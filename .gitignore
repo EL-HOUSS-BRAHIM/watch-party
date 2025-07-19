@@ -144,8 +144,3 @@ vendor/
 # forbidden script's hard coded
 
 *.sh
-
-debug-login.php
-test_env.php
-scripts/
-*.md
