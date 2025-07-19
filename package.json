@@ -1,0 +1,53 @@
+{
+  "name": "watch-party-v2",
+  "version": "2.0.0",
+  "description": "Full-stack watch party platform with PHP and Python backends",
+  "scripts": {
+    "dev": "./start-dev.sh",
+    "stop": "./stop-dev.sh",
+    "install:all": "pnpm run install:frontend && pnpm run install:python",
+    "install:frontend": "cd v0-watch-party && pnpm install",
+    "install:python": "cd backend-python && ./setup-python.sh",
+    "build": "cd v0-watch-party && pnpm run build",
+    "build:frontend": "cd v0-watch-party && pnpm run build",
+    "start": "pnpm run dev",
+    "lint": "cd v0-watch-party && pnpm run lint",
+    "test:frontend": "cd v0-watch-party && pnpm test",
+    "test:php": "cd backend-php && php vendor/bin/phpunit",
+    "test:python": "cd backend-python && source venv/bin/activate && python -m pytest",
+    "logs": "tail -f logs/*.log",
+    "logs:frontend": "tail -f logs/frontend.log",
+    "logs:php": "tail -f logs/php-backend.log", 
+    "logs:python": "tail -f logs/python-backend.log",
+    "logs:websocket": "tail -f logs/websocket-server.log",
+    "clean": "rm -rf logs/*.log && cd v0-watch-party && rm -rf .next",
+    "clean:all": "pnpm run clean && cd v0-watch-party && rm -rf node_modules && cd ../backend-python && rm -rf venv",
+    "setup": "./setup.sh",
+    "troubleshoot": "./troubleshoot.sh",
+    "status": "echo 'Frontend: http://localhost:3000' && echo 'PHP Backend: http://localhost:8000' && echo 'Python Backend: http://localhost:5000' && echo 'WebSocket: ws://localhost:8080'",
+    "check:ports": "lsof -i :3000,8000,5000,8080"
+  },
+  "keywords": [
+    "watch-party",
+    "video-synchronization",
+    "real-time-chat",
+    "nextjs",
+    "php",
+    "python",
+    "websocket"
+  ],
+  "author": "Watch Party Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.6",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EL-HOUSS-BRAHIM/v0-watch-party.git"
+  },
+  "workspaces": [
+    "v0-watch-party"
+  ]
+}
