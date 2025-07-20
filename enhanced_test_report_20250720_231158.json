@@ -1,0 +1,228 @@
+{
+  "timestamp": "2025-07-20T23:11:58.699126",
+  "config": {
+    "backend_url": "http://localhost:8000",
+    "frontend_url": "http://localhost:3000",
+    "base_timeout": 15,
+    "slow_route_timeout": 60,
+    "max_retries": 2
+  },
+  "summary": {
+    "total_tests": 26,
+    "passed": 24,
+    "failed": 2,
+    "warnings": 0,
+    "timeouts": 0
+  },
+  "performance_analysis": {
+    "average_response_time": 15.833464943445646,
+    "max_response_time": 43.22809052467346,
+    "min_response_time": 0.976966142654419,
+    "slow_routes_count": 2,
+    "very_slow_routes_count": 0
+  },
+  "performance_issues": [
+    {
+      "test": "Protected Route: Video Library",
+      "response_time": 32.94067072868347,
+      "severity": "medium"
+    },
+    {
+      "test": "Protected Route: Upload Interface",
+      "response_time": 43.22809052467346,
+      "severity": "medium"
+    }
+  ],
+  "results": [
+    {
+      "test": "Route: Landing Page",
+      "status": "PASS",
+      "message": "Route / accessible",
+      "response_time": 13.187772512435913,
+      "timestamp": "2025-07-20T23:04:27.157804"
+    },
+    {
+      "test": "Route: Blog/News",
+      "status": "PASS",
+      "message": "Route /blog accessible",
+      "response_time": 25.153444528579712,
+      "timestamp": "2025-07-20T23:05:29.995415"
+    },
+    {
+      "test": "Route: Mobile Redirect",
+      "status": "PASS",
+      "message": "Route /mobile accessible",
+      "response_time": 15.185820817947388,
+      "timestamp": "2025-07-20T23:05:45.182988"
+    },
+    {
+      "test": "Route: Dashboard Home",
+      "status": "PASS",
+      "message": "Route /dashboard accessible",
+      "response_time": 4.4889817237854,
+      "timestamp": "2025-07-20T23:05:49.673253"
+    },
+    {
+      "test": "Route: Login Page",
+      "status": "PASS",
+      "message": "Route /login accessible",
+      "response_time": 4.087111949920654,
+      "timestamp": "2025-07-20T23:05:53.796310"
+    },
+    {
+      "test": "Route: About Us",
+      "status": "PASS",
+      "message": "Route /about accessible",
+      "response_time": 13.870657444000244,
+      "timestamp": "2025-07-20T23:06:07.667530"
+    },
+    {
+      "test": "Route: Privacy Policy",
+      "status": "PASS",
+      "message": "Route /privacy accessible",
+      "response_time": 23.238091945648193,
+      "timestamp": "2025-07-20T23:06:30.906317"
+    },
+    {
+      "test": "Route: Signup Page",
+      "status": "PASS",
+      "message": "Route /join accessible",
+      "response_time": 22.419596195220947,
+      "timestamp": "2025-07-20T23:06:53.336812"
+    },
+    {
+      "test": "Route: Password Reset",
+      "status": "PASS",
+      "message": "Route /forgot-password accessible",
+      "response_time": 14.200757503509521,
+      "timestamp": "2025-07-20T23:07:07.566612"
+    },
+    {
+      "test": "Route: Pricing Plans",
+      "status": "PASS",
+      "message": "Route /pricing accessible",
+      "response_time": 13.299332857131958,
+      "timestamp": "2025-07-20T23:07:20.866648"
+    },
+    {
+      "test": "Route: Contact Form",
+      "status": "PASS",
+      "message": "Route /contact accessible",
+      "response_time": 27.1739661693573,
+      "timestamp": "2025-07-20T23:07:48.043639"
+    },
+    {
+      "test": "Route: FAQ & Support",
+      "status": "PASS",
+      "message": "Route /help accessible",
+      "response_time": 19.6230628490448,
+      "timestamp": "2025-07-20T23:08:07.684410"
+    },
+    {
+      "test": "Route: Feature Deep Dive",
+      "status": "PASS",
+      "message": "Route /features accessible",
+      "response_time": 16.06220507621765,
+      "timestamp": "2025-07-20T23:08:23.747473"
+    },
+    {
+      "test": "Route: Terms of Service",
+      "status": "PASS",
+      "message": "Route /terms accessible",
+      "response_time": 15.88753628730774,
+      "timestamp": "2025-07-20T23:08:39.642021"
+    },
+    {
+      "test": "Protected Route: Party Management",
+      "status": "PASS",
+      "message": "Route /dashboard/parties accessible",
+      "response_time": 15.154347896575928,
+      "timestamp": "2025-07-20T23:08:54.796668"
+    },
+    {
+      "test": "Protected Route: Video Library",
+      "status": "PASS",
+      "message": "Route /dashboard/videos accessible",
+      "response_time": 32.94067072868347,
+      "timestamp": "2025-07-20T23:09:27.750706"
+    },
+    {
+      "test": "Protected Route: Upload Interface",
+      "status": "PASS",
+      "message": "Route /dashboard/videos/upload accessible",
+      "response_time": 43.22809052467346,
+      "timestamp": "2025-07-20T23:10:11.007092"
+    },
+    {
+      "test": "Protected Route: Saved Content",
+      "status": "PASS",
+      "message": "Route /dashboard/favorites accessible",
+      "response_time": 10.80034589767456,
+      "timestamp": "2025-07-20T23:10:36.864047"
+    },
+    {
+      "test": "Protected Route: Social Management",
+      "status": "PASS",
+      "message": "Route /dashboard/friends accessible",
+      "response_time": 13.82670259475708,
+      "timestamp": "2025-07-20T23:10:50.694325"
+    },
+    {
+      "test": "Protected Route: Notification Center",
+      "status": "PASS",
+      "message": "Route /dashboard/notifications accessible",
+      "response_time": 18.52121090888977,
+      "timestamp": "2025-07-20T23:11:09.228413"
+    },
+    {
+      "test": "Protected Route: Billing Management",
+      "status": "PASS",
+      "message": "Route /dashboard/billing accessible",
+      "response_time": 13.416836977005005,
+      "timestamp": "2025-07-20T23:11:22.655286"
+    },
+    {
+      "test": "Protected Route: User Support",
+      "status": "PASS",
+      "message": "Route /dashboard/support accessible",
+      "response_time": 20.98719811439514,
+      "timestamp": "2025-07-20T23:11:43.668602"
+    },
+    {
+      "test": "User Login",
+      "status": "PASS",
+      "message": "Login endpoint working",
+      "response_time": 9.390285730361938,
+      "timestamp": "2025-07-20T23:11:53.092208"
+    },
+    {
+      "test": "User Profile",
+      "status": "FAIL",
+      "message": "Server error: 500",
+      "response_time": 3.5508806705474854,
+      "timestamp": "2025-07-20T23:11:56.667780"
+    },
+    {
+      "test": "Video List",
+      "status": "FAIL",
+      "message": "Server error: 500",
+      "response_time": 0.9982144832611084,
+      "timestamp": "2025-07-20T23:11:57.679092"
+    },
+    {
+      "test": "Party List",
+      "status": "PASS",
+      "message": "Endpoint accessible with auth",
+      "response_time": 0.976966142654419,
+      "timestamp": "2025-07-20T23:11:58.672607"
+    }
+  ],
+  "recommendations": [
+    {
+      "category": "backend",
+      "priority": "critical",
+      "issue": "2 endpoints returning 500 errors",
+      "recommendation": "Check Django error logs, verify database connectivity, and ensure all required environment variables are set"
+    }
+  ]
+}
