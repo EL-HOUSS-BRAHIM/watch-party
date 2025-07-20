@@ -6,7 +6,8 @@ from rest_framework import serializers
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from apps.videos.serializers import VideoSerializer
-from .models import WatchParty, PartyParticipant, ChatMessage, PartyReaction, PartyInvitation, PartyReport
+from .models import WatchParty, PartyParticipant, PartyReaction, PartyInvitation, PartyReport
+from apps.chat.models import ChatMessage
 
 User = get_user_model()
 
@@ -172,31 +173,33 @@ class ChatMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatMessage
         fields = [
-            'id', 'user', 'message_type', 'content', 'is_edited', 'is_deleted',
+            'id', 'user', 'message_type', 'content', 'moderation_status',
             'reply_to', 'reply_to_message', 'can_edit', 'created_at', 'updated_at'
         ]
-        read_only_fields = ['id', 'user', 'is_edited', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'user', 'moderation_status', 'created_at', 'updated_at']
     
     def get_user(self, obj):
-        return {
-            'id': str(obj.user.id),
-            'name': obj.user.full_name,
-            'avatar': obj.user.avatar.url if obj.user.avatar else None,
-            'is_premium': obj.user.is_premium
-        }
+        if obj.user:
+            return {
+                'id': str(obj.user.id),
+                'name': obj.user.full_name,
+                'avatar': obj.user.avatar.url if obj.user.avatar else None,
+                'is_premium': getattr(obj.user, 'is_premium', False)
+            }
+        return None
     
     def get_reply_to_message(self, obj):
         if obj.reply_to:
             return {
                 'id': str(obj.reply_to.id),
                 'content': obj.reply_to.content[:100],
-                'user': obj.reply_to.user.full_name
+                'user': obj.reply_to.user.full_name if obj.reply_to.user else 'System'
             }
         return None
     
     def get_can_edit(self, obj):
         request = self.context.get('request')
-        if request and request.user.is_authenticated:
+        if request and request.user.is_authenticated and obj.user:
             return obj.user == request.user
         return False
 
