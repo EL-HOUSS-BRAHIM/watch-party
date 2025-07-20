@@ -223,10 +223,93 @@ class BarChartDataSerializer(serializers.Serializer):
     color = serializers.CharField(required=False)
 
 
-class HeatmapDataSerializer(serializers.Serializer):
-    """Data for heatmap visualization"""
+# Phase 2 Advanced Analytics Serializers
+
+class RealTimeDashboardSerializer(serializers.Serializer):
+    """Real-time dashboard data serializer"""
     
-    x = serializers.CharField()
-    y = serializers.CharField()
-    value = serializers.FloatField()
-    intensity = serializers.FloatField()  # 0-1 for color intensity
+    overview = serializers.DictField()
+    active_users = serializers.ListField()
+    party_metrics = serializers.DictField()
+    video_metrics = serializers.DictField()
+    engagement_trends = serializers.DictField()
+    geographical_data = serializers.ListField()
+    device_breakdown = serializers.DictField()
+    real_time_events = serializers.ListField()
+    performance_metrics = serializers.DictField()
+    time_range = serializers.CharField()
+    generated_at = serializers.DateTimeField()
+
+
+class AdvancedAnalyticsQuerySerializer(serializers.Serializer):
+    """Advanced analytics query configuration serializer"""
+    
+    metric = serializers.ChoiceField(choices=[
+        'user_engagement', 'party_performance', 'video_analytics',
+        'revenue_analysis', 'retention_rates', 'feature_usage'
+    ])
+    time_range = serializers.DictField()
+    filters = serializers.DictField(required=False)
+    group_by = serializers.CharField(required=False)
+    aggregation = serializers.ChoiceField(
+        choices=['sum', 'avg', 'count', 'max', 'min'],
+        default='count'
+    )
+    
+
+class A_BTestResultSerializer(serializers.Serializer):
+    """A/B test results serializer"""
+    
+    test_id = serializers.CharField()
+    name = serializers.CharField()
+    status = serializers.ChoiceField(choices=['running', 'completed', 'paused'])
+    participants = serializers.IntegerField()
+    variants = serializers.ListField()
+    statistical_significance = serializers.BooleanField()
+    winning_variant = serializers.CharField(required=False)
+    improvement = serializers.FloatField(required=False)
+
+
+class PredictiveAnalyticsSerializer(serializers.Serializer):
+    """Predictive analytics results serializer"""
+    
+    prediction_type = serializers.CharField()
+    confidence_score = serializers.FloatField()
+    data = serializers.DictField()
+    generated_at = serializers.DateTimeField()
+    model_version = serializers.CharField(default='v1.0')
+
+
+class UserChurnPredictionSerializer(serializers.Serializer):
+    """User churn prediction serializer"""
+    
+    user_id = serializers.UUIDField()
+    username = serializers.CharField()
+    churn_probability = serializers.FloatField()
+    risk_level = serializers.ChoiceField(choices=['low', 'medium', 'high'])
+    key_factors = serializers.ListField()
+    recommended_actions = serializers.ListField()
+
+
+class ContentRecommendationSerializer(serializers.Serializer):
+    """Content recommendation serializer"""
+    
+    content_type = serializers.CharField()
+    recommended_categories = serializers.ListField()
+    optimal_length = serializers.DictField()
+    best_upload_times = serializers.ListField()
+    seasonal_factors = serializers.DictField()
+
+
+class GrowthForecastSerializer(serializers.Serializer):
+    """Growth forecast serializer"""
+    
+    metric = serializers.CharField()
+    current_value = serializers.FloatField()
+    predicted_value = serializers.FloatField()
+    growth_rate = serializers.FloatField()
+    confidence_interval = serializers.ListField()
+    forecast_period = serializers.CharField()
+
+
+# Add to the end of the existing file
