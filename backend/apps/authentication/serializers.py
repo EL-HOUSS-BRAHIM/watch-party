@@ -46,19 +46,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             is_email_verified=False
         )
         
-        # Create user profile
-        UserProfile.objects.create(
-            user=user,
-            notification_preferences={
-                'email_notifications': True,
-                'push_notifications': True,
-                'marketing_emails': False
-            },
-            privacy_settings={
-                'profile_visibility': 'friends',
-                'activity_visibility': 'friends'
-            }
-        )
+        # UserProfile is created automatically by signal
         
         # Create email verification token
         self.create_email_verification_token(user)
