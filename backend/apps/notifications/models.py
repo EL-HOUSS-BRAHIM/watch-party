@@ -207,7 +207,7 @@ class NotificationPreferences(models.Model):
     notifications_enabled = models.BooleanField(default=True, verbose_name='Enable Notifications')
     quiet_hours_start = models.TimeField(null=True, blank=True, verbose_name='Quiet Hours Start')
     quiet_hours_end = models.TimeField(null=True, blank=True, verbose_name='Quiet Hours End')
-    timezone = models.CharField(max_length=50, default='UTC', verbose_name='User Timezone')
+    user_timezone = models.CharField(max_length=50, default='UTC', verbose_name='User Timezone')
     
     # Channel preferences
     in_app_enabled = models.BooleanField(default=True, verbose_name='In-App Notifications')

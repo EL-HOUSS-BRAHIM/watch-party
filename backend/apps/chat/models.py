@@ -79,7 +79,7 @@ class ChatMessage(models.Model):
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     room = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='messages')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_messages', null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_chat_messages', null=True, blank=True)
     
     # Message content
     content = models.TextField(verbose_name='Message Content')
@@ -90,7 +90,7 @@ class ChatMessage(models.Model):
     
     # Moderation
     moderation_status = models.CharField(max_length=20, choices=MODERATION_STATUS, default='active')
-    moderated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='moderated_messages')
+    moderated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='moderated_chat_messages')
     moderation_reason = models.CharField(max_length=500, blank=True, verbose_name='Moderation Reason')
     
     # Timestamps
@@ -101,7 +101,7 @@ class ChatMessage(models.Model):
     metadata = models.JSONField(default=dict, blank=True, verbose_name='Additional Metadata')
     
     class Meta:
-        db_table = 'chat_messages'
+        db_table = 'chat_room_messages'
         verbose_name = 'Chat Message'
         verbose_name_plural = 'Chat Messages'
         ordering = ['created_at']

@@ -19,7 +19,10 @@ urlpatterns = [
     path('friends/requests/', views.FriendRequestsView.as_view(), name='friend_requests'),
     path('friends/send/', views.SendFriendRequestView.as_view(), name='send_friend_request'),
     path('friends/<uuid:request_id>/accept/', views.AcceptFriendRequestView.as_view(), name='accept_friend_request'),
+    path('friends/<uuid:request_id>/decline/', views.DeclineFriendRequestView.as_view(), name='decline_friend_request'),
     path('friends/<uuid:friend_id>/remove/', views.RemoveFriendView.as_view(), name='remove_friend'),
+    path('users/<uuid:user_id>/block/', views.BlockUserView.as_view(), name='block_user'),
+    path('users/<uuid:user_id>/unblock/', views.UnblockUserView.as_view(), name='unblock_user'),
     
     # User search and discovery
     path('search/', views.UserSearchView.as_view(), name='user_search'),

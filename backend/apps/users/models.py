@@ -118,64 +118,6 @@ class UserFavorite(models.Model):
         return f"{self.user.full_name} favorited {self.favorite_type} {self.object_id}"
 
 
-class UserNotification(models.Model):
-    """User notifications"""
-    
-    NOTIFICATION_TYPES = [
-        ('friend_request', 'Friend Request'),
-        ('friend_accepted', 'Friend Request Accepted'),
-        ('party_invite', 'Party Invitation'),
-        ('party_started', 'Party Started'),
-        ('video_like', 'Video Liked'),
-        ('video_comment', 'Video Comment'),
-        ('subscription_expiring', 'Subscription Expiring'),
-        ('payment_failed', 'Payment Failed'),
-        ('system', 'System Notification'),
-    ]
-    
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
-    
-    notification_type = models.CharField(max_length=30, choices=NOTIFICATION_TYPES)
-    title = models.CharField(max_length=200)
-    message = models.TextField()
-    
-    # Optional references
-    from_user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE, related_name='sent_notifications')
-    object_type = models.CharField(max_length=50, blank=True)
-    object_id = models.CharField(max_length=255, blank=True)
-    
-    # Status
-    is_read = models.BooleanField(default=False)
-    is_sent = models.BooleanField(default=False)  # For email/push notifications
-    
-    # Action URL
-    action_url = models.URLField(blank=True)
-    
-    created_at = models.DateTimeField(auto_now_add=True)
-    read_at = models.DateTimeField(null=True, blank=True)
-    
-    class Meta:
-        db_table = 'user_notifications'
-        ordering = ['-created_at']
-        verbose_name = 'User Notification'
-        verbose_name_plural = 'User Notifications'
-        indexes = [
-            models.Index(fields=['user', '-created_at']),
-            models.Index(fields=['user', 'is_read']),
-        ]
-        
-    def __str__(self):
-        return f"{self.title} for {self.user.full_name}"
-    
-    def mark_as_read(self):
-        """Mark notification as read"""
-        if not self.is_read:
-            self.is_read = True
-            self.read_at = timezone.now()
-            self.save(update_fields=['is_read', 'read_at'])
-
-
 class UserSettings(models.Model):
     """User preferences and settings"""
     

@@ -131,42 +131,6 @@ class PartyParticipant(models.Model):
         return f"{self.user.full_name} in {self.party.title}"
 
 
-class ChatMessage(models.Model):
-    """Chat message model"""
-    
-    MESSAGE_TYPES = [
-        ('text', 'Text Message'),
-        ('emoji', 'Emoji Reaction'),
-        ('system', 'System Message'),
-        ('gif', 'GIF'),
-    ]
-    
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    party = models.ForeignKey(WatchParty, on_delete=models.CASCADE, related_name='chat_messages')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_messages')
-    
-    message_type = models.CharField(max_length=20, choices=MESSAGE_TYPES, default='text')
-    content = models.TextField(verbose_name='Message Content')
-    
-    # Message metadata
-    is_edited = models.BooleanField(default=False)
-    is_deleted = models.BooleanField(default=False)
-    reply_to = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
-    
-    # Timestamps
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    class Meta:
-        db_table = 'chat_messages'
-        ordering = ['created_at']
-        verbose_name = 'Chat Message'
-        verbose_name_plural = 'Chat Messages'
-        
-    def __str__(self):
-        return f"{self.user.full_name}: {self.content[:50]}"
-
-
 class PartyReaction(models.Model):
     """Party reaction model for live reactions during video"""
     
