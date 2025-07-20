@@ -13,7 +13,8 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .models import WatchParty, PartyParticipant, ChatMessage, PartyReaction, PartyInvitation, PartyReport
+from .models import WatchParty, PartyParticipant, PartyReaction, PartyInvitation, PartyReport
+from apps.chat.models import ChatMessage
 from .serializers import (
     WatchPartySerializer, WatchPartyDetailSerializer, WatchPartyCreateSerializer,
     WatchPartyUpdateSerializer, ChatMessageSerializer, PartyReactionSerializer,
@@ -179,15 +180,28 @@ class WatchPartyViewSet(ModelViewSet):
         
         if request.method == 'GET':
             # Get recent messages (last 50)
-            messages = party.chat_messages.filter(is_deleted=False).order_by('-created_at')[:50]
-            messages = reversed(messages)  # Reverse to show oldest first
-            serializer = ChatMessageSerializer(messages, many=True, context={'request': request})
-            return Response(serializer.data)
+            if hasattr(party, 'chat_room'):
+                messages = party.chat_room.messages.filter(moderation_status='active').order_by('-created_at')[:50]
+                messages = reversed(messages)  # Reverse to show oldest first
+                serializer = ChatMessageSerializer(messages, many=True, context={'request': request})
+                return Response(serializer.data)
+            else:
+                return Response([])  # No chat room yet
         
         else:  # POST
             serializer = ChatMessageSerializer(data=request.data, context={'request': request})
             if serializer.is_valid():
-                message = serializer.save(party=party, user=user)
+                # Get or create chat room for the party
+                from apps.chat.models import ChatRoom
+                chat_room, created = ChatRoom.objects.get_or_create(
+                    party=party,
+                    defaults={
+                        'name': f"Chat for {party.title}",
+                        'max_users': party.max_participants
+                    }
+                )
+                
+                message = serializer.save(room=chat_room, user=user)
                 
                 # TODO: Send WebSocket notification to all participants
                 
