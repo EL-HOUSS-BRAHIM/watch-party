@@ -17,6 +17,18 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # Auto-discover tasks in all installed apps
 app.autodiscover_tasks()
 
+# Import beat schedule if available
+try:
+    from .beat_schedule import app as beat_app
+    app.conf.update(beat_app.conf)
+except ImportError:
+    pass
+
 @app.task(bind=True)
 def debug_task(self):
     print(f'Request: {self.request!r}')
+    
+@app.task
+def test_task():
+    """Simple test task"""
+    return "Test task completed successfully"
