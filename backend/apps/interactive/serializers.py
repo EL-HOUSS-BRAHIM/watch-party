@@ -36,10 +36,10 @@ class LiveReactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = LiveReaction
         fields = [
-            'id', 'reaction_id', 'user', 'party', 'reaction', 'position_x', 
-            'position_y', 'video_timestamp', 'intensity', 'is_active', 'created_at'
+            'id', 'user', 'party', 'reaction', 'position_x', 
+            'position_y', 'video_timestamp', 'is_active', 'created_at'
         ]
-        read_only_fields = ['id', 'reaction_id', 'user', 'party', 'created_at']
+        read_only_fields = ['id', 'user', 'party', 'created_at']
     
     def validate_reaction(self, value):
         """Validate reaction type"""
@@ -55,10 +55,6 @@ class LiveReactionSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("position_x must be between 0 and 1")
         if 'position_y' in data and not (0 <= data['position_y'] <= 1):
             raise serializers.ValidationError("position_y must be between 0 and 1")
-        
-        # Check intensity
-        if 'intensity' in data and not (1 <= data['intensity'] <= 5):
-            raise serializers.ValidationError("intensity must be between 1 and 5")
         
         return data
 
@@ -105,7 +101,7 @@ class VoiceChatParticipantSerializer(serializers.ModelSerializer):
         model = VoiceChatParticipant
         fields = [
             'id', 'user', 'room', 'peer_id', 'is_connected', 'is_muted',
-            'is_deafened', 'is_moderator', 'joined_at', 'left_at', 'session_duration'
+            'joined_at', 'left_at', 'session_duration'
         ]
         read_only_fields = ['id', 'user', 'room', 'joined_at', 'left_at', 'session_duration']
     
@@ -179,9 +175,8 @@ class InteractivePollSerializer(serializers.ModelSerializer):
     class Meta:
         model = InteractivePoll
         fields = [
-            'poll_id', 'creator', 'party', 'title', 'description', 'poll_type',
+            'poll_id', 'creator', 'party', 'question', 'poll_type',
             'options', 'min_rating', 'max_rating', 'allows_multiple',
-            'anonymous_responses', 'show_results_live', 'requires_verification',
             'video_timestamp', 'expires_at', 'is_published', 'total_responses',
             'created_at', 'is_expired', 'time_remaining'
         ]
@@ -303,11 +298,11 @@ class InteractiveAnnotationSerializer(serializers.ModelSerializer):
     class Meta:
         model = InteractiveAnnotation
         fields = [
-            'id', 'annotation_id', 'user', 'screen_share', 'annotation_type',
+            'annotation_id', 'user', 'screen_share', 'annotation_type',
             'position_x', 'position_y', 'width', 'height', 'content',
             'color', 'stroke_width', 'is_visible', 'expires_at', 'created_at'
         ]
-        read_only_fields = ['id', 'annotation_id', 'user', 'screen_share', 'created_at']
+        read_only_fields = ['annotation_id', 'user', 'screen_share', 'created_at']
     
     def validate_annotation_type(self, value):
         """Validate annotation type"""
@@ -348,12 +343,12 @@ class InteractiveSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = InteractiveSession
         fields = [
-            'id', 'session_id', 'user', 'party', 'reactions_sent',
+            'session_id', 'user', 'party', 'reactions_sent',
             'voice_chat_duration', 'screen_shares_initiated', 'polls_participated',
             'annotations_created', 'started_at', 'ended_at', 'session_duration'
         ]
         read_only_fields = [
-            'id', 'session_id', 'user', 'party', 'reactions_sent',
+            'session_id', 'user', 'party', 'reactions_sent',
             'voice_chat_duration', 'screen_shares_initiated', 'polls_participated',
             'annotations_created', 'started_at', 'ended_at', 'session_duration'
         ]
