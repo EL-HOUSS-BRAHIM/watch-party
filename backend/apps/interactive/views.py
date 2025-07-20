@@ -107,9 +107,9 @@ def get_live_reactions(request, party_id):
 def create_live_reaction(request, party_id):
     """Create a new live reaction"""
     try:
-        from apps.parties.models import Party
+        from apps.parties.models import WatchParty
         
-        party = Party.objects.get(id=party_id)
+        party = WatchParty.objects.get(id=party_id)
         
         # Check if user is in the party
         if not party.participants.filter(user=request.user).exists():
@@ -132,7 +132,7 @@ def create_live_reaction(request, party_id):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-    except Party.DoesNotExist:
+    except WatchParty.DoesNotExist:
         return Response(
             {'error': 'Party not found'},
             status=status.HTTP_404_NOT_FOUND
@@ -209,9 +209,9 @@ def get_voice_chat_room(request, party_id):
 def manage_voice_chat_room(request, party_id):
     """Create or update voice chat room"""
     try:
-        from apps.parties.models import Party
+        from apps.parties.models import WatchParty
         
-        party = Party.objects.get(id=party_id)
+        party = WatchParty.objects.get(id=party_id)
         
         # Check if user is party host
         if party.host != request.user:
@@ -245,7 +245,7 @@ def manage_voice_chat_room(request, party_id):
             status=status.HTTP_201_CREATED if created else status.HTTP_200_OK
         )
         
-    except Party.DoesNotExist:
+    except WatchParty.DoesNotExist:
         return Response(
             {'error': 'Party not found'},
             status=status.HTTP_404_NOT_FOUND
@@ -428,9 +428,9 @@ def get_party_polls(request, party_id):
 def create_poll(request, party_id):
     """Create a new interactive poll"""
     try:
-        from apps.parties.models import Party
+        from apps.parties.models import WatchParty
         
-        party = Party.objects.get(id=party_id)
+        party = WatchParty.objects.get(id=party_id)
         
         # Check if user is party host or has permission
         if party.host != request.user:
@@ -457,7 +457,7 @@ def create_poll(request, party_id):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-    except Party.DoesNotExist:
+    except WatchParty.DoesNotExist:
         return Response(
             {'error': 'Party not found'},
             status=status.HTTP_404_NOT_FOUND
@@ -645,9 +645,9 @@ def get_screen_annotations(request, share_id):
 def get_interactive_analytics(request, party_id):
     """Get interactive features analytics"""
     try:
-        from apps.parties.models import Party
+        from apps.parties.models import WatchParty
         
-        party = Party.objects.get(id=party_id)
+        party = WatchParty.objects.get(id=party_id)
         
         # Check permissions
         if party.host != request.user and not request.user.is_staff:
@@ -726,7 +726,7 @@ def get_interactive_analytics(request, party_id):
         
         return Response(analytics)
         
-    except Party.DoesNotExist:
+    except WatchParty.DoesNotExist:
         return Response(
             {'error': 'Party not found'},
             status=status.HTTP_404_NOT_FOUND
