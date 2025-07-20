@@ -60,3 +60,25 @@ LOGGING['loggers']['watchparty']['level'] = 'DEBUG'
 # Media files served by Django in development
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'mediafiles'
+
+# Override Redis-based configurations for development
+# Use dummy cache backend to avoid Redis dependency
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+
+# Use database-backed sessions instead of Redis
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Use in-memory channel layer for development
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
+
+# Disable Celery for development
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True
