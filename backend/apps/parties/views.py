@@ -50,12 +50,28 @@ class WatchPartyViewSet(ModelViewSet):
         queryset = super().get_queryset()
         user = self.request.user
         
+        # Get user's friends
+        from apps.users.models import Friendship
+        friend_ids = Friendship.objects.filter(
+            Q(from_user=user, status='accepted') | Q(to_user=user, status='accepted')
+        ).values_list(
+            'to_user', 'from_user'
+        )
+        
+        # Extract friend user IDs
+        friend_user_ids = set()
+        for from_id, to_id in friend_ids:
+            if from_id == user.id:
+                friend_user_ids.add(to_id)
+            else:
+                friend_user_ids.add(from_id)
+        
         # Filter based on visibility and user relationships
         return queryset.filter(
             Q(visibility='public') |
             Q(host=user) |
             Q(participants__user=user, participants__is_active=True) |
-            Q(visibility='friends', host__in=user.friends.all())
+            Q(visibility='friends', host__id__in=friend_user_ids)
         ).distinct()
     
     @action(detail=True, methods=['post'])
@@ -341,11 +357,28 @@ class PartySearchView(APIView):
             
             # Apply visibility filters
             user = request.user
+            
+            # Get user's friends
+            from apps.users.models import Friendship
+            friend_ids = Friendship.objects.filter(
+                Q(from_user=user, status='accepted') | Q(to_user=user, status='accepted')
+            ).values_list(
+                'to_user', 'from_user'
+            )
+            
+            # Extract friend user IDs
+            friend_user_ids = set()
+            for from_id, to_id in friend_ids:
+                if from_id == user.id:
+                    friend_user_ids.add(to_id)
+                else:
+                    friend_user_ids.add(from_id)
+            
             queryset = queryset.filter(
                 Q(visibility='public') |
                 Q(host=user) |
                 Q(participants__user=user, participants__is_active=True) |
-                Q(visibility='friends', host__in=user.friends.all())
+                Q(visibility='friends', host__id__in=friend_user_ids)
             ).distinct()
             
             # Apply ordering
