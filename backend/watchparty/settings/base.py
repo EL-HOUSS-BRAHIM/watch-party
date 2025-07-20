@@ -84,10 +84,10 @@ WSGI_APPLICATION = 'watchparty.wsgi.application'
 ASGI_APPLICATION = 'watchparty.asgi.application'
 
 # Database
-# Default to PostgreSQL, but support multiple configurations
+# Default to SQLite for development, but support multiple configurations
 DATABASES = {
     'default': dj_database_url.config(
-        default=f"postgresql://postgres:password@localhost:5432/watchparty_dev",
+        default=f"sqlite:///{BASE_DIR}/db.sqlite3",
         conn_max_age=600,
         conn_health_checks=True,
     )
