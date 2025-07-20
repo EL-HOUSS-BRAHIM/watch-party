@@ -2,12 +2,36 @@
 Simple script to create test users for development
 """
 
+import os
+import django
+
+# Setup Django environment
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'watchparty.settings.development')
+django.setup()
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import make_password
 
 User = get_user_model()
 
 def create_test_users():
+    # Create demo user for testing
+    demo_user, created = User.objects.get_or_create(
+        username='demo@example.com',
+        defaults={
+            'email': 'demo@example.com',
+            'password': make_password('demo123'),
+            'first_name': 'Demo',
+            'last_name': 'User',
+            'is_active': True
+        }
+    )
+    
+    if created:
+        print(f'✅ Created demo user: demo@example.com / demo123')
+    else:
+        print(f'ℹ️ Demo user already exists')
+    
     # Create admin user
     admin_user, created = User.objects.get_or_create(
         username='admin',
@@ -52,6 +76,7 @@ if __name__ == '__main__':
     create_test_users()
     print('\n🎯 Test users ready!')
     print('📝 Login credentials:')
+    print('   Demo: demo@example.com / demo123 (for testing)')
     print('   Admin: admin@watchparty.dev / admin123')
     print('   Users: user1@watchparty.dev / password123')
     print('          user2@watchparty.dev / password123')
