@@ -1,0 +1,27 @@
+"{{ party.title }}" starts in {{ time_until_start }}!
+
+Hi {{ user.first_name|default:user.username }},
+
+This is a friendly reminder that the watch party you're attending starts soon:
+
+Party: "{{ party.title }}"
+Host: {{ party.host.first_name|default:party.host.username }}
+Starts: {{ party.scheduled_start_time|date:"F j, Y" }} at {{ party.scheduled_start_time|time:"g:i A" }}
+
+Join now: {{ join_url }}
+
+Quick Checklist:
+- Test your internet connection
+- Grab some snacks and drinks
+- Check your audio/video settings
+- Invite any last-minute friends
+
+Don't be late - the party starts automatically at the scheduled time!
+
+See you there!
+
+--
+Watch Party Team
+{{ site_url }}
+
+Unsubscribe: {{ unsubscribe_url }}?token={{ unsubscribe_token }}
