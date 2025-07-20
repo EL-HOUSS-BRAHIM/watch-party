@@ -6,6 +6,8 @@ from rest_framework import status, permissions, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
+from django.db import models
+from .models import Friendship, UserActivity, UserSettings, Favorite
 
 User = get_user_model()
 
@@ -48,7 +50,30 @@ class FriendsListView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     
     def get(self, request):
-        return Response({'friends': []})
+        user = request.user
+        
+        # Get accepted friendships where user is either sender or receiver
+        friendships = Friendship.objects.filter(
+            models.Q(from_user=user) | models.Q(to_user=user),
+            status='accepted'
+        ).select_related('from_user', 'to_user')
+        
+        friends = []
+        for friendship in friendships:
+            # Get the other user in the friendship
+            friend = friendship.to_user if friendship.from_user == user else friendship.from_user
+            friends.append({
+                'id': str(friend.id),
+                'name': friend.full_name,
+                'avatar': friend.avatar.url if friend.avatar else None,
+                'is_online': hasattr(friend, 'is_online') and friend.is_online,
+                'last_seen': friendship.updated_at.isoformat(),
+            })
+        
+        return Response({
+            'friends': friends,
+            'count': len(friends)
+        })
 
 
 class FriendRequestsView(APIView):
