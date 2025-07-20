@@ -2,14 +2,16 @@
 
 import type React from "react"
 import { createContext, useContext, useEffect, useState } from "react"
-import { api } from "@/lib/api"
+import { authService } from "@/lib/api"
 
 interface User {
   id: string
-  name: string
+  first_name: string
+  last_name: string
   email: string
   avatar?: string
-  role: "user" | "admin"
+  is_staff: boolean
+  is_verified: boolean
   subscription?: {
     plan: "free" | "premium"
     status: "active" | "cancelled" | "expired"
@@ -21,7 +23,7 @@ interface AuthContextType {
   isAuthenticated: boolean
   isLoading: boolean
   login: (email: string, password: string) => Promise<void>
-  register: (name: string, email: string, password: string) => Promise<void>
+  register: (email: string, password: string, firstName: string, lastName: string) => Promise<void>
   logout: () => void
   refreshUser: () => Promise<void>
 }
@@ -42,32 +44,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const login = async (email: string, password: string) => {
-    const response = await api.post("/auth/login", { email, password })
-    const { token, user } = response
+    try {
+      const response = await authService.login(email, password)
+      const { access, refresh, user } = response
 
-    localStorage.setItem("auth_token", token)
-    setUser(user)
+      localStorage.setItem("auth_token", access)
+      localStorage.setItem("refresh_token", refresh)
+      setUser(user)
+    } catch (error: any) {
+      throw new Error(error.response?.data?.detail || "Login failed")
+    }
   }
 
-  const register = async (name: string, email: string, password: string) => {
-    const response = await api.post("/auth/register", { name, email, password })
-    const { token, user } = response
+  const register = async (email: string, password: string, firstName: string, lastName: string) => {
+    try {
+      const response = await authService.register(email, password, firstName, lastName)
+      const { access, refresh, user } = response
 
-    localStorage.setItem("auth_token", token)
-    setUser(user)
+      localStorage.setItem("auth_token", access)
+      localStorage.setItem("refresh_token", refresh)
+      setUser(user)
+    } catch (error: any) {
+      throw new Error(error.response?.data?.detail || "Registration failed")
+    }
   }
 
-  const logout = () => {
-    localStorage.removeItem("auth_token")
-    setUser(null)
+  const logout = async () => {
+    try {
+      await authService.logout()
+    } catch (error) {
+      // Even if logout fails on server, clear local storage
+      console.error("Logout error:", error)
+    } finally {
+      localStorage.removeItem("auth_token")
+      localStorage.removeItem("refresh_token")
+      setUser(null)
+    }
   }
 
   const refreshUser = async () => {
     try {
-      const user = await api.get("/auth/me")
-      setUser(user)
+      setIsLoading(true)
+      const userData = await authService.getProfile()
+      setUser(userData)
     } catch (error) {
+      console.error("Failed to refresh user:", error)
       localStorage.removeItem("auth_token")
+      localStorage.removeItem("refresh_token")
+      setUser(null)
     } finally {
       setIsLoading(false)
     }
