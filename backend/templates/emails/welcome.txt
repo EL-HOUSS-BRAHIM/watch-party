@@ -1,0 +1,30 @@
+Welcome to Watch Party, {{ user.first_name|default:user.username }}!
+
+Thank you for joining our community! We're excited to have you on board and can't wait for you to experience the magic of watching videos together with friends and family.
+
+Your account is ready! You can now start creating watch parties and inviting friends.
+
+What's next?
+- Complete your profile - Add a profile picture and bio
+- Create your first party - Upload a video or use a streaming link
+- Invite friends - Share the magic of synchronized watching
+- Explore features - Try real-time chat, reactions, and more!
+
+Get started: {{ dashboard_url }}
+Need help? {{ help_url }}
+
+Pro Tips:
+- Best Video Formats: MP4, WebM work best for smooth playback
+- Invite Friends: Use party codes for quick invitations
+- Stay Connected: Use real-time chat during watch parties
+- Mobile Ready: Access your parties from any device
+
+If you have any questions or need help getting started, our support team is here to help!
+
+Happy watching!
+
+--
+Watch Party Team
+{{ site_url }}
+
+Unsubscribe: {{ unsubscribe_url }}?token={{ unsubscribe_token }}
