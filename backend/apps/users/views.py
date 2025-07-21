@@ -22,6 +22,34 @@ from .serializers import (
 User = get_user_model()
 
 
+class DashboardStatsView(APIView):
+    """Get dashboard statistics for the user"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        
+        # Get basic stats
+        friends_count = Friendship.objects.filter(
+            (Q(from_user=user) | Q(to_user=user)) & Q(status='accepted')
+        ).count()
+        
+        # Import here to avoid circular imports
+        from apps.videos.models import Video
+        from apps.parties.models import WatchParty
+        
+        videos_count = Video.objects.filter(uploader=user).count()
+        parties_count = WatchParty.objects.filter(host=user).count()
+        
+        return Response({
+            'friends_count': friends_count,
+            'videos_count': videos_count,
+            'parties_hosted': parties_count,
+            'profile_completion': 80,  # Placeholder
+            'total_watch_time': '0h',  # Placeholder
+        })
+
+
 class UserProfileView(APIView):
     """Get user profile"""
     permission_classes = [permissions.IsAuthenticated]
