@@ -40,13 +40,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(read_only=True)
     avatar_url = serializers.SerializerMethodField()
     friends_count = serializers.SerializerMethodField()
+    profile = serializers.SerializerMethodField()
     
     class Meta:
         model = User
         fields = [
             'id', 'email', 'first_name', 'last_name', 'full_name',
             'avatar_url', 'is_premium', 'date_joined', 'friends_count',
-            'bio', 'location', 'birth_date', 'is_online'
+            'profile'
         ]
         read_only_fields = ['id', 'email', 'date_joined', 'is_premium', 'friends_count']
     
@@ -65,6 +66,22 @@ class UserProfileSerializer(serializers.ModelSerializer):
             models.Q(from_user=obj, status='accepted') |
             models.Q(to_user=obj, status='accepted')
         ).count()
+    
+    def get_profile(self, obj):
+        """Get user profile data"""
+        try:
+            profile = obj.profile
+            return {
+                'bio': profile.bio,
+                'timezone': profile.timezone,
+                'language': profile.language,
+            }
+        except:
+            return {
+                'bio': '',
+                'timezone': 'UTC',
+                'language': 'en',
+            }
 
 
 class FriendshipSerializer(serializers.ModelSerializer):
