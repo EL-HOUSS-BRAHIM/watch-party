@@ -1,0 +1,210 @@
+{
+  "timestamp": "2025-07-20T23:56:16.415497",
+  "config": {
+    "backend_url": "http://localhost:8000",
+    "frontend_url": "http://localhost:3000",
+    "base_timeout": 15,
+    "slow_route_timeout": 60,
+    "max_retries": 2
+  },
+  "summary": {
+    "total_tests": 26,
+    "passed": 26,
+    "failed": 0,
+    "warnings": 0,
+    "timeouts": 0
+  },
+  "performance_analysis": {
+    "average_response_time": 3.8008422668163595,
+    "max_response_time": 10.692016839981079,
+    "min_response_time": 0.1554241180419922,
+    "slow_routes_count": 0,
+    "very_slow_routes_count": 0
+  },
+  "performance_issues": [],
+  "results": [
+    {
+      "test": "Route: Landing Page",
+      "status": "PASS",
+      "message": "Route / accessible",
+      "response_time": 1.2903823852539062,
+      "timestamp": "2025-07-20T23:54:38.819701"
+    },
+    {
+      "test": "Route: Blog/News",
+      "status": "PASS",
+      "message": "Route /blog accessible",
+      "response_time": 9.865761280059814,
+      "timestamp": "2025-07-20T23:54:48.686029"
+    },
+    {
+      "test": "Route: Mobile Redirect",
+      "status": "PASS",
+      "message": "Route /mobile accessible",
+      "response_time": 3.666747808456421,
+      "timestamp": "2025-07-20T23:54:52.361676"
+    },
+    {
+      "test": "Route: Dashboard Home",
+      "status": "PASS",
+      "message": "Route /dashboard accessible",
+      "response_time": 0.6568124294281006,
+      "timestamp": "2025-07-20T23:54:53.019734"
+    },
+    {
+      "test": "Route: Login Page",
+      "status": "PASS",
+      "message": "Route /login accessible",
+      "response_time": 0.8207359313964844,
+      "timestamp": "2025-07-20T23:54:53.840846"
+    },
+    {
+      "test": "Route: About Us",
+      "status": "PASS",
+      "message": "Route /about accessible",
+      "response_time": 2.9436867237091064,
+      "timestamp": "2025-07-20T23:54:56.784946"
+    },
+    {
+      "test": "Route: Privacy Policy",
+      "status": "PASS",
+      "message": "Route /privacy accessible",
+      "response_time": 3.3769538402557373,
+      "timestamp": "2025-07-20T23:55:00.164464"
+    },
+    {
+      "test": "Route: Signup Page",
+      "status": "PASS",
+      "message": "Route /join accessible",
+      "response_time": 10.692016839981079,
+      "timestamp": "2025-07-20T23:55:10.857075"
+    },
+    {
+      "test": "Route: Password Reset",
+      "status": "PASS",
+      "message": "Route /forgot-password accessible",
+      "response_time": 2.6835086345672607,
+      "timestamp": "2025-07-20T23:55:13.541411"
+    },
+    {
+      "test": "Route: Pricing Plans",
+      "status": "PASS",
+      "message": "Route /pricing accessible",
+      "response_time": 2.5901620388031006,
+      "timestamp": "2025-07-20T23:55:16.131975"
+    },
+    {
+      "test": "Route: Contact Form",
+      "status": "PASS",
+      "message": "Route /contact accessible",
+      "response_time": 6.224641799926758,
+      "timestamp": "2025-07-20T23:55:22.359523"
+    },
+    {
+      "test": "Route: FAQ & Support",
+      "status": "PASS",
+      "message": "Route /help accessible",
+      "response_time": 6.6546242237091064,
+      "timestamp": "2025-07-20T23:55:29.016958"
+    },
+    {
+      "test": "Route: Feature Deep Dive",
+      "status": "PASS",
+      "message": "Route /features accessible",
+      "response_time": 6.425447940826416,
+      "timestamp": "2025-07-20T23:55:35.458692"
+    },
+    {
+      "test": "Route: Terms of Service",
+      "status": "PASS",
+      "message": "Route /terms accessible",
+      "response_time": 3.578237533569336,
+      "timestamp": "2025-07-20T23:55:39.037440"
+    },
+    {
+      "test": "Protected Route: Party Management",
+      "status": "PASS",
+      "message": "Route /dashboard/parties accessible",
+      "response_time": 3.240985155105591,
+      "timestamp": "2025-07-20T23:55:42.278822"
+    },
+    {
+      "test": "Protected Route: Video Library",
+      "status": "PASS",
+      "message": "Route /dashboard/videos accessible",
+      "response_time": 6.020355701446533,
+      "timestamp": "2025-07-20T23:55:48.299593"
+    },
+    {
+      "test": "Protected Route: Upload Interface",
+      "status": "PASS",
+      "message": "Route /dashboard/videos/upload accessible",
+      "response_time": 5.9243834018707275,
+      "timestamp": "2025-07-20T23:55:54.224711"
+    },
+    {
+      "test": "Protected Route: Saved Content",
+      "status": "PASS",
+      "message": "Route /dashboard/favorites accessible",
+      "response_time": 3.779802083969116,
+      "timestamp": "2025-07-20T23:55:58.012943"
+    },
+    {
+      "test": "Protected Route: Social Management",
+      "status": "PASS",
+      "message": "Route /dashboard/friends accessible",
+      "response_time": 4.422054290771484,
+      "timestamp": "2025-07-20T23:56:02.436032"
+    },
+    {
+      "test": "Protected Route: Notification Center",
+      "status": "PASS",
+      "message": "Route /dashboard/notifications accessible",
+      "response_time": 3.7518019676208496,
+      "timestamp": "2025-07-20T23:56:06.188986"
+    },
+    {
+      "test": "Protected Route: Billing Management",
+      "status": "PASS",
+      "message": "Route /dashboard/billing accessible",
+      "response_time": 3.55818510055542,
+      "timestamp": "2025-07-20T23:56:09.747869"
+    },
+    {
+      "test": "Protected Route: User Support",
+      "status": "PASS",
+      "message": "Route /dashboard/support accessible",
+      "response_time": 3.6644394397735596,
+      "timestamp": "2025-07-20T23:56:13.412693"
+    },
+    {
+      "test": "User Login",
+      "status": "PASS",
+      "message": "Login endpoint working",
+      "response_time": 2.111889362335205,
+      "timestamp": "2025-07-20T23:56:15.524993"
+    },
+    {
+      "test": "User Profile",
+      "status": "PASS",
+      "message": "Endpoint accessible with auth",
+      "response_time": 0.1554241180419922,
+      "timestamp": "2025-07-20T23:56:15.681599"
+    },
+    {
+      "test": "Video List",
+      "status": "PASS",
+      "message": "Endpoint accessible with auth",
+      "response_time": 0.24051761627197266,
+      "timestamp": "2025-07-20T23:56:15.923125"
+    },
+    {
+      "test": "Party List",
+      "status": "PASS",
+      "message": "Endpoint accessible with auth",
+      "response_time": 0.48234128952026367,
+      "timestamp": "2025-07-20T23:56:16.414733"
+    }
+  ],
+  "recommendations": []
+}
