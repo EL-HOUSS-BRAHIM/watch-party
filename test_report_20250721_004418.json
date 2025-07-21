@@ -1,0 +1,184 @@
+{
+  "timestamp": "2025-07-21T00:44:18.351928",
+  "config": {
+    "backend_url": "http://localhost:8000",
+    "frontend_url": "http://localhost:3000",
+    "timeout": 10
+  },
+  "summary": {
+    "total_tests": 28,
+    "passed": 17,
+    "failed": 1,
+    "warnings": 10
+  },
+  "results": [
+    {
+      "test": "Backend Environment",
+      "status": "PASS",
+      "message": "Backend .env file found",
+      "timestamp": "2025-07-21T00:44:05.564609"
+    },
+    {
+      "test": "Frontend Environment",
+      "status": "PASS",
+      "message": "Frontend .env.local file found",
+      "timestamp": "2025-07-21T00:44:05.564752"
+    },
+    {
+      "test": "Backend Server",
+      "status": "PASS",
+      "message": "Django server running on http://localhost:8000",
+      "timestamp": "2025-07-21T00:44:05.645414"
+    },
+    {
+      "test": "Frontend Server",
+      "status": "PASS",
+      "message": "Next.js server running on http://localhost:3000",
+      "timestamp": "2025-07-21T00:44:06.763549"
+    },
+    {
+      "test": "User Registration",
+      "status": "WARN",
+      "message": "Validation error (expected)",
+      "timestamp": "2025-07-21T00:44:07.315751"
+    },
+    {
+      "test": "User Login",
+      "status": "PASS",
+      "message": "Login endpoint working",
+      "timestamp": "2025-07-21T00:44:09.135303"
+    },
+    {
+      "test": "User Profile",
+      "status": "PASS",
+      "message": "Endpoint accessible with auth",
+      "timestamp": "2025-07-21T00:44:10.049168"
+    },
+    {
+      "test": "Video List",
+      "status": "PASS",
+      "message": "Endpoint accessible with auth",
+      "timestamp": "2025-07-21T00:44:10.870197"
+    },
+    {
+      "test": "Party List",
+      "status": "PASS",
+      "message": "Endpoint accessible with auth",
+      "timestamp": "2025-07-21T00:44:11.389103"
+    },
+    {
+      "test": "Dashboard Stats",
+      "status": "WARN",
+      "message": "Endpoint not found (may not be implemented)",
+      "timestamp": "2025-07-21T00:44:11.721666"
+    },
+    {
+      "test": "Notifications",
+      "status": "PASS",
+      "message": "Endpoint accessible with auth",
+      "timestamp": "2025-07-21T00:44:12.043183"
+    },
+    {
+      "test": "Token Refresh",
+      "status": "PASS",
+      "message": "Token refresh working",
+      "timestamp": "2025-07-21T00:44:12.427646"
+    },
+    {
+      "test": "API: Registration API",
+      "status": "PASS",
+      "message": "Endpoint accessible",
+      "timestamp": "2025-07-21T00:44:12.506337"
+    },
+    {
+      "test": "API: Login API",
+      "status": "PASS",
+      "message": "Endpoint accessible",
+      "timestamp": "2025-07-21T00:44:12.665023"
+    },
+    {
+      "test": "API: Public Videos",
+      "status": "PASS",
+      "message": "Endpoint accessible",
+      "timestamp": "2025-07-21T00:44:13.020032"
+    },
+    {
+      "test": "API: Public Parties",
+      "status": "PASS",
+      "message": "Endpoint accessible",
+      "timestamp": "2025-07-21T00:44:13.158901"
+    },
+    {
+      "test": "API: Subscription Plans",
+      "status": "WARN",
+      "message": "Endpoint not implemented",
+      "timestamp": "2025-07-21T00:44:13.415211"
+    },
+    {
+      "test": "Upload: Direct Upload",
+      "status": "WARN",
+      "message": "Upload endpoint not found",
+      "timestamp": "2025-07-21T00:44:13.672150"
+    },
+    {
+      "test": "Upload: S3 Upload",
+      "status": "WARN",
+      "message": "Upload endpoint not found",
+      "timestamp": "2025-07-21T00:44:13.933637"
+    },
+    {
+      "test": "Upload: Google Drive Upload",
+      "status": "WARN",
+      "message": "Upload endpoint not found",
+      "timestamp": "2025-07-21T00:44:14.113326"
+    },
+    {
+      "test": "Billing: Subscription Plans",
+      "status": "WARN",
+      "message": "Billing endpoint not implemented",
+      "timestamp": "2025-07-21T00:44:14.302447"
+    },
+    {
+      "test": "Billing: Current Subscription",
+      "status": "WARN",
+      "message": "Billing endpoint not implemented",
+      "timestamp": "2025-07-21T00:44:14.660361"
+    },
+    {
+      "test": "Billing: Payment Methods",
+      "status": "WARN",
+      "message": "Billing endpoint not implemented",
+      "timestamp": "2025-07-21T00:44:14.922269"
+    },
+    {
+      "test": "Billing: Billing History",
+      "status": "WARN",
+      "message": "Billing endpoint not implemented",
+      "timestamp": "2025-07-21T00:44:15.343118"
+    },
+    {
+      "test": "Docs: Swagger UI",
+      "status": "PASS",
+      "message": "Swagger UI accessible",
+      "timestamp": "2025-07-21T00:44:15.584086"
+    },
+    {
+      "test": "Docs: OpenAPI Schema",
+      "status": "PASS",
+      "message": "OpenAPI Schema accessible",
+      "timestamp": "2025-07-21T00:44:17.660640"
+    },
+    {
+      "test": "Docs: ReDoc",
+      "status": "PASS",
+      "message": "ReDoc accessible",
+      "timestamp": "2025-07-21T00:44:17.815275"
+    },
+    {
+      "test": "WebSocket Connection",
+      "status": "FAIL",
+      "message": "Connection error: server rejected WebSocket connection: HTTP 500",
+      "timestamp": "2025-07-21T00:44:18.333625"
+    }
+  ]
+}
