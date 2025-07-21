@@ -495,3 +495,52 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             notification.save()
         except Exception as e:
             logger.error(f"Error marking notification as read: {str(e)}")
+
+
+class TestWebSocketConsumer(AsyncWebsocketConsumer):
+    """Simple WebSocket consumer for testing purposes"""
+    
+    async def connect(self):
+        """Accept WebSocket connection for testing"""
+        await self.accept()
+        
+        # Send welcome message
+        await self.send(text_data=json.dumps({
+            'type': 'connection_established',
+            'message': 'WebSocket connection successful',
+            'timestamp': timezone.now().isoformat()
+        }))
+        
+        logger.info("Test WebSocket connection established")
+    
+    async def disconnect(self, close_code):
+        """Handle WebSocket disconnection"""
+        logger.info(f"Test WebSocket connection closed with code: {close_code}")
+    
+    async def receive(self, text_data):
+        """Handle incoming WebSocket messages"""
+        try:
+            data = json.loads(text_data)
+            message_type = data.get('type', 'message')
+            
+            # Echo back the message with some additional info
+            await self.send(text_data=json.dumps({
+                'type': 'echo',
+                'original_message': data,
+                'received_at': timezone.now().isoformat(),
+                'status': 'received'
+            }))
+            
+        except json.JSONDecodeError:
+            await self.send(text_data=json.dumps({
+                'type': 'error',
+                'error': 'Invalid JSON format',
+                'timestamp': timezone.now().isoformat()
+            }))
+        except Exception as e:
+            logger.error(f"Error in test WebSocket: {str(e)}")
+            await self.send(text_data=json.dumps({
+                'type': 'error',
+                'error': 'Internal server error',
+                'timestamp': timezone.now().isoformat()
+            }))
