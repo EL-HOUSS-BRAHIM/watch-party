@@ -1,7 +1,9 @@
 from django.urls import path
+from . import views
 
 app_name = 'notifications'
 
 urlpatterns = [
-    # Notification endpoints will be added here
+    # Basic notification endpoint
+    path('', views.NotificationListView.as_view(), name='notification_list'),
 ]
