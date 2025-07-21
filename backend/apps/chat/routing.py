@@ -10,4 +10,6 @@ websocket_urlpatterns = [
     path('ws/chat/<uuid:room_id>/', consumers.ChatConsumer.as_asgi()),
     path('ws/notifications/', consumers.NotificationConsumer.as_asgi()),
     path('ws/sync/<str:party_code>/', VideoSyncConsumer.as_asgi()),
+    # Test endpoint for system testing
+    path('ws/test/', consumers.TestWebSocketConsumer.as_asgi()),
 ]
