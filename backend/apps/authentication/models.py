@@ -45,6 +45,29 @@ class User(AbstractUser):
         if not self.is_premium or not self.subscription_expires:
             return False
         return self.subscription_expires > timezone.now()
+    
+    @property
+    def friends(self):
+        """Get all friends of this user"""
+        from apps.users.models import Friendship
+        from django.db.models import Q
+        
+        # Get all accepted friendships where this user is involved
+        friendships = Friendship.objects.filter(
+            Q(from_user=self, status='accepted') |
+            Q(to_user=self, status='accepted')
+        )
+        
+        # Extract friend user IDs
+        friend_ids = []
+        for friendship in friendships:
+            if friendship.from_user == self:
+                friend_ids.append(friendship.to_user.id)
+            else:
+                friend_ids.append(friendship.from_user.id)
+        
+        # Return queryset of friend users
+        return User.objects.filter(id__in=friend_ids)
 
 
 class UserProfile(models.Model):
