@@ -9,6 +9,9 @@ from . import views
 app_name = 'users'
 
 urlpatterns = [
+    # Dashboard stats
+    path('dashboard/stats/', views.DashboardStatsView.as_view(), name='dashboard_stats'),
+    
     # User profile management
     path('profile/', views.UserProfileView.as_view(), name='profile'),
     path('profile/update/', views.UpdateProfileView.as_view(), name='update_profile'),
