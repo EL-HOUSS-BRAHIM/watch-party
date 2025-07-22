@@ -1,8 +1,0 @@
-Collecting dj-database-url
-  Downloading dj_database_url-3.0.1-py3-none-any.whl.metadata (14 kB)
-Requirement already satisfied: Django>=4.2 in ./venv/lib/python3.13/site-packages (from dj-database-url) (5.0.14)
-Requirement already satisfied: asgiref<4,>=3.7.0 in ./venv/lib/python3.13/site-packages (from Django>=4.2->dj-database-url) (3.9.1)
-Requirement already satisfied: sqlparse>=0.3.1 in ./venv/lib/python3.13/site-packages (from Django>=4.2->dj-database-url) (0.5.3)
-Downloading dj_database_url-3.0.1-py3-none-any.whl (8.8 kB)
-Installing collected packages: dj-database-url
-Successfully installed dj-database-url-3.0.1
