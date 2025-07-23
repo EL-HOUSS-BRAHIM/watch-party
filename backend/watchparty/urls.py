@@ -7,8 +7,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from datetime import timedelta
+from django.utils import timezone
+from django.db.models import Q, Count
+from django.http import JsonResponse
 
 
 @api_view(['GET'])
@@ -34,30 +38,117 @@ def api_root(request):
         }
     })
 
-urlpatterns = [
-    # Admin
-    path('admin/', admin.site.urls),
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def test_endpoint(request):
+    """Test endpoint to verify server is working"""
+    return Response({
+        'message': 'Server is working!',
+        'authenticated': request.user.is_authenticated,
+        'user_id': request.user.id if request.user.is_authenticated else None,
+        'timestamp': timezone.now().isoformat()
+    })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def dashboard_stats(request):
+    """Dashboard statistics endpoint"""
+    from apps.parties.models import WatchParty
+    from apps.videos.models import Video
+    from apps.analytics.models import AnalyticsEvent
     
-    # API Root
-    path('api/', api_root, name='api_root'),
+    user = request.user
+    thirty_days_ago = timezone.now() - timedelta(days=30)
+    seven_days_ago = timezone.now() - timedelta(days=7)
     
-    # API Documentation
-    path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-    path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
-    path('api/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
+    # Get user's stats
+    user_parties = WatchParty.objects.filter(
+        Q(host=user) | Q(participants__user=user, participants__is_active=True)
+    ).distinct()
     
-    # API Endpoints
-    path('api/auth/', include('apps.authentication.urls')),
-    path('api/users/', include('apps.users.urls')),
-    path('api/videos/', include('apps.videos.urls')),
-    path('api/parties/', include('apps.parties.urls')),
-    path('api/chat/', include('apps.chat.urls')),
-    path('api/billing/', include('apps.billing.urls')),
-    path('api/analytics/', include('apps.analytics.urls')),
-    path('api/notifications/', include('apps.notifications.urls')),
-    path('api/integrations/', include('apps.integrations.urls')),
-    path('api/interactive/', include('apps.interactive.urls')),
-]
+    recent_parties = user_parties.filter(created_at__gte=thirty_days_ago).count()
+    total_parties = user_parties.count()
+    
+    user_videos = Video.objects.filter(uploaded_by=user)
+    recent_videos = user_videos.filter(created_at__gte=thirty_days_ago).count()
+    total_videos = user_videos.count()
+    
+    # Get watch time this week
+    watch_events = AnalyticsEvent.objects.filter(
+        user=user,
+        event_type='view_end',
+        timestamp__gte=seven_days_ago
+    ).aggregate(total_duration=Count('duration'))
+    
+    return Response({
+        'user': {
+            'id': user.id,
+            'name': user.get_full_name(),
+            'email': user.email,
+        },
+        'stats': {
+            'total_parties': total_parties,
+            'recent_parties': recent_parties,
+            'total_videos': total_videos,
+            'recent_videos': recent_videos,
+            'watch_time_minutes': 0,  # Will be calculated from analytics
+        },
+        'timestamp': timezone.now().isoformat()
+    })
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def activities_recent(request):
+    """Recent activities endpoint"""
+    from apps.analytics.models import AnalyticsEvent
+    
+    user = request.user
+    seven_days_ago = timezone.now() - timedelta(days=7)
+    
+    recent_events = AnalyticsEvent.objects.filter(
+        user=user,
+        timestamp__gte=seven_days_ago
+    ).order_by('-timestamp')[:20]
+    
+    activities = []
+    for event in recent_events:
+        activity = {
+            'id': event.id,
+            'type': event.event_type,
+            'timestamp': event.timestamp.isoformat(),
+            'data': event.event_data
+        }
+        
+        if event.party:
+            activity['party'] = {
+                'id': event.party.id,
+                'title': event.party.title
+            }
+        
+        if event.video:
+            activity['video'] = {
+                'id': event.video.id,
+                'title': event.video.title
+            }
+        
+        activities.append(activity)
+    
+    return Response({
+        'activities': activities,
+        'total': len(activities)
+    })
+
+
+def redirect_to_api(request, endpoint_name, correct_path):
+    """Redirect old endpoint calls to correct API paths"""
+    return JsonResponse({
+        'error': f'Please use {correct_path} instead of /{endpoint_name}/',
+        'correct_url': correct_path,
+        'message': 'This endpoint has moved to the /api/ prefix'
+    }, status=301)
 
 # Serve media files in development
 if settings.DEBUG:
