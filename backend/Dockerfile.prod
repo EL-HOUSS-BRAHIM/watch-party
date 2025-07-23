@@ -1,0 +1,53 @@
+# Production Dockerfile for Django backend
+FROM python:3.11-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    git \
+    libpq-dev \
+    libffi-dev \
+    libssl-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory
+WORKDIR /app
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Create non-root user
+RUN groupadd -r watchparty && useradd -r -g watchparty watchparty
+
+# Copy application code
+COPY . .
+
+# Create necessary directories
+RUN mkdir -p /app/staticfiles /app/media /app/logs /app/celerybeat && \
+    chown -R watchparty:watchparty /app
+
+# Switch to non-root user
+USER watchparty
+
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health/ || exit 1
+
+# Expose port
+EXPOSE 8000
+
+# Default command
+CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "watchparty.asgi:application"]
