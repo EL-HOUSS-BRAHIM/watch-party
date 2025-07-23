@@ -6,7 +6,7 @@ import uuid
 from datetime import timedelta
 from django.utils import timezone
 from django.db.models import Q, F
-from django.http import Http404, FileResponse, HttpResponse
+from django.http import Http404, FileResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from rest_framework import status, generics, permissions, filters
 from rest_framework.decorators import action
@@ -337,3 +337,389 @@ class VideoSearchView(APIView):
             })
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GoogleDriveMoviesView(APIView):
+    """Manage movies from Google Drive"""
+    
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        """List movies from user's Google Drive"""
+        try:
+            from utils.google_drive_service import get_drive_service
+            
+            # Check if user has Google Drive connected
+            if not hasattr(request.user, 'profile') or not request.user.profile.google_drive_connected:
+                return Response({
+                    'success': False,
+                    'message': 'Google Drive not connected'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Get Drive service
+            drive_service = get_drive_service(request.user)
+            
+            # Get folder ID
+            folder_id = request.user.profile.google_drive_folder_id
+            
+            # List videos from Google Drive
+            videos = drive_service.list_videos(folder_id=folder_id)
+            
+            # Convert to our video format and check if already in database
+            movies = []
+            for video_data in videos:
+                # Check if video already exists in our database
+                existing_video = Video.objects.filter(
+                    gdrive_file_id=video_data['id'],
+                    uploader=request.user
+                ).first()
+                
+                movie_data = {
+                    'gdrive_file_id': video_data['id'],
+                    'title': video_data['name'],
+                    'size': video_data['size'],
+                    'mime_type': video_data['mime_type'],
+                    'thumbnail_url': video_data['thumbnail_url'],
+                    'duration': video_data.get('duration'),
+                    'resolution': video_data.get('resolution'),
+                    'created_time': video_data['created_time'],
+                    'modified_time': video_data['modified_time'],
+                    'in_database': existing_video is not None,
+                    'video_id': str(existing_video.id) if existing_video else None
+                }
+                movies.append(movie_data)
+            
+            return Response({
+                'success': True,
+                'movies': movies,
+                'count': len(movies)
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'message': f'Failed to list movies: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def post(self, request):
+        """Add a Google Drive movie to our database"""
+        try:
+            from utils.google_drive_service import get_drive_service
+            
+            gdrive_file_id = request.data.get('gdrive_file_id')
+            title = request.data.get('title')
+            visibility = request.data.get('visibility', 'private')
+            
+            if not gdrive_file_id:
+                return Response({
+                    'success': False,
+                    'message': 'Google Drive file ID is required'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Check if video already exists
+            if Video.objects.filter(gdrive_file_id=gdrive_file_id, uploader=request.user).exists():
+                return Response({
+                    'success': False,
+                    'message': 'Movie already added to your library'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Get Drive service
+            drive_service = get_drive_service(request.user)
+            
+            # Get file info from Google Drive
+            file_info = drive_service.get_file_info(gdrive_file_id)
+            
+            # Create video record
+            video = Video.objects.create(
+                title=title or file_info['name'],
+                uploader=request.user,
+                source_type='gdrive',
+                gdrive_file_id=gdrive_file_id,
+                gdrive_download_url=file_info.get('download_url', ''),
+                gdrive_mime_type=file_info['mime_type'],
+                file_size=file_info['size'],
+                visibility=visibility,
+                status='ready'
+            )
+            
+            # Extract video metadata if available
+            if 'video_metadata' in file_info and file_info['video_metadata']:
+                metadata = file_info['video_metadata']
+                if 'durationMillis' in metadata:
+                    duration_ms = int(metadata['durationMillis'])
+                    video.duration = timedelta(milliseconds=duration_ms)
+                
+                if 'width' in metadata and 'height' in metadata:
+                    video.resolution = f"{metadata['width']}x{metadata['height']}"
+                
+                video.save()
+            
+            serializer = VideoSerializer(video, context={'request': request})
+            
+            return Response({
+                'success': True,
+                'message': 'Movie added successfully',
+                'video': serializer.data
+            }, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'message': f'Failed to add movie: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class GoogleDriveMovieUploadView(APIView):
+    """Upload movies to Google Drive"""
+    
+    permission_classes = [permissions.IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+    
+    def post(self, request):
+        """Upload a movie to Google Drive"""
+        try:
+            from utils.google_drive_service import get_drive_service
+            import tempfile
+            import os
+            
+            # Check if user has Google Drive connected
+            if not hasattr(request.user, 'profile') or not request.user.profile.google_drive_connected:
+                return Response({
+                    'success': False,
+                    'message': 'Google Drive not connected'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            uploaded_file = request.FILES.get('file')
+            title = request.data.get('title')
+            visibility = request.data.get('visibility', 'private')
+            
+            if not uploaded_file:
+                return Response({
+                    'success': False,
+                    'message': 'No file provided'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Save file temporarily
+            with tempfile.NamedTemporaryFile(delete=False, suffix=f'_{uploaded_file.name}') as temp_file:
+                for chunk in uploaded_file.chunks():
+                    temp_file.write(chunk)
+                temp_file_path = temp_file.name
+            
+            try:
+                # Get Drive service
+                drive_service = get_drive_service(request.user)
+                
+                # Get folder ID
+                folder_id = request.user.profile.google_drive_folder_id
+                
+                # Upload to Google Drive
+                upload_result = drive_service.upload_file(
+                    file_path=temp_file_path,
+                    name=title or uploaded_file.name,
+                    folder_id=folder_id
+                )
+                
+                # Create video record
+                video = Video.objects.create(
+                    title=title or uploaded_file.name,
+                    uploader=request.user,
+                    source_type='gdrive',
+                    gdrive_file_id=upload_result['id'],
+                    gdrive_mime_type=upload_result['mime_type'],
+                    file_size=upload_result['size'],
+                    visibility=visibility,
+                    status='ready'
+                )
+                
+                serializer = VideoSerializer(video, context={'request': request})
+                
+                return Response({
+                    'success': True,
+                    'message': 'Movie uploaded successfully',
+                    'video': serializer.data
+                }, status=status.HTTP_201_CREATED)
+                
+            finally:
+                # Clean up temporary file
+                if os.path.exists(temp_file_path):
+                    os.unlink(temp_file_path)
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'message': f'Failed to upload movie: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class GoogleDriveMovieDeleteView(APIView):
+    """Delete movies from Google Drive"""
+    
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def delete(self, request, video_id):
+        """Delete a movie from Google Drive and our database"""
+        try:
+            from utils.google_drive_service import get_drive_service
+            
+            # Get video
+            video = get_object_or_404(Video, id=video_id, uploader=request.user, source_type='gdrive')
+            
+            # Get Drive service
+            drive_service = get_drive_service(request.user)
+            
+            # Delete from Google Drive
+            if video.gdrive_file_id:
+                success = drive_service.delete_file(video.gdrive_file_id)
+                if not success:
+                    return Response({
+                        'success': False,
+                        'message': 'Failed to delete from Google Drive'
+                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            # Delete from our database
+            video.delete()
+            
+            return Response({
+                'success': True,
+                'message': 'Movie deleted successfully'
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'message': f'Failed to delete movie: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class GoogleDriveMovieStreamView(APIView):
+    """Stream movies from Google Drive"""
+    
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request, video_id):
+        """Get streaming URL for a Google Drive movie"""
+        try:
+            from utils.google_drive_service import get_drive_service
+            
+            # Get video
+            video = get_object_or_404(Video, id=video_id, source_type='gdrive')
+            
+            # Check permissions
+            if video.visibility == 'private' and video.uploader != request.user:
+                return Response({
+                    'success': False,
+                    'message': 'Access denied'
+                }, status=status.HTTP_403_FORBIDDEN)
+            elif video.visibility == 'friends':
+                if video.uploader != request.user and not video.uploader.friends.filter(id=request.user.id).exists():
+                    return Response({
+                        'success': False,
+                        'message': 'Access denied'
+                    }, status=status.HTTP_403_FORBIDDEN)
+            
+            # Check premium requirement
+            if video.require_premium and not request.user.is_subscription_active:
+                return Response({
+                    'success': False,
+                    'message': 'Premium subscription required'
+                }, status=status.HTTP_402_PAYMENT_REQUIRED)
+            
+            # Get Drive service
+            drive_service = get_drive_service(video.uploader)
+            
+            # Get streaming URL
+            streaming_url = drive_service.generate_streaming_url(video.gdrive_file_id)
+            
+            # Record view
+            VideoView.objects.create(
+                video=video,
+                user=request.user,
+                ip_address=self.get_client_ip(request),
+                user_agent=request.META.get('HTTP_USER_AGENT', '')
+            )
+            
+            # Update view count
+            Video.objects.filter(id=video.id).update(view_count=F('view_count') + 1)
+            
+            return Response({
+                'success': True,
+                'streaming_url': streaming_url,
+                'video': VideoDetailSerializer(video, context={'request': request}).data
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'message': f'Failed to get streaming URL: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            return x_forwarded_for.split(',')[0]
+        return request.META.get('REMOTE_ADDR')
+
+
+class VideoProxyView(APIView):
+    """Proxy video requests to avoid CORS issues"""
+    
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request, video_id):
+        """Proxy video stream from Google Drive"""
+        try:
+            import requests
+            from django.http import StreamingHttpResponse
+            from utils.google_drive_service import get_drive_service
+            
+            # Get video
+            video = get_object_or_404(Video, id=video_id, source_type='gdrive')
+            
+            # Check permissions (same as streaming view)
+            if video.visibility == 'private' and video.uploader != request.user:
+                return Response({'error': 'Access denied'}, status=status.HTTP_403_FORBIDDEN)
+            elif video.visibility == 'friends':
+                if video.uploader != request.user and not video.uploader.friends.filter(id=request.user.id).exists():
+                    return Response({'error': 'Access denied'}, status=status.HTTP_403_FORBIDDEN)
+            
+            # Check premium requirement
+            if video.require_premium and not request.user.is_subscription_active:
+                return Response({'error': 'Premium subscription required'}, status=status.HTTP_402_PAYMENT_REQUIRED)
+            
+            # Get Drive service
+            drive_service = get_drive_service(video.uploader)
+            
+            # Get download URL
+            download_url = drive_service.get_download_url(video.gdrive_file_id)
+            
+            # Set up headers for range requests
+            headers = {}
+            if 'Range' in request.headers:
+                headers['Range'] = request.headers['Range']
+            
+            # Make request to Google Drive
+            response = requests.get(download_url, headers=headers, stream=True)
+            
+            # Create streaming response
+            def generate():
+                for chunk in response.iter_content(chunk_size=8192):
+                    if chunk:
+                        yield chunk
+            
+            streaming_response = StreamingHttpResponse(
+                generate(),
+                content_type=response.headers.get('Content-Type', 'video/mp4'),
+                status=response.status_code
+            )
+            
+            # Copy relevant headers
+            for header in ['Content-Length', 'Content-Range', 'Accept-Ranges']:
+                if header in response.headers:
+                    streaming_response[header] = response.headers[header]
+            
+            return streaming_response
+            
+        except Exception as e:
+            return Response({
+                'error': f'Failed to proxy video: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
