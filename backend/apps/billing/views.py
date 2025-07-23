@@ -451,7 +451,7 @@ class InvoiceDownloadView(generics.GenericAPIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
-class BillingAddressView(generics.RetrieveUpdateCreateAPIView):
+class BillingAddressView(generics.RetrieveUpdateAPIView):
     """Get and update billing address"""
     
     serializer_class = BillingAddressSerializer
