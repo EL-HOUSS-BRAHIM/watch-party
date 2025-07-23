@@ -9,6 +9,7 @@ app_name = 'analytics'
 
 urlpatterns = [
     # Standard analytics endpoints
+    path('', views.AdminAnalyticsView.as_view(), name='analytics'),  # Default analytics endpoint
     path('user-stats/', views.UserStatsView.as_view(), name='user-stats'),
     path('party-stats/<uuid:party_id>/', views.PartyStatsView.as_view(), name='party-stats'),
     path('admin/analytics/', views.AdminAnalyticsView.as_view(), name='admin-analytics'),
