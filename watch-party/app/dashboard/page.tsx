@@ -10,17 +10,17 @@ import { api } from "@/lib/api"
 export default function DashboardPage() {
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ["dashboard-stats"],
-    queryFn: () => api.get("/dashboard/stats"),
+    queryFn: () => api.get("/api/users/dashboard/stats"),
   })
 
   const { data: recentParties, isLoading: partiesLoading } = useQuery({
     queryKey: ["recent-parties"],
-    queryFn: () => api.get("/parties/recent"),
+    queryFn: () => api.get("/api/parties/recent"),
   })
 
   const { data: activities, isLoading: activitiesLoading } = useQuery({
     queryKey: ["activities"],
-    queryFn: () => api.get("/activities/recent"),
+    queryFn: () => api.get("/api/users/activity"),
   })
 
   return (
