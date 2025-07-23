@@ -46,10 +46,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     try {
       const response = await authService.login(email, password)
-      const { access, refresh, user } = response
+      const { access_token, refresh_token, user } = response
 
-      localStorage.setItem("auth_token", access)
-      localStorage.setItem("refresh_token", refresh)
+      localStorage.setItem("auth_token", access_token)
+      localStorage.setItem("refresh_token", refresh_token)
       setUser(user)
     } catch (error: any) {
       throw new Error(error.response?.data?.detail || "Login failed")
@@ -59,10 +59,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (email: string, password: string, firstName: string, lastName: string) => {
     try {
       const response = await authService.register(email, password, firstName, lastName)
-      const { access, refresh, user } = response
+      const { access_token, refresh_token, user } = response
 
-      localStorage.setItem("auth_token", access)
-      localStorage.setItem("refresh_token", refresh)
+      localStorage.setItem("auth_token", access_token)
+      localStorage.setItem("refresh_token", refresh_token)
       setUser(user)
     } catch (error: any) {
       throw new Error(error.response?.data?.detail || "Registration failed")
@@ -85,8 +85,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refreshUser = async () => {
     try {
       setIsLoading(true)
-      const userData = await authService.getProfile()
-      setUser(userData)
+      const response = await authService.getProfile()
+      setUser(response)
     } catch (error) {
       console.error("Failed to refresh user:", error)
       localStorage.removeItem("auth_token")
