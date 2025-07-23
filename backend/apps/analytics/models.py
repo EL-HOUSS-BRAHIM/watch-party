@@ -12,6 +12,162 @@ from apps.videos.models import Video
 User = get_user_model()
 
 
+class UserSession(models.Model):
+    """User session tracking"""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sessions', null=True, blank=True)
+    session_id = models.CharField(max_length=100, unique=True, verbose_name='Session ID')
+    
+    # Session details
+    start_time = models.DateTimeField(verbose_name='Session Start Time')
+    end_time = models.DateTimeField(null=True, blank=True, verbose_name='Session End Time')
+    duration = models.PositiveIntegerField(null=True, blank=True, verbose_name='Duration (seconds)')
+    
+    # Device and location information
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.TextField(blank=True, verbose_name='User Agent')
+    device_type = models.CharField(max_length=50, blank=True, verbose_name='Device Type')
+    browser = models.CharField(max_length=50, blank=True, verbose_name='Browser')
+    os = models.CharField(max_length=50, blank=True, verbose_name='Operating System')
+    
+    class Meta:
+        db_table = 'user_sessions'
+        verbose_name = 'User Session'
+        verbose_name_plural = 'User Sessions'
+        ordering = ['-start_time']
+        indexes = [
+            models.Index(fields=['user', 'start_time']),
+            models.Index(fields=['session_id']),
+        ]
+        
+    def __str__(self):
+        user_str = self.user.get_full_name() if self.user else 'Anonymous'
+        return f"{user_str} session on {self.start_time}"
+
+
+class WatchTime(models.Model):
+    """Track user watch time for videos"""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='watch_times')
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='watch_times')
+    party = models.ForeignKey(WatchParty, on_delete=models.CASCADE, related_name='watch_times', null=True, blank=True)
+    
+    # Watch time details
+    total_watch_time = models.PositiveIntegerField(default=0, verbose_name='Total Watch Time (seconds)')
+    last_position = models.PositiveIntegerField(default=0, verbose_name='Last Position (seconds)')
+    completion_percentage = models.FloatField(default=0.0, verbose_name='Completion Percentage')
+    
+    # Quality and performance
+    average_quality = models.CharField(max_length=10, blank=True, verbose_name='Average Quality')
+    buffering_events = models.PositiveIntegerField(default=0, verbose_name='Buffering Events')
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'watch_times'
+        verbose_name = 'Watch Time'
+        verbose_name_plural = 'Watch Times'
+        unique_together = ['user', 'video', 'party']
+        indexes = [
+            models.Index(fields=['user', 'created_at']),
+            models.Index(fields=['video', 'created_at']),
+            models.Index(fields=['party', 'created_at']),
+        ]
+        
+    def __str__(self):
+        return f"{self.user.get_full_name()} watched {self.video.title}"
+
+
+class PartyAnalytics(models.Model):
+    """Watch party analytics"""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    party = models.OneToOneField(WatchParty, on_delete=models.CASCADE, related_name='analytics')
+    
+    # Participant statistics
+    total_participants = models.PositiveIntegerField(default=0, verbose_name='Total Participants')
+    peak_concurrent_participants = models.PositiveIntegerField(default=0, verbose_name='Peak Concurrent Participants')
+    avg_session_duration = models.FloatField(default=0.0, verbose_name='Average Session Duration (seconds)')
+    
+    # Engagement statistics
+    total_messages = models.PositiveIntegerField(default=0, verbose_name='Total Chat Messages')
+    total_reactions = models.PositiveIntegerField(default=0, verbose_name='Total Reactions')
+    
+    # Performance metrics
+    sync_issues = models.PositiveIntegerField(default=0, verbose_name='Sync Issues')
+    buffering_events = models.PositiveIntegerField(default=0, verbose_name='Buffering Events')
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'party_analytics'
+        verbose_name = 'Party Analytics'
+        verbose_name_plural = 'Party Analytics'
+        
+    def __str__(self):
+        return f"Analytics for {self.party.title}"
+
+
+class AnalyticsEvent(models.Model):
+    """Individual analytics events"""
+    
+    EVENT_TYPES = [
+        ('video_play', 'Video Play'),
+        ('video_pause', 'Video Pause'),
+        ('video_seek', 'Video Seek'),
+        ('party_join', 'Party Join'),
+        ('party_leave', 'Party Leave'),
+        ('chat_message', 'Chat Message'),
+        ('reaction_sent', 'Reaction Sent'),
+        ('user_login', 'User Login'),
+        ('user_logout', 'User Logout'),
+        ('video_upload', 'Video Upload'),
+        ('party_create', 'Party Create'),
+        ('buffering', 'Video Buffering'),
+        ('error', 'Error Occurred'),
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='analytics_events', null=True, blank=True)
+    
+    # Event details
+    event_type = models.CharField(max_length=50, choices=EVENT_TYPES)
+    event_data = models.JSONField(default=dict, verbose_name='Event Data')
+    
+    # Session information
+    session_id = models.CharField(max_length=100, blank=True, verbose_name='Session ID')
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    user_agent = models.TextField(blank=True, verbose_name='User Agent')
+    
+    # Processing status
+    processed = models.BooleanField(default=False, verbose_name='Processed')
+    
+    # Timestamp
+    timestamp = models.DateTimeField(default=timezone.now, verbose_name='Event Timestamp')
+    
+    class Meta:
+        db_table = 'analytics_events'
+        verbose_name = 'Analytics Event'
+        verbose_name_plural = 'Analytics Events'
+        ordering = ['-timestamp']
+        indexes = [
+            models.Index(fields=['user', 'timestamp']),
+            models.Index(fields=['event_type', 'timestamp']),
+            models.Index(fields=['processed', 'timestamp']),
+            models.Index(fields=['session_id']),
+        ]
+        
+    def __str__(self):
+        user_str = self.user.get_full_name() if self.user else 'Anonymous'
+        return f"{user_str} - {self.event_type} at {self.timestamp}"
+
+
 class UserAnalytics(models.Model):
     """User analytics and statistics"""
     
@@ -54,7 +210,7 @@ class UserAnalytics(models.Model):
         verbose_name_plural = 'User Analytics'
         
     def __str__(self):
-        return f"Analytics for {self.user.full_name}"
+        return f"Analytics for {self.user.get_full_name()}"
     
     @property
     def total_watch_time_hours(self):
@@ -82,70 +238,6 @@ class UserAnalytics(models.Model):
         self.this_month_parties_joined = 0
         self.this_month_messages_sent = 0
         self.save()
-
-
-class PartyAnalytics(models.Model):
-    """Watch party analytics and statistics"""
-    
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    party = models.OneToOneField(WatchParty, on_delete=models.CASCADE, related_name='analytics')
-    
-    # Viewer statistics
-    total_viewers = models.PositiveIntegerField(default=0, verbose_name='Total Unique Viewers')
-    peak_concurrent_viewers = models.PositiveIntegerField(default=0, verbose_name='Peak Concurrent Viewers')
-    average_viewers = models.FloatField(default=0.0, verbose_name='Average Concurrent Viewers')
-    
-    # Duration statistics
-    total_duration_minutes = models.PositiveIntegerField(default=0, verbose_name='Total Duration (minutes)')
-    actual_watch_duration_minutes = models.PositiveIntegerField(default=0, verbose_name='Actual Watch Duration (minutes)')
-    pause_time_minutes = models.PositiveIntegerField(default=0, verbose_name='Total Pause Time (minutes)')
-    
-    # Engagement statistics
-    total_chat_messages = models.PositiveIntegerField(default=0, verbose_name='Total Chat Messages')
-    total_reactions = models.PositiveIntegerField(default=0, verbose_name='Total Reactions')
-    average_messages_per_viewer = models.FloatField(default=0.0, verbose_name='Average Messages Per Viewer')
-    
-    # Join/leave statistics
-    total_joins = models.PositiveIntegerField(default=0, verbose_name='Total Joins')
-    total_leaves = models.PositiveIntegerField(default=0, verbose_name='Total Leaves')
-    completion_rate = models.FloatField(default=0.0, verbose_name='Completion Rate (%)')
-    
-    # Quality metrics
-    buffering_events = models.PositiveIntegerField(default=0, verbose_name='Total Buffering Events')
-    sync_issues = models.PositiveIntegerField(default=0, verbose_name='Synchronization Issues')
-    technical_problems = models.PositiveIntegerField(default=0, verbose_name='Technical Problems Reported')
-    
-    # Timestamps
-    created_at = models.DateTimeField(default=timezone.now, verbose_name='Created At')
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='Updated At')
-    
-    class Meta:
-        db_table = 'party_analytics'
-        verbose_name = 'Party Analytics'
-        verbose_name_plural = 'Party Analytics'
-        
-    def __str__(self):
-        return f"Analytics for {self.party.title}"
-    
-    @property
-    def engagement_score(self):
-        """Calculate engagement score based on various metrics"""
-        if self.total_viewers == 0:
-            return 0
-        
-        # Weighted score based on different factors
-        chat_score = min((self.total_chat_messages / self.total_viewers) * 10, 50)  # Max 50 points
-        reaction_score = min((self.total_reactions / self.total_viewers) * 5, 25)    # Max 25 points
-        completion_score = min(self.completion_rate * 0.25, 25)                     # Max 25 points
-        
-        return round(chat_score + reaction_score + completion_score, 2)
-    
-    @property
-    def average_session_duration(self):
-        """Calculate average session duration"""
-        if self.total_joins == 0:
-            return 0
-        return round(self.actual_watch_duration_minutes / self.total_joins, 2)
 
 
 class VideoAnalytics(models.Model):
@@ -231,60 +323,6 @@ class VideoAnalytics(models.Model):
         """Reset monthly statistics"""
         self.this_month_views = 0
         self.save()
-
-
-class AnalyticsEvent(models.Model):
-    """Individual analytics events for detailed tracking"""
-    
-    EVENT_TYPES = [
-        ('view_start', 'Video View Started'),
-        ('view_end', 'Video View Ended'),
-        ('party_join', 'Party Joined'),
-        ('party_leave', 'Party Left'),
-        ('chat_message', 'Chat Message Sent'),
-        ('reaction_sent', 'Reaction Sent'),
-        ('video_upload', 'Video Uploaded'),
-        ('friend_request', 'Friend Request Sent'),
-        ('buffering', 'Video Buffering'),
-        ('quality_change', 'Quality Changed'),
-        ('sync_issue', 'Synchronization Issue'),
-        ('error_occurred', 'Error Occurred'),
-    ]
-    
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='analytics_events', null=True, blank=True)
-    party = models.ForeignKey(WatchParty, on_delete=models.CASCADE, related_name='analytics_events', null=True, blank=True)
-    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='analytics_events', null=True, blank=True)
-    
-    # Event details
-    event_type = models.CharField(max_length=50, choices=EVENT_TYPES)
-    event_data = models.JSONField(default=dict, verbose_name='Event Data')
-    
-    # Session information
-    session_id = models.CharField(max_length=100, verbose_name='Session ID')
-    ip_address = models.GenericIPAddressField(null=True, blank=True)
-    user_agent = models.TextField(blank=True, verbose_name='User Agent')
-    
-    # Timing information
-    timestamp = models.DateTimeField(default=timezone.now, verbose_name='Event Timestamp')
-    duration = models.DurationField(null=True, blank=True, verbose_name='Event Duration')
-    
-    class Meta:
-        db_table = 'analytics_events'
-        verbose_name = 'Analytics Event'
-        verbose_name_plural = 'Analytics Events'
-        ordering = ['-timestamp']
-        indexes = [
-            models.Index(fields=['user', 'timestamp']),
-            models.Index(fields=['party', 'timestamp']),
-            models.Index(fields=['video', 'timestamp']),
-            models.Index(fields=['event_type', 'timestamp']),
-            models.Index(fields=['session_id']),
-        ]
-        
-    def __str__(self):
-        user_str = self.user.full_name if self.user else 'Anonymous'
-        return f"{user_str} - {self.event_type} at {self.timestamp}"
 
 
 class SystemAnalytics(models.Model):
