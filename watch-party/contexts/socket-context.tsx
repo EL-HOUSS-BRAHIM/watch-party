@@ -29,7 +29,10 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     if (!isAuthenticated || !user) return
 
     const token = localStorage.getItem("auth_token")
-    if (!token) return
+    if (!token) {
+      console.warn("No auth token found, cannot connect to WebSocket")
+      return
+    }
 
     try {
       const endpoint = partyId 
@@ -173,7 +176,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
         socket.close(1000, "Component unmounting")
       }
     }
-  }, [isAuthenticated, user])
+  }, [isAuthenticated, user]) // Fixed: removed socket dependency to prevent infinite re-renders
 
   return (
     <SocketContext.Provider
