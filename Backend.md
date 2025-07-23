@@ -35,6 +35,8 @@ The Watch Party Backend is a high-performance Django application built with Pyth
 - 🔒 **Security** - Rate limiting, CORS, and comprehensive validation
 - 🏗️ **Scalable Architecture** - Microservices-ready design
 
+> **Compatibility:** Designed to work seamlessly with the [Next.js 15 frontend](https://nextjs.org/docs).
+
 ---
 
 ## 🛠 Tech Stack
@@ -54,6 +56,11 @@ The Watch Party Backend is a high-performance Django application built with Pyth
 - **Email:** SendGrid/SMTP
 - **Monitoring:** Sentry, New Relic
 - **CDN:** CloudFlare/AWS CloudFront
+
+### Frontend Integration
+- **Real-time Communication:** Socket.IO for chat and video sync
+- **State Management:** TanStack Query for data fetching and caching
+- **Styling:** Tailwind CSS for utility-first styling
 
 ### Development & DevOps
 - **API Documentation:** Django REST Swagger
@@ -1480,72 +1487,6 @@ class GoogleDriveService:
                 fileId=file_id,
                 fields='permissions(id,emailAddress,role)'
             ).execute()
-            
-            # Check if file is publicly accessible or user has access
-            for permission in permissions.get('permissions', []):
-                if permission.get('id') == 'anyoneWithLink':
-                    return True
-                if user_email and permission.get('emailAddress') == user_email:
-                    return True
-            
-            return False
-        except HttpError as error:
-            return False
-
-    def create_public_link(self, file_id):
-        """Make file publicly accessible and return link"""
-        try:
-            permission = {
-                'role': 'reader',
-                'type': 'anyone'
-            }
-            
-            self.service.permissions().create(
-                fileId=file_id,
-                body=permission
-            ).execute()
-            
-            file_metadata = self.service.files().get(
-                fileId=file_id,
-                fields='webViewLink'
-            ).execute()
-            
-            return file_metadata.get('webViewLink')
-        except HttpError as error:
-            raise Exception(f'Failed to create public link: {error}')
-
-class GoogleDriveVideoUploader:
-    """Handle video uploads to Google Drive"""
-    
-    @staticmethod
-    def extract_file_id_from_url(drive_url):
-        """Extract file ID from Google Drive URL"""
-        import re
-        
-        patterns = [
-            r'/file/d/([a-zA-Z0-9-_]+)',
-            r'id=([a-zA-Z0-9-_]+)',
-            r'/d/([a-zA-Z0-9-_]+)'
-        ]
-        
-        for pattern in patterns:
-            match = re.search(pattern, drive_url)
-            if match:
-                return match.group(1)
-        
-        return None
-
-    @staticmethod
-    def validate_drive_video(drive_url):
-        """Validate Google Drive video URL and return metadata"""
-        file_id = GoogleDriveVideoUploader.extract_file_id_from_url(drive_url)
-        if not file_id:
-            raise Exception('Invalid Google Drive URL')
-        
-        drive_service = GoogleDriveService()
-        
-        try:
-            metadata = drive_service.get_file_metadata(file_id)
             
             # Check if it's a video file
             mime_type = metadata.get('mimeType', '')
