@@ -9,7 +9,7 @@ import { api } from "@/lib/api"
 export default function AnalyticsPage() {
   const { data: analytics, isLoading } = useQuery({
     queryKey: ["analytics"],
-    queryFn: () => api.get("/analytics"),
+    queryFn: () => api.get("/api/analytics/"),
   })
 
   const mockData = {
