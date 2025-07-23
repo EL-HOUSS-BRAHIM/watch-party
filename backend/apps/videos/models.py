@@ -57,6 +57,11 @@ class Video(models.Model):
     source_url = models.URLField(blank=True, verbose_name='Source URL')
     source_id = models.CharField(max_length=255, blank=True, verbose_name='External Source ID')
     
+    # Google Drive specific fields
+    gdrive_file_id = models.CharField(max_length=255, blank=True, verbose_name='Google Drive File ID')
+    gdrive_download_url = models.URLField(blank=True, verbose_name='Google Drive Download URL')
+    gdrive_mime_type = models.CharField(max_length=100, blank=True, verbose_name='Google Drive MIME Type')
+    
     # Metadata
     resolution = models.CharField(max_length=20, blank=True, verbose_name='Resolution')
     codec = models.CharField(max_length=50, blank=True, verbose_name='Video Codec')
