@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { VideoPlayer } from "@/components/video/video-player"
+import { SynchronizedVideoPlayer } from "@/components/video/synchronized-player"
 import { ChatBox } from "@/components/chat/chat-box"
 import { ParticipantsList } from "@/components/watch-party/participants-list"
 import { PartyControls } from "@/components/watch-party/party-controls"
@@ -28,6 +28,7 @@ export function WatchPartyRoom({ party }: WatchPartyRoomProps) {
   }, [socket, party.id, joinRoom, leaveRoom])
 
   const isHost = user?.id === party.host_id
+  const canControl = isHost || party.allow_participant_control
 
   return (
     <div className="min-h-screen bg-background">
@@ -36,7 +37,14 @@ export function WatchPartyRoom({ party }: WatchPartyRoomProps) {
         <div className="flex-1 flex flex-col">
           {/* Video Player */}
           <div className="flex-1 bg-black relative">
-            <VideoPlayer src={party.video_url} poster={party.thumbnail} roomId={party.id} isHost={isHost} />
+            <SynchronizedVideoPlayer
+              partyId={party.id}
+              streamingUrl={party.video_url}
+              gdriveFileId={party.gdrive_file_id}
+              movieTitle={party.selected_movie?.title || party.title}
+              isHost={isHost}
+              canControl={canControl}
+            />
 
             {/* Video Overlay Controls */}
             <div className="absolute top-4 right-4 flex gap-2">
@@ -67,6 +75,11 @@ export function WatchPartyRoom({ party }: WatchPartyRoomProps) {
               <div>
                 <h1 className="text-xl font-bold text-text-primary">{party.title}</h1>
                 <p className="text-text-secondary">{party.description}</p>
+                {party.selected_movie && (
+                  <p className="text-sm text-text-secondary mt-1">
+                    Now playing: {party.selected_movie.title}
+                  </p>
+                )}
               </div>
 
               {isHost && <PartyControls partyId={party.id} />}
