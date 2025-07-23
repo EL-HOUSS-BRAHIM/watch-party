@@ -80,6 +80,13 @@ class UserProfile(models.Model):
     notification_preferences = models.JSONField(default=dict, verbose_name='Notification Preferences')
     social_links = models.JSONField(default=dict, verbose_name='Social Media Links')
     privacy_settings = models.JSONField(default=dict, verbose_name='Privacy Settings')
+    
+    # Drive integration fields
+    google_drive_token = models.TextField(blank=True, verbose_name='Google Drive Access Token')
+    google_drive_refresh_token = models.TextField(blank=True, verbose_name='Google Drive Refresh Token')
+    google_drive_connected = models.BooleanField(default=False, verbose_name='Google Drive Connected')
+    google_drive_folder_id = models.CharField(max_length=255, blank=True, verbose_name='Google Drive Folder ID')
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
