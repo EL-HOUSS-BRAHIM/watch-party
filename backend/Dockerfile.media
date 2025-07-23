@@ -1,0 +1,57 @@
+# Media processing Dockerfile with ffmpeg
+FROM python:3.11-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies including ffmpeg
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    git \
+    libpq-dev \
+    libffi-dev \
+    libssl-dev \
+    build-essential \
+    ffmpeg \
+    libavcodec-dev \
+    libavformat-dev \
+    libavutil-dev \
+    libswscale-dev \
+    libavfilter-dev \
+    imagemagick \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory
+WORKDIR /app
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Additional packages for media processing
+RUN pip install --no-cache-dir \
+    ffmpeg-python \
+    opencv-python-headless \
+    Pillow \
+    numpy
+
+# Create non-root user
+RUN groupadd -r watchparty && useradd -r -g watchparty watchparty
+
+# Copy application code
+COPY . .
+
+# Create processing directories
+RUN mkdir -p /app/media /tmp/processing && \
+    chown -R watchparty:watchparty /app /tmp/processing
+
+# Switch to non-root user
+USER watchparty
+
+# Default command for media processing
+CMD ["celery", "-A", "watchparty", "worker", "--loglevel=info", "--queues=video_processing,image_processing", "--concurrency=2"]
