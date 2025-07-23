@@ -88,6 +88,7 @@ class Subscription(models.Model):
     # Cancellation
     cancel_at_period_end = models.BooleanField(default=False, verbose_name='Cancel at Period End')
     canceled_at = models.DateTimeField(null=True, blank=True, verbose_name='Canceled At')
+    cancellation_reason = models.TextField(blank=True, verbose_name='Cancellation Reason')
     
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -99,7 +100,7 @@ class Subscription(models.Model):
         verbose_name_plural = 'Subscriptions'
         
     def __str__(self):
-        return f"{self.user.full_name} - {self.plan.name} ({self.status})"
+        return f"{self.user.get_full_name()} - {self.plan.name} ({self.status})"
     
     @property
     def is_active(self):
@@ -135,14 +136,18 @@ class PaymentMethod(models.Model):
     # Stripe integration
     stripe_payment_method_id = models.CharField(max_length=255, unique=True, verbose_name='Stripe Payment Method ID')
     
+    # Payment method details
+    payment_method_type = models.CharField(max_length=20, default='card', verbose_name='Payment Method Type')
+    
     # Card details (stored by Stripe, we just keep metadata)
     card_brand = models.CharField(max_length=20, choices=CARD_TYPES, default='unknown')
-    card_last4 = models.CharField(max_length=4, verbose_name='Last 4 Digits')
-    card_exp_month = models.PositiveSmallIntegerField(verbose_name='Expiry Month')
-    card_exp_year = models.PositiveSmallIntegerField(verbose_name='Expiry Year')
+    card_last4 = models.CharField(max_length=4, blank=True, verbose_name='Last 4 Digits')
+    card_exp_month = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Expiry Month')
+    card_exp_year = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name='Expiry Year')
     
     # Settings
     is_default = models.BooleanField(default=False, verbose_name='Is Default Payment Method')
+    is_active = models.BooleanField(default=True, verbose_name='Is Active')
     
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -155,7 +160,9 @@ class PaymentMethod(models.Model):
         verbose_name_plural = 'Payment Methods'
         
     def __str__(self):
-        return f"{self.card_brand.title()} ending in {self.card_last4}"
+        if self.card_brand and self.card_last4:
+            return f"{self.card_brand.title()} ending in {self.card_last4}"
+        return f"{self.payment_method_type.title()} Payment Method"
 
 
 class Invoice(models.Model):
@@ -180,23 +187,16 @@ class Invoice(models.Model):
     invoice_number = models.CharField(max_length=50, unique=True, verbose_name='Invoice Number')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
     
-    # Amounts (in cents to avoid floating point issues)
-    subtotal = models.PositiveIntegerField(verbose_name='Subtotal (cents)')
-    tax_amount = models.PositiveIntegerField(default=0, verbose_name='Tax Amount (cents)')
-    discount_amount = models.PositiveIntegerField(default=0, verbose_name='Discount Amount (cents)')
-    total = models.PositiveIntegerField(verbose_name='Total Amount (cents)')
-    amount_paid = models.PositiveIntegerField(default=0, verbose_name='Amount Paid (cents)')
-    amount_due = models.PositiveIntegerField(default=0, verbose_name='Amount Due (cents)')
-    
+    # Amounts
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Amount', default=Decimal('0.00'))
     currency = models.CharField(max_length=3, default='USD', verbose_name='Currency')
     
     # Dates
-    invoice_date = models.DateTimeField(default=timezone.now, verbose_name='Invoice Date')
     due_date = models.DateTimeField(null=True, blank=True, verbose_name='Due Date')
     paid_at = models.DateTimeField(null=True, blank=True, verbose_name='Paid At')
     
     # Files
-    invoice_pdf = models.URLField(blank=True, verbose_name='Invoice PDF URL')
+    invoice_url = models.URLField(blank=True, verbose_name='Invoice URL')
     
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -209,35 +209,99 @@ class Invoice(models.Model):
         verbose_name_plural = 'Invoices'
         
     def __str__(self):
-        return f"Invoice {self.invoice_number} - ${self.total/100:.2f}"
-    
-    @property
-    def subtotal_dollars(self):
-        return self.subtotal / 100
-    
-    @property
-    def total_dollars(self):
-        return self.total / 100
-    
-    @property
-    def amount_due_dollars(self):
-        return self.amount_due / 100
+        return f"Invoice {self.invoice_number} - ${self.amount}"
 
 
-class PromoCode(models.Model):
+class Payment(models.Model):
+    """Payment model"""
+    
+    STATUS_CHOICES = [
+        ('succeeded', 'Succeeded'),
+        ('pending', 'Pending'),
+        ('failed', 'Failed'),
+        ('canceled', 'Canceled'),
+        ('refunded', 'Refunded'),
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments')
+    subscription = models.ForeignKey(Subscription, null=True, blank=True, on_delete=models.SET_NULL, related_name='payments')
+    
+    # Stripe integration
+    stripe_payment_intent_id = models.CharField(max_length=255, unique=True, verbose_name='Stripe Payment Intent ID')
+    stripe_invoice_id = models.CharField(max_length=255, blank=True, verbose_name='Stripe Invoice ID')
+    
+    # Payment details
+    amount = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Amount')
+    currency = models.CharField(max_length=3, default='USD', verbose_name='Currency')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    
+    # Optional promotional code
+    promotional_code = models.ForeignKey('PromotionalCode', null=True, blank=True, on_delete=models.SET_NULL, related_name='payments')
+    
+    # Dates
+    paid_at = models.DateTimeField(null=True, blank=True, verbose_name='Paid At')
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'payments'
+        ordering = ['-created_at']
+        verbose_name = 'Payment'
+        verbose_name_plural = 'Payments'
+        
+    def __str__(self):
+        return f"Payment {self.amount} {self.currency} - {self.status}"
+
+
+class BillingAddress(models.Model):
+    """Billing address model"""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='billing_address')
+    
+    # Address fields
+    company_name = models.CharField(max_length=255, blank=True, verbose_name='Company Name')
+    address_line_1 = models.CharField(max_length=255, verbose_name='Address Line 1')
+    address_line_2 = models.CharField(max_length=255, blank=True, verbose_name='Address Line 2')
+    city = models.CharField(max_length=100, verbose_name='City')
+    state_province = models.CharField(max_length=100, verbose_name='State/Province')
+    postal_code = models.CharField(max_length=20, verbose_name='Postal Code')
+    country = models.CharField(max_length=2, verbose_name='Country Code')  # ISO 3166-1 alpha-2
+    
+    # Tax information
+    tax_id = models.CharField(max_length=50, blank=True, verbose_name='Tax ID')
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'billing_addresses'
+        verbose_name = 'Billing Address'
+        verbose_name_plural = 'Billing Addresses'
+        
+    def __str__(self):
+        return f"{self.user.get_full_name()}'s Billing Address"
+
+
+class PromotionalCode(models.Model):
     """Promotional code model"""
     
     DISCOUNT_TYPES = [
-        ('percent', 'Percentage'),
-        ('amount', 'Fixed Amount'),
+        ('percentage', 'Percentage'),
+        ('fixed_amount', 'Fixed Amount'),
     ]
     
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     code = models.CharField(max_length=50, unique=True, verbose_name='Promo Code')
+    name = models.CharField(max_length=100, verbose_name='Promo Name')
     description = models.TextField(blank=True, verbose_name='Description')
     
     # Discount details
-    discount_type = models.CharField(max_length=10, choices=DISCOUNT_TYPES, default='percent')
+    discount_type = models.CharField(max_length=20, choices=DISCOUNT_TYPES, default='percentage')
     discount_value = models.PositiveIntegerField(verbose_name='Discount Value')  # Percentage or cents
     
     # Stripe integration
@@ -245,8 +309,8 @@ class PromoCode(models.Model):
     
     # Usage limits
     max_uses = models.PositiveIntegerField(null=True, blank=True, verbose_name='Max Uses')
-    times_used = models.PositiveIntegerField(default=0, verbose_name='Times Used')
-    max_uses_per_customer = models.PositiveIntegerField(default=1, verbose_name='Max Uses Per Customer')
+    current_uses = models.PositiveIntegerField(default=0, verbose_name='Current Uses')
+    max_uses_per_user = models.PositiveIntegerField(default=1, verbose_name='Max Uses Per User')
     
     # Validity
     valid_from = models.DateTimeField(default=timezone.now, verbose_name='Valid From')
@@ -254,7 +318,7 @@ class PromoCode(models.Model):
     is_active = models.BooleanField(default=True, verbose_name='Is Active')
     
     # Restrictions
-    minimum_amount = models.PositiveIntegerField(null=True, blank=True, verbose_name='Minimum Amount (cents)')
+    minimum_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name='Minimum Amount')
     applicable_plans = models.ManyToManyField(SubscriptionPlan, blank=True, verbose_name='Applicable Plans')
     
     # Timestamps
@@ -262,13 +326,13 @@ class PromoCode(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        db_table = 'promo_codes'
+        db_table = 'promotional_codes'
         ordering = ['-created_at']
-        verbose_name = 'Promo Code'
-        verbose_name_plural = 'Promo Codes'
+        verbose_name = 'Promotional Code'
+        verbose_name_plural = 'Promotional Codes'
         
     def __str__(self):
-        return f"{self.code} - {self.discount_value}{'%' if self.discount_type == 'percent' else ' cents'}"
+        return f"{self.code} - {self.name}"
     
     @property
     def is_valid(self):
@@ -284,32 +348,7 @@ class PromoCode(models.Model):
         if self.valid_until and now > self.valid_until:
             return False
         
-        if self.max_uses and self.times_used >= self.max_uses:
+        if self.max_uses and self.current_uses >= self.max_uses:
             return False
         
         return True
-
-
-class PromoCodeUsage(models.Model):
-    """Track promo code usage by users"""
-    
-    promo_code = models.ForeignKey(PromoCode, on_delete=models.CASCADE, related_name='usages')
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='promo_usages')
-    subscription = models.ForeignKey(Subscription, null=True, blank=True, on_delete=models.CASCADE, related_name='promo_usages')
-    
-    # Usage details
-    discount_amount = models.PositiveIntegerField(verbose_name='Discount Amount Applied (cents)')
-    original_amount = models.PositiveIntegerField(verbose_name='Original Amount (cents)')
-    final_amount = models.PositiveIntegerField(verbose_name='Final Amount (cents)')
-    
-    used_at = models.DateTimeField(auto_now_add=True, verbose_name='Used At')
-    
-    class Meta:
-        db_table = 'promo_code_usages'
-        unique_together = [['promo_code', 'user', 'subscription']]
-        ordering = ['-used_at']
-        verbose_name = 'Promo Code Usage'
-        verbose_name_plural = 'Promo Code Usages'
-        
-    def __str__(self):
-        return f"{self.user.full_name} used {self.promo_code.code}"
