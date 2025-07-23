@@ -14,7 +14,10 @@ from .views import (
     ForgotPasswordView,
     ResetPasswordView,
     VerifyEmailView,
-    ResendVerificationView
+    ResendVerificationView,
+    GoogleDriveAuthView,
+    GoogleDriveDisconnectView,
+    GoogleDriveStatusView
 )
 
 app_name = 'authentication'
@@ -37,4 +40,9 @@ urlpatterns = [
     
     # User Profile
     path('profile/', UserProfileView.as_view(), name='user_profile'),
+    
+    # Google Drive Integration
+    path('google-drive/auth/', GoogleDriveAuthView.as_view(), name='google_drive_auth'),
+    path('google-drive/disconnect/', GoogleDriveDisconnectView.as_view(), name='google_drive_disconnect'),
+    path('google-drive/status/', GoogleDriveStatusView.as_view(), name='google_drive_status'),
 ]
