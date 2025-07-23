@@ -4,7 +4,18 @@ Video URLs for Watch Party Backend
 
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import VideoViewSet, VideoUploadView, VideoUploadCompleteView, VideoUploadStatusView, VideoSearchView
+from .views import (
+    VideoViewSet, 
+    VideoUploadView, 
+    VideoUploadCompleteView, 
+    VideoUploadStatusView, 
+    VideoSearchView,
+    GoogleDriveMoviesView,
+    GoogleDriveMovieUploadView,
+    GoogleDriveMovieDeleteView,
+    GoogleDriveMovieStreamView,
+    VideoProxyView
+)
 
 app_name = 'videos'
 
@@ -23,6 +34,18 @@ urlpatterns = [
     
     # Search
     path('search/', VideoSearchView.as_view(), name='search'),
+    
+    # Google Drive movie management
+    path('gdrive/', GoogleDriveMoviesView.as_view(), name='gdrive_movies'),
+    path('gdrive/upload/', GoogleDriveMovieUploadView.as_view(), name='gdrive_upload'),
+    path('gdrive/<uuid:video_id>/delete/', GoogleDriveMovieDeleteView.as_view(), name='gdrive_delete'),
+    path('gdrive/<uuid:video_id>/stream/', GoogleDriveMovieStreamView.as_view(), name='gdrive_stream'),
+    
+    # Movie management (new Google Drive integration)
+    path('movies/', include('apps.videos.movie_urls')),
+    
+    # Video proxy for streaming
+    path('<uuid:video_id>/proxy/', VideoProxyView.as_view(), name='video_proxy'),
 ]
 
 # ViewSet generates these URLs:
