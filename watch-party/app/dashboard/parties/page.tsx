@@ -18,7 +18,7 @@ export default function PartiesPage() {
   const { data: parties, isLoading } = useQuery({
     queryKey: ["parties", { search, status, sortBy }],
     queryFn: () =>
-      api.get("/parties", {
+      api.get("/api/parties/", {
         params: { search, status, sort_by: sortBy },
       }),
   })
