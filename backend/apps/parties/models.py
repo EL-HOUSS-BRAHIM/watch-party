@@ -35,7 +35,12 @@ class WatchParty(models.Model):
     
     # Host and participants
     host = models.ForeignKey(User, on_delete=models.CASCADE, related_name='hosted_parties')
-    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='parties')
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='parties', null=True, blank=True)
+    
+    # Movie selection from Google Drive (alternative to video field)
+    gdrive_file_id = models.CharField(max_length=255, blank=True, verbose_name='Google Drive File ID')
+    movie_title = models.CharField(max_length=200, blank=True, verbose_name='Movie Title')
+    movie_duration = models.DurationField(null=True, blank=True, verbose_name='Movie Duration')
     
     # Party settings
     room_code = models.CharField(max_length=10, unique=True, verbose_name='Room Code')
