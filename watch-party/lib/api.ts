@@ -225,8 +225,15 @@ export const apiCall = {
 // WebSocket connection helper for Django Channels
 export const createWebSocketConnection = (endpoint: string, token?: string) => {
   const wsUrl = WEBSOCKET_URL.replace(/^http/, 'ws') + endpoint
-  const authUrl = token ? `${wsUrl}?token=${token}` : wsUrl
-  return new WebSocket(authUrl)
+  
+  // Only add token if it's valid and not undefined
+  if (token && token !== 'undefined' && token !== 'null' && token.trim() !== '') {
+    const authUrl = `${wsUrl}?token=${encodeURIComponent(token)}`
+    return new WebSocket(authUrl)
+  } else {
+    console.warn('WebSocket connection attempted without valid token')
+    return new WebSocket(wsUrl)
+  }
 }
 
 // Specific API service functions
