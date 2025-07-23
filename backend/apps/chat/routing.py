@@ -8,6 +8,7 @@ from .video_sync_consumer import VideoSyncConsumer
 
 websocket_urlpatterns = [
     path('ws/chat/<uuid:room_id>/', consumers.ChatConsumer.as_asgi()),
+    path('ws/party/<str:party_id>/', VideoSyncConsumer.as_asgi()),  # For party-specific connections
     path('ws/notifications/', consumers.NotificationConsumer.as_asgi()),
     path('ws/sync/<str:party_code>/', VideoSyncConsumer.as_asgi()),
     # Test endpoint for system testing
