@@ -16,12 +16,12 @@ export default function FriendsPage() {
 
   const { data: friends, isLoading: friendsLoading } = useQuery({
     queryKey: ["friends"],
-    queryFn: () => api.get("/friends"),
+    queryFn: () => api.get("/api/users/friends/"),
   })
 
   const { data: friendRequests, isLoading: requestsLoading } = useQuery({
     queryKey: ["friend-requests"],
-    queryFn: () => api.get("/friends/requests"),
+    queryFn: () => api.get("/api/users/friends/requests/"),
   })
 
   const mockFriends = [
