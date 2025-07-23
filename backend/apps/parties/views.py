@@ -288,6 +288,79 @@ class WatchPartyViewSet(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(detail=True, methods=['post'])
+    def select_gdrive_movie(self, request, pk=None):
+        """Select a movie from Google Drive for the party"""
+        party = self.get_object()
+        user = request.user
+        
+        # Only host can select movie
+        if party.host != user:
+            return Response({'error': 'Only host can select movie'}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Party should be in scheduled status
+        if party.status != 'scheduled':
+            return Response({'error': 'Can only select movie for scheduled parties'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            from utils.google_drive_service import get_drive_service
+            
+            gdrive_file_id = request.data.get('gdrive_file_id')
+            if not gdrive_file_id:
+                return Response({'error': 'Google Drive file ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Check if user has Google Drive connected
+            if not hasattr(user, 'profile') or not user.profile.google_drive_connected:
+                return Response({'error': 'Google Drive not connected'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Get Drive service and file info
+            drive_service = get_drive_service(user)
+            file_info = drive_service.get_file_info(gdrive_file_id)
+            
+            # Update party with movie info
+            party.gdrive_file_id = gdrive_file_id
+            party.movie_title = file_info['name']
+            
+            # Extract duration if available
+            if 'video_metadata' in file_info and file_info['video_metadata']:
+                metadata = file_info['video_metadata']
+                if 'durationMillis' in metadata:
+                    duration_ms = int(metadata['durationMillis'])
+                    party.movie_duration = timedelta(milliseconds=duration_ms)
+            
+            party.save()
+            
+            return Response({
+                'message': 'Movie selected successfully',
+                'movie_title': party.movie_title,
+                'gdrive_file_id': party.gdrive_file_id
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'error': f'Failed to select movie: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=True, methods=['get'])
+    def sync_state(self, request, pk=None):
+        """Get current sync state of the party"""
+        party = self.get_object()
+        user = request.user
+        
+        # Check if user is participant
+        if not party.participants.filter(user=user, is_active=True).exists() and party.host != user:
+            return Response({'error': 'Must be a participant to get sync state'}, status=status.HTTP_403_FORBIDDEN)
+        
+        return Response({
+            'is_playing': party.is_playing,
+            'current_timestamp': party.current_timestamp.total_seconds() if party.current_timestamp else 0,
+            'last_sync_at': party.last_sync_at,
+            'status': party.status,
+            'movie_title': party.movie_title,
+            'gdrive_file_id': party.gdrive_file_id,
+            'video_id': str(party.video.id) if party.video else None
+        }, status=status.HTTP_200_OK)
 
 
 class JoinByCodeView(APIView):
@@ -466,3 +539,20 @@ class PartyReportView(generics.CreateAPIView):
     
     def perform_create(self, serializer):
         serializer.save(reporter=self.request.user)
+
+
+class RecentPartiesView(generics.ListAPIView):
+    """Get recently created/joined parties for a user"""
+    
+    serializer_class = WatchPartySerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        # Get parties from the last 30 days where user is host or participant
+        thirty_days_ago = timezone.now() - timedelta(days=30)
+        
+        return WatchParty.objects.filter(
+            Q(host=user) | Q(participants__user=user, participants__is_active=True),
+            created_at__gte=thirty_days_ago
+        ).distinct().order_by('-created_at')[:10]
