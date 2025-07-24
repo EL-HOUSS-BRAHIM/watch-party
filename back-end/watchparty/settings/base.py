@@ -68,6 +68,9 @@ MIDDLEWARE = [
     'middleware.enhanced_middleware.UserActivityMiddleware',
     'middleware.enhanced_middleware.PerformanceMiddleware',
     'middleware.enhanced_middleware.ErrorHandlingMiddleware',
+    'middleware.enhanced_middleware.MaintenanceMiddleware',
+    'middleware.enhanced_middleware.APIVersionMiddleware',
+    'middleware.enhanced_middleware.ContentTypeMiddleware',
 ]
 
 ROOT_URLCONF = 'watchparty.urls'
