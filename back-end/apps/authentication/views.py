@@ -503,6 +503,12 @@ class GoogleDriveStatusView(APIView):
         }, status=status.HTTP_200_OK)
 
 
+def setup_2fa(request):
+    """Function wrapper for 2FA setup"""
+    view = TwoFactorSetupView()
+    return view.post(request)
+
+
 class TwoFactorSetupView(APIView):
     """Setup Two-Factor Authentication"""
     
