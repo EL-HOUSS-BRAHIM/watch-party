@@ -90,7 +90,7 @@ class Video(models.Model):
         indexes = [
             models.Index(fields=['status', 'created_at']),
             models.Index(fields=['uploader', 'visibility']),
-            models.Index(fields=['source', 'status']),
+            models.Index(fields=['source_type', 'status']),
             models.Index(fields=['visibility', 'created_at']),
         ]
         
