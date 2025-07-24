@@ -39,13 +39,11 @@ class PartyAnalyticsSerializer(serializers.ModelSerializer):
         model = PartyAnalytics
         fields = [
             'id', 'party', 'party_title',
-            'total_viewers', 'peak_concurrent_viewers', 'average_viewers',
-            'total_duration_minutes', 'actual_watch_duration_minutes', 'pause_time_minutes',
-            'total_chat_messages', 'total_reactions', 'average_messages_per_viewer',
-            'total_joins', 'total_leaves', 'completion_rate',
-            'buffering_events', 'sync_issues', 'technical_problems',
-            'engagement_score', 'average_session_duration',
-            'created_at', 'updated_at'
+            'total_participants', 'peak_concurrent_participants', 'avg_session_duration',
+            'total_messages', 'total_reactions',
+            'sync_issues', 'buffering_events',
+            'created_at', 'updated_at',
+            'engagement_score'
         ]
         read_only_fields = ['id', 'party', 'created_at', 'updated_at']
 
