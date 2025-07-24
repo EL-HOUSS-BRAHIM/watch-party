@@ -460,3 +460,130 @@ class NotificationQueue(models.Model):
             return 0
         successful = self.processed_count - self.failed_count
         return round((successful / self.processed_count) * 100, 2)
+
+
+class NotificationChannel(models.Model):
+    """User notification channel preferences"""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='notification_channels')
+    
+    # Channel preferences
+    email_enabled = models.BooleanField(default=True, verbose_name='Email Notifications')
+    push_enabled = models.BooleanField(default=True, verbose_name='Push Notifications')
+    sms_enabled = models.BooleanField(default=False, verbose_name='SMS Notifications')
+    in_app_enabled = models.BooleanField(default=True, verbose_name='In-App Notifications')
+    
+    # Specific notification type preferences
+    party_invites = models.BooleanField(default=True, verbose_name='Party Invitations')
+    party_updates = models.BooleanField(default=True, verbose_name='Party Updates')
+    friend_requests = models.BooleanField(default=True, verbose_name='Friend Requests')
+    video_uploads = models.BooleanField(default=True, verbose_name='Video Upload Notifications')
+    system_updates = models.BooleanField(default=True, verbose_name='System Updates')
+    marketing = models.BooleanField(default=False, verbose_name='Marketing Communications')
+    
+    # Quiet hours
+    quiet_hours_enabled = models.BooleanField(default=False, verbose_name='Enable Quiet Hours')
+    quiet_start_time = models.TimeField(null=True, blank=True, verbose_name='Quiet Start Time')
+    quiet_end_time = models.TimeField(null=True, blank=True, verbose_name='Quiet End Time')
+    
+    # Timestamps
+    created_at = models.DateTimeField(default=timezone.now, verbose_name='Created At')
+    updated_at = models.DateTimeField(auto_now=True, verbose_name='Updated At')
+    
+    class Meta:
+        db_table = 'notification_channels'
+        verbose_name = 'Notification Channel'
+        verbose_name_plural = 'Notification Channels'
+    
+    def __str__(self):
+        return f"Notification preferences for {self.user.username}"
+    
+    def is_enabled_for_type(self, notification_type: str) -> bool:
+        """Check if notifications are enabled for a specific type"""
+        type_mapping = {
+            'party_invite': self.party_invites,
+            'party_started': self.party_updates,
+            'party_reminder': self.party_updates,
+            'friend_request': self.friend_requests,
+            'friend_accepted': self.friend_requests,
+            'video_uploaded': self.video_uploads,
+            'video_processed': self.video_uploads,
+            'system_update': self.system_updates,
+            'maintenance_notice': self.system_updates,
+            'feature_announcement': self.marketing,
+            'community_update': self.marketing,
+        }
+        return type_mapping.get(notification_type, True)
+    
+    def is_in_quiet_hours(self) -> bool:
+        """Check if current time is within quiet hours"""
+        if not self.quiet_hours_enabled or not self.quiet_start_time or not self.quiet_end_time:
+            return False
+        
+        current_time = timezone.now().time()
+        
+        if self.quiet_start_time <= self.quiet_end_time:
+            # Same day quiet hours (e.g., 10 PM to 8 AM)
+            return self.quiet_start_time <= current_time <= self.quiet_end_time
+        else:
+            # Cross-midnight quiet hours (e.g., 10 PM to 8 AM next day)
+            return current_time >= self.quiet_start_time or current_time <= self.quiet_end_time
+
+
+class PushSubscription(models.Model):
+    """Push notification subscription for users"""
+    
+    PLATFORM_CHOICES = [
+        ('web', 'Web Browser'),
+        ('android', 'Android'),
+        ('ios', 'iOS'),
+        ('desktop', 'Desktop'),
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='push_subscriptions')
+    
+    # Push subscription details
+    endpoint = models.URLField(verbose_name='Push Endpoint')
+    p256dh_key = models.TextField(verbose_name='P256DH Key')
+    auth_key = models.TextField(verbose_name='Auth Key')
+    
+    # Device/Browser information
+    platform = models.CharField(max_length=20, choices=PLATFORM_CHOICES, default='web')
+    device_name = models.CharField(max_length=100, blank=True, verbose_name='Device Name')
+    user_agent = models.TextField(blank=True, verbose_name='User Agent')
+    
+    # Status
+    is_active = models.BooleanField(default=True, verbose_name='Is Active')
+    
+    # Firebase Cloud Messaging (for mobile)
+    fcm_token = models.TextField(blank=True, verbose_name='FCM Token')
+    apns_token = models.TextField(blank=True, verbose_name='APNS Token')
+    
+    # Timestamps
+    created_at = models.DateTimeField(default=timezone.now, verbose_name='Created At')
+    last_used = models.DateTimeField(default=timezone.now, verbose_name='Last Used')
+    
+    class Meta:
+        db_table = 'push_subscriptions'
+        verbose_name = 'Push Subscription'
+        verbose_name_plural = 'Push Subscriptions'
+        unique_together = ['user', 'endpoint']
+        indexes = [
+            models.Index(fields=['user', 'is_active']),
+            models.Index(fields=['platform', 'is_active']),
+        ]
+    
+    def __str__(self):
+        return f"Push subscription for {self.user.username} ({self.platform})"
+    
+    def deactivate(self):
+        """Deactivate the push subscription"""
+        self.is_active = False
+        self.save()
+    
+    def update_last_used(self):
+        """Update the last used timestamp"""
+        self.last_used = timezone.now()
+        self.save(update_fields=['last_used'])
