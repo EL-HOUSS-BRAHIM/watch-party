@@ -15,7 +15,6 @@ from datetime import timedelta
 from typing import Dict, List, Any
 
 from core.permissions import IsAdminUser, IsSuperUser
-from apps.users.models import UserProfile
 from apps.parties.models import WatchParty
 from apps.videos.models import Video
 from apps.analytics.models import SystemAnalytics, AnalyticsEvent
@@ -23,6 +22,14 @@ from apps.notifications.models import Notification
 from apps.billing.models import Subscription, Payment
 
 User = get_user_model()
+
+
+class AdminDashboardView(generics.GenericAPIView):
+    """Main admin dashboard view"""
+    permission_classes = [IsAdminUser]
+    
+    def get(self, request):
+        return admin_dashboard(request)
 
 
 class AdminPagination(PageNumberPagination):
