@@ -1,0 +1,26 @@
+{{ sender.first_name|default:sender.username }} wants to be friends!
+
+Hi {{ recipient.first_name|default:recipient.username }},
+
+{{ sender.first_name|default:sender.username }} ({{ sender.username }}) has sent you a friend request on Watch Party!
+
+{% if sender.bio %}"{{ sender.bio }}"
+
+{% endif %}Once you're friends, you'll be able to:
+- Create private watch parties together
+- Send direct party invitations  
+- Start private chats
+- See each other's watch activity (if enabled)
+
+Accept: {{ accept_url }}
+Decline: {{ decline_url }}
+
+You can also respond to this friend request from your dashboard.
+
+Happy connecting!
+
+--
+Watch Party Team
+{{ site_url }}
+
+Unsubscribe: {{ unsubscribe_url }}?token={{ unsubscribe_token }}
