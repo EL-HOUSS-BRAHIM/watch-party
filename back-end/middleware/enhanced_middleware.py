@@ -237,27 +237,6 @@ class SecurityHeadersMiddleware(MiddlewareMixin):
         return response
 
 
-class CorsMiddleware(MiddlewareMixin):
-    """Enhanced CORS middleware"""
-    
-    def process_response(self, request, response):
-        origin = request.META.get('HTTP_ORIGIN')
-        
-        # Get allowed origins from settings
-        allowed_origins = getattr(settings, 'CORS_ALLOWED_ORIGINS', [])
-        
-        if origin in allowed_origins or (settings.DEBUG and origin):
-            response['Access-Control-Allow-Origin'] = origin
-            response['Access-Control-Allow-Credentials'] = 'true'
-            response['Access-Control-Allow-Methods'] = 'GET, POST, PUT, PATCH, DELETE, OPTIONS'
-            response['Access-Control-Allow-Headers'] = (
-                'Accept, Authorization, Content-Type, X-CSRF-Token, X-Requested-With'
-            )
-            response['Access-Control-Max-Age'] = '86400'  # 24 hours
-        
-        return response
-
-
 class UserActivityMiddleware(MiddlewareMixin):
     """Enhanced middleware for tracking user activity and online status"""
     
