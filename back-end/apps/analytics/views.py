@@ -21,6 +21,17 @@ from apps.videos.models import Video
 User = get_user_model()
 
 
+class DashboardView(generics.GenericAPIView):
+    """Main analytics dashboard view"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        if request.user.is_staff:
+            return AdminAnalyticsView().get(request)
+        else:
+            return UserDetailedStatsView().get(request)
+
+
 class UserStatsView(generics.RetrieveAPIView):
     """Get personal analytics for authenticated user"""
     
