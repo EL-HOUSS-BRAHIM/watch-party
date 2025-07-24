@@ -37,6 +37,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'core',
+    'services',
     'apps.authentication',
     'apps.users',
     'apps.videos',

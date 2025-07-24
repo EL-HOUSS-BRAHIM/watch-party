@@ -216,3 +216,54 @@ class SocialAccount(models.Model):
         
     def __str__(self):
         return f"{self.provider} account for {self.user.email}"
+
+
+class TwoFactorAuth(models.Model):
+    """Two-Factor Authentication settings"""
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='two_factor_auth')
+    secret_key = models.CharField(max_length=32, verbose_name='Secret Key')
+    backup_codes = models.JSONField(default=list, verbose_name='Backup Codes')
+    is_enabled = models.BooleanField(default=False, verbose_name='2FA Enabled')
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_used = models.DateTimeField(null=True, blank=True, verbose_name='Last Used')
+    
+    class Meta:
+        db_table = 'two_factor_auth'
+        verbose_name = 'Two-Factor Authentication'
+        verbose_name_plural = 'Two-Factor Authentications'
+        
+    def __str__(self):
+        return f"2FA for {self.user.email} ({'enabled' if self.is_enabled else 'disabled'})"
+
+
+class UserSession(models.Model):
+    """User session tracking"""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='auth_sessions')
+    refresh_token_hash = models.CharField(max_length=255, verbose_name='Refresh Token Hash')
+    device_info = models.JSONField(default=dict, verbose_name='Device Information')
+    ip_address = models.GenericIPAddressField(verbose_name='IP Address')
+    user_agent = models.TextField(verbose_name='User Agent')
+    expires_at = models.DateTimeField(verbose_name='Expires At')
+    is_active = models.BooleanField(default=True, verbose_name='Active')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'auth_user_sessions'
+        verbose_name = 'User Session'
+        verbose_name_plural = 'User Sessions'
+        indexes = [
+            models.Index(fields=['user', 'is_active']),
+            models.Index(fields=['expires_at']),
+            models.Index(fields=['created_at']),
+        ]
+        
+    def __str__(self):
+        return f"Session for {self.user.email} from {self.ip_address}"
+    
+    @property
+    def is_expired(self):
+        return timezone.now() > self.expires_at

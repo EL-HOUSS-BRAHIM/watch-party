@@ -42,6 +42,20 @@ class VideoStorageService:
             raise StorageError("S3 not configured")
         
         try:
+            # Validate inputs
+            if not filename or not content_type:
+                raise VideoError("Filename and content type are required")
+            
+            # Validate file size
+            max_file_size = getattr(settings, 'MAX_VIDEO_FILE_SIZE', 2 * 1024 * 1024 * 1024)  # 2GB default
+            if file_size and file_size > max_file_size:
+                raise VideoError(f"File size exceeds maximum allowed size of {format_file_size(max_file_size)}")
+            
+            # Validate content type
+            allowed_types = ['video/mp4', 'video/avi', 'video/mov', 'video/mkv', 'video/webm']
+            if content_type not in allowed_types:
+                raise VideoError(f"Unsupported content type: {content_type}")
+            
             # Generate unique key
             sanitized_name = sanitize_filename(filename)
             unique_key = f"videos/{generate_secure_token(16)}/{sanitized_name}"
@@ -388,6 +402,119 @@ class VideoValidationService:
             
         except Exception as e:
             raise VideoError(f"Video validation failed: {str(e)}")
+
+
+class VideoProcessingService:
+    """Service for video processing operations"""
+    
+    def __init__(self):
+        self.supported_formats = ['mp4', 'avi', 'mov', 'mkv', 'webm', 'wmv', 'flv']
+        self.supported_mime_types = [
+            'video/mp4', 'video/avi', 'video/quicktime', 'video/x-msvideo',
+            'video/x-matroska', 'video/webm', 'video/x-ms-wmv', 'video/x-flv'
+        ]
+    
+    def validate_video_format(self, filename):
+        """Validate video file format"""
+        if not filename:
+            raise VideoError("Filename is required")
+        
+        extension = filename.lower().split('.')[-1] if '.' in filename else ''
+        if extension not in self.supported_formats:
+            raise VideoError(f"Unsupported video format: {extension}")
+        
+        return True
+    
+    def validate_file_size(self, file_size):
+        """Validate video file size"""
+        max_size = getattr(settings, 'MAX_VIDEO_FILE_SIZE', 2 * 1024 * 1024 * 1024)  # 2GB
+        if file_size > max_size:
+            raise VideoError(f"File size {format_file_size(file_size)} exceeds maximum allowed size {format_file_size(max_size)}")
+        
+        return True
+    
+    def validate_content_type(self, content_type):
+        """Validate video content type"""
+        if content_type not in self.supported_mime_types:
+            raise VideoError(f"Unsupported content type: {content_type}")
+        
+        return True
+    
+    def generate_thumbnails(self, video):
+        """Generate thumbnails for video (placeholder for actual implementation)"""
+        # This would typically use FFmpeg or similar tool
+        # For now, return a placeholder implementation
+        try:
+            cache_key = create_cache_key('thumbnail_generation', video.id)
+            cache.set(cache_key, 'processing', timeout=3600)
+            
+            # Simulate thumbnail generation
+            # In real implementation, this would:
+            # 1. Extract frames from video at specific intervals
+            # 2. Generate thumbnails of different sizes
+            # 3. Upload thumbnails to storage
+            # 4. Update video model with thumbnail paths
+            
+            return {
+                'status': 'queued',
+                'message': 'Thumbnail generation queued'
+            }
+        except Exception as e:
+            raise VideoError(f"Failed to generate thumbnails: {str(e)}")
+    
+    def transcode_video(self, video, resolutions=None):
+        """Transcode video to different resolutions (placeholder)"""
+        if not resolutions:
+            resolutions = ['480p', '720p', '1080p']
+        
+        try:
+            # In real implementation, this would use FFmpeg to:
+            # 1. Transcode video to different resolutions
+            # 2. Optimize for streaming
+            # 3. Generate adaptive bitrate streams
+            # 4. Store transcoded versions
+            
+            cache_key = create_cache_key('video_transcoding', video.id)
+            cache.set(cache_key, {
+                'status': 'processing',
+                'resolutions': resolutions,
+                'progress': 0
+            }, timeout=3600)
+            
+            return {
+                'status': 'queued',
+                'resolutions': resolutions,
+                'message': 'Video transcoding queued'
+            }
+        except Exception as e:
+            raise VideoError(f"Failed to transcode video: {str(e)}")
+    
+    def extract_metadata(self, video_file):
+        """Extract metadata from video file (placeholder)"""
+        try:
+            # In real implementation, this would use FFprobe or similar tool
+            # to extract detailed video metadata
+            
+            return {
+                'duration': None,
+                'resolution': None,
+                'codec': None,
+                'bitrate': None,
+                'fps': None,
+                'metadata_extracted': True
+            }
+        except Exception as e:
+            raise VideoError(f"Failed to extract metadata: {str(e)}")
+    
+    def cleanup_temp_files(self, video):
+        """Clean up temporary processing files"""
+        try:
+            # Clean up any temporary files created during processing
+            cache_key = create_cache_key('temp_files', video.id)
+            cache.delete(cache_key)
+            return True
+        except Exception as e:
+            raise VideoError(f"Failed to cleanup temp files: {str(e)}")
 
 
 # Singleton instances

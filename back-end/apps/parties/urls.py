@@ -6,7 +6,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     WatchPartyViewSet, JoinByCodeView, PartySearchView,
-    PartyInvitationViewSet, PartyReportView, RecentPartiesView
+    PartyInvitationViewSet, PartyReportView, RecentPartiesView, PublicPartiesView
 )
 
 app_name = 'parties'
@@ -19,6 +19,7 @@ router.register(r'invitations', PartyInvitationViewSet, basename='invitation')
 urlpatterns = [
     # Special endpoints first (before router includes)
     path('recent/', RecentPartiesView.as_view(), name='recent'),
+    path('public/', PublicPartiesView.as_view(), name='public'),
     path('join-by-code/', JoinByCodeView.as_view(), name='join_by_code'),
     path('search/', PartySearchView.as_view(), name='search'),
     path('report/', PartyReportView.as_view(), name='report'),

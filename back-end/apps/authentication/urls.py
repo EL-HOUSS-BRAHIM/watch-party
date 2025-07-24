@@ -17,7 +17,11 @@ from .views import (
     ResendVerificationView,
     GoogleDriveAuthView,
     GoogleDriveDisconnectView,
-    GoogleDriveStatusView
+    GoogleDriveStatusView,
+    TwoFactorSetupView,
+    TwoFactorVerifyView,
+    TwoFactorDisableView,
+    UserSessionsView
 )
 
 app_name = 'authentication'
@@ -45,4 +49,13 @@ urlpatterns = [
     path('google-drive/auth/', GoogleDriveAuthView.as_view(), name='google_drive_auth'),
     path('google-drive/disconnect/', GoogleDriveDisconnectView.as_view(), name='google_drive_disconnect'),
     path('google-drive/status/', GoogleDriveStatusView.as_view(), name='google_drive_status'),
+    
+    # Two-Factor Authentication
+    path('2fa/setup/', TwoFactorSetupView.as_view(), name='2fa_setup'),
+    path('2fa/verify/', TwoFactorVerifyView.as_view(), name='2fa_verify'),
+    path('2fa/disable/', TwoFactorDisableView.as_view(), name='2fa_disable'),
+    
+    # Session Management
+    path('sessions/', UserSessionsView.as_view(), name='user_sessions'),
+    path('sessions/<uuid:session_id>/', UserSessionsView.as_view(), name='revoke_session'),
 ]

@@ -201,3 +201,93 @@ class VideoUpload(models.Model):
         
     def __str__(self):
         return f"Upload: {self.filename} ({self.status})"
+
+
+class VideoProcessing(models.Model):
+    """Video processing status and progress tracking"""
+    
+    STATUS_CHOICES = [
+        ('queued', 'Queued'),
+        ('processing', 'Processing'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+        ('cancelled', 'Cancelled'),
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    video = models.OneToOneField(Video, on_delete=models.CASCADE, related_name='processing')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='queued')
+    progress_percentage = models.FloatField(default=0.0, verbose_name='Progress %')
+    processing_started_at = models.DateTimeField(null=True, blank=True)
+    processing_completed_at = models.DateTimeField(null=True, blank=True)
+    error_message = models.TextField(blank=True, verbose_name='Error Message')
+    
+    # Processing results
+    resolutions_generated = models.JSONField(default=list, verbose_name='Generated Resolutions')
+    thumbnail_generated = models.BooleanField(default=False, verbose_name='Thumbnail Generated')
+    metadata_extracted = models.BooleanField(default=False, verbose_name='Metadata Extracted')
+    
+    # Processing configuration
+    target_resolutions = models.JSONField(default=list, verbose_name='Target Resolutions')
+    generate_thumbnail = models.BooleanField(default=True, verbose_name='Generate Thumbnail')
+    extract_metadata = models.BooleanField(default=True, verbose_name='Extract Metadata')
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'video_processing'
+        verbose_name = 'Video Processing'
+        verbose_name_plural = 'Video Processing'
+        indexes = [
+            models.Index(fields=['status', 'created_at']),
+            models.Index(fields=['processing_started_at']),
+        ]
+        
+    def __str__(self):
+        return f"Processing: {self.video.title} ({self.status})"
+
+
+class VideoStreamingUrl(models.Model):
+    """Temporary streaming URLs for videos"""
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='streaming_urls')
+    resolution = models.CharField(max_length=20, default='original', verbose_name='Resolution')  # 480p, 720p, 1080p, original
+    url = models.URLField(verbose_name='Streaming URL')
+    expires_at = models.DateTimeField(verbose_name='Expires At')
+    access_count = models.PositiveIntegerField(default=0, verbose_name='Access Count')
+    max_access_count = models.PositiveIntegerField(null=True, blank=True, verbose_name='Max Access Count')
+    
+    # Requesting user info for access control
+    requested_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='requested_urls')
+    ip_address = models.GenericIPAddressField(verbose_name='IP Address')
+    user_agent = models.TextField(blank=True, verbose_name='User Agent')
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_accessed = models.DateTimeField(null=True, blank=True)
+    
+    class Meta:
+        db_table = 'video_streaming_urls'
+        verbose_name = 'Video Streaming URL'
+        verbose_name_plural = 'Video Streaming URLs'
+        indexes = [
+            models.Index(fields=['video', 'resolution']),
+            models.Index(fields=['expires_at']),
+            models.Index(fields=['requested_by', 'created_at']),
+        ]
+        
+    def __str__(self):
+        return f"Streaming URL for {self.video.title} ({self.resolution})"
+    
+    @property
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+    
+    @property
+    def can_access(self):
+        if self.is_expired:
+            return False
+        if self.max_access_count and self.access_count >= self.max_access_count:
+            return False
+        return True

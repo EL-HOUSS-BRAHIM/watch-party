@@ -47,6 +47,7 @@ class WatchParty(models.Model):
     visibility = models.CharField(max_length=20, choices=VISIBILITY_CHOICES, default='private')
     max_participants = models.PositiveIntegerField(default=50, verbose_name='Max Participants')
     require_approval = models.BooleanField(default=False, verbose_name='Require Host Approval')
+    allow_join_by_code = models.BooleanField(default=True, verbose_name='Allow Join by Room Code')
     
     # Chat settings
     allow_chat = models.BooleanField(default=True, verbose_name='Allow Chat')

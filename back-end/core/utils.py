@@ -73,10 +73,48 @@ def generate_secure_token(length=32):
 
 def create_cache_key(*args, prefix='watchparty'):
     """
-    Create a standardized cache key
+    Create a standardized cache key with automatic hashing for long keys
     """
     key_parts = [str(prefix)] + [str(arg) for arg in args]
-    return ':'.join(key_parts)
+    cache_key = ':'.join(key_parts)
+    
+    # Redis has a maximum key length of 512MB, but we'll limit to 250 chars for efficiency
+    if len(cache_key) > 250:
+        # Hash long keys to create consistent shorter keys
+        key_hash = hashlib.md5(cache_key.encode()).hexdigest()
+        cache_key = f"{prefix}:hashed:{key_hash}"
+    
+    return cache_key
+
+
+def cached_result(timeout=3600, key_prefix=None):
+    """
+    Decorator for caching function results
+    """
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            # Create cache key from function name and arguments
+            func_name = func.__name__
+            cache_prefix = key_prefix or func_name
+            
+            # Convert args and kwargs to string for cache key
+            args_str = '_'.join(str(arg) for arg in args)
+            kwargs_str = '_'.join(f"{k}={v}" for k, v in sorted(kwargs.items()))
+            
+            cache_key = create_cache_key(cache_prefix, args_str, kwargs_str)
+            
+            # Try to get from cache
+            result = cache.get(cache_key)
+            if result is not None:
+                return result
+            
+            # Execute function and cache result
+            result = func(*args, **kwargs)
+            cache.set(cache_key, result, timeout=timeout)
+            return result
+        
+        return wrapper
+    return decorator
 
 
 def get_client_ip(request):
@@ -133,7 +171,66 @@ def extract_youtube_video_id(url):
     return None
 
 
-def format_duration(seconds):
+def format_file_size(bytes_size):
+    """
+    Format file size in bytes to human-readable format
+    """
+    if bytes_size == 0:
+        return "0 B"
+    
+    size_names = ["B", "KB", "MB", "GB", "TB"]
+    i = 0
+    size = float(bytes_size)
+    
+    while size >= 1024.0 and i < len(size_names) - 1:
+        size /= 1024.0
+        i += 1
+    
+    return f"{size:.1f} {size_names[i]}"
+
+
+def sanitize_filename(filename):
+    """
+    Sanitize filename for safe storage
+    """
+    if not filename:
+        return "unnamed_file"
+    
+    # Remove path separators and dangerous characters
+    unsafe_chars = ['/', '\\', ':', '*', '?', '"', '<', '>', '|', '\0']
+    for char in unsafe_chars:
+        filename = filename.replace(char, '_')
+    
+    # Remove leading/trailing dots and spaces
+    filename = filename.strip('. ')
+    
+    # Limit length
+    if len(filename) > 255:
+        name, ext = os.path.splitext(filename)
+        filename = name[:250 - len(ext)] + ext
+    
+    return filename or "unnamed_file"
+
+
+def validate_file_type(filename, allowed_extensions):
+    """
+    Validate file type based on extension
+    """
+    if not filename:
+        return False
+    
+    file_extension = filename.lower().split('.')[-1]
+    return file_extension in [ext.lower() for ext in allowed_extensions]
+
+
+def get_file_extension(filename):
+    """
+    Get file extension from filename
+    """
+    if not filename or '.' not in filename:
+        return ""
+    
+    return filename.lower().split('.')[-1]
     """
     Format duration in seconds to human-readable format
     """

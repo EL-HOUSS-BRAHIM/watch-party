@@ -15,8 +15,12 @@ from django.conf import settings
 from datetime import timedelta
 import secrets
 import urllib.parse
+import pyotp
+import qrcode
+import io
+import base64
 
-from .models import User, EmailVerification, PasswordReset
+from .models import User, EmailVerification, PasswordReset, TwoFactorAuth, UserSession
 from .serializers import (
     UserRegistrationSerializer,
     UserLoginSerializer,
@@ -497,3 +501,211 @@ class GoogleDriveStatusView(APIView):
             'connected': connected,
             'folder_id': folder_id
         }, status=status.HTTP_200_OK)
+
+
+class TwoFactorSetupView(APIView):
+    """Setup Two-Factor Authentication"""
+    
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        """Generate 2FA secret and QR code"""
+        user = request.user
+        
+        # Check if 2FA is already enabled
+        two_factor, created = TwoFactorAuth.objects.get_or_create(user=user)
+        
+        if two_factor.is_enabled:
+            return Response({
+                'success': False,
+                'message': '2FA is already enabled'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Generate secret key
+        secret = pyotp.random_base32()
+        two_factor.secret_key = secret
+        
+        # Generate backup codes
+        backup_codes = [secrets.token_hex(8) for _ in range(10)]
+        two_factor.backup_codes = backup_codes
+        two_factor.save()
+        
+        # Generate QR code
+        totp_uri = pyotp.totp.TOTP(secret).provisioning_uri(
+            name=user.email,
+            issuer_name="Watch Party"
+        )
+        
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(totp_uri)
+        qr.make(fit=True)
+        
+        img = qr.make_image(fill_color="black", back_color="white")
+        buffer = io.BytesIO()
+        img.save(buffer, format='PNG')
+        buffer.seek(0)
+        qr_code_base64 = base64.b64encode(buffer.getvalue()).decode()
+        
+        return Response({
+            'success': True,
+            'secret': secret,
+            'backup_codes': backup_codes,
+            'qr_code': f"data:image/png;base64,{qr_code_base64}"
+        }, status=status.HTTP_200_OK)
+
+
+class TwoFactorVerifyView(APIView):
+    """Verify Two-Factor Authentication setup"""
+    
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        """Verify 2FA token to enable 2FA"""
+        user = request.user
+        token = request.data.get('token')
+        
+        if not token:
+            return Response({
+                'success': False,
+                'message': 'Token is required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            two_factor = TwoFactorAuth.objects.get(user=user)
+        except TwoFactorAuth.DoesNotExist:
+            return Response({
+                'success': False,
+                'message': '2FA setup not found. Please setup 2FA first.'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Verify token
+        totp = pyotp.TOTP(two_factor.secret_key)
+        if totp.verify(token):
+            two_factor.is_enabled = True
+            two_factor.last_used = timezone.now()
+            two_factor.save()
+            
+            return Response({
+                'success': True,
+                'message': '2FA enabled successfully'
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                'success': False,
+                'message': 'Invalid token'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TwoFactorDisableView(APIView):
+    """Disable Two-Factor Authentication"""
+    
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        """Disable 2FA with token verification"""
+        user = request.user
+        token = request.data.get('token')
+        password = request.data.get('password')
+        
+        if not token or not password:
+            return Response({
+                'success': False,
+                'message': 'Token and password are required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Verify password
+        if not user.check_password(password):
+            return Response({
+                'success': False,
+                'message': 'Invalid password'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            two_factor = TwoFactorAuth.objects.get(user=user, is_enabled=True)
+        except TwoFactorAuth.DoesNotExist:
+            return Response({
+                'success': False,
+                'message': '2FA is not enabled'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Verify token
+        totp = pyotp.TOTP(two_factor.secret_key)
+        if totp.verify(token) or token in two_factor.backup_codes:
+            # Remove used backup code
+            if token in two_factor.backup_codes:
+                two_factor.backup_codes.remove(token)
+            
+            two_factor.is_enabled = False
+            two_factor.save()
+            
+            return Response({
+                'success': True,
+                'message': '2FA disabled successfully'
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                'success': False,
+                'message': 'Invalid token'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserSessionsView(APIView):
+    """List and manage user sessions"""
+    
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        """List active sessions for user"""
+        user = request.user
+        sessions = UserSession.objects.filter(
+            user=user,
+            is_active=True,
+            expires_at__gt=timezone.now()
+        ).order_by('-created_at')
+        
+        session_data = []
+        for session in sessions:
+            session_data.append({
+                'id': str(session.id),
+                'device_info': session.device_info,
+                'ip_address': session.ip_address,
+                'user_agent': session.user_agent,
+                'created_at': session.created_at,
+                'expires_at': session.expires_at,
+                'is_current': session.ip_address == request.META.get('REMOTE_ADDR')
+            })
+        
+        return Response({
+            'success': True,
+            'sessions': session_data
+        }, status=status.HTTP_200_OK)
+    
+    def delete(self, request, session_id=None):
+        """Revoke a specific session or all sessions"""
+        user = request.user
+        
+        if session_id:
+            # Revoke specific session
+            try:
+                session = UserSession.objects.get(id=session_id, user=user)
+                session.is_active = False
+                session.save()
+                
+                return Response({
+                    'success': True,
+                    'message': 'Session revoked successfully'
+                }, status=status.HTTP_200_OK)
+            except UserSession.DoesNotExist:
+                return Response({
+                    'success': False,
+                    'message': 'Session not found'
+                }, status=status.HTTP_404_NOT_FOUND)
+        else:
+            # Revoke all sessions except current
+            current_ip = request.META.get('REMOTE_ADDR')
+            UserSession.objects.filter(user=user).exclude(ip_address=current_ip).update(is_active=False)
+            
+            return Response({
+                'success': True,
+                'message': 'All other sessions revoked successfully'
+            }, status=status.HTTP_200_OK)

@@ -6,6 +6,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.db.models import Q, F, Count
 from django.shortcuts import get_object_or_404
+from django.core.cache import cache
 from rest_framework import status, generics, permissions, filters
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -530,6 +531,146 @@ class PartyInvitationViewSet(ModelViewSet):
         return Response({'message': 'Invitation declined'})
 
 
+    @action(detail=True, methods=['post'])
+    def join_by_code(self, request, pk=None):
+        """Join party using room code"""
+        party = self.get_object()
+        user = request.user
+        room_code = request.data.get('room_code')
+        
+        if not room_code:
+            return Response({'error': 'Room code is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if party.room_code != room_code:
+            return Response({'error': 'Invalid room code'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Check if party allows join by code
+        if not party.allow_join_by_code:
+            return Response({'error': 'Party does not allow joining by code'}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Check if user is already a participant
+        if party.participants.filter(user=user, is_active=True).exists():
+            return Response({'error': 'Already a participant'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Check party capacity
+        if party.max_participants and party.participants.filter(is_active=True).count() >= party.max_participants:
+            return Response({'error': 'Party is full'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Add participant
+        participant, created = PartyParticipant.objects.get_or_create(
+            party=party,
+            user=user,
+            defaults={'is_active': True, 'role': 'participant'}
+        )
+        
+        if not created:
+            participant.is_active = True
+            participant.save()
+        
+        return Response({'message': 'Successfully joined party'}, status=status.HTTP_200_OK)
+    
+    @action(detail=True, methods=['get'])
+    def analytics(self, request, pk=None):
+        """Get party analytics (for host only)"""
+        party = self.get_object()
+        user = request.user
+        
+        # Only host can view analytics
+        if party.host != user:
+            return Response({'error': 'Only host can view analytics'}, status=status.HTTP_403_FORBIDDEN)
+        
+        # Calculate analytics
+        total_participants = party.participants.filter(is_active=True).count()
+        total_messages = ChatMessage.objects.filter(party=party).count()
+        total_reactions = PartyReaction.objects.filter(party=party).count()
+        avg_watch_time = 0  # This would be calculated from viewing analytics
+        
+        peak_concurrent_users = cache.get(f'party_peak_users_{party.id}', 0)
+        
+        return Response({
+            'party_id': str(party.id),
+            'total_participants': total_participants,
+            'total_messages': total_messages,
+            'total_reactions': total_reactions,
+            'average_watch_time': avg_watch_time,
+            'peak_concurrent_users': peak_concurrent_users,
+            'created_at': party.created_at,
+            'duration': (timezone.now() - party.created_at).total_seconds() / 3600  # hours
+        })
+    
+    @action(detail=True, methods=['post'])
+    def kick_participant(self, request, pk=None):
+        """Kick a participant from the party"""
+        party = self.get_object()
+        user = request.user
+        participant_id = request.data.get('participant_id')
+        
+        # Only host can kick participants
+        if party.host != user:
+            return Response({'error': 'Only host can kick participants'}, status=status.HTTP_403_FORBIDDEN)
+        
+        if not participant_id:
+            return Response({'error': 'Participant ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            participant = PartyParticipant.objects.get(
+                party=party,
+                user_id=participant_id,
+                is_active=True
+            )
+            
+            # Cannot kick yourself
+            if participant.user == user:
+                return Response({'error': 'Cannot kick yourself'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            participant.is_active = False
+            participant.save()
+            
+            # TODO: Send notification to kicked user
+            # TODO: Broadcast to WebSocket that user was kicked
+            
+            return Response({'message': 'Participant kicked successfully'}, status=status.HTTP_200_OK)
+            
+        except PartyParticipant.DoesNotExist:
+            return Response({'error': 'Participant not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+    @action(detail=True, methods=['post'])
+    def promote_participant(self, request, pk=None):
+        """Promote a participant to moderator"""
+        party = self.get_object()
+        user = request.user
+        participant_id = request.data.get('participant_id')
+        
+        # Only host can promote participants
+        if party.host != user:
+            return Response({'error': 'Only host can promote participants'}, status=status.HTTP_403_FORBIDDEN)
+        
+        if not participant_id:
+            return Response({'error': 'Participant ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            participant = PartyParticipant.objects.get(
+                party=party,
+                user_id=participant_id,
+                is_active=True
+            )
+            
+            # Cannot promote yourself
+            if participant.user == user:
+                return Response({'error': 'Cannot promote yourself'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            participant.role = 'moderator'
+            participant.save()
+            
+            # TODO: Send notification to promoted user
+            # TODO: Broadcast to WebSocket about role change
+            
+            return Response({'message': 'Participant promoted to moderator'}, status=status.HTTP_200_OK)
+            
+        except PartyParticipant.DoesNotExist:
+            return Response({'error': 'Participant not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
 class PartyReportView(generics.CreateAPIView):
     """Create party reports"""
     
@@ -556,3 +697,24 @@ class RecentPartiesView(generics.ListAPIView):
             Q(host=user) | Q(participants__user=user, participants__is_active=True),
             created_at__gte=thirty_days_ago
         ).distinct().order_by('-created_at')[:10]
+
+
+class PublicPartiesView(generics.ListAPIView):
+    """Get public parties that users can join"""
+    
+    serializer_class = WatchPartySerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = ['status']
+    search_fields = ['title', 'description']
+    ordering_fields = ['created_at', 'title', 'participant_count']
+    ordering = ['-created_at']
+    
+    def get_queryset(self):
+        """Get public parties that are currently active or scheduled"""
+        return WatchParty.objects.filter(
+            visibility='public',
+            status__in=['waiting', 'active', 'scheduled']
+        ).select_related('host', 'video').annotate(
+            participant_count=Count('participants', filter=Q(participants__is_active=True))
+        )

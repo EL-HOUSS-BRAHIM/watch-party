@@ -39,11 +39,19 @@ def create_cache_key(*args, prefix='watchparty'):
 
 def clean_sensitive_data(data):
     """Remove sensitive information from logs"""
-    sensitive_fields = ['password', 'token', 'secret', 'key', 'authorization']
+    sensitive_fields = ['password', 'token', 'secret', 'key', 'authorization', 'csrf', 'session']
     cleaned = {}
+    
+    if not isinstance(data, dict):
+        return data
+    
     for key, value in data.items():
         if any(sensitive in key.lower() for sensitive in sensitive_fields):
             cleaned[key] = '[REDACTED]'
+        elif isinstance(value, dict):
+            cleaned[key] = clean_sensitive_data(value)
+        elif isinstance(value, (list, tuple)) and value and isinstance(value[0], dict):
+            cleaned[key] = [clean_sensitive_data(item) if isinstance(item, dict) else item for item in value]
         else:
             cleaned[key] = value
     return cleaned

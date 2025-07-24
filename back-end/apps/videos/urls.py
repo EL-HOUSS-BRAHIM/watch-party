@@ -16,6 +16,13 @@ from .views import (
     GoogleDriveMovieStreamView,
     VideoProxyView
 )
+from .enhanced_views import (
+    S3VideoUploadView,
+    VideoStreamingUrlView,
+    VideoThumbnailView,
+    VideoAnalyticsView,
+    validate_video_url
+)
 
 app_name = 'videos'
 
@@ -29,8 +36,17 @@ urlpatterns = [
     
     # Upload endpoints
     path('upload/', VideoUploadView.as_view(), name='upload'),
+    path('upload/s3/', S3VideoUploadView.as_view(), name='s3_upload'),
     path('upload/<uuid:upload_id>/complete/', VideoUploadCompleteView.as_view(), name='upload_complete'),
     path('upload/<uuid:upload_id>/status/', VideoUploadStatusView.as_view(), name='upload_status'),
+    
+    # Video processing and streaming
+    path('<uuid:video_id>/stream/', VideoStreamingUrlView.as_view(), name='streaming_url'),
+    path('<uuid:video_id>/thumbnail/', VideoThumbnailView.as_view(), name='thumbnail'),
+    path('<uuid:video_id>/analytics/', VideoAnalyticsView.as_view(), name='analytics'),
+    
+    # Video validation
+    path('validate-url/', validate_video_url, name='validate_url'),
     
     # Search
     path('search/', VideoSearchView.as_view(), name='search'),
