@@ -181,6 +181,9 @@ urlpatterns = [
     path('api/integrations/', include('apps.integrations.urls')),
     path('api/interactive/', include('apps.interactive.urls')),
     
+    # Admin Panel API
+    path('api/admin/', include('apps.admin_panel.urls')),
+    
     # API Documentation
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
