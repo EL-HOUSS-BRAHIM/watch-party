@@ -17,7 +17,12 @@ import dropbox
 from msal import ConfidentialClientApplication
 from io import BytesIO
 import ftplib
+import json
+import logging
 from urllib.parse import urlparse
+from datetime import datetime, timedelta
+
+logger = logging.getLogger(__name__)
 
 
 class StorageServiceError(Exception):
@@ -599,6 +604,420 @@ def upload_video_to_all_services(user, file_path, file_name):
                 'provider': service_info['provider'],
                 'connection_id': service_info['id'],
                 'error': str(e),
+                'success': False
+            })
+    
+    return upload_results
+
+
+class OneDriveStorageService(BaseStorageService):
+    """Microsoft OneDrive storage service implementation"""
+    
+    def __init__(self, user_credentials: Dict[str, Any]):
+        self.client_id = getattr(settings, 'ONEDRIVE_CLIENT_ID', '')
+        self.client_secret = getattr(settings, 'ONEDRIVE_CLIENT_SECRET', '')
+        self.tenant_id = getattr(settings, 'ONEDRIVE_TENANT_ID', 'common')
+        self.redirect_uri = getattr(settings, 'ONEDRIVE_REDIRECT_URI', '')
+        super().__init__(user_credentials)
+    
+    def _initialize_client(self):
+        """Initialize Microsoft Graph API client"""
+        try:
+            self.app = ConfidentialClientApplication(
+                client_id=self.client_id,
+                client_credential=self.client_secret,
+                authority=f"https://login.microsoftonline.com/{self.tenant_id}"
+            )
+            
+            # Get access token from stored credentials
+            access_token = self.user_credentials.get('access_token')
+            refresh_token = self.user_credentials.get('refresh_token')
+            
+            if not access_token:
+                raise StorageServiceError("OneDrive access token not found")
+            
+            self.access_token = access_token
+            self.refresh_token = refresh_token
+            
+        except Exception as e:
+            raise StorageServiceError(f"Failed to initialize OneDrive client: {str(e)}")
+    
+    def _refresh_access_token(self):
+        """Refresh the access token using refresh token"""
+        try:
+            result = self.app.acquire_token_by_refresh_token(
+                refresh_token=self.refresh_token,
+                scopes=['https://graph.microsoft.com/Files.ReadWrite']
+            )
+            
+            if 'access_token' in result:
+                self.access_token = result['access_token']
+                # Update stored credentials
+                self.user_credentials['access_token'] = self.access_token
+                return True
+            else:
+                raise StorageServiceError("Failed to refresh OneDrive token")
+                
+        except Exception as e:
+            raise StorageServiceError(f"Token refresh failed: {str(e)}")
+    
+    def _make_request(self, method: str, endpoint: str, **kwargs):
+        """Make authenticated request to Microsoft Graph API"""
+        headers = {
+            'Authorization': f'Bearer {self.access_token}',
+            'Content-Type': 'application/json'
+        }
+        
+        if 'headers' in kwargs:
+            headers.update(kwargs['headers'])
+        kwargs['headers'] = headers
+        
+        base_url = 'https://graph.microsoft.com/v1.0'
+        url = f"{base_url}{endpoint}"
+        
+        response = requests.request(method, url, **kwargs)
+        
+        # Handle token expiration
+        if response.status_code == 401:
+            self._refresh_access_token()
+            headers['Authorization'] = f'Bearer {self.access_token}'
+            response = requests.request(method, url, **kwargs)
+        
+        if not response.ok:
+            raise StorageServiceError(f"OneDrive API error: {response.text}")
+        
+        return response
+    
+    def upload_file(self, file_path: str, remote_name: str = None, folder_path: str = None) -> Dict[str, Any]:
+        """Upload file to OneDrive"""
+        try:
+            if not os.path.exists(file_path):
+                raise FileNotFoundError(f"Local file not found: {file_path}")
+            
+            file_name = remote_name or os.path.basename(file_path)
+            file_size = os.path.getsize(file_path)
+            
+            # For large files (>4MB), use resumable upload
+            if file_size > 4 * 1024 * 1024:
+                return self._upload_large_file(file_path, file_name, folder_path)
+            else:
+                return self._upload_small_file(file_path, file_name, folder_path)
+                
+        except Exception as e:
+            raise StorageServiceError(f"Failed to upload file to OneDrive: {str(e)}")
+    
+    def _upload_small_file(self, file_path: str, file_name: str, folder_path: str = None):
+        """Upload small file (<4MB) to OneDrive"""
+        endpoint = f"/me/drive/root:/{file_name}:/content"
+        if folder_path:
+            endpoint = f"/me/drive/root:/{folder_path}/{file_name}:/content"
+        
+        with open(file_path, 'rb') as f:
+            response = self._make_request(
+                'PUT',
+                endpoint,
+                data=f.read(),
+                headers={'Content-Type': 'application/octet-stream'}
+            )
+        
+        file_info = response.json()
+        return {
+            'file_id': file_info['id'],
+            'name': file_info['name'],
+            'size': file_info['size'],
+            'download_url': file_info.get('webUrl'),
+            'success': True
+        }
+    
+    def _upload_large_file(self, file_path: str, file_name: str, folder_path: str = None):
+        """Upload large file (>4MB) using resumable upload"""
+        endpoint = f"/me/drive/root:/{file_name}:/createUploadSession"
+        if folder_path:
+            endpoint = f"/me/drive/root:/{folder_path}/{file_name}:/createUploadSession"
+        
+        # Create upload session
+        session_data = {
+            "item": {
+                "@microsoft.graph.conflictBehavior": "rename",
+                "name": file_name
+            }
+        }
+        
+        response = self._make_request('POST', endpoint, json=session_data)
+        upload_url = response.json()['uploadUrl']
+        
+        # Upload file in chunks
+        chunk_size = 320 * 1024  # 320KB chunks
+        file_size = os.path.getsize(file_path)
+        
+        with open(file_path, 'rb') as f:
+            bytes_uploaded = 0
+            while bytes_uploaded < file_size:
+                chunk = f.read(chunk_size)
+                chunk_length = len(chunk)
+                
+                headers = {
+                    'Content-Range': f'bytes {bytes_uploaded}-{bytes_uploaded + chunk_length - 1}/{file_size}',
+                    'Content-Length': str(chunk_length)
+                }
+                
+                response = requests.put(upload_url, data=chunk, headers=headers)
+                
+                if response.status_code in [200, 201, 202]:
+                    bytes_uploaded += chunk_length
+                else:
+                    raise StorageServiceError(f"Upload chunk failed: {response.text}")
+        
+        # Get final file info
+        file_info = response.json()
+        return {
+            'file_id': file_info['id'],
+            'name': file_info['name'],
+            'size': file_info['size'],
+            'download_url': file_info.get('webUrl'),
+            'success': True
+        }
+    
+    def get_file_url(self, file_id: str, expires_in: int = 3600) -> str:
+        """Get temporary download URL for OneDrive file"""
+        try:
+            response = self._make_request('GET', f"/me/drive/items/{file_id}")
+            file_info = response.json()
+            
+            # OneDrive files have a webUrl for viewing, but for direct download
+            # we need to use the @microsoft.graph.downloadUrl
+            if '@microsoft.graph.downloadUrl' in file_info:
+                return file_info['@microsoft.graph.downloadUrl']
+            else:
+                return file_info.get('webUrl', '')
+                
+        except Exception as e:
+            raise StorageServiceError(f"Failed to get OneDrive file URL: {str(e)}")
+    
+    def delete_file(self, file_id: str) -> bool:
+        """Delete file from OneDrive"""
+        try:
+            self._make_request('DELETE', f"/me/drive/items/{file_id}")
+            return True
+        except Exception as e:
+            raise StorageServiceError(f"Failed to delete file from OneDrive: {str(e)}")
+    
+    def get_file_info(self, file_id: str) -> Dict[str, Any]:
+        """Get file metadata from OneDrive"""
+        try:
+            response = self._make_request('GET', f"/me/drive/items/{file_id}")
+            file_info = response.json()
+            
+            return {
+                'file_id': file_info['id'],
+                'name': file_info['name'],
+                'size': file_info.get('size', 0),
+                'mime_type': file_info.get('file', {}).get('mimeType', ''),
+                'created_at': file_info['createdDateTime'],
+                'modified_at': file_info['lastModifiedDateTime'],
+                'download_url': file_info.get('@microsoft.graph.downloadUrl', ''),
+                'view_link': file_info.get('webUrl', '')
+            }
+            
+        except Exception as e:
+            raise FileNotFoundError(f"File not found in OneDrive: {str(e)}")
+    
+    def list_files(self, folder_id: str = None, limit: int = 100) -> List[Dict[str, Any]]:
+        """List files in OneDrive folder"""
+        try:
+            endpoint = "/me/drive/root/children" if not folder_id else f"/me/drive/items/{folder_id}/children"
+            endpoint += f"?$top={limit}"
+            
+            response = self._make_request('GET', endpoint)
+            files_data = response.json()
+            
+            files = []
+            for file_info in files_data.get('value', []):
+                files.append({
+                    'file_id': file_info['id'],
+                    'name': file_info['name'],
+                    'size': file_info.get('size', 0),
+                    'created_at': file_info['createdDateTime'],
+                    'is_folder': 'folder' in file_info
+                })
+            
+            return files
+            
+        except Exception as e:
+            raise StorageServiceError(f"Failed to list OneDrive files: {str(e)}")
+
+
+class DropboxStorageService(BaseStorageService):
+    """Dropbox storage service implementation"""
+    
+    def _initialize_client(self):
+        """Initialize Dropbox client"""
+        try:
+            access_token = self.user_credentials.get('access_token')
+            if not access_token:
+                raise StorageServiceError("Dropbox access token not found")
+            
+            self.client = dropbox.Dropbox(access_token)
+            
+        except Exception as e:
+            raise StorageServiceError(f"Failed to initialize Dropbox client: {str(e)}")
+    
+    def upload_file(self, file_path: str, remote_name: str = None, folder_path: str = None) -> Dict[str, Any]:
+        """Upload file to Dropbox"""
+        try:
+            if not os.path.exists(file_path):
+                raise FileNotFoundError(f"Local file not found: {file_path}")
+            
+            file_name = remote_name or os.path.basename(file_path)
+            remote_path = f"/{file_name}"
+            
+            if folder_path:
+                remote_path = f"/{folder_path.strip('/')}/{file_name}"
+            
+            file_size = os.path.getsize(file_path)
+            
+            # For large files (>150MB), use upload session
+            if file_size > 150 * 1024 * 1024:
+                return self._upload_large_file(file_path, remote_path, file_size)
+            else:
+                return self._upload_small_file(file_path, remote_path)
+                
+        except Exception as e:
+            raise StorageServiceError(f"Failed to upload file to Dropbox: {str(e)}")
+    
+    def _upload_small_file(self, file_path: str, remote_path: str):
+        """Upload small file to Dropbox"""
+        with open(file_path, 'rb') as f:
+            file_metadata = self.client.files_upload(
+                f.read(),
+                remote_path,
+                mode=dropbox.files.WriteMode.overwrite
+            )
+        
+        return {
+            'file_id': file_metadata.id,
+            'name': file_metadata.name,
+            'size': file_metadata.size,
+            'path': file_metadata.path_display,
+            'success': True
+        }
+    
+    def _upload_large_file(self, file_path: str, remote_path: str, file_size: int):
+        """Upload large file using upload session"""
+        chunk_size = 4 * 1024 * 1024  # 4MB chunks
+        
+        with open(file_path, 'rb') as f:
+            # Start upload session
+            session_start_result = self.client.files_upload_session_start(
+                f.read(chunk_size)
+            )
+            session_id = session_start_result.session_id
+            cursor = dropbox.files.UploadSessionCursor(
+                session_id=session_id,
+                offset=f.tell()
+            )
+            
+            # Upload remaining chunks
+            while f.tell() < file_size:
+                chunk = f.read(chunk_size)
+                if len(chunk) <= chunk_size:
+                    # Last chunk
+                    commit_info = dropbox.files.CommitInfo(
+                        path=remote_path,
+                        mode=dropbox.files.WriteMode.overwrite
+                    )
+                    file_metadata = self.client.files_upload_session_finish(
+                        chunk, cursor, commit_info
+                    )
+                    break
+                else:
+                    # Regular chunk
+                    self.client.files_upload_session_append_v2(chunk, cursor)
+                    cursor.offset = f.tell()
+        
+        return {
+            'file_id': file_metadata.id,
+            'name': file_metadata.name,
+            'size': file_metadata.size,
+            'path': file_metadata.path_display,
+            'success': True
+        }
+    
+    def get_file_url(self, file_path: str, expires_in: int = 3600) -> str:
+        """Get temporary download URL for Dropbox file"""
+        try:
+            # Create temporary link
+            shared_link = self.client.files_get_temporary_link(file_path)
+            return shared_link.link
+            
+        except Exception as e:
+            raise StorageServiceError(f"Failed to get Dropbox file URL: {str(e)}")
+    
+    def delete_file(self, file_path: str) -> bool:
+        """Delete file from Dropbox"""
+        try:
+            self.client.files_delete_v2(file_path)
+            return True
+        except Exception as e:
+            raise StorageServiceError(f"Failed to delete file from Dropbox: {str(e)}")
+    
+    def get_file_info(self, file_path: str) -> Dict[str, Any]:
+        """Get file metadata from Dropbox"""
+        try:
+            metadata = self.client.files_get_metadata(file_path)
+            
+            return {
+                'file_id': metadata.id,
+                'name': metadata.name,
+                'size': getattr(metadata, 'size', 0),
+                'path': metadata.path_display,
+                'created_at': getattr(metadata, 'client_modified', None),
+                'modified_at': getattr(metadata, 'server_modified', None)
+            }
+            
+        except Exception as e:
+            raise FileNotFoundError(f"File not found in Dropbox: {str(e)}")
+    
+    def list_files(self, folder_path: str = "", limit: int = 100) -> List[Dict[str, Any]]:
+        """List files in Dropbox folder"""
+        try:
+            if not folder_path:
+                folder_path = ""
+            
+            result = self.client.files_list_folder(folder_path, limit=limit)
+            
+            files = []
+            for entry in result.entries:
+                files.append({
+                    'file_id': entry.id,
+                    'name': entry.name,
+                    'path': entry.path_display,
+                    'size': getattr(entry, 'size', 0),
+                    'is_folder': isinstance(entry, dropbox.files.FolderMetadata)
+                })
+            
+            return files
+            
+        except Exception as e:
+            raise StorageServiceError(f"Failed to list Dropbox files: {str(e)}")
+
+
+# Factory function to create appropriate storage service
+def get_storage_service(provider: str, credentials: Dict[str, Any]) -> BaseStorageService:
+    """Factory function to create storage service based on provider"""
+    
+    providers = {
+        'aws_s3': S3StorageService,
+        'google_drive': GoogleDriveStorageService,
+        'onedrive': OneDriveStorageService,
+        'dropbox': DropboxStorageService,
+        'ftp': FTPStorageService
+    }
+    
+    if provider not in providers:
+        raise ValueError(f"Unsupported storage provider: {provider}")
+    
+    return providers[provider](credentials)
                 'success': False
             })
     

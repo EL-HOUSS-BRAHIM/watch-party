@@ -4,6 +4,7 @@ from .advanced_views import (
     RealTimeDashboardView, AdvancedAnalyticsView, 
     A_BTestingView, PredictiveAnalyticsView
 )
+from . import dashboard_views
 
 app_name = 'analytics'
 
@@ -14,6 +15,14 @@ urlpatterns = [
     path('party-stats/<uuid:party_id>/', views.PartyStatsView.as_view(), name='party-stats'),
     path('admin/analytics/', views.AdminAnalyticsView.as_view(), name='admin-analytics'),
     path('export/', views.ExportAnalyticsView.as_view(), name='export-analytics'),
+    
+    # Enhanced Dashboard Analytics
+    path('dashboard/', dashboard_views.dashboard_stats, name='dashboard-stats'),
+    path('user/', dashboard_views.user_analytics, name='user-analytics'),
+    path('video/<uuid:video_id>/', dashboard_views.video_analytics, name='video-analytics'),
+    path('party/<uuid:party_id>/', dashboard_views.party_analytics, name='party-analytics'),
+    path('system/', dashboard_views.system_analytics, name='system-analytics'),
+    path('events/', dashboard_views.track_event, name='track-event'),
     
     # Phase 2 Advanced Analytics
     path('dashboard/realtime/', RealTimeDashboardView.as_view(), name='realtime-dashboard'),
