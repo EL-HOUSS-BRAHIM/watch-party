@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.db.models import Q, Count
 from datetime import timedelta
+from core.permissions import IsAdminUser
 from .models import Notification, NotificationPreferences, NotificationTemplate, NotificationDelivery
 from .serializers import (
     NotificationSerializer, NotificationPreferencesSerializer, 
@@ -469,11 +470,121 @@ def update_push_token(request):
     
     preferences.push_token = token
     preferences.push_device_type = device_type
+    preferences.push_enabled = True  # Enable push notifications when token is updated
     preferences.save()
+    
+    # Subscribe to general topic for broadcast notifications
+    try:
+        from services.mobile_push_service import mobile_push_service
+        mobile_push_service.subscribe_to_topic([token], 'general_announcements')
+    except Exception as e:
+        logger.warning(f"Failed to subscribe to topic: {str(e)}")
     
     return Response({
         'message': 'Push token updated successfully'
     })
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def remove_push_token(request):
+    """Remove user's push notification token"""
+    device_type = request.data.get('device_type', 'web')
+    
+    try:
+        preferences = NotificationPreferences.objects.get(user=request.user)
+        
+        # Unsubscribe from topics before removing token
+        if preferences.push_token:
+            try:
+                from services.mobile_push_service import mobile_push_service
+                mobile_push_service.unsubscribe_from_topic(
+                    [preferences.push_token], 
+                    'general_announcements'
+                )
+            except Exception as e:
+                logger.warning(f"Failed to unsubscribe from topic: {str(e)}")
+        
+        preferences.push_token = ''
+        preferences.push_enabled = False
+        preferences.save()
+        
+        return Response({
+            'message': 'Push token removed successfully'
+        })
+        
+    except NotificationPreferences.DoesNotExist:
+        return Response({
+            'message': 'No push token found'
+        })
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def test_push_notification(request):
+    """Send a test push notification to the user"""
+    try:
+        from services.mobile_push_service import mobile_push_service
+        
+        result = mobile_push_service.send_to_user(
+            user=request.user,
+            title="Test Notification",
+            body="This is a test push notification from Watch Party",
+            data={
+                'type': 'test',
+                'timestamp': timezone.now().isoformat()
+            }
+        )
+        
+        return Response({
+            'message': 'Test notification sent',
+            'result': result
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Failed to send test notification: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def send_broadcast_push(request):
+    """Send broadcast push notification to all users"""
+    title = request.data.get('title')
+    body = request.data.get('body')
+    topic = request.data.get('topic', 'general_announcements')
+    
+    if not title or not body:
+        return Response(
+            {'error': 'title and body are required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    try:
+        from services.mobile_push_service import mobile_push_service
+        
+        message_id = mobile_push_service.send_to_topic(
+            topic=topic,
+            title=title,
+            body=body,
+            data={
+                'type': 'broadcast',
+                'timestamp': timezone.now().isoformat()
+            }
+        )
+        
+        return Response({
+            'message': 'Broadcast notification sent',
+            'message_id': message_id
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Failed to send broadcast: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 @api_view(['POST'])
@@ -490,4 +601,240 @@ def clear_all_notifications(request):
     return Response({
         'message': f'Cleared {count} notifications',
         'count': count
+    })
+
+
+# Missing function implementations for URL compatibility
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def mark_notification_read(request, pk):
+    """Mark a single notification as read"""
+    try:
+        notification = Notification.objects.get(id=pk, user=request.user)
+        notification.status = 'read'
+        notification.read_at = timezone.now()
+        notification.save()
+        
+        return Response({
+            'message': 'Notification marked as read',
+            'notification_id': str(pk)
+        })
+    except Notification.DoesNotExist:
+        return Response(
+            {'error': 'Notification not found'}, 
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def mark_all_notifications_read(request):
+    """Mark all notifications as read for the current user"""
+    count = request.user.notifications.filter(
+        status__in=['pending', 'sent', 'delivered']
+    ).update(
+        status='read',
+        read_at=timezone.now()
+    )
+    
+    return Response({
+        'message': f'Marked {count} notifications as read',
+        'count': count
+    })
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def update_notification_preferences(request):
+    """Update user notification preferences"""
+    try:
+        preferences, created = NotificationPreferences.objects.get_or_create(
+            user=request.user
+        )
+        
+        # Update preferences from request data
+        for key, value in request.data.items():
+            if hasattr(preferences, key):
+                setattr(preferences, key, value)
+        
+        preferences.save()
+        
+        serializer = NotificationPreferencesSerializer(preferences)
+        return Response({
+            'message': 'Preferences updated successfully',
+            'preferences': serializer.data
+        })
+    except Exception as e:
+        return Response(
+            {'error': str(e)}, 
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+
+# Additional view classes for URL compatibility
+class NotificationTemplateListView(generics.ListCreateAPIView):
+    """List and create notification templates (Admin only)"""
+    serializer_class = NotificationTemplateSerializer
+    permission_classes = [IsAdminUser]
+    
+    def get_queryset(self):
+        return NotificationTemplate.objects.all()
+
+
+class NotificationTemplateDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Retrieve, update, and delete notification templates (Admin only)"""
+    serializer_class = NotificationTemplateSerializer
+    permission_classes = [IsAdminUser]
+    
+    def get_queryset(self):
+        return NotificationTemplate.objects.all()
+
+
+class NotificationChannelListView(generics.ListAPIView):
+    """List notification channels (Admin only)"""
+    permission_classes = [IsAdminUser]
+    
+    def get(self, request):
+        from .models import NotificationChannel
+        channels = NotificationChannel.objects.select_related('user').all()
+        
+        data = []
+        for channel in channels:
+            data.append({
+                'id': str(channel.id),
+                'user': {
+                    'id': str(channel.user.id),
+                    'username': channel.user.username,
+                    'email': channel.user.email
+                },
+                'email_enabled': channel.email_enabled,
+                'push_enabled': channel.push_enabled,
+                'sms_enabled': channel.sms_enabled,
+                'in_app_enabled': channel.in_app_enabled,
+                'created_at': channel.created_at,
+                'updated_at': channel.updated_at
+            })
+        
+        return Response({
+            'channels': data,
+            'total': len(data)
+        })
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def notification_stats(request):
+    """Get notification statistics"""
+    from django.db.models import Count
+    
+    # Get stats for different time periods
+    today = timezone.now().date()
+    this_week = today - timedelta(days=7)
+    this_month = today - timedelta(days=30)
+    
+    stats = {
+        'total_notifications': Notification.objects.count(),
+        'today': Notification.objects.filter(created_at__date=today).count(),
+        'this_week': Notification.objects.filter(created_at__gte=this_week).count(),
+        'this_month': Notification.objects.filter(created_at__gte=this_month).count(),
+        'by_status': dict(
+            Notification.objects.values('status').annotate(
+                count=Count('id')
+            ).values_list('status', 'count')
+        ),
+        'by_type': dict(
+            Notification.objects.values('notification_type').annotate(
+                count=Count('id')
+            ).values_list('notification_type', 'count')
+        )
+    }
+    
+    return Response(stats)
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def delivery_stats(request):
+    """Get notification delivery statistics"""
+    from .models import NotificationDelivery
+    
+    delivery_stats = {
+        'total_deliveries': NotificationDelivery.objects.count(),
+        'by_channel': dict(
+            NotificationDelivery.objects.values('channel').annotate(
+                count=Count('id')
+            ).values_list('channel', 'count')
+        ),
+        'by_status': dict(
+            NotificationDelivery.objects.values('status').annotate(
+                count=Count('id')
+            ).values_list('status', 'count')
+        ),
+        'success_rate': 0  # Calculate success rate
+    }
+    
+    total = delivery_stats['total_deliveries']
+    if total > 0:
+        successful = NotificationDelivery.objects.filter(status='delivered').count()
+        delivery_stats['success_rate'] = round((successful / total) * 100, 2)
+    
+    return Response(delivery_stats)
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def bulk_send_notifications(request):
+    """Send notifications in bulk"""
+    notification_type = request.data.get('type')
+    title = request.data.get('title')
+    content = request.data.get('content')
+    user_ids = request.data.get('user_ids', [])
+    
+    if not all([notification_type, title, content]):
+        return Response(
+            {'error': 'Type, title, and content are required'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    # Get target users
+    if user_ids:
+        users = User.objects.filter(id__in=user_ids)
+    else:
+        users = User.objects.filter(is_active=True)
+    
+    # Create notifications
+    notifications = []
+    for user in users:
+        notifications.append(Notification(
+            user=user,
+            notification_type=notification_type,
+            title=title,
+            content=content,
+            metadata={'bulk_send': True}
+        ))
+    
+    created_notifications = Notification.objects.bulk_create(notifications)
+    
+    return Response({
+        'message': f'Created {len(created_notifications)} notifications',
+        'count': len(created_notifications)
+    })
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def cleanup_old_notifications(request):
+    """Clean up old notifications"""
+    days = int(request.data.get('days', 30))
+    cutoff_date = timezone.now() - timedelta(days=days)
+    
+    # Delete old dismissed and read notifications
+    deleted_count, _ = Notification.objects.filter(
+        Q(status='dismissed') | Q(status='read'),
+        created_at__lt=cutoff_date
+    ).delete()
+    
+    return Response({
+        'message': f'Cleaned up {deleted_count} old notifications',
+        'deleted_count': deleted_count
     })
