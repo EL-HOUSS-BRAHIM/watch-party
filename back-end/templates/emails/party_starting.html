@@ -1,0 +1,58 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Party Starting Soon - {{ party.title }}{% endblock %}
+
+{% block header_subtitle %}Your watch party is about to begin!{% endblock %}
+
+{% block content %}
+<h2>🚨 Party Alert: {{ party.title }} starts in {{ time_until_start }}!</h2>
+
+<div class="alert alert-warning">
+    <strong>⏰ Starting Soon!</strong> Your watch party begins at {{ party.scheduled_start_time|time:"g:i A" }} {{ party.scheduled_start_time|date:"T" }}
+</div>
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 8px; margin: 1.5rem 0; text-align: center;">
+    <h3 style="color: white; margin-bottom: 1rem;">{{ party.title }}</h3>
+    <p style="color: #e2e8f0; font-size: 1.1rem;">{{ party.participant_count }} people are already waiting!</p>
+</div>
+
+<div style="text-align: center; margin: 2rem 0;">
+    <a href="{{ join_url }}" class="btn" style="font-size: 1.2rem; padding: 18px 36px;">
+        🎬 Join Now
+    </a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+    <div style="background-color: #f0fff4; padding: 1rem; border-radius: 6px; border-left: 4px solid #38a169;">
+        <strong>👥 Current Attendees</strong><br>
+        {{ party.participant_count }} of {{ party.max_participants }} joined
+    </div>
+    <div style="background-color: #ebf8ff; padding: 1rem; border-radius: 6px; border-left: 4px solid #3182ce;">
+        <strong>🎬 Content Ready</strong><br>
+        {{ party.video.title|default:"Streaming content loaded" }}
+    </div>
+</div>
+
+<h3>🎯 Pre-party checklist:</h3>
+<ul style="margin: 1rem 0; padding-left: 2rem;">
+    <li>✅ Check your internet connection</li>
+    <li>✅ Grab your favorite snacks 🍿</li>
+    <li>✅ Make sure audio is working</li>
+    <li>✅ Close other browser tabs for best performance</li>
+</ul>
+
+{% if party.chat_enabled %}
+<div class="alert alert-info">
+    <strong>💬 Chat is enabled!</strong> Get ready to share your reactions and thoughts with everyone.
+</div>
+{% endif %}
+
+<p>Don't miss out - join your friends now and enjoy the show together!</p>
+
+<div style="text-align: center; margin: 2rem 0;">
+    <p style="font-size: 0.9rem; color: #718096;">
+        <strong>Party Code:</strong> {{ party.party_code }} |
+        <strong>Host:</strong> {{ party.host.first_name|default:party.host.username }}
+    </p>
+</div>
+{% endblock %}
