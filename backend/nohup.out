@@ -1,4 +1,0 @@
-INFO 2025-07-23 15:17:08,406 cli 107230 139661592948992 Starting server at tcp:port=8000:interface=0.0.0.0
-INFO 2025-07-23 15:17:08,408 server 107230 139661592948992 HTTP/2 support not enabled (install the http2 and tls Twisted extras)
-INFO 2025-07-23 15:17:08,409 server 107230 139661592948992 Configuring endpoint tcp:port=8000:interface=0.0.0.0
-CRITICAL 2025-07-23 15:17:08,410 server 107230 139661592948992 Listen failure: Couldn't listen on 0.0.0.0:8000: [Errno 98] Address already in use.
