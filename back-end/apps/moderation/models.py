@@ -46,7 +46,7 @@ class ContentReport(models.Model):
     reported_by = models.ForeignKey(
         User, 
         on_delete=models.CASCADE, 
-        related_name='reports_made'
+        related_name='content_reports_made'
     )
     
     # Report details
@@ -60,21 +60,21 @@ class ContentReport(models.Model):
         on_delete=models.CASCADE, 
         null=True, 
         blank=True,
-        related_name='reports'
+        related_name='content_reports'
     )
     reported_party = models.ForeignKey(
         'parties.WatchParty', 
         on_delete=models.CASCADE, 
         null=True, 
         blank=True,
-        related_name='reports'
+        related_name='content_reports'
     )
     reported_user = models.ForeignKey(
         User, 
         on_delete=models.CASCADE, 
         null=True, 
         blank=True,
-        related_name='reports_against'
+        related_name='content_reports_against'
     )
     
     # Report content
@@ -100,7 +100,7 @@ class ContentReport(models.Model):
         on_delete=models.SET_NULL, 
         null=True, 
         blank=True,
-        related_name='assigned_reports',
+        related_name='assigned_content_reports',
         limit_choices_to={'is_staff': True}
     )
     resolution_notes = models.TextField(blank=True)
@@ -161,7 +161,7 @@ class ReportAction(models.Model):
     action_type = models.CharField(max_length=20, choices=ACTION_TYPES)
     
     # Who took the action
-    moderator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='moderation_actions')
+    moderator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='content_moderation_actions')
     
     # Action details
     description = models.TextField()
