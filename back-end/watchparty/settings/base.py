@@ -49,6 +49,7 @@ LOCAL_APPS = [
     'apps.integrations',
     'apps.interactive',
     'apps.admin_panel',
+    'apps.moderation',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -265,6 +266,25 @@ STRIPE_WEBHOOK_SECRET = config('STRIPE_WEBHOOK_SECRET', default='')
 GOOGLE_DRIVE_CLIENT_ID = config('GOOGLE_DRIVE_CLIENT_ID', default='')
 GOOGLE_DRIVE_CLIENT_SECRET = config('GOOGLE_DRIVE_CLIENT_SECRET', default='')
 GOOGLE_SERVICE_ACCOUNT_FILE = config('GOOGLE_SERVICE_ACCOUNT_FILE', default='')
+
+# Firebase Configuration for Mobile Push Notifications
+FIREBASE_CONFIG = {
+    'type': config('FIREBASE_TYPE', default='service_account'),
+    'project_id': config('FIREBASE_PROJECT_ID', default=''),
+    'private_key_id': config('FIREBASE_PRIVATE_KEY_ID', default=''),
+    'private_key': config('FIREBASE_PRIVATE_KEY', default='').replace('\\n', '\n'),
+    'client_email': config('FIREBASE_CLIENT_EMAIL', default=''),
+    'client_id': config('FIREBASE_CLIENT_ID', default=''),
+    'auth_uri': config('FIREBASE_AUTH_URI', default='https://accounts.google.com/o/oauth2/auth'),
+    'token_uri': config('FIREBASE_TOKEN_URI', default='https://oauth2.googleapis.com/token'),
+    'auth_provider_x509_cert_url': config('FIREBASE_AUTH_PROVIDER_X509_CERT_URL', default='https://www.googleapis.com/oauth2/v1/certs'),
+    'client_x509_cert_url': config('FIREBASE_CLIENT_X509_CERT_URL', default=''),
+}
+
+# Mobile Push Notification Settings
+FIREBASE_CREDENTIALS_FILE = config('FIREBASE_CREDENTIALS_FILE', default='')
+PUSH_NOTIFICATION_BATCH_SIZE = config('PUSH_NOTIFICATION_BATCH_SIZE', default=100, cast=int)
+PUSH_NOTIFICATION_RETRY_ATTEMPTS = config('PUSH_NOTIFICATION_RETRY_ATTEMPTS', default=3, cast=int)
 
 # API Documentation
 SPECTACULAR_SETTINGS = {
