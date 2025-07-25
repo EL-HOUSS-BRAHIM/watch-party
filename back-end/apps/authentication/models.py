@@ -64,6 +64,11 @@ class User(AbstractUser):
     last_login = models.DateTimeField(null=True, blank=True, verbose_name='Last Login')
     is_active = models.BooleanField(default=True, verbose_name='Active')
     
+    # Social Authentication Fields
+    google_id = models.CharField(max_length=100, null=True, blank=True, unique=True, verbose_name='Google ID')
+    github_id = models.CharField(max_length=100, null=True, blank=True, unique=True, verbose_name='GitHub ID')
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True, verbose_name='Profile Picture')
+    
     # Custom manager
     objects = UserManager()
     
