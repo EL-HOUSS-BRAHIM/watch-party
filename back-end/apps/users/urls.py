@@ -51,6 +51,14 @@ urlpatterns = [
     path('notifications/settings/', views.NotificationSettingsView.as_view(), name='notification_settings'),
     path('privacy/settings/', views.PrivacySettingsView.as_view(), name='privacy_settings'),
     
+    # Data export and account management (GDPR compliance)
+    path('export-data/', views.ExportUserDataView.as_view(), name='export_user_data'),
+    path('delete-account/', views.DeleteAccountView.as_view(), name='delete_account'),
+    
+    # Enhanced social features
+    path('<uuid:user_id>/mutual-friends/', views.UserMutualFriendsView.as_view(), name='mutual_friends'),
+    path('online-status/', views.UserOnlineStatusView.as_view(), name='online_status'),
+    
     # Activity and history
     path('legacy/activity/', views.UserActivityView.as_view(), name='legacy_user_activity'),
     path('watch-history/', views.WatchHistoryView.as_view(), name='watch_history'),
