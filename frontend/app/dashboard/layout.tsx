@@ -10,6 +10,7 @@ import { DashboardHeader } from "@/components/layout/dashboard-header"
 import { useAppStore } from "@/lib/stores/ui-store"
 import { cn } from "@/lib/utils"
 import { Loader2 } from "lucide-react"
+import { SidebarProvider } from "@/components/ui/sidebar"
 
 export default function DashboardLayout({
   children,
@@ -42,18 +43,20 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Sidebar */}
-      <DashboardSidebar />
+    <SidebarProvider>
+      <div className="min-h-screen bg-background">
+        {/* Sidebar */}
+        <DashboardSidebar />
 
-      {/* Main Content */}
-      <div className={cn("transition-all duration-300 ease-in-out", ui.sidebarOpen ? "lg:ml-64" : "lg:ml-16")}>
-        {/* Header */}
-        <DashboardHeader />
+        {/* Main Content */}
+        <div className={cn("transition-all duration-300 ease-in-out", ui.sidebarOpen ? "lg:ml-64" : "lg:ml-16")}>
+          {/* Header */}
+          <DashboardHeader />
 
-        {/* Page Content */}
-        <main className="p-6">{children}</main>
+          {/* Page Content */}
+          <main className="p-6">{children}</main>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   )
 }

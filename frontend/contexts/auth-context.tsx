@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const token = localStorage.getItem("access_token")
         if (token) {
-          const userData = await apiClient.get<User>("/api/auth/me/")
+          const userData = await apiClient.get<User>("/api/auth/profile/")
           setUser(userData)
         }
       } catch (error) {

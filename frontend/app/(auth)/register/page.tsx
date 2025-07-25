@@ -16,20 +16,16 @@ import Link from "next/link"
 
 const registerSchema = z
   .object({
-    username: z
-      .string()
-      .min(3, "Username must be at least 3 characters")
-      .max(30, "Username must be less than 30 characters"),
     email: z.string().email("Please enter a valid email address"),
     first_name: z.string().min(1, "First name is required"),
     last_name: z.string().min(1, "Last name is required"),
     password: z.string().min(8, "Password must be at least 8 characters"),
-    password_confirm: z.string(),
+    confirm_password: z.string(),
     terms_accepted: z.boolean().refine((val) => val === true, "You must accept the terms and conditions"),
   })
-  .refine((data) => data.password === data.password_confirm, {
+  .refine((data) => data.password === data.confirm_password, {
     message: "Passwords don't match",
-    path: ["password_confirm"],
+    path: ["confirm_password"],
   })
 
 type RegisterForm = z.infer<typeof registerSchema>
@@ -56,7 +52,7 @@ export default function RegisterPage() {
   const onSubmit = async (data: RegisterForm) => {
     try {
       setIsLoading(true)
-      const { password_confirm, ...registerData } = data
+      const { confirm_password, terms_accepted, ...registerData } = data
       await registerUser(registerData)
       toast({
         title: "Account created!",
@@ -106,15 +102,6 @@ export default function RegisterPage() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="username">Username</Label>
-          <div className="relative">
-            <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input id="username" placeholder="johndoe" className="pl-10" {...register("username")} />
-          </div>
-          {errors.username && <p className="text-sm text-destructive">{errors.username.message}</p>}
-        </div>
-
-        <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <div className="relative">
             <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -160,7 +147,7 @@ export default function RegisterPage() {
               type={showPasswordConfirm ? "text" : "password"}
               placeholder="Confirm your password"
               className="pl-10 pr-10"
-              {...register("password_confirm")}
+              {...register("confirm_password")}
             />
             <Button
               type="button"
@@ -176,7 +163,7 @@ export default function RegisterPage() {
               )}
             </Button>
           </div>
-          {errors.password_confirm && <p className="text-sm text-destructive">{errors.password_confirm.message}</p>}
+          {errors.confirm_password && <p className="text-sm text-destructive">{errors.confirm_password.message}</p>}
         </div>
 
         <div className="flex items-center space-x-2">

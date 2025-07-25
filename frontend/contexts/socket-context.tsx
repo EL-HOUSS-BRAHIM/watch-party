@@ -23,12 +23,22 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       return socket
     }
 
-    const newSocket = io(`${process.env.NEXT_PUBLIC_WEBSOCKET_URL}${namespace}`, {
+    // Don't connect if not authenticated
+    if (!isAuthenticated) {
+      return null as any
+    }
+
+    const wsUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:8000'
+    const newSocket = io(`${wsUrl}${namespace}`, {
       auth: {
         token: localStorage.getItem("access_token"),
       },
       transports: ["websocket", "polling"],
       autoConnect: isAuthenticated,
+      timeout: 20000,
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionAttempts: 5,
     })
 
     newSocket.on("connect", () => {
@@ -42,8 +52,9 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     })
 
     newSocket.on("connect_error", (error) => {
-      console.error("Socket connection error:", error)
+      console.warn("Socket connection error:", error.message)
       setIsConnected(false)
+      // Don't spam the console with WebSocket errors during development
     })
 
     setSocket(newSocket)

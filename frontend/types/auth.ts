@@ -51,12 +51,11 @@ export interface LoginCredentials {
 }
 
 export interface RegisterData {
-  username: string
   email: string
   password: string
   first_name: string
   last_name: string
-  terms_accepted: boolean
+  confirm_password?: string
 }
 
 export interface AuthResponse {
