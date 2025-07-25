@@ -13,7 +13,12 @@ const config: Config = {
   theme: {
   	extend: {
   		colors: {
-  			background: 'hsl(var(--background))',
+  			background: {
+  				DEFAULT: 'hsl(var(--background))',
+  				primary: 'hsl(var(--background-primary))',
+  				secondary: 'hsl(var(--background-secondary))',
+  				tertiary: 'hsl(var(--background-tertiary))'
+  			},
   			foreground: 'hsl(var(--foreground))',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
