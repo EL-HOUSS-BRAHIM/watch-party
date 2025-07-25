@@ -7,7 +7,7 @@ import { useAuth } from "./auth-context"
 interface SocketContextType {
   socket: Socket | null
   isConnected: boolean
-  connect: (namespace?: string) => Socket
+  connect: (namespace?: string) => Socket | null
   disconnect: () => void
 }
 
@@ -25,7 +25,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     // Don't connect if not authenticated
     if (!isAuthenticated) {
-      return null as any
+      return null
     }
 
     const wsUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL || 'ws://localhost:8000'
@@ -62,11 +62,11 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   }
 
   const disconnect = () => {
-    if (socket) {
+    if (socket && socket.connected) {
       socket.disconnect()
-      setSocket(null)
-      setIsConnected(false)
     }
+    setSocket(null)
+    setIsConnected(false)
   }
 
   // Auto-connect when authenticated
@@ -78,7 +78,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     }
 
     return () => {
-      disconnect()
+      // Only disconnect if socket exists
+      if (socket) {
+        disconnect()
+      }
     }
   }, [isAuthenticated, user])
 
@@ -105,7 +108,14 @@ export function useSocket(namespace?: string) {
     if (namespace) {
       const namespacedSocket = connect(namespace)
       return () => {
-        namespacedSocket.disconnect()
+        // Only disconnect if socket exists and is still connected
+        if (namespacedSocket && typeof namespacedSocket.disconnect === 'function') {
+          try {
+            namespacedSocket.disconnect()
+          } catch (error) {
+            console.warn('Error disconnecting socket:', error)
+          }
+        }
       }
     }
   }, [namespace, connect])
