@@ -132,6 +132,15 @@ class IsAdminUser(permissions.BasePermission):
         return request.user and request.user.is_staff
 
 
+class IsSuperUser(permissions.BasePermission):
+    """
+    Permission class to check if user is superuser
+    """
+    
+    def has_permission(self, request, view):
+        return request.user and request.user.is_superuser
+
+
 class IsOwner(permissions.BasePermission):
     """
     Permission class to check if user is the owner
