@@ -631,3 +631,226 @@ class UserActivityView(APIView):
             'activities': serializer.data,
             'count': activities.count()
         })
+
+
+class ExportUserDataView(APIView):
+    """Export user data for GDPR compliance"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        
+        # Gather all user data
+        user_data = {
+            'user_profile': {
+                'id': str(user.id),
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'date_joined': user.date_joined.isoformat(),
+                'last_login': user.last_login.isoformat() if user.last_login else None,
+                'is_premium': user.is_premium,
+            },
+            'friends': [],
+            'activities': [],
+            'videos': [],
+            'parties': [],
+            'notifications': []
+        }
+        
+        # Get friends
+        friendships = Friendship.objects.filter(
+            (Q(from_user=user) | Q(to_user=user)) & Q(status='accepted')
+        )
+        for friendship in friendships:
+            friend = friendship.to_user if friendship.from_user == user else friendship.from_user
+            user_data['friends'].append({
+                'name': friend.full_name,
+                'email': friend.email,
+                'friends_since': friendship.created_at.isoformat()
+            })
+        
+        # Get activities
+        activities = UserActivity.objects.filter(user=user)[:100]  # Last 100 activities
+        for activity in activities:
+            user_data['activities'].append({
+                'type': activity.activity_type,
+                'description': activity.description,
+                'timestamp': activity.created_at.isoformat()
+            })
+        
+        # Get videos
+        from apps.videos.models import Video
+        videos = Video.objects.filter(uploader=user)
+        for video in videos:
+            user_data['videos'].append({
+                'title': video.title,
+                'description': video.description,
+                'uploaded_at': video.created_at.isoformat(),
+                'views': getattr(video, 'views', 0)
+            })
+        
+        # Get parties
+        from apps.parties.models import WatchParty
+        parties = WatchParty.objects.filter(host=user)
+        for party in parties:
+            user_data['parties'].append({
+                'title': party.title,
+                'description': party.description,
+                'created_at': party.created_at.isoformat(),
+                'privacy': party.privacy
+            })
+        
+        # Get notifications
+        from apps.notifications.models import Notification
+        notifications = Notification.objects.filter(user=user)[:50]  # Last 50 notifications
+        for notification in notifications:
+            user_data['notifications'].append({
+                'type': notification.notification_type,
+                'title': notification.title,
+                'message': notification.message,
+                'timestamp': notification.created_at.isoformat()
+            })
+        
+        return Response({
+            'success': True,
+            'data': user_data,
+            'export_date': timezone.now().isoformat()
+        })
+
+
+class DeleteAccountView(APIView):
+    """Delete user account with confirmation"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request):
+        password = request.data.get('password')
+        confirmation_phrase = request.data.get('confirmation_phrase')
+        
+        # Verify password
+        if not request.user.check_password(password):
+            return Response({
+                'success': False,
+                'message': 'Invalid password'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Verify confirmation phrase
+        if confirmation_phrase != 'DELETE MY ACCOUNT':
+            return Response({
+                'success': False,
+                'message': 'Please type "DELETE MY ACCOUNT" to confirm'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        user = request.user
+        
+        try:
+            # Log the account deletion
+            UserActivity.objects.create(
+                user=user,
+                activity_type='account_deleted',
+                description=f"Account deleted by user",
+                object_type='user',
+                object_id=str(user.id)
+            )
+            
+            # Mark user as inactive instead of hard delete (for data integrity)
+            user.is_active = False
+            user.email = f"deleted_{user.id}@deleted.com"
+            user.first_name = "Deleted"
+            user.last_name = "User"
+            user.save()
+            
+            return Response({
+                'success': True,
+                'message': 'Account successfully deleted'
+            })
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'message': 'Failed to delete account',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class UserMutualFriendsView(APIView):
+    """Get mutual friends with another user"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request, user_id):
+        try:
+            other_user = User.objects.get(id=user_id)
+            current_user = request.user
+            
+            # Get current user's friends
+            current_user_friends = set()
+            current_friendships = Friendship.objects.filter(
+                (Q(from_user=current_user) | Q(to_user=current_user)) & Q(status='accepted')
+            )
+            for friendship in current_friendships:
+                friend = friendship.to_user if friendship.from_user == current_user else friendship.from_user
+                current_user_friends.add(friend.id)
+            
+            # Get other user's friends
+            other_user_friends = set()
+            other_friendships = Friendship.objects.filter(
+                (Q(from_user=other_user) | Q(to_user=other_user)) & Q(status='accepted')
+            )
+            for friendship in other_friendships:
+                friend = friendship.to_user if friendship.from_user == other_user else friendship.from_user
+                other_user_friends.add(friend.id)
+            
+            # Find mutual friends
+            mutual_friend_ids = current_user_friends.intersection(other_user_friends)
+            mutual_friends = User.objects.filter(id__in=mutual_friend_ids)
+            
+            serializer = UserSerializer(mutual_friends, many=True)
+            
+            return Response({
+                'mutual_friends': serializer.data,
+                'count': len(mutual_friend_ids)
+            })
+            
+        except User.DoesNotExist:
+            return Response({
+                'error': 'User not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+
+class UserOnlineStatusView(APIView):
+    """Get online status of users"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        user_ids = request.GET.getlist('user_ids')
+        
+        if not user_ids:
+            return Response({
+                'error': 'user_ids parameter is required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # For now, use last_login to determine online status
+            # In production, you might use Redis or WebSocket connections
+            online_threshold = timezone.now() - timezone.timedelta(minutes=5)
+            
+            users = User.objects.filter(id__in=user_ids)
+            status_data = []
+            
+            for user in users:
+                is_online = user.last_login and user.last_login > online_threshold
+                status_data.append({
+                    'user_id': str(user.id),
+                    'is_online': is_online,
+                    'last_seen': user.last_login.isoformat() if user.last_login else None
+                })
+            
+            return Response({
+                'user_statuses': status_data
+            })
+            
+        except Exception as e:
+            return Response({
+                'error': 'Failed to get user statuses',
+                'details': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
