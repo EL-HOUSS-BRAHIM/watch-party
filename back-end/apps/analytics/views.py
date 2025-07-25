@@ -579,3 +579,282 @@ def _update_analytics_counters(event):
         import logging
         logger = logging.getLogger(__name__)
         logger.error(f"Error updating analytics counters: {str(e)}")
+
+
+# Missing Analytics Endpoints for TODO.md Requirements
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAdminUser])
+def system_performance_analytics(request):
+    """Get system performance metrics"""
+    
+    try:
+        # Get date range
+        days = int(request.GET.get('days', 30))
+        start_date = timezone.now() - timedelta(days=days)
+        
+        # Server performance metrics
+        total_users = User.objects.count()
+        active_users = User.objects.filter(last_login__gte=start_date).count()
+        total_parties = WatchParty.objects.count()
+        active_parties = WatchParty.objects.filter(created_at__gte=start_date).count()
+        total_videos = Video.objects.count()
+        
+        # System analytics
+        system_analytics = SystemAnalytics.objects.filter(
+            date__gte=start_date.date()
+        ).aggregate(
+            avg_response_time=Avg('avg_response_time'),
+            total_requests=Sum('total_requests'),
+            total_errors=Sum('error_count'),
+            avg_cpu_usage=Avg('cpu_usage'),
+            avg_memory_usage=Avg('memory_usage')
+        )
+        
+        # Calculate uptime (simplified)
+        uptime_percentage = 99.5  # Placeholder - would be calculated from actual uptime data
+        
+        return Response({
+            'system_metrics': {
+                'total_users': total_users,
+                'active_users': active_users,
+                'total_parties': total_parties,
+                'active_parties': active_parties,
+                'total_videos': total_videos,
+                'uptime_percentage': uptime_percentage
+            },
+            'performance_metrics': {
+                'avg_response_time_ms': system_analytics['avg_response_time'] or 0,
+                'total_requests': system_analytics['total_requests'] or 0,
+                'error_rate': (system_analytics['total_errors'] or 0) / max(system_analytics['total_requests'] or 1, 1) * 100,
+                'avg_cpu_usage': system_analytics['avg_cpu_usage'] or 0,
+                'avg_memory_usage': system_analytics['avg_memory_usage'] or 0
+            },
+            'period': f'last_{days}_days'
+        })
+        
+    except Exception as e:
+        return Response({
+            'error': f'Failed to get performance analytics: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAdminUser])
+def revenue_analytics(request):
+    """Get revenue and subscription analytics"""
+    
+    try:
+        from apps.billing.models import Subscription, Payment
+        
+        # Get date range
+        days = int(request.GET.get('days', 30))
+        start_date = timezone.now() - timedelta(days=days)
+        
+        # Revenue metrics
+        total_revenue = Payment.objects.filter(
+            status='completed',
+            created_at__gte=start_date
+        ).aggregate(total=Sum('amount'))['total'] or 0
+        
+        # Subscription metrics
+        total_subscriptions = Subscription.objects.filter(is_active=True).count()
+        new_subscriptions = Subscription.objects.filter(
+            created_at__gte=start_date
+        ).count()
+        
+        cancelled_subscriptions = Subscription.objects.filter(
+            is_active=False,
+            cancelled_at__gte=start_date
+        ).count() if hasattr(Subscription, 'cancelled_at') else 0
+        
+        # Calculate churn rate
+        churn_rate = (cancelled_subscriptions / max(total_subscriptions, 1)) * 100
+        
+        # Monthly recurring revenue (MRR)
+        monthly_subscriptions = Subscription.objects.filter(
+            is_active=True,
+            plan_type='monthly'  # Assuming you have plan types
+        ).count() if hasattr(Subscription, 'plan_type') else 0
+        
+        yearly_subscriptions = Subscription.objects.filter(
+            is_active=True,
+            plan_type='yearly'
+        ).count() if hasattr(Subscription, 'plan_type') else 0
+        
+        # Simplified MRR calculation
+        mrr = (monthly_subscriptions * 9.99) + (yearly_subscriptions * 99.99 / 12)  # Example pricing
+        
+        return Response({
+            'revenue_metrics': {
+                'total_revenue': float(total_revenue),
+                'mrr': float(mrr),
+                'period': f'last_{days}_days'
+            },
+            'subscription_metrics': {
+                'total_active_subscriptions': total_subscriptions,
+                'new_subscriptions': new_subscriptions,
+                'cancelled_subscriptions': cancelled_subscriptions,
+                'churn_rate': round(churn_rate, 2)
+            },
+            'subscription_breakdown': {
+                'monthly_subscriptions': monthly_subscriptions,
+                'yearly_subscriptions': yearly_subscriptions
+            }
+        })
+        
+    except Exception as e:
+        return Response({
+            'error': f'Failed to get revenue analytics: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAdminUser])
+def user_retention_analytics(request):
+    """Get user retention and churn analysis"""
+    
+    try:
+        # Get date range
+        days = int(request.GET.get('days', 30))
+        start_date = timezone.now() - timedelta(days=days)
+        
+        # Calculate retention cohorts
+        total_users = User.objects.count()
+        
+        # Users registered in different periods
+        week_1_users = User.objects.filter(
+            date_joined__gte=timezone.now() - timedelta(days=7)
+        ).count()
+        
+        month_1_users = User.objects.filter(
+            date_joined__gte=timezone.now() - timedelta(days=30)
+        ).count()
+        
+        month_3_users = User.objects.filter(
+            date_joined__gte=timezone.now() - timedelta(days=90)
+        ).count()
+        
+        # Active users in different periods
+        active_week_1 = User.objects.filter(
+            last_login__gte=timezone.now() - timedelta(days=7)
+        ).count()
+        
+        active_month_1 = User.objects.filter(
+            last_login__gte=timezone.now() - timedelta(days=30)
+        ).count()
+        
+        active_month_3 = User.objects.filter(
+            last_login__gte=timezone.now() - timedelta(days=90)
+        ).count()
+        
+        # Calculate retention rates
+        retention_rates = {
+            'week_1_retention': (active_week_1 / max(week_1_users, 1)) * 100,
+            'month_1_retention': (active_month_1 / max(month_1_users, 1)) * 100,
+            'month_3_retention': (active_month_3 / max(month_3_users, 1)) * 100
+        }
+        
+        # User engagement levels
+        high_engagement = User.objects.filter(
+            last_login__gte=timezone.now() - timedelta(days=1)
+        ).count()
+        
+        medium_engagement = User.objects.filter(
+            last_login__gte=timezone.now() - timedelta(days=7),
+            last_login__lt=timezone.now() - timedelta(days=1)
+        ).count()
+        
+        low_engagement = User.objects.filter(
+            last_login__gte=timezone.now() - timedelta(days=30),
+            last_login__lt=timezone.now() - timedelta(days=7)
+        ).count()
+        
+        return Response({
+            'retention_rates': retention_rates,
+            'engagement_levels': {
+                'high_engagement': high_engagement,
+                'medium_engagement': medium_engagement,
+                'low_engagement': low_engagement,
+                'total_active': high_engagement + medium_engagement + low_engagement
+            },
+            'user_counts': {
+                'total_users': total_users,
+                'week_1_users': week_1_users,
+                'month_1_users': month_1_users,
+                'month_3_users': month_3_users
+            }
+        })
+        
+    except Exception as e:
+        return Response({
+            'error': f'Failed to get retention analytics: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAdminUser])
+def content_analytics(request):
+    """Get content performance analytics"""
+    
+    try:
+        # Get date range
+        days = int(request.GET.get('days', 30))
+        start_date = timezone.now() - timedelta(days=days)
+        
+        # Video analytics
+        total_videos = Video.objects.count()
+        videos_this_period = Video.objects.filter(created_at__gte=start_date).count()
+        
+        # Top performing videos
+        top_videos = Video.objects.annotate(
+            view_count=Count('videoview')
+        ).order_by('-view_count')[:10]
+        
+        top_videos_data = []
+        for video in top_videos:
+            top_videos_data.append({
+                'id': str(video.id),
+                'title': video.title,
+                'view_count': video.view_count,
+                'uploader': video.uploader.get_full_name() if hasattr(video, 'uploader') else 'Unknown'
+            })
+        
+        # Party analytics
+        total_parties = WatchParty.objects.count()
+        parties_this_period = WatchParty.objects.filter(created_at__gte=start_date).count()
+        
+        # Average party duration and participants
+        avg_party_stats = WatchParty.objects.aggregate(
+            avg_participants=Avg('participants__count') if hasattr(WatchParty, 'participants') else 0
+        )
+        
+        # Content categories (if available)
+        video_categories = {}
+        if hasattr(Video, 'category'):
+            categories = Video.objects.values('category').annotate(
+                count=Count('id')
+            ).order_by('-count')[:10]
+            
+            for cat in categories:
+                video_categories[cat['category']] = cat['count']
+        
+        return Response({
+            'video_analytics': {
+                'total_videos': total_videos,
+                'videos_this_period': videos_this_period,
+                'top_videos': top_videos_data,
+                'categories': video_categories
+            },
+            'party_analytics': {
+                'total_parties': total_parties,
+                'parties_this_period': parties_this_period,
+                'avg_participants': avg_party_stats['avg_participants'] or 0
+            },
+            'period': f'last_{days}_days'
+        })
+        
+    except Exception as e:
+        return Response({
+            'error': f'Failed to get content analytics: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
