@@ -5,22 +5,62 @@ Provides unified interface for multiple cloud storage providers
 
 import os
 import uuid
-import boto3
-import requests
 from abc import ABC, abstractmethod
 from typing import Dict, Any, Optional, List
 from django.conf import settings
-from google.oauth2.credentials import Credentials
-from googleapiclient.discovery import build
-from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
-import dropbox
-from msal import ConfidentialClientApplication
 from io import BytesIO
-import ftplib
 import json
 import logging
 from urllib.parse import urlparse
 from datetime import datetime, timedelta
+
+# Optional imports for different cloud providers
+try:
+    import boto3
+    AWS_AVAILABLE = True
+except ImportError:
+    AWS_AVAILABLE = False
+    boto3 = None
+
+try:
+    from google.oauth2.credentials import Credentials
+    from googleapiclient.discovery import build
+    from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
+    GOOGLE_AVAILABLE = True
+except ImportError:
+    GOOGLE_AVAILABLE = False
+    Credentials = None
+    build = None
+    MediaIoBaseDownload = None
+    MediaFileUpload = None
+
+try:
+    import dropbox
+    DROPBOX_AVAILABLE = True
+except ImportError:
+    DROPBOX_AVAILABLE = False
+    dropbox = None
+
+try:
+    from msal import ConfidentialClientApplication
+    ONEDRIVE_AVAILABLE = True
+except ImportError:
+    ONEDRIVE_AVAILABLE = False
+    ConfidentialClientApplication = None
+
+try:
+    import requests
+    REQUESTS_AVAILABLE = True
+except ImportError:
+    REQUESTS_AVAILABLE = False
+    requests = None
+
+try:
+    import ftplib
+    FTP_AVAILABLE = True
+except ImportError:
+    FTP_AVAILABLE = False
+    ftplib = None
 
 logger = logging.getLogger(__name__)
 
@@ -99,6 +139,10 @@ class GoogleDriveStorage(BaseStorageService):
     
     def _initialize_client(self):
         """Initialize Google Drive client"""
+        if not GOOGLE_AVAILABLE:
+            logger.warning("Google APIs not available. Install google-api-python-client")
+            return
+            
         try:
             credentials = Credentials(
                 token=self.user_credentials.get('access_token'),
@@ -113,6 +157,9 @@ class GoogleDriveStorage(BaseStorageService):
     
     def upload_file(self, file_path: str, file_name: str, folder_id: str = None) -> Dict[str, Any]:
         """Upload file to Google Drive"""
+        if not GOOGLE_AVAILABLE:
+            raise StorageServiceError("Google APIs not available. Install google-api-python-client")
+        
         try:
             file_metadata = {
                 'name': file_name,
@@ -261,6 +308,10 @@ class AWSStorage(BaseStorageService):
     
     def _initialize_client(self):
         """Initialize AWS S3 client"""
+        if not AWS_AVAILABLE:
+            logger.warning("boto3 not available. Install boto3 for AWS S3 support")
+            return
+            
         try:
             self.client = boto3.client(
                 's3',
@@ -1007,18 +1058,53 @@ def get_storage_service(provider: str, credentials: Dict[str, Any]) -> BaseStora
     """Factory function to create storage service based on provider"""
     
     providers = {
-        'aws_s3': S3StorageService,
-        'google_drive': GoogleDriveStorageService,
+        'aws_s3': AWSStorage,
+        'google_drive': GoogleDriveStorage,
         'onedrive': OneDriveStorageService,
         'dropbox': DropboxStorageService,
-        'ftp': FTPStorageService
     }
     
     if provider not in providers:
         raise ValueError(f"Unsupported storage provider: {provider}")
     
     return providers[provider](credentials)
-                'success': False
-            })
+
+
+class StorageService:
+    """Main storage service with multi-cloud support"""
     
-    return upload_results
+    def __init__(self):
+        self.providers = {}
+        
+    def add_provider(self, provider_name: str, credentials: Dict[str, Any]):
+        """Add a storage provider"""
+        self.providers[provider_name] = get_storage_service(provider_name, credentials)
+    
+    def upload_to_s3(self, file_path: str, file_name: str, bucket: str = None) -> Dict[str, Any]:
+        """Upload file to AWS S3"""
+        if 'aws_s3' not in self.providers:
+            # Create S3 service with default credentials
+            self.providers['aws_s3'] = AWSStorage({})
+        
+        return self.providers['aws_s3'].upload_file(file_path, file_name, bucket)
+    
+    def upload_to_onedrive(self, file_path: str, file_name: str, folder_path: str = None) -> Dict[str, Any]:
+        """Upload file to OneDrive"""
+        if 'onedrive' not in self.providers:
+            self.providers['onedrive'] = OneDriveStorageService({})
+        
+        return self.providers['onedrive'].upload_file(file_path, file_name, folder_path)
+    
+    def upload_to_dropbox(self, file_path: str, file_name: str, folder_path: str = None) -> Dict[str, Any]:
+        """Upload file to Dropbox"""
+        if 'dropbox' not in self.providers:
+            self.providers['dropbox'] = DropboxStorageService({})
+        
+        return self.providers['dropbox'].upload_file(file_path, file_name, folder_path)
+    
+    def upload_to_google_drive(self, file_path: str, file_name: str, folder_id: str = None) -> Dict[str, Any]:
+        """Upload file to Google Drive"""
+        if 'google_drive' not in self.providers:
+            self.providers['google_drive'] = GoogleDriveStorage({})
+        
+        return self.providers['google_drive'].upload_file(file_path, file_name, folder_id)
