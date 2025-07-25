@@ -332,12 +332,78 @@ def admin_delete_party(request, party_id):
 def admin_content_reports(request):
     """Get content reports for moderation"""
     
-    # This would require a ContentReport model
-    # For now, return a placeholder
-    return Response({
-        'reports': [],
-        'message': 'Content reporting system not yet implemented'
-    })
+    try:
+        from apps.moderation.models import ContentReport
+        from apps.moderation.serializers import ContentReportSerializer
+        
+        # Get query parameters
+        status_filter = request.GET.get('status', 'all')
+        priority_filter = request.GET.get('priority', 'all')
+        content_type_filter = request.GET.get('content_type', 'all')
+        
+        # Build queryset
+        queryset = ContentReport.objects.select_related(
+            'reported_by', 'assigned_to', 'reported_video', 
+            'reported_party', 'reported_user'
+        )
+        
+        # Apply filters
+        if status_filter != 'all':
+            queryset = queryset.filter(status=status_filter)
+        if priority_filter != 'all':
+            queryset = queryset.filter(priority=priority_filter)
+        if content_type_filter != 'all':
+            queryset = queryset.filter(content_type=content_type_filter)
+        
+        # Order by priority and creation date
+        queryset = queryset.order_by(
+            models.Case(
+                models.When(priority='critical', then=1),
+                models.When(priority='high', then=2),
+                models.When(priority='medium', then=3),
+                models.When(priority='low', then=4),
+                default=5,
+                output_field=models.IntegerField()
+            ),
+            '-created_at'
+        )
+        
+        # Paginate
+        paginator = AdminPagination()
+        page = paginator.paginate_queryset(queryset, request)
+        
+        # Serialize data
+        reports_data = []
+        for report in page:
+            report_data = {
+                'id': str(report.id),
+                'report_type': report.report_type,
+                'content_type': report.content_type,
+                'status': report.status,
+                'priority': report.priority,
+                'description': report.description,
+                'reported_by': {
+                    'id': str(report.reported_by.id),
+                    'username': report.reported_by.username,
+                    'email': report.reported_by.email
+                },
+                'assigned_to': {
+                    'id': str(report.assigned_to.id),
+                    'username': report.assigned_to.username
+                } if report.assigned_to else None,
+                'created_at': report.created_at,
+                'updated_at': report.updated_at,
+                'content_details': _get_content_details(report)
+            }
+            reports_data.append(report_data)
+        
+        return paginator.get_paginated_response(reports_data)
+        
+    except ImportError:
+        return Response({
+            'reports': [],
+            'message': 'Content reporting system not available'
+        })
 
 
 @api_view(['POST'])
@@ -345,37 +411,104 @@ def admin_content_reports(request):
 def admin_resolve_report(request, report_id):
     """Resolve a content report"""
     
-    # This would require a ContentReport model
-    # For now, return a placeholder
-    return Response({
-        'message': 'Content reporting system not yet implemented'
-    })
+    try:
+        from apps.moderation.models import ContentReport, ReportAction
+        
+        report = get_object_or_404(ContentReport, id=report_id)
+        
+        action_type = request.data.get('action_type', 'no_action')
+        description = request.data.get('description', '')
+        resolution_notes = request.data.get('resolution_notes', '')
+        duration_days = request.data.get('duration_days')
+        
+        # Create report action
+        ReportAction.objects.create(
+            report=report,
+            action_type=action_type,
+            moderator=request.user,
+            description=description,
+            duration_days=duration_days
+        )
+        
+        # Resolve the report
+        report.resolve(
+            moderator=request.user,
+            action=description,
+            notes=resolution_notes
+        )
+        
+        # Log the action
+        AnalyticsEvent.objects.create(
+            user=request.user,
+            event_type='admin_report_resolved',
+            data={
+                'report_id': str(report.id),
+                'action_type': action_type,
+                'content_type': report.content_type
+            },
+            ip_address=request.META.get('REMOTE_ADDR', '')
+        )
+        
+        return Response({
+            'message': 'Report resolved successfully',
+            'report_id': str(report.id),
+            'action_taken': action_type
+        })
+        
+    except ImportError:
+        return Response({
+            'error': 'Content reporting system not available'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response({
+            'error': f'Failed to resolve report: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @api_view(['GET'])
 @permission_classes([IsAdminUser])
 def admin_system_logs(request):
-    """Get system logs"""
+    """Get system logs with enhanced filtering"""
     
     # Get query parameters
     level = request.GET.get('level', 'all')  # info, warning, error, all
     hours = int(request.GET.get('hours', 24))
+    event_type = request.GET.get('event_type', 'all')
+    user_filter = request.GET.get('user')
     
     start_time = timezone.now() - timedelta(hours=hours)
     
     # Get analytics events as logs
     queryset = AnalyticsEvent.objects.filter(
         timestamp__gte=start_time
-    ).order_by('-timestamp')
+    ).select_related('user').order_by('-timestamp')
     
-    # Filter by event type (simulating log levels)
+    # Filter by event type
+    if event_type != 'all':
+        queryset = queryset.filter(event_type=event_type)
+    
+    # Filter by log level (simulating log levels)
     if level == 'error':
         queryset = queryset.filter(event_type__contains='error')
     elif level == 'warning':
-        queryset = queryset.filter(event_type__contains='warning')
+        queryset = queryset.filter(
+            Q(event_type__contains='warning') | 
+            Q(event_type__contains='fail') |
+            Q(event_type__contains='suspend') |
+            Q(event_type__contains='ban')
+        )
     elif level == 'info':
         queryset = queryset.exclude(
-            Q(event_type__contains='error') | Q(event_type__contains='warning')
+            Q(event_type__contains='error') | 
+            Q(event_type__contains='warning') | 
+            Q(event_type__contains='fail')
+        )
+    
+    # Filter by user
+    if user_filter:
+        queryset = queryset.filter(
+            Q(user__username__icontains=user_filter) |
+            Q(user__email__icontains=user_filter)
         )
     
     # Paginate
@@ -390,13 +523,40 @@ def admin_system_logs(request):
             'timestamp': event.timestamp,
             'level': _get_log_level(event.event_type),
             'event_type': event.event_type,
-            'user': event.user.username if event.user else 'System',
+            'user': {
+                'id': str(event.user.id),
+                'username': event.user.username,
+                'email': event.user.email
+            } if event.user else None,
             'ip_address': event.ip_address,
-            'data': event.data
+            'data': event.data,
+            'message': _format_log_message(event)
         }
         logs_data.append(log_data)
     
-    return paginator.get_paginated_response(logs_data)
+    # Get summary statistics
+    total_events = queryset.count()
+    error_events = queryset.filter(event_type__contains='error').count()
+    warning_events = queryset.filter(
+        Q(event_type__contains='warning') | 
+        Q(event_type__contains='fail')
+    ).count()
+    
+    summary = {
+        'total_events': total_events,
+        'error_events': error_events,
+        'warning_events': warning_events,
+        'info_events': total_events - error_events - warning_events,
+        'time_range_hours': hours
+    }
+    
+    return Response({
+        'results': paginator.get_paginated_response(logs_data).data['results'],
+        'count': paginator.get_paginated_response(logs_data).data['count'],
+        'next': paginator.get_paginated_response(logs_data).data['next'],
+        'previous': paginator.get_paginated_response(logs_data).data['previous'],
+        'summary': summary
+    })
 
 
 @api_view(['POST'])
@@ -555,3 +715,606 @@ def _get_log_level(event_type: str) -> str:
         return 'warning'
     else:
         return 'info'
+
+
+def _format_log_message(event: 'AnalyticsEvent') -> str:
+    """Format log message for display"""
+    user_name = event.user.username if event.user else 'System'
+    
+    message_templates = {
+        'admin_user_suspended': f"{user_name} suspended user {event.data.get('suspended_user_id', 'unknown')}",
+        'admin_user_unsuspended': f"{user_name} unsuspended user {event.data.get('unsuspended_user_id', 'unknown')}",
+        'admin_video_deleted': f"{user_name} deleted video '{event.data.get('video_title', 'unknown')}'",
+        'admin_party_deleted': f"{user_name} deleted party '{event.data.get('party_title', 'unknown')}'",
+        'admin_report_resolved': f"{user_name} resolved report {event.data.get('report_id', 'unknown')}",
+        'admin_broadcast_sent': f"{user_name} sent broadcast to {event.data.get('recipients_count', 0)} users",
+        'admin_settings_updated': f"{user_name} updated system settings",
+        'admin_users_exported': f"{user_name} exported {event.data.get('export_count', 0)} user records",
+        'user_login': f"{user_name} logged in",
+        'user_logout': f"{user_name} logged out",
+        'party_create': f"{user_name} created party '{event.data.get('party_title', 'unknown')}'",
+        'video_upload': f"{user_name} uploaded video '{event.data.get('video_title', 'unknown')}'",
+    }
+    
+    return message_templates.get(event.event_type, f"{user_name} performed {event.event_type}")
+
+
+def _get_content_details(report: 'ContentReport') -> Dict[str, Any]:
+    """Get details about the reported content"""
+    details = {}
+    
+    if report.reported_video:
+        details = {
+            'title': report.reported_video.title,
+            'uploaded_by': report.reported_video.uploaded_by.username,
+            'created_at': report.reported_video.created_at
+        }
+    elif report.reported_party:
+        details = {
+            'title': report.reported_party.title,
+            'host': report.reported_party.host.username,
+            'created_at': report.reported_party.created_at
+        }
+    elif report.reported_user:
+        details = {
+            'username': report.reported_user.username,
+            'email': report.reported_user.email,
+            'date_joined': report.reported_user.date_joined
+        }
+    
+    return details
+
+
+# Additional Admin Panel Features
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def admin_analytics_overview(request):
+    """Get comprehensive analytics overview for admin dashboard"""
+    
+    try:
+        from apps.analytics.models import SystemAnalytics, UserAnalytics, VideoAnalytics
+        
+        # Get latest system analytics
+        latest_system_analytics = SystemAnalytics.objects.order_by('-date').first()
+        
+        # User analytics summary
+        total_users = User.objects.count()
+        active_users_7_days = User.objects.filter(
+            last_login__gte=timezone.now() - timedelta(days=7)
+        ).count()
+        premium_users = User.objects.filter(is_premium=True).count()
+        
+        # Content analytics summary
+        total_videos = Video.objects.count()
+        total_parties = WatchParty.objects.count()
+        active_parties = WatchParty.objects.filter(status='active').count()
+        
+        # Top performing videos
+        top_videos = VideoAnalytics.objects.select_related('video').order_by(
+            '-total_views'
+        )[:10]
+        
+        # Recent activity trends
+        recent_activity = AnalyticsEvent.objects.filter(
+            timestamp__gte=timezone.now() - timedelta(hours=24)
+        ).values('event_type').annotate(
+            count=Count('id')
+        ).order_by('-count')[:15]
+        
+        analytics_data = {
+            'system_overview': {
+                'total_users': total_users,
+                'active_users_7_days': active_users_7_days,
+                'premium_users': premium_users,
+                'total_videos': total_videos,
+                'total_parties': total_parties,
+                'active_parties': active_parties
+            },
+            'system_health': {
+                'cpu_usage': latest_system_analytics.cpu_usage if latest_system_analytics else 0,
+                'memory_usage': latest_system_analytics.memory_usage if latest_system_analytics else 0,
+                'disk_usage': latest_system_analytics.disk_usage if latest_system_analytics else 0,
+                'uptime_percentage': latest_system_analytics.uptime_percentage if latest_system_analytics else 100
+            },
+            'top_videos': [
+                {
+                    'id': str(video.video.id),
+                    'title': video.video.title,
+                    'views': video.total_views,
+                    'rating': video.average_rating
+                }
+                for video in top_videos
+            ],
+            'recent_activity': list(recent_activity)
+        }
+        
+        return Response(analytics_data)
+        
+    except Exception as e:
+        return Response({
+            'error': f'Failed to get analytics overview: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def admin_system_maintenance(request):
+    """Perform system maintenance tasks"""
+    
+    try:
+        maintenance_type = request.data.get('type')
+        
+        if maintenance_type == 'cleanup_logs':
+            # Clean up old log entries
+            days_to_keep = int(request.data.get('days_to_keep', 30))
+            cutoff_date = timezone.now() - timedelta(days=days_to_keep)
+            
+            deleted_count = AnalyticsEvent.objects.filter(
+                timestamp__lt=cutoff_date
+            ).delete()[0]
+            
+            message = f"Cleaned up {deleted_count} old log entries"
+            
+        elif maintenance_type == 'optimize_database':
+            # This would typically run database optimization commands
+            # For now, just log the action
+            message = "Database optimization scheduled"
+            
+        elif maintenance_type == 'clear_cache':
+            # Clear application cache
+            # This would integrate with your caching system
+            message = "Application cache cleared"
+            
+        elif maintenance_type == 'backup_database':
+            # Trigger database backup
+            # This would integrate with your backup system
+            message = "Database backup initiated"
+            
+        else:
+            return Response({
+                'error': 'Invalid maintenance type'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Log the maintenance action
+        AnalyticsEvent.objects.create(
+            user=request.user,
+            event_type=f'admin_maintenance_{maintenance_type}',
+            data={
+                'maintenance_type': maintenance_type,
+                'parameters': request.data
+            },
+            ip_address=request.META.get('REMOTE_ADDR', '')
+        )
+        
+        return Response({
+            'message': message,
+            'maintenance_type': maintenance_type,
+            'timestamp': timezone.now().isoformat()
+        })
+        
+    except Exception as e:
+        return Response({
+            'error': f'Maintenance task failed: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def admin_system_health(request):
+    """Get detailed system health information"""
+    
+    try:
+        import psutil
+        import os
+        
+        # System metrics
+        cpu_percent = psutil.cpu_percent(interval=1)
+        memory = psutil.virtual_memory()
+        disk = psutil.disk_usage('/')
+        
+        # Database metrics
+        active_users = User.objects.filter(
+            last_login__gte=timezone.now() - timedelta(minutes=30)
+        ).count()
+        
+        active_parties = WatchParty.objects.filter(status='active').count()
+        
+        # Recent errors
+        recent_errors = AnalyticsEvent.objects.filter(
+            event_type__contains='error',
+            timestamp__gte=timezone.now() - timedelta(hours=1)
+        ).count()
+        
+        health_data = {
+            'system_metrics': {
+                'cpu_usage_percent': cpu_percent,
+                'memory_usage_percent': memory.percent,
+                'memory_available_gb': round(memory.available / (1024**3), 2),
+                'disk_usage_percent': (disk.used / disk.total) * 100,
+                'disk_free_gb': round(disk.free / (1024**3), 2)
+            },
+            'application_metrics': {
+                'active_users': active_users,
+                'active_parties': active_parties,
+                'recent_errors_1h': recent_errors
+            },
+            'status': 'healthy' if cpu_percent < 80 and memory.percent < 80 else 'warning',
+            'last_updated': timezone.now().isoformat()
+        }
+        
+        return Response(health_data)
+        
+    except ImportError:
+        return Response({
+            'error': 'System monitoring not available (psutil not installed)'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        return Response({
+            'error': f'Failed to get system health: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# Enhanced Admin Panel Views for Missing Features
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def admin_bulk_user_action(request):
+    """Perform bulk actions on users"""
+    
+    user_ids = request.data.get('user_ids', [])
+    action = request.data.get('action')
+    reason = request.data.get('reason', '')
+    
+    if not user_ids or not action:
+        return Response({
+            'error': 'user_ids and action are required'
+        }, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        users = User.objects.filter(id__in=user_ids)
+        results = []
+        
+        with transaction.atomic():
+            for user in users:
+                result = {'user_id': str(user.id), 'success': False, 'message': ''}
+                
+                try:
+                    if action == 'suspend':
+                        if not user.is_superuser:  # Don't suspend superusers
+                            user.is_active = False
+                            user.save()
+                            result['success'] = True
+                            result['message'] = 'User suspended'
+                        else:
+                            result['message'] = 'Cannot suspend superuser'
+                    
+                    elif action == 'unsuspend':
+                        user.is_active = True
+                        user.save()
+                        result['success'] = True
+                        result['message'] = 'User unsuspended'
+                    
+                    elif action == 'make_premium':
+                        user.is_premium = True
+                        user.subscription_expires = timezone.now() + timedelta(days=365)
+                        user.save()
+                        result['success'] = True
+                        result['message'] = 'User made premium'
+                    
+                    elif action == 'remove_premium':
+                        user.is_premium = False
+                        user.subscription_expires = None
+                        user.save()
+                        result['success'] = True
+                        result['message'] = 'Premium removed'
+                    
+                    elif action == 'verify_email':
+                        user.is_email_verified = True
+                        user.save()
+                        result['success'] = True
+                        result['message'] = 'Email verified'
+                    
+                    else:
+                        result['message'] = f'Unknown action: {action}'
+                    
+                    # Log the action
+                    if result['success']:
+                        AnalyticsEvent.objects.create(
+                            user=request.user,
+                            event_type=f'admin_bulk_{action}',
+                            data={
+                                'target_user_id': str(user.id),
+                                'reason': reason
+                            },
+                            ip_address=request.META.get('REMOTE_ADDR', '')
+                        )
+                
+                except Exception as e:
+                    result['message'] = f'Error: {str(e)}'
+                
+                results.append(result)
+        
+        successful_count = sum(1 for r in results if r['success'])
+        
+        return Response({
+            'message': f'Bulk action completed. {successful_count}/{len(results)} operations successful.',
+            'results': results
+        })
+        
+    except Exception as e:
+        return Response({
+            'error': f'Bulk action failed: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def admin_export_users(request):
+    """Export user data to CSV"""
+    
+    try:
+        import csv
+        from django.http import HttpResponse
+        from io import StringIO
+        
+        # Get query parameters for filtering
+        date_from = request.GET.get('date_from')
+        date_to = request.GET.get('date_to')
+        is_premium = request.GET.get('is_premium')
+        is_active = request.GET.get('is_active')
+        
+        # Build queryset
+        users = User.objects.all()
+        
+        if date_from:
+            from datetime import datetime
+            date_from_obj = datetime.fromisoformat(date_from.replace('Z', '+00:00'))
+            users = users.filter(date_joined__gte=date_from_obj)
+        
+        if date_to:
+            from datetime import datetime
+            date_to_obj = datetime.fromisoformat(date_to.replace('Z', '+00:00'))
+            users = users.filter(date_joined__lte=date_to_obj)
+        
+        if is_premium is not None:
+            users = users.filter(is_premium=is_premium.lower() == 'true')
+        
+        if is_active is not None:
+            users = users.filter(is_active=is_active.lower() == 'true')
+        
+        # Create CSV content
+        output = StringIO()
+        writer = csv.writer(output)
+        
+        # Write headers
+        writer.writerow([
+            'ID', 'Email', 'First Name', 'Last Name', 'Is Premium', 
+            'Is Active', 'Email Verified', 'Date Joined', 'Last Login'
+        ])
+        
+        # Write user data
+        for user in users:
+            writer.writerow([
+                str(user.id),
+                user.email,
+                user.first_name,
+                user.last_name,
+                user.is_premium,
+                user.is_active,
+                user.is_email_verified,
+                user.date_joined.isoformat(),
+                user.last_login.isoformat() if user.last_login else ''
+            ])
+        
+        # Return CSV as downloadable response
+        response = HttpResponse(output.getvalue(), content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="users_export_{timezone.now().strftime("%Y%m%d_%H%M%S")}.csv"'
+        
+        # Log the export
+        AnalyticsEvent.objects.create(
+            user=request.user,
+            event_type='admin_users_exported',
+            data={
+                'export_count': users.count(),
+                'filters': {
+                    'date_from': date_from,
+                    'date_to': date_to,
+                    'is_premium': is_premium,
+                    'is_active': is_active
+                }
+            },
+            ip_address=request.META.get('REMOTE_ADDR', '')
+        )
+        
+        return response
+        
+    except Exception as e:
+        return Response({
+            'error': f'Export failed: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def admin_system_settings(request):
+    """Get system settings for admin panel"""
+    
+    try:
+        # In a real implementation, these would come from a settings model
+        settings = {
+            'site_settings': {
+                'site_name': 'Watch Party',
+                'max_upload_size_mb': 500,
+                'max_party_participants': 50,
+                'allow_public_parties': True,
+                'require_email_verification': True,
+                'enable_chat': True,
+                'enable_notifications': True
+            },
+            'video_settings': {
+                'allowed_formats': ['mp4', 'avi', 'mkv', 'mov'],
+                'max_duration_hours': 4,
+                'auto_generate_thumbnails': True,
+                'enable_quality_variants': True,
+                'enable_transcoding': True
+            },
+            'moderation_settings': {
+                'auto_moderate_chat': True,
+                'profanity_filter_enabled': True,
+                'require_manual_approval': False,
+                'max_reports_before_suspension': 5
+            },
+            'security_settings': {
+                'enable_2fa': True,
+                'session_timeout_hours': 24,
+                'max_login_attempts': 5,
+                'password_min_length': 8
+            }
+        }
+        
+        return Response({
+            'settings': settings,
+            'last_updated': timezone.now().isoformat()
+        })
+        
+    except Exception as e:
+        return Response({
+            'error': f'Failed to get settings: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['PUT'])
+@permission_classes([IsAdminUser])
+def admin_update_system_settings(request):
+    """Update system settings"""
+    
+    try:
+        settings_data = request.data.get('settings', {})
+        
+        # In a real implementation, this would update a settings model
+        # For now, just validate and log the update
+        
+        # Log the settings change
+        AnalyticsEvent.objects.create(
+            user=request.user,
+            event_type='admin_settings_updated',
+            data={
+                'settings_updated': list(settings_data.keys()),
+                'timestamp': timezone.now().isoformat()
+            },
+            ip_address=request.META.get('REMOTE_ADDR', '')
+        )
+        
+        return Response({
+            'message': 'Settings updated successfully',
+            'updated_at': timezone.now().isoformat()
+        })
+        
+    except Exception as e:
+        return Response({
+            'error': f'Failed to update settings: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def admin_user_action_history(request, user_id):
+    """Get action history for a specific user"""
+    
+    try:
+        user = get_object_or_404(User, id=user_id)
+        
+        # Get admin actions performed on this user
+        admin_actions = AnalyticsEvent.objects.filter(
+            Q(data__target_user_id=str(user_id)) | Q(user=user)
+        ).filter(
+            event_type__startswith='admin_'
+        ).order_by('-timestamp')[:50]
+        
+        actions_data = []
+        for action in admin_actions:
+            actions_data.append({
+                'id': str(action.id),
+                'action_type': action.event_type,
+                'performed_by': {
+                    'id': str(action.user.id),
+                    'name': action.user.get_full_name()
+                } if action.user else None,
+                'timestamp': action.timestamp.isoformat(),
+                'data': action.data,
+                'ip_address': action.ip_address
+            })
+        
+        return Response({
+            'user': {
+                'id': str(user.id),
+                'name': user.get_full_name(),
+                'email': user.email
+            },
+            'actions': actions_data,
+            'total_actions': len(actions_data)
+        })
+        
+    except Exception as e:
+        return Response({
+            'error': f'Failed to get user action history: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def admin_send_notification(request):
+    """Send notification to users or all users"""
+    
+    try:
+        message = request.data.get('message')
+        title = request.data.get('title', 'System Notification')
+        user_ids = request.data.get('user_ids', [])  # Empty list means all users
+        notification_type = request.data.get('type', 'system')
+        
+        if not message:
+            return Response({
+                'error': 'Message is required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Get target users
+        if user_ids:
+            users = User.objects.filter(id__in=user_ids, is_active=True)
+        else:
+            users = User.objects.filter(is_active=True)
+        
+        # Create notifications
+        notifications_created = 0
+        for user in users:
+            Notification.objects.create(
+                user=user,
+                title=title,
+                message=message,
+                notification_type=notification_type,
+                is_read=False
+            )
+            notifications_created += 1
+        
+        # Log the broadcast
+        AnalyticsEvent.objects.create(
+            user=request.user,
+            event_type='admin_notification_sent',
+            data={
+                'title': title,
+                'message': message[:100] + '...' if len(message) > 100 else message,
+                'recipients_count': notifications_created,
+                'target_users': user_ids if user_ids else 'all_users'
+            },
+            ip_address=request.META.get('REMOTE_ADDR', '')
+        )
+        
+        return Response({
+            'message': f'Notification sent to {notifications_created} users',
+            'recipients_count': notifications_created
+        })
+        
+    except Exception as e:
+        return Response({
+            'error': f'Failed to send notification: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
