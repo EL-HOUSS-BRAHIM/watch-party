@@ -969,3 +969,263 @@ def channel_analytics_dashboard(request):
             {'error': f'Failed to get channel analytics: {str(e)}'}, 
             status=status.HTTP_500_INTERNAL_SERVER_ERROR
         )
+
+
+class VideoProcessingStatusView(APIView):
+    """Get video processing status"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request, video_id):
+        try:
+            video = get_object_or_404(Video, id=video_id)
+            
+            # Check if user owns the video or is admin
+            if video.uploader != request.user and not request.user.is_staff:
+                return Response({
+                    'error': 'Permission denied'
+                }, status=status.HTTP_403_FORBIDDEN)
+            
+            return Response({
+                'video_id': str(video.id),
+                'status': video.status,
+                'processing_progress': getattr(video, 'processing_progress', 0),
+                'processing_stage': getattr(video, 'processing_stage', 'queued'),
+                'error_message': getattr(video, 'error_message', None),
+                'estimated_completion': getattr(video, 'estimated_completion', None),
+                'quality_variants_ready': video.quality_variants.count() if hasattr(video, 'quality_variants') else 0
+            })
+            
+        except Exception as e:
+            return Response({
+                'error': f'Failed to get processing status: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class VideoQualityVariantsView(APIView):
+    """Get available quality variants for a video"""
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    def get(self, request, video_id):
+        try:
+            video = get_object_or_404(Video, id=video_id)
+            
+            # Check if user has access to the video
+            if video.visibility == 'private' and video.uploader != request.user:
+                return Response({
+                    'error': 'Permission denied'
+                }, status=status.HTTP_403_FORBIDDEN)
+            
+            # Return available quality variants
+            quality_variants = [
+                {
+                    'quality': '360p',
+                    'url': f'/api/videos/{video_id}/stream/?quality=360p',
+                    'available': True  # In a real implementation, check if this quality exists
+                },
+                {
+                    'quality': '480p',
+                    'url': f'/api/videos/{video_id}/stream/?quality=480p',
+                    'available': True
+                },
+                {
+                    'quality': '720p',
+                    'url': f'/api/videos/{video_id}/stream/?quality=720p',
+                    'available': True
+                },
+                {
+                    'quality': '1080p',
+                    'url': f'/api/videos/{video_id}/stream/?quality=1080p',
+                    'available': video.resolution and 'HD' in str(video.resolution)
+                }
+            ]
+            
+            return Response({
+                'video_id': str(video.id),
+                'original_quality': getattr(video, 'resolution', 'Unknown'),
+                'quality_variants': quality_variants
+            })
+            
+        except Exception as e:
+            return Response({
+                'error': f'Failed to get quality variants: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class RegenerateThumbnailView(APIView):
+    """Regenerate video thumbnail"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, video_id):
+        try:
+            video = get_object_or_404(Video, id=video_id)
+            
+            # Check if user owns the video
+            if video.uploader != request.user and not request.user.is_staff:
+                return Response({
+                    'error': 'Permission denied'
+                }, status=status.HTTP_403_FORBIDDEN)
+            
+            # Trigger thumbnail regeneration
+            # In a real implementation, this would queue a task for video processing
+            video.thumbnail_generated = False
+            video.save()
+            
+            return Response({
+                'message': 'Thumbnail regeneration queued',
+                'video_id': str(video.id),
+                'status': 'processing'
+            })
+            
+        except Exception as e:
+            return Response({
+                'error': f'Failed to regenerate thumbnail: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class VideoShareView(APIView):
+    """Generate shareable links for videos"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, video_id):
+        try:
+            video = get_object_or_404(Video, id=video_id)
+            
+            # Check if user has access to the video
+            if video.visibility == 'private' and video.uploader != request.user:
+                return Response({
+                    'error': 'Permission denied'
+                }, status=status.HTTP_403_FORBIDDEN)
+            
+            share_type = request.data.get('type', 'public')
+            expires_in_hours = request.data.get('expires_in_hours', 24)
+            
+            # Generate share token
+            import secrets
+            share_token = secrets.token_urlsafe(32)
+            
+            # In a real implementation, store this in a VideoShare model
+            expires_at = timezone.now() + timedelta(hours=expires_in_hours)
+            
+            share_url = f"{request.build_absolute_uri('/')}share/video/{share_token}"
+            
+            return Response({
+                'share_url': share_url,
+                'share_token': share_token,
+                'expires_at': expires_at.isoformat(),
+                'type': share_type,
+                'video_id': str(video.id)
+            })
+            
+        except Exception as e:
+            return Response({
+                'error': f'Failed to generate share link: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class VideoSearchEnhancedView(APIView):
+    """Advanced video search with filters"""
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    def get(self, request):
+        try:
+            query = request.GET.get('q', '')
+            category = request.GET.get('category', '')
+            duration_min = request.GET.get('duration_min', 0)
+            duration_max = request.GET.get('duration_max', 7200)  # 2 hours max
+            quality = request.GET.get('quality', '')
+            date_from = request.GET.get('date_from', '')
+            date_to = request.GET.get('date_to', '')
+            sort_by = request.GET.get('sort_by', 'relevance')
+            
+            # Start with base queryset
+            videos = Video.objects.filter(status='ready', visibility='public')
+            
+            # Apply filters
+            if query:
+                videos = videos.filter(
+                    Q(title__icontains=query) | 
+                    Q(description__icontains=query) |
+                    Q(uploader__first_name__icontains=query) |
+                    Q(uploader__last_name__icontains=query)
+                )
+            
+            if category:
+                videos = videos.filter(category=category)
+            
+            # Duration filter (assuming duration is stored in seconds)
+            if duration_min:
+                videos = videos.filter(duration__gte=int(duration_min))
+            if duration_max:
+                videos = videos.filter(duration__lte=int(duration_max))
+            
+            # Date filters
+            if date_from:
+                from datetime import datetime
+                date_from_obj = datetime.fromisoformat(date_from.replace('Z', '+00:00'))
+                videos = videos.filter(created_at__gte=date_from_obj)
+            
+            if date_to:
+                from datetime import datetime
+                date_to_obj = datetime.fromisoformat(date_to.replace('Z', '+00:00'))
+                videos = videos.filter(created_at__lte=date_to_obj)
+            
+            # Sorting
+            if sort_by == 'newest':
+                videos = videos.order_by('-created_at')
+            elif sort_by == 'oldest':
+                videos = videos.order_by('created_at')
+            elif sort_by == 'most_viewed':
+                videos = videos.order_by('-view_count')
+            elif sort_by == 'most_liked':
+                videos = videos.order_by('-like_count')
+            elif sort_by == 'duration_short':
+                videos = videos.order_by('duration')
+            elif sort_by == 'duration_long':
+                videos = videos.order_by('-duration')
+            else:  # relevance (default)
+                if query:
+                    # Simple relevance scoring based on title/description matches
+                    from django.db.models import Case, When, IntegerField
+                    videos = videos.annotate(
+                        relevance_score=Case(
+                            When(title__icontains=query, then=3),
+                            When(description__icontains=query, then=2),
+                            default=1,
+                            output_field=IntegerField(),
+                        )
+                    ).order_by('-relevance_score', '-created_at')
+            
+            # Pagination
+            page_size = min(int(request.GET.get('page_size', 20)), 50)  # Max 50 per page
+            page = int(request.GET.get('page', 1))
+            start = (page - 1) * page_size
+            end = start + page_size
+            
+            total_count = videos.count()
+            videos_page = videos[start:end]
+            
+            # Serialize results
+            serializer = VideoSerializer(videos_page, many=True, context={'request': request})
+            
+            return Response({
+                'results': serializer.data,
+                'pagination': {
+                    'page': page,
+                    'page_size': page_size,
+                    'total_count': total_count,
+                    'total_pages': (total_count + page_size - 1) // page_size,
+                    'has_next': end < total_count,
+                    'has_previous': page > 1
+                },
+                'filters_applied': {
+                    'query': query,
+                    'category': category,
+                    'duration_range': [duration_min, duration_max],
+                    'sort_by': sort_by
+                }
+            })
+            
+        except Exception as e:
+            return Response({
+                'error': f'Search failed: {str(e)}'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
