@@ -299,22 +299,41 @@ class NotificationService:
             self.logger.error(f"Failed to send email notification: {str(e)}")
     
     def _send_push_notification(self, user: User, content: Dict[str, str]):
-        """Send push notification"""
+        """Send push notification using Firebase Cloud Messaging"""
         try:
-            # Get user's push subscriptions
-            subscriptions = PushSubscription.objects.filter(
-                user=user, 
-                is_active=True
-            )
+            from services.mobile_push_service import mobile_push_service
             
-            if not subscriptions.exists():
+            # Check if user has push notifications enabled
+            preferences = user.notification_preferences
+            if not preferences.push_enabled:
                 return
             
-            # Here you would integrate with a push notification service
-            # like Firebase Cloud Messaging, OneSignal, etc.
-            # For now, we'll just log
+            # Extract notification data
+            title = content.get('title', 'Watch Party')
+            body = content.get('content', '')
             
-            self.logger.info(f"Push notification would be sent to {len(subscriptions)} devices")
+            # Prepare data payload
+            data = {
+                'notification_type': content.get('notification_type', 'general'),
+                'timestamp': timezone.now().isoformat()
+            }
+            
+            # Add context data if available
+            if 'context' in content:
+                context = content['context']
+                if isinstance(context, dict):
+                    data.update(context)
+            
+            # Send push notification
+            result = mobile_push_service.send_to_user(
+                user=user,
+                title=title,
+                body=body,
+                data=data,
+                action_url=content.get('action_url')
+            )
+            
+            self.logger.info(f"Push notification sent to {user.username}: {result}")
             
         except Exception as e:
             self.logger.error(f"Failed to send push notification: {str(e)}")
