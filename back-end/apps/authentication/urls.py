@@ -21,7 +21,9 @@ from .views import (
     TwoFactorSetupView,
     TwoFactorVerifyView,
     TwoFactorDisableView,
-    UserSessionsView
+    UserSessionsView,
+    GoogleAuthView,
+    GitHubAuthView
 )
 
 app_name = 'authentication'
@@ -32,6 +34,10 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    
+    # Social Authentication
+    path('social/google/', GoogleAuthView.as_view(), name='google_auth'),
+    path('social/github/', GitHubAuthView.as_view(), name='github_auth'),
     
     # Password Management
     path('forgot-password/', ForgotPasswordView.as_view(), name='forgot_password'),
