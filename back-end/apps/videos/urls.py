@@ -15,6 +15,11 @@ from .views import (
     GoogleDriveMovieDeleteView,
     GoogleDriveMovieStreamView,
     VideoProxyView,
+    VideoProcessingStatusView,
+    VideoQualityVariantsView,
+    RegenerateThumbnailView,
+    VideoShareView,
+    VideoSearchEnhancedView,
     # Analytics views
     video_analytics,
     video_engagement_heatmap,
@@ -53,6 +58,12 @@ urlpatterns = [
     path('<uuid:video_id>/thumbnail/', VideoThumbnailView.as_view(), name='thumbnail'),
     path('<uuid:video_id>/analytics/', VideoAnalyticsView.as_view(), name='analytics'),
     
+    # Enhanced video management
+    path('<uuid:video_id>/processing-status/', VideoProcessingStatusView.as_view(), name='processing_status'),
+    path('<uuid:video_id>/quality-variants/', VideoQualityVariantsView.as_view(), name='quality_variants'),
+    path('<uuid:video_id>/regenerate-thumbnail/', RegenerateThumbnailView.as_view(), name='regenerate_thumbnail'),
+    path('<uuid:video_id>/share/', VideoShareView.as_view(), name='share_video'),
+    
     # Advanced Video Analytics
     path('<uuid:video_id>/analytics/detailed/', video_analytics, name='detailed_analytics'),
     path('<uuid:video_id>/analytics/heatmap/', video_engagement_heatmap, name='engagement_heatmap'),
@@ -69,6 +80,7 @@ urlpatterns = [
     
     # Search
     path('search/', VideoSearchView.as_view(), name='search'),
+    path('search/advanced/', VideoSearchEnhancedView.as_view(), name='advanced_search'),
     
     # Google Drive movie management
     path('gdrive/', GoogleDriveMoviesView.as_view(), name='gdrive_movies'),
