@@ -1,32 +1,67 @@
-import { lazy } from "react"
+"use client"
 
-// Lazy load heavy components
-export const LazyAdminDashboard = lazy(() =>
-  import("@/components/admin/admin-dashboard").then((module) => ({
-    default: module.AdminDashboard,
-  })),
-)
+import { lazy, type ComponentType, Suspense } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 
-export const LazyAnalyticsDashboard = lazy(() =>
-  import("@/components/admin/analytics-dashboard").then((module) => ({
-    default: module.AnalyticsDashboard,
-  })),
-)
+// Lazy loading utility with error boundary
+export function createLazyComponent<T extends ComponentType<any>>(
+  importFunc: () => Promise<{ default: T }>,
+  fallback?: ComponentType,
+) {
+  const LazyComponent = lazy(importFunc)
 
-export const LazyVideoPlayer = lazy(() =>
-  import("@/components/video/video-player").then((module) => ({
-    default: module.VideoPlayer,
-  })),
-)
+  return (props: any) => (
+    <Suspense fallback={fallback ? <fallback /> : <div>Loading...</div>}>
+      <LazyComponent {...props} />
+    </Suspense>
+  )
+}
 
-export const LazyVideoUploader = lazy(() =>
-  import("@/components/video/video-uploader").then((module) => ({
-    default: module.VideoUploader,
-  })),
-)
+// Image lazy loading hook
+export function useImageLazyLoading() {
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set())
 
-export const LazyChatInterface = lazy(() =>
-  import("@/components/chat/chat-interface").then((module) => ({
-    default: module.ChatInterface,
-  })),
-)
+  const loadImage = useCallback(
+    (src: string) => {
+      if (loadedImages.has(src)) return Promise.resolve()
+
+      return new Promise<void>((resolve, reject) => {
+        const img = new Image()
+        img.onload = () => {
+          setLoadedImages((prev) => new Set([...prev, src]))
+          resolve()
+        }
+        img.onerror = reject
+        img.src = src
+      })
+    },
+    [loadedImages],
+  )
+
+  return { loadImage, isLoaded: (src: string) => loadedImages.has(src) }
+}
+
+// Intersection Observer hook for lazy loading
+export function useIntersectionObserver(options: IntersectionObserverInit = {}) {
+  const [isIntersecting, setIsIntersecting] = useState(false)
+  const [hasIntersected, setHasIntersected] = useState(false)
+  const targetRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const target = targetRef.current
+    if (!target) return
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsIntersecting(entry.isIntersecting)
+      if (entry.isIntersecting && !hasIntersected) {
+        setHasIntersected(true)
+      }
+    }, options)
+
+    observer.observe(target)
+
+    return () => observer.disconnect()
+  }, [options, hasIntersected])
+
+  return { targetRef, isIntersecting, hasIntersected }
+}

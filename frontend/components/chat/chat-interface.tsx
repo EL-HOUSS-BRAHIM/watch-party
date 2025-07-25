@@ -1,332 +1,457 @@
 "use client"
 
-import type React from "react"
-
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { Send, Smile, Paperclip, Search, Shield, Trash2, Edit, Reply, Heart, ThumbsUp } from "lucide-react"
 import { useSocket } from "@/contexts/socket-context"
 import { useAuth } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
-import { Send, Smile, ImageIcon, Crown } from "lucide-react"
-import { formatDistanceToNow } from "date-fns"
 
-interface ChatMessage {
+interface Message {
   id: string
-  content: string
   user: {
     id: string
     username: string
     avatar?: string
+    role: "user" | "admin" | "moderator"
   }
+  content: string
   timestamp: string
-  type: "message" | "system" | "reaction"
-  reactions?: { emoji: string; count: number; users: string[] }[]
+  type: "text" | "image" | "file"
+  reactions?: { [emoji: string]: string[] }
+  isEdited?: boolean
+  replyTo?: string
 }
 
 interface ChatInterfaceProps {
-  partyId: string
+  roomId: string
   className?: string
 }
 
-// Mock messages
-const mockMessages: ChatMessage[] = [
-  {
-    id: "1",
-    content: "Hey everyone! Ready for movie night? 🍿",
-    user: {
-      id: "host-1",
-      username: "sarah_j",
-      avatar: "/placeholder.svg?height=32&width=32",
-    },
-    timestamp: new Date(Date.now() - 600000).toISOString(), // 10 minutes ago
-    type: "message",
-    reactions: [
-      { emoji: "👍", count: 3, users: ["user-2", "user-3", "user-4"] },
-      { emoji: "🍿", count: 2, users: ["user-2", "user-3"] },
-    ],
-  },
-  {
-    id: "2",
-    content: "mike_c joined the party",
-    user: {
-      id: "system",
-      username: "System",
-    },
-    timestamp: new Date(Date.now() - 300000).toISOString(), // 5 minutes ago
-    type: "system",
-  },
-  {
-    id: "3",
-    content: "This is going to be epic! Can't wait 🎬",
-    user: {
-      id: "user-2",
-      username: "mike_c",
-      avatar: "/placeholder.svg?height=32&width=32",
-    },
-    timestamp: new Date(Date.now() - 120000).toISOString(), // 2 minutes ago
-    type: "message",
-  },
-]
+export default function ChatInterface({ roomId, className }: ChatInterfaceProps) {
+  const [messages, setMessages] = useState<Message[]>([])
+  const [newMessage, setNewMessage] = useState("")
+  const [isTyping, setIsTyping] = useState<string[]>([])
+  const [searchQuery, setSearchQuery] = useState("")
+  const [showSearch, setShowSearch] = useState(false)
+  const [editingMessage, setEditingMessage] = useState<string | null>(null)
+  const [replyingTo, setReplyingTo] = useState<Message | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [hasMore, setHasMore] = useState(true)
+  const [page, setPage] = useState(1)
 
-const quickReactions = ["👍", "❤️", "😂", "😮", "😢", "😡"]
-
-export function ChatInterface({ partyId, className }: ChatInterfaceProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>(mockMessages)
-  const [inputValue, setInputValue] = useState("")
-  const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const { socket } = useSocket(`/chat/${partyId}`)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const typingTimeoutRef = useRef<NodeJS.Timeout>()
+
+  const { sendMessage, onMessage } = useSocket()
   const { user } = useAuth()
+
+  // Load chat history
+  useEffect(() => {
+    loadChatHistory()
+  }, [roomId])
+
+  // WebSocket message handler
+  useEffect(() => {
+    const unsubscribe = onMessage((message) => {
+      switch (message.type) {
+        case "chat_message":
+          handleNewMessage(message.data)
+          break
+        case "typing":
+          handleTypingIndicator(message.data)
+          break
+        case "message_reaction":
+          handleMessageReaction(message.data)
+          break
+        case "message_edit":
+          handleMessageEdit(message.data)
+          break
+        case "message_delete":
+          handleMessageDelete(message.data)
+          break
+      }
+    })
+
+    return unsubscribe
+  }, [onMessage])
 
   // Auto-scroll to bottom
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    scrollToBottom()
   }, [messages])
 
-  // Socket event handlers
-  useEffect(() => {
-    if (!socket) return
+  const loadChatHistory = async () => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      const response = await fetch(`/api/chat/${roomId}/messages/?page=${page}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
 
-    socket.on("chat:message", (message: ChatMessage) => {
-      setMessages((prev) => [...prev, message])
+      if (response.ok) {
+        const data = await response.json()
+        setMessages((prev) => (page === 1 ? data.results : [...data.results, ...prev]))
+        setHasMore(!!data.next)
+        setIsLoading(false)
+      }
+    } catch (error) {
+      console.error("Failed to load chat history:", error)
+      setIsLoading(false)
+    }
+  }
+
+  const handleNewMessage = (messageData: Message) => {
+    setMessages((prev) => [...prev, messageData])
+  }
+
+  const handleTypingIndicator = (data: { user_id: string; username: string; is_typing: boolean }) => {
+    setIsTyping((prev) => {
+      if (data.is_typing) {
+        return prev.includes(data.username) ? prev : [...prev, data.username]
+      } else {
+        return prev.filter((username) => username !== data.username)
+      }
     })
+  }
 
-    socket.on("chat:reaction", (data: { messageId: string; emoji: string; userId: string }) => {
-      setMessages((prev) =>
-        prev.map((msg) => {
-          if (msg.id === data.messageId) {
-            const reactions = msg.reactions || []
-            const existingReaction = reactions.find((r) => r.emoji === data.emoji)
+  const handleMessageReaction = (data: {
+    message_id: string
+    emoji: string
+    user_id: string
+    action: "add" | "remove"
+  }) => {
+    setMessages((prev) =>
+      prev.map((msg) => {
+        if (msg.id === data.message_id) {
+          const reactions = { ...msg.reactions }
+          if (!reactions[data.emoji]) reactions[data.emoji] = []
 
-            if (existingReaction) {
-              if (existingReaction.users.includes(data.userId)) {
-                // Remove reaction
-                existingReaction.count--
-                existingReaction.users = existingReaction.users.filter((id) => id !== data.userId)
-                if (existingReaction.count === 0) {
-                  return { ...msg, reactions: reactions.filter((r) => r.emoji !== data.emoji) }
-                }
-              } else {
-                // Add reaction
-                existingReaction.count++
-                existingReaction.users.push(data.userId)
-              }
-            } else {
-              // New reaction
-              reactions.push({ emoji: data.emoji, count: 1, users: [data.userId] })
+          if (data.action === "add") {
+            if (!reactions[data.emoji].includes(data.user_id)) {
+              reactions[data.emoji].push(data.user_id)
             }
-
-            return { ...msg, reactions }
+          } else {
+            reactions[data.emoji] = reactions[data.emoji].filter((id) => id !== data.user_id)
+            if (reactions[data.emoji].length === 0) {
+              delete reactions[data.emoji]
+            }
           }
-          return msg
-        }),
-      )
-    })
 
-    socket.on("chat:typing", (data: { userId: string; isTyping: boolean }) => {
-      // Handle typing indicator
-      setIsTyping(data.isTyping)
-    })
-
-    return () => {
-      socket.off("chat:message")
-      socket.off("chat:reaction")
-      socket.off("chat:typing")
-    }
-  }, [socket])
-
-  const sendMessage = () => {
-    if (!inputValue.trim() || !socket || !user) return
-
-    const message: ChatMessage = {
-      id: Date.now().toString(),
-      content: inputValue,
-      user: {
-        id: user.id,
-        username: user.username,
-        avatar: user.avatar,
-      },
-      timestamp: new Date().toISOString(),
-      type: "message",
-    }
-
-    socket.emit("chat:message", message)
-    setInputValue("")
-  }
-
-  const addReaction = (messageId: string, emoji: string) => {
-    if (!socket || !user) return
-
-    socket.emit("chat:reaction", {
-      messageId,
-      emoji,
-      userId: user.id,
-    })
-  }
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault()
-      sendMessage()
-    }
-  }
-
-  const renderMessage = (message: ChatMessage) => {
-    if (message.type === "system") {
-      return (
-        <div className="text-center py-2">
-          <Badge variant="secondary" className="text-xs">
-            {message.content}
-          </Badge>
-        </div>
-      )
-    }
-
-    const isOwnMessage = message.user.id === user?.id
-
-    return (
-      <div className={cn("flex space-x-3", isOwnMessage && "flex-row-reverse space-x-reverse")}>
-        <Avatar className="w-8 h-8 flex-shrink-0">
-          <AvatarImage src={message.user.avatar || "/placeholder.svg"} />
-          <AvatarFallback>{message.user.username[0]?.toUpperCase()}</AvatarFallback>
-        </Avatar>
-
-        <div className={cn("flex-1 min-w-0", isOwnMessage && "text-right")}>
-          <div className="flex items-center space-x-2 mb-1">
-            <span className="text-sm font-medium">{message.user.username}</span>
-            {message.user.id === "host-1" && <Crown className="w-3 h-3 text-accent-premium" />}
-            <span className="text-xs text-muted-foreground">
-              {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
-            </span>
-          </div>
-
-          <div
-            className={cn(
-              "inline-block p-3 rounded-lg max-w-xs break-words",
-              isOwnMessage ? "bg-primary text-primary-foreground" : "bg-background-secondary",
-            )}
-          >
-            <p className="text-sm">{message.content}</p>
-          </div>
-
-          {/* Reactions */}
-          {message.reactions && message.reactions.length > 0 && (
-            <div className="flex flex-wrap gap-1 mt-2">
-              {message.reactions.map((reaction) => (
-                <Button
-                  key={reaction.emoji}
-                  variant="outline"
-                  size="sm"
-                  className="h-6 px-2 text-xs bg-transparent"
-                  onClick={() => addReaction(message.id, reaction.emoji)}
-                >
-                  {reaction.emoji} {reaction.count}
-                </Button>
-              ))}
-            </div>
-          )}
-
-          {/* Quick Reactions */}
-          <div className="flex space-x-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-            {quickReactions.slice(0, 3).map((emoji) => (
-              <Button
-                key={emoji}
-                variant="ghost"
-                size="sm"
-                className="h-6 w-6 p-0 text-xs hover:bg-background-secondary"
-                onClick={() => addReaction(message.id, emoji)}
-              >
-                {emoji}
-              </Button>
-            ))}
-          </div>
-        </div>
-      </div>
+          return { ...msg, reactions }
+        }
+        return msg
+      }),
     )
   }
 
+  const handleMessageEdit = (data: { message_id: string; content: string }) => {
+    setMessages((prev) =>
+      prev.map((msg) => (msg.id === data.message_id ? { ...msg, content: data.content, isEdited: true } : msg)),
+    )
+  }
+
+  const handleMessageDelete = (data: { message_id: string }) => {
+    setMessages((prev) => prev.filter((msg) => msg.id !== data.message_id))
+  }
+
+  const sendChatMessage = async () => {
+    if (!newMessage.trim() || !user) return
+
+    const messageData = {
+      room_id: roomId,
+      content: newMessage.trim(),
+      type: "text",
+      reply_to: replyingTo?.id,
+    }
+
+    if (editingMessage) {
+      // Edit existing message
+      sendMessage("edit_message", {
+        message_id: editingMessage,
+        content: newMessage.trim(),
+      })
+      setEditingMessage(null)
+    } else {
+      // Send new message
+      sendMessage("chat_message", messageData)
+    }
+
+    setNewMessage("")
+    setReplyingTo(null)
+    inputRef.current?.focus()
+  }
+
+  const handleTyping = useCallback(() => {
+    sendMessage("typing", {
+      room_id: roomId,
+      is_typing: true,
+    })
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current)
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      sendMessage("typing", {
+        room_id: roomId,
+        is_typing: false,
+      })
+    }, 1000)
+  }, [roomId, sendMessage])
+
+  const addReaction = (messageId: string, emoji: string) => {
+    sendMessage("message_reaction", {
+      message_id: messageId,
+      emoji,
+      action: "add",
+    })
+  }
+
+  const removeReaction = (messageId: string, emoji: string) => {
+    sendMessage("message_reaction", {
+      message_id: messageId,
+      emoji,
+      action: "remove",
+    })
+  }
+
+  const deleteMessage = (messageId: string) => {
+    sendMessage("delete_message", { message_id: messageId })
+  }
+
+  const startEdit = (message: Message) => {
+    setEditingMessage(message.id)
+    setNewMessage(message.content)
+    inputRef.current?.focus()
+  }
+
+  const startReply = (message: Message) => {
+    setReplyingTo(message)
+    inputRef.current?.focus()
+  }
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  const filteredMessages = searchQuery
+    ? messages.filter(
+        (msg) =>
+          msg.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          msg.user.username.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : messages
+
+  const canModerate = user?.role === "admin" || user?.role === "moderator"
+
   return (
-    <div className={cn("flex flex-col h-full", className)}>
-      {/* Messages */}
+    <div className={cn("flex flex-col h-full bg-white border rounded-lg", className)}>
+      {/* Chat header */}
+      <div className="flex items-center justify-between p-4 border-b">
+        <h3 className="font-semibold">Chat</h3>
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm" onClick={() => setShowSearch(!showSearch)}>
+            <Search className="h-4 w-4" />
+          </Button>
+          {canModerate && (
+            <Button variant="ghost" size="sm">
+              <Shield className="h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      </div>
+
+      {/* Search bar */}
+      {showSearch && (
+        <div className="p-4 border-b">
+          <Input
+            placeholder="Search messages..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      )}
+
+      {/* Messages area */}
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
-          {messages.map((message) => (
-            <div key={message.id} className="group">
-              {renderMessage(message)}
-            </div>
-          ))}
-          {isTyping && (
-            <div className="flex items-center space-x-2 text-muted-foreground">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-current rounded-full animate-bounce" />
-                <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{ animationDelay: "0.1s" }} />
-                <div className="w-2 h-2 bg-current rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
+          {isLoading ? (
+            <div className="text-center text-gray-500">Loading messages...</div>
+          ) : filteredMessages.length === 0 ? (
+            <div className="text-center text-gray-500">No messages yet. Start the conversation!</div>
+          ) : (
+            filteredMessages.map((message) => (
+              <div key={message.id} className="group">
+                {/* Reply indicator */}
+                {message.replyTo && <div className="text-xs text-gray-500 mb-1 ml-12">Replying to a message</div>}
+
+                <div className="flex gap-3">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={message.user.avatar || "/placeholder.svg"} />
+                    <AvatarFallback>{message.user.username.charAt(0).toUpperCase()}</AvatarFallback>
+                  </Avatar>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-medium text-sm">{message.user.username}</span>
+                      {message.user.role !== "user" && (
+                        <Badge variant="secondary" className="text-xs">
+                          {message.user.role}
+                        </Badge>
+                      )}
+                      <span className="text-xs text-gray-500">{new Date(message.timestamp).toLocaleTimeString()}</span>
+                      {message.isEdited && <span className="text-xs text-gray-400">(edited)</span>}
+                    </div>
+
+                    <div className="text-sm break-words">{message.content}</div>
+
+                    {/* Reactions */}
+                    {message.reactions && Object.keys(message.reactions).length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {Object.entries(message.reactions).map(([emoji, userIds]) => (
+                          <Button
+                            key={emoji}
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 px-2 text-xs"
+                            onClick={() => {
+                              if (userIds.includes(user?.id || "")) {
+                                removeReaction(message.id, emoji)
+                              } else {
+                                addReaction(message.id, emoji)
+                              }
+                            }}
+                          >
+                            {emoji} {userIds.length}
+                          </Button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Message actions */}
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => addReaction(message.id, "👍")}
+                        className="h-6 w-6 p-0"
+                      >
+                        <ThumbsUp className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => addReaction(message.id, "❤️")}
+                        className="h-6 w-6 p-0"
+                      >
+                        <Heart className="h-3 w-3" />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => startReply(message)} className="h-6 w-6 p-0">
+                        <Reply className="h-3 w-3" />
+                      </Button>
+                      {(message.user.id === user?.id || canModerate) && (
+                        <>
+                          <Button variant="ghost" size="sm" onClick={() => startEdit(message)} className="h-6 w-6 p-0">
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => deleteMessage(message.id)}
+                            className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <span className="text-sm">Someone is typing...</span>
+            ))
+          )}
+
+          {/* Typing indicators */}
+          {isTyping.length > 0 && (
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <div className="flex gap-1">
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }} />
+                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }} />
+              </div>
+              {isTyping.join(", ")} {isTyping.length === 1 ? "is" : "are"} typing...
             </div>
           )}
+
           <div ref={messagesEndRef} />
         </div>
       </ScrollArea>
 
-      {/* Input */}
-      <div className="p-4 border-t border-border/40">
-        <div className="flex space-x-2">
-          <div className="flex-1 relative">
-            <Input
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Type a message..."
-              className="pr-20"
-            />
-            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex space-x-1">
-              <Button variant="ghost" size="icon" className="h-6 w-6">
-                <Smile className="w-4 h-4" />
-              </Button>
-              <Button variant="ghost" size="icon" className="h-6 w-6">
-                <ImageIcon className="w-4 h-4" />
-              </Button>
-            </div>
+      {/* Reply indicator */}
+      {replyingTo && (
+        <div className="px-4 py-2 bg-gray-50 border-t flex items-center justify-between">
+          <div className="text-sm">
+            <span className="text-gray-500">Replying to </span>
+            <span className="font-medium">{replyingTo.user.username}</span>
+            <span className="text-gray-500">: {replyingTo.content.substring(0, 50)}...</span>
           </div>
-          <Button onClick={sendMessage} disabled={!inputValue.trim()}>
-            <Send className="w-4 h-4" />
+          <Button variant="ghost" size="sm" onClick={() => setReplyingTo(null)}>
+            ×
           </Button>
         </div>
+      )}
 
-        {/* Quick Reactions */}
-        <div className="flex space-x-1 mt-2">
-          {quickReactions.map((emoji) => (
-            <Button
-              key={emoji}
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0"
-              onClick={() => {
-                // Send as quick message
-                if (socket && user) {
-                  const message: ChatMessage = {
-                    id: Date.now().toString(),
-                    content: emoji,
-                    user: {
-                      id: user.id,
-                      username: user.username,
-                      avatar: user.avatar,
-                    },
-                    timestamp: new Date().toISOString(),
-                    type: "reaction",
-                  }
-                  socket.emit("chat:message", message)
+      {/* Message input */}
+      <div className="p-4 border-t">
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="sm">
+            <Paperclip className="h-4 w-4" />
+          </Button>
+          <div className="flex-1 relative">
+            <Input
+              ref={inputRef}
+              placeholder={editingMessage ? "Edit message..." : "Type a message..."}
+              value={newMessage}
+              onChange={(e) => {
+                setNewMessage(e.target.value)
+                handleTyping()
+              }}
+              onKeyPress={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault()
+                  sendChatMessage()
                 }
               }}
-            >
-              {emoji}
-            </Button>
-          ))}
+            />
+            {editingMessage && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute right-2 top-1/2 -translate-y-1/2"
+                onClick={() => {
+                  setEditingMessage(null)
+                  setNewMessage("")
+                }}
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
+          <Button variant="ghost" size="sm">
+            <Smile className="h-4 w-4" />
+          </Button>
+          <Button onClick={sendChatMessage} disabled={!newMessage.trim()} size="sm">
+            <Send className="h-4 w-4" />
+          </Button>
         </div>
       </div>
     </div>

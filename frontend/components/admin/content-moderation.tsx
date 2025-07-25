@@ -1,412 +1,713 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import {
-  Search,
-  Filter,
-  Eye,
-  CheckCircle,
-  XCircle,
   AlertTriangle,
+  Search,
+  MoreHorizontal,
+  Eye,
+  Check,
+  X,
   Flag,
-  Video,
   MessageSquare,
-  Clock,
-  User,
+  Video,
+  Users,
   Calendar,
+  TrendingUp,
+  Shield,
+  Loader2,
 } from "lucide-react"
+import { useAuth } from "@/contexts/auth-context"
+import { useToast } from "@/hooks/use-toast"
+import { formatDistanceToNow } from "date-fns"
 
-export function ContentModeration() {
-  const [searchTerm, setSearchTerm] = useState("")
+interface Report {
+  id: string
+  type: "user" | "video" | "party" | "message"
+  status: "pending" | "reviewing" | "resolved" | "dismissed"
+  priority: "low" | "medium" | "high" | "critical"
+  category: "spam" | "harassment" | "inappropriate_content" | "copyright" | "violence" | "other"
+  description: string
+  reportedBy: {
+    id: string
+    username: string
+    avatar?: string
+  }
+  reportedItem: {
+    id: string
+    title?: string
+    content?: string
+    author?: {
+      id: string
+      username: string
+      avatar?: string
+    }
+  }
+  createdAt: string
+  reviewedAt?: string
+  reviewedBy?: {
+    id: string
+    username: string
+  }
+  resolution?: string
+  evidence: {
+    screenshots: string[]
+    logs: string[]
+    additionalInfo: string
+  }
+}
+
+interface ModerationStats {
+  totalReports: number
+  pendingReports: number
+  resolvedToday: number
+  averageResolutionTime: number
+  reportsByCategory: Record<string, number>
+  reportsByPriority: Record<string, number>
+}
+
+export default function ContentModeration() {
+  const [reports, setReports] = useState<Report[]>([])
+  const [stats, setStats] = useState<ModerationStats | null>(null)
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [typeFilter, setTypeFilter] = useState("all")
-  const [selectedItem, setSelectedItem] = useState<any>(null)
+  const [priorityFilter, setPriorityFilter] = useState("all")
+  const [isLoading, setIsLoading] = useState(true)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
 
-  // Mock moderation queue data
-  const moderationQueue = [
-    {
-      id: "mod_001",
-      type: "video",
-      title: "Suspicious Video Content",
-      description: "User uploaded video with potentially inappropriate content",
-      reporter: "john@example.com",
-      reported_user: "suspicious@example.com",
-      reported_at: "2024-01-20T10:30:00Z",
-      status: "pending",
-      priority: "high",
-      content_url: "/placeholder.svg",
-      reason: "Inappropriate content",
-      auto_flagged: true,
-    },
-    {
-      id: "mod_002",
-      type: "chat",
-      title: "Harassment in Chat",
-      description: "User reported harassment during watch party",
-      reporter: "sarah@example.com",
-      reported_user: "toxic@example.com",
-      reported_at: "2024-01-20T09:15:00Z",
-      status: "pending",
-      priority: "medium",
-      content_url: null,
-      reason: "Harassment",
-      auto_flagged: false,
-    },
-    {
-      id: "mod_003",
-      type: "profile",
-      title: "Inappropriate Profile Content",
-      description: "Profile contains offensive imagery",
-      reporter: "mike@example.com",
-      reported_user: "baduser@example.com",
-      reported_at: "2024-01-20T08:45:00Z",
-      status: "resolved",
-      priority: "low",
-      content_url: "/placeholder.svg",
-      reason: "Offensive content",
-      auto_flagged: true,
-    },
-  ]
+  const { user } = useAuth()
+  const { toast } = useToast()
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "pending":
-        return (
-          <Badge variant="outline" className="text-yellow-600 border-yellow-600">
-            Pending
-          </Badge>
-        )
-      case "approved":
-        return <Badge className="bg-green-100 text-green-800">Approved</Badge>
-      case "rejected":
-        return <Badge variant="destructive">Rejected</Badge>
-      case "resolved":
-        return <Badge className="bg-blue-100 text-blue-800">Resolved</Badge>
-      default:
-        return <Badge variant="outline">Unknown</Badge>
+  useEffect(() => {
+    loadReports()
+    loadModerationStats()
+  }, [searchQuery, statusFilter, typeFilter, priorityFilter, currentPage])
+
+  const loadReports = async () => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      const params = new URLSearchParams({
+        page: currentPage.toString(),
+        search: searchQuery,
+        status: statusFilter,
+        type: typeFilter,
+        priority: priorityFilter,
+      })
+
+      const response = await fetch(`/api/admin/reports/?${params}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setReports(data.results || data.reports || [])
+        setTotalPages(data.totalPages || Math.ceil(data.count / 20))
+      }
+    } catch (error) {
+      console.error("Failed to load reports:", error)
+      toast({
+        title: "Error",
+        description: "Failed to load reports. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const loadModerationStats = async () => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      const response = await fetch("/api/admin/moderation/stats/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setStats(data)
+      }
+    } catch (error) {
+      console.error("Failed to load moderation stats:", error)
+    }
+  }
+
+  const updateReportStatus = async (reportId: string, status: string, resolution?: string) => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      const response = await fetch(`/api/admin/reports/${reportId}/`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          status,
+          resolution,
+          reviewed_by: user?.id,
+        }),
+      })
+
+      if (response.ok) {
+        const updatedReport = await response.json()
+        setReports((prev) => prev.map((r) => (r.id === reportId ? updatedReport : r)))
+        setSelectedReport(null)
+        toast({
+          title: "Report Updated",
+          description: `Report status changed to ${status}`,
+        })
+      }
+    } catch (error) {
+      console.error("Failed to update report:", error)
+      toast({
+        title: "Error",
+        description: "Failed to update report. Please try again.",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const takeContentAction = async (reportId: string, action: string, reason: string) => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      const response = await fetch(`/api/admin/reports/${reportId}/action/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          action,
+          reason,
+        }),
+      })
+
+      if (response.ok) {
+        await updateReportStatus(reportId, "resolved", `Action taken: ${action}`)
+        toast({
+          title: "Action Taken",
+          description: `${action} applied successfully`,
+        })
+      }
+    } catch (error) {
+      console.error("Failed to take content action:", error)
+      toast({
+        title: "Error",
+        description: "Failed to take action. Please try again.",
+        variant: "destructive",
+      })
     }
   }
 
   const getPriorityBadge = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return <Badge variant="destructive">High</Badge>
-      case "medium":
-        return <Badge className="bg-yellow-100 text-yellow-800">Medium</Badge>
-      case "low":
-        return <Badge variant="outline">Low</Badge>
-      default:
-        return <Badge variant="outline">Normal</Badge>
-    }
+    const variants = {
+      low: "outline",
+      medium: "secondary",
+      high: "default",
+      critical: "destructive",
+    } as const
+
+    const colors = {
+      low: "text-gray-600",
+      medium: "text-yellow-600",
+      high: "text-orange-600",
+      critical: "text-red-600",
+    } as const
+
+    return (
+      <Badge variant={variants[priority as keyof typeof variants]} className={colors[priority as keyof typeof colors]}>
+        {priority.charAt(0).toUpperCase() + priority.slice(1)}
+      </Badge>
+    )
+  }
+
+  const getStatusBadge = (status: string) => {
+    const variants = {
+      pending: "outline",
+      reviewing: "secondary",
+      resolved: "default",
+      dismissed: "destructive",
+    } as const
+
+    return (
+      <Badge variant={variants[status as keyof typeof variants]}>
+        {status.charAt(0).toUpperCase() + status.slice(1)}
+      </Badge>
+    )
   }
 
   const getTypeIcon = (type: string) => {
     switch (type) {
+      case "user":
+        return <Users className="h-4 w-4" />
       case "video":
-        return <Video className="w-4 h-4" />
-      case "chat":
-        return <MessageSquare className="w-4 h-4" />
-      case "profile":
-        return <User className="w-4 h-4" />
+        return <Video className="h-4 w-4" />
+      case "party":
+        return <Calendar className="h-4 w-4" />
+      case "message":
+        return <MessageSquare className="h-4 w-4" />
       default:
-        return <Flag className="w-4 h-4" />
+        return <Flag className="h-4 w-4" />
     }
   }
 
-  const filteredQueue = moderationQueue.filter((item) => {
-    const matchesSearch =
-      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.reported_user.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = statusFilter === "all" || item.status === statusFilter
-    const matchesType = typeFilter === "all" || item.type === typeFilter
+  const ReportDetailsDialog = ({ report }: { report: Report }) => {
+    const [resolution, setResolution] = useState("")
+    const [actionType, setActionType] = useState("")
 
-    return matchesSearch && matchesStatus && matchesType
-  })
+    const handleResolve = () => {
+      if (actionType && resolution) {
+        takeContentAction(report.id, actionType, resolution)
+      } else {
+        updateReportStatus(report.id, "resolved", resolution)
+      }
+    }
+
+    return (
+      <Dialog open={!!selectedReport} onOpenChange={() => setSelectedReport(null)}>
+        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {getTypeIcon(report.type)}
+              Report #{report.id.slice(-8)}
+              {getPriorityBadge(report.priority)}
+            </DialogTitle>
+            <DialogDescription>
+              Reported {formatDistanceToNow(new Date(report.createdAt), { addSuffix: true })} by{" "}
+              {report.reportedBy.username}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-6">
+            {/* Report Details */}
+            <div className="grid grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-sm font-medium">Report Information</Label>
+                  <div className="mt-2 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Type:</span>
+                      <div className="flex items-center gap-1">
+                        {getTypeIcon(report.type)}
+                        <span className="capitalize">{report.type}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Category:</span>
+                      <span className="capitalize">{report.category.replace("_", " ")}</span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Status:</span>
+                      {getStatusBadge(report.status)}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-600">Priority:</span>
+                      {getPriorityBadge(report.priority)}
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <Label className="text-sm font-medium">Reported By</Label>
+                  <div className="mt-2 flex items-center gap-2">
+                    <Avatar className="h-6 w-6">
+                      <AvatarImage src={report.reportedBy.avatar || "/placeholder.svg"} />
+                      <AvatarFallback className="text-xs">
+                        {report.reportedBy.username.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm">{report.reportedBy.username}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-sm font-medium">Reported Content</Label>
+                  <div className="mt-2 p-3 bg-gray-50 rounded-lg">
+                    {report.reportedItem.title && <p className="font-medium text-sm">{report.reportedItem.title}</p>}
+                    {report.reportedItem.content && (
+                      <p className="text-sm text-gray-600 mt-1">{report.reportedItem.content}</p>
+                    )}
+                    {report.reportedItem.author && (
+                      <div className="flex items-center gap-2 mt-2">
+                        <Avatar className="h-5 w-5">
+                          <AvatarImage src={report.reportedItem.author.avatar || "/placeholder.svg"} />
+                          <AvatarFallback className="text-xs">
+                            {report.reportedItem.author.username.charAt(0).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-xs text-gray-500">by {report.reportedItem.author.username}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {report.reviewedBy && (
+                  <div>
+                    <Label className="text-sm font-medium">Reviewed By</Label>
+                    <div className="mt-2">
+                      <span className="text-sm">{report.reviewedBy.username}</span>
+                      {report.reviewedAt && (
+                        <p className="text-xs text-gray-500">
+                          {formatDistanceToNow(new Date(report.reviewedAt), { addSuffix: true })}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Report Description */}
+            <div>
+              <Label className="text-sm font-medium">Report Description</Label>
+              <div className="mt-2 p-3 bg-gray-50 rounded-lg">
+                <p className="text-sm">{report.description}</p>
+              </div>
+            </div>
+
+            {/* Evidence */}
+            {(report.evidence.screenshots.length > 0 || report.evidence.additionalInfo) && (
+              <div>
+                <Label className="text-sm font-medium">Evidence</Label>
+                <div className="mt-2 space-y-2">
+                  {report.evidence.screenshots.length > 0 && (
+                    <div>
+                      <p className="text-xs text-gray-600 mb-2">Screenshots:</p>
+                      <div className="grid grid-cols-3 gap-2">
+                        {report.evidence.screenshots.map((screenshot, index) => (
+                          <img
+                            key={index}
+                            src={screenshot || "/placeholder.svg"}
+                            alt={`Evidence ${index + 1}`}
+                            className="w-full h-20 object-cover rounded border"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {report.evidence.additionalInfo && (
+                    <div>
+                      <p className="text-xs text-gray-600 mb-1">Additional Information:</p>
+                      <p className="text-sm bg-gray-50 p-2 rounded">{report.evidence.additionalInfo}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Resolution */}
+            {report.status === "pending" && (
+              <div className="space-y-4 border-t pt-4">
+                <Label className="text-sm font-medium">Take Action</Label>
+
+                <div className="space-y-3">
+                  <div>
+                    <Label className="text-xs">Action Type</Label>
+                    <Select value={actionType} onValueChange={setActionType}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select action (optional)" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="remove_content">Remove Content</SelectItem>
+                        <SelectItem value="suspend_user">Suspend User</SelectItem>
+                        <SelectItem value="ban_user">Ban User</SelectItem>
+                        <SelectItem value="warn_user">Warn User</SelectItem>
+                        <SelectItem value="no_action">No Action Required</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label className="text-xs">Resolution Notes</Label>
+                    <Textarea
+                      placeholder="Explain your decision and any actions taken..."
+                      value={resolution}
+                      onChange={(e) => setResolution(e.target.value)}
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => updateReportStatus(report.id, "dismissed", resolution)}>
+                      Dismiss
+                    </Button>
+                    <Button onClick={handleResolve} disabled={!resolution}>
+                      Resolve Report
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Existing Resolution */}
+            {report.resolution && (
+              <div className="border-t pt-4">
+                <Label className="text-sm font-medium">Resolution</Label>
+                <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <p className="text-sm">{report.resolution}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    )
+  }
 
   return (
     <div className="space-y-6">
-      {/* Summary Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pending Reviews</CardTitle>
-            <Clock className="w-4 h-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">23</div>
-            <p className="text-xs text-muted-foreground">Awaiting moderation</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Auto-Flagged</CardTitle>
-            <AlertTriangle className="w-4 h-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">AI detected issues</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Resolved Today</CardTitle>
-            <CheckCircle className="w-4 h-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">15</div>
-            <p className="text-xs text-muted-foreground">Cases closed</p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">High Priority</CardTitle>
-            <Flag className="w-4 h-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">3</div>
-            <p className="text-xs text-muted-foreground">Urgent attention needed</p>
-          </CardContent>
-        </Card>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold">Content Moderation</h2>
+          <p className="text-gray-600">Review and moderate reported content</p>
+        </div>
       </div>
 
-      {/* Moderation Interface */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Content Moderation Queue</CardTitle>
-          <CardDescription>Review and moderate reported content and user behavior</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="queue" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="queue">Moderation Queue</TabsTrigger>
-              <TabsTrigger value="history">Moderation History</TabsTrigger>
-              <TabsTrigger value="settings">Auto-Moderation Settings</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="queue" className="space-y-4">
-              {/* Filters */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Search reports..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10"
-                    />
-                  </div>
+      {/* Stats Cards */}
+      {stats && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Total Reports</p>
+                  <p className="text-2xl font-bold">{stats.totalReports}</p>
                 </div>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[180px]">
-                    <Filter className="w-4 h-4 mr-2" />
-                    <SelectValue placeholder="Filter by status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Status</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="approved">Approved</SelectItem>
-                    <SelectItem value="rejected">Rejected</SelectItem>
-                    <SelectItem value="resolved">Resolved</SelectItem>
-                  </SelectContent>
-                </Select>
-                <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Filter by type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
-                    <SelectItem value="video">Videos</SelectItem>
-                    <SelectItem value="chat">Chat Messages</SelectItem>
-                    <SelectItem value="profile">Profiles</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Flag className="h-8 w-8 text-gray-400" />
               </div>
+            </CardContent>
+          </Card>
 
-              {/* Moderation Queue Table */}
-              <div className="rounded-md border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Report</TableHead>
-                      <TableHead>Type</TableHead>
-                      <TableHead>Priority</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Reported</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredQueue.map((item) => (
-                      <TableRow key={item.id}>
-                        <TableCell>
-                          <div className="space-y-1">
-                            <div className="flex items-center space-x-2">
-                              <span className="font-medium">{item.title}</span>
-                              {item.auto_flagged && (
-                                <Badge variant="outline" className="text-xs">
-                                  Auto-flagged
-                                </Badge>
-                              )}
-                            </div>
-                            <p className="text-xs text-muted-foreground">{item.description}</p>
-                            <p className="text-xs text-muted-foreground">Reported user: {item.reported_user}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center space-x-2">
-                            {getTypeIcon(item.type)}
-                            <span className="capitalize">{item.type}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>{getPriorityBadge(item.priority)}</TableCell>
-                        <TableCell>{getStatusBadge(item.status)}</TableCell>
-                        <TableCell>
-                          <div className="text-xs">
-                            <div className="flex items-center space-x-1">
-                              <Calendar className="w-3 h-3" />
-                              <span>{new Date(item.reported_at).toLocaleDateString()}</span>
-                            </div>
-                            <div className="flex items-center space-x-1 mt-1">
-                              <User className="w-3 h-3" />
-                              <span>{item.reporter}</span>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button size="sm" variant="outline" onClick={() => setSelectedItem(item)}>
-                                <Eye className="w-4 h-4 mr-2" />
-                                Review
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-2xl">
-                              <DialogHeader>
-                                <DialogTitle>Content Review</DialogTitle>
-                                <DialogDescription>Review and moderate reported content</DialogDescription>
-                              </DialogHeader>
-                              {selectedItem && (
-                                <div className="space-y-4">
-                                  <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                      <label className="text-sm font-medium">Report Type</label>
-                                      <p className="text-sm text-muted-foreground capitalize">{selectedItem.type}</p>
-                                    </div>
-                                    <div>
-                                      <label className="text-sm font-medium">Priority</label>
-                                      <div className="mt-1">{getPriorityBadge(selectedItem.priority)}</div>
-                                    </div>
-                                    <div>
-                                      <label className="text-sm font-medium">Reported User</label>
-                                      <p className="text-sm text-muted-foreground">{selectedItem.reported_user}</p>
-                                    </div>
-                                    <div>
-                                      <label className="text-sm font-medium">Reporter</label>
-                                      <p className="text-sm text-muted-foreground">{selectedItem.reporter}</p>
-                                    </div>
-                                  </div>
-
-                                  <div>
-                                    <label className="text-sm font-medium">Reason</label>
-                                    <p className="text-sm text-muted-foreground">{selectedItem.reason}</p>
-                                  </div>
-
-                                  <div>
-                                    <label className="text-sm font-medium">Description</label>
-                                    <p className="text-sm text-muted-foreground">{selectedItem.description}</p>
-                                  </div>
-
-                                  {selectedItem.content_url && (
-                                    <div>
-                                      <label className="text-sm font-medium">Content Preview</label>
-                                      <div className="mt-2 p-4 border rounded-lg bg-muted/50">
-                                        <img
-                                          src={selectedItem.content_url || "/placeholder.svg"}
-                                          alt="Content preview"
-                                          className="max-w-full h-32 object-cover rounded"
-                                        />
-                                      </div>
-                                    </div>
-                                  )}
-
-                                  <div>
-                                    <label className="text-sm font-medium">Moderation Notes</label>
-                                    <Textarea placeholder="Add notes about your decision..." className="mt-1" />
-                                  </div>
-
-                                  <div className="flex space-x-2">
-                                    <Button className="flex-1">
-                                      <CheckCircle className="w-4 h-4 mr-2" />
-                                      Approve
-                                    </Button>
-                                    <Button variant="destructive" className="flex-1">
-                                      <XCircle className="w-4 h-4 mr-2" />
-                                      Reject
-                                    </Button>
-                                    <Button variant="outline" className="flex-1 bg-transparent">
-                                      <Flag className="w-4 h-4 mr-2" />
-                                      Escalate
-                                    </Button>
-                                  </div>
-                                </div>
-                              )}
-                            </DialogContent>
-                          </Dialog>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Pending</p>
+                  <p className="text-2xl font-bold text-orange-600">{stats.pendingReports}</p>
+                </div>
+                <AlertTriangle className="h-8 w-8 text-orange-400" />
               </div>
-            </TabsContent>
+            </CardContent>
+          </Card>
 
-            <TabsContent value="history">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Moderation History</CardTitle>
-                  <CardDescription>View past moderation decisions and actions</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">Moderation history will be displayed here...</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Resolved Today</p>
+                  <p className="text-2xl font-bold text-green-600">{stats.resolvedToday}</p>
+                </div>
+                <Check className="h-8 w-8 text-green-400" />
+              </div>
+            </CardContent>
+          </Card>
 
-            <TabsContent value="settings">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Auto-Moderation Settings</CardTitle>
-                  <CardDescription>Configure automatic content filtering and flagging</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">Auto-moderation settings will be configured here...</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600">Avg Resolution</p>
+                  <p className="text-2xl font-bold">{stats.averageResolutionTime}h</p>
+                </div>
+                <TrendingUp className="h-8 w-8 text-blue-400" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            placeholder="Search reports..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="w-full sm:w-48">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Status</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
+            <SelectItem value="reviewing">Reviewing</SelectItem>
+            <SelectItem value="resolved">Resolved</SelectItem>
+            <SelectItem value="dismissed">Dismissed</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={typeFilter} onValueChange={setTypeFilter}>
+          <SelectTrigger className="w-full sm:w-48">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Types</SelectItem>
+            <SelectItem value="user">Users</SelectItem>
+            <SelectItem value="video">Videos</SelectItem>
+            <SelectItem value="party">Parties</SelectItem>
+            <SelectItem value="message">Messages</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+          <SelectTrigger className="w-full sm:w-48">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Priority</SelectItem>
+            <SelectItem value="critical">Critical</SelectItem>
+            <SelectItem value="high">High</SelectItem>
+            <SelectItem value="medium">Medium</SelectItem>
+            <SelectItem value="low">Low</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Reports Table */}
+      <Card>
+        <CardContent className="p-0">
+          {isLoading ? (
+            <div className="text-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+              <p>Loading reports...</p>
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Report</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Priority</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Reporter</TableHead>
+                  <TableHead>Created</TableHead>
+                  <TableHead className="w-12"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {reports.map((report) => (
+                  <TableRow key={report.id}>
+                    <TableCell>
+                      <div>
+                        <p className="font-medium text-sm">#{report.id.slice(-8)}</p>
+                        <p className="text-xs text-gray-500 capitalize">{report.category.replace("_", " ")}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        {getTypeIcon(report.type)}
+                        <span className="capitalize">{report.type}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>{getPriorityBadge(report.priority)}</TableCell>
+                    <TableCell>{getStatusBadge(report.status)}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Avatar className="h-6 w-6">
+                          <AvatarImage src={report.reportedBy.avatar || "/placeholder.svg"} />
+                          <AvatarFallback className="text-xs">
+                            {report.reportedBy.username.charAt(0).toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm">{report.reportedBy.username}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-sm">
+                        {formatDistanceToNow(new Date(report.createdAt), { addSuffix: true })}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => setSelectedReport(report)}>
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => updateReportStatus(report.id, "reviewing")}>
+                            <Shield className="mr-2 h-4 w-4" />
+                            Start Review
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => updateReportStatus(report.id, "resolved", "Quick resolution")}
+                          >
+                            <Check className="mr-2 h-4 w-4" />
+                            Quick Resolve
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => updateReportStatus(report.id, "dismissed", "Not actionable")}
+                          >
+                            <X className="mr-2 h-4 w-4" />
+                            Dismiss
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </CardContent>
       </Card>
+
+      {/* Pagination */}
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-gray-600">Showing {reports.length} reports</p>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </Button>
+          <span className="text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
+
+      {/* Report Details Dialog */}
+      {selectedReport && <ReportDetailsDialog report={selectedReport} />}
     </div>
   )
 }

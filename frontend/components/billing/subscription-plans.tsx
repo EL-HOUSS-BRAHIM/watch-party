@@ -1,311 +1,345 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { Check, Crown, Zap, Users, Video, HardDrive, Wifi, Shield } from "lucide-react"
+import { Check, Crown, Zap, Star, Users, Video, Cloud, Shield } from "lucide-react"
+import { useAuth } from "@/contexts/auth-context"
+import { useToast } from "@/hooks/use-toast"
+import { cn } from "@/lib/utils"
 
-interface SubscriptionPlansProps {
-  currentPlan: string
+interface Plan {
+  id: string
+  name: string
+  description: string
+  price: {
+    monthly: number
+    yearly: number
+  }
+  features: string[]
+  limits: {
+    parties: number | "unlimited"
+    participants: number
+    storage: string
+    videoQuality: string
+  }
+  popular?: boolean
+  current?: boolean
 }
 
-export function SubscriptionPlans({ currentPlan }: SubscriptionPlansProps) {
-  const [isAnnual, setIsAnnual] = useState(false)
+interface SubscriptionPlansProps {
+  className?: string
+}
 
-  const plans = [
+export default function SubscriptionPlans({ className }: SubscriptionPlansProps) {
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
+  const [isLoading, setIsLoading] = useState<string | null>(null)
+  const { user } = useAuth()
+  const { toast } = useToast()
+
+  const plans: Plan[] = [
     {
+      id: "free",
       name: "Free",
       description: "Perfect for getting started",
-      price: { monthly: 0, annual: 0 },
-      icon: Video,
+      price: { monthly: 0, yearly: 0 },
       features: [
-        "Up to 3 watch parties per month",
-        "Maximum 5 participants per party",
-        "1GB video storage",
+        "Create up to 3 watch parties",
+        "Up to 5 participants per party",
         "Basic video quality (720p)",
-        "Standard chat features",
+        "1GB storage",
         "Community support",
       ],
       limits: {
-        parties: "3/month",
-        participants: "5 max",
+        parties: 3,
+        participants: 5,
         storage: "1GB",
-        quality: "720p",
-        bandwidth: "10GB/month",
+        videoQuality: "720p",
       },
-      popular: false,
-      color: "border-border",
+      current: user?.subscription?.plan === "free",
     },
     {
+      id: "premium",
       name: "Premium",
-      description: "Great for regular users",
-      price: { monthly: 19.99, annual: 199.99 },
-      icon: Crown,
+      description: "For regular watch party hosts",
+      price: { monthly: 9.99, yearly: 99.99 },
       features: [
         "Unlimited watch parties",
         "Up to 25 participants per party",
-        "50GB video storage",
         "HD video quality (1080p)",
-        "Advanced chat with reactions",
+        "50GB storage",
         "Priority support",
-        "Custom party themes",
-        "Screen sharing",
+        "Advanced party controls",
+        "Custom themes",
+        "Party scheduling",
       ],
       limits: {
-        parties: "Unlimited",
-        participants: "25 max",
+        parties: "unlimited",
+        participants: 25,
         storage: "50GB",
-        quality: "1080p",
-        bandwidth: "500GB/month",
+        videoQuality: "1080p",
       },
       popular: true,
-      color: "border-primary",
+      current: user?.subscription?.plan === "premium",
     },
     {
+      id: "pro",
       name: "Pro",
-      description: "For power users and creators",
-      price: { monthly: 49.99, annual: 499.99 },
-      icon: Zap,
+      description: "For power users and communities",
+      price: { monthly: 19.99, yearly: 199.99 },
       features: [
         "Everything in Premium",
         "Up to 100 participants per party",
-        "500GB video storage",
         "4K video quality",
+        "500GB storage",
+        "24/7 priority support",
         "Advanced analytics",
+        "Custom branding",
         "API access",
         "White-label options",
-        "Custom integrations",
-        "Dedicated support",
       ],
       limits: {
-        parties: "Unlimited",
-        participants: "100 max",
+        parties: "unlimited",
+        participants: 100,
         storage: "500GB",
-        quality: "4K",
-        bandwidth: "2TB/month",
+        videoQuality: "4K",
       },
-      popular: false,
-      color: "border-accent-premium",
-    },
-    {
-      name: "Enterprise",
-      description: "For organizations and teams",
-      price: { monthly: 199.99, annual: 1999.99 },
-      icon: Shield,
-      features: [
-        "Everything in Pro",
-        "Unlimited participants",
-        "Unlimited storage",
-        "Enterprise security",
-        "SSO integration",
-        "Advanced admin controls",
-        "SLA guarantee",
-        "24/7 phone support",
-        "Custom deployment options",
-      ],
-      limits: {
-        parties: "Unlimited",
-        participants: "Unlimited",
-        storage: "Unlimited",
-        quality: "4K+",
-        bandwidth: "Unlimited",
-      },
-      popular: false,
-      color: "border-gradient-to-r from-purple-500 to-pink-500",
+      current: user?.subscription?.plan === "pro",
     },
   ]
 
-  const getPrice = (plan: (typeof plans)[0]) => {
-    if (plan.price.monthly === 0) return "Free"
-    const price = isAnnual ? plan.price.annual : plan.price.monthly
-    const period = isAnnual ? "year" : "month"
-    return `$${price}/${period}`
+  const handleSubscribe = async (planId: string) => {
+    if (planId === "free") return
+
+    setIsLoading(planId)
+
+    try {
+      const token = localStorage.getItem("accessToken")
+      const response = await fetch("/api/billing/subscribe/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          plan_id: planId,
+          billing_cycle: billingCycle,
+        }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+
+        // Redirect to Stripe Checkout
+        if (data.checkout_url) {
+          window.location.href = data.checkout_url
+        }
+      } else {
+        throw new Error("Failed to create subscription")
+      }
+    } catch (error) {
+      console.error("Subscription error:", error)
+      toast({
+        title: "Subscription Error",
+        description: "Failed to start subscription process. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(null)
+    }
   }
 
-  const getSavings = (plan: (typeof plans)[0]) => {
-    if (plan.price.monthly === 0) return null
-    const monthlyCost = plan.price.monthly * 12
-    const savings = monthlyCost - plan.price.annual
-    const percentage = Math.round((savings / monthlyCost) * 100)
-    return { amount: savings, percentage }
+  const getPlanIcon = (planId: string) => {
+    switch (planId) {
+      case "free":
+        return <Users className="h-6 w-6 text-gray-500" />
+      case "premium":
+        return <Crown className="h-6 w-6 text-yellow-500" />
+      case "pro":
+        return <Star className="h-6 w-6 text-purple-500" />
+      default:
+        return <Users className="h-6 w-6" />
+    }
+  }
+
+  const getYearlySavings = (plan: Plan) => {
+    const monthlyTotal = plan.price.monthly * 12
+    const yearlySavings = monthlyTotal - plan.price.yearly
+    const savingsPercentage = Math.round((yearlySavings / monthlyTotal) * 100)
+    return { amount: yearlySavings, percentage: savingsPercentage }
   }
 
   return (
-    <div className="space-y-6">
-      {/* Billing Toggle */}
-      <div className="flex items-center justify-center space-x-4">
-        <Label htmlFor="billing-toggle" className={!isAnnual ? "font-medium" : ""}>
-          Monthly
-        </Label>
-        <Switch id="billing-toggle" checked={isAnnual} onCheckedChange={setIsAnnual} />
-        <Label htmlFor="billing-toggle" className={isAnnual ? "font-medium" : ""}>
-          Annual
-        </Label>
-        {isAnnual && (
-          <Badge variant="secondary" className="ml-2">
-            Save up to 17%
-          </Badge>
-        )}
+    <div className={cn("space-y-8", className)}>
+      <div className="text-center">
+        <h2 className="text-3xl font-bold mb-4">Choose Your Plan</h2>
+        <p className="text-gray-600 mb-8">Upgrade your watch party experience with premium features</p>
+
+        {/* Billing Toggle */}
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <Label htmlFor="billing-toggle" className={cn(billingCycle === "monthly" && "font-semibold")}>
+            Monthly
+          </Label>
+          <Switch
+            id="billing-toggle"
+            checked={billingCycle === "yearly"}
+            onCheckedChange={(checked) => setBillingCycle(checked ? "yearly" : "monthly")}
+          />
+          <Label htmlFor="billing-toggle" className={cn(billingCycle === "yearly" && "font-semibold")}>
+            Yearly
+            <Badge variant="secondary" className="ml-2">
+              Save up to 17%
+            </Badge>
+          </Label>
+        </div>
       </div>
 
-      {/* Plans Grid */}
-      <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
+      <div className="grid md:grid-cols-3 gap-8">
         {plans.map((plan) => {
-          const isCurrentPlan = plan.name === currentPlan
-          const savings = getSavings(plan)
+          const savings = getYearlySavings(plan)
+          const price = billingCycle === "monthly" ? plan.price.monthly : plan.price.yearly
 
           return (
-            <Card key={plan.name} className={`relative ${plan.color} ${plan.popular ? "ring-2 ring-primary" : ""}`}>
+            <Card
+              key={plan.id}
+              className={cn(
+                "relative transition-all hover:shadow-lg",
+                plan.popular && "border-2 border-blue-500 shadow-lg",
+                plan.current && "border-2 border-green-500",
+              )}
+            >
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
+                  <Badge className="bg-blue-500 text-white">Most Popular</Badge>
+                </div>
+              )}
+
+              {plan.current && (
+                <div className="absolute -top-3 right-4">
+                  <Badge className="bg-green-500 text-white">Current Plan</Badge>
                 </div>
               )}
 
               <CardHeader className="text-center pb-4">
-                <div className="flex justify-center mb-4">
-                  <div className="p-3 rounded-full bg-primary/10">
-                    <plan.icon className="w-6 h-6 text-primary" />
-                  </div>
-                </div>
-                <CardTitle className="text-xl">{plan.name}</CardTitle>
+                <div className="flex justify-center mb-4">{getPlanIcon(plan.id)}</div>
+                <CardTitle className="text-2xl">{plan.name}</CardTitle>
                 <CardDescription>{plan.description}</CardDescription>
-                <div className="pt-4">
-                  <div className="text-3xl font-bold">{getPrice(plan)}</div>
-                  {savings && isAnnual && (
-                    <div className="text-sm text-green-600 font-medium">
-                      Save ${savings.amount} ({savings.percentage}%)
+
+                <div className="mt-4">
+                  <div className="text-4xl font-bold">
+                    ${price}
+                    {plan.id !== "free" && (
+                      <span className="text-lg font-normal text-gray-500">
+                        /{billingCycle === "monthly" ? "mo" : "yr"}
+                      </span>
+                    )}
+                  </div>
+
+                  {billingCycle === "yearly" && plan.id !== "free" && savings.amount > 0 && (
+                    <div className="text-sm text-green-600 mt-1">
+                      Save ${savings.amount}/year ({savings.percentage}% off)
                     </div>
                   )}
                 </div>
               </CardHeader>
 
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-6">
                 {/* Features */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {plan.features.map((feature, index) => (
-                    <div key={index} className="flex items-start space-x-2">
-                      <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <div key={index} className="flex items-start gap-3">
+                      <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
                       <span className="text-sm">{feature}</span>
                     </div>
                   ))}
                 </div>
 
-                {/* Usage Limits */}
-                <div className="pt-4 border-t space-y-2">
-                  <h4 className="font-medium text-sm">Usage Limits</h4>
-                  <div className="grid grid-cols-2 gap-2 text-xs">
-                    <div className="flex items-center space-x-1">
-                      <Users className="w-3 h-3" />
-                      <span>{plan.limits.participants}</span>
+                {/* Limits */}
+                <div className="border-t pt-4 space-y-2">
+                  <h4 className="font-semibold text-sm">Plan Limits:</h4>
+                  <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
+                    <div className="flex items-center gap-1">
+                      <Video className="h-3 w-3" />
+                      {plan.limits.parties} parties
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <HardDrive className="w-3 h-3" />
-                      <span>{plan.limits.storage}</span>
+                    <div className="flex items-center gap-1">
+                      <Users className="h-3 w-3" />
+                      {plan.limits.participants} participants
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <Video className="w-3 h-3" />
-                      <span>{plan.limits.quality}</span>
+                    <div className="flex items-center gap-1">
+                      <Cloud className="h-3 w-3" />
+                      {plan.limits.storage}
                     </div>
-                    <div className="flex items-center space-x-1">
-                      <Wifi className="w-3 h-3" />
-                      <span>{plan.limits.bandwidth}</span>
+                    <div className="flex items-center gap-1">
+                      <Zap className="h-3 w-3" />
+                      {plan.limits.videoQuality}
                     </div>
                   </div>
                 </div>
 
                 {/* Action Button */}
-                <div className="pt-4">
-                  {isCurrentPlan ? (
-                    <Button variant="outline" className="w-full bg-transparent" disabled>
-                      Current Plan
-                    </Button>
-                  ) : plan.name === "Free" ? (
-                    <Button variant="outline" className="w-full bg-transparent">
-                      Downgrade to Free
-                    </Button>
-                  ) : (
-                    <Button className="w-full" variant={plan.popular ? "default" : "outline"}>
-                      {plan.name === "Enterprise" ? "Contact Sales" : `Upgrade to ${plan.name}`}
-                    </Button>
-                  )}
-                </div>
+                <Button
+                  className="w-full"
+                  variant={plan.current ? "outline" : plan.popular ? "default" : "outline"}
+                  onClick={() => handleSubscribe(plan.id)}
+                  disabled={plan.current || isLoading === plan.id}
+                >
+                  {isLoading === plan.id
+                    ? "Processing..."
+                    : plan.current
+                      ? "Current Plan"
+                      : plan.id === "free"
+                        ? "Get Started"
+                        : `Upgrade to ${plan.name}`}
+                </Button>
+
+                {plan.id !== "free" && (
+                  <div className="text-center">
+                    <div className="flex items-center justify-center gap-1 text-xs text-gray-500">
+                      <Shield className="h-3 w-3" />
+                      30-day money-back guarantee
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           )
         })}
       </div>
 
-      {/* Feature Comparison */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Feature Comparison</CardTitle>
-          <CardDescription>Compare all features across different plans</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b">
-                  <th className="text-left py-2">Feature</th>
-                  {plans.map((plan) => (
-                    <th key={plan.name} className="text-center py-2 min-w-[100px]">
-                      {plan.name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="space-y-2">
-                <tr className="border-b">
-                  <td className="py-2 font-medium">Watch Parties</td>
-                  <td className="text-center py-2">3/month</td>
-                  <td className="text-center py-2">Unlimited</td>
-                  <td className="text-center py-2">Unlimited</td>
-                  <td className="text-center py-2">Unlimited</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 font-medium">Max Participants</td>
-                  <td className="text-center py-2">5</td>
-                  <td className="text-center py-2">25</td>
-                  <td className="text-center py-2">100</td>
-                  <td className="text-center py-2">Unlimited</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 font-medium">Video Storage</td>
-                  <td className="text-center py-2">1GB</td>
-                  <td className="text-center py-2">50GB</td>
-                  <td className="text-center py-2">500GB</td>
-                  <td className="text-center py-2">Unlimited</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 font-medium">Video Quality</td>
-                  <td className="text-center py-2">720p</td>
-                  <td className="text-center py-2">1080p</td>
-                  <td className="text-center py-2">4K</td>
-                  <td className="text-center py-2">4K+</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 font-medium">API Access</td>
-                  <td className="text-center py-2">❌</td>
-                  <td className="text-center py-2">❌</td>
-                  <td className="text-center py-2">✅</td>
-                  <td className="text-center py-2">✅</td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-2 font-medium">Priority Support</td>
-                  <td className="text-center py-2">❌</td>
-                  <td className="text-center py-2">✅</td>
-                  <td className="text-center py-2">✅</td>
-                  <td className="text-center py-2">24/7</td>
-                </tr>
-              </tbody>
-            </table>
+      {/* FAQ Section */}
+      <div className="mt-12 text-center">
+        <h3 className="text-xl font-semibold mb-4">Frequently Asked Questions</h3>
+        <div className="grid md:grid-cols-2 gap-6 text-left max-w-4xl mx-auto">
+          <div>
+            <h4 className="font-medium mb-2">Can I change plans anytime?</h4>
+            <p className="text-sm text-gray-600">
+              Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.
+            </p>
           </div>
-        </CardContent>
-      </Card>
+          <div>
+            <h4 className="font-medium mb-2">What payment methods do you accept?</h4>
+            <p className="text-sm text-gray-600">
+              We accept all major credit cards, PayPal, and bank transfers for yearly plans.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-medium mb-2">Is there a free trial?</h4>
+            <p className="text-sm text-gray-600">
+              Yes, all paid plans come with a 7-day free trial. No credit card required.
+            </p>
+          </div>
+          <div>
+            <h4 className="font-medium mb-2">Can I cancel anytime?</h4>
+            <p className="text-sm text-gray-600">
+              Absolutely. You can cancel your subscription at any time with no cancellation fees.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,138 +1,192 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import {
   Plus,
   Search,
-  Filter,
-  MoreHorizontal,
-  Users,
-  Clock,
-  Play,
   Calendar,
+  Users,
+  Play,
+  Clock,
   Settings,
-  Share,
-  Trash2,
+  Share2,
+  MoreVertical,
   Edit,
+  Trash2,
+  Copy,
 } from "lucide-react"
-import Link from "next/link"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useAuth } from "@/contexts/auth-context"
+import { cn } from "@/lib/utils"
 
-// Mock data
-const activeParties = [
-  {
-    id: "1",
-    title: "Friday Movie Night",
-    description: "Watching the latest Marvel movie together",
-    participants: 8,
-    maxParticipants: 15,
-    status: "live",
-    thumbnail: "/placeholder.svg?height=200&width=300",
-    host: { name: "Sarah Johnson", avatar: "/placeholder.svg?height=32&width=32" },
-    created_at: "2 hours ago",
-    room_code: "MARVEL123",
-    video: { title: "Spider-Man: No Way Home", duration: "2h 28m" },
-  },
-  {
-    id: "2",
-    title: "Documentary Series",
-    description: "Educational content about space exploration",
-    participants: 5,
-    maxParticipants: 10,
-    status: "scheduled",
-    thumbnail: "/placeholder.svg?height=200&width=300",
-    host: { name: "Mike Chen", avatar: "/placeholder.svg?height=32&width=32" },
-    created_at: "Tomorrow 8:00 PM",
-    room_code: "SPACE456",
-    video: { title: "Cosmos: A Space-Time Odyssey", duration: "45m" },
-  },
-]
-
-const pastParties = [
-  {
-    id: "3",
-    title: "Comedy Night",
-    description: "Stand-up comedy specials marathon",
-    participants: 12,
-    maxParticipants: 20,
-    status: "ended",
-    thumbnail: "/placeholder.svg?height=200&width=300",
-    host: { name: "Alex Rivera", avatar: "/placeholder.svg?height=32&width=32" },
-    created_at: "3 days ago",
-    room_code: "COMEDY789",
-    video: { title: "Dave Chappelle: The Closer", duration: "1h 12m" },
-    duration: "2h 15m",
-  },
-]
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case "live":
-      return "bg-accent-error text-white"
-    case "scheduled":
-      return "bg-accent-warning text-black"
-    case "ended":
-      return "bg-muted text-muted-foreground"
-    default:
-      return "bg-muted text-muted-foreground"
+interface Party {
+  id: string
+  name: string
+  description: string
+  roomCode: string
+  host: {
+    id: string
+    username: string
+    avatar?: string
   }
-}
-
-const getStatusText = (status: string) => {
-  switch (status) {
-    case "live":
-      return "LIVE"
-    case "scheduled":
-      return "SCHEDULED"
-    case "ended":
-      return "ENDED"
-    default:
-      return status.toUpperCase()
-  }
+  participants: Array<{
+    id: string
+    username: string
+    avatar?: string
+  }>
+  maxParticipants: number
+  isPrivate: boolean
+  status: "scheduled" | "active" | "ended"
+  scheduledFor?: string
+  createdAt: string
+  tags: string[]
+  videoTitle?: string
+  thumbnail?: string
 }
 
 export default function PartiesPage() {
+  const [parties, setParties] = useState<Party[]>([])
   const [searchQuery, setSearchQuery] = useState("")
-  const [activeTab, setActiveTab] = useState("active")
+  const [isLoading, setIsLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState("my-parties")
+  const { user } = useAuth()
+  const router = useRouter()
 
-  const filteredActiveParties = activeParties.filter(
+  useEffect(() => {
+    loadParties()
+  }, [activeTab])
+
+  const loadParties = async () => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      let endpoint = "/api/parties/"
+
+      if (activeTab === "joined") {
+        endpoint += "?joined=true"
+      } else if (activeTab === "scheduled") {
+        endpoint += "?status=scheduled"
+      }
+
+      const response = await fetch(endpoint, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setParties(data.results || data)
+      }
+    } catch (error) {
+      console.error("Failed to load parties:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const joinParty = async (roomCode: string) => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      const response = await fetch("/api/parties/join-by-code/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ room_code: roomCode }),
+      })
+
+      if (response.ok) {
+        router.push(`/watch/${roomCode}`)
+      }
+    } catch (error) {
+      console.error("Failed to join party:", error)
+    }
+  }
+
+  const deleteParty = async (partyId: string) => {
+    if (!confirm("Are you sure you want to delete this party?")) return
+
+    try {
+      const token = localStorage.getItem("accessToken")
+      const response = await fetch(`/api/parties/${partyId}/`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        setParties((prev) => prev.filter((p) => p.id !== partyId))
+      }
+    } catch (error) {
+      console.error("Failed to delete party:", error)
+    }
+  }
+
+  const copyRoomCode = (roomCode: string) => {
+    navigator.clipboard.writeText(roomCode)
+    // You could add a toast notification here
+  }
+
+  const filteredParties = parties.filter(
     (party) =>
-      party.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      party.description.toLowerCase().includes(searchQuery.toLowerCase()),
+      party.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      party.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      party.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase())),
   )
 
-  const filteredPastParties = pastParties.filter(
-    (party) =>
-      party.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      party.description.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "active":
+        return "bg-green-500"
+      case "scheduled":
+        return "bg-blue-500"
+      case "ended":
+        return "bg-gray-500"
+      default:
+        return "bg-gray-500"
+    }
+  }
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "active":
+        return "Live"
+      case "scheduled":
+        return "Scheduled"
+      case "ended":
+        return "Ended"
+      default:
+        return status
+    }
+  }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <div className="container mx-auto py-8 px-4">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold font-display">Watch Parties</h1>
-          <p className="text-muted-foreground mt-2">Create and manage your synchronized viewing sessions</p>
+          <h1 className="text-3xl font-bold">Watch Parties</h1>
+          <p className="text-gray-600 mt-2">Manage and join watch parties</p>
         </div>
-        <Button className="shadow-glow" asChild>
-          <Link href="/dashboard/parties/create">
-            <Plus className="w-4 h-4 mr-2" />
+        <Link href="/dashboard/parties/create">
+          <Button>
+            <Plus className="mr-2 h-4 w-4" />
             Create Party
-          </Link>
-        </Button>
+          </Button>
+        </Link>
       </div>
 
-      {/* Search and Filters */}
-      <div className="flex items-center space-x-4">
-        <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+      <div className="mb-6">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
             placeholder="Search parties..."
             value={searchQuery}
@@ -140,135 +194,127 @@ export default function PartiesPage() {
             className="pl-10"
           />
         </div>
-        <Button variant="outline">
-          <Filter className="w-4 h-4 mr-2" />
-          Filter
-        </Button>
       </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="active">Active & Scheduled</TabsTrigger>
-          <TabsTrigger value="past">Past Parties</TabsTrigger>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="my-parties">My Parties</TabsTrigger>
+          <TabsTrigger value="joined">Joined</TabsTrigger>
+          <TabsTrigger value="scheduled">Scheduled</TabsTrigger>
+          <TabsTrigger value="discover">Discover</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="active" className="space-y-6">
-          {filteredActiveParties.length === 0 ? (
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No active parties</h3>
-                <p className="text-muted-foreground mb-6">
-                  Create your first watch party to start streaming with friends
-                </p>
-                <Button asChild>
-                  <Link href="/dashboard/parties/create">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Create Party
-                  </Link>
-                </Button>
-              </CardContent>
-            </Card>
+        <TabsContent value="my-parties" className="space-y-4">
+          {isLoading ? (
+            <div className="text-center py-8">Loading your parties...</div>
+          ) : filteredParties.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="text-gray-500 mb-4">You haven't created any parties yet</div>
+              <Link href="/dashboard/parties/create">
+                <Button>Create Your First Party</Button>
+              </Link>
+            </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredActiveParties.map((party) => (
-                <Card
-                  key={party.id}
-                  className="border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-glow transition-all duration-300"
-                >
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {filteredParties.map((party) => (
+                <Card key={party.id} className="hover:shadow-lg transition-shadow">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <CardTitle className="text-lg">{party.title}</CardTitle>
-                          <Badge className={getStatusColor(party.status)}>{getStatusText(party.status)}</Badge>
-                        </div>
-                        <CardDescription className="line-clamp-2">{party.description}</CardDescription>
+                        <CardTitle className="text-lg line-clamp-1">{party.name}</CardTitle>
+                        <CardDescription className="line-clamp-2 mt-1">{party.description}</CardDescription>
                       </div>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <MoreHorizontal className="w-4 h-4" />
+                          <Button variant="ghost" size="sm">
+                            <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            <Edit className="w-4 h-4 mr-2" />
-                            Edit Party
+                          <DropdownMenuItem onClick={() => router.push(`/dashboard/parties/${party.id}/edit`)}>
+                            <Edit className="mr-2 h-4 w-4" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => copyRoomCode(party.roomCode)}>
+                            <Copy className="mr-2 h-4 w-4" />
+                            Copy Room Code
                           </DropdownMenuItem>
                           <DropdownMenuItem>
-                            <Share className="w-4 h-4 mr-2" />
+                            <Share2 className="mr-2 h-4 w-4" />
                             Share
                           </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Settings className="w-4 h-4 mr-2" />
-                            Settings
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive">
-                            <Trash2 className="w-4 h-4 mr-2" />
+                          <DropdownMenuItem onClick={() => deleteParty(party.id)} className="text-red-600">
+                            <Trash2 className="mr-2 h-4 w-4" />
                             Delete
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
+
+                    <div className="flex items-center gap-2 mt-2">
+                      <Badge variant="secondary" className={cn("text-white", getStatusColor(party.status))}>
+                        {getStatusText(party.status)}
+                      </Badge>
+                      {party.isPrivate && <Badge variant="outline">Private</Badge>}
+                    </div>
                   </CardHeader>
 
-                  <CardContent className="space-y-4">
-                    {/* Thumbnail */}
-                    <div className="relative">
-                      <img
-                        src={party.thumbnail || "/placeholder.svg"}
-                        alt={party.title}
-                        className="w-full h-40 rounded-lg object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/20 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                        <Play className="w-8 h-8 text-white" />
-                      </div>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Users className="h-4 w-4" />
+                      {party.participants.length} / {party.maxParticipants} participants
                     </div>
 
-                    {/* Video Info */}
-                    <div className="space-y-2">
-                      <p className="font-medium text-sm">{party.video.title}</p>
-                      <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span>{party.video.duration}</span>
-                        <span>Code: {party.room_code}</span>
+                    {party.scheduledFor && (
+                      <div className="flex items-center gap-2 text-sm text-gray-600">
+                        <Calendar className="h-4 w-4" />
+                        {new Date(party.scheduledFor).toLocaleDateString()} at{" "}
+                        {new Date(party.scheduledFor).toLocaleTimeString()}
                       </div>
+                    )}
+
+                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                      <Clock className="h-4 w-4" />
+                      Created {new Date(party.createdAt).toLocaleDateString()}
                     </div>
 
-                    {/* Host and Participants */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Avatar className="w-6 h-6">
-                          <AvatarImage src={party.host.avatar || "/placeholder.svg"} />
-                          <AvatarFallback>{party.host.name[0]}</AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm text-muted-foreground">{party.host.name}</span>
-                      </div>
-                      <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-                        <Users className="w-4 h-4" />
-                        <span>
-                          {party.participants}/{party.maxParticipants}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Action Button */}
-                    <Button className="w-full" variant={party.status === "live" ? "default" : "secondary"} asChild>
-                      <Link href={`/watch/${party.id}`}>
-                        {party.status === "live" ? (
-                          <>
-                            <Play className="w-4 h-4 mr-2" />
-                            Join Party
-                          </>
-                        ) : (
-                          <>
-                            <Calendar className="w-4 h-4 mr-2" />
-                            View Details
-                          </>
+                    {party.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1">
+                        {party.tags.slice(0, 3).map((tag) => (
+                          <Badge key={tag} variant="outline" className="text-xs">
+                            {tag}
+                          </Badge>
+                        ))}
+                        {party.tags.length > 3 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{party.tags.length - 3}
+                          </Badge>
                         )}
-                      </Link>
-                    </Button>
+                      </div>
+                    )}
+
+                    <div className="flex gap-2 pt-2">
+                      {party.status === "active" ? (
+                        <Button onClick={() => router.push(`/watch/${party.roomCode}`)} className="flex-1">
+                          <Play className="mr-2 h-4 w-4" />
+                          Join
+                        </Button>
+                      ) : party.status === "scheduled" ? (
+                        <Button variant="outline" className="flex-1 bg-transparent" disabled>
+                          <Clock className="mr-2 h-4 w-4" />
+                          Scheduled
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={() => router.push(`/watch/${party.roomCode}`)}
+                          variant="outline"
+                          className="flex-1"
+                        >
+                          <Settings className="mr-2 h-4 w-4" />
+                          Manage
+                        </Button>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -276,66 +322,19 @@ export default function PartiesPage() {
           )}
         </TabsContent>
 
-        <TabsContent value="past" className="space-y-6">
-          {filteredPastParties.length === 0 ? (
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-              <CardContent className="p-12 text-center">
-                <Clock className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-semibold mb-2">No past parties</h3>
-                <p className="text-muted-foreground">Your completed watch parties will appear here</p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPastParties.map((party) => (
-                <Card key={party.id} className="border-border/50 bg-card/50 backdrop-blur-sm">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2 mb-2">
-                          <CardTitle className="text-lg">{party.title}</CardTitle>
-                          <Badge className={getStatusColor(party.status)}>{getStatusText(party.status)}</Badge>
-                        </div>
-                        <CardDescription className="line-clamp-2">{party.description}</CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
+        <TabsContent value="joined" className="space-y-4">
+          {/* Similar structure for joined parties */}
+          <div className="text-center py-8 text-gray-500">Parties you've joined will appear here</div>
+        </TabsContent>
 
-                  <CardContent className="space-y-4">
-                    {/* Thumbnail */}
-                    <div className="relative opacity-75">
-                      <img
-                        src={party.thumbnail || "/placeholder.svg"}
-                        alt={party.title}
-                        className="w-full h-40 rounded-lg object-cover"
-                      />
-                    </div>
+        <TabsContent value="scheduled" className="space-y-4">
+          {/* Similar structure for scheduled parties */}
+          <div className="text-center py-8 text-gray-500">Your scheduled parties will appear here</div>
+        </TabsContent>
 
-                    {/* Video Info */}
-                    <div className="space-y-2">
-                      <p className="font-medium text-sm">{party.video.title}</p>
-                      <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span>Duration: {party.duration}</span>
-                        <span>{party.participants} participants</span>
-                      </div>
-                    </div>
-
-                    {/* Host and Date */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <Avatar className="w-6 h-6">
-                          <AvatarImage src={party.host.avatar || "/placeholder.svg"} />
-                          <AvatarFallback>{party.host.name[0]}</AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm text-muted-foreground">{party.host.name}</span>
-                      </div>
-                      <span className="text-sm text-muted-foreground">{party.created_at}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
+        <TabsContent value="discover" className="space-y-4">
+          {/* Public parties discovery */}
+          <div className="text-center py-8 text-gray-500">Discover public parties to join</div>
         </TabsContent>
       </Tabs>
     </div>

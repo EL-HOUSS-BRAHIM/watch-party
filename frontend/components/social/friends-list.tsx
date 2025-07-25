@@ -1,290 +1,440 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useAuth } from "@/contexts/auth-context"
+import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
-import { MoreHorizontal, MessageCircle, Video, UserMinus, UserX, Play, Crown, Users, UserPlus } from "lucide-react"
-import { formatDistanceToNow } from "date-fns"
+import {
+  Search,
+  UserPlus,
+  MoreVertical,
+  MessageCircle,
+  Video,
+  UserMinus,
+  UserX,
+  Crown,
+  Circle,
+  Users,
+} from "lucide-react"
 
 interface Friend {
   id: string
-  user: {
-    id: string
-    username: string
-    avatar?: string
-    first_name: string
-    last_name: string
-    is_online: boolean
-    last_seen?: string
-  }
-  status: "accepted"
-  created_at: string
+  first_name: string
+  last_name: string
+  email: string
+  avatar?: string
+  status: "online" | "offline" | "away" | "busy"
+  last_seen?: string
+  mutual_friends: number
+  friendship_date: string
+  is_premium: boolean
   current_activity?: {
-    type: "watching" | "hosting"
-    party_title: string
-    party_id: string
-    participants: number
+    type: "watching" | "in_party" | "idle"
+    details?: string
+    party_id?: string
   }
 }
 
 interface FriendsListProps {
-  searchQuery: string
+  className?: string
 }
 
-// Mock friends data
-const mockFriends: Friend[] = [
-  {
-    id: "1",
-    user: {
-      id: "user-1",
-      username: "sarah_j",
-      avatar: "/placeholder.svg?height=40&width=40",
-      first_name: "Sarah",
-      last_name: "Johnson",
-      is_online: true,
-    },
-    status: "accepted",
-    created_at: new Date(Date.now() - 86400000 * 30).toISOString(), // 30 days ago
-    current_activity: {
-      type: "hosting",
-      party_title: "Movie Night",
-      party_id: "party-1",
-      participants: 8,
-    },
-  },
-  {
-    id: "2",
-    user: {
-      id: "user-2",
-      username: "mike_c",
-      avatar: "/placeholder.svg?height=40&width=40",
-      first_name: "Mike",
-      last_name: "Chen",
-      is_online: true,
-      last_seen: new Date(Date.now() - 300000).toISOString(), // 5 minutes ago
-    },
-    status: "accepted",
-    created_at: new Date(Date.now() - 86400000 * 15).toISOString(), // 15 days ago
-    current_activity: {
-      type: "watching",
-      party_title: "Documentary Series",
-      party_id: "party-2",
-      participants: 5,
-    },
-  },
-  {
-    id: "3",
-    user: {
-      id: "user-3",
-      username: "alex_r",
-      avatar: "/placeholder.svg?height=40&width=40",
-      first_name: "Alex",
-      last_name: "Rivera",
-      is_online: false,
-      last_seen: new Date(Date.now() - 3600000 * 2).toISOString(), // 2 hours ago
-    },
-    status: "accepted",
-    created_at: new Date(Date.now() - 86400000 * 60).toISOString(), // 60 days ago
-  },
-  {
-    id: "4",
-    user: {
-      id: "user-4",
-      username: "emma_w",
-      avatar: "/placeholder.svg?height=40&width=40",
-      first_name: "Emma",
-      last_name: "Wilson",
-      is_online: true,
-    },
-    status: "accepted",
-    created_at: new Date(Date.now() - 86400000 * 7).toISOString(), // 7 days ago
-  },
-]
+export function FriendsList({ className }: FriendsListProps) {
+  const [friends, setFriends] = useState<Friend[]>([])
+  const [searchQuery, setSearchQuery] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState("all")
+  const { user } = useAuth()
+  const { toast } = useToast()
 
-export function FriendsList({ searchQuery }: FriendsListProps) {
-  const [friends, setFriends] = useState<Friend[]>(mockFriends)
+  useEffect(() => {
+    loadFriends()
+  }, [])
 
-  const filteredFriends = friends.filter(
-    (friend) =>
-      friend.user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      friend.user.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      friend.user.last_name.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+  const loadFriends = async () => {
+    try {
+      setIsLoading(true)
 
-  const onlineFriends = filteredFriends.filter((friend) => friend.user.is_online)
-  const offlineFriends = filteredFriends.filter((friend) => !friend.user.is_online)
+      // TODO: Backend API call needed
+      // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/friends/`, {
+      //   headers: {
+      //     'Authorization': `Bearer ${tokens?.access}`,
+      //   },
+      // })
+      // const data = await response.json()
 
-  const removeFriend = (friendId: string) => {
-    setFriends((prev) => prev.filter((friend) => friend.id !== friendId))
+      // Mock data for now
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+
+      const mockFriends: Friend[] = [
+        {
+          id: "friend_1",
+          first_name: "Alice",
+          last_name: "Johnson",
+          email: "alice@example.com",
+          avatar: "/placeholder.svg",
+          status: "online",
+          mutual_friends: 5,
+          friendship_date: "2023-06-15T10:00:00Z",
+          is_premium: true,
+          current_activity: {
+            type: "watching",
+            details: "The Matrix",
+            party_id: "party_123",
+          },
+        },
+        {
+          id: "friend_2",
+          first_name: "Bob",
+          last_name: "Smith",
+          email: "bob@example.com",
+          avatar: "/placeholder.svg",
+          status: "away",
+          last_seen: "2024-01-15T14:30:00Z",
+          mutual_friends: 3,
+          friendship_date: "2023-08-20T16:45:00Z",
+          is_premium: false,
+        },
+        {
+          id: "friend_3",
+          first_name: "Carol",
+          last_name: "Davis",
+          email: "carol@example.com",
+          avatar: "/placeholder.svg",
+          status: "offline",
+          last_seen: "2024-01-14T20:15:00Z",
+          mutual_friends: 8,
+          friendship_date: "2023-05-10T12:30:00Z",
+          is_premium: true,
+          current_activity: {
+            type: "in_party",
+            details: "Movie Night",
+            party_id: "party_456",
+          },
+        },
+        {
+          id: "friend_4",
+          first_name: "David",
+          last_name: "Wilson",
+          email: "david@example.com",
+          avatar: "/placeholder.svg",
+          status: "busy",
+          mutual_friends: 2,
+          friendship_date: "2023-12-01T09:15:00Z",
+          is_premium: false,
+        },
+      ]
+
+      setFriends(mockFriends)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load friends. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const blockUser = (friendId: string) => {
-    // Implement block functionality
-    console.log("Block user:", friendId)
+  const removeFriend = async (friendId: string) => {
+    try {
+      // TODO: Backend API call needed
+      // await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/friends/${friendId}/`, {
+      //   method: 'DELETE',
+      //   headers: {
+      //     'Authorization': `Bearer ${tokens?.access}`,
+      //   },
+      // })
+
+      setFriends((prev) => prev.filter((friend) => friend.id !== friendId))
+      toast({
+        title: "Friend removed",
+        description: "The user has been removed from your friends list.",
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to remove friend. Please try again.",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const blockUser = async (friendId: string) => {
+    try {
+      // TODO: Backend API call needed
+      // await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${friendId}/block/`, {
+      //   method: 'POST',
+      //   headers: {
+      //     'Authorization': `Bearer ${tokens?.access}`,
+      //   },
+      // })
+
+      setFriends((prev) => prev.filter((friend) => friend.id !== friendId))
+      toast({
+        title: "User blocked",
+        description: "The user has been blocked and removed from your friends list.",
+      })
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to block user. Please try again.",
+        variant: "destructive",
+      })
+    }
   }
 
   const startChat = (friendId: string) => {
-    // Implement chat functionality
-    console.log("Start chat with:", friendId)
+    // TODO: Implement chat functionality
+    toast({
+      title: "Chat feature",
+      description: "Direct messaging coming soon!",
+    })
   }
 
   const inviteToParty = (friendId: string) => {
-    // Implement party invitation
-    console.log("Invite to party:", friendId)
+    // TODO: Implement party invitation
+    toast({
+      title: "Party invitation",
+      description: "Party invitation feature coming soon!",
+    })
   }
 
-  const joinActivity = (partyId: string) => {
-    // Navigate to party
-    window.location.href = `/watch/${partyId}`
+  const getStatusColor = (status: Friend["status"]) => {
+    switch (status) {
+      case "online":
+        return "bg-green-500"
+      case "away":
+        return "bg-yellow-500"
+      case "busy":
+        return "bg-red-500"
+      case "offline":
+        return "bg-gray-400"
+      default:
+        return "bg-gray-400"
+    }
   }
 
-  const renderFriend = (friend: Friend) => (
-    <Card key={friend.id} className="border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-glow transition-all">
-      <CardContent className="p-4">
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <Avatar className="w-12 h-12">
-              <AvatarImage src={friend.user.avatar || "/placeholder.svg"} />
-              <AvatarFallback>
-                {friend.user.first_name[0]}
-                {friend.user.last_name[0]}
-              </AvatarFallback>
-            </Avatar>
-            {/* Online Status */}
-            <div
-              className={cn(
-                "absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-background",
-                friend.user.is_online ? "bg-accent-success" : "bg-muted-foreground",
-              )}
-            />
-          </div>
-
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center space-x-2">
-              <h3 className="font-medium truncate">
-                {friend.user.first_name} {friend.user.last_name}
-              </h3>
-              <span className="text-sm text-muted-foreground">@{friend.user.username}</span>
-            </div>
-
-            {friend.user.is_online ? (
-              friend.current_activity ? (
-                <div className="flex items-center space-x-2 mt-1">
-                  {friend.current_activity.type === "hosting" ? (
-                    <Crown className="w-3 h-3 text-accent-premium" />
-                  ) : (
-                    <Play className="w-3 h-3 text-accent-primary" />
-                  )}
-                  <span className="text-sm text-muted-foreground">
-                    {friend.current_activity.type === "hosting" ? "Hosting" : "Watching"}{" "}
-                    <span className="text-foreground font-medium">{friend.current_activity.party_title}</span>
-                  </span>
-                  <Badge variant="secondary" className="text-xs">
-                    {friend.current_activity.participants} watching
-                  </Badge>
-                </div>
-              ) : (
-                <p className="text-sm text-accent-success mt-1">Online</p>
-              )
-            ) : (
-              <p className="text-sm text-muted-foreground mt-1">
-                Last seen {formatDistanceToNow(new Date(friend.user.last_seen!), { addSuffix: true })}
-              </p>
-            )}
-          </div>
-
-          <div className="flex items-center space-x-2">
-            {friend.current_activity && (
-              <Button size="sm" onClick={() => joinActivity(friend.current_activity!.party_id)}>
-                <Play className="w-4 h-4 mr-1" />
-                Join
-              </Button>
-            )}
-
-            <Button variant="outline" size="sm" onClick={() => startChat(friend.id)}>
-              <MessageCircle className="w-4 h-4" />
-            </Button>
-
-            <Button variant="outline" size="sm" onClick={() => inviteToParty(friend.id)}>
-              <Video className="w-4 h-4" />
-            </Button>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <MoreHorizontal className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => startChat(friend.id)}>
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  Send Message
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => inviteToParty(friend.id)}>
-                  <Video className="w-4 h-4 mr-2" />
-                  Invite to Party
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => removeFriend(friend.id)} className="text-destructive">
-                  <UserMinus className="w-4 h-4 mr-2" />
-                  Remove Friend
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => blockUser(friend.id)} className="text-destructive">
-                  <UserX className="w-4 h-4 mr-2" />
-                  Block User
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
-
-  if (filteredFriends.length === 0) {
-    return (
-      <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-        <CardContent className="p-12 text-center">
-          <Users className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-semibold mb-2">No friends found</h3>
-          <p className="text-muted-foreground mb-6">
-            {searchQuery ? "Try adjusting your search terms" : "Start connecting with people to build your network"}
-          </p>
-          <Button>
-            <UserPlus className="w-4 h-4 mr-2" />
-            Find Friends
-          </Button>
-        </CardContent>
-      </Card>
-    )
+  const getStatusText = (friend: Friend) => {
+    switch (friend.status) {
+      case "online":
+        return friend.current_activity?.type === "watching"
+          ? `Watching ${friend.current_activity.details}`
+          : friend.current_activity?.type === "in_party"
+            ? `In party: ${friend.current_activity.details}`
+            : "Online"
+      case "away":
+        return "Away"
+      case "busy":
+        return "Busy"
+      case "offline":
+        return friend.last_seen ? `Last seen ${new Date(friend.last_seen).toLocaleDateString()}` : "Offline"
+      default:
+        return "Unknown"
+    }
   }
+
+  const getUserInitials = (firstName: string, lastName: string) => {
+    return `${firstName[0]}${lastName[0]}`.toUpperCase()
+  }
+
+  const filteredFriends = friends.filter((friend) => {
+    const matchesSearch =
+      friend.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      friend.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      friend.email.toLowerCase().includes(searchQuery.toLowerCase())
+
+    const matchesTab =
+      activeTab === "all" ||
+      (activeTab === "online" && friend.status === "online") ||
+      (activeTab === "offline" && friend.status === "offline")
+
+    return matchesSearch && matchesTab
+  })
 
   return (
-    <div className="space-y-6">
-      {/* Online Friends */}
-      {onlineFriends.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <h2 className="text-lg font-semibold">Online</h2>
-            <Badge variant="secondary">{onlineFriends.length}</Badge>
-          </div>
-          <div className="space-y-3">{onlineFriends.map(renderFriend)}</div>
+    <div className={cn("space-y-6", className)}>
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold">Friends</h2>
+          <p className="text-muted-foreground">Manage your friends and connections</p>
         </div>
-      )}
+        <Button>
+          <UserPlus className="w-4 h-4 mr-2" />
+          Add Friend
+        </Button>
+      </div>
 
-      {/* Offline Friends */}
-      {offlineFriends.length > 0 && (
-        <div className="space-y-4">
-          <div className="flex items-center space-x-2">
-            <h2 className="text-lg font-semibold">Offline</h2>
-            <Badge variant="secondary">{offlineFriends.length}</Badge>
-          </div>
-          <div className="space-y-3">{offlineFriends.map(renderFriend)}</div>
-        </div>
-      )}
+      {/* Search */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+        <Input
+          placeholder="Search friends..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10"
+        />
+      </div>
+
+      {/* Tabs */}
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
+          <TabsTrigger value="all">All Friends ({friends.length})</TabsTrigger>
+          <TabsTrigger value="online">Online ({friends.filter((f) => f.status === "online").length})</TabsTrigger>
+          <TabsTrigger value="offline">Offline ({friends.filter((f) => f.status === "offline").length})</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value={activeTab} className="mt-6">
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[...Array(6)].map((_, i) => (
+                <Card key={i} className="animate-pulse">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-12 h-12 bg-muted rounded-full" />
+                      <div className="flex-1 space-y-2">
+                        <div className="h-4 bg-muted rounded w-3/4" />
+                        <div className="h-3 bg-muted rounded w-1/2" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          ) : filteredFriends.length === 0 ? (
+            <div className="text-center py-12">
+              <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold mb-2">No friends found</h3>
+              <p className="text-muted-foreground mb-4">
+                {searchQuery
+                  ? "No friends match your search criteria."
+                  : activeTab === "online"
+                    ? "None of your friends are currently online."
+                    : "You don't have any friends yet."}
+              </p>
+              {!searchQuery && activeTab === "all" && (
+                <Button>
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Find Friends
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredFriends.map((friend) => (
+                <Card key={friend.id} className="hover:shadow-lg transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center space-x-3 flex-1">
+                        <div className="relative">
+                          <Avatar className="w-12 h-12">
+                            <AvatarImage src={friend.avatar || "/placeholder.svg"} />
+                            <AvatarFallback>{getUserInitials(friend.first_name, friend.last_name)}</AvatarFallback>
+                          </Avatar>
+                          <div
+                            className={cn(
+                              "absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-background",
+                              getStatusColor(friend.status),
+                            )}
+                          />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center space-x-2">
+                            <h3 className="font-semibold truncate">
+                              {friend.first_name} {friend.last_name}
+                            </h3>
+                            {friend.is_premium && <Crown className="w-4 h-4 text-accent-premium" />}
+                          </div>
+                          <p className="text-sm text-muted-foreground truncate">{getStatusText(friend)}</p>
+                        </div>
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreVertical className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => startChat(friend.id)}>
+                            <MessageCircle className="w-4 h-4 mr-2" />
+                            Send Message
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => inviteToParty(friend.id)}>
+                            <Video className="w-4 h-4 mr-2" />
+                            Invite to Party
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => removeFriend(friend.id)} className="text-orange-600">
+                            <UserMinus className="w-4 h-4 mr-2" />
+                            Remove Friend
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => blockUser(friend.id)} className="text-destructive">
+                            <UserX className="w-4 h-4 mr-2" />
+                            Block User
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+
+                    {/* Activity Status */}
+                    {friend.current_activity && friend.status === "online" && (
+                      <div className="mb-3 p-2 bg-muted rounded-lg">
+                        <div className="flex items-center space-x-2 text-sm">
+                          {friend.current_activity.type === "watching" ? (
+                            <Video className="w-4 h-4 text-blue-600" />
+                          ) : friend.current_activity.type === "in_party" ? (
+                            <Users className="w-4 h-4 text-green-600" />
+                          ) : (
+                            <Circle className="w-4 h-4 text-gray-600" />
+                          )}
+                          <span className="text-muted-foreground">
+                            {friend.current_activity.type === "watching"
+                              ? `Watching ${friend.current_activity.details}`
+                              : friend.current_activity.type === "in_party"
+                                ? `In party: ${friend.current_activity.details}`
+                                : "Active"}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Friend Info */}
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      <div className="flex items-center justify-between">
+                        <span>Mutual friends:</span>
+                        <span>{friend.mutual_friends}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span>Friends since:</span>
+                        <span>{new Date(friend.friendship_date).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+
+                    {/* Quick Actions */}
+                    <div className="flex space-x-2 mt-4">
+                      <Button variant="outline" size="sm" onClick={() => startChat(friend.id)} className="flex-1">
+                        <MessageCircle className="w-4 h-4 mr-1" />
+                        Chat
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => inviteToParty(friend.id)} className="flex-1">
+                        <Video className="w-4 h-4 mr-1" />
+                        Invite
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

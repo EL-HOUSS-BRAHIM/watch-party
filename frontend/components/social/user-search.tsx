@@ -1,239 +1,346 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Card, CardContent } from "@/components/ui/card"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Search, UserPlus, Users, Loader2 } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Search, UserPlus, Users, MessageCircle, Crown, Loader2 } from "lucide-react"
+import { useAuth } from "@/contexts/auth-context"
+import { useToast } from "@/hooks/use-toast"
+import { cn } from "@/lib/utils"
+import { useDebounce } from "@/hooks/use-debounce"
 
-interface User {
+interface SearchUser {
   id: string
   username: string
+  firstName: string
+  lastName: string
   avatar?: string
-  first_name: string
-  last_name: string
-  mutual_friends: number
-  is_friend: boolean
-  request_sent: boolean
+  isOnline: boolean
+  mutualFriends: number
+  friendshipStatus: "none" | "pending_sent" | "pending_received" | "friends" | "blocked"
+  isPremium: boolean
+  lastActive?: string
   bio?: string
   location?: string
 }
 
 interface UserSearchProps {
-  searchQuery: string
+  onUserSelect?: (user: SearchUser) => void
+  className?: string
 }
 
-// Mock search results
-const mockUsers: User[] = [
-  {
-    id: "search-1",
-    username: "movie_buff",
-    avatar: "/placeholder.svg?height=40&width=40",
-    first_name: "Jessica",
-    last_name: "Brown",
-    mutual_friends: 5,
-    is_friend: false,
-    request_sent: false,
-    bio: "Love sci-fi and horror movies! Always up for a good watch party 🎬",
-    location: "San Francisco, CA",
-  },
-  {
-    id: "search-2",
-    username: "cinema_lover",
-    avatar: "/placeholder.svg?height=40&width=40",
-    first_name: "Ryan",
-    last_name: "Taylor",
-    mutual_friends: 2,
-    is_friend: false,
-    request_sent: true,
-    bio: "Film student and movie enthusiast",
-    location: "Los Angeles, CA",
-  },
-  {
-    id: "search-3",
-    username: "netflix_addict",
-    avatar: "/placeholder.svg?height=40&width=40",
-    first_name: "Maya",
-    last_name: "Patel",
-    mutual_friends: 0,
-    is_friend: false,
-    request_sent: false,
-    bio: "Binge-watcher extraordinaire. Let's discover new shows together!",
-    location: "New York, NY",
-  },
-]
-
-const suggestedUsers: User[] = [
-  {
-    id: "suggested-1",
-    username: "alex_films",
-    avatar: "/placeholder.svg?height=40&width=40",
-    first_name: "Alex",
-    last_name: "Johnson",
-    mutual_friends: 8,
-    is_friend: false,
-    request_sent: false,
-    bio: "Documentary filmmaker and movie critic",
-    location: "Austin, TX",
-  },
-  {
-    id: "suggested-2",
-    username: "sarah_watches",
-    avatar: "/placeholder.svg?height=40&width=40",
-    first_name: "Sarah",
-    last_name: "Davis",
-    mutual_friends: 3,
-    is_friend: false,
-    request_sent: false,
-    bio: "Anime and K-drama enthusiast",
-    location: "Seattle, WA",
-  },
-]
-
-export function UserSearch({ searchQuery }: UserSearchProps) {
-  const [users, setUsers] = useState<User[]>([])
+export default function UserSearch({ onUserSelect, className }: UserSearchProps) {
+  const [searchQuery, setSearchQuery] = useState("")
+  const [users, setUsers] = useState<SearchUser[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery)
+  const [sortBy, setSortBy] = useState("relevance")
+  const [filterBy, setFilterBy] = useState("all")
+  const [hasSearched, setHasSearched] = useState(false)
 
-  useEffect(() => {
-    setLocalSearchQuery(searchQuery)
-  }, [searchQuery])
+  const debouncedSearchQuery = useDebounce(searchQuery, 300)
+  const { user } = useAuth()
+  const { toast } = useToast()
 
-  useEffect(() => {
-    if (localSearchQuery.trim()) {
+  const searchUsers = useCallback(
+    async (query: string) => {
+      if (!query.trim()) {
+        setUsers([])
+        setHasSearched(false)
+        return
+      }
+
       setIsLoading(true)
-      // Simulate API call
-      setTimeout(() => {
-        const filtered = mockUsers.filter(
-          (user) =>
-            user.username.toLowerCase().includes(localSearchQuery.toLowerCase()) ||
-            user.first_name.toLowerCase().includes(localSearchQuery.toLowerCase()) ||
-            user.last_name.toLowerCase().includes(localSearchQuery.toLowerCase()),
-        )
-        setUsers(filtered)
+      setHasSearched(true)
+
+      try {
+        const token = localStorage.getItem("accessToken")
+        const params = new URLSearchParams({
+          q: query,
+          sort: sortBy,
+          filter: filterBy,
+        })
+
+        const response = await fetch(`/api/users/search/?${params}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setUsers(data.results || data)
+        }
+      } catch (error) {
+        console.error("Failed to search users:", error)
+        toast({
+          title: "Search Error",
+          description: "Failed to search users. Please try again.",
+          variant: "destructive",
+        })
+      } finally {
         setIsLoading(false)
-      }, 500)
-    } else {
-      setUsers(suggestedUsers)
-    }
-  }, [localSearchQuery])
-
-  const sendFriendRequest = (userId: string) => {
-    setUsers((prev) => prev.map((user) => (user.id === userId ? { ...user, request_sent: true } : user)))
-  }
-
-  const cancelFriendRequest = (userId: string) => {
-    setUsers((prev) => prev.map((user) => (user.id === userId ? { ...user, request_sent: false } : user)))
-  }
-
-  const renderUser = (user: User) => (
-    <Card key={user.id} className="border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-glow transition-all">
-      <CardContent className="p-4">
-        <div className="flex items-start space-x-4">
-          <Avatar className="w-12 h-12">
-            <AvatarImage src={user.avatar || "/placeholder.svg"} />
-            <AvatarFallback>
-              {user.first_name[0]}
-              {user.last_name[0]}
-            </AvatarFallback>
-          </Avatar>
-
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center space-x-2 mb-1">
-              <h3 className="font-medium">
-                {user.first_name} {user.last_name}
-              </h3>
-              <span className="text-sm text-muted-foreground">@{user.username}</span>
-            </div>
-
-            {user.mutual_friends > 0 && (
-              <div className="flex items-center space-x-1 mb-2">
-                <Users className="w-3 h-3 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">
-                  {user.mutual_friends} mutual friend{user.mutual_friends !== 1 ? "s" : ""}
-                </span>
-              </div>
-            )}
-
-            {user.bio && <p className="text-sm text-muted-foreground mb-2">{user.bio}</p>}
-
-            {user.location && <p className="text-xs text-muted-foreground">{user.location}</p>}
-          </div>
-
-          <div>
-            {user.is_friend ? (
-              <Badge variant="secondary">Friends</Badge>
-            ) : user.request_sent ? (
-              <Button variant="outline" size="sm" onClick={() => cancelFriendRequest(user.id)}>
-                Cancel Request
-              </Button>
-            ) : (
-              <Button size="sm" onClick={() => sendFriendRequest(user.id)}>
-                <UserPlus className="w-4 h-4 mr-1" />
-                Add Friend
-              </Button>
-            )}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+      }
+    },
+    [sortBy, filterBy, toast],
   )
 
+  useEffect(() => {
+    searchUsers(debouncedSearchQuery)
+  }, [debouncedSearchQuery, searchUsers])
+
+  const sendFriendRequest = async (userId: string) => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      const response = await fetch(`/api/users/${userId}/friend-request/`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: "pending_sent" } : u)))
+        toast({
+          title: "Friend request sent",
+          description: "Your friend request has been sent successfully.",
+        })
+      }
+    } catch (error) {
+      console.error("Failed to send friend request:", error)
+      toast({
+        title: "Error",
+        description: "Failed to send friend request. Please try again.",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const acceptFriendRequest = async (userId: string) => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      // Find the request ID (this would come from the user data in a real implementation)
+      const response = await fetch(`/api/users/friend-requests/accept/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ user_id: userId }),
+      })
+
+      if (response.ok) {
+        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: "friends" } : u)))
+        toast({
+          title: "Friend request accepted",
+          description: "You are now friends!",
+        })
+      }
+    } catch (error) {
+      console.error("Failed to accept friend request:", error)
+      toast({
+        title: "Error",
+        description: "Failed to accept friend request. Please try again.",
+        variant: "destructive",
+      })
+    }
+  }
+
+  const startChat = (userId: string) => {
+    // TODO: Implement chat functionality
+    toast({
+      title: "Chat feature",
+      description: "Direct messaging coming soon!",
+    })
+  }
+
+  const getFriendshipStatusButton = (user: SearchUser) => {
+    switch (user.friendshipStatus) {
+      case "none":
+        return (
+          <Button size="sm" onClick={() => sendFriendRequest(user.id)}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Add Friend
+          </Button>
+        )
+      case "pending_sent":
+        return (
+          <Button size="sm" variant="outline" disabled>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Request Sent
+          </Button>
+        )
+      case "pending_received":
+        return (
+          <Button size="sm" onClick={() => acceptFriendRequest(user.id)}>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Accept Request
+          </Button>
+        )
+      case "friends":
+        return (
+          <Button size="sm" variant="outline" onClick={() => startChat(user.id)}>
+            <MessageCircle className="mr-2 h-4 w-4" />
+            Message
+          </Button>
+        )
+      case "blocked":
+        return (
+          <Button size="sm" variant="outline" disabled>
+            Blocked
+          </Button>
+        )
+      default:
+        return null
+    }
+  }
+
+  const getUserInitials = (firstName: string, lastName: string) => {
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
+  }
+
+  const getStatusIndicator = (user: SearchUser) => {
+    if (user.isOnline) {
+      return <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
+    }
+    return <div className="w-3 h-3 bg-gray-400 rounded-full border-2 border-white" />
+  }
+
   return (
-    <div className="space-y-6">
-      {/* Search Input */}
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <Input
-          placeholder="Search by username, name, or email..."
-          value={localSearchQuery}
-          onChange={(e) => setLocalSearchQuery(e.target.value)}
-          className="pl-10"
-        />
+    <div className={cn("space-y-6", className)}>
+      <div>
+        <h2 className="text-2xl font-bold flex items-center gap-2 mb-2">
+          <Search className="h-6 w-6" />
+          Find Friends
+        </h2>
+        <p className="text-gray-600">Search for users to connect with</p>
       </div>
 
-      {/* Loading State */}
-      {isLoading && (
-        <div className="flex items-center justify-center py-8">
-          <Loader2 className="w-6 h-6 animate-spin text-muted-foreground" />
-          <span className="ml-2 text-muted-foreground">Searching...</span>
+      {/* Search Controls */}
+      <div className="space-y-4">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            placeholder="Search by username, name, or email..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
         </div>
-      )}
 
-      {/* Results */}
-      {!isLoading && (
-        <div className="space-y-4">
-          {localSearchQuery.trim() ? (
-            <>
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold">Search Results</h2>
-                {users.length > 0 && <Badge variant="secondary">{users.length} found</Badge>}
-              </div>
-              {users.length === 0 ? (
-                <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-                  <CardContent className="p-12 text-center">
-                    <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No users found</h3>
-                    <p className="text-muted-foreground">Try searching with different keywords or check the spelling</p>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-3">{users.map(renderUser)}</div>
-              )}
-            </>
-          ) : (
-            <>
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold">Suggested for You</h2>
-                <Badge variant="secondary">{users.length}</Badge>
-              </div>
-              <div className="space-y-3">{users.map(renderUser)}</div>
-            </>
-          )}
+        <div className="flex gap-4">
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="w-48">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="relevance">Most Relevant</SelectItem>
+              <SelectItem value="mutual_friends">Mutual Friends</SelectItem>
+              <SelectItem value="last_active">Recently Active</SelectItem>
+              <SelectItem value="username">Username A-Z</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select value={filterBy} onValueChange={setFilterBy}>
+            <SelectTrigger className="w-48">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Users</SelectItem>
+              <SelectItem value="online">Online Only</SelectItem>
+              <SelectItem value="mutual_friends">Has Mutual Friends</SelectItem>
+              <SelectItem value="premium">Premium Users</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-      )}
+      </div>
+
+      {/* Search Results */}
+      <div className="space-y-4">
+        {isLoading ? (
+          <div className="text-center py-8">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <p className="text-gray-600">Searching users...</p>
+          </div>
+        ) : !hasSearched ? (
+          <div className="text-center py-8">
+            <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium mb-2">Start searching</h3>
+            <p className="text-gray-600">Enter a username, name, or email to find users</p>
+          </div>
+        ) : users.length === 0 ? (
+          <div className="text-center py-8">
+            <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium mb-2">No users found</h3>
+            <p className="text-gray-600">Try adjusting your search terms or filters</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {users.map((searchUser) => (
+              <Card
+                key={searchUser.id}
+                className="hover:shadow-md transition-shadow cursor-pointer"
+                onClick={() => onUserSelect?.(searchUser)}
+              >
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage src={searchUser.avatar || "/placeholder.svg"} />
+                        <AvatarFallback>{getUserInitials(searchUser.firstName, searchUser.lastName)}</AvatarFallback>
+                      </Avatar>
+                      <div className="absolute -bottom-1 -right-1">{getStatusIndicator(searchUser)}</div>
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-semibold">
+                              {searchUser.firstName} {searchUser.lastName}
+                            </h3>
+                            {searchUser.isPremium && <Crown className="h-4 w-4 text-yellow-500" />}
+                            {searchUser.isOnline && (
+                              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                                Online
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-600">@{searchUser.username}</p>
+
+                          {searchUser.bio && (
+                            <p className="text-sm text-gray-700 mt-1 line-clamp-2">{searchUser.bio}</p>
+                          )}
+
+                          <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                            {searchUser.mutualFriends > 0 && (
+                              <span className="flex items-center gap-1">
+                                <Users className="h-4 w-4" />
+                                {searchUser.mutualFriends} mutual friend{searchUser.mutualFriends !== 1 ? "s" : ""}
+                              </span>
+                            )}
+                            {searchUser.location && <span>{searchUser.location}</span>}
+                            {!searchUser.isOnline && searchUser.lastActive && (
+                              <span>Last active {new Date(searchUser.lastActive).toLocaleDateString()}</span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="ml-4" onClick={(e) => e.stopPropagation()}>
+                          {getFriendshipStatusButton(searchUser)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

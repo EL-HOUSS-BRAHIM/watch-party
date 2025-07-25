@@ -1,457 +1,467 @@
 "use client"
 
-import { useState, useCallback } from "react"
-import { useDropzone } from "react-dropzone"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import type React from "react"
+
+import { useState, useRef, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
-import { Upload, File, X, CheckCircle, AlertCircle, Cloud, HardDrive, LinkIcon, Play } from "lucide-react"
+import { useAuth } from "@/contexts/auth-context"
+import { cn } from "@/lib/utils"
+import { Upload, X, FileVideo, CheckCircle, AlertCircle, Cloud, HardDrive, Loader2 } from "lucide-react"
 
 interface UploadFile {
-  file: File
   id: string
+  file: File
+  title: string
+  description: string
+  privacy: "private" | "friends" | "public"
+  tags: string[]
   progress: number
   status: "pending" | "uploading" | "processing" | "completed" | "error"
   error?: string
 }
 
-interface VideoMetadata {
-  title: string
-  description: string
-  tags: string[]
-  is_public: boolean
-  allow_comments: boolean
-  allow_downloads: boolean
+interface VideoUploaderProps {
+  onUploadComplete?: (videoId: string) => void
+  maxFiles?: number
+  maxFileSize?: number // in bytes
+  className?: string
 }
 
-export function VideoUploader() {
+export function VideoUploader({
+  onUploadComplete,
+  maxFiles = 5,
+  maxFileSize = 2 * 1024 * 1024 * 1024, // 2GB
+  className,
+}: VideoUploaderProps) {
   const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([])
-  const [uploadMethod, setUploadMethod] = useState<"file" | "url" | "cloud">("file")
-  const [videoUrl, setVideoUrl] = useState("")
-  const [metadata, setMetadata] = useState<VideoMetadata>({
-    title: "",
-    description: "",
-    tags: [],
-    is_public: false,
-    allow_comments: true,
-    allow_downloads: false,
-  })
-  const [tagInput, setTagInput] = useState("")
+  const [isDragOver, setIsDragOver] = useState(false)
+  const [uploadSource, setUploadSource] = useState<"local" | "cloud">("local")
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const { user } = useAuth()
   const { toast } = useToast()
 
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const newFiles: UploadFile[] = acceptedFiles.map((file) => ({
-        file,
-        id: Math.random().toString(36).substr(2, 9),
-        progress: 0,
-        status: "pending",
-      }))
+  const supportedFormats = ["video/mp4", "video/avi", "video/mov", "video/wmv", "video/flv", "video/webm", "video/mkv"]
 
-      setUploadFiles((prev) => [...prev, ...newFiles])
-
-      // Auto-fill title from first file if empty
-      if (!metadata.title && newFiles.length > 0) {
-        const fileName = newFiles[0].file.name.replace(/\.[^/.]+$/, "")
-        setMetadata((prev) => ({ ...prev, title: fileName }))
-      }
-    },
-    [metadata.title],
-  )
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: {
-      "video/*": [".mp4", ".avi", ".mov", ".wmv", ".flv", ".webm", ".mkv"],
-    },
-    maxSize: 2 * 1024 * 1024 * 1024, // 2GB
-  })
-
-  const removeFile = (fileId: string) => {
-    setUploadFiles((prev) => prev.filter((f) => f.id !== fileId))
+  const formatFileSize = (bytes: number) => {
+    const sizes = ["Bytes", "KB", "MB", "GB"]
+    if (bytes === 0) return "0 Bytes"
+    const i = Math.floor(Math.log(bytes) / Math.log(1024))
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i]
   }
 
-  const startUpload = async () => {
-    if (uploadFiles.length === 0 && !videoUrl) {
+  const validateFile = (file: File): string | null => {
+    if (!supportedFormats.includes(file.type)) {
+      return "Unsupported file format. Please use MP4, AVI, MOV, WMV, FLV, WebM, or MKV."
+    }
+    if (file.size > maxFileSize) {
+      return `File size exceeds ${formatFileSize(maxFileSize)} limit.`
+    }
+    return null
+  }
+
+  const addFiles = (files: FileList | File[]) => {
+    const fileArray = Array.from(files)
+
+    if (uploadFiles.length + fileArray.length > maxFiles) {
       toast({
-        title: "No files selected",
-        description: "Please select files to upload or provide a video URL",
+        title: "Too many files",
+        description: `You can only upload ${maxFiles} files at once.`,
         variant: "destructive",
       })
       return
     }
 
-    // Simulate upload process
-    for (const file of uploadFiles) {
-      setUploadFiles((prev) => prev.map((f) => (f.id === file.id ? { ...f, status: "uploading" } : f)))
+    const newFiles: UploadFile[] = []
 
-      // Simulate progress
-      for (let progress = 0; progress <= 100; progress += 10) {
-        await new Promise((resolve) => setTimeout(resolve, 200))
-        setUploadFiles((prev) => prev.map((f) => (f.id === file.id ? { ...f, progress } : f)))
+    for (const file of fileArray) {
+      const error = validateFile(file)
+      if (error) {
+        toast({
+          title: "Invalid file",
+          description: `${file.name}: ${error}`,
+          variant: "destructive",
+        })
+        continue
       }
 
-      // Processing phase
-      setUploadFiles((prev) => prev.map((f) => (f.id === file.id ? { ...f, status: "processing", progress: 100 } : f)))
+      const uploadFile: UploadFile = {
+        id: `upload_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        file,
+        title: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
+        description: "",
+        privacy: "private",
+        tags: [],
+        progress: 0,
+        status: "pending",
+      }
 
+      newFiles.push(uploadFile)
+    }
+
+    setUploadFiles((prev) => [...prev, ...newFiles])
+  }
+
+  const removeFile = (fileId: string) => {
+    setUploadFiles((prev) => prev.filter((f) => f.id !== fileId))
+  }
+
+  const updateFile = (fileId: string, updates: Partial<UploadFile>) => {
+    setUploadFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, ...updates } : f)))
+  }
+
+  const uploadFile = async (uploadFile: UploadFile) => {
+    try {
+      updateFile(uploadFile.id, { status: "uploading", progress: 0 })
+
+      // TODO: Backend API call needed
+      // const formData = new FormData()
+      // formData.append('file', uploadFile.file)
+      // formData.append('title', uploadFile.title)
+      // formData.append('description', uploadFile.description)
+      // formData.append('privacy', uploadFile.privacy)
+      // formData.append('tags', JSON.stringify(uploadFile.tags))
+
+      // const xhr = new XMLHttpRequest()
+
+      // xhr.upload.addEventListener('progress', (e) => {
+      //   if (e.lengthComputable) {
+      //     const progress = Math.round((e.loaded / e.total) * 100)
+      //     updateFile(uploadFile.id, { progress })
+      //   }
+      // })
+
+      // xhr.addEventListener('load', () => {
+      //   if (xhr.status === 200) {
+      //     const response = JSON.parse(xhr.responseText)
+      //     updateFile(uploadFile.id, { status: 'processing', progress: 100 })
+      //     onUploadComplete?.(response.id)
+      //   } else {
+      //     updateFile(uploadFile.id, { status: 'error', error: 'Upload failed' })
+      //   }
+      // })
+
+      // xhr.addEventListener('error', () => {
+      //   updateFile(uploadFile.id, { status: 'error', error: 'Network error' })
+      // })
+
+      // xhr.open('POST', `${process.env.NEXT_PUBLIC_API_URL}/api/videos/upload/`)
+      // xhr.setRequestHeader('Authorization', `Bearer ${tokens?.access}`)
+      // xhr.send(formData)
+
+      // Simulate upload progress
+      for (let progress = 0; progress <= 100; progress += 10) {
+        await new Promise((resolve) => setTimeout(resolve, 200))
+        updateFile(uploadFile.id, { progress })
+      }
+
+      updateFile(uploadFile.id, { status: "processing" })
+
+      // Simulate processing
       await new Promise((resolve) => setTimeout(resolve, 2000))
+      updateFile(uploadFile.id, { status: "completed" })
 
-      // Complete
-      setUploadFiles((prev) => prev.map((f) => (f.id === file.id ? { ...f, status: "completed" } : f)))
-    }
+      toast({
+        title: "Upload completed",
+        description: `${uploadFile.title} has been uploaded successfully.`,
+      })
 
-    toast({
-      title: "Upload completed!",
-      description: "Your videos have been uploaded successfully.",
-    })
-  }
-
-  const addTag = () => {
-    if (tagInput.trim() && !metadata.tags.includes(tagInput.trim())) {
-      setMetadata((prev) => ({
-        ...prev,
-        tags: [...prev.tags, tagInput.trim()],
-      }))
-      setTagInput("")
+      onUploadComplete?.(`video_${uploadFile.id}`)
+    } catch (error) {
+      updateFile(uploadFile.id, { status: "error", error: "Upload failed" })
+      toast({
+        title: "Upload failed",
+        description: `Failed to upload ${uploadFile.title}. Please try again.`,
+        variant: "destructive",
+      })
     }
   }
 
-  const removeTag = (tagToRemove: string) => {
-    setMetadata((prev) => ({
-      ...prev,
-      tags: prev.tags.filter((tag) => tag !== tagToRemove),
-    }))
+  const uploadAllFiles = async () => {
+    const pendingFiles = uploadFiles.filter((f) => f.status === "pending")
+
+    for (const file of pendingFiles) {
+      await uploadFile(file)
+    }
   }
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes"
-    const k = 1024
-    const sizes = ["Bytes", "KB", "MB", "GB"]
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(true)
+  }, [])
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(false)
+  }, [])
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(false)
+
+    const files = e.dataTransfer.files
+    if (files.length > 0) {
+      addFiles(files)
+    }
+  }, [])
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (files && files.length > 0) {
+      addFiles(files)
+    }
+    // Reset input value to allow selecting the same file again
+    e.target.value = ""
   }
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: UploadFile["status"]) => {
     switch (status) {
-      case "completed":
-        return <CheckCircle className="w-4 h-4 text-accent-success" />
-      case "error":
-        return <AlertCircle className="w-4 h-4 text-accent-error" />
+      case "pending":
+        return <FileVideo className="w-5 h-5 text-muted-foreground" />
       case "uploading":
       case "processing":
-        return <div className="w-4 h-4 border-2 border-accent-primary border-t-transparent rounded-full animate-spin" />
+        return <Loader2 className="w-5 h-5 animate-spin text-blue-600" />
+      case "completed":
+        return <CheckCircle className="w-5 h-5 text-green-600" />
+      case "error":
+        return <AlertCircle className="w-5 h-5 text-red-600" />
       default:
-        return <File className="w-4 h-4 text-muted-foreground" />
+        return <FileVideo className="w-5 h-5 text-muted-foreground" />
     }
   }
 
-  const getStatusText = (status: string) => {
-    switch (status) {
+  const getStatusText = (file: UploadFile) => {
+    switch (file.status) {
       case "pending":
         return "Ready to upload"
       case "uploading":
-        return "Uploading..."
+        return `Uploading... ${file.progress}%`
       case "processing":
-        return "Processing..."
+        return "Processing video..."
       case "completed":
-        return "Upload complete"
+        return "Upload completed"
       case "error":
-        return "Upload failed"
+        return file.error || "Upload failed"
       default:
-        return "Unknown"
+        return "Unknown status"
     }
   }
 
   return (
-    <div className="space-y-6">
-      {/* Upload Method Selection */}
-      <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+    <div className={cn("space-y-6", className)}>
+      {/* Upload Source Selection */}
+      <Card>
         <CardHeader>
-          <CardTitle>Upload Method</CardTitle>
-          <CardDescription>Choose how you want to add your video content</CardDescription>
+          <CardTitle>Upload Source</CardTitle>
+          <CardDescription>Choose where to upload your videos from</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div
-              className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                uploadMethod === "file" ? "border-primary bg-primary/5" : "border-border hover:border-border/80"
-              }`}
-              onClick={() => setUploadMethod("file")}
+          <div className="grid grid-cols-2 gap-4">
+            <Button
+              variant={uploadSource === "local" ? "default" : "outline"}
+              onClick={() => setUploadSource("local")}
+              className="h-20 flex-col"
             >
-              <div className="flex flex-col items-center text-center space-y-2">
-                <HardDrive className="w-8 h-8 text-muted-foreground" />
-                <h3 className="font-medium">Upload Files</h3>
-                <p className="text-sm text-muted-foreground">Upload video files from your device</p>
-              </div>
-            </div>
-
-            <div
-              className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                uploadMethod === "url" ? "border-primary bg-primary/5" : "border-border hover:border-border/80"
-              }`}
-              onClick={() => setUploadMethod("url")}
+              <HardDrive className="w-6 h-6 mb-2" />
+              Local Files
+            </Button>
+            <Button
+              variant={uploadSource === "cloud" ? "default" : "outline"}
+              onClick={() => setUploadSource("cloud")}
+              className="h-20 flex-col"
             >
-              <div className="flex flex-col items-center text-center space-y-2">
-                <LinkIcon className="w-8 h-8 text-muted-foreground" />
-                <h3 className="font-medium">Video URL</h3>
-                <p className="text-sm text-muted-foreground">Import from YouTube, Vimeo, or direct URL</p>
-              </div>
-            </div>
-
-            <div
-              className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                uploadMethod === "cloud" ? "border-primary bg-primary/5" : "border-border hover:border-border/80"
-              }`}
-              onClick={() => setUploadMethod("cloud")}
-            >
-              <div className="flex flex-col items-center text-center space-y-2">
-                <Cloud className="w-8 h-8 text-muted-foreground" />
-                <h3 className="font-medium">Cloud Storage</h3>
-                <p className="text-sm text-muted-foreground">Import from Google Drive, Dropbox, etc.</p>
-              </div>
-            </div>
+              <Cloud className="w-6 h-6 mb-2" />
+              Cloud Storage
+            </Button>
           </div>
         </CardContent>
       </Card>
 
-      {/* File Upload */}
-      {uploadMethod === "file" && (
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle>Upload Files</CardTitle>
-            <CardDescription>Drag and drop your video files or click to browse</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Drop Zone */}
-            <div
-              {...getRootProps()}
-              className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-                isDragActive ? "border-primary bg-primary/5" : "border-border hover:border-border/80"
-              }`}
-            >
-              <input {...getInputProps()} />
-              <Upload className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              {isDragActive ? (
-                <p className="text-lg font-medium">Drop the files here...</p>
-              ) : (
-                <>
-                  <p className="text-lg font-medium mb-2">Drag & drop video files here</p>
-                  <p className="text-muted-foreground mb-4">or click to browse your computer</p>
-                  <Button variant="outline">Choose Files</Button>
-                </>
-              )}
-              <p className="text-xs text-muted-foreground mt-4">
-                Supported formats: MP4, AVI, MOV, WMV, FLV, WebM, MKV (Max 2GB per file)
-              </p>
-            </div>
+      {uploadSource === "local" ? (
+        <>
+          {/* File Drop Zone */}
+          <Card>
+            <CardContent className="p-0">
+              <div
+                className={cn(
+                  "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
+                  isDragOver ? "border-primary bg-primary/5" : "border-muted-foreground/25",
+                  "hover:border-primary hover:bg-primary/5",
+                )}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+              >
+                <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                <h3 className="text-lg font-semibold mb-2">Drop your videos here</h3>
+                <p className="text-muted-foreground mb-4">or click to browse your files</p>
+                <Button onClick={() => fileInputRef.current?.click()}>Select Files</Button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  multiple
+                  accept="video/*"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+                <div className="mt-4 text-sm text-muted-foreground">
+                  <p>Supported formats: MP4, AVI, MOV, WMV, FLV, WebM, MKV</p>
+                  <p>Maximum file size: {formatFileSize(maxFileSize)}</p>
+                  <p>Maximum {maxFiles} files at once</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-            {/* File List */}
-            {uploadFiles.length > 0 && (
-              <div className="space-y-3">
-                <h4 className="font-medium">Selected Files</h4>
-                {uploadFiles.map((uploadFile) => (
-                  <div
-                    key={uploadFile.id}
-                    className="flex items-center space-x-3 p-3 bg-background-secondary rounded-lg"
-                  >
-                    {getStatusIcon(uploadFile.status)}
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{uploadFile.file.name}</p>
-                      <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                        <span>{formatFileSize(uploadFile.file.size)}</span>
-                        <span>{getStatusText(uploadFile.status)}</span>
+          {/* Upload Queue */}
+          {uploadFiles.length > 0 && (
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>Upload Queue</CardTitle>
+                    <CardDescription>{uploadFiles.length} file(s) selected</CardDescription>
+                  </div>
+                  <div className="space-x-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => setUploadFiles([])}
+                      disabled={uploadFiles.some((f) => f.status === "uploading" || f.status === "processing")}
+                    >
+                      Clear All
+                    </Button>
+                    <Button
+                      onClick={uploadAllFiles}
+                      disabled={
+                        uploadFiles.length === 0 ||
+                        uploadFiles.every((f) => f.status !== "pending") ||
+                        uploadFiles.some((f) => f.status === "uploading" || f.status === "processing")
+                      }
+                    >
+                      Upload All
+                    </Button>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {uploadFiles.map((file) => (
+                  <div key={file.id} className="border rounded-lg p-4 space-y-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-3 flex-1">
+                        {getStatusIcon(file.status)}
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium truncate">{file.file.name}</h4>
+                          <p className="text-sm text-muted-foreground">
+                            {formatFileSize(file.file.size)} • {getStatusText(file)}
+                          </p>
+                        </div>
                       </div>
-                      {(uploadFile.status === "uploading" || uploadFile.status === "processing") && (
-                        <Progress value={uploadFile.progress} className="mt-2" />
-                      )}
-                    </div>
-                    {uploadFile.status === "pending" && (
-                      <Button variant="ghost" size="icon" onClick={() => removeFile(uploadFile.id)} className="h-8 w-8">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => removeFile(file.id)}
+                        disabled={file.status === "uploading" || file.status === "processing"}
+                        className="h-8 w-8"
+                      >
                         <X className="w-4 h-4" />
                       </Button>
+                    </div>
+
+                    {/* Progress Bar */}
+                    {(file.status === "uploading" || file.status === "processing") && (
+                      <Progress value={file.progress} className="w-full" />
+                    )}
+
+                    {/* File Details Form */}
+                    {file.status === "pending" && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
+                        <div className="space-y-2">
+                          <Label htmlFor={`title-${file.id}`}>Title</Label>
+                          <Input
+                            id={`title-${file.id}`}
+                            value={file.title}
+                            onChange={(e) => updateFile(file.id, { title: e.target.value })}
+                            placeholder="Enter video title"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`privacy-${file.id}`}>Privacy</Label>
+                          <Select
+                            value={file.privacy}
+                            onValueChange={(value) => updateFile(file.id, { privacy: value as any })}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="private">Private</SelectItem>
+                              <SelectItem value="friends">Friends Only</SelectItem>
+                              <SelectItem value="public">Public</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="space-y-2 md:col-span-2">
+                          <Label htmlFor={`description-${file.id}`}>Description</Label>
+                          <Textarea
+                            id={`description-${file.id}`}
+                            value={file.description}
+                            onChange={(e) => updateFile(file.id, { description: e.target.value })}
+                            placeholder="Enter video description"
+                            rows={2}
+                          />
+                        </div>
+                        <div className="space-y-2 md:col-span-2">
+                          <Label htmlFor={`tags-${file.id}`}>Tags (comma separated)</Label>
+                          <Input
+                            id={`tags-${file.id}`}
+                            value={file.tags.join(", ")}
+                            onChange={(e) =>
+                              updateFile(file.id, {
+                                tags: e.target.value
+                                  .split(",")
+                                  .map((tag) => tag.trim())
+                                  .filter(Boolean),
+                              })
+                            }
+                            placeholder="Enter tags separated by commas"
+                          />
+                        </div>
+                      </div>
                     )}
                   </div>
                 ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* URL Upload */}
-      {uploadMethod === "url" && (
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle>Import from URL</CardTitle>
-            <CardDescription>Enter a video URL to import content</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+              </CardContent>
+            </Card>
+          )}
+        </>
+      ) : (
+        /* Cloud Storage Integration */
+        <Card>
+          <CardContent className="p-8 text-center">
+            <Cloud className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+            <h3 className="text-lg font-semibold mb-2">Cloud Storage Integration</h3>
+            <p className="text-muted-foreground mb-4">Connect your cloud storage accounts to upload videos directly</p>
             <div className="space-y-2">
-              <Label htmlFor="video-url">Video URL</Label>
-              <Input
-                id="video-url"
-                placeholder="https://youtube.com/watch?v=... or direct video URL"
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-              />
-              <p className="text-sm text-muted-foreground">
-                Supported: YouTube, Vimeo, direct video links (.mp4, .webm, etc.)
-              </p>
+              <Button variant="outline" className="w-full bg-transparent">
+                Connect Google Drive
+              </Button>
+              <Button variant="outline" className="w-full bg-transparent">
+                Connect Dropbox
+              </Button>
+              <Button variant="outline" className="w-full bg-transparent">
+                Connect OneDrive
+              </Button>
             </div>
-            {videoUrl && (
-              <div className="p-4 bg-background-secondary rounded-lg">
-                <div className="flex items-center space-x-3">
-                  <Play className="w-8 h-8 text-accent-primary" />
-                  <div>
-                    <p className="font-medium">Video URL detected</p>
-                    <p className="text-sm text-muted-foreground truncate">{videoUrl}</p>
-                  </div>
-                </div>
-              </div>
-            )}
+            <p className="text-sm text-muted-foreground mt-4">Cloud storage integration coming soon</p>
           </CardContent>
         </Card>
       )}
-
-      {/* Cloud Storage */}
-      {uploadMethod === "cloud" && (
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle>Cloud Storage</CardTitle>
-            <CardDescription>Connect your cloud storage to import videos</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Button variant="outline" className="h-20 flex-col bg-transparent">
-                <div className="w-8 h-8 bg-blue-500 rounded mb-2"></div>
-                Google Drive
-              </Button>
-              <Button variant="outline" className="h-20 flex-col bg-transparent">
-                <div className="w-8 h-8 bg-blue-600 rounded mb-2"></div>
-                OneDrive
-              </Button>
-              <Button variant="outline" className="h-20 flex-col bg-transparent">
-                <div className="w-8 h-8 bg-blue-400 rounded mb-2"></div>
-                Dropbox
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Video Metadata */}
-      <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle>Video Details</CardTitle>
-          <CardDescription>Add information about your video</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="title">Title *</Label>
-            <Input
-              id="title"
-              placeholder="Enter video title"
-              value={metadata.title}
-              onChange={(e) => setMetadata((prev) => ({ ...prev, title: e.target.value }))}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              placeholder="Describe your video..."
-              rows={4}
-              value={metadata.description}
-              onChange={(e) => setMetadata((prev) => ({ ...prev, description: e.target.value }))}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="tags">Tags</Label>
-            <div className="flex space-x-2">
-              <Input
-                id="tags"
-                placeholder="Add a tag"
-                value={tagInput}
-                onChange={(e) => setTagInput(e.target.value)}
-                onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
-              />
-              <Button onClick={addTag} disabled={!tagInput.trim()}>
-                Add
-              </Button>
-            </div>
-            {metadata.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {metadata.tags.map((tag) => (
-                  <Badge key={tag} variant="secondary" className="cursor-pointer" onClick={() => removeTag(tag)}>
-                    {tag}
-                    <X className="w-3 h-3 ml-1" />
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <Separator />
-
-          <div className="space-y-4">
-            <h4 className="font-medium">Privacy & Permissions</h4>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <Label htmlFor="is_public">Make Public</Label>
-                <p className="text-sm text-muted-foreground">Allow others to discover and watch this video</p>
-              </div>
-              <Switch
-                id="is_public"
-                checked={metadata.is_public}
-                onCheckedChange={(checked) => setMetadata((prev) => ({ ...prev, is_public: checked }))}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <Label htmlFor="allow_comments">Allow Comments</Label>
-                <p className="text-sm text-muted-foreground">Let viewers leave comments on your video</p>
-              </div>
-              <Switch
-                id="allow_comments"
-                checked={metadata.allow_comments}
-                onCheckedChange={(checked) => setMetadata((prev) => ({ ...prev, allow_comments: checked }))}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="space-y-1">
-                <Label htmlFor="allow_downloads">Allow Downloads</Label>
-                <p className="text-sm text-muted-foreground">Allow viewers to download this video</p>
-              </div>
-              <Switch
-                id="allow_downloads"
-                checked={metadata.allow_downloads}
-                onCheckedChange={(checked) => setMetadata((prev) => ({ ...prev, allow_downloads: checked }))}
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Upload Actions */}
-      <div className="flex items-center justify-between">
-        <Button variant="outline">Save as Draft</Button>
-        <Button onClick={startUpload} className="shadow-glow" disabled={!metadata.title.trim()}>
-          <Upload className="w-4 h-4 mr-2" />
-          Start Upload
-        </Button>
-      </div>
     </div>
   )
 }

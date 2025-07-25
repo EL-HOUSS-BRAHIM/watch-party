@@ -1,285 +1,366 @@
 "use client"
 
-import { useState } from "react"
-import { Card, CardContent } from "@/components/ui/card"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Search,
+  Play,
+  Download,
+  Share2,
+  MoreVertical,
+  Edit,
+  Trash2,
+  Eye,
+  FileVideo,
+  Loader2,
+  CheckCircle,
+  AlertCircle,
+  Grid,
+  List,
+} from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Play, MoreHorizontal, Edit, Trash2, Share, Download, Eye, Clock, Calendar, Upload } from "lucide-react"
-import { formatDistanceToNow } from "date-fns"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { useAuth } from "@/contexts/auth-context"
+import { cn } from "@/lib/utils"
 
 interface Video {
   id: string
   title: string
   description: string
-  thumbnail: string
-  duration: string
-  file_size: string
+  filename: string
+  fileSize: number
+  duration: number
+  thumbnail?: string
+  uploadedAt: string
+  status: "processing" | "ready" | "failed"
+  processingProgress?: number
   views: number
-  created_at: string
-  is_public: boolean
+  isPublic: boolean
   tags: string[]
-  quality: string[]
+  qualityVariants: Array<{
+    quality: string
+    url: string
+    fileSize: number
+  }>
 }
 
 interface VideoLibraryProps {
-  searchQuery: string
-  viewMode: "grid" | "list"
+  onVideoSelect?: (video: Video) => void
+  selectionMode?: boolean
+  className?: string
 }
 
-// Mock video data
-const mockVideos: Video[] = [
-  {
-    id: "1",
-    title: "Vacation Highlights 2024",
-    description: "Amazing moments from our summer vacation in Europe",
-    thumbnail: "/placeholder.svg?height=200&width=300",
-    duration: "12:34",
-    file_size: "245 MB",
-    views: 156,
-    created_at: new Date(Date.now() - 86400000 * 3).toISOString(), // 3 days ago
-    is_public: true,
-    tags: ["vacation", "travel", "europe"],
-    quality: ["1080p", "720p", "480p"],
-  },
-  {
-    id: "2",
-    title: "Cooking Tutorial: Pasta Carbonara",
-    description: "Step-by-step guide to making authentic Italian carbonara",
-    thumbnail: "/placeholder.svg?height=200&width=300",
-    duration: "25:18",
-    file_size: "512 MB",
-    views: 89,
-    created_at: new Date(Date.now() - 86400000 * 7).toISOString(), // 1 week ago
-    is_public: false,
-    tags: ["cooking", "tutorial", "italian"],
-    quality: ["1080p", "720p"],
-  },
-  {
-    id: "3",
-    title: "Birthday Party Memories",
-    description: "Celebrating another year with friends and family",
-    thumbnail: "/placeholder.svg?height=200&width=300",
-    duration: "8:45",
-    file_size: "178 MB",
-    views: 234,
-    created_at: new Date(Date.now() - 86400000 * 14).toISOString(), // 2 weeks ago
-    is_public: false,
-    tags: ["birthday", "family", "celebration"],
-    quality: ["720p", "480p"],
-  },
-  {
-    id: "4",
-    title: "Guitar Practice Session",
-    description: "Working on some new songs and techniques",
-    thumbnail: "/placeholder.svg?height=200&width=300",
-    duration: "45:22",
-    file_size: "892 MB",
-    views: 67,
-    created_at: new Date(Date.now() - 86400000 * 21).toISOString(), // 3 weeks ago
-    is_public: true,
-    tags: ["music", "guitar", "practice"],
-    quality: ["1080p", "720p", "480p"],
-  },
-]
+export default function VideoLibrary({ onVideoSelect, selectionMode = false, className }: VideoLibraryProps) {
+  const [videos, setVideos] = useState<Video[]>([])
+  const [searchQuery, setSearchQuery] = useState("")
+  const [sortBy, setSortBy] = useState("uploadedAt")
+  const [filterBy, setFilterBy] = useState("all")
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [isLoading, setIsLoading] = useState(true)
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null)
+  const { user } = useAuth()
 
-export function VideoLibrary({ searchQuery, viewMode }: VideoLibraryProps) {
-  const [videos, setVideos] = useState<Video[]>(mockVideos)
+  useEffect(() => {
+    loadVideos()
+  }, [sortBy, filterBy])
 
-  const filteredVideos = videos.filter(
-    (video) =>
+  const loadVideos = async () => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      const params = new URLSearchParams({
+        sort: sortBy,
+        filter: filterBy,
+      })
+
+      const response = await fetch(`/api/videos/?${params}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setVideos(data.results || data)
+      }
+    } catch (error) {
+      console.error("Failed to load videos:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const deleteVideo = async (videoId: string) => {
+    if (!confirm("Are you sure you want to delete this video?")) return
+
+    try {
+      const token = localStorage.getItem("accessToken")
+      const response = await fetch(`/api/videos/${videoId}/`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        setVideos((prev) => prev.filter((v) => v.id !== videoId))
+      }
+    } catch (error) {
+      console.error("Failed to delete video:", error)
+    }
+  }
+
+  const regenerateThumbnail = async (videoId: string) => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      await fetch(`/api/videos/${videoId}/regenerate-thumbnail/`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      // Reload videos to get updated thumbnail
+      loadVideos()
+    } catch (error) {
+      console.error("Failed to regenerate thumbnail:", error)
+    }
+  }
+
+  const formatFileSize = (bytes: number) => {
+    const sizes = ["Bytes", "KB", "MB", "GB"]
+    if (bytes === 0) return "0 Bytes"
+    const i = Math.floor(Math.log(bytes) / Math.log(1024))
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i]
+  }
+
+  const formatDuration = (seconds: number) => {
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    const secs = Math.floor(seconds % 60)
+
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+    }
+    return `${minutes}:${secs.toString().padStart(2, "0")}`
+  }
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "processing":
+        return <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+      case "ready":
+        return <CheckCircle className="h-4 w-4 text-green-500" />
+      case "failed":
+        return <AlertCircle className="h-4 w-4 text-red-500" />
+      default:
+        return null
+    }
+  }
+
+  const filteredVideos = videos.filter((video) => {
+    const matchesSearch =
       video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       video.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      video.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase())),
-  )
+      video.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
 
-  const deleteVideo = (videoId: string) => {
-    setVideos((prev) => prev.filter((video) => video.id !== videoId))
-  }
+    const matchesFilter =
+      filterBy === "all" ||
+      (filterBy === "ready" && video.status === "ready") ||
+      (filterBy === "processing" && video.status === "processing") ||
+      (filterBy === "public" && video.isPublic) ||
+      (filterBy === "private" && !video.isPublic)
 
-  const togglePublic = (videoId: string) => {
-    setVideos((prev) => prev.map((video) => (video.id === videoId ? { ...video, is_public: !video.is_public } : video)))
-  }
+    return matchesSearch && matchesFilter
+  })
 
-  const renderGridView = (video: Video) => (
+  const VideoCard = ({ video }: { video: Video }) => (
     <Card
-      key={video.id}
-      className="border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-glow transition-all group"
+      className={cn("hover:shadow-lg transition-shadow cursor-pointer", selectionMode && "hover:border-blue-500")}
+      onClick={() => (selectionMode ? onVideoSelect?.(video) : setSelectedVideo(video))}
     >
-      <CardContent className="p-0">
-        {/* Thumbnail */}
-        <div className="relative">
-          <img
-            src={video.thumbnail || "/placeholder.svg"}
-            alt={video.title}
-            className="w-full h-48 object-cover rounded-t-lg"
-          />
-          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-t-lg flex items-center justify-center">
-            <Button size="icon" className="w-12 h-12 rounded-full">
-              <Play className="w-6 h-6" />
-            </Button>
-          </div>
-          <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-2 py-1 rounded">
-            {video.duration}
-          </div>
-          <div className="absolute top-2 left-2">
-            <Badge variant={video.is_public ? "secondary" : "outline"} className="text-xs">
-              {video.is_public ? "Public" : "Private"}
-            </Badge>
-          </div>
+      <div className="relative">
+        <div className="aspect-video bg-gray-100 rounded-t-lg overflow-hidden">
+          {video.thumbnail ? (
+            <img src={video.thumbnail || "/placeholder.svg"} alt={video.title} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <FileVideo className="h-12 w-12 text-gray-400" />
+            </div>
+          )}
         </div>
 
-        {/* Content */}
-        <div className="p-4">
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="font-medium text-sm line-clamp-2 flex-1">{video.title}</h3>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <MoreHorizontal className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit Details
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => togglePublic(video.id)}>
-                  <Share className="w-4 h-4 mr-2" />
-                  {video.is_public ? "Make Private" : "Make Public"}
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Download className="w-4 h-4 mr-2" />
-                  Download
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className="text-destructive">
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+        <div className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded">
+          {formatDuration(video.duration)}
+        </div>
 
-          <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{video.description}</p>
+        <div className="absolute top-2 left-2 flex items-center gap-1">
+          {getStatusIcon(video.status)}
+          {video.status === "processing" && video.processingProgress && (
+            <div className="bg-black/70 text-white text-xs px-2 py-1 rounded">{video.processingProgress}%</div>
+          )}
+        </div>
+      </div>
 
-          {/* Tags */}
-          <div className="flex flex-wrap gap-1 mb-3">
-            {video.tags.slice(0, 3).map((tag) => (
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base line-clamp-2">{video.title}</CardTitle>
+        <CardDescription className="line-clamp-2">{video.description}</CardDescription>
+      </CardHeader>
+
+      <CardContent className="pt-0">
+        <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
+          <span>{formatFileSize(video.fileSize)}</span>
+          <span>{video.views} views</span>
+        </div>
+
+        {video.status === "processing" && video.processingProgress && (
+          <Progress value={video.processingProgress} className="mb-2" />
+        )}
+
+        <div className="flex items-center justify-between">
+          <div className="flex flex-wrap gap-1">
+            {video.tags.slice(0, 2).map((tag) => (
               <Badge key={tag} variant="outline" className="text-xs">
                 {tag}
               </Badge>
             ))}
+            {video.tags.length > 2 && (
+              <Badge variant="outline" className="text-xs">
+                +{video.tags.length - 2}
+              </Badge>
+            )}
           </div>
 
-          {/* Stats */}
-          <div className="flex items-center justify-between text-xs text-muted-foreground">
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center space-x-1">
-                <Eye className="w-3 h-3" />
-                <span>{video.views}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Calendar className="w-3 h-3" />
-                <span>{formatDistanceToNow(new Date(video.created_at), { addSuffix: true })}</span>
-              </div>
-            </div>
-            <span>{video.file_size}</span>
-          </div>
+          {!selectionMode && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                  <Play className="mr-2 h-4 w-4" />
+                  Play
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Share
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => regenerateThumbnail(video.id)}>
+                  <Eye className="mr-2 h-4 w-4" />
+                  Regenerate Thumbnail
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className="text-red-600">
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </CardContent>
     </Card>
   )
 
-  const renderListView = (video: Video) => (
-    <Card key={video.id} className="border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-glow transition-all">
+  const VideoListItem = ({ video }: { video: Video }) => (
+    <Card
+      className={cn("hover:shadow-md transition-shadow cursor-pointer", selectionMode && "hover:border-blue-500")}
+      onClick={() => (selectionMode ? onVideoSelect?.(video) : setSelectedVideo(video))}
+    >
       <CardContent className="p-4">
-        <div className="flex items-center space-x-4">
-          {/* Thumbnail */}
-          <div className="relative flex-shrink-0">
-            <img
-              src={video.thumbnail || "/placeholder.svg"}
-              alt={video.title}
-              className="w-32 h-20 object-cover rounded-lg"
-            />
-            <div className="absolute bottom-1 right-1 bg-black/80 text-white text-xs px-1 py-0.5 rounded">
-              {video.duration}
+        <div className="flex gap-4">
+          <div className="relative w-32 h-20 bg-gray-100 rounded overflow-hidden flex-shrink-0">
+            {video.thumbnail ? (
+              <img
+                src={video.thumbnail || "/placeholder.svg"}
+                alt={video.title}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center">
+                <FileVideo className="h-8 w-8 text-gray-400" />
+              </div>
+            )}
+            <div className="absolute bottom-1 right-1 bg-black/70 text-white text-xs px-1 py-0.5 rounded">
+              {formatDuration(video.duration)}
             </div>
           </div>
 
-          {/* Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between mb-2">
-              <div className="flex-1">
-                <h3 className="font-medium mb-1">{video.title}</h3>
-                <p className="text-sm text-muted-foreground line-clamp-2">{video.description}</p>
-              </div>
-              <Badge variant={video.is_public ? "secondary" : "outline"} className="ml-2">
-                {video.is_public ? "Public" : "Private"}
-              </Badge>
-            </div>
+            <div className="flex items-start justify-between">
+              <div className="flex-1 min-w-0">
+                <h3 className="font-medium line-clamp-1">{video.title}</h3>
+                <p className="text-sm text-gray-600 line-clamp-2 mt-1">{video.description}</p>
 
-            {/* Tags */}
-            <div className="flex flex-wrap gap-1 mb-2">
-              {video.tags.map((tag) => (
-                <Badge key={tag} variant="outline" className="text-xs">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-
-            {/* Stats */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                <div className="flex items-center space-x-1">
-                  <Eye className="w-4 h-4" />
+                <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
+                  <span>{formatFileSize(video.fileSize)}</span>
                   <span>{video.views} views</span>
+                  <span>{new Date(video.uploadedAt).toLocaleDateString()}</span>
+                  <div className="flex items-center gap-1">
+                    {getStatusIcon(video.status)}
+                    <span className="capitalize">{video.status}</span>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <Clock className="w-4 h-4" />
-                  <span>{video.duration}</span>
-                </div>
-                <div className="flex items-center space-x-1">
-                  <Calendar className="w-4 h-4" />
-                  <span>{formatDistanceToNow(new Date(video.created_at), { addSuffix: true })}</span>
-                </div>
-                <span>{video.file_size}</span>
+
+                {video.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {video.tags.map((tag) => (
+                      <Badge key={tag} variant="outline" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              <div className="flex items-center space-x-2">
-                <Button size="sm">
-                  <Play className="w-4 h-4 mr-1" />
-                  Play
-                </Button>
+              {!selectionMode && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <MoreHorizontal className="w-4 h-4" />
+                    <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
+                      <MoreVertical className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>
-                      <Edit className="w-4 h-4 mr-2" />
-                      Edit Details
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => togglePublic(video.id)}>
-                      <Share className="w-4 h-4 mr-2" />
-                      {video.is_public ? "Make Private" : "Make Public"}
+                      <Play className="mr-2 h-4 w-4" />
+                      Play
                     </DropdownMenuItem>
                     <DropdownMenuItem>
-                      <Download className="w-4 h-4 mr-2" />
+                      <Edit className="mr-2 h-4 w-4" />
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Share2 className="mr-2 h-4 w-4" />
+                      Share
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => regenerateThumbnail(video.id)}>
+                      <Eye className="mr-2 h-4 w-4" />
+                      Regenerate Thumbnail
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Download className="mr-2 h-4 w-4" />
                       Download
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => deleteVideo(video.id)} className="text-destructive">
-                      <Trash2 className="w-4 h-4 mr-2" />
+                    <DropdownMenuItem onClick={() => deleteVideo(video.id)} className="text-red-600">
+                      <Trash2 className="mr-2 h-4 w-4" />
                       Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -287,37 +368,169 @@ export function VideoLibrary({ searchQuery, viewMode }: VideoLibraryProps) {
     </Card>
   )
 
-  if (filteredVideos.length === 0) {
-    return (
-      <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-        <CardContent className="p-12 text-center">
-          <Play className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-semibold mb-2">No videos found</h3>
-          <p className="text-muted-foreground mb-6">
-            {searchQuery ? "Try adjusting your search terms" : "Upload your first video to get started"}
-          </p>
-          <Button>
-            <Upload className="w-4 h-4 mr-2" />
-            Upload Video
-          </Button>
-        </CardContent>
-      </Card>
-    )
-  }
-
   return (
-    <div className="space-y-4">
+    <div className={cn("space-y-6", className)}>
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Your Videos</h2>
-        <Badge variant="secondary">{filteredVideos.length} videos</Badge>
+        <div>
+          <h2 className="text-2xl font-bold">Video Library</h2>
+          <p className="text-gray-600">Manage your uploaded videos</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}>
+            {viewMode === "grid" ? <List className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
+          </Button>
+        </div>
       </div>
 
-      {viewMode === "grid" ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredVideos.map(renderGridView)}
+      {/* Filters */}
+      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            placeholder="Search videos..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
+        </div>
+
+        <Select value={sortBy} onValueChange={setSortBy}>
+          <SelectTrigger className="w-full sm:w-48">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="uploadedAt">Recently Uploaded</SelectItem>
+            <SelectItem value="title">Title A-Z</SelectItem>
+            <SelectItem value="views">Most Viewed</SelectItem>
+            <SelectItem value="duration">Duration</SelectItem>
+            <SelectItem value="fileSize">File Size</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={filterBy} onValueChange={setFilterBy}>
+          <SelectTrigger className="w-full sm:w-48">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Videos</SelectItem>
+            <SelectItem value="ready">Ready</SelectItem>
+            <SelectItem value="processing">Processing</SelectItem>
+            <SelectItem value="public">Public</SelectItem>
+            <SelectItem value="private">Private</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Content */}
+      {isLoading ? (
+        <div className="text-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p>Loading your videos...</p>
+        </div>
+      ) : filteredVideos.length === 0 ? (
+        <div className="text-center py-8">
+          <FileVideo className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-medium mb-2">No videos found</h3>
+          <p className="text-gray-600 mb-4">
+            {searchQuery ? "Try adjusting your search terms" : "Upload your first video to get started"}
+          </p>
         </div>
       ) : (
-        <div className="space-y-4">{filteredVideos.map(renderListView)}</div>
+        <div
+          className={cn(viewMode === "grid" ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "space-y-4")}
+        >
+          {filteredVideos.map((video) =>
+            viewMode === "grid" ? (
+              <VideoCard key={video.id} video={video} />
+            ) : (
+              <VideoListItem key={video.id} video={video} />
+            ),
+          )}
+        </div>
+      )}
+
+      {/* Video Details Dialog */}
+      {selectedVideo && (
+        <Dialog open={!!selectedVideo} onOpenChange={() => setSelectedVideo(null)}>
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>{selectedVideo.title}</DialogTitle>
+              <DialogDescription>{selectedVideo.description}</DialogDescription>
+            </DialogHeader>
+
+            <div className="space-y-4">
+              <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                {selectedVideo.thumbnail ? (
+                  <img
+                    src={selectedVideo.thumbnail || "/placeholder.svg"}
+                    alt={selectedVideo.title}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <FileVideo className="h-16 w-16 text-gray-400" />
+                  </div>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div>
+                  <span className="font-medium">Duration:</span>
+                  <p>{formatDuration(selectedVideo.duration)}</p>
+                </div>
+                <div>
+                  <span className="font-medium">File Size:</span>
+                  <p>{formatFileSize(selectedVideo.fileSize)}</p>
+                </div>
+                <div>
+                  <span className="font-medium">Views:</span>
+                  <p>{selectedVideo.views}</p>
+                </div>
+                <div>
+                  <span className="font-medium">Status:</span>
+                  <div className="flex items-center gap-1">
+                    {getStatusIcon(selectedVideo.status)}
+                    <span className="capitalize">{selectedVideo.status}</span>
+                  </div>
+                </div>
+              </div>
+
+              {selectedVideo.qualityVariants.length > 0 && (
+                <div>
+                  <h4 className="font-medium mb-2">Available Qualities:</h4>
+                  <div className="space-y-2">
+                    {selectedVideo.qualityVariants.map((variant) => (
+                      <div key={variant.quality} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                        <span>{variant.quality}</span>
+                        <span className="text-sm text-gray-600">{formatFileSize(variant.fileSize)}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <div className="flex gap-2">
+                <Button>
+                  <Play className="mr-2 h-4 w-4" />
+                  Play
+                </Button>
+                <Button variant="outline">
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit
+                </Button>
+                <Button variant="outline">
+                  <Share2 className="mr-2 h-4 w-4" />
+                  Share
+                </Button>
+                <Button variant="outline">
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   )
