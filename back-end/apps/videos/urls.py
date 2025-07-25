@@ -14,7 +14,15 @@ from .views import (
     GoogleDriveMovieUploadView,
     GoogleDriveMovieDeleteView,
     GoogleDriveMovieStreamView,
-    VideoProxyView
+    VideoProxyView,
+    # Analytics views
+    video_analytics,
+    video_engagement_heatmap,
+    video_retention_curve,
+    video_viewer_journey,
+    video_comparative_analytics,
+    trending_videos_analytics,
+    channel_analytics_dashboard
 )
 from .enhanced_views import (
     S3VideoUploadView,
@@ -44,6 +52,17 @@ urlpatterns = [
     path('<uuid:video_id>/stream/', VideoStreamingUrlView.as_view(), name='streaming_url'),
     path('<uuid:video_id>/thumbnail/', VideoThumbnailView.as_view(), name='thumbnail'),
     path('<uuid:video_id>/analytics/', VideoAnalyticsView.as_view(), name='analytics'),
+    
+    # Advanced Video Analytics
+    path('<uuid:video_id>/analytics/detailed/', video_analytics, name='detailed_analytics'),
+    path('<uuid:video_id>/analytics/heatmap/', video_engagement_heatmap, name='engagement_heatmap'),
+    path('<uuid:video_id>/analytics/retention/', video_retention_curve, name='retention_curve'),
+    path('<uuid:video_id>/analytics/journey/', video_viewer_journey, name='viewer_journey'),
+    path('<uuid:video_id>/analytics/comparative/', video_comparative_analytics, name='comparative_analytics'),
+    
+    # Channel Analytics
+    path('analytics/channel/', channel_analytics_dashboard, name='channel_analytics'),
+    path('analytics/trending/', trending_videos_analytics, name='trending_analytics'),
     
     # Video validation
     path('validate-url/', validate_video_url, name='validate_url'),
