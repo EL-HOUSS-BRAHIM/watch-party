@@ -19,6 +19,8 @@ import pyotp
 import qrcode
 import io
 import base64
+import requests
+import json
 
 from .models import User, EmailVerification, PasswordReset, TwoFactorAuth, UserSession
 from .serializers import (
@@ -715,3 +717,238 @@ class UserSessionsView(APIView):
                 'success': True,
                 'message': 'All other sessions revoked successfully'
             }, status=status.HTTP_200_OK)
+
+
+# Social Authentication Views
+class GoogleAuthView(RateLimitMixin, APIView):
+    """Google OAuth authentication endpoint"""
+    
+    permission_classes = [AllowAny]
+    rate_limit_key = 'social_auth'
+    
+    def post(self, request):
+        """Authenticate user with Google OAuth token"""
+        access_token = request.data.get('access_token')
+        
+        if not access_token:
+            return Response({
+                'success': False,
+                'message': 'Access token is required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # Verify token with Google
+            response = requests.get(
+                f'https://www.googleapis.com/oauth2/v1/userinfo',
+                params={'access_token': access_token}
+            )
+            
+            if response.status_code != 200:
+                return Response({
+                    'success': False,
+                    'message': 'Invalid Google access token'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            google_data = response.json()
+            email = google_data.get('email')
+            google_id = google_data.get('id')
+            first_name = google_data.get('given_name', '')
+            last_name = google_data.get('family_name', '')
+            picture = google_data.get('picture', '')
+            
+            # Check if user exists with this email
+            try:
+                user = User.objects.get(email=email)
+                
+                # Update Google ID if not set
+                if not user.google_id:
+                    user.google_id = google_id
+                    user.save()
+                
+            except User.DoesNotExist:
+                # Create new user
+                user = User.objects.create_user(
+                    email=email,
+                    username=email.split('@')[0],
+                    first_name=first_name,
+                    last_name=last_name,
+                    google_id=google_id,
+                    is_email_verified=True  # Google emails are verified
+                )
+                
+                # Download and save profile picture if available
+                if picture:
+                    try:
+                        import requests
+                        from django.core.files.base import ContentFile
+                        response = requests.get(picture)
+                        if response.status_code == 200:
+                            user.profile_picture.save(
+                                f'google_avatar_{user.id}.jpg',
+                                ContentFile(response.content),
+                                save=True
+                            )
+                    except Exception:
+                        pass  # Ignore avatar errors
+            
+            # Generate tokens
+            refresh = RefreshToken.for_user(user)
+            access_token_jwt = refresh.access_token
+            
+            # Create user session
+            UserSession.objects.create(
+                user=user,
+                ip_address=request.META.get('REMOTE_ADDR', ''),
+                user_agent=request.META.get('HTTP_USER_AGENT', ''),
+                expires_at=timezone.now() + timedelta(days=7)
+            )
+            
+            return Response({
+                'success': True,
+                'message': 'Authentication successful',
+                'user': UserProfileSerializer(user).data,
+                'tokens': {
+                    'access': str(access_token_jwt),
+                    'refresh': str(refresh)
+                }
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'message': 'Authentication failed',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class GitHubAuthView(RateLimitMixin, APIView):
+    """GitHub OAuth authentication endpoint"""
+    
+    permission_classes = [AllowAny]
+    rate_limit_key = 'social_auth'
+    
+    def post(self, request):
+        """Authenticate user with GitHub OAuth token"""
+        access_token = request.data.get('access_token')
+        
+        if not access_token:
+            return Response({
+                'success': False,
+                'message': 'Access token is required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # Get user info from GitHub
+            headers = {'Authorization': f'token {access_token}'}
+            
+            # Get user data
+            user_response = requests.get(
+                'https://api.github.com/user',
+                headers=headers
+            )
+            
+            if user_response.status_code != 200:
+                return Response({
+                    'success': False,
+                    'message': 'Invalid GitHub access token'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            github_data = user_response.json()
+            
+            # Get user email (might be private)
+            email = github_data.get('email')
+            if not email:
+                email_response = requests.get(
+                    'https://api.github.com/user/emails',
+                    headers=headers
+                )
+                
+                if email_response.status_code == 200:
+                    emails = email_response.json()
+                    primary_email = next((e for e in emails if e['primary']), None)
+                    if primary_email:
+                        email = primary_email['email']
+            
+            if not email:
+                return Response({
+                    'success': False,
+                    'message': 'Unable to retrieve email from GitHub'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            github_id = str(github_data.get('id'))
+            username = github_data.get('login', '')
+            name = github_data.get('name', '')
+            avatar_url = github_data.get('avatar_url', '')
+            
+            # Parse name
+            first_name = ''
+            last_name = ''
+            if name:
+                name_parts = name.split(' ', 1)
+                first_name = name_parts[0]
+                if len(name_parts) > 1:
+                    last_name = name_parts[1]
+            
+            # Check if user exists with this email
+            try:
+                user = User.objects.get(email=email)
+                
+                # Update GitHub ID if not set
+                if not user.github_id:
+                    user.github_id = github_id
+                    user.save()
+                
+            except User.DoesNotExist:
+                # Create new user
+                user = User.objects.create_user(
+                    email=email,
+                    username=username or email.split('@')[0],
+                    first_name=first_name,
+                    last_name=last_name,
+                    github_id=github_id,
+                    is_email_verified=True  # GitHub emails are verified
+                )
+                
+                # Download and save profile picture if available
+                if avatar_url:
+                    try:
+                        import requests
+                        from django.core.files.base import ContentFile
+                        response = requests.get(avatar_url)
+                        if response.status_code == 200:
+                            user.profile_picture.save(
+                                f'github_avatar_{user.id}.jpg',
+                                ContentFile(response.content),
+                                save=True
+                            )
+                    except Exception:
+                        pass  # Ignore avatar errors
+            
+            # Generate tokens
+            refresh = RefreshToken.for_user(user)
+            access_token_jwt = refresh.access_token
+            
+            # Create user session
+            UserSession.objects.create(
+                user=user,
+                ip_address=request.META.get('REMOTE_ADDR', ''),
+                user_agent=request.META.get('HTTP_USER_AGENT', ''),
+                expires_at=timezone.now() + timedelta(days=7)
+            )
+            
+            return Response({
+                'success': True,
+                'message': 'Authentication successful',
+                'user': UserProfileSerializer(user).data,
+                'tokens': {
+                    'access': str(access_token_jwt),
+                    'refresh': str(refresh)
+                }
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'message': 'Authentication failed',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
