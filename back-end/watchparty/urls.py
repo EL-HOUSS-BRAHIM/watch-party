@@ -33,6 +33,7 @@ def api_root(request):
             'notifications': '/api/notifications/',
             'integrations': '/api/integrations/',
             'interactive': '/api/interactive/',
+            'moderation': '/api/moderation/',
             'documentation': '/api/docs/',
             'schema': '/api/schema/',
         }
@@ -180,6 +181,7 @@ urlpatterns = [
     path('api/notifications/', include('apps.notifications.urls')),
     path('api/integrations/', include('apps.integrations.urls')),
     path('api/interactive/', include('apps.interactive.urls')),
+    path('api/moderation/', include('apps.moderation.urls')),
     
     # Admin Panel API
     path('api/admin/', include('apps.admin_panel.urls')),
