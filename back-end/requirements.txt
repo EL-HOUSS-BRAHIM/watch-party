@@ -31,6 +31,9 @@ google-auth==2.40.3
 google-auth-httplib2==0.2.0
 google-auth-oauthlib==1.2.2
 
+# Mobile Push Notifications
+firebase-admin==6.5.0
+
 # File and Media Processing
 pillow==11.3.0
 python-magic==0.4.27
