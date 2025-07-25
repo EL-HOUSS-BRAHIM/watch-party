@@ -22,6 +22,10 @@ urlpatterns = [
     path('video/<uuid:video_id>/', dashboard_views.video_analytics, name='video-analytics'),
     path('party/<uuid:party_id>/', dashboard_views.party_analytics, name='party-analytics'),
     path('system/', dashboard_views.system_analytics, name='system-analytics'),
+    path('system/performance/', views.system_performance_analytics, name='system-performance'),
+    path('revenue/', views.revenue_analytics, name='revenue-analytics'),
+    path('retention/', views.user_retention_analytics, name='retention-analytics'),
+    path('content/', views.content_analytics, name='content-analytics'),
     path('events/', dashboard_views.track_event, name='track-event'),
     
     # Phase 2 Advanced Analytics
