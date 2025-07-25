@@ -9,7 +9,7 @@ from django.db.models import Q, F
 from django.http import Http404, FileResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from rest_framework import status, generics, permissions, filters
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
@@ -22,7 +22,7 @@ from .serializers import (
     VideoUpdateSerializer, VideoCommentSerializer, VideoLikeSerializer,
     VideoUploadSerializer, VideoUploadCreateSerializer, VideoSearchSerializer
 )
-from core.permissions import IsOwnerOrReadOnly, IsPremiumUserForPremiumContent
+from core.permissions import IsOwnerOrReadOnly, IsPremiumUserForPremiumContent, IsAdminUser
 
 
 class VideoViewSet(ModelViewSet):
@@ -723,3 +723,249 @@ class VideoProxyView(APIView):
             return Response({
                 'error': f'Failed to proxy video: {str(e)}'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# Advanced Video Analytics Endpoints
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def video_analytics(request, video_id):
+    """Get comprehensive analytics for a video"""
+    video = get_object_or_404(Video, id=video_id)
+    
+    # Check permissions - only owner or admin can view analytics
+    if video.uploader != request.user and not request.user.is_staff:
+        return Response(
+            {'error': 'Permission denied'}, 
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
+    try:
+        from services.video_analytics_service import video_analytics_service
+        
+        days = int(request.query_params.get('days', 30))
+        analytics_data = video_analytics_service.get_video_analytics(video, days)
+        
+        return Response(analytics_data)
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Failed to get analytics: {str(e)}'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def video_engagement_heatmap(request, video_id):
+    """Get engagement heatmap for video timeline"""
+    video = get_object_or_404(Video, id=video_id)
+    
+    # Check permissions
+    if video.uploader != request.user and not request.user.is_staff:
+        return Response(
+            {'error': 'Permission denied'}, 
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
+    try:
+        from services.video_analytics_service import video_analytics_service
+        
+        heatmap_data = video_analytics_service.get_engagement_heatmap(video)
+        
+        return Response({
+            'video_id': str(video.id),
+            'duration': video.duration,
+            'heatmap': heatmap_data
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Failed to get heatmap: {str(e)}'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def video_retention_curve(request, video_id):
+    """Get viewer retention curve for video"""
+    video = get_object_or_404(Video, id=video_id)
+    
+    # Check permissions
+    if video.uploader != request.user and not request.user.is_staff:
+        return Response(
+            {'error': 'Permission denied'}, 
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
+    try:
+        from services.video_analytics_service import video_analytics_service
+        
+        retention_data = video_analytics_service.get_retention_curve(video)
+        
+        return Response({
+            'video_id': str(video.id),
+            'retention_curve': retention_data
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Failed to get retention curve: {str(e)}'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def video_viewer_journey(request, video_id):
+    """Get viewer journey analysis for video"""
+    video = get_object_or_404(Video, id=video_id)
+    
+    # Check permissions
+    if video.uploader != request.user and not request.user.is_staff:
+        return Response(
+            {'error': 'Permission denied'}, 
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
+    try:
+        from services.video_analytics_service import video_analytics_service
+        
+        journey_data = video_analytics_service.get_viewer_journey_analysis(video)
+        
+        return Response({
+            'video_id': str(video.id),
+            'viewer_journey': journey_data
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Failed to get viewer journey: {str(e)}'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def video_comparative_analytics(request, video_id):
+    """Get comparative analytics for video vs channel/platform averages"""
+    video = get_object_or_404(Video, id=video_id)
+    
+    # Check permissions
+    if video.uploader != request.user and not request.user.is_staff:
+        return Response(
+            {'error': 'Permission denied'}, 
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
+    try:
+        from services.video_analytics_service import video_analytics_service
+        
+        comparative_data = video_analytics_service.get_comparative_analytics(video)
+        
+        return Response({
+            'video_id': str(video.id),
+            'comparative_analytics': comparative_data
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Failed to get comparative analytics: {str(e)}'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def trending_videos_analytics(request):
+    """Get trending videos analysis (admin only)"""
+    try:
+        from services.video_analytics_service import video_analytics_service
+        
+        days = int(request.query_params.get('days', 7))
+        trending_data = video_analytics_service.get_trending_analysis(days)
+        
+        return Response({
+            'period_days': days,
+            'trending_videos': trending_data
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Failed to get trending analytics: {str(e)}'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['GET'])
+@permission_classes([permissions.IsAuthenticated])
+def channel_analytics_dashboard(request):
+    """Get analytics dashboard for user's channel"""
+    user = request.user
+    
+    try:
+        from services.video_analytics_service import video_analytics_service
+        from django.db.models import Count, Sum, Avg
+        
+        # Get user's videos
+        user_videos = Video.objects.filter(uploader=user)
+        
+        if not user_videos.exists():
+            return Response({
+                'message': 'No videos found for this channel',
+                'channel_stats': {
+                    'total_videos': 0,
+                    'total_views': 0,
+                    'total_watch_time': 0,
+                    'avg_completion_rate': 0
+                }
+            })
+        
+        # Calculate channel stats
+        channel_stats = {
+            'total_videos': user_videos.count(),
+            'total_views': VideoView.objects.filter(video__uploader=user).count(),
+            'total_watch_time': VideoView.objects.filter(
+                video__uploader=user
+            ).aggregate(total=Sum('watch_duration'))['total'] or 0,
+            'avg_completion_rate': 0  # Calculate based on video durations
+        }
+        
+        # Get top performing videos
+        top_videos = user_videos.annotate(
+            view_count=Count('videoview')
+        ).order_by('-view_count')[:5]
+        
+        top_videos_data = []
+        for video in top_videos:
+            video_analytics = video_analytics_service.get_video_analytics(video, 30)
+            top_videos_data.append({
+                'id': str(video.id),
+                'title': video.title,
+                'views': video_analytics['metrics']['total_views'],
+                'completion_rate': video_analytics['metrics']['completion_rate'],
+                'created_at': video.created_at
+            })
+        
+        # Recent performance (last 30 days)
+        recent_stats = VideoView.objects.filter(
+            video__uploader=user,
+            created_at__gte=timezone.now() - timedelta(days=30)
+        ).aggregate(
+            recent_views=Count('id'),
+            recent_watch_time=Sum('watch_duration')
+        )
+        
+        return Response({
+            'channel_stats': channel_stats,
+            'recent_stats': recent_stats,
+            'top_videos': top_videos_data,
+            'period': 'last_30_days'
+        })
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Failed to get channel analytics: {str(e)}'}, 
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
