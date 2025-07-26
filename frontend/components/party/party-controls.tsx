@@ -28,13 +28,15 @@ interface PartyControlsProps {
 }
 
 export function PartyControls({ partyId }: PartyControlsProps) {
-  const { socket } = useSocket(`/party/${partyId}`)
+  const { sendMessage } = useSocket()
   const [isPlaying, setIsPlaying] = useState(false)
 
   const emitControl = (action: string, data?: any) => {
-    if (socket) {
-      socket.emit("party:control", { action, ...data })
-    }
+    sendMessage("party:control", { 
+      party_id: partyId,
+      action, 
+      ...data 
+    })
   }
 
   const handlePlayPause = () => {
