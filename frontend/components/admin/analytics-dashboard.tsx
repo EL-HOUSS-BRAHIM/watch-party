@@ -1,9 +1,11 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useToast } from "@/hooks/use-toast"
 import {
   XAxis,
   YAxis,
@@ -31,61 +33,86 @@ import {
   Download,
   Eye,
   CreditCard,
+  Loader2,
 } from "lucide-react"
-import { useState } from "react"
+
+interface AnalyticsData {
+  user_growth: Array<{
+    date: string
+    total_users: number
+    active_users: number
+    new_users: number
+  }>
+  revenue_data: Array<{
+    month: string
+    revenue: number
+    subscriptions: number
+    avg_revenue: number
+  }>
+  engagement_data: Array<{
+    hour: string
+    parties: number
+    viewers: number
+    messages: number
+  }>
+  device_data: Array<{
+    name: string
+    value: number
+    color: string
+  }>
+  content_data: Array<{
+    category: string
+    uploads: number
+    views: number
+    duration: number
+  }>
+  kpi_data: {
+    total_users: { value: number; change: number; trend: string }
+    active_users: { value: number; change: number; trend: string }
+    total_revenue: { value: number; change: number; trend: string }
+    avg_session_time: { value: number; change: number; trend: string }
+    watch_parties: { value: number; change: number; trend: string }
+    conversion_rate: { value: number; change: number; trend: string }
+  }
+}
 
 export function AnalyticsDashboard() {
+  const { toast } = useToast()
   const [timeRange, setTimeRange] = useState("7d")
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Mock analytics data
-  const userGrowthData = [
-    { date: "2024-01-14", users: 2100, active: 1680, new: 45 },
-    { date: "2024-01-15", users: 2145, active: 1720, new: 52 },
-    { date: "2024-01-16", users: 2197, active: 1758, new: 48 },
-    { date: "2024-01-17", users: 2245, active: 1796, new: 61 },
-    { date: "2024-01-18", users: 2306, active: 1845, new: 58 },
-    { date: "2024-01-19", users: 2364, active: 1891, new: 67 },
-    { date: "2024-01-20", users: 2431, active: 1945, new: 73 },
-  ]
+  useEffect(() => {
+    fetchAnalyticsData()
+  }, [timeRange])
 
-  const revenueData = [
-    { month: "Jul", revenue: 12500, subscriptions: 125, avg_revenue: 100 },
-    { month: "Aug", revenue: 15800, subscriptions: 158, avg_revenue: 100 },
-    { month: "Sep", revenue: 18900, subscriptions: 189, avg_revenue: 100 },
-    { month: "Oct", revenue: 23400, subscriptions: 234, avg_revenue: 100 },
-    { month: "Nov", revenue: 28700, subscriptions: 287, avg_revenue: 100 },
-  ]
+  const fetchAnalyticsData = async () => {
+    try {
+      setIsLoading(true)
+      const token = localStorage.getItem("accessToken")
+      
+      const response = await fetch(`/api/admin/analytics/?time_range=${timeRange}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
 
-  const engagementData = [
-    { hour: "00", parties: 12, viewers: 156, messages: 1240 },
-    { hour: "04", parties: 8, viewers: 98, messages: 780 },
-    { hour: "08", parties: 25, viewers: 340, messages: 2100 },
-    { hour: "12", parties: 45, viewers: 680, messages: 4200 },
-    { hour: "16", parties: 67, viewers: 890, messages: 5800 },
-    { hour: "20", parties: 89, viewers: 1200, messages: 7500 },
-  ]
-
-  const deviceData = [
-    { name: "Desktop", value: 65, color: "#8884d8" },
-    { name: "Mobile", value: 28, color: "#82ca9d" },
-    { name: "Tablet", value: 7, color: "#ffc658" },
-  ]
-
-  const contentData = [
-    { category: "Movies", uploads: 145, views: 12500, duration: 180 },
-    { category: "TV Shows", uploads: 89, views: 8900, duration: 45 },
-    { category: "Documentaries", uploads: 34, views: 3400, duration: 90 },
-    { category: "Anime", uploads: 67, views: 6700, duration: 25 },
-    { category: "Sports", uploads: 23, views: 2300, duration: 120 },
-  ]
-
-  const kpiData = {
-    totalUsers: { value: 2847, change: 12.5, trend: "up" },
-    activeUsers: { value: 2280, change: 8.3, trend: "up" },
-    totalRevenue: { value: 28700, change: 22.6, trend: "up" },
-    avgSessionTime: { value: 45, change: -2.1, trend: "down" },
-    watchParties: { value: 156, change: 15.8, trend: "up" },
-    conversionRate: { value: 3.2, change: 0.8, trend: "up" },
+      if (response.ok) {
+        const data = await response.json()
+        setAnalyticsData(data)
+      } else {
+        throw new Error("Failed to fetch analytics data")
+      }
+    } catch (error) {
+      console.error("Failed to fetch analytics data:", error)
+      toast({
+        title: "Error",
+        description: "Failed to load analytics data.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const getTrendIcon = (trend: string) => {
@@ -99,6 +126,64 @@ export function AnalyticsDashboard() {
   const getTrendColor = (trend: string) => {
     return trend === "up" ? "text-green-600" : "text-red-600"
   }
+
+  const exportData = async () => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      const response = await fetch(`/api/admin/analytics/export/?time_range=${timeRange}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = `analytics-${timeRange}-${new Date().toISOString().split("T")[0]}.csv`
+        document.body.appendChild(a)
+        a.click()
+        window.URL.revokeObjectURL(url)
+        document.body.removeChild(a)
+      }
+    } catch (error) {
+      console.error("Failed to export data:", error)
+      toast({
+        title: "Error",
+        description: "Failed to export analytics data.",
+        variant: "destructive",
+      })
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+      </div>
+    )
+  }
+
+  if (!analyticsData) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">No analytics data available</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Derived data for charts
+  const kpiData = analyticsData.kpi_data
+  const userGrowthData = analyticsData.user_growth
+  const revenueData = analyticsData.revenue_data
+  const engagementData = analyticsData.engagement_data
+  const deviceData = analyticsData.device_data
+  const contentData = analyticsData.content_data
 
   return (
     <div className="space-y-6">
@@ -121,7 +206,7 @@ export function AnalyticsDashboard() {
               <SelectItem value="90d">Last 90 Days</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={exportData}>
             <Download className="w-4 h-4 mr-2" />
             Export
           </Button>
@@ -136,11 +221,11 @@ export function AnalyticsDashboard() {
             <Users className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{kpiData.totalUsers.value.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{analyticsData.kpi_data.total_users.value.toLocaleString()}</div>
             <div className="flex items-center space-x-1 text-xs">
-              {getTrendIcon(kpiData.totalUsers.trend)}
-              <span className={getTrendColor(kpiData.totalUsers.trend)}>
-                {kpiData.totalUsers.change}% from last period
+              {getTrendIcon(analyticsData.kpi_data.total_users.trend)}
+              <span className={getTrendColor(analyticsData.kpi_data.total_users.trend)}>
+                {analyticsData.kpi_data.total_users.change}% from last period
               </span>
             </div>
           </CardContent>
@@ -152,11 +237,11 @@ export function AnalyticsDashboard() {
             <Activity className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{kpiData.activeUsers.value.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{analyticsData.kpi_data.active_users.value.toLocaleString()}</div>
             <div className="flex items-center space-x-1 text-xs">
-              {getTrendIcon(kpiData.activeUsers.trend)}
-              <span className={getTrendColor(kpiData.activeUsers.trend)}>
-                {kpiData.activeUsers.change}% from last period
+              {getTrendIcon(analyticsData.kpi_data.active_users.trend)}
+              <span className={getTrendColor(analyticsData.kpi_data.active_users.trend)}>
+                {analyticsData.kpi_data.active_users.change}% from last period
               </span>
             </div>
           </CardContent>
@@ -168,11 +253,11 @@ export function AnalyticsDashboard() {
             <DollarSign className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${kpiData.totalRevenue.value.toLocaleString()}</div>
+            <div className="text-2xl font-bold">${kpiData.total_revenue.value.toLocaleString()}</div>
             <div className="flex items-center space-x-1 text-xs">
-              {getTrendIcon(kpiData.totalRevenue.trend)}
-              <span className={getTrendColor(kpiData.totalRevenue.trend)}>
-                {kpiData.totalRevenue.change}% from last period
+              {getTrendIcon(kpiData.total_revenue.trend)}
+              <span className={getTrendColor(kpiData.total_revenue.trend)}>
+                {kpiData.total_revenue.change}% from last period
               </span>
             </div>
           </CardContent>
@@ -184,11 +269,11 @@ export function AnalyticsDashboard() {
             <Eye className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{kpiData.avgSessionTime.value}m</div>
+            <div className="text-2xl font-bold">{kpiData.avg_session_time.value}m</div>
             <div className="flex items-center space-x-1 text-xs">
-              {getTrendIcon(kpiData.avgSessionTime.trend)}
-              <span className={getTrendColor(kpiData.avgSessionTime.trend)}>
-                {Math.abs(kpiData.avgSessionTime.change)}% from last period
+              {getTrendIcon(kpiData.avg_session_time.trend)}
+              <span className={getTrendColor(kpiData.avg_session_time.trend)}>
+                {Math.abs(kpiData.avg_session_time.change)}% from last period
               </span>
             </div>
           </CardContent>
@@ -200,11 +285,11 @@ export function AnalyticsDashboard() {
             <Video className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{kpiData.watchParties.value}</div>
+            <div className="text-2xl font-bold">{kpiData.watch_parties.value}</div>
             <div className="flex items-center space-x-1 text-xs">
-              {getTrendIcon(kpiData.watchParties.trend)}
-              <span className={getTrendColor(kpiData.watchParties.trend)}>
-                {kpiData.watchParties.change}% from last period
+              {getTrendIcon(kpiData.watch_parties.trend)}
+              <span className={getTrendColor(kpiData.watch_parties.trend)}>
+                {kpiData.watch_parties.change}% from last period
               </span>
             </div>
           </CardContent>
@@ -216,11 +301,11 @@ export function AnalyticsDashboard() {
             <CreditCard className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{kpiData.conversionRate.value}%</div>
+            <div className="text-2xl font-bold">{kpiData.conversion_rate.value}%</div>
             <div className="flex items-center space-x-1 text-xs">
-              {getTrendIcon(kpiData.conversionRate.trend)}
-              <span className={getTrendColor(kpiData.conversionRate.trend)}>
-                {kpiData.conversionRate.change}% from last period
+              {getTrendIcon(kpiData.conversion_rate.trend)}
+              <span className={getTrendColor(kpiData.conversion_rate.trend)}>
+                {kpiData.conversion_rate.change}% from last period
               </span>
             </div>
           </CardContent>
@@ -379,7 +464,7 @@ export function AnalyticsDashboard() {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="value"
