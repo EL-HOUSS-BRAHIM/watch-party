@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { CommandPalette } from "@/components/ui/command-palette"
 import { useGlobalKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts"
 import { PerformanceMonitor } from "@/lib/performance/bundle-analyzer"
+import { AuthProvider } from "@/contexts/auth-context"
 import { useState, useEffect } from "react"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -51,9 +52,11 @@ export default function ClientLayout({
       </head>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          {children}
-          <Toaster />
-          <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
+          <AuthProvider>
+            {children}
+            <Toaster />
+            <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
