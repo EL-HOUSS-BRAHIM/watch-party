@@ -438,3 +438,5 @@ export function FriendsList({ className }: FriendsListProps) {
     </div>
   )
 }
+
+export default FriendsList
