@@ -15,6 +15,8 @@ interface KeyboardShortcut {
 export function useKeyboardShortcuts(shortcuts: KeyboardShortcut[]) {
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
+      if (!event.key) return
+      
       const matchingShortcut = shortcuts.find((shortcut) => {
         return (
           shortcut.key.toLowerCase() === event.key.toLowerCase() &&
