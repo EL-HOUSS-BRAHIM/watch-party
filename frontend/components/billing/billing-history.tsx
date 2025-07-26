@@ -1,67 +1,67 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Download, Search, Filter, RefreshCw, CheckCircle, XCircle, Clock, AlertTriangle } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+import { Download, Search, Filter, RefreshCw, CheckCircle, XCircle, Clock, AlertTriangle, Loader2 } from "lucide-react"
+
+interface Invoice {
+  id: string
+  amount: number
+  currency: string
+  status: string
+  description: string
+  invoice_date: string
+  due_date: string
+  paid_date?: string
+  download_url: string
+}
 
 export function BillingHistory() {
+  const { toast } = useToast()
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [dateFilter, setDateFilter] = useState("all")
+  const [billingHistory, setBillingHistory] = useState<Invoice[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Mock billing history data
-  const billingHistory = [
-    {
-      id: "inv_001",
-      date: "2024-01-15",
-      description: "Premium Plan - Monthly",
-      amount: 19.99,
-      status: "paid",
-      invoice_url: "#",
-      payment_method: "•••• 4242",
-    },
-    {
-      id: "inv_002",
-      date: "2023-12-15",
-      description: "Premium Plan - Monthly",
-      amount: 19.99,
-      status: "paid",
-      invoice_url: "#",
-      payment_method: "•••• 4242",
-    },
-    {
-      id: "inv_003",
-      date: "2023-11-15",
-      description: "Premium Plan - Monthly",
-      amount: 19.99,
-      status: "failed",
-      invoice_url: "#",
-      payment_method: "•••• 1234",
-    },
-    {
-      id: "inv_004",
-      date: "2023-10-15",
-      description: "Premium Plan - Monthly",
-      amount: 19.99,
-      status: "paid",
-      invoice_url: "#",
-      payment_method: "•••• 4242",
-    },
-    {
-      id: "inv_005",
-      date: "2023-09-15",
-      description: "Premium Plan - Monthly",
-      amount: 19.99,
-      status: "pending",
-      invoice_url: "#",
-      payment_method: "•••• 4242",
-    },
-  ]
+  useEffect(() => {
+    fetchBillingHistory()
+  }, [])
+
+  const fetchBillingHistory = async () => {
+    try {
+      setIsLoading(true)
+      const token = localStorage.getItem("accessToken")
+      
+      const response = await fetch("/api/billing/history/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setBillingHistory(data.results || [])
+      } else {
+        throw new Error("Failed to fetch billing history")
+      }
+    } catch (error) {
+      console.error("Failed to fetch billing history:", error)
+      toast({
+        title: "Error",
+        description: "Failed to load billing history.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -110,6 +110,49 @@ export function BillingHistory() {
   const totalAmount = filteredHistory.reduce((sum, item) => {
     return item.status === "paid" ? sum + item.amount : sum
   }, 0)
+
+  const downloadInvoice = async (invoiceId: string, downloadUrl: string) => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      
+      const response = await fetch(downloadUrl, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = `invoice_${invoiceId}.pdf`
+        document.body.appendChild(a)
+        a.click()
+        window.URL.revokeObjectURL(url)
+        document.body.removeChild(a)
+      } else {
+        throw new Error("Failed to download invoice")
+      }
+    } catch (error) {
+      console.error("Failed to download invoice:", error)
+      toast({
+        title: "Error",
+        description: "Failed to download invoice.",
+        variant: "destructive",
+      })
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -204,7 +247,7 @@ export function BillingHistory() {
                   <TableHead>Invoice</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>Description</TableHead>
-                  <TableHead>Payment Method</TableHead>
+                  <TableHead>Currency</TableHead>
                   <TableHead>Amount</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -214,14 +257,18 @@ export function BillingHistory() {
                 {filteredHistory.map((item) => (
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">{item.id}</TableCell>
-                    <TableCell>{new Date(item.date).toLocaleDateString()}</TableCell>
+                    <TableCell>{new Date(item.invoice_date).toLocaleDateString()}</TableCell>
                     <TableCell>{item.description}</TableCell>
-                    <TableCell>{item.payment_method}</TableCell>
+                    <TableCell>{item.currency.toUpperCase()}</TableCell>
                     <TableCell>${item.amount.toFixed(2)}</TableCell>
                     <TableCell>{getStatusBadge(item.status)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end space-x-2">
-                        <Button size="sm" variant="outline">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => downloadInvoice(item.id, item.download_url)}
+                        >
                           <Download className="w-4 h-4 mr-1" />
                           Download
                         </Button>
