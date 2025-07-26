@@ -1,8 +1,10 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
+import { useToast } from "@/hooks/use-toast"
 import {
   BarChart,
   Bar,
@@ -17,40 +19,119 @@ import {
   Pie,
   Cell,
 } from "recharts"
-import { HardDrive, Wifi, Users, Video, TrendingUp, AlertTriangle, CheckCircle } from "lucide-react"
+import { HardDrive, Wifi, Users, Video, TrendingUp, AlertTriangle, CheckCircle, Loader2 } from "lucide-react"
+
+interface UsageData {
+  storage: { used: number; limit: number; unit: string }
+  bandwidth: { used: number; limit: number; unit: string }
+  parties: { used: number; limit: number; unit: string }
+  participants: { used: number; limit: number; unit: string }
+}
+
+interface UsageStats {
+  current_usage: UsageData
+  monthly_trends: Array<{
+    month: string
+    storage: number
+    bandwidth: number
+    parties: number
+  }>
+  daily_activity: Array<{
+    day: string
+    participants: number
+  }>
+  quality_distribution: Array<{
+    name: string
+    value: number
+    color: string
+  }>
+}
 
 export function UsageStats() {
-  // Mock usage data
-  const currentUsage = {
-    storage: { used: 38.5, limit: 50, unit: "GB" },
-    bandwidth: { used: 245, limit: 500, unit: "GB" },
-    parties: { used: 12, limit: 25, unit: "parties" },
-    participants: { used: 156, limit: 500, unit: "total participants" },
+  const { toast } = useToast()
+  const [usageStats, setUsageStats] = useState<UsageStats | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    fetchUsageStats()
+  }, [])
+
+  const fetchUsageStats = async () => {
+    try {
+      setIsLoading(true)
+      const token = localStorage.getItem("accessToken")
+      
+      // Fetch usage data from analytics endpoint
+      const [subscriptionResponse, analyticsResponse, trendsResponse] = await Promise.all([
+        fetch("/api/billing/subscription/", {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        fetch("/api/analytics/user/", {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        fetch("/api/analytics/usage-trends/", {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      ])
+
+      if (subscriptionResponse.ok && analyticsResponse.ok) {
+        const [subscriptionData, analyticsData, trendsData] = await Promise.all([
+          subscriptionResponse.json(),
+          analyticsResponse.json(),
+          trendsResponse.ok ? trendsResponse.json() : { monthly_trends: [], daily_activity: [], quality_distribution: [] }
+        ])
+        
+        // Transform real data to match our interface
+        const currentUsage = subscriptionData.usage || {}
+        const analytics = analyticsData || {}
+        
+        const stats: UsageStats = {
+          current_usage: {
+            storage: { 
+              used: parseFloat(currentUsage.storage_used) || 0, 
+              limit: parseFloat(currentUsage.storage_limit) || 10, 
+              unit: "GB" 
+            },
+            bandwidth: { 
+              used: parseFloat(analytics.bandwidth_used_gb) || 0, 
+              limit: parseFloat(currentUsage.bandwidth_limit) || 500, 
+              unit: "GB" 
+            },
+            parties: { 
+              used: analytics.parties_hosted_this_month || 0, 
+              limit: parseInt(currentUsage.parties_limit) || 25, 
+              unit: "parties" 
+            },
+            participants: { 
+              used: analytics.total_participants_this_month || 0, 
+              limit: parseInt(currentUsage.participants_limit) || 500, 
+              unit: "total participants" 
+            },
+          },
+          monthly_trends: trendsData.monthly_trends || [],
+          daily_activity: trendsData.daily_activity || [],
+          quality_distribution: trendsData.quality_distribution || [
+            { name: "720p", value: 40, color: "#8884d8" },
+            { name: "1080p", value: 50, color: "#82ca9d" },
+            { name: "4K", value: 10, color: "#ffc658" },
+          ],
+        }
+        
+        setUsageStats(stats)
+      } else {
+        throw new Error("Failed to fetch usage stats")
+      }
+    } catch (error) {
+      console.error("Failed to fetch usage stats:", error)
+      toast({
+        title: "Error",
+        description: "Failed to load usage statistics.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
-
-  const monthlyUsage = [
-    { month: "Jul", storage: 25, bandwidth: 180, parties: 8 },
-    { month: "Aug", storage: 32, bandwidth: 220, parties: 10 },
-    { month: "Sep", storage: 35, bandwidth: 195, parties: 9 },
-    { month: "Oct", storage: 38, bandwidth: 245, parties: 12 },
-    { month: "Nov", storage: 38.5, bandwidth: 245, parties: 12 },
-  ]
-
-  const dailyParticipants = [
-    { day: "Mon", participants: 15 },
-    { day: "Tue", participants: 22 },
-    { day: "Wed", participants: 18 },
-    { day: "Thu", participants: 28 },
-    { day: "Fri", participants: 35 },
-    { day: "Sat", participants: 42 },
-    { day: "Sun", participants: 38 },
-  ]
-
-  const videoQualityDistribution = [
-    { name: "720p", value: 35, color: "#8884d8" },
-    { name: "1080p", value: 45, color: "#82ca9d" },
-    { name: "4K", value: 20, color: "#ffc658" },
-  ]
 
   const getUsageColor = (percentage: number) => {
     if (percentage >= 90) return "text-destructive"
@@ -62,6 +143,28 @@ export function UsageStats() {
     if (percentage >= 90) return <AlertTriangle className="w-4 h-4 text-destructive" />
     return <CheckCircle className="w-4 h-4 text-green-600" />
   }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+      </div>
+    )
+  }
+
+  if (!usageStats) {
+    return (
+      <div className="space-y-6">
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">No usage data available</p>
+        </div>
+      </div>
+    )
+  }
+
+  const { current_usage, monthly_trends, daily_activity, quality_distribution } = usageStats
 
   return (
     <div className="space-y-6">
@@ -75,14 +178,14 @@ export function UsageStats() {
           <CardContent>
             <div className="flex items-center justify-between mb-2">
               <div className="text-2xl font-bold">
-                {currentUsage.storage.used}
-                {currentUsage.storage.unit}
+                {current_usage.storage.used}
+                {current_usage.storage.unit}
               </div>
-              {getUsageIcon((currentUsage.storage.used / currentUsage.storage.limit) * 100)}
+              {getUsageIcon((current_usage.storage.used / current_usage.storage.limit) * 100)}
             </div>
-            <Progress value={(currentUsage.storage.used / currentUsage.storage.limit) * 100} className="mb-2" />
+            <Progress value={(current_usage.storage.used / current_usage.storage.limit) * 100} className="mb-2" />
             <p className="text-xs text-muted-foreground">
-              {currentUsage.storage.used} of {currentUsage.storage.limit} {currentUsage.storage.unit} used
+              {current_usage.storage.used} of {current_usage.storage.limit} {current_usage.storage.unit} used
             </p>
           </CardContent>
         </Card>
@@ -95,14 +198,14 @@ export function UsageStats() {
           <CardContent>
             <div className="flex items-center justify-between mb-2">
               <div className="text-2xl font-bold">
-                {currentUsage.bandwidth.used}
-                {currentUsage.bandwidth.unit}
+                {current_usage.bandwidth.used}
+                {current_usage.bandwidth.unit}
               </div>
-              {getUsageIcon((currentUsage.bandwidth.used / currentUsage.bandwidth.limit) * 100)}
+              {getUsageIcon((current_usage.bandwidth.used / current_usage.bandwidth.limit) * 100)}
             </div>
-            <Progress value={(currentUsage.bandwidth.used / currentUsage.bandwidth.limit) * 100} className="mb-2" />
+            <Progress value={(current_usage.bandwidth.used / current_usage.bandwidth.limit) * 100} className="mb-2" />
             <p className="text-xs text-muted-foreground">
-              {currentUsage.bandwidth.used} of {currentUsage.bandwidth.limit} {currentUsage.bandwidth.unit} used
+              {current_usage.bandwidth.used} of {current_usage.bandwidth.limit} {current_usage.bandwidth.unit} used
             </p>
           </CardContent>
         </Card>
@@ -114,12 +217,12 @@ export function UsageStats() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between mb-2">
-              <div className="text-2xl font-bold">{currentUsage.parties.used}</div>
-              {getUsageIcon((currentUsage.parties.used / currentUsage.parties.limit) * 100)}
+              <div className="text-2xl font-bold">{current_usage.parties.used}</div>
+              {getUsageIcon((current_usage.parties.used / current_usage.parties.limit) * 100)}
             </div>
-            <Progress value={(currentUsage.parties.used / currentUsage.parties.limit) * 100} className="mb-2" />
+            <Progress value={(current_usage.parties.used / current_usage.parties.limit) * 100} className="mb-2" />
             <p className="text-xs text-muted-foreground">
-              {currentUsage.parties.used} of {currentUsage.parties.limit} {currentUsage.parties.unit}
+              {current_usage.parties.used} of {current_usage.parties.limit} {current_usage.parties.unit}
             </p>
           </CardContent>
         </Card>
@@ -131,15 +234,15 @@ export function UsageStats() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between mb-2">
-              <div className="text-2xl font-bold">{currentUsage.participants.used}</div>
-              {getUsageIcon((currentUsage.participants.used / currentUsage.participants.limit) * 100)}
+              <div className="text-2xl font-bold">{current_usage.participants.used}</div>
+              {getUsageIcon((current_usage.participants.used / current_usage.participants.limit) * 100)}
             </div>
             <Progress
-              value={(currentUsage.participants.used / currentUsage.participants.limit) * 100}
+              value={(current_usage.participants.used / current_usage.participants.limit) * 100}
               className="mb-2"
             />
             <p className="text-xs text-muted-foreground">
-              {currentUsage.participants.used} of {currentUsage.participants.limit} {currentUsage.participants.unit}
+              {current_usage.participants.used} of {current_usage.participants.limit} {current_usage.participants.unit}
             </p>
           </CardContent>
         </Card>
@@ -154,7 +257,7 @@ export function UsageStats() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={monthlyUsage}>
+              <BarChart data={monthly_trends}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
@@ -173,7 +276,7 @@ export function UsageStats() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={dailyParticipants}>
+              <LineChart data={daily_activity}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="day" />
                 <YAxis />
@@ -196,16 +299,16 @@ export function UsageStats() {
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
-                  data={videoQualityDistribution}
+                  data={quality_distribution}
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
                 >
-                  {videoQualityDistribution.map((entry, index) => (
+                  {quality_distribution.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
@@ -260,7 +363,7 @@ export function UsageStats() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {Object.entries(currentUsage).map(([key, usage]) => {
+            {Object.entries(current_usage).map(([key, usage]) => {
               const percentage = (usage.used / usage.limit) * 100
               return (
                 <div key={key} className="space-y-2">
