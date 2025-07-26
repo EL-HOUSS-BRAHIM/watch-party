@@ -10,6 +10,7 @@ import { CommandPalette } from "@/components/ui/command-palette"
 import { useGlobalKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts"
 import { PerformanceMonitor } from "@/lib/performance/bundle-analyzer"
 import { AuthProvider } from "@/contexts/auth-context"
+import { SocketProvider } from "@/contexts/socket-context"
 import { useState, useEffect } from "react"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -53,9 +54,11 @@ export default function ClientLayout({
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AuthProvider>
-            {children}
-            <Toaster />
-            <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
+            <SocketProvider>
+              {children}
+              <Toaster />
+              <CommandPalette open={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
+            </SocketProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>
