@@ -385,3 +385,5 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
     </div>
   )
 }
+
+export { PaymentMethods }
