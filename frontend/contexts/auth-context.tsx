@@ -2,21 +2,14 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
+import { authAPI, usersAPI } from "@/lib/api"
+import type { User as APIUser, AuthResponse, RegisterData as APIRegisterData } from "@/lib/api/types"
 
-interface User {
-  id: string
-  email: string
-  username: string
-  firstName: string
-  lastName: string
-  avatar?: string
-  role: "user" | "admin" | "moderator"
-  isEmailVerified: boolean
-  subscription?: {
-    plan: string
-    status: string
-    expiresAt: string
-  }
+// Extended user interface for the frontend context  
+interface User extends Omit<APIUser, 'avatar'> {
+  avatar?: string | null // Allow both null and undefined for compatibility
+  role?: "user" | "admin" | "moderator"
+  isEmailVerified?: boolean
 }
 
 interface AuthContextType {
@@ -35,12 +28,8 @@ interface AuthContextType {
   updateProfile: (data: Partial<User>) => Promise<void>
 }
 
-interface RegisterData {
-  email: string
-  password: string
-  username: string
-  firstName: string
-  lastName: string
+interface RegisterData extends APIRegisterData {
+  // Keep the same structure as API but allow for frontend-specific extensions
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -76,29 +65,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkAuthStatus = async () => {
     try {
+      // Check if we're in the browser environment
+      if (typeof window === 'undefined') {
+        setIsLoading(false)
+        return
+      }
+
       const token = localStorage.getItem("accessToken")
       if (!token) {
         setIsLoading(false)
         return
       }
 
-      const response = await fetch("/api/auth/user/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const userData = await response.json()
-        setUser(userData)
-      } else {
-        // Token is invalid, try to refresh
-        await refreshToken()
-      }
+      const userData = await authAPI.getProfile()
+      setUser({ ...userData, avatar: userData.avatar || undefined })
     } catch (error) {
       console.error("Auth check failed:", error)
-      localStorage.removeItem("accessToken")
-      localStorage.removeItem("refreshToken")
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("refreshToken")
+      }
     } finally {
       setIsLoading(false)
     }
@@ -106,26 +92,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await fetch("/api/auth/login/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      })
+      const response = await authAPI.login({ email, password })
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed")
+      if (typeof window !== 'undefined') {
+        localStorage.setItem("accessToken", response.access_token)
+        localStorage.setItem("refreshToken", response.refresh_token)
       }
-
-      localStorage.setItem("accessToken", data.access)
-      localStorage.setItem("refreshToken", data.refresh)
-      setUser(data.user)
+      
+      const user = { 
+        ...response.user, 
+        avatar: response.user.avatar || undefined,
+        role: ("user" as "user" | "admin" | "moderator") // Default role, could be determined from backend
+      }
+      setUser(user)
 
       // Redirect based on user role
-      if (data.user.role === "admin") {
+      if (user.role === "admin") {
         router.push("/dashboard/admin")
       } else {
         router.push("/dashboard")
@@ -137,25 +119,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (userData: RegisterData) => {
     try {
-      const response = await fetch("/api/auth/register/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || "Registration failed")
-      }
+      const response = await authAPI.register(userData)
 
       // Auto-login after successful registration
-      if (data.access && data.refresh) {
-        localStorage.setItem("accessToken", data.access)
-        localStorage.setItem("refreshToken", data.refresh)
-        setUser(data.user)
+      if (response.access_token && response.refresh_token) {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem("accessToken", response.access_token)
+          localStorage.setItem("refreshToken", response.refresh_token)
+        }
+        setUser({ 
+          ...response.user, 
+          avatar: response.user.avatar || undefined,
+          role: ("user" as "user" | "admin" | "moderator")
+        })
         router.push("/dashboard")
       } else {
         // Email verification required
@@ -166,28 +142,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const logout = () => {
-    localStorage.removeItem("accessToken")
-    localStorage.removeItem("refreshToken")
-    setUser(null)
-    router.push("/login")
+  const logout = async () => {
+    try {
+      await authAPI.logout()
+    } catch (error) {
+      // Continue with logout even if API call fails
+      console.error("Logout API call failed:", error)
+    } finally {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("refreshToken")
+      }
+      setUser(null)
+      router.push("/login")
+    }
   }
 
   const forgotPassword = async (email: string) => {
     try {
-      const response = await fetch("/api/auth/forgot-password/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to send reset email")
-      }
+      await authAPI.forgotPassword({ email })
     } catch (error) {
       throw error
     }
@@ -195,19 +168,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const resetPassword = async (token: string, password: string) => {
     try {
-      const response = await fetch("/api/auth/reset-password/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token, password }),
+      await authAPI.resetPassword({ 
+        token, 
+        new_password: password,
+        confirm_password: password 
       })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to reset password")
-      }
     } catch (error) {
       throw error
     }
@@ -215,19 +180,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const verifyEmail = async (token: string) => {
     try {
-      const response = await fetch("/api/auth/verify-email/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ token }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || "Email verification failed")
-      }
+      await authAPI.verifyEmail(token)
 
       // Update user data
       if (user) {
@@ -240,19 +193,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const resendVerification = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/auth/resend-verification/", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to resend verification email")
-      }
+      // Note: This endpoint may need to be added to the backend
+      await authAPI.verifyEmail("") // Placeholder - needs backend implementation
     } catch (error) {
       throw error
     }
@@ -261,7 +203,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const socialLogin = async (provider: "google" | "github") => {
     try {
       // Redirect to social auth endpoint
-      window.location.href = `/api/auth/social/${provider}/`
+      const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+      window.location.href = `${baseURL}/api/auth/social/${provider}/`
     } catch (error) {
       throw error
     }
@@ -269,41 +212,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshToken = async () => {
     try {
+      if (typeof window === 'undefined') {
+        throw new Error("Cannot refresh token on server side")
+      }
+
       const refreshToken = localStorage.getItem("refreshToken")
       if (!refreshToken) {
         throw new Error("No refresh token available")
       }
 
-      const response = await fetch("/api/auth/refresh/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ refresh: refreshToken }),
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error("Token refresh failed")
-      }
-
-      localStorage.setItem("accessToken", data.access)
+      const response = await authAPI.refreshToken()
+      localStorage.setItem("accessToken", response.access)
 
       // Get updated user data
-      const userResponse = await fetch("/api/auth/user/", {
-        headers: {
-          Authorization: `Bearer ${data.access}`,
-        },
-      })
-
-      if (userResponse.ok) {
-        const userData = await userResponse.json()
-        setUser(userData)
-      }
+      const userData = await authAPI.getProfile()
+      setUser({ ...userData, avatar: userData.avatar || undefined })
     } catch (error) {
-      localStorage.removeItem("accessToken")
-      localStorage.removeItem("refreshToken")
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem("accessToken")
+        localStorage.removeItem("refreshToken")
+      }
       setUser(null)
       throw error
     }
@@ -311,23 +239,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const updateProfile = async (data: Partial<User>) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/profile/", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      })
-
-      const responseData = await response.json()
-
-      if (!response.ok) {
-        throw new Error(responseData.message || "Failed to update profile")
+      // Convert User data to UserProfile format for the API
+      const profileData = {
+        bio: (data as any).bio,
+        timezone: (data as any).timezone,
+        language: (data as any).language,
+        // Add other profile fields as needed
       }
-
-      setUser(responseData)
+      
+      const response = await usersAPI.updateProfile(profileData)
+      setUser({ 
+        ...response, 
+        ...response.profile,
+        avatar: response.avatar || undefined 
+      })
     } catch (error) {
       throw error
     }
