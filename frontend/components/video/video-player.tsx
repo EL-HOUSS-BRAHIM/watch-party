@@ -423,3 +423,5 @@ export default function VideoPlayer({
     </div>
   )
 }
+
+export { VideoPlayer }
