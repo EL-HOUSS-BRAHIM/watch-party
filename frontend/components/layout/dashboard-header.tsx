@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { NotificationCenter } from "@/components/notifications/notification-center"
+import { NotificationBell } from "@/components/notifications/notification-bell"
 import { useAuth } from "@/contexts/auth-context"
 import { useAppStore } from "@/lib/stores/ui-store"
 import { Menu, Search, Plus, Crown, User, Settings, CreditCard, LogOut, Moon, Sun } from "lucide-react"
@@ -62,7 +62,7 @@ export function DashboardHeader() {
         </Button>
 
         {/* Notifications */}
-        <NotificationCenter />
+        <NotificationBell />
 
         {/* Theme Toggle */}
         <Button variant="ghost" size="icon" onClick={toggleTheme}>
