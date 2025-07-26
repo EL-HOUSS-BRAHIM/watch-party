@@ -7,7 +7,6 @@ class APIClient {
     this.client = axios.create({
       baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000",
       timeout: 30000,
-      withCredentials: true,
       headers: {
         "Content-Type": "application/json",
       },
@@ -17,21 +16,22 @@ class APIClient {
   }
 
   private setupInterceptors() {
-    // Request interceptor for auth token
+    // Request interceptor to add auth token
     this.client.interceptors.request.use(
       (config) => {
-        const token = localStorage.getItem("access_token")
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`
+        // Only access localStorage on client side
+        if (typeof window !== 'undefined') {
+          const token = localStorage.getItem("accessToken")
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`
+          }
         }
         return config
       },
-      (error) => {
-        return Promise.reject(error)
-      },
+      (error) => Promise.reject(error)
     )
 
-    // Response interceptor for token refresh
+    // Response interceptor for error handling and token refresh
     this.client.interceptors.response.use(
       (response: AxiosResponse) => response,
       async (error: AxiosError) => {
@@ -42,42 +42,50 @@ class APIClient {
 
           try {
             await this.refreshToken()
-            const token = localStorage.getItem("access_token")
-            if (token) {
-              originalRequest.headers.Authorization = `Bearer ${token}`
+            // Only access localStorage on client side
+            if (typeof window !== 'undefined') {
+              const token = localStorage.getItem("accessToken")
+              if (token && originalRequest) {
+                originalRequest.headers.Authorization = `Bearer ${token}`
+                return this.client(originalRequest)
+              }
             }
-            return this.client(originalRequest)
           } catch (refreshError) {
             // Refresh failed, redirect to login
-            localStorage.removeItem("access_token")
-            localStorage.removeItem("refresh_token")
-            window.location.href = "/login"
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem("accessToken")
+              localStorage.removeItem("refreshToken")
+              window.location.href = "/auth/login"
+            }
             return Promise.reject(refreshError)
           }
         }
 
         return Promise.reject(error)
-      },
+      }
     )
   }
 
   private async refreshToken(): Promise<void> {
-    const refreshToken = localStorage.getItem("refresh_token")
+    // Only access localStorage on client side
+    if (typeof window === 'undefined') {
+      throw new Error("Cannot refresh token on server side")
+    }
+
+    const refreshToken = localStorage.getItem("refreshToken")
     if (!refreshToken) {
       throw new Error("No refresh token available")
     }
 
     const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh/`, {
-      refresh_token: refreshToken,
+      refresh: refreshToken,
     })
 
-    const { access_token, refresh_token } = response.data
-    localStorage.setItem("access_token", access_token)
-    localStorage.setItem("refresh_token", refresh_token)
+    const { access } = response.data
+    localStorage.setItem("accessToken", access)
   }
 
-  // Generic HTTP methods
-  async get<T>(url: string, params?: any): Promise<T> {
+  async get<T>(url: string, params?: Record<string, any>): Promise<T> {
     const response = await this.client.get<T>(url, { params })
     return response.data
   }
@@ -102,10 +110,20 @@ class APIClient {
     return response.data
   }
 
-  // File upload method
-  async uploadFile<T>(url: string, file: File, onProgress?: (progress: number) => void): Promise<T> {
+  async uploadFile<T>(
+    url: string, 
+    file: File, 
+    additionalData?: Record<string, any>,
+    onProgress?: (progress: number) => void
+  ): Promise<T> {
     const formData = new FormData()
-    formData.append("file", file)
+    formData.append("video_file", file)
+    
+    if (additionalData) {
+      Object.entries(additionalData).forEach(([key, value]) => {
+        formData.append(key, value)
+      })
+    }
 
     const response = await this.client.post<T>(url, formData, {
       headers: {
@@ -118,9 +136,27 @@ class APIClient {
         }
       },
     })
+    return response.data
+  }
 
+  async uploadAvatar<T>(url: string, file: File, onProgress?: (progress: number) => void): Promise<T> {
+    const formData = new FormData()
+    formData.append("avatar", file)
+
+    const response = await this.client.post<T>(url, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      onUploadProgress: (progressEvent) => {
+        if (onProgress && progressEvent.total) {
+          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          onProgress(progress)
+        }
+      },
+    })
     return response.data
   }
 }
 
 export const apiClient = new APIClient()
+export default apiClient
