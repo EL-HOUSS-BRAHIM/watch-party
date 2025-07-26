@@ -457,3 +457,5 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
     </div>
   )
 }
+
+export { ChatInterface }
