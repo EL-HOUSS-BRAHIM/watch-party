@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
@@ -10,21 +10,80 @@ import { BillingHistory } from "@/components/billing/billing-history"
 import { PaymentMethods } from "@/components/billing/payment-methods"
 import { UsageStats } from "@/components/billing/usage-stats"
 import { useAuth } from "@/contexts/auth-context"
-import { CreditCard, Crown, TrendingUp, Calendar, AlertTriangle, CheckCircle } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
+import { CreditCard, Crown, TrendingUp, Calendar, AlertTriangle, CheckCircle, Loader2 } from "lucide-react"
+
+interface Subscription {
+  id: string
+  plan: {
+    id: string
+    name: string
+    price: number
+    features: string[]
+  }
+  status: string
+  current_period_start: string
+  current_period_end: string
+  cancel_at_period_end: boolean
+}
+
+interface UsageData {
+  storage_used: string
+  storage_limit: string
+  parties_hosted_this_month: number
+  videos_uploaded_this_month: number
+}
+
+interface NextPayment {
+  amount: number
+  date: string
+  payment_method: string
+}
 
 export default function BillingPage() {
   const { user } = useAuth()
+  const { toast } = useToast()
   const [activeTab, setActiveTab] = useState("overview")
+  const [subscription, setSubscription] = useState<Subscription | null>(null)
+  const [usage, setUsage] = useState<UsageData | null>(null)
+  const [nextPayment, setNextPayment] = useState<NextPayment | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Mock subscription data - replace with actual API calls
-  const subscription = {
-    plan: "Premium",
-    status: "active",
-    billing_cycle: "monthly",
-    next_billing_date: "2024-02-15",
-    amount: 19.99,
-    currency: "USD",
-  }
+  useEffect(() => {
+    const fetchBillingData = async () => {
+      try {
+        setIsLoading(true)
+        const token = localStorage.getItem("accessToken")
+        
+        const response = await fetch("/api/billing/subscription/", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setSubscription(data.subscription)
+          setUsage(data.usage)
+          setNextPayment(data.next_payment)
+        } else if (response.status === 404) {
+          // User doesn't have a subscription
+          setSubscription(null)
+        }
+      } catch (error) {
+        console.error("Failed to fetch billing data:", error)
+        toast({
+          title: "Error",
+          description: "Failed to load billing information.",
+          variant: "destructive",
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchBillingData()
+  }, [toast])
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -49,6 +108,20 @@ export default function BillingPage() {
     }
   }
 
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString()
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -59,8 +132,8 @@ export default function BillingPage() {
         </div>
         <div className="flex items-center space-x-2">
           <Crown className="w-5 h-5 text-accent-premium" />
-          <span className="font-medium">{subscription.plan} Plan</span>
-          {getStatusBadge(subscription.status)}
+          <span className="font-medium">{subscription?.plan.name || "Free"} Plan</span>
+          {subscription && getStatusBadge(subscription.status)}
         </div>
       </div>
 
@@ -72,9 +145,9 @@ export default function BillingPage() {
             <Crown className="w-4 h-4 text-accent-premium" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{subscription.plan}</div>
+            <div className="text-2xl font-bold">{subscription?.plan.name || "Free"}</div>
             <p className="text-xs text-muted-foreground">
-              ${subscription.amount}/{subscription.billing_cycle}
+              {subscription ? `$${subscription.plan.price}/month` : "No subscription"}
             </p>
           </CardContent>
         </Card>
@@ -85,8 +158,12 @@ export default function BillingPage() {
             <Calendar className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">Feb 15</div>
-            <p className="text-xs text-muted-foreground">${subscription.amount} will be charged</p>
+            <div className="text-2xl font-bold">
+              {nextPayment ? formatDate(nextPayment.date) : "N/A"}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {nextPayment ? `$${nextPayment.amount} will be charged` : "No upcoming charges"}
+            </p>
           </CardContent>
         </Card>
 
@@ -96,8 +173,10 @@ export default function BillingPage() {
             <TrendingUp className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">78%</div>
-            <p className="text-xs text-muted-foreground">Of your plan limits</p>
+            <div className="text-2xl font-bold">
+              {usage ? `${usage.parties_hosted_this_month + usage.videos_uploaded_this_month}` : "0"}
+            </div>
+            <p className="text-xs text-muted-foreground">Activities this month</p>
           </CardContent>
         </Card>
 
@@ -107,8 +186,12 @@ export default function BillingPage() {
             <CreditCard className="w-4 h-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">•••• 4242</div>
-            <p className="text-xs text-muted-foreground">Visa ending in 4242</p>
+            <div className="text-2xl font-bold">
+              {nextPayment?.payment_method || "None"}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {nextPayment?.payment_method ? "Active payment method" : "No payment method"}
+            </p>
           </CardContent>
         </Card>
       </div>
@@ -133,20 +216,24 @@ export default function BillingPage() {
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Plan</span>
-                  <span className="font-medium">{subscription.plan}</span>
+                  <span className="font-medium">{subscription?.plan.name || "Free"}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-sm text-muted-foreground">Status</span>
-                  {getStatusBadge(subscription.status)}
+                  {subscription ? getStatusBadge(subscription.status) : <Badge variant="outline">No Subscription</Badge>}
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Billing Cycle</span>
-                  <span className="font-medium capitalize">{subscription.billing_cycle}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-sm text-muted-foreground">Next Billing</span>
-                  <span className="font-medium">{subscription.next_billing_date}</span>
-                </div>
+                {subscription && (
+                  <>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Billing Cycle</span>
+                      <span className="font-medium">Monthly</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm text-muted-foreground">Next Billing</span>
+                      <span className="font-medium">{formatDate(subscription.current_period_end)}</span>
+                    </div>
+                  </>
+                )}
                 <div className="pt-4 space-y-2">
                   <Button variant="outline" className="w-full bg-transparent">
                     Change Plan
@@ -186,7 +273,7 @@ export default function BillingPage() {
         </TabsContent>
 
         <TabsContent value="plans">
-          <SubscriptionPlans currentPlan={subscription.plan} />
+          <SubscriptionPlans currentPlan={subscription?.plan.name || "free"} />
         </TabsContent>
 
         <TabsContent value="payment-methods">
