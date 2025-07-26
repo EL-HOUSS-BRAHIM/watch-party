@@ -1,9 +1,11 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
+import { useToast } from "@/hooks/use-toast"
 import {
   XAxis,
   YAxis,
@@ -27,39 +29,92 @@ import {
   CheckCircle,
   TrendingUp,
   Activity,
+  Loader2,
 } from "lucide-react"
 
+interface SystemMetrics {
+  cpu_usage: number
+  memory_usage: number
+  disk_usage: number
+  network_usage: number
+}
+
+interface UserGrowthData {
+  month: string
+  total_users: number
+  active_users: number
+}
+
+interface RecentActivity {
+  id: string
+  timestamp: string
+  action: string
+  user_email: string
+  activity_type: string
+}
+
+interface SubscriptionDistribution {
+  plan_name: string
+  user_count: number
+  color: string
+}
+
 export function AdminDashboard() {
-  // Mock system metrics
-  const systemMetrics = {
-    cpu: 45,
-    memory: 68,
-    disk: 34,
-    network: 23,
+  const { toast } = useToast()
+  const [systemMetrics, setSystemMetrics] = useState<SystemMetrics | null>(null)
+  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([])
+  const [userGrowth, setUserGrowth] = useState<UserGrowthData[]>([])
+  const [subscriptionDistribution, setSubscriptionDistribution] = useState<SubscriptionDistribution[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    fetchAdminData()
+  }, [])
+
+  const fetchAdminData = async () => {
+    try {
+      setIsLoading(true)
+      const token = localStorage.getItem("accessToken")
+      
+      const [metricsResponse, activityResponse, analyticsResponse] = await Promise.all([
+        fetch("/api/admin/system-metrics/", {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        fetch("/api/admin/recent-activity/", {
+          headers: { Authorization: `Bearer ${token}` }
+        }),
+        fetch("/api/admin/analytics/", {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+      ])
+
+      if (metricsResponse.ok) {
+        const metrics = await metricsResponse.json()
+        setSystemMetrics(metrics)
+      }
+
+      if (activityResponse.ok) {
+        const activity = await activityResponse.json()
+        setRecentActivity(activity.results || [])
+      }
+
+      if (analyticsResponse.ok) {
+        const analytics = await analyticsResponse.json()
+        setUserGrowth(analytics.user_growth || [])
+        setSubscriptionDistribution(analytics.subscription_distribution || [])
+      }
+
+    } catch (error) {
+      console.error("Failed to fetch admin data:", error)
+      toast({
+        title: "Error",
+        description: "Failed to load admin dashboard data.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
-
-  const recentActivity = [
-    { time: "2 min ago", action: "New user registered", user: "john@example.com", type: "user" },
-    { time: "5 min ago", action: "Watch party created", user: "sarah@example.com", type: "party" },
-    { time: "8 min ago", action: "Video uploaded", user: "mike@example.com", type: "content" },
-    { time: "12 min ago", action: "Payment processed", user: "lisa@example.com", type: "billing" },
-    { time: "15 min ago", action: "User reported content", user: "admin@example.com", type: "moderation" },
-  ]
-
-  const userGrowth = [
-    { month: "Jul", users: 1200, active: 980 },
-    { month: "Aug", users: 1450, active: 1180 },
-    { month: "Sep", users: 1680, active: 1350 },
-    { month: "Oct", users: 2100, active: 1680 },
-    { month: "Nov", users: 2847, active: 2280 },
-  ]
-
-  const subscriptionDistribution = [
-    { name: "Free", value: 65, color: "#8884d8" },
-    { name: "Premium", value: 25, color: "#82ca9d" },
-    { name: "Pro", value: 8, color: "#ffc658" },
-    { name: "Enterprise", value: 2, color: "#ff7300" },
-  ]
 
   const getActivityIcon = (type: string) => {
     switch (type) {
@@ -84,6 +139,32 @@ export function AdminDashboard() {
     return "text-green-600"
   }
 
+  const formatTimeAgo = (timestamp: string) => {
+    const date = new Date(timestamp)
+    const now = new Date()
+    const diffMs = now.getTime() - date.getTime()
+    const diffMins = Math.floor(diffMs / (1000 * 60))
+    
+    if (diffMins < 1) return "Just now"
+    if (diffMins < 60) return `${diffMins} min ago`
+    
+    const diffHours = Math.floor(diffMins / 60)
+    if (diffHours < 24) return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`
+    
+    const diffDays = Math.floor(diffHours / 24)
+    return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       {/* System Health */}
@@ -95,14 +176,16 @@ export function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between mb-2">
-              <div className={`text-2xl font-bold ${getMetricColor(systemMetrics.cpu)}`}>{systemMetrics.cpu}%</div>
-              {systemMetrics.cpu < 80 ? (
+              <div className={`text-2xl font-bold ${getMetricColor(systemMetrics?.cpu_usage || 0)}`}>
+                {systemMetrics?.cpu_usage || 0}%
+              </div>
+              {(systemMetrics?.cpu_usage || 0) < 80 ? (
                 <CheckCircle className="w-4 h-4 text-green-600" />
               ) : (
                 <AlertTriangle className="w-4 h-4 text-red-600" />
               )}
             </div>
-            <Progress value={systemMetrics.cpu} className="mb-2" />
+            <Progress value={systemMetrics?.cpu_usage || 0} className="mb-2" />
             <p className="text-xs text-muted-foreground">Average load across all servers</p>
           </CardContent>
         </Card>
@@ -114,16 +197,16 @@ export function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between mb-2">
-              <div className={`text-2xl font-bold ${getMetricColor(systemMetrics.memory)}`}>
-                {systemMetrics.memory}%
+              <div className={`text-2xl font-bold ${getMetricColor(systemMetrics?.memory_usage || 0)}`}>
+                {systemMetrics?.memory_usage || 0}%
               </div>
-              {systemMetrics.memory < 80 ? (
+              {(systemMetrics?.memory_usage || 0) < 80 ? (
                 <CheckCircle className="w-4 h-4 text-green-600" />
               ) : (
                 <AlertTriangle className="w-4 h-4 text-red-600" />
               )}
             </div>
-            <Progress value={systemMetrics.memory} className="mb-2" />
+            <Progress value={systemMetrics?.memory_usage || 0} className="mb-2" />
             <p className="text-xs text-muted-foreground">RAM utilization</p>
           </CardContent>
         </Card>
@@ -135,10 +218,12 @@ export function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between mb-2">
-              <div className={`text-2xl font-bold ${getMetricColor(systemMetrics.disk)}`}>{systemMetrics.disk}%</div>
+              <div className={`text-2xl font-bold ${getMetricColor(systemMetrics?.disk_usage || 0)}`}>
+                {systemMetrics?.disk_usage || 0}%
+              </div>
               <CheckCircle className="w-4 h-4 text-green-600" />
             </div>
-            <Progress value={systemMetrics.disk} className="mb-2" />
+            <Progress value={systemMetrics?.disk_usage || 0} className="mb-2" />
             <p className="text-xs text-muted-foreground">Storage utilization</p>
           </CardContent>
         </Card>
@@ -150,12 +235,12 @@ export function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between mb-2">
-              <div className={`text-2xl font-bold ${getMetricColor(systemMetrics.network)}`}>
-                {systemMetrics.network}%
+              <div className={`text-2xl font-bold ${getMetricColor(systemMetrics?.network_usage || 0)}`}>
+                {systemMetrics?.network_usage || 0}%
               </div>
               <CheckCircle className="w-4 h-4 text-green-600" />
             </div>
-            <Progress value={systemMetrics.network} className="mb-2" />
+            <Progress value={systemMetrics?.network_usage || 0} className="mb-2" />
             <p className="text-xs text-muted-foreground">Bandwidth utilization</p>
           </CardContent>
         </Card>
@@ -175,8 +260,8 @@ export function AdminDashboard() {
                 <XAxis dataKey="month" />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="users" stroke="#8884d8" strokeWidth={2} name="Total Users" />
-                <Line type="monotone" dataKey="active" stroke="#82ca9d" strokeWidth={2} name="Active Users" />
+                <Line type="monotone" dataKey="total_users" stroke="#8884d8" strokeWidth={2} name="Total Users" />
+                <Line type="monotone" dataKey="active_users" stroke="#82ca9d" strokeWidth={2} name="Active Users" />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -195,10 +280,10 @@ export function AdminDashboard() {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                   outerRadius={80}
                   fill="#8884d8"
-                  dataKey="value"
+                  dataKey="user_count"
                 >
                   {subscriptionDistribution.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
@@ -219,20 +304,26 @@ export function AdminDashboard() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {recentActivity.map((activity, index) => (
-              <div key={index} className="flex items-center space-x-4 p-3 rounded-lg border">
-                <div className="flex-shrink-0">{getActivityIcon(activity.type)}</div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium">{activity.action}</p>
-                  <p className="text-xs text-muted-foreground">{activity.user}</p>
+            {recentActivity.length > 0 ? (
+              recentActivity.map((activity) => (
+                <div key={activity.id} className="flex items-center space-x-4 p-3 rounded-lg border">
+                  <div className="flex-shrink-0">{getActivityIcon(activity.activity_type)}</div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium">{activity.action}</p>
+                    <p className="text-xs text-muted-foreground">{activity.user_email}</p>
+                  </div>
+                  <div className="flex-shrink-0">
+                    <Badge variant="outline" className="text-xs">
+                      {formatTimeAgo(activity.timestamp)}
+                    </Badge>
+                  </div>
                 </div>
-                <div className="flex-shrink-0">
-                  <Badge variant="outline" className="text-xs">
-                    {activity.time}
-                  </Badge>
-                </div>
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">No recent activity</p>
               </div>
-            ))}
+            )}
           </div>
           <div className="pt-4">
             <Button variant="outline" className="w-full bg-transparent">
