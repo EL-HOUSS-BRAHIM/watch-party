@@ -14,6 +14,9 @@ import { useToast } from "@/hooks/use-toast"
 import { Eye, EyeOff, Mail, Lock, Github } from "lucide-react"
 import Link from "next/link"
 
+// Disable static generation for this page
+export const dynamic = 'force-dynamic'
+
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
   password: z.string().min(1, "Password is required"),
@@ -43,7 +46,7 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     try {
       setIsLoading(true)
-      await login(data)
+      await login(data.email, data.password)
       toast({
         title: "Welcome back!",
         description: "You have been successfully logged in.",
@@ -51,7 +54,7 @@ export default function LoginPage() {
     } catch (error: any) {
       toast({
         title: "Login failed",
-        description: error.response?.data?.message || "Please check your credentials and try again.",
+        description: error.response?.data?.message || error.message || "Please check your credentials and try again.",
         variant: "destructive",
       })
     } finally {
