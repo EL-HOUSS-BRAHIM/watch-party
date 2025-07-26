@@ -535,3 +535,5 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
     </div>
   )
 }
+
+export { VideoLibrary }
