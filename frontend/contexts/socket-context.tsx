@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState, type ReactNode, useCallback } from "react"
+import { createContext, useContext, useEffect, useState, type ReactNode, useCallback, useRef } from "react"
 import { useAuth } from "./auth-context"
 
 interface SocketContextType {
@@ -26,36 +26,60 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   const [reconnectAttempts, setReconnectAttempts] = useState(0)
   const [currentRoom, setCurrentRoom] = useState<string | null>(null)
   const { user, isAuthenticated } = useAuth()
+  
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const socketRef = useRef<WebSocket | null>(null)
 
   const maxReconnectAttempts = 5
   const reconnectDelay = 1000
 
   const connect = useCallback(() => {
-    if (!isAuthenticated || !user) return
+    if (!isAuthenticated || !user || typeof window === 'undefined') return
+
+    // Clear any existing reconnect timeout
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current)
+      reconnectTimeoutRef.current = null
+    }
+
+    // Close existing socket if any
+    if (socketRef.current) {
+      socketRef.current.close()
+    }
 
     setConnectionStatus("connecting")
 
     const token = localStorage.getItem("accessToken")
-    const wsUrl = `${process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000"}/ws/?token=${token}`
+    const wsUrl = `${process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000"}/ws/notifications/?token=${token}`
 
     const newSocket = new WebSocket(wsUrl)
+    socketRef.current = newSocket
 
     newSocket.onopen = () => {
       console.log("WebSocket connected")
       setIsConnected(true)
       setConnectionStatus("connected")
       setReconnectAttempts(0)
+      setSocket(newSocket)
 
       // Rejoin room if we were in one
       if (currentRoom) {
-        sendMessage("join_room", { room_id: currentRoom })
+        const message = {
+          type: "join_room",
+          data: { room_id: currentRoom },
+          timestamp: new Date().toISOString(),
+        }
+        newSocket.send(JSON.stringify(message))
       }
     }
 
     newSocket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data)
-        messageCallbacks.forEach((callback) => callback(data))
+        setMessageCallbacks((currentCallbacks) => {
+          currentCallbacks.forEach((callback) => callback(data))
+          return currentCallbacks
+        })
       } catch (error) {
         console.error("Failed to parse WebSocket message:", error)
       }
@@ -65,13 +89,17 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       console.log("WebSocket disconnected:", event.code, event.reason)
       setIsConnected(false)
       setConnectionStatus("disconnected")
+      setSocket(null)
 
-      // Attempt to reconnect if it wasn't a manual close
-      if (event.code !== 1000 && reconnectAttempts < maxReconnectAttempts) {
-        setTimeout(() => {
+      // Attempt to reconnect if it wasn't a manual close and we're still authenticated
+      if (event.code !== 1000 && reconnectAttempts < maxReconnectAttempts && isAuthenticated) {
+        const delay = reconnectDelay * Math.pow(2, reconnectAttempts)
+        console.log(`Attempting to reconnect in ${delay}ms (attempt ${reconnectAttempts + 1}/${maxReconnectAttempts})`)
+        
+        reconnectTimeoutRef.current = setTimeout(() => {
           setReconnectAttempts((prev) => prev + 1)
           connect()
-        }, reconnectDelay * Math.pow(2, reconnectAttempts))
+        }, delay)
       }
     }
 
@@ -79,25 +107,35 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       console.error("WebSocket error:", error)
       setConnectionStatus("error")
     }
-
-    setSocket(newSocket)
-  }, [isAuthenticated, user, reconnectAttempts, currentRoom, messageCallbacks])
+  }, [isAuthenticated, user, reconnectAttempts, currentRoom])
 
   const disconnect = useCallback(() => {
-    if (socket) {
-      socket.close(1000, "Manual disconnect")
-      setSocket(null)
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current)
+      reconnectTimeoutRef.current = null
     }
-  }, [socket])
+    
+    if (socketRef.current) {
+      socketRef.current.close(1000, "Manual disconnect")
+      socketRef.current = null
+    }
+    
+    setSocket(null)
+    setIsConnected(false)
+    setConnectionStatus("disconnected")
+  }, [])
 
   const reconnect = useCallback(() => {
-    disconnect()
     setReconnectAttempts(0)
-    connect()
+    disconnect()
+    // Small delay to ensure clean disconnect before reconnecting
+    setTimeout(() => {
+      connect()
+    }, 100)
   }, [disconnect, connect])
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && user) {
       connect()
     } else {
       disconnect()
@@ -106,13 +144,18 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     return () => {
       disconnect()
     }
-  }, [isAuthenticated, connect, disconnect])
+  }, [isAuthenticated, user])
 
   const joinRoom = useCallback(
     (roomId: string) => {
       setCurrentRoom(roomId)
       if (socket && isConnected) {
-        sendMessage("join_room", { room_id: roomId })
+        const message = {
+          type: "join_room",
+          data: { room_id: roomId },
+          timestamp: new Date().toISOString(),
+        }
+        socket.send(JSON.stringify(message))
       }
     },
     [socket, isConnected],
@@ -122,7 +165,12 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     (roomId: string) => {
       setCurrentRoom(null)
       if (socket && isConnected) {
-        sendMessage("leave_room", { room_id: roomId })
+        const message = {
+          type: "leave_room",
+          data: { room_id: roomId },
+          timestamp: new Date().toISOString(),
+        }
+        socket.send(JSON.stringify(message))
       }
     },
     [socket, isConnected],
