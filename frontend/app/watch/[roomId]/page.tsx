@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -11,118 +11,171 @@ import { ParticipantList } from "@/components/party/participant-list"
 import { PartyControls } from "@/components/party/party-controls"
 import { useSocket } from "@/contexts/socket-context"
 import { useAuth } from "@/contexts/auth-context"
+import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
-import { Users, MessageCircle, Settings, Share, Crown } from "lucide-react"
+import { Users, MessageCircle, Settings, Share, Crown, Loader2 } from "lucide-react"
 
-// Mock party data
-const mockParty = {
-  id: "1",
-  title: "Friday Movie Night",
-  description: "Watching the latest Marvel movie together",
-  room_code: "MARVEL123",
+interface Party {
+  id: string
+  title: string
+  description: string
+  room_code: string
   host: {
-    id: "host-1",
-    username: "sarah_j",
-    avatar: "/placeholder.svg?height=32&width=32",
-    name: "Sarah Johnson",
-  },
+    id: string
+    name: string
+    avatar?: string
+  }
   video: {
-    id: "video-1",
-    title: "Spider-Man: No Way Home",
-    src: "/placeholder-video.mp4",
-    thumbnail: "/placeholder.svg?height=400&width=600",
-    duration: 8880, // 2h 28m in seconds
-  },
+    id: string
+    title: string
+    thumbnail?: string
+    duration?: number
+    source_url?: string
+  }
   settings: {
-    allow_chat: true,
-    allow_reactions: true,
-    sync_tolerance: 2,
-  },
-  participants: [
-    {
-      id: "host-1",
-      user: {
-        id: "host-1",
-        username: "sarah_j",
-        avatar: "/placeholder.svg?height=32&width=32",
-      },
-      is_host: true,
-      joined_at: new Date().toISOString(),
-      permissions: {
-        can_control_video: true,
-        can_chat: true,
-        can_invite: true,
-        can_kick: true,
-      },
-    },
-    {
-      id: "user-2",
-      user: {
-        id: "user-2",
-        username: "mike_c",
-        avatar: "/placeholder.svg?height=32&width=32",
-      },
-      is_host: false,
-      joined_at: new Date(Date.now() - 300000).toISOString(), // 5 minutes ago
-      permissions: {
-        can_control_video: false,
-        can_chat: true,
-        can_invite: false,
-        can_kick: false,
-      },
-    },
-  ],
+    allow_chat: boolean
+    allow_reactions: boolean
+    sync_tolerance: number
+  }
+  participants: Array<{
+    id: string
+    user: {
+      id: string
+      name: string
+      avatar?: string
+    }
+    role: string
+    status: string
+    joined_at: string
+  }>
+  visibility: string
+  status: string
+  can_join: boolean
+  can_edit: boolean
 }
 
 export default function WatchPartyPage() {
   const params = useParams()
+  const router = useRouter()
   const roomId = params.roomId as string
   const { user } = useAuth()
-  const { socket, isConnected } = useSocket(`/party/${roomId}`)
+  const { socket, isConnected, sendMessage, onMessage, joinRoom } = useSocket()
+  const { toast } = useToast()
 
-  const [party, setParty] = useState(mockParty)
+  const [party, setParty] = useState<Party | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [showChat, setShowChat] = useState(true)
   const [showParticipants, setShowParticipants] = useState(true)
   const [isFullscreen, setIsFullscreen] = useState(false)
-  const [currentUser, setCurrentUser] = useState(party.participants[0])
 
   // Check if current user is host
-  const isHost = currentUser?.is_host || false
+  const isHost = party?.participants.find(p => p.user.id === user?.id)?.role === 'host'
+
+  // Fetch party data
+  useEffect(() => {
+    const fetchParty = async () => {
+      try {
+        setIsLoading(true)
+        const token = localStorage.getItem("accessToken")
+        const response = await fetch(`/api/parties/${roomId}/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (response.ok) {
+          const partyData = await response.json()
+          setParty(partyData)
+        } else if (response.status === 404) {
+          setError("Party not found")
+        } else if (response.status === 403) {
+          setError("You don't have permission to view this party")
+        } else {
+          setError("Failed to load party")
+        }
+      } catch (error) {
+        console.error("Failed to fetch party:", error)
+        setError("Failed to load party")
+        toast({
+          title: "Error",
+          description: "Failed to load party. Please try again.",
+          variant: "destructive",
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    if (roomId) {
+      fetchParty()
+    }
+  }, [roomId, toast])
 
   useEffect(() => {
-    if (!socket) return
+    if (!isConnected || !party || !user) return
 
     // Join the party room
-    socket.emit("party:join", { roomId, userId: user?.id })
+    joinRoom(roomId)
 
     // Listen for party events
-    socket.on("party:joined", (data) => {
-      console.log("Joined party:", data)
+    const unsubscribe = onMessage((message) => {
+      switch (message.type) {
+        case "party:joined":
+          console.log("Joined party:", message.data)
+          break
+        case "party:user_joined":
+          setParty((prev) => {
+            if (!prev) return prev
+            return {
+              ...prev,
+              participants: [...prev.participants, message.data],
+            }
+          })
+          break
+        case "party:user_left":
+          setParty((prev) => {
+            if (!prev) return prev
+            return {
+              ...prev,
+              participants: prev.participants.filter((p) => p.user.id !== message.data.userId),
+            }
+          })
+          break
+        case "party:updated":
+          setParty(message.data)
+          break
+      }
     })
 
-    socket.on("party:user_joined", (participant) => {
-      setParty((prev) => ({
-        ...prev,
-        participants: [...prev.participants, participant],
-      }))
-    })
-
-    socket.on("party:user_left", (userId) => {
-      setParty((prev) => ({
-        ...prev,
-        participants: prev.participants.filter((p) => p.user.id !== userId),
-      }))
-    })
-
-    return () => {
-      socket.off("party:joined")
-      socket.off("party:user_joined")
-      socket.off("party:user_left")
-    }
-  }, [socket, roomId, user?.id])
+    return unsubscribe
+  }, [isConnected, roomId, user?.id, party, joinRoom, onMessage])
 
   const toggleChat = () => setShowChat(!showChat)
   const toggleParticipants = () => setShowParticipants(!showParticipants)
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
+          <p>Loading party...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !party) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Party Not Found</h1>
+          <p className="text-muted-foreground mb-6">{error || "The party you're looking for doesn't exist."}</p>
+          <Button onClick={() => router.push("/dashboard")}>Go to Dashboard</Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -168,7 +221,12 @@ export default function WatchPartyPage() {
           {/* Video Player */}
           <div className="flex-1 p-6">
             <div className="h-full max-h-[70vh]">
-              <VideoPlayer src={party.video.src} partyId={roomId} isHost={isHost} className="w-full h-full" />
+              <VideoPlayer 
+                src={party.video.source_url || ""} 
+                roomId={roomId} 
+                isHost={isHost} 
+                className="w-full h-full" 
+              />
             </div>
           </div>
 
@@ -181,10 +239,12 @@ export default function WatchPartyPage() {
                     <h2 className="text-lg font-semibold">{party.video.title}</h2>
                     <div className="flex items-center space-x-4 text-sm text-muted-foreground mt-1">
                       <span>Hosted by {party.host.name}</span>
-                      <Badge variant="secondary" className="flex items-center space-x-1">
-                        <Crown className="w-3 h-3" />
-                        <span>Host</span>
-                      </Badge>
+                      {isHost && (
+                        <Badge variant="secondary" className="flex items-center space-x-1">
+                          <Crown className="w-3 h-3" />
+                          <span>Host</span>
+                        </Badge>
+                      )}
                     </div>
                   </div>
 
@@ -221,14 +281,29 @@ export default function WatchPartyPage() {
           <div className="flex-1 overflow-hidden">
             {showParticipants && (
               <ParticipantList
-                participants={party.participants}
+                participants={party.participants.map(p => ({
+                  id: p.id,
+                  user: {
+                    id: p.user.id,
+                    username: p.user.name,
+                    avatar: p.user.avatar
+                  },
+                  is_host: p.role === 'host',
+                  joined_at: p.joined_at,
+                  permissions: {
+                    can_control_video: p.role === 'host',
+                    can_chat: true,
+                    can_invite: p.role === 'host',
+                    can_kick: p.role === 'host'
+                  }
+                }))}
                 currentUserId={user?.id}
-                isHost={isHost}
+                isHost={isHost || false}
                 className="h-full"
               />
             )}
 
-            {showChat && party.settings.allow_chat && <ChatInterface partyId={roomId} className="h-full" />}
+            {showChat && party.settings.allow_chat && <ChatInterface roomId={roomId} className="h-full" />}
           </div>
         </div>
       </div>
