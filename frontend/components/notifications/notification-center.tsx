@@ -648,3 +648,5 @@ export default function NotificationCenter({ className }: NotificationCenterProp
     </div>
   )
 }
+
+export { NotificationCenter }
