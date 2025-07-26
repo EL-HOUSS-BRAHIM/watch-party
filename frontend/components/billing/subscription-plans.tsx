@@ -343,3 +343,5 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
     </div>
   )
 }
+
+export { SubscriptionPlans }
