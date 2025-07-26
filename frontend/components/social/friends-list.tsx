@@ -60,79 +60,22 @@ export function FriendsList({ className }: FriendsListProps) {
   const loadFriends = async () => {
     try {
       setIsLoading(true)
-
-      // TODO: Backend API call needed
-      // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/friends/`, {
-      //   headers: {
-      //     'Authorization': `Bearer ${tokens?.access}`,
-      //   },
-      // })
-      // const data = await response.json()
-
-      // Mock data for now
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      const mockFriends: Friend[] = [
-        {
-          id: "friend_1",
-          first_name: "Alice",
-          last_name: "Johnson",
-          email: "alice@example.com",
-          avatar: "/placeholder.svg",
-          status: "online",
-          mutual_friends: 5,
-          friendship_date: "2023-06-15T10:00:00Z",
-          is_premium: true,
-          current_activity: {
-            type: "watching",
-            details: "The Matrix",
-            party_id: "party_123",
-          },
+      const token = localStorage.getItem("accessToken")
+      
+      const response = await fetch("/api/users/friends/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        {
-          id: "friend_2",
-          first_name: "Bob",
-          last_name: "Smith",
-          email: "bob@example.com",
-          avatar: "/placeholder.svg",
-          status: "away",
-          last_seen: "2024-01-15T14:30:00Z",
-          mutual_friends: 3,
-          friendship_date: "2023-08-20T16:45:00Z",
-          is_premium: false,
-        },
-        {
-          id: "friend_3",
-          first_name: "Carol",
-          last_name: "Davis",
-          email: "carol@example.com",
-          avatar: "/placeholder.svg",
-          status: "offline",
-          last_seen: "2024-01-14T20:15:00Z",
-          mutual_friends: 8,
-          friendship_date: "2023-05-10T12:30:00Z",
-          is_premium: true,
-          current_activity: {
-            type: "in_party",
-            details: "Movie Night",
-            party_id: "party_456",
-          },
-        },
-        {
-          id: "friend_4",
-          first_name: "David",
-          last_name: "Wilson",
-          email: "david@example.com",
-          avatar: "/placeholder.svg",
-          status: "busy",
-          mutual_friends: 2,
-          friendship_date: "2023-12-01T09:15:00Z",
-          is_premium: false,
-        },
-      ]
+      })
 
-      setFriends(mockFriends)
+      if (response.ok) {
+        const data = await response.json()
+        setFriends(data.results || [])
+      } else {
+        throw new Error("Failed to load friends")
+      }
     } catch (error) {
+      console.error("Failed to load friends:", error)
       toast({
         title: "Error",
         description: "Failed to load friends. Please try again.",
@@ -145,13 +88,14 @@ export function FriendsList({ className }: FriendsListProps) {
 
   const removeFriend = async (friendId: string) => {
     try {
-      // TODO: Backend API call needed
-      // await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/friends/${friendId}/`, {
-      //   method: 'DELETE',
-      //   headers: {
-      //     'Authorization': `Bearer ${tokens?.access}`,
-      //   },
-      // })
+      const token = localStorage.getItem("accessToken")
+      
+      await fetch(`/api/users/friends/${friendId}/`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
 
       setFriends((prev) => prev.filter((friend) => friend.id !== friendId))
       toast({
@@ -159,6 +103,7 @@ export function FriendsList({ className }: FriendsListProps) {
         description: "The user has been removed from your friends list.",
       })
     } catch (error) {
+      console.error("Failed to remove friend:", error)
       toast({
         title: "Error",
         description: "Failed to remove friend. Please try again.",
@@ -169,13 +114,14 @@ export function FriendsList({ className }: FriendsListProps) {
 
   const blockUser = async (friendId: string) => {
     try {
-      // TODO: Backend API call needed
-      // await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/${friendId}/block/`, {
-      //   method: 'POST',
-      //   headers: {
-      //     'Authorization': `Bearer ${tokens?.access}`,
-      //   },
-      // })
+      const token = localStorage.getItem("accessToken")
+      
+      await fetch(`/api/users/${friendId}/block/`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
 
       setFriends((prev) => prev.filter((friend) => friend.id !== friendId))
       toast({
@@ -183,6 +129,7 @@ export function FriendsList({ className }: FriendsListProps) {
         description: "The user has been blocked and removed from your friends list.",
       })
     } catch (error) {
+      console.error("Failed to block user:", error)
       toast({
         title: "Error",
         description: "Failed to block user. Please try again.",
