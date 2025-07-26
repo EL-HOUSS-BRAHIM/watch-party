@@ -10,6 +10,7 @@ import { Check, Crown, Zap, Star, Users, Video, Cloud, Shield } from "lucide-rea
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
+import { billingAPI } from "@/lib/api"
 
 interface Plan {
   id: string
@@ -117,28 +118,20 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
     setIsLoading(planId)
 
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/billing/subscribe/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          plan_id: planId,
-          billing_cycle: billingCycle,
-        }),
+      const response = await billingAPI.subscribe({
+        plan_id: planId,
+        payment_method_id: "", // This would come from a payment method selector
+        // promo_code: "" // Optional promo code
       })
 
-      if (response.ok) {
-        const data = await response.json()
-
-        // Redirect to Stripe Checkout
-        if (data.checkout_url) {
-          window.location.href = data.checkout_url
-        }
-      } else {
-        throw new Error("Failed to create subscription")
+      if (response.success) {
+        toast({
+          title: "Subscription Created",
+          description: "Your subscription has been successfully created!",
+        })
+        
+        // Refresh user data or redirect
+        window.location.reload()
       }
     } catch (error) {
       console.error("Subscription error:", error)
