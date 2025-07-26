@@ -120,67 +120,135 @@ export function VideoUploader({
     try {
       updateFile(uploadFile.id, { status: "uploading", progress: 0 })
 
-      // TODO: Backend API call needed
-      // const formData = new FormData()
-      // formData.append('file', uploadFile.file)
-      // formData.append('title', uploadFile.title)
-      // formData.append('description', uploadFile.description)
-      // formData.append('privacy', uploadFile.privacy)
-      // formData.append('tags', JSON.stringify(uploadFile.tags))
-
-      // const xhr = new XMLHttpRequest()
-
-      // xhr.upload.addEventListener('progress', (e) => {
-      //   if (e.lengthComputable) {
-      //     const progress = Math.round((e.loaded / e.total) * 100)
-      //     updateFile(uploadFile.id, { progress })
-      //   }
-      // })
-
-      // xhr.addEventListener('load', () => {
-      //   if (xhr.status === 200) {
-      //     const response = JSON.parse(xhr.responseText)
-      //     updateFile(uploadFile.id, { status: 'processing', progress: 100 })
-      //     onUploadComplete?.(response.id)
-      //   } else {
-      //     updateFile(uploadFile.id, { status: 'error', error: 'Upload failed' })
-      //   }
-      // })
-
-      // xhr.addEventListener('error', () => {
-      //   updateFile(uploadFile.id, { status: 'error', error: 'Network error' })
-      // })
-
-      // xhr.open('POST', `${process.env.NEXT_PUBLIC_API_URL}/api/videos/upload/`)
-      // xhr.setRequestHeader('Authorization', `Bearer ${tokens?.access}`)
-      // xhr.send(formData)
-
-      // Simulate upload progress
-      for (let progress = 0; progress <= 100; progress += 10) {
-        await new Promise((resolve) => setTimeout(resolve, 200))
-        updateFile(uploadFile.id, { progress })
+      const token = localStorage.getItem("accessToken")
+      if (!token) {
+        throw new Error("Authentication required")
       }
 
-      updateFile(uploadFile.id, { status: "processing" })
+      const formData = new FormData()
+      formData.append('file', uploadFile.file)
+      formData.append('title', uploadFile.title)
+      formData.append('description', uploadFile.description)
+      formData.append('privacy', uploadFile.privacy)
+      formData.append('tags', JSON.stringify(uploadFile.tags))
 
-      // Simulate processing
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      updateFile(uploadFile.id, { status: "completed" })
+      const xhr = new XMLHttpRequest()
 
-      toast({
-        title: "Upload completed",
-        description: `${uploadFile.title} has been uploaded successfully.`,
+      // Track upload progress
+      xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+          const progress = Math.round((e.loaded / e.total) * 100)
+          updateFile(uploadFile.id, { progress })
+        }
       })
 
-      onUploadComplete?.(`video_${uploadFile.id}`)
+      // Handle successful upload
+      xhr.addEventListener('load', () => {
+        if (xhr.status === 200 || xhr.status === 201) {
+          try {
+            const response = JSON.parse(xhr.responseText)
+            updateFile(uploadFile.id, { status: 'processing', progress: 100 })
+            
+            // Poll for processing status
+            pollProcessingStatus(uploadFile.id, response.id)
+            
+            toast({
+              title: "Upload completed",
+              description: `${uploadFile.title} is now being processed.`,
+            })
+          } catch (parseError) {
+            console.error("Failed to parse upload response:", parseError)
+            updateFile(uploadFile.id, { status: 'error', error: 'Invalid response from server' })
+          }
+        } else {
+          let errorMessage = 'Upload failed'
+          try {
+            const errorResponse = JSON.parse(xhr.responseText)
+            errorMessage = errorResponse.error || errorResponse.message || errorMessage
+          } catch (e) {
+            // Use default error message
+          }
+          updateFile(uploadFile.id, { status: 'error', error: errorMessage })
+        }
+      })
+
+      // Handle upload errors
+      xhr.addEventListener('error', () => {
+        updateFile(uploadFile.id, { status: 'error', error: 'Network error during upload' })
+      })
+
+      // Handle upload timeout
+      xhr.addEventListener('timeout', () => {
+        updateFile(uploadFile.id, { status: 'error', error: 'Upload timed out' })
+      })
+
+      // Configure and send request
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+      xhr.open('POST', `${apiUrl}/api/videos/upload/`)
+      xhr.setRequestHeader('Authorization', `Bearer ${token}`)
+      xhr.timeout = 30 * 60 * 1000 // 30 minutes timeout
+      xhr.send(formData)
+
     } catch (error) {
-      updateFile(uploadFile.id, { status: "error", error: "Upload failed" })
+      console.error("Upload error:", error)
+      updateFile(uploadFile.id, { status: "error", error: error instanceof Error ? error.message : "Upload failed" })
       toast({
         title: "Upload failed",
         description: `Failed to upload ${uploadFile.title}. Please try again.`,
         variant: "destructive",
       })
     }
+  }
+
+  const pollProcessingStatus = async (uploadFileId: string, videoId: string) => {
+    const token = localStorage.getItem("accessToken")
+    if (!token) return
+
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+    
+    const pollInterval = setInterval(async () => {
+      try {
+        const response = await fetch(`${apiUrl}/api/videos/${videoId}/status/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          
+          if (data.status === 'completed') {
+            updateFile(uploadFileId, { status: 'completed' })
+            onUploadComplete?.(videoId)
+            clearInterval(pollInterval)
+            
+            toast({
+              title: "Processing completed",
+              description: "Your video is now ready to view!",
+            })
+          } else if (data.status === 'failed') {
+            updateFile(uploadFileId, { status: 'error', error: 'Processing failed' })
+            clearInterval(pollInterval)
+            
+            toast({
+              title: "Processing failed",
+              description: "Video processing failed. Please try uploading again.",
+              variant: "destructive",
+            })
+          }
+          // If status is still 'processing', continue polling
+        }
+      } catch (error) {
+        console.error("Failed to check processing status:", error)
+        // Continue polling - don't clear interval on temporary errors
+      }
+    }, 5000) // Poll every 5 seconds
+
+    // Stop polling after 30 minutes
+    setTimeout(() => {
+      clearInterval(pollInterval)
+      updateFile(uploadFileId, { status: 'error', error: 'Processing timeout' })
+    }, 30 * 60 * 1000)
   }
 
   const uploadAllFiles = async () => {
