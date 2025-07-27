@@ -28,7 +28,7 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Method**: POST
 - **Headers**: `Content-Type: application/json`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "email": "user@example.com",
     "password": "securepassword",
@@ -37,9 +37,9 @@ This document provides a comprehensive overview of all API endpoints used in the
     "last_name": "Doe",
     "promo_code": "WELCOME10"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
@@ -56,21 +56,21 @@ This document provides a comprehensive overview of all API endpoints used in the
     },
     "verification_sent": true
   }
-  ```
+  \`\`\`
 
 ### Login
 - **Endpoint**: `/api/auth/login/`
 - **Method**: POST
 - **Headers**: `Content-Type: application/json`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "email": "user@example.com",
     "password": "securepassword"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
@@ -86,125 +86,125 @@ This document provides a comprehensive overview of all API endpoints used in the
       "subscription_expires": "2025-12-31T23:59:59Z"
     }
   }
-  ```
+  \`\`\`
 
 ### Logout
 - **Endpoint**: `/api/auth/logout/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "refresh_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "message": "Successfully logged out"
   }
-  ```
+  \`\`\`
 
 ### Refresh Token
 - **Endpoint**: `/api/auth/refresh/`
 - **Method**: POST
 - **Headers**: `Content-Type: application/json`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9..."
   }
-  ```
+  \`\`\`
 
 ### Forgot Password
 - **Endpoint**: `/api/auth/forgot-password/`
 - **Method**: POST
 - **Headers**: `Content-Type: application/json`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "email": "user@example.com"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "message": "Password reset email sent"
   }
-  ```
+  \`\`\`
 
 ### Reset Password
 - **Endpoint**: `/api/auth/reset-password/`
 - **Method**: POST
 - **Headers**: `Content-Type: application/json`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "token": "password-reset-token",
     "new_password": "newsecurepassword",
     "confirm_password": "newsecurepassword"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "message": "Password reset successful"
   }
-  ```
+  \`\`\`
 
 ### Change Password
 - **Endpoint**: `/api/auth/change-password/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "current_password": "currentpassword",
     "new_password": "newsecurepassword",
     "confirm_password": "newsecurepassword"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "message": "Password changed successfully"
   }
-  ```
+  \`\`\`
 
 ### Verify Email
 - **Endpoint**: `/api/auth/verify-email/`
 - **Method**: POST
 - **Headers**: `Content-Type: application/json`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "token": "email-verification-token"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "message": "Email verified successfully"
   }
-  ```
+  \`\`\`
 
 ### Get Profile
 - **Endpoint**: `/api/auth/profile/`
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "id": "uuid-string",
     "email": "user@example.com",
@@ -218,14 +218,14 @@ This document provides a comprehensive overview of all API endpoints used in the
     "date_joined": "2024-01-01T00:00:00Z",
     "last_login": "2025-01-27T10:30:00Z"
   }
-  ```
+  \`\`\`
 
 ### Setup 2FA
 - **Endpoint**: `/api/auth/2fa/setup/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "qr_code": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...",
@@ -235,20 +235,20 @@ This document provides a comprehensive overview of all API endpoints used in the
       "987654321"
     ]
   }
-  ```
+  \`\`\`
 
 ### Verify 2FA
 - **Endpoint**: `/api/auth/2fa/verify/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "code": "123456"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
@@ -259,7 +259,7 @@ This document provides a comprehensive overview of all API endpoints used in the
       "two_factor_enabled": true
     }
   }
-  ```
+  \`\`\`
 
 ### Social Login
 - **Endpoint**: `/api/auth/social/{provider}/`
@@ -277,7 +277,7 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "total_parties": 15,
     "parties_hosted": 8,
@@ -291,14 +291,14 @@ This document provides a comprehensive overview of all API endpoints used in the
       "watch_time_this_week": 12.3
     }
   }
-  ```
+  \`\`\`
 
 ### Get User Profile
 - **Endpoint**: `/api/users/profile/`
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "id": "uuid-string",
     "email": "user@example.com",
@@ -325,14 +325,14 @@ This document provides a comprehensive overview of all API endpoints used in the
       }
     }
   }
-  ```
+  \`\`\`
 
 ### Update User Profile
 - **Endpoint**: `/api/users/profile/`
 - **Method**: PUT
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "bio": "Updated bio text",
     "timezone": "America/Los_Angeles",
@@ -341,9 +341,9 @@ This document provides a comprehensive overview of all API endpoints used in the
       "email_notifications": false
     }
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "id": "uuid-string",
     "email": "user@example.com",
@@ -353,7 +353,7 @@ This document provides a comprehensive overview of all API endpoints used in the
       "language": "es"
     }
   }
-  ```
+  \`\`\`
 
 ### Upload Avatar
 - **Endpoint**: `/api/users/avatar/upload/`
@@ -361,12 +361,12 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Headers**: `Authorization: Bearer <access_token>`, `Content-Type: multipart/form-data`
 - **Request Body**: Form data with `avatar` file
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "avatar_url": "https://example.com/avatars/user-123.jpg"
   }
-  ```
+  \`\`\`
 
 ### Get Friends List
 - **Endpoint**: `/api/users/friends/`
@@ -376,7 +376,7 @@ This document provides a comprehensive overview of all API endpoints used in the
   - `page` (integer): Page number
   - `limit` (integer): Results per page
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "results": [
       {
@@ -391,26 +391,26 @@ This document provides a comprehensive overview of all API endpoints used in the
     "next": "https://api.example.com/api/users/friends/?page=2",
     "previous": null
   }
-  ```
+  \`\`\`
 
 ### Send Friend Request
 - **Endpoint**: `/api/users/friends/request/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "username": "janedoe",
     "message": "Let's watch movies together!"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "message": "Friend request sent successfully"
   }
-  ```
+  \`\`\`
 
 ### Search Users
 - **Endpoint**: `/api/users/search/`
@@ -420,7 +420,7 @@ This document provides a comprehensive overview of all API endpoints used in the
   - `q` (string): Search query
   - `limit` (integer): Results limit
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "results": [
       {
@@ -433,7 +433,7 @@ This document provides a comprehensive overview of all API endpoints used in the
     ],
     "count": 10
   }
-  ```
+  \`\`\`
 
 ### Get User Notifications
 - **Endpoint**: `/api/users/notifications/`
@@ -444,7 +444,7 @@ This document provides a comprehensive overview of all API endpoints used in the
   - `unread` (boolean): Filter unread notifications
   - `type` (string): Filter by notification type
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "results": [
       {
@@ -461,7 +461,7 @@ This document provides a comprehensive overview of all API endpoints used in the
     "count": 5,
     "unread_count": 3
   }
-  ```
+  \`\`\`
 
 ---
 
@@ -478,7 +478,7 @@ This document provides a comprehensive overview of all API endpoints used in the
   - `uploader` (string): Filter by uploader ID
   - `ordering` (string): Sort order ('-created_at', 'title', etc.)
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "results": [
       {
@@ -508,14 +508,14 @@ This document provides a comprehensive overview of all API endpoints used in the
     "count": 100,
     "next": "https://api.example.com/api/videos/?page=2"
   }
-  ```
+  \`\`\`
 
 ### Create Video
 - **Endpoint**: `/api/videos/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "title": "My New Video",
     "description": "Description of the video",
@@ -523,9 +523,9 @@ This document provides a comprehensive overview of all API endpoints used in the
     "allow_download": true,
     "require_premium": false
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "id": "video-uuid",
     "title": "My New Video",
@@ -533,14 +533,14 @@ This document provides a comprehensive overview of all API endpoints used in the
     "status": "pending",
     "upload_url": "https://s3.amazonaws.com/upload-url"
   }
-  ```
+  \`\`\`
 
 ### Get Video Details
 - **Endpoint**: `/api/videos/{videoId}/`
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "id": "video-uuid",
     "title": "Amazing Movie Night",
@@ -571,7 +571,7 @@ This document provides a comprehensive overview of all API endpoints used in the
     "created_at": "2025-01-20T14:30:00Z",
     "updated_at": "2025-01-20T14:35:00Z"
   }
-  ```
+  \`\`\`
 
 ### Upload Video
 - **Endpoint**: `/api/videos/upload/`
@@ -579,21 +579,21 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Headers**: `Authorization: Bearer <access_token>`, `Content-Type: multipart/form-data`
 - **Request Body**: Form data with `video_file` and metadata
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "upload_id": "upload-uuid",
     "video_id": "video-uuid",
     "message": "Video upload started"
   }
-  ```
+  \`\`\`
 
 ### Get Upload Status
 - **Endpoint**: `/api/videos/upload/{uploadId}/status/`
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "upload_id": "upload-uuid",
     "status": "processing",
@@ -602,14 +602,14 @@ This document provides a comprehensive overview of all API endpoints used in the
     "estimated_completion": "2025-01-27T11:00:00Z",
     "video_id": "video-uuid"
   }
-  ```
+  \`\`\`
 
 ### Get Video Stream
 - **Endpoint**: `/api/videos/{videoId}/stream/`
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "streaming_url": "https://stream.example.com/video.m3u8",
     "thumbnail_url": "https://example.com/thumb.jpg",
@@ -624,26 +624,26 @@ This document provides a comprehensive overview of all API endpoints used in the
       }
     ]
   }
-  ```
+  \`\`\`
 
 ### Like/Unlike Video
 - **Endpoint**: `/api/videos/{videoId}/like/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "is_like": true
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "is_liked": true,
     "like_count": 86
   }
-  ```
+  \`\`\`
 
 ### Search Videos
 - **Endpoint**: `/api/videos/search/`
@@ -657,7 +657,7 @@ This document provides a comprehensive overview of all API endpoints used in the
   - `quality` (string): Video quality filter
   - `ordering` (string): Sort order
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "results": [
       {
@@ -680,7 +680,7 @@ This document provides a comprehensive overview of all API endpoints used in the
       ]
     }
   }
-  ```
+  \`\`\`
 
 ---
 
@@ -696,7 +696,7 @@ This document provides a comprehensive overview of all API endpoints used in the
   - `search` (string): Search term
   - `page` (integer): Page number
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "results": [
       {
@@ -730,14 +730,14 @@ This document provides a comprehensive overview of all API endpoints used in the
     ],
     "count": 15
   }
-  ```
+  \`\`\`
 
 ### Create Party
 - **Endpoint**: `/api/parties/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "title": "My Movie Night",
     "description": "Join me for a great movie!",
@@ -749,9 +749,9 @@ This document provides a comprehensive overview of all API endpoints used in the
     "allow_chat": true,
     "allow_reactions": true
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "id": "party-uuid",
     "title": "My Movie Night",
@@ -759,20 +759,20 @@ This document provides a comprehensive overview of all API endpoints used in the
     "status": "scheduled",
     "join_url": "https://example.com/watch/party-uuid"
   }
-  ```
+  \`\`\`
 
 ### Join Party
 - **Endpoint**: `/api/parties/{partyId}/join/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "message": "Excited to join!"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "message": "Successfully joined the party",
@@ -787,47 +787,47 @@ This document provides a comprehensive overview of all API endpoints used in the
       "joined_at": "2025-01-27T10:30:00Z"
     }
   }
-  ```
+  \`\`\`
 
 ### Leave Party
 - **Endpoint**: `/api/parties/{partyId}/leave/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "message": "Successfully left the party"
   }
-  ```
+  \`\`\`
 
 ### Control Video Playback
 - **Endpoint**: `/api/parties/{partyId}/control/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "action": "play",
     "timestamp": 1250
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "action": "play",
     "timestamp": 1250,
     "synced_at": "2025-01-27T10:30:00Z"
   }
-  ```
+  \`\`\`
 
 ### Get Participants
 - **Endpoint**: `/api/parties/{partyId}/participants/`
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "results": [
       {
@@ -845,20 +845,20 @@ This document provides a comprehensive overview of all API endpoints used in the
     "count": 5,
     "online_count": 4
   }
-  ```
+  \`\`\`
 
 ### Join by Room Code
 - **Endpoint**: `/api/parties/join-by-code/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "room_code": "ABC123"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "party": {
@@ -868,7 +868,7 @@ This document provides a comprehensive overview of all API endpoints used in the
     },
     "redirect_url": "/watch/party-uuid"
   }
-  ```
+  \`\`\`
 
 ---
 
@@ -882,7 +882,7 @@ This document provides a comprehensive overview of all API endpoints used in the
   - `page` (integer): Page number
   - `limit` (integer): Messages per page
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "results": [
       {
@@ -907,21 +907,21 @@ This document provides a comprehensive overview of all API endpoints used in the
     ],
     "count": 50
   }
-  ```
+  \`\`\`
 
 ### Send Chat Message
 - **Endpoint**: `/api/chat/{partyId}/messages/send/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "message": "Great movie choice!",
     "message_type": "text"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "id": "message-uuid",
     "user": {
@@ -935,14 +935,14 @@ This document provides a comprehensive overview of all API endpoints used in the
     "is_system": false,
     "reactions": []
   }
-  ```
+  \`\`\`
 
 ### Get Chat Settings
 - **Endpoint**: `/api/chat/{roomId}/settings/`
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "slow_mode": false,
     "slow_mode_interval": 5,
@@ -951,22 +951,22 @@ This document provides a comprehensive overview of all API endpoints used in the
     "max_message_length": 500,
     "moderators": ["user-uuid-1", "user-uuid-2"]
   }
-  ```
+  \`\`\`
 
 ### Update Chat Settings
 - **Endpoint**: `/api/chat/{roomId}/settings/`
 - **Method**: PUT
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "slow_mode": true,
     "slow_mode_interval": 10,
     "allow_links": false
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "slow_mode": true,
     "slow_mode_interval": 10,
@@ -975,7 +975,7 @@ This document provides a comprehensive overview of all API endpoints used in the
     "max_message_length": 500,
     "moderators": ["user-uuid-1"]
   }
-  ```
+  \`\`\`
 
 ---
 
@@ -985,7 +985,7 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Endpoint**: `/api/billing/plans/`
 - **Method**: GET
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "plans": [
       {
@@ -1019,22 +1019,22 @@ This document provides a comprehensive overview of all API endpoints used in the
       }
     ]
   }
-  ```
+  \`\`\`
 
 ### Create Subscription
 - **Endpoint**: `/api/billing/subscribe/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "plan_id": "premium-monthly",
     "payment_method_id": "pm_1234567890",
     "promo_code": "SAVE20"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "subscription": {
@@ -1051,14 +1051,14 @@ This document provides a comprehensive overview of all API endpoints used in the
       "date": "2025-02-27T10:30:00Z"
     }
   }
-  ```
+  \`\`\`
 
 ### Get Current Subscription
 - **Endpoint**: `/api/billing/subscription/`
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "subscription": {
       "id": "sub_uuid",
@@ -1085,14 +1085,14 @@ This document provides a comprehensive overview of all API endpoints used in the
       "payment_method": "**** 4242"
     }
   }
-  ```
+  \`\`\`
 
 ### Get Payment Methods
 - **Endpoint**: `/api/billing/payment-methods/`
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "payment_methods": [
       {
@@ -1108,7 +1108,7 @@ This document provides a comprehensive overview of all API endpoints used in the
     ],
     "default_payment_method": "pm_1234567890"
   }
-  ```
+  \`\`\`
 
 ### Get Billing History
 - **Endpoint**: `/api/billing/history/`
@@ -1117,7 +1117,7 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Query Parameters**:
   - `page` (integer): Page number
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "results": [
       {
@@ -1132,7 +1132,7 @@ This document provides a comprehensive overview of all API endpoints used in the
     ],
     "count": 12
   }
-  ```
+  \`\`\`
 
 ---
 
@@ -1145,7 +1145,7 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Query Parameters**:
   - `time_range` (string): '7d', '30d', '90d', '1y'
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "overview": {
       "total_users": 10000,
@@ -1171,14 +1171,14 @@ This document provides a comprehensive overview of all API endpoints used in the
       "popular_days": ["friday", "saturday", "sunday"]
     }
   }
-  ```
+  \`\`\`
 
 ### Get User Analytics
 - **Endpoint**: `/api/analytics/user/`
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "watch_time": {
       "total_hours": 145.5,
@@ -1208,14 +1208,14 @@ This document provides a comprehensive overview of all API endpoints used in the
       }
     ]
   }
-  ```
+  \`\`\`
 
 ### Get Video Analytics
 - **Endpoint**: `/api/analytics/video/{videoId}/`
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "video": {
       "id": "video-uuid",
@@ -1262,7 +1262,7 @@ This document provides a comprehensive overview of all API endpoints used in the
       ]
     }
   }
-  ```
+  \`\`\`
 
 ---
 
@@ -1277,7 +1277,7 @@ This document provides a comprehensive overview of all API endpoints used in the
   - `type` (string): Filter by type ('friend_request', 'party_invite', etc.)
   - `page` (integer): Page number
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "results": [
       {
@@ -1297,26 +1297,26 @@ This document provides a comprehensive overview of all API endpoints used in the
     "count": 15,
     "unread_count": 5
   }
-  ```
+  \`\`\`
 
 ### Mark Notification as Read
 - **Endpoint**: `/api/notifications/{notificationId}/mark-read/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "message": "Notification marked as read"
   }
-  ```
+  \`\`\`
 
 ### Get Notification Preferences
 - **Endpoint**: `/api/notifications/preferences/`
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "email_notifications": true,
     "push_notifications": true,
@@ -1326,22 +1326,22 @@ This document provides a comprehensive overview of all API endpoints used in the
     "system_updates": true,
     "marketing": false
   }
-  ```
+  \`\`\`
 
 ### Update Notification Preferences
 - **Endpoint**: `/api/notifications/preferences/`
 - **Method**: PUT
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "email_notifications": false,
     "party_invites": true,
     "marketing": false
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "email_notifications": false,
     "push_notifications": true,
@@ -1351,26 +1351,26 @@ This document provides a comprehensive overview of all API endpoints used in the
     "system_updates": true,
     "marketing": false
   }
-  ```
+  \`\`\`
 
 ### Update Push Token
 - **Endpoint**: `/api/notifications/push/token/update/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "token": "fcm-token-string",
     "platform": "web"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "message": "Push token updated successfully"
   }
-  ```
+  \`\`\`
 
 ---
 
@@ -1383,33 +1383,33 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Query Parameters**:
   - `redirect_uri` (string): Callback URL
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "auth_url": "https://accounts.google.com/oauth/authorize?client_id=...",
     "state": "random-state-string"
   }
-  ```
+  \`\`\`
 
 ### Google Drive OAuth Callback
 - **Endpoint**: `/api/integrations/google-drive/oauth-callback/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "code": "authorization-code",
     "redirect_uri": "https://example.com/callback",
     "state": "random-state-string"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "message": "Google Drive connected successfully",
     "folder_id": "google-drive-folder-id"
   }
-  ```
+  \`\`\`
 
 ### List Google Drive Files
 - **Endpoint**: `/api/integrations/google-drive/files/`
@@ -1420,7 +1420,7 @@ This document provides a comprehensive overview of all API endpoints used in the
   - `page_token` (string): Next page token
   - `query` (string): Search query
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "files": [
       {
@@ -1434,22 +1434,22 @@ This document provides a comprehensive overview of all API endpoints used in the
     ],
     "nextPageToken": "next-page-token"
   }
-  ```
+  \`\`\`
 
 ### Get S3 Presigned Upload URL
 - **Endpoint**: `/api/integrations/s3/presigned-upload/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "filename": "video.mp4",
     "content_type": "video/mp4",
     "file_size": 1073741824
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "upload_url": "https://s3.amazonaws.com/bucket/presigned-url",
     "upload_id": "upload-uuid",
@@ -1460,7 +1460,7 @@ This document provides a comprehensive overview of all API endpoints used in the
       "signature": "signature"
     }
   }
-  ```
+  \`\`\`
 
 ---
 
@@ -1471,7 +1471,7 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "reactions": [
       {
@@ -1484,21 +1484,21 @@ This document provides a comprehensive overview of all API endpoints used in the
       }
     ]
   }
-  ```
+  \`\`\`
 
 ### Create Reaction
 - **Endpoint**: `/api/interactive/parties/{partyId}/reactions/create/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "emoji": "👍",
     "timestamp": 1250
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "reaction": {
@@ -1506,14 +1506,14 @@ This document provides a comprehensive overview of all API endpoints used in the
       "timestamp": 1250
     }
   }
-  ```
+  \`\`\`
 
 ### Create Poll
 - **Endpoint**: `/api/interactive/parties/{partyId}/polls/create/`
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "question": "What should we watch next?",
     "options": [
@@ -1523,9 +1523,9 @@ This document provides a comprehensive overview of all API endpoints used in the
     "duration_minutes": 5,
     "allow_multiple_choice": false
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "id": "poll-uuid",
     "question": "What should we watch next?",
@@ -1545,7 +1545,7 @@ This document provides a comprehensive overview of all API endpoints used in the
     "duration_minutes": 5,
     "created_at": "2025-01-27T10:30:00Z"
   }
-  ```
+  \`\`\`
 
 ---
 
@@ -1556,7 +1556,7 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Method**: POST
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Request Body**:
-  ```json
+  \`\`\`json
   {
     "content_type": "video",
     "content_id": "video-uuid",
@@ -1564,21 +1564,21 @@ This document provides a comprehensive overview of all API endpoints used in the
     "description": "This video contains inappropriate content",
     "additional_context": "Timestamp: 1:30"
   }
-  ```
+  \`\`\`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "success": true,
     "report_id": "report-uuid",
     "message": "Report submitted successfully"
   }
-  ```
+  \`\`\`
 
 ### Get Report Types
 - **Endpoint**: `/api/moderation/report-types/`
 - **Method**: GET
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "report_types": [
       {
@@ -1595,7 +1595,7 @@ This document provides a comprehensive overview of all API endpoints used in the
       }
     ]
   }
-  ```
+  \`\`\`
 
 ---
 
@@ -1606,7 +1606,7 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>` (Admin role required)
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "system_stats": {
       "total_users": 10000,
@@ -1629,7 +1629,7 @@ This document provides a comprehensive overview of all API endpoints used in the
       }
     ]
   }
-  ```
+  \`\`\`
 
 ### Get Admin Users
 - **Endpoint**: `/api/admin/users/`
@@ -1641,7 +1641,7 @@ This document provides a comprehensive overview of all API endpoints used in the
   - `subscription` (string): 'active', 'inactive'
   - `page` (integer): Page number
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "results": [
       {
@@ -1656,14 +1656,14 @@ This document provides a comprehensive overview of all API endpoints used in the
     ],
     "count": 500
   }
-  ```
+  \`\`\`
 
 ### Get System Health
 - **Endpoint**: `/api/admin/system-health/`
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>` (Admin role required)
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "overall_status": "healthy",
     "services": {
@@ -1690,7 +1690,7 @@ This document provides a comprehensive overview of all API endpoints used in the
       "network_io": "125 MB/s"
     }
   }
-  ```
+  \`\`\`
 
 ---
 
@@ -1701,7 +1701,7 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Method**: GET
 - **Headers**: `Authorization: Bearer <access_token>`
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "total_parties": 15,
     "parties_hosted": 8,
@@ -1710,7 +1710,7 @@ This document provides a comprehensive overview of all API endpoints used in the
     "watch_time_hours": 142.5,
     "friends_count": 23
   }
-  ```
+  \`\`\`
 
 ### Get Dashboard Activities
 - **Endpoint**: `/api/dashboard/activities/`
@@ -1719,7 +1719,7 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Query Parameters**:
   - `limit` (integer): Number of activities to return
 - **Response**:
-  ```json
+  \`\`\`json
   {
     "activities": [
       {
@@ -1736,7 +1736,7 @@ This document provides a comprehensive overview of all API endpoints used in the
       }
     ]
   }
-  ```
+  \`\`\`
 
 ### Extended Integrations Endpoints
 - **Get Google Drive Auth URL**: `/api/integrations/google-drive/auth-url/` (GET)
@@ -1793,7 +1793,7 @@ This document provides a comprehensive overview of all API endpoints used in the
 - **Protocol**: WebSocket
 - **Authentication**: Token via query parameter `?token=<access_token>`
 - **Message Format**:
-  ```json
+  \`\`\`json
   {
     "type": "message",
     "data": {
@@ -1802,14 +1802,14 @@ This document provides a comprehensive overview of all API endpoints used in the
     },
     "timestamp": "2025-01-27T10:30:00Z"
   }
-  ```
+  \`\`\`
 
 ### Party Sync WebSocket
 - **Endpoint**: `/ws/party/{partyId}/sync/`
 - **Protocol**: WebSocket
 - **Authentication**: Token via query parameter `?token=<access_token>`
 - **Message Format**:
-  ```json
+  \`\`\`json
   {
     "type": "video_control",
     "data": {
@@ -1822,14 +1822,14 @@ This document provides a comprehensive overview of all API endpoints used in the
     },
     "timestamp": "2025-01-27T10:30:00Z"
   }
-  ```
+  \`\`\`
 
 ### Interactive WebSocket
 - **Endpoint**: `/ws/interactive/{partyId}/`
 - **Protocol**: WebSocket
 - **Authentication**: Token via query parameter `?token=<access_token>`
 - **Message Format**:
-  ```json
+  \`\`\`json
   {
     "type": "reaction",
     "data": {
@@ -1842,14 +1842,14 @@ This document provides a comprehensive overview of all API endpoints used in the
     },
     "timestamp": "2025-01-27T10:30:00Z"
   }
-  ```
+  \`\`\`
 
 ### Notifications WebSocket
 - **Endpoint**: `/ws/notifications/`
 - **Protocol**: WebSocket
 - **Authentication**: Token via query parameter `?token=<access_token>`
 - **Message Format**:
-  ```json
+  \`\`\`json
   {
     "type": "notification",
     "data": {
@@ -1860,7 +1860,7 @@ This document provides a comprehensive overview of all API endpoints used in the
     },
     "timestamp": "2025-01-27T10:30:00Z"
   }
-  ```
+  \`\`\`
 
 ---
 
