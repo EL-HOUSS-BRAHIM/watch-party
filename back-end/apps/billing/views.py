@@ -135,6 +135,7 @@ class SubscriptionCreateView(generics.CreateAPIView):
                     subscription.save()
             
             return Response({
+                'success': True,
                 'subscription_id': subscription.id,
                 'client_secret': stripe_subscription.latest_invoice.payment_intent.client_secret,
                 'status': stripe_subscription.status
@@ -142,11 +143,13 @@ class SubscriptionCreateView(generics.CreateAPIView):
             
         except stripe.error.StripeError as e:
             return Response({
+                'success': False,
                 'error': str(e),
                 'type': 'stripe_error'
             }, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({
+                'success': False,
                 'error': str(e),
                 'type': 'server_error'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -191,6 +194,7 @@ class SubscriptionDetailView(generics.RetrieveAPIView):
             return Response(serializer.data)
         else:
             return Response({
+                'success': True,
                 'message': 'No active subscription found',
                 'has_subscription': False
             })
@@ -237,7 +241,7 @@ class SubscriptionCancelView(generics.GenericAPIView):
                 
                 message = 'Subscription will be canceled at the end of the current billing period'
             
-            return Response({'message': message})
+            return Response({'success': True, 'message': message})
             
         except Subscription.DoesNotExist:
             return Response(
@@ -277,7 +281,7 @@ class SubscriptionResumeView(generics.GenericAPIView):
             subscription.cancellation_reason = ''
             subscription.save()
             
-            return Response({'message': 'Subscription resumed successfully'})
+            return Response({'success': True, 'message': 'Subscription resumed successfully'})
             
         except Subscription.DoesNotExist:
             return Response(
@@ -391,9 +395,78 @@ class PaymentMethodDetailView(generics.RetrieveUpdateDestroyAPIView):
             
         except stripe.error.StripeError as e:
             return Response({
+                'success': False,
                 'error': str(e),
                 'type': 'stripe_error'
             }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PaymentMethodSetDefaultView(generics.GenericAPIView):
+    """Set a payment method as default"""
+    
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, pk):
+        try:
+            payment_method = get_object_or_404(
+                PaymentMethod,
+                id=pk,
+                user=request.user,
+                is_active=True
+            )
+            
+            with transaction.atomic():
+                # Unset other default payment methods
+                PaymentMethod.objects.filter(
+                    user=request.user,
+                    is_default=True
+                ).update(is_default=False)
+                
+                # Set this one as default
+                payment_method.is_default = True
+                payment_method.save()
+                
+                # Update in Stripe as well
+                try:
+                    # Get or create Stripe customer
+                    stripe_customer = self._get_or_create_stripe_customer(request.user)
+                    
+                    # Set as default payment method
+                    stripe.Customer.modify(
+                        stripe_customer.id,
+                        invoice_settings={
+                            'default_payment_method': payment_method.stripe_payment_method_id,
+                        },
+                    )
+                except stripe.error.StripeError:
+                    # Continue even if Stripe update fails
+                    pass
+            
+            return Response({
+                'success': True,
+                'message': 'Payment method set as default successfully'
+            })
+            
+        except Exception as e:
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def _get_or_create_stripe_customer(self, user):
+        """Get existing Stripe customer or create new one"""
+        try:
+            customers = stripe.Customer.list(email=user.email, limit=1)
+            if customers.data:
+                return customers.data[0]
+        except stripe.error.StripeError:
+            pass
+        
+        return stripe.Customer.create(
+            email=user.email,
+            name=user.full_name,
+            metadata={'user_id': str(user.id)}
+        )
 
 
 class BillingHistoryView(generics.ListAPIView):
