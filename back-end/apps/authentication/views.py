@@ -8,7 +8,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView as BaseTokenRefreshView
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from django.contrib.auth import login
 from django.utils import timezone
 from django.conf import settings
@@ -807,10 +808,8 @@ class GoogleAuthView(RateLimitMixin, APIView):
                 'success': True,
                 'message': 'Authentication successful',
                 'user': UserProfileSerializer(user).data,
-                'tokens': {
-                    'access': str(access_token_jwt),
-                    'refresh': str(refresh)
-                }
+                'access_token': str(access_token_jwt),
+                'refresh_token': str(refresh)
             }, status=status.HTTP_200_OK)
             
         except Exception as e:
@@ -940,15 +939,165 @@ class GitHubAuthView(RateLimitMixin, APIView):
                 'success': True,
                 'message': 'Authentication successful',
                 'user': UserProfileSerializer(user).data,
-                'tokens': {
-                    'access': str(access_token_jwt),
-                    'refresh': str(refresh)
-                }
+                'access_token': str(access_token_jwt),
+                'refresh_token': str(refresh)
             }, status=status.HTTP_200_OK)
             
         except Exception as e:
             return Response({
                 'success': False,
                 'message': 'Authentication failed',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+class SocialAuthRedirectView(APIView):
+    """
+    Handles GET requests for social authentication redirects
+    Frontend expects: GET /api/auth/social/google/ (redirect to OAuth provider)
+    """
+    permission_classes = [AllowAny]
+    
+    def get(self, request, provider):
+        """Generate OAuth redirect URL for social providers"""
+        if provider == 'google':
+            # Google OAuth2 configuration
+            client_id = getattr(settings, 'GOOGLE_OAUTH2_CLIENT_ID', '')
+            if not client_id:
+                return Response({
+                    'success': False,
+                    'message': 'Google OAuth not configured'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            redirect_uri = request.build_absolute_uri('/api/auth/social/google/callback/')
+            scope = 'openid email profile'
+            state = secrets.token_urlsafe(32)
+            
+            # Store state in session for verification
+            request.session['oauth_state'] = state
+            
+            auth_url = (
+                f"https://accounts.google.com/o/oauth2/v2/auth?"
+                f"client_id={client_id}&"
+                f"redirect_uri={urllib.parse.quote(redirect_uri)}&"
+                f"scope={urllib.parse.quote(scope)}&"
+                f"response_type=code&"
+                f"state={state}&"
+                f"access_type=offline&"
+                f"prompt=consent"
+            )
+            
+            return Response({
+                'success': True,
+                'redirect_url': auth_url,
+                'state': state
+            }, status=status.HTTP_200_OK)
+            
+        elif provider == 'github':
+            # GitHub OAuth configuration
+            client_id = getattr(settings, 'GITHUB_CLIENT_ID', '')
+            if not client_id:
+                return Response({
+                    'success': False,
+                    'message': 'GitHub OAuth not configured'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            redirect_uri = request.build_absolute_uri('/api/auth/social/github/callback/')
+            scope = 'user:email'
+            state = secrets.token_urlsafe(32)
+            
+            # Store state in session for verification
+            request.session['oauth_state'] = state
+            
+            auth_url = (
+                f"https://github.com/login/oauth/authorize?"
+                f"client_id={client_id}&"
+                f"redirect_uri={urllib.parse.quote(redirect_uri)}&"
+                f"scope={urllib.parse.quote(scope)}&"
+                f"state={state}"
+            )
+            
+            return Response({
+                'success': True,
+                'redirect_url': auth_url,
+                'state': state
+            }, status=status.HTTP_200_OK)
+            
+        elif provider == 'discord':
+            # Discord OAuth configuration
+            client_id = getattr(settings, 'DISCORD_CLIENT_ID', '')
+            if not client_id:
+                return Response({
+                    'success': False,
+                    'message': 'Discord OAuth not configured'
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            redirect_uri = request.build_absolute_uri('/api/auth/social/discord/callback/')
+            scope = 'identify email'
+            state = secrets.token_urlsafe(32)
+            
+            # Store state in session for verification
+            request.session['oauth_state'] = state
+            
+            auth_url = (
+                f"https://discord.com/api/oauth2/authorize?"
+                f"client_id={client_id}&"
+                f"redirect_uri={urllib.parse.quote(redirect_uri)}&"
+                f"response_type=code&"
+                f"scope={urllib.parse.quote(scope)}&"
+                f"state={state}"
+            )
+            
+            return Response({
+                'success': True,
+                'redirect_url': auth_url,
+                'state': state
+            }, status=status.HTTP_200_OK)
+            
+        else:
+            return Response({
+                'success': False,
+                'message': f'Provider {provider} not supported'
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CustomTokenRefreshView(BaseTokenRefreshView):
+    """Custom token refresh view with consistent field naming"""
+    
+    def post(self, request, *args, **kwargs):
+        """Refresh access token with consistent response format"""
+        try:
+            # Use parent class logic but customize response
+            response = super().post(request, *args, **kwargs)
+            
+            if response.status_code == 200:
+                # Transform response to use consistent field names
+                data = response.data
+                transformed_data = {
+                    'success': True,
+                    'access_token': data.get('access'),
+                    'refresh_token': data.get('refresh', request.data.get('refresh'))
+                }
+                response.data = transformed_data
+            else:
+                # Handle error case
+                response.data = {
+                    'success': False,
+                    'errors': response.data
+                }
+            
+            return response
+            
+        except (InvalidToken, TokenError) as e:
+            return Response({
+                'success': False,
+                'message': 'Invalid or expired refresh token',
+                'errors': {'refresh_token': [str(e)]}
+            }, status=status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            return Response({
+                'success': False,
+                'message': 'Token refresh failed',
                 'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
