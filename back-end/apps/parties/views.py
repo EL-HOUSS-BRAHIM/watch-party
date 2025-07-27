@@ -252,8 +252,15 @@ class WatchPartyViewSet(ModelViewSet):
         """Get party participants"""
         party = self.get_object()
         participants = party.participants.filter(is_active=True)
+        online_participants = participants.filter(user__last_login__gte=timezone.now() - timedelta(minutes=5))
+        
         serializer = PartyParticipantSerializer(participants, many=True, context={'request': request})
-        return Response(serializer.data)
+        return Response({
+            'success': True,
+            'participants': serializer.data,
+            'total_count': participants.count(),
+            'online_count': online_participants.count()
+        })
     
     @action(detail=True, methods=['post'])
     def invite(self, request, pk=None):
