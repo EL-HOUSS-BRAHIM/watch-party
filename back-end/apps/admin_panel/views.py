@@ -333,40 +333,25 @@ def admin_content_reports(request):
     """Get content reports for moderation"""
     
     try:
-        from apps.moderation.models import ContentReport
-        from apps.moderation.serializers import ContentReportSerializer
+        from apps.parties.models import PartyReport
         
         # Get query parameters
         status_filter = request.GET.get('status', 'all')
-        priority_filter = request.GET.get('priority', 'all')
-        content_type_filter = request.GET.get('content_type', 'all')
+        report_type_filter = request.GET.get('report_type', 'all')
         
-        # Build queryset
-        queryset = ContentReport.objects.select_related(
-            'reported_by', 'assigned_to', 'reported_video', 
-            'reported_party', 'reported_user'
+        # Build queryset from party reports (since we have that model)
+        queryset = PartyReport.objects.select_related(
+            'reporter', 'party', 'reported_user'
         )
         
         # Apply filters
         if status_filter != 'all':
             queryset = queryset.filter(status=status_filter)
-        if priority_filter != 'all':
-            queryset = queryset.filter(priority=priority_filter)
-        if content_type_filter != 'all':
-            queryset = queryset.filter(content_type=content_type_filter)
+        if report_type_filter != 'all':
+            queryset = queryset.filter(report_type=report_type_filter)
         
-        # Order by priority and creation date
-        queryset = queryset.order_by(
-            models.Case(
-                models.When(priority='critical', then=1),
-                models.When(priority='high', then=2),
-                models.When(priority='medium', then=3),
-                models.When(priority='low', then=4),
-                default=5,
-                output_field=models.IntegerField()
-            ),
-            '-created_at'
-        )
+        # Order by creation date
+        queryset = queryset.order_by('-created_at')
         
         # Paginate
         paginator = AdminPagination()
@@ -378,22 +363,25 @@ def admin_content_reports(request):
             report_data = {
                 'id': str(report.id),
                 'report_type': report.report_type,
-                'content_type': report.content_type,
                 'status': report.status,
-                'priority': report.priority,
                 'description': report.description,
-                'reported_by': {
-                    'id': str(report.reported_by.id),
-                    'username': report.reported_by.username,
-                    'email': report.reported_by.email
+                'reporter': {
+                    'id': str(report.reporter.id),
+                    'username': report.reporter.username,
+                    'email': report.reporter.email
                 },
-                'assigned_to': {
-                    'id': str(report.assigned_to.id),
-                    'username': report.assigned_to.username
-                } if report.assigned_to else None,
+                'party': {
+                    'id': str(report.party.id),
+                    'title': report.party.title,
+                    'host': report.party.host.username
+                },
+                'reported_user': {
+                    'id': str(report.reported_user.id),
+                    'username': report.reported_user.username
+                } if report.reported_user else None,
+                'admin_notes': report.admin_notes,
                 'created_at': report.created_at,
                 'updated_at': report.updated_at,
-                'content_details': _get_content_details(report)
             }
             reports_data.append(report_data)
         
@@ -412,30 +400,17 @@ def admin_resolve_report(request, report_id):
     """Resolve a content report"""
     
     try:
-        from apps.moderation.models import ContentReport, ReportAction
+        from apps.parties.models import PartyReport
         
-        report = get_object_or_404(ContentReport, id=report_id)
+        report = get_object_or_404(PartyReport, id=report_id)
         
-        action_type = request.data.get('action_type', 'no_action')
-        description = request.data.get('description', '')
         resolution_notes = request.data.get('resolution_notes', '')
-        duration_days = request.data.get('duration_days')
+        action_taken = request.data.get('action_taken', 'reviewed')
         
-        # Create report action
-        ReportAction.objects.create(
-            report=report,
-            action_type=action_type,
-            moderator=request.user,
-            description=description,
-            duration_days=duration_days
-        )
-        
-        # Resolve the report
-        report.resolve(
-            moderator=request.user,
-            action=description,
-            notes=resolution_notes
-        )
+        # Update report status
+        report.status = 'resolved'
+        report.admin_notes = resolution_notes
+        report.save()
         
         # Log the action
         AnalyticsEvent.objects.create(
@@ -443,8 +418,8 @@ def admin_resolve_report(request, report_id):
             event_type='admin_report_resolved',
             data={
                 'report_id': str(report.id),
-                'action_type': action_type,
-                'content_type': report.content_type
+                'action_taken': action_taken,
+                'report_type': report.report_type
             },
             ip_address=request.META.get('REMOTE_ADDR', '')
         )
@@ -452,13 +427,9 @@ def admin_resolve_report(request, report_id):
         return Response({
             'message': 'Report resolved successfully',
             'report_id': str(report.id),
-            'action_taken': action_type
+            'action_taken': action_taken
         })
         
-    except ImportError:
-        return Response({
-            'error': 'Content reporting system not available'
-        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     except Exception as e:
         return Response({
             'error': f'Failed to resolve report: {str(e)}'
@@ -739,28 +710,24 @@ def _format_log_message(event: 'AnalyticsEvent') -> str:
     return message_templates.get(event.event_type, f"{user_name} performed {event.event_type}")
 
 
-def _get_content_details(report: 'ContentReport') -> Dict[str, Any]:
+def _get_content_details(report) -> Dict[str, Any]:
     """Get details about the reported content"""
     details = {}
     
-    if report.reported_video:
+    # Since we're using PartyReport model
+    if hasattr(report, 'party') and report.party:
         details = {
-            'title': report.reported_video.title,
-            'uploaded_by': report.reported_video.uploaded_by.username,
-            'created_at': report.reported_video.created_at
+            'title': report.party.title,
+            'host': report.party.host.username,
+            'created_at': report.party.created_at
         }
-    elif report.reported_party:
-        details = {
-            'title': report.reported_party.title,
-            'host': report.reported_party.host.username,
-            'created_at': report.reported_party.created_at
-        }
-    elif report.reported_user:
-        details = {
-            'username': report.reported_user.username,
-            'email': report.reported_user.email,
-            'date_joined': report.reported_user.date_joined
-        }
+    
+    if hasattr(report, 'reported_user') and report.reported_user:
+        details.update({
+            'reported_username': report.reported_user.username,
+            'reported_email': report.reported_user.email,
+            'reported_date_joined': report.reported_user.date_joined
+        })
     
     return details
 
@@ -1287,10 +1254,11 @@ def admin_send_notification(request):
         # Create notifications
         notifications_created = 0
         for user in users:
+            from apps.notifications.models import Notification
             Notification.objects.create(
                 user=user,
                 title=title,
-                message=message,
+                content=message,
                 notification_type=notification_type,
                 is_read=False
             )
