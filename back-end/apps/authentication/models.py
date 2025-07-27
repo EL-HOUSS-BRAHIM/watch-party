@@ -70,7 +70,6 @@ class User(AbstractUser):
     profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True, verbose_name='Profile Picture')
     
     # Additional fields from TODO requirements
-    achievements = models.JSONField(default=list, verbose_name='User Achievements')
     virtual_currency = models.IntegerField(default=0, verbose_name='Virtual Currency')
     total_watch_time = models.DurationField(default=timezone.timedelta(0), verbose_name='Total Watch Time')
     experience_points = models.IntegerField(default=0, verbose_name='Experience Points')
