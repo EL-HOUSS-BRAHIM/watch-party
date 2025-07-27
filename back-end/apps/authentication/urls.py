@@ -3,7 +3,6 @@ URL patterns for authentication endpoints
 """
 
 from django.urls import path
-from rest_framework_simplejwt.views import TokenRefreshView
 
 from .views import (
     RegisterView,
@@ -23,7 +22,9 @@ from .views import (
     TwoFactorDisableView,
     UserSessionsView,
     GoogleAuthView,
-    GitHubAuthView
+    GitHubAuthView,
+    SocialAuthRedirectView,
+    CustomTokenRefreshView
 )
 
 app_name = 'authentication'
@@ -33,9 +34,10 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
     
     # Social Authentication
+    path('social/<str:provider>/', SocialAuthRedirectView.as_view(), name='social_auth_redirect'),
     path('social/google/', GoogleAuthView.as_view(), name='google_auth'),
     path('social/github/', GitHubAuthView.as_view(), name='github_auth'),
     
