@@ -265,7 +265,7 @@ export default function FeedbackPage() {
       // Add form fields
       Object.entries(data).forEach(([key, value]) => {
         if (key === "tags") {
-          const tags = value ? value.split(",").map(tag => tag.trim()).filter(Boolean) : []
+          const tags = typeof value === "string" ? value.split(",").map((tag: string) => tag.trim()).filter(Boolean) : []
           formData.append(key, JSON.stringify(tags))
         } else {
           formData.append(key, String(value))
