@@ -4,20 +4,22 @@ Views for Global Search functionality
 
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Q
+from django.db.models import Q, Count, F, Case, When, IntegerField, Value
 from django.apps import apps
+from django.utils import timezone
+from datetime import timedelta
 
 from core.responses import StandardResponse
 
 
 class GlobalSearchView(APIView):
     """
-    Global search across users, videos, parties, and other content
+    Global search across users, videos, parties, and other content with advanced filtering
     """
     permission_classes = [IsAuthenticated]
     
     def get(self, request):
-        """Search across multiple models"""
+        """Search across multiple models with filters and sorting"""
         query = request.GET.get('q', '').strip()
         if not query:
             return StandardResponse.error("Query parameter 'q' is required")
@@ -25,10 +27,18 @@ class GlobalSearchView(APIView):
         if len(query) < 2:
             return StandardResponse.error("Query must be at least 2 characters long")
         
+        # Get search parameters
+        search_type = request.GET.get('type', 'all')  # all, users, videos, parties, groups
+        sort_by = request.GET.get('sort', 'relevance')  # relevance, date, popularity, alphabetical
+        date_filter = request.GET.get('date_filter', 'all')  # all, today, week, month, year
+        category = request.GET.get('category', '')
+        limit = min(int(request.GET.get('limit', 10)), 50)  # Max 50 results
+        
         # Get models
         User = apps.get_model('authentication', 'User')
         Video = apps.get_model('videos', 'Video')
         WatchParty = apps.get_model('parties', 'WatchParty')
+        SocialGroup = apps.get_model('social', 'SocialGroup')
         
         # Search users (excluding current user)
         users = User.objects.filter(
