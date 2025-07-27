@@ -472,8 +472,11 @@ export default function AccountSecurityPage() {
                       id="currentPassword"
                       type={showPasswords.current ? "text" : "password"}
                       {...registerPassword("currentPassword")}
-                      error={passwordErrors.currentPassword?.message}
+                      className={passwordErrors.currentPassword ? "border-red-500" : ""}
                     />
+                    {passwordErrors.currentPassword && (
+                      <p className="text-sm text-red-500 mt-1">{passwordErrors.currentPassword.message}</p>
+                    )}
                     <Button
                       type="button"
                       variant="ghost"
@@ -493,8 +496,11 @@ export default function AccountSecurityPage() {
                       id="newPassword"
                       type={showPasswords.new ? "text" : "password"}
                       {...registerPassword("newPassword")}
-                      error={passwordErrors.newPassword?.message}
+                      className={passwordErrors.newPassword ? "border-red-500" : ""}
                     />
+                    {passwordErrors.newPassword && (
+                      <p className="text-sm text-red-500 mt-1">{passwordErrors.newPassword.message}</p>
+                    )}
                     <Button
                       type="button"
                       variant="ghost"
@@ -532,8 +538,11 @@ export default function AccountSecurityPage() {
                       id="confirmPassword"
                       type={showPasswords.confirm ? "text" : "password"}
                       {...registerPassword("confirmPassword")}
-                      error={passwordErrors.confirmPassword?.message}
+                      className={passwordErrors.confirmPassword ? "border-red-500" : ""}
                     />
+                    {passwordErrors.confirmPassword && (
+                      <p className="text-sm text-red-500 mt-1">{passwordErrors.confirmPassword.message}</p>
+                    )}
                     <Button
                       type="button"
                       variant="ghost"
