@@ -36,6 +36,10 @@ export interface User {
   is_subscription_active: boolean
   date_joined: string
   last_login: string | null
+  is_staff?: boolean
+  is_superuser?: boolean
+  isVerified?: boolean
+  onboarding_completed?: boolean
 }
 
 export interface AuthResponse {
