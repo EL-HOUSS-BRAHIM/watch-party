@@ -50,8 +50,6 @@ import {
   Coffee,
   Mountain,
   Rocket,
-  Lightning,
-  Fire,
   Snowflake
 } from "lucide-react"
 import { formatDistanceToNow, format, parseISO } from "date-fns"
