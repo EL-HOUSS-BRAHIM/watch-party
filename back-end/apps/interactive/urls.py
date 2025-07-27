@@ -11,31 +11,31 @@ app_name = 'interactive'
 urlpatterns = [
     # Live Reactions
     path(
-        'parties/<int:party_id>/reactions/',
+        'parties/<uuid:party_id>/reactions/',
         views.get_live_reactions,
         name='get-live-reactions'
     ),
     path(
-        'parties/<int:party_id>/reactions/create/',
+        'parties/<uuid:party_id>/reactions/create/',
         views.create_live_reaction,
         name='create-live-reaction'
     ),
     
     # Voice Chat
     path(
-        'parties/<int:party_id>/voice-chat/',
+        'parties/<uuid:party_id>/voice-chat/',
         views.get_voice_chat_room,
         name='get-voice-chat-room'
     ),
     path(
-        'parties/<int:party_id>/voice-chat/manage/',
+        'parties/<uuid:party_id>/voice-chat/manage/',
         views.manage_voice_chat_room,
         name='manage-voice-chat-room'
     ),
     
     # Screen Sharing
     path(
-        'parties/<int:party_id>/screen-shares/',
+        'parties/<uuid:party_id>/screen-shares/',
         views.get_active_screen_shares,
         name='get-screen-shares'
     ),
@@ -52,12 +52,12 @@ urlpatterns = [
     
     # Interactive Polls
     path(
-        'parties/<int:party_id>/polls/',
+        'parties/<uuid:party_id>/polls/',
         views.get_party_polls,
         name='get-party-polls'
     ),
     path(
-        'parties/<int:party_id>/polls/create/',
+        'parties/<uuid:party_id>/polls/create/',
         views.create_poll,
         name='create-poll'
     ),
@@ -74,7 +74,7 @@ urlpatterns = [
     
     # Analytics
     path(
-        'parties/<int:party_id>/analytics/',
+        'parties/<uuid:party_id>/analytics/',
         views.get_interactive_analytics,
         name='get-analytics'
     ),
