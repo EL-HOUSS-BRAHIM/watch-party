@@ -224,12 +224,17 @@ class VideoUploadView(APIView):
             upload.save()
             
             return Response({
+                'success': True,
                 'upload_id': upload.id,
                 'video_id': video.id,
+                'message': 'Video upload initiated successfully',
                 'status': 'ready_for_upload'
             }, status=status.HTTP_201_CREATED)
         
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({
+            'success': False,
+            'errors': serializer.errors
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class VideoUploadCompleteView(APIView):
