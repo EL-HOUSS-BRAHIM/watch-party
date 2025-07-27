@@ -2,10 +2,10 @@
 WebSocket routing for party functionality
 """
 
-from django.urls import re_path
+from django.urls import path
 from .consumers import PartyConsumer, PartyLobbyConsumer
 
 websocket_urlpatterns = [
-    re_path(r'ws/party/(?P<party_id>[0-9a-f-]+)/$', PartyConsumer.as_asgi()),
-    re_path(r'ws/party/(?P<party_id>[0-9a-f-]+)/lobby/$', PartyLobbyConsumer.as_asgi()),
+    path('ws/party/<uuid:party_id>/', PartyConsumer.as_asgi()),
+    path('ws/party/<uuid:party_id>/lobby/', PartyLobbyConsumer.as_asgi()),
 ]
