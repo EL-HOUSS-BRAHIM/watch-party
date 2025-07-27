@@ -54,6 +54,7 @@ LOCAL_APPS = [
     'apps.search',
     'apps.social',
     'apps.messaging',
+    'apps.support',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -78,6 +79,8 @@ MIDDLEWARE = [
     'middleware.enhanced_middleware.MaintenanceMiddleware',
     'middleware.enhanced_middleware.APIVersionMiddleware',
     'middleware.enhanced_middleware.ContentTypeMiddleware',
+    'middleware.performance_middleware.APIPerformanceMiddleware',
+    'middleware.performance_middleware.APIRateLimitingMiddleware',
 ]
 
 ROOT_URLCONF = 'watchparty.urls'
@@ -175,8 +178,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'core.pagination.StandardResultsSetPagination',
     'PAGE_SIZE': 20,
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'EXCEPTION_HANDLER': 'core.exceptions.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'core.error_handling.enhanced_exception_handler',
 }
+
+# Enhanced settings for performance and monitoring
+USE_CACHE = True
+ENABLE_RATE_LIMITING = True
+ENABLE_PERFORMANCE_MONITORING = True
 
 # JWT Settings
 from datetime import timedelta
