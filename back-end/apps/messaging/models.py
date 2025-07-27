@@ -16,7 +16,12 @@ class Conversation(models.Model):
         ('group', 'Group Chat'),
     ]
     
-    participants = models.ManyToManyField(User, through='ConversationParticipant', related_name='conversations')
+    participants = models.ManyToManyField(
+        User, 
+        through='ConversationParticipant', 
+        through_fields=('conversation', 'user'),
+        related_name='conversations'
+    )
     conversation_type = models.CharField(max_length=10, choices=CONVERSATION_TYPE_CHOICES, default='direct')
     title = models.CharField(max_length=200, blank=True, help_text="Only for group conversations")
     is_active = models.BooleanField(default=True)
