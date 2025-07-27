@@ -50,6 +50,10 @@ LOCAL_APPS = [
     'apps.interactive',
     'apps.admin_panel',
     'apps.moderation',
+    'apps.store',
+    'apps.search',
+    'apps.social',
+    'apps.messaging',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -171,6 +175,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'core.pagination.StandardResultsSetPagination',
     'PAGE_SIZE': 20,
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'EXCEPTION_HANDLER': 'core.exceptions.custom_exception_handler',
 }
 
 # JWT Settings
