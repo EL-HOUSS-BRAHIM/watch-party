@@ -182,6 +182,10 @@ urlpatterns = [
     path('api/integrations/', include('apps.integrations.urls')),
     path('api/interactive/', include('apps.interactive.urls')),
     path('api/moderation/', include('apps.moderation.urls')),
+    path('api/store/', include('apps.store.urls')),
+    path('api/search/', include('apps.search.urls')),
+    path('api/social/', include('apps.social.urls')),
+    path('api/messaging/', include('apps.messaging.urls')),
     
     # Admin Panel API
     path('api/admin/', include('apps.admin_panel.urls')),
