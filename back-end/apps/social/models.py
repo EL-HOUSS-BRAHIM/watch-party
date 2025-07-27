@@ -37,7 +37,12 @@ class SocialGroup(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='general')
     privacy = models.CharField(max_length=15, choices=PRIVACY_CHOICES, default='public')
     creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_groups')
-    members = models.ManyToManyField(User, through='GroupMembership', related_name='social_groups')
+    members = models.ManyToManyField(
+        User, 
+        through='GroupMembership', 
+        through_fields=('group', 'user'),
+        related_name='social_groups'
+    )
     avatar = models.ImageField(upload_to='group_avatars/', null=True, blank=True)
     banner = models.ImageField(upload_to='group_banners/', null=True, blank=True)
     rules = models.TextField(blank=True, help_text="Group rules and guidelines")
