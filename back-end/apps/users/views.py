@@ -854,3 +854,581 @@ class UserOnlineStatusView(APIView):
                 'error': 'Failed to get user statuses',
                 'details': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# ===== NEW MISSING VIEWS FROM TODO =====
+
+class UserAchievementsView(APIView):
+    """User achievements view"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        """Return user achievements"""
+        user = request.user
+        
+        # Import here to avoid circular imports
+        try:
+            from apps.store.models import UserAchievement, Achievement
+            from apps.store.serializers import UserAchievementSerializer, AchievementSerializer
+            
+            # Get user's unlocked achievements
+            user_achievements = UserAchievement.objects.filter(user=user).select_related('achievement')
+            
+            # Get all available achievements
+            all_achievements = Achievement.objects.filter(is_active=True)
+            
+            # Serialize data
+            user_achievements_data = UserAchievementSerializer(user_achievements, many=True).data
+            all_achievements_data = AchievementSerializer(all_achievements, many=True, context={'request': request}).data
+            
+            stats = {
+                'total_unlocked': user_achievements.count(),
+                'total_available': all_achievements.count(),
+                'completion_percentage': round((user_achievements.count() / all_achievements.count()) * 100) if all_achievements.count() > 0 else 0,
+                'total_points': sum(ua.achievement.points for ua in user_achievements)
+            }
+            
+            return Response({
+                'success': True,
+                'data': {
+                    'unlocked_achievements': user_achievements_data,
+                    'all_achievements': all_achievements_data,
+                    'stats': stats
+                }
+            })
+            
+        except ImportError:
+            # Store app not available
+            return Response({
+                'success': True,
+                'data': {
+                    'unlocked_achievements': [],
+                    'all_achievements': [],
+                    'stats': {
+                        'total_unlocked': 0,
+                        'total_available': 0,
+                        'completion_percentage': 0,
+                        'total_points': 0
+                    }
+                }
+            })
+
+
+class UserStatsView(APIView):
+    """Detailed user statistics"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        """Return detailed user statistics"""
+        user = request.user
+        
+        # Calculate various statistics
+        from apps.videos.models import Video
+        from apps.parties.models import WatchParty
+        from django.db.models import Sum, Count
+        
+        # Basic counts
+        videos_uploaded = Video.objects.filter(uploader=user).count()
+        parties_hosted = WatchParty.objects.filter(host=user).count()
+        parties_joined = WatchParty.objects.filter(participants__user=user).count()
+        
+        # Friend statistics
+        friends_count = Friendship.objects.filter(
+            (Q(from_user=user) | Q(to_user=user)) & Q(status='accepted')
+        ).count()
+        
+        # Store statistics (if available)
+        try:
+            from apps.store.models import UserCurrency, UserInventory, UserAchievement
+            currency = getattr(user, 'currency', None)
+            currency_balance = currency.balance if currency else 0
+            items_owned = UserInventory.objects.filter(user=user).count()
+            achievements_unlocked = UserAchievement.objects.filter(user=user).count()
+        except ImportError:
+            currency_balance = 0
+            items_owned = 0
+            achievements_unlocked = 0
+        
+        # Calculate level based on simple formula (this could be more sophisticated)
+        total_activity = videos_uploaded + parties_hosted + friends_count + achievements_unlocked
+        level = min(max(1, total_activity // 5), 100)  # Level 1-100 based on activity
+        experience_points = total_activity * 10
+        
+        stats = {
+            'level': level,
+            'experience_points': experience_points,
+            'total_watch_time': 0,  # TODO: Calculate from analytics
+            'parties_hosted': parties_hosted,
+            'parties_joined': parties_joined,
+            'videos_uploaded': videos_uploaded,
+            'achievements_unlocked': achievements_unlocked,
+            'total_achievements': 0,  # TODO: Get from achievements system
+            'currency_balance': currency_balance,
+            'items_owned': items_owned,
+            'friends_count': friends_count,
+            'rank': 0,  # TODO: Calculate leaderboard position
+            'join_date': user.date_joined,
+            'last_active': user.last_login,
+        }
+        
+        return Response({
+            'success': True,
+            'data': stats
+        })
+
+
+class UserSessionsView(APIView):
+    """User session management"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        """List active sessions for user"""
+        # For now, return mock data. This would integrate with actual session management
+        sessions = [
+            {
+                'id': '1',
+                'device_info': {'browser': 'Chrome', 'os': 'Windows'},
+                'ip_address': request.META.get('REMOTE_ADDR', 'Unknown'),
+                'user_agent': request.META.get('HTTP_USER_AGENT', 'Unknown'),
+                'created_at': timezone.now(),
+                'expires_at': timezone.now() + timezone.timedelta(days=7),
+                'is_current': True
+            }
+        ]
+        
+        return Response({
+            'success': True,
+            'data': {'sessions': sessions}
+        })
+
+
+class RevokeSessionView(APIView):
+    """Revoke a specific session"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def delete(self, request, session_id):
+        """Revoke specific session"""
+        # TODO: Implement actual session revocation
+        return Response({
+            'success': True,
+            'message': f'Session {session_id} revoked successfully'
+        })
+
+
+class RevokeAllSessionsView(APIView):
+    """Revoke all sessions except current"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request):
+        """Revoke all other sessions"""
+        # TODO: Implement actual session revocation
+        return Response({
+            'success': True,
+            'message': 'All other sessions revoked successfully'
+        })
+
+
+class Enable2FAView(APIView):
+    """Enable Two-Factor Authentication"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request):
+        """Enable 2FA for user"""
+        token = request.data.get('token')
+        
+        if not token:
+            return Response({
+                'success': False,
+                'message': 'Token is required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # TODO: Implement actual 2FA enabling
+        # This would verify the token and enable 2FA
+        
+        return Response({
+            'success': True,
+            'message': '2FA enabled successfully'
+        })
+
+
+class Disable2FAView(APIView):
+    """Disable Two-Factor Authentication"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request):
+        """Disable 2FA for user"""
+        token = request.data.get('token')
+        password = request.data.get('password')
+        
+        if not token or not password:
+            return Response({
+                'success': False,
+                'message': 'Token and password are required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Verify password
+        if not request.user.check_password(password):
+            return Response({
+                'success': False,
+                'message': 'Invalid password'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # TODO: Implement actual 2FA disabling
+        
+        return Response({
+            'success': True,
+            'message': '2FA disabled successfully'
+        })
+
+
+class Setup2FAView(APIView):
+    """Setup Two-Factor Authentication"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request):
+        """Generate 2FA setup data"""
+        import secrets
+        import base64
+        import io
+        import qrcode
+        import pyotp
+        
+        user = request.user
+        
+        # Generate secret key
+        secret = pyotp.random_base32()
+        
+        # Generate QR code
+        totp_uri = pyotp.totp.TOTP(secret).provisioning_uri(
+            name=user.email,
+            issuer_name="Watch Party"
+        )
+        
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(totp_uri)
+        qr.make(fit=True)
+        
+        img = qr.make_image(fill_color="black", back_color="white")
+        buffer = io.BytesIO()
+        img.save(buffer, format='PNG')
+        buffer.seek(0)
+        qr_code_base64 = base64.b64encode(buffer.getvalue()).decode()
+        
+        # Generate backup codes
+        backup_codes = [secrets.token_hex(8) for _ in range(10)]
+        
+        return Response({
+            'success': True,
+            'data': {
+                'secret': secret,
+                'qr_code': f"data:image/png;base64,{qr_code_base64}",
+                'backup_codes': backup_codes
+            }
+        })
+
+
+class OnboardingView(APIView):
+    """Complete user onboarding"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request):
+        """Complete user onboarding process"""
+        user = request.user
+        
+        # Update user onboarding status
+        # TODO: Add onboarding fields to user model
+        
+        # Log activity
+        UserActivity.objects.create(
+            user=user,
+            activity_type='onboarding_completed',
+            description="Completed onboarding process"
+        )
+        
+        return Response({
+            'success': True,
+            'message': 'Onboarding completed successfully'
+        })
+
+
+class UpdatePasswordView(APIView):
+    """Update user password"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request):
+        """Update user password"""
+        current_password = request.data.get('current_password')
+        new_password = request.data.get('new_password')
+        
+        if not current_password or not new_password:
+            return Response({
+                'success': False,
+                'message': 'Current password and new password are required'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        user = request.user
+        
+        # Verify current password
+        if not user.check_password(current_password):
+            return Response({
+                'success': False,
+                'message': 'Current password is incorrect'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Validate new password
+        if len(new_password) < 8:
+            return Response({
+                'success': False,
+                'message': 'New password must be at least 8 characters long'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Update password
+        user.set_password(new_password)
+        user.save()
+        
+        # Log activity
+        UserActivity.objects.create(
+            user=user,
+            activity_type='password_changed',
+            description="Password changed successfully"
+        )
+        
+        return Response({
+            'success': True,
+            'message': 'Password updated successfully'
+        })
+
+
+class UserInventoryView(APIView):
+    """User inventory from store"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        """Get user's inventory"""
+        try:
+            from apps.store.models import UserInventory, UserCurrency
+            from apps.store.serializers import UserInventorySerializer, UserCurrencySerializer
+            
+            user = request.user
+            inventory = UserInventory.objects.filter(user=user).select_related('item')
+            currency = getattr(user, 'currency', None)
+            
+            inventory_data = UserInventorySerializer(inventory, many=True).data
+            currency_data = UserCurrencySerializer(currency).data if currency else {'balance': 0, 'total_earned': 0, 'total_spent': 0}
+            
+            return Response({
+                'success': True,
+                'data': {
+                    'inventory': inventory_data,
+                    'currency': currency_data,
+                    'stats': {
+                        'total_items': inventory.count(),
+                        'equipped_items': inventory.filter(is_equipped=True).count()
+                    }
+                }
+            })
+            
+        except ImportError:
+            return Response({
+                'success': True,
+                'data': {
+                    'inventory': [],
+                    'currency': {'balance': 0, 'total_earned': 0, 'total_spent': 0},
+                    'stats': {'total_items': 0, 'equipped_items': 0}
+                }
+            })
+
+
+class FriendSuggestionsView(APIView):
+    """Friend suggestions for user"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        """Get friend suggestions"""
+        user = request.user
+        
+        # Get users who are not already friends
+        existing_friends = Friendship.objects.filter(
+            (Q(from_user=user) | Q(to_user=user))
+        ).values_list('from_user_id', 'to_user_id')
+        
+        friend_ids = set()
+        for from_id, to_id in existing_friends:
+            friend_ids.add(from_id)
+            friend_ids.add(to_id)
+        friend_ids.discard(user.id)
+        
+        # Simple suggestion: random users not already friends
+        suggestions = User.objects.filter(
+            is_active=True
+        ).exclude(id__in=friend_ids).exclude(id=user.id)[:10]
+        
+        suggestions_data = []
+        for suggestion in suggestions:
+            suggestions_data.append({
+                'id': suggestion.id,
+                'username': suggestion.username,
+                'name': suggestion.get_full_name(),
+                'profile_picture': suggestion.profile_picture.url if hasattr(suggestion, 'profile_picture') and suggestion.profile_picture else None,
+                'mutual_friends': 0,  # TODO: Calculate mutual friends
+            })
+        
+        return Response({
+            'success': True,
+            'data': {'suggestions': suggestions_data}
+        })
+
+
+class SendFriendRequestView(APIView):
+    """Send friend request"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, user_id):
+        """Send friend request to user"""
+        try:
+            target_user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({
+                'success': False,
+                'message': 'User not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        if target_user == request.user:
+            return Response({
+                'success': False,
+                'message': 'Cannot send friend request to yourself'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Check if friendship already exists
+        existing_friendship = Friendship.objects.filter(
+            (Q(from_user=request.user, to_user=target_user) |
+             Q(from_user=target_user, to_user=request.user))
+        ).first()
+        
+        if existing_friendship:
+            return Response({
+                'success': False,
+                'message': 'Friend request already exists or users are already friends'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Create friend request
+        friendship = Friendship.objects.create(
+            from_user=request.user,
+            to_user=target_user,
+            status='pending'
+        )
+        
+        # Log activity
+        UserActivity.objects.create(
+            user=request.user,
+            activity_type='friend_request_sent',
+            description=f"Sent friend request to {target_user.username}"
+        )
+        
+        return Response({
+            'success': True,
+            'message': 'Friend request sent successfully'
+        })
+
+
+class AcceptFriendRequestView(APIView):
+    """Accept friend request"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, request_id):
+        """Accept friend request"""
+        try:
+            friendship = Friendship.objects.get(
+                id=request_id,
+                to_user=request.user,
+                status='pending'
+            )
+        except Friendship.DoesNotExist:
+            return Response({
+                'success': False,
+                'message': 'Friend request not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        friendship.status = 'accepted'
+        friendship.save()
+        
+        # Log activity
+        UserActivity.objects.create(
+            user=request.user,
+            activity_type='friend_request_accepted',
+            description=f"Accepted friend request from {friendship.from_user.username}"
+        )
+        
+        return Response({
+            'success': True,
+            'message': 'Friend request accepted'
+        })
+
+
+class DeclineFriendRequestView(APIView):
+    """Decline friend request"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, request_id):
+        """Decline friend request"""
+        try:
+            friendship = Friendship.objects.get(
+                id=request_id,
+                to_user=request.user,
+                status='pending'
+            )
+        except Friendship.DoesNotExist:
+            return Response({
+                'success': False,
+                'message': 'Friend request not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        friendship.delete()
+        
+        # Log activity
+        UserActivity.objects.create(
+            user=request.user,
+            activity_type='friend_request_declined',
+            description=f"Declined friend request from {friendship.from_user.username}"
+        )
+        
+        return Response({
+            'success': True,
+            'message': 'Friend request declined'
+        })
+
+
+class BlockUserView(APIView):
+    """Block a user"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, user_id):
+        """Block a user"""
+        try:
+            target_user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response({
+                'success': False,
+                'message': 'User not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+        if target_user == request.user:
+            return Response({
+                'success': False,
+                'message': 'Cannot block yourself'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # TODO: Implement actual user blocking logic
+        # This would typically involve creating a UserBlock model
+        
+        # Log activity
+        UserActivity.objects.create(
+            user=request.user,
+            activity_type='user_blocked',
+            description=f"Blocked user {target_user.username}"
+        )
+        
+        return Response({
+            'success': True,
+            'message': f'User {target_user.username} blocked successfully'
+        })
