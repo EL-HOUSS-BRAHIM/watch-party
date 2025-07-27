@@ -332,9 +332,12 @@ export default function OnboardingPage() {
                   <Input
                     id="displayName"
                     {...profileForm.register("displayName")}
-                    error={profileForm.formState.errors.displayName?.message}
+                    className={profileForm.formState.errors.displayName ? "border-red-500" : ""}
                     placeholder="How should others see you?"
                   />
+                  {profileForm.formState.errors.displayName && (
+                    <p className="text-sm text-red-500 mt-1">{profileForm.formState.errors.displayName.message}</p>
+                  )}
                 </div>
 
                 <div>
@@ -342,10 +345,13 @@ export default function OnboardingPage() {
                   <Textarea
                     id="bio"
                     {...profileForm.register("bio")}
-                    error={profileForm.formState.errors.bio?.message}
+                    className={profileForm.formState.errors.bio ? "border-red-500" : ""}
                     placeholder="Tell us a bit about yourself..."
                     rows={3}
                   />
+                  {profileForm.formState.errors.bio && (
+                    <p className="text-sm text-red-500 mt-1">{profileForm.formState.errors.bio.message}</p>
+                  )}
                   <p className="text-xs text-gray-500 mt-1">
                     {profileForm.watch("bio")?.length || 0}/500 characters
                   </p>
