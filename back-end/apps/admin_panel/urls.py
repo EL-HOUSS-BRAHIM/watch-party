@@ -4,6 +4,7 @@ Admin panel URL configuration
 
 from django.urls import path
 from . import views
+from .health_views import HealthCheckView, DetailedStatusView, MetricsView
 
 app_name = 'admin_panel'
 
@@ -44,4 +45,9 @@ urlpatterns = [
     # Settings
     path('settings/', views.admin_system_settings, name='admin_system_settings'),
     path('settings/update/', views.admin_update_system_settings, name='admin_update_system_settings'),
+    
+    # Health and monitoring endpoints (Enhanced)
+    path('health/check/', HealthCheckView.as_view(), name='health_check'),
+    path('health/status/', DetailedStatusView.as_view(), name='detailed_status'),
+    path('health/metrics/', MetricsView.as_view(), name='metrics'),
 ]
