@@ -9,7 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.3.4",
+    "@hookform/resolvers": "latest",
     "@jest/globals": "latest",
     "@playwright/test": "latest",
     "@radix-ui/react-accordion": "latest",
@@ -63,7 +63,7 @@
     "react-day-picker": "latest",
     "react-dom": "^19",
     "react-dropzone": "latest",
-    "react-hook-form": "^7.52.0",
+    "react-hook-form": "latest",
     "react-resizable-panels": "latest",
     "recharts": "latest",
     "socket.io-client": "latest",
