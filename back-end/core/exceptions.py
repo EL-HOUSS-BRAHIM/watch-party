@@ -4,6 +4,36 @@ Custom exceptions for Watch Party Backend
 
 from rest_framework import status
 from rest_framework.exceptions import APIException
+from rest_framework.views import exception_handler
+
+
+def custom_exception_handler(exc, context):
+    """
+    Custom exception handler that adds 'success' field to all error responses
+    """
+    # Call REST framework's default exception handler first
+    response = exception_handler(exc, context)
+    
+    if response is not None:
+        # Add success field to all error responses
+        custom_response_data = {
+            'success': False,
+        }
+        
+        # Handle different error response formats
+        if isinstance(response.data, dict):
+            if 'detail' in response.data:
+                custom_response_data['message'] = response.data['detail']
+                if len(response.data) > 1:
+                    custom_response_data['errors'] = {k: v for k, v in response.data.items() if k != 'detail'}
+            else:
+                custom_response_data['errors'] = response.data
+        else:
+            custom_response_data['errors'] = response.data
+        
+        response.data = custom_response_data
+    
+    return response
 
 
 class WatchPartyBaseException(APIException):
