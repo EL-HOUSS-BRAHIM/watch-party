@@ -49,6 +49,17 @@ class WatchParty(models.Model):
     require_approval = models.BooleanField(default=False, verbose_name='Require Host Approval')
     allow_join_by_code = models.BooleanField(default=True, verbose_name='Allow Join by Room Code')
     
+    # Invite settings
+    invite_code = models.CharField(max_length=20, unique=True, blank=True, verbose_name='Shareable Invite Code')
+    invite_code_expires_at = models.DateTimeField(null=True, blank=True, verbose_name='Invite Code Expiry')
+    allow_public_search = models.BooleanField(default=True, verbose_name='Allow in Public Search')
+    
+    # Analytics fields
+    total_viewers = models.PositiveIntegerField(default=0, verbose_name='Total Unique Viewers')
+    peak_concurrent_viewers = models.PositiveIntegerField(default=0, verbose_name='Peak Concurrent Viewers')
+    total_reactions = models.PositiveIntegerField(default=0, verbose_name='Total Reactions')
+    total_chat_messages = models.PositiveIntegerField(default=0, verbose_name='Total Chat Messages')
+    
     # Chat settings
     allow_chat = models.BooleanField(default=True, verbose_name='Allow Chat')
     allow_reactions = models.BooleanField(default=True, verbose_name='Allow Reactions')
@@ -87,6 +98,8 @@ class WatchParty(models.Model):
     def save(self, *args, **kwargs):
         if not self.room_code:
             self.room_code = self.generate_room_code()
+        if not self.invite_code:
+            self.invite_code = self.generate_invite_code()
         super().save(*args, **kwargs)
     
     def generate_room_code(self):
@@ -96,6 +109,13 @@ class WatchParty(models.Model):
             if not WatchParty.objects.filter(room_code=code).exists():
                 return code
     
+    def generate_invite_code(self):
+        """Generate unique shareable invite code"""
+        while True:
+            code = secrets.token_urlsafe(12)
+            if not WatchParty.objects.filter(invite_code=code).exists():
+                return code
+    
     @property
     def participant_count(self):
         return self.participants.filter(is_active=True).count()
@@ -103,6 +123,12 @@ class WatchParty(models.Model):
     @property
     def is_full(self):
         return self.participant_count >= self.max_participants
+    
+    @property
+    def is_invite_code_valid(self):
+        if not self.invite_code_expires_at:
+            return True
+        return timezone.now() < self.invite_code_expires_at
 
 
 class PartyParticipant(models.Model):
@@ -263,3 +289,36 @@ class PartyReport(models.Model):
         
     def __str__(self):
         return f"Report by {self.reporter.full_name} about {self.party.title}"
+
+
+class PartyEngagementAnalytics(models.Model):
+    """Track detailed analytics for watch parties"""
+    
+    party = models.OneToOneField(WatchParty, on_delete=models.CASCADE, related_name='engagement_analytics')
+    
+    # Viewer engagement metrics
+    average_watch_time = models.DurationField(null=True, blank=True)
+    bounce_rate = models.FloatField(default=0.0, help_text="Percentage who left within first 5 minutes")
+    engagement_score = models.FloatField(default=0.0, help_text="Overall engagement score 0-100")
+    
+    # Content performance
+    most_rewound_timestamp = models.DurationField(null=True, blank=True)
+    most_paused_timestamp = models.DurationField(null=True, blank=True)
+    reaction_hotspots = models.JSONField(default=list, help_text="Timestamps with high reaction activity")
+    
+    # Social metrics
+    chat_activity_score = models.FloatField(default=0.0)
+    user_retention_rate = models.FloatField(default=0.0)
+    invitation_conversion_rate = models.FloatField(default=0.0)
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        db_table = 'party_engagement_analytics'
+        verbose_name = 'Party Engagement Analytics'
+        verbose_name_plural = 'Party Engagement Analytics'
+        
+    def __str__(self):
+        return f"Engagement Analytics for {self.party.title}"
