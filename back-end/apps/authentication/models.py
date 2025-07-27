@@ -69,6 +69,16 @@ class User(AbstractUser):
     github_id = models.CharField(max_length=100, null=True, blank=True, unique=True, verbose_name='GitHub ID')
     profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True, verbose_name='Profile Picture')
     
+    # Additional fields from TODO requirements
+    achievements = models.JSONField(default=list, verbose_name='User Achievements')
+    virtual_currency = models.IntegerField(default=0, verbose_name='Virtual Currency')
+    total_watch_time = models.DurationField(default=timezone.timedelta(0), verbose_name='Total Watch Time')
+    experience_points = models.IntegerField(default=0, verbose_name='Experience Points')
+    level = models.IntegerField(default=1, verbose_name='User Level')
+    onboarding_completed = models.BooleanField(default=False, verbose_name='Onboarding Completed')
+    is_online = models.BooleanField(default=False, verbose_name='Online Status')
+    last_activity = models.DateTimeField(auto_now=True, verbose_name='Last Activity')
+    
     # Custom manager
     objects = UserManager()
     
