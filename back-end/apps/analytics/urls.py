@@ -5,6 +5,11 @@ from .advanced_views import (
     A_BTestingView, PredictiveAnalyticsView
 )
 from . import dashboard_views
+from .views_advanced import (
+    platform_overview_analytics, user_behavior_analytics, 
+    content_performance_analytics, revenue_analytics,
+    user_personal_analytics, real_time_analytics
+)
 
 app_name = 'analytics'
 
@@ -33,4 +38,12 @@ urlpatterns = [
     path('advanced/query/', AdvancedAnalyticsView.as_view(), name='advanced-analytics'),
     path('ab-testing/', A_BTestingView.as_view(), name='ab-testing'),
     path('predictive/', PredictiveAnalyticsView.as_view(), name='predictive-analytics'),
+    
+    # Latest Advanced Analytics Endpoints
+    path('platform-overview/', platform_overview_analytics, name='platform_overview'),
+    path('user-behavior/', user_behavior_analytics, name='user_behavior'),
+    path('content-performance/', content_performance_analytics, name='content_performance'),
+    path('revenue-advanced/', revenue_analytics, name='revenue_analytics_advanced'),
+    path('personal/', user_personal_analytics, name='personal_analytics'),
+    path('real-time/', real_time_analytics, name='real_time_analytics'),
 ]
