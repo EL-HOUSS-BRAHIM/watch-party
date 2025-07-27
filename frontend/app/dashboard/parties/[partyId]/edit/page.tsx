@@ -447,9 +447,12 @@ export default function EditPartyPage() {
                 <Input
                   id="name"
                   {...register("name")}
-                  error={errors.name?.message}
+                  className={errors.name ? "border-red-500" : ""}
                   disabled={party.status === "active"}
                 />
+                {errors.name && (
+                  <p className="text-sm text-red-500 mt-1">{errors.name.message}</p>
+                )}
               </div>
 
               <div>
@@ -458,9 +461,11 @@ export default function EditPartyPage() {
                   id="description"
                   placeholder="What are you watching? Add details..."
                   {...register("description")}
-                  error={errors.description?.message}
-                  className="min-h-[100px]"
+                  className={`min-h-[100px] ${errors.description ? "border-red-500" : ""}`}
                 />
+                {errors.description && (
+                  <p className="text-sm text-red-500 mt-1">{errors.description.message}</p>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -470,9 +475,12 @@ export default function EditPartyPage() {
                     id="scheduledFor"
                     type="datetime-local"
                     {...register("scheduledFor")}
-                    error={errors.scheduledFor?.message}
+                    className={errors.scheduledFor ? "border-red-500" : ""}
                     disabled={party.status === "active"}
                   />
+                  {errors.scheduledFor && (
+                    <p className="text-sm text-red-500 mt-1">{errors.scheduledFor.message}</p>
+                  )}
                 </div>
                 <div>
                   <Label htmlFor="maxParticipants">Max Participants *</Label>
@@ -482,8 +490,11 @@ export default function EditPartyPage() {
                     min="2"
                     max="100"
                     {...register("maxParticipants", { valueAsNumber: true })}
-                    error={errors.maxParticipants?.message}
+                    className={errors.maxParticipants ? "border-red-500" : ""}
                   />
+                  {errors.maxParticipants && (
+                    <p className="text-sm text-red-500 mt-1">{errors.maxParticipants.message}</p>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -550,8 +561,11 @@ export default function EditPartyPage() {
                   type="password"
                   placeholder="Set a password for additional security"
                   {...register("password")}
-                  error={errors.password?.message}
+                  className={errors.password ? "border-red-500" : ""}
                 />
+                {errors.password && (
+                  <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>
+                )}
               </div>
             </CardContent>
           </Card>
