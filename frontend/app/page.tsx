@@ -1,304 +1,168 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Play, Users, MessageCircle, Zap, Shield, Globe } from "lucide-react"
 import Link from "next/link"
-import Image from "next/image"
+import { Play, Users, Zap, Shield, Smartphone, Globe } from "lucide-react"
+import { WatchPartyButton } from "@/components/ui/watch-party-button"
+import {
+  WatchPartyCard,
+  WatchPartyCardContent,
+  WatchPartyCardDescription,
+  WatchPartyCardHeader,
+  WatchPartyCardTitle,
+} from "@/components/ui/watch-party-card"
 
-export default function LandingPage() {
+export default function HomePage() {
+  const features = [
+    {
+      icon: Play,
+      title: "Synchronized Viewing",
+      description: "Watch videos together in perfect sync with friends around the world.",
+    },
+    {
+      icon: Users,
+      title: "Social Experience",
+      description: "Chat, react, and share moments with your watch party companions.",
+    },
+    {
+      icon: Zap,
+      title: "Lightning Fast",
+      description: "Ultra-low latency streaming for seamless group watching experiences.",
+    },
+    {
+      icon: Shield,
+      title: "Privacy First",
+      description: "Your data is secure with end-to-end encryption and privacy controls.",
+    },
+    {
+      icon: Smartphone,
+      title: "Multi-Platform",
+      description: "Watch on any device - desktop, mobile, tablet, or smart TV.",
+    },
+    {
+      icon: Globe,
+      title: "Global Reach",
+      description: "Connect with friends worldwide with our global CDN infrastructure.",
+    },
+  ]
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background-secondary to-background">
-      {/* Header */}
-      <header className="border-b border-border/40 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-              <Play className="w-4 h-4 text-white" />
-            </div>
-            <span className="text-xl font-bold font-display">Watch Party</span>
-          </div>
-
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/features" className="text-muted-foreground hover:text-foreground transition-colors">
-              Features
-            </Link>
-            <Link href="/pricing" className="text-muted-foreground hover:text-foreground transition-colors">
-              Pricing
-            </Link>
-            <Link href="/about" className="text-muted-foreground hover:text-foreground transition-colors">
-              About
-            </Link>
-          </nav>
-
-          <div className="flex items-center space-x-3">
-            <Button variant="ghost" asChild>
-              <Link href="/login">Sign In</Link>
-            </Button>
-            <Button asChild className="shadow-glow">
-              <Link href="/register">Get Started</Link>
-            </Button>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen bg-watch-party-bg">
       {/* Hero Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto text-center">
-          <Badge variant="secondary" className="mb-6">
-            🎉 Now supporting 10,000+ concurrent users
-          </Badge>
-
-          <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
-            Stream Together,
-            <br />
-            <span className="bg-gradient-primary bg-clip-text text-transparent">Watch as One</span>
-          </h1>
-
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Create synchronized watch parties with friends. Stream videos together with real-time chat, reactions, and
-            seamless video synchronization across all devices.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" asChild className="shadow-glow-lg">
-              <Link href="/register">
-                <Play className="w-5 h-5 mr-2" />
-                Start Watching Together
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-watch-party-gradient opacity-10"></div>
+        <div className="container mx-auto px-4 py-24 relative">
+          <div className="text-center max-w-4xl mx-auto">
+            <h1 className="text-5xl md:text-7xl font-bold text-watch-party-text-primary mb-6 animate-slide-in-cinema">
+              Watch Together,{" "}
+              <span className="bg-watch-party-gradient bg-clip-text text-transparent animate-gradient-shift">
+                Anywhere
+              </span>
+            </h1>
+            <p className="text-xl md:text-2xl text-watch-party-text-secondary mb-8 animate-slide-in-cinema">
+              The next-generation platform for synchronized video watching with friends. Experience movies, shows, and
+              content together in real-time.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-in-cinema">
+              <Link href="/dashboard">
+                <WatchPartyButton variant="gradient" size="lg" className="text-lg px-8 py-4">
+                  <Play className="h-5 w-5" />
+                  Start Watching
+                </WatchPartyButton>
               </Link>
-            </Button>
-            <Button size="lg" variant="secondary" asChild>
-              <Link href="/demo">
-                <Users className="w-5 h-5 mr-2" />
-                View Demo
+              <Link href="/about">
+                <WatchPartyButton variant="outline" size="lg" className="text-lg px-8 py-4">
+                  Learn More
+                </WatchPartyButton>
               </Link>
-            </Button>
-          </div>
-
-          {/* Hero Image Placeholder */}
-          <div className="relative max-w-4xl mx-auto">
-            <div className="aspect-video bg-gradient-secondary rounded-xl border border-border/50 overflow-hidden shadow-2xl">
-              <Image
-                src="/placeholder.svg?height=600&width=800"
-                alt="Watch Party Interface"
-                width={800}
-                height={600}
-                className="w-full h-full object-cover"
-              />
             </div>
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-accent-primary/20 rounded-full blur-xl"></div>
-            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-support-violet/20 rounded-full blur-xl"></div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 px-4 bg-background-secondary/50">
-        <div className="container mx-auto">
+      <section className="py-24 bg-watch-party-surface">
+        <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold font-display mb-4">
-              Everything You Need for Perfect Watch Parties
+            <h2 className="text-4xl md:text-5xl font-bold text-watch-party-text-primary mb-4">
+              Why Choose WatchParty?
             </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              From real-time synchronization to advanced social features, we've built the ultimate platform for shared
-              viewing experiences.
+            <p className="text-xl text-watch-party-text-secondary max-w-2xl mx-auto">
+              Built for the future of social entertainment with cutting-edge technology and user-first design.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-glow transition-all duration-300">
-              <CardHeader>
-                <div className="w-12 h-12 bg-accent-primary/20 rounded-lg flex items-center justify-center mb-4">
-                  <Zap className="w-6 h-6 text-accent-primary" />
-                </div>
-                <CardTitle>Real-time Sync</CardTitle>
-                <CardDescription>
-                  Perfect video synchronization with sub-second accuracy across all participants
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-glow transition-all duration-300">
-              <CardHeader>
-                <div className="w-12 h-12 bg-accent-success/20 rounded-lg flex items-center justify-center mb-4">
-                  <MessageCircle className="w-6 h-6 text-accent-success" />
-                </div>
-                <CardTitle>Live Chat</CardTitle>
-                <CardDescription>
-                  Interactive chat with emoji reactions, mentions, and file sharing capabilities
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-glow transition-all duration-300">
-              <CardHeader>
-                <div className="w-12 h-12 bg-support-violet/20 rounded-lg flex items-center justify-center mb-4">
-                  <Users className="w-6 h-6 text-support-violet" />
-                </div>
-                <CardTitle>Social Features</CardTitle>
-                <CardDescription>
-                  Friend system, activity feeds, and community features for enhanced social interaction
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-glow transition-all duration-300">
-              <CardHeader>
-                <div className="w-12 h-12 bg-accent-warning/20 rounded-lg flex items-center justify-center mb-4">
-                  <Globe className="w-6 h-6 text-accent-warning" />
-                </div>
-                <CardTitle>Multi-Source Support</CardTitle>
-                <CardDescription>
-                  Upload from Google Drive, OneDrive, S3, or direct file upload with CDN optimization
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-glow transition-all duration-300">
-              <CardHeader>
-                <div className="w-12 h-12 bg-accent-premium/20 rounded-lg flex items-center justify-center mb-4">
-                  <Shield className="w-6 h-6 text-accent-premium" />
-                </div>
-                <CardTitle>Enterprise Security</CardTitle>
-                <CardDescription>
-                  2FA, biometric auth, session management, and comprehensive security monitoring
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-glow transition-all duration-300">
-              <CardHeader>
-                <div className="w-12 h-12 bg-support-pink/20 rounded-lg flex items-center justify-center mb-4">
-                  <Play className="w-6 h-6 text-support-pink" />
-                </div>
-                <CardTitle>Advanced Analytics</CardTitle>
-                <CardDescription>
-                  Detailed viewing metrics, engagement tracking, and business intelligence
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-4xl font-bold text-accent-primary mb-2">10,000+</div>
-              <div className="text-muted-foreground">Concurrent Users</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-accent-success mb-2">99.9%</div>
-              <div className="text-muted-foreground">Uptime</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-support-violet mb-2">50ms</div>
-              <div className="text-muted-foreground">Sync Latency</div>
-            </div>
-            <div>
-              <div className="text-4xl font-bold text-accent-premium mb-2">24/7</div>
-              <div className="text-muted-foreground">Support</div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => {
+              const Icon = feature.icon
+              return (
+                <WatchPartyCard key={index} className="hover:shadow-watch-party-glow transition-all duration-300">
+                  <WatchPartyCardHeader>
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 rounded-lg bg-watch-party-gradient">
+                        <Icon className="h-6 w-6 text-white" />
+                      </div>
+                      <WatchPartyCardTitle className="text-xl">{feature.title}</WatchPartyCardTitle>
+                    </div>
+                  </WatchPartyCardHeader>
+                  <WatchPartyCardContent>
+                    <WatchPartyCardDescription className="text-base">{feature.description}</WatchPartyCardDescription>
+                  </WatchPartyCardContent>
+                </WatchPartyCard>
+              )
+            })}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-primary">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold font-display mb-4 text-white">
+      <section className="py-24 bg-watch-party-bg relative overflow-hidden">
+        <div className="absolute inset-0 bg-watch-party-gradient opacity-5"></div>
+        <div className="container mx-auto px-4 text-center relative">
+          <h2 className="text-4xl md:text-5xl font-bold text-watch-party-text-primary mb-6">
             Ready to Start Your Watch Party?
           </h2>
-          <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-            Join thousands of users already enjoying synchronized streaming experiences with friends and family.
+          <p className="text-xl text-watch-party-text-secondary mb-8 max-w-2xl mx-auto">
+            Join thousands of users already enjoying synchronized viewing experiences. Create your first watch party in
+            seconds.
           </p>
-          <Button size="lg" variant="secondary" asChild className="shadow-xl">
-            <Link href="/register">Get Started Free</Link>
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/register">
+              <WatchPartyButton variant="glow" size="lg" className="text-lg px-8 py-4">
+                <Users className="h-5 w-5" />
+                Get Started Free
+              </WatchPartyButton>
+            </Link>
+            <Link href="/discover">
+              <WatchPartyButton variant="secondary" size="lg" className="text-lg px-8 py-4">
+                Explore Parties
+              </WatchPartyButton>
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border/40 py-12 px-4">
-        <div className="container mx-auto">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-                  <Play className="w-4 h-4 text-white" />
-                </div>
-                <span className="text-xl font-bold font-display">Watch Party</span>
+      <footer className="bg-watch-party-surface border-t border-watch-party-border py-12">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="flex items-center space-x-2 mb-4 md:mb-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-watch-party-gradient">
+                <Play className="h-4 w-4 text-white" />
               </div>
-              <p className="text-muted-foreground">The ultimate platform for synchronized streaming experiences.</p>
+              <span className="text-xl font-bold text-watch-party-text-primary">WatchParty</span>
             </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Product</h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link href="/features" className="hover:text-foreground transition-colors">
-                    Features
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/pricing" className="hover:text-foreground transition-colors">
-                    Pricing
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/security" className="hover:text-foreground transition-colors">
-                    Security
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Company</h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link href="/about" className="hover:text-foreground transition-colors">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog" className="hover:text-foreground transition-colors">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="hover:text-foreground transition-colors">
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4">Legal</h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link href="/privacy" className="hover:text-foreground transition-colors">
-                    Privacy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/terms" className="hover:text-foreground transition-colors">
-                    Terms
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/cookies" className="hover:text-foreground transition-colors">
-                    Cookies
-                  </Link>
-                </li>
-              </ul>
+            <div className="flex space-x-6 text-watch-party-text-secondary">
+              <Link href="/privacy" className="hover:text-watch-party-primary transition-colors">
+                Privacy
+              </Link>
+              <Link href="/terms" className="hover:text-watch-party-primary transition-colors">
+                Terms
+              </Link>
+              <Link href="/help" className="hover:text-watch-party-primary transition-colors">
+                Help
+              </Link>
             </div>
           </div>
-
-          <div className="border-t border-border/40 mt-8 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2024 Watch Party. All rights reserved.</p>
+          <div className="mt-8 pt-8 border-t border-watch-party-border text-center text-watch-party-text-secondary">
+            <p>&copy; 2025 WatchParty. All rights reserved. Built for the future of social entertainment.</p>
           </div>
         </div>
       </footer>
