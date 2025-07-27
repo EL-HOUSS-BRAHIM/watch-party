@@ -18,6 +18,17 @@ export { NotificationsAPI } from "./notifications"
 export { AnalyticsAPI } from "./analytics"
 export { AdminAPI } from "./admin"
 
+// Import types for proxy typing
+import type { AuthAPI } from "./auth"
+import type { UsersAPI } from "./users"
+import type { VideosAPI } from "./videos"
+import type { PartiesAPI } from "./parties"
+import type { ChatAPI } from "./chat"
+import type { BillingAPI } from "./billing"
+import type { NotificationsAPI } from "./notifications"
+import type { AnalyticsAPI } from "./analytics"
+import type { AdminAPI } from "./admin"
+
 // Lazy-loaded API instances
 let _authAPI: any = null
 let _usersAPI: any = null
@@ -101,64 +112,64 @@ function getAdminAPI() {
   return _adminAPI
 }
 
-// Export lazy-loaded instances
-export const authAPI = new Proxy({}, {
+// Export lazy-loaded instances with proper typing
+export const authAPI = new Proxy({} as AuthAPI, {
   get(target, prop) {
     const api = getAuthAPI()
     return api?.[prop]
   }
 })
 
-export const usersAPI = new Proxy({}, {
+export const usersAPI = new Proxy({} as UsersAPI, {
   get(target, prop) {
     const api = getUsersAPI()
     return api?.[prop]
   }
 })
 
-export const videosAPI = new Proxy({}, {
+export const videosAPI = new Proxy({} as VideosAPI, {
   get(target, prop) {
     const api = getVideosAPI()
     return api?.[prop]
   }
 })
 
-export const partiesAPI = new Proxy({}, {
+export const partiesAPI = new Proxy({} as PartiesAPI, {
   get(target, prop) {
     const api = getPartiesAPI()
     return api?.[prop]
   }
 })
 
-export const chatAPI = new Proxy({}, {
+export const chatAPI = new Proxy({} as ChatAPI, {
   get(target, prop) {
     const api = getChatAPI()
     return api?.[prop]
   }
 })
 
-export const billingAPI = new Proxy({}, {
+export const billingAPI = new Proxy({} as BillingAPI, {
   get(target, prop) {
     const api = getBillingAPI()
     return api?.[prop]
   }
 })
 
-export const notificationsAPI = new Proxy({}, {
+export const notificationsAPI = new Proxy({} as NotificationsAPI, {
   get(target, prop) {
     const api = getNotificationsAPI()
     return api?.[prop]
   }
 })
 
-export const analyticsAPI = new Proxy({}, {
+export const analyticsAPI = new Proxy({} as AnalyticsAPI, {
   get(target, prop) {
     const api = getAnalyticsAPI()
     return api?.[prop]
   }
 })
 
-export const adminAPI = new Proxy({}, {
+export const adminAPI = new Proxy({} as AdminAPI, {
   get(target, prop) {
     const api = getAdminAPI()
     return api?.[prop]
