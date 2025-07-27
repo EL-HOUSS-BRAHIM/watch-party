@@ -49,7 +49,6 @@ import {
   Video,
   Coffee,
   Rocket,
-  Lightning,
   Snowflake,
   Sun,
   Moon,
