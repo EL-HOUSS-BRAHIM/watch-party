@@ -26,6 +26,8 @@ interface AuthContextType {
   socialLogin: (provider: "google" | "github") => Promise<void>
   refreshToken: () => Promise<void>
   updateProfile: (data: Partial<User>) => Promise<void>
+  updateUser: (userData: Partial<User>) => void
+  refreshUser: () => Promise<void>
 }
 
 interface RegisterData extends APIRegisterData {
@@ -258,6 +260,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  const updateUser = (userData: Partial<User>) => {
+    setUser(prev => prev ? { ...prev, ...userData } : null)
+  }
+
+  const refreshUser = async () => {
+    try {
+      setIsLoading(true)
+      const token = localStorage.getItem("accessToken")
+      if (token) {
+        const userData = await authAPI.getProfile()
+        setUser(userData)
+      }
+    } catch (error) {
+      console.error("Failed to refresh user:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const value = {
     user,
     isLoading,
@@ -272,6 +293,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     socialLogin,
     refreshToken,
     updateProfile,
+    updateUser,
+    refreshUser,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
