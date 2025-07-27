@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -85,7 +85,7 @@ interface PartyInvite {
   join_deadline?: string
 }
 
-export default function QuickInvitePage() {
+function QuickInviteContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, isAuthenticated } = useAuth()
@@ -606,5 +606,20 @@ export default function QuickInvitePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function QuickInvitePage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p>Loading invite details...</p>
+        </div>
+      </div>
+    }>
+      <QuickInviteContent />
+    </Suspense>
   )
 }
