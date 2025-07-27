@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -151,7 +151,7 @@ interface PartyAnalytics {
   }
 }
 
-export default function PartyAnalyticsPage() {
+function PartyAnalyticsContent() {
   const searchParams = useSearchParams()
   const partyId = searchParams.get('id')
   const { user } = useAuth()
@@ -856,5 +856,20 @@ export default function PartyAnalyticsPage() {
         </Tabs>
       </div>
     </div>
+  )
+}
+
+export default function PartyAnalyticsPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto py-8 px-4">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p>Loading party analytics...</p>
+        </div>
+      </div>
+    }>
+      <PartyAnalyticsContent />
+    </Suspense>
   )
 }
