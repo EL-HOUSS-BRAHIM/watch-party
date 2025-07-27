@@ -18,6 +18,7 @@ urlpatterns = [
     # Payment Methods
     path('payment-methods/', views.PaymentMethodsView.as_view(), name='payment_methods'),
     path('payment-methods/<uuid:pk>/', views.PaymentMethodDetailView.as_view(), name='payment_method_detail'),
+    path('payment-methods/<uuid:pk>/set-default/', views.PaymentMethodSetDefaultView.as_view(), name='set_default_payment_method'),
     
     # Billing History
     path('history/', views.BillingHistoryView.as_view(), name='billing_history'),
