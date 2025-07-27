@@ -492,16 +492,22 @@ export default function ProfileEditPage() {
                     <Input
                       id="firstName"
                       {...register("firstName")}
-                      error={errors.firstName?.message}
+                      className={errors.firstName ? "border-red-500" : ""}
                     />
+                    {errors.firstName && (
+                      <p className="text-sm text-red-500 mt-1">{errors.firstName.message}</p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="lastName">Last Name *</Label>
                     <Input
                       id="lastName"
                       {...register("lastName")}
-                      error={errors.lastName?.message}
+                      className={errors.lastName ? "border-red-500" : ""}
                     />
+                    {errors.lastName && (
+                      <p className="text-sm text-red-500 mt-1">{errors.lastName.message}</p>
+                    )}
                   </div>
                 </div>
 
@@ -510,8 +516,11 @@ export default function ProfileEditPage() {
                   <Input
                     id="username"
                     {...register("username")}
-                    error={errors.username?.message}
+                    className={errors.username ? "border-red-500" : ""}
                   />
+                  {errors.username && (
+                    <p className="text-sm text-red-500 mt-1">{errors.username.message}</p>
+                  )}
                 </div>
 
                 <div>
@@ -520,8 +529,11 @@ export default function ProfileEditPage() {
                     id="email"
                     type="email"
                     {...register("email")}
-                    error={errors.email?.message}
+                    className={errors.email ? "border-red-500" : ""}
                   />
+                  {errors.email && (
+                    <p className="text-sm text-red-500 mt-1">{errors.email.message}</p>
+                  )}
                 </div>
 
                 <div>
@@ -530,9 +542,11 @@ export default function ProfileEditPage() {
                     id="bio"
                     placeholder="Tell others about yourself..."
                     {...register("bio")}
-                    error={errors.bio?.message}
-                    className="min-h-[100px]"
+                    className={`min-h-[100px] ${errors.bio ? "border-red-500" : ""}`}
                   />
+                  {errors.bio && (
+                    <p className="text-sm text-red-500 mt-1">{errors.bio.message}</p>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -542,8 +556,11 @@ export default function ProfileEditPage() {
                       id="location"
                       placeholder="City, Country"
                       {...register("location")}
-                      error={errors.location?.message}
+                      className={errors.location ? "border-red-500" : ""}
                     />
+                    {errors.location && (
+                      <p className="text-sm text-red-500 mt-1">{errors.location.message}</p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="website">Website</Label>
@@ -551,8 +568,11 @@ export default function ProfileEditPage() {
                       id="website"
                       placeholder="https://yourwebsite.com"
                       {...register("website")}
-                      error={errors.website?.message}
+                      className={errors.website ? "border-red-500" : ""}
                     />
+                    {errors.website && (
+                      <p className="text-sm text-red-500 mt-1">{errors.website.message}</p>
+                    )}
                   </div>
                 </div>
 
@@ -562,8 +582,11 @@ export default function ProfileEditPage() {
                     id="birthday"
                     type="date"
                     {...register("birthday")}
-                    error={errors.birthday?.message}
+                    className={errors.birthday ? "border-red-500" : ""}
                   />
+                  {errors.birthday && (
+                    <p className="text-sm text-red-500 mt-1">{errors.birthday.message}</p>
+                  )}
                 </div>
               </CardContent>
             </Card>
