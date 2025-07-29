@@ -78,54 +78,79 @@ export default function DashboardPage() {
     const fetchDashboardData = async () => {
       try {
         setIsLoading(true)
-        const token = localStorage.getItem("accessToken")
+        const token = localStorage.getItem("access_token")
 
         // Fetch dashboard stats
-        const statsResponse = await fetch("/api/users/dashboard/stats/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        try {
+          const statsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/dashboard/stats/`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
 
-        if (statsResponse.ok) {
-          const statsData = await statsResponse.json()
-          setStats(statsData)
+          if (statsResponse.ok) {
+            const statsData = await statsResponse.json()
+            console.log("Dashboard stats received:", statsData)
+            setStats(statsData)
+          } else {
+            console.warn("Dashboard stats API failed:", statsResponse.status, statsResponse.statusText)
+          }
+        } catch (error) {
+          console.error("Failed to fetch dashboard stats:", error)
         }
 
         // Fetch recent parties
-        const partiesResponse = await fetch("/api/parties/?limit=5&ordering=-created_at", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        try {
+          const partiesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/parties/?limit=5&ordering=-created_at`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
 
-        if (partiesResponse.ok) {
-          const partiesData = await partiesResponse.json()
-          setRecentParties(partiesData.results || [])
+          if (partiesResponse.ok) {
+            const partiesData = await partiesResponse.json()
+            setRecentParties(partiesData.results || [])
+          } else {
+            console.warn("Parties API failed:", partiesResponse.status, partiesResponse.statusText)
+          }
+        } catch (error) {
+          console.error("Failed to fetch parties:", error)
         }
 
         // Fetch recent videos
-        const videosResponse = await fetch("/api/videos/?limit=4&ordering=-created_at", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        try {
+          const videosResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/videos/?limit=4&ordering=-created_at`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
 
-        if (videosResponse.ok) {
-          const videosData = await videosResponse.json()
-          setRecentVideos(videosData.results || [])
+          if (videosResponse.ok) {
+            const videosData = await videosResponse.json()
+            setRecentVideos(videosData.results || [])
+          } else {
+            console.warn("Videos API failed:", videosResponse.status, videosResponse.statusText)
+          }
+        } catch (error) {
+          console.error("Failed to fetch videos:", error)
         }
 
         // Fetch friend activity
-        const activityResponse = await fetch("/api/dashboard/activities/?limit=10", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        try {
+          const activityResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/activities/?limit=10`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
 
-        if (activityResponse.ok) {
-          const activityData = await activityResponse.json()
-          setFriendActivity(activityData.activities || [])
+          if (activityResponse.ok) {
+            const activityData = await activityResponse.json()
+            setFriendActivity(activityData.activities || [])
+          } else {
+            console.warn("Activity API failed:", activityResponse.status, activityResponse.statusText)
+          }
+        } catch (error) {
+          console.error("Failed to fetch activity:", error)
         }
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error)
@@ -208,7 +233,7 @@ export default function DashboardPage() {
               <div className="text-2xl font-bold text-watch-party-text-primary">{stats?.total_videos || 0}</div>
               <p className="text-xs text-watch-party-text-secondary">
                 <span className="text-watch-party-success">
-                  +{stats?.recent_activity.videos_uploaded_this_week || 0}
+                  +{stats?.recent_activity?.videos_uploaded_this_week || 0}
                 </span>{" "}
                 this week
               </p>
@@ -223,7 +248,7 @@ export default function DashboardPage() {
             <WatchPartyCardContent>
               <div className="text-2xl font-bold text-watch-party-text-primary">{stats?.total_parties || 0}</div>
               <p className="text-xs text-watch-party-text-secondary">
-                <span className="text-watch-party-success">+{stats?.recent_activity.parties_this_week || 0}</span> this
+                <span className="text-watch-party-success">+{stats?.recent_activity?.parties_this_week || 0}</span> this
                 week
               </p>
             </WatchPartyCardContent>
@@ -248,7 +273,7 @@ export default function DashboardPage() {
             <WatchPartyCardContent>
               <div className="text-2xl font-bold text-watch-party-text-primary">{stats?.watch_time_hours || 0}h</div>
               <p className="text-xs text-watch-party-text-secondary">
-                <span className="text-watch-party-success">+{stats?.recent_activity.watch_time_this_week || 0}h</span>{" "}
+                <span className="text-watch-party-success">+{stats?.recent_activity?.watch_time_this_week || 0}h</span>{" "}
                 this week
               </p>
             </WatchPartyCardContent>

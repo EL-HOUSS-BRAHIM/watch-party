@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/contexts/auth-context"
+import { useAuthGuard } from "@/components/auth/auth-guard"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import {
@@ -51,16 +52,24 @@ export function FriendsList({ className }: FriendsListProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
   const { user } = useAuth()
+  const { canMakeApiCall, getAuthToken } = useAuthGuard()
   const { toast } = useToast()
 
   useEffect(() => {
-    loadFriends()
-  }, [])
+    if (canMakeApiCall()) {
+      loadFriends()
+    }
+  }, [canMakeApiCall])
 
   const loadFriends = async () => {
+    if (!canMakeApiCall()) {
+      console.log("Cannot load friends: user not authenticated")
+      return
+    }
+
     try {
       setIsLoading(true)
-      const token = localStorage.getItem("accessToken")
+      const token = getAuthToken()
       
       const response = await fetch("/api/users/friends/", {
         headers: {
@@ -87,8 +96,13 @@ export function FriendsList({ className }: FriendsListProps) {
   }
 
   const removeFriend = async (friendId: string) => {
+    if (!canMakeApiCall()) {
+      console.log("Cannot remove friend: user not authenticated")
+      return
+    }
+
     try {
-      const token = localStorage.getItem("accessToken")
+      const token = getAuthToken()
       
       await fetch(`/api/users/friends/${friendId}/`, {
         method: "DELETE",
@@ -113,8 +127,13 @@ export function FriendsList({ className }: FriendsListProps) {
   }
 
   const blockUser = async (friendId: string) => {
+    if (!canMakeApiCall()) {
+      console.log("Cannot block user: user not authenticated")
+      return
+    }
+
     try {
-      const token = localStorage.getItem("accessToken")
+      const token = getAuthToken()
       
       await fetch(`/api/users/${friendId}/block/`, {
         method: "POST",

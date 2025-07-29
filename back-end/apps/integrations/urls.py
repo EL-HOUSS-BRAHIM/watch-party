@@ -26,6 +26,15 @@ social_oauth_patterns = [
 ]
 
 urlpatterns = [
+    # Public endpoints (no auth required)
+    path('health/', views.integration_health, name='integration_health'),
+    
+    # Admin integration endpoints
+    path('status/', views.IntegrationStatusView.as_view(), name='integration_status'),
+    path('management/', views.IntegrationManagementView.as_view(), name='integration_management'),
+    path('test/', views.test_integration, name='test_integration'),
+    path('types/', views.integration_types, name='integration_types'),
+    
     # General integration endpoints
     path('connections/', views.list_user_connections, name='list_user_connections'),
     path('connections/<int:connection_id>/disconnect/', views.disconnect_service, name='disconnect_service'),

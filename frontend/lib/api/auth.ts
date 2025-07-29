@@ -36,7 +36,7 @@ export class AuthAPI {
    */
   async logout(): Promise<APIResponse> {
     // Only access localStorage on client side
-    const refreshToken = typeof window !== 'undefined' ? localStorage.getItem("refreshToken") : null
+    const refreshToken = typeof window !== 'undefined' ? localStorage.getItem("refresh_token") : null
     return apiClient.post<APIResponse>(API_ENDPOINTS.auth.logout, {
       refresh_token: refreshToken,
     })
@@ -51,7 +51,7 @@ export class AuthAPI {
       throw new Error("Cannot refresh token on server side")
     }
 
-    const refreshToken = localStorage.getItem("refreshToken")
+    const refreshToken = localStorage.getItem("refresh_token")
     if (!refreshToken) {
       throw new Error("No refresh token available")
     }

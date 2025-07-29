@@ -12,9 +12,12 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Bell, BellOff, Check, X } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { formatDistanceToNow } from "date-fns"
-import { notificationsAPI } from "@/lib/api"
+import { NotificationsAPI } from "@/lib/api/notifications"
 import type { Notification } from "@/lib/api/types"
 import { cn } from "@/lib/utils"
+
+// Initialize API instance directly
+const notificationsAPI = new NotificationsAPI()
 
 export function NotificationBell() {
   const [notifications, setNotifications] = useState<Notification[]>([])

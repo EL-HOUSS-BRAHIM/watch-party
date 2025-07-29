@@ -49,8 +49,16 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     setConnectionStatus("connecting")
 
-    const token = localStorage.getItem("accessToken")
-    const wsUrl = `${process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000"}/ws/notifications/?token=${token}`
+    const token = localStorage.getItem("access_token")
+    
+    // Don't connect if no token is available
+    if (!token) {
+      console.log("No authentication token available, skipping WebSocket connection")
+      setConnectionStatus("disconnected")
+      return
+    }
+    
+    const wsUrl = `${process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000/ws"}?token=${token}`
 
     const newSocket = new WebSocket(wsUrl)
     socketRef.current = newSocket

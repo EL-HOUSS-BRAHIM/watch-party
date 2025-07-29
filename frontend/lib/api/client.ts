@@ -25,7 +25,7 @@ export interface ApiError {
 }
 
 // Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
 const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8000/ws"
 
 // Request timeout in milliseconds
@@ -132,13 +132,13 @@ class ApiClient {
 
   private getAuthToken(): string | null {
     if (typeof window !== "undefined") {
-      return localStorage.getItem("accessToken")
+      return localStorage.getItem("access_token")
     }
     return null
   }
 
   private async refreshToken(): Promise<void> {
-    const refreshToken = typeof window !== "undefined" ? localStorage.getItem("refreshToken") : null
+    const refreshToken = typeof window !== "undefined" ? localStorage.getItem("refresh_token") : null
 
     if (!refreshToken) {
       throw new Error("No refresh token available")
@@ -152,16 +152,16 @@ class ApiClient {
       const { access, refresh } = response.data
 
       if (typeof window !== "undefined") {
-        localStorage.setItem("accessToken", access)
+        localStorage.setItem("access_token", access)
         if (refresh) {
-          localStorage.setItem("refreshToken", refresh)
+          localStorage.setItem("refresh_token", refresh)
         }
       }
     } catch (error) {
       // Clear tokens on refresh failure
       if (typeof window !== "undefined") {
-        localStorage.removeItem("accessToken")
-        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("access_token")
+        localStorage.removeItem("refresh_token")
       }
       throw error
     }
@@ -169,8 +169,8 @@ class ApiClient {
 
   private handleAuthError(): void {
     if (typeof window !== "undefined") {
-      localStorage.removeItem("accessToken")
-      localStorage.removeItem("refreshToken")
+      localStorage.removeItem("access_token")
+      localStorage.removeItem("refresh_token")
 
       // Redirect to login page
       window.location.href = "/login"
@@ -221,7 +221,7 @@ class ApiClient {
   }
 
   async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
-    const response = await this.client.post<T>(url, data, config)
+    const response = await this.client.post(url, data, config)
     return response.data
   }
 
@@ -300,14 +300,14 @@ class ApiClient {
   // Utility methods
   setAuthToken(token: string): void {
     if (typeof window !== "undefined") {
-      localStorage.setItem("accessToken", token)
+      localStorage.setItem("access_token", token)
     }
   }
 
   clearAuthToken(): void {
     if (typeof window !== "undefined") {
-      localStorage.removeItem("accessToken")
-      localStorage.removeItem("refreshToken")
+      localStorage.removeItem("access_token")
+      localStorage.removeItem("refresh_token")
     }
   }
 

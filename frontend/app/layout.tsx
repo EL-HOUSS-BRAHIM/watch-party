@@ -1,9 +1,9 @@
 import type React from "react"
 import type { Metadata } from "next"
 import "./globals.css"
-import { WatchPartyThemeProvider } from "@/components/theme/theme-provider"
 import { WatchPartyHeader } from "@/components/layout/watch-party-header"
 import { Toaster } from "@/components/ui/toaster"
+import { Providers } from "@/components/providers"
 
 export const metadata: Metadata = {
   title: "WatchParty - Stream Together, Anywhere",
@@ -67,13 +67,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased">
-        <WatchPartyThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+        <Providers>
           <div className="min-h-screen bg-watch-party-bg text-watch-party-text-primary">
             <WatchPartyHeader />
             <main className="flex-1">{children}</main>
             <Toaster />
           </div>
-        </WatchPartyThemeProvider>
+        </Providers>
       </body>
     </html>
   )

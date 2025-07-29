@@ -187,6 +187,7 @@ urlpatterns = [
     path('api/social/', include('apps.social.urls')),
     path('api/messaging/', include('apps.messaging.urls')),
     path('api/support/', include('apps.support.urls')),
+    path('api/mobile/', include('apps.mobile.urls')),
     
     # Admin Panel API
     path('api/admin/', include('apps.admin_panel.urls')),

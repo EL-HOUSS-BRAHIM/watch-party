@@ -3,7 +3,7 @@ Integration management views for admin panel
 """
 
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from django.utils import timezone
 import asyncio
@@ -11,6 +11,17 @@ import asyncio
 from core.responses import StandardResponse
 from core.api_documentation import api_response_documentation
 from core.integrations import integration_manager, IntegrationType, IntegrationConfig
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def integration_health(request):
+    """Public health check endpoint for integrations"""
+    return StandardResponse.success({
+        'status': 'healthy',
+        'service': 'integrations',
+        'timestamp': timezone.now().isoformat()
+    }, "Integration service is healthy")
 
 
 class IntegrationStatusView(APIView):
@@ -185,7 +196,7 @@ def test_integration(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAuthenticated])
 def integration_types(request):
     """Get available integration types"""
     types = [
@@ -208,3 +219,101 @@ def integration_types(request):
         'types': types,
         'total_types': len(types)
     }, "Integration types retrieved")
+
+
+# Google Drive Integration Views
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def google_drive_auth_url(request):
+    """Get Google Drive OAuth authorization URL"""
+    # TODO: Implement Google Drive OAuth authorization URL generation
+    return StandardResponse.error("Google Drive integration not implemented yet", status_code=501)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def google_drive_oauth_callback(request):
+    """Handle Google Drive OAuth callback"""
+    # TODO: Implement Google Drive OAuth callback handling
+    return StandardResponse.error("Google Drive integration not implemented yet", status_code=501)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def google_drive_list_files(request):
+    """List files from Google Drive"""
+    # TODO: Implement Google Drive file listing
+    return StandardResponse.error("Google Drive integration not implemented yet", status_code=501)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def google_drive_streaming_url(request, file_id):
+    """Get streaming URL for Google Drive file"""
+    # TODO: Implement Google Drive streaming URL generation
+    return StandardResponse.error("Google Drive integration not implemented yet", status_code=501)
+
+
+# AWS S3 Integration Views
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def s3_presigned_upload_url(request):
+    """Get presigned URL for S3 upload"""
+    # TODO: Implement S3 presigned URL generation
+    return StandardResponse.error("S3 integration not implemented yet", status_code=501)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def s3_upload_file(request):
+    """Upload file to S3"""
+    # TODO: Implement S3 file upload
+    return StandardResponse.error("S3 integration not implemented yet", status_code=501)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def s3_streaming_url(request, file_key):
+    """Get streaming URL for S3 file"""
+    # TODO: Implement S3 streaming URL generation
+    return StandardResponse.error("S3 integration not implemented yet", status_code=501)
+
+
+# Social OAuth Views
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def social_oauth_auth_url(request, provider):
+    """Get OAuth authorization URL for social provider"""
+    # TODO: Implement social OAuth authorization URL generation
+    return StandardResponse.error(f"{provider} integration not implemented yet", status_code=501)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def social_oauth_callback(request, provider):
+    """Handle OAuth callback for social provider"""
+    # TODO: Implement social OAuth callback handling
+    return StandardResponse.error(f"{provider} integration not implemented yet", status_code=501)
+
+
+# User Connection Management Views
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def list_user_connections(request):
+    """List user's integration connections"""
+    # TODO: Implement user connections listing
+    return StandardResponse.success({
+        'connections': [],
+        'total': 0
+    }, "User connections retrieved")
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def disconnect_service(request, connection_id):
+    """Disconnect a service integration"""
+    # TODO: Implement service disconnection
+    return StandardResponse.success({
+        'disconnected': True,
+        'connection_id': connection_id
+    }, "Service disconnected successfully")

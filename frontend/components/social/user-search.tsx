@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Search, UserPlus, Users, MessageCircle, Crown, Loader2 } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
+import { useAuthGuard } from "@/components/auth/auth-guard"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { useDebounce } from "@/hooks/use-debounce"
@@ -43,6 +44,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
 
   const debouncedSearchQuery = useDebounce(searchQuery, 300)
   const { user } = useAuth()
+  const { canMakeApiCall, getAuthToken } = useAuthGuard()
   const { toast } = useToast()
 
   const searchUsers = useCallback(
@@ -53,11 +55,16 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
         return
       }
 
+      if (!canMakeApiCall()) {
+        console.log("Cannot search users: user not authenticated")
+        return
+      }
+
       setIsLoading(true)
       setHasSearched(true)
 
       try {
-        const token = localStorage.getItem("accessToken")
+        const token = getAuthToken()
         const params = new URLSearchParams({
           q: query,
           sort: sortBy,
@@ -85,7 +92,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
         setIsLoading(false)
       }
     },
-    [sortBy, filterBy, toast],
+    [sortBy, filterBy, toast, canMakeApiCall, getAuthToken],
   )
 
   useEffect(() => {
@@ -93,8 +100,13 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
   }, [debouncedSearchQuery, searchUsers])
 
   const sendFriendRequest = async (userId: string) => {
+    if (!canMakeApiCall()) {
+      console.log("Cannot send friend request: user not authenticated")
+      return
+    }
+
     try {
-      const token = localStorage.getItem("accessToken")
+      const token = getAuthToken()
       const response = await fetch(`/api/users/${userId}/friend-request/`, {
         method: "POST",
         headers: {
@@ -120,8 +132,13 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
   }
 
   const acceptFriendRequest = async (userId: string) => {
+    if (!canMakeApiCall()) {
+      console.log("Cannot accept friend request: user not authenticated")
+      return
+    }
+
     try {
-      const token = localStorage.getItem("accessToken")
+      const token = getAuthToken()
       // Find the request ID (this would come from the user data in a real implementation)
       const response = await fetch(`/api/users/friend-requests/accept/`, {
         method: "POST",

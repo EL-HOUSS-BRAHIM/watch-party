@@ -2,8 +2,13 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 import { useRouter } from "next/navigation"
-import { authAPI, usersAPI } from "@/lib/api"
+import { AuthAPI } from "@/lib/api/auth"
+import { UsersAPI } from "@/lib/api/users"
 import type { User as APIUser, AuthResponse, RegisterData as APIRegisterData } from "@/lib/api/types"
+
+// Initialize API instances directly
+const authAPI = new AuthAPI()
+const usersAPI = new UsersAPI()
 
 // Extended user interface for the frontend context  
 interface User extends Omit<APIUser, 'avatar'> {
@@ -73,7 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return
       }
 
-      const token = localStorage.getItem("accessToken")
+      const token = localStorage.getItem("access_token")
       if (!token) {
         setIsLoading(false)
         return
@@ -84,8 +89,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (error) {
       console.error("Auth check failed:", error)
       if (typeof window !== 'undefined') {
-        localStorage.removeItem("accessToken")
-        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("access_token")
+        localStorage.removeItem("refresh_token")
       }
     } finally {
       setIsLoading(false)
@@ -97,8 +102,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await authAPI.login({ email, password })
 
       if (typeof window !== 'undefined') {
-        localStorage.setItem("accessToken", response.access_token)
-        localStorage.setItem("refreshToken", response.refresh_token)
+        localStorage.setItem("access_token", response.access_token)
+        localStorage.setItem("refresh_token", response.refresh_token)
       }
       
       const user = { 
@@ -115,6 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         router.push("/dashboard")
       }
     } catch (error) {
+      console.error("Login error:", error)
       throw error
     }
   }
@@ -126,8 +132,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Auto-login after successful registration
       if (response.access_token && response.refresh_token) {
         if (typeof window !== 'undefined') {
-          localStorage.setItem("accessToken", response.access_token)
-          localStorage.setItem("refreshToken", response.refresh_token)
+          localStorage.setItem("access_token", response.access_token)
+          localStorage.setItem("refresh_token", response.refresh_token)
         }
         setUser({ 
           ...response.user, 
@@ -152,8 +158,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error("Logout API call failed:", error)
     } finally {
       if (typeof window !== 'undefined') {
-        localStorage.removeItem("accessToken")
-        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("access_token")
+        localStorage.removeItem("refresh_token")
       }
       setUser(null)
       router.push("/login")
@@ -218,21 +224,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error("Cannot refresh token on server side")
       }
 
-      const refreshToken = localStorage.getItem("refreshToken")
+      const refreshToken = localStorage.getItem("refresh_token")
       if (!refreshToken) {
         throw new Error("No refresh token available")
       }
 
       const response = await authAPI.refreshToken()
-      localStorage.setItem("accessToken", response.access)
+      localStorage.setItem("access_token", response.access)
 
       // Get updated user data
       const userData = await authAPI.getProfile()
       setUser({ ...userData, avatar: userData.avatar || undefined })
     } catch (error) {
       if (typeof window !== 'undefined') {
-        localStorage.removeItem("accessToken")
-        localStorage.removeItem("refreshToken")
+        localStorage.removeItem("access_token")
+        localStorage.removeItem("refresh_token")
       }
       setUser(null)
       throw error
@@ -267,7 +273,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const refreshUser = async () => {
     try {
       setIsLoading(true)
-      const token = localStorage.getItem("accessToken")
+      const token = localStorage.getItem("access_token")
       if (token) {
         const userData = await authAPI.getProfile()
         setUser(userData)

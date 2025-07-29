@@ -10,11 +10,14 @@ export function createLazyComponent<T extends ComponentType<any>>(
 ) {
   const LazyComponent = lazy(importFunc)
 
-  return (props: any) => (
-    <Suspense fallback={fallback ? <fallback /> : <div>Loading...</div>}>
-      <LazyComponent {...props} />
-    </Suspense>
-  )
+  return (props: any) => {
+    const FallbackComponent = fallback
+    return (
+      <Suspense fallback={FallbackComponent ? <FallbackComponent /> : <div>Loading...</div>}>
+        <LazyComponent {...props} />
+      </Suspense>
+    )
+  }
 }
 
 // Image lazy loading hook
