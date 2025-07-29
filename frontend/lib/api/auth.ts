@@ -114,6 +114,81 @@ export class AuthAPI {
   async verify2FA(code: string): Promise<AuthResponse> {
     return apiClient.post<AuthResponse>(API_ENDPOINTS.auth.twoFactorVerify, { code })
   }
+
+  /**
+   * Resend email verification
+   */
+  async resendVerification(email: string): Promise<APIResponse> {
+    return apiClient.post<APIResponse>(API_ENDPOINTS.auth.resendVerification, { email })
+  }
+
+  /**
+   * Disable two-factor authentication
+   */
+  async disable2FA(): Promise<APIResponse> {
+    return apiClient.post<APIResponse>(API_ENDPOINTS.auth.twoFactorDisable)
+  }
+
+  /**
+   * Get user sessions
+   */
+  async getSessions(): Promise<Array<{
+    id: string
+    device: string
+    location: string
+    last_activity: string
+    is_current: boolean
+  }>> {
+    return apiClient.get(API_ENDPOINTS.auth.sessions)
+  }
+
+  /**
+   * Delete specific session
+   */
+  async deleteSession(sessionId: string): Promise<APIResponse> {
+    return apiClient.delete<APIResponse>(API_ENDPOINTS.auth.sessionDelete(sessionId))
+  }
+
+  /**
+   * Social Authentication - Get auth URL
+   */
+  getSocialAuthUrl(provider: 'google' | 'github'): string {
+    return provider === 'google' 
+      ? API_ENDPOINTS.auth.googleAuth 
+      : API_ENDPOINTS.auth.githubAuth
+  }
+
+  /**
+   * Generic social auth for any provider
+   */
+  getSocialAuthUrlGeneric(provider: string): string {
+    return API_ENDPOINTS.auth.socialAuth(provider)
+  }
+
+  /**
+   * Google Drive Authentication - Get auth URL
+   */
+  async getGoogleDriveAuthUrl(): Promise<{ auth_url: string }> {
+    return apiClient.get(API_ENDPOINTS.auth.googleDriveAuth)
+  }
+
+  /**
+   * Disconnect Google Drive
+   */
+  async disconnectGoogleDrive(): Promise<APIResponse> {
+    return apiClient.post<APIResponse>(API_ENDPOINTS.auth.googleDriveDisconnect)
+  }
+
+  /**
+   * Get Google Drive connection status
+   */
+  async getGoogleDriveStatus(): Promise<{
+    is_connected: boolean
+    email: string | null
+    permissions: string[]
+  }> {
+    return apiClient.get(API_ENDPOINTS.auth.googleDriveStatus)
+  }
 }
 
 // Export the class but don't instantiate it immediately
