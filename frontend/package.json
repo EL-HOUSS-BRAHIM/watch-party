@@ -65,6 +65,7 @@
     "react-dropzone": "latest",
     "react-hook-form": "latest",
     "react-resizable-panels": "latest",
+    "react-syntax-highlighter": "latest",
     "recharts": "latest",
     "socket.io-client": "latest",
     "sonner": "latest",
@@ -73,7 +74,7 @@
     "use-sync-external-store": "latest",
     "vaul": "latest",
     "webpack-bundle-analyzer": "latest",
-    "zod": "^3.23.8",
+    "zod": "^4.0.10",
     "zustand": "latest"
   },
   "devDependencies": {

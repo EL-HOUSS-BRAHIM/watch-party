@@ -2,59 +2,63 @@
 
 import type React from "react"
 
-import { useState, useEffect, Suspense } from "react"
+import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2, Eye, EyeOff, CheckCircle } from "lucide-react"
-import { useAuth } from "@/contexts/auth-context"
+import { ArrowLeft, Lock, CheckCircle, AlertCircle } from "lucide-react"
+import { WatchPartyButton } from "@/components/ui/watch-party-button"
+import { WatchPartyInput } from "@/components/ui/watch-party-input"
+import { WatchPartyCard } from "@/components/ui/watch-party-card"
 
-function ResetPasswordContent() {
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState(false)
-  const { resetPassword } = useAuth()
+export default function ResetPasswordPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const token = searchParams.get("token")
 
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [error, setError] = useState("")
+  const [tokenValid, setTokenValid] = useState<boolean | null>(null)
+
+  // Validate token on component mount
   useEffect(() => {
     if (!token) {
-      router.push("/forgot-password")
+      setTokenValid(false)
+      return
     }
-  }, [token, router])
 
-  const validatePassword = (password: string) => {
-    const minLength = password.length >= 8
-    const hasUpperCase = /[A-Z]/.test(password)
-    const hasLowerCase = /[a-z]/.test(password)
-    const hasNumbers = /\d/.test(password)
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    const validateToken = async () => {
+      try {
+        const response = await fetch(`/api/auth/reset-password/validate/`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
+        })
 
-    return {
-      minLength,
-      hasUpperCase,
-      hasLowerCase,
-      hasNumbers,
-      hasSpecialChar,
-      isValid: minLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar,
+        setTokenValid(response.ok)
+      } catch (err) {
+        setTokenValid(false)
+      }
     }
-  }
 
-  const passwordValidation = validatePassword(password)
+    validateToken()
+  }, [token])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setError("")
+
+    // Validation
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long")
+      setIsLoading(false)
+      return
+    }
 
     if (password !== confirmPassword) {
       setError("Passwords do not match")
@@ -62,192 +66,180 @@ function ResetPasswordContent() {
       return
     }
 
-    if (!passwordValidation.isValid) {
-      setError("Password does not meet requirements")
-      setIsLoading(false)
-      return
-    }
-
     try {
-      await resetPassword(token!, password)
-      setSuccess(true)
-      setTimeout(() => {
-        router.push("/login")
-      }, 3000)
-    } catch (err: any) {
-      setError(err.message || "Failed to reset password. Please try again.")
+      const response = await fetch("/api/auth/reset-password/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+          password,
+          confirmPassword,
+        }),
+      })
+
+      if (response.ok) {
+        setIsSuccess(true)
+        setTimeout(() => {
+          router.push("/login")
+        }, 3000)
+      } else {
+        const data = await response.json()
+        setError(data.message || "Failed to reset password")
+      }
+    } catch (err) {
+      setError("Network error. Please try again.")
     } finally {
       setIsLoading(false)
     }
   }
 
-  if (success) {
+  // Loading state while validating token
+  if (tokenValid === null) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50 p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-            <CardTitle className="text-2xl">Password Reset Successful</CardTitle>
-            <CardDescription>
-              Your password has been successfully reset. You will be redirected to the login page shortly.
-            </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <Link href="/login" className="w-full">
-              <Button className="w-full">Go to Login</Button>
-            </Link>
-          </CardFooter>
-        </Card>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4">
+        <WatchPartyCard className="w-full max-w-md" variant="elevated">
+          <WatchPartyCard.Content className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Validating reset token...</p>
+          </WatchPartyCard.Content>
+        </WatchPartyCard>
       </div>
     )
   }
 
+  // Invalid token state
+  if (tokenValid === false) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4">
+        <WatchPartyCard className="w-full max-w-md" variant="elevated">
+          <WatchPartyCard.Header className="text-center space-y-4">
+            <div className="mx-auto w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center">
+              <AlertCircle className="h-8 w-8 text-destructive" />
+            </div>
+            <div>
+              <WatchPartyCard.Title className="text-2xl">Invalid or expired link</WatchPartyCard.Title>
+              <WatchPartyCard.Description className="mt-2">
+                This password reset link is invalid or has expired. Please request a new one.
+              </WatchPartyCard.Description>
+            </div>
+          </WatchPartyCard.Header>
+
+          <WatchPartyCard.Footer className="space-y-2">
+            <Link href="/forgot-password" className="w-full">
+              <WatchPartyButton variant="gradient" className="w-full">
+                Request new reset link
+              </WatchPartyButton>
+            </Link>
+            <Link href="/login" className="w-full">
+              <WatchPartyButton variant="outline" className="w-full">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to login
+              </WatchPartyButton>
+            </Link>
+          </WatchPartyCard.Footer>
+        </WatchPartyCard>
+      </div>
+    )
+  }
+
+  // Success state
+  if (isSuccess) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4">
+        <WatchPartyCard className="w-full max-w-md" variant="elevated">
+          <WatchPartyCard.Header className="text-center space-y-4">
+            <div className="mx-auto w-16 h-16 rounded-full bg-success/10 flex items-center justify-center">
+              <CheckCircle className="h-8 w-8 text-success" />
+            </div>
+            <div>
+              <WatchPartyCard.Title className="text-2xl">Password reset successful!</WatchPartyCard.Title>
+              <WatchPartyCard.Description className="mt-2">
+                Your password has been successfully reset. You will be redirected to the login page shortly.
+              </WatchPartyCard.Description>
+            </div>
+          </WatchPartyCard.Header>
+
+          <WatchPartyCard.Footer>
+            <Link href="/login" className="w-full">
+              <WatchPartyButton variant="gradient" className="w-full">
+                Continue to login
+              </WatchPartyButton>
+            </Link>
+          </WatchPartyCard.Footer>
+        </WatchPartyCard>
+      </div>
+    )
+  }
+
+  // Reset password form
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-blue-50 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl">Set New Password</CardTitle>
-          <CardDescription>Enter your new password below.</CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4">
+      <WatchPartyCard className="w-full max-w-md" variant="elevated">
+        <WatchPartyCard.Header className="text-center space-y-2">
+          <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+            <Lock className="h-6 w-6 text-primary" />
+          </div>
+          <WatchPartyCard.Title className="text-2xl">Reset your password</WatchPartyCard.Title>
+          <WatchPartyCard.Description>
+            Enter your new password below. Make sure it's strong and secure.
+          </WatchPartyCard.Description>
+        </WatchPartyCard.Header>
+
+        <WatchPartyCard.Content>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <WatchPartyInput
+              type="password"
+              label="New password"
+              placeholder="Enter new password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              icon={<Lock className="h-4 w-4" />}
+              showPasswordToggle
+              hint="Must be at least 8 characters long"
+              required
+            />
+
+            <WatchPartyInput
+              type="password"
+              label="Confirm password"
+              placeholder="Confirm new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              icon={<Lock className="h-4 w-4" />}
+              showPasswordToggle
+              error={confirmPassword && password !== confirmPassword ? "Passwords do not match" : ""}
+              required
+            />
+
             {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
-              </Alert>
-            )}
-
-            <div className="space-y-2">
-              <Label htmlFor="password">New Password</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter new password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  disabled={isLoading}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => setShowPassword(!showPassword)}
-                  disabled={isLoading}
-                >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </Button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <div className="relative">
-                <Input
-                  id="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Confirm new password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  disabled={isLoading}
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  disabled={isLoading}
-                >
-                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </Button>
-              </div>
-            </div>
-
-            {password && (
-              <div className="space-y-2">
-                <Label className="text-sm font-medium">Password Requirements</Label>
-                <div className="space-y-1 text-sm">
-                  <div
-                    className={`flex items-center gap-2 ${passwordValidation.minLength ? "text-green-600" : "text-gray-500"}`}
-                  >
-                    <div
-                      className={`w-2 h-2 rounded-full ${passwordValidation.minLength ? "bg-green-600" : "bg-gray-300"}`}
-                    />
-                    At least 8 characters
-                  </div>
-                  <div
-                    className={`flex items-center gap-2 ${passwordValidation.hasUpperCase ? "text-green-600" : "text-gray-500"}`}
-                  >
-                    <div
-                      className={`w-2 h-2 rounded-full ${passwordValidation.hasUpperCase ? "bg-green-600" : "bg-gray-300"}`}
-                    />
-                    One uppercase letter
-                  </div>
-                  <div
-                    className={`flex items-center gap-2 ${passwordValidation.hasLowerCase ? "text-green-600" : "text-gray-500"}`}
-                  >
-                    <div
-                      className={`w-2 h-2 rounded-full ${passwordValidation.hasLowerCase ? "bg-green-600" : "bg-gray-300"}`}
-                    />
-                    One lowercase letter
-                  </div>
-                  <div
-                    className={`flex items-center gap-2 ${passwordValidation.hasNumbers ? "text-green-600" : "text-gray-500"}`}
-                  >
-                    <div
-                      className={`w-2 h-2 rounded-full ${passwordValidation.hasNumbers ? "bg-green-600" : "bg-gray-300"}`}
-                    />
-                    One number
-                  </div>
-                  <div
-                    className={`flex items-center gap-2 ${passwordValidation.hasSpecialChar ? "text-green-600" : "text-gray-500"}`}
-                  >
-                    <div
-                      className={`w-2 h-2 rounded-full ${passwordValidation.hasSpecialChar ? "bg-green-600" : "bg-gray-300"}`}
-                    />
-                    One special character
-                  </div>
-                </div>
+              <div className="text-sm text-destructive flex items-center gap-2">
+                <AlertCircle className="h-4 w-4" />
+                {error}
               </div>
             )}
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <Button
+
+            <WatchPartyButton
               type="submit"
               className="w-full"
-              disabled={isLoading || !passwordValidation.isValid || password !== confirmPassword}
+              disabled={isLoading || !password || !confirmPassword}
+              variant="gradient"
             >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Reset Password
-            </Button>
-            <div className="text-center text-sm">
-              Remember your password?{" "}
-              <Link href="/login" className="text-blue-600 hover:underline">
-                Sign in
-              </Link>
-            </div>
-          </CardFooter>
-        </form>
-      </Card>
-    </div>
-  )
-}
+              {isLoading ? "Resetting..." : "Reset password"}
+            </WatchPartyButton>
+          </form>
+        </WatchPartyCard.Content>
 
-export default function ResetPasswordPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p>Loading...</p>
-        </div>
-      </div>
-    }>
-      <ResetPasswordContent />
-    </Suspense>
+        <WatchPartyCard.Footer className="text-center">
+          <p className="text-sm text-muted-foreground">
+            Remember your password?{" "}
+            <Link href="/login" className="text-primary hover:text-primary/80 font-medium">
+              Sign in
+            </Link>
+          </p>
+        </WatchPartyCard.Footer>
+      </WatchPartyCard>
+    </div>
   )
 }

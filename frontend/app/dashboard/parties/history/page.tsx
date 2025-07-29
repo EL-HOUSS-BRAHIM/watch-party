@@ -1,72 +1,34 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useForm } from "react-hook-form"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import WatchPartyTable from "@/components/ui/watch-party-table"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import {
-  Clock,
+  History,
   Users,
-  Calendar,
+  Clock,
+  Play,
   Star,
   Download,
-  Filter,
-  Search,
   Eye,
-  MessageCircle,
-  Heart,
+  Search,
   Share2,
-  MoreHorizontal,
-  TrendingUp,
-  Award,
-  Timer,
-  Play,
-  Pause,
-  Film,
-  Tv,
-  Globe,
-  Lock,
   Loader2,
-  CalendarDays,
-  BarChart3,
-  FileText,
-  ExternalLink
+  ArrowLeft,
+  RefreshCw,
 } from "lucide-react"
-import { formatDistanceToNow, format, parseISO, isThisMonth, isThisYear } from "date-fns"
+import { format, parseISO } from "date-fns"
 
-interface PartyParticipant {
-  id: string
-  user: {
-    id: string
-    username: string
-    first_name: string
-    last_name: string
-    avatar?: string
-  }
-  joined_at: string
-  left_at?: string
-  was_host: boolean
-  watch_time_minutes: number
-  messages_sent: number
-  reactions_sent: number
-}
-
-interface PartyStats {
-  total_watch_time: number
-  peak_concurrent_users: number
-  total_messages: number
-  total_reactions: number
-  completion_rate: number
-  average_rating?: number
-}
-
-interface PartyHistory {
+interface PartyHistoryItem {
   id: string
   title: string
   description?: string
@@ -74,57 +36,79 @@ interface PartyHistory {
     id: string
     title: string
     thumbnail?: string
-    duration_minutes: number
-    type: "movie" | "series" | "youtube"
+    duration: number
   }
-  created_at: string
-  started_at?: string
-  ended_at?: string
-  status: "scheduled" | "active" | "completed" | "cancelled"
-  is_public: boolean
-  participants: PartyParticipant[]
-  stats: PartyStats
   host: {
     id: string
     username: string
-    first_name: string
-    last_name: string
+    firstName: string
+    lastName: string
     avatar?: string
   }
-  created_by_user: boolean
-  participant_count: number
+  scheduledFor: string
+  startedAt?: string
+  endedAt?: string
+  status: "completed" | "cancelled" | "abandoned"
+  participants: Array<{
+    id: string
+    user: {
+      id: string
+      username: string
+      firstName: string
+      lastName: string
+      avatar?: string
+    }
+    joinedAt: string
+    leftAt?: string
+    watchTime: number
+  }>
+  stats: {
+    totalParticipants: number
+    averageWatchTime: number
+    completionRate: number
+    peakViewers: number
+    totalMessages: number
+    totalReactions: number
+  }
   rating?: number
+  tags: string[]
+  isPrivate: boolean
+  createdAt: string
 }
 
 interface FilterOptions {
-  timeRange: "all" | "week" | "month" | "year"
-  status: "all" | "completed" | "cancelled"
-  role: "all" | "host" | "participant"
-  videoType: "all" | "movie" | "series" | "youtube"
+  status: string
+  dateRange: string
+  minParticipants: string
+  rating: string
+  search: string
 }
 
 export default function PartyHistoryPage() {
   const { user } = useAuth()
   const { toast } = useToast()
+  const router = useRouter()
 
-  const [parties, setParties] = useState<PartyHistory[]>([])
-  const [filteredParties, setFilteredParties] = useState<PartyHistory[]>([])
+  const [parties, setParties] = useState<PartyHistoryItem[]>([])
+  const [filteredParties, setFilteredParties] = useState<PartyHistoryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState("")
+  const [activeTab, setActiveTab] = useState("all")
   const [filters, setFilters] = useState<FilterOptions>({
-    timeRange: "all",
     status: "all",
-    role: "all",
-    videoType: "all"
-  })
-  const [selectedParty, setSelectedParty] = useState<PartyHistory | null>(null)
-  const [showStats, setShowStats] = useState(false)
-
-  const { register, watch } = useForm({
-    defaultValues: { search: "" }
+    dateRange: "all",
+    minParticipants: "all",
+    rating: "all",
+    search: "",
   })
 
-  const searchValue = watch("search")
+  const [stats, setStats] = useState({
+    totalParties: 0,
+    totalWatchTime: 0,
+    averageParticipants: 0,
+    averageRating: 0,
+    completionRate: 0,
+    mostWatchedGenre: "",
+  })
 
   useEffect(() => {
     loadPartyHistory()
@@ -132,30 +116,30 @@ export default function PartyHistoryPage() {
 
   useEffect(() => {
     filterParties()
-  }, [parties, searchQuery, filters])
+  }, [parties, filters, activeTab])
 
   const loadPartyHistory = async () => {
+    setIsLoading(true)
     try {
       const token = localStorage.getItem("accessToken")
       const response = await fetch("/api/parties/history/", {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
 
       if (response.ok) {
         const data = await response.json()
         setParties(data.results || data.parties || [])
+        setStats(data.stats || stats)
       } else {
-        toast({
-          title: "Error",
-          description: "Failed to load party history.",
-          variant: "destructive",
-        })
+        throw new Error("Failed to load party history")
       }
     } catch (error) {
       console.error("Failed to load party history:", error)
       toast({
         title: "Error",
-        description: "Something went wrong while loading your history.",
+        description: "Failed to load party history. Please try again.",
         variant: "destructive",
       })
     } finally {
@@ -166,147 +150,241 @@ export default function PartyHistoryPage() {
   const filterParties = () => {
     let filtered = [...parties]
 
-    // Search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase()
-      filtered = filtered.filter(party =>
-        party.title.toLowerCase().includes(query) ||
-        party.video.title.toLowerCase().includes(query) ||
-        party.description?.toLowerCase().includes(query)
+    // Tab filter
+    if (activeTab === "hosted") {
+      filtered = filtered.filter((party) => party.host.id === user?.id)
+    } else if (activeTab === "joined") {
+      filtered = filtered.filter(
+        (party) => party.participants.some((p) => p.user.id === user?.id) && party.host.id !== user?.id,
       )
-    }
-
-    // Time range filter
-    if (filters.timeRange !== "all") {
-      const now = new Date()
-      filtered = filtered.filter(party => {
-        const partyDate = parseISO(party.created_at)
-        switch (filters.timeRange) {
-          case "week":
-            return now.getTime() - partyDate.getTime() <= 7 * 24 * 60 * 60 * 1000
-          case "month":
-            return isThisMonth(partyDate)
-          case "year":
-            return isThisYear(partyDate)
-          default:
-            return true
-        }
-      })
     }
 
     // Status filter
     if (filters.status !== "all") {
-      filtered = filtered.filter(party => party.status === filters.status)
+      filtered = filtered.filter((party) => party.status === filters.status)
     }
 
-    // Role filter
-    if (filters.role !== "all") {
-      filtered = filtered.filter(party => {
-        if (filters.role === "host") {
-          return party.created_by_user
-        } else {
-          return !party.created_by_user
-        }
-      })
+    // Date range filter
+    if (filters.dateRange !== "all") {
+      const now = new Date()
+      const filterDate = new Date()
+
+      switch (filters.dateRange) {
+        case "week":
+          filterDate.setDate(now.getDate() - 7)
+          break
+        case "month":
+          filterDate.setMonth(now.getMonth() - 1)
+          break
+        case "quarter":
+          filterDate.setMonth(now.getMonth() - 3)
+          break
+        case "year":
+          filterDate.setFullYear(now.getFullYear() - 1)
+          break
+      }
+
+      filtered = filtered.filter((party) => new Date(party.createdAt) >= filterDate)
     }
 
-    // Video type filter
-    if (filters.videoType !== "all") {
-      filtered = filtered.filter(party => party.video.type === filters.videoType)
+    // Minimum participants filter
+    if (filters.minParticipants !== "all") {
+      const minCount = Number.parseInt(filters.minParticipants)
+      filtered = filtered.filter((party) => party.stats.totalParticipants >= minCount)
+    }
+
+    // Rating filter
+    if (filters.rating !== "all") {
+      const minRating = Number.parseInt(filters.rating)
+      filtered = filtered.filter((party) => party.rating && party.rating >= minRating)
+    }
+
+    // Search filter
+    if (filters.search.trim()) {
+      const searchTerm = filters.search.toLowerCase()
+      filtered = filtered.filter(
+        (party) =>
+          party.title.toLowerCase().includes(searchTerm) ||
+          party.video.title.toLowerCase().includes(searchTerm) ||
+          party.host.username.toLowerCase().includes(searchTerm) ||
+          party.tags.some((tag) => tag.toLowerCase().includes(searchTerm)),
+      )
     }
 
     setFilteredParties(filtered)
   }
 
-  const calculateTotalStats = () => {
-    const completedParties = parties.filter(p => p.status === "completed")
-    
-    return {
-      totalParties: parties.length,
-      completedParties: completedParties.length,
-      totalWatchTime: completedParties.reduce((sum, p) => sum + p.stats.total_watch_time, 0),
-      averageRating: completedParties.reduce((sum, p) => sum + (p.rating || 0), 0) / completedParties.length || 0,
-      hostedParties: parties.filter(p => p.created_by_user).length,
-      joinedParties: parties.filter(p => !p.created_by_user).length,
+  const exportHistory = async () => {
+    try {
+      const token = localStorage.getItem("accessToken")
+      const response = await fetch("/api/parties/history/export/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = `party-history-${new Date().toISOString().split("T")[0]}.csv`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        window.URL.revokeObjectURL(url)
+
+        toast({
+          title: "Export Complete",
+          description: "Your party history has been exported successfully.",
+        })
+      }
+    } catch (error) {
+      console.error("Failed to export history:", error)
+      toast({
+        title: "Export Failed",
+        description: "Failed to export party history.",
+        variant: "destructive",
+      })
     }
   }
 
-  const exportHistory = () => {
-    const csvContent = [
-      ["Date", "Title", "Video", "Status", "Role", "Duration (min)", "Participants", "Rating"].join(","),
-      ...filteredParties.map(party => [
-        format(parseISO(party.created_at), "yyyy-MM-dd"),
-        `"${party.title}"`,
-        `"${party.video.title}"`,
-        party.status,
-        party.created_by_user ? "Host" : "Participant",
-        party.stats.total_watch_time,
-        party.participant_count,
-        party.rating || ""
-      ].join(","))
-    ].join("\n")
-
-    const blob = new Blob([csvContent], { type: "text/csv" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `watch-party-history-${format(new Date(), "yyyy-MM-dd")}.csv`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-
-    toast({
-      title: "Export Complete",
-      description: "Your party history has been exported successfully.",
-    })
-  }
-
-  const getStatusColor = (status: string) => {
+  const getStatusBadge = (status: string) => {
     switch (status) {
       case "completed":
-        return "bg-green-100 text-green-800"
+        return <Badge className="bg-green-100 text-green-800">Completed</Badge>
       case "cancelled":
-        return "bg-red-100 text-red-800"
-      case "active":
-        return "bg-blue-100 text-blue-800"
-      case "scheduled":
-        return "bg-yellow-100 text-yellow-800"
+        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>
+      case "abandoned":
+        return <Badge className="bg-yellow-100 text-yellow-800">Abandoned</Badge>
       default:
-        return "bg-gray-100 text-gray-800"
-    }
-  }
-
-  const getVideoTypeIcon = (type: string) => {
-    switch (type) {
-      case "movie":
-        return <Film className="h-4 w-4" />
-      case "series":
-        return <Tv className="h-4 w-4" />
-      case "youtube":
-        return <Play className="h-4 w-4" />
-      default:
-        return <Film className="h-4 w-4" />
+        return <Badge variant="outline">{status}</Badge>
     }
   }
 
   const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60)
     const mins = minutes % 60
-    if (hours > 0) {
-      return `${hours}h ${mins}m`
-    }
-    return `${mins}m`
+    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
   }
 
-  const stats = calculateTotalStats()
+  const tableColumns = [
+    {
+      id: "title",
+      header: "Party",
+      accessorKey: "title" as keyof PartyHistoryItem,
+      cell: ({ row }: { row: PartyHistoryItem }) => (
+        <div className="flex items-center gap-3">
+          <img
+            src={row.video.thumbnail || "/placeholder.svg"}
+            alt={row.video.title}
+            className="w-12 h-8 object-cover rounded"
+          />
+          <div>
+            <div className="font-medium">{row.title}</div>
+            <div className="text-sm text-muted-foreground">{row.video.title}</div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "host",
+      header: "Host",
+      cell: ({ row }: { row: PartyHistoryItem }) => (
+        <div className="flex items-center gap-2">
+          <Avatar className="w-6 h-6">
+            <AvatarImage src={row.host.avatar || "/placeholder.svg"} />
+            <AvatarFallback className="text-xs">
+              {row.host.firstName[0]}
+              {row.host.lastName[0]}
+            </AvatarFallback>
+          </Avatar>
+          <span className="text-sm">
+            {row.host.firstName} {row.host.lastName}
+          </span>
+        </div>
+      ),
+    },
+    {
+      id: "date",
+      header: "Date",
+      accessorKey: "scheduledFor" as keyof PartyHistoryItem,
+      cell: ({ row }: { row: PartyHistoryItem }) => (
+        <div className="text-sm">
+          <div>{format(parseISO(row.scheduledFor), "MMM dd, yyyy")}</div>
+          <div className="text-muted-foreground">{format(parseISO(row.scheduledFor), "h:mm a")}</div>
+        </div>
+      ),
+    },
+    {
+      id: "participants",
+      header: "Participants",
+      cell: ({ row }: { row: PartyHistoryItem }) => (
+        <div className="flex items-center gap-1">
+          <Users className="w-4 h-4 text-muted-foreground" />
+          <span>{row.stats.totalParticipants}</span>
+        </div>
+      ),
+    },
+    {
+      id: "duration",
+      header: "Duration",
+      cell: ({ row }: { row: PartyHistoryItem }) => (
+        <div className="flex items-center gap-1">
+          <Clock className="w-4 h-4 text-muted-foreground" />
+          <span>{formatDuration(row.stats.averageWatchTime)}</span>
+        </div>
+      ),
+    },
+    {
+      id: "rating",
+      header: "Rating",
+      cell: ({ row }: { row: PartyHistoryItem }) =>
+        row.rating ? (
+          <div className="flex items-center gap-1">
+            <Star className="w-4 h-4 text-yellow-500 fill-current" />
+            <span>{row.rating.toFixed(1)}</span>
+          </div>
+        ) : (
+          <span className="text-muted-foreground">-</span>
+        ),
+    },
+    {
+      id: "status",
+      header: "Status",
+      cell: ({ row }: { row: PartyHistoryItem }) => getStatusBadge(row.status),
+    },
+  ]
+
+  const tableActions = [
+    {
+      id: "view",
+      label: "View Details",
+      icon: <Eye className="w-4 h-4" />,
+      onClick: (party: PartyHistoryItem) => router.push(`/dashboard/parties/${party.id}/analytics`),
+    },
+    {
+      id: "share",
+      label: "Share",
+      icon: <Share2 className="w-4 h-4" />,
+      onClick: (party: PartyHistoryItem) => {
+        navigator.clipboard.writeText(`${window.location.origin}/parties/${party.id}`)
+        toast({
+          title: "Link Copied",
+          description: "Party link copied to clipboard.",
+        })
+      },
+    },
+  ]
 
   if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p>Loading your party history...</p>
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <p>Loading party history...</p>
+          </div>
         </div>
       </div>
     )
@@ -316,22 +394,21 @@ export default function PartyHistoryPage() {
     <div className="container mx-auto py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
+        <div className="flex items-center gap-4 mb-8">
+          <Button variant="ghost" onClick={() => router.back()} className="p-2">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <div className="flex-1">
             <h1 className="text-3xl font-bold flex items-center gap-2">
-              <Clock className="h-8 w-8" />
+              <History className="h-8 w-8" />
               Party History
             </h1>
-            <p className="text-gray-600 mt-2">Your watch party timeline and statistics</p>
+            <p className="text-muted-foreground mt-2">View and analyze your past watch parties</p>
           </div>
-          
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setShowStats(!showStats)}
-            >
-              <BarChart3 className="h-4 w-4 mr-2" />
-              Stats
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={loadPartyHistory}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh
             </Button>
             <Button variant="outline" onClick={exportHistory}>
               <Download className="h-4 w-4 mr-2" />
@@ -340,50 +417,58 @@ export default function PartyHistoryPage() {
           </div>
         </div>
 
-        {/* Stats Overview */}
-        {showStats && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-blue-600">{stats.totalParties}</div>
-                <div className="text-sm text-gray-600">Total Parties</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-green-600">{formatDuration(stats.totalWatchTime)}</div>
-                <div className="text-sm text-gray-600">Watch Time</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-purple-600">{stats.hostedParties}</div>
-                <div className="text-sm text-gray-600">Hosted</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4 text-center">
-                <div className="text-2xl font-bold text-orange-600">
-                  {stats.averageRating > 0 ? stats.averageRating.toFixed(1) : "N/A"}
-                </div>
-                <div className="text-sm text-gray-600">Avg Rating</div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-blue-600">{stats.totalParties}</div>
+              <div className="text-sm text-muted-foreground">Total Parties</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-green-600">{formatDuration(stats.totalWatchTime)}</div>
+              <div className="text-sm text-muted-foreground">Watch Time</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-purple-600">{stats.averageParticipants.toFixed(1)}</div>
+              <div className="text-sm text-muted-foreground">Avg Participants</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-yellow-600">{stats.averageRating.toFixed(1)}</div>
+              <div className="text-sm text-muted-foreground">Avg Rating</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-orange-600">{(stats.completionRate * 100).toFixed(0)}%</div>
+              <div className="text-sm text-muted-foreground">Completion Rate</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-red-600">{stats.mostWatchedGenre || "N/A"}</div>
+              <div className="text-sm text-muted-foreground">Top Genre</div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Filters */}
         <Card className="mb-6">
           <CardContent className="p-4">
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col lg:flex-row gap-4">
               {/* Search */}
               <div className="flex-1">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                   <Input
-                    placeholder="Search parties, videos, or descriptions..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search parties..."
+                    value={filters.search}
+                    onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
                     className="pl-10"
                   />
                 </div>
@@ -392,23 +477,8 @@ export default function PartyHistoryPage() {
               {/* Filter dropdowns */}
               <div className="flex gap-2">
                 <Select
-                  value={filters.timeRange}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, timeRange: value as any }))}
-                >
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Time</SelectItem>
-                    <SelectItem value="week">This Week</SelectItem>
-                    <SelectItem value="month">This Month</SelectItem>
-                    <SelectItem value="year">This Year</SelectItem>
-                  </SelectContent>
-                </Select>
-
-                <Select
                   value={filters.status}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, status: value as any }))}
+                  onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -417,20 +487,55 @@ export default function PartyHistoryPage() {
                     <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="completed">Completed</SelectItem>
                     <SelectItem value="cancelled">Cancelled</SelectItem>
+                    <SelectItem value="abandoned">Abandoned</SelectItem>
                   </SelectContent>
                 </Select>
 
                 <Select
-                  value={filters.role}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, role: value as any }))}
+                  value={filters.dateRange}
+                  onValueChange={(value) => setFilters((prev) => ({ ...prev, dateRange: value }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Roles</SelectItem>
-                    <SelectItem value="host">Hosted</SelectItem>
-                    <SelectItem value="participant">Joined</SelectItem>
+                    <SelectItem value="all">All Time</SelectItem>
+                    <SelectItem value="week">This Week</SelectItem>
+                    <SelectItem value="month">This Month</SelectItem>
+                    <SelectItem value="quarter">Last 3 Months</SelectItem>
+                    <SelectItem value="year">This Year</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={filters.minParticipants}
+                  onValueChange={(value) => setFilters((prev) => ({ ...prev, minParticipants: value }))}
+                >
+                  <SelectTrigger className="w-36">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Any Size</SelectItem>
+                    <SelectItem value="2">2+ Participants</SelectItem>
+                    <SelectItem value="5">5+ Participants</SelectItem>
+                    <SelectItem value="10">10+ Participants</SelectItem>
+                    <SelectItem value="20">20+ Participants</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={filters.rating}
+                  onValueChange={(value) => setFilters((prev) => ({ ...prev, rating: value }))}
+                >
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Any Rating</SelectItem>
+                    <SelectItem value="4">4+ Stars</SelectItem>
+                    <SelectItem value="3">3+ Stars</SelectItem>
+                    <SelectItem value="2">2+ Stars</SelectItem>
+                    <SelectItem value="1">1+ Stars</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -438,212 +543,64 @@ export default function PartyHistoryPage() {
           </CardContent>
         </Card>
 
-        {/* Party List */}
-        <div className="space-y-4">
-          {filteredParties.length === 0 ? (
-            <Card>
-              <CardContent className="text-center py-12">
-                <Clock className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">No parties found</h3>
-                <p className="text-gray-600">
-                  {searchQuery || Object.values(filters).some(f => f !== "all")
-                    ? "Try adjusting your search or filters"
-                    : "You haven't joined any watch parties yet"
-                  }
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            filteredParties.map((party) => (
-              <Card key={party.id} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-start gap-4">
-                        {/* Video thumbnail */}
-                        <div className="w-16 h-24 bg-gray-200 rounded-lg flex items-center justify-center">
-                          {party.video.thumbnail ? (
-                            <img
-                              src={party.video.thumbnail}
-                              alt={party.video.title}
-                              className="w-full h-full object-cover rounded-lg"
-                            />
-                          ) : (
-                            getVideoTypeIcon(party.video.type)
-                          )}
-                        </div>
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="all">All Parties ({parties.length})</TabsTrigger>
+            <TabsTrigger value="hosted">Hosted ({parties.filter((p) => p.host.id === user?.id).length})</TabsTrigger>
+            <TabsTrigger value="joined">
+              Joined (
+              {
+                parties.filter(
+                  (p) => p.participants.some((part) => part.user.id === user?.id) && p.host.id !== user?.id,
+                ).length
+              }
+              )
+            </TabsTrigger>
+          </TabsList>
 
-                        {/* Party details */}
-                        <div className="flex-1">
-                          <div className="flex items-start justify-between mb-2">
-                            <div>
-                              <h3 className="font-semibold text-lg">{party.title}</h3>
-                              <p className="text-gray-600">{party.video.title}</p>
-                            </div>
-                            <Badge className={getStatusColor(party.status)}>
-                              {party.status}
-                            </Badge>
-                          </div>
-
-                          {party.description && (
-                            <p className="text-gray-600 text-sm mb-3">{party.description}</p>
-                          )}
-
-                          {/* Metadata */}
-                          <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                            <span className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4" />
-                              {format(parseISO(party.created_at), "MMM d, yyyy")}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Users className="h-4 w-4" />
-                              {party.participant_count} participants
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Timer className="h-4 w-4" />
-                              {formatDuration(party.stats.total_watch_time)}
-                            </span>
-                            {party.rating && (
-                              <span className="flex items-center gap-1">
-                                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                                {party.rating.toFixed(1)}
-                              </span>
-                            )}
-                            <span className="flex items-center gap-1">
-                              {party.is_public ? (
-                                <Globe className="h-4 w-4" />
-                              ) : (
-                                <Lock className="h-4 w-4" />
-                              )}
-                              {party.is_public ? "Public" : "Private"}
-                            </span>
-                          </div>
-
-                          {/* Host info */}
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <Avatar className="w-6 h-6">
-                                <AvatarImage src={party.host.avatar} />
-                                <AvatarFallback className="text-xs">
-                                  {party.host.first_name?.[0] || party.host.username?.[0]}
-                                </AvatarFallback>
-                              </Avatar>
-                              <span className="text-sm">
-                                {party.created_by_user ? "You hosted" : `Hosted by ${party.host.first_name || party.host.username}`}
-                              </span>
-                            </div>
-
-                            {/* Quick stats */}
-                            <div className="flex items-center gap-3 text-sm text-gray-500">
-                              <span className="flex items-center gap-1">
-                                <MessageCircle className="h-4 w-4" />
-                                {party.stats.total_messages}
-                              </span>
-                              <span className="flex items-center gap-1">
-                                <Heart className="h-4 w-4" />
-                                {party.stats.total_reactions}
-                              </span>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => setSelectedParty(selectedParty?.id === party.id ? null : party)}
-                              >
-                                <Eye className="h-4 w-4 mr-1" />
-                                Details
-                              </Button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Expanded details */}
-                      {selectedParty?.id === party.id && (
-                        <div className="mt-4 pt-4 border-t">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Statistics */}
-                            <div>
-                              <h4 className="font-medium mb-2">Statistics</h4>
-                              <div className="space-y-2 text-sm">
-                                <div className="flex justify-between">
-                                  <span>Peak concurrent viewers:</span>
-                                  <span>{party.stats.peak_concurrent_users}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>Completion rate:</span>
-                                  <span>{party.stats.completion_rate}%</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>Total messages:</span>
-                                  <span>{party.stats.total_messages}</span>
-                                </div>
-                                <div className="flex justify-between">
-                                  <span>Total reactions:</span>
-                                  <span>{party.stats.total_reactions}</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Participants */}
-                            <div>
-                              <h4 className="font-medium mb-2">Participants ({party.participants.length})</h4>
-                              <div className="space-y-2 max-h-32 overflow-y-auto">
-                                {party.participants.slice(0, 5).map((participant) => (
-                                  <div key={participant.id} className="flex items-center gap-2 text-sm">
-                                    <Avatar className="w-5 h-5">
-                                      <AvatarImage src={participant.user.avatar} />
-                                      <AvatarFallback className="text-xs">
-                                        {participant.user.first_name?.[0] || participant.user.username?.[0]}
-                                      </AvatarFallback>
-                                    </Avatar>
-                                    <span className="flex-1">
-                                      {participant.user.first_name || participant.user.username}
-                                      {participant.was_host && (
-                                        <Badge variant="outline" className="ml-2 text-xs">Host</Badge>
-                                      )}
-                                    </span>
-                                    <span className="text-gray-500">
-                                      {formatDuration(participant.watch_time_minutes)}
-                                    </span>
-                                  </div>
-                                ))}
-                                {party.participants.length > 5 && (
-                                  <div className="text-xs text-gray-500 text-center">
-                                    +{party.participants.length - 5} more participants
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Timeline */}
-                          {party.started_at && (
-                            <div className="mt-4">
-                              <h4 className="font-medium mb-2">Timeline</h4>
-                              <div className="text-sm text-gray-600 space-y-1">
-                                <div>Created: {format(parseISO(party.created_at), "MMM d, yyyy 'at' h:mm a")}</div>
-                                <div>Started: {format(parseISO(party.started_at), "MMM d, yyyy 'at' h:mm a")}</div>
-                                {party.ended_at && (
-                                  <div>Ended: {format(parseISO(party.ended_at), "MMM d, yyyy 'at' h:mm a")}</div>
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+          <TabsContent value={activeTab}>
+            {filteredParties.length === 0 ? (
+              <Card>
+                <CardContent className="text-center py-12">
+                  <History className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-2">No parties found</h3>
+                  <p className="text-muted-foreground">
+                    {filters.search || Object.values(filters).some((f) => f !== "all")
+                      ? "Try adjusting your search or filters"
+                      : activeTab === "hosted"
+                        ? "You haven't hosted any parties yet"
+                        : activeTab === "joined"
+                          ? "You haven't joined any parties yet"
+                          : "No party history available"}
+                  </p>
+                  <Button className="mt-4" onClick={() => router.push("/dashboard/parties/create")}>
+                    <Play className="h-4 w-4 mr-2" />
+                    Create Your First Party
+                  </Button>
                 </CardContent>
               </Card>
-            ))
-          )}
-        </div>
-
-        {/* Pagination placeholder */}
-        {filteredParties.length > 20 && (
-          <div className="text-center mt-8">
-            <Button variant="outline">Load More Parties</Button>
-          </div>
-        )}
+            ) : (
+              <WatchPartyTable
+                data={filteredParties}
+                columns={tableColumns}
+                actions={tableActions}
+                pagination={{
+                  page: 1,
+                  pageSize: 10,
+                  total: filteredParties.length,
+                  showSizeSelector: true,
+                  pageSizeOptions: [10, 25, 50],
+                }}
+                exportable
+                onExport={exportHistory}
+                refreshable
+                onRefresh={loadPartyHistory}
+                className="bg-background"
+              />
+            )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   )

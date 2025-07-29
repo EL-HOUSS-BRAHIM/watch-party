@@ -10,15 +10,18 @@ const watchPartyButtonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-watch-party-primary text-white hover:opacity-90 hover:shadow-watch-party-glow",
-        destructive: "bg-watch-party-error text-white hover:opacity-90",
+        default: "bg-watch-party-primary text-white hover:bg-watch-party-primary/90 shadow-sm hover:shadow-md",
+        destructive: "bg-watch-party-error text-white hover:bg-watch-party-error/90 shadow-sm hover:shadow-md",
         outline:
-          "border border-watch-party-border bg-watch-party-surface hover:bg-watch-party-elevation-1 hover:text-watch-party-text-primary text-watch-party-text-secondary",
-        secondary: "bg-watch-party-secondary text-white hover:opacity-90 hover:shadow-watch-party-glow",
+          "border border-watch-party-border bg-transparent hover:bg-watch-party-elevation-1 hover:text-watch-party-text-primary text-watch-party-text-secondary",
+        secondary: "bg-watch-party-secondary text-white hover:bg-watch-party-secondary/90 shadow-sm hover:shadow-md",
         ghost: "hover:bg-watch-party-elevation-1 hover:text-watch-party-text-primary text-watch-party-text-secondary",
-        link: "text-watch-party-primary underline-offset-4 hover:underline hover:text-watch-party-glow",
-        gradient: "bg-watch-party-gradient text-white hover:animate-gradient-shift hover:shadow-watch-party-glow",
-        glow: "bg-watch-party-primary text-white hover:animate-glow-pulse shadow-watch-party-glow",
+        link: "text-watch-party-primary underline-offset-4 hover:underline hover:text-watch-party-secondary",
+        gradient:
+          "bg-watch-party-gradient text-white hover:shadow-watch-party-glow shadow-sm hover:scale-105 transform transition-all duration-200",
+        glow: "bg-watch-party-primary text-white hover:shadow-watch-party-glow shadow-sm animate-glow-pulse",
+        success: "bg-watch-party-success text-white hover:bg-watch-party-success/90 shadow-sm hover:shadow-md",
+        warning: "bg-watch-party-warning text-white hover:bg-watch-party-warning/90 shadow-sm hover:shadow-md",
       },
       size: {
         default: "h-10 px-4 py-2",

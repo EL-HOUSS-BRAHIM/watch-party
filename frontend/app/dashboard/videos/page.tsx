@@ -1,220 +1,544 @@
 "use client"
 
+import * as React from "react"
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { VideoUploader } from "@/components/video/video-uploader"
-import { VideoLibrary } from "@/components/video/video-library"
-import { useToast } from "@/hooks/use-toast"
-import { Upload, Search, Filter, Grid3X3, List, Play, Clock, Eye, Share, Loader2 } from "lucide-react"
+import { Search, Grid, List, Upload, Play, MoreHorizontal, Eye, Heart, MessageCircle, Calendar } from "lucide-react"
+import { WatchPartyButton } from "@/components/ui/watch-party-button"
+import { WatchPartyInput } from "@/components/ui/watch-party-input"
+import { WatchPartySelect } from "@/components/ui/watch-party-select"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Progress } from "@/components/ui/progress"
+import { Skeleton } from "@/components/ui/skeleton"
+import Link from "next/link"
 
-interface VideoStats {
-  total: number
-  totalViews: number
-  totalDuration: string
-  storageUsed: string
-  storageLimit: string
+interface Video {
+  id: string
+  title: string
+  description: string
+  thumbnail: string
+  duration: number
+  views: number
+  likes: number
+  comments: number
+  uploadedAt: string
+  status: "processing" | "ready" | "failed"
+  visibility: "public" | "private" | "unlisted"
+  size: number
+  format: string
+  uploadProgress?: number
+}
+
+const mockVideos: Video[] = [
+  {
+    id: "1",
+    title: "Epic Movie Night - The Dark Knight",
+    description: "Join us for an amazing watch party of Christopher Nolan's masterpiece",
+    thumbnail: "/placeholder.svg?height=200&width=300&text=Dark+Knight",
+    duration: 8520, // 2h 22m in seconds
+    views: 1250,
+    likes: 89,
+    comments: 23,
+    uploadedAt: "2024-01-15T10:30:00Z",
+    status: "ready",
+    visibility: "public",
+    size: 2.1, // GB
+    format: "MP4",
+  },
+  {
+    id: "2",
+    title: "Anime Marathon - Attack on Titan S4",
+    description: "Final season watch party with the community",
+    thumbnail: "/placeholder.svg?height=200&width=300&text=AOT+S4",
+    duration: 1440, // 24m
+    views: 892,
+    likes: 156,
+    comments: 45,
+    uploadedAt: "2024-01-14T15:45:00Z",
+    status: "ready",
+    visibility: "public",
+    size: 0.8,
+    format: "MP4",
+  },
+  {
+    id: "3",
+    title: "Classic Comedy Night",
+    description: "Uploading classic comedy for tonight's party",
+    thumbnail: "/placeholder.svg?height=200&width=300&text=Comedy",
+    duration: 5400, // 1h 30m
+    views: 0,
+    likes: 0,
+    comments: 0,
+    uploadedAt: "2024-01-16T09:15:00Z",
+    status: "processing",
+    visibility: "private",
+    size: 1.5,
+    format: "MP4",
+    uploadProgress: 65,
+  },
+]
+
+const sortOptions = [
+  { value: "newest", label: "Newest First" },
+  { value: "oldest", label: "Oldest First" },
+  { value: "most-viewed", label: "Most Viewed" },
+  { value: "most-liked", label: "Most Liked" },
+  { value: "title", label: "Title A-Z" },
+]
+
+const filterOptions = [
+  { value: "all", label: "All Videos" },
+  { value: "ready", label: "Ready" },
+  { value: "processing", label: "Processing" },
+  { value: "failed", label: "Failed" },
+]
+
+const visibilityOptions = [
+  { value: "all", label: "All Visibility" },
+  { value: "public", label: "Public" },
+  { value: "private", label: "Private" },
+  { value: "unlisted", label: "Unlisted" },
+]
+
+function formatDuration(seconds: number): string {
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const secs = seconds % 60
+
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+  }
+  return `${minutes}:${secs.toString().padStart(2, "0")}`
+}
+
+function formatFileSize(gb: number): string {
+  if (gb < 1) {
+    return `${Math.round(gb * 1024)} MB`
+  }
+  return `${gb.toFixed(1)} GB`
+}
+
+function formatDate(dateString: string): string {
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+}
+
+function VideoCard({ video }: { video: Video }) {
+  return (
+    <Card className="group hover:shadow-lg transition-all duration-200 hover:shadow-primary/10">
+      <div className="relative">
+        <img
+          src={video.thumbnail || "/placeholder.svg"}
+          alt={video.title}
+          className="w-full h-48 object-cover rounded-t-lg"
+        />
+        <div className="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-xs">
+          {formatDuration(video.duration)}
+        </div>
+        {video.status === "processing" && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-lg">
+            <div className="text-white text-center">
+              <div className="mb-2">Processing...</div>
+              <Progress value={video.uploadProgress} className="w-32" />
+              <div className="text-xs mt-1">{video.uploadProgress}%</div>
+            </div>
+          </div>
+        )}
+        <Badge
+          variant={video.status === "ready" ? "default" : video.status === "processing" ? "secondary" : "destructive"}
+          className="absolute top-2 left-2"
+        >
+          {video.status}
+        </Badge>
+        <Badge variant="outline" className="absolute top-2 right-2 bg-background/80">
+          {video.visibility}
+        </Badge>
+      </div>
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className="font-semibold text-sm line-clamp-2 flex-1">{video.title}</h3>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <WatchPartyButton variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <MoreHorizontal className="h-4 w-4" />
+              </WatchPartyButton>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>
+                <Play className="mr-2 h-4 w-4" />
+                Play Video
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Eye className="mr-2 h-4 w-4" />
+                View Details
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="text-destructive">Delete Video</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{video.description}</p>
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center gap-1">
+              <Eye className="h-3 w-3" />
+              {video.views.toLocaleString()}
+            </span>
+            <span className="flex items-center gap-1">
+              <Heart className="h-3 w-3" />
+              {video.likes}
+            </span>
+            <span className="flex items-center gap-1">
+              <MessageCircle className="h-3 w-3" />
+              {video.comments}
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Calendar className="h-3 w-3" />
+            {formatDate(video.uploadedAt)}
+          </div>
+        </div>
+        <div className="flex items-center justify-between mt-2 pt-2 border-t text-xs text-muted-foreground">
+          <span>
+            {formatFileSize(video.size)} • {video.format}
+          </span>
+          {video.status === "ready" && (
+            <WatchPartyButton size="sm" variant="outline">
+              <Play className="mr-1 h-3 w-3" />
+              Play
+            </WatchPartyButton>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
+function VideoListItem({ video }: { video: Video }) {
+  return (
+    <Card className="hover:shadow-md transition-all duration-200">
+      <CardContent className="p-4">
+        <div className="flex items-center gap-4">
+          <div className="relative flex-shrink-0">
+            <img
+              src={video.thumbnail || "/placeholder.svg"}
+              alt={video.title}
+              className="w-24 h-16 object-cover rounded"
+            />
+            <div className="absolute bottom-1 right-1 bg-black/80 text-white px-1 py-0.5 rounded text-xs">
+              {formatDuration(video.duration)}
+            </div>
+            {video.status === "processing" && (
+              <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded">
+                <div className="text-white text-xs">{video.uploadProgress}%</div>
+              </div>
+            )}
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between mb-1">
+              <h3 className="font-semibold text-sm line-clamp-1">{video.title}</h3>
+              <div className="flex items-center gap-2">
+                <Badge
+                  variant={
+                    video.status === "ready" ? "default" : video.status === "processing" ? "secondary" : "destructive"
+                  }
+                  className="text-xs"
+                >
+                  {video.status}
+                </Badge>
+                <Badge variant="outline" className="text-xs">
+                  {video.visibility}
+                </Badge>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground line-clamp-1 mb-2">{video.description}</p>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <Eye className="h-3 w-3" />
+                  {video.views.toLocaleString()}
+                </span>
+                <span className="flex items-center gap-1">
+                  <Heart className="h-3 w-3" />
+                  {video.likes}
+                </span>
+                <span className="flex items-center gap-1">
+                  <MessageCircle className="h-3 w-3" />
+                  {video.comments}
+                </span>
+                <span>{formatFileSize(video.size)}</span>
+                <span>{formatDate(video.uploadedAt)}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                {video.status === "ready" && (
+                  <WatchPartyButton size="sm" variant="outline">
+                    <Play className="mr-1 h-3 w-3" />
+                    Play
+                  </WatchPartyButton>
+                )}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <WatchPartyButton variant="ghost" size="sm" className="h-8 w-8 p-0">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </WatchPartyButton>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>
+                      <Play className="mr-2 h-4 w-4" />
+                      Play Video
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <Eye className="mr-2 h-4 w-4" />
+                      View Details
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="text-destructive">Delete Video</DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
 }
 
 export default function VideosPage() {
-  const { toast } = useToast()
-  const [searchQuery, setSearchQuery] = useState("")
+  const [videos, setVideos] = useState<Video[]>([])
+  const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [activeTab, setActiveTab] = useState("library")
-  const [videoStats, setVideoStats] = useState<VideoStats | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [sortBy, setSortBy] = useState("newest")
+  const [filterBy, setFilterBy] = useState("all")
+  const [visibilityFilter, setVisibilityFilter] = useState("all")
 
+  // Simulate API call
   useEffect(() => {
-    const fetchVideoStats = async () => {
-      try {
-        setIsLoading(true)
-        const token = localStorage.getItem("accessToken")
-        
-        // Fetch user analytics for video stats
-        const response = await fetch("/api/analytics/user/", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+    const loadVideos = async () => {
+      setLoading(true)
+      // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      setVideos(mockVideos)
+      setLoading(false)
+    }
+    loadVideos()
+  }, [])
 
-        if (response.ok) {
-          const data = await response.json()
-          
-          // Also fetch videos to get total count
-          const videosResponse = await fetch("/api/videos/?limit=1", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
+  // Filter and sort videos
+  const filteredVideos = React.useMemo(() => {
+    let filtered = videos
 
-          let totalVideos = 0
-          if (videosResponse.ok) {
-            const videosData = await videosResponse.json()
-            totalVideos = videosData.count || 0
-          }
-
-          setVideoStats({
-            total: totalVideos,
-            totalViews: data.watch_time?.total_hours * 60 || 0, // rough approximation
-            totalDuration: `${data.watch_time?.total_hours || 0}h`,
-            storageUsed: "2.4 GB", // This would come from backend
-            storageLimit: "10 GB", // This would come from user subscription
-          })
-        }
-      } catch (error) {
-        console.error("Failed to fetch video stats:", error)
-        toast({
-          title: "Error",
-          description: "Failed to load video statistics.",
-          variant: "destructive",
-        })
-      } finally {
-        setIsLoading(false)
-      }
+    // Search filter
+    if (searchQuery) {
+      filtered = filtered.filter(
+        (video) =>
+          video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          video.description.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
     }
 
-    fetchVideoStats()
-  }, [toast])
+    // Status filter
+    if (filterBy !== "all") {
+      filtered = filtered.filter((video) => video.status === filterBy)
+    }
+
+    // Visibility filter
+    if (visibilityFilter !== "all") {
+      filtered = filtered.filter((video) => video.visibility === visibilityFilter)
+    }
+
+    // Sort
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "newest":
+          return new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
+        case "oldest":
+          return new Date(a.uploadedAt).getTime() - new Date(b.uploadedAt).getTime()
+        case "most-viewed":
+          return b.views - a.views
+        case "most-liked":
+          return b.likes - a.likes
+        case "title":
+          return a.title.localeCompare(b.title)
+        default:
+          return 0
+      }
+    })
+
+    return filtered
+  }, [videos, searchQuery, sortBy, filterBy, visibilityFilter])
+
+  if (loading) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="flex items-center justify-between mb-6">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Card key={i}>
+              <Skeleton className="h-48 w-full rounded-t-lg" />
+              <CardContent className="p-4">
+                <Skeleton className="h-4 w-full mb-2" />
+                <Skeleton className="h-3 w-3/4 mb-3" />
+                <div className="flex justify-between">
+                  <Skeleton className="h-3 w-16" />
+                  <Skeleton className="h-3 w-20" />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto p-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold font-display">Video Library</h1>
-          <p className="text-muted-foreground mt-2">Manage your video collection and upload new content</p>
+          <h1 className="text-3xl font-bold">My Videos</h1>
+          <p className="text-muted-foreground">Manage your uploaded videos and watch party content</p>
         </div>
-        <Button className="shadow-glow">
-          <Upload className="w-4 h-4 mr-2" />
-          Upload Video
-        </Button>
+        <Link href="/dashboard/videos/upload">
+          <WatchPartyButton>
+            <Upload className="mr-2 h-4 w-4" />
+            Upload Video
+          </WatchPartyButton>
+        </Link>
       </div>
 
-      {isLoading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-8 h-8 animate-spin" />
+      {/* Filters and Search */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <div className="flex-1">
+          <WatchPartyInput
+            placeholder="Search videos..."
+            value={searchQuery}
+            onChange={(value) => setSearchQuery(value)}
+            icon={<Search className="h-4 w-4" />}
+          />
         </div>
+        <div className="flex gap-2">
+          <WatchPartySelect
+            options={sortOptions}
+            value={sortBy}
+            onValueChange={(value) => setSortBy(value as string)}
+            placeholder="Sort by..."
+            className="w-40"
+          />
+          <WatchPartySelect
+            options={filterOptions}
+            value={filterBy}
+            onValueChange={(value) => setFilterBy(value as string)}
+            placeholder="Filter..."
+            className="w-32"
+          />
+          <WatchPartySelect
+            options={visibilityOptions}
+            value={visibilityFilter}
+            onValueChange={(value) => setVisibilityFilter(value as string)}
+            placeholder="Visibility..."
+            className="w-36"
+          />
+        </div>
+        <div className="flex border rounded-md">
+          <WatchPartyButton
+            variant={viewMode === "grid" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setViewMode("grid")}
+            className="rounded-r-none"
+          >
+            <Grid className="h-4 w-4" />
+          </WatchPartyButton>
+          <WatchPartyButton
+            variant={viewMode === "list" ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setViewMode("list")}
+            className="rounded-l-none"
+          >
+            <List className="h-4 w-4" />
+          </WatchPartyButton>
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold">{videos.length}</div>
+            <p className="text-xs text-muted-foreground">Total Videos</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold">{videos.filter((v) => v.status === "ready").length}</div>
+            <p className="text-xs text-muted-foreground">Ready</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold">{videos.filter((v) => v.status === "processing").length}</div>
+            <p className="text-xs text-muted-foreground">Processing</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold">{videos.reduce((acc, v) => acc + v.views, 0).toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">Total Views</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Videos Grid/List */}
+      {filteredVideos.length === 0 ? (
+        <Card>
+          <CardContent className="p-12 text-center">
+            <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+            <h3 className="text-lg font-semibold mb-2">No videos found</h3>
+            <p className="text-muted-foreground mb-4">
+              {searchQuery || filterBy !== "all" || visibilityFilter !== "all"
+                ? "Try adjusting your search or filters"
+                : "Upload your first video to get started"}
+            </p>
+            <Link href="/dashboard/videos/upload">
+              <WatchPartyButton>
+                <Upload className="mr-2 h-4 w-4" />
+                Upload Video
+              </WatchPartyButton>
+            </Link>
+          </CardContent>
+        </Card>
       ) : (
-        <>
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Videos</CardTitle>
-                <Play className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{videoStats?.total || 0}</div>
-                <p className="text-xs text-muted-foreground">
-                  Your video collection
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Views</CardTitle>
-                <Eye className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{videoStats?.totalViews?.toLocaleString() || 0}</div>
-                <p className="text-xs text-muted-foreground">
-                  Estimated total views
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Watch Time</CardTitle>
-                <Clock className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{videoStats?.totalDuration || "0h"}</div>
-                <p className="text-xs text-muted-foreground">Total content duration</p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Storage</CardTitle>
-                <Upload className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{videoStats?.storageUsed || "0 GB"}</div>
-                <div className="w-full bg-background-secondary rounded-full h-2 mt-2">
-                  <div 
-                    className="bg-accent-primary h-2 rounded-full" 
-                    style={{ 
-                      width: `${videoStats ? (parseFloat(videoStats.storageUsed) / parseFloat(videoStats.storageLimit)) * 100 : 0}%` 
-                    }} 
-                  />
-                </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {videoStats?.storageUsed || "0 GB"} of {videoStats?.storageLimit || "10 GB"} used
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        </>
+        <div
+          className={
+            viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" : "space-y-4"
+          }
+        >
+          {filteredVideos.map((video) =>
+            viewMode === "grid" ? (
+              <VideoCard key={video.id} video={video} />
+            ) : (
+              <VideoListItem key={video.id} video={video} />
+            ),
+          )}
+        </div>
       )}
-
-      {/* Search and Controls */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search videos..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-80"
-            />
-          </div>
-          <Button variant="outline">
-            <Filter className="w-4 h-4 mr-2" />
-            Filter
-          </Button>
-        </div>
-
-        <div className="flex items-center space-x-2">
-          <Button variant={viewMode === "grid" ? "secondary" : "ghost"} size="icon" onClick={() => setViewMode("grid")}>
-            <Grid3X3 className="w-4 h-4" />
-          </Button>
-          <Button variant={viewMode === "list" ? "secondary" : "ghost"} size="icon" onClick={() => setViewMode("list")}>
-            <List className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="library">My Videos</TabsTrigger>
-          <TabsTrigger value="upload">Upload</TabsTrigger>
-          <TabsTrigger value="shared">Shared with Me</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="library" className="space-y-6">
-          <VideoLibrary searchQuery={searchQuery} viewMode={viewMode} />
-        </TabsContent>
-
-        <TabsContent value="upload" className="space-y-6">
-          <VideoUploader />
-        </TabsContent>
-
-        <TabsContent value="shared" className="space-y-6">
-          <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-            <CardContent className="p-12 text-center">
-              <Share className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No shared videos</h3>
-              <p className="text-muted-foreground">Videos shared with you by friends will appear here</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
     </div>
   )
 }

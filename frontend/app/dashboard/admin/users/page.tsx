@@ -2,157 +2,138 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import WatchPartyTable from "@/components/ui/watch-party-table"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import {
   Users,
   Search,
-  Filter,
-  Ban,
   UserCheck,
-  UserX,
-  Mail,
-  Calendar,
   Shield,
-  AlertTriangle,
-  Eye,
-  Edit,
-  Trash2,
-  Download,
-  Upload,
-  MoreHorizontal,
-  CheckCircle,
-  XCircle,
-  Clock,
-  MapPin,
-  Activity,
   Crown,
   Star,
-  Flag,
-  Loader2,
-  ChevronLeft,
-  ChevronRight,
+  Ban,
+  Unlock,
+  Eye,
+  Edit,
+  Download,
   RefreshCw,
-  FileText,
-  MessageCircle,
-  Heart,
-  Play
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  Video,
+  ArrowLeft,
+  Loader2,
 } from "lucide-react"
-import { formatDistanceToNow, format, parseISO } from "date-fns"
+import { format, formatDistanceToNow } from "date-fns"
 
-interface UserData {
+interface User {
   id: string
   username: string
   email: string
-  first_name: string
-  last_name: string
+  firstName: string
+  lastName: string
   avatar?: string
-  is_active: boolean
-  is_verified: boolean
-  is_staff: boolean
-  is_superuser: boolean
-  is_banned: boolean
-  ban_reason?: string
-  banned_at?: string
-  banned_by?: string
-  date_joined: string
-  last_login?: string
-  last_active?: string
-  location?: string
-  bio?: string
-  total_parties_hosted: number
-  total_parties_joined: number
-  total_watch_time_hours: number
-  total_friends: number
-  total_reports_received: number
-  total_reports_made: number
-  account_status: "active" | "suspended" | "banned" | "pending_verification"
-  subscription_type?: "free" | "premium" | "enterprise"
-  registration_ip?: string
-  email_verified: boolean
-  phone_verified: boolean
-  two_factor_enabled: boolean
+  isVerified: boolean
+  isPremium: boolean
+  isActive: boolean
+  isBanned: boolean
+  role: "user" | "moderator" | "admin"
+  joinedAt: string
+  lastActive?: string
+  stats: {
+    partiesHosted: number
+    partiesJoined: number
+    videosUploaded: number
+    friendsCount: number
+    totalWatchTime: number
+  }
+  subscription?: {
+    plan: string
+    status: string
+    expiresAt: string
+  }
 }
 
-interface FilterOptions {
-  status: string
-  role: string
-  subscription: string
-  verification: string
-  registrationDate: string
-  lastActive: string
+interface UserAction {
+  id: string
+  type: "ban" | "unban" | "verify" | "unverify" | "promote" | "demote" | "delete"
+  reason?: string
+  duration?: number // in days
+  notifyUser?: boolean
 }
 
 export default function UserManagementPage() {
-  const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
+  const router = useRouter()
 
-  const [users, setUsers] = useState<UserData[]>([])
-  const [filteredUsers, setFilteredUsers] = useState<UserData[]>([])
+  const [users, setUsers] = useState<User[]>([])
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([])
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set())
-  const [processingActions, setProcessingActions] = useState<Set<string>>(new Set())
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [totalUsers, setTotalUsers] = useState(0)
-  const [filters, setFilters] = useState<FilterOptions>({
-    status: "all",
-    role: "all",
-    subscription: "all",
-    verification: "all",
-    registrationDate: "all",
-    lastActive: "all"
+  const [statusFilter, setStatusFilter] = useState("all")
+  const [roleFilter, setRoleFilter] = useState("all")
+  const [subscriptionFilter, setSubscriptionFilter] = useState("all")
+  const [showActionDialog, setShowActionDialog] = useState(false)
+  const [currentAction, setCurrentAction] = useState<UserAction | null>(null)
+  const [actionReason, setActionReason] = useState("")
+  const [actionDuration, setActionDuration] = useState(7)
+  const [notifyUser, setNotifyUser] = useState(true)
+
+  const [stats, setStats] = useState({
+    total: 0,
+    active: 0,
+    banned: 0,
+    verified: 0,
+    premium: 0,
+    newToday: 0,
   })
 
-  const usersPerPage = 20
-
+  // Check if user is admin
   useEffect(() => {
-    // Check if user has admin permissions
-    if (!user?.is_staff && !user?.is_superuser) {
+    if (user && !user.isAdmin) {
       router.push("/dashboard")
       return
     }
+  }, [user, router])
+
+  useEffect(() => {
     loadUsers()
-  }, [user, router, currentPage])
+  }, [])
 
   useEffect(() => {
     filterUsers()
-  }, [users, searchQuery, filters])
+  }, [users, searchQuery, statusFilter, roleFilter, subscriptionFilter])
 
   const loadUsers = async () => {
+    if (!user?.isAdmin) return
+
+    setIsLoading(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        limit: usersPerPage.toString(),
-      })
-
-      const response = await fetch(`/api/admin/users/?${params}`, {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await fetch("/api/admin/users/", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
 
       if (response.ok) {
         const data = await response.json()
         setUsers(data.results || data.users || [])
-        setTotalPages(Math.ceil((data.total || data.count || 0) / usersPerPage))
-        setTotalUsers(data.total || data.count || 0)
-      } else if (response.status === 403) {
-        toast({
-          title: "Access Denied",
-          description: "You don't have permission to access this page.",
-          variant: "destructive",
-        })
-        router.push("/dashboard")
+        setStats(data.stats || stats)
       } else {
         throw new Error("Failed to load users")
       }
@@ -160,7 +141,7 @@ export default function UserManagementPage() {
       console.error("Failed to load users:", error)
       toast({
         title: "Error",
-        description: "Failed to load users.",
+        description: "Failed to load users. Please try again.",
         variant: "destructive",
       })
     } finally {
@@ -174,195 +155,138 @@ export default function UserManagementPage() {
     // Search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
-      filtered = filtered.filter(user =>
-        user.username.toLowerCase().includes(query) ||
-        user.email.toLowerCase().includes(query) ||
-        user.first_name.toLowerCase().includes(query) ||
-        user.last_name.toLowerCase().includes(query) ||
-        user.bio?.toLowerCase().includes(query)
+      filtered = filtered.filter(
+        (user) =>
+          user.username.toLowerCase().includes(query) ||
+          user.email.toLowerCase().includes(query) ||
+          user.firstName.toLowerCase().includes(query) ||
+          user.lastName.toLowerCase().includes(query),
       )
     }
 
     // Status filter
-    if (filters.status !== "all") {
-      filtered = filtered.filter(user => {
-        switch (filters.status) {
-          case "active":
-            return user.is_active && !user.is_banned
-          case "banned":
-            return user.is_banned
-          case "suspended":
-            return !user.is_active && !user.is_banned
-          case "pending":
-            return !user.email_verified
-          default:
-            return true
-        }
-      })
+    if (statusFilter !== "all") {
+      switch (statusFilter) {
+        case "active":
+          filtered = filtered.filter((user) => user.isActive && !user.isBanned)
+          break
+        case "inactive":
+          filtered = filtered.filter((user) => !user.isActive)
+          break
+        case "banned":
+          filtered = filtered.filter((user) => user.isBanned)
+          break
+        case "verified":
+          filtered = filtered.filter((user) => user.isVerified)
+          break
+      }
     }
 
     // Role filter
-    if (filters.role !== "all") {
-      filtered = filtered.filter(user => {
-        switch (filters.role) {
-          case "admin":
-            return user.is_staff || user.is_superuser
-          case "verified":
-            return user.is_verified
-          case "regular":
-            return !user.is_staff && !user.is_superuser && !user.is_verified
-          default:
-            return true
-        }
-      })
+    if (roleFilter !== "all") {
+      filtered = filtered.filter((user) => user.role === roleFilter)
     }
 
     // Subscription filter
-    if (filters.subscription !== "all") {
-      filtered = filtered.filter(user => user.subscription_type === filters.subscription)
-    }
-
-    // Verification filter
-    if (filters.verification !== "all") {
-      filtered = filtered.filter(user => {
-        switch (filters.verification) {
-          case "email_verified":
-            return user.email_verified
-          case "phone_verified":
-            return user.phone_verified
-          case "2fa_enabled":
-            return user.two_factor_enabled
-          case "unverified":
-            return !user.email_verified
-          default:
-            return true
-        }
-      })
+    if (subscriptionFilter !== "all") {
+      switch (subscriptionFilter) {
+        case "premium":
+          filtered = filtered.filter((user) => user.isPremium)
+          break
+        case "free":
+          filtered = filtered.filter((user) => !user.isPremium)
+          break
+        case "expired":
+          filtered = filtered.filter((user) => user.subscription && user.subscription.status === "expired")
+          break
+      }
     }
 
     setFilteredUsers(filtered)
   }
 
-  const updateUserStatus = async (userId: string, action: string, reason?: string) => {
-    setProcessingActions(prev => new Set(prev).add(userId))
-
+  const executeUserAction = async (action: UserAction, userIds: string[]) => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/users/${userId}/`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          action,
-          reason,
-          admin_id: user?.id
-        }),
-      })
-
-      if (response.ok) {
-        await loadUsers() // Reload to get updated data
-        
-        const actionMessages = {
-          ban: "User has been banned",
-          unban: "User has been unbanned",
-          suspend: "User has been suspended",
-          activate: "User has been activated",
-          verify: "User has been verified",
-          make_staff: "User promoted to staff",
-          remove_staff: "Staff privileges removed"
-        }
-
-        toast({
-          title: "User Updated",
-          description: actionMessages[action as keyof typeof actionMessages] || "User status updated successfully.",
-        })
-      } else {
-        throw new Error("Failed to update user")
-      }
-    } catch (error) {
-      console.error("Update user error:", error)
-      toast({
-        title: "Error",
-        description: "Failed to update user status.",
-        variant: "destructive",
-      })
-    } finally {
-      setProcessingActions(prev => {
-        const newSet = new Set(prev)
-        newSet.delete(userId)
-        return newSet
-      })
-    }
-  }
-
-  const bulkAction = async (action: string, reason?: string) => {
-    if (selectedUsers.size === 0) {
-      toast({
-        title: "No Users Selected",
-        description: "Please select users to perform bulk action.",
-        variant: "destructive",
-      })
-      return
-    }
-
-    const userIds = Array.from(selectedUsers)
-    
-    try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/users/bulk/`, {
+      const response = await fetch("/api/admin/users/bulk/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
+          action: action.type,
           user_ids: userIds,
-          action,
-          reason,
-          admin_id: user?.id
+          reason: action.reason,
+          duration: action.duration,
+          notify_user: action.notifyUser,
         }),
       })
 
       if (response.ok) {
         await loadUsers()
-        setSelectedUsers(new Set())
-        
+        setSelectedUsers([])
+        setShowActionDialog(false)
+        setCurrentAction(null)
+        setActionReason("")
+
         toast({
-          title: "Bulk Action Complete",
-          description: `Action applied to ${userIds.length} users successfully.`,
+          title: "Action Completed",
+          description: `Successfully ${action.type}ed ${userIds.length} user(s).`,
         })
       } else {
-        throw new Error("Failed to perform bulk action")
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Action failed")
       }
     } catch (error) {
-      console.error("Bulk action error:", error)
+      console.error("Failed to execute user action:", error)
       toast({
-        title: "Error",
-        description: "Failed to perform bulk action.",
+        title: "Action Failed",
+        description: error instanceof Error ? error.message : "Failed to execute action.",
         variant: "destructive",
       })
     }
+  }
+
+  const handleBulkAction = (actionType: UserAction["type"]) => {
+    if (selectedUsers.length === 0) {
+      toast({
+        title: "No Users Selected",
+        description: "Please select users to perform this action.",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setCurrentAction({
+      id: Date.now().toString(),
+      type: actionType,
+      reason: "",
+      duration: 7,
+      notifyUser: true,
+    })
+    setShowActionDialog(true)
   }
 
   const exportUsers = async () => {
     try {
       const token = localStorage.getItem("accessToken")
       const response = await fetch("/api/admin/users/export/", {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
 
       if (response.ok) {
         const blob = await response.blob()
-        const url = URL.createObjectURL(blob)
+        const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
         a.href = url
         a.download = `users-export-${format(new Date(), "yyyy-MM-dd")}.csv`
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
-        URL.revokeObjectURL(url)
+        window.URL.revokeObjectURL(url)
 
         toast({
           title: "Export Complete",
@@ -370,64 +294,199 @@ export default function UserManagementPage() {
         })
       }
     } catch (error) {
-      console.error("Export error:", error)
+      console.error("Failed to export users:", error)
       toast({
-        title: "Error",
+        title: "Export Failed",
         description: "Failed to export user data.",
         variant: "destructive",
       })
     }
   }
 
-  const getStatusColor = (user: UserData) => {
-    if (user.is_banned) return "bg-red-100 text-red-800"
-    if (!user.is_active) return "bg-yellow-100 text-yellow-800"
-    if (!user.email_verified) return "bg-orange-100 text-orange-800"
-    return "bg-green-100 text-green-800"
-  }
-
-  const getStatusText = (user: UserData) => {
-    if (user.is_banned) return "Banned"
-    if (!user.is_active) return "Suspended"
-    if (!user.email_verified) return "Pending"
-    return "Active"
-  }
-
-  const getRoleIcon = (user: UserData) => {
-    if (user.is_superuser) return <Crown className="h-4 w-4 text-purple-600" />
-    if (user.is_staff) return <Shield className="h-4 w-4 text-blue-600" />
-    if (user.is_verified) return <CheckCircle className="h-4 w-4 text-green-600" />
-    return <Users className="h-4 w-4 text-gray-600" />
-  }
-
-  const toggleUserSelection = (userId: string) => {
-    const newSelected = new Set(selectedUsers)
-    if (newSelected.has(userId)) {
-      newSelected.delete(userId)
-    } else {
-      newSelected.add(userId)
+  const getStatusBadge = (user: User) => {
+    if (user.isBanned) {
+      return <Badge variant="destructive">Banned</Badge>
     }
-    setSelectedUsers(newSelected)
+    if (!user.isActive) {
+      return <Badge variant="outline">Inactive</Badge>
+    }
+    return <Badge className="bg-green-100 text-green-800">Active</Badge>
   }
 
-  const selectAllUsers = () => {
-    if (selectedUsers.size === filteredUsers.length) {
-      setSelectedUsers(new Set())
-    } else {
-      setSelectedUsers(new Set(filteredUsers.map(u => u.id)))
+  const getRoleBadge = (role: string) => {
+    switch (role) {
+      case "admin":
+        return (
+          <Badge className="bg-red-100 text-red-800">
+            <Shield className="w-3 h-3 mr-1" />
+            Admin
+          </Badge>
+        )
+      case "moderator":
+        return (
+          <Badge className="bg-blue-100 text-blue-800">
+            <Star className="w-3 h-3 mr-1" />
+            Moderator
+          </Badge>
+        )
+      default:
+        return (
+          <Badge variant="outline">
+            <Users className="w-3 h-3 mr-1" />
+            User
+          </Badge>
+        )
     }
   }
 
-  if (!user?.is_staff && !user?.is_superuser) {
-    return null // Will redirect in useEffect
+  const tableColumns = [
+    {
+      id: "user",
+      header: "User",
+      cell: ({ row }: { row: User }) => (
+        <div className="flex items-center gap-3">
+          <Avatar className="w-8 h-8">
+            <AvatarImage src={row.avatar || "/placeholder.svg"} />
+            <AvatarFallback className="text-xs">
+              {row.firstName[0]}
+              {row.lastName[0]}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-medium">
+                {row.firstName} {row.lastName}
+              </span>
+              {row.isVerified && <CheckCircle className="w-4 h-4 text-blue-500" />}
+              {row.isPremium && <Crown className="w-4 h-4 text-yellow-500" />}
+            </div>
+            <div className="text-sm text-muted-foreground">@{row.username}</div>
+            <div className="text-xs text-muted-foreground">{row.email}</div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "status",
+      header: "Status",
+      cell: ({ row }: { row: User }) => (
+        <div className="space-y-1">
+          {getStatusBadge(row)}
+          {getRoleBadge(row.role)}
+        </div>
+      ),
+    },
+    {
+      id: "stats",
+      header: "Activity",
+      cell: ({ row }: { row: User }) => (
+        <div className="text-sm space-y-1">
+          <div className="flex items-center gap-1">
+            <Video className="w-3 h-3 text-muted-foreground" />
+            <span>{row.stats.partiesHosted} hosted</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Users className="w-3 h-3 text-muted-foreground" />
+            <span>{row.stats.partiesJoined} joined</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Clock className="w-3 h-3 text-muted-foreground" />
+            <span>{Math.round(row.stats.totalWatchTime / 60)}h watched</span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "joined",
+      header: "Joined",
+      cell: ({ row }: { row: User }) => (
+        <div className="text-sm">
+          <div>{format(new Date(row.joinedAt), "MMM dd, yyyy")}</div>
+          <div className="text-muted-foreground">
+            {formatDistanceToNow(new Date(row.joinedAt), { addSuffix: true })}
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: "lastActive",
+      header: "Last Active",
+      cell: ({ row }: { row: User }) => (
+        <div className="text-sm">
+          {row.lastActive ? (
+            <>
+              <div>{format(new Date(row.lastActive), "MMM dd, yyyy")}</div>
+              <div className="text-muted-foreground">
+                {formatDistanceToNow(new Date(row.lastActive), { addSuffix: true })}
+              </div>
+            </>
+          ) : (
+            <span className="text-muted-foreground">Never</span>
+          )}
+        </div>
+      ),
+    },
+  ]
+
+  const tableActions = [
+    {
+      id: "view",
+      label: "View Profile",
+      icon: <Eye className="w-4 h-4" />,
+      onClick: (user: User) => router.push(`/profile/${user.id}`),
+    },
+    {
+      id: "edit",
+      label: "Edit User",
+      icon: <Edit className="w-4 h-4" />,
+      onClick: (user: User) => {
+        // Open edit dialog or navigate to edit page
+        console.log("Edit user:", user.id)
+      },
+    },
+    {
+      id: "ban",
+      label: "Ban User",
+      icon: <Ban className="w-4 h-4" />,
+      onClick: (user: User) => {
+        setSelectedUsers([user.id])
+        handleBulkAction("ban")
+      },
+      condition: (user: User) => !user.isBanned,
+    },
+    {
+      id: "unban",
+      label: "Unban User",
+      icon: <Unlock className="w-4 h-4" />,
+      onClick: (user: User) => {
+        setSelectedUsers([user.id])
+        handleBulkAction("unban")
+      },
+      condition: (user: User) => user.isBanned,
+    },
+  ]
+
+  if (!user?.isAdmin) {
+    return (
+      <div className="container mx-auto py-8 px-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
+          <p className="text-muted-foreground mb-4">You don't have permission to access user management.</p>
+          <Button onClick={() => router.push("/dashboard")}>Back to Dashboard</Button>
+        </div>
+      </div>
+    )
   }
 
   if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p>Loading users...</p>
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <p>Loading users...</p>
+          </div>
         </div>
       </div>
     )
@@ -435,33 +494,69 @@ export default function UserManagementPage() {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
+        <div className="flex items-center gap-4 mb-8">
+          <Button variant="ghost" onClick={() => router.back()} className="p-2">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <div className="flex-1">
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <Users className="h-8 w-8" />
               User Management
             </h1>
-            <p className="text-gray-600 mt-2">Manage platform users and permissions</p>
+            <p className="text-muted-foreground mt-2">Manage users, roles, and permissions</p>
           </div>
-          
           <div className="flex items-center gap-2">
-            <Badge variant="outline">
-              {totalUsers} Total Users
-            </Badge>
-            <Badge variant="outline">
-              {filteredUsers.filter(u => u.is_banned).length} Banned
-            </Badge>
-            <Button variant="outline" onClick={exportUsers}>
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
             <Button variant="outline" onClick={loadUsers}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh
             </Button>
+            <Button variant="outline" onClick={exportUsers}>
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
           </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold">{stats.total}</div>
+              <div className="text-sm text-muted-foreground">Total Users</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-green-600">{stats.active}</div>
+              <div className="text-sm text-muted-foreground">Active</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-red-600">{stats.banned}</div>
+              <div className="text-sm text-muted-foreground">Banned</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-blue-600">{stats.verified}</div>
+              <div className="text-sm text-muted-foreground">Verified</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-yellow-600">{stats.premium}</div>
+              <div className="text-sm text-muted-foreground">Premium</div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-2xl font-bold text-purple-600">{stats.newToday}</div>
+              <div className="text-sm text-muted-foreground">New Today</div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Filters */}
@@ -471,9 +566,9 @@ export default function UserManagementPage() {
               {/* Search */}
               <div className="flex-1">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                   <Input
-                    placeholder="Search by username, email, or name..."
+                    placeholder="Search users..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10"
@@ -483,49 +578,40 @@ export default function UserManagementPage() {
 
               {/* Filter dropdowns */}
               <div className="flex gap-2">
-                <Select
-                  value={filters.status}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, status: value }))}
-                >
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="w-32">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Status</SelectItem>
                     <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="inactive">Inactive</SelectItem>
                     <SelectItem value="banned">Banned</SelectItem>
-                    <SelectItem value="suspended">Suspended</SelectItem>
-                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="verified">Verified</SelectItem>
                   </SelectContent>
                 </Select>
 
-                <Select
-                  value={filters.role}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, role: value }))}
-                >
+                <Select value={roleFilter} onValueChange={setRoleFilter}>
                   <SelectTrigger className="w-32">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Roles</SelectItem>
+                    <SelectItem value="user">User</SelectItem>
+                    <SelectItem value="moderator">Moderator</SelectItem>
                     <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="verified">Verified</SelectItem>
-                    <SelectItem value="regular">Regular</SelectItem>
                   </SelectContent>
                 </Select>
 
-                <Select
-                  value={filters.subscription}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, subscription: value }))}
-                >
-                  <SelectTrigger className="w-32">
+                <Select value={subscriptionFilter} onValueChange={setSubscriptionFilter}>
+                  <SelectTrigger className="w-36">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Plans</SelectItem>
-                    <SelectItem value="free">Free</SelectItem>
+                    <SelectItem value="all">All Subscriptions</SelectItem>
                     <SelectItem value="premium">Premium</SelectItem>
-                    <SelectItem value="enterprise">Enterprise</SelectItem>
+                    <SelectItem value="free">Free</SelectItem>
+                    <SelectItem value="expired">Expired</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -534,37 +620,26 @@ export default function UserManagementPage() {
         </Card>
 
         {/* Bulk Actions */}
-        {selectedUsers.size > 0 && (
+        {selectedUsers.length > 0 && (
           <Card className="mb-6">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">
-                  {selectedUsers.size} user{selectedUsers.size !== 1 ? 's' : ''} selected
-                </span>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => bulkAction("suspend", "Bulk suspension by admin")}
-                  >
-                    <UserX className="h-4 w-4 mr-2" />
-                    Suspend
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => bulkAction("activate")}
-                  >
+                <span className="text-sm font-medium">{selectedUsers.length} user(s) selected</span>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction("verify")}>
                     <UserCheck className="h-4 w-4 mr-2" />
-                    Activate
+                    Verify
                   </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => bulkAction("ban", "Bulk ban by admin")}
-                  >
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction("ban")}>
                     <Ban className="h-4 w-4 mr-2" />
                     Ban
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction("unban")}>
+                    <Unlock className="h-4 w-4 mr-2" />
+                    Unban
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={() => setSelectedUsers([])}>
+                    Clear Selection
                   </Button>
                 </div>
               </div>
@@ -573,238 +648,117 @@ export default function UserManagementPage() {
         )}
 
         {/* Users Table */}
-        <Card>
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50 border-b">
-                  <tr>
-                    <th className="text-left p-4">
-                      <Checkbox
-                        checked={selectedUsers.size === filteredUsers.length && filteredUsers.length > 0}
-                        onCheckedChange={selectAllUsers}
-                      />
-                    </th>
-                    <th className="text-left p-4 font-medium">User</th>
-                    <th className="text-left p-4 font-medium">Status</th>
-                    <th className="text-left p-4 font-medium">Role</th>
-                    <th className="text-left p-4 font-medium">Activity</th>
-                    <th className="text-left p-4 font-medium">Joined</th>
-                    <th className="text-left p-4 font-medium">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredUsers.length === 0 ? (
-                    <tr>
-                      <td colSpan={7} className="text-center py-12">
-                        <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">No users found</h3>
-                        <p className="text-gray-600">
-                          {searchQuery || Object.values(filters).some(f => f !== "all")
-                            ? "Try adjusting your search or filters"
-                            : "No users match the current criteria"
-                          }
-                        </p>
-                      </td>
-                    </tr>
-                  ) : (
-                    filteredUsers.map((userData) => (
-                      <tr key={userData.id} className="border-b hover:bg-gray-50">
-                        <td className="p-4">
-                          <Checkbox
-                            checked={selectedUsers.has(userData.id)}
-                            onCheckedChange={() => toggleUserSelection(userData.id)}
-                          />
-                        </td>
-                        <td className="p-4">
-                          <div className="flex items-center gap-3">
-                            <Avatar className="w-10 h-10">
-                              <AvatarImage src={userData.avatar} />
-                              <AvatarFallback>
-                                {userData.first_name?.[0] || userData.username?.[0]}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <p className="font-medium">
-                                  {userData.first_name} {userData.last_name}
-                                </p>
-                                {getRoleIcon(userData)}
-                              </div>
-                              <p className="text-sm text-gray-600">@{userData.username}</p>
-                              <p className="text-xs text-gray-500">{userData.email}</p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <Badge className={getStatusColor(userData)}>
-                            {getStatusText(userData)}
-                          </Badge>
-                          {userData.is_banned && userData.ban_reason && (
-                            <p className="text-xs text-red-600 mt-1">{userData.ban_reason}</p>
-                          )}
-                        </td>
-                        <td className="p-4">
-                          <div className="space-y-1">
-                            {userData.is_superuser && (
-                              <Badge variant="outline" className="text-xs bg-purple-50">
-                                <Crown className="h-3 w-3 mr-1" />
-                                Super Admin
-                              </Badge>
-                            )}
-                            {userData.is_staff && !userData.is_superuser && (
-                              <Badge variant="outline" className="text-xs bg-blue-50">
-                                <Shield className="h-3 w-3 mr-1" />
-                                Staff
-                              </Badge>
-                            )}
-                            {userData.is_verified && (
-                              <Badge variant="outline" className="text-xs bg-green-50">
-                                <CheckCircle className="h-3 w-3 mr-1" />
-                                Verified
-                              </Badge>
-                            )}
-                            {userData.subscription_type && userData.subscription_type !== "free" && (
-                              <Badge variant="outline" className="text-xs bg-yellow-50">
-                                <Star className="h-3 w-3 mr-1" />
-                                {userData.subscription_type}
-                              </Badge>
-                            )}
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <div className="text-sm space-y-1">
-                            <div className="flex items-center gap-1 text-gray-600">
-                              <Play className="h-3 w-3" />
-                              <span>{userData.total_parties_hosted} hosted</span>
-                            </div>
-                            <div className="flex items-center gap-1 text-gray-600">
-                              <Users className="h-3 w-3" />
-                              <span>{userData.total_friends} friends</span>
-                            </div>
-                            {userData.total_reports_received > 0 && (
-                              <div className="flex items-center gap-1 text-red-600">
-                                <Flag className="h-3 w-3" />
-                                <span>{userData.total_reports_received} reports</span>
-                              </div>
-                            )}
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <div className="text-sm">
-                            <div>{format(parseISO(userData.date_joined), "MMM d, yyyy")}</div>
-                            {userData.last_active && (
-                              <div className="text-gray-500 text-xs">
-                                Active {formatDistanceToNow(parseISO(userData.last_active), { addSuffix: true })}
-                              </div>
-                            )}
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <div className="flex items-center gap-2">
-                            {userData.is_banned ? (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => updateUserStatus(userData.id, "unban")}
-                                disabled={processingActions.has(userData.id)}
-                              >
-                                {processingActions.has(userData.id) ? (
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  <UserCheck className="h-4 w-4" />
-                                )}
-                              </Button>
-                            ) : (
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => updateUserStatus(userData.id, "ban", "Banned by admin")}
-                                disabled={processingActions.has(userData.id)}
-                              >
-                                {processingActions.has(userData.id) ? (
-                                  <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                  <Ban className="h-4 w-4" />
-                                )}
-                              </Button>
-                            )}
-                            
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => router.push(`/dashboard/admin/users/${userData.id}`)}
-                            >
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </CardContent>
-        </Card>
+        <WatchPartyTable
+          data={filteredUsers}
+          columns={tableColumns}
+          actions={tableActions}
+          selectable
+          selectedRows={selectedUsers}
+          onSelectionChange={setSelectedUsers}
+          pagination={{
+            page: 1,
+            pageSize: 25,
+            total: filteredUsers.length,
+            showSizeSelector: true,
+            pageSizeOptions: [10, 25, 50, 100],
+          }}
+          exportable
+          onExport={exportUsers}
+          refreshable
+          onRefresh={loadUsers}
+          className="bg-background"
+        />
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="flex items-center justify-between mt-6">
-            <div className="text-sm text-gray-600">
-              Showing {((currentPage - 1) * usersPerPage) + 1} to {Math.min(currentPage * usersPerPage, totalUsers)} of {totalUsers} users
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </Button>
-              
-              <div className="flex items-center gap-1">
-                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                  const page = i + 1
-                  return (
-                    <Button
-                      key={page}
-                      variant={currentPage === page ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setCurrentPage(page)}
-                    >
-                      {page}
-                    </Button>
-                  )
-                })}
-                {totalPages > 5 && (
-                  <>
-                    <span className="text-gray-500">...</span>
-                    <Button
-                      variant={currentPage === totalPages ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setCurrentPage(totalPages)}
-                    >
-                      {totalPages}
-                    </Button>
-                  </>
-                )}
+        {/* Action Dialog */}
+        <Dialog open={showActionDialog} onOpenChange={setShowActionDialog}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>
+                {currentAction?.type === "ban"
+                  ? "Ban Users"
+                  : currentAction?.type === "unban"
+                    ? "Unban Users"
+                    : currentAction?.type === "verify"
+                      ? "Verify Users"
+                      : currentAction?.type === "delete"
+                        ? "Delete Users"
+                        : "User Action"}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Alert>
+                <AlertTriangle className="h-4 w-4" />
+                <AlertDescription>
+                  This action will affect {selectedUsers.length} user(s).
+                  {currentAction?.type === "delete" && " This action cannot be undone."}
+                </AlertDescription>
+              </Alert>
+
+              <div>
+                <Label htmlFor="reason">Reason</Label>
+                <Textarea
+                  id="reason"
+                  placeholder="Enter reason for this action..."
+                  value={actionReason}
+                  onChange={(e) => setActionReason(e.target.value)}
+                  rows={3}
+                />
               </div>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                disabled={currentPage === totalPages}
-              >
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </Button>
+
+              {currentAction?.type === "ban" && (
+                <div>
+                  <Label htmlFor="duration">Duration (days)</Label>
+                  <Select
+                    value={actionDuration.toString()}
+                    onValueChange={(value) => setActionDuration(Number.parseInt(value))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">1 day</SelectItem>
+                      <SelectItem value="7">7 days</SelectItem>
+                      <SelectItem value="30">30 days</SelectItem>
+                      <SelectItem value="90">90 days</SelectItem>
+                      <SelectItem value="365">1 year</SelectItem>
+                      <SelectItem value="0">Permanent</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              <div className="flex items-center space-x-2">
+                <Checkbox id="notify" checked={notifyUser} onCheckedChange={setNotifyUser} />
+                <Label htmlFor="notify">Notify affected users</Label>
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => {
+                    if (currentAction) {
+                      executeUserAction(
+                        {
+                          ...currentAction,
+                          reason: actionReason,
+                          duration: actionDuration,
+                          notifyUser,
+                        },
+                        selectedUsers,
+                      )
+                    }
+                  }}
+                  className="flex-1"
+                  variant={currentAction?.type === "delete" ? "destructive" : "default"}
+                >
+                  Confirm {currentAction?.type}
+                </Button>
+                <Button variant="outline" onClick={() => setShowActionDialog(false)}>
+                  Cancel
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   )
