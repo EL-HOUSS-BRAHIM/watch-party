@@ -391,6 +391,62 @@ export const API_ENDPOINTS = {
     stats: '/api/dashboard/stats/',
     activities: '/api/dashboard/activities/',
   },
+
+  // === COMPLETELY NEW API SECTIONS ===
+
+  // Store API - Complete commerce system
+  store: {
+    items: '/api/store/items/',
+    purchase: '/api/store/purchase/',
+    inventory: '/api/store/inventory/',
+    achievements: '/api/store/achievements/',
+    rewards: '/api/store/rewards/',
+    claimReward: (rewardId: number) => `/api/store/rewards/${rewardId}/claim/`,
+    stats: '/api/store/stats/',
+  },
+
+  // Search API - Global search and discovery
+  search: {
+    global: '/api/search/',
+    discover: '/api/search/discover/',
+  },
+
+  // Social API - Groups and social features
+  social: {
+    groups: '/api/social/groups/',
+    groupDetail: (groupId: number) => `/api/social/groups/${groupId}/`,
+    joinGroup: (groupId: number) => `/api/social/groups/${groupId}/join/`,
+    leaveGroup: (groupId: number) => `/api/social/groups/${groupId}/leave/`,
+  },
+
+  // Messaging API - Direct messaging system
+  messaging: {
+    conversations: '/api/messaging/conversations/',
+    messages: (conversationId: number) => `/api/messaging/conversations/${conversationId}/messages/`,
+  },
+
+  // Support API - Customer support system
+  support: {
+    faqCategories: '/api/support/faq/categories/',
+    faq: '/api/support/faq/',
+    voteFaq: (faqId: string) => `/api/support/faq/${faqId}/vote/`,
+    viewFaq: (faqId: string) => `/api/support/faq/${faqId}/view/`,
+    tickets: '/api/support/tickets/',
+    ticketDetail: (ticketId: string) => `/api/support/tickets/${ticketId}/`,
+    ticketMessages: (ticketId: string) => `/api/support/tickets/${ticketId}/messages/`,
+    feedback: '/api/support/feedback/',
+    voteFeedback: (feedbackId: string) => `/api/support/feedback/${feedbackId}/vote/`,
+    search: '/api/support/search/',
+  },
+
+  // Mobile API - Mobile app support
+  mobile: {
+    config: '/api/mobile/config/',
+    home: '/api/mobile/home/',
+    sync: '/api/mobile/sync/',
+    pushToken: '/api/mobile/push-token/',
+    appInfo: '/api/mobile/app-info/',
+  },
 } as const
 
 // WebSocket endpoints

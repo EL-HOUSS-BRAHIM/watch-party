@@ -1,6 +1,6 @@
 /**
- * Authentication API Service
- * Handles all authentication-related API calls
+ * Enhanced Authentication API Service
+ * Handles all authentication-related API calls including social auth and session management
  */
 
 import { apiClient } from "./client"
