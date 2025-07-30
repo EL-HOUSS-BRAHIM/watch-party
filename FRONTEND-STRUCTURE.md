@@ -6,6 +6,40 @@ This document provides a comprehensive overview of the Watch Party frontend appl
 
 The frontend is built with **Next.js 14** using the App Router architecture, TypeScript, and Tailwind CSS. It follows a modern component-based architecture with clear separation of concerns.
 
+## 🗂️ Updated File Structure
+
+```
+frontend/
+├── app/                           # Next.js App Router pages
+│   ├── (auth)/                   # Authentication route group
+│   │   ├── callback/             # OAuth callback handler
+│   │   ├── login/                # User login
+│   │   ├── register/             # User registration
+│   │   ├── forgot-password/      # Password reset
+│   │   └── reset-password/       # Password reset form
+│   ├── dashboard/                # User dashboard pages
+│   ├── watch/[roomId]/          # Watch party rooms
+│   ├── profile/[userId]/        # User profiles
+│   └── [other pages]/           # Additional pages
+├── components/                   # Reusable UI components
+│   ├── ui/                      # Base UI components
+│   ├── auth/                    # Authentication components
+│   ├── video/                   # Video-related components
+│   ├── party/                   # Party management components
+│   ├── social/                  # Social networking components
+│   ├── notifications/           # Notification components
+│   ├── chat/                    # Chat interface components
+│   ├── billing/                 # Billing and subscription components
+│   └── [other feature dirs]/   # Other feature-specific components
+├── contexts/                    # React context providers
+├── hooks/                       # Custom React hooks
+├── lib/                         # Utility libraries and API clients
+├── types/                       # TypeScript type definitions
+├── styles/                      # Global styles
+├── public/                      # Static assets
+└── __tests__/                   # Test files
+```
+
 ## 🏗️ Core Architecture
 
 ```
@@ -47,6 +81,7 @@ frontend/
 | `/register` | `app/(auth)/register/page.tsx` | User registration |
 | `/forgot-password` | `app/(auth)/forgot-password/page.tsx` | Password reset request |
 | `/reset-password` | `app/(auth)/reset-password/page.tsx` | Password reset form |
+| `/callback` | `app/(auth)/callback/page.tsx` | OAuth callback handler |
 
 ### Watch Party Pages
 
@@ -198,10 +233,15 @@ The UI component library includes:
 - `video-uploader.tsx` - Video upload interface
 - `video-library.tsx` - Video library browser
 - `video-processing-pipeline.tsx` - Video processing workflow
+- `video-quality-selector.tsx` - Video quality selection component
 
 #### Party Management (`components/party/`)
 - `party-controls.tsx` - Party control interface
 - `participant-list.tsx` - List of party participants
+- `party-invite-dialog.tsx` - Party invitation management
+- `join-by-code-dialog.tsx` - Join party by room code
+- `party-host-controls.tsx` - Host control panel
+- `party-status-indicator.tsx` - Real-time sync status indicator
 
 #### Chat (`components/chat/`)
 - `chat-interface.tsx` - Real-time chat interface
@@ -209,6 +249,8 @@ The UI component library includes:
 #### Notifications (`components/notifications/`)
 - `notification-center.tsx` - Notification management
 - `notification-bell.tsx` - Notification indicator
+- `notification-preferences.tsx` - Granular notification settings
+- `notification-grouping.tsx` - Smart notification grouping and filtering
 
 #### Billing (`components/billing/`)
 - `subscription-plans.tsx` - Subscription plan selection
@@ -252,6 +294,10 @@ The UI component library includes:
 
 #### Social (`components/social/`)
 - Social networking components
+- `enhanced-friend-search.tsx` - Advanced friend search with suggestions
+- `friend-requests-management.tsx` - Complete friend request management
+- `block-list-management.tsx` - Privacy and blocking controls
+- `friend-profile-preview.tsx` - Rich user profile previews
 
 #### Events (`components/events/`)
 - Event management components
@@ -267,6 +313,38 @@ The UI component library includes:
 
 #### Deployment (`components/deployment/`)
 - Deployment management components
+
+## 🔌 API Integration
+
+### Authentication API (`lib/api/auth.ts`)
+- OAuth URL generation for social providers
+- Social authentication completion
+- Token management and refresh
+- User registration and login
+
+### Friends API Integration
+- User search with advanced filtering
+- Friend suggestion algorithms
+- Request management (send, accept, reject, cancel)
+- Block list management with privacy controls
+
+### Party API Integration
+- Room creation and management
+- Invitation system with multiple delivery methods
+- Real-time synchronization APIs
+- Participant management
+
+### Notification API Integration
+- Preference management with granular controls
+- Real-time notification delivery
+- Grouping and filtering algorithms
+- Push notification registration
+
+### Store API Integration
+- Item catalog with search and filtering
+- Purchase transaction handling
+- Inventory management
+- Achievement tracking and rewards
 
 ## 🎯 Contexts
 
@@ -331,6 +409,25 @@ The UI component library includes:
 
 The application includes several development scripts accessible through the `start-dev.sh` file for easy development setup.
 
+## 📦 Dependencies
+
+### Core Dependencies
+- **Next.js 15.2.4** - React framework with App Router
+- **React 19** - Core React library
+- **TypeScript 5** - Type safety and development experience
+- **Tailwind CSS** - Utility-first CSS framework
+- **Radix UI** - Accessible component primitives
+- **Lucide React** - Icon library
+- **date-fns** - Date utility library
+- **Zod** - Runtime type validation
+- **Socket.io Client** - Real-time communication
+
+### UI Component Library
+- Complete set of accessible, customizable components
+- Consistent design system with theme support
+- Mobile-responsive components
+- Advanced form handling with validation
+
 ## 📱 Mobile Support
 
 The application includes comprehensive mobile support with:
@@ -355,3 +452,46 @@ Full i18n support is implemented with:
 - Content moderation tools
 
 This architecture provides a scalable, maintainable, and feature-rich frontend for the Watch Party application, supporting everything from basic video watching to advanced social features and administrative functionality.
+
+## 🆕 Recently Implemented Features
+
+### Social Authentication & OAuth
+- Complete OAuth callback handling for Google and GitHub
+- Secure token management and error handling
+- Seamless integration with existing auth flow
+
+### Enhanced Party Management
+- **Party Invite System**: Room code sharing, email invitations, invite links
+- **Join by Code**: Simple room code entry with validation
+- **Host Controls**: Comprehensive party management with participant controls
+- **Status Indicators**: Real-time sync status and connection monitoring
+
+### Advanced Video Features
+- **Quality Selector**: Multi-quality video streaming with bitrate display
+- Smooth quality switching without interruption
+- Adaptive streaming support
+
+### Complete Friends System
+- **Smart Friend Search**: AI-powered suggestions based on mutual friends, location, and interests
+- **Request Management**: Full lifecycle management of friend requests
+- **Privacy Controls**: Comprehensive blocking system with reason tracking
+- **Profile Previews**: Rich user profiles with activity history and achievements
+
+### Enhanced Notifications
+- **Granular Preferences**: Category-based notification settings with priority levels
+- **Smart Grouping**: Intelligent notification batching and filtering
+- **Quiet Hours**: Time-based notification management
+- **Rate Limiting**: Configurable notification frequency controls
+
+### Store & Rewards Integration
+- Comprehensive store system with item browsing and purchasing
+- Achievement system with progress tracking
+- Point-based economy with inventory management
+- Cart functionality and purchase history
+
+### Technical Improvements
+- Type-safe TypeScript implementation across all components
+- Responsive design with mobile-first approach
+- Error boundaries and comprehensive error handling
+- Performance optimizations with debouncing and lazy loading
+- Accessibility features with proper ARIA labels
