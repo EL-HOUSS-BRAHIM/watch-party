@@ -30,6 +30,7 @@ import {
 } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { adminAPI } from "@/lib/api"
 import { formatDistanceToNow } from "date-fns"
 
 interface Report {
@@ -99,25 +100,14 @@ export default function ContentModeration() {
 
   const loadReports = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        search: searchQuery,
-        status: statusFilter,
-        type: typeFilter,
-        priority: priorityFilter,
+      const data = await adminAPI.getReports({
+        status: statusFilter !== "all" ? statusFilter as any : undefined,
+        type: typeFilter !== "all" ? typeFilter : undefined,
+        page: currentPage,
       })
-
-      const response = await fetch(`/api/admin/reports/?${params}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setReports(data.results || data.reports || [])
-        setTotalPages(data.totalPages || Math.ceil(data.count / 20))
+      
+      setReports(data.results || [])
+      setTotalPages(data.totalPages || Math.ceil(data.count / 20))
       }
     } catch (error) {
       console.error("Failed to load reports:", error)
@@ -151,28 +141,17 @@ export default function ContentModeration() {
 
   const updateReportStatus = async (reportId: string, status: string, resolution?: string) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/reports/${reportId}/`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          status,
-          resolution,
-          reviewed_by: user?.id,
-        }),
+      await adminAPI.resolveReport(reportId, {
+        action: status === "resolved" ? "dismiss" : status as any,
+        reason: resolution,
       })
 
-      if (response.ok) {
-        const updatedReport = await response.json()
-        setReports((prev) => prev.map((r) => (r.id === reportId ? updatedReport : r)))
-        setSelectedReport(null)
-        toast({
-          title: "Report Updated",
-          description: `Report status changed to ${status}`,
-        })
+      await loadReports() // Reload to get updated data
+      setSelectedReport(null)
+      toast({
+        title: "Report Updated",
+        description: `Report status changed to ${status}`,
+      })
       }
     } catch (error) {
       console.error("Failed to update report:", error)
@@ -186,26 +165,16 @@ export default function ContentModeration() {
 
   const takeContentAction = async (reportId: string, action: string, reason: string) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/reports/${reportId}/action/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          action,
-          reason,
-        }),
+      await adminAPI.resolveReport(reportId, {
+        action: action as any,
+        reason,
       })
 
-      if (response.ok) {
-        await updateReportStatus(reportId, "resolved", `Action taken: ${action}`)
-        toast({
-          title: "Action Taken",
-          description: `${action} applied successfully`,
-        })
-      }
+      await loadReports() // Reload to get updated data
+      toast({
+        title: "Action Taken",
+        description: `${action} applied successfully`,
+      })
     } catch (error) {
       console.error("Failed to take content action:", error)
       toast({
