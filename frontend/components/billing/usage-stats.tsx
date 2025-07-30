@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
+import { billingAPI } from "@/lib/api"
 import {
   BarChart,
   Bar,
@@ -59,13 +60,14 @@ export function UsageStats() {
   const fetchUsageStats = async () => {
     try {
       setIsLoading(true)
-      const token = localStorage.getItem("accessToken")
       
-      // Fetch usage data from analytics endpoint
-      const [subscriptionResponse, analyticsResponse, trendsResponse] = await Promise.all([
-        fetch("/api/billing/subscription/", {
-          headers: { Authorization: `Bearer ${token}` }
-        }),
+      // Fetch usage data from billing API
+      const subscriptionData = await billingAPI.getSubscription()
+      
+      // Note: Analytics endpoints would need to be implemented in analyticsAPI
+      // For now, we'll use direct fetch for analytics data
+      const token = localStorage.getItem("accessToken")
+      const [analyticsResponse, trendsResponse] = await Promise.all([
         fetch("/api/analytics/user/", {
           headers: { Authorization: `Bearer ${token}` }
         }),
@@ -74,53 +76,48 @@ export function UsageStats() {
         })
       ])
 
-      if (subscriptionResponse.ok && analyticsResponse.ok) {
-        const [subscriptionData, analyticsData, trendsData] = await Promise.all([
-          subscriptionResponse.json(),
-          analyticsResponse.json(),
-          trendsResponse.ok ? trendsResponse.json() : { monthly_trends: [], daily_activity: [], quality_distribution: [] }
-        ])
-        
-        // Transform real data to match our interface
-        const currentUsage = subscriptionData.usage || {}
-        const analytics = analyticsData || {}
-        
-        const stats: UsageStats = {
-          current_usage: {
-            storage: { 
-              used: parseFloat(currentUsage.storage_used) || 0, 
-              limit: parseFloat(currentUsage.storage_limit) || 10, 
-              unit: "GB" 
-            },
-            bandwidth: { 
-              used: parseFloat(analytics.bandwidth_used_gb) || 0, 
-              limit: parseFloat(currentUsage.bandwidth_limit) || 500, 
-              unit: "GB" 
-            },
-            parties: { 
-              used: analytics.parties_hosted_this_month || 0, 
-              limit: parseInt(currentUsage.parties_limit) || 25, 
-              unit: "parties" 
-            },
-            participants: { 
-              used: analytics.total_participants_this_month || 0, 
-              limit: parseInt(currentUsage.participants_limit) || 500, 
-              unit: "total participants" 
-            },
+      const [analyticsData, trendsData] = await Promise.all([
+        analyticsResponse.ok ? analyticsResponse.json() : {},
+        trendsResponse.ok ? trendsResponse.json() : { monthly_trends: [], daily_activity: [], quality_distribution: [] }
+      ])
+      
+      // Transform real data to match our interface
+      const currentUsage = subscriptionData.usage || {}
+      const analytics = analyticsData || {}
+      
+      const stats: UsageStats = {
+        current_usage: {
+          storage: { 
+            used: parseFloat(currentUsage.storage_used) || 0, 
+            limit: parseFloat(currentUsage.storage_limit) || 10, 
+            unit: "GB" 
           },
-          monthly_trends: trendsData.monthly_trends || [],
-          daily_activity: trendsData.daily_activity || [],
-          quality_distribution: trendsData.quality_distribution || [
-            { name: "720p", value: 40, color: "#8884d8" },
-            { name: "1080p", value: 50, color: "#82ca9d" },
-            { name: "4K", value: 10, color: "#ffc658" },
-          ],
-        }
-        
-        setUsageStats(stats)
-      } else {
-        throw new Error("Failed to fetch usage stats")
+          bandwidth: { 
+            used: parseFloat((analytics as any).bandwidth_used_gb) || 0, 
+            limit: parseFloat((currentUsage as any).bandwidth_limit) || 500, 
+            unit: "GB" 
+          },
+          parties: { 
+            used: currentUsage.parties_hosted_this_month || 0, 
+            limit: parseInt((currentUsage as any).parties_limit) || 25, 
+            unit: "parties" 
+          },
+          participants: { 
+            used: (analytics as any).total_participants_this_month || 0, 
+            limit: parseInt((currentUsage as any).participants_limit) || 500, 
+            unit: "total participants" 
+          },
+        },
+        monthly_trends: trendsData.monthly_trends || [],
+        daily_activity: trendsData.daily_activity || [],
+        quality_distribution: trendsData.quality_distribution || [
+          { name: "720p", value: 40, color: "#8884d8" },
+          { name: "1080p", value: 50, color: "#82ca9d" },
+          { name: "4K", value: 10, color: "#ffc658" },
+        ],
       }
+      
+      setUsageStats(stats)
     } catch (error) {
       console.error("Failed to fetch usage stats:", error)
       toast({
