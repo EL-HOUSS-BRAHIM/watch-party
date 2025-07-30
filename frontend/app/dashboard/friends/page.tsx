@@ -8,10 +8,26 @@ import FriendRequests from "@/components/social/friend-requests"
 import UserSearch from "@/components/social/user-search"
 import ActivityFeed from "@/components/social/activity-feed"
 import { Users, UserPlus, Search, Activity } from "lucide-react"
+import { usersAPI } from "@/lib/api"
+import { useEffect } from "react"
 
 export default function FriendsPage() {
   const [activeTab, setActiveTab] = useState("friends")
-  const [pendingRequestsCount] = useState(3) // This would come from API
+  const [pendingRequestsCount, setPendingRequestsCount] = useState(0)
+
+  useEffect(() => {
+    loadPendingRequestsCount()
+  }, [])
+
+  const loadPendingRequestsCount = async () => {
+    try {
+      const requests = await usersAPI.getFriendRequests()
+      const pendingCount = requests.filter((req: any) => req.status === 'pending').length
+      setPendingRequestsCount(pendingCount)
+    } catch (error) {
+      console.error("Failed to load pending requests count:", error)
+    }
+  }
 
   return (
     <div className="container mx-auto py-8 px-4">
