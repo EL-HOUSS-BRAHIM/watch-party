@@ -210,10 +210,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const socialLogin = async (provider: "google" | "github") => {
     try {
-      // Redirect to social auth endpoint
+      // Get OAuth redirect URL from backend
       const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
-      window.location.href = `${baseURL}/api/auth/social/${provider}/`
+      const redirectUri = `${window.location.origin}/callback?provider=${provider}`
+      
+      const response = await fetch(`${baseURL}/api/auth/social/${provider}/redirect/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          redirect_uri: redirectUri,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to get OAuth URL")
+      }
+
+      const data = await response.json()
+      
+      if (data.redirect_url) {
+        window.location.href = data.redirect_url
+      } else {
+        throw new Error("No redirect URL received")
+      }
     } catch (error) {
+      console.error("Social login error:", error)
       throw error
     }
   }
