@@ -12,6 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { notificationsAPI } from "@/lib/api"
+import type { Notification as APINotification } from "@/lib/api/types"
 import {
   Bell,
   BellOff,
@@ -29,8 +31,10 @@ import {
   ArrowLeft,
   Loader2,
   RefreshCw,
+  Video,
 } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
+import { CheckedState } from "@radix-ui/react-checkbox"
 
 interface Notification {
   id: string
@@ -41,14 +45,15 @@ interface Notification {
     | "party_started"
     | "video_like"
     | "video_comment"
+    | "video_upload"
     | "system"
     | "achievement"
     | "message"
   title: string
   message: string
-  isRead: boolean
-  createdAt: string
-  data?: {
+  is_read: boolean
+  created_at: string
+  action_data?: {
     userId?: string
     userName?: string
     userAvatar?: string
@@ -61,8 +66,7 @@ interface Notification {
     messageId?: string
     url?: string
   }
-  priority: "low" | "normal" | "high" | "urgent"
-  category: "social" | "content" | "system" | "achievement"
+  action_url?: string
   requiresAction?: boolean
   actionButtons?: Array<{
     label: string
@@ -120,20 +124,12 @@ export default function NotificationsPage() {
   const loadNotifications = async () => {
     setIsLoading(true)
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/notifications/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setNotifications(data.results || data.notifications || [])
-        setStats(data.stats || stats)
-      } else {
-        throw new Error("Failed to load notifications")
-      }
+      const data = await notificationsAPI.getNotifications()
+      setNotifications(data.results || [])
+      setStats(prev => ({
+        ...prev,
+        unread: data.unread_count || 0
+      }))
     } catch (error) {
       console.error("Failed to load notifications:", error)
       toast({
@@ -151,19 +147,19 @@ export default function NotificationsPage() {
 
     // Tab filter
     if (activeTab === "unread") {
-      filtered = filtered.filter((n) => !n.isRead)
+      filtered = filtered.filter((n) => !n.is_read)
     } else if (activeTab === "actions") {
-      filtered = filtered.filter((n) => n.requiresAction && !n.isRead)
+      filtered = filtered.filter((n) => n.requiresAction && !n.is_read)
     }
 
-    // Category filter
-    if (filterType !== "all") {
-      filtered = filtered.filter((n) => n.category === filterType)
-    }
+    // Category filter - Since we don't have category in API response, skip this filter
+    // if (filterType !== "all") {
+    //   filtered = filtered.filter((n) => n.category === filterType)
+    // }
 
     // Unread only filter
     if (showUnreadOnly) {
-      filtered = filtered.filter((n) => !n.isRead)
+      filtered = filtered.filter((n) => !n.is_read)
     }
 
     setFilteredNotifications(filtered)
@@ -171,18 +167,9 @@ export default function NotificationsPage() {
 
   const markAsRead = async (notificationId: string) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/notifications/${notificationId}/mark-read/`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        setNotifications((prev) => prev.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n)))
-        setStats((prev) => ({ ...prev, unread: Math.max(0, prev.unread - 1) }))
-      }
+      await notificationsAPI.markAsRead(notificationId)
+      setNotifications((prev) => prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n)))
+      setStats((prev) => ({ ...prev, unread: Math.max(0, prev.unread - 1) }))
     } catch (error) {
       console.error("Failed to mark notification as read:", error)
     }
@@ -190,22 +177,13 @@ export default function NotificationsPage() {
 
   const markAllAsRead = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/notifications/mark-all-read/", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      await notificationsAPI.markAllAsRead()
+      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })))
+      setStats((prev) => ({ ...prev, unread: 0 }))
+      toast({
+        title: "All Marked as Read",
+        description: "All notifications have been marked as read.",
       })
-
-      if (response.ok) {
-        setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })))
-        setStats((prev) => ({ ...prev, unread: 0 }))
-        toast({
-          title: "All Marked as Read",
-          description: "All notifications have been marked as read.",
-        })
-      }
     } catch (error) {
       console.error("Failed to mark all as read:", error)
       toast({
@@ -218,22 +196,13 @@ export default function NotificationsPage() {
 
   const deleteNotification = async (notificationId: string) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/notifications/${notificationId}/`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        setNotifications((prev) => prev.filter((n) => n.id !== notificationId))
-        setStats((prev) => ({
-          ...prev,
-          total: prev.total - 1,
-          unread: prev.unread - (notifications.find((n) => n.id === notificationId)?.isRead ? 0 : 1),
-        }))
-      }
+      await notificationsAPI.deleteNotification(notificationId)
+      setNotifications((prev) => prev.filter((n) => n.id !== notificationId))
+      setStats((prev) => ({
+        ...prev,
+        total: prev.total - 1,
+        unread: prev.unread - (notifications.find((n) => n.id === notificationId)?.is_read ? 0 : 1),
+      }))
     } catch (error) {
       console.error("Failed to delete notification:", error)
       toast({
@@ -248,32 +217,21 @@ export default function NotificationsPage() {
     if (selectedNotifications.length === 0) return
 
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/notifications/bulk-delete/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ notification_ids: selectedNotifications }),
+      await notificationsAPI.bulkDelete(selectedNotifications)
+      const unreadCount = selectedNotifications.filter((id) => !notifications.find((n) => n.id === id)?.is_read).length
+
+      setNotifications((prev) => prev.filter((n) => !selectedNotifications.includes(n.id)))
+      setStats((prev) => ({
+        ...prev,
+        total: prev.total - selectedNotifications.length,
+        unread: prev.unread - unreadCount,
+      }))
+      setSelectedNotifications([])
+
+      toast({
+        title: "Notifications Deleted",
+        description: `${selectedNotifications.length} notifications deleted.`,
       })
-
-      if (response.ok) {
-        const unreadCount = selectedNotifications.filter((id) => !notifications.find((n) => n.id === id)?.isRead).length
-
-        setNotifications((prev) => prev.filter((n) => !selectedNotifications.includes(n.id)))
-        setStats((prev) => ({
-          ...prev,
-          total: prev.total - selectedNotifications.length,
-          unread: prev.unread - unreadCount,
-        }))
-        setSelectedNotifications([])
-
-        toast({
-          title: "Notifications Deleted",
-          description: `${selectedNotifications.length} notifications deleted.`,
-        })
-      }
     } catch (error) {
       console.error("Failed to delete selected notifications:", error)
       toast({
@@ -291,8 +249,8 @@ export default function NotificationsPage() {
       if (notification.type === "friend_request") {
         const endpoint =
           action === "accept"
-            ? `/api/users/friends/${notification.data?.requestId}/accept/`
-            : `/api/users/friends/${notification.data?.requestId}/decline/`
+            ? `/api/users/friends/${notification.action_data?.requestId}/accept/`
+            : `/api/users/friends/${notification.action_data?.requestId}/decline/`
 
         const response = await fetch(endpoint, {
           method: "POST",
@@ -309,9 +267,9 @@ export default function NotificationsPage() {
           })
         }
       } else if (notification.type === "party_invite" && action === "view") {
-        router.push(`/watch/${notification.data?.partyId}`)
-      } else if (notification.data?.url) {
-        router.push(notification.data.url)
+        router.push(`/watch/${notification.action_data?.partyId}`)
+      } else if (notification.action_url) {
+        router.push(notification.action_url)
       }
     } catch (error) {
       console.error("Failed to handle notification action:", error)
@@ -335,6 +293,8 @@ export default function NotificationsPage() {
         return <Heart className="w-5 h-5 text-red-500" />
       case "video_comment":
         return <MessageCircle className="w-5 h-5 text-blue-500" />
+      case "video_upload":
+        return <Video className="w-5 h-5 text-green-500" />
       case "message":
         return <MessageCircle className="w-5 h-5 text-green-500" />
       case "achievement":
@@ -347,34 +307,8 @@ export default function NotificationsPage() {
   }
 
   const getPriorityBadge = (priority: string) => {
-    switch (priority) {
-      case "urgent":
-        return (
-          <Badge variant="destructive" className="text-xs">
-            Urgent
-          </Badge>
-        )
-      case "high":
-        return (
-          <Badge variant="default" className="text-xs">
-            High
-          </Badge>
-        )
-      case "normal":
-        return (
-          <Badge variant="outline" className="text-xs">
-            Normal
-          </Badge>
-        )
-      case "low":
-        return (
-          <Badge variant="secondary" className="text-xs">
-            Low
-          </Badge>
-        )
-      default:
-        return null
-    }
+    // Priority not available in API response, return null
+    return null
   }
 
   const toggleNotificationSelection = (notificationId: string) => {
@@ -490,7 +424,13 @@ export default function NotificationsPage() {
             </Select>
 
             <div className="flex items-center space-x-2">
-              <Checkbox id="unread-only" checked={showUnreadOnly} onCheckedChange={setShowUnreadOnly} />
+              <Checkbox 
+                id="unread-only" 
+                checked={showUnreadOnly} 
+                onCheckedChange={(checked: CheckedState) => {
+                  setShowUnreadOnly(checked === true)
+                }} 
+              />
               <label htmlFor="unread-only" className="text-sm">
                 Unread only
               </label>
@@ -517,7 +457,7 @@ export default function NotificationsPage() {
             <TabsTrigger value="all">All ({notifications.length})</TabsTrigger>
             <TabsTrigger value="unread">Unread ({stats.unread})</TabsTrigger>
             <TabsTrigger value="actions">
-              Requires Action ({notifications.filter((n) => n.requiresAction && !n.isRead).length})
+              Requires Action ({notifications.filter((n) => n.requiresAction && !n.is_read).length})
             </TabsTrigger>
           </TabsList>
 
@@ -545,11 +485,15 @@ export default function NotificationsPage() {
                       filteredNotifications.length > 0 &&
                       filteredNotifications.every((n) => selectedNotifications.includes(n.id))
                     }
-                    indeterminate={
-                      filteredNotifications.some((n) => selectedNotifications.includes(n.id)) &&
-                      !filteredNotifications.every((n) => selectedNotifications.includes(n.id))
-                    }
-                    onCheckedChange={toggleAllSelection}
+                    onCheckedChange={(checked: CheckedState) => {
+                      if (checked === true) {
+                        const visibleIds = filteredNotifications.map((n) => n.id)
+                        setSelectedNotifications((prev) => [...new Set([...prev, ...visibleIds])])
+                      } else {
+                        const visibleIds = filteredNotifications.map((n) => n.id)
+                        setSelectedNotifications((prev) => prev.filter((id) => !visibleIds.includes(id)))
+                      }
+                    }}
                   />
                   <span className="text-sm text-muted-foreground">Select all visible</span>
                 </div>
@@ -560,7 +504,7 @@ export default function NotificationsPage() {
                     <Card
                       key={notification.id}
                       className={`transition-all hover:shadow-md ${
-                        !notification.isRead ? "border-blue-200 bg-blue-50" : "hover:bg-gray-50"
+                        !notification.is_read ? "border-blue-200 bg-blue-50" : "hover:bg-gray-50"
                       }`}
                     >
                       <CardContent className="p-4">
@@ -575,11 +519,11 @@ export default function NotificationsPage() {
                           <div className="flex-shrink-0 mt-1">{getNotificationIcon(notification.type)}</div>
 
                           {/* Avatar (if applicable) */}
-                          {notification.data?.userAvatar && (
+                          {notification.action_data?.userAvatar && (
                             <Avatar className="w-10 h-10">
-                              <AvatarImage src={notification.data.userAvatar || "/placeholder.svg"} />
+                              <AvatarImage src={notification.action_data.userAvatar || "/placeholder.svg"} />
                               <AvatarFallback className="text-sm">
-                                {notification.data.userName?.[0] || "U"}
+                                {notification.action_data.userName?.[0] || "U"}
                               </AvatarFallback>
                             </Avatar>
                           )}
@@ -588,15 +532,15 @@ export default function NotificationsPage() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between mb-2">
                               <div className="flex items-center gap-2">
-                                <h4 className={`font-medium ${!notification.isRead ? "font-semibold" : ""}`}>
+                                <h4 className={`font-medium ${!notification.is_read ? "font-semibold" : ""}`}>
                                   {notification.title}
                                 </h4>
-                                {!notification.isRead && <div className="w-2 h-2 bg-blue-500 rounded-full"></div>}
-                                {getPriorityBadge(notification.priority)}
+                                {!notification.is_read && <div className="w-2 h-2 bg-blue-500 rounded-full"></div>}
+                                {getPriorityBadge("normal")}
                               </div>
                               <div className="flex items-center gap-2">
                                 <span className="text-sm text-muted-foreground">
-                                  {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
+                                  {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
                                 </span>
                                 <DropdownMenu>
                                   <DropdownMenuTrigger asChild>
@@ -605,7 +549,7 @@ export default function NotificationsPage() {
                                     </Button>
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end">
-                                    {!notification.isRead && (
+                                    {!notification.is_read && (
                                       <DropdownMenuItem onClick={() => markAsRead(notification.id)}>
                                         <Check className="w-4 h-4 mr-2" />
                                         Mark as Read
@@ -626,7 +570,7 @@ export default function NotificationsPage() {
                             <p className="text-muted-foreground mb-3">{notification.message}</p>
 
                             {/* Action Buttons */}
-                            {notification.requiresAction && !notification.isRead && notification.actionButtons && (
+                            {notification.requiresAction && !notification.is_read && notification.actionButtons && (
                               <div className="flex items-center gap-2">
                                 {notification.actionButtons.map((button, index) => (
                                   <Button
@@ -642,7 +586,7 @@ export default function NotificationsPage() {
                             )}
 
                             {/* Default Actions for specific types */}
-                            {notification.requiresAction && !notification.isRead && !notification.actionButtons && (
+                            {notification.requiresAction && !notification.is_read && !notification.actionButtons && (
                               <div className="flex items-center gap-2">
                                 {notification.type === "friend_request" && (
                                   <>
@@ -658,7 +602,7 @@ export default function NotificationsPage() {
                                     </Button>
                                   </>
                                 )}
-                                {(notification.type === "party_invite" || notification.data?.url) && (
+                                {(notification.type === "party_invite" || notification.action_url) && (
                                   <Button
                                     variant="outline"
                                     size="sm"
