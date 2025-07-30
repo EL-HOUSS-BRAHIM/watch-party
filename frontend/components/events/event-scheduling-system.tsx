@@ -38,55 +38,10 @@ import {
   Play,
   Crown,
   MessageCircle,
+  Loader2,
 } from "lucide-react"
-
-interface WatchEvent {
-  id: string
-  title: string
-  description: string
-  startTime: string
-  endTime: string
-  timezone: string
-  status: "scheduled" | "live" | "completed" | "cancelled"
-  privacy: "public" | "private" | "invite-only"
-  maxAttendees: number
-  currentAttendees: number
-  video: {
-    id: string
-    title: string
-    thumbnail: string
-    duration: number
-  }
-  host: {
-    id: string
-    name: string
-    avatar: string
-  }
-  location?: string
-  isVirtual: boolean
-  meetingLink?: string
-  tags: string[]
-  reminders: string[]
-  rsvpDeadline?: string
-  allowGuestInvites: boolean
-  requireApproval: boolean
-  isHost: boolean
-  rsvpStatus?: "going" | "maybe" | "not-going" | "pending"
-  createdAt: string
-}
-
-interface EventAttendee {
-  id: string
-  user: {
-    id: string
-    name: string
-    avatar: string
-    email: string
-  }
-  status: "going" | "maybe" | "not-going" | "pending"
-  rsvpDate: string
-  role: "host" | "co-host" | "attendee"
-}
+import { eventsAPI } from "@/lib/api"
+import type { WatchEvent, EventAttendee, CreateEventRequest, EventFilters } from "@/lib/api/types"
 
 export default function EventSchedulingSystem() {
   const { toast } = useToast()
@@ -98,160 +53,83 @@ export default function EventSchedulingSystem() {
   const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar")
   const [filterStatus, setFilterStatus] = useState("all")
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingEvents, setIsLoadingEvents] = useState(true)
 
-  // Mock data
+  // Load events from API
   useEffect(() => {
-    const mockEvents: WatchEvent[] = [
-      {
-        id: "1",
-        title: "Movie Night: The Matrix",
-        description:
-          "Join us for a classic sci-fi movie night! We'll be watching The Matrix and discussing it afterwards.",
-        startTime: "2024-01-30T20:00:00Z",
-        endTime: "2024-01-30T22:30:00Z",
-        timezone: "UTC",
-        status: "scheduled",
-        privacy: "public",
-        maxAttendees: 50,
-        currentAttendees: 23,
-        video: {
-          id: "video1",
-          title: "The Matrix",
-          thumbnail: "/placeholder.svg?height=200&width=300&text=The+Matrix",
-          duration: 8100, // 2h 15m
-        },
-        host: {
-          id: "user1",
-          name: "John Doe",
-          avatar: "/placeholder.svg?height=40&width=40",
-        },
-        isVirtual: true,
-        meetingLink: "https://watchparty.com/room/matrix-night",
-        tags: ["sci-fi", "classic", "discussion"],
-        reminders: ["1 hour", "15 minutes"],
-        rsvpDeadline: "2024-01-30T18:00:00Z",
-        allowGuestInvites: true,
-        requireApproval: false,
-        isHost: true,
-        rsvpStatus: "going",
-        createdAt: "2024-01-25T10:00:00Z",
-      },
-      {
-        id: "2",
-        title: "Anime Marathon: Studio Ghibli",
-        description: "A weekend marathon of Studio Ghibli films. Bring snacks and get ready for a magical journey!",
-        startTime: "2024-02-03T14:00:00Z",
-        endTime: "2024-02-04T22:00:00Z",
-        timezone: "UTC",
-        status: "scheduled",
-        privacy: "invite-only",
-        maxAttendees: 20,
-        currentAttendees: 15,
-        video: {
-          id: "video2",
-          title: "Studio Ghibli Collection",
-          thumbnail: "/placeholder.svg?height=200&width=300&text=Studio+Ghibli",
-          duration: 28800, // 8 hours
-        },
-        host: {
-          id: "user2",
-          name: "Jane Smith",
-          avatar: "/placeholder.svg?height=40&width=40",
-        },
-        isVirtual: true,
-        meetingLink: "https://watchparty.com/room/ghibli-marathon",
-        tags: ["anime", "marathon", "family-friendly"],
-        reminders: ["1 day", "2 hours"],
-        allowGuestInvites: false,
-        requireApproval: true,
-        isHost: false,
-        rsvpStatus: "maybe",
-        createdAt: "2024-01-20T15:30:00Z",
-      },
-    ]
-
-    const mockAttendees: EventAttendee[] = [
-      {
-        id: "1",
-        user: {
-          id: "user1",
-          name: "John Doe",
-          avatar: "/placeholder.svg?height=40&width=40",
-          email: "john@example.com",
-        },
-        status: "going",
-        rsvpDate: "2024-01-25T10:00:00Z",
-        role: "host",
-      },
-      {
-        id: "2",
-        user: {
-          id: "user2",
-          name: "Jane Smith",
-          avatar: "/placeholder.svg?height=40&width=40",
-          email: "jane@example.com",
-        },
-        status: "going",
-        rsvpDate: "2024-01-26T14:30:00Z",
-        role: "attendee",
-      },
-      {
-        id: "3",
-        user: {
-          id: "user3",
-          name: "Mike Johnson",
-          avatar: "/placeholder.svg?height=40&width=40",
-          email: "mike@example.com",
-        },
-        status: "maybe",
-        rsvpDate: "2024-01-27T09:15:00Z",
-        role: "attendee",
-      },
-    ]
-
-    setEvents(mockEvents)
-    setEventAttendees(mockAttendees)
+    loadEvents()
   }, [])
+
+  const loadEvents = async () => {
+    try {
+      setIsLoadingEvents(true)
+      const response = await eventsAPI.getEvents({
+        page: 1,
+        limit: 100,
+        status: filterStatus === "all" ? undefined : filterStatus as any,
+      })
+      setEvents(response.events)
+    } catch (error) {
+      console.error("Failed to load events:", error)
+      toast({
+        title: "Error",
+        description: "Failed to load events. Please try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoadingEvents(false)
+    }
+  }
+
+  // Reload events when filter changes
+  useEffect(() => {
+    loadEvents()
+  }, [filterStatus])
+
+  const loadEventAttendees = async (eventId: string) => {
+    try {
+      const attendees = await eventsAPI.getEventAttendees(eventId)
+      setEventAttendees(attendees)
+    } catch (error) {
+      console.error("Failed to load attendees:", error)
+      toast({
+        title: "Error",
+        description: "Failed to load event attendees.",
+        variant: "destructive",
+      })
+    }
+  }
+
+  // Load attendees when event is selected
+  useEffect(() => {
+    if (selectedEvent) {
+      loadEventAttendees(selectedEvent.id)
+    }
+  }, [selectedEvent])
 
   const handleCreateEvent = async (formData: FormData) => {
     setIsLoading(true)
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      const newEvent: WatchEvent = {
-        id: Date.now().toString(),
+      const eventData: CreateEventRequest = {
         title: formData.get("title") as string,
         description: formData.get("description") as string,
         startTime: new Date(formData.get("startTime") as string).toISOString(),
         endTime: new Date(formData.get("endTime") as string).toISOString(),
         timezone: "UTC",
-        status: "scheduled",
         privacy: formData.get("privacy") as "public" | "private" | "invite-only",
         maxAttendees: Number.parseInt(formData.get("maxAttendees") as string) || 50,
-        currentAttendees: 1,
-        video: {
-          id: "temp-video",
-          title: (formData.get("videoTitle") as string) || "Selected Video",
-          thumbnail: "/placeholder.svg?height=200&width=300&text=Video",
-          duration: 7200,
-        },
-        host: {
-          id: "current-user",
-          name: "Current User",
-          avatar: "/placeholder.svg?height=40&width=40",
-        },
+        videoId: "temp-video", // This should be selected from a video picker
         isVirtual: formData.get("isVirtual") === "on",
         meetingLink: formData.get("meetingLink") as string,
         tags: (formData.get("tags") as string).split(",").map((tag) => tag.trim()),
         reminders: ["1 hour", "15 minutes"],
         allowGuestInvites: formData.get("allowGuestInvites") === "on",
         requireApproval: formData.get("requireApproval") === "on",
-        isHost: true,
-        rsvpStatus: "going",
-        createdAt: new Date().toISOString(),
       }
 
+      const newEvent = await eventsAPI.createEvent(eventData)
+      
+      // Add to local state
       setEvents((prev) => [newEvent, ...prev])
       setShowCreateDialog(false)
 
@@ -260,6 +138,7 @@ export default function EventSchedulingSystem() {
         description: "Your watch party event has been scheduled!",
       })
     } catch (error) {
+      console.error("Failed to create event:", error)
       toast({
         title: "Error",
         description: "Failed to create event. Please try again.",
@@ -272,6 +151,9 @@ export default function EventSchedulingSystem() {
 
   const handleRSVP = async (eventId: string, status: "going" | "maybe" | "not-going") => {
     try {
+      await eventsAPI.rsvpToEvent(eventId, status)
+      
+      // Update local state
       setEvents((prev) => prev.map((event) => (event.id === eventId ? { ...event, rsvpStatus: status } : event)))
 
       toast({
@@ -279,6 +161,7 @@ export default function EventSchedulingSystem() {
         description: `You have marked yourself as ${status} for this event.`,
       })
     } catch (error) {
+      console.error("Failed to update RSVP:", error)
       toast({
         title: "Error",
         description: "Failed to update RSVP. Please try again.",
@@ -292,14 +175,20 @@ export default function EventSchedulingSystem() {
       const event = events.find((e) => e.id === eventId)
       if (!event) return
 
-      // Simulate joining the live event
-      window.open(event.meetingLink, "_blank")
+      // Join the live event via API
+      await eventsAPI.joinEvent(eventId)
+
+      // Open the meeting link
+      if (event.meetingLink) {
+        window.open(event.meetingLink, "_blank")
+      }
 
       toast({
         title: "Joining Event",
         description: "Opening watch party room...",
       })
     } catch (error) {
+      console.error("Failed to join event:", error)
       toast({
         title: "Error",
         description: "Failed to join event. Please try again.",
@@ -310,6 +199,9 @@ export default function EventSchedulingSystem() {
 
   const handleCancelEvent = async (eventId: string) => {
     try {
+      await eventsAPI.cancelEvent(eventId)
+      
+      // Update local state
       setEvents((prev) => prev.map((event) => (event.id === eventId ? { ...event, status: "cancelled" } : event)))
 
       toast({
@@ -317,6 +209,7 @@ export default function EventSchedulingSystem() {
         description: "The event has been cancelled and attendees will be notified.",
       })
     } catch (error) {
+      console.error("Failed to cancel event:", error)
       toast({
         title: "Error",
         description: "Failed to cancel event. Please try again.",
@@ -521,7 +414,15 @@ export default function EventSchedulingSystem() {
       </div>
 
       {/* Content */}
-      {viewMode === "calendar" ? (
+      {isLoadingEvents ? (
+        <Card>
+          <CardContent className="text-center py-12">
+            <Loader2 className="h-12 w-12 mx-auto text-muted-foreground mb-4 animate-spin" />
+            <h3 className="text-lg font-semibold mb-2">Loading Events</h3>
+            <p className="text-muted-foreground">Please wait while we fetch your events...</p>
+          </CardContent>
+        </Card>
+      ) : viewMode === "calendar" ? (
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Calendar */}
           <Card className="lg:col-span-1">
