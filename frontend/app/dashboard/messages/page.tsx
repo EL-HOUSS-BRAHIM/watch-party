@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { messagingAPI } from "@/lib/api"
 import {
   MessageCircle,
   Send,
@@ -114,17 +115,8 @@ export default function MessagesPage() {
 
   const loadConversations = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/messages/conversations/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setConversations(data.results || data.conversations || [])
-      }
+      const data = await messagingAPI.getConversations()
+      setConversations(data.results || data.conversations || [])
     } catch (error) {
       console.error("Failed to load conversations:", error)
       toast({
@@ -139,17 +131,8 @@ export default function MessagesPage() {
 
   const loadMessages = async (conversationId: string) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/messages/conversations/${conversationId}/messages/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setMessages(data.results || data.messages || [])
-      }
+      const data = await messagingAPI.getMessages(conversationId)
+      setMessages(data.results || data.messages || [])
     } catch (error) {
       console.error("Failed to load messages:", error)
       toast({
@@ -162,17 +145,8 @@ export default function MessagesPage() {
 
   const loadOnlineUsers = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/friends/?online_only=true", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setOnlineUsers(data.results || data.friends || [])
-      }
+      const data = await messagingAPI.getOnlineFriends()
+      setOnlineUsers(data || [])
     } catch (error) {
       console.error("Failed to load online users:", error)
     }
@@ -180,14 +154,7 @@ export default function MessagesPage() {
 
   const markConversationAsRead = async (conversationId: string) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      await fetch(`/api/messages/conversations/${conversationId}/read/`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
+      await messagingAPI.markConversationAsRead(conversationId)
       setConversations(prev => prev.map(conv => 
         conv.id === conversationId ? { ...conv, unreadCount: 0 } : conv
       ))
@@ -204,37 +171,19 @@ export default function MessagesPage() {
     setNewMessage("")
 
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/messages/conversations/${selectedConversation.id}/messages/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          content: messageContent,
-          type: "text",
-        }),
+      const data = await messagingAPI.sendMessage(selectedConversation.id, {
+        content: messageContent,
+        type: "text",
       })
-
-      if (response.ok) {
-        const data = await response.json()
-        setMessages(prev => [...prev, data])
-        
-        // Update conversation with last message
-        setConversations(prev => prev.map(conv => 
-          conv.id === selectedConversation.id 
-            ? { ...conv, lastMessage: data, updatedAt: data.createdAt }
-            : conv
-        ))
-      } else {
-        setNewMessage(messageContent) // Restore message on failure
-        toast({
-          title: "Error",
-          description: "Failed to send message. Please try again.",
-          variant: "destructive",
-        })
-      }
+      
+      setMessages(prev => [...prev, data])
+      
+      // Update conversation with last message
+      setConversations(prev => prev.map(conv => 
+        conv.id === selectedConversation.id 
+          ? { ...conv, lastMessage: data, updatedAt: data.createdAt }
+          : conv
+      ))
     } catch (error) {
       console.error("Failed to send message:", error)
       setNewMessage(messageContent) // Restore message on failure
@@ -250,29 +199,18 @@ export default function MessagesPage() {
 
   const startDirectMessage = async (userId: string) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/messages/conversations/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          type: "direct",
-          participants: [userId],
-        }),
+      const data = await messagingAPI.createConversation({
+        type: "direct",
+        participants: [userId],
       })
-
-      if (response.ok) {
-        const data = await response.json()
-        setConversations(prev => {
-          const exists = prev.find(conv => conv.id === data.id)
-          if (exists) return prev
-          return [data, ...prev]
-        })
-        setSelectedConversation(data)
-        setShowUserSearch(false)
-      }
+      
+      setConversations(prev => {
+        const exists = prev.find(conv => conv.id === data.id)
+        if (exists) return prev
+        return [data, ...prev]
+      })
+      setSelectedConversation(data)
+      setShowUserSearch(false)
     } catch (error) {
       console.error("Failed to start direct message:", error)
       toast({
