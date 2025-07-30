@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog"
 import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/hooks/use-toast"
+import { integrationsAPI } from "@/lib/api"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism"
 import {
@@ -88,104 +89,125 @@ export default function IntegrationAPISystem() {
   const [selectedTab, setSelectedTab] = useState("api-keys")
   const [isLoading, setIsLoading] = useState(false)
 
-  // Mock data
+  // Load integrations data
   useEffect(() => {
-    const mockAPIKeys: APIKey[] = [
-      {
-        id: "1",
-        name: "Production API",
-        key: "wp_live_sk_1234567890abcdef",
-        permissions: ["read", "write", "admin"],
-        rateLimit: 1000,
-        lastUsed: "2024-01-28T10:30:00Z",
-        createdAt: "2024-01-15T09:00:00Z",
-        isActive: true,
-        usage: {
-          requests: 750,
-          limit: 1000,
-          resetDate: "2024-01-29T00:00:00Z",
-        },
-      },
-      {
-        id: "2",
-        name: "Development API",
-        key: "wp_test_sk_abcdef1234567890",
-        permissions: ["read", "write"],
-        rateLimit: 100,
-        lastUsed: "2024-01-27T15:45:00Z",
-        createdAt: "2024-01-20T14:00:00Z",
-        isActive: true,
-        usage: {
-          requests: 45,
-          limit: 100,
-          resetDate: "2024-01-29T00:00:00Z",
-        },
-      },
-    ]
-
-    const mockIntegrations: Integration[] = [
-      {
-        id: "1",
-        name: "Google Drive",
-        description: "Import videos directly from Google Drive",
-        icon: "🗂️",
-        category: "Storage",
-        status: "connected",
-        config: { folderId: "1234567890", autoSync: true },
-        lastSync: "2024-01-28T08:00:00Z",
-        features: ["Video Import", "Auto Sync", "Folder Monitoring"],
-      },
-      {
-        id: "2",
-        name: "Discord",
-        description: "Send notifications to Discord channels",
-        icon: "💬",
-        category: "Communication",
-        status: "connected",
-        config: { webhookUrl: "https://discord.com/api/webhooks/...", channelId: "123456789" },
-        lastSync: "2024-01-28T12:15:00Z",
-        features: ["Party Notifications", "Event Reminders", "User Mentions"],
-      },
-      {
-        id: "3",
-        name: "Twitch",
-        description: "Stream watch parties to Twitch",
-        icon: "📺",
-        category: "Streaming",
-        status: "disconnected",
-        config: {},
-        lastSync: "",
-        features: ["Live Streaming", "Chat Integration", "Viewer Analytics"],
-      },
-    ]
-
-    const mockWebhooks: WebhookEndpoint[] = [
-      {
-        id: "1",
-        url: "https://api.example.com/webhooks/watchparty",
-        events: ["party.created", "party.started", "user.joined"],
-        secret: "whsec_1234567890abcdef",
-        isActive: true,
-        lastDelivery: "2024-01-28T11:30:00Z",
-        successRate: 98.5,
-        createdAt: "2024-01-15T10:00:00Z",
-      },
-      {
-        id: "2",
-        url: "https://hooks.slack.com/services/...",
-        events: ["party.ended", "video.uploaded"],
-        secret: "whsec_abcdef1234567890",
-        isActive: true,
-        lastDelivery: "2024-01-28T09:45:00Z",
-        successRate: 100,
-        createdAt: "2024-01-20T16:30:00Z",
-      },
-    ]
-
-    setApiKeys(mockAPIKeys)
-    setIntegrations(mockIntegrations)
-    setWebhooks(mockWebhooks)
+    loadIntegrations()
   }, [])
+
+  const loadIntegrations = async () => {
+    try {
+      setIsLoading(true)
+      
+      // Check integrations health and availability
+      const healthData = await integrationsAPI.getHealth()
+      
+      // Mock data for demo - in real app this would come from API
+      const mockAPIKeys: APIKey[] = [
+        {
+          id: "1",
+          name: "Production API",
+          key: "wp_live_sk_1234567890abcdef",
+          permissions: ["read", "write", "admin"],
+          rateLimit: 1000,
+          lastUsed: "2024-01-28T10:30:00Z",
+          createdAt: "2024-01-15T09:00:00Z",
+          isActive: true,
+          usage: {
+            requests: 750,
+            limit: 1000,
+            resetDate: "2024-01-29T00:00:00Z",
+          },
+        },
+        {
+          id: "2",
+          name: "Development API",
+          key: "wp_test_sk_abcdef1234567890",
+          permissions: ["read", "write"],
+          rateLimit: 100,
+          lastUsed: "2024-01-27T15:45:00Z",
+          createdAt: "2024-01-20T14:00:00Z",
+          isActive: true,
+          usage: {
+            requests: 45,
+            limit: 100,
+            resetDate: "2024-01-29T00:00:00Z",
+          },
+        },
+      ]
+
+      const mockIntegrations: Integration[] = [
+        {
+          id: "1",
+          name: "Google Drive",
+          description: "Import videos directly from Google Drive",
+          icon: "🗂️",
+          category: "Storage",
+          status: healthData.google_drive ? "connected" : "disconnected",
+          config: { folderId: "1234567890", autoSync: true },
+          lastSync: "2024-01-28T08:00:00Z",
+          features: ["Video Import", "Auto Sync", "Folder Monitoring"],
+        },
+        {
+          id: "2",
+          name: "Discord",
+          description: "Send notifications to Discord channels",
+          icon: "💬",
+          category: "Communication",
+          status: "connected",
+          config: { webhookUrl: "https://discord.com/api/webhooks/...", channelId: "123456789" },
+          lastSync: "2024-01-28T12:15:00Z",
+          features: ["Party Notifications", "Event Reminders", "User Mentions"],
+        },
+        {
+          id: "3",
+          name: "Twitch",
+          description: "Stream watch parties to Twitch",
+          icon: "📺",
+          category: "Streaming",
+          status: "disconnected",
+          config: {},
+          lastSync: "",
+          features: ["Live Streaming", "Chat Integration", "Viewer Analytics"],
+        },
+      ]
+
+      const mockWebhooks: WebhookEndpoint[] = [
+        {
+          id: "1",
+          url: "https://api.example.com/webhooks/watchparty",
+          events: ["party.created", "party.started", "user.joined"],
+          secret: "whsec_1234567890abcdef",
+          isActive: true,
+          lastDelivery: "2024-01-28T11:30:00Z",
+          successRate: 98.5,
+          createdAt: "2024-01-15T10:00:00Z",
+        },
+        {
+          id: "2",
+          url: "https://hooks.slack.com/services/...",
+          events: ["party.ended", "video.uploaded"],
+          secret: "whsec_abcdef1234567890",
+          isActive: true,
+          lastDelivery: "2024-01-28T09:45:00Z",
+          successRate: 100,
+          createdAt: "2024-01-20T16:30:00Z",
+        },
+      ]
+
+      setApiKeys(mockAPIKeys)
+      setIntegrations(mockIntegrations)
+      setWebhooks(mockWebhooks)
+    } catch (error) {
+      console.error("Failed to load integrations:", error)
+      toast({
+        title: "Error",
+        description: "Failed to load integrations data",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleCreateAPIKey = async (formData: FormData) => {
     setIsLoading(true)
@@ -304,24 +326,30 @@ export default function IntegrationAPISystem() {
 
   const handleConnectIntegration = async (integrationId: string) => {
     try {
-      setIntegrations((prev) =>
-        prev.map((integration) =>
-          integration.id === integrationId
-            ? { ...integration, status: "connected", lastSync: new Date().toISOString() }
-            : integration,
-        ),
-      )
-
-      toast({
-        title: "Integration Connected",
-        description: "Integration has been successfully connected.",
-      })
+      setIsLoading(true)
+      const integration = integrations.find(i => i.id === integrationId)
+      
+      if (integration?.name === "Google Drive") {
+        // Get Google Drive auth URL and redirect
+        const authResponse = await integrationsAPI.getGoogleDriveAuthUrl()
+        window.location.href = authResponse.auth_url
+        return
+      }
+      
+      // For other integrations, use generic auth
+      if (integration) {
+        const authResponse = await integrationsAPI.getAuthUrl(integration.name.toLowerCase().replace(/\s+/g, '-'))
+        window.location.href = authResponse.auth_url
+      }
     } catch (error) {
+      console.error("Failed to connect integration:", error)
       toast({
         title: "Error",
-        description: "Failed to connect integration.",
+        description: "Failed to connect integration. Please try again.",
         variant: "destructive",
       })
+    } finally {
+      setIsLoading(false)
     }
   }
 
