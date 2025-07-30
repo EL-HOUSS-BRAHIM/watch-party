@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { adminAPI } from "@/lib/api"
 import {
   BarChart,
   Bar,
@@ -133,15 +134,11 @@ export default function PartyAnalyticsPage() {
 
   const loadAnalytics = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/analytics/parties/?time_range=${timeRange}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setAnalytics(data)
-      } else if (response.status === 403) {
+      const data = await adminAPI.getAnalytics()
+      setAnalytics(data)
+    } catch (error) {
+      console.error("Failed to load analytics:", error)
+      if ((error as any)?.response?.status === 403) {
         toast({
           title: "Access Denied",
           description: "You don't have permission to access this page.",
@@ -149,15 +146,12 @@ export default function PartyAnalyticsPage() {
         })
         router.push("/dashboard")
       } else {
-        throw new Error("Failed to load analytics")
+        toast({
+          title: "Error",
+          description: "Failed to load analytics data.",
+          variant: "destructive",
+        })
       }
-    } catch (error) {
-      console.error("Failed to load analytics:", error)
-      toast({
-        title: "Error",
-        description: "Failed to load analytics data.",
-        variant: "destructive",
-      })
     } finally {
       setIsLoading(false)
     }
@@ -165,6 +159,8 @@ export default function PartyAnalyticsPage() {
 
   const exportAnalytics = async () => {
     try {
+      // Since there's no direct export analytics method in adminAPI, 
+      // we can use a generic approach or extend the API
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/admin/analytics/export/?time_range=${timeRange}`, {
         headers: { Authorization: `Bearer ${token}` }
