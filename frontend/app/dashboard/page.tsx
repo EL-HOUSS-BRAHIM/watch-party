@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { usersAPI, partiesAPI, videosAPI } from "@/lib/api"
 
 interface DashboardStats {
   total_parties: number
@@ -78,77 +79,36 @@ export default function DashboardPage() {
     const fetchDashboardData = async () => {
       try {
         setIsLoading(true)
-        const token = localStorage.getItem("access_token")
 
-        // Fetch dashboard stats
+        // Fetch dashboard stats using API client
         try {
-          const statsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/dashboard/stats/`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-
-          if (statsResponse.ok) {
-            const statsData = await statsResponse.json()
-            console.log("Dashboard stats received:", statsData)
-            setStats(statsData)
-          } else {
-            console.warn("Dashboard stats API failed:", statsResponse.status, statsResponse.statusText)
-          }
+          const statsData = await usersAPI.getDashboardStats()
+          console.log("Dashboard stats received:", statsData)
+          setStats(statsData)
         } catch (error) {
           console.error("Failed to fetch dashboard stats:", error)
         }
 
-        // Fetch recent parties
+        // Fetch recent parties using API client
         try {
-          const partiesResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/parties/?limit=5&ordering=-created_at`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-
-          if (partiesResponse.ok) {
-            const partiesData = await partiesResponse.json()
-            setRecentParties(partiesData.results || [])
-          } else {
-            console.warn("Parties API failed:", partiesResponse.status, partiesResponse.statusText)
-          }
+          const partiesData = await partiesAPI.getParties({ limit: 5, ordering: '-created_at' })
+          setRecentParties(partiesData.results || [])
         } catch (error) {
           console.error("Failed to fetch parties:", error)
         }
 
-        // Fetch recent videos
+        // Fetch recent videos using API client
         try {
-          const videosResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/videos/?limit=4&ordering=-created_at`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-
-          if (videosResponse.ok) {
-            const videosData = await videosResponse.json()
-            setRecentVideos(videosData.results || [])
-          } else {
-            console.warn("Videos API failed:", videosResponse.status, videosResponse.statusText)
-          }
+          const videosData = await videosAPI.getUserVideos({ limit: 4, ordering: '-created_at' })
+          setRecentVideos(videosData.videos || [])
         } catch (error) {
           console.error("Failed to fetch videos:", error)
         }
 
-        // Fetch friend activity
+        // Fetch friend activity using API client
         try {
-          const activityResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/activities/?limit=10`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-
-          if (activityResponse.ok) {
-            const activityData = await activityResponse.json()
-            setFriendActivity(activityData.activities || [])
-          } else {
-            console.warn("Activity API failed:", activityResponse.status, activityResponse.statusText)
-          }
+          const activityData = await usersAPI.getFriendActivity({ limit: 10 })
+          setFriendActivity(activityData.activities || [])
         } catch (error) {
           console.error("Failed to fetch activity:", error)
         }
