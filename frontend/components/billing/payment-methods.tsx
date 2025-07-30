@@ -20,6 +20,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CreditCard, Plus, Trash2, Star, Shield, Calendar } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { billingAPI } from "@/lib/api"
+import type { PaymentMethod as APIPaymentMethod } from "@/lib/api/types"
 import { cn } from "@/lib/utils"
 
 interface PaymentMethod {
@@ -50,19 +52,22 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
     loadPaymentMethods()
   }, [])
 
+  // Helper function to map API payment method to local type
+  const mapAPIPaymentMethodToLocal = (apiPM: APIPaymentMethod): PaymentMethod => ({
+    id: apiPM.id,
+    type: apiPM.type,
+    brand: apiPM.brand,
+    last4: apiPM.last_four,
+    expiryMonth: apiPM.expires_month,
+    expiryYear: apiPM.expires_year,
+    isDefault: apiPM.is_default,
+  })
+
   const loadPaymentMethods = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/billing/payment-methods/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setPaymentMethods(data.results || data)
-      }
+      const data = await billingAPI.getPaymentMethods()
+      const mappedMethods = (data.payment_methods || []).map(mapAPIPaymentMethodToLocal)
+      setPaymentMethods(mappedMethods)
     } catch (error) {
       console.error("Failed to load payment methods:", error)
     } finally {
@@ -74,27 +79,16 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
     setIsAdding(true)
 
     try {
-      const token = localStorage.getItem("accessToken")
-
       // In a real implementation, you would use Stripe Elements or similar
       // to securely collect payment information
-      const response = await fetch("/api/billing/payment-methods/", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
+      const newPaymentMethod = await billingAPI.addPaymentMethod("stripe_payment_method_id")
+      const mappedMethod = mapAPIPaymentMethodToLocal(newPaymentMethod)
+      setPaymentMethods((prev) => [...prev, mappedMethod])
+      setShowAddDialog(false)
+      toast({
+        title: "Payment method added",
+        description: "Your payment method has been successfully added.",
       })
-
-      if (response.ok) {
-        const newPaymentMethod = await response.json()
-        setPaymentMethods((prev) => [...prev, newPaymentMethod])
-        setShowAddDialog(false)
-        toast({
-          title: "Payment method added",
-          description: "Your payment method has been successfully added.",
-        })
-      }
     } catch (error) {
       console.error("Failed to add payment method:", error)
       toast({
@@ -111,21 +105,12 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
     if (!confirm("Are you sure you want to remove this payment method?")) return
 
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/billing/payment-methods/${methodId}/`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      await billingAPI.deletePaymentMethod(methodId)
+      setPaymentMethods((prev) => prev.filter((method) => method.id !== methodId))
+      toast({
+        title: "Payment method removed",
+        description: "The payment method has been successfully removed.",
       })
-
-      if (response.ok) {
-        setPaymentMethods((prev) => prev.filter((method) => method.id !== methodId))
-        toast({
-          title: "Payment method removed",
-          description: "The payment method has been successfully removed.",
-        })
-      }
     } catch (error) {
       console.error("Failed to remove payment method:", error)
       toast({
@@ -138,26 +123,17 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
 
   const setDefaultPaymentMethod = async (methodId: string) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/billing/payment-methods/${methodId}/set-default/`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      await billingAPI.setDefaultPaymentMethod(methodId)
+      setPaymentMethods((prev) =>
+        prev.map((method) => ({
+          ...method,
+          isDefault: method.id === methodId,
+        })),
+      )
+      toast({
+        title: "Default payment method updated",
+        description: "Your default payment method has been updated.",
       })
-
-      if (response.ok) {
-        setPaymentMethods((prev) =>
-          prev.map((method) => ({
-            ...method,
-            isDefault: method.id === methodId,
-          })),
-        )
-        toast({
-          title: "Default payment method updated",
-          description: "Your default payment method has been updated.",
-        })
-      }
     } catch (error) {
       console.error("Failed to set default payment method:", error)
       toast({
