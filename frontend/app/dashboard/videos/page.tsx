@@ -18,72 +18,8 @@ import {
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
-
-interface Video {
-  id: string
-  title: string
-  description: string
-  thumbnail: string
-  duration: number
-  views: number
-  likes: number
-  comments: number
-  uploadedAt: string
-  status: "processing" | "ready" | "failed"
-  visibility: "public" | "private" | "unlisted"
-  size: number
-  format: string
-  uploadProgress?: number
-}
-
-const mockVideos: Video[] = [
-  {
-    id: "1",
-    title: "Epic Movie Night - The Dark Knight",
-    description: "Join us for an amazing watch party of Christopher Nolan's masterpiece",
-    thumbnail: "/placeholder.svg?height=200&width=300&text=Dark+Knight",
-    duration: 8520, // 2h 22m in seconds
-    views: 1250,
-    likes: 89,
-    comments: 23,
-    uploadedAt: "2024-01-15T10:30:00Z",
-    status: "ready",
-    visibility: "public",
-    size: 2.1, // GB
-    format: "MP4",
-  },
-  {
-    id: "2",
-    title: "Anime Marathon - Attack on Titan S4",
-    description: "Final season watch party with the community",
-    thumbnail: "/placeholder.svg?height=200&width=300&text=AOT+S4",
-    duration: 1440, // 24m
-    views: 892,
-    likes: 156,
-    comments: 45,
-    uploadedAt: "2024-01-14T15:45:00Z",
-    status: "ready",
-    visibility: "public",
-    size: 0.8,
-    format: "MP4",
-  },
-  {
-    id: "3",
-    title: "Classic Comedy Night",
-    description: "Uploading classic comedy for tonight's party",
-    thumbnail: "/placeholder.svg?height=200&width=300&text=Comedy",
-    duration: 5400, // 1h 30m
-    views: 0,
-    likes: 0,
-    comments: 0,
-    uploadedAt: "2024-01-16T09:15:00Z",
-    status: "processing",
-    visibility: "private",
-    size: 1.5,
-    format: "MP4",
-    uploadProgress: 65,
-  },
-]
+import { videosAPI } from "@/lib/api"
+import type { Video as APIVideo } from "@/lib/api/types"
 
 const sortOptions = [
   { value: "newest", label: "Newest First" },
@@ -135,7 +71,7 @@ function formatDate(dateString: string): string {
   })
 }
 
-function VideoCard({ video }: { video: Video }) {
+function VideoCard({ video }: { video: APIVideo }) {
   return (
     <Card className="group hover:shadow-lg transition-all duration-200 hover:shadow-primary/10">
       <div className="relative">
@@ -226,7 +162,7 @@ function VideoCard({ video }: { video: Video }) {
   )
 }
 
-function VideoListItem({ video }: { video: Video }) {
+function VideoListItem({ video }: { video: APIVideo }) {
   return (
     <Card className="hover:shadow-md transition-all duration-200">
       <CardContent className="p-4">
@@ -318,7 +254,7 @@ function VideoListItem({ video }: { video: Video }) {
 }
 
 export default function VideosPage() {
-  const [videos, setVideos] = useState<Video[]>([])
+  const [videos, setVideos] = useState<APIVideo[]>([])
   const [loading, setLoading] = useState(true)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [searchQuery, setSearchQuery] = useState("")
@@ -326,17 +262,22 @@ export default function VideosPage() {
   const [filterBy, setFilterBy] = useState("all")
   const [visibilityFilter, setVisibilityFilter] = useState("all")
 
-  // Simulate API call
+  // Load videos from API
   useEffect(() => {
-    const loadVideos = async () => {
-      setLoading(true)
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      setVideos(mockVideos)
-      setLoading(false)
-    }
     loadVideos()
   }, [])
+
+  const loadVideos = async () => {
+    try {
+      setLoading(true)
+      const response = await videosAPI.getUserVideos()
+      setVideos(response.videos)
+    } catch (error) {
+      console.error("Failed to load videos:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   // Filter and sort videos
   const filteredVideos = React.useMemo(() => {
