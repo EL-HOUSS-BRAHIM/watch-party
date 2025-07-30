@@ -15,6 +15,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import WatchPartyTable from "@/components/ui/watch-party-table"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { billingAPI } from "@/lib/api"
 import {
   CreditCard,
   Crown,
@@ -33,7 +34,9 @@ import {
 } from "lucide-react"
 import { format } from "date-fns"
 
-interface Subscription {
+import type { SubscriptionPlan, Subscription as APISubscription, PaymentMethod as APIPaymentMethod, BillingHistory } from "@/lib/api/types"
+
+interface LocalSubscription {
   id: string
   plan: {
     id: string
@@ -61,7 +64,7 @@ interface Subscription {
   }
 }
 
-interface PaymentMethod {
+interface LocalPaymentMethod {
   id: string
   type: "card" | "paypal" | "bank_account"
   brand?: string
@@ -107,8 +110,8 @@ export default function BillingPage() {
   const router = useRouter()
 
   const [isLoading, setIsLoading] = useState(true)
-  const [subscription, setSubscription] = useState<Subscription | null>(null)
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([])
+  const [subscription, setSubscription] = useState<LocalSubscription | null>(null)
+  const [paymentMethods, setPaymentMethods] = useState<LocalPaymentMethod[]>([])
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [availablePlans, setAvailablePlans] = useState<Plan[]>([])
   const [showAddPaymentDialog, setShowAddPaymentDialog] = useState(false)
@@ -125,6 +128,72 @@ export default function BillingPage() {
     email: "",
   })
 
+  // Helper functions to map API types to local types
+  const mapAPISubscriptionToLocal = (apiSub: any): LocalSubscription => ({
+    id: apiSub.subscription?.id || apiSub.id,
+    plan: {
+      id: apiSub.subscription?.plan?.id || apiSub.plan?.id,
+      name: apiSub.subscription?.plan?.name || apiSub.plan?.name,
+      price: apiSub.subscription?.plan?.price || apiSub.plan?.price,
+      interval: apiSub.subscription?.plan?.interval === "yearly" ? "year" : "month",
+      features: apiSub.subscription?.plan?.features || apiSub.plan?.features || [],
+      limits: {
+        maxParticipants: 25,
+        maxVideos: 100,
+        maxStorage: 50,
+        maxParties: 25,
+      },
+    },
+    status: apiSub.subscription?.status || apiSub.status,
+    currentPeriodStart: apiSub.subscription?.current_period_start || apiSub.current_period_start,
+    currentPeriodEnd: apiSub.subscription?.current_period_end || apiSub.current_period_end,
+    cancelAtPeriodEnd: apiSub.subscription?.cancel_at_period_end || apiSub.cancel_at_period_end || false,
+    usage: {
+      participants: 0,
+      videos: 0,
+      storage: parseFloat(apiSub.usage?.storage_used || "0"),
+      parties: apiSub.usage?.parties_hosted_this_month || 0,
+    },
+  })
+
+  const mapAPIPaymentMethodToLocal = (apiPM: APIPaymentMethod): LocalPaymentMethod => ({
+    id: apiPM.id,
+    type: apiPM.type,
+    brand: apiPM.brand,
+    last4: apiPM.last_four,
+    expiryMonth: apiPM.expires_month,
+    expiryYear: apiPM.expires_year,
+    isDefault: apiPM.is_default,
+  })
+
+  const mapAPIBillingHistoryToInvoice = (apiHistory: BillingHistory): Invoice => ({
+    id: apiHistory.id,
+    number: apiHistory.id,
+    amount: apiHistory.amount,
+    currency: apiHistory.currency,
+    status: apiHistory.status as any,
+    date: apiHistory.created_at,
+    dueDate: apiHistory.created_at,
+    description: apiHistory.description,
+    downloadUrl: apiHistory.download_url,
+  })
+
+  const mapAPIPlanToLocal = (apiPlan: SubscriptionPlan): Plan => ({
+    id: apiPlan.id,
+    name: apiPlan.name,
+    price: apiPlan.price,
+    interval: apiPlan.interval === "yearly" ? "year" : "month",
+    description: apiPlan.description,
+    features: apiPlan.features,
+    limits: {
+      maxParticipants: 25,
+      maxVideos: 100,
+      maxStorage: 50,
+      maxParties: 25,
+    },
+    popular: apiPlan.is_popular,
+  })
+
   useEffect(() => {
     loadBillingData()
   }, [])
@@ -132,42 +201,39 @@ export default function BillingPage() {
   const loadBillingData = async () => {
     setIsLoading(true)
     try {
-      const token = localStorage.getItem("accessToken")
-
       // Load subscription
-      const subResponse = await fetch("/api/billing/subscription/", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (subResponse.ok) {
-        const subData = await subResponse.json()
-        setSubscription(subData)
+      try {
+        const subData = await billingAPI.getSubscription()
+        setSubscription(mapAPISubscriptionToLocal(subData))
+      } catch (error) {
+        console.log("No active subscription")
       }
 
       // Load payment methods
-      const pmResponse = await fetch("/api/billing/payment-methods/", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (pmResponse.ok) {
-        const pmData = await pmResponse.json()
-        setPaymentMethods(pmData.results || [])
+      try {
+        const pmData = await billingAPI.getPaymentMethods()
+        const mappedPaymentMethods = (pmData.payment_methods || []).map(mapAPIPaymentMethodToLocal)
+        setPaymentMethods(mappedPaymentMethods)
+      } catch (error) {
+        console.error("Failed to load payment methods:", error)
       }
 
-      // Load invoices
-      const invoiceResponse = await fetch("/api/billing/invoices/", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (invoiceResponse.ok) {
-        const invoiceData = await invoiceResponse.json()
-        setInvoices(invoiceData.results || [])
+      // Load invoices (billing history)
+      try {
+        const invoiceData = await billingAPI.getBillingHistory()
+        const mappedInvoices = (invoiceData.results || []).map(mapAPIBillingHistoryToInvoice)
+        setInvoices(mappedInvoices)
+      } catch (error) {
+        console.error("Failed to load invoices:", error)
       }
 
       // Load available plans
-      const plansResponse = await fetch("/api/billing/plans/", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (plansResponse.ok) {
-        const plansData = await plansResponse.json()
-        setAvailablePlans(plansData.results || [])
+      try {
+        const plansData = await billingAPI.getPlans()
+        const mappedPlans = (plansData.plans || []).map(mapAPIPlanToLocal)
+        setAvailablePlans(mappedPlans)
+      } catch (error) {
+        console.error("Failed to load plans:", error)
       }
     } catch (error) {
       console.error("Failed to load billing data:", error)
@@ -184,42 +250,23 @@ export default function BillingPage() {
   const addPaymentMethod = async () => {
     setIsProcessing(true)
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/billing/payment-methods/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          type: newPaymentMethod.type,
-          card_number: newPaymentMethod.cardNumber,
-          expiry_month: newPaymentMethod.expiryMonth,
-          expiry_year: newPaymentMethod.expiryYear,
-          cvc: newPaymentMethod.cvc,
-          name: newPaymentMethod.name,
-          email: newPaymentMethod.email,
-        }),
+      const newMethod = await billingAPI.addPaymentMethod("stripe_payment_method_id")
+      const mappedMethod = mapAPIPaymentMethodToLocal(newMethod)
+      setPaymentMethods((prev) => [...prev, mappedMethod])
+      setShowAddPaymentDialog(false)
+      setNewPaymentMethod({
+        type: "card",
+        cardNumber: "",
+        expiryMonth: "",
+        expiryYear: "",
+        cvc: "",
+        name: "",
+        email: "",
       })
-
-      if (response.ok) {
-        const newMethod = await response.json()
-        setPaymentMethods((prev) => [...prev, newMethod])
-        setShowAddPaymentDialog(false)
-        setNewPaymentMethod({
-          type: "card",
-          cardNumber: "",
-          expiryMonth: "",
-          expiryYear: "",
-          cvc: "",
-          name: "",
-          email: "",
-        })
-        toast({
-          title: "Payment Method Added",
-          description: "Your payment method has been added successfully.",
-        })
-      }
+      toast({
+        title: "Payment Method Added",
+        description: "Your payment method has been added successfully.",
+      })
     } catch (error) {
       console.error("Failed to add payment method:", error)
       toast({
@@ -236,19 +283,12 @@ export default function BillingPage() {
     if (!confirm("Are you sure you want to remove this payment method?")) return
 
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/billing/payment-methods/${methodId}/`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
+      await billingAPI.deletePaymentMethod(methodId)
+      setPaymentMethods((prev) => prev.filter((pm) => pm.id !== methodId))
+      toast({
+        title: "Payment Method Removed",
+        description: "The payment method has been removed.",
       })
-
-      if (response.ok) {
-        setPaymentMethods((prev) => prev.filter((pm) => pm.id !== methodId))
-        toast({
-          title: "Payment Method Removed",
-          description: "The payment method has been removed.",
-        })
-      }
     } catch (error) {
       console.error("Failed to remove payment method:", error)
       toast({
@@ -261,19 +301,12 @@ export default function BillingPage() {
 
   const setDefaultPaymentMethod = async (methodId: string) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/billing/payment-methods/${methodId}/set-default/`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+      await billingAPI.setDefaultPaymentMethod(methodId)
+      setPaymentMethods((prev) => prev.map((pm) => ({ ...pm, isDefault: pm.id === methodId })))
+      toast({
+        title: "Default Payment Method Updated",
+        description: "Your default payment method has been updated.",
       })
-
-      if (response.ok) {
-        setPaymentMethods((prev) => prev.map((pm) => ({ ...pm, isDefault: pm.id === methodId })))
-        toast({
-          title: "Default Payment Method Updated",
-          description: "Your default payment method has been updated.",
-        })
-      }
     } catch (error) {
       console.error("Failed to set default payment method:", error)
       toast({
@@ -287,19 +320,14 @@ export default function BillingPage() {
   const changePlan = async (planId: string) => {
     setIsProcessing(true)
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/billing/subscribe/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ plan_id: planId }),
+      const response = await billingAPI.subscribe({
+        plan_id: planId,
+        payment_method_id: paymentMethods.find(pm => pm.isDefault)?.id || "",
       })
 
-      if (response.ok) {
-        const updatedSubscription = await response.json()
-        setSubscription(updatedSubscription)
+      if (response.success) {
+        const mappedSubscription = mapAPISubscriptionToLocal(response)
+        setSubscription(mappedSubscription)
         setShowChangePlanDialog(false)
         toast({
           title: "Plan Changed",
@@ -328,21 +356,14 @@ export default function BillingPage() {
     }
 
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/billing/subscription/cancel/", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+      await billingAPI.cancelSubscription()
+      // Reload billing data to get updated subscription info
+      loadBillingData()
+      toast({
+        title: "Subscription Cancelled",
+        description:
+          "Your subscription has been cancelled. You'll retain access until the end of your billing period.",
       })
-
-      if (response.ok) {
-        const updatedSubscription = await response.json()
-        setSubscription(updatedSubscription)
-        toast({
-          title: "Subscription Cancelled",
-          description:
-            "Your subscription has been cancelled. You'll retain access until the end of your billing period.",
-        })
-      }
     } catch (error) {
       console.error("Failed to cancel subscription:", error)
       toast({
@@ -355,20 +376,13 @@ export default function BillingPage() {
 
   const reactivateSubscription = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/billing/subscription/reactivate/", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+      await billingAPI.reactivateSubscription()
+      // Reload billing data to get updated subscription info
+      loadBillingData()
+      toast({
+        title: "Subscription Reactivated",
+        description: "Your subscription has been reactivated successfully.",
       })
-
-      if (response.ok) {
-        const updatedSubscription = await response.json()
-        setSubscription(updatedSubscription)
-        toast({
-          title: "Subscription Reactivated",
-          description: "Your subscription has been reactivated successfully.",
-        })
-      }
     } catch (error) {
       console.error("Failed to reactivate subscription:", error)
       toast({
@@ -381,22 +395,15 @@ export default function BillingPage() {
 
   const downloadInvoice = async (invoiceId: string) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/billing/invoices/${invoiceId}/download/`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-
-      if (response.ok) {
-        const blob = await response.blob()
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement("a")
-        a.href = url
-        a.download = `invoice-${invoiceId}.pdf`
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-        window.URL.revokeObjectURL(url)
-      }
+      const blob = await billingAPI.downloadInvoice(invoiceId)
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `invoice-${invoiceId}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
     } catch (error) {
       console.error("Failed to download invoice:", error)
       toast({
