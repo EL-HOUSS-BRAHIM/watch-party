@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useToast } from "@/hooks/use-toast"
+import { billingAPI } from "@/lib/api"
+import type { BillingHistory } from "@/lib/api/types"
 import { Download, Search, Filter, RefreshCw, CheckCircle, XCircle, Clock, AlertTriangle, Loader2 } from "lucide-react"
 
 interface Invoice {
@@ -34,23 +36,24 @@ export function BillingHistory() {
     fetchBillingHistory()
   }, [])
 
+  // Helper function to map API billing history to local invoice type
+  const mapBillingHistoryToInvoice = (history: BillingHistory): Invoice => ({
+    id: history.id,
+    amount: history.amount,
+    currency: history.currency,
+    status: history.status,
+    description: history.description,
+    invoice_date: history.created_at,
+    due_date: history.created_at,
+    download_url: history.download_url || "",
+  })
+
   const fetchBillingHistory = async () => {
     try {
       setIsLoading(true)
-      const token = localStorage.getItem("accessToken")
-      
-      const response = await fetch("/api/billing/history/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setBillingHistory(data.results || [])
-      } else {
-        throw new Error("Failed to fetch billing history")
-      }
+      const data = await billingAPI.getBillingHistory()
+      const mappedHistory = (data.results || []).map(mapBillingHistoryToInvoice)
+      setBillingHistory(mappedHistory)
     } catch (error) {
       console.error("Failed to fetch billing history:", error)
       toast({
@@ -113,27 +116,15 @@ export function BillingHistory() {
 
   const downloadInvoice = async (invoiceId: string, downloadUrl: string) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      
-      const response = await fetch(downloadUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const blob = await response.blob()
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement("a")
-        a.href = url
-        a.download = `invoice_${invoiceId}.pdf`
-        document.body.appendChild(a)
-        a.click()
-        window.URL.revokeObjectURL(url)
-        document.body.removeChild(a)
-      } else {
-        throw new Error("Failed to download invoice")
-      }
+      const blob = await billingAPI.downloadInvoice(invoiceId)
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `invoice_${invoiceId}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
     } catch (error) {
       console.error("Failed to download invoice:", error)
       toast({
