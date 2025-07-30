@@ -16,12 +16,14 @@ import {
   WatchPartyCardFooter 
 } from "@/components/ui/watch-party-card"
 import { authAPI } from "@/lib/api"
+import { useToast } from "@/hooks/use-toast"
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState("")
+  const { toast } = useToast()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,8 +33,21 @@ export default function ForgotPasswordPage() {
     try {
       await authAPI.forgotPassword({ email })
       setIsSubmitted(true)
+      toast({
+        title: "Reset link sent!",
+        description: "Please check your email for the password reset link.",
+      })
     } catch (err: any) {
-      setError(err.message || "Something went wrong. Please try again.")
+      const errorMessage = err?.response?.data?.message || 
+                          err?.response?.data?.detail || 
+                          err?.message || 
+                          "Something went wrong. Please try again."
+      setError(errorMessage)
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
