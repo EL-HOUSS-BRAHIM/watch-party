@@ -2,6 +2,7 @@
 
 // Inspired by react-hot-toast library
 import * as React from "react"
+import { CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react'
 
 import type {
   ToastActionElement,
@@ -188,6 +189,86 @@ function useToast() {
     ...state,
     toast,
     dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+  }
+}
+
+// Enhanced hook for API requests with automatic error toasting
+export function useApiToast() {
+  const { toast } = useToast()
+
+  const toastError = React.useCallback((error: any, title?: string) => {
+    const errorMessage = error?.message || error?.error || 'An unexpected error occurred'
+    toast({
+      variant: 'destructive',
+      title: title || 'Error',
+      description: errorMessage,
+      duration: 6000
+    })
+  }, [toast])
+
+  const toastSuccess = React.useCallback((message: string, title?: string) => {
+    toast({
+      title: title || 'Success',
+      description: message,
+      duration: 4000,
+      className: 'border-green-200 bg-green-50 text-green-900'
+    })
+  }, [toast])
+
+  const toastWarning = React.useCallback((message: string, title?: string) => {
+    toast({
+      title: title || 'Warning', 
+      description: message,
+      duration: 5000,
+      className: 'border-yellow-200 bg-yellow-50 text-yellow-900'
+    })
+  }, [toast])
+
+  const toastInfo = React.useCallback((message: string, title?: string) => {
+    toast({
+      title: title || 'Info',
+      description: message,
+      duration: 4000,
+      className: 'border-blue-200 bg-blue-50 text-blue-900'
+    })
+  }, [toast])
+
+  // API request wrapper with automatic error handling
+  const apiRequest = React.useCallback(async <T = any>(
+    request: () => Promise<Response>,
+    options?: {
+      successMessage?: string
+      errorTitle?: string
+      showSuccess?: boolean
+    }
+  ): Promise<T | null> => {
+    try {
+      const response = await request()
+      const data = await response.json()
+
+      if (!response.ok) {
+        toastError(data, options?.errorTitle)
+        return null
+      }
+
+      if (options?.showSuccess && options?.successMessage) {
+        toastSuccess(options.successMessage)
+      }
+
+      return data
+    } catch (error) {
+      toastError(error, options?.errorTitle)
+      return null
+    }
+  }, [toastError, toastSuccess])
+
+  return {
+    toast,
+    toastError,
+    toastSuccess,
+    toastWarning,
+    toastInfo,
+    apiRequest
   }
 }
 
