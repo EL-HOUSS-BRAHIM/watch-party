@@ -135,7 +135,7 @@ export default function DiscoverPage() {
         category: categoryFilter,
       })
 
-      const response = await fetch(`/api/discover/?${params}`, {
+      const response = await fetch(`/api/search/discover/?${params}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
