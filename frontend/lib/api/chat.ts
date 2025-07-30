@@ -1,6 +1,6 @@
 /**
  * Chat API Service
- * Handles chat-related API calls
+ * Handles chat-related API calls including moderation and management
  */
 
 import { apiClient } from "./client"
@@ -8,6 +8,9 @@ import { API_ENDPOINTS } from "./endpoints"
 import type {
   ChatMessage,
   ChatSettings,
+  ChatUser,
+  ModerationLog,
+  ChatStats,
   PaginatedResponse,
   APIResponse,
 } from "./types"
@@ -25,7 +28,7 @@ export class ChatAPI {
   ): Promise<PaginatedResponse<ChatMessage>> {
     return apiClient.get<PaginatedResponse<ChatMessage>>(
       API_ENDPOINTS.chat.messages(partyId),
-      params
+      { params }
     )
   }
 
@@ -57,6 +60,110 @@ export class ChatAPI {
     settings: Partial<ChatSettings>
   ): Promise<ChatSettings> {
     return apiClient.put<ChatSettings>(API_ENDPOINTS.chat.settings(roomId), settings)
+  }
+
+  // === CHAT ROOM MANAGEMENT ===
+
+  /**
+   * Join chat room
+   */
+  async joinRoom(roomId: string): Promise<APIResponse> {
+    return apiClient.post<APIResponse>(API_ENDPOINTS.chat.join(roomId))
+  }
+
+  /**
+   * Leave chat room
+   */
+  async leaveRoom(roomId: string): Promise<APIResponse> {
+    return apiClient.post<APIResponse>(API_ENDPOINTS.chat.leave(roomId))
+  }
+
+  /**
+   * Get active users in chat room
+   */
+  async getActiveUsers(roomId: string): Promise<ChatUser[]> {
+    return apiClient.get<ChatUser[]>(API_ENDPOINTS.chat.activeUsers(roomId))
+  }
+
+  // === CHAT MODERATION ===
+
+  /**
+   * Moderate chat room
+   */
+  async moderateRoom(roomId: string, data: {
+    action: 'slow_mode' | 'subscriber_only' | 'emote_only' | 'clear_chat'
+    duration?: number
+    reason?: string
+  }): Promise<APIResponse> {
+    return apiClient.post<APIResponse>(API_ENDPOINTS.chat.moderate(roomId), data)
+  }
+
+  /**
+   * Ban user from chat
+   */
+  async banUser(roomId: string, data: {
+    user_id: string
+    duration?: number
+    reason?: string
+  }): Promise<APIResponse> {
+    return apiClient.post<APIResponse>(API_ENDPOINTS.chat.ban(roomId), data)
+  }
+
+  /**
+   * Unban user from chat
+   */
+  async unbanUser(roomId: string, data: {
+    user_id: string
+  }): Promise<APIResponse> {
+    return apiClient.post<APIResponse>(API_ENDPOINTS.chat.unban(roomId), data)
+  }
+
+  /**
+   * Get moderation log
+   */
+  async getModerationLog(roomId: string, params?: {
+    page?: number
+    action_type?: string
+  }): Promise<PaginatedResponse<ModerationLog>> {
+    return apiClient.get<PaginatedResponse<ModerationLog>>(
+      API_ENDPOINTS.chat.moderationLog(roomId),
+      { params }
+    )
+  }
+
+  // === CHAT STATISTICS ===
+
+  /**
+   * Get chat room statistics
+   */
+  async getChatStats(roomId: string): Promise<ChatStats> {
+    return apiClient.get<ChatStats>(API_ENDPOINTS.chat.stats(roomId))
+  }
+
+  // === LEGACY ROUTES ===
+
+  /**
+   * Get chat history for party
+   */
+  async getChatHistory(partyId: string, params?: {
+    page?: number
+    limit?: number
+  }): Promise<PaginatedResponse<ChatMessage>> {
+    return apiClient.get<PaginatedResponse<ChatMessage>>(
+      API_ENDPOINTS.chat.history(partyId),
+      { params }
+    )
+  }
+
+  /**
+   * General moderation action
+   */
+  async generalModerate(data: {
+    action: string
+    target_id?: string
+    reason?: string
+  }): Promise<APIResponse> {
+    return apiClient.post<APIResponse>(API_ENDPOINTS.chat.generalModerate, data)
   }
 }
 
