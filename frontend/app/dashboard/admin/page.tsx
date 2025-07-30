@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { adminAPI } from "@/lib/api"
 import {
   Shield,
   Users,
@@ -117,7 +118,7 @@ export default function AdminDashboardPage() {
 
   // Check if user is admin
   useEffect(() => {
-    if (user && !user.isAdmin) {
+    if (user && !user.is_staff && !user.is_superuser) {
       router.push("/dashboard")
       return
     }
@@ -132,47 +133,25 @@ export default function AdminDashboardPage() {
   }, [])
 
   const loadDashboardData = async () => {
-    if (!user?.isAdmin) return
+    if (!user?.is_staff && !user?.is_superuser) return
 
     setIsLoading(true)
     try {
-      const token = localStorage.getItem("accessToken")
-
       // Load system stats
-      const statsResponse = await fetch("/api/admin/dashboard/", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (statsResponse.ok) {
-        const statsData = await statsResponse.json()
-        setStats(statsData)
+      const statsData = await adminAPI.getDashboard()
+      // We need to transform the AdminDashboard type to fit SystemStats
+      // For now, let's handle this properly
+      const transformedStats = {
+        users: statsData.users || { total: 0, active: 0, new: 0, verified: 0, premium: 0 },
+        parties: statsData.parties || { total: 0, active: 0, completed: 0, scheduled: 0 },
+        videos: statsData.videos || { total: 0, uploaded: 0, processed: 0, storage: 0 },
+        system: statsData.system || { uptime: 0, cpu: 0, memory: 0, storage: 0, bandwidth: 0 },
       }
+      setStats(transformedStats)
 
-      // Load recent activity
-      const activityResponse = await fetch("/api/admin/activity/", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (activityResponse.ok) {
-        const activityData = await activityResponse.json()
-        setRecentActivity(activityData.results || [])
-      }
-
-      // Load system alerts
-      const alertsResponse = await fetch("/api/admin/alerts/", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (alertsResponse.ok) {
-        const alertsData = await alertsResponse.json()
-        setSystemAlerts(alertsData.results || [])
-      }
-
-      // Load performance metrics
-      const performanceResponse = await fetch("/api/admin/performance/", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      if (performanceResponse.ok) {
-        const performanceData = await performanceResponse.json()
-        setPerformanceData(performanceData.results || [])
-      }
+      // Load system health
+      const healthData = await adminAPI.getSystemHealth()
+      // Update stats with health data if needed
 
       setLastUpdated(new Date())
     } catch (error) {
@@ -214,21 +193,46 @@ export default function AdminDashboardPage() {
 
   const exportData = async (type: "users" | "parties" | "videos" | "analytics") => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/export/${type}/`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      let downloadData
+      switch (type) {
+        case "users":
+          downloadData = await adminAPI.exportUsers({ format: 'csv' })
+          break
+        default:
+          // For other types, we can extend the adminAPI or use a generic export
+          const token = localStorage.getItem("accessToken")
+          const response = await fetch(`/api/admin/export/${type}/`, {
+            headers: { Authorization: `Bearer ${token}` },
+          })
 
-      if (response.ok) {
-        const blob = await response.blob()
-        const url = window.URL.createObjectURL(blob)
+          if (response.ok) {
+            const blob = await response.blob()
+            const url = window.URL.createObjectURL(blob)
+            const a = document.createElement("a")
+            a.href = url
+            a.download = `${type}-export-${format(new Date(), "yyyy-MM-dd")}.csv`
+            document.body.appendChild(a)
+            a.click()
+            document.body.removeChild(a)
+            window.URL.revokeObjectURL(url)
+
+            toast({
+              title: "Export Complete",
+              description: `${type} data has been exported successfully.`,
+            })
+            return
+          }
+          break
+      }
+
+      if (downloadData?.download_url) {
+        // Handle the download URL from the API
         const a = document.createElement("a")
-        a.href = url
+        a.href = downloadData.download_url
         a.download = `${type}-export-${format(new Date(), "yyyy-MM-dd")}.csv`
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
-        window.URL.revokeObjectURL(url)
 
         toast({
           title: "Export Complete",
@@ -298,7 +302,7 @@ export default function AdminDashboardPage() {
     return <Minus className="h-3 w-3 text-gray-500" />
   }
 
-  if (!user?.isAdmin) {
+  if (!user?.is_staff && !user?.is_superuser) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-2xl mx-auto text-center">
