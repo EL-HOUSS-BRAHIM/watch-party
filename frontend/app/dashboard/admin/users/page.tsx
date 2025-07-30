@@ -16,6 +16,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import WatchPartyTable from "@/components/ui/watch-party-table"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { adminAPI } from "@/lib/api"
 import {
   Users,
   Search,
@@ -38,7 +39,7 @@ import {
 } from "lucide-react"
 import { format, formatDistanceToNow } from "date-fns"
 
-interface User {
+interface AdminUser {
   id: string
   username: string
   email: string
@@ -68,7 +69,7 @@ interface User {
 
 interface UserAction {
   id: string
-  type: "ban" | "unban" | "verify" | "unverify" | "promote" | "demote" | "delete"
+  type: "ban" | "unban" | "suspend" | "unsuspend" | "delete"
   reason?: string
   duration?: number // in days
   notifyUser?: boolean
@@ -79,8 +80,8 @@ export default function UserManagementPage() {
   const { toast } = useToast()
   const router = useRouter()
 
-  const [users, setUsers] = useState<User[]>([])
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([])
+  const [users, setUsers] = useState<AdminUser[]>([])
+  const [filteredUsers, setFilteredUsers] = useState<AdminUser[]>([])
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
@@ -104,7 +105,7 @@ export default function UserManagementPage() {
 
   // Check if user is admin
   useEffect(() => {
-    if (user && !user.isAdmin) {
+    if (user && !user.is_staff && !user.is_superuser) {
       router.push("/dashboard")
       return
     }
@@ -119,24 +120,18 @@ export default function UserManagementPage() {
   }, [users, searchQuery, statusFilter, roleFilter, subscriptionFilter])
 
   const loadUsers = async () => {
-    if (!user?.isAdmin) return
+    if (!user?.is_staff && !user?.is_superuser) return
 
     setIsLoading(true)
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/admin/users/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const data = await adminAPI.getUsers({
+        search: searchQuery || undefined,
+        status: statusFilter !== "all" ? statusFilter as any : undefined,
+        page: 1, // You can add pagination later
       })
-
-      if (response.ok) {
-        const data = await response.json()
-        setUsers(data.results || data.users || [])
-        setStats(data.stats || stats)
-      } else {
-        throw new Error("Failed to load users")
-      }
+      
+      setUsers(data.results || [])
+      // setStats would need to be extracted from the response or fetched separately
     } catch (error) {
       console.error("Failed to load users:", error)
       toast({
@@ -207,37 +202,22 @@ export default function UserManagementPage() {
 
   const executeUserAction = async (action: UserAction, userIds: string[]) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/admin/users/bulk/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          action: action.type,
-          user_ids: userIds,
-          reason: action.reason,
-          duration: action.duration,
-          notify_user: action.notifyUser,
-        }),
+      await adminAPI.bulkUserAction({
+        user_ids: userIds,
+        action: action.type,
+        reason: action.reason,
       })
 
-      if (response.ok) {
-        await loadUsers()
-        setSelectedUsers([])
-        setShowActionDialog(false)
-        setCurrentAction(null)
-        setActionReason("")
+      await loadUsers()
+      setSelectedUsers([])
+      setShowActionDialog(false)
+      setCurrentAction(null)
+      setActionReason("")
 
-        toast({
-          title: "Action Completed",
-          description: `Successfully ${action.type}ed ${userIds.length} user(s).`,
-        })
-      } else {
-        const errorData = await response.json()
-        throw new Error(errorData.message || "Action failed")
-      }
+      toast({
+        title: "Action Completed",
+        description: `Successfully ${action.type}ed ${userIds.length} user(s).`,
+      })
     } catch (error) {
       console.error("Failed to execute user action:", error)
       toast({
@@ -270,23 +250,15 @@ export default function UserManagementPage() {
 
   const exportUsers = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/admin/users/export/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const blob = await response.blob()
-        const url = window.URL.createObjectURL(blob)
+      const downloadData = await adminAPI.exportUsers({ format: 'csv' })
+      
+      if (downloadData?.download_url) {
         const a = document.createElement("a")
-        a.href = url
+        a.href = downloadData.download_url
         a.download = `users-export-${format(new Date(), "yyyy-MM-dd")}.csv`
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
-        window.URL.revokeObjectURL(url)
 
         toast({
           title: "Export Complete",
@@ -343,7 +315,7 @@ export default function UserManagementPage() {
     {
       id: "user",
       header: "User",
-      cell: ({ row }: { row: User }) => (
+      cell: ({ row }: { row: AdminUser }) => (
         <div className="flex items-center gap-3">
           <Avatar className="w-8 h-8">
             <AvatarImage src={row.avatar || "/placeholder.svg"} />
@@ -369,7 +341,7 @@ export default function UserManagementPage() {
     {
       id: "status",
       header: "Status",
-      cell: ({ row }: { row: User }) => (
+      cell: ({ row }: { row: AdminUser }) => (
         <div className="space-y-1">
           {getStatusBadge(row)}
           {getRoleBadge(row.role)}
@@ -379,7 +351,7 @@ export default function UserManagementPage() {
     {
       id: "stats",
       header: "Activity",
-      cell: ({ row }: { row: User }) => (
+      cell: ({ row }: { row: AdminUser }) => (
         <div className="text-sm space-y-1">
           <div className="flex items-center gap-1">
             <Video className="w-3 h-3 text-muted-foreground" />
@@ -399,7 +371,7 @@ export default function UserManagementPage() {
     {
       id: "joined",
       header: "Joined",
-      cell: ({ row }: { row: User }) => (
+      cell: ({ row }: { row: AdminUser }) => (
         <div className="text-sm">
           <div>{format(new Date(row.joinedAt), "MMM dd, yyyy")}</div>
           <div className="text-muted-foreground">
@@ -411,7 +383,7 @@ export default function UserManagementPage() {
     {
       id: "lastActive",
       header: "Last Active",
-      cell: ({ row }: { row: User }) => (
+      cell: ({ row }: { row: AdminUser }) => (
         <div className="text-sm">
           {row.lastActive ? (
             <>
@@ -433,13 +405,13 @@ export default function UserManagementPage() {
       id: "view",
       label: "View Profile",
       icon: <Eye className="w-4 h-4" />,
-      onClick: (user: User) => router.push(`/profile/${user.id}`),
+      onClick: (user: AdminUser) => router.push(`/profile/${user.id}`),
     },
     {
       id: "edit",
       label: "Edit User",
       icon: <Edit className="w-4 h-4" />,
-      onClick: (user: User) => {
+      onClick: (user: AdminUser) => {
         // Open edit dialog or navigate to edit page
         console.log("Edit user:", user.id)
       },
@@ -448,25 +420,25 @@ export default function UserManagementPage() {
       id: "ban",
       label: "Ban User",
       icon: <Ban className="w-4 h-4" />,
-      onClick: (user: User) => {
+      onClick: (user: AdminUser) => {
         setSelectedUsers([user.id])
         handleBulkAction("ban")
       },
-      condition: (user: User) => !user.isBanned,
+      condition: (user: AdminUser) => !user.isBanned,
     },
     {
       id: "unban",
       label: "Unban User",
       icon: <Unlock className="w-4 h-4" />,
-      onClick: (user: User) => {
+      onClick: (user: AdminUser) => {
         setSelectedUsers([user.id])
         handleBulkAction("unban")
       },
-      condition: (user: User) => user.isBanned,
+      condition: (user: AdminUser) => user.isBanned,
     },
   ]
 
-  if (!user?.isAdmin) {
+  if (!user?.is_staff && !user?.is_superuser) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-2xl mx-auto text-center">
@@ -626,9 +598,9 @@ export default function UserManagementPage() {
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{selectedUsers.length} user(s) selected</span>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => handleBulkAction("verify")}>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction("suspend")}>
                     <UserCheck className="h-4 w-4 mr-2" />
-                    Verify
+                    Suspend
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => handleBulkAction("ban")}>
                     <Ban className="h-4 w-4 mr-2" />
@@ -654,7 +626,7 @@ export default function UserManagementPage() {
           actions={tableActions}
           selectable
           selectedRows={selectedUsers}
-          onSelectionChange={setSelectedUsers}
+          onSelectionChange={(selection: string[]) => setSelectedUsers(selection)}
           pagination={{
             page: 1,
             pageSize: 25,
@@ -728,7 +700,11 @@ export default function UserManagementPage() {
               )}
 
               <div className="flex items-center space-x-2">
-                <Checkbox id="notify" checked={notifyUser} onCheckedChange={setNotifyUser} />
+                <Checkbox 
+                  id="notify" 
+                  checked={notifyUser} 
+                  onCheckedChange={(checked) => setNotifyUser(checked === true)} 
+                />
                 <Label htmlFor="notify">Notify affected users</Label>
               </div>
 
