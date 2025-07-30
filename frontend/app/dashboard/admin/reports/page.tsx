@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { adminAPI } from "@/lib/api"
 import {
   Shield,
   AlertTriangle,
@@ -147,15 +148,14 @@ export default function ReportsManagementPage() {
 
   const loadReports = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/admin/reports/", {
-        headers: { Authorization: `Bearer ${token}` }
+      const data = await adminAPI.getReports({
+        status: filters.status !== "all" ? filters.status as any : undefined,
+        page: 1, // You can add pagination later
       })
-
-      if (response.ok) {
-        const data = await response.json()
-        setReports(data.results || data.reports || [])
-      } else if (response.status === 403) {
+      setReports(data.results || [])
+    } catch (error) {
+      console.error("Failed to load reports:", error)
+      if ((error as any)?.response?.status === 403) {
         toast({
           title: "Access Denied",
           description: "You don't have permission to access this page.",
@@ -163,15 +163,12 @@ export default function ReportsManagementPage() {
         })
         router.push("/dashboard")
       } else {
-        throw new Error("Failed to load reports")
+        toast({
+          title: "Error",
+          description: "Failed to load reports.",
+          variant: "destructive",
+        })
       }
-    } catch (error) {
-      console.error("Failed to load reports:", error)
-      toast({
-        title: "Error",
-        description: "Failed to load reports.",
-        variant: "destructive",
-      })
     } finally {
       setIsLoading(false)
     }
@@ -244,39 +241,24 @@ export default function ReportsManagementPage() {
     setProcessingActions(prev => new Set(prev).add(reportId))
 
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/reports/${reportId}/`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          status,
-          resolution,
-          admin_notes: adminNotes,
-          resolved_by: user?.id
-        }),
+      await adminAPI.resolveReport(reportId, {
+        action: status === "resolved" ? "dismiss" : status as any,
+        reason: resolution || adminNotes,
       })
 
-      if (response.ok) {
-        const updatedReport = await response.json()
-        setReports(prev =>
-          prev.map(report =>
-            report.id === reportId ? updatedReport : report
-          )
-        )
+      await loadReports() // Reload reports to get updated data
 
-        toast({
-          title: "Report Updated",
-          description: `Report has been ${status === "resolved" ? "resolved" : status}.`,
-        })
+      toast({
+        title: "Report Updated",
+        description: `Report has been ${status === "resolved" ? "resolved" : status}.`,
+      })
 
-        if (selectedReport?.id === reportId) {
+      if (selectedReport?.id === reportId) {
+        // Update the selected report from the refreshed data
+        const updatedReport = reports.find(r => r.id === reportId)
+        if (updatedReport) {
           setSelectedReport(updatedReport)
         }
-      } else {
-        throw new Error("Failed to update report")
       }
     } catch (error) {
       console.error("Update report error:", error)
