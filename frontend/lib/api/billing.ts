@@ -70,6 +70,13 @@ export class BillingAPI {
   }
 
   /**
+   * Reactivate subscription
+   */
+  async reactivateSubscription(): Promise<APIResponse> {
+    return apiClient.post<APIResponse>(API_ENDPOINTS.billing.resumeSubscription)
+  }
+
+  /**
    * Get payment methods
    */
   async getPaymentMethods(): Promise<{
@@ -114,7 +121,7 @@ export class BillingAPI {
   }): Promise<PaginatedResponse<BillingHistory>> {
     return apiClient.get<PaginatedResponse<BillingHistory>>(
       API_ENDPOINTS.billing.history,
-      params
+      { params }
     )
   }
 
