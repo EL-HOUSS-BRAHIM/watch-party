@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { authAPI } from "@/lib/api"
 import {
   Mail,
   CheckCircle,
@@ -71,45 +72,37 @@ function VerifyEmailContent() {
     try {
       setVerificationStatus('loading')
       
-      const response = await fetch('/api/auth/verify-email/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token: verificationToken }),
+      await authAPI.verifyEmail(verificationToken)
+
+      setVerificationStatus('success')
+      setMessage('Your email has been successfully verified!')
+      
+      // Refresh user data to update verification status
+      await refreshUser()
+      
+      toast({
+        title: "Email Verified",
+        description: "Your email has been successfully verified. Welcome!",
       })
 
-      const data: VerificationResponse = await response.json()
-
-      if (response.ok && data.success) {
-        setVerificationStatus('success')
-        setMessage(data.message || 'Your email has been successfully verified!')
-        
-        // Refresh user data to update verification status
-        await refreshUser()
-        
-        toast({
-          title: "Email Verified",
-          description: "Your email has been successfully verified. Welcome!",
-        })
-
-        // Redirect to dashboard after 3 seconds
-        setTimeout(() => {
-          router.push('/dashboard')
-        }, 3000)
-      } else {
-        if (response.status === 400) {
-          setVerificationStatus('expired')
-          setMessage(data.message || 'The verification link has expired.')
-        } else {
-          setVerificationStatus('error')
-          setMessage(data.message || 'Failed to verify email. Please try again.')
-        }
-      }
-    } catch (error) {
+      // Redirect to dashboard after 3 seconds
+      setTimeout(() => {
+        router.push('/dashboard')
+      }, 3000)
+    } catch (error: any) {
       console.error('Email verification error:', error)
-      setVerificationStatus('error')
-      setMessage('Something went wrong. Please try again later.')
+      
+      const errorMessage = error?.response?.data?.message || 
+                          error?.response?.data?.detail || 
+                          error?.message
+
+      if (error?.response?.status === 400 || errorMessage?.includes('expired')) {
+        setVerificationStatus('expired')
+        setMessage('The verification link has expired.')
+      } else {
+        setVerificationStatus('error')
+        setMessage(errorMessage || 'Failed to verify email. Please try again.')
+      }
     }
   }
 
@@ -120,38 +113,24 @@ function VerifyEmailContent() {
     setCanResend(false)
 
     try {
-      const response = await fetch('/api/auth/resend-verification/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-        },
-        body: JSON.stringify({ 
-          email: email || user?.email 
-        }),
-      })
+      await authAPI.resendVerification(email || user?.email || '')
 
-      const data = await response.json()
-
-      if (response.ok) {
-        toast({
-          title: "Email Sent",
-          description: "A new verification email has been sent to your inbox.",
-        })
-        setCountdown(60) // 60 second cooldown
-      } else {
-        toast({
-          title: "Failed to Send",
-          description: data.message || "Failed to send verification email. Please try again.",
-          variant: "destructive",
-        })
-        setCanResend(true)
-      }
-    } catch (error) {
-      console.error('Resend verification error:', error)
       toast({
-        title: "Error",
-        description: "Something went wrong. Please try again later.",
+        title: "Email Sent",
+        description: "A new verification email has been sent to your inbox.",
+      })
+      setCountdown(60) // 60 second cooldown
+    } catch (error: any) {
+      console.error('Resend verification error:', error)
+      
+      const errorMessage = error?.response?.data?.message || 
+                          error?.response?.data?.detail || 
+                          error?.message || 
+                          "Failed to send verification email. Please try again."
+
+      toast({
+        title: "Failed to Send",
+        description: errorMessage,
         variant: "destructive",
       })
       setCanResend(true)
