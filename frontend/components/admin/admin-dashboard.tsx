@@ -103,7 +103,9 @@ export function AdminDashboard() {
     } finally {
       setIsLoading(false)
     }
-  }  const getActivityIcon = (type: string) => {
+  }
+
+  const getActivityIcon = (type: string) => {
     switch (type) {
       case "user":
         return <Users className="w-4 h-4 text-blue-500" />
