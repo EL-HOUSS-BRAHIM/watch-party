@@ -23,6 +23,7 @@ import {
 import { Users, Search, MoreHorizontal, Ban, Shield, Crown, Download, Trash2, Eye, Loader2 } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { adminAPI } from "@/lib/api"
 import { formatDistanceToNow } from "date-fns"
 
 interface User {
@@ -89,26 +90,14 @@ export default function UserManagement() {
 
   const loadUsers = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const params = new URLSearchParams({
-        page: currentPage.toString(),
-        search: searchQuery,
-        status: statusFilter,
-        role: roleFilter,
-        sort: sortBy,
-        order: sortOrder,
+      const data = await adminAPI.getUsers({
+        search: searchQuery || undefined,
+        status: statusFilter !== "all" ? statusFilter as any : undefined,
+        page: currentPage,
       })
-
-      const response = await fetch(`/api/admin/users/?${params}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setUsers(data.results || data.users || [])
-        setTotalPages(data.totalPages || Math.ceil(data.count / 20))
+      
+      setUsers(data.results || [])
+      setTotalPages(data.totalPages || Math.ceil(data.count / 20))
       }
     } catch (error) {
       console.error("Failed to load users:", error)
@@ -240,22 +229,14 @@ export default function UserManagement() {
 
   const exportUsers = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/admin/users/export/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const blob = await response.blob()
-        const url = window.URL.createObjectURL(blob)
+      const downloadData = await adminAPI.exportUsers({ format: 'csv' })
+      
+      if (downloadData?.download_url) {
         const a = document.createElement("a")
-        a.href = url
+        a.href = downloadData.download_url
         a.download = `users-export-${new Date().toISOString().split("T")[0]}.csv`
         document.body.appendChild(a)
         a.click()
-        window.URL.revokeObjectURL(url)
         document.body.removeChild(a)
       }
     } catch (error) {
