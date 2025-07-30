@@ -392,6 +392,37 @@ export const API_ENDPOINTS = {
     activities: '/api/dashboard/activities/',
   },
 
+  // Events API - Event scheduling and management system
+  events: {
+    list: '/api/events/',
+    create: '/api/events/',
+    detail: (id: string) => `/api/events/${id}/`,
+    update: (id: string) => `/api/events/${id}/`,
+    delete: (id: string) => `/api/events/${id}/`,
+    
+    // Event Management
+    join: (id: string) => `/api/events/${id}/join/`,
+    leave: (id: string) => `/api/events/${id}/leave/`,
+    cancel: (id: string) => `/api/events/${id}/cancel/`,
+    
+    // RSVP Management
+    rsvp: (id: string) => `/api/events/${id}/rsvp/`,
+    attendees: (id: string) => `/api/events/${id}/attendees/`,
+    invitations: (id: string) => `/api/events/${id}/invitations/`,
+    sendInvitation: (id: string) => `/api/events/${id}/invite/`,
+    
+    // Event Discovery
+    upcoming: '/api/events/upcoming/',
+    my: '/api/events/my/',
+    hosted: '/api/events/hosted/',
+    search: '/api/events/search/',
+    featured: '/api/events/featured/',
+    
+    // Event Analytics
+    analytics: (id: string) => `/api/events/${id}/analytics/`,
+    statistics: '/api/events/statistics/',
+  },
+
   // === COMPLETELY NEW API SECTIONS ===
 
   // Store API - Complete commerce system
