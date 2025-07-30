@@ -29,6 +29,7 @@ import {
 } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { adminAPI } from "@/lib/api"
 
 interface SystemSettings {
   general: {
@@ -102,17 +103,8 @@ export default function SystemSettings() {
 
   const loadSettings = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/admin/settings/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setSettings(data)
-      }
+      const data = await adminAPI.getSettings()
+      setSettings(data as SystemSettings)
     } catch (error) {
       console.error("Failed to load settings:", error)
       toast({
@@ -130,23 +122,13 @@ export default function SystemSettings() {
 
     setIsSaving(true)
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/admin/settings/", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(settings),
+      await adminAPI.updateSettings(settings)
+      
+      setHasChanges(false)
+      toast({
+        title: "Settings Saved",
+        description: "System settings have been updated successfully.",
       })
-
-      if (response.ok) {
-        setHasChanges(false)
-        toast({
-          title: "Settings Saved",
-          description: "System settings have been updated successfully.",
-        })
-      }
     } catch (error) {
       console.error("Failed to save settings:", error)
       toast({
@@ -192,13 +174,16 @@ export default function SystemSettings() {
   const updateSetting = (category: keyof SystemSettings, key: string, value: any) => {
     if (!settings) return
 
-    setSettings((prev) => ({
-      ...prev!,
-      [category]: {
-        ...prev![category],
-        [key]: value,
-      },
-    }))
+    setSettings((prev) => {
+      if (!prev) return null
+      return {
+        ...prev,
+        [category]: {
+          ...prev[category],
+          [key]: value,
+        },
+      }
+    })
     setHasChanges(true)
   }
 
