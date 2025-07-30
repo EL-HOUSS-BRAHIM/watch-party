@@ -152,10 +152,38 @@ export class AuthAPI {
   /**
    * Social Authentication - Get auth URL
    */
-  getSocialAuthUrl(provider: 'google' | 'github'): string {
-    return provider === 'google' 
-      ? API_ENDPOINTS.auth.googleAuth 
-      : API_ENDPOINTS.auth.githubAuth
+  async getSocialAuthUrl(provider: 'google' | 'github', redirectUri?: string): Promise<{ redirect_url: string }> {
+    const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+    const defaultRedirectUri = `${window.location.origin}/callback?provider=${provider}`
+    
+    const response = await fetch(`${baseURL}/api/auth/social/${provider}/redirect/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        redirect_uri: redirectUri || defaultRedirectUri,
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error("Failed to get social auth URL")
+    }
+
+    return response.json()
+  }
+
+  /**
+   * Complete social authentication
+   */
+  async completeSocialAuth(provider: 'google' | 'github', code: string, state?: string): Promise<AuthResponse> {
+    const redirectUri = `${window.location.origin}/callback?provider=${provider}`
+    
+    return apiClient.post<AuthResponse>(`/api/auth/social/${provider}/`, {
+      code,
+      state,
+      redirect_uri: redirectUri,
+    })
   }
 
   /**
