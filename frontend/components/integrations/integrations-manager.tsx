@@ -136,6 +136,27 @@ const AVAILABLE_INTEGRATIONS: Omit<Integration, 'isConnected' | 'isEnabled' | 's
   }
 ]
 
+// Helper functions
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'connected': return 'bg-green-500'
+    case 'disconnected': return 'bg-gray-500'
+    case 'error': return 'bg-red-500'
+    case 'syncing': return 'bg-blue-500'
+    default: return 'bg-gray-500'
+  }
+}
+
+const getStatusIcon = (status: string) => {
+  switch (status) {
+    case 'connected': return <Check className="h-3 w-3" />
+    case 'disconnected': return <X className="h-3 w-3" />
+    case 'error': return <AlertTriangle className="h-3 w-3" />
+    case 'syncing': return <RefreshCw className="h-3 w-3 animate-spin" />
+    default: return <X className="h-3 w-3" />
+  }
+}
+
 export function IntegrationsManager() {
   const [integrations, setIntegrations] = useState<Integration[]>([])
   const [loading, setLoading] = useState(true)
@@ -501,7 +522,6 @@ function IntegrationCard({
                   <Switch
                     checked={integration.isEnabled}
                     onCheckedChange={(enabled) => onToggleEnabled(integration.id, enabled)}
-                    size="sm"
                   />
                 )}
               </div>
