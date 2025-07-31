@@ -64,6 +64,34 @@ interface CreateGroupData {
   maxMembers?: number
 }
 
+// Helper functions
+const getRoleIcon = (role: string) => {
+  switch (role) {
+    case 'owner': return <Crown className="h-4 w-4 text-yellow-500" />
+    case 'admin': return <Star className="h-4 w-4 text-blue-500" />
+    case 'moderator': return <Settings className="h-4 w-4 text-green-500" />
+    default: return <User className="h-4 w-4 text-gray-500" />
+  }
+}
+
+const getPrivacyColor = (privacy: string) => {
+  switch (privacy) {
+    case 'public': return 'bg-green-500'
+    case 'private': return 'bg-red-500'
+    case 'invite-only': return 'bg-yellow-500'
+    default: return 'bg-gray-500'
+  }
+}
+
+const getPrivacyIcon = (privacy: string) => {
+  switch (privacy) {
+    case 'public': return <Globe className="h-3 w-3" />
+    case 'private': return <Lock className="h-3 w-3" />
+    case 'invite-only': return <UserPlus className="h-3 w-3" />
+    default: return <Eye className="h-3 w-3" />
+  }
+}
+
 const GROUP_CATEGORIES = [
   'Movies', 'TV Shows', 'Anime', 'Gaming', 'Music', 'Sports',
   'Documentary', 'Comedy', 'Horror', 'Action', 'Drama', 'Sci-Fi',
