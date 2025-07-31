@@ -73,7 +73,7 @@ export function useDashboardStats() {
 // Hook for videos list
 export function useVideos(filters?: {
   search?: string
-  visibility?: string
+  visibility?: 'public' | 'private' | 'unlisted'
   page?: number
 }) {
   const [videos, setVideos] = useState<PaginatedResponse<Video> | null>(null)
@@ -103,8 +103,8 @@ export function useVideos(filters?: {
 
 // Hook for parties list
 export function useParties(filters?: {
-  status?: string
-  visibility?: string
+  status?: 'scheduled' | 'live' | 'paused' | 'ended'
+  visibility?: 'public' | 'private'
   search?: string
   page?: number
 }) {
@@ -290,3 +290,6 @@ export function usePartyActions() {
 
   return { joinParty, leaveParty, controlVideo, loading, error }
 }
+
+// Export the main useApi hook for backward compatibility
+export const useApi = useAPICall
