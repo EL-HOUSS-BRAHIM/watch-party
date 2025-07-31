@@ -1,91 +1,136 @@
 import Link from "next/link"
-import { Play, Users, Zap, Shield, Smartphone, Globe } from "lucide-react"
-import { WatchPartyButton } from "@/components/ui/watch-party-button"
-import {
-  WatchPartyCard,
-  WatchPartyCardContent,
-  WatchPartyCardDescription,
-  WatchPartyCardHeader,
-  WatchPartyCardTitle,
-} from "@/components/ui/watch-party-card"
+import { 
+  Play, 
+  Users, 
+  Zap, 
+  Shield, 
+  Smartphone, 
+  Globe,
+  ArrowRight,
+  Star,
+  Eye,
+  MessageCircle,
+  Sparkles
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 
 export default function HomePage() {
   const features = [
     {
       icon: Play,
-      title: "Synchronized Viewing",
-      description: "Watch videos together in perfect sync with friends around the world.",
+      title: "Perfect Sync",
+      description: "Watch videos together in perfect sync with sub-second precision.",
+      gradient: "from-neon-red to-neon-purple"
     },
     {
       icon: Users,
-      title: "Social Experience",
-      description: "Chat, react, and share moments with your watch party companions.",
+      title: "Social Cinema",
+      description: "Chat, react, and share moments with friends in real-time.",
+      gradient: "from-neon-blue to-neon-purple"
     },
     {
       icon: Zap,
       title: "Lightning Fast",
-      description: "Ultra-low latency streaming for seamless group watching experiences.",
+      description: "Ultra-low latency streaming powered by global CDN infrastructure.",
+      gradient: "from-neon-gold to-neon-red"
     },
     {
       icon: Shield,
       title: "Privacy First",
-      description: "Your data is secure with end-to-end encryption and privacy controls.",
+      description: "End-to-end encryption and advanced privacy controls.",
+      gradient: "from-neon-green to-neon-blue"
     },
     {
       icon: Smartphone,
-      title: "Multi-Platform",
-      description: "Watch on any device - desktop, mobile, tablet, or smart TV.",
+      title: "Any Device",
+      description: "Seamless experience across desktop, mobile, tablet, and TV.",
+      gradient: "from-neon-purple to-neon-gold"
     },
     {
       icon: Globe,
-      title: "Global Reach",
-      description: "Connect with friends worldwide with our global CDN infrastructure.",
+      title: "Global Community",
+      description: "Connect with movie lovers worldwide in any language.",
+      gradient: "from-neon-blue to-neon-green"
     },
   ]
 
+  const stats = [
+    { number: "50K+", label: "Active Users", icon: Users },
+    { number: "25K+", label: "Watch Parties", icon: Eye },
+    { number: "1M+", label: "Hours Watched", icon: Play },
+    { number: "99.9%", label: "Uptime", icon: Zap }
+  ]
+
   return (
-    <div className="min-h-screen bg-watch-party-bg">
+    <div className="min-h-screen bg-cinema-deep relative overflow-hidden">
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-watch-party-gradient opacity-10"></div>
-        <div className="container mx-auto px-4 py-24 relative">
-          <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl md:text-7xl font-bold text-watch-party-text-primary mb-6 animate-slide-in-cinema">
+      <section className="relative pt-32 pb-20 lg:ml-64">
+        <div className="container-cinema">
+          <div className="max-w-4xl mx-auto text-center relative z-10">
+            {/* Badge */}
+            <Badge className="mb-6 bg-neon-red/20 text-neon-red border-neon-red/30 px-4 py-2 text-sm font-medium animate-fade-in">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Next-Gen Streaming Platform
+            </Badge>
+
+            {/* Main Heading */}
+            <h1 className="heading-xl mb-6 animate-slide-up">
               Watch Together,{" "}
-              <span className="bg-watch-party-gradient bg-clip-text text-transparent animate-gradient-shift">
-                Anywhere
+              <span className="bg-neon-gradient bg-clip-text text-transparent animate-gradient-shift bg-[length:200%_100%]">
+                Experience More
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-watch-party-text-secondary mb-8 animate-slide-in-cinema">
-              The next-generation platform for synchronized video watching with friends. Experience movies, shows, and
-              content together in real-time.
+
+            {/* Subtitle */}
+            <p className="body-large mb-8 max-w-3xl mx-auto animate-slide-up" style={{ animationDelay: "0.2s" }}>
+              The ultimate cinematic platform for synchronized video watching. Stream movies, shows, and content 
+              together with friends in stunning quality and perfect sync.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-in-cinema">
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-slide-up" style={{ animationDelay: "0.4s" }}>
               <Link href="/dashboard">
-                <WatchPartyButton variant="gradient" size="lg" className="text-lg px-8 py-4">
-                  <Play className="h-5 w-5" />
-                  Start Watching
-                </WatchPartyButton>
+                <Button className="btn-primary text-lg px-8 py-4 group">
+                  <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
+                  Start Watching Now
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Button>
               </Link>
-              <Link href="/about">
-                <WatchPartyButton variant="outline" size="lg" className="text-lg px-8 py-4">
-                  Learn More
-                </WatchPartyButton>
+              <Link href="/discover">
+                <Button className="btn-secondary text-lg px-8 py-4">
+                  <Users className="w-5 h-5 mr-2" />
+                  Browse Parties
+                </Button>
               </Link>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 animate-fade-in" style={{ animationDelay: "0.6s" }}>
+              {stats.map((stat, index) => (
+                <div key={index} className="text-center">
+                  <div className="flex justify-center mb-2">
+                    <stat.icon className="w-5 h-5 text-neon-blue" />
+                  </div>
+                  <div className="text-2xl font-bold text-white">{stat.number}</div>
+                  <div className="text-sm text-gray-400">{stat.label}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-24 bg-watch-party-surface">
-        <div className="container mx-auto px-4">
+      <section className="py-20 lg:ml-64 relative">
+        <div className="container-cinema">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-watch-party-text-primary mb-4">
-              Why Choose WatchParty?
+            <h2 className="heading-lg mb-4">
+              Cinema-Grade Features
             </h2>
-            <p className="text-xl text-watch-party-text-secondary max-w-2xl mx-auto">
-              Built for the future of social entertainment with cutting-edge technology and user-first design.
+            <p className="body-large max-w-2xl mx-auto">
+              Built with cutting-edge technology for the ultimate social viewing experience
             </p>
           </div>
 
@@ -93,76 +138,105 @@ export default function HomePage() {
             {features.map((feature, index) => {
               const Icon = feature.icon
               return (
-                <WatchPartyCard key={index} className="hover:shadow-watch-party-glow transition-all duration-300">
-                  <WatchPartyCardHeader>
+                <Card 
+                  key={index} 
+                  className="glass-card border-white/20 hover:border-white/30 transition-all duration-300 hover:scale-105 group"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <CardHeader>
                     <div className="flex items-center space-x-3">
-                      <div className="p-2 rounded-lg bg-watch-party-gradient">
+                      <div className={`p-3 rounded-xl bg-gradient-to-br ${feature.gradient} glow-red group-hover:scale-110 transition-transform`}>
                         <Icon className="h-6 w-6 text-white" />
                       </div>
-                      <WatchPartyCardTitle className="text-xl">{feature.title}</WatchPartyCardTitle>
+                      <CardTitle className="text-xl text-white">{feature.title}</CardTitle>
                     </div>
-                  </WatchPartyCardHeader>
-                  <WatchPartyCardContent>
-                    <WatchPartyCardDescription className="text-base">{feature.description}</WatchPartyCardDescription>
-                  </WatchPartyCardContent>
-                </WatchPartyCard>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="text-gray-400 text-base leading-relaxed">
+                      {feature.description}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
               )
             })}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 bg-watch-party-bg relative overflow-hidden">
-        <div className="absolute inset-0 bg-watch-party-gradient opacity-5"></div>
-        <div className="container mx-auto px-4 text-center relative">
-          <h2 className="text-4xl md:text-5xl font-bold text-watch-party-text-primary mb-6">
-            Ready to Start Your Watch Party?
-          </h2>
-          <p className="text-xl text-watch-party-text-secondary mb-8 max-w-2xl mx-auto">
-            Join thousands of users already enjoying synchronized viewing experiences. Create your first watch party in
-            seconds.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register">
-              <WatchPartyButton variant="glow" size="lg" className="text-lg px-8 py-4">
-                <Users className="h-5 w-5" />
-                Get Started Free
-              </WatchPartyButton>
-            </Link>
-            <Link href="/discover">
-              <WatchPartyButton variant="secondary" size="lg" className="text-lg px-8 py-4">
-                Explore Parties
-              </WatchPartyButton>
-            </Link>
+      {/* Experience Section */}
+      <section className="py-20 lg:ml-64 relative">
+        <div className="container-cinema">
+          <div className="glass-card p-12 rounded-3xl border border-white/20 text-center">
+            <div className="max-w-3xl mx-auto">
+              <div className="flex justify-center mb-6">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-neon-red to-neon-purple flex items-center justify-center glow-purple">
+                  <Star className="w-8 h-8 text-white" />
+                </div>
+              </div>
+              
+              <h2 className="heading-lg mb-6">
+                Ready for Your First 
+                <span className="text-neon-red"> Cinema Experience</span>?
+              </h2>
+              
+              <p className="body-large mb-8 max-w-2xl mx-auto">
+                Join thousands of users already enjoying synchronized viewing experiences. 
+                Create your first watch party in seconds and discover the future of social entertainment.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/register">
+                  <Button className="btn-primary text-lg px-8 py-4 group">
+                    <Users className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
+                    Get Started Free
+                    <Sparkles className="w-4 h-4 ml-2 animate-pulse" />
+                  </Button>
+                </Link>
+                <Link href="/about">
+                  <Button className="btn-ghost text-lg px-8 py-4">
+                    Learn More
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-watch-party-surface border-t border-watch-party-border py-12">
-        <div className="container mx-auto px-4">
+      <footer className="lg:ml-64 border-t border-white/10 py-12 bg-cinema-dark/50 backdrop-blur-xl">
+        <div className="container-cinema">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-watch-party-gradient">
-                <Play className="h-4 w-4 text-white" />
+            <div className="flex items-center space-x-3 mb-6 md:mb-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-neon-red to-neon-purple flex items-center justify-center">
+                <Play className="w-5 h-5 text-white fill-white" />
               </div>
-              <span className="text-xl font-bold text-watch-party-text-primary">WatchParty</span>
+              <div>
+                <span className="text-xl font-bold text-white">WatchParty</span>
+                <div className="text-xs text-neon-gold">CINEMA</div>
+              </div>
             </div>
-            <div className="flex space-x-6 text-watch-party-text-secondary">
-              <Link href="/privacy" className="hover:text-watch-party-primary transition-colors">
+            
+            <div className="flex space-x-8 text-gray-400">
+              <Link href="/privacy" className="hover:text-neon-blue transition-colors">
                 Privacy
               </Link>
-              <Link href="/terms" className="hover:text-watch-party-primary transition-colors">
+              <Link href="/terms" className="hover:text-neon-blue transition-colors">
                 Terms
               </Link>
-              <Link href="/help" className="hover:text-watch-party-primary transition-colors">
-                Help
+              <Link href="/help" className="hover:text-neon-blue transition-colors">
+                Support
+              </Link>
+              <Link href="/about" className="hover:text-neon-blue transition-colors">
+                About
               </Link>
             </div>
           </div>
-          <div className="mt-8 pt-8 border-t border-watch-party-border text-center text-watch-party-text-secondary">
-            <p>&copy; 2025 WatchParty. All rights reserved. Built for the future of social entertainment.</p>
+          
+          <div className="mt-8 pt-8 border-t border-white/10 text-center">
+            <p className="text-gray-500 text-sm">
+              © 2025 WatchParty Cinema. All rights reserved. Built for the future of social entertainment.
+            </p>
           </div>
         </div>
       </footer>
