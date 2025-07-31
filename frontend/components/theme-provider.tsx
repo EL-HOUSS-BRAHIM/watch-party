@@ -6,6 +6,20 @@ import {
   type ThemeProviderProps,
 } from 'next-themes'
 
-export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>
+interface CinemaThemeProviderProps extends Omit<ThemeProviderProps, 'attribute' | 'defaultTheme'> {
+  children: React.ReactNode
+}
+
+export function ThemeProvider({ children, ...props }: CinemaThemeProviderProps) {
+  return (
+    <NextThemesProvider
+      attribute="class"
+      defaultTheme="dark"
+      enableSystem={false}
+      disableTransitionOnChange={false}
+      {...props}
+    >
+      {children}
+    </NextThemesProvider>
+  )
 }
