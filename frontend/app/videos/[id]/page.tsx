@@ -1,6 +1,6 @@
 import { VideoPlayer } from "@/components/video/video-player"
-import { VideoDetails } from "@/components/video/video-details"
-import { VideoComments } from "@/components/video/video-comments"
+import { VideoDetails } from "@/components/videos/video-details"
+import { VideoComments } from "@/components/videos/video-comments"
 
 interface PageProps {
   params: {
