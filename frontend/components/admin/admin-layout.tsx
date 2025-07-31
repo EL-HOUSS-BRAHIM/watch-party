@@ -75,17 +75,17 @@ const navigation = [
 ]
 
 export function AdminLayout({ children }: AdminLayoutProps) {
-  const { user, loading } = useAuth()
+  const { user, isLoading } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
 
   useEffect(() => {
-    if (!loading && (!user || !user.isAdmin)) {
+    if (!isLoading && (!user || user.role !== 'admin')) {
       router.push('/dashboard')
     }
-  }, [user, loading, router])
+  }, [user, isLoading, router])
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -93,7 +93,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
     )
   }
 
-  if (!user || !user.isAdmin) {
+  if (!user || user.role !== 'admin') {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="w-96">
