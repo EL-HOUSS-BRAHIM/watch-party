@@ -1,4 +1,4 @@
-import { VideoManagement } from "@/components/video/video-management"
+import { VideoManagement } from "@/components/videos/video-management"
 
 export default function VideoManagePage() {
   return (
