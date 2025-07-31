@@ -63,6 +63,38 @@ interface Report {
   }
 }
 
+// Helper functions
+const getCategoryIcon = (category: string) => {
+  switch (category) {
+    case 'harassment': return <User className="h-4 w-4 text-red-500" />
+    case 'spam': return <Flag className="h-4 w-4 text-orange-500" />
+    case 'inappropriate': return <AlertTriangle className="h-4 w-4 text-yellow-500" />
+    case 'copyright': return <MessageSquare className="h-4 w-4 text-blue-500" />
+    case 'violence': return <XCircle className="h-4 w-4 text-red-600" />
+    default: return <Flag className="h-4 w-4 text-gray-500" />
+  }
+}
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case 'pending': return 'bg-yellow-100 text-yellow-800'
+    case 'investigating': return 'bg-blue-100 text-blue-800'
+    case 'resolved': return 'bg-green-100 text-green-800'
+    case 'dismissed': return 'bg-gray-100 text-gray-800'
+    default: return 'bg-gray-100 text-gray-800'
+  }
+}
+
+const getPriorityColor = (priority: string) => {
+  switch (priority) {
+    case 'low': return 'bg-green-100 text-green-800'
+    case 'medium': return 'bg-yellow-100 text-yellow-800'
+    case 'high': return 'bg-orange-100 text-orange-800'
+    case 'critical': return 'bg-red-100 text-red-800'
+    default: return 'bg-gray-100 text-gray-800'
+  }
+}
+
 export function ModerationReports() {
   const [reports, setReports] = useState<Report[]>([])
   const [loading, setLoading] = useState(true)
