@@ -13,10 +13,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { 
-  Flask, 
+  Beaker, 
   Play, 
   Pause, 
-  Stop, 
+  Square, 
   TrendingUp, 
   TrendingDown, 
   Users, 
@@ -254,8 +254,8 @@ export default function ABTestingDashboard() {
     switch (status) {
       case 'running': return <Play className="h-4 w-4" />;
       case 'paused': return <Pause className="h-4 w-4" />;
-      case 'completed': return <Stop className="h-4 w-4" />;
-      default: return <Flask className="h-4 w-4" />;
+      case 'completed': return <Square className="h-4 w-4" />;
+      default: return <Beaker className="h-4 w-4" />;
     }
   };
 
@@ -539,7 +539,7 @@ export default function ABTestingDashboard() {
                         size="sm"
                         onClick={() => stopTest(test.id)}
                       >
-                        <Stop className="h-4 w-4 mr-1" />
+                        <Square className="h-4 w-4 mr-1" />
                         Stop
                       </Button>
                     </>
@@ -621,7 +621,7 @@ export default function ABTestingDashboard() {
       {filteredTests.length === 0 && (
         <Card>
           <CardContent className="p-12 text-center">
-            <Flask className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+            <Beaker className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-medium mb-2">No tests found</h3>
             <p className="text-muted-foreground mb-4">
               {filter === 'all' 
