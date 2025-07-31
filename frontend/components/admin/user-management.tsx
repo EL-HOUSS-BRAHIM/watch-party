@@ -66,7 +66,7 @@ interface UserAction {
   timestamp: string
 }
 
-export default function UserManagement() {
+export function UserManagement() {
   const [users, setUsers] = useState<User[]>([])
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const [searchQuery, setSearchQuery] = useState("")
@@ -96,9 +96,8 @@ export default function UserManagement() {
         page: currentPage,
       })
       
-      setUsers(data.results || [])
-      setTotalPages(data.totalPages || Math.ceil(data.count / 20))
-      }
+      setUsers((data.results || []) as unknown as User[])
+      setTotalPages(Math.ceil((data.count || 0) / 20))
     } catch (error) {
       console.error("Failed to load users:", error)
       toast({
@@ -771,3 +770,6 @@ export default function UserManagement() {
     </div>
   )
 }
+
+// Default export
+export default UserManagement
