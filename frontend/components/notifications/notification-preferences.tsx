@@ -85,7 +85,7 @@ interface NotificationPreferencesProps {
   className?: string
 }
 
-export default function NotificationPreferences({ className }: NotificationPreferencesProps) {
+export function NotificationPreferences({ className }: NotificationPreferencesProps) {
   const [settings, setSettings] = useState<NotificationSettings | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
@@ -691,3 +691,6 @@ export default function NotificationPreferences({ className }: NotificationPrefe
     </div>
   )
 }
+
+// Default export
+export default NotificationPreferences
