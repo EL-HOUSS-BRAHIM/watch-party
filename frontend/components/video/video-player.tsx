@@ -21,7 +21,8 @@ import { useSocket } from "@/contexts/socket-context"
 import { cn } from "@/lib/utils"
 
 interface VideoPlayerProps {
-  src: string
+  src?: string
+  videoId?: string
   roomId?: string
   isHost?: boolean
   className?: string
@@ -326,7 +327,7 @@ export default function VideoPlayer({
             size="lg"
             onClick={togglePlay}
             className="h-16 w-16 rounded-full bg-black/50 hover:bg-black/70 text-white"
-            disabled={!isHost && roomId}
+            disabled={!isHost && !!roomId}
           >
             {isPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8 ml-1" />}
           </Button>
@@ -350,7 +351,7 @@ export default function VideoPlayer({
                 max={100}
                 step={0.1}
                 className="absolute inset-0 opacity-0 cursor-pointer"
-                disabled={!isHost && roomId}
+                disabled={!isHost && !!roomId}
               />
             </div>
           </div>
@@ -362,7 +363,7 @@ export default function VideoPlayer({
                 variant="ghost"
                 size="sm"
                 onClick={togglePlay}
-                disabled={!isHost && roomId}
+                disabled={!isHost && !!roomId}
                 className="text-white hover:bg-white/20"
               >
                 {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
@@ -372,7 +373,7 @@ export default function VideoPlayer({
                 variant="ghost"
                 size="sm"
                 onClick={() => skip(-10)}
-                disabled={!isHost && roomId}
+                disabled={!isHost && !!roomId}
                 className="text-white hover:bg-white/20"
               >
                 <SkipBack className="h-4 w-4" />
@@ -382,7 +383,7 @@ export default function VideoPlayer({
                 variant="ghost"
                 size="sm"
                 onClick={() => skip(10)}
-                disabled={!isHost && roomId}
+                disabled={!isHost && !!roomId}
                 className="text-white hover:bg-white/20"
               >
                 <SkipForward className="h-4 w-4" />
