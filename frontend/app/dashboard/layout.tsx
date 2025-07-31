@@ -1,16 +1,10 @@
 "use client"
 
 import type React from "react"
-
 import { useAuth } from "@/contexts/auth-context"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
-import { DashboardSidebar } from "@/components/layout/dashboard-sidebar"
-import { DashboardHeader } from "@/components/layout/dashboard-header"
-import { useAppStore } from "@/lib/stores/ui-store"
-import { cn } from "@/lib/utils"
 import { Loader2 } from "lucide-react"
-import { SidebarProvider } from "@/components/ui/sidebar"
 
 export default function DashboardLayout({
   children,
@@ -19,7 +13,6 @@ export default function DashboardLayout({
 }) {
   const { user, isLoading, isAuthenticated } = useAuth()
   const router = useRouter()
-  const { ui } = useAppStore()
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -29,10 +22,16 @@ export default function DashboardLayout({
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="flex items-center space-x-2">
-          <Loader2 className="w-6 h-6 animate-spin text-primary" />
-          <span className="text-muted-foreground">Loading...</span>
+      <div className="min-h-screen bg-cinema-deep flex items-center justify-center">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="relative">
+            <Loader2 className="w-8 h-8 animate-spin text-neon-red" />
+            <div className="absolute inset-0 w-8 h-8 rounded-full border-2 border-neon-red/20" />
+          </div>
+          <div className="text-center">
+            <div className="text-white font-medium">Loading Dashboard...</div>
+            <div className="text-gray-400 text-sm">Preparing your cinema experience</div>
+          </div>
         </div>
       </div>
     )
@@ -43,20 +42,15 @@ export default function DashboardLayout({
   }
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen bg-background">
-        {/* Sidebar */}
-        <DashboardSidebar />
-
-        {/* Main Content */}
-        <div className={cn("transition-all duration-300 ease-in-out", ui.sidebarOpen ? "lg:ml-64" : "lg:ml-16")}>
-          {/* Header */}
-          <DashboardHeader />
-
-          {/* Page Content */}
-          <main className="p-6">{children}</main>
-        </div>
+    <div className="min-h-screen bg-cinema-deep">
+      {/* Main Content Area - Adjusted for Navigation */}
+      <div className="lg:ml-64 pt-16">
+        <main className="container-cinema page-padding">
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
+        </main>
       </div>
-    </SidebarProvider>
+    </div>
   )
 }
