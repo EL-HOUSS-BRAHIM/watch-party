@@ -7,7 +7,7 @@ from celery import Celery
 from django.conf import settings
 
 # Set default Django settings
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'watchparty.settings.development')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'watchparty.settings.production')
 
 app = Celery('watchparty')
 
