@@ -1,0 +1,37 @@
+{
+  "name": "watch-party-api-tests",
+  "version": "1.0.0",
+  "description": "Postman test collections for Watch Party API",
+  "scripts": {
+    "test": "newman run Watch-Party-API-Collection.json -e environments/Local-Development.postman_environment.json",
+    "test:basic": "newman run Watch-Party-API-Collection.json -e environments/Local-Development.postman_environment.json --reporters cli,html --reporter-html-export results/basic-test-report.html",
+    "test:advanced": "newman run Watch-Party-Advanced-Tests.json -e environments/Local-Development.postman_environment.json --reporters cli,html --reporter-html-export results/advanced-test-report.html", 
+    "test:flow": "newman run Watch-Party-Complete-Flow.json -e environments/Local-Development.postman_environment.json --reporters cli,html --reporter-html-export results/flow-test-report.html",
+    "test:all": "./run-tests.sh",
+    "test:ci": "newman run Watch-Party-API-Collection.json -e environments/Local-Development.postman_environment.json --reporters cli,junit --reporter-junit-export results/test-results.xml",
+    "install-newman": "npm install -g newman newman-reporter-html",
+    "setup": "npm run install-newman && mkdir -p results"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "newman": "^6.0.0",
+    "newman-reporter-html": "^1.0.5"
+  },
+  "keywords": [
+    "postman",
+    "api-testing",
+    "watch-party",
+    "automation",
+    "newman"
+  ],
+  "author": "Watch Party Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EL-HOUSS-BRAHIM/watch-party.git"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}

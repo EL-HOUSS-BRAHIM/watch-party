@@ -1,20 +1,25 @@
 # Watch Party API Endpoints
 
+*Last Updated: August 2025 - Backend Hardening Sprint*
+
 ## Main API Routes
 
+### Health & Status
+- `/health/` - Main health check endpoint
+
 ### API Root
-- `/api/`
-- `/`
+- `/api/` - API root with endpoint discovery
+- `/` - Root endpoint (redirects to API)
 
 ### Test & Dashboard
-- `/api/test/`
-- `/api/dashboard/stats/`
-- `/api/dashboard/activities/`
+- `/api/test/` - Test endpoint to verify server status
+- `/api/dashboard/stats/` - Dashboard statistics for authenticated users
+- `/api/dashboard/activities/` - Recent activities feed
 
 ### API Documentation
-- `/api/schema/`
-- `/api/docs/`
-- `/api/redoc/`
+- `/api/schema/` - OpenAPI schema
+- `/api/docs/` - Swagger UI documentation
+- `/api/redoc/` - ReDoc API documentation
 
 ---
 
@@ -62,27 +67,27 @@
 ## Users API (`/api/users/`)
 
 ### Dashboard
-- `/api/users/dashboard/stats/`
+- `/api/users/dashboard/stats/` - User dashboard statistics
 
 ### Profile Management
-- `/api/users/profile/`
-- `/api/users/profile/update/`
-- `/api/users/avatar/upload/`
-- `/api/users/achievements/`
-- `/api/users/stats/`
-- `/api/users/onboarding/`
-- `/api/users/password/`
-- `/api/users/inventory/`
+- `/api/users/profile/` - Get/update user profile
+- `/api/users/profile/update/` - Update user profile (dedicated endpoint)
+- `/api/users/avatar/upload/` - Upload user avatar
+- `/api/users/achievements/` - User achievements
+- `/api/users/stats/` - User statistics
+- `/api/users/onboarding/` - User onboarding flow
+- `/api/users/password/` - Update password
+- `/api/users/inventory/` - User virtual inventory
 
 ### Session Management
-- `/api/users/sessions/`
-- `/api/users/sessions/<str:session_id>/`
-- `/api/users/sessions/revoke-all/`
+- `/api/users/sessions/` - List user sessions
+- `/api/users/sessions/<str:session_id>/` - Revoke specific session
+- `/api/users/sessions/revoke-all/` - Revoke all user sessions
 
 ### Two-Factor Authentication
-- `/api/users/2fa/enable/`
-- `/api/users/2fa/disable/`
-- `/api/users/2fa/setup/`
+- `/api/users/2fa/enable/` - Enable 2FA
+- `/api/users/2fa/disable/` - Disable 2FA
+- `/api/users/2fa/setup/` - Setup 2FA (get QR code)
 
 ### Friends & Social
 - `/api/users/friends/suggestions/`
@@ -125,21 +130,21 @@
 - `/api/users/delete-account/`
 
 ### Additional Features
-- `/api/users/<uuid:user_id>/mutual-friends/`
-- `/api/users/online-status/`
-- `/api/users/legacy/activity/`
-- `/api/users/watch-history/`
-- `/api/users/favorites/`
-- `/api/users/favorites/add/`
-- `/api/users/favorites/<uuid:favorite_id>/remove/`
+- `/api/users/<uuid:user_id>/mutual-friends/` - Get mutual friends
+- `/api/users/online-status/` - Get/update online status
+- `/api/users/legacy/activity/` - User activity feed (legacy)
+- `/api/users/watch-history/` - User watch history
+- `/api/users/favorites/` - User favorites list
+- `/api/users/favorites/add/` - Add to favorites
+- `/api/users/favorites/<uuid:favorite_id>/remove/` - Remove from favorites
 
 ### Notifications
-- `/api/users/notifications/`
-- `/api/users/notifications/<uuid:notification_id>/read/`
-- `/api/users/notifications/mark-all-read/`
+- `/api/users/notifications/` - User notifications
+- `/api/users/notifications/<uuid:notification_id>/read/` - Mark notification as read
+- `/api/users/notifications/mark-all-read/` - Mark all notifications as read
 
 ### Reporting
-- `/api/users/report/`
+- `/api/users/report/` - Report user content/behavior
 
 ---
 
@@ -148,10 +153,10 @@
 ### Video CRUD (ViewSet)
 - `/api/videos/` (GET - List videos, POST - Create video)
 - `/api/videos/<uuid:id>/` (GET - Get details, PUT - Update, PATCH - Partial update, DELETE - Delete)
-- `/api/videos/<uuid:id>/like/`
-- `/api/videos/<uuid:id>/comments/`
-- `/api/videos/<uuid:id>/stream/`
-- `/api/videos/<uuid:id>/download/`
+- `/api/videos/<uuid:id>/like/` - Like/unlike video
+- `/api/videos/<uuid:id>/comments/` - Get/add video comments
+- `/api/videos/<uuid:id>/stream/` - Stream video content
+- `/api/videos/<uuid:id>/download/` - Download video file
 
 ### Upload Endpoints
 - `/api/videos/upload/`
@@ -176,8 +181,8 @@
 - `/api/videos/<uuid:video_id>/analytics/comparative/`
 
 ### Channel Analytics
-- `/api/videos/analytics/channel/`
-- `/api/videos/analytics/trending/`
+- `/api/videos/analytics/channel/` - Channel analytics dashboard
+- `/api/videos/analytics/trending/` - Trending videos analytics
 
 ### Video Validation & Search
 - `/api/videos/validate-url/`
@@ -198,19 +203,19 @@
 ## Parties API (`/api/parties/`)
 
 ### Special Endpoints
-- `/api/parties/recent/`
-- `/api/parties/public/`
-- `/api/parties/trending/`
-- `/api/parties/recommendations/`
-- `/api/parties/join-by-code/`
-- `/api/parties/join-by-invite/`
-- `/api/parties/search/`
-- `/api/parties/report/`
+- `/api/parties/recent/` - Recently created parties
+- `/api/parties/public/` - Public parties list
+- `/api/parties/trending/` - Trending parties
+- `/api/parties/recommendations/` - Personalized party recommendations
+- `/api/parties/join-by-code/` - Join party by invite code
+- `/api/parties/join-by-invite/` - Join party by invitation link
+- `/api/parties/search/` - Search parties
+- `/api/parties/report/` - Report party content
 
 ### Party-Specific Enhanced
-- `/api/parties/<uuid:party_id>/generate-invite/`
-- `/api/parties/<uuid:party_id>/analytics/`
-- `/api/parties/<uuid:party_id>/update-analytics/`
+- `/api/parties/<uuid:party_id>/generate-invite/` - Generate invite code/link
+- `/api/parties/<uuid:party_id>/analytics/` - Detailed party analytics
+- `/api/parties/<uuid:party_id>/update-analytics/` - Update party analytics data
 
 ### Party CRUD (ViewSet)
 - `/api/parties/` (GET - List parties, POST - Create party)
@@ -223,18 +228,14 @@
 - `/api/parties/<uuid:id>/react/`
 - `/api/parties/<uuid:id>/participants/`
 - `/api/parties/<uuid:id>/invite/`
-- `/api/parties/<uuid:id>/select_gdrive_movie/`
-- `/api/parties/<uuid:id>/sync_state/`
+- `/api/parties/<uuid:id>/select_gdrive_movie/` - Select Google Drive movie for party
+- `/api/parties/<uuid:id>/sync_state/` - Get/update party synchronization state
 
 ### Invitations (ViewSet)
 - `/api/parties/invitations/` (GET - List invitations)
 - `/api/parties/invitations/<uuid:id>/` (GET - Get invitation details)
-- `/api/parties/invitations/<uuid:id>/accept/`
-- `/api/parties/invitations/<uuid:id>/decline/`
-- `/api/parties/invitations/<uuid:id>/analytics/`
-- `/api/parties/invitations/<uuid:id>/join_by_code/`
-- `/api/parties/invitations/<uuid:id>/kick_participant/`
-- `/api/parties/invitations/<uuid:id>/promote_participant/`
+- `/api/parties/invitations/<uuid:id>/accept/` - Accept invitation
+- `/api/parties/invitations/<uuid:id>/decline/` - Decline invitation
 
 ---
 
@@ -298,37 +299,37 @@
 ## Analytics API (`/api/analytics/`)
 
 ### Basic Analytics
-- `/api/analytics/`
-- `/api/analytics/user-stats/`
-- `/api/analytics/party-stats/<uuid:party_id>/`
-- `/api/analytics/admin/analytics/`
-- `/api/analytics/export/`
+- `/api/analytics/` - Default analytics endpoint
+- `/api/analytics/user-stats/` - User statistics
+- `/api/analytics/party-stats/<uuid:party_id>/` - Party-specific statistics
+- `/api/analytics/admin/analytics/` - Admin analytics overview
+- `/api/analytics/export/` - Export analytics data
 
 ### Dashboard Analytics
-- `/api/analytics/dashboard/`
-- `/api/analytics/user/`
-- `/api/analytics/video/<uuid:video_id>/`
-- `/api/analytics/party/<uuid:party_id>/`
-- `/api/analytics/system/`
-- `/api/analytics/system/performance/`
-- `/api/analytics/revenue/`
-- `/api/analytics/retention/`
-- `/api/analytics/content/`
-- `/api/analytics/events/`
+- `/api/analytics/dashboard/` - Dashboard statistics
+- `/api/analytics/user/` - User analytics
+- `/api/analytics/video/<uuid:video_id>/` - Video analytics
+- `/api/analytics/party/<uuid:party_id>/` - Party analytics
+- `/api/analytics/system/` - System analytics
+- `/api/analytics/system/performance/` - System performance metrics
+- `/api/analytics/revenue/` - Revenue analytics
+- `/api/analytics/retention/` - User retention analytics
+- `/api/analytics/content/` - Content performance analytics
+- `/api/analytics/events/` - Track events
 
 ### Advanced Analytics
-- `/api/analytics/dashboard/realtime/`
-- `/api/analytics/advanced/query/`
-- `/api/analytics/ab-testing/`
-- `/api/analytics/predictive/`
+- `/api/analytics/dashboard/realtime/` - Real-time dashboard
+- `/api/analytics/advanced/query/` - Advanced query interface
+- `/api/analytics/ab-testing/` - A/B testing analytics
+- `/api/analytics/predictive/` - Predictive analytics
 
 ### Extended Analytics
-- `/api/analytics/platform-overview/`
-- `/api/analytics/user-behavior/`
-- `/api/analytics/content-performance/`
-- `/api/analytics/revenue-advanced/`
-- `/api/analytics/personal/`
-- `/api/analytics/real-time/`
+- `/api/analytics/platform-overview/` - Platform overview
+- `/api/analytics/user-behavior/` - User behavior analytics
+- `/api/analytics/content-performance/` - Content performance metrics
+- `/api/analytics/revenue-advanced/` - Advanced revenue analytics
+- `/api/analytics/personal/` - Personal user analytics
+- `/api/analytics/real-time/` - Real-time analytics
 
 ---
 
@@ -568,10 +569,11 @@
 - `/api/admin/settings/`
 - `/api/admin/settings/update/`
 
-### Health Monitoring
-- `/api/admin/health/check/`
-- `/api/admin/health/status/`
-- `/api/admin/health/metrics/`
+### Health Monitoring (Enhanced)
+- `/api/admin/health/check/` - Basic health check
+- `/api/admin/health/status/` - Detailed system status
+- `/api/admin/health/metrics/` - System metrics
+- `/api/admin/metrics/prometheus/` - Prometheus metrics endpoint
 
 ---
 
@@ -585,7 +587,7 @@
 
 ---
 
-## Static Files (Development Only)
-- `/media/` (Media files)
-- `/static/` (Static files)
-- `/__debug__/` (Debug toolbar)
+## Static Files & Development (Development Only)
+- `/media/` - Media files (videos, images, etc.)
+- `/static/` - Static assets (CSS, JS, images)
+- `/__debug__/` - Django Debug Toolbar (if enabled)

@@ -1,0 +1,687 @@
+{
+  "info": {
+    "name": "Watch Party API - Complete Flow Tests",
+    "description": "End-to-end flow testing covering user journey from registration to party participation",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "api_url", 
+      "value": "{{base_url}}/api",
+      "type": "string"
+    },
+    {
+      "key": "flow_user_email",
+      "value": "flowtest@watchparty.dev",
+      "type": "string"
+    },
+    {
+      "key": "flow_user_password",
+      "value": "FlowTest123!",
+      "type": "string"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Flow test utilities",
+          "function generateTestData() {",
+          "    const timestamp = Date.now();",
+          "    pm.collectionVariables.set('timestamp', timestamp);",
+          "    pm.collectionVariables.set('test_email', `flowtest${timestamp}@watchparty.dev`);",
+          "}"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Complete User Journey Flow",
+      "item": [
+        {
+          "name": "Step 1 - System Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health/",
+              "host": ["{{base_url}}"],
+              "path": ["health", ""]
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "console.log('🚀 Starting Complete User Journey Flow Test');",
+                  "const timestamp = Date.now();",
+                  "pm.collectionVariables.set('timestamp', timestamp);",
+                  "pm.collectionVariables.set('flow_user_email', `flowtest${timestamp}@watchparty.dev`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ System is healthy and ready', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.status).to.eql('healthy');",
+                  "});",
+                  "",
+                  "console.log('✅ Step 1 Complete: System health verified');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 2 - User Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"{{flow_user_email}}\",\n    \"password\": \"{{flow_user_password}}\",\n    \"confirm_password\": \"{{flow_user_password}}\",\n    \"first_name\": \"Flow\",\n    \"last_name\": \"Tester\"\n}"
+            },
+            "url": {
+              "raw": "{{api_url}}/auth/register/",
+              "host": ["{{api_url}}"],
+              "path": ["auth", "register", ""]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ User registration successful', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('access_token');",
+                  "    pm.expect(responseJson).to.have.property('user');",
+                  "    pm.expect(responseJson.user.email).to.eql(pm.collectionVariables.get('flow_user_email'));",
+                  "});",
+                  "",
+                  "// Store tokens and user data",
+                  "const responseJson = pm.response.json();",
+                  "pm.collectionVariables.set('access_token', responseJson.access_token);",
+                  "pm.collectionVariables.set('refresh_token', responseJson.refresh_token);",
+                  "pm.collectionVariables.set('user_id', responseJson.user.id);",
+                  "",
+                  "console.log('✅ Step 2 Complete: User registered and authenticated');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 3 - Profile Verification",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/auth/profile/",
+              "host": ["{{api_url}}"],
+              "path": ["auth", "profile", ""]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ User profile accessible', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.email).to.eql(pm.collectionVariables.get('flow_user_email'));",
+                  "    pm.expect(responseJson.first_name).to.eql('Flow');",
+                  "});",
+                  "",
+                  "console.log('✅ Step 3 Complete: Profile verified and accessible');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 4 - Upload Test Video",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Flow Test Movie\",\n    \"description\": \"Test movie for complete flow testing\",\n    \"url\": \"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4\",\n    \"duration\": 596,\n    \"is_public\": true,\n    \"genre\": \"Animation\"\n}"
+            },
+            "url": {
+              "raw": "{{api_url}}/videos/",
+              "host": ["{{api_url}}"],
+              "path": ["videos", ""]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ Video upload successful', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('id');",
+                  "    pm.expect(responseJson.title).to.eql('Flow Test Movie');",
+                  "});",
+                  "",
+                  "// Store video ID",
+                  "const responseJson = pm.response.json();",
+                  "pm.collectionVariables.set('video_id', responseJson.id);",
+                  "",
+                  "console.log('✅ Step 4 Complete: Test video uploaded');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 5 - Create Watch Party",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Flow Test Watch Party\",\n    \"description\": \"Complete flow test party for Big Buck Bunny\",\n    \"video_id\": \"{{video_id}}\",\n    \"is_public\": true,\n    \"max_participants\": 10,\n    \"scheduled_start\": \"2025-08-10T20:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{api_url}}/parties/",
+              "host": ["{{api_url}}"],
+              "path": ["parties", ""]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ Watch party created successfully', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('id');",
+                  "    pm.expect(responseJson.title).to.eql('Flow Test Watch Party');",
+                  "    pm.expect(responseJson.host).to.eql(pm.collectionVariables.get('user_id'));",
+                  "});",
+                  "",
+                  "// Store party ID",
+                  "const responseJson = pm.response.json();",
+                  "pm.collectionVariables.set('party_id', responseJson.id);",
+                  "",
+                  "console.log('✅ Step 5 Complete: Watch party created');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 6 - Generate Party Invite",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/parties/{{party_id}}/generate-invite/",
+              "host": ["{{api_url}}"],
+              "path": ["parties", "{{party_id}}", "generate-invite", ""]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ Party invite generated', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('invite_code');",
+                  "    pm.expect(responseJson).to.have.property('invite_link');",
+                  "    pm.expect(responseJson.invite_code).to.be.a('string');",
+                  "});",
+                  "",
+                  "// Store invite data",
+                  "const responseJson = pm.response.json();",
+                  "pm.collectionVariables.set('invite_code', responseJson.invite_code);",
+                  "pm.collectionVariables.set('invite_link', responseJson.invite_link);",
+                  "",
+                  "console.log('✅ Step 6 Complete: Party invite generated');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 7 - Send Welcome Chat Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"message\": \"Welcome to my watch party! Let's enjoy Big Buck Bunny together! 🐰🎬\",\n    \"message_type\": \"text\"\n}"
+            },
+            "url": {
+              "raw": "{{api_url}}/chat/{{party_id}}/messages/send/",
+              "host": ["{{api_url}}"],
+              "path": ["chat", "{{party_id}}", "messages", "send", ""]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ Welcome message sent', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('id');",
+                  "    pm.expect(responseJson.message).to.include('Welcome to my watch party');",
+                  "});",
+                  "",
+                  "console.log('✅ Step 7 Complete: Welcome message sent to party chat');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 8 - Start Watch Party",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"action\": \"start\",\n    \"timestamp\": 0\n}"
+            },
+            "url": {
+              "raw": "{{api_url}}/parties/{{party_id}}/start/",
+              "host": ["{{api_url}}"],
+              "path": ["parties", "{{party_id}}", "start", ""]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ Watch party started', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('success');",
+                  "    pm.expect(responseJson.success).to.be.true;",
+                  "});",
+                  "",
+                  "console.log('✅ Step 8 Complete: Watch party started');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 9 - Get Party Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/analytics/party/{{party_id}}/",
+              "host": ["{{api_url}}"],
+              "path": ["analytics", "party", "{{party_id}}", ""]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ Party analytics retrieved', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "});",
+                  "",
+                  "console.log('✅ Step 9 Complete: Party analytics retrieved');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 10 - User Dashboard Check",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/users/dashboard/stats/",
+              "host": ["{{api_url}}"],
+              "path": ["users", "dashboard", "stats", ""]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ User dashboard accessible', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "});",
+                  "",
+                  "console.log('✅ Step 10 Complete: User dashboard statistics verified');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 11 - Check Notifications",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/users/notifications/",
+              "host": ["{{api_url}}"],
+              "path": ["users", "notifications", ""]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ Notifications accessible', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('results');",
+                  "});",
+                  "",
+                  "console.log('✅ Step 11 Complete: User notifications system working');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 12 - Video Search Test",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/videos/search/?q=Flow Test",
+              "host": ["{{api_url}}"],
+              "path": ["videos", "search", ""],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "Flow Test"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ Video search working', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('results');",
+                  "});",
+                  "",
+                  "pm.test('✅ Our test video is findable', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const foundVideo = responseJson.results.find(video => video.title === 'Flow Test Movie');",
+                  "    pm.expect(foundVideo).to.not.be.undefined;",
+                  "});",
+                  "",
+                  "console.log('✅ Step 12 Complete: Video search functionality verified');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 13 - Global Search Test",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/search/?q=Flow Test&type=all",
+              "host": ["{{api_url}}"],
+              "path": ["search", ""],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "Flow Test"
+                },
+                {
+                  "key": "type",
+                  "value": "all"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ Global search working', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('results');",
+                  "});",
+                  "",
+                  "console.log('✅ Step 13 Complete: Global search functionality verified');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 14 - Token Refresh Test",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{api_url}}/auth/refresh/",
+              "host": ["{{api_url}}"],
+              "path": ["auth", "refresh", ""]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ Token refresh successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('access');",
+                  "});",
+                  "",
+                  "// Update access token",
+                  "const responseJson = pm.response.json();",
+                  "pm.collectionVariables.set('access_token', responseJson.access);",
+                  "",
+                  "console.log('✅ Step 14 Complete: Token refresh mechanism verified');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Step 15 - Final System Verification",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{api_url}}/parties/{{party_id}}/",
+              "host": ["{{api_url}}"],
+              "path": ["parties", "{{party_id}}", ""]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('✅ Party still accessible with refreshed token', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.id).to.eql(pm.collectionVariables.get('party_id'));",
+                  "    pm.expect(responseJson.title).to.eql('Flow Test Watch Party');",
+                  "});",
+                  "",
+                  "console.log('✅ Step 15 Complete: Final system verification passed');",
+                  "console.log('');",
+                  "console.log('🎉 COMPLETE USER JOURNEY FLOW TEST SUCCESSFUL! 🎉');",
+                  "console.log('');",
+                  "console.log('Summary of completed actions:');",
+                  "console.log('1. ✅ System health verified');",
+                  "console.log('2. ✅ User registration');",
+                  "console.log('3. ✅ Profile verification');",
+                  "console.log('4. ✅ Video upload');",
+                  "console.log('5. ✅ Watch party creation');",
+                  "console.log('6. ✅ Invite generation');",
+                  "console.log('7. ✅ Chat messaging');",
+                  "console.log('8. ✅ Party start');",
+                  "console.log('9. ✅ Analytics tracking');",
+                  "console.log('10. ✅ Dashboard access');",
+                  "console.log('11. ✅ Notifications system');",
+                  "console.log('12. ✅ Video search');",
+                  "console.log('13. ✅ Global search');",
+                  "console.log('14. ✅ Token refresh');",
+                  "console.log('15. ✅ Final verification');",
+                  "console.log('');",
+                  "console.log('All core Watch Party functionality is working correctly! 🚀');"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

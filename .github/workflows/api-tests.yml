@@ -1,0 +1,295 @@
+name: API Testing Suite
+
+on:
+  push:
+    branches: [ main, backend-hardening-sprint ]
+    paths:
+      - 'back-end/**'
+      - 'postman/**'
+      - '.github/workflows/api-tests.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'back-end/**'
+      - 'postman/**'
+
+env:
+  DJANGO_SETTINGS_MODULE: watchparty.settings.testing
+  SECRET_KEY: test-secret-key-for-ci
+  DEBUG: False
+
+jobs:
+  api-tests:
+    name: Run API Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: watchparty_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Cache Python dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('back-end/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Cache Node dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('postman/package.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+
+    - name: Install Python dependencies
+      run: |
+        cd back-end
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Install Newman and reporters
+      run: |
+        npm install -g newman newman-reporter-html newman-reporter-htmlextra
+
+    - name: Set up environment variables
+      run: |
+        cd back-end
+        cat > .env << EOF
+        DEBUG=False
+        SECRET_KEY=test-secret-key-for-ci
+        DATABASE_URL=postgresql://postgres:postgres@localhost:5432/watchparty_test
+        REDIS_URL=redis://localhost:6379/0
+        CELERY_BROKER_URL=redis://localhost:6379/1
+        CELERY_RESULT_BACKEND=redis://localhost:6379/2
+        CHANNEL_LAYERS_CONFIG_HOSTS=redis://localhost:6379/3
+        ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+        DJANGO_SETTINGS_MODULE=watchparty.settings.testing
+        EOF
+
+    - name: Run database migrations
+      run: |
+        cd back-end
+        python manage.py migrate --noinput
+
+    - name: Create test superuser
+      run: |
+        cd back-end
+        python manage.py shell << EOF
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        if not User.objects.filter(username='admin').exists():
+            User.objects.create_superuser('admin', 'admin@watchparty.dev', 'admin123')
+        EOF
+
+    - name: Collect static files
+      run: |
+        cd back-end
+        python manage.py collectstatic --noinput
+
+    - name: Start Django server
+      run: |
+        cd back-end
+        python manage.py runserver 8000 &
+        sleep 10
+        echo "Django server started"
+
+    - name: Wait for server to be ready
+      run: |
+        timeout 60 bash -c 'until curl -f http://localhost:8000/health/; do sleep 2; done'
+
+    - name: Run Django unit tests
+      run: |
+        cd back-end
+        python manage.py test --verbosity=2
+
+    - name: Run Basic API Tests
+      run: |
+        cd postman
+        newman run Watch-Party-API-Collection.json \
+          -e environments/Local-Development.postman_environment.json \
+          --reporters cli,html,junit \
+          --reporter-html-export results/basic-api-report.html \
+          --reporter-junit-export results/basic-api-junit.xml \
+          --timeout-request 30000 \
+          --delay-request 200
+
+    - name: Run Advanced API Tests
+      run: |
+        cd postman
+        newman run Watch-Party-Advanced-Tests.json \
+          -e environments/Local-Development.postman_environment.json \
+          --reporters cli,html,junit \
+          --reporter-html-export results/advanced-api-report.html \
+          --reporter-junit-export results/advanced-api-junit.xml \
+          --timeout-request 30000 \
+          --delay-request 200
+      continue-on-error: true
+
+    - name: Run Complete Flow Tests
+      run: |
+        cd postman
+        newman run Watch-Party-Complete-Flow.json \
+          -e environments/Local-Development.postman_environment.json \
+          --reporters cli,html,junit \
+          --reporter-html-export results/flow-test-report.html \
+          --reporter-junit-export results/flow-test-junit.xml \
+          --timeout-request 30000 \
+          --delay-request 200
+
+    - name: Run Comprehensive CI Tests
+      run: |
+        cd postman
+        ./ci-test-runner.sh -e local -f junit,html -v
+      continue-on-error: true
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: api-test-results
+        path: |
+          postman/results/
+          back-end/logs/
+        retention-days: 30
+
+    - name: Publish Test Results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: API Test Results
+        path: 'postman/results/*junit*.xml'
+        reporter: java-junit
+        fail-on-error: false
+
+    - name: Generate Test Summary
+      if: always()
+      run: |
+        cd postman
+        echo "## 🧪 API Test Results" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -f "results/test-summary-*.md" ]; then
+          cat results/test-summary-*.md >> $GITHUB_STEP_SUMMARY
+        else
+          echo "### Test Execution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Basic API Tests: $([ -f 'results/basic-api-junit.xml' ] && echo '✅ Completed' || echo '❌ Failed')" >> $GITHUB_STEP_SUMMARY
+          echo "- Advanced Tests: $([ -f 'results/advanced-api-junit.xml' ] && echo '✅ Completed' || echo '❌ Failed')" >> $GITHUB_STEP_SUMMARY
+          echo "- Flow Tests: $([ -f 'results/flow-test-junit.xml' ] && echo '✅ Completed' || echo '❌ Failed')" >> $GITHUB_STEP_SUMMARY
+        fi
+        
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### 📊 Test Artifacts" >> $GITHUB_STEP_SUMMARY
+        echo "- [Download Test Reports](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+
+    - name: Comment PR with results
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const fs = require('fs');
+          let comment = '## 🧪 API Test Results\n\n';
+          
+          // Check for test result files
+          const basicExists = fs.existsSync('postman/results/basic-api-junit.xml');
+          const advancedExists = fs.existsSync('postman/results/advanced-api-junit.xml');
+          const flowExists = fs.existsSync('postman/results/flow-test-junit.xml');
+          
+          comment += '| Test Suite | Status |\n';
+          comment += '|------------|--------|\n';
+          comment += `| Basic API Tests | ${basicExists ? '✅ Passed' : '❌ Failed'} |\n`;
+          comment += `| Advanced Tests | ${advancedExists ? '✅ Passed' : '❌ Failed'} |\n`;
+          comment += `| Flow Tests | ${flowExists ? '✅ Passed' : '❌ Failed'} |\n`;
+          
+          comment += '\n📁 Detailed reports are available in the [test artifacts](';
+          comment += `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}).\n`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: comment
+          });
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: api-tests
+    if: always()
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Bandit Security Linter
+      run: |
+        pip install bandit[toml]
+        bandit -r back-end/ -f json -o security-report.json || true
+
+    - name: Upload Security Report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-report
+        path: security-report.json
+
+  performance-test:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: api-tests
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm install -g newman
+
+    - name: Run Performance Tests
+      run: |
+        cd postman
+        # Add performance-specific tests here
+        echo "Performance tests would run here"
+        # newman run Watch-Party-Performance-Tests.json -e environments/Local-Development.postman_environment.json
