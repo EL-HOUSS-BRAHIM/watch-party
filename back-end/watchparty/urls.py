@@ -17,6 +17,38 @@ from django.http import JsonResponse
 
 @api_view(['GET'])
 @permission_classes([AllowAny])
+def health_check(request):
+    """Simple health check endpoint"""
+    from core.error_handling import APIHealthMonitor
+    
+    try:
+        health_data = APIHealthMonitor.get_health_status()
+        
+        # Check worker status if timeout parameter provided
+        timeout = request.GET.get('timeout', None)
+        if timeout:
+            try:
+                from watchparty.tasks import ping
+                timeout = int(timeout)
+                result = ping.apply_async()
+                worker_response = result.get(timeout=timeout)
+                health_data['services']['worker'] = 'healthy' if worker_response == 'pong' else 'unhealthy'
+            except Exception as e:
+                health_data['services']['worker'] = f'unhealthy: {str(e)}'
+                if health_data['status'] == 'healthy':
+                    health_data['status'] = 'degraded'
+        
+        return JsonResponse(health_data, status=200 if health_data['status'] == 'healthy' else 503)
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e),
+            'timestamp': timezone.now().isoformat()
+        }, status=503)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def api_root(request):
     """API root endpoint"""
     return Response({
@@ -154,6 +186,9 @@ def redirect_to_api(request, endpoint_name, correct_path):
 
 # Main URL patterns
 urlpatterns = [
+    # Health check
+    path('health/', health_check, name='health_check'),
+    
     # Admin
     path('admin/', admin.site.urls),
     

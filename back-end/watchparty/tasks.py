@@ -11,6 +11,12 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+@shared_task(name='system.ping')
+def ping():
+    """Simple ping task to verify Celery workers are responding"""
+    return 'pong'
+
+
 @shared_task
 def cleanup_expired_sessions():
     """Clean up expired user sessions"""

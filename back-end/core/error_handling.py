@@ -120,10 +120,22 @@ class APIHealthMonitor:
         try:
             from django.db import connection
             from django.core.cache import cache
+            import subprocess
+            import os
+            
+            # Get commit hash
+            try:
+                commit = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], 
+                                               cwd=os.path.dirname(__file__), 
+                                               stderr=subprocess.DEVNULL).decode('utf-8').strip()
+            except:
+                commit = os.environ.get('GIT_COMMIT', 'unknown')
             
             health_data = {
                 'status': 'healthy',
                 'timestamp': datetime.now().isoformat(),
+                'commit': commit,
+                'build_time': os.environ.get('BUILD_TIME', 'unknown'),
                 'services': {}
             }
             

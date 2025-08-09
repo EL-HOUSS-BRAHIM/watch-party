@@ -74,6 +74,8 @@ SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_SAMESITE = 'Lax'
 SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
@@ -147,30 +149,38 @@ LOGGING = {
         },
         'json': {
             'class': 'pythonjsonlogger.jsonlogger.JsonFormatter',
-            'format': '%(asctime)s %(name)s %(levelname)s %(message)s'
+            'format': '%(asctime)s %(name)s %(levelname)s %(message)s %(request_id)s %(pathname)s %(funcName)s %(lineno)d'
+        },
+    },
+    'filters': {
+        'request_id': {
+            '()': 'middleware.request_id.RequestIDFilter',
         },
     },
     'handlers': {
         'file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': '/var/log/watchparty/django.log',
-            'formatter': 'verbose',
+            'filename': BASE_DIR / 'logs' / 'django.log',
+            'formatter': 'json',
+            'filters': ['request_id'],
             'maxBytes': 1024*1024*100,  # 100 MB
             'backupCount': 10,
         },
         'error_file': {
             'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler', 
-            'filename': '/var/log/watchparty/django_errors.log',
+            'filename': BASE_DIR / 'logs' / 'django_errors.log',
             'formatter': 'json',
+            'filters': ['request_id'],
             'maxBytes': 1024*1024*50,  # 50 MB
             'backupCount': 5,
         },
         'console': {
             'level': 'WARNING',
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
+            'formatter': 'json',
+            'filters': ['request_id'],
         },
     },
     'root': {

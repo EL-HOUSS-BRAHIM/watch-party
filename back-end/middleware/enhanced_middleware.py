@@ -240,7 +240,8 @@ class SecurityHeadersMiddleware(MiddlewareMixin):
             "base-uri 'self'",
             "form-action 'self'",
         ]
-        response['Content-Security-Policy'] = "; ".join(csp_directives)
+        # Use report-only mode first for CSP
+        response['Content-Security-Policy-Report-Only'] = "; ".join(csp_directives)
         
         return response
 
