@@ -213,6 +213,11 @@ Thumbs.db
 *.crt
 *.csr
 
+# SSH keys and credentials
+.ssh/
+id_rsa*
+*.pub
+
 # Backup files
 *.backup
 *.bak

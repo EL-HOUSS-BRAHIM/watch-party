@@ -184,6 +184,18 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'EXCEPTION_HANDLER': 'core.error_handling.enhanced_exception_handler',
+    'DEFAULT_THROTTLE_CLASSES': [
+        'core.throttling.CustomUserRateThrottle',
+        'core.throttling.CustomAnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '1000/hour',
+        'anon': '100/hour',
+        'auth': '30/15min',
+        'upload': '20/hour',
+        'api': '10000/hour',
+        'security': '10/15min',
+    },
 }
 
 # Enhanced settings for performance and monitoring

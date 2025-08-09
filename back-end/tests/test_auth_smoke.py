@@ -3,21 +3,18 @@ Authentication smoke tests
 """
 
 import pytest
+import json
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from rest_framework.test import APIClient
-from rest_framework import status
-import json
-
-
-User = get_user_model()
 
 
 class AuthSmokeTest(TestCase):
     """Basic authentication smoke tests"""
     
     def setUp(self):
+        from rest_framework.test import APIClient
         self.client = APIClient()
+        self.User = get_user_model()
         self.test_user_data = {
             'username': 'testuser',
             'email': 'test@example.com',
@@ -26,16 +23,17 @@ class AuthSmokeTest(TestCase):
             'last_name': 'User'
         }
     
-    def test_user_login_flow(self):
-        """Test basic user login functionality"""
-        # Create a test user
-        user = User.objects.create_user(
-            username=self.test_user_data['username'],
-            email=self.test_user_data['email'],
-            password=self.test_user_data['password'],
-            first_name=self.test_user_data['first_name'],
-            last_name=self.test_user_data['last_name']
-        )
+    def test_auth_flow(self):
+        """Test basic authentication flow"""
+        from rest_framework import status
+        
+        # Register a new user
+        register_data = {
+            'username': 'testuser',
+            'email': 'test@example.com',
+            'password': 'testpass123',
+            'password_confirm': 'testpass123'
+        }
         
         # Test login
         login_data = {

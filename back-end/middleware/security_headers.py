@@ -2,6 +2,8 @@
 Security headers middleware for Watch Party Backend
 """
 
+from django.conf import settings
+
 
 class SecurityHeadersMiddleware:
     """
@@ -20,15 +22,23 @@ class SecurityHeadersMiddleware:
         response.setdefault('Referrer-Policy', 'strict-origin-when-cross-origin')
         response.setdefault('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
         
-        # Add CSP in report-only mode first
-        if 'Content-Security-Policy' not in response:
-            response['Content-Security-Policy-Report-Only'] = (
+        # Add CSP - enforce by default, report-only in development
+        csp_header = 'Content-Security-Policy'
+        if getattr(settings, 'CSP_REPORT_ONLY', False):
+            csp_header = 'Content-Security-Policy-Report-Only'
+        
+        if csp_header not in response and 'Content-Security-Policy' not in response:
+            csp_policy = getattr(settings, 'CSP_POLICY', (
                 "default-src 'self'; "
-                "img-src 'self' data:; "
+                "script-src 'self' 'unsafe-inline'; "
+                "style-src 'self' 'unsafe-inline'; "
+                "img-src 'self' data: https:; "
                 "media-src 'self'; "
                 "object-src 'none'; "
                 "frame-ancestors 'none'; "
-                "base-uri 'self'"
-            )
+                "base-uri 'self'; "
+                "form-action 'self'"
+            ))
+            response[csp_header] = csp_policy
         
         return response

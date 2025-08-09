@@ -239,6 +239,22 @@ VIDEO_PROCESSING_TIMEOUT = config('VIDEO_PROCESSING_TIMEOUT', default=1800, cast
 WS_MAX_CONNECTIONS_PER_IP = config('WS_MAX_CONNECTIONS_PER_IP', default=20, cast=int)
 WS_HEARTBEAT_INTERVAL = config('WS_HEARTBEAT_INTERVAL', default=30, cast=int)
 
+# Security Headers Configuration
+CSP_REPORT_ONLY = config('CSP_REPORT_ONLY', default=False, cast=bool)  # Enforce CSP in production
+CSP_POLICY = (
+    "default-src 'self'; "
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; "
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+    "font-src 'self' https://fonts.gstatic.com; "
+    "img-src 'self' data: https: blob:; "
+    "media-src 'self' https: blob:; "
+    "connect-src 'self' wss: https:; "
+    "object-src 'none'; "
+    "frame-ancestors 'none'; "
+    "base-uri 'self'; "
+    "form-action 'self'"
+)
+
 # Party Limits
 MAX_PARTY_PARTICIPANTS = config('MAX_PARTY_PARTICIPANTS', default=100, cast=int)
 

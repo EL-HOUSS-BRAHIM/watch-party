@@ -82,3 +82,18 @@ CHANNEL_LAYERS = {
 # Disable Celery for development
 CELERY_TASK_ALWAYS_EAGER = True
 CELERY_TASK_EAGER_PROPAGATES = True
+
+# Security Headers Configuration - Use report-only CSP in development
+CSP_REPORT_ONLY = True  # Report-only in development for easier debugging
+CSP_POLICY = (
+    "default-src 'self'; "
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval'; "
+    "style-src 'self' 'unsafe-inline'; "
+    "img-src 'self' data: https: blob:; "
+    "media-src 'self' https: blob:; "
+    "connect-src 'self' ws: wss: https:; "
+    "object-src 'none'; "
+    "frame-ancestors 'none'; "
+    "base-uri 'self'; "
+    "form-action 'self'"
+)

@@ -48,6 +48,11 @@ CELERY_TASK_EAGER_PROPAGATES = True
 DEBUG = False
 SECRET_KEY = 'test-secret-key'
 CORS_ALLOW_ALL_ORIGINS = True
+TESTING = True  # Mark as testing environment for health checks
+
+# Security Headers Configuration - Disable CSP for tests
+CSP_REPORT_ONLY = True
+CSP_POLICY = "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob:;"
 
 # Media files for tests
 MEDIA_ROOT = BASE_DIR / 'test_media'

@@ -5,6 +5,7 @@ Admin panel URL configuration
 from django.urls import path
 from . import views
 from .health_views import HealthCheckView, DetailedStatusView, MetricsView
+from .metrics_views import PrometheusMetricsView
 
 app_name = 'admin_panel'
 
@@ -50,4 +51,5 @@ urlpatterns = [
     path('health/check/', HealthCheckView.as_view(), name='health_check'),
     path('health/status/', DetailedStatusView.as_view(), name='detailed_status'),
     path('health/metrics/', MetricsView.as_view(), name='metrics'),
+    path('metrics/prometheus/', PrometheusMetricsView.as_view(), name='prometheus_metrics'),
 ]
