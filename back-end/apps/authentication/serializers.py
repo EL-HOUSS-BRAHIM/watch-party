@@ -37,7 +37,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         promo_code = validated_data.pop('promo_code', None)
         
         user = User.objects.create_user(
-            username=validated_data['email'],
             email=validated_data['email'],
             password=validated_data['password'],
             first_name=validated_data['first_name'],

@@ -1,5 +1,7 @@
 # Watch Party Frontend Structure
 
+> **⚠️ DEPLOYMENT UPDATE**: This project now uses a unified deployment system. See the root-level `deploy.sh` script and GitHub Actions workflow for automated CI/CD deployment.
+
 This document provides a comprehensive overview of the Watch Party frontend application structure, including all pages, components, and their organization.
 
 ## 📁 Project Overview

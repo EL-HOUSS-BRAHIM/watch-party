@@ -88,6 +88,13 @@ CSRF_TRUSTED_ORIGINS = config(
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 
+# Add CORS allowed origins from environment
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='https://watch-party.brahim-elhouss.me,https://be-watch-party.brahim-elhouss.me',
+    cast=lambda v: [s.strip() for s in v.split(',')]
+)
+
 # Static files - Use WhiteNoise with compression
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
