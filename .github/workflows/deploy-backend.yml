@@ -1,0 +1,129 @@
+name: Deploy Backend to Production
+
+on:
+  push:
+    branches: [ backend-hardening-sprint, main ]
+    paths:
+      - 'back-end/**'
+      - '.github/workflows/deploy-backend.yml'
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Force deployment even if no backend changes'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.modified, 'back-end/') || contains(github.event.head_commit.added, 'back-end/') || contains(github.event.head_commit.removed, 'back-end/')
+    
+    steps:
+    - name: 🛎️ Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
+    - name: 📊 Check for backend changes
+      id: changes
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.force_deploy }}" == "true" ]]; then
+          echo "has_backend_changes=true" >> $GITHUB_OUTPUT
+          echo "Force deployment requested"
+        elif git diff HEAD^ HEAD --name-only | grep -q "^back-end/"; then
+          echo "has_backend_changes=true" >> $GITHUB_OUTPUT
+          echo "Backend changes detected"
+        else
+          echo "has_backend_changes=false" >> $GITHUB_OUTPUT
+          echo "No backend changes detected"
+        fi
+
+    - name: 🔧 Setup SSH Key
+      if: steps.changes.outputs.has_backend_changes == 'true'
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+        ssh-keyscan -H ${{ secrets.SERVER_IP }} >> ~/.ssh/known_hosts
+
+    - name: 🧪 Test Server Connection
+      if: steps.changes.outputs.has_backend_changes == 'true'
+      run: |
+        ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "echo 'Connection successful'"
+
+    - name: 📦 Deploy Backend
+      if: steps.changes.outputs.has_backend_changes == 'true'
+      run: |
+        # Create deployment script
+        cat > deploy.sh << 'EOF'
+        #!/bin/bash
+        set -e
+        
+        SERVER_IP="${{ secrets.SERVER_IP }}"
+        SERVER_USER="ubuntu"
+        DEPLOY_KEY="~/.ssh/deploy_key"
+        REMOTE_DIR="/home/ubuntu/brahim"
+        APP_DIR="be_watch-party"
+        BRANCH="${{ github.ref_name }}"
+        
+        echo "🔄 Starting deployment to production server..."
+        
+        # Function to run commands on remote server
+        run_remote() {
+            ssh -i "$DEPLOY_KEY" -o StrictHostKeyChecking=no "$SERVER_USER@$SERVER_IP" "$1"
+        }
+        
+        echo "📋 Step 1: Pulling latest code..."
+        run_remote "cd $REMOTE_DIR/$APP_DIR && git fetch origin && git checkout $BRANCH && git pull origin $BRANCH"
+        
+        echo "📋 Step 2: Copying backend files..."
+        run_remote "cd $REMOTE_DIR/$APP_DIR && if [ -d 'back-end' ]; then cp -r back-end/* . && rm -rf back-end front-end; fi"
+        
+        echo "📋 Step 3: Updating Python dependencies..."
+        run_remote "cd $REMOTE_DIR/$APP_DIR && source venv/bin/activate && pip install -r requirements.txt"
+        
+        echo "📋 Step 4: Running database migrations..."
+        run_remote "cd $REMOTE_DIR/$APP_DIR && source venv/bin/activate && python manage.py migrate"
+        
+        echo "📋 Step 5: Collecting static files..."
+        run_remote "cd $REMOTE_DIR/$APP_DIR && source venv/bin/activate && python manage.py collectstatic --noinput"
+        
+        echo "📋 Step 6: Setting permissions..."
+        run_remote "cd $REMOTE_DIR && chown -R ubuntu:ubuntu $APP_DIR"
+        
+        echo "📋 Step 7: Restarting services..."
+        run_remote "sudo systemctl restart daphne celery"
+        run_remote "sudo systemctl reload nginx"
+        
+        echo "📋 Step 8: Verifying deployment..."
+        sleep 5
+        run_remote "sudo systemctl is-active daphne && echo 'Daphne: ✅ Running'"
+        run_remote "sudo systemctl is-active celery && echo 'Celery: ✅ Running'"
+        run_remote "sudo systemctl is-active nginx && echo 'Nginx: ✅ Running'"
+        
+        # Health check
+        run_remote "curl -f http://localhost:8000/health/ || echo 'Health check failed'"
+        
+        echo "✅ Deployment completed successfully!"
+        EOF
+        
+        chmod +x deploy.sh
+        ./deploy.sh
+
+    - name: 🧹 Cleanup
+      if: always()
+      run: |
+        rm -f ~/.ssh/deploy_key
+        rm -f deploy.sh
+
+    - name: 📢 Deployment Status
+      if: steps.changes.outputs.has_backend_changes == 'true'
+      run: |
+        echo "🎉 Backend deployment completed successfully!"
+        echo "🌐 Application is available at: https://be-watch-party.brahim-elhouss.me"
+        
+    - name: 📢 No Changes
+      if: steps.changes.outputs.has_backend_changes == 'false'
+      run: |
+        echo "ℹ️ No backend changes detected. Skipping deployment."
