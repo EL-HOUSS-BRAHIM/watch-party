@@ -149,13 +149,13 @@ export default function FeedbackPage() {
     showMyFeedback: false
   })
 
-  const submitForm = useForm<z.infer<typeof feedbackSchema>>({
+  const submitForm = useForm({
     resolver: zodResolver(feedbackSchema),
     defaultValues: {
       title: "",
       description: "",
-      category: "bug",
-      priority: "medium",
+      category: "bug" as const,
+      priority: "medium" as const,
       is_public: true,
       tags: "",
     },
@@ -724,7 +724,7 @@ export default function FeedbackPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={submitForm.handleSubmit(submitFeedback)} className="space-y-6">
+                <form onSubmit={submitForm.handleSubmit((data) => submitFeedback(data as z.infer<typeof feedbackSchema>))} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm font-medium mb-2 block">Category *</label>

@@ -10,6 +10,11 @@ import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { messagingAPI } from "@/lib/api"
+import type {
+  Message as APIMessage,
+  Conversation as APIConversation,
+  PaginatedResponse
+} from "@/lib/api/types"
 import {
   MessageCircle,
   Send,
@@ -76,6 +81,36 @@ interface OnlineUser {
   avatar?: string
   isOnline: boolean
 }
+  const loadConversations = async () => {
+    try {
+      const data = await messagingAPI.getConversations()
+      const adaptedConversations = (data.results || []).map(adaptConversation)
+      setConversations(adaptedConversations)
+  content: apiMessage.content,
+  type: (apiMessage.message_type as Message['type']) || "text",
+  senderId: apiMessage.sender.id,
+  conversationId: apiMessage.conversation.toString(),
+  createdAt: apiMessage.sent_at,
+  isRead: apiMessage.is_read,
+})
+
+const adaptConversation = (apiConv: APIConversation): Conversation => ({
+  id: apiConv.id.toString(),
+  type: "direct", // Default since API type is different  
+  const loadMessages = async (conversationId: string) => {
+    try {
+      const data = await messagingAPI.getMessages(conversationId)
+      const adaptedMessages = (data.results || []).map(adaptMessage)
+      setMessages(adaptedMessages)
+    lastName: p.last_name || p.lastName || '',
+    avatar: p.avatar,
+    isOnline: false, // Default
+  })),
+  lastMessage: apiConv.last_message ? adaptMessage(apiConv.last_message) : undefined,
+  unreadCount: apiConv.unread_count,
+  createdAt: apiConv.created_at,
+  updatedAt: apiConv.updated_at,
+})
 
 export default function MessagesPage() {
   const { user } = useAuth()
@@ -104,19 +139,20 @@ export default function MessagesPage() {
       markConversationAsRead(selectedConversation.id)
     }
   }, [selectedConversation])
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
-  const loadConversations = async () => {
-    try {
-      const data = await messagingAPI.getConversations()
-      setConversations(data.results || data.conversations || [])
+      const data = await messagingAPI.sendMessage(selectedConversation.id, {
+        content: messageContent,
+        type: "text",
+      })
+      
+      const adaptedMessage = adaptMessage(data)
+      setMessages(prev => [...prev, adaptedMessage])
+      
+      // Update conversation with last message
+      setConversations(prev => prev.map(conv => 
+        conv.id === selectedConversation.id 
+          ? { ...conv, lastMessage: adaptedMessage, updatedAt: adaptedMessage.createdAt }
+          : conv
+      ))tConversations(data.results || data.conversations || [])
     } catch (error) {
       console.error("Failed to load conversations:", error)
       toast({
@@ -196,17 +232,18 @@ export default function MessagesPage() {
       setIsSending(false)
     }
   }
-
-  const startDirectMessage = async (userId: string) => {
-    try {
       const data = await messagingAPI.createConversation({
         type: "direct",
         participants: [userId],
       })
       
+      const adaptedConversation = adaptConversation(data)
       setConversations(prev => {
-        const exists = prev.find(conv => conv.id === data.id)
+        const exists = prev.find(conv => conv.id === adaptedConversation.id)
         if (exists) return prev
+        return [adaptedConversation, ...prev]
+      })
+      setSelectedConversation(adaptedConversation)
         return [data, ...prev]
       })
       setSelectedConversation(data)

@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react"
 import { VideoPlayer } from "@/components/video/video-player"
-import jest from "jest" // Import jest to fix the undeclared variable error
+import { jest } from "@jest/globals" // Import jest globals
 
 // Mock HTML5 video element
 Object.defineProperty(HTMLMediaElement.prototype, "play", {

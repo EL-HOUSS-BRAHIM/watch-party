@@ -112,7 +112,7 @@ export default function AdminBroadcastSystem() {
         title: log.message?.split(':')[0] || 'Broadcast Message',
         content: log.message || 'No content available',
         type: 'announcement' as const,
-        channels: ['in-app'] as const,
+        channels: ['in-app'] as ('in-app' | 'email' | 'push' | 'sms')[],
         targetAudience: { type: 'all' as const },
         scheduling: { sendNow: true, timezone: 'UTC' },
         status: 'sent' as const,

@@ -1,7 +1,7 @@
 import type React from "react"
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import { LoginForm } from "@/components/auth/login-form"
-import jest from "jest" // Import jest to declare the variable
+import { jest } from "@jest/globals" // Import jest globals
 
 // Mock the auth context
 const mockLogin = jest.fn()
@@ -73,16 +73,23 @@ describe("LoginForm", () => {
   })
 
   it("shows loading state during submission", async () => {
-    // Mock loading state
-    jest.mocked(require("@/contexts/auth-context").useAuth).mockReturnValue({
+    // Mock loading state - create a new mock for this test
+    const mockUseAuth = jest.fn().mockReturnValue({
       login: mockLogin,
       loading: true,
       error: null,
     })
+    
+    // Temporarily override the mock
+    const originalMock = require("@/contexts/auth-context").useAuth
+    require("@/contexts/auth-context").useAuth = mockUseAuth
 
     render(<LoginForm />)
 
     const submitButton = screen.getByRole("button", { name: /signing in/i })
     expect(submitButton).toBeDisabled()
+    
+    // Restore original mock
+    require("@/contexts/auth-context").useAuth = originalMock
   })
 })

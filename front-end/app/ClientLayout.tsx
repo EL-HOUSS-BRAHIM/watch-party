@@ -52,7 +52,7 @@ export default function ClientLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
       </head>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider enableSystem disableTransitionOnChange>
           <AuthProvider>
             <SocketProvider>
               {children}

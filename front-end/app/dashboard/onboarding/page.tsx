@@ -137,7 +137,7 @@ export default function OnboardingPage() {
     }
   })
 
-  const socialForm = useForm<SocialFormData>({
+  const socialForm = useForm({
     resolver: zodResolver(socialSchema),
     defaultValues: {
       allowFriendRequests: true,
@@ -528,7 +528,7 @@ export default function OnboardingPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={socialForm.handleSubmit(onSocialSubmit)} className="space-y-6">
+              <form onSubmit={socialForm.handleSubmit((data) => onSocialSubmit(data as SocialFormData))} className="space-y-6">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div>

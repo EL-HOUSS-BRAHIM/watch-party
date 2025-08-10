@@ -1,8 +1,15 @@
 import axios from "axios"
-import jest from "jest" // Declare the jest variable
+import { jest } from "@jest/globals" // Import jest globals
+import type { AxiosInstance } from "axios"
 
 jest.mock("axios")
-const mockedAxios = axios as jest.Mocked<typeof axios>
+const mockedAxios = axios as jest.MockedFunction<typeof axios> & {
+  create: jest.MockedFunction<typeof axios.create>
+  interceptors: {
+    request: { use: jest.MockedFunction<any> }
+    response: { use: jest.MockedFunction<any> }
+  }
+}
 
 describe("API Client", () => {
   beforeEach(() => {

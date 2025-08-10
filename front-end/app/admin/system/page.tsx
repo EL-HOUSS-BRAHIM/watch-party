@@ -103,8 +103,8 @@ export default function SystemMonitoring() {
             percentage: healthMetrics.disk_usage || 0
           },
           network: {
-            inbound: healthMetrics.network_in || 0,
-            outbound: healthMetrics.network_out || 0
+            inbound: 0, // Network metrics not available in current API
+            outbound: 0 // Network metrics not available in current API
           },
           database: {
             connections: healthMetrics.active_connections || 0,

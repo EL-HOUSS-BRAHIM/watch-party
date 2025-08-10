@@ -50,6 +50,7 @@ export interface User {
   username?: string
   firstName?: string
   lastName?: string
+  twoFactorEnabled?: boolean  // Add 2FA property
   subscription?: {           // Add subscription object for billing plans
     plan: 'free' | 'premium' | 'pro'
     status: 'active' | 'inactive' | 'expired'

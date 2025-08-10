@@ -3,20 +3,22 @@ import { VideoDetails } from "@/components/videos/video-details"
 import { VideoComments } from "@/components/videos/video-comments"
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-export default function VideoPage({ params }: PageProps) {
+export default async function VideoPage({ params }: PageProps) {
+  const resolvedParams = await params
+  
   return (
     <div className="container mx-auto py-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
-          <VideoPlayer videoId={params.id} />
-          <VideoDetails videoId={params.id} />
-          <VideoComments videoId={params.id} />
+          <VideoPlayer videoId={resolvedParams.id} />
+          <VideoDetails videoId={resolvedParams.id} />
+          <VideoComments videoId={resolvedParams.id} />
         </div>
         
         {/* Sidebar */}

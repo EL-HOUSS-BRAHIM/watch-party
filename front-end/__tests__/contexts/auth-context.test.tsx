@@ -12,7 +12,7 @@ function TestComponent() {
     <div>
       <div data-testid="user">{user ? user.email : "No user"}</div>
       <div data-testid="loading">{loading ? "Loading" : "Not loading"}</div>
-      <button onClick={() => login({ email: "test@example.com", password: "password" })}>Login</button>
+      <button onClick={() => login("test@example.com", "password")}>Login</button>
       <button onClick={logout}>Logout</button>
     </div>
   )

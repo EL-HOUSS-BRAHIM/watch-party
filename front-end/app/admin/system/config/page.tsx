@@ -404,7 +404,7 @@ export default function SystemConfiguration() {
   };
 
   const exportConfiguration = () => {
-    const config = {};
+    const config: Record<string, any> = {};
     configSections.forEach(section => {
       section.settings.forEach(setting => {
         config[setting.id] = setting.value;

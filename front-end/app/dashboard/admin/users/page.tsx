@@ -69,7 +69,7 @@ interface AdminUser {
 
 interface UserAction {
   id: string
-  type: "ban" | "unban" | "suspend" | "unsuspend" | "delete"
+  type: "ban" | "unban" | "suspend" | "unsuspend" | "delete" | "verify"
   reason?: string
   duration?: number // in days
   notifyUser?: boolean
@@ -82,7 +82,7 @@ export default function UserManagementPage() {
 
   const [users, setUsers] = useState<AdminUser[]>([])
   const [filteredUsers, setFilteredUsers] = useState<AdminUser[]>([])
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
+  const [selectedUsers, setSelectedUsers] = useState<AdminUser[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
@@ -130,7 +130,32 @@ export default function UserManagementPage() {
         page: 1, // You can add pagination later
       })
       
-      setUsers(data.results || [])
+      // Transform User data to AdminUser format
+      const transformedUsers: AdminUser[] = (data.results || []).map((user: any) => ({
+        id: user.id,
+        username: user.username || user.email,
+        email: user.email,
+        firstName: user.first_name || user.firstName || '',
+        lastName: user.last_name || user.lastName || '',
+        avatar: user.avatar,
+        isVerified: user.isVerified || false,
+        isPremium: user.is_premium || false,
+        isActive: true, // Default value since not in API
+        isBanned: false, // Default value since not in API
+        role: (user.is_staff ? 'admin' : user.is_superuser ? 'admin' : 'user') as 'user' | 'moderator' | 'admin',
+        joinedAt: user.date_joined,
+        lastActive: user.last_login,
+        stats: {
+          partiesHosted: 0, // Default values since not in API
+          partiesJoined: 0,
+          videosUploaded: 0,
+          friendsCount: 0,
+          totalWatchTime: 0
+        },
+        subscription: user.subscription
+      }))
+      
+      setUsers(transformedUsers)
       // setStats would need to be extracted from the response or fetched separately
     } catch (error) {
       console.error("Failed to load users:", error)
@@ -275,7 +300,7 @@ export default function UserManagementPage() {
     }
   }
 
-  const getStatusBadge = (user: User) => {
+  const getStatusBadge = (user: AdminUser) => {
     if (user.isBanned) {
       return <Badge variant="destructive">Banned</Badge>
     }
@@ -421,7 +446,7 @@ export default function UserManagementPage() {
       label: "Ban User",
       icon: <Ban className="w-4 h-4" />,
       onClick: (user: AdminUser) => {
-        setSelectedUsers([user.id])
+        setSelectedUsers([user])
         handleBulkAction("ban")
       },
       condition: (user: AdminUser) => !user.isBanned,
@@ -431,7 +456,7 @@ export default function UserManagementPage() {
       label: "Unban User",
       icon: <Unlock className="w-4 h-4" />,
       onClick: (user: AdminUser) => {
-        setSelectedUsers([user.id])
+        setSelectedUsers([user])
         handleBulkAction("unban")
       },
       condition: (user: AdminUser) => user.isBanned,
@@ -626,7 +651,7 @@ export default function UserManagementPage() {
           actions={tableActions}
           selectable
           selectedRows={selectedUsers}
-          onSelectionChange={(selection: string[]) => setSelectedUsers(selection)}
+          onSelectionChange={(selection: AdminUser[]) => setSelectedUsers(selection)}
           pagination={{
             page: 1,
             pageSize: 25,
@@ -719,7 +744,7 @@ export default function UserManagementPage() {
                           duration: actionDuration,
                           notifyUser,
                         },
-                        selectedUsers,
+                        selectedUsers.map(u => u.id),
                       )
                     }
                   }}
