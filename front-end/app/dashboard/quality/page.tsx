@@ -136,8 +136,8 @@ const QualityPage = () => {
       // Transform logs to quality tests and issues
       if (systemLogs.results) {
         const tests: QualityTest[] = systemLogs.results.slice(0, 10).map((log: Record<string, unknown>, index: number) => ({
-          id: log.id || `test-${index}`,
-          name: log.message?.substring(0, 50) || `Quality Test ${index + 1}`,
+          id: String(log.id) || `test-${index}`,
+          name: log.message?.toString().substring(0, 50) || `Quality Test ${index + 1}`,
           type: "automated" as const,
           status: log.level === 'error' ? 'failed' : 'passed',
           priority: log.level === 'error' ? 'high' : 'medium',
@@ -151,9 +151,9 @@ const QualityPage = () => {
         // Transform error logs to issues
         const errorLogs = systemLogs.results.filter((log: Record<string, unknown>) => log.level === 'error')
         const transformedIssues: Issue[] = errorLogs.slice(0, 5).map((log: Record<string, unknown>, index: number) => ({
-          id: log.id || `issue-${index}`,
-          title: log.message?.substring(0, 60) || `Quality Issue ${index + 1}`,
-          description: log.message || 'No description available',
+          id: String(log.id) || `issue-${index}`,
+          title: log.message?.toString().substring(0, 60) || `Quality Issue ${index + 1}`,
+          description: log.message?.toString() || 'No description available',
           severity: 'medium' as const,
           status: 'open' as const,
           createdAt: new Date(log.timestamp || Date.now())
