@@ -217,3 +217,5 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
     </div>
   )
 }
+
+export default EmojiGifPicker

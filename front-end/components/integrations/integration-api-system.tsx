@@ -21,6 +21,7 @@ import { useToast } from "@/hooks/use-toast"
 import { integrationsAPI } from "@/lib/api"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism"
+import type { ReactElement } from "react"
 import {
   Key,
   Plus,
@@ -865,13 +866,15 @@ curl -X POST https://api.watchparty.com/v1/parties \\
                     {Object.entries(sampleCode).map(([language, code]) => (
                       <TabsContent key={language} value={language}>
                         <div className="relative">
-                          <SyntaxHighlighter
-                            language={language === "curl" ? "bash" : language}
-                            style={tomorrow}
-                            className="rounded-lg"
-                          >
-                            {code}
-                          </SyntaxHighlighter>
+                          {(SyntaxHighlighter as any) && (
+                            <SyntaxHighlighter
+                              language={language === "curl" ? "bash" : language}
+                              style={tomorrow}
+                              className="rounded-lg"
+                            >
+                              {code}
+                            </SyntaxHighlighter>
+                          )}
                           <Button
                             variant="outline"
                             size="sm"

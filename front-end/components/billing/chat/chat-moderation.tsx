@@ -640,3 +640,5 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
     </Card>
   )
 }
+
+export default ChatModeration

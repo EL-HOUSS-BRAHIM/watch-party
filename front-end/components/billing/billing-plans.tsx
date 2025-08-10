@@ -21,7 +21,7 @@ interface BillingPlan {
   description?: string
 }
 
-export default function BillingPlans() {
+export function BillingPlans() {
   const [plans, setPlans] = useState<BillingPlan[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [subscribing, setSubscribing] = useState<string | null>(null)
@@ -144,3 +144,5 @@ export default function BillingPlans() {
     </div>
   )
 }
+
+export default BillingPlans

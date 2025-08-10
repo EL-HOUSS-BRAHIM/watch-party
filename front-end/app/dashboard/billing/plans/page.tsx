@@ -1,4 +1,4 @@
-import { BillingPlans } from "@/components/billing/billing-plans"
+import BillingPlans from "@/components/billing/billing-plans"
 
 export default function BillingPlansPage() {
   return (
