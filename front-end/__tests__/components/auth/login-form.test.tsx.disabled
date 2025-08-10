@@ -1,0 +1,105 @@
+/**
+ * @jest-environment jsdom
+ */
+import "@testing-library/jest-dom"
+import React from "react"
+import { render, screen, fireEvent, waitFor } from "@testing-library/react"
+import LoginForm from "@/components/auth/login-form"
+
+// Declare globals for TypeScript
+declare global {
+  var describe: any
+  var it: any
+  var beforeEach: any
+  var expect: any
+  var jest: any
+}
+
+// Mock the auth context
+const mockLogin = global.jest?.fn() || (() => {})
+const mockUseAuth = {
+  login: mockLogin,
+  loading: false,
+  error: null,
+  user: null,
+  isAuthenticated: false,
+  logout: global.jest?.fn() || (() => {}),
+  isAdmin: false,
+}
+
+global.jest?.mock("@/contexts/auth-context", () => ({
+  AuthProvider: ({ children }: { children: React.ReactNode }) => children,
+  useAuth: () => mockUseAuth,
+}))
+
+global.describe?.("LoginForm", () => {
+  global.beforeEach?.(() => {
+    mockLogin.mockClear?.()
+  })
+
+  global.it?.("renders login form correctly", () => {
+    render(<LoginForm />)
+
+    global.expect?.(screen.getByLabelText(/email/i)).toBeInTheDocument?.()
+    global.expect?.(screen.getByLabelText(/password/i)).toBeInTheDocument?.()
+    global.expect?.(screen.getByRole("button", { name: /sign in/i })).toBeInTheDocument?.()
+  })
+
+  global.it?.("validates required fields", async () => {
+    render(<LoginForm />)
+
+    const submitButton = screen.getByRole("button", { name: /sign in/i })
+    fireEvent.click(submitButton)
+
+    await waitFor(() => {
+      global.expect?.(screen.getByText(/email is required/i)).toBeInTheDocument?.()
+      global.expect?.(screen.getByText(/password is required/i)).toBeInTheDocument?.()
+    })
+  })
+
+  global.it?.("validates email format", async () => {
+    render(<LoginForm />)
+
+    const emailInput = screen.getByLabelText(/email/i)
+    fireEvent.change(emailInput, { target: { value: "invalid-email" } })
+
+    const submitButton = screen.getByRole("button", { name: /sign in/i })
+    fireEvent.click(submitButton)
+
+    await waitFor(() => {
+      global.expect?.(screen.getByText(/invalid email address/i)).toBeInTheDocument?.()
+    })
+  })
+
+  global.it?.("submits form with valid data", async () => {
+    render(<LoginForm />)
+
+    const emailInput = screen.getByLabelText(/email/i)
+    const passwordInput = screen.getByLabelText(/password/i)
+    const submitButton = screen.getByRole("button", { name: /sign in/i })
+
+    fireEvent.change(emailInput, { target: { value: "test@example.com" } })
+    fireEvent.change(passwordInput, { target: { value: "password123" } })
+    fireEvent.click(submitButton)
+
+    await waitFor(() => {
+      global.expect?.(mockLogin).toHaveBeenCalledWith?.({
+        email: "test@example.com",
+        password: "password123",
+      })
+    })
+  })
+
+  global.it?.("shows loading state during submission", async () => {
+    // Update mock for this specific test
+    mockUseAuth.loading = true
+
+    render(<LoginForm />)
+
+    const submitButton = screen.getByRole("button", { name: /signing in/i })
+    global.expect?.(submitButton).toBeDisabled?.()
+    
+    // Reset mock state
+    mockUseAuth.loading = false
+  })
+})

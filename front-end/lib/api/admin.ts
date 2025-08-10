@@ -72,7 +72,7 @@ export class AdminAPI {
    */
   async bulkUserAction(data: {
     user_ids: string[]
-    action: 'suspend' | 'unsuspend' | 'ban' | 'unban' | 'delete'
+    action: 'suspend' | 'unsuspend' | 'ban' | 'unban' | 'delete' | 'verify'
     reason?: string
   }): Promise<APIResponse> {
     return apiClient.post<APIResponse>(API_ENDPOINTS.admin.bulkUserAction, data)

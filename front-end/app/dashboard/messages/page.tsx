@@ -1,40 +1,15 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { messagingAPI } from "@/lib/api"
 import type {
   Message as APIMessage,
   Conversation as APIConversation,
-  PaginatedResponse
+  PaginatedResponse,
+  User
 } from "@/lib/api/types"
-import {
-  MessageCircle,
-  Send,
-  Search,
-  MoreVertical,
-  Phone,
-  Video,
-  Info,
-  Smile,
-  Paperclip,
-  Image,
-  Mic,
-  Users,
-  Plus,
-  X,
-  Check,
-  CheckCheck,
-  Circle,
-} from "lucide-react"
-import { formatDistanceToNow, format, isToday, isYesterday } from "date-fns"
 
 interface Message {
   id: string
@@ -44,28 +19,18 @@ interface Message {
   conversationId: string
   createdAt: string
   isRead: boolean
-  replyTo?: string
-  attachments?: Array<{
-    id: string
-    name: string
-    url: string
-    type: string
-    size: number
-  }>
 }
 
 interface Conversation {
   id: string
+  name: string
   type: "direct" | "group"
-  name?: string
   participants: Array<{
     id: string
-    username: string
     firstName: string
     lastName: string
     avatar?: string
     isOnline: boolean
-    lastSeen?: string
   }>
   lastMessage?: Message
   unreadCount: number
@@ -75,17 +40,14 @@ interface Conversation {
 
 interface OnlineUser {
   id: string
-  username: string
   firstName: string
   lastName: string
   avatar?: string
   isOnline: boolean
 }
-  const loadConversations = async () => {
-    try {
-      const data = await messagingAPI.getConversations()
-      const adaptedConversations = (data.results || []).map(adaptConversation)
-      setConversations(adaptedConversations)
+
+const adaptMessage = (apiMessage: APIMessage): Message => ({
+  id: apiMessage.id,
   content: apiMessage.content,
   type: (apiMessage.message_type as Message['type']) || "text",
   senderId: apiMessage.sender.id,
@@ -96,15 +58,14 @@ interface OnlineUser {
 
 const adaptConversation = (apiConv: APIConversation): Conversation => ({
   id: apiConv.id.toString(),
-  type: "direct", // Default since API type is different  
-  const loadMessages = async (conversationId: string) => {
-    try {
-      const data = await messagingAPI.getMessages(conversationId)
-      const adaptedMessages = (data.results || []).map(adaptMessage)
-      setMessages(adaptedMessages)
-    lastName: p.last_name || p.lastName || '',
-    avatar: p.avatar,
-    isOnline: false, // Default
+  name: `Conversation ${apiConv.id}`,
+  type: "direct",
+  participants: (apiConv.participants || []).map(p => ({
+    id: p.id,
+    firstName: p.first_name || '',
+    lastName: p.last_name || '',
+    avatar: p.avatar || undefined,
+    isOnline: false,
   })),
   lastMessage: apiConv.last_message ? adaptMessage(apiConv.last_message) : undefined,
   unreadCount: apiConv.unread_count,
@@ -115,44 +76,29 @@ const adaptConversation = (apiConv: APIConversation): Conversation => ({
 export default function MessagesPage() {
   const { user } = useAuth()
   const { toast } = useToast()
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState("")
-  const [searchQuery, setSearchQuery] = useState("")
-  const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isSending, setIsSending] = useState(false)
-  const [showUserSearch, setShowUserSearch] = useState(false)
 
   useEffect(() => {
     loadConversations()
-    loadOnlineUsers()
   }, [])
 
   useEffect(() => {
     if (selectedConversation) {
       loadMessages(selectedConversation.id)
-      markConversationAsRead(selectedConversation.id)
     }
   }, [selectedConversation])
-      const data = await messagingAPI.sendMessage(selectedConversation.id, {
-        content: messageContent,
-        type: "text",
-      })
-      
-      const adaptedMessage = adaptMessage(data)
-      setMessages(prev => [...prev, adaptedMessage])
-      
-      // Update conversation with last message
-      setConversations(prev => prev.map(conv => 
-        conv.id === selectedConversation.id 
-          ? { ...conv, lastMessage: adaptedMessage, updatedAt: adaptedMessage.createdAt }
-          : conv
-      ))tConversations(data.results || data.conversations || [])
+
+  const loadConversations = async () => {
+    try {
+      const data = await messagingAPI.getConversations()
+      const adaptedConversations = (data.results || []).map(adaptConversation)
+      setConversations(adaptedConversations)
     } catch (error) {
       console.error("Failed to load conversations:", error)
       toast({
@@ -168,7 +114,8 @@ export default function MessagesPage() {
   const loadMessages = async (conversationId: string) => {
     try {
       const data = await messagingAPI.getMessages(conversationId)
-      setMessages(data.results || data.messages || [])
+      const adaptedMessages = (data.results || []).map(adaptMessage)
+      setMessages(adaptedMessages)
     } catch (error) {
       console.error("Failed to load messages:", error)
       toast({
@@ -179,28 +126,12 @@ export default function MessagesPage() {
     }
   }
 
-  const loadOnlineUsers = async () => {
-    try {
-      const data = await messagingAPI.getOnlineFriends()
-      setOnlineUsers(data || [])
-    } catch (error) {
-      console.error("Failed to load online users:", error)
+  const sendMessage = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!newMessage.trim() || !selectedConversation || isSending) {
+      return
     }
-  }
-
-  const markConversationAsRead = async (conversationId: string) => {
-    try {
-      await messagingAPI.markConversationAsRead(conversationId)
-      setConversations(prev => prev.map(conv => 
-        conv.id === conversationId ? { ...conv, unreadCount: 0 } : conv
-      ))
-    } catch (error) {
-      console.error("Failed to mark conversation as read:", error)
-    }
-  }
-
-  const sendMessage = async () => {
-    if (!newMessage.trim() || !selectedConversation || isSending) return
 
     setIsSending(true)
     const messageContent = newMessage.trim()
@@ -212,17 +143,17 @@ export default function MessagesPage() {
         type: "text",
       })
       
-      setMessages(prev => [...prev, data])
+      const adaptedMessage = adaptMessage(data)
+      setMessages(prev => [...prev, adaptedMessage])
       
-      // Update conversation with last message
       setConversations(prev => prev.map(conv => 
         conv.id === selectedConversation.id 
-          ? { ...conv, lastMessage: data, updatedAt: data.createdAt }
+          ? { ...conv, lastMessage: adaptedMessage, updatedAt: adaptedMessage.createdAt }
           : conv
       ))
     } catch (error) {
       console.error("Failed to send message:", error)
-      setNewMessage(messageContent) // Restore message on failure
+      setNewMessage(messageContent)
       toast({
         title: "Error",
         description: "Failed to send message. Please try again.",
@@ -232,213 +163,63 @@ export default function MessagesPage() {
       setIsSending(false)
     }
   }
-      const data = await messagingAPI.createConversation({
-        type: "direct",
-        participants: [userId],
-      })
-      
-      const adaptedConversation = adaptConversation(data)
-      setConversations(prev => {
-        const exists = prev.find(conv => conv.id === adaptedConversation.id)
-        if (exists) return prev
-        return [adaptedConversation, ...prev]
-      })
-      setSelectedConversation(adaptedConversation)
-        return [data, ...prev]
-      })
-      setSelectedConversation(data)
-      setShowUserSearch(false)
-    } catch (error) {
-      console.error("Failed to start direct message:", error)
-      toast({
-        title: "Error",
-        description: "Failed to start conversation. Please try again.",
-        variant: "destructive",
-      })
-    }
+
+  if (!user) {
+    return <div className="p-4">Please log in to access messages.</div>
   }
-
-  const formatMessageTime = (createdAt: string) => {
-    const date = new Date(createdAt)
-    if (isToday(date)) {
-      return format(date, "HH:mm")
-    } else if (isYesterday(date)) {
-      return `Yesterday ${format(date, "HH:mm")}`
-    } else {
-      return format(date, "MMM d, HH:mm")
-    }
-  }
-
-  const getConversationName = (conversation: Conversation) => {
-    if (conversation.type === "group" && conversation.name) {
-      return conversation.name
-    }
-    
-    const otherParticipant = conversation.participants.find(p => p.id !== user?.id)
-    if (otherParticipant) {
-      return `${otherParticipant.firstName} ${otherParticipant.lastName}`
-    }
-    
-    return "Unknown"
-  }
-
-  const getConversationAvatar = (conversation: Conversation) => {
-    if (conversation.type === "group") {
-      return "/placeholder-group.jpg"
-    }
-    
-    const otherParticipant = conversation.participants.find(p => p.id !== user?.id)
-    return otherParticipant?.avatar || "/placeholder-user.jpg"
-  }
-
-  const isOnline = (conversation: Conversation) => {
-    if (conversation.type === "group") return false
-    
-    const otherParticipant = conversation.participants.find(p => p.id !== user?.id)
-    return otherParticipant?.isOnline || false
-  }
-
-  const filteredConversations = conversations.filter(conv => 
-    getConversationName(conv).toLowerCase().includes(searchQuery.toLowerCase())
-  )
-
-  const filteredOnlineUsers = onlineUsers.filter(user => 
-    `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.username.toLowerCase().includes(searchQuery.toLowerCase())
-  )
 
   return (
-    <div className="h-screen flex bg-gray-50">
+    <div className="flex h-[calc(100vh-4rem)] bg-gray-50">
       {/* Sidebar */}
-      <div className="w-80 bg-white border-r flex flex-col">
-        {/* Header */}
+      <div className="w-80 border-r bg-white">
         <div className="p-4 border-b">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-xl font-bold flex items-center gap-2">
-              <MessageCircle className="h-6 w-6" />
-              Messages
-            </h1>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setShowUserSearch(!showUserSearch)}
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {/* Search */}
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Search conversations..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
+          <h2 className="text-lg font-semibold">Messages</h2>
         </div>
 
-        {/* Online Users */}
-        {(showUserSearch || searchQuery) && (
-          <div className="p-4 border-b">
-            <h3 className="text-sm font-medium text-gray-700 mb-3">Start New Conversation</h3>
-            <div className="space-y-2 max-h-40 overflow-y-auto">
-              {filteredOnlineUsers.map((onlineUser) => (
-                <div 
-                  key={onlineUser.id}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
-                  onClick={() => startDirectMessage(onlineUser.id)}
-                >
-                  <div className="relative">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={onlineUser.avatar || "/placeholder-user.jpg"} />
-                      <AvatarFallback className="text-sm">
-                        {onlineUser.firstName[0]}{onlineUser.lastName[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    {onlineUser.isOnline && (
-                      <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium truncate">
-                      {onlineUser.firstName} {onlineUser.lastName}
-                    </p>
-                    <p className="text-xs text-gray-500">@{onlineUser.username}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Conversations */}
         <div className="flex-1 overflow-y-auto">
           {isLoading ? (
-            <div className="p-4 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-2"></div>
-              <p className="text-sm text-gray-600">Loading conversations...</p>
+            <div className="p-4 text-center text-gray-500">
+              Loading conversations...
             </div>
-          ) : filteredConversations.length > 0 ? (
+          ) : conversations.length > 0 ? (
             <div className="space-y-1 p-2">
-              {filteredConversations.map((conversation) => (
+              {conversations.map(conversation => (
                 <div
                   key={conversation.id}
-                  className={`p-3 rounded-lg cursor-pointer transition-colors ${
-                    selectedConversation?.id === conversation.id
-                      ? "bg-blue-100 border-blue-200"
-                      : "hover:bg-gray-100"
+                  className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-gray-100 ${
+                    selectedConversation?.id === conversation.id ? 'bg-blue-50' : ''
                   }`}
                   onClick={() => setSelectedConversation(conversation)}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="relative">
-                      <Avatar className="w-12 h-12">
-                        <AvatarImage src={getConversationAvatar(conversation)} />
-                        <AvatarFallback>
-                          {conversation.type === "group" ? "G" : getConversationName(conversation)[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                      {isOnline(conversation) && (
-                        <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
-                      )}
+                  <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+                    {conversation.participants[0]?.firstName[0] || 'U'}
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium truncate">
+                        {conversation.name}
+                      </p>
                     </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-medium truncate">{getConversationName(conversation)}</h3>
-                        {conversation.lastMessage && (
-                          <span className="text-xs text-gray-500">
-                            {formatDistanceToNow(new Date(conversation.lastMessage.createdAt), { addSuffix: true })}
-                          </span>
-                        )}
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm text-gray-600 truncate">
-                          {conversation.lastMessage?.content || "No messages yet"}
-                        </p>
-                        {conversation.unreadCount > 0 && (
-                          <Badge variant="default" className="text-xs">
-                            {conversation.unreadCount}
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
+                    
+                    {conversation.lastMessage && (
+                      <p className="text-sm text-gray-500 truncate">
+                        {conversation.lastMessage.content}
+                      </p>
+                    )}
+                    
+                    {conversation.unreadCount > 0 && (
+                      <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                        {conversation.unreadCount}
+                      </span>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="p-8 text-center">
-              <MessageCircle className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-              <h3 className="text-lg font-semibold mb-2">No Conversations</h3>
-              <p className="text-gray-600 mb-4">Start a conversation with your friends!</p>
-              <Button onClick={() => setShowUserSearch(true)}>
-                <Plus className="w-4 h-4 mr-2" />
-                New Message
-              </Button>
+            <div className="p-4 text-center text-gray-500">
+              No conversations found
             </div>
           )}
         </div>
@@ -449,158 +230,79 @@ export default function MessagesPage() {
         {selectedConversation ? (
           <>
             {/* Chat Header */}
-            <div className="p-4 border-b bg-white flex items-center justify-between">
+            <div className="p-4 border-b bg-white">
               <div className="flex items-center gap-3">
-                <div className="relative">
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage src={getConversationAvatar(selectedConversation)} />
-                    <AvatarFallback>
-                      {selectedConversation.type === "group" ? "G" : getConversationName(selectedConversation)[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  {isOnline(selectedConversation) && (
-                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
-                  )}
+                <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
+                  {selectedConversation.participants[0]?.firstName[0] || 'U'}
                 </div>
+                
                 <div>
-                  <h2 className="font-semibold">{getConversationName(selectedConversation)}</h2>
-                  <p className="text-sm text-gray-600">
-                    {isOnline(selectedConversation) ? "Online" : "Offline"}
-                  </p>
+                  <h3 className="font-medium">{selectedConversation.name}</h3>
+                  <p className="text-sm text-gray-500">Online</p>
                 </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="sm">
-                  <Phone className="w-4 h-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Video className="w-4 h-4" />
-                </Button>
-                <Button variant="ghost" size="sm">
-                  <Info className="w-4 h-4" />
-                </Button>
               </div>
             </div>
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((message, index) => {
-                const isOwnMessage = message.senderId === user?.id
-                const showAvatar = !isOwnMessage && (
-                  index === 0 || 
-                  messages[index - 1].senderId !== message.senderId ||
-                  new Date(message.createdAt).getTime() - new Date(messages[index - 1].createdAt).getTime() > 300000 // 5 minutes
-                )
-
-                return (
+              {messages.map(message => (
+                <div
+                  key={message.id}
+                  className={`flex ${
+                    message.senderId === user.id ? 'justify-end' : 'justify-start'
+                  }`}
+                >
                   <div
-                    key={message.id}
-                    className={`flex gap-3 ${isOwnMessage ? "justify-end" : "justify-start"}`}
+                    className={`max-w-[70%] rounded-lg p-3 ${
+                      message.senderId === user.id
+                        ? 'bg-blue-500 text-white'
+                        : 'bg-gray-200'
+                    }`}
                   >
-                    {!isOwnMessage && (
-                      <div className="w-8">
-                        {showAvatar && (
-                          <Avatar className="w-8 h-8">
-                            <AvatarImage src={selectedConversation.participants.find(p => p.id === message.senderId)?.avatar || "/placeholder-user.jpg"} />
-                            <AvatarFallback className="text-xs">
-                              {selectedConversation.participants.find(p => p.id === message.senderId)?.firstName[0] || "U"}
-                            </AvatarFallback>
-                          </Avatar>
-                        )}
-                      </div>
-                    )}
-
-                    <div className={`max-w-xs lg:max-w-md ${isOwnMessage ? "order-1" : ""}`}>
-                      <div
-                        className={`px-4 py-2 rounded-2xl ${
-                          isOwnMessage
-                            ? "bg-blue-500 text-white rounded-br-md"
-                            : "bg-gray-200 text-gray-900 rounded-bl-md"
-                        }`}
-                      >
-                        <p className="text-sm">{message.content}</p>
-                      </div>
-                      
-                      <div className={`mt-1 flex items-center gap-1 ${isOwnMessage ? "justify-end" : ""}`}>
-                        <span className="text-xs text-gray-500">
-                          {formatMessageTime(message.createdAt)}
-                        </span>
-                        {isOwnMessage && (
-                          <div className="text-gray-400">
-                            {message.isRead ? (
-                              <CheckCheck className="w-3 h-3" />
-                            ) : (
-                              <Check className="w-3 h-3" />
-                            )}
-                          </div>
-                        )}
-                      </div>
+                    <p className="text-sm">{message.content}</p>
+                    <div className="flex items-center justify-end gap-1 mt-1">
+                      <span className="text-xs opacity-70">
+                        {new Date(message.createdAt).toLocaleTimeString([], {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </span>
                     </div>
                   </div>
-                )
-              })}
-              <div ref={messagesEndRef} />
+                </div>
+              ))}
             </div>
 
             {/* Message Input */}
             <div className="p-4 border-t bg-white">
-              <div className="flex items-end gap-3">
-                <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="sm" onClick={() => fileInputRef.current?.click()}>
-                    <Paperclip className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Image className="w-4 h-4" />
-                  </Button>
-                </div>
-
-                <div className="flex-1 relative">
-                  <Input
-                    placeholder="Type a message..."
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault()
-                        sendMessage()
-                      }
-                    }}
-                    className="pr-12"
-                  />
-                  <Button variant="ghost" size="sm" className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                    <Smile className="w-4 h-4" />
-                  </Button>
-                </div>
-
-                <Button onClick={sendMessage} disabled={!newMessage.trim() || isSending}>
-                  <Send className="w-4 h-4" />
-                </Button>
-              </div>
+              <form onSubmit={sendMessage} className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Type a message..."
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  disabled={isSending}
+                />
+                
+                <button 
+                  type="submit" 
+                  disabled={!newMessage.trim() || isSending}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Send
+                </button>
+              </form>
             </div>
-
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              className="hidden"
-              accept="image/*,video/*,audio/*,.pdf,.doc,.docx"
-              onChange={(e) => {
-                // Handle file upload
-                console.log("Files selected:", e.target.files)
-              }}
-            />
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center bg-gray-50">
+          <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
-              <MessageCircle className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-              <h3 className="text-xl font-semibold mb-2">Select a Conversation</h3>
-              <p className="text-gray-600 mb-6">Choose a conversation from the sidebar to start messaging.</p>
-              <Button onClick={() => setShowUserSearch(true)}>
-                <Plus className="w-4 h-4 mr-2" />
-                Start New Conversation
-              </Button>
+              <div className="w-12 h-12 bg-gray-300 rounded-full mx-auto mb-4"></div>
+              <h3 className="text-lg font-medium mb-2">No conversation selected</h3>
+              <p className="text-gray-500">
+                Choose a conversation from the sidebar to start messaging
+              </p>
             </div>
           </div>
         )}
