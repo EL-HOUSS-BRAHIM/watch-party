@@ -76,7 +76,7 @@ export function VideoUpload() {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
-        onUploadProgress: (progressEvent: any) => {
+        onUploadProgress: (progressEvent: { loaded: number; total: number }) => {
           if (progressEvent.total) {
             const loaded = progressEvent.loaded
             const total = progressEvent.total
@@ -91,10 +91,11 @@ export function VideoUpload() {
         title: "Upload successful!",
         description: "Your video has been uploaded and is being processed",
       })
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } }
       toast({
         title: "Upload failed",
-        description: err.response?.data?.message || "Failed to upload video",
+        description: error.response?.data?.message || "Failed to upload video",
         variant: "destructive"
       })
     } finally {
@@ -137,7 +138,7 @@ export function VideoUpload() {
         </CardHeader>
         <CardContent className="text-center space-y-4">
           <p className="text-sm text-muted-foreground">
-            You'll receive a notification when processing is complete and your video is ready to share.
+            You&apos;ll receive a notification when processing is complete and your video is ready to share.
           </p>
           <div className="flex space-x-2 justify-center">
             <Button onClick={() => window.location.reload()}>
@@ -154,7 +155,7 @@ export function VideoUpload() {
 
   return (
     <div className="space-y-6">
-      <Tabs value={uploadMethod} onValueChange={(value: any) => setUploadMethod(value)}>
+      <Tabs value={uploadMethod} onValueChange={(value: string) => setUploadMethod(value)}>
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="local" className="flex items-center space-x-2">
             <HardDrive className="w-4 h-4" />

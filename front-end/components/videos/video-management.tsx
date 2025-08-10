@@ -665,7 +665,7 @@ export function VideoManagement({ className }: VideoManagementProps) {
                             <AlertDialogHeader>
                               <AlertDialogTitle>Delete Video</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Are you sure you want to delete "{video.title}"? This action cannot be undone.
+                                Are you sure you want to delete &quot;{video.title}&quot;? This action cannot be undone.
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>

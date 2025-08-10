@@ -229,7 +229,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
           ))}
 
           {filteredCommands.length === 0 && (
-            <div className="p-8 text-center text-gray-500">No commands found for "{query}"</div>
+            <div className="p-8 text-center text-gray-500">No commands found for &quot;{query}&quot;</div>
           )}
         </ScrollArea>
 

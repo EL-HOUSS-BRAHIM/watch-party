@@ -1,13 +1,13 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosError } from "axios"
 
 // Types
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data: T
   message?: string
   status: number
 }
 
-export interface PaginatedResponse<T = any> {
+export interface PaginatedResponse<T = unknown> {
   results: T[]
   count: number
   next?: string
@@ -62,7 +62,7 @@ class ApiClient {
         }
 
         // Add request timestamp for debugging
-        ;(config as any).metadata = { startTime: new Date() }
+        ;(config as AxiosRequestConfig & { metadata?: { startTime: Date } }).metadata = { startTime: new Date() }
 
         return config
       },
@@ -77,7 +77,7 @@ class ApiClient {
         // Log response time in development
         if (process.env.NODE_ENV === "development") {
           const endTime = new Date()
-          const startTime = (response.config as any).metadata?.startTime
+          const startTime = (response.config as AxiosRequestConfig & { metadata?: { startTime: Date } }).metadata?.startTime
           if (startTime) {
             const duration = endTime.getTime() - startTime.getTime()
             console.log(`API Request: ${response.config.method?.toUpperCase()} ${response.config.url} - ${duration}ms`)

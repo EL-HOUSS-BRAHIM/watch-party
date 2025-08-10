@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import {
   Heart,
   Users,
@@ -8,9 +7,7 @@ import {
   Github,
   Twitter,
   Mail,
-  Zap,
   Globe,
-  Shield,
   MessageCircle,
   Video,
   Calendar,

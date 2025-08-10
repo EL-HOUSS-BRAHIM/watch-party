@@ -488,7 +488,7 @@ function RewardCard({
       return (
         <div className="flex items-center space-x-1">
           <Crown className="h-4 w-4 text-purple-500" />
-          <span>"{reward.value.title}"</span>
+          <span>&quot;{reward.value.title}&quot;</span>
         </div>
       )
     }

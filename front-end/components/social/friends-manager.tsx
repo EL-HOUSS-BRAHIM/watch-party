@@ -238,7 +238,7 @@ export function FriendsManager() {
                             <div className="flex items-center space-x-1 mt-1">
                               <GamepadIcon className="h-3 w-3 text-primary" />
                               <span className="text-xs text-primary">
-                                In "{friend.currentParty.title}" ({friend.currentParty.participantCount} watching)
+                                In &quot;{friend.currentParty.title}&quot; ({friend.currentParty.participantCount} watching)
                               </span>
                             </div>
                           )}
@@ -313,7 +313,7 @@ export function FriendsManager() {
                         <div className="flex items-center space-x-1 mt-1">
                           <GamepadIcon className="h-3 w-3 text-primary" />
                           <span className="text-xs text-primary">
-                            Watching "{friend.currentParty.title}"
+                            Watching &quot;{friend.currentParty.title}&quot;
                           </span>
                         </div>
                       )}
@@ -365,7 +365,7 @@ export function FriendsManager() {
                             </ProfilePreview>
                             <p className="text-sm text-muted-foreground">@{request.fromUser.username}</p>
                             {request.message && (
-                              <p className="text-sm mt-1 italic">"{request.message}"</p>
+                              <p className="text-sm mt-1 italic">&quot;{request.message}&quot;</p>
                             )}
                             <div className="flex items-center space-x-1 mt-1">
                               <Clock className="h-3 w-3 text-muted-foreground" />

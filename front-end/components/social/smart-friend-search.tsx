@@ -150,7 +150,7 @@ export default function SmartFriendSearch() {
   };
 
   const filteredUsers = useMemo(() => {
-    let filtered = users.filter(user => {
+    const filtered = users.filter(user => {
       if (filters.hasAvatar && !user.avatar) return false;
       if (filters.isOnline && !user.isOnline) return false;
       if (filters.verifiedOnly && !user.isVerified) return false;

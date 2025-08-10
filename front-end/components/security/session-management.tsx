@@ -10,12 +10,10 @@ import {
   ComputerDesktopIcon,
   DevicePhoneMobileIcon,
   DeviceTabletIcon,
-  GlobeAltIcon,
   MapPinIcon,
   ClockIcon,
   ShieldCheckIcon,
-  ExclamationTriangleIcon,
-  XMarkIcon
+  ExclamationTriangleIcon
 } from '@heroicons/react/24/outline'
 import { CheckCircleIcon } from '@heroicons/react/24/solid'
 
@@ -327,7 +325,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
                   <AlertDialogHeader>
                     <AlertDialogTitle>Revoke All Other Sessions?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This will sign you out of all other devices. You'll need to sign in again on those devices.
+                      This will sign you out of all other devices. You&apos;ll need to sign in again on those devices.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>

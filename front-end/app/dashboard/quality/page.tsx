@@ -17,15 +17,9 @@ import {
   Target,
   Bug,
   TestTube,
-  Users,
-  Zap,
   TrendingUp,
-  TrendingDown,
   Activity,
-  Eye,
   Shield,
-  Globe,
-  Search,
 } from "lucide-react"
 
 interface QualityMetric {
@@ -141,7 +135,7 @@ const QualityPage = () => {
 
       // Transform logs to quality tests and issues
       if (systemLogs.results) {
-        const tests: QualityTest[] = systemLogs.results.slice(0, 10).map((log: any, index: number) => ({
+        const tests: QualityTest[] = systemLogs.results.slice(0, 10).map((log: Record<string, unknown>, index: number) => ({
           id: log.id || `test-${index}`,
           name: log.message?.substring(0, 50) || `Quality Test ${index + 1}`,
           type: "automated" as const,
@@ -155,8 +149,8 @@ const QualityPage = () => {
         setQualityTests(tests)
 
         // Transform error logs to issues
-        const errorLogs = systemLogs.results.filter((log: any) => log.level === 'error')
-        const transformedIssues: Issue[] = errorLogs.slice(0, 5).map((log: any, index: number) => ({
+        const errorLogs = systemLogs.results.filter((log: Record<string, unknown>) => log.level === 'error')
+        const transformedIssues: Issue[] = errorLogs.slice(0, 5).map((log: Record<string, unknown>, index: number) => ({
           id: log.id || `issue-${index}`,
           title: log.message?.substring(0, 60) || `Quality Issue ${index + 1}`,
           description: log.message || 'No description available',

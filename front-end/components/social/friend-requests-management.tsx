@@ -274,7 +274,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
 
               {request.message && (
                 <div className="bg-muted/50 rounded-lg p-3 mb-2">
-                  <p className="text-sm italic">"{request.message}"</p>
+                  <p className="text-sm italic">&quot;{request.message}&quot;</p>
                 </div>
               )}
 
@@ -434,7 +434,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
                 <div className="text-center py-8 text-muted-foreground">
                   <Mail className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p>No sent requests</p>
-                  <p className="text-sm">Friend requests you send will appear here until they're responded to</p>
+                  <p className="text-sm">Friend requests you send will appear here until they&apos;re responded to</p>
                 </div>
               ) : (
                 <div className="space-y-4">

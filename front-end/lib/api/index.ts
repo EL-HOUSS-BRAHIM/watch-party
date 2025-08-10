@@ -50,173 +50,173 @@ import type { IntegrationsAPI } from "./integrations"
 import type { EventsAPI } from "./events"
 
 // Lazy-loaded API instances
-let _authAPI: any = null
-let _usersAPI: any = null
-let _videosAPI: any = null
-let _partiesAPI: any = null
-let _chatAPI: any = null
-let _billingAPI: any = null
-let _notificationsAPI: any = null
-let _analyticsAPI: any = null
-let _adminAPI: any = null
-let _storeAPI: any = null
-let _searchAPI: any = null
-let _socialAPI: any = null
-let _messagingAPI: any = null
-let _supportAPI: any = null
-let _mobileAPI: any = null
-let _interactiveAPI: any = null
-let _moderationAPI: any = null
-let _integrationsAPI: any = null
-let _eventsAPI: any = null
+let _authAPI: unknown = null
+let _usersAPI: unknown = null
+let _videosAPI: unknown = null
+let _partiesAPI: unknown = null
+let _chatAPI: unknown = null
+let _billingAPI: unknown = null
+let _notificationsAPI: unknown = null
+let _analyticsAPI: unknown = null
+let _adminAPI: unknown = null
+let _storeAPI: unknown = null
+let _searchAPI: unknown = null
+let _socialAPI: unknown = null
+let _messagingAPI: unknown = null
+let _supportAPI: unknown = null
+let _mobileAPI: unknown = null
+let _interactiveAPI: unknown = null
+let _moderationAPI: unknown = null
+let _integrationsAPI: unknown = null
+let _eventsAPI: unknown = null
 
-function getAuthAPI() {
+async function getAuthAPI() {
   if (!_authAPI && typeof window !== 'undefined') {
-    const { AuthAPI } = require("./auth")
+    const { AuthAPI } = await import("./auth")
     _authAPI = new AuthAPI()
   }
   return _authAPI
 }
 
-function getUsersAPI() {
+async function getUsersAPI() {
   if (!_usersAPI && typeof window !== 'undefined') {
-    const { UsersAPI } = require("./users")
+    const { UsersAPI } = await import("./users")
     _usersAPI = new UsersAPI()
   }
   return _usersAPI
 }
 
-function getVideosAPI() {
+async function getVideosAPI() {
   if (!_videosAPI && typeof window !== 'undefined') {
-    const { VideosAPI } = require("./videos")
+    const { VideosAPI } = await import("./videos")
     _videosAPI = new VideosAPI()
   }
   return _videosAPI
 }
 
-function getPartiesAPI() {
+async function getPartiesAPI() {
   if (!_partiesAPI && typeof window !== 'undefined') {
-    const { PartiesAPI } = require("./parties")
+    const { PartiesAPI } = await import("./parties")
     _partiesAPI = new PartiesAPI()
   }
   return _partiesAPI
 }
 
-function getChatAPI() {
+async function getChatAPI() {
   if (!_chatAPI && typeof window !== 'undefined') {
-    const { ChatAPI } = require("./chat")
+    const { ChatAPI } = await import("./chat")
     _chatAPI = new ChatAPI()
   }
   return _chatAPI
 }
 
-function getBillingAPI() {
+async function getBillingAPI() {
   if (!_billingAPI && typeof window !== 'undefined') {
-    const { BillingAPI } = require("./billing")
+    const { BillingAPI } = await import("./billing")
     _billingAPI = new BillingAPI()
   }
   return _billingAPI
 }
 
-function getNotificationsAPI() {
+async function getNotificationsAPI() {
   if (!_notificationsAPI && typeof window !== 'undefined') {
-    const { NotificationsAPI } = require("./notifications")
+    const { NotificationsAPI } = await import("./notifications")
     _notificationsAPI = new NotificationsAPI()
   }
   return _notificationsAPI
 }
 
-function getAnalyticsAPI() {
+async function getAnalyticsAPI() {
   if (!_analyticsAPI && typeof window !== 'undefined') {
-    const { AnalyticsAPI } = require("./analytics")
+    const { AnalyticsAPI } = await import("./analytics")
     _analyticsAPI = new AnalyticsAPI()
   }
   return _analyticsAPI
 }
 
-function getAdminAPI() {
+async function getAdminAPI() {
   if (!_adminAPI && typeof window !== 'undefined') {
-    const { AdminAPI } = require("./admin")
+    const { AdminAPI } = await import("./admin")
     _adminAPI = new AdminAPI()
   }
   return _adminAPI
 }
 
-function getStoreAPI() {
+async function getStoreAPI() {
   if (!_storeAPI && typeof window !== 'undefined') {
-    const { StoreAPI } = require("./store")
+    const { StoreAPI } = await import("./store")
     _storeAPI = new StoreAPI()
   }
   return _storeAPI
 }
 
-function getSearchAPI() {
+async function getSearchAPI() {
   if (!_searchAPI && typeof window !== 'undefined') {
-    const { SearchAPI } = require("./search")
+    const { SearchAPI } = await import("./search")
     _searchAPI = new SearchAPI()
   }
   return _searchAPI
 }
 
-function getSocialAPI() {
+async function getSocialAPI() {
   if (!_socialAPI && typeof window !== 'undefined') {
-    const { SocialAPI } = require("./social")
+    const { SocialAPI } = await import("./social")
     _socialAPI = new SocialAPI()
   }
   return _socialAPI
 }
 
-function getMessagingAPI() {
+async function getMessagingAPI() {
   if (!_messagingAPI && typeof window !== 'undefined') {
-    const { MessagingAPI } = require("./messaging")
+    const { MessagingAPI } = await import("./messaging")
     _messagingAPI = new MessagingAPI()
   }
   return _messagingAPI
 }
 
-function getSupportAPI() {
+async function getSupportAPI() {
   if (!_supportAPI && typeof window !== 'undefined') {
-    const { SupportAPI } = require("./support")
+    const { SupportAPI } = await import("./support")
     _supportAPI = new SupportAPI()
   }
   return _supportAPI
 }
 
-function getMobileAPI() {
+async function getMobileAPI() {
   if (!_mobileAPI && typeof window !== 'undefined') {
-    const { MobileAPI } = require("./mobile")
+    const { MobileAPI } = await import("./mobile")
     _mobileAPI = new MobileAPI()
   }
   return _mobileAPI
 }
 
-function getInteractiveAPI() {
+async function getInteractiveAPI() {
   if (!_interactiveAPI && typeof window !== 'undefined') {
-    const { InteractiveAPI } = require("./interactive")
+    const { InteractiveAPI } = await import("./interactive")
     _interactiveAPI = new InteractiveAPI()
   }
   return _interactiveAPI
 }
 
-function getModerationAPI() {
+async function getModerationAPI() {
   if (!_moderationAPI && typeof window !== 'undefined') {
-    const { ModerationAPI } = require("./moderation")
+    const { ModerationAPI } = await import("./moderation")
     _moderationAPI = new ModerationAPI()
   }
   return _moderationAPI
 }
 
-function getIntegrationsAPI() {
+async function getIntegrationsAPI() {
   if (!_integrationsAPI && typeof window !== 'undefined') {
-    const { IntegrationsAPI } = require("./integrations")
+    const { IntegrationsAPI } = await import("./integrations")
     _integrationsAPI = new IntegrationsAPI()
   }
   return _integrationsAPI
 }
 
-function getEventsAPI() {
+async function getEventsAPI() {
   if (!_eventsAPI && typeof window !== 'undefined') {
-    const { EventsAPI } = require("./events")
+    const { EventsAPI } = await import("./events")
     _eventsAPI = new EventsAPI()
   }
   return _eventsAPI

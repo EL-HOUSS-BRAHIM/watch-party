@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
@@ -58,19 +58,19 @@ export function UserAchievements({ userId }: UserAchievementsProps) {
 
   useEffect(() => {
     fetchAchievements()
-  }, [userId])
+  }, [userId, fetchAchievements])
 
-  const fetchAchievements = async () => {
+  const fetchAchievements = useCallback(async () => {
     try {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/achievements/`)
-      setCategories((response as any).data.categories || [])
+      setCategories((response as { data: { categories: AchievementCategory[] } }).data.categories || [])
     } catch (err) {
       console.error("Failed to load achievements:", err)
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [api, userId])
 
   const allAchievements = categories.flatMap(cat => cat.achievements)
   const earnedAchievements = allAchievements.filter(a => a.earned_at)

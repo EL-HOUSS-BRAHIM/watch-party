@@ -15,15 +15,11 @@ import {
   UserX, 
   UserCheck, 
   Search, 
-  AlertTriangle, 
   Clock,
   Eye,
   EyeOff,
   MessageCircle,
-  Volume2,
-  VolumeX,
   Ban,
-  Undo,
   Filter,
   MoreHorizontal,
   Flag
@@ -236,7 +232,7 @@ export function BlockUnblockManager() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-2 mb-1">
                 <h3 className="font-medium truncate">{user.displayName}</h3>
-                <Badge variant={getBlockTypeColor(user.blockType) as any}>
+                <Badge variant={getBlockTypeColor(user.blockType) as "default" | "destructive" | "outline" | "secondary"}>
                   {getBlockTypeIcon(user.blockType)}
                   <span className="ml-1 capitalize">{user.blockType}</span>
                 </Badge>
@@ -352,7 +348,7 @@ export function BlockUnblockManager() {
             <span>Blocked Users</span>
           </h1>
           <p className="text-muted-foreground mt-1">
-            Manage users you've blocked and their access levels
+            Manage users you&apos;ve blocked and their access levels
           </p>
         </div>
         
@@ -446,7 +442,7 @@ export function BlockUnblockManager() {
           />
         </div>
         
-        <Select value={filter} onValueChange={(value: any) => setFilter(value)}>
+        <Select value={filter} onValueChange={(value: string) => setFilter(value)}>
           <SelectTrigger className="w-full sm:w-48">
             <Filter className="h-4 w-4 mr-2" />
             <SelectValue />

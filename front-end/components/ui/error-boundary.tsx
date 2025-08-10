@@ -53,7 +53,7 @@ export class ErrorBoundary extends Component<Props, State> {
               </div>
               <CardTitle>Something went wrong</CardTitle>
               <CardDescription>
-                We're sorry, but something unexpected happened. Please try refreshing the page.
+                We&apos;re sorry, but something unexpected happened. Please try refreshing the page.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">

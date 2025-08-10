@@ -1,22 +1,13 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { Search, UserPlus, Users, Filter, MapPin, Activity, Star, Loader2, UserCheck, Clock, X } from "lucide-react"
+import { Search, UserPlus, Users, MapPin, Activity, Star, Loader2, UserCheck, Clock, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
-import { Separator } from "@/components/ui/separator"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface User {
@@ -60,20 +51,13 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
   const [isSearching, setIsSearching] = useState(false)
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(true)
   const [sendingRequests, setSendingRequests] = useState<Set<string>>(new Set())
-  
-  const [filters, setFilters] = useState({
-    location: "all",
-    activity: "all",
-    compatibility: "all",
-    hasAvatar: false,
-  })
 
   const { toast } = useToast()
 
   // Native debounce function
-  const debounce = (func: Function, wait: number) => {
+  const debounce = (func: (...args: unknown[]) => void, wait: number) => {
     let timeout: NodeJS.Timeout
-    return function executedFunction(...args: any[]) {
+    return function executedFunction(...args: unknown[]) {
       const later = () => {
         clearTimeout(timeout)
         func(...args)
@@ -382,7 +366,7 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
 
               {!isSearching && searchQuery && searchResults.length === 0 && (
                 <div className="text-center py-8 text-muted-foreground">
-                  No users found matching "{searchQuery}"
+                  No users found matching &quot;{searchQuery}&quot;
                 </div>
               )}
 

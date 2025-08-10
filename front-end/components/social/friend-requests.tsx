@@ -197,7 +197,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
 
                   {request.message && (
                     <div className="mt-2 p-2 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-700">"{request.message}"</p>
+                      <p className="text-sm text-gray-700">&quot;{request.message}&quot;</p>
                     </div>
                   )}
 
@@ -291,7 +291,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
             <div className="text-center py-8">
               <UserPlus className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium mb-2">No pending friend requests</h3>
-              <p className="text-gray-600">You don't have any pending friend requests at the moment.</p>
+              <p className="text-gray-600">You don&apos;t have any pending friend requests at the moment.</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -312,7 +312,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
             <div className="text-center py-8">
               <Send className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium mb-2">No sent requests</h3>
-              <p className="text-gray-600">You haven't sent any friend requests yet.</p>
+              <p className="text-gray-600">You haven&apos;t sent any friend requests yet.</p>
             </div>
           ) : (
             <div className="space-y-4">

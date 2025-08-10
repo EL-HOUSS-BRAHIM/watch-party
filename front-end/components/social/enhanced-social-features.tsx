@@ -18,8 +18,8 @@ import {
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Progress } from "@/components/ui/progress"
-import { toast } from "@/hooks/use-toast"
-import { api } from "@/lib/api/client"
+import { useToast } from "@/hooks/use-toast"
+import { usersAPI } from "@/lib/api"
 import {
   Users,
   UserPlus,
@@ -41,8 +41,6 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { socialAPI, usersAPI } from "@/lib/api"
-import { useToast } from "@/hooks/use-toast"
 
 interface User {
   id: string
@@ -86,7 +84,7 @@ interface ActivityFeedItem {
   likes: number
   comments: number
   isLiked: boolean
-  metadata?: any
+  metadata?: Record<string, unknown>
 }
 
 interface Achievement {
@@ -228,10 +226,10 @@ const mockAchievements: Achievement[] = [
     description: "Host 50 watch parties",
     icon: "🏆",
     category: "content",
-    rarity: "epic",
-    progress: 23,
+    rarity: "legendary",
+    progress: 42,
     maxProgress: 50,
-    reward: { type: "feature", value: "Custom Party Themes" },
+    reward: { type: "badge", value: "Marathon Master" },
   },
 ]
 
@@ -255,97 +253,11 @@ export function EnhancedSocialFeatures() {
   const fetchSocialData = async () => {
     setLoading(true)
     try {
-      // Fetch social data from API
-      const [friendsData, communitiesData, activityData, achievementsData] = await Promise.all([
-        api.users.getFriends(),
-        // Mock API calls for now - these would be actual API endpoints
-        Promise.resolve({ results: [] }),
-        Promise.resolve({ results: [] }),
-        Promise.resolve({ results: [] })
-      ])
-
-      // Transform API data to component format
-      const transformedUsers: User[] = (friendsData.results || []).map((friend: any) => ({
-        id: friend.id,
-        username: friend.username,
-        displayName: friend.display_name || friend.username,
-        avatar: friend.avatar_url || '/placeholder-user.jpg',
-        isOnline: friend.is_online || false,
-        lastSeen: friend.last_seen || new Date().toISOString(),
-        mutualFriends: friend.mutual_friends_count || 0,
-        commonInterests: friend.common_interests || [],
-        location: friend.location,
-        joinedDate: friend.created_at,
-        stats: {
-          partiesHosted: friend.stats?.parties_hosted || 0,
-          partiesJoined: friend.stats?.parties_joined || 0,
-          friendsCount: friend.stats?.friends_count || 0,
-          watchTime: friend.stats?.watch_time || 0,
-        }
-      })) || []
-
-      const transformedCommunities: Community[] = (communitiesData.results || []).map((community: any) => ({
-        id: community.id,
-        name: community.name,
-        description: community.description,
-        memberCount: community.member_count,
-        category: community.category,
-        isPrivate: community.is_private,
-        avatar: community.avatar_url || '/placeholder.jpg',
-        tags: community.tags || [],
-        createdBy: community.creator?.username || 'Unknown',
-        createdAt: community.created_at,
-        recentActivity: community.recent_activity || 'No recent activity'
-      })) || []
-
-      const transformedActivityFeed: ActivityFeedItem[] = (activityData.results || []).map((activity: any) => ({
-        id: activity.id,
-        type: activity.activity_type,
-        user: {
-          id: activity.user.id,
-          username: activity.user.username,
-          displayName: activity.user.display_name || activity.user.username,
-          avatar: activity.user.avatar_url || '/placeholder-user.jpg',
-          isOnline: activity.user.is_online || false,
-          lastSeen: activity.user.last_seen || new Date().toISOString(),
-          mutualFriends: 0,
-          commonInterests: [],
-          joinedDate: activity.user.created_at,
-          stats: {
-            partiesHosted: 0,
-            partiesJoined: 0,
-            friendsCount: 0,
-            watchTime: 0,
-          }
-        },
-        content: activity.content,
-        timestamp: activity.created_at,
-        likes: activity.like_count || 0,
-        comments: activity.comment_count || 0,
-        isLiked: activity.is_liked || false,
-        metadata: activity.metadata
-      })) || []
-
-      const transformedAchievements: Achievement[] = (achievementsData.results || []).map((achievement: any) => ({
-        id: achievement.id,
-        name: achievement.name,
-        description: achievement.description,
-        icon: achievement.icon || 'trophy',
-        category: achievement.category,
-        rarity: achievement.rarity,
-        progress: achievement.progress,
-        maxProgress: achievement.max_progress,
-        unlockedAt: achievement.unlocked_at,
-        reward: {
-          type: achievement.reward?.type || 'badge',
-          value: achievement.reward?.value || 'Achievement Badge'
-        }
-      })) || []
-
-      setUsers(transformedUsers)
-      setCommunities(transformedCommunities)
-      setActivityFeed(transformedActivityFeed)
-      setAchievements(transformedAchievements)
+      // Use mock data for now - replace with actual API calls when available
+      setUsers(mockUsers)
+      setCommunities(mockCommunities)
+      setActivityFeed(mockActivityFeed)
+      setAchievements(mockAchievements)
     } catch (error) {
       console.error('Failed to fetch social data:', error)
       toast({
