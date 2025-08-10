@@ -41,8 +41,10 @@ interface VideoStats {
 }
 
 interface ViewerData {
-  timestamp: string
-  viewers: number
+  date: string
+  views: number
+  timestamp?: string
+  viewers?: number
   country?: string
   device?: string
   age?: string
@@ -73,24 +75,22 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
   const fetchAnalytics = async () => {
     try {
       setLoading(true)
-      const response = await analyticsAPI.getVideoAnalytics(videoId, {
-        date_range: dateRange
-      })
+      const response = await analyticsAPI.getVideoAnalytics(videoId)
       
       if (response) {
         setStats({
-          views: response.views || 0,
-          likes: response.likes || 0,
-          dislikes: response.dislikes || 0,
-          shares: response.shares || 0,
-          comments: response.comments || 0,
-          watchTime: response.total_watch_time || 0,
-          avgWatchTime: response.avg_watch_time || 0,
-          retentionRate: response.retention_rate || 0,
-          completionRate: response.completion_rate || 0
+          views: response.video?.views || 0,
+          likes: response.engagement?.likes || 0,
+          dislikes: 0, // Not available in current API structure
+          shares: response.engagement?.shares || 0,
+          comments: response.engagement?.comments || 0,
+          watchTime: 0, // Not available in current API structure
+          avgWatchTime: 0, // Not available in current API structure
+          retentionRate: 0, // Not available in current API structure
+          completionRate: response.video?.completion_rate || 0
         })
         
-        setViewerData(response.viewer_data || [])
+        setViewerData(response.view_chart || [])
       }
     } catch (error) {
       console.error('Failed to fetch video analytics:', error)
@@ -374,5 +374,4 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
 }
 
 export default VideoAnalyticsView
-export { VideoAnalyticsView }
 export { VideoAnalyticsView }

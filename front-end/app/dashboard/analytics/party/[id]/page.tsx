@@ -1,12 +1,14 @@
 import { PartyAnalytics } from "@/components/analytics/party-analytics"
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
-export default function PartyAnalyticsPage({ params }: PageProps) {
+export default async function PartyAnalyticsPage({ params }: PageProps) {
+  const { id } = await params
+  
   return (
     <div className="container mx-auto py-8">
       <div className="max-w-6xl mx-auto">
@@ -16,7 +18,7 @@ export default function PartyAnalyticsPage({ params }: PageProps) {
             Detailed insights about your watch party performance
           </p>
         </div>
-        <PartyAnalytics partyId={params.id} />
+        <PartyAnalytics partyId={id} />
       </div>
     </div>
   )

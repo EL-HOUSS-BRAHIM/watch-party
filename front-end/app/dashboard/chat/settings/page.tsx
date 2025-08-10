@@ -71,7 +71,11 @@ interface ChatPreferences {
   showOnlineStatus: boolean
 }
 
-export function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {
+export default function ChatSettings() {
+  // Extract partyId from URL params if needed
+  const partyId = undefined // or use useParams() if needed
+  const isGlobal = false
+  
   const [preferences, setPreferences] = useState<ChatPreferences>({
     messageNotifications: true,
     mentionNotifications: true,

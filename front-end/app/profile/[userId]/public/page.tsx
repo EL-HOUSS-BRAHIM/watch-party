@@ -2,9 +2,9 @@ import type { Metadata } from "next"
 import PublicProfileClientPage from "./PublicProfileClientPage"
 
 interface PublicProfilePageProps {
-  params: {
+  params: Promise<{
     userId: string
-  }
+  }>
 }
 
 export async function generateMetadata({ params }: PublicProfilePageProps): Promise<Metadata> {
@@ -15,8 +15,9 @@ export async function generateMetadata({ params }: PublicProfilePageProps): Prom
   }
 }
 
-const PublicProfilePage = ({ params }: PublicProfilePageProps) => {
-  return <PublicProfileClientPage params={params} />
+const PublicProfilePage = async ({ params }: PublicProfilePageProps) => {
+  const resolvedParams = await params
+  return <PublicProfileClientPage params={resolvedParams} />
 }
 
 export default PublicProfilePage

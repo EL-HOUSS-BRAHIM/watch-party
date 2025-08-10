@@ -2,9 +2,9 @@ import { Metadata } from 'next'
 import { VideoAnalyticsView } from '@/components/analytics/video-analytics-view'
 
 interface VideoAnalyticsPageProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export const metadata: Metadata = {
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   description: 'Detailed analytics for your video content'
 }
 
-export default function VideoAnalyticsPage({ params }: VideoAnalyticsPageProps) {
-  return <VideoAnalyticsView videoId={params.id} />
+export default async function VideoAnalyticsPage({ params }: VideoAnalyticsPageProps) {
+  const { id } = await params
+  return <VideoAnalyticsView videoId={id} />
 }
