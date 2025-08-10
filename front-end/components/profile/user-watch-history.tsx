@@ -47,7 +47,7 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {
     try {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/watch-history/`)
-      setHistory(response.data.history || [])
+      setHistory((response as any).data.history || [])
     } catch (err) {
       console.error("Failed to load watch history:", err)
     } finally {

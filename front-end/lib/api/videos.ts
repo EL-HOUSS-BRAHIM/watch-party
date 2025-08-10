@@ -32,6 +32,18 @@ export class VideosAPI {
   }
 
   /**
+   * Get user videos list with filtering and pagination
+   */
+  async getUserVideos(params?: {
+    page?: number
+    search?: string
+    visibility?: 'public' | 'private' | 'unlisted'
+    ordering?: string
+  }): Promise<PaginatedResponse<Video>> {
+    return apiClient.get<PaginatedResponse<Video>>("/api/videos/user/", { params })
+  }
+
+  /**
    * Create a new video entry
    */
   async createVideo(data: {

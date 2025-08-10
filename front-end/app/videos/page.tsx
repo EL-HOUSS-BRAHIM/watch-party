@@ -13,6 +13,7 @@ import { useVideos } from "@/hooks/use-api"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
+import { Video as APIVideo } from "@/lib/api/types"  // Import the API Video type
 import {
   Plus,
   Search,
@@ -23,7 +24,7 @@ import {
   Filter,
   Grid3X3,
   List,
-  Video,
+  Video as VideoIcon,  // Rename to avoid conflict
   Upload,
   Loader2,
   Trash2,
@@ -32,22 +33,6 @@ import {
   MoreVertical,
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-
-interface Video {
-  id: string
-  title: string
-  description: string
-  thumbnail?: string
-  duration_formatted: string
-  file_size: number
-  view_count: number
-  likes: number
-  visibility: "public" | "private" | "unlisted"
-  created_at: string
-  updated_at: string
-  category: string
-  tags: string[]
-}
 
 export default function VideosPage() {
   const router = useRouter()
@@ -98,7 +83,7 @@ export default function VideosPage() {
     }
   }
 
-  const shareVideo = async (video: Video) => {
+  const shareVideo = async (video: APIVideo) => {
     const shareUrl = `${window.location.origin}/videos/${video.id}`
 
     if (navigator.share) {
@@ -131,7 +116,7 @@ export default function VideosPage() {
     return `${minutes}:${secs.toString().padStart(2, "0")}`
   }
 
-  const VideoCard = ({ video }: { video: Video }) => (
+  const VideoCard = ({ video }: { video: APIVideo }) => (
     <Card className="hover:shadow-lg transition-all duration-200 group">
       <CardContent className="p-0">
         <div className="relative aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg overflow-hidden">
@@ -143,7 +128,7 @@ export default function VideosPage() {
             />
           ) : (
             <div className="flex items-center justify-center h-full">
-              <Video className="h-12 w-12 text-muted-foreground" />
+              <VideoIcon className="h-12 w-12 text-muted-foreground" />
             </div>
           )}
 
@@ -151,8 +136,8 @@ export default function VideosPage() {
             <Play className="w-12 h-12 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
 
-          <div className="absolute bottom-2 right-2 bg-black/75 text-white text-xs px-2 py-1 rounded">
-            {video.duration_formatted}
+                    <div className="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-xs font-medium">
+            {video.duration_formatted || video.duration || 'N/A'}
           </div>
 
           <div className="absolute top-2 right-2">
@@ -188,7 +173,7 @@ export default function VideosPage() {
             </div>
           </div>
 
-          {video.tags.length > 0 && (
+          {video.tags && video.tags.length > 0 && (
             <div className="flex flex-wrap gap-1 mb-3">
               {video.tags.slice(0, 3).map((tag) => (
                 <Badge key={tag} variant="outline" className="text-xs">
@@ -255,7 +240,7 @@ export default function VideosPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
-              <Video className="h-8 w-8" />
+              <VideoIcon className="h-8 w-8" />
               Video Library
             </h1>
             <p className="text-muted-foreground mt-2">Manage and organize your video content</p>
@@ -331,14 +316,14 @@ export default function VideosPage() {
         {/* Content */}
         {error ? (
           <div className="text-center py-12">
-            <Video className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+            <VideoIcon className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
             <h3 className="text-lg font-medium mb-2">Error Loading Videos</h3>
             <p className="text-muted-foreground mb-4">There was an error loading your videos.</p>
             <Button onClick={refresh}>Try Again</Button>
           </div>
         ) : !videos?.results?.length ? (
           <div className="text-center py-12">
-            <Video className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
+            <VideoIcon className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
             <h3 className="text-lg font-medium mb-2">No Videos Found</h3>
             <p className="text-muted-foreground mb-4">
               {searchQuery ? "No videos match your search criteria." : "You haven't uploaded any videos yet."}
@@ -365,7 +350,7 @@ export default function VideosPage() {
         )}
 
         {/* Pagination would go here if needed */}
-        {videos?.results?.length > 0 && (
+        {videos?.results && videos.results.length > 0 && (
           <div className="mt-8 text-center text-muted-foreground">
             Showing {videos.results.length} of {videos.count || videos.results.length} videos
           </div>

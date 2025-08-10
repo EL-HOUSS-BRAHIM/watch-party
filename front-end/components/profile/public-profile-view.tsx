@@ -66,7 +66,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
     try {
       setIsLoading(true)
       const response = await get(`/users/${userId}/public-profile/`)
-      setProfile(response.data)
+      setProfile((response as any).data)
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load profile')
     } finally {

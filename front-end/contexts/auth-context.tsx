@@ -20,7 +20,9 @@ interface User extends Omit<APIUser, 'avatar'> {
 interface AuthContextType {
   user: User | null
   isLoading: boolean
+  loading: boolean          // Add loading alias for compatibility
   isAuthenticated: boolean
+  isAdmin: boolean          // Add isAdmin property
   login: (email: string, password: string) => Promise<void>
   register: (userData: RegisterData) => Promise<void>
   logout: () => void
@@ -47,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter()
 
   const isAuthenticated = !!user
+  const isAdmin = !!user?.is_admin || !!user?.is_superuser || false  // Compute isAdmin
 
   // Check for existing session on mount
   useEffect(() => {
@@ -311,7 +314,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = {
     user,
     isLoading,
+    loading: isLoading,        // Add loading alias
     isAuthenticated,
+    isAdmin,                   // Add isAdmin property
     login,
     register,
     logout,

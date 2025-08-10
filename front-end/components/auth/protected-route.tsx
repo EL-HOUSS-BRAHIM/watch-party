@@ -21,7 +21,7 @@ export function ProtectedRoute({
   requireAdmin = false,
   fallback,
   redirectTo,
-}: ProtectedRouteProps) {
+}: ProtectedRouteProps): React.ReactNode {
   const { user, loading, isAuthenticated, isAdmin } = useAuth()
   const router = useRouter()
   const [shouldRender, setShouldRender] = useState(false)

@@ -18,7 +18,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
-const navigationItems = [
+const navigationItems: Omit<NavigationItemProps, 'active'>[] = [
   {
     label: 'Dashboard',
     href: '/dashboard',

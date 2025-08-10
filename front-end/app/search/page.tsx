@@ -445,7 +445,7 @@ function SearchContent() {
 
       {/* Results */}
       {query && (
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as SearchFilters["type"])}>
           <TabsList className="grid w-full grid-cols-4 mb-6">
             <TabsTrigger value="all">All Results</TabsTrigger>
             <TabsTrigger value="users">Users ({users.length})</TabsTrigger>

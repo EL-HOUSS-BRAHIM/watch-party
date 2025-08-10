@@ -62,7 +62,7 @@ class ApiClient {
         }
 
         // Add request timestamp for debugging
-        config.metadata = { startTime: new Date() }
+        ;(config as any).metadata = { startTime: new Date() }
 
         return config
       },
@@ -77,7 +77,7 @@ class ApiClient {
         // Log response time in development
         if (process.env.NODE_ENV === "development") {
           const endTime = new Date()
-          const startTime = response.config.metadata?.startTime
+          const startTime = (response.config as any).metadata?.startTime
           if (startTime) {
             const duration = endTime.getTime() - startTime.getTime()
             console.log(`API Request: ${response.config.method?.toUpperCase()} ${response.config.url} - ${duration}ms`)
@@ -192,10 +192,10 @@ class ApiClient {
       // Server responded with error status
       const { status, data } = error.response
       return {
-        message: data?.message || data?.detail || "An error occurred",
-        errors: data?.errors,
+        message: (data as any)?.message || (data as any)?.detail || "An error occurred",
+        errors: (data as any)?.errors,
         status,
-        code: data?.code,
+        code: (data as any)?.code,
       }
     } else if (error.request) {
       // Network error

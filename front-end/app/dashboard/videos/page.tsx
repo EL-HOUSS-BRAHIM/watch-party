@@ -81,14 +81,14 @@ function VideoCard({ video }: { video: APIVideo }) {
           className="w-full h-48 object-cover rounded-t-lg"
         />
         <div className="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-xs">
-          {formatDuration(video.duration)}
+          {formatDuration(video.duration ? parseInt(video.duration) || 0 : 0)}
         </div>
         {video.status === "processing" && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-t-lg">
             <div className="text-white text-center">
               <div className="mb-2">Processing...</div>
-              <Progress value={video.uploadProgress} className="w-32" />
-              <div className="text-xs mt-1">{video.uploadProgress}%</div>
+              <Progress value={video.uploadProgress || 0} className="w-32" />
+              <div className="text-xs mt-1">{video.uploadProgress || 0}%</div>
             </div>
           </div>
         )}
@@ -130,25 +130,25 @@ function VideoCard({ video }: { video: APIVideo }) {
           <div className="flex items-center gap-3">
             <span className="flex items-center gap-1">
               <Eye className="h-3 w-3" />
-              {video.views.toLocaleString()}
+              {(video.views || video.view_count || 0).toLocaleString()}
             </span>
             <span className="flex items-center gap-1">
               <Heart className="h-3 w-3" />
-              {video.likes}
+              {video.likes || video.like_count || 0}
             </span>
             <span className="flex items-center gap-1">
               <MessageCircle className="h-3 w-3" />
-              {video.comments}
+              {video.comments || video.comments_count || 0}
             </span>
           </div>
           <div className="flex items-center gap-1">
             <Calendar className="h-3 w-3" />
-            {formatDate(video.uploadedAt)}
+            {formatDate(video.uploadedAt || video.created_at)}
           </div>
         </div>
         <div className="flex items-center justify-between mt-2 pt-2 border-t text-xs text-muted-foreground">
           <span>
-            {formatFileSize(video.size)} • {video.format}
+            {video.size ? formatFileSize(parseFloat(video.size)) : (video.file_size ? formatFileSize(video.file_size) : 'Unknown size')} • {video.format || 'video'}
           </span>
           {video.status === "ready" && (
             <WatchPartyButton size="sm" variant="outline">
@@ -174,11 +174,11 @@ function VideoListItem({ video }: { video: APIVideo }) {
               className="w-24 h-16 object-cover rounded"
             />
             <div className="absolute bottom-1 right-1 bg-black/80 text-white px-1 py-0.5 rounded text-xs">
-              {formatDuration(video.duration)}
+              {formatDuration(video.duration ? parseInt(video.duration) || 0 : 0)}
             </div>
             {video.status === "processing" && (
               <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded">
-                <div className="text-white text-xs">{video.uploadProgress}%</div>
+                <div className="text-white text-xs">{video.uploadProgress || 0}%</div>
               </div>
             )}
           </div>
@@ -205,18 +205,18 @@ function VideoListItem({ video }: { video: APIVideo }) {
               <div className="flex items-center gap-4 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <Eye className="h-3 w-3" />
-                  {video.views.toLocaleString()}
+                  {(video.views || video.view_count || 0).toLocaleString()}
                 </span>
                 <span className="flex items-center gap-1">
                   <Heart className="h-3 w-3" />
-                  {video.likes}
+                  {video.likes || video.like_count || 0}
                 </span>
                 <span className="flex items-center gap-1">
                   <MessageCircle className="h-3 w-3" />
-                  {video.comments}
+                  {video.comments || video.comments_count || 0}
                 </span>
-                <span>{formatFileSize(video.size)}</span>
-                <span>{formatDate(video.uploadedAt)}</span>
+                <span>{video.size ? formatFileSize(parseFloat(video.size)) : (video.file_size ? formatFileSize(video.file_size) : 'Unknown size')}</span>
+                <span>{formatDate(video.uploadedAt || video.created_at)}</span>
               </div>
               <div className="flex items-center gap-2">
                 {video.status === "ready" && (
@@ -271,7 +271,7 @@ export default function VideosPage() {
     try {
       setLoading(true)
       const response = await videosAPI.getUserVideos()
-      setVideos(response.videos)
+      setVideos(response.results)
     } catch (error) {
       console.error("Failed to load videos:", error)
     } finally {
@@ -306,13 +306,13 @@ export default function VideosPage() {
     filtered.sort((a, b) => {
       switch (sortBy) {
         case "newest":
-          return new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
+          return new Date(b.uploadedAt || b.created_at).getTime() - new Date(a.uploadedAt || a.created_at).getTime()
         case "oldest":
-          return new Date(a.uploadedAt).getTime() - new Date(b.uploadedAt).getTime()
+          return new Date(a.uploadedAt || a.created_at).getTime() - new Date(b.uploadedAt || b.created_at).getTime()
         case "most-viewed":
-          return b.views - a.views
+          return (b.views || b.view_count || 0) - (a.views || a.view_count || 0)
         case "most-liked":
-          return b.likes - a.likes
+          return (b.likes || b.like_count || 0) - (a.likes || a.like_count || 0)
         case "title":
           return a.title.localeCompare(b.title)
         default:
@@ -371,7 +371,7 @@ export default function VideosPage() {
           <WatchPartyInput
             placeholder="Search videos..."
             value={searchQuery}
-            onChange={(value) => setSearchQuery(value)}
+            onChange={(e) => setSearchQuery(e.target.value)}
             icon={<Search className="h-4 w-4" />}
           />
         </div>
@@ -440,7 +440,7 @@ export default function VideosPage() {
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{videos.reduce((acc, v) => acc + v.views, 0).toLocaleString()}</div>
+            <div className="text-2xl font-bold">{videos.reduce((acc, v) => acc + (v.views || v.view_count || 0), 0).toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">Total Views</p>
           </CardContent>
         </Card>

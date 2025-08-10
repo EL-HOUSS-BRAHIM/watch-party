@@ -399,7 +399,7 @@ export default function VideoUploadPage() {
                   <WatchPartyInput
                     placeholder="Enter video title..."
                     value={metadata.title}
-                    onChange={(value) => setMetadata((prev) => ({ ...prev, title: value }))}
+                    onChange={(e) => setMetadata((prev) => ({ ...prev, title: e.target.value }))}
                   />
                 </FormField>
 
@@ -427,10 +427,10 @@ export default function VideoUploadPage() {
                   <WatchPartyInput
                     placeholder="Enter tags separated by commas..."
                     value={metadata.tags.join(", ")}
-                    onChange={(value) =>
+                    onChange={(e) =>
                       setMetadata((prev) => ({
                         ...prev,
-                        tags: value
+                        tags: e.target.value
                           .split(",")
                           .map((tag) => tag.trim())
                           .filter(Boolean),

@@ -38,8 +38,18 @@ export interface User {
   last_login: string | null
   is_staff?: boolean
   is_superuser?: boolean
+  is_admin?: boolean
   isVerified?: boolean
   onboarding_completed?: boolean
+  mutualFriends?: number
+  username?: string
+  firstName?: string
+  lastName?: string
+  subscription?: {           // Add subscription object for billing plans
+    plan: 'free' | 'premium' | 'pro'
+    status: 'active' | 'inactive' | 'expired'
+    expires_at?: string | null
+  }
 }
 
 export interface AuthResponse {
@@ -356,6 +366,8 @@ export interface HealthStatus {
     status: 'up' | 'down'
     response_time?: number
   }>
+  google_drive?: boolean
+  s3_storage?: boolean
 }
 
 // Video Types
@@ -456,6 +468,7 @@ export interface Video {
   }
   thumbnail: string | null
   duration: string | null
+  duration_formatted?: string  // Add formatted duration for display
   file_size: number | null
   source_type: 'upload' | 'url' | 'drive'
   source_url?: string
@@ -468,13 +481,23 @@ export interface Video {
   allow_download: boolean
   require_premium: boolean
   view_count: number
+  views?: number              // Add alias for compatibility
   like_count: number
+  likes?: number             // Add alias for compatibility
   comments_count: number
   is_liked: boolean
   can_edit: boolean
   can_download: boolean
+  category?: string          // Add category property
+  tags?: string[]           // Add tags property
   created_at: string
   updated_at: string
+  // Additional properties needed for dashboard components
+  uploadProgress?: number
+  comments?: number
+  uploadedAt?: string
+  size?: string
+  format?: string
 }
 
 export interface VideoUpload {
@@ -971,4 +994,16 @@ export interface EventSearchParams {
   is_virtual?: boolean
   page?: number
   limit?: number
+}
+
+export interface EventFilters {
+  status?: 'scheduled' | 'live' | 'completed' | 'cancelled'
+  privacy?: 'public' | 'private' | 'invite-only'
+  tags?: string[]
+  date_range?: {
+    start: string
+    end: string
+  }
+  is_virtual?: boolean
+  max_attendees?: number
 }

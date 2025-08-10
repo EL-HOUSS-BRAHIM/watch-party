@@ -62,7 +62,7 @@ interface ActiveRoom {
 }
 
 // Helper function to generate time series data
-const generateTimeSeriesData = () => {
+const generateMockTimeSeriesData = () => {
   const data = [];
   const now = new Date();
   for (let i = 29; i >= 0; i--) {
@@ -77,8 +77,6 @@ const generateTimeSeriesData = () => {
   }
   return data;
 };
-
-export default function RealTimeAnalytics() {
 
 const mockLiveUsers: LiveUser[] = Array.from({ length: 25 }, (_, i) => ({
   id: `user-${i}`,
@@ -589,5 +587,3 @@ export default function RealTimeAnalytics() {
     </div>
   );
 }
-
-export default RealTimeAnalytics;

@@ -1,5 +1,5 @@
-// Re-export auth types from the main API types
-export type {
+// Import auth types from the main API types
+import type {
   User,
   AuthResponse,
   LoginCredentials,
@@ -9,6 +9,18 @@ export type {
   ChangePasswordRequest,
   UserProfile,
 } from "@/lib/api/types"
+
+// Re-export the types
+export type {
+  User,
+  AuthResponse,
+  LoginCredentials,
+  RegisterData,
+  ForgotPasswordRequest,
+  ResetPasswordRequest,
+  ChangePasswordRequest,
+  UserProfile,
+}
 
 // Additional auth-specific types can be added here
 export interface AuthContextType {

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import { Smile, Heart, Laugh, Angry, Cry, ThumbsUp, Fire, Star } from 'lucide-react'
+import { Smile, Heart, Laugh, Angry, Frown, ThumbsUp, Flame, Star } from 'lucide-react'
 
 interface Reaction {
   id: string
@@ -29,9 +29,9 @@ const REACTION_EMOJIS = [
   { emoji: '❤️', icon: Heart, color: 'text-red-500', name: 'Love' },
   { emoji: '😂', icon: Laugh, color: 'text-yellow-500', name: 'Laugh' },
   { emoji: '👍', icon: ThumbsUp, color: 'text-blue-500', name: 'Like' },
-  { emoji: '🔥', icon: Fire, color: 'text-orange-500', name: 'Fire' },
+  { emoji: '🔥', icon: Flame, color: 'text-orange-500', name: 'Fire' },
   { emoji: '⭐', icon: Star, color: 'text-yellow-400', name: 'Star' },
-  { emoji: '😢', icon: Cry, color: 'text-blue-400', name: 'Sad' },
+  { emoji: '😢', icon: Frown, color: 'text-blue-400', name: 'Sad' },
   { emoji: '😠', icon: Angry, color: 'text-red-600', name: 'Angry' },
   { emoji: '😍', icon: Heart, color: 'text-pink-500', name: 'Love Eyes' }
 ]

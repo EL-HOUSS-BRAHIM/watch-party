@@ -48,7 +48,7 @@ export function UserStats({ userId }: UserStatsProps) {
     try {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/stats/?timeframe=${timeframe}`)
-      setStats(response.data)
+      setStats((response as any).data)
     } catch (err) {
       console.error("Failed to load user stats:", err)
     } finally {

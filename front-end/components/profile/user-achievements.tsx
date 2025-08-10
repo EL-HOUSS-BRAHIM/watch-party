@@ -64,7 +64,7 @@ export function UserAchievements({ userId }: UserAchievementsProps) {
     try {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/achievements/`)
-      setCategories(response.data.categories || [])
+      setCategories((response as any).data.categories || [])
     } catch (err) {
       console.error("Failed to load achievements:", err)
     } finally {

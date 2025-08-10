@@ -18,8 +18,7 @@ import {
   Users,
   AlertCircle,
   Loader2,
-  Cast,
-  CastOff
+  Cast
 } from 'lucide-react'
 import { useSocket } from '@/contexts/socket-context'
 
@@ -90,7 +89,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
   }, [])
 
   const getDisplayMedia = async (): Promise<MediaStream> => {
-    const constraints: DisplayMediaStreamConstraints = {
+    const constraints: MediaStreamConstraints = {
       video: {
         width: { ideal: getResolution().width },
         height: { ideal: getResolution().height },
@@ -420,7 +419,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                 variant="destructive"
                 className="flex items-center space-x-2"
               >
-                <CastOff className="h-4 w-4" />
+                <Monitor className="h-4 w-4" />
                 <span>Stop Sharing</span>
               </Button>
             )}
@@ -525,7 +524,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                         size="sm"
                         onClick={() => stopRemoteScreenShare(participant.id)}
                       >
-                        <CastOff className="h-3 w-3" />
+                        <Monitor className="h-3 w-3" />
                       </Button>
                     )}
                   </div>

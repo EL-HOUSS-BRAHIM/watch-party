@@ -23,7 +23,7 @@ export function VideoThumbnailPreview({
   const [previewPosition, setPreviewPosition] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
-  const timeoutRef = useRef<NodeJS.Timeout>()
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     if (isHovering && videoRef.current) {

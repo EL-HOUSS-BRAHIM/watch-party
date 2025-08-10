@@ -62,22 +62,18 @@ export default function EventSchedulingSystem() {
 
   const loadEvents = async () => {
     try {
-      setIsLoadingEvents(true)
-      const response = await eventsAPI.getEvents({
-        page: 1,
-        limit: 100,
-        status: filterStatus === "all" ? undefined : filterStatus as any,
-      })
-      setEvents(response.events)
+      setIsLoading(true)
+      const response = await eventsAPI.getEvents()
+      setEvents(response.results || [])
     } catch (error) {
       console.error("Failed to load events:", error)
       toast({
         title: "Error",
-        description: "Failed to load events. Please try again.",
+        description: "Failed to load events.",
         variant: "destructive",
       })
     } finally {
-      setIsLoadingEvents(false)
+      setIsLoading(false)
     }
   }
 
@@ -88,8 +84,8 @@ export default function EventSchedulingSystem() {
 
   const loadEventAttendees = async (eventId: string) => {
     try {
-      const attendees = await eventsAPI.getEventAttendees(eventId)
-      setEventAttendees(attendees)
+      const response = await eventsAPI.getEventAttendees(eventId)
+      setEventAttendees(response.results || [])
     } catch (error) {
       console.error("Failed to load attendees:", error)
       toast({
@@ -113,18 +109,18 @@ export default function EventSchedulingSystem() {
       const eventData: CreateEventRequest = {
         title: formData.get("title") as string,
         description: formData.get("description") as string,
-        startTime: new Date(formData.get("startTime") as string).toISOString(),
-        endTime: new Date(formData.get("endTime") as string).toISOString(),
+        start_time: new Date(formData.get("startTime") as string).toISOString(),
+        end_time: new Date(formData.get("endTime") as string).toISOString(),
         timezone: "UTC",
         privacy: formData.get("privacy") as "public" | "private" | "invite-only",
-        maxAttendees: Number.parseInt(formData.get("maxAttendees") as string) || 50,
-        videoId: "temp-video", // This should be selected from a video picker
-        isVirtual: formData.get("isVirtual") === "on",
-        meetingLink: formData.get("meetingLink") as string,
+        max_attendees: Number.parseInt(formData.get("maxAttendees") as string) || 50,
+        video_id: "temp-video", // This should be selected from a video picker
+        is_virtual: formData.get("isVirtual") === "on",
+        meeting_link: formData.get("meetingLink") as string,
         tags: (formData.get("tags") as string).split(",").map((tag) => tag.trim()),
         reminders: ["1 hour", "15 minutes"],
-        allowGuestInvites: formData.get("allowGuestInvites") === "on",
-        requireApproval: formData.get("requireApproval") === "on",
+        allow_guest_invites: formData.get("allowGuestInvites") === "on",
+        require_approval: formData.get("requireApproval") === "on",
       }
 
       const newEvent = await eventsAPI.createEvent(eventData)
@@ -151,10 +147,10 @@ export default function EventSchedulingSystem() {
 
   const handleRSVP = async (eventId: string, status: "going" | "maybe" | "not-going") => {
     try {
-      await eventsAPI.rsvpToEvent(eventId, status)
+      await eventsAPI.rsvpToEvent(eventId, { status })
       
       // Update local state
-      setEvents((prev) => prev.map((event) => (event.id === eventId ? { ...event, rsvpStatus: status } : event)))
+      setEvents((prev) => prev.map((event) => (event.id === eventId ? { ...event, rsvp_status: status } : event)))
 
       toast({
         title: "RSVP Updated",
@@ -179,8 +175,8 @@ export default function EventSchedulingSystem() {
       await eventsAPI.joinEvent(eventId)
 
       // Open the meeting link
-      if (event.meetingLink) {
-        window.open(event.meetingLink, "_blank")
+      if (event.meeting_link) {
+        window.open(event.meeting_link, "_blank")
       }
 
       toast({
@@ -266,7 +262,7 @@ export default function EventSchedulingSystem() {
     return event.status === filterStatus
   })
 
-  const eventsForSelectedDate = events.filter((event) => isSameDay(parseISO(event.startTime), selectedDate))
+  const eventsForSelectedDate = events.filter((event) => isSameDay(parseISO(event.start_time), selectedDate))
 
   return (
     <div className="space-y-6">
@@ -462,15 +458,15 @@ export default function EventSchedulingSystem() {
                             </Badge>
                           </div>
                           <p className="text-sm text-muted-foreground mb-2">
-                            {format(parseISO(event.startTime), "h:mm a")} - {format(parseISO(event.endTime), "h:mm a")}
+                            {format(parseISO(event.start_time), "h:mm a")} - {format(parseISO(event.end_time), "h:mm a")}
                           </p>
                           <p className="text-sm">{event.description}</p>
                         </div>
 
                         <div className="flex items-center gap-2">
                           {getPrivacyIcon(event.privacy)}
-                          {event.rsvpStatus && (
-                            <Badge className={getRSVPStatusColor(event.rsvpStatus)}>{event.rsvpStatus}</Badge>
+                          {event.rsvp_status && (
+                            <Badge className={getRSVPStatusColor(event.rsvp_status)}>{event.rsvp_status}</Badge>
                           )}
                         </div>
                       </div>
@@ -479,7 +475,7 @@ export default function EventSchedulingSystem() {
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
                           <div className="flex items-center gap-1">
                             <Users className="h-4 w-4" />
-                            {event.currentAttendees}/{event.maxAttendees}
+                            {event.current_attendees}/{event.max_attendees}
                           </div>
                           <div className="flex items-center gap-1">
                             <Avatar className="h-5 w-5">
@@ -498,7 +494,7 @@ export default function EventSchedulingSystem() {
                             </Button>
                           )}
 
-                          {event.status === "scheduled" && !event.rsvpStatus && (
+                          {event.status === "scheduled" && !event.rsvp_status && (
                             <div className="flex gap-1">
                               <Button size="sm" variant="outline" onClick={() => handleRSVP(event.id, "going")}>
                                 Going
@@ -509,7 +505,7 @@ export default function EventSchedulingSystem() {
                             </div>
                           )}
 
-                          {event.isHost && event.status === "scheduled" && (
+                          {event.is_host && event.status === "scheduled" && (
                             <Button size="sm" variant="outline" onClick={() => handleCancelEvent(event.id)}>
                               Cancel
                             </Button>
@@ -548,8 +544,8 @@ export default function EventSchedulingSystem() {
                       <CardDescription>{event.description}</CardDescription>
                     </div>
 
-                    {event.rsvpStatus && (
-                      <Badge className={getRSVPStatusColor(event.rsvpStatus)}>{event.rsvpStatus}</Badge>
+                    {event.rsvp_status && (
+                      <Badge className={getRSVPStatusColor(event.rsvp_status)}>{event.rsvp_status}</Badge>
                     )}
                   </div>
                 </CardHeader>
@@ -559,17 +555,17 @@ export default function EventSchedulingSystem() {
                     <div className="space-y-4">
                       <div className="flex items-center gap-2 text-sm">
                         <CalendarIcon className="h-4 w-4" />
-                        {format(parseISO(event.startTime), "MMM d, yyyy")}
+                        {format(parseISO(event.start_time), "MMM d, yyyy")}
                       </div>
 
                       <div className="flex items-center gap-2 text-sm">
                         <Clock className="h-4 w-4" />
-                        {format(parseISO(event.startTime), "h:mm a")} - {format(parseISO(event.endTime), "h:mm a")}
+                        {format(parseISO(event.start_time), "h:mm a")} - {format(parseISO(event.end_time), "h:mm a")}
                       </div>
 
                       <div className="flex items-center gap-2 text-sm">
                         <Users className="h-4 w-4" />
-                        {event.currentAttendees}/{event.maxAttendees} attendees
+                        {event.current_attendees}/{event.max_attendees} attendees
                       </div>
 
                       <div className="flex items-center gap-2 text-sm">
@@ -598,7 +594,7 @@ export default function EventSchedulingSystem() {
                           </Button>
                         )}
 
-                        {event.status === "scheduled" && !event.rsvpStatus && (
+                        {event.status === "scheduled" && !event.rsvp_status && (
                           <div className="flex gap-2">
                             <Button variant="outline" onClick={() => handleRSVP(event.id, "going")}>
                               Going
@@ -617,7 +613,7 @@ export default function EventSchedulingSystem() {
                           Share
                         </Button>
 
-                        {event.isHost && (
+                        {event.is_host && (
                           <Button variant="outline" size="sm">
                             <Edit className="h-4 w-4 mr-2" />
                             Edit
@@ -673,16 +669,16 @@ export default function EventSchedulingSystem() {
                       <div className="space-y-2 text-sm">
                         <div className="flex items-center gap-2">
                           <CalendarIcon className="h-4 w-4" />
-                          {format(parseISO(selectedEvent.startTime), "MMMM d, yyyy")}
+                          {format(parseISO(selectedEvent.start_time), "MMMM d, yyyy")}
                         </div>
                         <div className="flex items-center gap-2">
                           <Clock className="h-4 w-4" />
-                          {format(parseISO(selectedEvent.startTime), "h:mm a")} -{" "}
-                          {format(parseISO(selectedEvent.endTime), "h:mm a")}
+                          {format(parseISO(selectedEvent.start_time), "h:mm a")} -{" "}
+                          {format(parseISO(selectedEvent.end_time), "h:mm a")}
                         </div>
                         <div className="flex items-center gap-2">
                           <Users className="h-4 w-4" />
-                          {selectedEvent.currentAttendees}/{selectedEvent.maxAttendees} attendees
+                          {selectedEvent.current_attendees}/{selectedEvent.max_attendees} attendees
                         </div>
                         <div className="flex items-center gap-2">
                           {getPrivacyIcon(selectedEvent.privacy)}
@@ -704,27 +700,29 @@ export default function EventSchedulingSystem() {
                   </div>
 
                   <div className="space-y-4">
-                    <div>
-                      <h4 className="font-semibold mb-2">Video</h4>
-                      <div className="flex items-center gap-3 p-3 border rounded-lg">
-                        <img
-                          src={selectedEvent.video.thumbnail || "/placeholder.svg"}
-                          alt={selectedEvent.video.title}
-                          className="w-16 h-12 object-cover rounded"
-                        />
-                        <div>
-                          <p className="font-medium">{selectedEvent.video.title}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {Math.floor(selectedEvent.video.duration / 60)} minutes
-                          </p>
+                    {selectedEvent.video && (
+                      <div>
+                        <h4 className="font-semibold mb-2">Video</h4>
+                        <div className="flex items-center gap-3 p-3 border rounded-lg">
+                          <img
+                            src={selectedEvent.video.thumbnail || "/placeholder.svg"}
+                            alt={selectedEvent.video.title}
+                            className="w-16 h-12 object-cover rounded"
+                          />
+                          <div>
+                            <p className="font-medium">{selectedEvent.video.title}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {Math.floor(selectedEvent.video.duration / 60)} minutes
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
 
                     <div>
                       <h4 className="font-semibold mb-2">Tags</h4>
                       <div className="flex flex-wrap gap-1">
-                        {selectedEvent.tags.map((tag) => (
+                        {(selectedEvent.tags || []).map((tag) => (
                           <Badge key={tag} variant="secondary" className="text-xs">
                             {tag}
                           </Badge>
@@ -750,7 +748,7 @@ export default function EventSchedulingSystem() {
                             {attendee.role === "host" && <Crown className="h-4 w-4 text-yellow-500" />}
                           </div>
                           <p className="text-sm text-muted-foreground">
-                            RSVP'd {format(parseISO(attendee.rsvpDate), "MMM d")}
+                            RSVP'd {format(parseISO(attendee.rsvp_date), "MMM d")}
                           </p>
                         </div>
                       </div>
