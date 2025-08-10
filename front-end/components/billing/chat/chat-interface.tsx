@@ -46,7 +46,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-  const typingTimeoutRef = useRef<NodeJS.Timeout>()
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const { sendMessage, onMessage } = useSocket()
   const { user } = useAuth()

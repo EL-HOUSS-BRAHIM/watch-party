@@ -150,7 +150,7 @@ export function AdvancedAnalyticsDashboard() {
     }
   }
 
-  const exportData = async (format: "csv" | "pdf") => {
+  const exportData = async (format: "csv" | "json" | "excel") => {
     try {
       const exportResponse = await analyticsAPI.exportAnalytics({ format })
       
@@ -219,7 +219,11 @@ export function AdvancedAnalyticsDashboard() {
                 mode="range"
                 defaultMonth={dateRange?.from}
                 selected={dateRange}
-                onSelect={(range) => range && setDateRange(range)}
+                onSelect={(range) => {
+                  if (range?.from && range?.to) {
+                    setDateRange({ from: range.from, to: range.to })
+                  }
+                }}
                 numberOfMonths={2}
               />
             </PopoverContent>
@@ -241,9 +245,9 @@ export function AdvancedAnalyticsDashboard() {
             <Download className="mr-2 h-4 w-4" />
             Export CSV
           </Button>
-          <Button onClick={() => exportData("pdf")} variant="outline">
+          <Button onClick={() => exportData("excel")} variant="outline">
             <Download className="mr-2 h-4 w-4" />
-            Export PDF
+            Export Excel
           </Button>
         </div>
       </div>
@@ -423,7 +427,10 @@ export function AdvancedAnalyticsDashboard() {
                       cx="50%"
                       cy="50%"
                       labelLine={false}
-                      label={({ category, percent }) => `${category} ${(percent * 100).toFixed(0)}%`}
+                      label={(props: any) => {
+                        const { category, percent } = props
+                        return `${category} ${percent ? (percent * 100).toFixed(0) : 0}%`
+                      }}
                       outerRadius={80}
                       fill="#8884d8"
                       dataKey="views"

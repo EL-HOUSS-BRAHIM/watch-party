@@ -20,7 +20,7 @@ interface FriendRequest {
     firstName: string
     lastName: string
     avatar?: string
-    mutualFriends: number
+    mutualFriends?: number  // Make optional since not all users may have this
   }
   recipient: {
     id: string
@@ -28,6 +28,7 @@ interface FriendRequest {
     firstName: string
     lastName: string
     avatar?: string
+    mutualFriends?: number  // Add to recipient as well
   }
   message?: string
   status: "pending" | "accepted" | "declined"
@@ -188,9 +189,9 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
                   </h3>
                   <p className="text-sm text-gray-600">@{otherUser.username}</p>
 
-                  {isReceived && otherUser.mutualFriends > 0 && (
+                  {isReceived && (otherUser.mutualFriends ?? 0) > 0 && (
                     <p className="text-sm text-gray-500 mt-1">
-                      {otherUser.mutualFriends} mutual friend{otherUser.mutualFriends !== 1 ? "s" : ""}
+                      {otherUser.mutualFriends} mutual friend{(otherUser.mutualFriends ?? 0) !== 1 ? "s" : ""}
                     </p>
                   )}
 

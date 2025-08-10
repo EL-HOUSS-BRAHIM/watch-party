@@ -42,8 +42,9 @@ export class MessagingAPI {
     limit?: number
     before?: string
   }): Promise<PaginatedResponse<Message>> {
+    const id = typeof conversationId === 'string' ? parseInt(conversationId, 10) : conversationId
     return apiClient.get<PaginatedResponse<Message>>(
-      API_ENDPOINTS.messaging.messages(conversationId), 
+      API_ENDPOINTS.messaging.messages(id), 
       { params }
     )
   }
@@ -56,14 +57,16 @@ export class MessagingAPI {
     type?: 'text' | 'image' | 'file'
     message_type?: 'text' | 'image' | 'file'
   }): Promise<Message> {
-    return apiClient.post<Message>(API_ENDPOINTS.messaging.messages(conversationId), data)
+    const id = typeof conversationId === 'string' ? parseInt(conversationId, 10) : conversationId
+    return apiClient.post<Message>(API_ENDPOINTS.messaging.messages(id), data)
   }
 
   /**
    * Mark conversation as read
    */
   async markConversationAsRead(conversationId: number | string): Promise<APIResponse> {
-    return apiClient.post<APIResponse>(`${API_ENDPOINTS.messaging.conversations}/${conversationId}/read/`)
+    const id = typeof conversationId === 'string' ? parseInt(conversationId, 10) : conversationId
+    return apiClient.post<APIResponse>(`${API_ENDPOINTS.messaging.conversations}${id}/read/`)
   }
 
   /**

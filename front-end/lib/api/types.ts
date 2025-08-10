@@ -23,6 +23,11 @@ export interface APIError {
   detail?: string
 }
 
+// Generic typed API response handlers
+export type APIResult<T> = APIResponse<T>
+export type TypedAPIResponse<T> = Promise<APIResponse<T>>
+export type TypedPaginatedResponse<T> = Promise<PaginatedResponse<T>>
+
 // Authentication types - matching backend responses
 export interface User {
   id: string

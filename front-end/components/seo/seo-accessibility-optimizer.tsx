@@ -77,7 +77,7 @@ const mockAccessibilityIssues: AccessibilityIssue[] = []
 
 const mockSEOPages: SEOPage[] = []
 
-const seoTrends = []
+const seoTrends: any[] = []
 
 export function SEOAccessibilityOptimizer() {
   const { toast } = useToast()

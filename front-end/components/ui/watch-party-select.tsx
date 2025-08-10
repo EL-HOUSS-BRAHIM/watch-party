@@ -71,7 +71,7 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
 
     const handleSelect = (optionValue: string) => {
       if (multiple) {
-        const currentValues = selectedValues
+        const currentValues = selectedValues as string[]
         let newValues: string[]
 
         if (currentValues.includes(optionValue)) {
@@ -134,10 +134,10 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
               <span className="truncate">{getDisplayValue()}</span>
               {multiple && selectedValues.length > 1 && (
                 <div className="flex gap-1 flex-wrap">
-                  {selectedValues.slice(0, 2).map((val) => {
+                  {selectedValues.slice(0, 2).map((val, index) => {
                     const option = options.find((opt) => opt.value === val)
                     return (
-                      <Badge key={val} variant="secondary" className="text-xs">
+                      <Badge key={`${val}-${index}`} variant="secondary" className="text-xs">
                         {option?.label || val}
                       </Badge>
                     )

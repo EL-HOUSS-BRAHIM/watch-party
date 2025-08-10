@@ -61,6 +61,15 @@ export const translations = {
         hours: "Hours Watched",
       },
     },
+    language: {
+      title: "Language",
+      available: "available",
+      current: "Current",
+      change: "Change Language",
+      rtl_notice: "Right-to-left text direction is active",
+      help: "Help us translate Watch Party into more languages.",
+      contribute: "Contribute translations",
+    },
   },
   es: {
     common: {
@@ -186,6 +195,15 @@ export const translations = {
         videos: "Vidéos Regardées",
         hours: "Heures Regardées",
       },
+    },
+    language: {
+      title: "Langue",
+      available: "disponible",
+      current: "Actuelle",
+      change: "Changer de Langue",
+      rtl_notice: "Direction de texte de droite à gauche est active",
+      help: "Aidez-nous à traduire Watch Party dans plus de langues.",
+      contribute: "Contribuer aux traductions",
     },
   },
 }

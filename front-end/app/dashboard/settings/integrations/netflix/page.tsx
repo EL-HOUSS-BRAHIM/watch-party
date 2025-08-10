@@ -437,7 +437,7 @@ export default function NetflixIntegrationPage() {
               <div>
                 <h4 className="font-medium text-white mb-2">Last Sync</h4>
                 <p className="text-white/70">
-                  {lastSync.toLocaleDateString()} at {lastSync.toLocaleTimeString()}
+                  {lastSync ? `${lastSync.toLocaleDateString()} at ${lastSync.toLocaleTimeString()}` : 'Never'}
                 </p>
               </div>
               

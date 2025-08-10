@@ -77,6 +77,21 @@ interface TestResult {
   line?: number
 }
 
+// Mock data for charts
+const coverageData: any[] = [
+  { name: 'Statements', value: 85, color: '#8884d8' },
+  { name: 'Branches', value: 78, color: '#82ca9d' },
+  { name: 'Functions', value: 92, color: '#ffc658' },
+  { name: 'Lines', value: 88, color: '#ff7300' }
+]
+
+const testTrends: any[] = [
+  { date: '2024-01', passed: 145, failed: 5, coverage: 85 },
+  { date: '2024-02', passed: 152, failed: 3, coverage: 87 },
+  { date: '2024-03', passed: 158, failed: 2, coverage: 89 },
+  { date: '2024-04', passed: 162, failed: 1, coverage: 91 }
+]
+
 export function TestingSuiteDashboard() {
   const { toast } = useToast()
   const [testSuites, setTestSuites] = useState<TestSuite[]>([])

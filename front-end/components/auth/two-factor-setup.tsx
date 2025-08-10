@@ -35,8 +35,13 @@ export function TwoFactorSetup() {
 
   const generateSetupData = async () => {
     try {
-      const response = await api.post("/auth/2fa/setup/")
-      setSetupData(response.data)
+      const response = await api.post("/auth/2fa/setup/") as { data: { secret: string; qr_code: string; backup_codes: string[] } }
+      // Map the API response to match our interface
+      setSetupData({
+        secret_key: response.data.secret,
+        qr_code: response.data.qr_code,
+        backup_codes: response.data.backup_codes
+      })
     } catch (err) {
       setError("Failed to generate 2FA setup data")
     }

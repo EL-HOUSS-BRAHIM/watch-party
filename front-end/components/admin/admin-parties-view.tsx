@@ -80,7 +80,7 @@ export function AdminPartiesView() {
   const fetchParties = async () => {
     try {
       setIsLoading(true)
-      const response = await get('/admin/parties/')
+      const response = await get('/admin/parties/') as { data: WatchParty[] }
       setParties(response.data || [])
     } catch (error: any) {
       toast({

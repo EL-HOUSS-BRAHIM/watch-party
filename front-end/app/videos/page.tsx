@@ -14,6 +14,7 @@ import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { Video as APIVideo } from "@/lib/api/types"  // Import the API Video type
+import { formatNumberSafe, formatDateSafe, safeGet } from "@/lib/api/safe-access"
 import {
   Plus,
   Search,
@@ -137,7 +138,7 @@ export default function VideosPage() {
           </div>
 
                     <div className="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-xs font-medium">
-            {video.duration_formatted || video.duration || 'N/A'}
+            {safeGet(video, 'duration_formatted', safeGet(video, 'duration', 'N/A'))}
           </div>
 
           <div className="absolute top-2 right-2">
@@ -160,16 +161,16 @@ export default function VideosPage() {
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
                 <Eye className="w-4 h-4" />
-                {video.view_count.toLocaleString()}
+                {formatNumberSafe(video.view_count)}
               </div>
               <div className="flex items-center gap-1">
                 <Heart className="w-4 h-4" />
-                {video.likes}
+                {formatNumberSafe(video.likes)}
               </div>
             </div>
             <div className="flex items-center gap-1">
               <Clock className="w-4 h-4" />
-              {new Date(video.created_at).toLocaleDateString()}
+              {formatDateSafe(video.created_at)}
             </div>
           </div>
 

@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Users, Loader2, AlertCircle } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { useApi } from "@/hooks/use-api"
+import { PartyJoinResponse } from "@/lib/api/response-types"
 
 export function JoinParty() {
   const [partyCode, setPartyCode] = useState("")
@@ -42,7 +43,7 @@ export function JoinParty() {
     try {
       const response = await api.post("/parties/join/", {
         code: partyCode.trim().toUpperCase()
-      })
+      }) as PartyJoinResponse
 
       const partyId = response.data.party_id
       toast({

@@ -76,7 +76,7 @@ export function VideoUpload() {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
-        onUploadProgress: (progressEvent) => {
+        onUploadProgress: (progressEvent: any) => {
           if (progressEvent.total) {
             const loaded = progressEvent.loaded
             const total = progressEvent.total
@@ -105,7 +105,7 @@ export function VideoUpload() {
   const connectGoogleDrive = async () => {
     try {
       const response = await api.get('/integrations/google-drive/auth-url/')
-      window.location.href = response.data.auth_url
+      window.location.href = (response as { data: { auth_url: string } }).data.auth_url
     } catch (err) {
       toast({
         title: "Error",

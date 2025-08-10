@@ -26,7 +26,8 @@ import {
   Trash2,
   Flag,
   Volume2,
-  VolumeX
+  VolumeX,
+  X  // Add X icon import
 } from 'lucide-react'
 import { useSocket } from '@/contexts/socket-context'
 

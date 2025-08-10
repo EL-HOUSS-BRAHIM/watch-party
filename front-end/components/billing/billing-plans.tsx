@@ -9,18 +9,20 @@ import { Crown, Check, Star, Zap } from "lucide-react"
 import { useApi } from "@/hooks/use-api"
 import { useToast } from "@/hooks/use-toast"
 
-interface Plan {
+interface BillingPlan {
   id: string
   name: string
   price: number
-  interval: "month" | "year"
-  features: string[]
+  currency: string
+  interval: string
   popular?: boolean
   current?: boolean
+  features: string[]
+  description?: string
 }
 
-export function BillingPlans() {
-  const [plans, setPlans] = useState<Plan[]>([])
+export default function BillingPlans() {
+  const [plans, setPlans] = useState<BillingPlan[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [subscribing, setSubscribing] = useState<string | null>(null)
   
@@ -34,7 +36,7 @@ export function BillingPlans() {
   const fetchPlans = async () => {
     try {
       setIsLoading(true)
-      const response = await api.get("/billing/plans/")
+      const response = await api.get("/billing/plans/") as { data: { plans: BillingPlan[] } }
       setPlans(response.data.plans || [])
     } catch (err) {
       console.error("Failed to load plans:", err)
@@ -46,7 +48,7 @@ export function BillingPlans() {
   const subscribeToPlan = async (planId: string) => {
     setSubscribing(planId)
     try {
-      const response = await api.post(`/billing/subscribe/${planId}/`)
+      const response = await api.post(`/billing/subscribe/${planId}/`) as { data: { checkout_url: string } }
       // Handle payment flow here
       toast({
         title: "Subscription initiated",
@@ -80,7 +82,7 @@ export function BillingPlans() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {plans.map((plan) => (
+      {plans.map((plan: BillingPlan) => (
         <Card 
           key={plan.id}
           className={`relative ${plan.popular ? "ring-2 ring-primary" : ""}`}
@@ -111,7 +113,7 @@ export function BillingPlans() {
           
           <CardContent className="space-y-4">
             <ul className="space-y-2">
-              {plan.features.map((feature, index) => (
+              {plan.features.map((feature: string, index: number) => (
                 <li key={index} className="flex items-center space-x-2">
                   <Check className="w-4 h-4 text-green-500 flex-shrink-0" />
                   <span className="text-sm">{feature}</span>

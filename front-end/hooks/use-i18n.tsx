@@ -7,8 +7,9 @@ import { translations, type AllTranslationKeys } from "@/lib/i18n/translations"
 
 interface I18nContextType {
   language: string
+  currentLanguage: string  // Add alias for compatibility
   setLanguage: (lang: string) => void
-  t: (key: AllTranslationKeys, params?: Record<string, any>) => string
+  t: (key: AllTranslationKeys, fallback?: string) => string
   availableLanguages: Array<{
     code: string
     name: string
@@ -49,7 +50,7 @@ export const I18nProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("watchparty-language", language)
   }, [language])
 
-  const t = (key: AllTranslationKeys, params?: Record<string, any>): string => {
+  const t = (key: AllTranslationKeys, fallback?: string): string => {
     const keys = key.split(".")
     let value: any = translations[language as keyof typeof translations] || translations.en
 
@@ -66,20 +67,21 @@ export const I18nProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     if (typeof value !== "string") {
-      return key // Return key if no translation found
-    }
-
-    // Replace parameters
-    if (params) {
-      Object.entries(params).forEach(([param, paramValue]) => {
-        value = value.replace(new RegExp(`{{${param}}}`, "g"), String(paramValue))
-      })
+      return fallback || key // Return fallback or key if no translation found
     }
 
     return value
   }
 
   return (
-    <I18nContext.Provider value={{ language, setLanguage, t, availableLanguages }}>{children}</I18nContext.Provider>
+    <I18nContext.Provider value={{ 
+      language, 
+      currentLanguage: language,  // Add alias
+      setLanguage, 
+      t, 
+      availableLanguages 
+    }}>
+      {children}
+    </I18nContext.Provider>
   )
 }

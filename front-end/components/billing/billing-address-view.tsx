@@ -83,7 +83,7 @@ export function BillingAddressView() {
     try {
       setIsLoading(true)
       const response = await get('/billing/addresses/')
-      setAddresses(response.data || [])
+      setAddresses((response as { data: any[] }).data || [])
     } catch (error: any) {
       toast({
         title: 'Error',

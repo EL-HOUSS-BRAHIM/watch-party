@@ -21,7 +21,7 @@ export function ProtectedRoute({
   requireAdmin = false,
   fallback,
   redirectTo,
-}: ProtectedRouteProps): React.ReactNode {
+}: ProtectedRouteProps) {
   const { user, loading, isAuthenticated, isAdmin } = useAuth()
   const router = useRouter()
   const [shouldRender, setShouldRender] = useState(false)
@@ -70,7 +70,7 @@ export function ProtectedRoute({
 
   // Don't render anything while redirecting
   if (!shouldRender) {
-    return null
+    return <div className="hidden" />
   }
 
   return <>{children}</>

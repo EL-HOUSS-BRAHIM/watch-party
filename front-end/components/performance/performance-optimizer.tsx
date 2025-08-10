@@ -633,16 +633,16 @@ export function PerformanceOptimizer() {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span>Total Size</span>
-                    <span className="font-medium">{formatBytes(bundleAnalysis.totalSize)}</span>
+                    <span className="font-medium">{bundleAnalysis ? formatBytes(bundleAnalysis.totalSize) : 'N/A'}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span>Gzipped Size</span>
-                    <span className="font-medium text-green-600">{formatBytes(bundleAnalysis.gzippedSize)}</span>
+                    <span className="font-medium text-green-600">{bundleAnalysis ? formatBytes(bundleAnalysis.gzippedSize) : 'N/A'}</span>
                   </div>
                   <div className="pt-4">
                     <h4 className="font-medium mb-2">Chunks</h4>
                     <div className="space-y-2">
-                      {bundleAnalysis.chunks.map((chunk) => (
+                      {bundleAnalysis?.chunks.map((chunk) => (
                         <div key={chunk.name} className="flex justify-between items-center text-sm">
                           <span>{chunk.name}</span>
                           <div className="flex items-center gap-2">
@@ -664,7 +664,7 @@ export function PerformanceOptimizer() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {bundleAnalysis.duplicates.map((duplicate) => (
+                  {bundleAnalysis?.duplicates.map((duplicate) => (
                     <div key={duplicate.module} className="flex justify-between items-center p-3 border rounded-lg">
                       <div>
                         <h4 className="font-medium">{duplicate.module}</h4>
@@ -688,7 +688,7 @@ export function PerformanceOptimizer() {
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={bundleAnalysis.chunks}>
+                <BarChart data={bundleAnalysis?.chunks || []}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis tickFormatter={(value) => formatBytes(value)} />

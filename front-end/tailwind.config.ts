@@ -279,7 +279,7 @@ const config: Config = {
   plugins: [
     require("tailwindcss-animate"),
     // Custom plugin for glass morphism utilities
-    function({ addUtilities }) {
+    function({ addUtilities }: { addUtilities: any }) {
       const newUtilities = {
         '.glass-weak': {
           backgroundColor: 'var(--glass-weak)',

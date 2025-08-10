@@ -80,7 +80,7 @@ export function GoogleDriveVideoBrowser({
           pageSize: 100
         }
       })
-      setFiles(response.data.files || [])
+      setFiles((response as { data: { files: any[] } }).data.files || [])
     } catch (error: any) {
       toast({
         title: 'Error',

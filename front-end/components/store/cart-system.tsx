@@ -49,7 +49,7 @@ export function CartSystem({ children, onCheckoutComplete }: CartSystemProps) {
     try {
       setIsLoading(true)
       const response = await get('/store/cart/')
-      setCartItems(response.data?.items || [])
+      setCartItems((response as { data?: { items: any[] } }).data?.items || [])
     } catch (error) {
       toast({
         title: 'Error',
