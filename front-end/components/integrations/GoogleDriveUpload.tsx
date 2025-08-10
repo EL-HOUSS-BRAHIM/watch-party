@@ -33,10 +33,10 @@ interface UploadFile {
   uploadMethod: 's3' | 'gdrive';
   thumbnail?: string;
   metadata?: {
-    title: string;
-    description: string;
-    tags: string[];
-    visibility: 'public' | 'private' | 'unlisted';
+    title?: string;
+    description?: string;
+    tags?: string[];
+    visibility?: 'public' | 'private' | 'unlisted';
   };
 }
 

@@ -109,7 +109,7 @@ const QualityPage = () => {
             id: "functionality",
             name: "Functionality",
             category: "functionality",
-            score: systemHealth.status === 'healthy' ? 95 : systemHealth.status === 'degraded' ? 75 : 50,
+            score: systemHealth.overall_status === 'healthy' ? 95 : systemHealth.overall_status === 'warning' ? 75 : 50,
             target: 95,
             trend: "stable",
             lastTested: new Date(),
@@ -175,7 +175,7 @@ const QualityPage = () => {
           version: "v2.1.0",
           releaseDate: new Date(),
           testCoverage: 85,
-          passRate: systemHealth.status === 'healthy' ? 95 : 75,
+          passRate: systemHealth.overall_status === 'healthy' ? 95 : 75,
           criticalIssues: issues.filter(i => i.severity === 'critical').length,
           blockerIssues: issues.filter(i => i.severity === 'high').length,
           status: "approved"

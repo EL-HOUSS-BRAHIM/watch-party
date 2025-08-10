@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_FRONTEND_URL || "http://localhost:3000"),
   openGraph: {
     title: "WatchParty - Stream Together, Anywhere",
     description: "The next-generation cinematic platform for synchronized video watching with friends.",

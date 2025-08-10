@@ -107,7 +107,7 @@ export default function ContentModeration() {
       })
       
       setReports(data.results || [])
-      setTotalPages(data.totalPages || Math.ceil(data.count / 20))
+      setTotalPages(Math.ceil(data.count / 20))
     } catch (error) {
       console.error("Failed to load reports:", error)
       toast({

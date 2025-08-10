@@ -21,7 +21,7 @@ export function ProtectedRoute({
   requireAdmin = false,
   fallback,
   redirectTo,
-}: ProtectedRouteProps) {
+}: ProtectedRouteProps): React.ReactElement | null {
   const { user, loading, isAuthenticated, isAdmin } = useAuth()
   const router = useRouter()
   const [shouldRender, setShouldRender] = useState(false)
@@ -53,24 +53,25 @@ export function ProtectedRoute({
 
   // Show loading state
   if (loading) {
+    if (fallback) {
+      return <>{fallback}</>
+    }
     return (
-      fallback || (
-        <div className="min-h-screen flex items-center justify-center">
-          <Card className="w-full max-w-md">
-            <CardContent className="p-8 text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">Loading...</h3>
-              <p className="text-muted-foreground">Please wait while we verify your authentication</p>
-            </CardContent>
-          </Card>
-        </div>
-      )
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="p-8 text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Loading...</h3>
+            <p className="text-muted-foreground">Please wait while we verify your authentication</p>
+          </CardContent>
+        </Card>
+      </div>
     )
   }
 
   // Don't render anything while redirecting
   if (!shouldRender) {
-    return <div className="hidden" />
+    return null
   }
 
   return <>{children}</>
