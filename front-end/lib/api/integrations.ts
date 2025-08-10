@@ -77,3 +77,6 @@ export class IntegrationsAPI {
     return apiClient.get(API_ENDPOINTS.integrations.gdriveStreamingUrl(fileId))
   }
 }
+
+// Export an instance of the IntegrationsAPI class
+export const integrationsAPI = new IntegrationsAPI();

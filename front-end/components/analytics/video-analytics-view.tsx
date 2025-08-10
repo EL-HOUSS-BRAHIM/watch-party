@@ -374,3 +374,5 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
 }
 
 export default VideoAnalyticsView
+export { VideoAnalyticsView }
+export { VideoAnalyticsView }
