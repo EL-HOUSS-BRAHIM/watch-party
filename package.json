@@ -1,0 +1,34 @@
+{
+  "name": "watch-party-monorepo",
+  "version": "1.0.0",
+  "description": "Watch Party - Full-stack application with Next.js frontend and Django backend",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "./scripts/start-frontend.sh",
+    "dev:backend": "./scripts/start-backend.sh",
+    "setup": "./scripts/dev-setup.sh",
+    "frontend": "cd frontend && npm run dev",
+    "backend": "cd backend && source venv/bin/activate && python manage.py runserver 127.0.0.1:8001",
+    "build": "cd frontend && npm run build",
+    "test": "cd frontend && npm test",
+    "lint": "cd frontend && npm run lint"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EL-HOUSS-BRAHIM/watch-party-monorepo.git"
+  },
+  "author": "EL-HOUSS-BRAHIM",
+  "license": "MIT"
+}

@@ -1,0 +1,32 @@
+Your "{{ party.title }}" party summary
+
+Hi {{ user.first_name|default:user.username }},
+
+Your watch party has ended! Here's how it went:
+
+Party Statistics:
+- Total Participants: {{ stats.total_participants }}
+- Party Duration: {{ stats.duration_hours }}h {{ stats.duration_minutes }}m  
+- Chat Messages: {{ stats.total_messages }}
+- Reactions: {{ stats.total_reactions }}
+- Average Rating: {{ stats.average_rating }}/5
+
+{% if stats.most_active_participants %}Most Active Participants:
+{% for participant in stats.most_active_participants %}- {{ participant.name }} - {{ participant.message_count }} messages
+{% endfor %}{% endif %}
+
+{% if stats.popular_moments %}Most Popular Moments:
+{% for moment in stats.popular_moments %}- {{ moment.timestamp }} - {{ moment.reactions }} reactions
+{% endfor %}{% endif %}
+
+Host another party: {{ dashboard_url }}
+
+Thanks for bringing people together through the magic of shared viewing!
+
+Happy hosting!
+
+--
+Watch Party Team
+{{ site_url }}
+
+Unsubscribe: {{ unsubscribe_url }}?token={{ unsubscribe_token }}

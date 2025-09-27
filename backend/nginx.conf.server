@@ -1,0 +1,66 @@
+upstream django_backend { 
+    server 127.0.0.1:8000; 
+    keepalive 32; 
+}
+
+upstream websocket_backend { 
+    server 127.0.0.1:8002; 
+}
+
+# HTTP redirect to HTTPS
+server {
+    listen 80;
+    server_name be-watch-party.brahim-elhouss.me watch-party.brahim-elhouss.me 35.181.208.71;
+    return 301 https://$server_name$request_uri;
+}
+
+# HTTPS server
+server {
+    listen 443 ssl http2;
+    server_name be-watch-party.brahim-elhouss.me watch-party.brahim-elhouss.me 35.181.208.71;
+
+    # SSL Configuration
+    ssl_certificate /etc/ssl/certs/cloudflare-origin.pem;
+    ssl_certificate_key /etc/ssl/private/cloudflare-origin.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    client_max_body_size 50M;
+    
+    # Logging
+    access_log /var/log/nginx/watchparty_access.log;
+    error_log /var/log/nginx/watchparty_error.log warn;
+
+    # Static files
+    location /static/ { 
+        alias /opt/watch-party-backend/staticfiles/; 
+        expires 1y; 
+        add_header Cache-Control "public, immutable"; 
+    }
+    
+    location /media/ { 
+        alias /opt/watch-party-backend/media/; 
+        expires 30d; 
+        add_header Cache-Control "public"; 
+    }
+
+    # WebSocket connections
+    location /ws/ {
+        proxy_pass http://websocket_backend;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # All other requests to Django
+    location / { 
+        proxy_pass http://django_backend; 
+        proxy_set_header Host $host; 
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for; 
+        proxy_set_header X-Forwarded-Proto $scheme; 
+    }
+}

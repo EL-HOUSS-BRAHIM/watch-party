@@ -1,0 +1,10 @@
+-r base.txt
+
+# Testing specific packages
+pytest==8.3.3
+pytest-django==4.9.0
+pytest-cov==6.0.0
+pytest-mock==3.14.0
+factory-boy==3.3.0
+Faker==37.4.2
+freezegun==1.4.0

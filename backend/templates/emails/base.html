@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Watch Party{% endblock %}</title>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8fafc;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .email-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .email-header h1 {
+            color: #ffffff;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .email-header p {
+            color: #e2e8f0;
+            font-size: 1.1rem;
+        }
+        
+        .email-content {
+            padding: 2rem;
+        }
+        
+        .email-content h2 {
+            color: #2d3748;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .email-content p {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            margin: 1rem 0;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .alert {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+        
+        .alert-success {
+            background-color: #f0fff4;
+            border-color: #38a169;
+            color: #22543d;
+        }
+        
+        .alert-info {
+            background-color: #ebf8ff;
+            border-color: #3182ce;
+            color: #2c5282;
+        }
+        
+        .alert-warning {
+            background-color: #fffbeb;
+            border-color: #d69e2e;
+            color: #744210;
+        }
+        
+        .alert-danger {
+            background-color: #fed7d7;
+            border-color: #e53e3e;
+            color: #742a2a;
+        }
+        
+        .email-footer {
+            background-color: #f7fafc;
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .email-footer p {
+            color: #718096;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .social-links {
+            margin: 1rem 0;
+        }
+        
+        .social-links a {
+            display: inline-block;
+            margin: 0 0.5rem;
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 600px) {
+            .email-container {
+                margin: 0;
+                box-shadow: none;
+            }
+            
+            .email-header, .email-content, .email-footer {
+                padding: 1.5rem;
+            }
+            
+            .email-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .btn {
+                display: block;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <h1>🎬 Watch Party</h1>
+            <p>{% block header_subtitle %}Your favorite streaming platform{% endblock %}</p>
+        </div>
+        
+        <div class="email-content">
+            {% block content %}
+            <!-- Email content goes here -->
+            {% endblock %}
+        </div>
+        
+        <div class="email-footer">
+            <p><strong>Watch Party</strong> - Stream Together, Stay Connected</p>
+            <p>
+                <a href="{{ unsubscribe_url }}" style="color: #718096;">Unsubscribe</a> |
+                <a href="{{ support_url }}" style="color: #718096;">Support</a> |
+                <a href="{{ privacy_url }}" style="color: #718096;">Privacy Policy</a>
+            </p>
+            <div class="social-links">
+                <a href="{{ twitter_url }}">Twitter</a>
+                <a href="{{ discord_url }}">Discord</a>
+                <a href="{{ github_url }}">GitHub</a>
+            </div>
+            <p>&copy; {% now "Y" %} Watch Party. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

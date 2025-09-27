@@ -1,0 +1,40 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Welcome to Watch Party{% endblock %}
+
+{% block header_subtitle %}Welcome to the community!{% endblock %}
+
+{% block content %}
+<h2>🎉 Welcome to Watch Party, {{ user.first_name|default:user.username }}!</h2>
+
+<p>Thank you for joining our community! We're excited to have you on board and can't wait for you to experience the magic of watching videos together with friends and family.</p>
+
+<div class="alert alert-success">
+    <strong>Your account is ready!</strong> You can now start creating watch parties and inviting friends.
+</div>
+
+<h3>🚀 What's next?</h3>
+<ul style="margin: 1rem 0; padding-left: 2rem;">
+    <li><strong>Complete your profile</strong> - Add a profile picture and bio</li>
+    <li><strong>Create your first party</strong> - Upload a video or use a streaming link</li>
+    <li><strong>Invite friends</strong> - Share the magic of synchronized watching</li>
+    <li><strong>Explore features</strong> - Try real-time chat, reactions, and more!</li>
+</ul>
+
+<div style="text-align: center; margin: 2rem 0;">
+    <a href="{{ dashboard_url }}" class="btn">Get Started Now</a>
+    <a href="{{ help_url }}" class="btn btn-secondary">View User Guide</a>
+</div>
+
+<h3>💡 Pro Tips:</h3>
+<div style="background-color: #f7fafc; padding: 1rem; border-radius: 6px; margin: 1rem 0;">
+    <p><strong>🎬 Best Video Formats:</strong> MP4, WebM work best for smooth playback</p>
+    <p><strong>👥 Invite Friends:</strong> Use party codes for quick invitations</p>
+    <p><strong>💬 Stay Connected:</strong> Use real-time chat during watch parties</p>
+    <p><strong>📱 Mobile Ready:</strong> Access your parties from any device</p>
+</div>
+
+<p>If you have any questions or need help getting started, our support team is here to help!</p>
+
+<p>Happy watching! 🍿</p>
+{% endblock %}

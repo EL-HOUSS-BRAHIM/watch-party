@@ -1,0 +1,158 @@
+name: Deploy Watch Party Backend
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+env:
+  DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+  DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+  DEPLOY_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_watchparty
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+        
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install 'requests==2.31.0' 'psycopg2-binary' 'drf-spectacular[sidecar]'
+    
+    - name: Create test environment
+      run: |
+        cp .env.example .env.test
+        echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_watchparty" >> .env.test
+        echo "REDIS_URL=redis://localhost:6379/0" >> .env.test
+        echo "SECRET_KEY=test-secret-key-for-ci" >> .env.test
+        echo "DEBUG=False" >> .env.test
+    
+    - name: Run tests
+      env:
+        DJANGO_SETTINGS_MODULE: config.settings.testing
+      run: |
+        python manage.py check
+        python manage.py collectstatic --noinput
+        python manage.py migrate
+        # python manage.py test  # Uncomment when tests are available
+    
+    - name: Check deployment scripts
+      run: |
+        chmod +x deployment/scripts/*.sh
+        bash -n deployment/scripts/setup-server.sh
+        bash -n deployment/scripts/deploy-app.sh
+        bash -n deployment/scripts/update-app.sh
+        bash -n deployment/scripts/nginx-setup.sh
+        bash -n deployment/scripts/health-check.sh
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+    
+    - name: Deploy to server
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} << 'EOF'
+        cd /opt/watch-party-backend
+        
+        # Run update script
+        ./deployment/scripts/update-app.sh master
+        
+        # Run health check
+        ./deployment/scripts/health-check.sh
+        
+        # Show status
+        pm2 status
+        EOF
+    
+    - name: Deployment notification
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Deployment successful!"
+        else
+          echo "❌ Deployment failed!"
+          exit 1
+        fi
+
+  health-check:
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    
+    steps:
+    - name: Wait for deployment to stabilize
+      run: sleep 30
+    
+    - name: External health check
+      run: |
+        # Check if the website is responding
+        if curl -f -s --connect-timeout 30 --max-time 60 https://be-watch-party.brahim-elhouss.me/ > /dev/null; then
+          echo "✅ External health check passed"
+        else
+          echo "❌ External health check failed"
+          exit 1
+        fi
+    
+    - name: API health check
+      run: |
+        # Check API endpoints
+        if curl -f -s --connect-timeout 30 --max-time 60 https://be-watch-party.brahim-elhouss.me/api/schema/ > /dev/null; then
+          echo "✅ API health check passed"
+        else
+          echo "❌ API health check failed"
+          exit 1
+        fi

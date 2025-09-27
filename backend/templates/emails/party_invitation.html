@@ -1,0 +1,72 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Party Invitation - {{ party.title }}{% endblock %}
+
+{% block header_subtitle %}You're invited to join a watch party!{% endblock %}
+
+{% block content %}
+<h2>🎉 {{ inviter.first_name|default:inviter.username }} invited you to a watch party!</h2>
+
+<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+    <h3 style="color: white; margin-bottom: 0.5rem;">{{ party.title }}</h3>
+    <p style="color: #e2e8f0;">{{ party.description|default:"Join us for an awesome watch party!" }}</p>
+</div>
+
+<div style="display: flex; gap: 1rem; margin: 1rem 0;">
+    <div style="flex: 1; background-color: #f7fafc; padding: 1rem; border-radius: 6px;">
+        <strong>📅 Date & Time:</strong><br>
+        {{ party.scheduled_start_time|date:"F j, Y" }}<br>
+        {{ party.scheduled_start_time|time:"g:i A" }} {{ party.scheduled_start_time|date:"T" }}
+    </div>
+    <div style="flex: 1; background-color: #f7fafc; padding: 1rem; border-radius: 6px;">
+        <strong>🎬 Content:</strong><br>
+        {% if party.video %}
+            {{ party.video.title }}<br>
+            <small>Duration: {{ party.video.duration|default:"Unknown" }}</small>
+        {% else %}
+            Streaming content
+        {% endif %}
+    </div>
+</div>
+
+{% if party.description %}
+<div class="alert alert-info">
+    <strong>Party Details:</strong><br>
+    {{ party.description }}
+</div>
+{% endif %}
+
+<div style="text-align: center; margin: 2rem 0;">
+    <a href="{{ join_url }}" class="btn" style="font-size: 1.1rem; padding: 15px 30px;">
+        🎬 Join Watch Party
+    </a>
+</div>
+
+<div style="background-color: #fffbeb; border: 1px solid #d69e2e; border-radius: 6px; padding: 1rem; margin: 1rem 0;">
+    <h4 style="color: #744210; margin-bottom: 0.5rem;">📋 Quick Info:</h4>
+    <ul style="color: #744210; margin: 0; padding-left: 1.5rem;">
+        <li><strong>Party Code:</strong> {{ party.party_code }}</li>
+        <li><strong>Max Participants:</strong> {{ party.max_participants }}</li>
+        <li><strong>Current Members:</strong> {{ party.participant_count }}</li>
+        {% if party.is_private %}<li><strong>Privacy:</strong> Private party (invitation only)</li>{% endif %}
+    </ul>
+</div>
+
+<h3>🚀 What to expect:</h3>
+<ul style="margin: 1rem 0; padding-left: 2rem;">
+    <li><strong>Synchronized playback</strong> - Everyone watches together in perfect sync</li>
+    <li><strong>Real-time chat</strong> - Share reactions and thoughts during the show</li>
+    <li><strong>Interactive features</strong> - Reactions, polls, and more</li>
+    <li><strong>Cross-platform</strong> - Join from any device</li>
+</ul>
+
+<p><strong>Can't make it?</strong> No worries! You can join late or catch up using the replay feature.</p>
+
+<div style="text-align: center; margin: 2rem 0;">
+    <a href="{{ decline_url }}" style="color: #718096; text-decoration: none; font-size: 0.9rem;">
+        Can't attend? Click here to decline
+    </a>
+</div>
+
+<p>See you at the party! 🍿</p>
+{% endblock %}

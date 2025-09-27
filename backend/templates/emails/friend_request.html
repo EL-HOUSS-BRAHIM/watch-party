@@ -1,0 +1,41 @@
+{% extends "emails/base.html" %}
+
+{% block title %}{{ sender.first_name|default:sender.username }} wants to be friends!{% endblock %}
+
+{% block header_subtitle %}You have a new friend request{% endblock %}
+
+{% block content %}
+<h2>👋 New Friend Request</h2>
+
+<p>Hi {{ recipient.first_name|default:recipient.username }},</p>
+
+<p><strong>{{ sender.first_name|default:sender.username }}</strong> has sent you a friend request on Watch Party!</p>
+
+<div style="background-color: #f7fafc; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; text-align: center;">
+    {% if sender.avatar %}
+    <img src="{{ sender.avatar.url }}" alt="{{ sender.username }}" style="width: 60px; height: 60px; border-radius: 50%; margin-bottom: 1rem;">
+    {% endif %}
+    <h3>{{ sender.first_name|default:sender.username }}</h3>
+    <p style="color: #718096;">{{ sender.username }}</p>
+    {% if sender.bio %}
+    <p><em>"{{ sender.bio }}"</em></p>
+    {% endif %}
+</div>
+
+<p>Once you're friends, you'll be able to:</p>
+<ul style="margin: 1rem 0; padding-left: 2rem;">
+    <li>🎬 Create private watch parties together</li>
+    <li>📝 Send direct party invitations</li>
+    <li>💬 Start private chats</li>
+    <li>📊 See each other's watch activity (if enabled)</li>
+</ul>
+
+<div style="text-align: center; margin: 2rem 0;">
+    <a href="{{ accept_url }}" class="btn" style="margin: 0.5rem;">Accept Friend Request</a>
+    <a href="{{ decline_url }}" class="btn btn-secondary" style="margin: 0.5rem;">Decline</a>
+</div>
+
+<p>You can also respond to this friend request from your dashboard.</p>
+
+<p>Happy connecting! 🤝</p>
+{% endblock %}

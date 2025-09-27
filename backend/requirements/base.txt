@@ -1,0 +1,60 @@
+# Base requirements - common to all environments
+Django==5.0.14
+djangorestframework==3.16.0
+djangorestframework_simplejwt==5.5.0
+drf-spectacular>=0.28.0
+django-cors-headers==4.7.0
+django-filter==25.1
+django-redis==6.0.0
+django-environ==0.12.0
+dj-database-url==3.0.1
+
+# Database
+psycopg==3.2.9
+
+# Authentication and Authorization
+django-allauth==65.10.0
+PyJWT==2.9.0
+pyotp==2.9.0
+
+# WebSocket support
+channels==4.2.2
+channels_redis==4.2.1
+daphne==4.0.0
+
+# Task queue
+celery==5.5.3
+redis==6.2.0
+
+# Cloud services
+boto3==1.39.9
+firebase-admin==6.5.0
+google-api-python-client==2.176.0
+google-auth==2.40.3
+google-cloud-firestore==2.21.0
+google-cloud-storage==3.2.0
+
+# File handling and images
+Pillow==11.3.0
+python-magic==0.4.27
+
+# Utilities
+requests==2.32.4
+python-dateutil==2.9.0.post0
+pytz==2025.2
+qrcode==7.4.2
+stripe==12.3.0
+
+# Security
+cryptography==45.0.5
+bleach==6.1.0
+
+# Static files
+whitenoise==6.9.0
+
+# WSGI/ASGI servers
+gunicorn==23.0.0
+gevent==24.2.1
+
+# Monitoring
+sentry-sdk==1.40.6

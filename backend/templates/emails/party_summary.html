@@ -1,0 +1,51 @@
+{% extends "emails/base.html" %}
+
+{% block title %}Your "{{ party.title }}" party summary{% endblock %}
+
+{% block header_subtitle %}Thanks for hosting an awesome watch party!{% endblock %}
+
+{% block content %}
+<h2>📊 Party Summary: "{{ party.title }}"</h2>
+
+<p>Hi {{ user.first_name|default:user.username }},</p>
+
+<p>Your watch party has ended! Here's how it went:</p>
+
+<div class="alert alert-info">
+    <h3>📈 Party Statistics</h3>
+    <ul style="list-style: none; padding: 0;">
+        <li><strong>👥 Total Participants:</strong> {{ stats.total_participants }}</li>
+        <li><strong>⏱️ Party Duration:</strong> {{ stats.duration_hours }}h {{ stats.duration_minutes }}m</li>
+        <li><strong>💬 Chat Messages:</strong> {{ stats.total_messages }}</li>
+        <li><strong>😄 Reactions:</strong> {{ stats.total_reactions }}</li>
+        <li><strong>⭐ Average Rating:</strong> {{ stats.average_rating }}/5</li>
+    </ul>
+</div>
+
+{% if stats.most_active_participants %}
+<h3>🏆 Most Active Participants</h3>
+<ul>
+    {% for participant in stats.most_active_participants %}
+    <li>{{ participant.name }} - {{ participant.message_count }} messages</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if stats.popular_moments %}
+<h3>🎉 Most Popular Moments</h3>
+<p>These moments got the most reactions during your party:</p>
+<ul>
+    {% for moment in stats.popular_moments %}
+    <li>{{ moment.timestamp }} - {{ moment.reactions }} reactions</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div style="text-align: center; margin: 2rem 0;">
+    <a href="{{ dashboard_url }}" class="btn">Host Another Party</a>
+</div>
+
+<p>Thanks for bringing people together through the magic of shared viewing!</p>
+
+<p>Happy hosting! 🎬</p>
+{% endblock %}

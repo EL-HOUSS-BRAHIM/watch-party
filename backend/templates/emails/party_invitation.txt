@@ -1,0 +1,26 @@
+You're invited to "{{ party.title }}" watch party!
+
+{{ inviter.first_name|default:inviter.username }} has invited you to join their watch party.
+
+Party Details:
+- Title: {{ party.title }}
+- Host: {{ inviter.first_name|default:inviter.username }}
+- Scheduled: {{ party.scheduled_start_time|date:"F j, Y" }} at {{ party.scheduled_start_time|time:"g:i A" }}
+{% if party.description %}
+- Description: {{ party.description }}
+{% endif %}
+
+Join the party: {{ join_url }}
+
+Not interested? You can decline: {{ decline_url }}
+
+What is a Watch Party?
+A watch party lets you watch videos together with friends in perfect sync, complete with real-time chat, reactions, and shared controls.
+
+See you there!
+
+--
+Watch Party Team
+{{ site_url }}
+
+Unsubscribe: {{ unsubscribe_url }}?token={{ unsubscribe_token }}
