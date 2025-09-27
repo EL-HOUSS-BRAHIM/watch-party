@@ -76,7 +76,7 @@ function EmailVerificationHandler() {
     }
 
     verifyEmail()
-  }, [])
+  }, [token, email, verifyEmail])
 
   useEffect(() => {
     if (resendCooldown > 0) {

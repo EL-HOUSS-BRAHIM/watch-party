@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -50,27 +50,7 @@ export default function ChatStatsPage() {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const normalizeChannelData = (channel: any) => {
-    return {
-      id: String(channel.id ?? channel.channel_id ?? Math.random().toString(36).substr(2, 9)),
-      name: channel.name ?? channel.channel_name ?? channel.title ?? `Channel ${channel.id}`,
-      messageCount: Number(channel.message_count ?? channel.messages ?? channel.total_messages ?? 0),
-      userCount: Number(channel.user_count ?? channel.users ?? channel.participants ?? 0)
-    }
-  }
-
-  const normalizeActivity = (activity: any) => {
-    return {
-      id: String(activity.id ?? Math.random().toString(36).substr(2, 9)),
-      type: normalizeActivityType(activity.type ?? activity.activity_type),
-      user: activity.user ?? activity.username ?? activity.user_name ?? 'Unknown',
-      channel: activity.channel ?? activity.channel_name ?? activity.room ?? 'Unknown',
-      timestamp: activity.timestamp ?? activity.created_at ?? activity.time ?? 'Unknown',
-      details: activity.details ?? activity.description ?? activity.message ?? undefined
-    }
-  }
-
-  const normalizeActivityType = (type: any): 'message' | 'join' | 'leave' | 'moderation' => {
+  const normalizeActivityType = (type: unknown): 'message' | 'join' | 'leave' | 'moderation' => {
     const typeStr = String(type).toLowerCase()
     if (typeStr.includes('moderation') || typeStr.includes('mod') || typeStr.includes('ban') || typeStr.includes('warn')) return 'moderation'
     if (typeStr.includes('join') || typeStr.includes('enter')) return 'join'
@@ -78,11 +58,7 @@ export default function ChatStatsPage() {
     return 'message'
   }
 
-  useEffect(() => {
-    fetchChatStats();
-  }, [timeframe, selectedChannel]);
-
-  const fetchChatStats = async () => {
+  const fetchChatStats = useCallback(async () => {
     setLoading(true);
     try {
       // Fetch chat statistics from multiple API endpoints
@@ -96,7 +72,7 @@ export default function ChatStatsPage() {
         chatAPI.getModerationLog ? chatAPI.getModerationLog(defaultRoomId, { page: 1 }) : Promise.resolve(null)
       ])
 
-      let chatStats: ChatStats = {
+      const chatStats: ChatStats = {
         totalMessages: 0,
         totalUsers: 0,
         activeUsers: 0,
@@ -180,16 +156,11 @@ export default function ChatStatsPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [selectedChannel, toast])
 
-  const getActionColor = (actionType: string): string => {
-    const type = String(actionType).toLowerCase()
-    if (type.includes('delete') || type.includes('remove')) return '#ef4444'
-    if (type.includes('warn') || type.includes('warning')) return '#f59e0b'
-    if (type.includes('mute') || type.includes('silence')) return '#8b5cf6'
-    if (type.includes('ban') || type.includes('block')) return '#dc2626'
-    return '#6b7280'
-  };
+  useEffect(() => {
+    fetchChatStats();
+  }, [fetchChatStats]);
 
   if (loading) {
     return (

@@ -9,34 +9,17 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
-  Cog, 
-  Database,
-  Mail,
   Shield,
-  Globe,
-  Upload,
-  Download,
-  Key,
-  Lock,
-  Users,
   MessageSquare,
   Video,
   Bell,
-  Palette,
-  Languages,
-  Accessibility,
   Server,
-  Cloud,
-  Smartphone,
-  Monitor,
   Save,
   RotateCcw,
   CheckCircle,
   AlertTriangle,
   Info,
   Settings,
-  HardDrive,
-  Wifi,
   Zap
 } from 'lucide-react';
 

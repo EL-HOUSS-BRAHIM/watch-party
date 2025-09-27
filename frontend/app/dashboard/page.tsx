@@ -29,6 +29,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { dashboardAPI, partiesAPI, videosAPI, usersAPI } from "@/lib/api"
 
 interface DashboardStats {
   total_parties: number
@@ -111,33 +112,14 @@ export default function DashboardPage() {
       try {
         setIsLoading(true)
 
-        // Use API to fetch real dashboard data
+        // Use proper API services instead of direct fetch calls
         const [dashboardStats, partiesData, videosData, activityData, achievementsData] = await Promise.all([
-          fetch("/api/dashboard/stats", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }).then(res => res.json()).catch(() => null),
-          fetch("/api/parties/recent", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }).then(res => res.json()).catch(() => []),
-          fetch("/api/videos/recent", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }).then(res => res.json()).catch(() => []),
-          fetch("/api/activity/friends", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }).then(res => res.json()).catch(() => []),
-          fetch("/api/achievements", {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-            },
-          }).then(res => res.json()).catch(() => [])
+          dashboardAPI && dashboardAPI.getStats ? dashboardAPI.getStats() : Promise.resolve(null),
+          partiesAPI && partiesAPI.getRecent ? partiesAPI.getRecent() : Promise.resolve([]),
+          videosAPI && videosAPI.getVideos ? videosAPI.getVideos({ ordering: '-created_at', limit: 5 }) : Promise.resolve({ results: [] }),
+          usersAPI && usersAPI.getActivity ? usersAPI.getActivity({ visibility: 'friends_only' }) : Promise.resolve({ results: [] }),
+          // For achievements, we'll need to create mock data as there's no clear endpoint yet
+          Promise.resolve([])
         ])
 
         // Set stats from API or fallback to defaults
@@ -155,10 +137,10 @@ export default function DashboardPage() {
           },
         })
 
-        // Set data from API responses or fallback to empty arrays
+        // Set data from API responses - handle paginated responses
         setRecentParties(Array.isArray(partiesData) ? partiesData.slice(0, 3) : [])
-        setRecentVideos(Array.isArray(videosData) ? videosData.slice(0, 3) : [])
-        setFriendActivity(Array.isArray(activityData) ? activityData.slice(0, 4) : [])
+        setRecentVideos(Array.isArray(videosData?.results) ? videosData.results.slice(0, 3) : [])
+        setFriendActivity(Array.isArray(activityData?.results) ? activityData.results.slice(0, 4) : [])
         setAchievements(Array.isArray(achievementsData) ? achievementsData : [])
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error)
