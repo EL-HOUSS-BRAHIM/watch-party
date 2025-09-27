@@ -1,142 +1,194 @@
-# Watch Party Monorepo
+# 🎬 Watch Party Monorepo
 
-A full-stack watch party application with synchronized video viewing, real-time chat, and social features.
+A unified repository containing both frontend and backend for the Watch Party application - a next-generation platform for synchronized video watching with friends.
 
-## Architecture
-
-This monorepo contains:
-- **Frontend**: Next.js 15.2.4 with React, TypeScript, and Tailwind CSS
-- **Backend**: Django 5.0 with Django REST Framework, WebSocket support, and PostgreSQL
-
-## Project Structure
+## 🏗️ Repository Structure
 
 ```
 watch-party-monorepo/
-├── frontend/                 # Next.js application
-│   ├── app/                  # App Router pages
-│   ├── components/           # Reusable React components
-│   ├── lib/                  # Utility functions and configurations
-│   ├── hooks/                # Custom React hooks
-│   ├── types/                # TypeScript type definitions
-│   ├── package.json          # Frontend dependencies
-│   └── .env.dev              # Development environment variables
-├── backend/                  # Django application
-│   ├── apps/                 # Django apps (authentication, parties, etc.)
-│   ├── config/               # Django settings and configurations
-│   ├── venv/                 # Python virtual environment
-│   ├── requirements.txt      # Python dependencies
-│   └── .env.dev              # Development environment variables
-├── scripts/                  # Development and deployment scripts
-│   ├── dev-setup.sh          # Setup development environment
-│   ├── start-frontend.sh     # Start frontend dev server
-│   └── start-backend.sh      # Start backend dev server
-├── docs/                     # Documentation
-└── package.json              # Root package.json with workspace config
+├── frontend/                 # Next.js 15.2.4 React application
+│   ├── app/                 # App router pages
+│   ├── components/          # Reusable React components  
+│   ├── hooks/               # Custom React hooks
+│   ├── lib/                 # Utility libraries
+│   └── types/               # TypeScript type definitions
+├── backend/                 # Django REST API
+│   ├── apps/                # Django applications
+│   ├── config/              # Django configuration
+│   ├── shared/              # Shared utilities
+│   └── requirements/        # Python dependencies
+├── scripts/                 # Development and deployment scripts
+└── .github/workflows/       # CI/CD workflows
 ```
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
 - Node.js 18+ and npm
-- Python 3.12+
-- Redis server
-- Git
+- Python 3.12+ and pip
+- PostgreSQL 13+
+- Redis 6+
 
-### Setup Development Environment
+### Development Setup
 
-1. **Clone and setup**:
+1. **Clone the repository:**
    ```bash
-   cd ~/watch-party-monorepo
-   npm run setup
+   git clone git@github.com:EL-HOUSS-BRAHIM/watch-party.git
+   cd watch-party
    ```
 
-2. **Start development servers**:
+2. **Setup Backend:**
    ```bash
-   # Start both frontend and backend
+   cd backend
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements/development.txt
+   cp .env.example .env      # Configure your environment variables
+   python manage.py migrate
+   python manage.py runserver
+   ```
+
+3. **Setup Frontend:**
+   ```bash
+   cd frontend
+   npm install
+   cp .env.local.example .env.local  # Configure your environment variables
    npm run dev
-   
-   # Or start individually
-   npm run dev:frontend  # Frontend on http://127.0.0.1:3000
-   npm run dev:backend   # Backend on http://127.0.0.1:8001
    ```
 
-## Development Workflow
+### Using Development Scripts
 
-### Frontend Development
-- **Port**: 3000 (development)
-- **Framework**: Next.js 15.2.4 with App Router
-- **Styling**: Tailwind CSS
-- **State Management**: React hooks and Context API
+- **Start both frontend and backend:**
+  ```bash
+  ./scripts/dev-setup.sh
+  ```
 
-### Backend Development
-- **Port**: 8001 (development), 8000 (production)
-- **Framework**: Django 5.0 with Django REST Framework
-- **Database**: SQLite (development), PostgreSQL (production)
-- **Authentication**: JWT tokens with refresh mechanism
+- **Start backend only:**
+  ```bash
+  ./scripts/start-backend.sh
+  ```
 
-### Environment Variables
+- **Start frontend only:**
+  ```bash
+  ./scripts/start-frontend.sh
+  ```
 
-#### Frontend (.env.dev)
+## 🏭 Production Deployment
+
+### Automatic Deployment
+
+The repository includes GitHub Actions workflows for automatic deployment:
+
+- **Backend Deployment:** Triggered on changes to `backend/` directory
+- **Frontend Deployment:** Triggered on changes to `frontend/` directory
+- **Full Deployment:** Triggered on pushes to `master` branch
+
+### Manual Deployment
+
+1. **Backend:**
+   ```bash
+   cd backend
+   ./deploy.sh
+   ```
+
+2. **Frontend:**
+   ```bash
+   cd frontend
+   npm run build
+   # Deploy build files to server
+   ```
+
+## 🔧 Configuration
+
+### Backend Configuration
+
+Key environment variables in `backend/.env`:
+
+- `SECRET_KEY`: Django secret key
+- `DATABASE_URL`: PostgreSQL connection string
+- `REDIS_URL`: Redis connection string
+- `JWT_SECRET_KEY`: JWT signing key
+
+### Frontend Configuration
+
+Key environment variables in `frontend/.env.local`:
+
+- `NEXT_PUBLIC_API_URL`: Backend API URL
+- `NEXT_PUBLIC_APP_URL`: Frontend application URL
+
+## 📚 API Documentation
+
+- **Swagger UI:** Available at `/api/docs/` when backend is running
+- **ReDoc:** Available at `/api/redoc/`
+- **OpenAPI Schema:** Available at `/api/schema/`
+
+## 🧪 Testing
+
+### Backend Tests
 ```bash
-NEXT_PUBLIC_API_URL=http://127.0.0.1:8001
-NEXT_PUBLIC_APP_URL=http://127.0.0.1:3000
-NODE_ENV=development
+cd backend
+pytest
 ```
 
-#### Backend (.env.dev)
+### Frontend Tests  
 ```bash
-DEBUG=True
-DJANGO_SETTINGS_MODULE=config.settings.development
-DATABASE_URL=sqlite:///db.dev.sqlite3
-REDIS_URL=redis://127.0.0.1:6379/1
-SECRET_KEY=dev-secret-key-change-in-production
-ALLOWED_HOSTS=127.0.0.1,localhost
-CORS_ALLOW_ALL_ORIGINS=True
+cd frontend
+npm test
 ```
 
-## Available Scripts
+### E2E Tests
+```bash
+cd frontend
+npm run test:e2e
+```
 
-From the root directory:
-- `npm run setup` - Setup development environment
-- `npm run dev` - Start both frontend and backend
-- `npm run dev:frontend` - Start only frontend
-- `npm run dev:backend` - Start only backend
-- `npm run build` - Build frontend for production
-- `npm run test` - Run frontend tests
-- `npm run lint` - Lint frontend code
+## 🏗️ Architecture
 
-## Production Deployment
+### Backend Architecture
+- **Django 4.2+** with Django REST Framework
+- **PostgreSQL** for primary database
+- **Redis** for caching and sessions
+- **Celery** for background tasks
+- **WebSocket** support via Django Channels
 
-The production environment is running:
-- Frontend: https://watch-party.brahim-elhouss.me (PM2 + Nginx + Cloudflare)
-- Backend: Same domain with /api prefix (Gunicorn + Nginx + PostgreSQL)
+### Frontend Architecture
+- **Next.js 15.2.4** with App Router
+- **TypeScript** for type safety
+- **Tailwind CSS** for styling
+- **Shadcn/ui** component library
 
-## Contributing
+## 🔐 Security
 
-1. Make changes in the monorepo
-2. Test locally with `npm run dev`
-3. Build and test with `npm run build`
-4. Commit and push to GitHub
+- JWT-based authentication
+- CORS configuration
+- Rate limiting
+- Input validation and sanitization
+- SQL injection protection
+- XSS protection
 
-## Technology Stack
+## 📈 Monitoring
 
-### Frontend
-- Next.js 15.2.4 (React 19)
-- TypeScript
-- Tailwind CSS
-- Lucide Icons
-- shadcn/ui components
+- Health check endpoints
+- Performance monitoring
+- Error tracking
+- Application logs
 
-### Backend
-- Django 5.0
-- Django REST Framework
-- PostgreSQL
-- Redis (caching & sessions)
-- Channels (WebSocket support)
-- Celery (background tasks)
+## 🤝 Contributing
 
-### Infrastructure
-- PM2 (Process Management)
-- Nginx (Reverse Proxy)
-- Cloudflare (CDN & SSL)
-- Ubuntu 24.04 LTS
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m '\''Add some amazing feature\''`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙋‍♂️ Support
+
+For questions and support, please open an issue in the GitHub repository.
+
+---
+
+**Built with ❤️ for the future of social entertainment**
