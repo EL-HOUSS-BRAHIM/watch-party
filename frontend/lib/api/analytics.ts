@@ -72,28 +72,28 @@ export class AnalyticsAPI {
   /**
    * Get basic analytics
    */
-  async getBasicAnalytics(): Promise<any> {
+  async getBasicAnalytics(): Promise<AnalyticsDashboard> {
     return apiClient.get(API_ENDPOINTS.analytics.basic)
   }
 
   /**
    * Get user statistics
    */
-  async getUserStats(): Promise<any> {
+  async getUserStats(): Promise<UserAnalytics> {
     return apiClient.get(API_ENDPOINTS.analytics.userStats)
   }
 
   /**
    * Get party statistics
    */
-  async getPartyStats(partyId: string): Promise<any> {
+  async getPartyStats(partyId: string): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.partyStats(partyId))
   }
 
   /**
    * Get admin analytics
    */
-  async getAdminAnalytics(): Promise<any> {
+  async getAdminAnalytics(): Promise<AnalyticsDashboard> {
     return apiClient.get(API_ENDPOINTS.analytics.adminAnalytics)
   }
 
@@ -113,49 +113,49 @@ export class AnalyticsAPI {
   /**
    * Get party analytics
    */
-  async getPartyAnalytics(partyId: string): Promise<any> {
+  async getPartyAnalytics(partyId: string): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.party(partyId))
   }
 
   /**
    * Get system analytics
    */
-  async getSystemAnalytics(): Promise<any> {
+  async getSystemAnalytics(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.system)
   }
 
   /**
    * Get performance analytics
    */
-  async getPerformanceAnalytics(): Promise<any> {
+  async getPerformanceAnalytics(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.performance)
   }
 
   /**
    * Get revenue analytics
    */
-  async getRevenueAnalytics(): Promise<any> {
+  async getRevenueAnalytics(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.revenue)
   }
 
   /**
    * Get retention analytics
    */
-  async getRetentionAnalytics(): Promise<any> {
+  async getRetentionAnalytics(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.retention)
   }
 
   /**
    * Get content analytics
    */
-  async getContentAnalytics(): Promise<any> {
+  async getContentAnalytics(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.content)
   }
 
   /**
    * Get events analytics
    */
-  async getEventsAnalytics(): Promise<any> {
+  async getEventsAnalytics(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.events)
   }
 
@@ -179,14 +179,14 @@ export class AnalyticsAPI {
   /**
    * Get A/B testing analytics
    */
-  async getABTestingAnalytics(): Promise<any> {
+  async getABTestingAnalytics(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.abTesting)
   }
 
   /**
    * Get predictive analytics
    */
-  async getPredictiveAnalytics(): Promise<any> {
+  async getPredictiveAnalytics(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.predictive)
   }
 
@@ -195,35 +195,35 @@ export class AnalyticsAPI {
   /**
    * Get platform overview analytics
    */
-  async getPlatformOverview(): Promise<any> {
+  async getPlatformOverview(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.platformOverview)
   }
 
   /**
    * Get user behavior analytics
    */
-  async getUserBehaviorAnalytics(): Promise<any> {
+  async getUserBehaviorAnalytics(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.userBehavior)
   }
 
   /**
    * Get content performance analytics
    */
-  async getContentPerformance(): Promise<any> {
+  async getContentPerformance(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.contentPerformance)
   }
 
   /**
    * Get advanced revenue analytics
    */
-  async getAdvancedRevenueAnalytics(): Promise<any> {
+  async getAdvancedRevenueAnalytics(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.revenueAdvanced)
   }
 
   /**
    * Get personal analytics
    */
-  async getPersonalAnalytics(): Promise<any> {
+  async getPersonalAnalytics(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.personal)
   }
 
