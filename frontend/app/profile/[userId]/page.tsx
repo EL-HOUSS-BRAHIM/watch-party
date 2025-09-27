@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { usersAPI } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -112,28 +113,31 @@ export default function PublicProfilePage() {
 
   const fetchProfile = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/${userId}/profile/`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setProfile(data)
-      } else if (response.status === 404) {
+      if (!usersAPI) {
+        console.error('Users API not available')
+        return
+      }
+      
+      const data = await usersAPI.getUserProfile(userId)
+      setProfile(data as PublicProfile)
+    } catch (error) {
+      console.error("Profile fetch error:", error)
+      
+      // Handle API errors
+      const apiError = error as any
+      if (apiError?.status === 404) {
         router.push("/not-found")
-      } else if (response.status === 403) {
+        return
+      } else if (apiError?.status === 403) {
         setProfile({
           ...({} as PublicProfile),
           isPublic: false,
           friendshipStatus: "blocked",
         })
-      } else {
-        throw new Error("Failed to fetch profile")
+        return
       }
-    } catch (error) {
-      console.error("Profile fetch error:", error)
-      // Mock data for demonstration
+      
+      // Mock data for demonstration when API fails
       setProfile({
         id: userId,
         username: "sampleuser",
