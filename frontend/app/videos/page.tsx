@@ -12,8 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useVideos } from "@/hooks/use-api"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { videosAPI } from "@/lib/api"
 import { cn } from "@/lib/utils"
-import { useAuthToken, isAuthTokenError } from "@/hooks/use-auth-token"
 import {
   Plus,
   Search,
@@ -38,7 +38,6 @@ import type { Video } from "@/lib/api/types"
 export default function VideosPage() {
   const router = useRouter()
   const { user } = useAuth()
-  const { ensureAccessToken } = useAuthToken()
   const { toast } = useToast()
   
   const [searchQuery, setSearchQuery] = useState("")
@@ -58,29 +57,25 @@ export default function VideosPage() {
     }
 
     try {
-      const token = ensureAccessToken()
-      const response = await fetch(`/api/videos/${videoId}/`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        toast({
-          title: "Video Deleted",
-          description: "The video has been successfully deleted.",
-        })
-        refresh()
-      } else {
-        throw new Error("Failed to delete video")
+      if (!videosAPI) {
+        console.error('Videos API not available')
+        return
       }
+      
+      await videosAPI.deleteVideo(videoId)
+      
+      toast({
+        title: "Video Deleted",
+        description: "The video has been successfully deleted.",
+      })
+      refresh()
     } catch (error) {
-      if (isAuthTokenError(error)) {
-        toast({
-          title: "Session expired",
-          description: "Please sign in again to manage your videos.",
-          variant: "destructive",
+      console.error("Failed to delete video:", error)
+      toast({
+        title: "Error",
+        description: "Failed to delete the video. Please try again.",
+        variant: "destructive",
+      })
         })
         return
       }
