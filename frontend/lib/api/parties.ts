@@ -12,6 +12,7 @@ import type {
   PartyJoinResponse,
   PaginatedResponse,
   APIResponse,
+  EventInvitation,
 } from "./types"
 
 export class PartiesAPI {
@@ -301,14 +302,14 @@ export class PartiesAPI {
   async getInvitations(params?: {
     status?: 'pending' | 'accepted' | 'declined'
     page?: number
-  }): Promise<PaginatedResponse<any>> {
-    return apiClient.get<PaginatedResponse<any>>(API_ENDPOINTS.parties.invitations, { params })
+  }): Promise<PaginatedResponse<EventInvitation>> {
+    return apiClient.get<PaginatedResponse<EventInvitation>>(API_ENDPOINTS.parties.invitations, { params })
   }
 
   /**
    * Get invitation details
    */
-  async getInvitationDetail(invitationId: string): Promise<any> {
+  async getInvitationDetail(invitationId: string): Promise<EventInvitation> {
     return apiClient.get(API_ENDPOINTS.parties.invitationDetail(invitationId))
   }
 
@@ -329,7 +330,7 @@ export class PartiesAPI {
   /**
    * Get invitation analytics
    */
-  async getInvitationAnalytics(invitationId: string): Promise<any> {
+  async getInvitationAnalytics(invitationId: string): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.parties.invitationAnalytics(invitationId))
   }
 

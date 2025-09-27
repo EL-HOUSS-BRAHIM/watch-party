@@ -3,7 +3,7 @@
  */
 
 // Common API response types
-export interface APIResponse<T = any> {
+export interface APIResponse<T = unknown> {
   success: boolean
   message?: string
   data?: T
@@ -245,8 +245,8 @@ export interface SearchResult {
 
 export interface DiscoverRecommendation {
   type?: string
-  metadata?: Record<string, any>
-  [key: string]: any
+  metadata?: Record<string, unknown>
+  [key: string]: unknown
 }
 
 export interface DiscoverCategory {
@@ -259,15 +259,15 @@ export interface DiscoverCategory {
   item_count?: number
   trend_direction?: 'up' | 'down' | 'steady'
   is_growing?: boolean
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export interface DiscoverContent {
-  featured_videos?: Array<Record<string, any>>
-  trending_parties?: Array<Record<string, any>>
+  featured_videos?: Array<Record<string, unknown>>
+  trending_parties?: Array<Record<string, unknown>>
   recommended_content?: DiscoverRecommendation[]
   popular_categories?: DiscoverCategory[]
-  platform_stats?: Record<string, any>
+  platform_stats?: Record<string, unknown>
 }
 
 // Dashboard Types
@@ -306,7 +306,7 @@ export interface DashboardActivity {
     id: string
     title: string
   }
-  data?: Record<string, any>
+  data?: Record<string, unknown>
 }
 
 export interface DashboardActivityAcknowledgePayload {
@@ -346,7 +346,7 @@ export interface DocumentationDocument {
   updated_at: string
   version: string
   view_count?: number
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface DocumentationVersion {
@@ -369,7 +369,7 @@ export interface DocumentationUpsertInput {
   summary?: string
   tags?: string[]
   type?: DocumentationType
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface DocumentationCategoryInput {
@@ -448,7 +448,7 @@ export interface LocalizationString {
   source_text: string
   status: LocalizationStringStatus
   translations: LocalizationStringTranslation[]
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
   updated_at: string
 }
 
@@ -457,7 +457,7 @@ export interface LocalizationSubmissionPayload {
   language: string
   translation: string
   context?: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface LocalizationApproval {
@@ -524,7 +524,7 @@ export interface AnalyticsRealtimeSnapshot {
 export interface AnalyticsAdvancedQueryInput {
   metrics: string[]
   dimensions?: string[]
-  filters?: Record<string, any>
+  filters?: Record<string, unknown>
   date_range?: {
     start: string
     end: string
@@ -536,8 +536,8 @@ export interface AnalyticsAdvancedQueryInput {
 
 export interface AnalyticsAdvancedQueryResponse {
   columns: string[]
-  rows: Array<Record<string, any>>
-  metadata?: Record<string, any>
+  rows: Array<Record<string, unknown>>
+  metadata?: Record<string, unknown>
 }
 
 // Social Types
@@ -811,7 +811,7 @@ export interface IntegrationFile {
   mime_type: string
   url: string
   thumbnail?: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface IntegrationDefinition {
@@ -835,7 +835,7 @@ export interface IntegrationConnection {
   permissions?: string[]
   expires_at?: string
   last_error?: string | null
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface IntegrationStatusOverview {
@@ -1204,7 +1204,7 @@ export interface Notification {
   type: string
   title: string
   message: string
-  action_data?: Record<string, any>
+  action_data?: Record<string, unknown>
   action_url?: string
   is_read: boolean
   created_at: string
@@ -1232,10 +1232,10 @@ export interface AnalyticsDashboard {
     videos_watched?: number
     watch_time?: number
     new_users_today?: number
-    [key: string]: any
+    [key: string]: unknown
   }
-  trends: Record<string, any>
-  top_videos: Array<Record<string, any>>
+  trends: Record<string, unknown>
+  top_videos: Array<Record<string, unknown>>
   user_activity: {
     peak_hours: number[]
     popular_days: string[]
@@ -1256,7 +1256,7 @@ export interface UserAnalytics {
     date: string
     hours: number
   }>
-  achievements: Array<Record<string, any>>
+  achievements: Array<Record<string, unknown>>
 }
 
 // Interactive features
@@ -1319,7 +1319,7 @@ export interface AdminDashboard {
     bandwidth_used_today: string
     storage_used: string
   }
-  recent_activity: Array<Record<string, any>>
+  recent_activity: Array<Record<string, unknown>>
   alerts: Array<{
     type: 'warning' | 'error' | 'info'
     message: string

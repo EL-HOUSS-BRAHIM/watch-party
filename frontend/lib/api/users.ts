@@ -22,6 +22,8 @@ import type {
   PaginatedResponse,
   APIResponse,
   RawUser,
+  DashboardActivity,
+  NotificationPreferences,
 } from "./types"
 
 export class UsersAPI {
@@ -257,8 +259,8 @@ export class UsersAPI {
     type?: string
     timeframe?: string
     visibility?: "public" | "friends_only" | "private"
-  }): Promise<PaginatedResponse<any>> {
-    return apiClient.get<PaginatedResponse<any>>(API_ENDPOINTS.users.activity, { params })
+  }): Promise<PaginatedResponse<DashboardActivity>> {
+    return apiClient.get<PaginatedResponse<DashboardActivity>>(API_ENDPOINTS.users.activity, { params })
   }
 
   /**
@@ -369,7 +371,7 @@ export class UsersAPI {
     verified?: boolean
     min_mutual_friends?: number
     genres?: string[]
-  }): Promise<PaginatedResponse<any>> {
+  }): Promise<PaginatedResponse<User>> {
     return apiClient.get(API_ENDPOINTS.users.search, { params })
   }
 
@@ -406,7 +408,7 @@ export class UsersAPI {
   /**
    * Get notification settings
    */
-  async getNotificationSettings(): Promise<any> {
+  async getNotificationSettings(): Promise<NotificationPreferences> {
     return apiClient.get(API_ENDPOINTS.users.notificationSettings)
   }
 
@@ -420,7 +422,7 @@ export class UsersAPI {
   /**
    * Get privacy settings
    */
-  async getPrivacySettings(): Promise<any> {
+  async getPrivacySettings(): Promise<UserSettings> {
     return apiClient.get(API_ENDPOINTS.users.privacySettings)
   }
 

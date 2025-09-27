@@ -123,21 +123,21 @@ export class NotificationsAPI {
   /**
    * Get notification templates
    */
-  async getTemplates(): Promise<any[]> {
+  async getTemplates(): Promise<Array<Record<string, unknown>>> {
     return apiClient.get(API_ENDPOINTS.notifications.templates)
   }
 
   /**
    * Get notification template details
    */
-  async getTemplateDetail(templateId: string): Promise<any> {
+  async getTemplateDetail(templateId: string): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.notifications.templateDetail(templateId))
   }
 
   /**
    * Get notification channels
    */
-  async getChannels(): Promise<any[]> {
+  async getChannels(): Promise<Array<Record<string, unknown>>> {
     return apiClient.get(API_ENDPOINTS.notifications.channels)
   }
 
@@ -152,7 +152,7 @@ export class NotificationsAPI {
     total_opened: number
     delivery_rate: number
     open_rate: number
-    recent_activity: any[]
+    recent_activity: Array<Record<string, unknown>>
   }> {
     return apiClient.get(API_ENDPOINTS.notifications.stats)
   }
@@ -167,7 +167,7 @@ export class NotificationsAPI {
     }
     type?: string
   }): Promise<{
-    delivery_stats: any[]
+    delivery_stats: Array<Record<string, unknown>>
     summary: {
       total_sent: number
       delivered: number

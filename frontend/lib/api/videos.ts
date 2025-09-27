@@ -260,7 +260,7 @@ export class VideosAPI {
     period?: 'day' | 'week' | 'month'
     start_date?: string
     end_date?: string
-  }): Promise<any> {
+  }): Promise<VideoAnalytics> {
     return apiClient.get(API_ENDPOINTS.videos.detailedAnalytics(videoId), { params })
   }
 
@@ -301,7 +301,7 @@ export class VideosAPI {
   async getComparativeAnalytics(videoId: string, params: {
     compare_with: string[]
     metrics: string[]
-  }): Promise<any> {
+  }): Promise<Record<string, VideoAnalytics>> {
     return apiClient.get(API_ENDPOINTS.videos.comparativeAnalytics(videoId), { params })
   }
 
@@ -387,7 +387,7 @@ export class VideosAPI {
     folder_id?: string
     page_token?: string
   }): Promise<{
-    videos: any[]
+    videos: Video[]
     next_page_token?: string
   }> {
     return apiClient.get(API_ENDPOINTS.videos.gdrive, { params })
@@ -439,9 +439,9 @@ export class VideosAPI {
     progress: number
     started_at: string
     completed_at?: string
-    tasks: Array<any>
-    output_files: Array<any>
-    metadata: any
+    tasks: Array<Record<string, unknown>>
+    output_files: Array<Record<string, unknown>>
+    metadata: Record<string, unknown>
   }>> {
     try {
       // For now, we'll use the admin videos endpoint or regular videos endpoint
@@ -449,7 +449,7 @@ export class VideosAPI {
       const videos = await this.getVideos({ ordering: '-created_at' })
       
       // Transform video data into processing job format
-      return videos.results?.map((video: any) => ({
+      return videos.results?.map((video: Video) => ({
         id: video.id,
         filename: video.title || video.filename || 'Unknown',
         original_size: video.file_size || 0,
