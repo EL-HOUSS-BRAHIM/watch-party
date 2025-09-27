@@ -8,7 +8,6 @@ import { API_ENDPOINTS } from "./endpoints"
 import type {
   MobileConfig,
   MobileHomeData,
-  PushToken,
   APIResponse,
 } from "./types"
 

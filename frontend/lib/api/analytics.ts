@@ -9,8 +9,6 @@ import { normalizeRealtimeSnapshot } from "./transformers"
 import type {
   AnalyticsDashboard,
   UserAnalytics,
-  APIResponse,
-  PaginatedResponse,
   AnalyticsRealtimeSnapshot,
   AnalyticsAdvancedQueryInput,
   AnalyticsAdvancedQueryResponse,

@@ -10,7 +10,6 @@ import type {
   Conversation,
   Message,
   PaginatedResponse,
-  APIResponse,
   RawConversation,
   RawMessage,
   RawUser,

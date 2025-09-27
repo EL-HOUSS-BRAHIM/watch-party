@@ -10,7 +10,6 @@ import type {
   ReportType,
   ContentType,
   PaginatedResponse,
-  APIResponse,
 } from "./types"
 
 export class ModerationAPI {
