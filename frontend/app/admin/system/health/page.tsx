@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { 
   CpuChipIcon,
   ServerIcon,
@@ -9,7 +9,6 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   ChartBarIcon,
-  SignalIcon,
   BoltIcon,
   CloudIcon,
   ShieldCheckIcon
@@ -42,10 +41,8 @@ export default function SystemHealthPage() {
   const [metrics, setMetrics] = useState<ServerMetric[]>([])
   const [components, setComponents] = useState<SystemComponent[]>([])
   const [loading, setLoading] = useState(true)
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
   const [autoRefresh, setAutoRefresh] = useState(true)
   const [refreshInterval, setRefreshInterval] = useState(30)
-  const [showDetails, setShowDetails] = useState(false)
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null)
 
   useEffect(() => {
@@ -54,16 +51,16 @@ export default function SystemHealthPage() {
     // Set up auto-refresh every 30 seconds
     const interval = setInterval(fetchSystemHealth, 30000)
     return () => clearInterval(interval)
-  }, [])
+  }, [fetchSystemHealth])
 
   useEffect(() => {
     if (autoRefresh) {
       const interval = setInterval(fetchSystemHealth, refreshInterval * 1000)
       return () => clearInterval(interval)
     }
-  }, [autoRefresh, refreshInterval])
+  }, [autoRefresh, refreshInterval, fetchSystemHealth])
 
-  const fetchSystemHealth = async () => {
+  const fetchSystemHealth = useCallback(async () => {
     try {
       setLoading(true)
       
@@ -116,7 +113,7 @@ export default function SystemHealthPage() {
 
       // Transform system components
       if (healthData.services) {
-        const transformedComponents: SystemComponent[] = Object.entries(healthData.services).map(([name, service]: [string, any]) => ({
+        const transformedComponents: SystemComponent[] = Object.entries(healthData.services).map(([name, service]) => ({
           id: name,
           name: name.charAt(0).toUpperCase() + name.slice(1),
           type: name.includes('db') ? 'database' : 
@@ -143,7 +140,7 @@ export default function SystemHealthPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [toast])
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -200,7 +197,7 @@ export default function SystemHealthPage() {
   const warningMetrics = metrics.filter(m => m.status === 'warning').length
 
   const overallStatus = offlineCount > 0 ? 'critical' : 
-                       (degradedCount > 0 || criticalMetrics > 0) ? 'warning' : 'healthy'
+                       (degradedCount > 0 || criticalMetrics > 0 || warningMetrics > 0) ? 'warning' : 'healthy'
 
   const refreshSystemHealth = async () => {
     setLoading(true)
