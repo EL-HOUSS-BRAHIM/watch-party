@@ -1,0 +1,323 @@
+Found API usages not covered by backend specification:
+
+app/dashboard/activity/page.tsx
+  - /api/social/activity/
+  - /api/users/notification-settings/
+  - /api/social/activity/<param>/engage/
+
+app/dashboard/admin/analytics/page.tsx
+  - /api/admin/analytics/export/
+
+app/dashboard/admin/page.tsx
+  - /api/admin/alerts/<param>/resolve/
+  - /api/admin/export/<param>/
+
+app/dashboard/admin/reports/page.tsx
+  - /api/admin/actions/
+
+app/dashboard/analytics/party/page.tsx
+  - /api/parties/<param>/analytics/
+  - /api/parties/<param>/analytics/export/
+
+app/dashboard/chat/settings/page.tsx
+  - /api/chat/preferences
+  - /api/parties/<param>/chat/preferences
+
+app/dashboard/feedback/page.tsx
+  - /api/feedback/
+  - /api/feedback/<param>/responses/
+  - /api/feedback/<param>/vote/
+
+app/dashboard/friends/suggestions/page.tsx
+  - /api/users/friends/suggestions/
+  - /api/users/friends/requests/
+
+app/dashboard/notifications/page.tsx
+  - /api/users/friends/<param>/accept/
+  - /api/users/friends/<param>/decline/
+
+app/dashboard/page.tsx
+  - /api/videos/recent
+  - /api/activity/friends
+  - /api/achievements
+
+app/dashboard/parties/[partyId]/edit/page.tsx
+  - /api/parties/<param>/
+  - /api/parties/<param>/participants/<param>/
+
+app/dashboard/parties/[partyId]/page.tsx
+  - /api/parties/<param>/
+  - /api/parties/<param>/join/
+  - /api/parties/<param>/leave/
+  - /api/parties/<param>/join-requests/<param>/<param>/
+  - /api/parties/<param>/participants/<param>/
+
+app/dashboard/parties/history/page.tsx
+  - /api/parties/history/
+  - /api/parties/history/export/
+
+app/dashboard/parties/page.tsx
+  - /api/parties/<param>/
+
+app/dashboard/performance/page.tsx
+  - /api/parties/create
+  - /api/chat/messages
+  - /api/user/profile
+
+app/dashboard/profile/[userId]/page.tsx
+  - /api/users/<param>/profile/
+  - /api/users/<param>/videos/
+  - /api/users/friends/<param>/accept/
+  - /api/users/friends/<param>/decline/
+  - /api/users/friends/<param>/remove/
+
+app/dashboard/profile/edit/page.tsx
+  - /api/users/upload-image/
+
+app/dashboard/rewards/page.tsx
+  - /api/rewards/
+  - /api/leaderboard/
+  - /api/rewards/<param>/claim/
+
+app/dashboard/videos/[videoId]/page.tsx
+  - /api/videos/<param>/
+  - /api/videos/<param>/comments/
+  - /api/videos/<param>/like/
+  - /api/videos/<param>/dislike/
+
+app/help/page.tsx
+  - /api/support/faqs/
+
+app/invite/page.tsx
+  - /api/parties/invite/<param>/
+  - /api/parties/<param>/join/
+
+app/profile/[userId]/page.tsx
+  - /api/users/<param>/profile/
+  - /api/users/<param>/friendship/
+  - /api/users/<param>/block/
+
+app/videos/page.tsx
+  - /api/videos/<param>/
+
+app/watch/[roomId]/page.tsx
+  - /api/parties/<param>/
+
+components/admin/analytics-dashboard.tsx
+  - /api/admin/analytics/export/
+
+components/admin/content-moderation.tsx
+  - /api/admin/moderation/stats/
+
+components/admin/moderation-reports.tsx
+  - /api/admin/moderation/reports
+  - /api/admin/moderation/reports/<param>/action
+  - /api/admin/moderation/reports/<param>/assign
+
+components/admin/system-logs.tsx
+  - /api/admin/system-logs/
+  - /api/admin/system-logs/stats/
+  - /api/admin/system-logs/export/
+
+components/admin/system-settings.tsx
+  - /api/admin/settings/reset/
+  - /api/admin/settings/test-email/
+
+components/admin/user-management.tsx
+  - /api/admin/users/<param>/actions/
+  - /api/admin/users/<param>/status/
+  - /api/admin/users/<param>/role/
+
+components/analytics/party-analytics.tsx
+  - /api/analytics/party/<param>
+
+components/auth/auth-callback.tsx
+  - /api/auth/social/<param>/
+
+components/billing/chat/chat-interface.tsx
+  - /api/chat/<param>/messages/
+
+components/billing/chat/chat-moderation.tsx
+  - /api/parties/<param>/moderation/settings
+  - /api/parties/<param>/moderation/logs
+  - /api/parties/<param>/moderation/users/<param>
+  - /api/parties/<param>/moderation/messages/<param>
+
+components/billing/promo-code-entry.tsx
+  - /api/billing/promo-codes/validate
+
+components/billing/subscription-manager.tsx
+  - /api/billing/subscription/upgrade
+  - /api/billing/subscription/downgrade
+  - /api/billing/subscription/pause
+
+components/billing/usage-stats.tsx
+  - /api/analytics/usage-trends/
+
+components/groups/group-management-system.tsx
+  - /api/social/groups/<group_id>/members/<member_id>/
+  - /api/social/groups/<group_id>/members/<member_id>/\
+
+components/integrations/integrations-manager.tsx
+  - /api/integrations
+  - /api/integrations/<param>/connect
+  - /api/integrations/<param>/disconnect
+  - /api/integrations/<param>/toggle
+  - /api/integrations/<param>/features/<param>
+  - /api/integrations/<param>/sync
+
+components/notifications/notifications-center.tsx
+  - /api/notifications/settings
+  - /api/notifications/<param>/read
+  - /api/notifications/read-all
+  - /api/notifications/<param>
+
+components/notifications/push-permission-registration.tsx
+  - /api/user/notification-settings
+  - /api/user/push-subscription
+  - /api/notifications/test
+
+components/party/interactive-polls.tsx
+  - /api/parties/<param>/polls
+  - /api/parties/<param>/polls/<param>/vote
+  - /api/parties/<param>/polls/<param>/end
+
+components/party/party-analytics-modal.tsx
+  - /api/parties/<param>/analytics
+
+components/party/party-host-controls.tsx
+  - /api/parties/<param>/settings/
+
+components/party/party-invite-dialog.tsx
+  - /api/parties/<param>/invite/
+
+components/security/advanced-security-system.tsx
+  - /api/keys
+
+components/security/data-export-import.tsx
+  - /api/exports/export-1.zip
+
+components/social/activity-feed.tsx
+  - /api/users/activity-feed/
+  - /api/users/activity/<param>/react/
+
+components/social/block-list-management.tsx
+  - /api/users/blocks/
+  - /api/users/blocks/<param>/
+  - /api/users/<param>/block/
+
+components/social/block-unblock-manager.tsx
+  - /api/users/blocked
+  - /api/users/unblock/<param>
+  - /api/users/block/<param>
+
+components/social/enhanced-friend-search.tsx
+  - /api/users/friends/suggestions/
+  - /api/users/<param>/friend-request/
+
+components/social/friend-profile-preview.tsx
+  - /api/users/<param>/profile/
+  - /api/users/<param>/friend-request/
+  - /api/users/<param>/unfriend/
+  - /api/users/<param>/block/
+
+components/social/friend-requests-management.tsx
+  - /api/users/friends/requests/received/
+  - /api/users/friends/requests/sent/
+  - /api/users/friends/requests/<param>/accept/
+  - /api/users/friends/requests/<param>/reject/
+  - /api/users/friends/requests/<param>/cancel/
+
+components/social/friend-requests.tsx
+  - /api/users/friend-requests/
+  - /api/users/friend-requests/<param>/<param>/
+  - /api/users/friend-requests/<param>/
+
+components/social/friends-list.tsx
+  - /api/users/friends/<param>/
+  - /api/users/<param>/block/
+
+components/social/friends-manager.tsx
+  - /api/social/friends
+  - /api/social/friend-requests/incoming
+  - /api/social/friend-requests/outgoing
+  - /api/social/friend-requests/<param>/accept
+  - /api/social/friend-requests/<param>/decline
+  - /api/social/friend-requests/<param>/cancel
+  - /api/social/friends/<param>
+
+components/social/groups-manager.tsx
+  - /api/social/groups/discover
+  - /api/social/groups/my-groups
+  - /api/social/groups/<param>/join
+  - /api/social/groups/<param>/leave
+
+components/social/mutual-friends-suggestions.tsx
+  - /api/friends/suggestions
+  - /api/friends/suggestions/refresh
+  - /api/friends/requests
+  - /api/friends/suggestions/<param>/dismiss
+
+components/social/profile-preview.tsx
+  - /api/users/<param>/preview
+  - /api/friends/requests
+  - /api/friends/requests/<param>/accept
+  - /api/friends/<param>
+
+components/social/user-search.tsx
+  - /api/users/<param>/friend-request/
+  - /api/users/friend-requests/accept/
+
+components/store/store-items.tsx
+  - /api/store/currency
+  - /api/store/items/<param>/purchase
+  - /api/store/items/<param>/equip
+
+components/store/store-rewards.tsx
+  - /api/store/rewards/daily
+  - /api/store/rewards/streak
+  - /api/store/rewards/<param>/claim
+  - /api/store/rewards/daily/<param>/claim
+
+components/ui/profile-preview.tsx
+  - /api/users/<param>/profile
+  - /api/social/friend-requests
+
+components/video/video-library.tsx
+  - /api/videos/<param>/
+  - /api/videos/<param>/regenerate-thumbnail/
+
+components/videos/video-comments.tsx
+  - /api/videos/<param>/comments/
+  - /api/videos/<param>/comments/stats/
+  - /api/comments/<param>/like/
+  - /api/comments/<param>/dislike/
+  - /api/comments/<param>/report/
+  - /api/comments/<param>/
+
+components/videos/video-details.tsx
+  - /api/videos/<param>/
+  - /api/videos/<param>/comments/
+  - /api/videos/<param>/related/
+  - /api/videos/<param>/like/
+  - /api/videos/<param>/dislike/
+  - /api/videos/<param>/watchlist/
+
+components/videos/video-management.tsx
+  - /api/admin/videos/stats/
+  - /api/admin/videos/<param>/<param>/
+  - /api/admin/videos/bulk/
+
+lib/api/admin.ts
+  - /api/admin/alerts/
+  - /api/admin/alerts/<param>/resolve/
+  - /api/admin/performance/
+  - /api/admin/users/<param>/status/
+  - /api/admin/users/<param>/role/
+  - /api/admin/system-logs/
+  - /api/admin/system-logs/stats/
+  - /api/admin/system-logs/export/
+  - /api/admin/moderation/stats/
+  - /api/admin/settings/reset/
+  - /api/admin/settings/test-email/
+  - /api/admin/analytics/export/

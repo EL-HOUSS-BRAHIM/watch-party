@@ -1,0 +1,5509 @@
+{
+  "metadata": {
+    "title": "Watch Party Backend API",
+    "base_url": "/api/",
+    "authentication": {
+      "type": "JWT",
+      "header": "Authorization: Bearer <access_token>",
+      "refresh_endpoint": "/api/auth/refresh/"
+    },
+    "pagination": {
+      "style": "cursor",
+      "parameters": [
+        "page",
+        "page_size",
+        "cursor"
+      ],
+      "response_structure": {
+        "results": "Array of resources",
+        "pagination": {
+          "next": "Cursor for the next page",
+          "previous": "Cursor for the previous page",
+          "total": "Total count of items",
+          "page_size": "Number of items per page"
+        }
+      }
+    },
+    "rate_limiting": {
+      "authentication_endpoints": "Limited per IP",
+      "general_endpoints": "Limited per user",
+      "upload_endpoints": "Separate limits for uploads",
+      "headers": [
+        "X-RateLimit-Limit",
+        "X-RateLimit-Remaining",
+        "X-RateLimit-Reset"
+      ]
+    },
+    "error_response_format": {
+      "success": false,
+      "error": "error_code",
+      "message": "Human readable error message",
+      "details": {
+        "field_name": [
+          "Field specific error messages"
+        ]
+      },
+      "timestamp": "2025-08-10T12:00:00Z"
+    },
+    "websocket_endpoints": [
+      "/ws/party/<party_id>/",
+      "/ws/chat/<room_id>/",
+      "/ws/notifications/"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Base",
+      "description": "Service readiness checks and documentation entry points.",
+      "endpoints": [
+        {
+          "name": "API Root",
+          "path": "/api/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": {
+                "message": "Watch Party API",
+                "version": "1.0",
+                "endpoints": {
+                  "authentication": "/api/auth/",
+                  "users": "/api/users/",
+                  "videos": "/api/videos/",
+                  "parties": "/api/parties/",
+                  "chat": "/api/chat/",
+                  "billing": "/api/billing/",
+                  "analytics": "/api/analytics/",
+                  "notifications": "/api/notifications/",
+                  "integrations": "/api/integrations/",
+                  "interactive": "/api/interactive/",
+                  "moderation": "/api/moderation/",
+                  "store": "/api/store/",
+                  "search": "/api/search/",
+                  "social": "/api/social/",
+                  "messaging": "/api/messaging/",
+                  "support": "/api/support/",
+                  "mobile": "/api/mobile/",
+                  "admin": "/api/admin/",
+                  "documentation": "/api/docs/",
+                  "schema": "/api/schema/"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Server Test",
+          "path": "/api/test/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": {
+                "message": "Server is working!",
+                "authenticated": true,
+                "user_id": 123,
+                "timestamp": "2025-08-10T12:00:00Z"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dashboard Stats",
+          "path": "/api/dashboard/stats/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "user": {
+                  "id": 123,
+                  "name": "John Doe",
+                  "email": "john@example.com"
+                },
+                "stats": {
+                  "total_parties": 15,
+                  "recent_parties": 3,
+                  "total_videos": 8,
+                  "recent_videos": 1,
+                  "watch_time_minutes": 0
+                },
+                "timestamp": "2025-08-10T12:00:00Z"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Dashboard Activities",
+          "path": "/api/dashboard/activities/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "activities": [
+                  {
+                    "id": 456,
+                    "type": "party_created",
+                    "timestamp": "2025-08-10T12:00:00Z",
+                    "data": {},
+                    "party": {
+                      "id": 789,
+                      "title": "Movie Night"
+                    },
+                    "video": {
+                      "id": 101,
+                      "title": "Sample Movie"
+                    }
+                  }
+                ],
+                "total": 20
+              }
+            }
+          ]
+        },
+        {
+          "name": "Schema",
+          "path": "/api/schema/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "OpenAPI schema document"
+            }
+          ]
+        },
+        {
+          "name": "Swagger UI",
+          "path": "/api/docs/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Swagger UI HTML"
+            }
+          ]
+        },
+        {
+          "name": "ReDoc UI",
+          "path": "/api/redoc/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "ReDoc HTML"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "description": "Account registration, login, verification, and security endpoints.",
+      "endpoints": [
+        {
+          "name": "Register",
+          "path": "/api/auth/register/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": false,
+              "request_example": {
+                "email": "user@example.com",
+                "password": "securepassword",
+                "confirm_password": "securepassword",
+                "first_name": "John",
+                "last_name": "Doe",
+                "promo_code": "WELCOME2024"
+              },
+              "response_example": {
+                "success": true,
+                "message": "Registration successful. Please verify your email.",
+                "user": {
+                  "id": 123,
+                  "email": "user@example.com",
+                  "first_name": "John",
+                  "last_name": "Doe"
+                },
+                "access_token": "jwt_access_token",
+                "refresh_token": "jwt_refresh_token",
+                "verification_sent": true
+              },
+              "notes": "promo_code optional"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "path": "/api/auth/login/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": false,
+              "request_example": {
+                "email": "user@example.com",
+                "password": "securepassword"
+              },
+              "response_example": {
+                "success": true,
+                "access_token": "jwt_access_token",
+                "refresh_token": "jwt_refresh_token",
+                "user": {
+                  "id": 123,
+                  "email": "user@example.com",
+                  "first_name": "John",
+                  "last_name": "Doe"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "path": "/api/auth/logout/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "refresh_token": "jwt_refresh_token"
+              },
+              "response_example": {
+                "success": true,
+                "message": "Successfully logged out."
+              }
+            }
+          ]
+        },
+        {
+          "name": "Token Refresh",
+          "path": "/api/auth/refresh/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": false,
+              "request_example": {
+                "refresh": "jwt_refresh_token"
+              },
+              "response_example": {
+                "access": "new_jwt_access_token"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Social Auth Redirect",
+          "path": "/api/auth/social/<provider>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Social auth redirect URL",
+              "notes": "provider is google or github",
+              "path_parameters": [
+                "provider"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Google Social Login",
+          "path": "/api/auth/social/google/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": false,
+              "request_example": {
+                "access_token": "google_access_token"
+              },
+              "response_example": "User data and tokens"
+            }
+          ]
+        },
+        {
+          "name": "GitHub Social Login",
+          "path": "/api/auth/social/github/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": false,
+              "request_example": {
+                "code": "github_auth_code"
+              },
+              "response_example": "User data and tokens"
+            }
+          ]
+        },
+        {
+          "name": "Forgot Password",
+          "path": "/api/auth/forgot-password/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": false,
+              "request_example": {
+                "email": "user@example.com"
+              },
+              "response_example": {
+                "success": true,
+                "message": "Password reset email sent."
+              }
+            }
+          ]
+        },
+        {
+          "name": "Reset Password",
+          "path": "/api/auth/reset-password/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": false,
+              "request_example": {
+                "token": "reset_token",
+                "new_password": "newpassword",
+                "confirm_password": "newpassword"
+              },
+              "response_example": {
+                "success": true,
+                "message": "Password reset successful."
+              }
+            }
+          ]
+        },
+        {
+          "name": "Change Password",
+          "path": "/api/auth/change-password/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "current_password": "oldpassword",
+                "new_password": "newpassword",
+                "confirm_password": "newpassword"
+              },
+              "response_example": {
+                "success": true,
+                "message": "Password changed successfully."
+              }
+            }
+          ]
+        },
+        {
+          "name": "Verify Email",
+          "path": "/api/auth/verify-email/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": false,
+              "request_example": {
+                "token": "verification_token"
+              },
+              "response_example": {
+                "success": true,
+                "message": "Email verified successfully."
+              }
+            }
+          ]
+        },
+        {
+          "name": "Resend Verification",
+          "path": "/api/auth/resend-verification/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": false,
+              "request_example": {
+                "email": "user@example.com"
+              },
+              "response_example": {
+                "success": true,
+                "message": "Verification email sent."
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth Profile",
+          "path": "/api/auth/profile/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Authenticated user profile"
+            },
+            {
+              "method": "PUT",
+              "auth_required": true,
+              "request_example": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "bio": "User bio"
+              },
+              "response_example": "Updated profile"
+            },
+            {
+              "method": "PATCH",
+              "auth_required": true,
+              "request_example": {
+                "bio": "User bio"
+              },
+              "response_example": "Updated profile"
+            }
+          ]
+        },
+        {
+          "name": "Google Drive Auth",
+          "path": "/api/auth/google-drive/auth/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Google Drive authorization URL"
+            },
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "code": "google_auth_code"
+              },
+              "response_example": "Google Drive integration status"
+            }
+          ]
+        },
+        {
+          "name": "Google Drive Disconnect",
+          "path": "/api/auth/google-drive/disconnect/",
+          "operations": [
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Google Drive disconnected"
+            }
+          ]
+        },
+        {
+          "name": "Google Drive Status",
+          "path": "/api/auth/google-drive/status/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "connected": true,
+                "email": "user@gmail.com"
+              }
+            }
+          ]
+        },
+        {
+          "name": "2FA Setup",
+          "path": "/api/auth/2fa/setup/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "qr_code": "base64_qr_code",
+                "secret": "2fa_secret"
+              }
+            }
+          ]
+        },
+        {
+          "name": "2FA Verify",
+          "path": "/api/auth/2fa/verify/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "token": "123456"
+              },
+              "response_example": {
+                "success": true,
+                "backup_codes": [
+                  "code1",
+                  "code2"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "2FA Disable",
+          "path": "/api/auth/2fa/disable/",
+          "operations": [
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": {
+                "password": "userpassword"
+              },
+              "response_example": "2FA disabled"
+            }
+          ]
+        },
+        {
+          "name": "Sessions",
+          "path": "/api/auth/sessions/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Active sessions list"
+            }
+          ]
+        },
+        {
+          "name": "Session Detail",
+          "path": "/api/auth/sessions/<session_id>/",
+          "operations": [
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Session revoked",
+              "path_parameters": [
+                "session_id"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "User profiles, relationships, and account utilities.",
+      "endpoints": [
+        {
+          "name": "Profile",
+          "path": "/api/users/profile/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Current user profile"
+            },
+            {
+              "method": "PUT",
+              "auth_required": true,
+              "request_example": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "bio": "Updated bio",
+                "display_name": "JohnD"
+              },
+              "response_example": "Updated profile"
+            },
+            {
+              "method": "PATCH",
+              "auth_required": true,
+              "request_example": {
+                "bio": "Updated bio"
+              },
+              "response_example": "Updated profile"
+            }
+          ]
+        },
+        {
+          "name": "Profile Update",
+          "path": "/api/users/profile/update/",
+          "operations": [
+            {
+              "method": "PUT",
+              "auth_required": true,
+              "request_example": {
+                "first_name": "John",
+                "last_name": "Doe",
+                "bio": "Updated bio",
+                "display_name": "JohnD"
+              },
+              "response_example": "Updated profile"
+            },
+            {
+              "method": "PATCH",
+              "auth_required": true,
+              "request_example": {
+                "bio": "Updated bio"
+              },
+              "response_example": "Updated profile"
+            }
+          ]
+        },
+        {
+          "name": "Avatar Upload",
+          "path": "/api/users/avatar/upload/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "avatar": "<file>"
+              },
+              "response_example": {
+                "success": true,
+                "avatar_url": "https://example.com/avatars/user123.jpg"
+              },
+              "notes": "Multipart form data"
+            }
+          ]
+        },
+        {
+          "name": "Change Password",
+          "path": "/api/users/password/",
+          "operations": [
+            {
+              "method": "PUT",
+              "auth_required": true,
+              "request_example": {
+                "current_password": "oldpassword",
+                "new_password": "newpassword"
+              },
+              "response_example": "Password change confirmation"
+            }
+          ]
+        },
+        {
+          "name": "Onboarding",
+          "path": "/api/users/onboarding/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Onboarding status"
+            },
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Onboarding updated"
+            }
+          ]
+        },
+        {
+          "name": "Friend Request by Username",
+          "path": "/api/users/friends/request/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "username": "target_user"
+              },
+              "response_example": "Friend request sent"
+            }
+          ]
+        },
+        {
+          "name": "Block User",
+          "path": "/api/users/block/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "user_id": "uuid"
+              },
+              "response_example": "User blocked"
+            }
+          ]
+        },
+        {
+          "name": "Unblock User",
+          "path": "/api/users/unblock/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "user_id": "uuid"
+              },
+              "response_example": "User unblocked"
+            }
+          ]
+        },
+        {
+          "name": "Add Favorite",
+          "path": "/api/users/favorites/add/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "content_type": "video",
+                "content_id": "uuid"
+              },
+              "response_example": "Favorite added"
+            }
+          ]
+        },
+        {
+          "name": "Remove Favorite",
+          "path": "/api/users/favorites/<favorite_id>/remove/",
+          "operations": [
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Favorite removed",
+              "path_parameters": [
+                "favorite_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "User Report",
+          "path": "/api/users/report/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "reported_user_id": "uuid",
+                "reason": "spam",
+                "description": "Report details"
+              },
+              "response_example": "Report submitted"
+            }
+          ]
+        },
+        {
+          "name": "Delete Account",
+          "path": "/api/users/delete-account/",
+          "operations": [
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": {
+                "password": "userpassword",
+                "confirmation": "DELETE"
+              },
+              "response_example": "Account deletion confirmed"
+            }
+          ]
+        },
+        {
+          "name": "User Dashboard Stats",
+          "path": "/api/users/dashboard/stats/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User dashboard statistics"
+            }
+          ]
+        },
+        {
+          "name": "Achievements",
+          "path": "/api/users/achievements/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User achievements list"
+            }
+          ]
+        },
+        {
+          "name": "User Stats",
+          "path": "/api/users/stats/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "total_parties": 15,
+                "total_watch_time": 1200,
+                "videos_uploaded": 5,
+                "friends_count": 23
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sessions",
+          "path": "/api/users/sessions/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Active sessions"
+            }
+          ]
+        },
+        {
+          "name": "Inventory",
+          "path": "/api/users/inventory/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User inventory"
+            }
+          ]
+        },
+        {
+          "name": "Friends",
+          "path": "/api/users/friends/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Friends list"
+            }
+          ]
+        },
+        {
+          "name": "User Activity",
+          "path": "/api/users/activity/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User activity feed"
+            }
+          ]
+        },
+        {
+          "name": "Suggestions",
+          "path": "/api/users/suggestions/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Suggested users"
+            }
+          ]
+        },
+        {
+          "name": "Notification Settings",
+          "path": "/api/users/notifications/settings/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Notification settings"
+            }
+          ]
+        },
+        {
+          "name": "Privacy Settings",
+          "path": "/api/users/privacy/settings/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Privacy settings"
+            }
+          ]
+        },
+        {
+          "name": "Settings",
+          "path": "/api/users/settings/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User settings"
+            }
+          ]
+        },
+        {
+          "name": "Export Data",
+          "path": "/api/users/export-data/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Export initiated"
+            }
+          ]
+        },
+        {
+          "name": "Mutual Friends",
+          "path": "/api/users/<user_id>/mutual-friends/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Mutual friends",
+              "path_parameters": [
+                "user_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Online Status",
+          "path": "/api/users/online-status/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Friends online status"
+            }
+          ]
+        },
+        {
+          "name": "Legacy Activity",
+          "path": "/api/users/legacy/activity/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Legacy activity feed"
+            }
+          ]
+        },
+        {
+          "name": "Watch History",
+          "path": "/api/users/watch-history/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Watch history"
+            }
+          ]
+        },
+        {
+          "name": "Favorites",
+          "path": "/api/users/favorites/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Favorites list"
+            }
+          ]
+        },
+        {
+          "name": "Notifications",
+          "path": "/api/users/notifications/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User notifications"
+            }
+          ]
+        },
+        {
+          "name": "Mutual Profile",
+          "path": "/api/users/<user_id>/profile/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Public user profile",
+              "path_parameters": [
+                "user_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Legacy Public Profile",
+          "path": "/api/users/<user_id>/public-profile/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Legacy public profile",
+              "path_parameters": [
+                "user_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Search Users",
+          "path": "/api/users/search/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Search results",
+              "query_parameters": [
+                "q"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Session Detail",
+          "path": "/api/users/sessions/<session_id>/",
+          "operations": [
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Session revoked",
+              "path_parameters": [
+                "session_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Accept Friend Request",
+          "path": "/api/users/friends/<request_id>/accept/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Friend request accepted",
+              "path_parameters": [
+                "request_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Decline Friend Request",
+          "path": "/api/users/friends/<request_id>/decline/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Friend request declined",
+              "path_parameters": [
+                "request_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Send Friend Request",
+          "path": "/api/users/<user_id>/friend-request/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Friend request sent",
+              "path_parameters": [
+                "user_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Block User (legacy)",
+          "path": "/api/users/<user_id>/block/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User blocked",
+              "path_parameters": [
+                "user_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Friendship Accept",
+          "path": "/api/users/friends/<friendship_id>/accept/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Friendship accepted",
+              "path_parameters": [
+                "friendship_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Friendship Decline",
+          "path": "/api/users/friends/<friendship_id>/decline/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Friendship declined",
+              "path_parameters": [
+                "friendship_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Remove Friend",
+          "path": "/api/users/friends/<username>/remove/",
+          "operations": [
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Friend removed",
+              "path_parameters": [
+                "username"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Notification Read",
+          "path": "/api/users/notifications/<notification_id>/read/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Notification marked read",
+              "path_parameters": [
+                "notification_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Revoke All Sessions",
+          "path": "/api/users/sessions/revoke-all/",
+          "operations": [
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "All sessions revoked"
+            }
+          ]
+        },
+        {
+          "name": "Mark All Notifications Read",
+          "path": "/api/users/notifications/mark-all-read/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "All notifications marked read"
+            }
+          ]
+        },
+        {
+          "name": "Legacy Endpoint",
+          "path": "/api/users/friends/legacy/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Legacy response"
+            }
+          ]
+        },
+        {
+          "name": "Legacy Endpoint",
+          "path": "/api/users/friends/legacy/requests/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Legacy response"
+            }
+          ]
+        },
+        {
+          "name": "Legacy Endpoint",
+          "path": "/api/users/friends/legacy/send/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Legacy response"
+            }
+          ]
+        },
+        {
+          "name": "Legacy Endpoint",
+          "path": "/api/users/friends/legacy/<request_id>/accept/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Legacy response",
+              "path_parameters": [
+                "request_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Legacy Endpoint",
+          "path": "/api/users/friends/legacy/<request_id>/decline/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Legacy response",
+              "path_parameters": [
+                "request_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Legacy Endpoint",
+          "path": "/api/users/friends/legacy/<friend_id>/remove/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Legacy response",
+              "path_parameters": [
+                "friend_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Legacy Endpoint",
+          "path": "/api/users/users/<user_id>/block/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Legacy response",
+              "path_parameters": [
+                "user_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Legacy Endpoint",
+          "path": "/api/users/users/<user_id>/unblock/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Legacy response",
+              "path_parameters": [
+                "user_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Legacy Endpoint",
+          "path": "/api/users/legacy/search/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Legacy response"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Videos",
+      "description": "Video uploads, playback, analytics, and integrations.",
+      "endpoints": [
+        {
+          "name": "Videos Collection",
+          "path": "/api/videos/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Paginated list of videos",
+              "query_parameters": [
+                "page",
+                "page_size",
+                "search",
+                "category",
+                "uploaded_by"
+              ]
+            },
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "title": "Video Title",
+                "description": "Video description",
+                "video_file": "<file>",
+                "thumbnail": "<file>",
+                "category": "movies",
+                "is_public": true,
+                "tags": [
+                  "tag1",
+                  "tag2"
+                ]
+              },
+              "response_example": "Video created",
+              "notes": "Multipart upload supported"
+            }
+          ]
+        },
+        {
+          "name": "Video Detail",
+          "path": "/api/videos/<video_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Video detail",
+              "path_parameters": [
+                "video_id"
+              ]
+            },
+            {
+              "method": "PUT",
+              "auth_required": true,
+              "request_example": {
+                "title": "Updated Title",
+                "description": "Updated description",
+                "is_public": false
+              },
+              "response_example": "Video updated",
+              "path_parameters": [
+                "video_id"
+              ]
+            },
+            {
+              "method": "PATCH",
+              "auth_required": true,
+              "request_example": {
+                "description": "Updated description"
+              },
+              "response_example": "Video updated",
+              "path_parameters": [
+                "video_id"
+              ]
+            },
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Video deleted",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Video Like",
+          "path": "/api/videos/<video_id>/like/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Video liked",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Video Comments",
+          "path": "/api/videos/<video_id>/comments/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Video comments",
+              "query_parameters": [
+                "page",
+                "before",
+                "after"
+              ],
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Video Comment Create",
+          "path": "/api/videos/<video_id>/comments/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "message": "Comment",
+                "message_type": "text"
+              },
+              "response_example": "Comment created",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Video Stream",
+          "path": "/api/videos/<video_id>/stream/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": {
+                "streaming_url": "https://cdn.example.com/videos/video.m3u8",
+                "quality_variants": [
+                  "720p",
+                  "1080p"
+                ],
+                "duration": 3600
+              },
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Video Download",
+          "path": "/api/videos/<video_id>/download/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Video download stream",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Video Thumbnail",
+          "path": "/api/videos/<video_id>/thumbnail/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Thumbnail image",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Video Analytics",
+          "path": "/api/videos/<video_id>/analytics/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "total_views": 1500,
+                "unique_viewers": 1200,
+                "watch_time": 45000,
+                "engagement_rate": 0.85
+              },
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Processing Status",
+          "path": "/api/videos/<video_id>/processing-status/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "status": "completed",
+                "processing_steps": {
+                  "transcoding": "completed",
+                  "thumbnail_generation": "completed",
+                  "quality_variants": "completed"
+                }
+              },
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Quality Variants",
+          "path": "/api/videos/<video_id>/quality-variants/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": {
+                "variants": [
+                  {
+                    "quality": "720p",
+                    "url": "https://cdn.example.com/720p.m3u8",
+                    "bitrate": 2500
+                  },
+                  {
+                    "quality": "1080p",
+                    "url": "https://cdn.example.com/1080p.m3u8",
+                    "bitrate": 5000
+                  }
+                ]
+              },
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Regenerate Thumbnail",
+          "path": "/api/videos/<video_id>/regenerate-thumbnail/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "timestamp": 30.5
+              },
+              "response_example": "Thumbnail regeneration requested",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Share Video",
+          "path": "/api/videos/<video_id>/share/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "platform": "twitter",
+                "message": "Check out this video!"
+              },
+              "response_example": "Share details",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Detailed Analytics",
+          "path": "/api/videos/<video_id>/analytics/detailed/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Detailed analytics",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Analytics Heatmap",
+          "path": "/api/videos/<video_id>/analytics/heatmap/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Engagement heatmap",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Analytics Retention",
+          "path": "/api/videos/<video_id>/analytics/retention/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Retention data",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Analytics Journey",
+          "path": "/api/videos/<video_id>/analytics/journey/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Viewer journey",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Analytics Comparative",
+          "path": "/api/videos/<video_id>/analytics/comparative/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Comparative analytics",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Video Proxy",
+          "path": "/api/videos/<video_id>/proxy/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Proxied video stream",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Video Upload",
+          "path": "/api/videos/upload/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "video_file": "<file>",
+                "title": "Video Title",
+                "description": "Video description",
+                "thumbnail": "<file optional>"
+              },
+              "response_example": {
+                "upload_id": "uuid",
+                "video_id": "uuid",
+                "status": "uploading"
+              },
+              "notes": "Multipart form data"
+            }
+          ]
+        },
+        {
+          "name": "S3 Upload",
+          "path": "/api/videos/upload/s3/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "filename": "video.mp4",
+                "file_size": 1024000,
+                "content_type": "video/mp4"
+              },
+              "response_example": {
+                "upload_url": "https://s3.amazonaws.com/presigned-url",
+                "upload_id": "uuid"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Complete Upload",
+          "path": "/api/videos/upload/<upload_id>/complete/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "title": "Video Title",
+                "description": "Description"
+              },
+              "response_example": "Video creation confirmation",
+              "path_parameters": [
+                "upload_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Upload Status",
+          "path": "/api/videos/upload/<upload_id>/status/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "status": "processing",
+                "progress": 75,
+                "estimated_completion": "2025-08-10T13:00:00Z"
+              },
+              "path_parameters": [
+                "upload_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Channel Analytics",
+          "path": "/api/videos/analytics/channel/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Channel analytics"
+            }
+          ]
+        },
+        {
+          "name": "Trending Analytics",
+          "path": "/api/videos/analytics/trending/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Trending videos"
+            }
+          ]
+        },
+        {
+          "name": "Validate URL",
+          "path": "/api/videos/validate-url/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "url": "https://example.com/video.mp4"
+              },
+              "response_example": {
+                "valid": true,
+                "content_type": "video/mp4",
+                "file_size": 1024000,
+                "duration": 3600
+              }
+            }
+          ]
+        },
+        {
+          "name": "Video Search",
+          "path": "/api/videos/search/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Search results",
+              "query_parameters": [
+                "q",
+                "category",
+                "duration_min",
+                "duration_max",
+                "sort_by"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Advanced Video Search",
+          "path": "/api/videos/search/advanced/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Advanced search results",
+              "notes": "Supports extended filters"
+            }
+          ]
+        },
+        {
+          "name": "Google Drive Videos",
+          "path": "/api/videos/gdrive/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Google Drive movies list"
+            }
+          ]
+        },
+        {
+          "name": "Google Drive Upload",
+          "path": "/api/videos/gdrive/upload/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "file_id": "google_drive_file_id",
+                "title": "Movie Title"
+              },
+              "response_example": "Upload initiated"
+            }
+          ]
+        },
+        {
+          "name": "Google Drive Delete",
+          "path": "/api/videos/gdrive/<video_id>/delete/",
+          "operations": [
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Google Drive video deleted",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Google Drive Stream",
+          "path": "/api/videos/gdrive/<video_id>/stream/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Google Drive streaming URL",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Parties",
+      "description": "Watch party discovery, management, participation, and invitations.",
+      "endpoints": [
+        {
+          "name": "Recent Parties",
+          "path": "/api/parties/recent/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Recent parties"
+            }
+          ]
+        },
+        {
+          "name": "Public Parties",
+          "path": "/api/parties/public/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Public parties",
+              "query_parameters": [
+                "page",
+                "search",
+                "category"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Trending Parties",
+          "path": "/api/parties/trending/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Trending parties"
+            }
+          ]
+        },
+        {
+          "name": "Party Recommendations",
+          "path": "/api/parties/recommendations/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Recommended parties"
+            }
+          ]
+        },
+        {
+          "name": "Party Search",
+          "path": "/api/parties/search/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Party search results",
+              "query_parameters": [
+                "q",
+                "is_public",
+                "category"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Join by Code",
+          "path": "/api/parties/join-by-code/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "code": "ABC123"
+              },
+              "response_example": "Joined party"
+            }
+          ]
+        },
+        {
+          "name": "Join by Invite",
+          "path": "/api/parties/join-by-invite/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "invite_code": "invitation_code"
+              },
+              "response_example": "Joined party"
+            }
+          ]
+        },
+        {
+          "name": "Report Party",
+          "path": "/api/parties/report/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "party_id": "uuid",
+                "reason": "inappropriate_content",
+                "description": "Report details"
+              },
+              "response_example": "Report submitted"
+            }
+          ]
+        },
+        {
+          "name": "Generate Invite",
+          "path": "/api/parties/<party_id>/generate-invite/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "invite_code": "ABC123XYZ",
+                "invite_url": "https://app.example.com/join/ABC123XYZ",
+                "expires_at": "2025-08-11T12:00:00Z"
+              },
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Party Analytics",
+          "path": "/api/parties/<party_id>/analytics/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Party analytics",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Update Analytics",
+          "path": "/api/parties/<party_id>/update-analytics/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Analytics updated",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Parties Collection",
+          "path": "/api/parties/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Paginated parties",
+              "query_parameters": [
+                "page",
+                "search",
+                "is_public",
+                "host"
+              ]
+            },
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "title": "Movie Night",
+                "description": "Friday movie night with friends",
+                "video_id": "uuid",
+                "is_public": true,
+                "max_participants": 10,
+                "scheduled_for": "2025-08-10T20:00:00Z"
+              },
+              "response_example": "Party created"
+            }
+          ]
+        },
+        {
+          "name": "Party Detail",
+          "path": "/api/parties/<party_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Party details",
+              "path_parameters": [
+                "party_id"
+              ]
+            },
+            {
+              "method": "PUT",
+              "auth_required": true,
+              "request_example": {
+                "title": "Updated Title",
+                "description": "Updated description",
+                "is_public": false
+              },
+              "response_example": "Party updated",
+              "path_parameters": [
+                "party_id"
+              ]
+            },
+            {
+              "method": "PATCH",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Party partially updated",
+              "path_parameters": [
+                "party_id"
+              ]
+            },
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Party deleted",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Join Party",
+          "path": "/api/parties/<party_id>/join/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Joined party",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Leave Party",
+          "path": "/api/parties/<party_id>/leave/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Left party",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Start Party",
+          "path": "/api/parties/<party_id>/start/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Party started",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Control Party",
+          "path": "/api/parties/<party_id>/control/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "action": "play",
+                "timestamp": 120.5
+              },
+              "response_example": "Control action processed",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "React to Party",
+          "path": "/api/parties/<party_id>/react/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "emoji": "😂",
+                "timestamp": 180.3
+              },
+              "response_example": "Reaction recorded",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Participants",
+          "path": "/api/parties/<party_id>/participants/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Party participants",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Invite",
+          "path": "/api/parties/<party_id>/invite/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "user_ids": [
+                  "uuid1",
+                  "uuid2"
+                ],
+                "message": "Join us for movie night!"
+              },
+              "response_example": "Invitations sent",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Select GDrive Movie",
+          "path": "/api/parties/<party_id>/select_gdrive_movie/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Google Drive movie selected",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Sync State",
+          "path": "/api/parties/<party_id>/sync_state/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Party sync state",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Update Sync State",
+          "path": "/api/parties/<party_id>/sync_state/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Party sync updated",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Party Chat",
+          "path": "/api/parties/<party_id>/chat/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Party chat history",
+              "query_parameters": [
+                "page",
+                "before_timestamp"
+              ],
+              "path_parameters": [
+                "party_id"
+              ]
+            },
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "message": "Great movie!",
+                "message_type": "text"
+              },
+              "response_example": "Message sent",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Invitations",
+          "path": "/api/parties/invitations/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Invitations list"
+            }
+          ]
+        },
+        {
+          "name": "Invitation Detail",
+          "path": "/api/parties/invitations/<invitation_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Invitation detail",
+              "path_parameters": [
+                "invitation_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Accept Invitation",
+          "path": "/api/parties/invitations/<invitation_id>/accept/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Invitation accepted",
+              "path_parameters": [
+                "invitation_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Decline Invitation",
+          "path": "/api/parties/invitations/<invitation_id>/decline/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Invitation declined",
+              "path_parameters": [
+                "invitation_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Invitation Analytics",
+          "path": "/api/parties/invitations/<invitation_id>/analytics/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Invitation analytics",
+              "path_parameters": [
+                "invitation_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Join by Invitation Code",
+          "path": "/api/parties/invitations/<invitation_id>/join_by_code/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Joined via code",
+              "path_parameters": [
+                "invitation_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Kick Participant",
+          "path": "/api/parties/invitations/<invitation_id>/kick_participant/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Participant removed",
+              "path_parameters": [
+                "invitation_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Promote Participant",
+          "path": "/api/parties/invitations/<invitation_id>/promote_participant/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Participant promoted",
+              "path_parameters": [
+                "invitation_id"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "description": "Real-time chat messaging, room management, and moderation.",
+      "endpoints": [
+        {
+          "name": "Party Chat Messages",
+          "path": "/api/chat/<party_id>/messages/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "messages": [
+                  {
+                    "id": "uuid",
+                    "user": {
+                      "id": "uuid",
+                      "username": "johndoe",
+                      "display_name": "John Doe"
+                    },
+                    "message": "Great movie!",
+                    "message_type": "text",
+                    "timestamp": "2025-08-10T20:30:00Z",
+                    "edited": false
+                  }
+                ],
+                "pagination": {
+                  "next": null,
+                  "previous": "url",
+                  "total": 50
+                }
+              },
+              "query_parameters": [
+                "page",
+                "before",
+                "after",
+                "limit"
+              ],
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Send Party Chat Message",
+          "path": "/api/chat/<party_id>/messages/send/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "message": "This is awesome!",
+                "message_type": "text",
+                "reply_to": "message_id"
+              },
+              "response_example": {
+                "id": "uuid",
+                "message": "This is awesome!",
+                "timestamp": "2025-08-10T20:31:00Z",
+                "status": "sent"
+              },
+              "notes": "reply_to optional",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Join Chat Room",
+          "path": "/api/chat/<room_id>/join/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Join Chat Room confirmation",
+              "path_parameters": [
+                "room_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Leave Chat Room",
+          "path": "/api/chat/<room_id>/leave/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Leave Chat Room confirmation",
+              "path_parameters": [
+                "room_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Active Chat Users",
+          "path": "/api/chat/<room_id>/active-users/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "active_users": [
+                  {
+                    "id": "uuid",
+                    "username": "johndoe",
+                    "display_name": "John Doe",
+                    "last_seen": "2025-08-10T20:32:00Z"
+                  }
+                ],
+                "total_active": 5
+              },
+              "path_parameters": [
+                "room_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Chat Room Settings",
+          "path": "/api/chat/<room_id>/settings/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "slow_mode": false,
+                "slow_mode_interval": 5,
+                "allow_emojis": true,
+                "allow_links": true,
+                "max_message_length": 500
+              },
+              "path_parameters": [
+                "room_id"
+              ]
+            },
+            {
+              "method": "PUT",
+              "auth_required": true,
+              "request_example": {
+                "slow_mode": false,
+                "slow_mode_interval": 5,
+                "allow_emojis": true,
+                "allow_links": true,
+                "max_message_length": 500
+              },
+              "response_example": "Chat settings updated",
+              "path_parameters": [
+                "room_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Moderate Chat",
+          "path": "/api/chat/<room_id>/moderate/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "action": "delete_message",
+                "target_id": "message_id",
+                "reason": "spam"
+              },
+              "response_example": "Moderation action applied",
+              "path_parameters": [
+                "room_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Ban User",
+          "path": "/api/chat/<room_id>/ban/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "user_id": "uuid",
+                "duration": 3600,
+                "reason": "inappropriate_behavior"
+              },
+              "response_example": "User banned",
+              "path_parameters": [
+                "room_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Unban User",
+          "path": "/api/chat/<room_id>/unban/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "user_id": "uuid"
+              },
+              "response_example": "User unbanned",
+              "path_parameters": [
+                "room_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Moderation Log",
+          "path": "/api/chat/<room_id>/moderation-log/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Moderation log",
+              "path_parameters": [
+                "room_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Chat Statistics",
+          "path": "/api/chat/<room_id>/stats/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "total_messages": 150,
+                "active_participants": 8,
+                "message_rate": 2.5,
+                "popular_emojis": [
+                  "😂",
+                  "👍",
+                  "❤️"
+                ]
+              },
+              "path_parameters": [
+                "room_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Legacy Chat History",
+          "path": "/api/chat/history/<party_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Legacy chat history",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Legacy Moderation",
+          "path": "/api/chat/moderate/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Legacy moderation action"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Billing",
+      "description": "Subscriptions, payment methods, invoicing, and billing utilities.",
+      "endpoints": [
+        {
+          "name": "Subscription Plans",
+          "path": "/api/billing/plans/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": {
+                "plans": [
+                  {
+                    "id": "basic",
+                    "name": "Basic Plan",
+                    "price": 9.99,
+                    "currency": "USD",
+                    "interval": "month",
+                    "features": [
+                      "Feature 1",
+                      "Feature 2"
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Subscribe",
+          "path": "/api/billing/subscribe/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "plan_id": "premium",
+                "payment_method_id": "pm_123456",
+                "promo_code": "SAVE20"
+              },
+              "response_example": "Subscription created",
+              "notes": "promo_code optional"
+            }
+          ]
+        },
+        {
+          "name": "Current Subscription",
+          "path": "/api/billing/subscription/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "id": "sub_123",
+                "plan": "premium",
+                "status": "active",
+                "current_period_end": "2025-09-10T00:00:00Z",
+                "cancel_at_period_end": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cancel Subscription",
+          "path": "/api/billing/subscription/cancel/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "cancel_at_period_end": true,
+                "reason": "switching_plans"
+              },
+              "response_example": "Cancellation scheduled"
+            }
+          ]
+        },
+        {
+          "name": "Resume Subscription",
+          "path": "/api/billing/subscription/resume/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Subscription resumed"
+            }
+          ]
+        },
+        {
+          "name": "Payment Methods",
+          "path": "/api/billing/payment-methods/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Payment methods list"
+            }
+          ]
+        },
+        {
+          "name": "Payment Method Detail",
+          "path": "/api/billing/payment-methods/<payment_method_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Payment method detail",
+              "path_parameters": [
+                "payment_method_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Set Default Payment Method",
+          "path": "/api/billing/payment-methods/<payment_method_id>/set-default/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Default payment method updated",
+              "path_parameters": [
+                "payment_method_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Billing History",
+          "path": "/api/billing/history/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Billing history",
+              "query_parameters": [
+                "page",
+                "year",
+                "month"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Invoice Detail",
+          "path": "/api/billing/invoices/<invoice_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Invoice detail",
+              "path_parameters": [
+                "invoice_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Invoice Download",
+          "path": "/api/billing/invoices/<invoice_id>/download/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Invoice PDF download",
+              "path_parameters": [
+                "invoice_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Billing Address",
+          "path": "/api/billing/address/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "line1": "123 Main St",
+                "line2": "Apt 4B",
+                "city": "New York",
+                "state": "NY",
+                "postal_code": "10001",
+                "country": "US"
+              }
+            },
+            {
+              "method": "PUT",
+              "auth_required": true,
+              "request_example": {
+                "line1": "123 Main St",
+                "line2": "Apt 4B",
+                "city": "New York",
+                "state": "NY",
+                "postal_code": "10001",
+                "country": "US"
+              },
+              "response_example": "Billing address updated"
+            }
+          ]
+        },
+        {
+          "name": "Validate Promo Code",
+          "path": "/api/billing/promo-code/validate/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "promo_code": "SAVE20"
+              },
+              "response_example": {
+                "valid": true,
+                "discount_percent": 20,
+                "expires_at": "2025-12-31T23:59:59Z"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Stripe Webhook",
+          "path": "/api/billing/webhooks/stripe/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Webhook processed",
+              "notes": "Requires Stripe signature header"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "description": "Usage tracking, reporting, and advanced analytics endpoints.",
+      "endpoints": [
+        {
+          "name": "Analytics Overview",
+          "path": "/api/analytics/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Analytics overview",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "User Stats",
+          "path": "/api/analytics/user-stats/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User statistics"
+            }
+          ]
+        },
+        {
+          "name": "Party Stats",
+          "path": "/api/analytics/party-stats/<party_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Party analytics",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Admin Analytics",
+          "path": "/api/analytics/admin/analytics/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Admin analytics dashboard",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Export Analytics",
+          "path": "/api/analytics/export/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "date_range": {
+                  "start": "2025-08-01",
+                  "end": "2025-08-31"
+                },
+                "format": "csv"
+              },
+              "response_example": "Export started",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Dashboard Summary",
+          "path": "/api/analytics/dashboard/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Dashboard statistics"
+            }
+          ]
+        },
+        {
+          "name": "User Analytics",
+          "path": "/api/analytics/user/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User analytics"
+            }
+          ]
+        },
+        {
+          "name": "Video Analytics",
+          "path": "/api/analytics/video/<video_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Video analytics",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Party Analytics Detail",
+          "path": "/api/analytics/party/<party_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Party analytics",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "System Analytics",
+          "path": "/api/analytics/system/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "System analytics",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "System Performance",
+          "path": "/api/analytics/system/performance/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "System performance metrics",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Revenue Analytics",
+          "path": "/api/analytics/revenue/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Revenue analytics",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Retention Analytics",
+          "path": "/api/analytics/retention/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User retention analytics",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Content Analytics",
+          "path": "/api/analytics/content/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Content analytics",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Record Event",
+          "path": "/api/analytics/events/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "event_type": "video_view",
+                "event_data": {
+                  "video_id": "uuid",
+                  "watch_duration": 120
+                }
+              },
+              "response_example": "Event recorded"
+            }
+          ]
+        },
+        {
+          "name": "Real-time Dashboard",
+          "path": "/api/analytics/dashboard/realtime/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Real-time dashboard data",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Advanced Query",
+          "path": "/api/analytics/advanced/query/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "query": "custom_analytics_query",
+                "parameters": {}
+              },
+              "response_example": "Custom query results",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "A/B Testing",
+          "path": "/api/analytics/ab-testing/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "A/B testing results",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Submit A/B Test",
+          "path": "/api/analytics/ab-testing/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "A/B testing payload accepted",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Predictive Analytics",
+          "path": "/api/analytics/predictive/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Predictive analytics data",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Platform Overview",
+          "path": "/api/analytics/platform-overview/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Platform overview analytics",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "User Behavior",
+          "path": "/api/analytics/user-behavior/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User behavior analytics"
+            }
+          ]
+        },
+        {
+          "name": "Content Performance",
+          "path": "/api/analytics/content-performance/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Content performance analytics"
+            }
+          ]
+        },
+        {
+          "name": "Advanced Revenue",
+          "path": "/api/analytics/revenue-advanced/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Advanced revenue analytics",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Personal Analytics",
+          "path": "/api/analytics/personal/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Personal user analytics"
+            }
+          ]
+        },
+        {
+          "name": "Real-time Feed",
+          "path": "/api/analytics/real-time/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Real-time analytics feed",
+              "notes": "Admin access required"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "description": "User notifications, preferences, push delivery, and admin tools.",
+      "endpoints": [
+        {
+          "name": "Notifications",
+          "path": "/api/notifications/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "notifications": [
+                  {
+                    "id": "uuid",
+                    "type": "friend_request",
+                    "title": "New Friend Request",
+                    "message": "John Doe sent you a friend request",
+                    "read": false,
+                    "created_at": "2025-08-10T20:00:00Z",
+                    "data": {
+                      "sender_id": "uuid"
+                    }
+                  }
+                ],
+                "unread_count": 5
+              },
+              "query_parameters": [
+                "page",
+                "read",
+                "type"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Notification Detail",
+          "path": "/api/notifications/<notification_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Notification detail",
+              "path_parameters": [
+                "notification_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Mark Notification Read",
+          "path": "/api/notifications/<notification_id>/mark-read/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Notification marked read",
+              "path_parameters": [
+                "notification_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Mark All Read",
+          "path": "/api/notifications/mark-all-read/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "All notifications marked read"
+            }
+          ]
+        },
+        {
+          "name": "Clear All Notifications",
+          "path": "/api/notifications/clear-all/",
+          "operations": [
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Notifications cleared"
+            }
+          ]
+        },
+        {
+          "name": "Notification Preferences",
+          "path": "/api/notifications/preferences/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "email_notifications": true,
+                "push_notifications": true,
+                "friend_requests": true,
+                "party_invitations": true,
+                "video_comments": false,
+                "marketing": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Notification Preferences",
+          "path": "/api/notifications/preferences/update/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "email_notifications": true,
+                "push_notifications": true,
+                "friend_requests": true,
+                "party_invitations": true
+              },
+              "response_example": "Preferences updated"
+            }
+          ]
+        },
+        {
+          "name": "Update Push Token",
+          "path": "/api/notifications/push/token/update/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "device_token": "fcm_token",
+                "device_type": "ios",
+                "app_version": "1.0.0"
+              },
+              "response_example": "Token updated"
+            }
+          ]
+        },
+        {
+          "name": "Remove Push Token",
+          "path": "/api/notifications/push/token/remove/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "device_token": "fcm_token"
+              },
+              "response_example": "Token removed"
+            }
+          ]
+        },
+        {
+          "name": "Push Test",
+          "path": "/api/notifications/push/test/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Test notification sent"
+            }
+          ]
+        },
+        {
+          "name": "Push Broadcast",
+          "path": "/api/notifications/push/broadcast/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "title": "Announcement",
+                "message": "New features available!",
+                "target_users": [
+                  "all"
+                ]
+              },
+              "response_example": "Broadcast started",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Notification Templates",
+          "path": "/api/notifications/templates/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Notification templates",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Notification Template Detail",
+          "path": "/api/notifications/templates/<template_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Template detail",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "template_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Notification Channels",
+          "path": "/api/notifications/channels/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Notification channels",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Notification Stats",
+          "path": "/api/notifications/stats/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Notification statistics",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Delivery Stats",
+          "path": "/api/notifications/delivery-stats/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Delivery statistics",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Bulk Send",
+          "path": "/api/notifications/bulk/send/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "template_id": "uuid",
+                "target_users": [
+                  "uuid1",
+                  "uuid2"
+                ],
+                "data": {}
+              },
+              "response_example": "Bulk send started",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Notification Cleanup",
+          "path": "/api/notifications/cleanup/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "older_than_days": 30
+              },
+              "response_example": "Cleanup started",
+              "notes": "Admin access required"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Integrations",
+      "description": "Third-party service integrations and connection management.",
+      "endpoints": [
+        {
+          "name": "Integration Health",
+          "path": "/api/integrations/health/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": {
+                "status": "healthy",
+                "services": {
+                  "google_drive": "available",
+                  "aws_s3": "available",
+                  "social_oauth": "available"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Google Drive Auth URL",
+          "path": "/api/integrations/google-drive/auth-url/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "auth_url": "https://accounts.google.com/oauth/authorize?..."
+              }
+            }
+          ]
+        },
+        {
+          "name": "Google Drive OAuth Callback",
+          "path": "/api/integrations/google-drive/oauth-callback/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "code": "google_oauth_code"
+              },
+              "response_example": "OAuth completed"
+            }
+          ]
+        },
+        {
+          "name": "Google Drive Files",
+          "path": "/api/integrations/google-drive/files/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Google Drive files",
+              "query_parameters": [
+                "folder_id",
+                "mime_type",
+                "page"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Google Drive Streaming URL",
+          "path": "/api/integrations/google-drive/files/<file_id>/streaming-url/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "streaming_url": "https://drive.google.com/file/d/xyz/view",
+                "expires_at": "2025-08-10T21:00:00Z"
+              },
+              "path_parameters": [
+                "file_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "S3 Presigned Upload",
+          "path": "/api/integrations/s3/presigned-upload/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "filename": "video.mp4",
+                "content_type": "video/mp4",
+                "file_size": 1024000
+              },
+              "response_example": {
+                "upload_url": "https://s3.amazonaws.com/presigned-url",
+                "file_key": "uploads/video_123.mp4"
+              }
+            }
+          ]
+        },
+        {
+          "name": "S3 Upload",
+          "path": "/api/integrations/s3/upload/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "file": "<file>"
+              },
+              "response_example": "File uploaded",
+              "notes": "Multipart form data"
+            }
+          ]
+        },
+        {
+          "name": "S3 Streaming URL",
+          "path": "/api/integrations/s3/files/<file_key>/streaming-url/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "S3 streaming URL",
+              "path_parameters": [
+                "file_key"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Social Auth URL",
+          "path": "/api/integrations/social/<provider>/auth-url/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Social OAuth URL",
+              "notes": "Supported providers: google, github, facebook, twitter",
+              "path_parameters": [
+                "provider"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Social OAuth Callback",
+          "path": "/api/integrations/social/<provider>/callback/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": false,
+              "request_example": {
+                "code": "oauth_code",
+                "state": "oauth_state"
+              },
+              "response_example": "OAuth processed",
+              "path_parameters": [
+                "provider"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Integration Status",
+          "path": "/api/integrations/status/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Integration status",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Integration Management",
+          "path": "/api/integrations/management/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Integration management",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Test Integration",
+          "path": "/api/integrations/test/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Integration test results",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Integration Types",
+          "path": "/api/integrations/types/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Integration types"
+            }
+          ]
+        },
+        {
+          "name": "User Connections",
+          "path": "/api/integrations/connections/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Connected services list"
+            }
+          ]
+        },
+        {
+          "name": "Disconnect Connection",
+          "path": "/api/integrations/connections/<connection_id>/disconnect/",
+          "operations": [
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Service disconnected",
+              "path_parameters": [
+                "connection_id"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Interactive",
+      "description": "Real-time interactive features such as reactions, voice chat, polls, and screen sharing.",
+      "endpoints": [
+        {
+          "name": "Party Reactions",
+          "path": "/api/interactive/parties/<party_id>/reactions/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Party reactions",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Create Reaction",
+          "path": "/api/interactive/parties/<party_id>/reactions/create/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "emoji": "😂",
+                "timestamp": 120.5
+              },
+              "response_example": "Reaction created",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Voice Chat",
+          "path": "/api/interactive/parties/<party_id>/voice-chat/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Voice chat room info",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Manage Voice Chat",
+          "path": "/api/interactive/parties/<party_id>/voice-chat/manage/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "action": "mute_user",
+                "user_id": "uuid"
+              },
+              "response_example": "Voice chat updated",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Screen Shares",
+          "path": "/api/interactive/parties/<party_id>/screen-shares/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Active screen shares",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Start Screen Share",
+          "path": "/api/interactive/parties/<party_id>/screen-shares/start/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Screen share started",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Stop Screen Share",
+          "path": "/api/interactive/parties/<party_id>/screen-shares/<share_id>/stop/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Screen share stopped",
+              "path_parameters": [
+                "party_id",
+                "share_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Update Screen Share",
+          "path": "/api/interactive/screen-shares/<share_id>/update/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Screen share updated",
+              "path_parameters": [
+                "share_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Screen Share Annotations",
+          "path": "/api/interactive/screen-shares/<share_id>/annotations/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Annotations updated",
+              "path_parameters": [
+                "share_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Party Polls",
+          "path": "/api/interactive/parties/<party_id>/polls/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Active polls",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Create Poll",
+          "path": "/api/interactive/parties/<party_id>/polls/create/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "question": "What should we watch next?",
+                "options": [
+                  "Movie A",
+                  "Movie B",
+                  "Movie C"
+                ],
+                "duration": 300
+              },
+              "response_example": "Poll created",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Publish Poll",
+          "path": "/api/interactive/polls/<poll_id>/publish/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Poll published",
+              "path_parameters": [
+                "poll_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Respond to Poll",
+          "path": "/api/interactive/polls/<poll_id>/respond/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "option_id": "uuid"
+              },
+              "response_example": "Vote recorded",
+              "path_parameters": [
+                "poll_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Party Interactive Analytics",
+          "path": "/api/interactive/parties/<party_id>/analytics/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Interactive analytics",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Moderation",
+      "description": "Reporting workflows, admin queues, and reference data.",
+      "endpoints": [
+        {
+          "name": "Reports",
+          "path": "/api/moderation/reports/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Reports list",
+              "notes": "Admin access required"
+            },
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "content_type": "video",
+                "content_id": "uuid",
+                "reason": "inappropriate_content",
+                "description": "Report details"
+              },
+              "response_example": "Report submitted"
+            }
+          ]
+        },
+        {
+          "name": "Report Detail",
+          "path": "/api/moderation/reports/<report_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Report detail",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "report_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Moderation Queue",
+          "path": "/api/moderation/admin/queue/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Moderation queue",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Moderation Stats",
+          "path": "/api/moderation/admin/stats/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Moderation statistics",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Moderation Dashboard",
+          "path": "/api/moderation/admin/dashboard/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Moderation dashboard",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Assign Report",
+          "path": "/api/moderation/admin/reports/<report_id>/assign/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "moderator_id": "uuid"
+              },
+              "response_example": "Report assigned",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "report_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Resolve Report",
+          "path": "/api/moderation/admin/reports/<report_id>/resolve/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "action": "approve",
+                "reason": "Valid content"
+              },
+              "response_example": "Report resolved",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "report_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Dismiss Report",
+          "path": "/api/moderation/admin/reports/<report_id>/dismiss/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "reason": "Invalid report"
+              },
+              "response_example": "Report dismissed",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "report_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Report Actions",
+          "path": "/api/moderation/admin/reports/<report_id>/actions/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Report action history",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "report_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Bulk Report Action",
+          "path": "/api/moderation/admin/reports/bulk-action/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "report_ids": [
+                  "uuid1",
+                  "uuid2"
+                ],
+                "action": "resolve",
+                "reason": "Bulk resolution"
+              },
+              "response_example": "Bulk action started",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Report Types",
+          "path": "/api/moderation/report-types/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Available report types"
+            }
+          ]
+        },
+        {
+          "name": "Content Types",
+          "path": "/api/moderation/content-types/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Reportable content types"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Store",
+      "description": "In-app purchases, achievements, rewards, and inventory.",
+      "endpoints": [
+        {
+          "name": "Store Items",
+          "path": "/api/store/items/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "items": [
+                  {
+                    "id": "uuid",
+                    "name": "Premium Theme",
+                    "description": "Exclusive theme",
+                    "price": 9.99,
+                    "currency": "USD",
+                    "category": "themes",
+                    "featured": true
+                  }
+                ]
+              },
+              "query_parameters": [
+                "category",
+                "featured",
+                "page"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Purchase Item",
+          "path": "/api/store/purchase/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "item_id": "uuid",
+                "payment_method": "credits"
+              },
+              "response_example": "Purchase completed"
+            }
+          ]
+        },
+        {
+          "name": "Inventory",
+          "path": "/api/store/inventory/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User inventory"
+            }
+          ]
+        },
+        {
+          "name": "Achievements",
+          "path": "/api/store/achievements/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Available achievements"
+            }
+          ]
+        },
+        {
+          "name": "Rewards",
+          "path": "/api/store/rewards/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Available rewards"
+            }
+          ]
+        },
+        {
+          "name": "Claim Reward",
+          "path": "/api/store/rewards/<reward_id>/claim/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Reward claimed",
+              "path_parameters": [
+                "reward_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Store Stats",
+          "path": "/api/store/stats/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Store statistics"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Support",
+      "description": "Help center, support tickets, feedback, and FAQ.",
+      "endpoints": [
+        {
+          "name": "FAQ Categories",
+          "path": "/api/support/faq/categories/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "FAQ categories"
+            }
+          ]
+        },
+        {
+          "name": "FAQ List",
+          "path": "/api/support/faq/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "FAQ list",
+              "query_parameters": [
+                "category",
+                "search"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Vote FAQ",
+          "path": "/api/support/faq/<faq_id>/vote/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "helpful": true
+              },
+              "response_example": "Vote recorded",
+              "path_parameters": [
+                "faq_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "View FAQ",
+          "path": "/api/support/faq/<faq_id>/view/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "FAQ detail",
+              "path_parameters": [
+                "faq_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Support Tickets",
+          "path": "/api/support/tickets/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Support tickets"
+            },
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "subject": "Issue with video upload",
+                "description": "Detailed description",
+                "category": "technical",
+                "priority": "medium"
+              },
+              "response_example": "Ticket created"
+            }
+          ]
+        },
+        {
+          "name": "Ticket Detail",
+          "path": "/api/support/tickets/<ticket_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Ticket detail",
+              "path_parameters": [
+                "ticket_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Ticket Messages",
+          "path": "/api/support/tickets/<ticket_id>/messages/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "message": "Additional information"
+              },
+              "response_example": "Message added",
+              "path_parameters": [
+                "ticket_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Feedback",
+          "path": "/api/support/feedback/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User feedback"
+            },
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "type": "feature_request",
+                "title": "Add dark mode",
+                "description": "Would love a dark mode option",
+                "rating": 5
+              },
+              "response_example": "Feedback submitted"
+            }
+          ]
+        },
+        {
+          "name": "Vote Feedback",
+          "path": "/api/support/feedback/<feedback_id>/vote/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "vote": "upvote"
+              },
+              "response_example": "Feedback vote recorded",
+              "path_parameters": [
+                "feedback_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Support Search",
+          "path": "/api/support/search/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Support search results",
+              "query_parameters": [
+                "q"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "description": "Platform-wide discovery and search endpoints.",
+      "endpoints": [
+        {
+          "name": "Global Search",
+          "path": "/api/search/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": {
+                "query": "search term",
+                "results": {
+                  "videos": [
+                    {
+                      "id": "uuid",
+                      "title": "Video Title",
+                      "description": "Description",
+                      "thumbnail": "url",
+                      "duration": 3600
+                    }
+                  ],
+                  "parties": [
+                    {
+                      "id": "uuid",
+                      "title": "Party Title",
+                      "host": "username",
+                      "participants_count": 5
+                    }
+                  ],
+                  "users": [
+                    {
+                      "id": "uuid",
+                      "username": "johndoe",
+                      "display_name": "John Doe",
+                      "avatar": "url"
+                    }
+                  ]
+                },
+                "total_results": 45
+              },
+              "query_parameters": [
+                "q",
+                "type",
+                "page",
+                "page_size"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Discover",
+          "path": "/api/search/discover/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": {
+                "featured_videos": [],
+                "trending_parties": [],
+                "recommended_content": [],
+                "popular_categories": []
+              },
+              "query_parameters": [
+                "category",
+                "trending",
+                "recommended"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Social",
+      "description": "Community groups and social interactions beyond friend system.",
+      "endpoints": [
+        {
+          "name": "Social Groups",
+          "path": "/api/social/groups/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User social groups"
+            }
+          ]
+        },
+        {
+          "name": "Group Detail",
+          "path": "/api/social/groups/<group_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Group detail",
+              "path_parameters": [
+                "group_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Join Group",
+          "path": "/api/social/groups/<group_id>/join/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Joined group",
+              "path_parameters": [
+                "group_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Leave Group",
+          "path": "/api/social/groups/<group_id>/leave/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Left group",
+              "path_parameters": [
+                "group_id"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Messaging",
+      "description": "Direct messaging between users.",
+      "endpoints": [
+        {
+          "name": "Conversations",
+          "path": "/api/messaging/conversations/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Conversations list"
+            },
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "participant_ids": [
+                  "uuid1",
+                  "uuid2"
+                ],
+                "initial_message": "Hello!"
+              },
+              "response_example": "Conversation created"
+            }
+          ]
+        },
+        {
+          "name": "Conversation Messages",
+          "path": "/api/messaging/conversations/<conversation_id>/messages/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Conversation messages",
+              "query_parameters": [
+                "page",
+                "before",
+                "after"
+              ],
+              "path_parameters": [
+                "conversation_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Send Conversation Message",
+          "path": "/api/messaging/conversations/<conversation_id>/messages/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "message": "Hello there!",
+                "message_type": "text"
+              },
+              "response_example": "Message sent",
+              "path_parameters": [
+                "conversation_id"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mobile",
+      "description": "Mobile application endpoints for configuration and sync.",
+      "endpoints": [
+        {
+          "name": "Mobile Config",
+          "path": "/api/mobile/config/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "app_version": "1.0.0",
+                "min_supported_version": "1.0.0",
+                "features": {
+                  "offline_sync": true,
+                  "push_notifications": true,
+                  "video_streaming": true
+                },
+                "api_endpoints": {},
+                "settings": {}
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mobile Home",
+          "path": "/api/mobile/home/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "featured_content": [],
+                "recent_parties": [],
+                "friend_activity": [],
+                "recommendations": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mobile Sync",
+          "path": "/api/mobile/sync/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Sync data"
+            },
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Sync updated"
+            }
+          ]
+        },
+        {
+          "name": "Push Token",
+          "path": "/api/mobile/push-token/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "device_token": "fcm_token",
+                "device_type": "ios"
+              },
+              "response_example": "Token registered"
+            }
+          ]
+        },
+        {
+          "name": "App Info",
+          "path": "/api/mobile/app-info/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Mobile app info"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "description": "Administrative dashboards, moderation actions, system management, and broadcasting.",
+      "endpoints": [
+        {
+          "name": "Admin Dashboard",
+          "path": "/api/admin/dashboard/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Admin dashboard",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Admin Analytics",
+          "path": "/api/admin/analytics/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Admin analytics",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Admin Users",
+          "path": "/api/admin/users/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User management list",
+              "notes": "Admin access required",
+              "query_parameters": [
+                "search",
+                "status",
+                "page"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Admin User Detail",
+          "path": "/api/admin/users/<user_id>/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User detail",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "user_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Suspend User",
+          "path": "/api/admin/users/<user_id>/suspend/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "reason": "Terms violation"
+              },
+              "response_example": "Suspend User confirmation",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "user_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Unsuspend User",
+          "path": "/api/admin/users/<user_id>/unsuspend/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Unsuspend User confirmation",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "user_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Ban User",
+          "path": "/api/admin/users/<user_id>/ban/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "reason": "Terms violation",
+                "duration": 86400
+              },
+              "response_example": "Ban User confirmation",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "user_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Unban User",
+          "path": "/api/admin/users/<user_id>/unban/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Unban User confirmation",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "user_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "User Bulk Action",
+          "path": "/api/admin/users/bulk-action/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Bulk action executed",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "User Export",
+          "path": "/api/admin/users/export/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User export generated",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "User Actions",
+          "path": "/api/admin/users/<user_id>/actions/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "User actions log",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "user_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Admin Parties",
+          "path": "/api/admin/parties/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Admin party list",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Delete Party",
+          "path": "/api/admin/parties/<party_id>/delete/",
+          "operations": [
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Party deleted",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "party_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Admin Videos",
+          "path": "/api/admin/videos/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Admin video list",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Delete Video",
+          "path": "/api/admin/videos/<video_id>/delete/",
+          "operations": [
+            {
+              "method": "DELETE",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Video deleted",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "video_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Admin Reports",
+          "path": "/api/admin/reports/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Admin reports",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Resolve Admin Report",
+          "path": "/api/admin/reports/<report_id>/resolve/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "action": "approve",
+                "reason": "Content approved"
+              },
+              "response_example": "Report resolved",
+              "notes": "Admin access required",
+              "path_parameters": [
+                "report_id"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "System Logs",
+          "path": "/api/admin/logs/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "System logs",
+              "notes": "Admin access required",
+              "query_parameters": [
+                "level",
+                "date_from",
+                "date_to"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "System Health",
+          "path": "/api/admin/system-health/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": {
+                "status": "healthy",
+                "services": {
+                  "database": "healthy",
+                  "redis": "healthy",
+                  "celery": "healthy",
+                  "storage": "healthy"
+                },
+                "metrics": {
+                  "cpu_usage": 45.2,
+                  "memory_usage": 68.5,
+                  "disk_usage": 32.1
+                }
+              },
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Maintenance Mode",
+          "path": "/api/admin/maintenance/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "action": "enable",
+                "message": "Scheduled maintenance"
+              },
+              "response_example": "Maintenance updated",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Broadcast Message",
+          "path": "/api/admin/broadcast/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "message": "System maintenance scheduled",
+                "type": "announcement",
+                "target_users": "all"
+              },
+              "response_example": "Broadcast sent",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Send Admin Notification",
+          "path": "/api/admin/notifications/send/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "title": "Important Update",
+                "message": "New features available",
+                "recipients": [
+                  "uuid1",
+                  "uuid2"
+                ]
+              },
+              "response_example": "Notification sent",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Admin Settings",
+          "path": "/api/admin/settings/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "System settings",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Update Admin Settings",
+          "path": "/api/admin/settings/update/",
+          "operations": [
+            {
+              "method": "POST",
+              "auth_required": true,
+              "request_example": {
+                "setting_key": "max_upload_size",
+                "setting_value": "100MB"
+              },
+              "response_example": "Settings updated",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Health Check",
+          "path": "/api/admin/health/check/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Health check",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Health Status",
+          "path": "/api/admin/health/status/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "Health status",
+              "notes": "Admin access required"
+            }
+          ]
+        },
+        {
+          "name": "Health Metrics",
+          "path": "/api/admin/health/metrics/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": true,
+              "request_example": null,
+              "response_example": "System metrics",
+              "notes": "Admin access required"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Legacy",
+      "description": "Legacy routes maintained for backward compatibility that redirect to the API namespace.",
+      "endpoints": [
+        {
+          "name": "Legacy Auth Redirect",
+          "path": "/auth/<path:remaining>",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Redirect to /api/auth/",
+              "notes": "Redirects to new API",
+              "path_parameters": [
+                "remaining"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Legacy Users Redirect",
+          "path": "/users/<path:remaining>",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Redirect to /api/users/",
+              "notes": "Redirects to new API",
+              "path_parameters": [
+                "remaining"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Legacy Videos Redirect",
+          "path": "/videos/<path:remaining>",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Redirect to /api/videos/",
+              "notes": "Redirects to new API",
+              "path_parameters": [
+                "remaining"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Legacy Parties Redirect",
+          "path": "/parties/<path:remaining>",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Redirect to /api/parties/",
+              "notes": "Redirects to new API",
+              "path_parameters": [
+                "remaining"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Static",
+      "description": "Development static and media asset endpoints.",
+      "endpoints": [
+        {
+          "name": "Media Files",
+          "path": "/media/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Media file access",
+              "notes": "Development only"
+            }
+          ]
+        },
+        {
+          "name": "Static Files",
+          "path": "/static/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Static asset access",
+              "notes": "Development only"
+            }
+          ]
+        },
+        {
+          "name": "Debug Toolbar",
+          "path": "/__debug__/",
+          "operations": [
+            {
+              "method": "GET",
+              "auth_required": false,
+              "request_example": null,
+              "response_example": "Django debug toolbar",
+              "notes": "Development only"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

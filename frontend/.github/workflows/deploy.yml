@@ -1,0 +1,233 @@
+name: Deploy Frontend to Production
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+    types: [closed]
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Force deployment even if no changes detected'
+        required: false
+        default: 'false'
+
+env:
+  NODE_VERSION: '18'
+  PNPM_VERSION: '8'
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+          
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+            
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Run linter
+        run: pnpm lint
+        
+      - name: Run tests
+        run: pnpm test
+        
+      - name: Build application
+        run: pnpm build
+
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: |
+      (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main') &&
+      (github.event_name == 'push' || 
+       (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
+       github.event_name == 'workflow_dispatch')
+    
+    environment: production
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ env.PNPM_VERSION }}
+          
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+          
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+            
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Build application
+        run: pnpm build
+        
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+          
+      - name: Create backup on server
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.USERNAME }}@${{ secrets.HOST }} "
+            sudo mkdir -p /opt/backups/frontend
+            sudo chown ubuntu:ubuntu /opt/backups/frontend
+            
+            if [[ -d '/opt/watch-party-frontend' ]]; then
+              cd '/opt/watch-party-frontend'
+              if [[ -f 'server.js' && -d '.next' ]]; then
+                TIMESTAMP=\$(date +'%Y%m%d_%H%M%S')
+                BACKUP_NAME=\"frontend_backup_\${TIMESTAMP}\"
+                echo \"Creating backup: \$BACKUP_NAME\"
+                tar -czf \"/opt/backups/frontend/\$BACKUP_NAME.tar.gz\" \
+                  --exclude='build.tar.gz' \
+                  --exclude='node_modules' \
+                  .
+                echo \"Backup created successfully\"
+              fi
+            fi
+            
+            # Clean old backups (keep only 3)
+            cd /opt/backups/frontend
+            ls -t frontend_backup_*.tar.gz 2>/dev/null | tail -n +4 | xargs -r rm -f
+          "
+          
+      - name: Create deployment archive
+        run: |
+          tar -czf build.tar.gz .next/standalone .next/static public
+          
+      - name: Transfer files to server
+        run: |
+          scp -i ~/.ssh/id_rsa build.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/opt/watch-party-frontend/
+          scp -i ~/.ssh/id_rsa ecosystem.frontend.config.js ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/opt/watch-party-frontend/
+          
+      - name: Deploy application
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.USERNAME }}@${{ secrets.HOST }} "
+            cd /opt/watch-party-frontend
+            
+            # Stop the application
+            pm2 stop watch-party-frontend || true
+            
+            # Clean previous deployment (except backups)
+            rm -rf .next node_modules package.json server.js
+            
+            # Extract new deployment
+            tar -xzf build.tar.gz
+            cp -r .next/standalone/. .
+            
+            # Ensure proper permissions
+            chmod +x server.js
+            
+            # Start the application
+            pm2 start ecosystem.frontend.config.js
+            pm2 save
+            
+            # Clean up
+            rm -f build.tar.gz
+            
+            echo 'Deployment completed successfully'
+          "
+          
+      - name: Restart services
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.USERNAME }}@${{ secrets.HOST }} "
+            # Restart frontend
+            pm2 restart watch-party-frontend
+            
+            # Reload nginx
+            sudo nginx -t && sudo systemctl reload nginx
+            
+            echo 'Services restarted successfully'
+          "
+          
+      - name: Health check
+        run: |
+          ssh -i ~/.ssh/id_rsa ${{ secrets.USERNAME }}@${{ secrets.HOST }} "
+            # Wait for service to be ready
+            sleep 10
+            
+            # Check PM2 status
+            pm2 list
+            
+            # Check application health
+            curl -f http://localhost:3001/ || (echo 'Health check failed' && exit 1)
+            
+            echo 'Health check passed'
+          "
+          
+      - name: Cleanup SSH
+        if: always()
+        run: |
+          rm -f ~/.ssh/id_rsa
+          
+      - name: Deployment notification
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Frontend deployment successful!"
+          else
+            echo "❌ Frontend deployment failed!"
+          fi
+
+    - name: Execute deployment script
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        port: ${{ secrets.SERVER_PORT || 22 }}
+        script: |
+          cd /tmp/watch-party-deployment
+          tar -xzf deployment.tar.gz
+          chmod +x deploy.sh
+          chmod +x generate-nginx-config.sh
+          chmod +x generate-nginx-config-http.sh
+          sudo ./deploy.sh watch-party.brahim-elhouss.me
