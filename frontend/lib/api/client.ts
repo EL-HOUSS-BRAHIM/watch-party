@@ -5,14 +5,14 @@ import { tokenStorage } from "@/lib/auth/token-storage"
 import { logger } from "@/lib/observability/logger"
 
 declare module "axios" {
-  interface InternalAxiosRequestConfig<D = any> {
+  interface InternalAxiosRequestConfig<D = unknown> {
     metadata?: { startTime?: number }
     _retry?: boolean
   }
 }
 
 // Types
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data: T
   message?: string
   status: number
@@ -26,7 +26,7 @@ export interface PaginationMeta {
   page_size?: number
 }
 
-export interface PaginatedResponse<T = any> {
+export interface PaginatedResponse<T = unknown> {
   results: T[]
   pagination?: PaginationMeta
   count?: number
@@ -282,37 +282,37 @@ export class ApiClient {
   }
 
   // HTTP Methods
-  async get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  async get<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.get<T>(url, config)
     return response.data
   }
 
-  async post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  async post<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.post(url, data, config)
     return response.data
   }
 
-  async put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  async put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.put<T>(url, data, config)
     return response.data
   }
 
-  async patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): Promise<T> {
+  async patch<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.patch<T>(url, data, config)
     return response.data
   }
 
-  async delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  async delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.delete<T>(url, config)
     return response.data
   }
 
   // File upload with progress
-  async upload<T = any>(
+  async upload<T = unknown>(
     url: string,
     file: File,
     onProgress?: (progress: number) => void,
-    additionalData?: Record<string, any>,
+    additionalData?: Record<string, unknown>,
   ): Promise<T> {
     const formData = new FormData()
     formData.append("file", file)
@@ -400,11 +400,13 @@ export { apiClient }
 export default apiClient
 
 // Error handling utilities
-export const isApiError = (error: any): error is ApiError => {
-  return error && typeof error.message === "string" && typeof error.status === "number"
+export const isApiError = (error: unknown): error is ApiError => {
+  return error && typeof error === 'object' && error !== null && 
+    'message' in error && typeof (error as any).message === "string" && 
+    'status' in error && typeof (error as any).status === "number"
 }
 
-export const getErrorMessage = (error: any): string => {
+export const getErrorMessage = (error: unknown): string => {
   if (isApiError(error)) {
     return error.message
   }
@@ -414,7 +416,7 @@ export const getErrorMessage = (error: any): string => {
   return "An unexpected error occurred"
 }
 
-export const getFieldErrors = (error: any): Record<string, string[]> => {
+export const getFieldErrors = (error: unknown): Record<string, string[]> => {
   if (isApiError(error) && error.errors) {
     return error.errors
   }

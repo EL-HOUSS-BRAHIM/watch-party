@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
+import { socialAPI, usersAPI } from "@/lib/api"
 import {
   UserPlus,
   Users,
@@ -133,14 +134,9 @@ export default function FriendSuggestionsPage() {
     }
 
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/friends/suggestions/", {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setSuggestions(data.results || data.suggestions || [])
+      // Use proper API service instead of direct fetch
+      const suggestions = await usersAPI?.getFriendSuggestions({ limit: 20 })
+      setSuggestions(suggestions || [])
       } else {
         toast({
           title: "Error",
@@ -231,25 +227,17 @@ export default function FriendSuggestionsPage() {
     setSendingRequests(prev => new Set(prev).add(userId))
 
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/friends/requests/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ user_id: userId }),
-      })
+      // Use proper API service instead of direct fetch
+      await usersAPI?.sendFriendRequest({ to_user: userId })
 
-      if (response.ok) {
-        // Update the suggestion to show request sent
-        setSuggestions(prev =>
-          prev.map(user =>
-            user.id === userId
-              ? { ...user, friend_request_sent: true }
-              : user
-          )
+      // Update the suggestion to show request sent
+      setSuggestions(prev =>
+        prev.map(user =>
+          user.id === userId
+            ? { ...user, friend_request_sent: true }
+            : user
         )
+      )
 
         toast({
           title: "Friend Request Sent",
