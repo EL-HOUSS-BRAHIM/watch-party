@@ -124,10 +124,10 @@ deploy_services() {
     cd "$APP_DIR"
     
     print_status "Building Docker images..."
-    docker compose build --no-cache
+    docker-compose build --no-cache
     
     print_status "Starting services..."
-    docker compose up -d --remove-orphans
+    docker-compose up -d --remove-orphans
     
     # Wait for backend to be ready
     print_status "Waiting for backend to be ready..."
@@ -135,17 +135,17 @@ deploy_services() {
     
     # Run database migrations
     print_status "Running database migrations..."
-    docker compose exec -T backend python manage.py migrate
+    docker-compose exec -T backend python manage.py migrate
     
     # Collect static files
     print_status "Collecting static files..."
-    docker compose exec -T backend python manage.py collectstatic --noinput
+    docker-compose exec -T backend python manage.py collectstatic --noinput
     
     # Create superuser if needed
     print_status "Checking for superuser..."
-    if ! docker compose exec -T backend python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); print('Superuser exists' if User.objects.filter(is_superuser=True).exists() else 'No superuser');" | grep -q "Superuser exists"; then
+    if ! docker-compose exec -T backend python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); print('Superuser exists' if User.objects.filter(is_superuser=True).exists() else 'No superuser');" | grep -q "Superuser exists"; then
         print_warning "No superuser found. You may want to create one:"
-        print_warning "docker compose exec backend python manage.py createsuperuser"
+        print_warning "docker-compose exec backend python manage.py createsuperuser"
     fi
     
     print_status "Services deployed successfully"
@@ -159,7 +159,7 @@ check_health() {
     
     # Check if containers are running
     print_status "Checking container status..."
-    docker compose ps
+    docker-compose ps
     
     # Check backend health
     print_status "Checking backend health..."
@@ -168,7 +168,7 @@ check_health() {
     else
         print_error "❌ Backend health check failed"
         print_status "Backend logs:"
-        docker compose logs --tail=20 backend
+        docker-compose logs --tail=20 backend
     fi
     
     # Check frontend health
@@ -178,7 +178,7 @@ check_health() {
     else
         print_error "❌ Frontend health check failed"
         print_status "Frontend logs:"
-        docker compose logs --tail=20 frontend
+        docker-compose logs --tail=20 frontend
     fi
     
     # Check nginx health
@@ -188,7 +188,7 @@ check_health() {
     else
         print_error "❌ Nginx health check failed"
         print_status "Nginx logs:"
-        docker compose logs --tail=20 nginx
+        docker-compose logs --tail=20 nginx
     fi
 }
 
@@ -199,16 +199,16 @@ show_logs() {
     cd "$APP_DIR"
     
     echo -e "\n${BLUE}Backend logs:${NC}"
-    docker compose logs --tail=20 backend
+    docker-compose logs --tail=20 backend
     
     echo -e "\n${BLUE}Frontend logs:${NC}"
-    docker compose logs --tail=20 frontend
+    docker-compose logs --tail=20 frontend
     
     echo -e "\n${BLUE}Nginx logs:${NC}"
-    docker compose logs --tail=20 nginx
+    docker-compose logs --tail=20 nginx
     
     echo -e "\n${BLUE}Database logs:${NC}"
-    docker compose logs --tail=10 db
+    docker-compose logs --tail=10 db
 }
 
 # Function to restart services
@@ -218,7 +218,7 @@ restart_services() {
     cd "$APP_DIR"
     
     print_status "Restarting all services..."
-    docker compose restart
+    docker-compose restart
     
     print_status "Waiting for services to be ready..."
     sleep 30
@@ -233,7 +233,7 @@ stop_services() {
     cd "$APP_DIR"
     
     print_status "Stopping all services..."
-    docker compose down
+    docker-compose down
     
     print_status "Services stopped"
 }
@@ -294,11 +294,11 @@ backup_data() {
     mkdir -p "$BACKUP_DIR"
     
     print_status "Creating database backup..."
-    docker compose exec -T db pg_dump -U watchparty watchparty > "$BACKUP_DIR/database.sql"
+    docker-compose exec -T db pg_dump -U watchparty watchparty > "$BACKUP_DIR/database.sql"
     
     print_status "Creating media files backup..."
-    if [ -d "$(docker compose config --volumes | grep media)" ]; then
-        docker run --rm -v "$(docker compose config --volumes | grep media)":/source -v "$BACKUP_DIR":/backup alpine tar czf /backup/media.tar.gz -C /source .
+    if [ -d "$(docker-compose config --volumes | grep media)" ]; then
+        docker run --rm -v "$(docker-compose config --volumes | grep media)":/source -v "$BACKUP_DIR":/backup alpine tar czf /backup/media.tar.gz -C /source .
     fi
     
     print_status "Backup created at: $BACKUP_DIR"
