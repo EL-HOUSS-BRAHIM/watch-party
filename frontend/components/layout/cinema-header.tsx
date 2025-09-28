@@ -8,16 +8,15 @@ import { isAuthRoute, isMarketingRoute } from "@/lib/navigation/visibility"
 
 "use client"
 
-
 export function CinemaHeader() {
   const pathname = usePathname()
   const { user } = useAuth()
 
-  if (isAuthRoute(pathname) || pathname?.startsWith("/admin")) {}
+  if (isAuthRoute(pathname) || pathname?.startsWith("/admin")) {
     return null;
   }
 
-  if (!isMarketingRoute(pathname)) {}
+  if (!isMarketingRoute(pathname)) {
     return null;
   }
 

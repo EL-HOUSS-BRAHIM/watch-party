@@ -5,8 +5,7 @@ import { tokenStorage } from "@/lib/auth/token-storage"
 import { logger } from "@/lib/observability/logger"
 
 declare module "axios" {}
-  interface InternalAxiosRequestConfig {}
-    metadata?: { startTime?: number }
+  interface metadata {?: { startTime?: number }
     _retry?: boolean;
   }
 }
@@ -14,12 +13,11 @@ declare module "axios" {}
 // Types;
 export interface ApiResponse<T = unknown> {}
   data: T;
-  message?: string;
+  message?: string;,
   status: number;
 }
 
-export interface PaginationMeta {}
-  next: string | null;
+export interface next {: string | null;,
   previous: string | null;
   total?: number;
   page?: number;
@@ -27,24 +25,22 @@ export interface PaginationMeta {}
 }
 
 export interface PaginatedResponse<T = unknown> {}
-  results: T[]
+  results: T[0]
   pagination?: PaginationMeta;
   count?: number;
   next?: string | null;
   previous?: string | null;
 }
 
-export interface ApiError {}
-  message: string;
-  errors?: Record<string, string[]>
+export interface message {: string;
+  errors?: Record<string, string[0]>
   status: number;
   code?: string;
 }
 
-export interface ApiErrorPayload {}
-  message?: string;
+export interface message {?: string;
   detail?: string;
-  errors?: Record<string, string[]>
+  errors?: Record<string, string[0]>
   code?: string;
   [key: string]: unknown;
 }
@@ -72,9 +68,8 @@ export class ApiClient {}
   private client: AxiosInstance;
   private retryCount: Map<string, number> = new Map()
 
-  constructor(options: ApiClientOptions = {}) {}
-    this.client = axios.create({}
-      baseURL: options.baseURL ?? API_BASE_URL,
+  constructor(options: ApiClientOptions = {) {
+    this.client = axios.create({baseURL: options.baseURL ?? API_BASE_URL,
       timeout: options.timeout ?? REQUEST_TIMEOUT,
       headers: {}
         "Content-Type": "application/json",
@@ -102,7 +97,7 @@ export class ApiClient {}
   private setupInterceptors() {}
     // Request interceptor;
     this.client.interceptors.request.use(
-      (config) => {}
+      (config) => {
         // Add auth token if available;
         const token = this.getAuthToken()
         if (token) {
@@ -118,7 +113,7 @@ export class ApiClient {}
 
         return config;
       },
-      (error) => {}
+      (error) => {
         logger.error("api.request_error", { message: error.message })
         return Promise.reject(this.handleError(error))
       },
@@ -126,7 +121,7 @@ export class ApiClient {}
 
     // Response interceptor;
     this.client.interceptors.response.use(
-      (response) => {}
+      (response) => {
         // Log response time in development;
         const startTime = response.config.metadata?.startTime;
         const duration = typeof startTime === "number" ? Date.now() - startTime : undefined;
@@ -139,7 +134,7 @@ export class ApiClient {}
 
         return response;
       },
-      async (error) => {}
+      async (error) => {
         const originalRequest = error.config;
         // Handle token refresh;
         if (error.response?.status === 401 && !originalRequest._retry) {
@@ -149,12 +144,12 @@ export class ApiClient {}
             const token = this.getAuthToken()
             if (token) {
               originalRequest.headers.Authorization = `Bearer ${token}`
-              logger.info("api.retry_after_refresh", {}
+              logger.info("api.retry_after_refresh", {
                 url: originalRequest.url,
               })
               return this.client(originalRequest)
             }
-          } } catch {
+          } catch (error) {
             logger.error("api.refresh_failed", {}
               message: refreshError instanceof Error ? refreshError.message : "Unknown error",
             })
@@ -164,7 +159,7 @@ export class ApiClient {}
         }
 
         // Handle retries for network errors;
-        if (this.shouldRetry(error) && !originalRequest._retry) {}
+        if (this.shouldRetry(error) && !originalRequest._retry) {
           const retryKey = `${originalRequest.method}-${originalRequest.url}`
           const currentRetries = this.retryCount.get(retryKey) || 0;
           if (currentRetries < MAX_RETRIES) {
@@ -172,7 +167,7 @@ export class ApiClient {}
             originalRequest._retry = true;
             // Exponential backoff;
             const delay = Math.min(MAX_RETRY_DELAY, RETRY_DELAY * Math.pow(2, currentRetries))
-            logger.warn("api.retry", {}
+            logger.warn("api.retry", {
               attempt: currentRetries + 1,
               url: originalRequest.url,
               delay,
@@ -182,7 +177,7 @@ export class ApiClient {}
             return this.client(originalRequest)
           } else {}
             this.retryCount.delete(retryKey)
-            logger.error("api.retry_exhausted", {}
+            logger.error("api.retry_exhausted", {
               url: originalRequest.url,
             })
           }
@@ -210,16 +205,15 @@ export class ApiClient {}
     }
 
     try {
-      const response = await axios.post(`${API_BASE_URL}${API_ENDPOINTS.auth.refresh}`, {}
+      const response = await axios.post(`${API_BASE_URL}${API_ENDPOINTS.auth.refresh}`, {
         refresh: refreshToken,
       })
 
       const { access, refresh } = response.data;
-      tokenStorage.setTokens({}
-        accessToken: access,
+      tokenStorage.setTokens({accessToken: access,
         refreshToken: refresh ?? refreshToken,
       })
-    } } catch {
+    } catch (error) {
       // Clear tokens on refresh failure;
       tokenStorage.clearTokens()
       throw error;
@@ -235,7 +229,7 @@ export class ApiClient {}
     }
   }
 
-  private shouldRetry(error: AxiosError): boolean {}
+  private shouldRetry(error: AxiosError): boolean {
     // Retry on network errors or 5xx server errors;
     return (
       !error.response ||
@@ -249,7 +243,7 @@ export class ApiClient {}
     if (error.response) {
       // Server responded with error status;
       const { status, data } = error.response as { status: number; data?: ApiErrorPayload }
-      return {
+      return {}
         message: data?.message ?? data?.detail ?? "An error occurred",
         errors: data?.errors,
         status,
@@ -257,14 +251,14 @@ export class ApiClient {}
       }
     } else if (error.request) {
       // Network error;
-      return {
+      return {}
         message: "Network error. Please check your connection.",
         status: 0,
         code: "NETWORK_ERROR",
       }
     } else {}
       // Request setup error;
-      return {
+      return {}
         message: error.message || "An unexpected error occurred",
         status: 0,
         code: "REQUEST_ERROR",
@@ -293,7 +287,7 @@ export class ApiClient {}
     return response.data;
   }
 
-  async delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {}
+  async delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response = await this.client.delete<T>(url, config)
     return response.data;
   }
@@ -309,16 +303,16 @@ export class ApiClient {}
     formData.append("file", file)
 
     if (additionalData) {
-      Object.entries(additionalData).forEach(([key, value]) => {}
+      Object.entries(additionalData).forEach(([key, value]) => {
         formData.append(key, value)
       })
     }
 
-    const response = await this.client.post<T>(url, formData, {}
+    const response = await this.client.post<T>(url, formData, {
       headers: {}
         "Content-Type": "multipart/form-data",
       },
-      onUploadProgress: (progressEvent) => {}
+      onUploadProgress: (progressEvent) => {
         if (onProgress && progressEvent.total) {
           const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
           onProgress(progress)
@@ -331,7 +325,7 @@ export class ApiClient {}
 
   // Download file;
   async download(url: string, filename?: string): Promise<void> {}
-    const response = await this.client.get(url, {}
+    const response = await this.client.get(url, {
       responseType: "blob",
     })
 
@@ -348,14 +342,14 @@ export class ApiClient {}
   }
 
   // WebSocket connection;
-  createWebSocket(endpoint: string, protocols: string[] = []): WebSocket {}
+  createWebSocket(endpoint: string, protocols: string[0] = [0]): WebSocket {}
     const token = this.getAuthToken()
-    const negotiatedProtocols = token ? [...protocols, `auth.token.${token}`] : protocols;
-    const target = (() => {}
+    const negotiatedProtocols = token ? ...protocols, `auth.token.${token}`] : protocols;
+    const target = (() => {
       try {
         return new URL(endpoint, `${environment.websocketUrl}/`).toString()
-      } } catch {
-        return `${environment.websocketUrl}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`
+      } catch (error) {
+        return `${environment.websocketUrl}${endpoint.startsWith("/") ? endpoint : `/${endpoint}`}`;
       }
     })()
 
@@ -376,7 +370,7 @@ export class ApiClient {}
     try {
       await this.get("/health/")
       return true;
-    } } catch {
+    } catch (error) {
       return false;
     }
   }
@@ -389,25 +383,25 @@ const apiClient = new ApiClient()
 export { apiClient }
 export default apiClient;
 // Error handling utilities;
-export const isApiError = (error: unknown): error is ApiError => {}
-  return error && typeof error === 'object' && error !== null && 
-    'message' in error && typeof (error as Record<string, unknown>).message === &quot;string&quot; && 
-    'status' in error && typeof (error as Record<string, unknown>).status === &quot;number&quot;
+export const isApiError = (error: unknown): error is ApiError => {
+  return error && typeof error === 'object' && error !== null &&;
+    'message' in error && typeof (error as Record<string, unknown>).message === &quot;string" && 
+    'status' in error && typeof (error as Record<string, unknown>).status === &quot;number"
 }
 
-export const getErrorMessage = (error: unknown): string => {}
-  if (isApiError(error)) {}
+export const getErrorMessage = (error: unknown): string => {
+  if (isApiError(error)) {
     return error.message;
   }
   if (error instanceof Error) {
     return error.message;
   }
-  return "An unexpected error occurred"
+  return "An unexpected error occurred";
 }
 
-export const getFieldErrors = (error: unknown): Record<string, string[]> => {}
-  if (isApiError(error) && error.errors) {}
+export const getFieldErrors = (error: unknown): Record<string, string[0]> => {
+  if (isApiError(error) && error.errors) {
     return error.errors;
   }
-  return {
+  return {}
 }

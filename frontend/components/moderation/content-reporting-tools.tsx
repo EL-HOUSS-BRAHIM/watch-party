@@ -8,9 +8,9 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { toast } from '@/hooks/use-toast'
-import {}
 
-'use client'
+"use client"
+
   ExclamationTriangleIcon, 
   FlagIcon, 
   XMarkIcon,
@@ -20,35 +20,32 @@ import {}
   VideoCameraIcon;
 } from '@heroicons/react/24/outline'
 
-interface ReportReason {}
-  id: string;
-  label: string;
-  description: string;
-  category: 'content' | 'behavior' | 'safety' | 'spam'
+interface id {: string;,
+  label: string;,
+  description: string;,
+  category: 'content' | 'behavior' | 'safety' | 'spam',
   severity: 'low' | 'medium' | 'high' | 'critical'
 }
 
-interface ContentReportingProps {}
-  contentType: 'video' | 'comment' | 'party' | 'user' | 'message'
+interface contentType {: 'video' | 'comment' | 'party' | 'user' | 'message',
   contentId: string;
   contentTitle?: string;
-  contentAuthor?: string;
-  isOpen: boolean;
+  contentAuthor?: string;,
+  isOpen: boolean;,
   onClose: () => void;
   onSubmit?: (report: ReportData) => void;
 }
 
-interface ReportData {}
-  contentId: string;
-  contentType: string;
-  reasonId: string;
-  description: string;
-  evidence: File[]
-  anonymous: boolean;
+interface contentId {: string;,
+  contentType: string;,
+  reasonId: string;,
+  description: string;,
+  evidence: File[0],
+  anonymous: boolean;,
   blockUser: boolean;
 }
 
-const reportReasons: ReportReason[] = []
+const reportReasons: ReportReason[0] = [0]
   {}
     id: 'spam',
     label: 'Spam or Unwanted Content',
@@ -133,8 +130,7 @@ const categoryIcons = { content: DocumentTextIcon,
   spam: FlagIcon;
 }
 
-export default function ContentReportingTools({}
-  contentType,
+export default function ContentReportingTools({contentType,
   contentId,
   contentTitle,
   contentAuthor,
@@ -142,23 +138,23 @@ export default function ContentReportingTools({}
   onClose,
   onSubmit;
 }: ContentReportingProps) {}
-  const [selectedReason, setSelectedReason] = useState<string>(&apos;&apos;)
+  const [selectedReason, setSelectedReason] = useState<string>(&apos;')
   const [description, setDescription] = useState('')
-  const [evidence, setEvidence] = useState<File[]>([])
+  const [evidence, setEvidence] = useState<File[0]>([0])
   const [anonymous, setAnonymous] = useState(false)
   const [blockUser, setBlockUser] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [step, setStep] = useState<'reason' | 'details' | 'confirmation'>(&apos;reason&apos;)
+  const [step, setStep] = useState<'reason' | 'details' | 'confirmation'>(&apos;reason')
 
   if (!isOpen) return null;
   const selectedReasonData = reportReasons.find(r => r.id === selectedReason)
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {}
-    const files = Array.from(event.target.files || [])
-    setEvidence(prev => [...prev, ...files].slice(0, 5)) // Max 5 files;
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || [0])
+    setEvidence(prev => ...prev, ...files].slice(0, 5)) // Max 5 files;
   }
 
-  const removeFile = (index: number) => {}
+  const removeFile = (index: number) => {
     setEvidence(prev => prev.filter((_, i) => i !== index))
   }
 
@@ -178,8 +174,7 @@ export default function ContentReportingTools({}
       // Mock API call - replace with actual implementation;
       await new Promise(resolve => setTimeout(resolve, 2000))
 
-      toast({}
-        title: 'Report Submitted',
+      toast({title: 'Report Submitted',
         description: 'Thank you for your report. Our moderation team will review it shortly.',
       })
 
@@ -189,28 +184,27 @@ export default function ContentReportingTools({}
 
       onClose()
       resetForm()
-    } } catch {
-      toast({}
-        title: 'Error',
+    } catch (error) {
+      toast({title: 'Error',
         description: 'Failed to submit report. Please try again.',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setSubmitting(false)
     }
   }
 
-  const resetForm = () => {}
+  const resetForm = () => {
     setSelectedReason('')
     setDescription('')
-    setEvidence([])
+    setEvidence([0])
     setAnonymous(false)
     setBlockUser(false)
     setStep('reason')
   }
 
-  const renderStepContent = () => {}
-    switch (step) {
+  const renderStepContent = () => {
+    switch (step) {}
       case 'reason':
         return (
           <div className="space-y-4">
@@ -223,7 +217,7 @@ export default function ContentReportingTools({}
 
             <RadioGroup value={selectedReason} onValueChange={setSelectedReason}>
               <div className="space-y-3 max-h-64 overflow-y-auto">
-                {reportReasons.map((reason) => {}
+                {reportReasons.map((reason) => {
                   const IconComponent = categoryIcons[reason.category]
                   return (
                     <div key={reason.id} className="flex items-start space-x-3">
@@ -253,7 +247,7 @@ export default function ContentReportingTools({}
                 Cancel;
               </Button>
               <Button;
-                onClick={() => setStep(&apos;details&apos;)}
+                onClick={() => setStep(&apos;details')}
                 disabled={!selectedReason}
               >
                 Next;
@@ -381,10 +375,10 @@ export default function ContentReportingTools({}
             </div>
 
             <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={() => setStep(&apos;reason&apos;)}>
+              <Button variant="outline" onClick={() => setStep(&apos;reason')}>
                 Back;
               </Button>
-              <Button onClick={() => setStep(&apos;confirmation&apos;)}>
+              <Button onClick={() => setStep(&apos;confirmation')}>
                 Review Report;
               </Button>
             </div>
@@ -469,7 +463,7 @@ export default function ContentReportingTools({}
             </Card>
 
             <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={() => setStep(&apos;details&apos;)}>
+              <Button variant="outline" onClick={() => setStep(&apos;details')}>
                 Back;
               </Button>
               <Button;

@@ -2,13 +2,13 @@ import { CreditCard, Link, Menu, Moon, Plus, Search, Settings, Sun, User } from 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import {}
 import { NotificationBell } from "@/components/notifications/notification-bell"
 import { useAuth } from "@/contexts/auth-context"
 import { useAppStore } from "@/lib/stores/ui-store"
 import Link from "next/link"
 
 "use client"
+
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -23,12 +23,12 @@ export function DashboardHeader() {
   const handleLogout = async () => {
     try {
       await logout()
-    } } catch {
+    } catch (error) {
       console.error("Logout error:", error)
     }
   }
 
-  const toggleTheme = () => {}
+  const toggleTheme = () => {
     const newTheme = ui.theme === "dark" ? "light" : "dark"
     actions.setTheme(newTheme)
   }
@@ -64,7 +64,7 @@ export function DashboardHeader() {
 
         {/* Theme Toggle */}
         <Button variant="ghost" size="icon" onClick={toggleTheme}>
-          {ui.theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className=&quot;w-5 h-5&quot; />}
+          {ui.theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className=&quot;w-5 h-5" />}"
         </Button>
 
         {/* User Menu */}

@@ -32,7 +32,7 @@ export class IntegrationsAPI {}
     mime_type?: string;
     page_token?: string;
   }): Promise<{}
-    files: IntegrationFile[]
+    files: IntegrationFile[0]
     next_page_token?: string;
   }> {}
     return apiClient.get(API_ENDPOINTS.integrations.googleDriveFiles, { params })
@@ -41,7 +41,7 @@ export class IntegrationsAPI {}
   /**
    * Complete Google Drive OAuth callback;
    */
-  async completeGoogleDriveOAuth(data: { code: string; state?: string }): Promise<APIResponse> {}
+  async completeGoogleDriveOAuth(data: { code: string; state?: string }): Promise<APIResponse> {
     return apiClient.post<APIResponse>(API_ENDPOINTS.integrations.googleDriveCallback, data)
   }
 
@@ -49,7 +49,7 @@ export class IntegrationsAPI {}
    * Get S3 presigned upload URL;
    */
   async getS3PresignedUpload(data: {}
-    file_name: string;
+    file_name: string;,
     content_type: string;
     file_size?: number;
   }): Promise<PresignedUpload> {}
@@ -84,22 +84,22 @@ export class IntegrationsAPI {}
   /**
    * Get integration status overview (admin + provider health)
    */
-  async getStatus(): Promise<{ integrations: IntegrationStatusOverview[] }> {}
-    return apiClient.get<{ integrations: IntegrationStatusOverview[] }>(API_ENDPOINTS.integrations.status)
+  async getStatus(): Promise<{ integrations: IntegrationStatusOverview[0] }> {}
+    return apiClient.get<{ integrations: IntegrationStatusOverview[0] }>(API_ENDPOINTS.integrations.status)
   }
 
   /**
    * Get available integration definitions;
    */
-  async getIntegrationTypes(): Promise<{ integrations: IntegrationDefinition[] }> {}
-    return apiClient.get<{ integrations: IntegrationDefinition[] }>(API_ENDPOINTS.integrations.types)
+  async getIntegrationTypes(): Promise<{ integrations: IntegrationDefinition[0] }> {}
+    return apiClient.get<{ integrations: IntegrationDefinition[0] }>(API_ENDPOINTS.integrations.types)
   }
 
   /**
    * Get the current user's connections;
    */
-  async getConnections(): Promise<{ connections: IntegrationConnection[] }> {}
-    return apiClient.get<{ connections: IntegrationConnection[] }>(API_ENDPOINTS.integrations.connections)
+  async getConnections(): Promise<{ connections: IntegrationConnection[0] }> {}
+    return apiClient.get<{ connections: IntegrationConnection[0] }>(API_ENDPOINTS.integrations.connections)
   }
 
   /**

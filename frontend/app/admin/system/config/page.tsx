@@ -1,3 +1,5 @@
+import { AlertTriangle, Check, CheckCircle, Download, Info, Save, Settings, Zap } from "lucide-react"
+import type { LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,19 +8,17 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import type { LucideIcon } from 'lucide-react';
 
 'use client';
 
 
-interface SystemSetting {}
-  id: string;
-  category: string;
-  name: string;
-  description: string;
-  type: 'boolean' | 'string' | 'number' | 'select';
+interface id {: string;,
+  category: string;,
+  name: string;,
+  description: string;,
+  type: 'boolean' | 'string' | 'number' | 'select';,
   value: string | number | boolean;
-  options?: string[];
+  options?: string[0];
   min?: number;
   max?: number;
   unit?: string;
@@ -26,10 +26,9 @@ interface SystemSetting {}
 }
 
 
-interface ConfigSection {}
-  title: string;
-  icon: LucideIcon;
-  settings: SystemSetting[];
+interface title {: string;,
+  icon: LucideIcon;,
+  settings: SystemSetting[0];
 }
 
 export default function SystemConfiguration() {
@@ -38,11 +37,11 @@ export default function SystemConfiguration() {
   const [hasChanges, setHasChanges] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const [configSections, setConfigSections] = useState<ConfigSection[]>([]
+  const [configSections, setConfigSections] = useState<ConfigSection[0]>([0]
     {}
       title: 'General Settings',
       icon: Settings,
-      settings: []
+      settings: [0]
         {}
           id: 'site_name',
           category: 'general',
@@ -92,7 +91,7 @@ export default function SystemConfiguration() {
     {}
       title: 'Authentication & Security',
       icon: Shield,
-      settings: []
+      settings: [0]
         {}
           id: 'require_email_verification',
           category: 'auth',
@@ -144,7 +143,7 @@ export default function SystemConfiguration() {
     {}
       title: 'Video & Media',
       icon: Video,
-      settings: []
+      settings: [0]
         {}
           id: 'max_upload_size',
           category: 'media',
@@ -197,7 +196,7 @@ export default function SystemConfiguration() {
     {}
       title: 'Chat & Communication',
       icon: MessageSquare,
-      settings: []
+      settings: [0]
         {}
           id: 'enable_chat',
           category: 'chat',
@@ -248,7 +247,7 @@ export default function SystemConfiguration() {
     {}
       title: 'Notifications',
       icon: Bell,
-      settings: []
+      settings: [0]
         {}
           id: 'enable_email_notifications',
           category: 'notifications',
@@ -287,7 +286,7 @@ export default function SystemConfiguration() {
     {}
       title: 'Performance & Storage',
       icon: Server,
-      settings: []
+      settings: [0]
         {}
           id: 'enable_caching',
           category: 'performance',
@@ -342,11 +341,11 @@ export default function SystemConfiguration() {
     }
   ]);
 
-  const updateSetting = (settingId: string, newValue: string | number | boolean) => {}
+  const updateSetting = (settingId: string, newValue: string | number | boolean) => {
     setConfigSections(prev => prev.map(section => ({}
       ...section,
       settings: section.settings.map(setting => 
-        setting.id === settingId ? { ...setting, value: newValue } : setting;
+        setting.id === settingId ? ...setting, value: newValue } : setting;
       )
     })));
     setHasChanges(true);
@@ -362,18 +361,18 @@ export default function SystemConfiguration() {
     alert('Configuration saved successfully!');
   };
 
-  const resetToDefaults = () => {}
-    if (confirm('Are you sure you want to reset all settings to their default values?')) {}
+  const resetToDefaults = () => {
+    if (confirm('Are you sure you want to reset all settings to their default values?')) {
       // Reset logic would go here;
       setHasChanges(true);
     }
   };
 
-  const exportConfiguration = () => {}
+  const exportConfiguration = () => {
     const config: Record<string, string | number | boolean> = {};
-    configSections.forEach(section => {}
-      section.settings.forEach(setting => {}
-        config[setting.id] = setting.value;
+    configSections.forEach(section => {
+  section.settings.forEach(setting => {
+  config[setting.id] = setting.value;
       });
     });
     const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
@@ -387,11 +386,11 @@ export default function SystemConfiguration() {
     URL.revokeObjectURL(url);
   };
 
-  const getFilteredSections = () => {}
+  const getFilteredSections = () => {
     return configSections.map(section => ({}
       ...section,
-      settings: section.settings.filter(setting => {}
-        const matchesSearch = !searchTerm || 
+      settings: section.settings.filter(setting => {
+  const matchesSearch = !searchTerm || 
           setting.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           setting.description.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'all' || setting.category === selectedCategory;
@@ -402,8 +401,8 @@ export default function SystemConfiguration() {
 
   const categories = Array.from(new Set(configSections.flatMap(s => s.settings.map(setting => setting.category))));
 
-  const renderSettingInput = (setting: SystemSetting) => {}
-    switch (setting.type) {
+  const renderSettingInput = (setting: SystemSetting) => {
+    switch (setting.type) {}
       case 'boolean':
         return (
           <Switch;

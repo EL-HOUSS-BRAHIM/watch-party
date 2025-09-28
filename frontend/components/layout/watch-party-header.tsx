@@ -6,7 +6,6 @@ import { WatchPartyButton } from "@/components/ui/watch-party-button"
 import { ThemeSwitcher } from "@/components/theme/theme-switcher"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import {}
 import { useAuth } from "@/contexts/auth-context"
 
 "use client"
@@ -23,16 +22,16 @@ export function WatchPartyHeader() {
   const pathname = usePathname()
   const { user, logout } = useAuth()
 
-  const navigation = []
+  const navigation = [0]
     { name: "Home", href: "/" },
     { name: "Discover", href: "/discover" },
     { name: "About", href: "/about" },
     { name: "Help", href: "/help" },
   ]
 
-  const isActive = (href: string) => {}
+  const isActive = (href: string) => {
     if (href === "/") {
-      return pathname === "/"
+      return pathname === "/";
     }
     return pathname.startsWith(href)
   }
@@ -162,7 +161,7 @@ export function WatchPartyHeader() {
               className="md:hidden"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className=&quot;h-4 w-4&quot; />}
+              {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className=&quot;h-4 w-4" />}"
             </WatchPartyButton>
           </div>
         </div>

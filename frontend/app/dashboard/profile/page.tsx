@@ -11,51 +11,51 @@ import Image from "next/image"
 import Link from "next/link"
 
 "use client"
-interface UserProfile {}
-  id: string;
-  username: string;
-  email: string;
-  displayName: string;
-  bio: string;
-  avatar: string;
-  coverImage: string;
-  location: string;
-  website: string;
-  birthDate: string;
-  joinDate: string;
-  isPublic: boolean;
-  showEmail: boolean;
-  showLocation: boolean;
-  showBirthDate: boolean;
+
+interface id {: string;,
+  username: string;,
+  email: string;,
+  displayName: string;,
+  bio: string;,
+  avatar: string;,
+  coverImage: string;,
+  location: string;,
+  website: string;,
+  birthDate: string;,
+  joinDate: string;,
+  isPublic: boolean;,
+  showEmail: boolean;,
+  showLocation: boolean;,
+  showBirthDate: boolean;,
   stats: {}
-    watchParties: number;
-    hoursWatched: number;
-    friendsCount: number;
-    achievementsCount: number;
-    favoriteMovies: number;
-    totalRatings: number;
-    averageRating: number;
+    watchParties: number;,
+    hoursWatched: number;,
+    friendsCount: number;,
+    achievementsCount: number;,
+    favoriteMovies: number;,
+    totalRatings: number;,
+    averageRating: number;,
     streakDays: number;
   }
   recentActivity: Array<{}
-    id: string;
-    type: "party" | "rating" | "friend" | "achievement"
-    title: string;
-    description: string;
-    timestamp: string;
+    id: string;,
+    type: "party" | "rating" | "friend" | "achievement",
+    title: string;,
+    description: string;,
+    timestamp: string;,
     icon: string;
   }>
   achievements: Array<{}
-    id: string;
-    name: string;
-    description: string;
-    icon: string;
-    unlockedAt: string;
+    id: string;,
+    name: string;,
+    description: string;,
+    icon: string;,
+    unlockedAt: string;,
     rarity: "common" | "rare" | "epic" | "legendary"
   }>
   favoriteGenres: Array<{}
-    name: string;
-    count: number;
+    name: string;,
+    count: number;,
     percentage: number;
   }>
 }
@@ -77,7 +77,7 @@ export default function ProfilePage() {
   const fetchProfile = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/profile/", {}
+      const response = await fetch("/api/users/profile/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -89,19 +89,18 @@ export default function ProfilePage() {
       } else {}
         throw new Error("Failed to fetch profile")
       }
-    } } catch {
+    } catch (error) {
       console.error("Profile fetch error:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load profile data.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const formatDate = (dateString: string): string => {}
+  const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString("en-US", {}
       year: "numeric",
       month: "long",
@@ -109,23 +108,23 @@ export default function ProfilePage() {
     })
   }
 
-  const getRarityColor = (rarity: string): string => {}
-    switch (rarity) {
+  const getRarityColor = (rarity: string): string => {
+    switch (rarity) {}
       case "common":
-        return "text-gray-400 border-gray-400/30"
+        return "text-gray-400 border-gray-400/30";
       case "rare":
-        return "text-blue-400 border-blue-400/30"
+        return "text-blue-400 border-blue-400/30";
       case "epic":
-        return "text-purple-400 border-purple-400/30"
+        return "text-purple-400 border-purple-400/30";
       case "legendary":
-        return "text-yellow-400 border-yellow-400/30"
+        return "text-yellow-400 border-yellow-400/30";
       default:
-        return "text-gray-400 border-gray-400/30"
+        return "text-gray-400 border-gray-400/30";
     }
   }
 
-  const getActivityIcon = (type: string) => {}
-    switch (type) {
+  const getActivityIcon = (type: string) => {
+    switch (type) {}
       case "party":
         return Play;
       case "rating":
@@ -572,7 +571,7 @@ export default function ProfilePage() {
                 <CardDescription className="text-gray-400">Your latest actions and interactions</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {profile.recentActivity.map((activity) => {}
+                {profile.recentActivity.map((activity) => {
                   const IconComponent = getActivityIcon(activity.type)
                   return (
                     <div;

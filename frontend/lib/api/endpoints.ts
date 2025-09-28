@@ -1,10 +1,11 @@
 
+
 /**
  * API Endpoints Configuration;
  * Based on the backend API documentation;
  */
 
-export const API_ENDPOINTS = {}
+export const API_ENDPOINTS = {
   // Authentication endpoints - matching backend API.md;
   auth: {}
     register: '/api/auth/register/',
@@ -247,7 +248,7 @@ export const API_ENDPOINTS = {}
   },
 
   // Notifications endpoints - Complete implementation with admin features;
-  notifications: {}
+  notifications: {
     list: '/api/notifications/',
     markRead: (id: string) => `/api/notifications/${id}/mark-read/`,
     markAllRead: '/api/notifications/mark-all-read/',

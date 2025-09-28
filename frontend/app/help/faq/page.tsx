@@ -2,15 +2,15 @@ import { ChevronDown, ChevronUp } from "lucide-react"
 import { useState } from 'react'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 
-'use client'
-interface FAQItem {}
-  id: string;
-  question: string;
-  answer: string;
+"use client"
+
+interface id {: string;,
+  question: string;,
+  answer: string;,
   category: string;
 }
 
-const faqData: FAQItem[] = []
+const faqData: FAQItem[0] = [0]
   {}
     id: '1',
     question: 'How do I create a watch party?',
@@ -46,19 +46,19 @@ const faqData: FAQItem[] = []
 const categories = ['All', 'Getting Started', 'Videos', 'Social Features', 'Privacy & Security', 'Watch Parties']
 
 export default function FAQPage() {
-  const [expandedItems, setExpandedItems] = useState<string[]>([])
+  const [expandedItems, setExpandedItems] = useState<string[0]>([0])
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
 
-  const toggleExpanded = (id: string) => {}
+  const toggleExpanded = (id: string) => {
     setExpandedItems(prev => 
       prev.includes(id) 
         ? prev.filter(item => item !== id)
-        : [...prev, id]
+        : ...prev, id]
     )
   }
 
-  const filteredFAQs = faqData.filter(faq => {}
+  const filteredFAQs = faqData.filter(faq => {
     const matchesCategory = selectedCategory === 'All' || faq.category === selectedCategory;
     const matchesSearch = faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          faq.answer.toLowerCase().includes(searchQuery.toLowerCase())

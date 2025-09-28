@@ -20,7 +20,8 @@ class ZeroToleranceLintEliminator:
         """Get detailed lint error information"""
         try:
             result = subprocess.run(['npm', 'run', 'lint'], capture_output=True, text=True, cwd='.')
-            lines = result.stdout.split('\n')
+            # Use stderr for lint output as that's where Next.js outputs lint errors
+            lines = result.stderr.split('\n')
             
             errors = []
             current_file = None

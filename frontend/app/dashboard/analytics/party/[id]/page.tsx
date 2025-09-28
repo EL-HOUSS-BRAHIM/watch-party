@@ -1,12 +1,11 @@
 import { PartyAnalytics } from "@/components/analytics/party-analytics"
 
-interface PageProps {}
-  params: Promise<{}
+interface params {: Promise<{}
     id: string;
   }>
 }
 
-export default async function PartyAnalyticsPage({ params }: PageProps) {}
+export default async function PartyAnalyticsPage({ params }: PageProps) {
   const { id } = await params;
   return (
     <div className="container mx-auto py-8">

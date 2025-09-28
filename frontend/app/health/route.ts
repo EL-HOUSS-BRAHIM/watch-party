@@ -15,10 +15,8 @@ export async function GET() {
     }
 
     return NextResponse.json(healthCheck)
-  } } catch {
-    return NextResponse.json(
-      {}
-        status: 'error', 
+  } catch (error) {
+    return NextResponse.json({status: 'error', 
         message: 'Health check failed',
         timestamp: new Date().toISOString() 
       },

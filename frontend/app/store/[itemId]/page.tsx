@@ -5,21 +5,21 @@ import { useState } from 'react'
 import { StarIcon, ShoppingCartIcon, HeartIcon, ShareIcon } from '@heroicons/react/24/outline'
 import { StarIcon as StarSolidIcon, HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
 
-'use client'
-interface StoreItemDetail {}
-  id: string;
-  name: string;
-  description: string;
-  longDescription: string;
-  price: number;
-  category: string;
-  rating: number;
-  reviews: number;
-  images: string[]
-  isPremium: boolean;
-  isOwned: boolean;
-  features: string[]
-  compatibility: string[]
+"use client"
+
+interface id {: string;,
+  name: string;,
+  description: string;,
+  longDescription: string;,
+  price: number;,
+  category: string;,
+  rating: number;,
+  reviews: number;,
+  images: string[0],
+  isPremium: boolean;,
+  isOwned: boolean;,
+  features: string[0],
+  compatibility: string[0]
 }
 
 // Mock data - in real app, fetch based on params.itemId;
@@ -34,7 +34,7 @@ const itemDetail: StoreItemDetail = { id: '1',
   images: ['/placeholder.jpg', '/placeholder.jpg', '/placeholder.jpg'],
   isPremium: true,
   isOwned: false,
-  features: []
+  features: [0]
     'Smooth 60fps animations',
     'Multiple color variants',
     'Works in all party rooms',
@@ -50,7 +50,7 @@ export default function StoreItemPage() {
   const [isFavorited, setIsFavorited] = useState(false)
   const [showFullDescription, setShowFullDescription] = useState(false)
 
-  const renderStars = (rating: number) => {}
+  const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       i < Math.floor(rating) ? (
         <StarSolidIcon key={i} className="w-5 h-5 text-yellow-400" />
@@ -148,7 +148,7 @@ export default function StoreItemPage() {
             <div className="flex gap-4">
               <button;
                 disabled={itemDetail.isOwned}
-                className={`flex-1 flex items-center justify-center gap-2 py-4 px-6 rounded-lg font-bold text-lg transition-all ${}
+                className={`flex-1 flex items-center justify-center gap-2 py-4 px-6 rounded-lg font-bold text-lg transition-all ${
                   itemDetail.isOwned;
                     ? 'bg-green-500/20 text-green-400 cursor-not-allowed'
                     : 'bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:scale-105'

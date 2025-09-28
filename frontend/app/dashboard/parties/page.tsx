@@ -16,64 +16,63 @@ import { cn } from "@/lib/utils"
 import { format, formatDistanceToNow, isToday, isTomorrow, isYesterday } from "date-fns"
 
 "use client"
-interface Party {}
-  id: string;
-  name: string;
-  description: string;
+
+interface id {: string;,
+  name: string;,
+  description: string;,
   roomCode: string;
-  thumbnail?: string;
+  thumbnail?: string;,
   host: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
-    avatar?: string;
+    avatar?: string;,
     isVerified: boolean;
   }
   participants: Array<{}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
     avatar?: string;
   }>
-  maxParticipants: number;
-  isPrivate: boolean;
-  requiresApproval: boolean;
+  maxParticipants: number;,
+  isPrivate: boolean;,
+  requiresApproval: boolean;,
   status: "scheduled" | "active" | "ended" | "cancelled"
   scheduledFor?: string;
   startedAt?: string;
-  endedAt?: string;
-  createdAt: string;
-  updatedAt: string;
-  tags: string[]
+  endedAt?: string;,
+  createdAt: string;,
+  updatedAt: string;,
+  tags: string[0]
   videoTitle?: string;
   videoThumbnail?: string;
   videoDuration?: number;
   analytics?: {}
-    totalViews: number;
-    peakViewers: number;
-    averageWatchTime: number;
+    totalViews: number;,
+    peakViewers: number;,
+    averageWatchTime: number;,
     chatMessages: number;
   }
 }
 
-interface FilterOptions {}
-  status: "all" | "scheduled" | "active" | "ended"
-  privacy: "all" | "public" | "private"
-  role: "all" | "hosted" | "joined"
-  sortBy: "created" | "scheduled" | "participants" | "name"
+interface status {: "all" | "scheduled" | "active" | "ended",
+  privacy: "all" | "public" | "private",
+  role: "all" | "hosted" | "joined",
+  sortBy: "created" | "scheduled" | "participants" | "name",
   sortOrder: "asc" | "desc"
 }
 
 export default function PartiesPage() {
-  const [parties, setParties] = useState<Party[]>([])
-  const [filteredParties, setFilteredParties] = useState<Party[]>([])
+  const [parties, setParties] = useState<Party[0]>([0])
+  const [filteredParties, setFilteredParties] = useState<Party[0]>([0])
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
-  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid&quot;)
-  const [filters, setFilters] = useState<FilterOptions>({}
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
+  const [filters, setFilters] = useState<FilterOptions>({
     status: "all",
     privacy: "all",
     role: "all",
@@ -110,11 +109,11 @@ export default function PartiesPage() {
         params.append("status", "active")
       }
 
-      if (params.toString()) {}
+      if (params.toString()) {
         endpoint += `?${params.toString()}`
       }
 
-      const response = await fetch(endpoint, {}
+      const response = await fetch(endpoint, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -126,23 +125,22 @@ export default function PartiesPage() {
       } else {}
         throw new Error("Failed to load parties")
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load parties:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load parties. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const filterAndSortParties = () => {}
-    let filtered = [...parties]
+  const filterAndSortParties = () => {
+    let filtered = ...parties]
 
     // Search filter;
-    if (searchQuery.trim()) {}
+    if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(
         (party) =>
@@ -160,12 +158,12 @@ export default function PartiesPage() {
 
     // Privacy filter;
     if (filters.privacy !== "all") {
-      filtered = filtered.filter((party) => (filters.privacy === &quot;private&quot; ? party.isPrivate : !party.isPrivate))
+      filtered = filtered.filter((party) => (filters.privacy === &quot;private" ? party.isPrivate : !party.isPrivate))
     }
 
     // Role filter;
     if (filters.role !== "all") {
-      filtered = filtered.filter((party) => {}
+      filtered = filtered.filter((party) => {
         if (filters.role === "hosted") {
           return party.host.id === user?.id;
         } else if (filters.role === "joined") {
@@ -176,9 +174,9 @@ export default function PartiesPage() {
     }
 
     // Sort;
-    filtered.sort((a, b) => {}
+    filtered.sort((a, b) => {
       let aValue: unknown, bValue: unknown;
-      switch (filters.sortBy) {
+      switch (filters.sortBy) {}
         case "name":
           aValue = a.name.toLowerCase()
           bValue = b.name.toLowerCase()
@@ -208,10 +206,10 @@ export default function PartiesPage() {
     setFilteredParties(filtered)
   }
 
-  const joinParty = async (roomCode: string) => {}
+  const joinParty = async (roomCode: string) => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/parties/join-by-code/", {}
+      const response = await fetch("/api/parties/join-by-code/", {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -224,30 +222,28 @@ export default function PartiesPage() {
         router.push(`/watch/${roomCode}`)
       } else {}
         const errorData = await response.json()
-        toast({}
-          title: "Failed to Join",
+        toast({title: "Failed to Join",
           description: errorData.message || "Unable to join the party.",
           variant: "destructive",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to join party:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
     }
   }
 
-  const deleteParty = async (partyId: string) => {}
-    if (!confirm("Are you sure you want to delete this party? This action cannot be undone.")) {}
+  const deleteParty = async (partyId: string) => {
+    if (!confirm("Are you sure you want to delete this party? This action cannot be undone.")) {
       return;
     }
 
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/`, {}
+      const response = await fetch(`/api/parties/${partyId}/`, {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -256,92 +252,87 @@ export default function PartiesPage() {
 
       if (response.ok) {
         setParties((prev) => prev.filter((p) => p.id !== partyId))
-        toast({}
-          title: "Party Deleted",
+        toast({title: "Party Deleted",
           description: "The party has been successfully deleted.",
         })
       } else {}
         throw new Error("Failed to delete party")
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to delete party:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to delete party. Please try again.",
         variant: "destructive",
       })
     }
   }
 
-  const copyRoomCode = (roomCode: string) => {}
+  const copyRoomCode = (roomCode: string) => {
     navigator.clipboard.writeText(roomCode)
-    toast({}
-      title: "Copied!",
+    toast({title: "Copied!",
       description: "Room code copied to clipboard.",
     })
   }
 
-  const shareParty = async (party: Party) => {}
+  const shareParty = async (party: Party) => {
     const shareUrl = `${window.location.origin}/watch/${party.roomCode}`
 
     if (navigator.share) {
       try {
-        await navigator.share({}
-          title: party.name,
+        await navigator.share({title: party.name,
           text: party.description,
           url: shareUrl,
         })
-      } } catch {
+      } catch (error) {
         console.log("Share cancelled")
       }
     } else {}
       navigator.clipboard.writeText(shareUrl)
-      toast({}
-        title: "Link Copied",
+      toast({title: "Link Copied",
         description: "Party link copied to clipboard.",
       })
     }
   }
 
-  const getStatusColor = (status: string) => {}
-    switch (status) {
+  const getStatusColor = (status: string) => {
+    switch (status) {}
       case "active":
-        return "bg-green-500 text-white"
+        return "bg-green-500 text-white";
       case "scheduled":
-        return "bg-blue-500 text-white"
+        return "bg-blue-500 text-white";
       case "ended":
-        return "bg-gray-500 text-white"
+        return "bg-gray-500 text-white";
       case "cancelled":
-        return "bg-red-500 text-white"
+        return "bg-red-500 text-white";
       default:
-        return "bg-gray-500 text-white"
+        return "bg-gray-500 text-white";
     }
   }
 
-  const getStatusText = (status: string) => {}
-    switch (status) {
+  const getStatusText = (status: string) => {
+    switch (status) {}
       case "active":
-        return "Live"
+        return "Live";
       case "scheduled":
-        return "Scheduled"
+        return "Scheduled";
       case "ended":
-        return "Ended"
+        return "Ended";
       case "cancelled":
-        return "Cancelled"
+        return "Cancelled";
       default:
         return status;
     }
   }
 
-  const formatScheduledTime = (scheduledFor: string) => {}
+  const formatScheduledTime = (scheduledFor: string) => {
     const date = new Date(scheduledFor)
 
-    if (isToday(date)) {}
-      return `Today at ${format(date, "h:mm a")}`
-    } else if (isTomorrow(date)) {}
-      return `Tomorrow at ${format(date, "h:mm a")}`
-    } else if (isYesterday(date)) {}
-      return `Yesterday at ${format(date, "h:mm a")}`
+    if (isToday(date)) {
+      return `Today at ${format(date, "h:mm a")}`;
+    } else if (isTomorrow(date)) {
+      return `Tomorrow at ${format(date, "h:mm a")}`;
+    } else if (isYesterday(date)) {
+      return `Yesterday at ${format(date, "h:mm a")}`;
     } else {}
       return format(date, "MMM d 'at' h:mm a")
     }
@@ -435,7 +426,7 @@ export default function PartiesPage() {
                   Share Party;
                 </DropdownMenuItem>
                 {isHost(party) && (
-                  <DropdownMenuItem onClick={() => deleteParty(party.id)} className=&quot;text-destructive&quot;>
+                  <DropdownMenuItem onClick={() => deleteParty(party.id)} className=&quot;text-destructive">"
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete Party;
                   </DropdownMenuItem>
@@ -512,7 +503,7 @@ export default function PartiesPage() {
           {/* Action Buttons */}
           <div className="flex gap-2">
             {party.status === "active" ? (
-              <Button onClick={() => router.push(`/watch/${party.roomCode}`)} className=&quot;flex-1&quot; size=&quot;sm">"
+              <Button onClick={() => router.push(`/watch/${party.roomCode}`)} className=&quot;flex-1" size="sm">"
                 <Play className="h-4 w-4 mr-2" />
                 Join Live;
               </Button>
@@ -534,7 +525,7 @@ export default function PartiesPage() {
             )}
 
             {!isParticipant(party) && !isHost(party) && party.status !== "ended" && (
-              <Button onClick={() => joinParty(party.roomCode)} variant=&quot;outline&quot; size=&quot;sm">
+              <Button onClick={() => joinParty(party.roomCode)} variant=&quot;outline" size="sm">
                 <UserPlus className="h-4 w-4" />
               </Button>
             )}
@@ -572,7 +563,7 @@ export default function PartiesPage() {
               <h3 className="font-semibold truncate pr-2">{party.name}</h3>
               <div className="flex items-center gap-2 flex-shrink-0">
                 <Badge variant="outline" className="text-xs">
-                  {party.isPrivate ? <Lock className="w-3 h-3" /> : <Globe className=&quot;w-3 h-3&quot; />}
+                  {party.isPrivate ? <Lock className="w-3 h-3" /> : <Globe className=&quot;w-3 h-3" />}"
                 </Badge>
                 <Badge variant="outline" className="text-xs">
                   <Users className="w-3 h-3 mr-1" />
@@ -602,12 +593,12 @@ export default function PartiesPage() {
 
               <div className="flex items-center gap-2">
                 {party.status === "active" ? (
-                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} size=&quot;sm&quot;>
+                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} size=&quot;sm">
                     <Play className="h-4 w-4 mr-1" />
                     Join;
                   </Button>
                 ) : (
-                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} variant=&quot;outline&quot; size=&quot;sm">
+                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} variant=&quot;outline" size="sm">
                     <Eye className="h-4 w-4 mr-1" />
                     View;
                   </Button>
@@ -681,7 +672,7 @@ export default function PartiesPage() {
           <div className="flex items-center gap-2">
             <Select;
               value={filters.status}
-              onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value as Record<string, unknown> }))}
+              onValueChange={(value) => setFilters((prev) => (...prev, status: value as Record<string, unknown> }))}
             >
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -696,7 +687,7 @@ export default function PartiesPage() {
 
             <Select;
               value={filters.privacy}
-              onValueChange={(value) => setFilters((prev) => ({ ...prev, privacy: value as Record<string, unknown> }))}
+              onValueChange={(value) => setFilters((prev) => (...prev, privacy: value as Record<string, unknown> }))}
             >
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -710,7 +701,7 @@ export default function PartiesPage() {
 
             <Select;
               value={filters.sortBy}
-              onValueChange={(value) => setFilters((prev) => ({ ...prev, sortBy: value as Record<string, unknown> }))}
+              onValueChange={(value) => setFilters((prev) => (...prev, sortBy: value as Record<string, unknown> }))}
             >
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -727,7 +718,7 @@ export default function PartiesPage() {
               <Button;
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode(&quot;grid&quot;)}
+                onClick={() => setViewMode(&quot;grid")}
                 className="rounded-r-none"
               >
                 <Grid3X3 className="h-4 w-4" />
@@ -735,7 +726,7 @@ export default function PartiesPage() {
               <Button;
                 variant={viewMode === "list" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode(&quot;list&quot;)}
+                onClick={() => setViewMode(&quot;list")}
                 className="rounded-l-none"
               >
                 <List className="h-4 w-4" />
@@ -812,7 +803,7 @@ export default function PartiesPage() {
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-green-600">
-                  {filteredParties.filter((p) => p.status === &quot;active&quot;).length}
+                  {filteredParties.filter((p) => p.status === &quot;active").length}
                 </div>
                 <div className="text-sm text-muted-foreground">Live Now</div>
               </CardContent>
@@ -820,7 +811,7 @@ export default function PartiesPage() {
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-blue-600">
-                  {filteredParties.filter((p) => p.status === &quot;scheduled&quot;).length}
+                  {filteredParties.filter((p) => p.status === &quot;scheduled").length}
                 </div>
                 <div className="text-sm text-muted-foreground">Scheduled</div>
               </CardContent>

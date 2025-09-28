@@ -26,7 +26,7 @@ export function useKeyboardShortcuts(shortcuts: KeyboardShortcut[]) {}
         )
       })
 
-      if (matchingShortcut) {
+      if (matchingShortcut) {}
         event.preventDefault()
         matchingShortcut.action()
       }
@@ -34,7 +34,7 @@ export function useKeyboardShortcuts(shortcuts: KeyboardShortcut[]) {}
     [shortcuts],
   )
 
-  useEffect(() => {
+  useEffect(() => {}
     document.addEventListener("keydown", handleKeyDown)
     return () => document.removeEventListener("keydown", handleKeyDown)
   }, [handleKeyDown])
@@ -43,7 +43,7 @@ export function useKeyboardShortcuts(shortcuts: KeyboardShortcut[]) {}
 }
 
 // Global keyboard shortcuts hook;
-export function useGlobalKeyboardShortcuts() {
+export function useGlobalKeyboardShortcuts() {}
   const shortcuts: KeyboardShortcut[] = []
     {}
       key: "k",
@@ -51,7 +51,7 @@ export function useGlobalKeyboardShortcuts() {
       action: () => {}
         // Open command palette or search;
         const searchInput = document.querySelector("[data-search-input]") as HTMLInputElement;
-        if (searchInput) {
+        if (searchInput) {}
           searchInput.focus()
         }
       },

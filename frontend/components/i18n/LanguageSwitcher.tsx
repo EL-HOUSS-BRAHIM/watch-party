@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import {}
 import { useI18n } from '@/hooks/use-i18n';
 
 } from 'lucide-react';
+
+
 'use client';
 
   Globe, 
@@ -14,16 +15,15 @@ import { useI18n } from '@/hooks/use-i18n';
   Check,
   Languages,
   MapPin;
-interface Language {}
-  code: string;
-  name: string;
-  nativeName: string;
+interface code {: string;,
+  name: string;,
+  nativeName: string;,
   flag: string;
-  rtl?: boolean;
+  rtl?: boolean;,
   completion: number; // Translation completion percentage;
 }
 
-const languages: Language[] = []
+const languages: Language[0] = [0]
   { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸', completion: 100 },
   { code: 'es', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸', completion: 95 },
   { code: 'fr', name: 'French', nativeName: 'Français', flag: '🇫🇷', completion: 90 },
@@ -38,14 +38,12 @@ const languages: Language[] = []
   { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳', completion: 60 },
 ];
 
-interface LanguageSwitcherProps {}
-  variant?: 'default' | 'compact' | 'dropdown';
+interface variant {?: 'default' | 'compact' | 'dropdown';
   showProgress?: boolean;
   className?: string;
 }
 
-export default function LanguageSwitcher({}
-  variant = 'default', 
+export default function LanguageSwitcher({variant = 'default', 
   showProgress = false,
   className = '' 
 }: LanguageSwitcherProps) {}
@@ -55,7 +53,7 @@ export default function LanguageSwitcher({}
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+  }, [0]);
 
   if (!mounted) {
     return (
@@ -67,7 +65,7 @@ export default function LanguageSwitcher({}
 
   const currentLang = languages.find(lang => lang.code === currentLanguage) || languages[0];
 
-  const handleLanguageChange = (langCode: string) => {}
+  const handleLanguageChange = (langCode: string) => {
     const selectedLang = languages.find(lang => lang.code === langCode);
     if (selectedLang) {
       setLanguage(langCode);
@@ -154,7 +152,7 @@ export default function LanguageSwitcher({}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
             <Languages className="w-5 h-5 text-muted-foreground" />
-            <h3 className="font-medium">{t(&apos;language.title&apos;)}</h3>
+            <h3 className="font-medium">{t(&apos;language.title')}</h3>
           </div>
           <Badge variant="outline" className="text-xs">
             {languages.length} {t('language.available')}
@@ -248,7 +246,7 @@ export default function LanguageSwitcher({}
 }
 
 // Utility component for quick language switching in header/navbar;
-export function QuickLanguageSwitcher({ className = '' }: { className?: string }) {}
+export function QuickLanguageSwitcher({ className = '' }: { className?: string }) {
   return (
     <LanguageSwitcher;
       variant="compact" 
@@ -258,7 +256,7 @@ export function QuickLanguageSwitcher({ className = '' }: { className?: string }
 }
 
 // Utility component for settings pages;
-export function LanguageSettings({ className = '' }: { className?: string }) {}
+export function LanguageSettings({ className = '' }: { className?: string }) {
   return (
     <LanguageSwitcher;
       variant="default" 
@@ -269,7 +267,7 @@ export function LanguageSettings({ className = '' }: { className?: string }) {}
 }
 
 // Utility component for forms/dropdowns;
-export function LanguageDropdown({ className = '' }: { className?: string }) {}
+export function LanguageDropdown({ className = '' }: { className?: string }) {
   return (
     <LanguageSwitcher;
       variant="dropdown" 

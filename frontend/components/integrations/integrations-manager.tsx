@@ -10,34 +10,34 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Separator } from "@/components/ui/separator"
 import { useApiToast } from "@/hooks/use-toast"
 
-'use client'
-interface Integration {}
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  category: 'streaming' | 'social' | 'productivity' | 'entertainment' | 'communication'
-  isConnected: boolean;
+"use client"
+
+interface id {: string;,
+  name: string;,
+  description: string;,
+  icon: string;,
+  category: 'streaming' | 'social' | 'productivity' | 'entertainment' | 'communication',
+  isConnected: boolean;,
   isEnabled: boolean;
-  lastSync?: string;
-  status: 'connected' | 'disconnected' | 'error' | 'syncing'
-  permissions: string[]
+  lastSync?: string;,
+  status: 'connected' | 'disconnected' | 'error' | 'syncing',
+  permissions: string[0],
   features: {}
-    name: string;
-    description: string;
+    name: string;,
+    description: string;,
     enabled: boolean;
-  }[]
+  }[0]
   config?: {}
     [key: string]: unknown;
   }
   stats?: {}
-    totalSyncs: number;
-    lastActivity: string;
+    totalSyncs: number;,
+    lastActivity: string;,
     errorCount: number;
   }
 }
 
-const AVAILABLE_INTEGRATIONS: Omit<Integration, 'isConnected' | 'isEnabled' | 'status' | 'config' | 'stats'>[] = []
+const AVAILABLE_INTEGRATIONS: Omit<Integration, 'isConnected' | 'isEnabled' | 'status' | 'config' | 'stats'>[0] = [0]
   {}
     id: 'netflix',
     name: 'Netflix',
@@ -45,7 +45,7 @@ const AVAILABLE_INTEGRATIONS: Omit<Integration, 'isConnected' | 'isEnabled' | 's
     icon: '🎬',
     category: 'streaming',
     permissions: ['Read watchlist', 'Read viewing history'],
-    features: []
+    features: [0]
       { name: 'Watchlist Sync', description: 'Import your Netflix watchlist', enabled: true },
       { name: 'Viewing History', description: 'Track what you\'ve watched', enabled: true },
       { name: 'Recommendations', description: 'Get personalized recommendations', enabled: false }
@@ -58,7 +58,7 @@ const AVAILABLE_INTEGRATIONS: Omit<Integration, 'isConnected' | 'isEnabled' | 's
     icon: '🎵',
     category: 'entertainment',
     permissions: ['Read playlists', 'Create playlists', 'Control playback'],
-    features: []
+    features: [0]
       { name: 'Playlist Sharing', description: 'Share playlists with your party', enabled: true },
       { name: 'Music Sync', description: 'Sync music with video content', enabled: false },
       { name: 'Background Music', description: 'Play music during breaks', enabled: true }
@@ -71,7 +71,7 @@ const AVAILABLE_INTEGRATIONS: Omit<Integration, 'isConnected' | 'isEnabled' | 's
     icon: '💬',
     category: 'communication',
     permissions: ['Read server info', 'Send messages', 'Manage webhooks'],
-    features: []
+    features: [0]
       { name: 'Server Integration', description: 'Connect to your Discord server', enabled: true },
       { name: 'Voice Channels', description: 'Create voice channels for parties', enabled: false },
       { name: 'Bot Commands', description: 'Control parties via Discord bot', enabled: true }
@@ -84,7 +84,7 @@ const AVAILABLE_INTEGRATIONS: Omit<Integration, 'isConnected' | 'isEnabled' | 's
     icon: '📺',
     category: 'streaming',
     permissions: ['Read playlists', 'Read subscriptions'],
-    features: []
+    features: [0]
       { name: 'Playlist Import', description: 'Import your YouTube playlists', enabled: true },
       { name: 'Subscription Sync', description: 'Get updates from subscriptions', enabled: true },
       { name: 'Live Streams', description: 'Watch live streams together', enabled: false }
@@ -97,7 +97,7 @@ const AVAILABLE_INTEGRATIONS: Omit<Integration, 'isConnected' | 'isEnabled' | 's
     icon: '📻',
     category: 'streaming',
     permissions: ['Read channel info', 'Read chat', 'Follow channels'],
-    features: []
+    features: [0]
       { name: 'Live Streaming', description: 'Watch Twitch streams together', enabled: true },
       { name: 'Chat Integration', description: 'Interact with Twitch chat', enabled: true },
       { name: 'Channel Following', description: 'Follow channels from parties', enabled: false }
@@ -110,7 +110,7 @@ const AVAILABLE_INTEGRATIONS: Omit<Integration, 'isConnected' | 'isEnabled' | 's
     icon: '📅',
     category: 'productivity',
     permissions: ['Read calendar', 'Create events'],
-    features: []
+    features: [0]
       { name: 'Party Scheduling', description: 'Schedule parties in your calendar', enabled: true },
       { name: 'Reminders', description: 'Get notified before parties start', enabled: true },
       { name: 'Availability Sync', description: 'Share your availability', enabled: false }
@@ -119,28 +119,28 @@ const AVAILABLE_INTEGRATIONS: Omit<Integration, 'isConnected' | 'isEnabled' | 's
 ]
 
 // Helper functions;
-const getStatusColor = (status: string) => {}
-  switch (status) {
-    case 'connected': return 'bg-green-500'
-    case 'disconnected': return 'bg-gray-500'
-    case 'error': return 'bg-red-500'
-    case 'syncing': return 'bg-blue-500'
-    default: return 'bg-gray-500'
+const getStatusColor = (status: string) => {
+  switch (status) {}
+    case 'connected': return 'bg-green-500';
+    case 'disconnected': return 'bg-gray-500';
+    case 'error': return 'bg-red-500';
+    case 'syncing': return 'bg-blue-500',
+    default: return 'bg-gray-500';
   }
 }
 
-const getStatusIcon = (status: string) => {}
-  switch (status) {
-    case 'connected': return <Check className="h-3 w-3" />
-    case 'disconnected': return <X className="h-3 w-3" />
-    case 'error': return <AlertTriangle className="h-3 w-3" />
-    case 'syncing': return <RefreshCw className="h-3 w-3 animate-spin" />
-    default: return <X className="h-3 w-3" />
+const getStatusIcon = (status: string) => {
+  switch (status) {}
+    case 'connected': return <Check className="h-3 w-3" />;
+    case 'disconnected': return <X className="h-3 w-3" />;
+    case 'error': return <AlertTriangle className="h-3 w-3" />;
+    case 'syncing': return <RefreshCw className="h-3 w-3 animate-spin" />,
+    default: return <X className="h-3 w-3" />;
   }
 }
 
 export function IntegrationsManager() {
-  const [integrations, setIntegrations] = useState<Integration[]>([])
+  const [integrations, setIntegrations] = useState<Integration[0]>([0])
   const [loading, setLoading] = useState(true)
   const [selectedIntegration, setSelectedIntegration] = useState<Integration | null>(null)
   const [configDialogOpen, setConfigDialogOpen] = useState(false)
@@ -148,16 +148,16 @@ export function IntegrationsManager() {
 
   useEffect(() => {
     loadIntegrations()
-  }, [])
+  }, [0])
 
   const loadIntegrations = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/integrations&apos;))
+      const response = await apiRequest(() => fetch(&apos;/api/integrations'))
       if (response) {
         // Merge with available integrations to show all possible integrations;
-        const mergedIntegrations = AVAILABLE_INTEGRATIONS.map(available => {}
+        const mergedIntegrations = AVAILABLE_INTEGRATIONS.map(available => {
           const connected = response.find((i: Integration) => i.id === available.id)
-          return {
+          return {}
             ...available,
             isConnected: !!connected,
             isEnabled: connected?.isEnabled || false,
@@ -169,16 +169,16 @@ export function IntegrationsManager() {
         })
         setIntegrations(mergedIntegrations)
       }
-    } } catch {
+    } catch (error) {
       toastError(error, 'Failed to load integrations')
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const handleConnect = async (integrationId: string) => {}
+  const handleConnect = async (integrationId: string) => {
     const success = await apiRequest(
-      () => fetch(`/api/integrations/${integrationId}/connect`, { method: &apos;POST' }),
+      () => fetch(`/api/integrations/${integrationId}/connect`, { method: 'POST' }),
       { successMessage: 'Integration connected successfully!', showSuccess: true }
     )
 
@@ -187,7 +187,7 @@ export function IntegrationsManager() {
     }
   }
 
-  const handleDisconnect = async (integrationId: string) => {}
+  const handleDisconnect = async (integrationId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/integrations/${integrationId}/disconnect`, { method: 'POST' }),
       { successMessage: 'Integration disconnected', showSuccess: true }
@@ -198,7 +198,7 @@ export function IntegrationsManager() {
     }
   }
 
-  const handleToggleEnabled = async (integrationId: string, enabled: boolean) => {}
+  const handleToggleEnabled = async (integrationId: string, enabled: boolean) => {
     const success = await apiRequest(
       () => fetch(`/api/integrations/${integrationId}/toggle`, {}
         method: 'POST',
@@ -213,7 +213,7 @@ export function IntegrationsManager() {
     }
   }
 
-  const handleToggleFeature = async (integrationId: string, featureName: string, enabled: boolean) => {}
+  const handleToggleFeature = async (integrationId: string, featureName: string, enabled: boolean) => {
     const success = await apiRequest(
       () => fetch(`/api/integrations/${integrationId}/features/${featureName}`, {}
         method: 'POST',
@@ -228,7 +228,7 @@ export function IntegrationsManager() {
     }
   }
 
-  const handleSync = async (integrationId: string) => {}
+  const handleSync = async (integrationId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/integrations/${integrationId}/sync`, { method: 'POST' }),
       { successMessage: 'Sync started', showSuccess: true }
@@ -239,40 +239,40 @@ export function IntegrationsManager() {
     }
   }
 
-  const getStatusColor = (status: Integration['status']) => {}
-    switch (status) {
-      case 'connected': return 'bg-green-500'
-      case 'syncing': return 'bg-blue-500'
-      case 'error': return 'bg-red-500'
-      default: return 'bg-gray-500'
+  const getStatusColor = (status: Integration['status']) => {
+    switch (status) {}
+      case 'connected': return 'bg-green-500';
+      case 'syncing': return 'bg-blue-500';
+      case 'error': return 'bg-red-500',
+      default: return 'bg-gray-500';
     }
   }
 
-  const getStatusIcon = (status: Integration['status']) => {}
-    switch (status) {
-      case 'connected': return <Check className="h-4 w-4" />
-      case 'syncing': return <RefreshCw className="h-4 w-4 animate-spin" />
-      case 'error': return <AlertTriangle className="h-4 w-4" />
-      default: return <X className="h-4 w-4" />
+  const getStatusIcon = (status: Integration['status']) => {
+    switch (status) {}
+      case 'connected': return <Check className="h-4 w-4" />;
+      case 'syncing': return <RefreshCw className="h-4 w-4 animate-spin" />;
+      case 'error': return <AlertTriangle className="h-4 w-4" />,
+      default: return <X className="h-4 w-4" />;
     }
   }
 
-  const getCategoryIcon = (category: Integration['category']) => {}
-    switch (category) {
-      case 'streaming': return <Video className="h-5 w-5" />
-      case 'social': return <Users className="h-5 w-5" />
-      case 'productivity': return <Calendar className="h-5 w-5" />
-      case 'entertainment': return <Music className="h-5 w-5" />
-      case 'communication': return <MessageSquare className="h-5 w-5" />
-      default: return <Globe className="h-5 w-5" />
+  const getCategoryIcon = (category: Integration['category']) => {
+    switch (category) {}
+      case 'streaming': return <Video className="h-5 w-5" />;
+      case 'social': return <Users className="h-5 w-5" />;
+      case 'productivity': return <Calendar className="h-5 w-5" />;
+      case 'entertainment': return <Music className="h-5 w-5" />;
+      case 'communication': return <MessageSquare className="h-5 w-5" />,
+      default: return <Globe className="h-5 w-5" />;
     }
   }
 
-  const groupedIntegrations = integrations.reduce((acc, integration) => {}
-    if (!acc[integration.category]) acc[integration.category] = []
+  const groupedIntegrations = integrations.reduce((acc, integration) => {
+    if (!acc[integration.category]) acc[integration.category] = [0]
     acc[integration.category].push(integration)
     return acc;
-  }, {} as Record<string, Integration[]>)
+  }, {} as Record<string, Integration[0]>)
 
   if (loading) {
     return (
@@ -355,7 +355,7 @@ export function IntegrationsManager() {
                     onDisconnect={handleDisconnect}
                     onToggleEnabled={handleToggleEnabled}
                     onSync={handleSync}
-                    onConfigure={() => {}
+                    onConfigure={() => {
                       setSelectedIntegration(integration)
                       setConfigDialogOpen(true)
                     }}
@@ -378,7 +378,7 @@ export function IntegrationsManager() {
                   onDisconnect={handleDisconnect}
                   onToggleEnabled={handleToggleEnabled}
                   onSync={handleSync}
-                  onConfigure={() => {}
+                  onConfigure={() => {
                     setSelectedIntegration(integration)
                     setConfigDialogOpen(true)
                   }}
@@ -390,7 +390,7 @@ export function IntegrationsManager() {
         <TabsContent value="streaming" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {integrations;
-              .filter(i => i.category === &apos;streaming&apos;)
+              .filter(i => i.category === &apos;streaming')
               .map((integration) => (
                 <IntegrationCard;
                   key={integration.id}
@@ -399,7 +399,7 @@ export function IntegrationsManager() {
                   onDisconnect={handleDisconnect}
                   onToggleEnabled={handleToggleEnabled}
                   onSync={handleSync}
-                  onConfigure={() => {}
+                  onConfigure={() => {
                     setSelectedIntegration(integration)
                     setConfigDialogOpen(true)
                   }}
@@ -411,7 +411,7 @@ export function IntegrationsManager() {
         <TabsContent value="social" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {integrations;
-              .filter(i => i.category === &apos;social&apos;)
+              .filter(i => i.category === &apos;social')
               .map((integration) => (
                 <IntegrationCard;
                   key={integration.id}
@@ -420,7 +420,7 @@ export function IntegrationsManager() {
                   onDisconnect={handleDisconnect}
                   onToggleEnabled={handleToggleEnabled}
                   onSync={handleSync}
-                  onConfigure={() => {}
+                  onConfigure={() => {
                     setSelectedIntegration(integration)
                     setConfigDialogOpen(true)
                   }}
@@ -432,7 +432,7 @@ export function IntegrationsManager() {
         <TabsContent value="entertainment" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {integrations;
-              .filter(i => i.category === &apos;entertainment&apos;)
+              .filter(i => i.category === &apos;entertainment')
               .map((integration) => (
                 <IntegrationCard;
                   key={integration.id}
@@ -441,7 +441,7 @@ export function IntegrationsManager() {
                   onDisconnect={handleDisconnect}
                   onToggleEnabled={handleToggleEnabled}
                   onSync={handleSync}
-                  onConfigure={() => {}
+                  onConfigure={() => {
                     setSelectedIntegration(integration)
                     setConfigDialogOpen(true)
                   }}
@@ -467,19 +467,18 @@ export function IntegrationsManager() {
   )
 }
 
-function IntegrationCard({}
-  integration,
+function IntegrationCard({integration,
   onConnect,
   onDisconnect,
   onToggleEnabled,
   onSync,
   onConfigure;
 }: {}
-  integration: Integration;
-  onConnect: (id: string) => void;
-  onDisconnect: (id: string) => void;
-  onToggleEnabled: (id: string, enabled: boolean) => void;
-  onSync: (id: string) => void;
+  integration: Integration;,
+  onConnect: (id: string) => void;,
+  onDisconnect: (id: string) => void;,
+  onToggleEnabled: (id: string, enabled: boolean) => void;,
+  onSync: (id: string) => void;,
   onConfigure: () => void;
 }) {}
   return (
@@ -578,13 +577,12 @@ function IntegrationCard({}
   )
 }
 
-function IntegrationConfig({}
-  integration,
+function IntegrationConfig({integration,
   onToggleFeature,
   onClose;
 }: {}
-  integration: Integration;
-  onToggleFeature: (integrationId: string, featureName: string, enabled: boolean) => void;
+  integration: Integration;,
+  onToggleFeature: (integrationId: string, featureName: string, enabled: boolean) => void;,
   onClose: () => void;
 }) {}
   return (

@@ -1,4 +1,4 @@
-import { Cloud } from "lucide-react"
+import  from "lucide-react"
 import { GoogleDriveWorkspace } from '@/components/integrations/google-drive-workspace'
 import { CloudIcon } from '@heroicons/react/24/outline'
 

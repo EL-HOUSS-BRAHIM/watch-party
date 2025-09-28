@@ -6,10 +6,12 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
-import {}
 
 } from "lucide-react"
 "use client"
+
+
+
 
   ChevronDown,
   ChevronUp,
@@ -27,7 +29,7 @@ import {}
 
 // Types;
 export interface Column<T = any> {}
-  id: string;
+  id: string;,
   header: string | React.ReactNode;
   accessorKey?: keyof T;
   cell?: (props: { row: T; value: unknown; index: number }) => React.ReactNode;
@@ -42,9 +44,9 @@ export interface Column<T = any> {}
 }
 
 export interface TableAction<T = any> {}
-  id: string;
+  id: string;,
   label: string;
-  icon?: React.ReactNode;
+  icon?: React.ReactNode;,
   onClick: (row: T, index: number) => void;
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
   disabled?: (row: T) => boolean;
@@ -52,16 +54,15 @@ export interface TableAction<T = any> {}
 }
 
 export interface BulkAction<T = any> {}
-  id: string;
+  id: string;,
   label: string;
-  icon?: React.ReactNode;
-  onClick: (selectedRows: T[]) => void;
+  icon?: React.ReactNode;,
+  onClick: (selectedRows: T[0]) => void;
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
-  disabled?: (selectedRows: T[]) => boolean;
+  disabled?: (selectedRows: T[0]) => boolean;
 }
 
-export interface SortConfig {}
-  key: string;
+export interface key {: string;,
   direction: "asc" | "desc"
 }
 
@@ -69,23 +70,22 @@ export interface FilterConfig {}
   [key: string]: unknown;
 }
 
-export interface PaginationConfig {}
-  page: number;
-  pageSize: number;
+export interface page {: number;,
+  pageSize: number;,
   total: number;
   showSizeSelector?: boolean;
-  pageSizeOptions?: number[]
+  pageSizeOptions?: number[0]
 }
 
 export interface WatchPartyTableProps<T = any> {}
-  data: T[]
-  columns: Column<T>[]
+  data: T[0],
+  columns: Column<T>[0]
   loading?: boolean;
   error?: string;
   // Selection;
   selectable?: boolean;
-  selectedRows?: T[]
-  onSelectionChange?: (selectedRows: T[]) => void;
+  selectedRows?: T[0]
+  onSelectionChange?: (selectedRows: T[0]) => void;
   getRowId?: (row: T, index: number) => string | number;
   // Sorting;
   sortable?: boolean;
@@ -101,8 +101,8 @@ export interface WatchPartyTableProps<T = any> {}
   pagination?: PaginationConfig;
   onPaginationChange?: (pagination: Partial<PaginationConfig>) => void;
   // Actions;
-  actions?: TableAction<T>[]
-  bulkActions?: BulkAction<T>[]
+  actions?: TableAction<T>[0]
+  bulkActions?: BulkAction<T>[0]
 
   // Styling;
   className?: string;
@@ -111,7 +111,7 @@ export interface WatchPartyTableProps<T = any> {}
 
   // Features;
   exportable?: boolean;
-  onExport?: (data: T[]) => void;
+  onExport?: (data: T[0]) => void;
   refreshable?: boolean;
   onRefresh?: () => void;
   // Empty state;
@@ -121,13 +121,13 @@ export interface WatchPartyTableProps<T = any> {}
   onRowClick?: (row: T, index: number) => void;
 }
 
-export function WatchPartyTable<T = any>({}
+export function WatchPartyTable<T = any>({
   data,
   columns,
   loading = false,
   error,
   selectable = false,
-  selectedRows = [],
+  selectedRows = [0],
   onSelectionChange,
   getRowId = (row, index) => index,
   sortable = true,
@@ -140,8 +140,8 @@ export function WatchPartyTable<T = any>({}
   onColumnFiltersChange,
   pagination,
   onPaginationChange,
-  actions = [],
-  bulkActions = [],
+  actions = [0],
+  bulkActions = [0],
   className,
   variant = "default",
   size = "md",
@@ -163,14 +163,14 @@ export function WatchPartyTable<T = any>({}
   const currentGlobalFilter = onGlobalFilterChange ? globalFilter : internalGlobalFilter;
   const currentColumnFilters = onColumnFiltersChange ? columnFilters : internalColumnFilters;
   // Filter and sort data;
-  const processedData = useMemo(() => {}
-    let filtered = [...data]
+  const processedData = useMemo(() => {
+    let filtered = ...data]
 
     // Apply global filter;
-    if (currentGlobalFilter.trim()) {}
+    if (currentGlobalFilter.trim()) {
       const searchTerm = currentGlobalFilter.toLowerCase()
       filtered = filtered.filter((row) =>
-        columns.some((column) => {}
+        columns.some((column) => {
           if (!column.filterable) return false;
           const value = column.accessorKey ? row[column.accessorKey] : row;
           return String(value).toLowerCase().includes(searchTerm)
@@ -179,11 +179,11 @@ export function WatchPartyTable<T = any>({}
     }
 
     // Apply column filters;
-    Object.entries(currentColumnFilters).forEach(([columnId, filterValue]) => {}
+    Object.entries(currentColumnFilters).forEach(([columnId, filterValue]) => {
       if (filterValue !== undefined && filterValue !== "") {
         const column = columns.find((col) => col.id === columnId)
         if (column && column.accessorKey) {
-          filtered = filtered.filter((row) => {}
+          filtered = filtered.filter((row) => {
             const value = row[column.accessorKey!]
             if (typeof filterValue === "string") {
               return String(value).toLowerCase().includes(filterValue.toLowerCase())
@@ -198,7 +198,7 @@ export function WatchPartyTable<T = any>({}
     if (currentSort) {
       const column = columns.find((col) => col.id === currentSort.key)
       if (column && column.accessorKey) {
-        filtered.sort((a, b) => {}
+        filtered.sort((a, b) => {
           const aValue = a[column.accessorKey!]
           const bValue = b[column.accessorKey!]
 
@@ -215,7 +215,7 @@ export function WatchPartyTable<T = any>({}
   }, [data, columns, currentGlobalFilter, currentColumnFilters, currentSort])
 
   // Pagination;
-  const paginatedData = useMemo(() => {}
+  const paginatedData = useMemo(() => {
     if (!pagination) return processedData;
     const startIndex = (pagination.page - 1) * pagination.pageSize;
     const endIndex = startIndex + pagination.pageSize;
@@ -223,12 +223,12 @@ export function WatchPartyTable<T = any>({}
   }, [processedData, pagination])
 
   // Selection handlers;
-  const isRowSelected = (row: T, index: number) => {}
+  const isRowSelected = (row: T, index: number) => {
     const rowId = getRowId(row, index)
     return selectedRows.some((selectedRow) => getRowId(selectedRow, 0) === rowId)
   }
 
-  const toggleRowSelection = (row: T, index: number) => {}
+  const toggleRowSelection = (row: T, index: number) => {
     if (!onSelectionChange) return;
     const rowId = getRowId(row, index)
     const isSelected = isRowSelected(row, index)
@@ -236,11 +236,11 @@ export function WatchPartyTable<T = any>({}
     if (isSelected) {
       onSelectionChange(selectedRows.filter((selectedRow) => getRowId(selectedRow, 0) !== rowId))
     } else {}
-      onSelectionChange([...selectedRows, row])
+      onSelectionChange(...selectedRows, row])
     }
   }
 
-  const toggleAllSelection = () => {}
+  const toggleAllSelection = () => {
     if (!onSelectionChange) return;
     const allSelected = paginatedData.every((row, index) => isRowSelected(row, index))
 
@@ -251,12 +251,12 @@ export function WatchPartyTable<T = any>({}
     } else {}
       // Select all visible rows;
       const newSelections = paginatedData.filter((row, index) => !isRowSelected(row, index))
-      onSelectionChange([...selectedRows, ...newSelections])
+      onSelectionChange(...selectedRows, ...newSelections])
     }
   }
 
   // Sort handler;
-  const handleSort = (columnId: string) => {}
+  const handleSort = (columnId: string) => {
     const column = columns.find((col) => col.id === columnId)
     if (!column?.sortable) return;
     let newSort: SortConfig | null = null;
@@ -276,7 +276,7 @@ export function WatchPartyTable<T = any>({}
   }
 
   // Filter handlers;
-  const handleGlobalFilterChange = (value: string) => {}
+  const handleGlobalFilterChange = (value: string) => {
     if (onGlobalFilterChange) {
       onGlobalFilterChange(value)
     } else {}
@@ -284,8 +284,8 @@ export function WatchPartyTable<T = any>({}
     }
   }
 
-  const handleColumnFilterChange = (columnId: string, value: unknown) => {}
-    const newFilters = { ...currentColumnFilters, [columnId]: value }
+  const handleColumnFilterChange = (columnId: string, value: unknown) => {
+    const newFilters = ...currentColumnFilters, [columnId]: value }
 
     if (onColumnFiltersChange) {
       onColumnFiltersChange(newFilters)
@@ -297,9 +297,9 @@ export function WatchPartyTable<T = any>({}
   // Column visibility;
   const visibleColumns = columns.filter((column) => !hiddenColumns.has(column.id) && !column.hidden)
 
-  const toggleColumnVisibility = (columnId: string) => {}
+  const toggleColumnVisibility = (columnId: string) => {
     const newHidden = new Set(hiddenColumns)
-    if (newHidden.has(columnId)) {}
+    if (newHidden.has(columnId)) {
       newHidden.delete(columnId)
     } else {}
       newHidden.add(columnId)
@@ -308,25 +308,25 @@ export function WatchPartyTable<T = any>({}
   }
 
   // Pagination handlers;
-  const handlePageChange = (newPage: number) => {}
+  const handlePageChange = (newPage: number) => {
     if (pagination && onPaginationChange) {
       onPaginationChange({ page: newPage })
     }
   }
 
-  const handlePageSizeChange = (newPageSize: number) => {}
+  const handlePageSizeChange = (newPageSize: number) => {
     if (pagination && onPaginationChange) {
       onPaginationChange({ pageSize: newPageSize, page: 1 })
     }
   }
 
   // Render sort icon;
-  const renderSortIcon = (columnId: string) => {}
+  const renderSortIcon = (columnId: string) => {
     if (!currentSort || currentSort.key !== columnId) {
-      return <ChevronsUpDown className="h-4 w-4 opacity-50" />
+      return <ChevronsUpDown className="h-4 w-4 opacity-50" />;
     }
 
-    return currentSort.direction === "asc" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className=&quot;h-4 w-4&quot; />
+    return currentSort.direction === "asc" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className=&quot;h-4 w-4" />";
   }
 
   // Get table size classes;
@@ -543,7 +543,7 @@ export function WatchPartyTable<T = any>({}
                     )}
 
                     {/* Data cells */}
-                    {visibleColumns.map((column) => {}
+                    {visibleColumns.map((column) => {
                       const value = column.accessorKey ? row[column.accessorKey] : row;
                       return (
                         <td;

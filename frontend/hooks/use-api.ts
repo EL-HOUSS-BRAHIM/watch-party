@@ -25,11 +25,11 @@ export function useAPICall<T>() {}
   const execute = useCallback(async (apiCall: () => Promise<T>) => {}
     setLoading(true)
     setError(null)
-    try {
+    try {}
       const result = await apiCall()
       setData(result)
       return result;
-    } } catch {
+    } } catch {}
       const error = err instanceof Error ? err : new Error("Unknown error")
       setError(error)
       throw error;
@@ -42,28 +42,28 @@ export function useAPICall<T>() {}
 }
 
 // Hook for dashboard stats;
-export function useDashboardStats() {
+export function useDashboardStats() {}
   const { isAuthenticated } = useAuth()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
-  const loadStats = useCallback(async () => {
+  const loadStats = useCallback(async () => {}
     if (!isAuthenticated) return;
     setLoading(true)
     setError(null)
 
-    try {
+    try {}
       const data = await api.users.getDashboardStats()
       setStats(data)
-    } } catch {
+    } } catch {}
       setError(err instanceof Error ? err : new Error("Failed to load stats"))
     } finally {}
       setLoading(false)
     }
   }, [isAuthenticated])
 
-  useEffect(() => {
+  useEffect(() => {}
     loadStats()
   }, [loadStats])
 
@@ -80,21 +80,21 @@ export function useVideos(filters?: {}
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
-  const loadVideos = useCallback(async () => {
+  const loadVideos = useCallback(async () => {}
     setLoading(true)
     setError(null)
 
-    try {
+    try {}
       const data = await api.videos.getVideos(filters)
       setVideos(data)
-    } } catch {
+    } } catch {}
       setError(err instanceof Error ? err : new Error("Failed to load videos"))
     } finally {}
       setLoading(false)
     }
   }, [filters])
 
-  useEffect(() => {
+  useEffect(() => {}
     loadVideos()
   }, [loadVideos])
 
@@ -112,21 +112,21 @@ export function useParties(filters?: {}
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
-  const loadParties = useCallback(async () => {
+  const loadParties = useCallback(async () => {}
     setLoading(true)
     setError(null)
 
-    try {
+    try {}
       const data = await api.parties.getParties(filters)
       setParties(data)
-    } } catch {
+    } } catch {}
       setError(err instanceof Error ? err : new Error("Failed to load parties"))
     } finally {}
       setLoading(false)
     }
   }, [filters])
 
-  useEffect(() => {
+  useEffect(() => {}
     loadParties()
   }, [loadParties])
 
@@ -134,23 +134,23 @@ export function useParties(filters?: {}
 }
 
 // Hook for notifications;
-export function useNotifications() {
+export function useNotifications() {}
   const { isAuthenticated } = useAuth()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
-  const loadNotifications = useCallback(async () => {
+  const loadNotifications = useCallback(async () => {}
     if (!isAuthenticated) return;
     setLoading(true)
     setError(null)
 
-    try {
+    try {}
       const data = await api.notifications.getNotifications()
       setNotifications(data.results)
       setUnreadCount(data.unread_count)
-    } } catch {
+    } } catch {}
       setError(err instanceof Error ? err : new Error("Failed to load notifications"))
     } finally {}
       setLoading(false)
@@ -158,32 +158,32 @@ export function useNotifications() {
   }, [isAuthenticated])
 
   const markAsRead = useCallback(async (notificationId: string) => {}
-    try {
+    try {}
       await api.notifications.markAsRead(notificationId)
       setNotifications(prev => 
         prev.map(n => n.id === notificationId ? { ...n, is_read: true } : n)
       )
       setUnreadCount(prev => Math.max(0, prev - 1))
-    } } catch {
+    } } catch {}
       throw err instanceof Error ? err : new Error("Failed to mark as read")
     }
   }, [])
 
-  const markAllAsRead = useCallback(async () => {
-    try {
+  const markAllAsRead = useCallback(async () => {}
+    try {}
       await api.notifications.markAllAsRead()
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
       setUnreadCount(0)
-    } } catch {
+    } } catch {}
       throw err instanceof Error ? err : new Error("Failed to mark all as read")
     }
   }, [])
 
-  useEffect(() => {
+  useEffect(() => {}
     loadNotifications()
   }, [loadNotifications])
 
-  return {
+  return {}
     notifications, 
     unreadCount, 
     loading, 
@@ -195,7 +195,7 @@ export function useNotifications() {
 }
 
 // Hook for video upload;
-export function useVideoUpload() {
+export function useVideoUpload() {}
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState<Error | null>(null)
@@ -212,14 +212,14 @@ export function useVideoUpload() {
     setProgress(0)
     setError(null)
 
-    try {
+    try {}
       const result = await api.videos.uploadVideo(
         file,
         metadata,
         (progress) => setProgress(progress)
       )
       return result;
-    } } catch {
+    } } catch {}
       const error = err instanceof Error ? err : new Error("Upload failed")
       setError(error)
       throw error;
@@ -233,7 +233,7 @@ export function useVideoUpload() {
 }
 
 // Hook for party management;
-export function usePartyActions() {
+export function usePartyActions() {}
   const [loading, setLoading] = useState<string | null>(null)
   const [error, setError] = useState<Error | null>(null)
 
@@ -241,10 +241,10 @@ export function usePartyActions() {
     setLoading("join")
     setError(null)
 
-    try {
+    try {}
       const result = await api.parties.joinParty(partyId, message)
       return result;
-    } } catch {
+    } } catch {}
       const error = err instanceof Error ? err : new Error("Failed to join party")
       setError(error)
       throw error;
@@ -257,9 +257,9 @@ export function usePartyActions() {
     setLoading("leave")
     setError(null)
 
-    try {
+    try {}
       await api.parties.leaveParty(partyId)
-    } } catch {
+    } } catch {}
       const error = err instanceof Error ? err : new Error("Failed to leave party")
       setError(error)
       throw error;
@@ -276,9 +276,9 @@ export function usePartyActions() {
     setLoading("control")
     setError(null)
 
-    try {
+    try {}
       await api.parties.controlVideo(partyId, { action, timestamp })
-    } } catch {
+    } } catch {}
       const error = err instanceof Error ? err : new Error("Failed to control video")
       setError(error)
       throw error;
@@ -291,13 +291,13 @@ export function usePartyActions() {
 }
 
 // Main useApi hook with HTTP methods;
-export function useApi() {
+export function useApi() {}
   const [data, setData] = useState<unknown>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
   const normalizeEndpoint = useCallback((endpoint: string) => {}
-    if (!endpoint || typeof endpoint !== "string") {
+    if (!endpoint || typeof endpoint !== "string") {}
       return endpoint;
     }
 
@@ -320,11 +320,11 @@ export function useApi() {
     setLoading(true)
     setError(null)
 
-    try {
+    try {}
       const result = await apiCall()
       setData(result)
       return result;
-    } } catch {
+    } } catch {}
       const error = err instanceof Error ? err : new Error("Unknown error")
       setError(error)
       throw error;
@@ -358,7 +358,7 @@ export function useApi() {
     return { data: result }
   }, [execute, normalizeEndpoint])
 
-  return {
+  return {}
     data,
     loading,
     error, 

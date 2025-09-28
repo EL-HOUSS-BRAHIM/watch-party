@@ -1,10 +1,12 @@
 import { useState, useEffect , useCallback } from "react"
-import {}
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 } from "lucide-react"
 "use client"
+
+
+
 
   Play, 
   Pause, 
@@ -15,24 +17,22 @@ import { cn } from "@/lib/utils"
   Eye,
   Crown,
   Clock;
-interface PartyStatusIndicatorProps {}
-  isPlaying: boolean;
-  isBuffering: boolean;
-  isConnected: boolean;
-  participantCount: number;
+interface isPlaying {: boolean;,
+  isBuffering: boolean;,
+  isConnected: boolean;,
+  participantCount: number;,
   syncState: {}
     lastSyncedBy?: {}
-      username: string;
+      username: string;,
       isHost: boolean;
     }
-    lastSyncAt: string;
+    lastSyncAt: string;,
     action: "play" | "pause" | "seek" | "buffer"
   }
   className?: string;
 }
 
-export function PartyStatusIndicator({}
-  isPlaying,
+export function PartyStatusIndicator({isPlaying,
   isBuffering,
   isConnected,
   participantCount,
@@ -49,36 +49,36 @@ export function PartyStatusIndicator({}
     }
   }, [syncState.lastSyncAt])
 
-  const getSyncMessage = () => {}
+  const getSyncMessage = () => {
     const { lastSyncedBy, action } = syncState;
     if (!lastSyncedBy) return ""
 
     const prefix = lastSyncedBy.isHost ? "🎬 Host" : lastSyncedBy.username;
-    switch (action) {
+    switch (action) {}
       case "play":
-        return `${prefix} resumed playback`
+        return `${prefix} resumed playback`;
       case "pause":
-        return `${prefix} paused the video`
+        return `${prefix} paused the video`;
       case "seek":
-        return `${prefix} jumped to a new position`
+        return `${prefix} jumped to a new position`;
       case "buffer":
-        return "Syncing playback..."
+        return "Syncing playback...";
       default:
-        return `${prefix} updated playback`
+        return `${prefix} updated playback`;
     }
   }
 
-  const getStatusIcon = () => {}
+  const getStatusIcon = () => {
     if (isBuffering) {
-      return <Loader2 className="h-4 w-4 animate-spin text-yellow-500" />
+      return <Loader2 className="h-4 w-4 animate-spin text-yellow-500" />;
     }
     if (isPlaying) {
-      return <Play className="h-4 w-4 text-green-500" />
+      return <Play className="h-4 w-4 text-green-500" />;
     }
-    return <Pause className="h-4 w-4 text-gray-500" />
+    return <Pause className="h-4 w-4 text-gray-500" />;
   }
 
-  const getConnectionStatus = () => {}
+  const getConnectionStatus = () => {
     if (!isConnected) {
       return (
         <Badge variant="destructive" className="text-xs">
@@ -96,19 +96,19 @@ export function PartyStatusIndicator({}
     )
   }
 
-  const formatTimeAgo = (timestamp: string) => {}
+  const formatTimeAgo = (timestamp: string) => {
     const now = new Date()
     const syncTime = new Date(timestamp)
     const diffMs = now.getTime() - syncTime.getTime()
     const diffSeconds = Math.floor(diffMs / 1000)
     if (diffSeconds < 60) {
-      return "just now"
+      return "just now";
     } else if (diffSeconds < 3600) {
       const minutes = Math.floor(diffSeconds / 60)
-      return `${minutes}m ago`
+      return `${minutes}m ago`;
     } else {}
       const hours = Math.floor(diffSeconds / 3600)
-      return `${hours}h ago`
+      return `${hours}h ago`;
     }
   }
 

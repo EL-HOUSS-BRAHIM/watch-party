@@ -1,4 +1,4 @@
-import { useState, useEffect , useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -10,11 +10,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import WatchPartyTable from "@/components/ui/watch-party-table"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
-import {}
 import { format, parseISO } from "date-fns"
 
 } from "lucide-react"
 "use client"
+
+
+
 
   History,
   Users,
@@ -28,72 +30,64 @@ import { format, parseISO } from "date-fns"
   Loader2,
   ArrowLeft,
   RefreshCw,
-interface PartyHistoryItem {}
-  id: string;
-  title: string;
-  description?: string;
+interface id {: string,
+  title: string,
+  description?: string,
   video: {}
-    id: string;
-    title: string;
-    thumbnail?: string;
-    duration: number;
-  }
+    id: string,
+    title: string,
+    thumbnail?: string,
+    duration: number,
   host: {}
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    avatar?: string;
-  }
-  scheduledFor: string;
-  startedAt?: string;
-  endedAt?: string;
-  status: "completed" | "cancelled" | "abandoned"
+    id: string,
+    username: string,
+    firstName: string,
+    lastName: string,
+    avatar?: string,
+  scheduledFor: string,
+  startedAt?: string,
+  endedAt?: string,
+  status: "completed" | "cancelled" | "abandoned",
   participants: Array<{}
-    id: string;
+    id: string,
     user: {}
-      id: string;
-      username: string;
-      firstName: string;
-      lastName: string;
-      avatar?: string;
-    }
-    joinedAt: string;
-    leftAt?: string;
+      id: string,
+      username: string,
+      firstName: string,
+      lastName: string,
+      avatar?: string,
+    joinedAt: string,
+    leftAt?: string,
     watchTime: number;
   }>
   stats: {}
-    totalParticipants: number;
-    averageWatchTime: number;
-    completionRate: number;
-    peakViewers: number;
-    totalMessages: number;
-    totalReactions: number;
-  }
-  rating?: number;
-  tags: string[]
-  isPrivate: boolean;
-  createdAt: string;
-}
+    totalParticipants: number,
+    averageWatchTime: number,
+    completionRate: number,
+    peakViewers: number,
+    totalMessages: number,
+    totalReactions: number,
+  rating?: number,
+  tags: string[0],
+  isPrivate: boolean,
+  createdAt: string,
 
-interface FilterOptions {}
-  status: string;
-  dateRange: string;
-  minParticipants: string;
-  rating: string;
-  search: string;
-}
+interface status {: string,
+  dateRange: string,
+  minParticipants: string,
+  rating: string,
+  search: string,
 
 export default function PartyHistoryPage() {
   const { user } = useAuth()
   const { toast } = useToast()
   const router = useRouter()
 
-  const [parties, setParties] = useState<PartyHistoryItem[]>([])
-  const [filteredParties, setFilteredParties] = useState<PartyHistoryItem[]>([])
+  const [parties, setParties] = useState<PartyHistoryItem[0]>([0])
+  const [filteredParties, setFilteredParties] = useState<PartyHistoryItem[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
-  const [filters, setFilters] = useState<FilterOptions>({}
+  const [filters, setFilters] = useState<FilterOptions>({
     status: "all",
     dateRange: "all",
     minParticipants: "all",
@@ -101,8 +95,7 @@ export default function PartyHistoryPage() {
     search: "",
   })
 
-  const [stats, setStats] = useState({}
-    totalParties: 0,
+  const [stats, setStats] = useState({totalParties: 0,
     totalWatchTime: 0,
     averageParticipants: 0,
     averageRating: 0,
@@ -112,7 +105,7 @@ export default function PartyHistoryPage() {
 
   useEffect(() => {
     loadPartyHistory()
-  }, [])
+  }, [0])
 
   useEffect(() => {
     filterParties()
@@ -122,7 +115,7 @@ export default function PartyHistoryPage() {
     setIsLoading(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/parties/history/", {}
+      const response = await fetch("/api/parties/history/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -130,77 +123,62 @@ export default function PartyHistoryPage() {
 
       if (response.ok) {
         const data = await response.json()
-        setParties(data.results || data.parties || [])
+        setParties(data.results || data.parties || [0])
         setStats(data.stats || stats)
       } else {}
         throw new Error("Failed to load party history")
-      }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load party history:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load party history. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
-    }
-  }
 
-  const filterParties = () => {}
-    let filtered = [...parties]
+  const filterParties = () => {
+    let filtered = ...parties]
 
-    // Tab filter;
+    // Tab filter,
     if (activeTab === "hosted") {
       filtered = filtered.filter((party) => party.host.id === user?.id)
     } else if (activeTab === "joined") {
       filtered = filtered.filter(
         (party) => party.participants.some((p) => p.user.id === user?.id) && party.host.id !== user?.id,
-      )
-    }
 
-    // Status filter;
+    // Status filter,
     if (filters.status !== "all") {
       filtered = filtered.filter((party) => party.status === filters.status)
-    }
 
-    // Date range filter;
+    // Date range filter,
     if (filters.dateRange !== "all") {
       const now = new Date()
       const filterDate = new Date()
 
-      switch (filters.dateRange) {
+      switch (filters.dateRange) {}
         case "week":
           filterDate.setDate(now.getDate() - 7)
-          break;
         case "month":
           filterDate.setMonth(now.getMonth() - 1)
-          break;
         case "quarter":
           filterDate.setMonth(now.getMonth() - 3)
-          break;
         case "year":
           filterDate.setFullYear(now.getFullYear() - 1)
-          break;
-      }
 
       filtered = filtered.filter((party) => new Date(party.createdAt) >= filterDate)
-    }
 
-    // Minimum participants filter;
+    // Minimum participants filter,
     if (filters.minParticipants !== "all") {
       const minCount = Number.parseInt(filters.minParticipants)
       filtered = filtered.filter((party) => party.stats.totalParticipants >= minCount)
-    }
 
-    // Rating filter;
+    // Rating filter,
     if (filters.rating !== "all") {
       const minRating = Number.parseInt(filters.rating)
       filtered = filtered.filter((party) => party.rating && party.rating >= minRating)
-    }
 
-    // Search filter;
-    if (filters.search.trim()) {}
+    // Search filter,
+    if (filters.search.trim()) {
       const searchTerm = filters.search.toLowerCase()
       filtered = filtered.filter(
         (party) =>
@@ -208,16 +186,13 @@ export default function PartyHistoryPage() {
           party.video.title.toLowerCase().includes(searchTerm) ||
           party.host.username.toLowerCase().includes(searchTerm) ||
           party.tags.some((tag) => tag.toLowerCase().includes(searchTerm)),
-      )
-    }
 
     setFilteredParties(filtered)
-  }
 
   const exportHistory = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/parties/history/export/", {}
+      const response = await fetch("/api/parties/history/export/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -227,55 +202,47 @@ export default function PartyHistoryPage() {
         const blob = await response.blob()
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
-        a.href = url;
+        a.href = url,
         a.download = `party-history-${new Date().toISOString().split("T")[0]}.csv`
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
         window.URL.revokeObjectURL(url)
 
-        toast({}
-          title: "Export Complete",
+        toast({title: "Export Complete",
           description: "Your party history has been exported successfully.",
         })
-      }
-    } } catch {
+    } catch (error) {
       console.error("Failed to export history:", error)
-      toast({}
-        title: "Export Failed",
+      toast({title: "Export Failed",
         description: "Failed to export party history.",
         variant: "destructive",
       })
-    }
-  }
 
-  const getStatusBadge = (status: string) => {}
-    switch (status) {
+  const getStatusBadge = (status: string) => {
+    switch (status) {}
       case "completed":
-        return <Badge className="bg-green-100 text-green-800">Completed</Badge>
+        return <Badge className="bg-green-100 text-green-800">Completed</Badge>;
       case "cancelled":
-        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>
+        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>;
       case "abandoned":
-        return <Badge className="bg-yellow-100 text-yellow-800">Abandoned</Badge>
+        return <Badge className="bg-yellow-100 text-yellow-800">Abandoned</Badge>;
       default:
-        return <Badge variant="outline">{status}</Badge>
-    }
-  }
+        return <Badge variant="outline">{status}</Badge>;
 
-  const formatDuration = (minutes: number) => {}
+  const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60;
-    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
-  }
+    const mins = minutes % 60,
+    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
 
-  const tableColumns = []
+  const tableColumns = [0]
     {}
       id: "title",
       header: "Party",
       accessorKey: "title" as keyof PartyHistoryItem,
       cell: ({ row }: { row: PartyHistoryItem }) => (
         <div className="flex items-center gap-3">
-          <img;
+          <img,
             src={row.video.thumbnail || "/placeholder.svg"}
             alt={row.video.title}
             className="w-12 h-8 object-cover rounded"
@@ -311,8 +278,8 @@ export default function PartyHistoryPage() {
       accessorKey: "scheduledFor" as keyof PartyHistoryItem,
       cell: ({ row }: { row: PartyHistoryItem }) => (
         <div className="text-sm">
-          <div>{format(parseISO(row.scheduledFor), &quot;MMM dd, yyyy&quot;)}</div>
-          <div className="text-muted-foreground">{format(parseISO(row.scheduledFor), &quot;h:mm a&quot;)}</div>
+          <div>{format(parseISO(row.scheduledFor), &quot;MMM dd, yyyy")}</div>
+          <div className="text-muted-foreground">{format(parseISO(row.scheduledFor), &quot;h:mm a")}</div>&quot;
         </div>
       ),
     },
@@ -354,9 +321,9 @@ export default function PartyHistoryPage() {
       header: "Status",
       cell: ({ row }: { row: PartyHistoryItem }) => getStatusBadge(row.status),
     },
-  ]
 
-  const tableActions = []
+
+  const tableActions = [0]
     {}
       id: "view",
       label: "View Details",
@@ -367,15 +334,14 @@ export default function PartyHistoryPage() {
       id: "share",
       label: "Share",
       icon: <Share2 className="w-4 h-4" />,
-      onClick: (party: PartyHistoryItem) => {}
+      onClick: (party: PartyHistoryItem) => {
         navigator.clipboard.writeText(`${window.location.origin}/parties/${party.id}`)
-        toast({}
-          title: "Link Copied",
+        toast({title: "Link Copied",
           description: "Party link copied to clipboard.",
         })
       },
     },
-  ]
+
 
   if (isLoading) {
     return (
@@ -387,15 +353,13 @@ export default function PartyHistoryPage() {
           </div>
         </div>
       </div>
-    )
-  }
 
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">"
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -408,11 +372,9 @@ export default function PartyHistoryPage() {
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={loadPartyHistory}>
               <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh;
             </Button>
             <Button variant="outline" onClick={exportHistory}>
               <Download className="h-4 w-4 mr-2" />
-              Export;
             </Button>
           </div>
         </div>
@@ -451,7 +413,7 @@ export default function PartyHistoryPage() {
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-red-600">{stats.mostWatchedGenre || &quot;N/A&quot;}</div>
+              <div className="text-2xl font-bold text-red-600">{stats.mostWatchedGenre || &quot;N/A"}</div>&quot;
               <div className="text-sm text-muted-foreground">Top Genre</div>
             </CardContent>
           </Card>
@@ -465,10 +427,10 @@ export default function PartyHistoryPage() {
               <div className="flex-1">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                  <Input;
+                  <Input,
                     placeholder="Search parties..."
                     value={filters.search}
-                    onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
+                    onChange={(e) => setFilters((prev) => (...prev, search: e.target.value }))}
                     className="pl-10"
                   />
                 </div>
@@ -476,9 +438,9 @@ export default function PartyHistoryPage() {
 
               {/* Filter dropdowns */}
               <div className="flex gap-2">
-                <Select;
+                <Select,
                   value={filters.status}
-                  onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value }))}
+                  onValueChange={(value) => setFilters((prev) => (...prev, status: value }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -491,9 +453,9 @@ export default function PartyHistoryPage() {
                   </SelectContent>
                 </Select>
 
-                <Select;
+                <Select,
                   value={filters.dateRange}
-                  onValueChange={(value) => setFilters((prev) => ({ ...prev, dateRange: value }))}
+                  onValueChange={(value) => setFilters((prev) => (...prev, dateRange: value }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -507,9 +469,9 @@ export default function PartyHistoryPage() {
                   </SelectContent>
                 </Select>
 
-                <Select;
+                <Select,
                   value={filters.minParticipants}
-                  onValueChange={(value) => setFilters((prev) => ({ ...prev, minParticipants: value }))}
+                  onValueChange={(value) => setFilters((prev) => (...prev, minParticipants: value }))}
                 >
                   <SelectTrigger className="w-36">
                     <SelectValue />
@@ -523,9 +485,9 @@ export default function PartyHistoryPage() {
                   </SelectContent>
                 </Select>
 
-                <Select;
+                <Select,
                   value={filters.rating}
-                  onValueChange={(value) => setFilters((prev) => ({ ...prev, rating: value }))}
+                  onValueChange={(value) => setFilters((prev) => (...prev, rating: value }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -549,13 +511,9 @@ export default function PartyHistoryPage() {
             <TabsTrigger value="all">All Parties ({parties.length})</TabsTrigger>
             <TabsTrigger value="hosted">Hosted ({parties.filter((p) => p.host.id === user?.id).length})</TabsTrigger>
             <TabsTrigger value="joined">
-              Joined (
-              {}
-                parties.filter(
+              Joined({parties.filter(
                   (p) => p.participants.some((part) => part.user.id === user?.id) && p.host.id !== user?.id,
                 ).length;
-              }
-              )
             </TabsTrigger>
           </TabsList>
 
@@ -566,7 +524,7 @@ export default function PartyHistoryPage() {
                   <History className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-lg font-medium mb-2">No parties found</h3>
                   <p className="text-muted-foreground">
-                    {filters.search || Object.values(filters).some((f) => f !== &quot;all&quot;)
+                    {filters.search || Object.values(filters).some((f) => f !== &quot;all")
                       ? "Try adjusting your search or filters"
                       : activeTab === "hosted"
                         ? "You haven't hosted any parties yet"
@@ -574,14 +532,14 @@ export default function PartyHistoryPage() {
                           ? "You haven't joined any parties yet"
                           : "No party history available"}
                   </p>
-                  <Button className="mt-4" onClick={() => router.push(&quot;/dashboard/parties/create&quot;)}>
+                  <Button className="mt-4" onClick={() => router.push(&quot;/dashboard/parties/create")}>"
                     <Play className="h-4 w-4 mr-2" />
                     Create Your First Party;
                   </Button>
                 </CardContent>
               </Card>
             ) : (
-              <WatchPartyTable;
+              <WatchPartyTable,
                 data={filteredParties}
                 columns={tableColumns}
                 actions={tableActions}
@@ -592,9 +550,7 @@ export default function PartyHistoryPage() {
                   showSizeSelector: true,
                   pageSizeOptions: [10, 25, 50],
                 }}
-                exportable;
                 onExport={exportHistory}
-                refreshable;
                 onRefresh={loadPartyHistory}
                 className="bg-background"
               />
@@ -603,5 +559,3 @@ export default function PartyHistoryPage() {
         </Tabs>
       </div>
     </div>
-  )
-}

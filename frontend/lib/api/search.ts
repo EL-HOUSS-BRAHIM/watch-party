@@ -21,13 +21,13 @@ export class SearchAPI {}
     page?: number;
     limit?: number;
   }): Promise<{}
-    success: boolean;
+    success: boolean;,
     results: {}
-      videos: SearchResult[]
-      parties: SearchResult[]
-      users: SearchResult[]
+      videos: SearchResult[0],
+      parties: SearchResult[0],
+      users: SearchResult[0]
     }
-    total_count: number;
+    total_count: number;,
     search_time: number;
   }> {}
     return apiClient.get(API_ENDPOINTS.search.global, { params })

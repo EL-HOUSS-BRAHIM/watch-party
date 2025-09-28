@@ -13,12 +13,14 @@ import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { videosAPI } from "@/lib/api"
 import { cn } from "@/lib/utils"
-import {}
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import type { Video } from "@/lib/api/types"
 
 } from "lucide-react"
 "use client"
+
+
+
 
   Plus,
   Search,
@@ -42,16 +44,15 @@ export default function VideosPage() {
   const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState("all")
-  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid&quot;)
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
   const [sortBy, setSortBy] = useState("created")
   const [visibility, setVisibility] = useState("all")
-  const { videos, loading, error, refresh } = useVideos({}
-    search: searchQuery,
+  const { videos, loading, error, refresh } = useVideos({search: searchQuery,
     visibility: visibility === "all" ? undefined : visibility as Record<string, unknown>,
   })
 
-  const deleteVideo = async (videoId: string) => {}
-    if (!confirm("Are you sure you want to delete this video? This action cannot be undone.")) {}
+  const deleteVideo = async (videoId: string) => {
+    if (!confirm("Are you sure you want to delete this video? This action cannot be undone.")) {
       return;
     }
 
@@ -61,15 +62,13 @@ export default function VideosPage() {
         return;
       }
       await videosAPI.deleteVideo(videoId)
-      toast({}
-        title: "Video Deleted",
+      toast({title: "Video Deleted",
         description: "The video has been successfully deleted.",
       })
       refresh()
-    } } catch {
+    } catch (error) {
       console.error("Failed to delete video:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to delete the video. Please try again.",
         variant: "destructive",
       })
@@ -77,44 +76,41 @@ export default function VideosPage() {
         return;
       }
       console.error("Failed to delete video:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to delete video. Please try again.",
         variant: "destructive",
       })
     }
   }
 
-  const shareVideo = async (video: Video) => {}
+  const shareVideo = async (video: Video) => {
     const shareUrl = `${window.location.origin}/videos/${video.id}`
 
     if (navigator.share) {
       try {
-        await navigator.share({}
-          title: video.title,
+        await navigator.share({title: video.title,
           text: video.description,
           url: shareUrl,
         })
-      } } catch {
+      } catch (error) {
         console.log("Share cancelled")
       }
     } else {}
       navigator.clipboard.writeText(shareUrl)
-      toast({}
-        title: "Link Copied",
+      toast({title: "Link Copied",
         description: "Video link copied to clipboard.",
       })
     }
   }
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60;
     if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
     }
-    return `${minutes}:${secs.toString().padStart(2, "0")}`
+    return `${minutes}:${secs.toString().padStart(2, "0")}`;
   }
 
   const VideoCard = ({ video }: { video: Video }) => (
@@ -176,7 +172,7 @@ export default function VideosPage() {
           {/* Remove tags section since it's not in the Video interface */}
 
           <div className="flex items-center justify-between">
-            <Button onClick={() => router.push(`/videos/${video.id}`)} size=&quot;sm&quot; className=&quot;flex-1 mr-2">"
+            <Button onClick={() => router.push(`/videos/${video.id}`)} size=&quot;sm" className="flex-1 mr-2">"
               <Play className="h-4 w-4 mr-2" />
               Watch;
             </Button>
@@ -196,7 +192,7 @@ export default function VideosPage() {
                   <Share2 className="h-4 w-4 mr-2" />
                   Share;
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-destructive&quot;>
+                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-destructive">"
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete;
                 </DropdownMenuItem>
@@ -283,7 +279,7 @@ export default function VideosPage() {
               <Button;
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode(&quot;grid&quot;)}
+                onClick={() => setViewMode(&quot;grid")}
                 className="rounded-r-none"
               >
                 <Grid3X3 className="h-4 w-4" />
@@ -291,7 +287,7 @@ export default function VideosPage() {
               <Button;
                 variant={viewMode === "list" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode(&quot;list&quot;)}
+                onClick={() => setViewMode(&quot;list")}
                 className="rounded-l-none"
               >
                 <List className="h-4 w-4" />

@@ -9,14 +9,13 @@ import { useToast } from '@/hooks/use-toast';
 
 'use client';
 
-interface OnlineFriend {}
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string;
+interface id {: string;,
+  username: string;,
+  displayName: string;,
+  avatar: string;,
   status: 'online' | 'idle' | 'busy' | 'offline';
   activity?: {}
-    type: 'watching' | 'in_party' | 'browsing';
+    type: 'watching' | 'in_party' | 'browsing';,
     details: string;
     partyId?: string;
     videoId?: string;
@@ -29,10 +28,9 @@ const fallbackId = (prefix: string) =>
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
-const resolveStatus = (status: unknown, isOnlineFallback?: boolean): OnlineFriend['status'] => {}
+const resolveStatus = (status: unknown, isOnlineFallback?: boolean): OnlineFriend['status'] => {
   const normalized = typeof status === 'string' ? status.toLowerCase() : undefined;
-
-  switch (normalized) {
+  switch (normalized) {}
     case 'online':
     case 'available':
       return 'online';
@@ -50,15 +48,14 @@ const resolveStatus = (status: unknown, isOnlineFallback?: boolean): OnlineFrien
   }
 };
 
-const normalizeActivity = (activity: unknown): OnlineFriend['activity'] | undefined => {}
+const normalizeActivity = (activity: unknown): OnlineFriend['activity'] | undefined => {
   if (!activity) return undefined;
-
-  let type: NonNullable<OnlineFriend['activity']>[&apos;type&apos;] = &apos;watching';
+  let type: NonNullable<OnlineFriend['activity']>[&apos;type'] = 'watching';
 
   const rawType = (activity.type ?? activity.activity_type ?? '').toString().toLowerCase();
-  if (rawType.includes('party')) {}
+  if (rawType.includes('party')) {
     type = 'in_party';
-  } else if (rawType.includes('brows')) {}
+  } else if (rawType.includes('brows')) {
     type = 'browsing';
   }
 
@@ -69,7 +66,7 @@ const normalizeActivity = (activity: unknown): OnlineFriend['activity'] | undefi
     activity.description ??
     '';
 
-  return {
+  return {}
     type,
     details,
     partyId: activity.party_id ?? activity.partyId ?? activity.room_id ?? undefined,
@@ -77,7 +74,7 @@ const normalizeActivity = (activity: unknown): OnlineFriend['activity'] | undefi
   };
 };
 
-const normalizeOnlineFriend = (friend: unknown): OnlineFriend => ({}
+const normalizeOnlineFriend = (friend: unknown): OnlineFriend => ({
   id: String(friend?.id ?? friend?.user_id ?? fallbackId('friend')),
   username: friend?.username ?? friend?.handle ?? friend?.name ?? 'user',
   displayName: friend?.display_name ?? friend?.name ?? friend?.username ?? 'Friend',
@@ -87,7 +84,7 @@ const normalizeOnlineFriend = (friend: unknown): OnlineFriend => ({}
   lastSeen: friend?.last_seen ?? friend?.last_activity ?? undefined,
 });
 
-const StatusIndicator = ({ status }: { status: OnlineFriend['status'] }) => {}
+const StatusIndicator = ({ status }: { status: OnlineFriend['status'] }) => {
   const statusConfig = { online: { color: 'bg-green-500', tooltip: 'Online' },
     idle: { color: 'bg-yellow-500', tooltip: 'Away' },
     busy: { color: 'bg-red-500', tooltip: 'Busy' },
@@ -110,9 +107,8 @@ const StatusIndicator = ({ status }: { status: OnlineFriend['status'] }) => {}
   );
 };
 
-const ActivityBadge = ({ activity }: { activity: OnlineFriend['activity'] }) => {}
+const ActivityBadge = ({ activity }: { activity: OnlineFriend['activity'] }) => {
   if (!activity) return null;
-
   const activityConfig = { watching: { color: 'bg-blue-500', text: '👀 Watching' },
     in_party: { color: 'bg-purple-500', text: '🎉 In Party' },
     browsing: { color: 'bg-green-500', text: '🔍 Browsing' },
@@ -129,7 +125,7 @@ const ActivityBadge = ({ activity }: { activity: OnlineFriend['activity'] }) => 
 };
 
 export default function OnlineStatusIndicators() {
-  const [friends, setFriends] = useState<OnlineFriend[]>([]);
+  const [friends, setFriends] = useState<OnlineFriend[0]>([0]);
   const [loading, setLoading] = useState(true);
   const [totalOnline, setTotalOnline] = useState<number | null>(null);
   const { toast } = useToast();
@@ -138,21 +134,20 @@ export default function OnlineStatusIndicators() {
   const fetchOnlineFriends = useCallback(async () => {
     try {
       const response = await usersAPI.getOnlineStatus();
-      const results = Array.isArray(response?.online_friends) ? response.online_friends : [];
+      const results = Array.isArray(response?.online_friends) ? response.online_friends : [0];
       setFriends(results.map((friend: unknown) => normalizeOnlineFriend(friend)));
       setTotalOnline(typeof response?.total_online === 'number' ? response.total_online : results.length);
       errorNotifiedRef.current = false;
-    } } catch {
+    } catch (error) {
       console.error('Failed to fetch online friends:', error);
       if (!errorNotifiedRef.current) {
-        toast({}
-          title: 'Unable to update friend status',
+        toast({title: 'Unable to update friend status',
           description: 'We will retry automatically.',
           variant: 'destructive',
         });
         errorNotifiedRef.current = true;
       }
-    } finally {}
+    } finally {
       setLoading(false);
     }
   }, [toast]);
@@ -165,15 +160,15 @@ export default function OnlineStatusIndicators() {
     return () => clearInterval(interval);
   }, [fetchOnlineFriends]);
 
-  const onlineFriends = friends.filter(friend => friend.status !== &apos;offline&apos;);
-  const offlineFriends = friends.filter(friend => friend.status === &apos;offline');
+  const onlineFriends = friends.filter(friend => friend.status !== &apos;offline');
+  const offlineFriends = friends.filter(friend => friend.status === 'offline');
 
-  const handleStartChat = (friendId: string) => {}
+  const handleStartChat = (friendId: string) => {
     // Implement chat functionality;
     console.log('Starting chat with friend:', friendId);
   };
 
-  const handleJoinActivity = (friend: OnlineFriend) => {}
+  const handleJoinActivity = (friend: OnlineFriend) => {
     if (friend.activity?.type === 'watching' && friend.activity.videoId) {
       // Redirect to video;
       window.location.href = `/videos/${friend.activity.videoId}`;
@@ -224,7 +219,7 @@ export default function OnlineStatusIndicators() {
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={friend.avatar} alt={friend.displayName} />
                     <AvatarFallback>
-                      {friend.displayName.split(' ').map(n => n[0]).join(&apos;&apos;)}
+                      {friend.displayName.split(' ').map(n => n[0]).join(&apos;')}
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute -bottom-1 -right-1">
@@ -301,7 +296,7 @@ export default function OnlineStatusIndicators() {
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={friend.avatar} alt={friend.displayName} />
                     <AvatarFallback>
-                      {friend.displayName.split(' ').map(n => n[0]).join(&apos;&apos;)}
+                      {friend.displayName.split(' ').map(n => n[0]).join(&apos;')}
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute -bottom-1 -right-1">

@@ -10,12 +10,12 @@ import { Badge } from "@/components/ui/badge"
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-'use client'
-interface AdminLayoutProps {}
-  children: React.ReactNode;
+"use client"
+
+interface children {: React.ReactNode;
 }
 
-const navigation = []
+const navigation = [0]
   {}
     name: 'Dashboard',
     href: '/admin',
@@ -33,7 +33,7 @@ const navigation = []
     href: '/admin/moderation',
     icon: Shield,
     description: 'Review reported content',
-    children: []
+    children: [0]
       { name: 'Reports', href: '/admin/moderation/reports' },
       { name: 'Banned Users', href: '/admin/moderation/banned' },
       { name: 'Content Review', href: '/admin/moderation/content' }
@@ -59,13 +59,13 @@ const navigation = []
   }
 ]
 
-export function AdminLayout({ children }: AdminLayoutProps) {}
+export function AdminLayout({ children }: AdminLayoutProps) {
   const { user, isLoading } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
 
   useEffect(() => {
-    if (!isLoading && (!user || user.role !== 'admin')) {}
+    if (!isLoading && (!user || user.role !== 'admin')) {
       router.push('/dashboard')
     }
   }, [user, isLoading, router])
@@ -131,7 +131,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {}
         {/* Sidebar */}
         <aside className="w-64 border-r bg-card min-h-[calc(100vh-4rem)]">
           <nav className="p-4 space-y-2">
-            {navigation.map((item) => {}
+            {navigation.map((item) => {
               const isActive = pathname === item.href || 
                 (item.children && item.children.some(child => pathname === child.href))
               return (

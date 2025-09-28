@@ -56,7 +56,7 @@ export { DashboardAPI }
 export { LocalizationAPI }
 
 // Create singleton instances (only on client-side)
-const createAPIInstance = <T>(APIClass: new () => T): T | null => {}
+const createAPIInstance = <T>(APIClass: new () => T): T | null => {
   if (typeof window === 'undefined') return null;
   return new APIClass()
 }

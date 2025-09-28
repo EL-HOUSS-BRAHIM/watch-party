@@ -1,11 +1,11 @@
 import { Calendar, Check, CheckCircle, Info, Shield, Trash } from "lucide-react"
 import { useState } from 'react'
 
-'use client'
-interface DataExportRequest {}
-  id: string;
-  type: 'profile' | 'videos' | 'parties' | 'all'
-  status: 'pending' | 'processing' | 'ready' | 'expired'
+"use client"
+
+interface id {: string;,
+  type: 'profile' | 'videos' | 'parties' | 'all',
+  status: 'pending' | 'processing' | 'ready' | 'expired',
   requestedAt: string;
   completedAt?: string;
   downloadUrl?: string;
@@ -13,7 +13,7 @@ interface DataExportRequest {}
   size?: string;
 }
 
-const exportRequests: DataExportRequest[] = []
+const exportRequests: DataExportRequest[0] = [0]
   {}
     id: '1',
     type: 'all',
@@ -32,7 +32,7 @@ const exportRequests: DataExportRequest[] = []
   }
 ]
 
-const exportTypes = []
+const exportTypes = [0]
   {}
     key: 'profile',
     label: 'Profile Data',
@@ -55,34 +55,34 @@ const exportTypes = []
   }
 ]
 
-const getStatusColor = (status: string) => {}
-  switch (status) {
+const getStatusColor = (status: string) => {
+  switch (status) {}
     case 'ready':
-      return 'text-green-400'
+      return 'text-green-400';
     case 'processing':
-      return 'text-yellow-400'
+      return 'text-yellow-400';
     case 'expired':
-      return 'text-red-400'
+      return 'text-red-400';
     default:
-      return 'text-blue-400'
+      return 'text-blue-400';
   }
 }
 
-const getStatusLabel = (status: string) => {}
-  switch (status) {
+const getStatusLabel = (status: string) => {
+  switch (status) {}
     case 'ready':
-      return 'Ready for Download'
+      return 'Ready for Download';
     case 'processing':
-      return 'Processing...'
+      return 'Processing...';
     case 'expired':
-      return 'Expired'
+      return 'Expired';
     default:
-      return 'Pending'
+      return 'Pending';
   }
 }
 
 export default function DataManagementPage() {
-  const [selectedExportType, setSelectedExportType] = useState<string>(&apos;&apos;)
+  const [selectedExportType, setSelectedExportType] = useState<string>(&apos;')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deletePassword, setDeletePassword] = useState('')
   const [isExporting, setIsExporting] = useState(false)
@@ -109,7 +109,7 @@ export default function DataManagementPage() {
     console.log('Deleting account')
   }
 
-  const formatDate = (dateString: string) => {}
+  const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {}
       year: 'numeric',
       month: 'long',
@@ -119,7 +119,7 @@ export default function DataManagementPage() {
     })
   }
 
-  const isExpiringSoon = (expiresAt: string) => {}
+  const isExpiringSoon = (expiresAt: string) => {
     const expiry = new Date(expiresAt)
     const now = new Date()
     const diffInHours = (expiry.getTime() - now.getTime()) / (1000 * 60 * 60)
@@ -333,7 +333,7 @@ export default function DataManagementPage() {
 
               <div className="flex gap-4">
                 <button;
-                  onClick={() => {}
+                  onClick={() => {
                     setShowDeleteConfirm(false)
                     setDeletePassword('')
                   }}

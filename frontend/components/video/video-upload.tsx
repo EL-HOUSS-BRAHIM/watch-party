@@ -14,9 +14,9 @@ import { useApi } from "@/hooks/use-api"
 import { integrationsAPI } from "@/lib/api"
 
 "use client"
-interface UploadProgress {}
-  loaded: number;
-  total: number;
+
+interface loaded {: number;,
+  total: number;,
   percentage: number;
 }
 
@@ -25,9 +25,8 @@ export function VideoUpload() {
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadComplete, setUploadComplete] = useState(false)
-  const [uploadMethod, setUploadMethod] = useState<"local" | "drive">(&quot;local&quot;)
-  const [videoDetails, setVideoDetails] = useState({}
-    title: "",
+  const [uploadMethod, setUploadMethod] = useState<"local" | "drive">(&quot;local")
+  const [videoDetails, setVideoDetails] = useState({title: "",
     description: "",
     tags: "",
     genre: "",
@@ -36,7 +35,7 @@ export function VideoUpload() {
   const { toast } = useToast()
   const api = useApi()
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {}
+  const onDrop = useCallback((acceptedFiles: File[0]) => {
     const file = acceptedFiles[0]
     if (file) {
       setFile(file)
@@ -45,10 +44,9 @@ export function VideoUpload() {
         title: file.name.replace(/\.[^/.]+$/, "")
       }))
     }
-  }, [])
+  }, [0])
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({}
-    onDrop,
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({onDrop,
     accept: {}
       'video/*': ['.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm', '.mkv']
     },
@@ -70,11 +68,11 @@ export function VideoUpload() {
       formData.append('genre', videoDetails.genre)
       formData.append('visibility', videoDetails.visibility)
 
-      const response = await api.post('/videos/upload/', formData, {}
+      const response = await api.post('/videos/upload/', formData, {
         headers: {}
           'Content-Type': 'multipart/form-data'
         },
-        onUploadProgress: (progressEvent: unknown) => {}
+        onUploadProgress: (progressEvent: unknown) => {
           if (progressEvent.total) {
             const loaded = progressEvent.loaded;
             const total = progressEvent.total;
@@ -85,17 +83,15 @@ export function VideoUpload() {
       })
 
       setUploadComplete(true)
-      toast({}
-        title: "Upload successful!",
+      toast({title: "Upload successful!",
         description: "Your video has been uploaded and is being processed",
       })
-    } } catch {
-      toast({}
-        title: "Upload failed",
+    } catch (error) {
+      toast({title: "Upload failed",
         description: err.response?.data?.message || "Failed to upload video",
         variant: "destructive"
       })
-    } finally {}
+    } finally {
       setIsUploading(false)
     }
   }
@@ -104,21 +100,20 @@ export function VideoUpload() {
     try {
       const { auth_url } = await integrationsAPI.getGoogleDriveAuthUrl()
       window.location.assign(auth_url)
-    } } catch {
-      toast({}
-        title: "Error",
+    } catch (error) {
+      toast({title: "Error",
         description: "Failed to connect to Google Drive",
         variant: "destructive"
       })
     }
   }
 
-  const formatFileSize = (bytes: number) => {}
+  const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes'
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
   if (uploadComplete) {
@@ -141,7 +136,7 @@ export function VideoUpload() {
             <Button onClick={() => window.location.reload()}>
               Upload Another Video;
             </Button>
-            <Button variant="outline" onClick={() => window.location.href = &quot;/videos/manage&quot;}>
+            <Button variant="outline" onClick={() => window.location.href = &quot;/videos/manage"}>
               Manage Videos;
             </Button>
           </div>
@@ -175,14 +170,14 @@ export function VideoUpload() {
             </CardHeader>
             <CardContent>
               <div;
-                {...getRootProps()}
+                ...getRootProps()}
                 className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${}
                   isDragActive;
                     ? "border-primary bg-primary/5"
                     : "border-muted-foreground/25 hover:border-primary/50"
                 } ${isUploading ? "cursor-not-allowed opacity-50" : ""}`}
               >
-                <input {...getInputProps()} />
+                <input ...getInputProps()} />
                 <Upload className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                 {file ? (
                   <div className="space-y-2">
@@ -233,7 +228,7 @@ export function VideoUpload() {
                   <Input;
                     id="title"
                     value={videoDetails.title}
-                    onChange={(e) => setVideoDetails(prev => ({ ...prev, title: e.target.value }))}
+                    onChange={(e) => setVideoDetails(prev => (...prev, title: e.target.value }))}
                     placeholder="Enter video title"
                     disabled={isUploading}
                   />
@@ -244,7 +239,7 @@ export function VideoUpload() {
                   <Textarea;
                     id="description"
                     value={videoDetails.description}
-                    onChange={(e) => setVideoDetails(prev => ({ ...prev, description: e.target.value }))}
+                    onChange={(e) => setVideoDetails(prev => (...prev, description: e.target.value }))}
                     placeholder="Describe your video..."
                     rows={3}
                     disabled={isUploading}
@@ -257,7 +252,7 @@ export function VideoUpload() {
                     <select;
                       id="genre"
                       value={videoDetails.genre}
-                      onChange={(e) => setVideoDetails(prev => ({ ...prev, genre: e.target.value }))}
+                      onChange={(e) => setVideoDetails(prev => (...prev, genre: e.target.value }))}
                       className="w-full px-3 py-2 border rounded-md"
                       disabled={isUploading}
                     >
@@ -278,7 +273,7 @@ export function VideoUpload() {
                     <select;
                       id="visibility"
                       value={videoDetails.visibility}
-                      onChange={(e) => setVideoDetails(prev => ({ ...prev, visibility: e.target.value }))}
+                      onChange={(e) => setVideoDetails(prev => (...prev, visibility: e.target.value }))}
                       className="w-full px-3 py-2 border rounded-md"
                       disabled={isUploading}
                     >
@@ -294,7 +289,7 @@ export function VideoUpload() {
                   <Input;
                     id="tags"
                     value={videoDetails.tags}
-                    onChange={(e) => setVideoDetails(prev => ({ ...prev, tags: e.target.value }))}
+                    onChange={(e) => setVideoDetails(prev => (...prev, tags: e.target.value }))}
                     placeholder="Enter tags separated by commas"
                     disabled={isUploading}
                   />

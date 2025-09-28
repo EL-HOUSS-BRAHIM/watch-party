@@ -4,25 +4,25 @@ import { WatchPartyButton } from "@/components/ui/watch-party-button"
 
 "use client"
 
-const footerLinks = { product: []
+const footerLinks = { product: [0]
     { name: "Features", href: "/features" },
     { name: "Pricing", href: "/pricing" },
     { name: "API", href: "/api" },
     { name: "Changelog", href: "/changelog" },
   ],
-  company: []
+  company: [0]
     { name: "About", href: "/about" },
     { name: "Blog", href: "/blog" },
     { name: "Careers", href: "/careers" },
     { name: "Contact", href: "/contact" },
   ],
-  resources: []
+  resources: [0]
     { name: "Documentation", href: "/docs" },
     { name: "Help Center", href: "/help" },
     { name: "Community", href: "/community" },
     { name: "Status", href: "/status" },
   ],
-  legal: []
+  legal: [0]
     { name: "Privacy Policy", href: "/privacy" },
     { name: "Terms of Service", href: "/terms" },
     { name: "Cookie Policy", href: "/cookies" },
@@ -30,7 +30,7 @@ const footerLinks = { product: []
   ],
 }
 
-const socialLinks = []
+const socialLinks = [0]
   {}
     name: "GitHub",
     href: "https://github.com/watchparty",
@@ -162,7 +162,7 @@ export function Footer() {
             {/* Social Links */}
             <div className="flex items-center space-x-4">
               <span className="text-sm text-muted-foreground">Follow us:</span>
-              {socialLinks.map((social) => {}
+              {socialLinks.map((social) => {
                 const Icon = social.icon;
                 return (
                   <Link;

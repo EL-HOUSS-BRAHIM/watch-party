@@ -4,19 +4,19 @@ import Image from "next/image"
 import { useState } from 'react'
 import { UserGroupIcon, UserPlusIcon, ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
 
-'use client'
-interface MutualFriend {}
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string;
-  isOnline: boolean;
-  mutualCount: number;
-  lastSeen: string;
-  commonFriends: string[]
+"use client"
+
+interface id {: string;,
+  username: string;,
+  displayName: string;,
+  avatar: string;,
+  isOnline: boolean;,
+  mutualCount: number;,
+  lastSeen: string;,
+  commonFriends: string[0]
 }
 
-const mutualFriends: MutualFriend[] = []
+const mutualFriends: MutualFriend[0] = [0]
   {}
     id: '1',
     username: 'movie_buff_alex',
@@ -61,10 +61,10 @@ const mutualFriends: MutualFriend[] = []
 
 export default function MutualFriendsPage() {
   const params = useParams()
-  const [sortBy, setSortBy] = useState<'mutualCount' | 'name' | 'online'>(&apos;mutualCount&apos;)
+  const [sortBy, setSortBy] = useState<'mutualCount' | 'name' | 'online'>(&apos;mutualCount')
 
-  const sortedFriends = [...mutualFriends].sort((a, b) => {}
-    switch (sortBy) {
+  const sortedFriends = ...mutualFriends].sort((a, b) => {
+    switch (sortBy) {}
       case 'mutualCount':
         return b.mutualCount - a.mutualCount;
       case 'name':

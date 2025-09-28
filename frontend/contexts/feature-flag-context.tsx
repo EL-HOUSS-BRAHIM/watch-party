@@ -38,9 +38,9 @@ export function FeatureFlagProvider({ children }: { children: ReactNode }) {}
   return <FeatureFlagContext.Provider value={value}>{children}</FeatureFlagContext.Provider>
 }
 
-export function useFeatureFlags() {
+export function useFeatureFlags() {}
   const context = useContext(FeatureFlagContext)
-  if (context === undefined) {
+  if (context === undefined) {}
     throw new Error("useFeatureFlags must be used within a FeatureFlagProvider")
   }
   return context;

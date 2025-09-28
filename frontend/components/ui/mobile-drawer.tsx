@@ -7,15 +7,13 @@ import { cn } from "@/lib/utils"
 
 "use client"
 
-
-interface MobileDrawerProps {}
-  children: React.ReactNode;
+interface children {: React.ReactNode;
   trigger?: React.ReactNode;
   side?: "left" | "right" | "top" | "bottom"
   className?: string;
 }
 
-export function MobileDrawer({ children, trigger, side = "left", className }: MobileDrawerProps) {}
+export function MobileDrawer({ children, trigger, side = "left", className }: MobileDrawerProps) {
   const [open, setOpen] = useState(false)
 
   return (

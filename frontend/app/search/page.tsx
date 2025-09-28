@@ -14,59 +14,56 @@ import { useDebounce } from "@/hooks/use-debounce"
 import { formatDistanceToNow } from "date-fns"
 
 "use client"
-interface SearchUser {}
-  id: string;
-  username: string;
-  firstName: string;
+
+interface id {: string;,
+  username: string;,
+  firstName: string;,
   lastName: string;
   avatar?: string;
   bio?: string;
-  location?: string;
-  isOnline: boolean;
-  friendshipStatus: "none" | "pending_sent" | "pending_received" | "friends" | "blocked"
-  mutualFriends: number;
+  location?: string;,
+  isOnline: boolean;,
+  friendshipStatus: "none" | "pending_sent" | "pending_received" | "friends" | "blocked",
+  mutualFriends: number;,
   isVerified: boolean;
 }
 
-interface SearchVideo {}
-  id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  duration: number;
-  views: number;
-  likes: number;
-  createdAt: string;
+interface id {: string;,
+  title: string;,
+  description: string;,
+  thumbnail: string;,
+  duration: number;,
+  views: number;,
+  likes: number;,
+  createdAt: string;,
   author: {}
-    id: string;
+    id: string;,
     username: string;
     avatar?: string;
   }
-  privacy: "public" | "friends" | "private"
-  tags: string[]
+  privacy: "public" | "friends" | "private",
+  tags: string[0]
 }
 
-interface SearchParty {}
-  id: string;
-  name: string;
-  description: string;
+interface id {: string;,
+  name: string;,
+  description: string;,
   host: {}
-    id: string;
+    id: string;,
     username: string;
     avatar?: string;
   }
-  scheduledFor?: string;
-  isActive: boolean;
+  scheduledFor?: string;,
+  isActive: boolean;,
   participantCount: number;
-  maxParticipants?: number;
-  isPrivate: boolean;
-  tags: string[]
+  maxParticipants?: number;,
+  isPrivate: boolean;,
+  tags: string[0]
 }
 
-interface SearchFilters {}
-  type: "all" | "users" | "videos" | "parties"
-  sortBy: "relevance" | "date" | "popularity"
-  dateRange: "all" | "today" | "week" | "month" | "year"
+interface type {: "all" | "users" | "videos" | "parties",
+  sortBy: "relevance" | "date" | "popularity",
+  dateRange: "all" | "today" | "week" | "month" | "year",
   userFilters: {}
     location?: string;
     isOnline?: boolean;
@@ -77,7 +74,7 @@ interface SearchFilters {}
     minViews?: number;
   }
   partyFilters: {}
-    status: "all" | "active" | "scheduled"
+    status: "all" | "active" | "scheduled",
     availability: "all" | "open" | "full"
   }
 }
@@ -96,15 +93,15 @@ function SearchContent() {
   const [isLoading, setIsLoading] = useState(false)
   const [showFilters, setShowFilters] = useState(false)
 
-  const [users, setUsers] = useState<SearchUser[]>([])
-  const [videos, setVideos] = useState<SearchVideo[]>([])
-  const [parties, setParties] = useState<SearchParty[]>([])
-  const [searchHistory, setSearchHistory] = useState<string[]>([])
-  const [popularSearches] = useState([]
+  const [users, setUsers] = useState<SearchUser[0]>([0])
+  const [videos, setVideos] = useState<SearchVideo[0]>([0])
+  const [parties, setParties] = useState<SearchParty[0]>([0])
+  const [searchHistory, setSearchHistory] = useState<string[0]>([0])
+  const [popularSearches] = useState([0]
     "gaming videos", "movie night", "anime party", "study group", "music videos", "comedy shows"
   ])
 
-  const [filters, setFilters] = useState<SearchFilters>({}
+  const [filters, setFilters] = useState<SearchFilters>({
     type: "all",
     sortBy: "relevance",
     dateRange: "all",
@@ -123,10 +120,10 @@ function SearchContent() {
     if (savedHistory) {
       setSearchHistory(JSON.parse(savedHistory))
     }
-  }, [])
+  }, [0])
 
   useEffect(() => {
-    if (debouncedQuery.trim()) {}
+    if (debouncedQuery.trim()) {
       performSearch(debouncedQuery)
       updateURL()
     } else {}
@@ -134,7 +131,7 @@ function SearchContent() {
     }
   }, [debouncedQuery, filters, activeTab])
 
-  const updateURL = useCallback(() => {}
+  const updateURL = useCallback(() => {
     const params = new URLSearchParams()
     if (query.trim()) params.set("q", query.trim())
     if (activeTab !== "all") params.set("type", activeTab)
@@ -142,13 +139,12 @@ function SearchContent() {
     router.replace(newURL, { scroll: false })
   }, [query, activeTab, router])
 
-  const performSearch = async (searchQuery: string) => {}
+  const performSearch = async (searchQuery: string) => {
     if (!searchQuery.trim()) return;
     setIsLoading(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const params = new URLSearchParams({}
-        q: searchQuery,
+      const params = new URLSearchParams({q: searchQuery,
         type: activeTab,
         sort: filters.sortBy,
         date_range: filters.dateRange,
@@ -159,11 +155,11 @@ function SearchContent() {
           Object.entries(filters.videoFilters).filter(([_, v]) => v !== undefined)
         ),
         ...Object.fromEntries(
-          Object.entries(filters.partyFilters).filter(([_, v]) => v !== undefined && v !== &quot;all&quot;)
+          Object.entries(filters.partyFilters).filter(([_, v]) => v !== undefined && v !== &quot;all")
         ),
       })
 
-      const response = await fetch(`/api/search/?${params}`, {}
+      const response = await fetch(`/api/search/?${params}`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -172,53 +168,52 @@ function SearchContent() {
       if (response.ok) {
         const data = await response.json()
         if (activeTab === "all" || activeTab === "users") {
-          setUsers(data.users || [])
+          setUsers(data.users || [0])
         }
         if (activeTab === "all" || activeTab === "videos") {
-          setVideos(data.videos || [])
+          setVideos(data.videos || [0])
         }
         if (activeTab === "all" || activeTab === "parties") {
-          setParties(data.parties || [])
+          setParties(data.parties || [0])
         }
 
         // Add to search history;
         addToSearchHistory(searchQuery)
       }
-    } } catch {
+    } catch (error) {
       console.error("Search failed:", error)
-      toast({}
-        title: "Search Error",
+      toast({title: "Search Error",
         description: "Failed to perform search. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const addToSearchHistory = (searchQuery: string) => {}
+  const addToSearchHistory = (searchQuery: string) => {
     const newHistory = [searchQuery, ...searchHistory.filter(q => q !== searchQuery)].slice(0, 10)
     setSearchHistory(newHistory)
     localStorage.setItem("searchHistory", JSON.stringify(newHistory))
   }
 
-  const clearResults = () => {}
-    setUsers([])
-    setVideos([])
-    setParties([])
+  const clearResults = () => {
+    setUsers([0])
+    setVideos([0])
+    setParties([0])
   }
 
-  const handleSearchSubmit = (e: React.FormEvent) => {}
+  const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (query.trim()) {}
+    if (query.trim()) {
       performSearch(query.trim())
     }
   }
 
-  const handleSendFriendRequest = async (userId: string) => {}
+  const handleSendFriendRequest = async (userId: string) => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/friends/request/", {}
+      const response = await fetch("/api/users/friends/request/", {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -229,33 +224,31 @@ function SearchContent() {
 
       if (response.ok) {
         setUsers(prev => prev.map(u => 
-          u.id === userId ? { ...u, friendshipStatus: "pending_sent" } : u;
+          u.id === userId ? ...u, friendshipStatus: "pending_sent" } : u;
         ))
-        toast({}
-          title: "Friend Request Sent",
+        toast({title: "Friend Request Sent",
           description: "Your friend request has been sent.",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to send friend request:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to send friend request.",
         variant: "destructive",
       })
     }
   }
 
-  const getFriendshipStatusBadge = (status: SearchUser["friendshipStatus"]) => {}
-    switch (status) {
+  const getFriendshipStatusBadge = (status: SearchUser["friendshipStatus"]) => {
+    switch (status) {}
       case "friends":
-        return <Badge variant="default">Friends</Badge>
+        return <Badge variant="default">Friends</Badge>;
       case "pending_sent":
-        return <Badge variant="outline">Request Sent</Badge>
+        return <Badge variant="outline">Request Sent</Badge>;
       case "pending_received":
-        return <Badge variant="secondary">Request Received</Badge>
+        return <Badge variant="secondary">Request Received</Badge>;
       case "blocked":
-        return <Badge variant="destructive">Blocked</Badge>
+        return <Badge variant="destructive">Blocked</Badge>;
       default:
         return null;
     }
@@ -287,7 +280,7 @@ function SearchContent() {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  onClick={() => setQuery(&quot;&quot;)}
+                  onClick={() => setQuery(&quot;")}
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
                 >
                   <X className="h-4 w-4" />
@@ -363,7 +356,7 @@ function SearchContent() {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Sort By</label>
                   <Select value={filters.sortBy} onValueChange={(value) => 
-                    setFilters(prev => ({ ...prev, sortBy: value as Record<string, unknown> }))
+                    setFilters(prev => (...prev, sortBy: value as Record<string, unknown> }))
                   }>
                     <SelectTrigger>
                       <SelectValue />
@@ -379,7 +372,7 @@ function SearchContent() {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Date Range</label>
                   <Select value={filters.dateRange} onValueChange={(value) => 
-                    setFilters(prev => ({ ...prev, dateRange: value as Record<string, unknown> }))
+                    setFilters(prev => (...prev, dateRange: value as Record<string, unknown> }))
                   }>
                     <SelectTrigger>
                       <SelectValue />
@@ -400,7 +393,7 @@ function SearchContent() {
                     <Select value={filters.partyFilters.status} onValueChange={(value) => 
                       setFilters(prev => ({}
                         ...prev, 
-                        partyFilters: { ...prev.partyFilters, status: value as Record<string, unknown> }
+                        partyFilters: ...prev.partyFilters, status: value as Record<string, unknown> }
                       }))
                     }>
                       <SelectTrigger>
@@ -422,7 +415,7 @@ function SearchContent() {
 
       {/* Results */}
       {query && (
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as SearchFilters[&quot;type&quot;])}>
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as SearchFilters[&quot;type"])}>
           <TabsList className="grid w-full grid-cols-4 mb-6">
             <TabsTrigger value="all">All Results</TabsTrigger>
             <TabsTrigger value="users">Users ({users.length})</TabsTrigger>
@@ -443,7 +436,7 @@ function SearchContent() {
                 <p className="text-gray-600 mb-4">
                   No results found for "{query}". Try adjusting your search terms or filters.
                 </p>
-                <Button variant="outline" onClick={() => setQuery(&quot;&quot;)}>
+                <Button variant="outline" onClick={() => setQuery(&quot;")}>
                   Clear Search;
                 </Button>
               </CardContent>

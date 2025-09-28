@@ -21,7 +21,7 @@ const I18nContext = createContext<I18nContextType | undefined>(undefined)
 
 export const useI18n = () => {}
   const context = useContext(I18nContext)
-  if (!context) {
+  if (!context) {}
     throw new Error("useI18n must be used within an I18nProvider")
   }
   return context;
@@ -37,39 +37,39 @@ export const I18nProvider = ({ children }: { children: React.ReactNode }) => {}
   ]
 
   // Load language from localStorage on mount;
-  useEffect(() => {
+  useEffect(() => {}
     const savedLanguage = localStorage.getItem("watchparty-language")
-    if (savedLanguage && translations[savedLanguage as keyof typeof translations]) {
+    if (savedLanguage && translations[savedLanguage as keyof typeof translations]) {}
       setLanguage(savedLanguage)
     }
   }, [])
 
   // Save language to localStorage when changed;
-  useEffect(() => {
+  useEffect(() => {}
     localStorage.setItem("watchparty-language", language)
   }, [language])
 
   const t = (key: AllTranslationKeys, params?: Record<string, any>): string => {}
     const keys = key.split(".")
     let value: unknown = translations[language as keyof typeof translations] || translations.en;
-    for (const k of keys) {
+    for (const k of keys) {}
       value = value?.[k]
     }
 
-    if (typeof value !== "string") {
+    if (typeof value !== "string") {}
       // Fallback to English if translation not found;
       value = translations.en;
-      for (const k of keys) {
+      for (const k of keys) {}
         value = value?.[k]
       }
     }
 
-    if (typeof value !== "string") {
+    if (typeof value !== "string") {}
       return key // Return key if no translation found;
     }
 
     // Replace parameters;
-    if (params) {
+    if (params) {}
       Object.entries(params).forEach(([param, paramValue]) => {}
         value = value.replace(new RegExp(`{{${param}}}`, "g"), String(paramValue))
       })

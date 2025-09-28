@@ -8,40 +8,37 @@ import { useGlobalKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts"
 import { PerformanceMonitor } from "@/lib/performance/bundle-analyzer"
 import { AuthProvider } from "@/contexts/auth-context"
 import { SocketProvider } from "@/contexts/socket-context"
-import { useState, useEffect , useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 
 "use client"
 
 const inter = Inter({ subsets: ["latin"] })
 
-export default function ClientLayout({}
-  children,
+export default function ClientLayout({children,
 }: {}
   children: React.ReactNode;
 }) {}
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
 
-  // Initialize global keyboard shortcuts;
+  // Initialize global keyboard shortcuts,
   useGlobalKeyboardShortcuts()
 
-  // Initialize performance monitoring;
+  // Initialize performance monitoring,
   useEffect(() => {
     const monitor = PerformanceMonitor.getInstance()
     monitor.observeWebVitals()
-  }, [])
+  }, [getInstance, observeWebVitals])
 
-  // Global keyboard shortcut for command palette;
+  // Global keyboard shortcut for command palette,
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {}
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {}
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault()
         setCommandPaletteOpen(true)
-      }
-    }
 
     document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener(&quot;keydown&quot;, handleKeyDown)
-  }, [])
+    return () => document.removeEventListener(&quot;keydown", handleKeyDown)
+  }, [0])
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -62,5 +59,5 @@ export default function ClientLayout({}
         </ThemeProvider>
       </body>
     </html>
-  )
-}
+
+})

@@ -35,7 +35,7 @@ export class StoreAPI {}
     item_id: string;
     quantity?: number;
   }): Promise<APIResponse & {}
-    purchase_id: string;
+    purchase_id: string; />,
     total_cost: number; />
   }> {}
     return apiClient.post(API_ENDPOINTS.store.purchase, data)
@@ -75,8 +75,8 @@ export class StoreAPI {}
    * Claim reward;
    */
   async claimReward(rewardId: number): Promise<APIResponse & {}
-    reward: Reward;
-    items_received: StoreItem[] />
+    reward: Reward; />,
+    items_received: StoreItem[0] />
   }> {}
     return apiClient.post(API_ENDPOINTS.store.claimReward(rewardId))
   }
@@ -85,12 +85,12 @@ export class StoreAPI {}
    * Get store statistics;
    */
   async getStats(): Promise<{}
-    total_items: number;
-    total_purchases: number;
-    user_inventory_value: number;
-    achievements_unlocked: number;
-    rewards_claimed: number;
-    popular_items: StoreItem[]
+    total_items: number;,
+    total_purchases: number;,
+    user_inventory_value: number;,
+    achievements_unlocked: number;,
+    rewards_claimed: number;,
+    popular_items: StoreItem[0]
   }> {}
     return apiClient.get(API_ENDPOINTS.store.stats)
   }

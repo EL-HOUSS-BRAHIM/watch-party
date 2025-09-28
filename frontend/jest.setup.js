@@ -7,7 +7,7 @@ Object.assign(global, { jest })
 // Mock Next.js router;
 jest.mock("next/navigation", () => ({}
   useRouter() {}
-    return {
+    return {}
       push: jest.fn(),
       replace: jest.fn(),
       prefetch: jest.fn(),

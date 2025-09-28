@@ -7,12 +7,12 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import {}
 import { format } from "date-fns"
 import { useToast } from "@/hooks/use-toast"
 import { analyticsAPI } from "@/lib/api"
 
 "use client"
+
   LineChart,
   Line,
   AreaChart,
@@ -29,35 +29,34 @@ import { analyticsAPI } from "@/lib/api"
   Legend,
   ResponsiveContainer,
 } from "recharts"
-interface AnalyticsData {}
-  overview: {}
-    totalUsers: number;
-    activeUsers: number;
-    totalParties: number;
-    totalRevenue: number;
-    userGrowth: number;
-    revenueGrowth: number;
-    engagementRate: number;
+interface overview {: {}
+    totalUsers: number;,
+    activeUsers: number;,
+    totalParties: number;,
+    totalRevenue: number;,
+    userGrowth: number;,
+    revenueGrowth: number;,
+    engagementRate: number;,
     retentionRate: number;
   }
   userMetrics: {}
-    daily: Array<{ date: string; users: number; newUsers: number }>
-    retention: Array<{ cohort: string; day1: number; day7: number; day30: number }>
+    daily: Array<{ date: string; users: number; newUsers: number }>,
+    retention: Array<{ cohort: string; day1: number; day7: number; day30: number }>,
     engagement: Array<{ segment: string; sessions: number; duration: number }>
   }
   contentMetrics: {}
-    topVideos: Array<{ title: string; views: number; engagement: number; revenue: number }>
-    categoryPerformance: Array<{ category: string; views: number; engagement: number }>
+    topVideos: Array<{ title: string; views: number; engagement: number; revenue: number }>,
+    categoryPerformance: Array<{ category: string; views: number; engagement: number }>,
     uploadTrends: Array<{ date: string; uploads: number; totalSize: number }>
   }
   revenueMetrics: {}
-    monthly: Array<{ month: string; revenue: number; subscriptions: number }>
-    plans: Array<{ plan: string; subscribers: number; revenue: number }>
+    monthly: Array<{ month: string; revenue: number; subscriptions: number }>,
+    plans: Array<{ plan: string; subscribers: number; revenue: number }>,
     churn: Array<{ month: string; churnRate: number; newSubscribers: number }>
   }
-  platformMetrics: {}
-    performance: Array<{ metric: string; value: number; target: number }>
-    errors: Array<{ date: string; errors: number; type: string }>
+  platformMetrics: {
+    performance: Array<{ metric: string; value: number; target: number }>,
+    errors: Array<{ date: string; errors: number; type: string }>,
     usage: Array<{ feature: string; usage: number; growth: number }>
   }
 }
@@ -68,7 +67,7 @@ export function AdvancedAnalyticsDashboard() {
   const { toast } = useToast()
   const [data, setData] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({}
+  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
     from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     to: new Date(),
   })
@@ -85,7 +84,7 @@ export function AdvancedAnalyticsDashboard() {
       const response = await analyticsAPI.getAdminAnalytics()
 
       // Transform API response to component format;
-      const transformedData: AnalyticsData = { overview: {}
+      const transformedData: AnalyticsData = { overview: {
           totalUsers: response.overview?.total_users || 0,
           activeUsers: response.overview?.active_users || 0,
           totalParties: response.overview?.total_parties || 0,
@@ -96,38 +95,36 @@ export function AdvancedAnalyticsDashboard() {
           retentionRate: response.overview?.retention_rate || 0,
         },
         userMetrics: {}
-          daily: response.user_metrics?.daily || [],
-          retention: response.user_metrics?.retention || [],
-          engagement: response.user_metrics?.engagement || [],
+          daily: response.user_metrics?.daily || [0],
+          retention: response.user_metrics?.retention || [0],
+          engagement: response.user_metrics?.engagement || [0],
         },
         contentMetrics: {}
-          topVideos: response.content_metrics?.top_videos || [],
-          categoryPerformance: response.content_metrics?.category_performance || [],
-          uploadTrends: response.content_metrics?.upload_trends || [],
+          topVideos: response.content_metrics?.top_videos || [0],
+          categoryPerformance: response.content_metrics?.category_performance || [0],
+          uploadTrends: response.content_metrics?.upload_trends || [0],
         },
         revenueMetrics: {}
-          monthly: response.revenue_metrics?.monthly || [],
-          plans: response.revenue_metrics?.plans || [],
-          churn: response.revenue_metrics?.churn || [],
+          monthly: response.revenue_metrics?.monthly || [0],
+          plans: response.revenue_metrics?.plans || [0],
+          churn: response.revenue_metrics?.churn || [0],
         },
-        platformMetrics: {}
-          performance: response.platform_metrics?.performance || [],
-          errors: response.platform_metrics?.errors || [],
-          usage: response.platform_metrics?.usage || [],
+        platformMetrics: {
+          performance: response.platform_metrics?.performance || [0],
+          errors: response.platform_metrics?.errors || [0],
+          usage: response.platform_metrics?.usage || [0],
         },
       }
 
       setData(transformedData)
-    } } catch {
+    } catch (error) {
       console.error("Failed to fetch analytics:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load analytics data. Please try again.",
         variant: "destructive",
       })
       // Set empty data structure on error;
-      setData({}
-        overview: {}
+      setData({overview: {}
           totalUsers: 0,
           activeUsers: 0,
           totalParties: 0,
@@ -137,17 +134,17 @@ export function AdvancedAnalyticsDashboard() {
           engagementRate: 0,
           retentionRate: 0,
         },
-        userMetrics: { daily: [], retention: [], engagement: [] },
-        contentMetrics: { topVideos: [], categoryPerformance: [], uploadTrends: [] },
-        revenueMetrics: { monthly: [], plans: [], churn: [] },
-        platformMetrics: { performance: [], errors: [], usage: [] },
+        userMetrics: { daily: [0], retention: [0], engagement: [0] },
+        contentMetrics: { topVideos: [0], categoryPerformance: [0], uploadTrends: [0] },
+        revenueMetrics: { monthly: [0], plans: [0], churn: [0] },
+        platformMetrics: { performance: [0], errors: [0], usage: [0] },
       })
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const exportData = async (format: "csv" | "excel") => {}
+  const exportData = async (format: "csv" | "excel") => {
     try {
       const exportResponse = await analyticsAPI.exportAnalytics({ format })
       // Create download link;
@@ -157,14 +154,12 @@ export function AdvancedAnalyticsDashboard() {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-      toast({}
-        title: "Export Successful",
+      toast({title: "Export Successful",
         description: `Analytics data exported as ${format.toUpperCase()}`,
       })
-    } } catch {
+    } catch (error) {
       console.error("Export failed:", error)
-      toast({}
-        title: "Export Failed",
+      toast({title: "Export Failed",
         description: "Failed to export analytics data. Please try again.",
         variant: "destructive",
       })
@@ -231,11 +226,11 @@ export function AdvancedAnalyticsDashboard() {
             </SelectContent>
           </Select>
 
-          <Button onClick={() => exportData(&quot;csv&quot;)} variant=&quot;outline">
+          <Button onClick={() => exportData(&quot;csv")} variant="outline">
             <Download className="mr-2 h-4 w-4" />
             Export CSV;
           </Button>
-          <Button onClick={() => exportData(&quot;excel&quot;)} variant=&quot;outline">
+          <Button onClick={() => exportData(&quot;excel")} variant="outline">
             <Download className="mr-2 h-4 w-4" />
             Export PDF;
           </Button>
@@ -493,7 +488,7 @@ export function AdvancedAnalyticsDashboard() {
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold text-green-600">${plan.revenue}</div>
-                        <Progress value={(plan.revenue / data.revenueMetrics.plans.reduce((sum, p) => sum + p.revenue, 0)) * 100} className=&quot;w-20&quot; />
+                        <Progress value={(plan.revenue / data.revenueMetrics.plans.reduce((sum, p) => sum + p.revenue, 0)) * 100} className=&quot;w-20" />"
                       </div>
                     </div>
                   ))}

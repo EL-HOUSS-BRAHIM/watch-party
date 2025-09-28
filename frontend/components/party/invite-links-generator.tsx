@@ -7,18 +7,16 @@ import { QRCodeSVG } from 'qrcode.react'
 import { Clock, Copy, Link, Share, Share2, User, Users } from "lucide-react"
 import { useToast } from '@/hooks/use-toast'
 
-'use client'
+"use client"
 
-interface InviteLinksGeneratorProps {}
-  partyId: string;
-  partyName: string;
-  hostName: string;
-  isPublic: boolean;
+interface partyId {: string;,
+  partyName: string;,
+  hostName: string;,
+  isPublic: boolean;,
   onTogglePublic: () => void;
 }
 
-export function InviteLinksGenerator({}
-  partyId, 
+export function InviteLinksGenerator({partyId, 
   partyName, 
   hostName, 
   isPublic, 
@@ -37,16 +35,14 @@ export function InviteLinksGenerator({}
 
   const handleCopyLink = async () => {
     await navigator.clipboard.writeText(inviteUrl)
-    toast({}
-      title: 'Link copied!',
+    toast({title: 'Link copied!',
       description: 'Invite link has been copied to clipboard.',
     })
   }
 
   const handleCopyCode = async () => {
     await navigator.clipboard.writeText(inviteCode)
-    toast({}
-      title: 'Code copied!',
+    toast({title: 'Code copied!',
       description: 'Invite code has been copied to clipboard.',
     })
   }
@@ -54,12 +50,11 @@ export function InviteLinksGenerator({}
   const handleShare = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({}
-          title: `Join ${partyName}`,
+        await navigator.share({title: `Join ${partyName}`,
           text: `${hostName} invited you to watch ${partyName} together!`,
           url: inviteUrl;
         })
-      } } catch {
+      } catch (error) {
         // User cancelled sharing;
       }
     } else {}
@@ -67,10 +62,9 @@ export function InviteLinksGenerator({}
     }
   }
 
-  const handleRegenerateCode = () => {}
+  const handleRegenerateCode = () => {
     setInviteCode(generateInviteCode())
-    toast({}
-      title: 'New code generated',
+    toast({title: 'New code generated',
       description: 'A new invite code has been created.',
     })
   }
@@ -102,7 +96,7 @@ export function InviteLinksGenerator({}
 
           <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
             <p className="text-sm font-medium mb-1">Invite Link</p>
-            <p className="text-xs text-gray-600 dark:text-gray-400 break-all">
+            <p className="text-xs text-gray-600 dark:text-gray-400 break-all">;
               {inviteUrl}
             </p>
           </div>

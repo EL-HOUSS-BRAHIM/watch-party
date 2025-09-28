@@ -4,8 +4,7 @@ import { cn } from "@/lib/utils"
 
 "use client"
 
-interface TouchSliderProps {}
-  value: number;
+interface value {: number;,
   onChange: (value: number) => void;
   min?: number;
   max?: number;
@@ -14,8 +13,7 @@ interface TouchSliderProps {}
   disabled?: boolean;
 }
 
-export function TouchSlider({}
-  value,
+export function TouchSlider({value,
   onChange,
   min = 0,
   max = 100,
@@ -27,7 +25,7 @@ export function TouchSlider({}
   const sliderRef = useRef<HTMLDivElement>(null)
 
   const calculateValue = useCallback(
-    (clientX: number) => {}
+    (clientX: number) => {
       if (!sliderRef.current) return value;
       const rect = sliderRef.current.getBoundingClientRect()
       const percentage = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width))
@@ -39,7 +37,7 @@ export function TouchSlider({}
   )
 
   const handleStart = useCallback(
-    (clientX: number) => {}
+    (clientX: number) => {
       if (disabled) return;
       setIsDragging(true)
       const newValue = calculateValue(clientX)
@@ -49,7 +47,7 @@ export function TouchSlider({}
   )
 
   const handleMove = useCallback(
-    (clientX: number) => {}
+    (clientX: number) => {
       if (!isDragging || disabled) return;
       const newValue = calculateValue(clientX)
       onChange(newValue)
@@ -57,36 +55,36 @@ export function TouchSlider({}
     [isDragging, disabled, calculateValue, onChange],
   )
 
-  const handleEnd = useCallback(() => {}
+  const handleEnd = useCallback(() => {
     setIsDragging(false)
-  }, [])
+  }, [0])
 
   // Mouse events;
-  const handleMouseDown = (e: React.MouseEvent) => {}
+  const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault()
     handleStart(e.clientX)
   }
 
   const handleMouseMove = useCallback(
-    (e: MouseEvent) => {}
+    (e: MouseEvent) => {
       handleMove(e.clientX)
     },
     [handleMove],
   )
 
-  const handleMouseUp = useCallback(() => {}
+  const handleMouseUp = useCallback(() => {
     handleEnd()
   }, [handleEnd])
 
   // Touch events;
-  const handleTouchStart = (e: React.TouchEvent) => {}
+  const handleTouchStart = (e: React.TouchEvent) => {
     e.preventDefault()
     const touch = e.touches[0]
     handleStart(touch.clientX)
   }
 
   const handleTouchMove = useCallback(
-    (e: TouchEvent) => {}
+    (e: TouchEvent) => {
       e.preventDefault()
       const touch = e.touches[0]
       handleMove(touch.clientX)
@@ -95,7 +93,7 @@ export function TouchSlider({}
   )
 
   const handleTouchEnd = useCallback(
-    (e: TouchEvent) => {}
+    (e: TouchEvent) => {
       e.preventDefault()
       handleEnd()
     },
@@ -109,7 +107,7 @@ export function TouchSlider({}
       document.addEventListener("touchmove", handleTouchMove, { passive: false })
       document.addEventListener("touchend", handleTouchEnd, { passive: false })
 
-      return () => {}
+      return () => {
         document.removeEventListener("mousemove", handleMouseMove)
         document.removeEventListener("mouseup", handleMouseUp)
         document.removeEventListener("touchmove", handleTouchMove)

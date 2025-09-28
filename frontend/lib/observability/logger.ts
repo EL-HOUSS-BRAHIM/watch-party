@@ -1,11 +1,12 @@
 
+
 interface LogContext {}
   [key: string]: unknown;
 }
 
 type LogLevel = "debug" | "info" | "warn" | "error"
 
-const emit = (level: LogLevel, message: string, context?: LogContext) => {}
+const emit = (level: LogLevel, message: string, context?: LogContext) => {
   const payload = { level,
     message,
     timestamp: new Date().toISOString(),
@@ -28,13 +29,13 @@ const emit = (level: LogLevel, message: string, context?: LogContext) => {}
 export const logger = { debug(message: string, context?: LogContext) {
     emit("debug", message, context)
   },
-  info(message: string, context?: LogContext) {
+  info(message: string, context?: LogContext) {}
     emit("info", message, context)
   },
-  warn(message: string, context?: LogContext) {
+  warn(message: string, context?: LogContext) {}
     emit("warn", message, context)
   },
-  error(message: string, context?: LogContext) {
+  error(message: string, context?: LogContext) {}
     emit("error", message, context)
   },
 }

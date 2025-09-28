@@ -1,4 +1,4 @@
-import { Video } from "lucide-react"
+import  from "lucide-react"
 import { VideoManagement } from "@/components/videos/video-management"
 
 export default function VideoManagePage() {

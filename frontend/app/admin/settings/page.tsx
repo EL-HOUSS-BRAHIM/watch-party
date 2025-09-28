@@ -12,31 +12,29 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from '@/hooks/use-toast';
 
 'use client';
-interface FeatureFlag {}
-  id: string;
-  name: string;
-  description: string;
-  enabled: boolean;
+interface id {: string;,
+  name: string;,
+  description: string;,
+  enabled: boolean;,
   category: 'features' | 'experiments' | 'maintenance' | 'security';
-  rolloutPercentage?: number;
-  environment: 'development' | 'staging' | 'production' | 'all';
-  lastModified: Date;
+  rolloutPercentage?: number;,
+  environment: 'development' | 'staging' | 'production' | 'all';,
+  lastModified: Date;,
   modifiedBy: string;
 }
 
-interface SystemSetting {}
-  id: string;
-  category: string;
-  name: string;
-  value: string | number | boolean;
-  type: 'string' | 'number' | 'boolean' | 'json';
+interface id {: string;,
+  category: string;,
+  name: string;,
+  value: string | number | boolean;,
+  type: 'string' | 'number' | 'boolean' | 'json';,
   description: string;
   isSecret?: boolean;
   requiresRestart?: boolean;
 }
 
 export default function AdminSettings() {
-  const [featureFlags, setFeatureFlags] = useState<FeatureFlag[]>([]
+  const [featureFlags, setFeatureFlags] = useState<FeatureFlag[0]>([0]
     {}
       id: 'video_quality_4k',
       name: '4K Video Support',
@@ -93,7 +91,7 @@ export default function AdminSettings() {
     }
   ]);
 
-  const [systemSettings, setSystemSettings] = useState<SystemSetting[]>([]
+  const [systemSettings, setSystemSettings] = useState<SystemSetting[0]>([0]
     {}
       id: 'max_party_size',
       category: 'General',
@@ -160,7 +158,7 @@ export default function AdminSettings() {
   );
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  const toggleFeatureFlag = (flagId: string) => {}
+  const toggleFeatureFlag = (flagId: string) => {
     setFeatureFlags(prev => prev.map(flag => 
       flag.id === flagId;
         ? {}
@@ -174,80 +172,77 @@ export default function AdminSettings() {
     setHasUnsavedChanges(true);
   };
 
-  const updateSystemSetting = (settingId: string, newValue: string | number | boolean) => {}
+  const updateSystemSetting = (settingId: string, newValue: string | number | boolean) => {
     setSystemSettings(prev => prev.map(setting => 
       setting.id === settingId;
-        ? { ...setting, value: newValue }
+        ? ...setting, value: newValue }
         : setting;
     ));
     setHasUnsavedChanges(true);
   };
 
-  const saveChanges = () => {}
+  const saveChanges = () => {
     // Simulate API call to save changes;
-    setTimeout(() => {}
-      setHasUnsavedChanges(false);
-      toast({}
-        title: "Settings Saved",
+    setTimeout(() => {
+  setHasUnsavedChanges(false);
+      toast({title: "Settings Saved",
         description: "All configuration changes have been saved successfully.",
       });
     }, 1000);
   };
 
-  const enableMaintenanceMode = () => {}
+  const enableMaintenanceMode = () => {
     setMaintenanceMode(true);
     setFeatureFlags(prev => prev.map(flag => 
       flag.id === 'maintenance_mode' 
-        ? { ...flag, enabled: true, lastModified: new Date() }
+        ? ...flag, enabled: true, lastModified: new Date() }
         : flag;
     ));
-    toast({}
-      title: "Maintenance Mode Enabled",
+    toast({title: "Maintenance Mode Enabled",
       description: "The platform is now in maintenance mode.",
       variant: "destructive"
     });
   };
 
-  const disableMaintenanceMode = () => {}
+  const disableMaintenanceMode = () => {
     setMaintenanceMode(false);
     setFeatureFlags(prev => prev.map(flag => 
       flag.id === 'maintenance_mode' 
-        ? { ...flag, enabled: false, lastModified: new Date() }
+        ? ...flag, enabled: false, lastModified: new Date() }
         : flag;
     ));
-    toast({}
-      title: "Maintenance Mode Disabled",
+    toast({title: "Maintenance Mode Disabled",
       description: "The platform is now accessible to users.",
     });
   };
 
-  const getCategoryIcon = (category: string) => {}
-    switch (category) {
+  const getCategoryIcon = (category: string) => {
+    switch (category) {}
       case 'features': return <Zap className="w-4 h-4 text-blue-500" />;
       case 'experiments': return <Palette className="w-4 h-4 text-purple-500" />;
       case 'maintenance': return <Wrench className="w-4 h-4 text-orange-500" />;
-      case 'security': return <Shield className="w-4 h-4 text-red-500" />;
+      case 'security': return <Shield className="w-4 h-4 text-red-500" />;,
       default: return <Settings className="w-4 h-4 text-gray-500" />;
     }
   };
 
-  const getCategoryColor = (category: string) => {}
-    switch (category) {
+  const getCategoryColor = (category: string) => {
+    switch (category) {}
       case 'features': return 'bg-blue-100 text-blue-800 border-blue-200';
       case 'experiments': return 'bg-purple-100 text-purple-800 border-purple-200';
       case 'maintenance': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'security': return 'bg-red-100 text-red-800 border-red-200';
+      case 'security': return 'bg-red-100 text-red-800 border-red-200';,
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
-  const groupedSettings = systemSettings.reduce((acc, setting) => {}
-    if (!acc[setting.category]) {
-      acc[setting.category] = [];
+  const groupedSettings = systemSettings.reduce((acc, setting) => {
+  if (!acc[setting.category]) {
+      acc[setting.category] = [0];
     }
     acc[setting.category].push(setting);
     return acc;
-  }, {} as Record<string, SystemSetting[]>);
+  }, {} as Record<string, SystemSetting[0]>);
 
   return (
     <div className="p-6 space-y-6">
@@ -468,8 +463,8 @@ export default function AdminSettings() {
                           id={setting.id}
                           type={setting.type === 'number' ? 'number' : 'text'}
                           value={setting.value.toString()}
-                          onChange={(e) => {}
-                            const value = setting.type === 'number' 
+                          onChange={(e) => {
+  const value = setting.type === 'number' 
                               ? parseInt(e.target.value) || 0;
                               : e.target.value;
                             updateSystemSetting(setting.id, value);

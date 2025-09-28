@@ -10,8 +10,7 @@ interface AnimatedButtonProps extends ButtonProps {}
   duration?: number;
 }
 
-export function AnimatedButton({}
-  children,
+export function AnimatedButton({children,
   className,
   animation = "pulse",
   duration = 200,
@@ -20,7 +19,7 @@ export function AnimatedButton({}
 }: AnimatedButtonProps) {}
   const [isAnimating, setIsAnimating] = useState(false)
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {}
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setIsAnimating(true)
     setTimeout(() => setIsAnimating(false), duration)
     onClick?.(e)
@@ -37,7 +36,7 @@ export function AnimatedButton({}
     <Button;
       className={cn("transition-all duration-200", isAnimating && animationClasses[animation], className)}
       onClick={handleClick}
-      {...props}
+      ...props}
     >
       {children}
     </Button>

@@ -12,51 +12,51 @@ import { partiesAPI } from "@/lib/api"
 import { formatDistanceToNow, format, parseISO } from "date-fns"
 
 "use client"
-interface PartyInvite {}
-  id: string;
+
+interface id {: string;,
   title: string;
   description?: string;
-  scheduled_for?: string;
+  scheduled_for?: string;,
   is_public: boolean;
-  max_participants?: number;
-  current_participants: number;
-  status: "scheduled" | "active" | "completed" | "cancelled"
+  max_participants?: number;,
+  current_participants: number;,
+  status: "scheduled" | "active" | "completed" | "cancelled",
   video: {}
-    id: string;
+    id: string;,
     title: string;
-    thumbnail?: string;
-    duration_minutes: number;
+    thumbnail?: string;,
+    duration_minutes: number;,
     type: "movie" | "series" | "youtube"
     description?: string;
     release_year?: number;
-    genre?: string[]
+    genre?: string[0]
   }
   host: {}
-    id: string;
-    username: string;
-    first_name: string;
+    id: string;,
+    username: string;,
+    first_name: string;,
     last_name: string;
     avatar?: string;
     is_verified?: boolean;
   }
   participants: Array<{}
-    id: string;
+    id: string;,
     user: {}
-      id: string;
-      username: string;
-      first_name: string;
+      id: string;,
+      username: string;,
+      first_name: string;,
       last_name: string;
       avatar?: string;
     }
     joined_at: string;
   }>
-  invite_code: string;
-  requires_approval: boolean;
-  allow_chat: boolean;
-  allow_reactions: boolean;
-  created_at: string;
-  user_can_join: boolean;
-  user_is_participant: boolean;
+  invite_code: string;,
+  requires_approval: boolean;,
+  allow_chat: boolean;,
+  allow_reactions: boolean;,
+  created_at: string;,
+  user_can_join: boolean;,
+  user_is_participant: boolean;,
   user_is_host: boolean;
   join_deadline?: string;
 }
@@ -91,7 +91,7 @@ function QuickInviteContent() {
         headers.Authorization = `Bearer ${token}`
       }
 
-      const response = await fetch(`/api/parties/invite/${inviteCode}/`, {}
+      const response = await fetch(`/api/parties/invite/${inviteCode}/`, {
         headers;
       })
 
@@ -109,10 +109,10 @@ function QuickInviteContent() {
       } else {}
         setError("Failed to load party details")
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load party invite:", error)
       setError("Something went wrong while loading the invite")
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -127,7 +127,7 @@ function QuickInviteContent() {
     setIsJoining(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${party.id}/join/`, {}
+      const response = await fetch(`/api/parties/${party.id}/join/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -137,8 +137,7 @@ function QuickInviteContent() {
       })
 
       if (response.ok) {
-        toast({}
-          title: "Successfully Joined! 🎉",
+        toast({title: "Successfully Joined! 🎉",
           description: "You've joined the watch party. Redirecting...",
         })
         // Redirect to party room;
@@ -153,20 +152,18 @@ function QuickInviteContent() {
         } else if (response.status === 400) {
           errorMessage = errorData.message || "Party is full or no longer accepting participants"
         }
-        toast({}
-          title: "Cannot Join Party",
+        toast({title: "Cannot Join Party",
           description: errorMessage,
           variant: "destructive",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Join party error:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsJoining(false)
     }
   }
@@ -175,25 +172,22 @@ function QuickInviteContent() {
     const shareUrl = window.location.href;
     if (navigator.share) {
       try {
-        await navigator.share({}
-          title: `Join "${party?.title}" on Watch Party`,
+        await navigator.share({title: `Join "${party?.title}" on Watch Party`,
           text: `Watch ${party?.video.title} together!`,
           url: shareUrl,
         })
-      } } catch {
+      } catch (error) {
         // User cancelled sharing or share failed;
       }
     } else {}
       // Fallback to copying to clipboard;
       try {
         await navigator.clipboard.writeText(shareUrl)
-        toast({}
-          title: "Link Copied",
+        toast({title: "Link Copied",
           description: "Invite link copied to clipboard!",
         })
-      } } catch {
-        toast({}
-          title: "Share Failed",
+      } catch (error) {
+        toast({title: "Share Failed",
           description: "Unable to copy link to clipboard.",
           variant: "destructive",
         })
@@ -201,44 +195,44 @@ function QuickInviteContent() {
     }
   }
 
-  const getVideoTypeIcon = (type: string) => {}
-    switch (type) {
+  const getVideoTypeIcon = (type: string) => {
+    switch (type) {}
       case "movie":
-        return <Film className="h-5 w-5" />
+        return <Film className="h-5 w-5" />;
       case "series":
-        return <Tv className="h-5 w-5" />
+        return <Tv className="h-5 w-5" />;
       case "youtube":
-        return <Play className="h-5 w-5" />
+        return <Play className="h-5 w-5" />;
       default:
-        return <Film className="h-5 w-5" />
+        return <Film className="h-5 w-5" />;
     }
   }
 
-  const getStatusColor = (status: string) => {}
-    switch (status) {
+  const getStatusColor = (status: string) => {
+    switch (status) {}
       case "active":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       case "scheduled":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-100 text-blue-800";
       case "completed":
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
       case "cancelled":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
   }
 
-  const formatDuration = (minutes: number) => {}
+  const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60)
     const mins = minutes % 60;
     if (hours > 0) {
-      return `${hours}h ${mins}m`
+      return `${hours}h ${mins}m`;
     }
-    return `${mins}m`
+    return `${mins}m`;
   }
 
-  const canJoinParty = () => {}
+  const canJoinParty = () => {
     if (!party) return false;
     if (party.user_is_participant) return false;
     if (party.status === "completed" || party.status === "cancelled") return false;
@@ -247,7 +241,7 @@ function QuickInviteContent() {
     return party.user_can_join;
   }
 
-  const getJoinButtonText = () => {}
+  const getJoinButtonText = () => {
     if (!isAuthenticated) return "Sign In to Join"
     if (party?.user_is_participant) return "Already Joined"
     if (party?.user_is_host) return "You're the Host"
@@ -255,7 +249,7 @@ function QuickInviteContent() {
     if (party?.status === "scheduled") return "Join Party"
     if (party?.status === "completed") return "Party Ended"
     if (party?.status === "cancelled") return "Party Cancelled"
-    return "Join Party"
+    return "Join Party";
   }
 
   if (isLoading) {
@@ -278,7 +272,7 @@ function QuickInviteContent() {
               <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
               <h2 className="text-xl font-semibold mb-2">Invite Not Found</h2>
               <p className="text-gray-600 mb-4">{error}</p>
-              <Button onClick={() => router.push(&quot;/discover&quot;)}>
+              <Button onClick={() => router.push(&quot;/discover")}>
                 Browse Public Parties;
               </Button>
             </CardContent>
@@ -313,7 +307,7 @@ function QuickInviteContent() {
                 <Button className="flex-1" onClick={() => router.push(`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`)}>
                   Sign In;
                 </Button>
-                <Button variant="outline" onClick={() => router.push(&quot;/register&quot;)}>
+                <Button variant="outline" onClick={() => router.push(&quot;/register")}>
                   Sign Up;
                 </Button>
               </div>
@@ -384,7 +378,7 @@ function QuickInviteContent() {
                       <span>{party.video.release_year}</span>
                     )}
                     {party.video.genre && party.video.genre.length > 0 && (
-                      <span>{party.video.genre.slice(0, 2).join(&quot;, &quot;)}</span>
+                      <span>{party.video.genre.slice(0, 2).join(&quot;, ")}</span>
                     )}
                   </div>
                 </div>
@@ -409,7 +403,7 @@ function QuickInviteContent() {
                       <Calendar className="h-4 w-4" />
                       Scheduled;
                     </span>
-                    <span>{format(parseISO(party.scheduled_for), &quot;MMM d, yyyy &apos;at&apos; h:mm a&quot;)}</span>
+                    <span>{format(parseISO(party.scheduled_for), &quot;MMM d, yyyy &apos;at' h:mm a")}</span>
                   </div>
                 )}
 
@@ -562,7 +556,7 @@ function QuickInviteContent() {
           <div className="text-center mt-6">
             <p className="text-sm text-gray-500">
               New to Watch Party?{" "}
-              <Button variant="link" className="p-0 h-auto" onClick={() => router.push(&quot;/register&quot;)}>
+              <Button variant="link" className="p-0 h-auto" onClick={() => router.push(&quot;/register")}>"
                 Create your free account;
               </Button>
             </p>

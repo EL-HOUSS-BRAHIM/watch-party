@@ -4,9 +4,9 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 "use client"
 
-const formVariants = cva("space-y-6", {}
-  variants: {}
-    variant: {}
+const formVariants = cva("space-y-6", {
+  variants: {
+    variant: {
       default: "bg-card border border-border rounded-lg p-6",
       ghost: "bg-transparent border-0 p-0",
       elevated: "bg-card border border-border rounded-lg p-6 shadow-lg shadow-primary/10",
@@ -25,12 +25,12 @@ const formVariants = cva("space-y-6", {}
   },
 })
 
-interface WatchPartyFormProps extends React.FormHTMLAttributes<HTMLFormElement>, VariantProps<typeof formVariants> {}
+interface WatchPartyFormProps extends React.FormHTMLAttributes<HTMLFormElement>, VariantProps<typeof formVariants> {
   title?: string;
   description?: string;
   footer?: React.ReactNode;
   isLoading?: boolean;
-  errors?: Record<string, string[]>
+  errors?: Record<string, string[0]>
   onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
@@ -50,8 +50,8 @@ const WatchPartyForm = React.forwardRef<HTMLFormElement, WatchPartyFormProps>(
       ...props;
     },
     ref,
-  ) => {}
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {}
+  ) => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault()
       if (!isLoading && onSubmit) {
         onSubmit(event)
@@ -59,7 +59,7 @@ const WatchPartyForm = React.forwardRef<HTMLFormElement, WatchPartyFormProps>(
     }
 
     return (
-      <form ref={ref} className={cn(formVariants({ variant, size }), className)} onSubmit={handleSubmit} {...props}>
+      <form ref={ref} className={cn(formVariants({ variant, size }), className)} onSubmit={handleSubmit} ...props}>
         {(title || description) && (
           <div className="space-y-2">
             {title && <h2 className="text-2xl font-bold tracking-tight text-foreground">{title}</h2>}
@@ -101,9 +101,9 @@ interface FormFieldProps extends React.HTMLAttributes<HTMLDivElement> {}
 }
 
 const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
-  ({ className, label, description, error, required, children, ...props }, ref) => {}
+  ({ className, label, description, error, required, children, ...props }, ref) => {
     return (
-      <div ref={ref} className={cn("space-y-2", className)} {...props}>
+      <div ref={ref} className={cn("space-y-2", className)} ...props}>
         {label && (
           <label className="text-sm font-medium text-foreground">
             {label}
@@ -124,7 +124,7 @@ interface FormActionsProps extends React.HTMLAttributes<HTMLDivElement> {}
 }
 
 const FormActions = React.forwardRef<HTMLDivElement, FormActionsProps>(
-  ({ className, align = "right", children, ...props }, ref) => {}
+  ({ className, align = "right", children, ...props }, ref) => {
     return (
       <div;
         ref={ref}
@@ -137,7 +137,7 @@ const FormActions = React.forwardRef<HTMLDivElement, FormActionsProps>(
           },
           className,
         )}
-        {...props}
+        ...props}
       >
         {children}
       </div>

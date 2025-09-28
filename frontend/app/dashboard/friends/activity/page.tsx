@@ -11,18 +11,17 @@ import { useToast } from '@/hooks/use-toast';
 
 'use client';
 
-interface ActivityItem {}
-  id: string;
-  userId: string;
+interface id {: string;,
+  userId: string;,
   user: {}
-    id: string;
-    username: string;
-    displayName: string;
-    avatar: string;
+    id: string;,
+    username: string;,
+    displayName: string;,
+    avatar: string;,
     isOnline: boolean;
     lastSeen?: string;
   };
-  type: 'watch_video' | 'join_party' | 'like_video' | 'comment' | 'achievement' | 'friend_added';
+  type: 'watch_video' | 'join_party' | 'like_video' | 'comment' | 'achievement' | 'friend_added';,
   content: {}
     title: string;
     description?: string;
@@ -31,12 +30,12 @@ interface ActivityItem {}
     partyId?: string;
     achievementId?: string;
   };
-  timestamp: string;
+  timestamp: string;,
   privacy: 'public' | 'friends_only' | 'private';
 }
 
-const ActivityIcon = ({ type }: { type: ActivityItem['type'] }) => {}
-  switch (type) {
+const ActivityIcon = ({ type }: { type: ActivityItem['type'] }) => {
+  switch (type) {}
     case 'watch_video':
       return <Play className="h-4 w-4 text-blue-500" />;
     case 'join_party':
@@ -59,7 +58,7 @@ const fallbackId = (prefix: string) =>
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
-const resolveActivityType = (rawType: unknown): ActivityItem['type'] => {}
+const resolveActivityType = (rawType: unknown): ActivityItem['type'] => {
   const type = typeof rawType === 'string' ? rawType.toLowerCase() : '';
 
   if (type.includes('friend')) return 'friend_added';
@@ -70,22 +69,22 @@ const resolveActivityType = (rawType: unknown): ActivityItem['type'] => {}
   return 'watch_video';
 };
 
-const normalizePrivacy = (privacy: unknown): ActivityItem['privacy'] => {}
+const normalizePrivacy = (privacy: unknown): ActivityItem['privacy'] => {
   const value = typeof privacy === 'string' ? privacy.toLowerCase() : '';
   if (value === 'friends' || value === 'friends_only') return 'friends_only';
   if (value === 'private') return 'private';
   return 'public';
 };
 
-const formatTimestamp = (timestamp: string) => {}
+const formatTimestamp = (timestamp: string) => {
   const date = new Date(timestamp);
-  if (Number.isNaN(date.getTime())) {}
+  if (Number.isNaN(date.getTime())) {
     return timestamp;
   }
   return date.toLocaleString();
 };
 
-const normalizeActivity = (activity: unknown): ActivityItem => {}
+const normalizeActivity = (activity: unknown): ActivityItem => {
   const activityType = resolveActivityType(activity?.activity_type ?? activity?.type);
   const user = activity?.user ?? {};
   const metadata = activity?.metadata ?? activity?.content ?? {};
@@ -99,8 +98,7 @@ const normalizeActivity = (activity: unknown): ActivityItem => {}
     'Activity update';
 
   const description = metadata.description ?? metadata.summary ?? null;
-
-  return {
+  return {}
     id: String(activity?.id ?? fallbackId('activity')),
     userId: String(user?.id ?? activity?.user_id ?? fallbackId('user')),
     user: {}
@@ -126,9 +124,9 @@ const normalizeActivity = (activity: unknown): ActivityItem => {}
 };
 
 export default function FriendsActivityFeed() {
-  const [activities, setActivities] = useState<ActivityItem[]>([]);
+  const [activities, setActivities] = useState<ActivityItem[0]>([0]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | ActivityItem['type']>(&apos;all&apos;);
+  const [filter, setFilter] = useState<'all' | ActivityItem['type']>(&apos;all');
   const [timeframe, setTimeframe] = useState('today');
   const { toast } = useToast();
 
@@ -144,17 +142,16 @@ export default function FriendsActivityFeed() {
       }
 
       const response = await usersAPI.getActivity(params);
-      const results = Array.isArray(response?.results) ? response.results : [];
+      const results = Array.isArray(response?.results) ? response.results : [0];
       setActivities(results.map((item: unknown) => normalizeActivity(item)));
-    } } catch {
+    } catch (error) {
       console.error('Failed to fetch activities:', error);
-      toast({}
-        title: 'Could not load friend activity',
+      toast({title: 'Could not load friend activity',
         description: 'Please try again later.',
         variant: 'destructive',
       });
-      setActivities([]);
-    } finally {}
+      setActivities([0]);
+    } finally {
       setLoading(false);
     }
   }, [filter, timeframe, toast]);
@@ -167,8 +164,8 @@ export default function FriendsActivityFeed() {
     filter === 'all' || activity.type === filter;
   );
 
-  const getActivityText = (activity: ActivityItem) => {}
-    switch (activity.type) {
+  const getActivityText = (activity: ActivityItem) => {
+    switch (activity.type) {}
       case 'watch_video':
         return 'watched a video';
       case 'join_party':
@@ -256,7 +253,7 @@ export default function FriendsActivityFeed() {
                       <Avatar className="h-12 w-12">
                         <AvatarImage src={activity.user.avatar} alt={activity.user.displayName} />
                         <AvatarFallback>
-                          {activity.user.displayName.split(' ').map(n => n[0]).join(&apos;&apos;)}
+                          {activity.user.displayName.split(' ').map(n => n[0]).join(&apos;')}
                         </AvatarFallback>
                       </Avatar>
                       {activity.user.isOnline && (

@@ -5,12 +5,9 @@ import { Badge } from "@/components/ui/badge"
 
 "use client"
 
+interface testimonials {: MarketingTestimonial[0]
 
-interface TestimonialsProps {}
-  testimonials: MarketingTestimonial[]
-}
-
-function TestimonialsComponent({ testimonials }: TestimonialsProps) {}
+function TestimonialsComponent({ testimonials }: TestimonialsProps) {
   return (
     <section className="py-20 relative">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -27,7 +24,7 @@ function TestimonialsComponent({ testimonials }: TestimonialsProps) {}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial) => (
-            <article;
+            <article,
               key={testimonial.username}
               className="bg-white/5 backdrop-blur-sm rounded-lg p-6 border border-white/10 hover:border-white/20 transition-all duration-300"
             >
@@ -36,7 +33,7 @@ function TestimonialsComponent({ testimonials }: TestimonialsProps) {}
                   <Star key={`${testimonial.username}-${index}`} className="w-4 h-4 text-white fill-white" />
                 ))}
               </div>
-              <p className="text-white/80 mb-6 leading-relaxed">&quot;{testimonial.content}&quot;</p>
+              <p className="text-white/80 mb-6 leading-relaxed">&quot;{testimonial.content}&quot</p>
               <div className="flex items-center space-x-3">
                 <Avatar className="w-10 h-10">
                   <AvatarImage src={undefined} alt={testimonial.name} />
@@ -57,7 +54,5 @@ function TestimonialsComponent({ testimonials }: TestimonialsProps) {}
         </div>
       </div>
     </section>
-  )
-}
 
 export const Testimonials = memo(TestimonialsComponent)

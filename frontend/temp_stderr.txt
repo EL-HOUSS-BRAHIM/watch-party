@@ -1,9 +1,5 @@
 npm warn config ignoring workspace config at /home/runner/work/watch-party/watch-party/frontend/.npmrc
 
-> my-v0-project@0.1.0 lint
-> next lint
-
-
 ./app/(auth)/2fa/setup/page.tsx
 54:8  Error: Parsing error: ',' expected.
 
@@ -229,10 +225,6 @@ Error: Parsing error: 'from' expected.
 ./app/dashboard/settings/integrations/discord/page.tsx
 Error: Parsing error: 'from' expected.
 
-./app/dashboard/settings/integrations/google-drive/page.tsx
-1:10  Warning: 'Cloud' is defined but never used.  @typescript-eslint/no-unused-vars
-5:1  Warning: Expected an assignment or function call and instead saw an expression.  @typescript-eslint/no-unused-expressions
-
 ./app/dashboard/settings/integrations/netflix/page.tsx
 Error: Parsing error: 'from' expected.
 
@@ -292,10 +284,6 @@ Error: Parsing error: Declaration or statement expected.
 
 ./app/layout.tsx
 20:4  Error: Parsing error: ',' expected.
-
-./app/not-found.tsx
-3:37  Warning: 'Refresh' is defined but never used.  @typescript-eslint/no-unused-vars
-6:1  Warning: Expected an assignment or function call and instead saw an expression.  @typescript-eslint/no-unused-expressions
 
 ./app/page.tsx
 Error: Parsing error: 'from' expected.

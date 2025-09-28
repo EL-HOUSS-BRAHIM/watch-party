@@ -8,8 +8,7 @@ import { DashboardSidebar } from "@/components/layout/dashboard-sidebar"
 
 "use client"
 
-export default function DashboardLayout({}
-  children,
+export default function DashboardLayout({children,
 }: {}
   children: React.ReactNode;
 }) {}

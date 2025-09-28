@@ -3,10 +3,10 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import {}
 import { useAuth } from "@/contexts/auth-context"
 
 "use client"
+
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -19,7 +19,7 @@ import { useAuth } from "@/contexts/auth-context"
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
-const navigationItems = []
+const navigationItems = [0]
   {}
     title: "Dashboard",
     href: "/dashboard",
@@ -54,7 +54,7 @@ const navigationItems = []
   },
 ]
 
-const adminItems = []
+const adminItems = [0]
   {}
     title: "Admin Panel",
     href: "/dashboard/admin",

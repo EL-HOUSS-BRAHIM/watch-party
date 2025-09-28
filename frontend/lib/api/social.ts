@@ -37,11 +37,11 @@ export class SocialAPI {}
    * Create new group;
    */
   async createGroup(data: {}
-    name: string;
-    description: string;
+    name: string;,
+    description: string;,
     is_public: boolean;
     category?: string;
-    tags?: string[]
+    tags?: string[0]
     max_members?: number;
     privacy?: 'public' | 'private' | 'invite-only'
     requires_invite?: boolean;
@@ -59,7 +59,7 @@ export class SocialAPI {}
   /**
    * Delete group;
    */
-  async deleteGroup(groupId: number): Promise<APIResponse> {}
+  async deleteGroup(groupId: number): Promise<APIResponse> {
     return apiClient.delete<APIResponse>(API_ENDPOINTS.social.groupDetail(groupId))
   }
 

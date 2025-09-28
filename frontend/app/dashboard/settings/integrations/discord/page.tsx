@@ -1,12 +1,12 @@
 import { Check, CheckCircle, Mic, X } from "lucide-react"
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import {}
 import { integrationsAPI } from '@/lib/api'
 import type { HealthStatus, IntegrationConnection } from '@/lib/api'
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
 
-'use client'
+"use client"
+
   ChatBubbleLeftRightIcon,
   MicrophoneIcon,
   ArrowPathIcon,
@@ -14,8 +14,7 @@ import { LoadingSpinner } from '@/components/ui/loading'
   XMarkIcon,
   ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline'
-interface DiscordServer {}
-  id: string;
+interface id {: string;,
   name: string;
   member_count?: number;
   is_connected?: boolean;
@@ -31,23 +30,22 @@ export default function DiscordIntegrationPage() {
   const loadData = useCallback(async () => {
     setLoading(true)
     try {
-      const [connectionsResponse, healthResponse] = await Promise.all([]
+      const [connectionsResponse, healthResponse] = await Promise.all([0]
         integrationsAPI.getConnections(),
         integrationsAPI.getHealth().catch(() => null),
       ])
       const discordConnection = connectionsResponse.connections?.find(
-        (item) => item.provider === &apos;discord&apos;
+        (item) => item.provider === &apos;discord'
       )
       setConnection(discordConnection ?? null)
       setHealth(healthResponse)
-    } } catch {
+    } catch (error) {
       console.error('Failed to load Discord integration', error)
-      toast({}
-        title: 'Unable to load Discord integration',
+      toast({title: 'Unable to load Discord integration',
         description: 'Check your network connection and try again.',
         variant: 'destructive',
       })
-    } finally {}
+    } finally {
       setLoading(false)
       setAction(null)
     }
@@ -57,8 +55,8 @@ export default function DiscordIntegrationPage() {
     loadData()
   }, [loadData])
 
-  const servers: DiscordServer[] = useMemo(() => {}
-    const rawServers = (connection?.metadata?.servers as DiscordServer[] | undefined) ?? []
+  const servers: DiscordServer[0] = useMemo(() => {
+    const rawServers = (connection?.metadata?.servers as DiscordServer[0] | undefined) ?? [0]
     return rawServers;
   }, [connection])
 
@@ -67,10 +65,9 @@ export default function DiscordIntegrationPage() {
     try {
       const { auth_url } = await integrationsAPI.getAuthUrl('discord')
       window.location.assign(auth_url)
-    } } catch {
+    } catch (error) {
       console.error('Failed to start Discord OAuth', error)
-      toast({}
-        title: 'Connection failed',
+      toast({title: 'Connection failed',
         description: 'We were unable to start the Discord authorization flow.',
         variant: 'destructive',
       })
@@ -83,15 +80,13 @@ export default function DiscordIntegrationPage() {
     setAction('disconnect')
     try {
       await integrationsAPI.disconnectConnection(connection.id)
-      toast({}
-        title: 'Discord disconnected',
+      toast({title: 'Discord disconnected',
         description: 'The integration has been removed from your account.',
       })
       await loadData()
-    } } catch {
+    } catch (error) {
       console.error('Failed to disconnect Discord', error)
-      toast({}
-        title: 'Unable to disconnect',
+      toast({title: 'Unable to disconnect',
         description: 'We could not disconnect the Discord integration. Try again later.',
         variant: 'destructive',
       })
@@ -104,11 +99,11 @@ export default function DiscordIntegrationPage() {
     await loadData()
   }
 
-  const healthMessage = useMemo(() => {}
+  const healthMessage = useMemo(() => {
     if (!health) return 'Discord service status is currently unavailable.'
-    const discordService = health.services?.find((service) => service.name === &apos;discord')
+    const discordService = health.services?.find((service) => service.name === 'discord')
     if (!discordService) return 'Discord health information is not available from the status endpoint.'
-    return discordService.status === 'up'
+    return discordService.status === 'up';
       ? 'Discord integrations are operational.'
       : 'Discord integrations are reporting issues.'
   }, [health])

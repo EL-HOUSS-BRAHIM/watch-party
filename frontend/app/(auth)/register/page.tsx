@@ -12,12 +12,12 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Checkbox } from "@/components/ui/checkbox"
 
 "use client"
+
 export default function RegisterPage() {
   const { register, socialLogin, isLoading } = useAuth()
   const { toast } = useToast()
 
-  const [formData, setFormData] = useState({}
-    firstName: "",
+  const [formData, setFormData] = useState({firstName: "",
     lastName: "",
     email: "",
     password: "",
@@ -30,7 +30,7 @@ export default function RegisterPage() {
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [passwordStrength, setPasswordStrength] = useState(0)
 
-  const validatePassword = (password: string) => {}
+  const validatePassword = (password: string) => {
     let strength = 0;
     if (password.length >= 8) strength++
     if (/[A-Z]/.test(password)) strength++
@@ -44,18 +44,18 @@ export default function RegisterPage() {
     setPasswordStrength(validatePassword(formData.password))
   }, [formData.password])
 
-  const validateForm = () => {}
-    const newErrors: Record<string, string> = { if (!formData.firstName.trim()) {}
+  const validateForm = () => {
+    const newErrors: Record<string, string> = { if (!formData.firstName.trim()) {
       newErrors.firstName = "First name is required"
     }
 
-    if (!formData.lastName.trim()) {}
+    if (!formData.lastName.trim()) {
       newErrors.lastName = "Last name is required"
     }
 
     if (!formData.email) {
       newErrors.email = "Email is required"
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {}
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Please enter a valid email address"
     }
 
@@ -81,71 +81,67 @@ export default function RegisterPage() {
     return Object.keys(newErrors).length === 0;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {}
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!validateForm()) return;
     setIsSubmitting(true)
-    setErrors({})
+    setErrors({)
 
     try {
-      await register({}
-        first_name: formData.firstName,
+      await register({first_name: formData.firstName,
         last_name: formData.lastName,
         email: formData.email,
         password: formData.password,
         confirm_password: formData.confirmPassword,
       })
 
-      toast({}
-        title: "Account Created!",
+      toast({title: "Account Created!",
         description: "Welcome to WatchParty! Your account has been created successfully.",
         duration: 5000,
       })
-    } } catch {
+    } catch {
       const errorMessage = (error as { message?: string })?.message || "Registration failed. Please try again."
       setErrors({ general: errorMessage })
-      toast({}
-        title: "Registration Failed",
+      toast({title: "Registration Failed",
         description: errorMessage,
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSubmitting(false)
     }
   }
 
-  const handleSocialLogin = async (provider: "google" | "github") => {}
+  const handleSocialLogin = async (provider: "google" | "github") => {
     try {
       await socialLogin(provider)
-    } } catch {
-      toast({}
-        title: "Social Registration Failed",
+    } catch {
+      toast({title: "Social Registration Failed",
         description: (error as { message?: string })?.message || `Failed to register with ${provider}`,
         variant: "destructive",
       })
     }
   }
 
-  const handleInputChange = (field: string, value: string) => {}
-    setFormData((prev) => ({ ...prev, [field]: value }))
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => (...prev, [field]: value }))
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: &quot;&quot; }))
+      setErrors((prev) => (...prev, [field]: &quot;" }))
     }
   }
 
-  const getPasswordStrengthColor = () => {}
+  const getPasswordStrengthColor = () => {
     if (passwordStrength <= 1) return "bg-red-500"
     if (passwordStrength <= 2) return "bg-yellow-500"
     if (passwordStrength <= 3) return "bg-blue-500"
-    return "bg-green-500"
+    return "bg-green-500";
   }
 
-  const getPasswordStrengthText = () => {}
+  const getPasswordStrengthText = () => {
     if (passwordStrength <= 1) return "Weak"
     if (passwordStrength <= 2) return "Fair"
     if (passwordStrength <= 3) return "Good"
-    return "Strong"
+    return "Strong";
   }
 
   if (isLoading) {
@@ -199,7 +195,7 @@ export default function RegisterPage() {
         <div className="grid grid-cols-2 gap-3">
           <Button;
             variant="outline"
-            onClick={() => handleSocialLogin(&quot;google&quot;)}
+            onClick={() => handleSocialLogin(&quot;google")}
             disabled={isSubmitting}
             className="glass-card border-white/20 hover:border-neon-blue/50 hover:bg-neon-blue/10 text-white transition-all duration-300"
           >
@@ -208,7 +204,7 @@ export default function RegisterPage() {
           </Button>
           <Button;
             variant="outline"
-            onClick={() => handleSocialLogin(&quot;github&quot;)}
+            onClick={() => handleSocialLogin(&quot;github")}
             disabled={isSubmitting}
             className="glass-card border-white/20 hover:border-neon-purple/50 hover:bg-neon-purple/10 text-white transition-all duration-300"
           >
@@ -243,7 +239,7 @@ export default function RegisterPage() {
                   type="text"
                   placeholder="First name"
                   value={formData.firstName}
-                  onChange={(e) => handleInputChange(&quot;firstName&quot;, e.target.value)}
+                  onChange={(e) => handleInputChange(&quot;firstName", e.target.value)}
                   className={`pl-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${}
                     errors.firstName ? "border-red-500/50 focus:border-red-500" : ""
                   }`}
@@ -269,7 +265,7 @@ export default function RegisterPage() {
                 type="text"
                 placeholder="Last name"
                 value={formData.lastName}
-                onChange={(e) => handleInputChange(&quot;lastName&quot;, e.target.value)}
+                onChange={(e) => handleInputChange(&quot;lastName", e.target.value)}
                 className={`pl-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${}
                   errors.lastName ? "border-red-500/50 focus:border-red-500" : ""
                 }`}
@@ -298,7 +294,7 @@ export default function RegisterPage() {
                 type="email"
                 placeholder="Enter your email"
                 value={formData.email}
-                onChange={(e) => handleInputChange(&quot;email&quot;, e.target.value)}
+                onChange={(e) => handleInputChange(&quot;email", e.target.value)}
                 className={`pl-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${}
                   errors.email ? "border-red-500/50 focus:border-red-500" : ""
                 }`}
@@ -327,7 +323,7 @@ export default function RegisterPage() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Create a strong password"
                 value={formData.password}
-                onChange={(e) => handleInputChange(&quot;password&quot;, e.target.value)}
+                onChange={(e) => handleInputChange(&quot;password", e.target.value)}
                 className={`pl-10 pr-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${}
                   errors.password ? "border-red-500/50 focus:border-red-500" : ""
                 }`}
@@ -341,7 +337,7 @@ export default function RegisterPage() {
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                 disabled={isSubmitting}
               >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4&quot; />}
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4" />}"
               </button>
             </div>
 
@@ -393,7 +389,7 @@ export default function RegisterPage() {
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
-                onChange={(e) => handleInputChange(&quot;confirmPassword&quot;, e.target.value)}
+                onChange={(e) => handleInputChange(&quot;confirmPassword", e.target.value)}
                 className={`pl-10 pr-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${}
                   errors.confirmPassword ? "border-red-500/50 focus:border-red-500" : ""
                 } ${}
@@ -411,7 +407,7 @@ export default function RegisterPage() {
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                 disabled={isSubmitting}
               >
-                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4&quot; />}
+                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4" />}"
               </button>
               {formData.confirmPassword && formData.password === formData.confirmPassword && (
                 <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
@@ -434,10 +430,10 @@ export default function RegisterPage() {
             <Checkbox;
               id="terms"
               checked={agreedToTerms}
-              onCheckedChange={(checked) => {}
-                setAgreedToTerms(checked as boolean)
+              onCheckedChange={(checked) => {
+  setAgreedToTerms(checked as boolean)
                 if (errors.terms) {
-                  setErrors((prev) => ({ ...prev, terms: &quot;&quot; }))
+                  setErrors((prev) => (...prev, terms: &quot;" }))
                 }
               }}
               className="mt-1 border-white/20 data-[state=checked]:bg-neon-blue data-[state=checked]:border-neon-blue"
@@ -447,7 +443,7 @@ export default function RegisterPage() {
               I agree to the{" "}
               <Link href="/terms" className="text-neon-blue hover:text-neon-purple transition-colors">
                 Terms of Service;
-              </Link>{&quot; &quot;}
+              </Link>{&quot; "}
               and{" "}
               <Link href="/privacy" className="text-neon-blue hover:text-neon-purple transition-colors">
                 Privacy Policy;

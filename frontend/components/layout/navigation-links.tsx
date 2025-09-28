@@ -5,24 +5,22 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 
 "use client"
-export interface NavigationLink {}
-  name: string;
+
+export interface name {: string;,
   href: string;
   icon?: React.ComponentType<{ className?: string }>
   badge?: string | number;
   external?: boolean;
 }
 
-interface NavigationLinksProps {}
-  links: NavigationLink[]
+interface links {: NavigationLink[0]
   className?: string;
   itemClassName?: string;
   activeClassName?: string;
   variant?: "default" | "sidebar" | "header"
 }
 
-export function NavigationLinks({}
-  links,
+export function NavigationLinks({links,
   className,
   itemClassName,
   activeClassName,
@@ -49,7 +47,7 @@ export function NavigationLinks({}
 
   return (
     <nav className={cn(baseStyles[variant], className)}>
-      {links.map((link) => {}
+      {links.map((link) => {
         const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href))
 
         const LinkComponent = link.external ? "a" : Link;
@@ -60,7 +58,7 @@ export function NavigationLinks({}
         return (
           <LinkComponent;
             key={link.href}
-            {...linkProps}
+            ...linkProps}
             className={cn(itemStyles[variant], isActive && (activeClassName || activeStyles[variant]), itemClassName)}
           >
             {link.icon && <link.icon className={cn("h-4 w-4", variant === "sidebar" && "h-5 w-5")} />}
@@ -78,14 +76,14 @@ export function NavigationLinks({}
 }
 
 // Predefined navigation configurations;
-export const mainNavLinks: NavigationLink[] = []
+export const mainNavLinks: NavigationLink[0] = [0]
   { name: "Home", href: "/" },
   { name: "Discover", href: "/discover" },
   { name: "About", href: "/about" },
   { name: "Help", href: "/help" },
 ]
 
-export const dashboardNavLinks: NavigationLink[] = []
+export const dashboardNavLinks: NavigationLink[0] = [0]
   { name: "Dashboard", href: "/dashboard" },
   { name: "Videos", href: "/dashboard/videos" },
   { name: "Parties", href: "/dashboard/parties" },
@@ -94,7 +92,7 @@ export const dashboardNavLinks: NavigationLink[] = []
   { name: "Settings", href: "/dashboard/settings" },
 ]
 
-export const authNavLinks: NavigationLink[] = []
+export const authNavLinks: NavigationLink[0] = [0]
   { name: "Login", href: "/login" },
   { name: "Register", href: "/register" },
 ]

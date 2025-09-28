@@ -5,81 +5,79 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
-'use client'
-interface ParticipantStatus {}
-  id: string;
-  username: string;
-  display_name: string;
-  avatar_url: string | null;
-  role: 'host' | 'co-host' | 'member'
-  connection_status: 'connected' | 'reconnecting' | 'disconnected'
-  sync_status: 'synced' | 'buffering' | 'out_of_sync'
-  video_position: number;
-  last_heartbeat: string;
-  joined_at: string;
+"use client"
+
+interface id {: string;,
+  username: string;,
+  display_name: string;,
+  avatar_url: string | null;,
+  role: 'host' | 'co-host' | 'member',
+  connection_status: 'connected' | 'reconnecting' | 'disconnected',
+  sync_status: 'synced' | 'buffering' | 'out_of_sync',
+  video_position: number;,
+  last_heartbeat: string;,
+  joined_at: string;,
   ping: number;
 }
 
-interface ParticipantListSidebarProps {}
-  participants: ParticipantStatus[]
+interface participants {: ParticipantStatus[0],
   currentVideoPosition: number;
   isHost?: boolean;
   onParticipantClick?: (participantId: string) => void;
 }
 
-export function ParticipantListSidebar({}
-  participants,
+export function ParticipantListSidebar({participants,
   currentVideoPosition,
   isHost = false,
   onParticipantClick;
 }: ParticipantListSidebarProps) {}
   const [syncTolerance] = useState(2) // seconds;
-  const getConnectionIcon = (status: string, ping: number) => {}
+  const getConnectionIcon = (status: string, ping: number) => {
     if (status === 'disconnected') {
-      return <WifiOff className="w-4 h-4 text-red-500" />
+      return <WifiOff className="w-4 h-4 text-red-500" />;
     }
     if (status === 'reconnecting') {
-      return <AlertCircle className="w-4 h-4 text-yellow-500 animate-pulse" />
+      return <AlertCircle className="w-4 h-4 text-yellow-500 animate-pulse" />;
     }
     if (ping > 500) {
-      return <Wifi className="w-4 h-4 text-yellow-500" />
+      return <Wifi className="w-4 h-4 text-yellow-500" />;
     }
-    return <Wifi className="w-4 h-4 text-green-500" />
+    return <Wifi className="w-4 h-4 text-green-500" />;
   }
 
-  const getSyncIcon = (syncStatus: string, timeDiff: number) => {}
+  const getSyncIcon = (syncStatus: string, timeDiff: number) => {
     if (syncStatus === 'buffering') {
-      return <Activity className="w-4 h-4 text-blue-500 animate-pulse" />
+      return <Activity className="w-4 h-4 text-blue-500 animate-pulse" />;
     }
-    if (Math.abs(timeDiff) > syncTolerance) {}
-      return <AlertCircle className="w-4 h-4 text-red-500" />
+    if (Math.abs(timeDiff) > syncTolerance) {
+      return <AlertCircle className="w-4 h-4 text-red-500" />;
     }
-    return <CheckCircle className="w-4 h-4 text-green-500" />
+    return <CheckCircle className="w-4 h-4 text-green-500" />;
   }
 
-  const getRoleIcon = (role: string) => {}
-    switch (role) {
+  const getRoleIcon = (role: string) => {
+    switch (role) {}
       case 'host':
-        return <Crown className="w-4 h-4 text-yellow-500" />
+        return <Crown className="w-4 h-4 text-yellow-500" />;
       case 'co-host':
-        return <Shield className="w-4 h-4 text-blue-500" />
+        return <Shield className="w-4 h-4 text-blue-500" />;
       default:
         return null;
     }
   }
 
-  const formatTime = (seconds: number) => {}
+  const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60)
     const remainingSeconds = Math.floor(seconds % 60)
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   }
 
-  const formatPing = (ping: number) => {}
-    if (ping > 1000) return &apos;1000+ ms&apos;
-    return `${ping} ms`
+  const formatPing = (ping: number) => {
+    if (ping > 1000) return &apos;1000+ ms'
+    return `${ping} ms`;
   }
 
-  const connectedCount = participants.filter(p => p.connection_status === &apos;connected').length;
+  const connectedCount = participants.filter(p => p.connection_status === 'connected').length;
   const syncedCount = participants.filter(p => 
     p.connection_status === 'connected' && 
     Math.abs(p.video_position - currentVideoPosition) <= syncTolerance;
@@ -108,7 +106,7 @@ export function ParticipantListSidebar({}
       <CardContent className="p-0">
         <ScrollArea className="h-[calc(100vh-200px)]">
           <div className="space-y-1 p-4">
-            {participants.map((participant) => {}
+            {participants.map((participant) => {
               const timeDiff = participant.video_position - currentVideoPosition;
               const isOutOfSync = Math.abs(timeDiff) > syncTolerance;
               return (
@@ -161,7 +159,7 @@ export function ParticipantListSidebar({}
                         <span>
                           {participant.connection_status === 'connected' 
                             ? (isOutOfSync;
-                                ? `${timeDiff > 0 ? &apos;+&apos; : &apos;'}${timeDiff.toFixed(1)}s` 
+                                ? `${timeDiff > 0 ? &apos;+' : ''}${timeDiff.toFixed(1)}s` 
                                 : 'Synced'
                               )
                             : participant.connection_status;

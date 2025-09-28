@@ -12,59 +12,57 @@ import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 
 "use client"
-interface NotificationSettings {}
+
+interface NotificationSettings {
   email: {}
-    friendRequests: boolean;
-    partyInvites: boolean;
-    newMessages: boolean;
-    partyUpdates: boolean;
-    systemUpdates: boolean;
+    friendRequests: boolean;,
+    partyInvites: boolean;,
+    newMessages: boolean;,
+    partyUpdates: boolean;,
+    systemUpdates: boolean;,
     newsletter: boolean;
   }
   push: {}
-    friendRequests: boolean;
-    partyInvites: boolean;
-    newMessages: boolean;
-    partyUpdates: boolean;
+    friendRequests: boolean;,
+    partyInvites: boolean;,
+    newMessages: boolean;,
+    partyUpdates: boolean;,
     liveNotifications: boolean;
   }
   inApp: {}
-    friendRequests: boolean;
-    partyInvites: boolean;
-    newMessages: boolean;
-    partyUpdates: boolean;
-    reactions: boolean;
+    friendRequests: boolean;,
+    partyInvites: boolean;,
+    newMessages: boolean;,
+    partyUpdates: boolean;,
+    reactions: boolean;,
     mentions: boolean;
   }
 }
 
-interface AppearanceSettings {}
-  theme: "light" | "dark" | "system"
-  accentColor: string;
-  fontSize: "small" | "medium" | "large"
-  compactMode: boolean;
-  animations: boolean;
+interface theme {: "light" | "dark" | "system",
+  accentColor: string;,
+  fontSize: "small" | "medium" | "large",
+  compactMode: boolean;,
+  animations: boolean;,
   autoPlayVideos: boolean;
 }
 
-interface PrivacySettings {}
-  profileVisibility: "public" | "friends" | "private"
-  showOnlineStatus: boolean;
-  showLastSeen: boolean;
-  allowFriendRequests: boolean;
-  allowMessages: boolean;
-  showActivity: boolean;
-  dataCollection: boolean;
+interface profileVisibility {: "public" | "friends" | "private",
+  showOnlineStatus: boolean;,
+  showLastSeen: boolean;,
+  allowFriendRequests: boolean;,
+  allowMessages: boolean;,
+  showActivity: boolean;,
+  dataCollection: boolean;,
   analytics: boolean;
 }
 
-interface PlaybackSettings {}
-  autoPlay: boolean;
-  defaultQuality: "auto" | "1080p" | "720p" | "480p" | "360p"
-  volume: number;
-  muted: boolean;
-  subtitles: boolean;
-  subtitleLanguage: string;
+interface autoPlay {: boolean;,
+  defaultQuality: "auto" | "1080p" | "720p" | "480p" | "360p",
+  volume: number;,
+  muted: boolean;,
+  subtitles: boolean;,
+  subtitleLanguage: string;,
   playbackSpeed: number;
 }
 
@@ -77,7 +75,7 @@ export default function SettingsPage() {
   const [isSaving, setSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  const [notifications, setNotifications] = useState<NotificationSettings>({}
+  const [notifications, setNotifications] = useState<NotificationSettings>({
     email: {}
       friendRequests: true,
       partyInvites: true,
@@ -103,7 +101,7 @@ export default function SettingsPage() {
     },
   })
 
-  const [appearance, setAppearance] = useState<AppearanceSettings>({}
+  const [appearance, setAppearance] = useState<AppearanceSettings>({
     theme: "system",
     accentColor: "#3b82f6",
     fontSize: "medium",
@@ -112,7 +110,7 @@ export default function SettingsPage() {
     autoPlayVideos: true,
   })
 
-  const [privacy, setPrivacy] = useState<PrivacySettings>({}
+  const [privacy, setPrivacy] = useState<PrivacySettings>({
     profileVisibility: "public",
     showOnlineStatus: true,
     showLastSeen: true,
@@ -123,7 +121,7 @@ export default function SettingsPage() {
     analytics: true,
   })
 
-  const [playback, setPlayback] = useState<PlaybackSettings>({}
+  const [playback, setPlayback] = useState<PlaybackSettings>({
     autoPlay: true,
     defaultQuality: "auto",
     volume: 80,
@@ -135,12 +133,12 @@ export default function SettingsPage() {
 
   useEffect(() => {
     loadSettings()
-  }, [])
+  }, [0])
 
   const loadSettings = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/settings/", {}
+      const response = await fetch("/api/users/settings/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -153,14 +151,13 @@ export default function SettingsPage() {
         setPrivacy(settings.privacy || privacy)
         setPlayback(settings.playback || playback)
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load settings:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load settings.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -169,14 +166,13 @@ export default function SettingsPage() {
     setSaving(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/settings/", {}
+      const response = await fetch("/api/users/settings/", {
         method: "PATCH",
         headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({}
-          notifications,
+        body: JSON.stringify({notifications,
           appearance,
           privacy,
           playback,
@@ -184,21 +180,19 @@ export default function SettingsPage() {
       })
 
       if (response.ok) {
-        toast({}
-          title: "Settings Saved",
+        toast({title: "Settings Saved",
           description: "Your settings have been updated successfully.",
         })
       } else {}
         throw new Error("Failed to save settings")
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to save settings:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to save settings. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setSaving(false)
     }
   }
@@ -206,7 +200,7 @@ export default function SettingsPage() {
   const exportData = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/export-data/", {}
+      const response = await fetch("/api/users/export-data/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -223,15 +217,13 @@ export default function SettingsPage() {
         document.body.removeChild(a)
         window.URL.revokeObjectURL(url)
 
-        toast({}
-          title: "Data Exported",
+        toast({title: "Data Exported",
           description: "Your data has been exported successfully.",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to export data:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to export data.",
         variant: "destructive",
       })
@@ -247,7 +239,7 @@ export default function SettingsPage() {
 
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/delete-account/", {}
+      const response = await fetch("/api/users/delete-account/", {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -255,19 +247,17 @@ export default function SettingsPage() {
       })
 
       if (response.ok) {
-        toast({}
-          title: "Account Deleted",
+        toast({title: "Account Deleted",
           description: "Your account has been permanently deleted.",
         })
         // Redirect to home page after a delay;
-        setTimeout(() => {}
+        setTimeout(() => {
           window.location.href = "/"
         }, 2000)
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to delete account:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to delete account.",
         variant: "destructive",
       })
@@ -292,7 +282,7 @@ export default function SettingsPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">"
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -354,7 +344,7 @@ export default function SettingsPage() {
                 {Object.entries(notifications.email).map(([key, value]) => (
                   <div key={key} className="flex items-center justify-between">
                     <div>
-                      <Label className="capitalize">{key.replace(/([A-Z])/g, &quot; $1&quot;).trim()}</Label>
+                      <Label className="capitalize">{key.replace(/([A-Z])/g, &quot; $1").trim()}</Label>&quot;
                       <p className="text-sm text-muted-foreground">
                         {key === "friendRequests" && "Get notified when someone sends you a friend request"}
                         {key === "partyInvites" && "Receive invitations to watch parties"}
@@ -367,9 +357,9 @@ export default function SettingsPage() {
                     <Switch;
                       checked={value}
                       onCheckedChange={(checked) =>
-                        setNotifications((prev) => ({}
+                        setNotifications((prev) => ({
                           ...prev,
-                          email: { ...prev.email, [key]: checked },
+                          email: ...prev.email, [key]: checked },
                         }))
                       }
                     />
@@ -389,7 +379,7 @@ export default function SettingsPage() {
                 {Object.entries(notifications.push).map(([key, value]) => (
                   <div key={key} className="flex items-center justify-between">
                     <div>
-                      <Label className="capitalize">{key.replace(/([A-Z])/g, &quot; $1&quot;).trim()}</Label>
+                      <Label className="capitalize">{key.replace(/([A-Z])/g, &quot; $1").trim()}</Label>&quot;
                       <p className="text-sm text-muted-foreground">
                         {key === "friendRequests" && "Push notifications for friend requests"}
                         {key === "partyInvites" && "Push notifications for party invitations"}
@@ -401,9 +391,9 @@ export default function SettingsPage() {
                     <Switch;
                       checked={value}
                       onCheckedChange={(checked) =>
-                        setNotifications((prev) => ({}
+                        setNotifications((prev) => ({
                           ...prev,
-                          push: { ...prev.push, [key]: checked },
+                          push: ...prev.push, [key]: checked },
                         }))
                       }
                     />
@@ -423,7 +413,7 @@ export default function SettingsPage() {
                 {Object.entries(notifications.inApp).map(([key, value]) => (
                   <div key={key} className="flex items-center justify-between">
                     <div>
-                      <Label className="capitalize">{key.replace(/([A-Z])/g, &quot; $1&quot;).trim()}</Label>
+                      <Label className="capitalize">{key.replace(/([A-Z])/g, &quot; $1").trim()}</Label>&quot;
                       <p className="text-sm text-muted-foreground">
                         {key === "friendRequests" && "Show friend request notifications in the app"}
                         {key === "partyInvites" && "Show party invitation notifications"}
@@ -436,9 +426,9 @@ export default function SettingsPage() {
                     <Switch;
                       checked={value}
                       onCheckedChange={(checked) =>
-                        setNotifications((prev) => ({}
+                        setNotifications((prev) => ({
                           ...prev,
-                          inApp: { ...prev.inApp, [key]: checked },
+                          inApp: ...prev.inApp, [key]: checked },
                         }))
                       }
                     />
@@ -459,7 +449,7 @@ export default function SettingsPage() {
                   <Label>Color Theme</Label>
                   <Select;
                     value={appearance.theme}
-                    onValueChange={(value) => setAppearance((prev) => ({ ...prev, theme: value as Record<string, unknown> }))}
+                    onValueChange={(value) => setAppearance((prev) => (...prev, theme: value as Record<string, unknown> }))}
                   >
                     <SelectTrigger className="mt-1">
                       <SelectValue />
@@ -491,7 +481,7 @@ export default function SettingsPage() {
                   <Label>Font Size</Label>
                   <Select;
                     value={appearance.fontSize}
-                    onValueChange={(value) => setAppearance((prev) => ({ ...prev, fontSize: value as Record<string, unknown> }))}
+                    onValueChange={(value) => setAppearance((prev) => (...prev, fontSize: value as Record<string, unknown> }))}
                   >
                     <SelectTrigger className="mt-1">
                       <SelectValue />
@@ -511,7 +501,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch;
                     checked={appearance.compactMode}
-                    onCheckedChange={(checked) => setAppearance((prev) => ({ ...prev, compactMode: checked }))}
+                    onCheckedChange={(checked) => setAppearance((prev) => (...prev, compactMode: checked }))}
                   />
                 </div>
 
@@ -522,7 +512,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch;
                     checked={appearance.animations}
-                    onCheckedChange={(checked) => setAppearance((prev) => ({ ...prev, animations: checked }))}
+                    onCheckedChange={(checked) => setAppearance((prev) => (...prev, animations: checked }))}
                   />
                 </div>
 
@@ -533,7 +523,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch;
                     checked={appearance.autoPlayVideos}
-                    onCheckedChange={(checked) => setAppearance((prev) => ({ ...prev, autoPlayVideos: checked }))}
+                    onCheckedChange={(checked) => setAppearance((prev) => (...prev, autoPlayVideos: checked }))}
                   />
                 </div>
               </CardContent>
@@ -551,7 +541,7 @@ export default function SettingsPage() {
                   <Label>Profile Visibility</Label>
                   <Select;
                     value={privacy.profileVisibility}
-                    onValueChange={(value) => setPrivacy((prev) => ({ ...prev, profileVisibility: value as Record<string, unknown> }))}
+                    onValueChange={(value) => setPrivacy((prev) => (...prev, profileVisibility: value as Record<string, unknown> }))}
                   >
                     <SelectTrigger className="mt-1">
                       <SelectValue />
@@ -586,7 +576,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch;
                     checked={privacy.showOnlineStatus}
-                    onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, showOnlineStatus: checked }))}
+                    onCheckedChange={(checked) => setPrivacy((prev) => (...prev, showOnlineStatus: checked }))}
                   />
                 </div>
 
@@ -597,7 +587,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch;
                     checked={privacy.showLastSeen}
-                    onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, showLastSeen: checked }))}
+                    onCheckedChange={(checked) => setPrivacy((prev) => (...prev, showLastSeen: checked }))}
                   />
                 </div>
 
@@ -608,7 +598,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch;
                     checked={privacy.allowFriendRequests}
-                    onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, allowFriendRequests: checked }))}
+                    onCheckedChange={(checked) => setPrivacy((prev) => (...prev, allowFriendRequests: checked }))}
                   />
                 </div>
 
@@ -619,7 +609,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch;
                     checked={privacy.allowMessages}
-                    onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, allowMessages: checked }))}
+                    onCheckedChange={(checked) => setPrivacy((prev) => (...prev, allowMessages: checked }))}
                   />
                 </div>
 
@@ -630,7 +620,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch;
                     checked={privacy.showActivity}
-                    onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, showActivity: checked }))}
+                    onCheckedChange={(checked) => setPrivacy((prev) => (...prev, showActivity: checked }))}
                   />
                 </div>
               </CardContent>
@@ -650,7 +640,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch;
                     checked={privacy.dataCollection}
-                    onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, dataCollection: checked }))}
+                    onCheckedChange={(checked) => setPrivacy((prev) => (...prev, dataCollection: checked }))}
                   />
                 </div>
 
@@ -661,7 +651,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch;
                     checked={privacy.analytics}
-                    onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, analytics: checked }))}
+                    onCheckedChange={(checked) => setPrivacy((prev) => (...prev, analytics: checked }))}
                   />
                 </div>
               </CardContent>
@@ -685,7 +675,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch;
                     checked={playback.autoPlay}
-                    onCheckedChange={(checked) => setPlayback((prev) => ({ ...prev, autoPlay: checked }))}
+                    onCheckedChange={(checked) => setPlayback((prev) => (...prev, autoPlay: checked }))}
                   />
                 </div>
 
@@ -693,7 +683,7 @@ export default function SettingsPage() {
                   <Label>Default Quality</Label>
                   <Select;
                     value={playback.defaultQuality}
-                    onValueChange={(value) => setPlayback((prev) => ({ ...prev, defaultQuality: value as Record<string, unknown> }))}
+                    onValueChange={(value) => setPlayback((prev) => (...prev, defaultQuality: value as Record<string, unknown> }))}
                   >
                     <SelectTrigger className="mt-1">
                       <SelectValue />
@@ -717,7 +707,7 @@ export default function SettingsPage() {
                       min="0"
                       max="100"
                       value={playback.volume}
-                      onChange={(e) => setPlayback((prev) => ({ ...prev, volume: Number(e.target.value) }))}
+                      onChange={(e) => setPlayback((prev) => (...prev, volume: Number(e.target.value) }))}
                       className="flex-1"
                     />
                     <span className="text-sm font-medium w-12">{playback.volume}%</span>
@@ -728,7 +718,7 @@ export default function SettingsPage() {
                   <Label>Playback Speed</Label>
                   <Select;
                     value={playback.playbackSpeed.toString()}
-                    onValueChange={(value) => setPlayback((prev) => ({ ...prev, playbackSpeed: Number(value) }))}
+                    onValueChange={(value) => setPlayback((prev) => (...prev, playbackSpeed: Number(value) }))}
                   >
                     <SelectTrigger className="mt-1">
                       <SelectValue />
@@ -758,7 +748,7 @@ export default function SettingsPage() {
                   </div>
                   <Switch;
                     checked={playback.subtitles}
-                    onCheckedChange={(checked) => setPlayback((prev) => ({ ...prev, subtitles: checked }))}
+                    onCheckedChange={(checked) => setPlayback((prev) => (...prev, subtitles: checked }))}
                   />
                 </div>
 
@@ -767,7 +757,7 @@ export default function SettingsPage() {
                     <Label>Subtitle Language</Label>
                     <Select;
                       value={playback.subtitleLanguage}
-                      onValueChange={(value) => setPlayback((prev) => ({ ...prev, subtitleLanguage: value }))}
+                      onValueChange={(value) => setPlayback((prev) => (...prev, subtitleLanguage: value }))}
                     >
                       <SelectTrigger className="mt-1">
                         <SelectValue />
@@ -833,7 +823,7 @@ export default function SettingsPage() {
                     <Label>Terms of Service</Label>
                     <p className="text-sm text-muted-foreground">Read our terms and conditions</p>
                   </div>
-                  <Button variant="outline" onClick={() => window.open(&quot;/terms&quot;, &quot;_blank")}>
+                  <Button variant="outline" onClick={() => window.open(&quot;/terms", "_blank")}>
                     <ExternalLink className="h-4 w-4 mr-2" />
                     View;
                   </Button>
@@ -844,7 +834,7 @@ export default function SettingsPage() {
                     <Label>Privacy Policy</Label>
                     <p className="text-sm text-muted-foreground">Learn how we protect your privacy</p>
                   </div>
-                  <Button variant="outline" onClick={() => window.open(&quot;/privacy&quot;, &quot;_blank")}>
+                  <Button variant="outline" onClick={() => window.open(&quot;/privacy", "_blank")}>
                     <ExternalLink className="h-4 w-4 mr-2" />
                     View;
                   </Button>
@@ -855,7 +845,7 @@ export default function SettingsPage() {
                     <Label>Contact Support</Label>
                     <p className="text-sm text-muted-foreground">Get help with your account</p>
                   </div>
-                  <Button variant="outline" onClick={() => router.push(&quot;/help&quot;)}>
+                  <Button variant="outline" onClick={() => router.push(&quot;/help")}>
                     <ExternalLink className="h-4 w-4 mr-2" />
                     Contact;
                   </Button>

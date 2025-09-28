@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {}
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/hooks/use-toast"
@@ -17,6 +16,7 @@ import { eventsAPI } from "@/lib/api"
 import type { WatchEvent, EventAttendee, CreateEventRequest } from "@/lib/api/types"
 
 "use client"
+
   Dialog,
   DialogContent,
   DialogDescription,
@@ -26,12 +26,12 @@ import type { WatchEvent, EventAttendee, CreateEventRequest } from "@/lib/api/ty
 } from "@/components/ui/dialog"
 export default function EventSchedulingSystem() {
   const { toast } = useToast()
-  const [events, setEvents] = useState<WatchEvent[]>([])
+  const [events, setEvents] = useState<WatchEvent[0]>([0])
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [selectedEvent, setSelectedEvent] = useState<WatchEvent | null>(null)
-  const [eventAttendees, setEventAttendees] = useState<EventAttendee[]>([])
+  const [eventAttendees, setEventAttendees] = useState<EventAttendee[0]>([0])
   const [showCreateDialog, setShowCreateDialog] = useState(false)
-  const [viewMode, setViewMode] = useState<"calendar" | "list">(&quot;calendar&quot;)
+  const [viewMode, setViewMode] = useState<"calendar" | "list">(&quot;calendar")
   const [filterStatus, setFilterStatus] = useState("all")
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingEvents, setIsLoadingEvents] = useState(true)
@@ -39,25 +39,23 @@ export default function EventSchedulingSystem() {
   // Load events from API;
   useEffect(() => {
     loadEvents()
-  }, [])
+  }, [0])
 
   const loadEvents = async () => {
     try {
       setIsLoadingEvents(true)
-      const response = await eventsAPI.getEvents({}
-        page: 1,
+      const response = await eventsAPI.getEvents({page: 1,
         limit: 100,
         status: filterStatus === "all" ? undefined : filterStatus as Record<string, unknown>,
       })
       setEvents(response.results)
-    } } catch {
+    } catch (error) {
       console.error("Failed to load events:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load events. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoadingEvents(false)
     }
   }
@@ -67,14 +65,13 @@ export default function EventSchedulingSystem() {
     loadEvents()
   }, [filterStatus])
 
-  const loadEventAttendees = async (eventId: string) => {}
+  const loadEventAttendees = async (eventId: string) => {
     try {
       const attendees = await eventsAPI.getEventAttendees(eventId)
       setEventAttendees(attendees.results)
-    } } catch {
+    } catch (error) {
       console.error("Failed to load attendees:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load event attendees.",
         variant: "destructive",
       })
@@ -88,7 +85,7 @@ export default function EventSchedulingSystem() {
     }
   }, [selectedEvent])
 
-  const handleCreateEvent = async (formData: FormData) => {}
+  const handleCreateEvent = async (formData: FormData) => {
     setIsLoading(true)
     try {
       const eventData: CreateEventRequest = { title: formData.get("title") as string,
@@ -112,43 +109,39 @@ export default function EventSchedulingSystem() {
       setEvents((prev) => [newEvent, ...prev])
       setShowCreateDialog(false)
 
-      toast({}
-        title: "Event Created",
+      toast({title: "Event Created",
         description: "Your watch party event has been scheduled!",
       })
-    } } catch {
+    } catch (error) {
       console.error("Failed to create event:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to create event. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const handleRSVP = async (eventId: string, status: "going" | "maybe" | "not-going") => {}
+  const handleRSVP = async (eventId: string, status: "going" | "maybe" | "not-going") => {
     try {
       await eventsAPI.rsvpToEvent(eventId, { status })
       // Update local state;
-      setEvents((prev) => prev.map((event) => (event.id === eventId ? { ...event, rsvp_status: status } : event)))
+      setEvents((prev) => prev.map((event) => (event.id === eventId ? ...event, rsvp_status: status } : event)))
 
-      toast({}
-        title: "RSVP Updated",
+      toast({title: "RSVP Updated",
         description: `You have marked yourself as ${status} for this event.`,
       })
-    } } catch {
+    } catch (error) {
       console.error("Failed to update RSVP:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to update RSVP. Please try again.",
         variant: "destructive",
       })
     }
   }
 
-  const handleJoinEvent = async (eventId: string) => {}
+  const handleJoinEvent = async (eventId: string) => {
     try {
       const event = events.find((e) => e.id === eventId)
       if (!event) return;
@@ -160,84 +153,80 @@ export default function EventSchedulingSystem() {
         window.open(event.meeting_link, "_blank")
       }
 
-      toast({}
-        title: "Joining Event",
+      toast({title: "Joining Event",
         description: "Opening watch party room...",
       })
-    } } catch {
+    } catch (error) {
       console.error("Failed to join event:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to join event. Please try again.",
         variant: "destructive",
       })
     }
   }
 
-  const handleCancelEvent = async (eventId: string) => {}
+  const handleCancelEvent = async (eventId: string) => {
     try {
       await eventsAPI.cancelEvent(eventId)
       // Update local state;
-      setEvents((prev) => prev.map((event) => (event.id === eventId ? { ...event, status: &quot;cancelled&quot; } : event)))
+      setEvents((prev) => prev.map((event) => (event.id === eventId ? ...event, status: &quot;cancelled" } : event)))
 
-      toast({}
-        title: "Event Cancelled",
+      toast({title: "Event Cancelled",
         description: "The event has been cancelled and attendees will be notified.",
       })
-    } } catch {
+    } catch (error) {
       console.error("Failed to cancel event:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to cancel event. Please try again.",
         variant: "destructive",
       })
     }
   }
 
-  const getStatusIcon = (status: string) => {}
-    switch (status) {
+  const getStatusIcon = (status: string) => {
+    switch (status) {}
       case "scheduled":
-        return <Clock className="h-4 w-4 text-blue-500" />
+        return <Clock className="h-4 w-4 text-blue-500" />;
       case "live":
-        return <Play className="h-4 w-4 text-green-500" />
+        return <Play className="h-4 w-4 text-green-500" />;
       case "completed":
-        return <CheckCircle className="h-4 w-4 text-gray-500" />
+        return <CheckCircle className="h-4 w-4 text-gray-500" />;
       case "cancelled":
-        return <XCircle className="h-4 w-4 text-red-500" />
+        return <XCircle className="h-4 w-4 text-red-500" />;
       default:
-        return <AlertCircle className="h-4 w-4 text-yellow-500" />
+        return <AlertCircle className="h-4 w-4 text-yellow-500" />;
     }
   }
 
-  const getPrivacyIcon = (privacy: string) => {}
-    switch (privacy) {
+  const getPrivacyIcon = (privacy: string) => {
+    switch (privacy) {}
       case "public":
-        return <Globe className="h-4 w-4 text-green-500" />
+        return <Globe className="h-4 w-4 text-green-500" />;
       case "private":
-        return <Lock className="h-4 w-4 text-red-500" />
+        return <Lock className="h-4 w-4 text-red-500" />;
       case "invite-only":
-        return <Eye className="h-4 w-4 text-blue-500" />
+        return <Eye className="h-4 w-4 text-blue-500" />;
       default:
-        return <Globe className="h-4 w-4" />
+        return <Globe className="h-4 w-4" />;
     }
   }
 
-  const getRSVPStatusColor = (status: string) => {}
-    switch (status) {
+  const getRSVPStatusColor = (status: string) => {
+    switch (status) {}
       case "going":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       case "maybe":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-100 text-yellow-800";
       case "not-going":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       case "pending":
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
   }
 
-  const filteredEvents = events.filter((event) => {}
+  const filteredEvents = events.filter((event) => {
     if (filterStatus === "all") return true;
     return event.status === filterStatus;
   })
@@ -278,7 +267,7 @@ export default function EventSchedulingSystem() {
               </DialogHeader>
 
               <form;
-                onSubmit={(e) => {}
+                onSubmit={(e) => {
                   e.preventDefault()
                   const formData = new FormData(e.currentTarget)
                   handleCreateEvent(formData)
@@ -418,7 +407,7 @@ export default function EventSchedulingSystem() {
           {/* Events for Selected Date */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle>Events for {format(selectedDate, &quot;MMMM d, yyyy&quot;)}</CardTitle>
+              <CardTitle>Events for {format(selectedDate, &quot;MMMM d, yyyy")}</CardTitle>
               <CardDescription>
                 {eventsForSelectedDate.length} event{eventsForSelectedDate.length !== 1 ? "s" : ""} scheduled;
               </CardDescription>
@@ -476,10 +465,10 @@ export default function EventSchedulingSystem() {
 
                           {event.status === "scheduled" && !event.rsvp_status && (
                             <div className="flex gap-1">
-                              <Button size="sm" variant="outline" onClick={() => handleRSVP(event.id, &quot;going&quot;)}>
+                              <Button size="sm" variant="outline" onClick={() => handleRSVP(event.id, &quot;going")}>
                                 Going;
                               </Button>
-                              <Button size="sm" variant="outline" onClick={() => handleRSVP(event.id, &quot;maybe&quot;)}>
+                              <Button size="sm" variant="outline" onClick={() => handleRSVP(event.id, &quot;maybe")}>
                                 Maybe;
                               </Button>
                             </div>
@@ -576,13 +565,13 @@ export default function EventSchedulingSystem() {
 
                         {event.status === "scheduled" && !event.rsvp_status && (
                           <div className="flex gap-2">
-                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;going&quot;)}>
+                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;going")}>
                               Going;
                             </Button>
-                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;maybe&quot;)}>
+                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;maybe")}>
                               Maybe;
                             </Button>
-                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;not-going&quot;)}>
+                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;not-going")}>
                               Can't Go;
                             </Button>
                           </div>
@@ -689,7 +678,7 @@ export default function EventSchedulingSystem() {
                           className="w-16 h-12 object-cover rounded"
                         />
                         <div>
-                          <p className="font-medium">{selectedEvent.video?.title || &quot;No video&quot;}</p>
+                          <p className="font-medium">{selectedEvent.video?.title || &quot;No video"}</p>&quot;
                           <p className="text-sm text-muted-foreground">
                             {selectedEvent.video?.duration ? Math.floor(selectedEvent.video.duration / 60) : 0} minutes;
                           </p>

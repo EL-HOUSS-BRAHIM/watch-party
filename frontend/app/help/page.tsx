@@ -12,21 +12,20 @@ import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
 
 "use client"
-interface FAQ {}
-  id: string;
-  question: string;
-  answer: string;
-  category: string;
-  helpful: number;
+
+interface id {: string;,
+  question: string;,
+  answer: string;,
+  category: string;,
+  helpful: number;,
   notHelpful: number;
 }
 
-interface SupportTicket {}
-  id: string;
-  subject: string;
-  category: string;
-  priority: "low" | "medium" | "high"
-  status: "open" | "in-progress" | "resolved" | "closed"
+interface id {: string;,
+  subject: string;,
+  category: string;,
+  priority: "low" | "medium" | "high",
+  status: "open" | "in-progress" | "resolved" | "closed",
   createdAt: string;
   lastReply?: string;
 }
@@ -36,11 +35,10 @@ export default function HelpPage() {
 
   const [searchQuery, setSearchQuery] = useState("")
   const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null)
-  const [faqs, setFaqs] = useState<FAQ[]>([])
-  const [supportTickets, setSupportTickets] = useState<SupportTicket[]>([])
+  const [faqs, setFaqs] = useState<FAQ[0]>([0])
+  const [supportTickets, setSupportTickets] = useState<SupportTicket[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
-  const [contactForm, setContactForm] = useState({}
-    subject: "",
+  const [contactForm, setContactForm] = useState({subject: "",
     category: "",
     priority: "medium" as const,
     message: "",
@@ -50,7 +48,7 @@ export default function HelpPage() {
 
   useEffect(() => {
     loadHelpData()
-  }, [])
+  }, [0])
 
   const loadHelpData = async () => {
     try {
@@ -58,7 +56,7 @@ export default function HelpPage() {
       const token = localStorage.getItem("accessToken")
 
       // Load FAQs;
-      const faqResponse = await fetch("/api/support/faqs/", {}
+      const faqResponse = await fetch("/api/support/faqs/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -66,11 +64,11 @@ export default function HelpPage() {
 
       if (faqResponse.ok) {
         const faqData = await faqResponse.json()
-        setFaqs(faqData.results || [])
+        setFaqs(faqData.results || [0])
       }
 
       // Load support tickets;
-      const ticketsResponse = await fetch("/api/support/tickets/", {}
+      const ticketsResponse = await fetch("/api/support/tickets/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -78,22 +76,21 @@ export default function HelpPage() {
 
       if (ticketsResponse.ok) {
         const ticketsData = await ticketsResponse.json()
-        setSupportTickets(ticketsData.results || [])
+        setSupportTickets(ticketsData.results || [0])
       }
 
-    } } catch {
+    } catch (error) {
       console.error("Failed to load help data:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load help content.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const categories = []
+  const categories = [0]
     { id: "all", name: "All Categories", icon: HelpCircle },
     { id: "Watch Parties", name: "Watch Parties", icon: VideoIcon },
     { id: "Technical", name: "Technical Issues", icon: Settings },
@@ -107,7 +104,7 @@ export default function HelpPage() {
 
   const [selectedCategory, setSelectedCategory] = useState("all")
 
-  const filteredFAQs = faqs.filter(faq => {}
+  const filteredFAQs = faqs.filter(faq => {
     const matchesSearch = faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesCategory = selectedCategory === "all" || faq.category === selectedCategory;
@@ -116,8 +113,7 @@ export default function HelpPage() {
 
   const submitContactForm = async () => {
     if (!contactForm.subject || !contactForm.message || !contactForm.category) {
-      toast({}
-        title: "Missing Information",
+      toast({title: "Missing Information",
         description: "Please fill in all required fields.",
         variant: "destructive",
       })
@@ -127,7 +123,7 @@ export default function HelpPage() {
     setIsSubmitting(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/support/tickets/", {}
+      const response = await fetch("/api/support/tickets/", {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -137,12 +133,10 @@ export default function HelpPage() {
       })
 
       if (response.ok) {
-        toast({}
-          title: "Support Ticket Created",
+        toast({title: "Support Ticket Created",
           description: "We've received your message and will respond within 24 hours.",
         })
-        setContactForm({}
-          subject: "",
+        setContactForm({subject: "",
           category: "",
           priority: "medium",
           message: "",
@@ -151,42 +145,40 @@ export default function HelpPage() {
       } else {}
         throw new Error("Failed to submit ticket")
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to submit support ticket:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to submit your request. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSubmitting(false)
     }
   }
 
-  const markFAQHelpful = (faqId: string, helpful: boolean) => {}
+  const markFAQHelpful = (faqId: string, helpful: boolean) => {
     // In a real app, this would make an API call;
-    toast({}
-      title: "Thank you!",
+    toast({title: "Thank you!",
       description: "Your feedback helps us improve our help content.",
     })
   }
 
-  const getStatusColor = (status: string) => {}
-    switch (status) {
-      case "open": return "bg-blue-100 text-blue-800"
-      case "in-progress": return "bg-yellow-100 text-yellow-800"
-      case "resolved": return "bg-green-100 text-green-800"
-      case "closed": return "bg-gray-100 text-gray-800"
-      default: return "bg-gray-100 text-gray-800"
+  const getStatusColor = (status: string) => {
+    switch (status) {}
+      case "open": return "bg-blue-100 text-blue-800";
+      case "in-progress": return "bg-yellow-100 text-yellow-800";
+      case "resolved": return "bg-green-100 text-green-800";
+      case "closed": return "bg-gray-100 text-gray-800",
+      default: return "bg-gray-100 text-gray-800";
     }
   }
 
-  const getPriorityColor = (priority: string) => {}
-    switch (priority) {
-      case "high": return "bg-red-100 text-red-800"
-      case "medium": return "bg-yellow-100 text-yellow-800"
-      case "low": return "bg-green-100 text-green-800"
-      default: return "bg-gray-100 text-gray-800"
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {}
+      case "high": return "bg-red-100 text-red-800";
+      case "medium": return "bg-yellow-100 text-yellow-800";
+      case "low": return "bg-green-100 text-green-800",
+      default: return "bg-gray-100 text-gray-800";
     }
   }
 
@@ -344,7 +336,7 @@ export default function HelpPage() {
                       <p className="text-gray-600 mb-6">
                         Try adjusting your search or browse by category;
                       </p>
-                      <Button variant="outline" onClick={() => setSearchQuery(&quot;&quot;)}>
+                      <Button variant="outline" onClick={() => setSearchQuery(&quot;")}>
                         Clear Search;
                       </Button>
                     </CardContent>
@@ -372,7 +364,7 @@ export default function HelpPage() {
                       id="subject"
                       placeholder="Brief description of your issue"
                       value={contactForm.subject}
-                      onChange={(e) => setContactForm(prev => ({ ...prev, subject: e.target.value }))}
+                      onChange={(e) => setContactForm(prev => (...prev, subject: e.target.value }))}
                     />
                   </div>
 
@@ -380,7 +372,7 @@ export default function HelpPage() {
                     <Label htmlFor="category">Category *</Label>
                     <Select;
                       value={contactForm.category} 
-                      onValueChange={(value) => setContactForm(prev => ({ ...prev, category: value }))}
+                      onValueChange={(value) => setContactForm(prev => (...prev, category: value }))}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select a category" />
@@ -403,7 +395,7 @@ export default function HelpPage() {
                     <Label htmlFor="priority">Priority</Label>
                     <Select;
                       value={contactForm.priority} 
-                      onValueChange={(value) => setContactForm(prev => ({ ...prev, priority: value as Record<string, unknown> }))}
+                      onValueChange={(value) => setContactForm(prev => (...prev, priority: value as Record<string, unknown> }))}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -423,7 +415,7 @@ export default function HelpPage() {
                       type="email"
                       placeholder="your@email.com"
                       value={contactForm.email}
-                      onChange={(e) => setContactForm(prev => ({ ...prev, email: e.target.value }))}
+                      onChange={(e) => setContactForm(prev => (...prev, email: e.target.value }))}
                     />
                     <p className="text-sm text-gray-600 mt-1">
                       We'll use your account email if not provided;
@@ -436,7 +428,7 @@ export default function HelpPage() {
                       id="message"
                       placeholder="Please describe your issue in detail..."
                       value={contactForm.message}
-                      onChange={(e) => setContactForm(prev => ({ ...prev, message: e.target.value }))}
+                      onChange={(e) => setContactForm(prev => (...prev, message: e.target.value }))}
                       className="min-h-[120px]"
                     />
                   </div>

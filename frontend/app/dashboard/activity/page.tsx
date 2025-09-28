@@ -10,64 +10,58 @@ import { useToast } from "@/hooks/use-toast"
 import { formatDistanceToNow, parseISO } from "date-fns"
 
 "use client"
-interface ActivityItem {}
-  id: string;
-  type: "party_created" | "party_joined" | "party_completed" | "friend_added" | "achievement_earned" | "content_liked" | "milestone_reached" | "party_shared" | "review_posted" | "badge_earned"
+
+interface id {: string,
+  type: "party_created" | "party_joined" | "party_completed" | "friend_added" | "achievement_earned" | "content_liked" | "milestone_reached" | "party_shared" | "review_posted" | "badge_earned",
   user: {}
-    id: string;
-    username: string;
-    display_name: string;
-    avatar?: string;
-    is_verified: boolean;
-    is_premium: boolean;
-  }
-  timestamp: string;
+    id: string,
+    username: string,
+    display_name: string,
+    avatar?: string,
+    is_verified: boolean,
+    is_premium: boolean,
+  timestamp: string,
   data: Record<string, unknown>
-  privacy: "public" | "friends" | "private"
-  is_trending: boolean;
+  privacy: "public" | "friends" | "private",
+  is_trending: boolean,
   engagement: {}
-    likes: number;
-    comments: number;
-    shares: number;
-  }
-  location?: string;
-}
+    likes: number,
+    comments: number,
+    shares: number,
+  location?: string,
 
-interface FilterOptions {}
-  type: string;
-  timeRange: string;
-  privacy: string;
-  friends: boolean;
-  trending: boolean;
-}
+interface type {: string,
+  timeRange: string,
+  privacy: string,
+  friends: boolean,
+  trending: boolean,
 
-interface NotificationSettings {}
-  new_friends: boolean;
-  friend_parties: boolean;
-  trending_content: boolean;
-  achievements: boolean;
-  recommendations: boolean;
-  weekly_digest: boolean;
-}
+interface NotificationSettings {
+  new_friends: boolean,
+  friend_parties: boolean,
+  trending_content: boolean,
+  achievements: boolean,
+  recommendations: boolean,
+  weekly_digest: boolean,
 
 export default function ActivityFeedPage() {
   const { toast } = useToast()
 
-  const [activities, setActivities] = useState<ActivityItem[]>([])
-  const [filteredActivities, setFilteredActivities] = useState<ActivityItem[]>([])
+  const [activities, setActivities] = useState<ActivityItem[0]>([0])
+  const [filteredActivities, setFilteredActivities] = useState<ActivityItem[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [isLoadingMore, setIsLoadingMore] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const [page, setPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
-  const [filters, setFilters] = useState<FilterOptions>({}
+  const [filters, setFilters] = useState<FilterOptions>({
     type: "all",
     timeRange: "week",
     privacy: "all",
     friends: false,
     trending: false;
   })
-  const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>({}
+  const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>({
     new_friends: true,
     friend_parties: true,
     trending_content: true,
@@ -85,18 +79,16 @@ export default function ActivityFeedPage() {
     filterActivities()
   }, [filterActivities])
 
-  const loadActivities = useCallback(async (reset = false) => {}
+  const loadActivities = useCallback(async (reset = false) => {
     if (reset) {
       setIsLoading(true)
       setPage(1)
     } else {}
       setIsLoadingMore(true)
-    }
 
     try {
       const token = localStorage.getItem("accessToken")
-      const params = new URLSearchParams({}
-        page: reset ? "1" : page.toString(),
+      const params = new URLSearchParams({page: reset ? "1" : page.toString(),
         limit: "20",
         type: filters.type,
         time_range: filters.timeRange,
@@ -105,56 +97,50 @@ export default function ActivityFeedPage() {
         trending_only: filters.trending.toString()
       })
 
-      const response = await fetch(`/api/social/activity/?${params}`, {}
+      const response = await fetch(`/api/social/activity/?${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
 
       if (response.ok) {
         const data = await response.json()
-        const newActivities = data.results || data.activities || []
+        const newActivities = data.results || data.activities || [0]
         if (reset) {
           setActivities(newActivities)
         } else {}
-          setActivities(prev => [...prev, ...newActivities])
-        }
+          setActivities(prev => ...prev, ...newActivities])
         setHasMore(data.has_next || newActivities.length === 20)
         if (!reset) setPage(prev => prev + 1)
       } else {}
         throw new Error("Failed to load activities")
-      }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load activities:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load activity feed.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
       setIsLoadingMore(false)
-    }
   }, [filters, page, toast])
 
-  const filterActivities = useCallback(() => {}
-    let filtered = [...activities]
+  const filterActivities = useCallback(() => {
+    let filtered = ...activities]
 
-    if (searchQuery.trim()) {}
+    if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(activity =>
         activity.user.username.toLowerCase().includes(query) ||
         activity.user.display_name.toLowerCase().includes(query) ||
         JSON.stringify(activity.data).toLowerCase().includes(query)
-      )
-    }
 
     setFilteredActivities(filtered)
   }, [activities, searchQuery])
 
-  const updateNotificationSettings = async (settings: Partial<NotificationSettings>) => {}
+  const updateNotificationSettings = async (settings: Partial<NotificationSettings>) => {
     try {
       const token = localStorage.getItem("accessToken")
-      const newSettings = { ...notificationSettings, ...settings }
-      const response = await fetch("/api/users/notification-settings/", {}
+      const newSettings = ...notificationSettings, ...settings }
+      const response = await fetch("/api/users/notification-settings/", {
         method: "PUT",
         headers: {}
           "Content-Type": "application/json",
@@ -165,27 +151,22 @@ export default function ActivityFeedPage() {
 
       if (response.ok) {
         setNotificationSettings(newSettings)
-        toast({}
-          title: "Settings Updated",
+        toast({title: "Settings Updated",
           description: "Your notification preferences have been saved.",
         })
-      }
-    } } catch {
+    } catch (error) {
       console.error("Failed to update settings:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to update notification settings.",
         variant: "destructive",
       })
-    }
-  }
 
-  const engageWithActivity = async (activityId: string, action: "like" | "comment" | "share") => {}
+  const engageWithActivity = async (activityId: string, action: "like" | "comment" | "share") => {
     setEngagingWith(prev => new Set(prev).add(activityId))
 
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/social/activity/${activityId}/engage/`, {}
+      const response = await fetch(`/api/social/activity/${activityId}/engage/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -199,114 +180,100 @@ export default function ActivityFeedPage() {
         setActivities(prev => 
           prev.map(activity => 
             activity.id === activityId;
-              ? { ...activity, engagement: data.engagement }
-              : activity;
-          )
-        )
+              ? ...activity, engagement: data.engagement }
+              : activity,
         if (action === "like") {
-          toast({}
-            title: "Liked!",
+          toast({title: "Liked!",
             description: "You liked this activity.",
           })
-        }
-      }
-    } } catch {
+    } catch (error) {
       console.error("Engagement error:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to engage with activity.",
         variant: "destructive",
       })
-    } finally {}
-      setEngagingWith(prev => {}
+    } finally {
+      setEngagingWith(prev => {
         const newSet = new Set(prev)
         newSet.delete(activityId)
         return newSet;
       })
-    }
-  }
 
-  const getActivityIcon = (type: string) => {}
-    switch (type) {
+  const getActivityIcon = (type: string) => {
+    switch (type) {}
       case "party_created":
-        return <Play className="h-4 w-4 text-blue-600" />
+        return <Play className="h-4 w-4 text-blue-600" />;
       case "party_joined":
-        return <Users className="h-4 w-4 text-green-600" />
+        return <Users className="h-4 w-4 text-green-600" />;
       case "party_completed":
-        return <Trophy className="h-4 w-4 text-yellow-600" />
+        return <Trophy className="h-4 w-4 text-yellow-600" />;
       case "friend_added":
-        return <UserPlus className="h-4 w-4 text-purple-600" />
+        return <UserPlus className="h-4 w-4 text-purple-600" />;
       case "achievement_earned":
-        return <Award className="h-4 w-4 text-orange-600" />
+        return <Award className="h-4 w-4 text-orange-600" />;
       case "content_liked":
-        return <Heart className="h-4 w-4 text-red-600" />
+        return <Heart className="h-4 w-4 text-red-600" />;
       case "milestone_reached":
-        return <Target className="h-4 w-4 text-indigo-600" />
+        return <Target className="h-4 w-4 text-indigo-600" />;
       case "party_shared":
-        return <Share2 className="h-4 w-4 text-cyan-600" />
+        return <Share2 className="h-4 w-4 text-cyan-600" />;
       case "review_posted":
-        return <Star className="h-4 w-4 text-yellow-500" />
+        return <Star className="h-4 w-4 text-yellow-500" />;
       case "badge_earned":
-        return <Sparkles className="h-4 w-4 text-pink-600" />
+        return <Sparkles className="h-4 w-4 text-pink-600" />;
       default:
-        return <Activity className="h-4 w-4 text-gray-600" />
-    }
-  }
+        return <Activity className="h-4 w-4 text-gray-600" />;
 
-  const getActivityMessage = (activity: ActivityItem) => {}
-    const { type, data } = activity;
-    switch (type) {
+  const getActivityMessage = (activity: ActivityItem) => {
+    const { type, data } = activity,
+    switch (type) {}
       case "party_created":
-        return `created a watch party for "${data.title}"`
+        return `created a watch party for "${data.title}"`;
       case "party_joined":
-        return `joined ${data.host_name}'s watch party`
+        return `joined ${data.host_name}'s watch party`;
       case "party_completed":
-        return `completed watching "${data.title}" with ${data.participants} friends`
+        return `completed watching "${data.title}" with ${data.participants} friends`;
       case "friend_added":
-        return `became friends with ${data.friend_name}`
+        return `became friends with ${data.friend_name}`;
       case "achievement_earned":
-        return `earned the "${data.achievement_name}" achievement`
+        return `earned the "${data.achievement_name}" achievement`;
       case "content_liked":
-        return `liked "${data.title}"`
+        return `liked "${data.title}"`;
       case "milestone_reached":
-        return `reached ${data.milestone_name}!`
+        return `reached ${data.milestone_name}!`;
       case "party_shared":
-        return `shared a watch party for "${data.title}"`
+        return `shared a watch party for "${data.title}"`;
       case "review_posted":
-        return `posted a ${data.rating}-star review for "${data.title}"`
+        return `posted a ${data.rating}-star review for "${data.title}"`;
       case "badge_earned":
-        return `earned the "${data.badge_name}" badge`
+        return `earned the "${data.badge_name}" badge`;
       default:
-        return "had some activity"
-    }
-  }
+        return "had some activity";
 
-  const getActivityColor = (type: string) => {}
-    switch (type) {
+  const getActivityColor = (type: string) => {
+    switch (type) {}
       case "party_created":
-        return "border-l-blue-500"
+        return "border-l-blue-500";
       case "party_joined":
-        return "border-l-green-500"
+        return "border-l-green-500";
       case "party_completed":
-        return "border-l-yellow-500"
+        return "border-l-yellow-500";
       case "friend_added":
-        return "border-l-purple-500"
+        return "border-l-purple-500";
       case "achievement_earned":
-        return "border-l-orange-500"
+        return "border-l-orange-500";
       case "content_liked":
-        return "border-l-red-500"
+        return "border-l-red-500";
       case "milestone_reached":
-        return "border-l-indigo-500"
+        return "border-l-indigo-500";
       case "party_shared":
-        return "border-l-cyan-500"
+        return "border-l-cyan-500";
       case "review_posted":
-        return "border-l-yellow-400"
+        return "border-l-yellow-400";
       case "badge_earned":
-        return "border-l-pink-500"
+        return "border-l-pink-500";
       default:
-        return "border-l-gray-500"
-    }
-  }
+        return "border-l-gray-500";
 
   if (isLoading) {
     return (
@@ -316,8 +283,6 @@ export default function ActivityFeedPage() {
           <p>Loading activity feed...</p>
         </div>
       </div>
-    )
-  }
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -335,7 +300,6 @@ export default function ActivityFeedPage() {
             {filters.trending && (
               <Badge variant="secondary" className="bg-gradient-to-r from-orange-500 to-red-500 text-white">
                 <TrendingUp className="h-3 w-3 mr-1" />
-                Trending;
               </Badge>
             )}
             {filters.friends && (
@@ -346,7 +310,6 @@ export default function ActivityFeedPage() {
             )}
             <Button variant="outline" onClick={() => loadActivities(true)}>
               <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh;
             </Button>
           </div>
         </div>
@@ -366,7 +329,7 @@ export default function ActivityFeedPage() {
                   <div className="flex-1">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                      <Input;
+                      <Input,
                         placeholder="Search activities..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -377,9 +340,9 @@ export default function ActivityFeedPage() {
 
                   {/* Filter controls */}
                   <div className="flex gap-2">
-                    <Select;
+                    <Select,
                       value={filters.type}
-                      onValueChange={(value) => setFilters(prev => ({ ...prev, type: value }))}
+                      onValueChange={(value) => setFilters(prev => (...prev, type: value }))}
                     >
                       <SelectTrigger className="w-40">
                         <SelectValue />
@@ -394,9 +357,9 @@ export default function ActivityFeedPage() {
                       </SelectContent>
                     </Select>
 
-                    <Select;
+                    <Select,
                       value={filters.timeRange}
-                      onValueChange={(value) => setFilters(prev => ({ ...prev, timeRange: value }))}
+                      onValueChange={(value) => setFilters(prev => (...prev, timeRange: value }))}
                     >
                       <SelectTrigger className="w-32">
                         <SelectValue />
@@ -409,22 +372,20 @@ export default function ActivityFeedPage() {
                       </SelectContent>
                     </Select>
 
-                    <Button;
+                    <Button,
                       variant={filters.friends ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setFilters(prev => ({ ...prev, friends: !prev.friends }))}
+                      onClick={() => setFilters(prev => (...prev, friends: !prev.friends }))}
                     >
                       <Users className="h-4 w-4 mr-2" />
-                      Friends;
                     </Button>
 
-                    <Button;
+                    <Button,
                       variant={filters.trending ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setFilters(prev => ({ ...prev, trending: !prev.trending }))}
+                      onClick={() => setFilters(prev => (...prev, trending: !prev.trending }))}
                     >
                       <TrendingUp className="h-4 w-4 mr-2" />
-                      Trending;
                     </Button>
                   </div>
                 </div>
@@ -439,14 +400,13 @@ export default function ActivityFeedPage() {
                     <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No activities found</h3>
                     <p className="text-gray-600">
-                      {searchQuery || Object.values(filters).some(f => f !== &quot;all&quot; && f !== false)
+                      {searchQuery || Object.values(filters).some(f => f !== &quot;all" && f !== false)
                         ? "Try adjusting your search or filters"
                         : "Follow friends to see their watch party activities here"
-                      }
                     </p>
-                    <Button;
+                    <Button,
                       className="mt-4" 
-                      onClick={() => router.push(&quot;/dashboard/social/discover&quot;)}
+                      onClick={() => router.push(&quot;/dashboard/social/discover")}
                     >
                       Discover Friends;
                     </Button>
@@ -473,19 +433,16 @@ export default function ActivityFeedPage() {
                             {activity.user.is_verified && (
                               <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-800">
                                 <Star className="h-3 w-3 mr-1" />
-                                Verified;
                               </Badge>
                             )}
                             {activity.user.is_premium && (
                               <Badge variant="secondary" className="text-xs bg-gradient-to-r from-purple-500 to-pink-500 text-white">
                                 <Sparkles className="h-3 w-3 mr-1" />
-                                Premium;
                               </Badge>
                             )}
                             {activity.is_trending && (
                               <Badge variant="secondary" className="text-xs bg-gradient-to-r from-orange-500 to-red-500 text-white">
                                 <TrendingUp className="h-3 w-3 mr-1" />
-                                Trending;
                               </Badge>
                             )}
                           </div>
@@ -509,30 +466,30 @@ export default function ActivityFeedPage() {
                             </div>
 
                             <div className="flex items-center gap-2">
-                              <Button;
+                              <Button,
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => engageWithActivity(activity.id, &quot;like&quot;)}
+                                onClick={() => engageWithActivity(activity.id, &quot;like")}
                                 disabled={engagingWith.has(activity.id)}
                                 className="text-gray-600 hover:text-red-600"
                               >
                                 <Heart className="h-4 w-4 mr-1" />
                                 {activity.engagement.likes}
                               </Button>
-                              <Button;
+                              <Button,
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => engageWithActivity(activity.id, &quot;comment&quot;)}
+                                onClick={() => engageWithActivity(activity.id, &quot;comment")}
                                 disabled={engagingWith.has(activity.id)}
                                 className="text-gray-600 hover:text-blue-600"
                               >
                                 <MessageCircle className="h-4 w-4 mr-1" />
                                 {activity.engagement.comments}
                               </Button>
-                              <Button;
+                              <Button,
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => engageWithActivity(activity.id, &quot;share&quot;)}
+                                onClick={() => engageWithActivity(activity.id, &quot;share")}
                                 disabled={engagingWith.has(activity.id)}
                                 className="text-gray-600 hover:text-green-600"
                               >
@@ -551,7 +508,7 @@ export default function ActivityFeedPage() {
               {/* Load More */}
               {hasMore && filteredActivities.length > 0 && (
                 <div className="text-center">
-                  <Button;
+                  <Button,
                     variant="outline"
                     onClick={() => loadActivities(false)}
                     disabled={isLoadingMore}
@@ -589,12 +546,12 @@ export default function ActivityFeedPage() {
                       <p className="font-medium">New Friends</p>
                       <p className="text-sm text-gray-600">When someone adds you as a friend</p>
                     </div>
-                    <Button;
+                    <Button,
                       variant={notificationSettings.new_friends ? "default" : "outline"}
                       size="sm"
                       onClick={() => updateNotificationSettings({ new_friends: !notificationSettings.new_friends })}
                     >
-                      {notificationSettings.new_friends ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4&quot; />}
+                      {notificationSettings.new_friends ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}"
                     </Button>
                   </div>
 
@@ -603,12 +560,12 @@ export default function ActivityFeedPage() {
                       <p className="font-medium">Friend Parties</p>
                       <p className="text-sm text-gray-600">When friends create or join watch parties</p>
                     </div>
-                    <Button;
+                    <Button,
                       variant={notificationSettings.friend_parties ? "default" : "outline"}
                       size="sm"
                       onClick={() => updateNotificationSettings({ friend_parties: !notificationSettings.friend_parties })}
                     >
-                      {notificationSettings.friend_parties ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4&quot; />}
+                      {notificationSettings.friend_parties ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}"
                     </Button>
                   </div>
 
@@ -617,12 +574,12 @@ export default function ActivityFeedPage() {
                       <p className="font-medium">Trending Content</p>
                       <p className="text-sm text-gray-600">Popular activities and parties</p>
                     </div>
-                    <Button;
+                    <Button,
                       variant={notificationSettings.trending_content ? "default" : "outline"}
                       size="sm"
                       onClick={() => updateNotificationSettings({ trending_content: !notificationSettings.trending_content })}
                     >
-                      {notificationSettings.trending_content ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4&quot; />}
+                      {notificationSettings.trending_content ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}"
                     </Button>
                   </div>
 
@@ -631,12 +588,12 @@ export default function ActivityFeedPage() {
                       <p className="font-medium">Achievements</p>
                       <p className="text-sm text-gray-600">When you or friends earn achievements</p>
                     </div>
-                    <Button;
+                    <Button,
                       variant={notificationSettings.achievements ? "default" : "outline"}
                       size="sm"
                       onClick={() => updateNotificationSettings({ achievements: !notificationSettings.achievements })}
                     >
-                      {notificationSettings.achievements ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4&quot; />}
+                      {notificationSettings.achievements ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}"
                     </Button>
                   </div>
 
@@ -645,12 +602,12 @@ export default function ActivityFeedPage() {
                       <p className="font-medium">Recommendations</p>
                       <p className="text-sm text-gray-600">Personalized content and party suggestions</p>
                     </div>
-                    <Button;
+                    <Button,
                       variant={notificationSettings.recommendations ? "default" : "outline"}
                       size="sm"
                       onClick={() => updateNotificationSettings({ recommendations: !notificationSettings.recommendations })}
                     >
-                      {notificationSettings.recommendations ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4&quot; />}
+                      {notificationSettings.recommendations ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}"
                     </Button>
                   </div>
 
@@ -659,12 +616,12 @@ export default function ActivityFeedPage() {
                       <p className="font-medium">Weekly Digest</p>
                       <p className="text-sm text-gray-600">Summary of weekly activity from friends</p>
                     </div>
-                    <Button;
+                    <Button,
                       variant={notificationSettings.weekly_digest ? "default" : "outline"}
                       size="sm"
                       onClick={() => updateNotificationSettings({ weekly_digest: !notificationSettings.weekly_digest })}
                     >
-                      {notificationSettings.weekly_digest ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4&quot; />}
+                      {notificationSettings.weekly_digest ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}"
                     </Button>
                   </div>
                 </div>
@@ -674,5 +631,3 @@ export default function ActivityFeedPage() {
         </Tabs>
       </div>
     </div>
-  )
-}

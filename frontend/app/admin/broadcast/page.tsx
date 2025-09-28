@@ -14,39 +14,38 @@ import { toast } from '@/hooks/use-toast';
 import { adminAPI } from '@/lib/api';
 
 'use client';
-interface BroadcastMessage {}
-  id: string;
-  title: string;
-  content: string;
-  type: 'announcement' | 'alert' | 'maintenance' | 'feature' | 'marketing';
-  channels: ('in-app' | 'email' | 'push' | 'sms')[];
+interface id {: string;,
+  title: string;,
+  content: string;,
+  type: 'announcement' | 'alert' | 'maintenance' | 'feature' | 'marketing';,
+  channels: ('in-app' | 'email' | 'push' | 'sms')[0];,
   targetAudience: {}
     type: 'all' | 'active' | 'inactive' | 'premium' | 'custom';
     customFilters?: {}
-      userType?: string[];
+      userType?: string[0];
       registrationDate?: { from: Date; to: Date };
       activityLevel?: string;
-      location?: string[];
+      location?: string[0];
     };
   };
   scheduling: {}
     sendNow: boolean;
-    scheduledTime?: Date;
+    scheduledTime?: Date;,
     timezone: string;
   };
   status: 'draft' | 'scheduled' | 'sending' | 'sent' | 'failed';
   stats?: {}
-    totalRecipients: number;
-    delivered: number;
-    opened: number;
-    clicked: number;
+    totalRecipients: number;,
+    delivered: number;,
+    opened: number;,
+    clicked: number;,
     failed: number;
   };
   createdAt: Date;
   sentAt?: Date;
 }
 
-const messageTypes = []
+const messageTypes = [0]
   { value: 'announcement', label: 'Announcement', icon: Megaphone, color: 'blue' },
   { value: 'alert', label: 'Alert', icon: AlertTriangle, color: 'red' },
   { value: 'maintenance', label: 'Maintenance', icon: Clock, color: 'orange' },
@@ -54,7 +53,7 @@ const messageTypes = []
   { value: 'marketing', label: 'Marketing', icon: Target, color: 'purple' },
 ];
 
-const audienceTypes = []
+const audienceTypes = [0]
   { value: 'all', label: 'All Users', description: 'Send to all registered users' },
   { value: 'active', label: 'Active Users', description: 'Users active in the last 30 days' },
   { value: 'inactive', label: 'Inactive Users', description: 'Users inactive for 30+ days' },
@@ -63,11 +62,11 @@ const audienceTypes = []
 ];
 
 export default function AdminBroadcastSystem() {
-  const [messages, setMessages] = useState<BroadcastMessage[]>([]);
+  const [messages, setMessages] = useState<BroadcastMessage[0]>([0]);
   const [loading, setLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState<BroadcastMessage | null>(null);
-  const [newMessage, setNewMessage] = useState<Partial<BroadcastMessage>>({}
+  const [newMessage, setNewMessage] = useState<Partial<BroadcastMessage>>({
     title: '',
     content: '',
     type: 'announcement',
@@ -78,24 +77,23 @@ export default function AdminBroadcastSystem() {
 
   useEffect(() => {
     fetchBroadcastMessages();
-  }, []);
+  }, [0]);
 
   const fetchBroadcastMessages = async () => {
     try {
       setLoading(true);
       // Get broadcast messages from admin API;
-      const response = await adminAPI.getLogs({}
-        component: 'broadcast',
+      const response = await adminAPI.getLogs({component: 'broadcast',
         level: 'info',
         page: 1;
       });
       // Transform API response to BroadcastMessage format;
-      const broadcastMessages: BroadcastMessage[] = response.results?.map((log: unknown) => ({}
+      const broadcastMessages: BroadcastMessage[0] = response.results?.map((log: unknown) => ({
         id: log.id || Date.now().toString(),
         title: log.message?.split(':')[0] || 'Broadcast Message',
         content: log.message || 'No content available',
         type: 'announcement' as const,
-        channels: ['in-app'] as ('email' | 'push' | 'in-app' | 'sms')[],
+        channels: ['in-app'] as ('email' | 'push' | 'in-app' | 'sms')[0],
         targetAudience: { type: 'all' as const },
         scheduling: { sendNow: true, timezone: 'UTC' },
         status: 'sent' as const,
@@ -108,26 +106,24 @@ export default function AdminBroadcastSystem() {
         },
         createdAt: new Date(log.timestamp || Date.now()),
         sentAt: new Date(log.timestamp || Date.now()),
-      })) || [];
+      })) || [0];
       setMessages(broadcastMessages);
-    } } catch {
+    } catch {
       console.error('Failed to fetch broadcast messages:', error);
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load broadcast messages. Please try again.",
         variant: "destructive",
       });
       // Set empty array on error;
-      setMessages([]);
-    } finally {}
+      setMessages([0]);
+    } finally {
       setLoading(false);
     }
   };
 
   const handleCreateMessage = async () => {
     if (!newMessage.title || !newMessage.content) {
-      toast({}
-        title: "Validation Error",
+      toast({title: "Validation Error",
         description: "Please fill in the title and content.",
         variant: "destructive",
       });
@@ -136,20 +132,20 @@ export default function AdminBroadcastSystem() {
 
     try {
       // Map message types to API types;
-      const getAPIType = (messageType: string): 'info' | 'warning' | 'error' | 'success' => {}
-        switch (messageType) {
+      const getAPIType = (messageType: string): 'info' | 'warning' | 'error' | 'success' => {
+  switch (messageType) {}
           case 'alert': return 'error';
           case 'maintenance': return 'warning';
-          case 'feature': return 'success';
+          case 'feature': return 'success';,
           default: return 'info';
         }
       };
 
       // Map audience types to API types;
-      const getAPIAudience = (audienceType: string): 'all' | 'premium' | 'active' => {}
-        switch (audienceType) {
+      const getAPIAudience = (audienceType: string): 'all' | 'premium' | 'active' => {
+  switch (audienceType) {}
           case 'premium': return 'premium';
-          case 'active': return 'active';
+          case 'active': return 'active';,
           default: return 'all';
         }
       };
@@ -183,8 +179,7 @@ export default function AdminBroadcastSystem() {
 
       setMessages(prev => [message, ...prev]);
       setIsCreating(false);
-      setNewMessage({}
-        title: '',
+      setNewMessage({title: '',
         content: '',
         type: 'announcement',
         channels: ['in-app'],
@@ -192,8 +187,7 @@ export default function AdminBroadcastSystem() {
         scheduling: { sendNow: true, timezone: 'UTC' },
       });
 
-      toast({}
-        title: "Broadcast Created",
+      toast({title: "Broadcast Created",
         description: message.scheduling.sendNow;
           ? "Your message has been sent to users." 
           : "Your message has been scheduled.",
@@ -201,8 +195,8 @@ export default function AdminBroadcastSystem() {
 
       // Simulate sending process;
       if (message.scheduling.sendNow) {
-        setTimeout(() => {}
-          setMessages(prev => prev.map(m => 
+        setTimeout(() => {
+  setMessages(prev => prev.map(m => 
             m.id === message.id;
               ? {}
                   ...m, 
@@ -220,28 +214,26 @@ export default function AdminBroadcastSystem() {
           ));
         }, 3000);
       }
-    } } catch {
+    } catch {
       console.error('Failed to create broadcast:', error);
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to create broadcast message. Please try again.",
         variant: "destructive",
       });
     }
   };
 
-  const cancelMessage = (messageId: string) => {}
+  const cancelMessage = (messageId: string) => {
     setMessages(prev => prev.map(m => 
-      m.id === messageId ? { ...m, status: 'draft' as const } : m;
+      m.id === messageId ? ...m, status: 'draft' as const } : m;
     ));
-    toast({}
-      title: "Message Cancelled",
+    toast({title: "Message Cancelled",
       description: "The scheduled message has been cancelled.",
     });
   };
 
-  const duplicateMessage = (message: BroadcastMessage) => {}
-    const duplicate: BroadcastMessage = {}
+  const duplicateMessage = (message: BroadcastMessage) => {
+    const duplicate: BroadcastMessage = {
       ...message,
       id: Date.now().toString(),
       title: message.title + ' (Copy)',
@@ -251,20 +243,18 @@ export default function AdminBroadcastSystem() {
       stats: undefined,
     };
     setMessages(prev => [duplicate, ...prev]);
-    toast({}
-      title: "Message Duplicated",
+    toast({title: "Message Duplicated",
       description: "A copy of the message has been created as a draft.",
     });
   };
 
-  const getStatusBadge = (status: BroadcastMessage['status']) => {}
+  const getStatusBadge = (status: BroadcastMessage['status']) => {
     const variants = { draft: 'secondary',
       scheduled: 'default',
       sending: 'default',
       sent: 'default',
       failed: 'destructive',
     } as const;
-
     const colors = { draft: 'text-gray-600',
       scheduled: 'text-blue-600',
       sending: 'text-orange-600',
@@ -279,24 +269,24 @@ export default function AdminBroadcastSystem() {
     );
   };
 
-  const getChannelIcon = (channel: string) => {}
-    switch (channel) {
+  const getChannelIcon = (channel: string) => {
+    switch (channel) {}
       case 'in-app': return <MessageSquare className="h-4 w-4" />;
       case 'email': return <Mail className="h-4 w-4" />;
       case 'push': return <Bell className="h-4 w-4" />;
-      case 'sms': return <Smartphone className="h-4 w-4" />;
+      case 'sms': return <Smartphone className="h-4 w-4" />;,
       default: return <MessageSquare className="h-4 w-4" />;
     }
   };
 
-  const getTypeIcon = (type: string) => {}
+  const getTypeIcon = (type: string) => {
     const messageType = messageTypes.find(t => t.value === type);
     if (!messageType) return <Megaphone className="h-4 w-4" />;
     const Icon = messageType.icon;
     return <Icon className="h-4 w-4" />;
   };
 
-  const formatDate = (date: Date) => {}
+  const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {}
       year: 'numeric',
       month: 'short',
@@ -306,7 +296,7 @@ export default function AdminBroadcastSystem() {
     }).format(date);
   };
 
-  const calculateEngagementRate = (stats: BroadcastMessage['stats']) => {}
+  const calculateEngagementRate = (stats: BroadcastMessage['stats']) => {
     if (!stats || stats.delivered === 0) return 0;
     return ((stats.opened / stats.delivered) * 100).toFixed(1);
   };
@@ -339,7 +329,7 @@ export default function AdminBroadcastSystem() {
                   <Input;
                     id="title"
                     value={newMessage.title || ''}
-                    onChange={(e) => setNewMessage({...newMessage, title: e.target.value})}
+                    onChange={(e) => setNewMessage(...newMessage, title: e.target.value})}
                     placeholder="Enter message title..."
                   />
                 </div>
@@ -349,7 +339,7 @@ export default function AdminBroadcastSystem() {
                   <Textarea;
                     id="content"
                     value={newMessage.content || ''}
-                    onChange={(e) => setNewMessage({...newMessage, content: e.target.value})}
+                    onChange={(e) => setNewMessage(...newMessage, content: e.target.value})}
                     placeholder="Enter your message content..."
                     rows={4}
                   />
@@ -359,7 +349,7 @@ export default function AdminBroadcastSystem() {
                   <Label>Message Type</Label>
                   <Select;
                     value={newMessage.type} 
-                    onValueChange={(value) => setNewMessage({...newMessage, type: value as Record<string, unknown>})}
+                    onValueChange={(value) => setNewMessage(...newMessage, type: value as Record<string, unknown>})}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -384,7 +374,7 @@ export default function AdminBroadcastSystem() {
               <div className="space-y-3">
                 <Label>Delivery Channels</Label>
                 <div className="grid grid-cols-2 gap-3">
-                  {[]
+                  {[0]
                     { id: 'in-app', label: 'In-App', icon: MessageSquare },
                     { id: 'email', label: 'Email', icon: Mail },
                     { id: 'push', label: 'Push', icon: Bell },
@@ -395,12 +385,12 @@ export default function AdminBroadcastSystem() {
                         type="checkbox"
                         id={channel.id}
                         checked={newMessage.channels?.includes(channel.id as Record<string, unknown>) || false}
-                        onChange={(e) => {}
-                          const channels = newMessage.channels || [];
+                        onChange={(e) => {
+  const channels = newMessage.channels || [0];
                           if (e.target.checked) {
-                            setNewMessage({...newMessage, channels: [...channels, channel.id as Record<string, unknown>]});
+                            setNewMessage(...newMessage, channels: ...channels, channel.id as Record<string, unknown>]});
                           } else {}
-                            setNewMessage({...newMessage, channels: channels.filter(c => c !== channel.id)});
+                            setNewMessage(...newMessage, channels: channels.filter(c => c !== channel.id)});
                           }
                         }}
                         className="rounded border-gray-300"
@@ -421,8 +411,7 @@ export default function AdminBroadcastSystem() {
                 <Label>Target Audience</Label>
                 <Select;
                   value={newMessage.targetAudience?.type} 
-                  onValueChange={(value) => setNewMessage({}
-                    ...newMessage, 
+                  onValueChange={(value) => setNewMessage(...newMessage, 
                     targetAudience: { type: value as Record<string, unknown> }
                   })}
                 >
@@ -450,9 +439,8 @@ export default function AdminBroadcastSystem() {
                 <div className="flex items-center space-x-2">
                   <Switch;
                     checked={newMessage.scheduling?.sendNow || false}
-                    onCheckedChange={(checked) => setNewMessage({}
-                      ...newMessage,
-                      scheduling: { ...newMessage.scheduling!, sendNow: checked }
+                    onCheckedChange={(checked) => setNewMessage(...newMessage,
+                      scheduling: ...newMessage.scheduling!, sendNow: checked }
                     })}
                   />
                   <span className="text-sm">Send immediately</span>
@@ -464,8 +452,7 @@ export default function AdminBroadcastSystem() {
                       <Label>Scheduled Date & Time</Label>
                       <Input;
                         type="datetime-local"
-                        onChange={(e) => setNewMessage({}
-                          ...newMessage,
+                        onChange={(e) => setNewMessage(...newMessage,
                           scheduling: {}
                             ...newMessage.scheduling!,
                             scheduledTime: new Date(e.target.value)
@@ -477,9 +464,8 @@ export default function AdminBroadcastSystem() {
                       <Label>Timezone</Label>
                       <Select;
                         value={newMessage.scheduling?.timezone} 
-                        onValueChange={(value) => setNewMessage({}
-                          ...newMessage,
-                          scheduling: { ...newMessage.scheduling!, timezone: value }
+                        onValueChange={(value) => setNewMessage(...newMessage,
+                          scheduling: ...newMessage.scheduling!, timezone: value }
                         })}
                       >
                         <SelectTrigger>
@@ -729,3 +715,4 @@ export default function AdminBroadcastSystem() {
     </div>
   );
 }
+))))))))))))))))))))))))))))))))))))))))

@@ -6,10 +6,12 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ProfilePreview } from "@/components/ui/profile-preview"
 import { useApiToast } from "@/hooks/use-toast"
-import {}
 
 } from 'lucide-react'
-'use client'
+"use client"
+
+
+
 
   Search, 
   UserPlus, 
@@ -20,136 +22,108 @@ import {}
   Users,
   Clock,
   GamepadIcon,
-  User;
-
-interface Friend {}
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string | null;
-  status: 'online' | 'offline' | 'away' | 'busy'
-  isInParty: boolean;
+interface id {: string,
+  username: string,
+  displayName: string,
+  avatar: string | null,
+  status: 'online' | 'offline' | 'away' | 'busy',
+  isInParty: boolean,
   currentParty?: {}
-    id: string;
-    title: string;
-    participantCount: number;
-  }
-  lastSeen: string;
-  mutualFriends: number;
-  friendSince: string;
-}
+    id: string,
+    title: string,
+    participantCount: number,
+  lastSeen: string,
+  mutualFriends: number,
+  friendSince: string,
 
-interface FriendRequest {}
-  id: string;
+interface id {: string,
   fromUser: {}
-    id: string;
-    username: string;
-    displayName: string;
-    avatar: string | null;
-  }
+    id: string,
+    username: string,
+    displayName: string,
+    avatar: string | null,
   toUser: {}
-    id: string;
-    username: string;
-    displayName: string;
-    avatar: string | null;
-  }
-  createdAt: string;
-  message?: string;
-}
+    id: string,
+    username: string,
+    displayName: string,
+    avatar: string | null,
+  createdAt: string,
+  message?: string,
 
 export function FriendsManager() {
-  const [friends, setFriends] = useState<Friend[]>([])
-  const [incomingRequests, setIncomingRequests] = useState<FriendRequest[]>([])
-  const [outgoingRequests, setOutgoingRequests] = useState<FriendRequest[]>([])
+  const [friends, setFriends] = useState<Friend[0]>([0])
+  const [incomingRequests, setIncomingRequests] = useState<FriendRequest[0]>([0])
+  const [outgoingRequests, setOutgoingRequests] = useState<FriendRequest[0]>([0])
   const [searchQuery, setSearchQuery] = useState('')
   const [loading, setLoading] = useState(true)
   const { apiRequest, toastSuccess, toastError } = useApiToast()
 
   useEffect(() => {
     loadFriendsData()
-  }, [])
+  }, [0])
 
   const loadFriendsData = async () => {
     try {
-      const [friendsData, incomingData, outgoingData] = await Promise.all([]
-        apiRequest(() => fetch(&apos;/api/social/friends&apos;)),
-        apiRequest(() => fetch(&apos;/api/social/friend-requests/incoming')),
+      const [friendsData, incomingData, outgoingData] = await Promise.all([0]
+        apiRequest(() => fetch(&apos;/api/social/friends')),
+        apiRequest(() => fetch('/api/social/friend-requests/incoming')),
         apiRequest(() => fetch('/api/social/friend-requests/outgoing'))
       ])
 
       if (friendsData) setFriends(friendsData)
       if (incomingData) setIncomingRequests(incomingData)
       if (outgoingData) setOutgoingRequests(outgoingData)
-    } } catch {
+    } catch (error) {
       toastError(error, 'Failed to load friends data')
-    } finally {}
+    } finally {
       setLoading(false)
-    }
-  }
 
-  const handleAcceptRequest = async (requestId: string) => {}
+  const handleAcceptRequest = async (requestId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/social/friend-requests/${requestId}/accept`, { method: 'POST' }),
       { successMessage: 'Friend request accepted!', showSuccess: true }
-    )
     if (success) {
       setIncomingRequests(prev => prev.filter(req => req.id !== requestId))
       loadFriendsData()
-    }
-  }
 
-  const handleDeclineRequest = async (requestId: string) => {}
+  const handleDeclineRequest = async (requestId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/social/friend-requests/${requestId}/decline`, { method: 'POST' }),
       { successMessage: 'Friend request declined', showSuccess: true }
-    )
     if (success) {
       setIncomingRequests(prev => prev.filter(req => req.id !== requestId))
-    }
-  }
 
-  const handleCancelRequest = async (requestId: string) => {}
+  const handleCancelRequest = async (requestId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/social/friend-requests/${requestId}/cancel`, { method: 'DELETE' }),
       { successMessage: 'Friend request cancelled', showSuccess: true }
-    )
     if (success) {
       setOutgoingRequests(prev => prev.filter(req => req.id !== requestId))
-    }
-  }
 
-  const handleRemoveFriend = async (friendId: string) => {}
+  const handleRemoveFriend = async (friendId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/social/friends/${friendId}`, { method: 'DELETE' }),
       { successMessage: 'Friend removed', showSuccess: true }
-    )
     if (success) {
       setFriends(prev => prev.filter(friend => friend.id !== friendId))
-    }
-  }
 
   const filteredFriends = friends.filter(friend =>
     friend.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     friend.username.toLowerCase().includes(searchQuery.toLowerCase())
-  )
 
-  const getStatusColor = (status: Friend['status']) => {}
-    switch (status) {
-      case 'online': return 'bg-green-500'
-      case 'away': return 'bg-yellow-500'
-      case 'busy': return 'bg-red-500'
-      default: return 'bg-gray-400'
-    }
-  }
+  const getStatusColor = (status: Friend['status']) => {
+    switch (status) {}
+      case 'online': return 'bg-green-500';
+      case 'away': return 'bg-yellow-500';
+      case 'busy': return 'bg-red-500';,
+      default: return 'bg-gray-400';
 
-  const getStatusText = (status: Friend['status']) => {}
-    switch (status) {
-      case 'online': return 'Online'
-      case 'away': return 'Away'
-      case 'busy': return 'Busy'
-      default: return 'Offline'
-    }
-  }
+  const getStatusText = (status: Friend['status']) => {
+    switch (status) {}
+      case 'online': return 'Online';
+      case 'away': return 'Away';
+      case 'busy': return 'Busy';,
+      default: return 'Offline';
 
   if (loading) {
     return (
@@ -158,15 +132,13 @@ export function FriendsManager() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </CardContent>
       </Card>
-    )
-  }
 
   return (
     <div className="space-y-6">
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-        <Input;
+        <Input,
           placeholder="Search friends..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -180,7 +152,7 @@ export function FriendsManager() {
             All Friends ({friends.length})
           </TabsTrigger>
           <TabsTrigger value="online">
-            Online ({friends.filter(f => f.status === &apos;online&apos;).length})
+            Online ({friends.filter(f => f.status === &apos;online').length})
           </TabsTrigger>
           <TabsTrigger value="requests">
             Requests ({incomingRequests.length + outgoingRequests.length})
@@ -259,7 +231,7 @@ export function FriendsManager() {
                             </Button>
                           </>
                         )}
-                        <Button;
+                        <Button,
                           variant="outline"
                           size="sm"
                           onClick={() => handleRemoveFriend(friend.id)}
@@ -276,7 +248,7 @@ export function FriendsManager() {
         </TabsContent>
 
         <TabsContent value="online" className="space-y-4">
-          {filteredFriends.filter(f => f.status === &apos;online&apos;).map((friend) => (
+          {filteredFriends.filter(f => f.status === &apos;online').map((friend) => (
             <Card key={friend.id}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
@@ -353,7 +325,7 @@ export function FriendsManager() {
                             </ProfilePreview>
                             <p className="text-sm text-muted-foreground">@{request.fromUser.username}</p>
                             {request.message && (
-                              <p className="text-sm mt-1 italic">&quot;{request.message}&quot;</p>
+                              <p className="text-sm mt-1 italic">&quot;{request.message}&quot</p>
                             )}
                             <div className="flex items-center space-x-1 mt-1">
                               <Clock className="h-3 w-3 text-muted-foreground" />
@@ -364,19 +336,17 @@ export function FriendsManager() {
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Button;
+                          <Button,
                             variant="default"
                             size="sm"
                             onClick={() => handleAcceptRequest(request.id)}
                           >
-                            Accept;
                           </Button>
-                          <Button;
+                          <Button,
                             variant="outline"
                             size="sm"
                             onClick={() => handleDeclineRequest(request.id)}
                           >
-                            Decline;
                           </Button>
                         </div>
                       </div>
@@ -420,12 +390,11 @@ export function FriendsManager() {
                             </div>
                           </div>
                         </div>
-                        <Button;
+                        <Button,
                           variant="outline"
                           size="sm"
                           onClick={() => handleCancelRequest(request.id)}
                         >
-                          Cancel;
                         </Button>
                       </div>
                     </CardContent>
@@ -449,5 +418,3 @@ export function FriendsManager() {
         </TabsContent>
       </Tabs>
     </div>
-  )
-}

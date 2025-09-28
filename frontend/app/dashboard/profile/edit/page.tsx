@@ -16,32 +16,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Image from "next/image"
 
 "use client"
-interface UserProfile {}
-  id: string;
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  displayName: string;
-  bio: string;
-  avatar: string;
-  coverImage: string;
-  location: string;
-  website: string;
-  birthDate: string;
-  phone: string;
-  timezone: string;
-  language: string;
-  theme: string;
-  isPublic: boolean;
-  showEmail: boolean;
-  showLocation: boolean;
-  showBirthDate: boolean;
-  emailNotifications: boolean;
-  pushNotifications: boolean;
-  marketingEmails: boolean;
-  friendRequests: boolean;
-  partyInvites: boolean;
+
+interface id {: string;,
+  username: string;,
+  email: string;,
+  firstName: string;,
+  lastName: string;,
+  displayName: string;,
+  bio: string;,
+  avatar: string;,
+  coverImage: string;,
+  location: string;,
+  website: string;,
+  birthDate: string;,
+  phone: string;,
+  timezone: string;,
+  language: string;,
+  theme: string;,
+  isPublic: boolean;,
+  showEmail: boolean;,
+  showLocation: boolean;,
+  showBirthDate: boolean;,
+  emailNotifications: boolean;,
+  pushNotifications: boolean;,
+  marketingEmails: boolean;,
+  friendRequests: boolean;,
+  partyInvites: boolean;,
   achievements: boolean;
 }
 
@@ -58,8 +58,8 @@ export default function ProfileEditPage() {
   const [activeTab, setActiveTab] = useState("profile")
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [coverFile, setCoverFile] = useState<File | null>(null)
-  const [avatarPreview, setAvatarPreview] = useState<string>(&quot;&quot;)
-  const [coverPreview, setCoverPreview] = useState<string>(&quot;&quot;)
+  const [avatarPreview, setAvatarPreview] = useState<string>(&quot;")
+  const [coverPreview, setCoverPreview] = useState<string>(&quot;")
 
   useEffect(() => {
     if (!user) {
@@ -72,7 +72,7 @@ export default function ProfileEditPage() {
   const fetchProfile = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/profile/", {}
+      const response = await fetch("/api/users/profile/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -84,19 +84,18 @@ export default function ProfileEditPage() {
       } else {}
         throw new Error("Failed to fetch profile")
       }
-    } } catch {
+    } catch (error) {
       console.error("Profile fetch error:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load profile data.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const handleInputChange = (field: keyof UserProfile, value: unknown) => {}
+  const handleInputChange = (field: keyof UserProfile, value: unknown) => {
     if (!profile) return;
     setProfile((prev) => ({}
       ...prev!,
@@ -106,16 +105,15 @@ export default function ProfileEditPage() {
 
     // Clear field error;
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: &quot;" }))
+      setErrors((prev) => (...prev, [field]: "" }))
     }
   }
 
-  const handleFileChange = (type: "avatar" | "cover", file: File | null) => {}
+  const handleFileChange = (type: "avatar" | "cover", file: File | null) => {
     if (!file) return;
     // Validate file size (5MB max)
     if (file.size > 5 * 1024 * 1024) {
-      toast({}
-        title: "File Too Large",
+      toast({title: "File Too Large",
         description: "Please select an image smaller than 5MB.",
         variant: "destructive",
       })
@@ -123,9 +121,8 @@ export default function ProfileEditPage() {
     }
 
     // Validate file type;
-    if (!file.type.startsWith("image/")) {}
-      toast({}
-        title: "Invalid File Type",
+    if (!file.type.startsWith("image/")) {
+      toast({title: "Invalid File Type",
         description: "Please select an image file.",
         variant: "destructive",
       })
@@ -142,22 +139,22 @@ export default function ProfileEditPage() {
     setHasChanges(true)
   }
 
-  const validateProfile = (): boolean => {}
-    const newErrors: Record<string, string> = { if (!profile?.username?.trim()) {}
+  const validateProfile = (): boolean => {
+    const newErrors: Record<string, string> = { if (!profile?.username?.trim()) {
       newErrors.username = "Username is required"
     } else if (profile.username.length < 3) {
       newErrors.username = "Username must be at least 3 characters"
-    } else if (!/^[a-zA-Z0-9_]+$/.test(profile.username)) {}
+    } else if (!/^[a-zA-Z0-9_]+$/.test(profile.username)) {
       newErrors.username = "Username can only contain letters, numbers, and underscores"
     }
 
-    if (!profile?.email?.trim()) {}
+    if (!profile?.email?.trim()) {
       newErrors.email = "Email is required"
-    } else if (!/\S+@\S+\.\S+/.test(profile.email)) {}
+    } else if (!/\S+@\S+\.\S+/.test(profile.email)) {
       newErrors.email = "Please enter a valid email address"
     }
 
-    if (!profile?.displayName?.trim()) {}
+    if (!profile?.displayName?.trim()) {
       newErrors.displayName = "Display name is required"
     }
 
@@ -165,7 +162,7 @@ export default function ProfileEditPage() {
       newErrors.bio = "Bio must be less than 500 characters"
     }
 
-    if (profile?.website && !/^https?:\/\/.+/.test(profile.website)) {}
+    if (profile?.website && !/^https?:\/\/.+/.test(profile.website)) {
       newErrors.website = "Website must be a valid URL (include http:// or https://)"
     }
 
@@ -173,13 +170,13 @@ export default function ProfileEditPage() {
     return Object.keys(newErrors).length === 0;
   }
 
-  const uploadFile = async (file: File, type: "avatar" | "cover"): Promise<string> => {}
+  const uploadFile = async (file: File, type: "avatar" | "cover"): Promise<string> => {
     const formData = new FormData()
     formData.append("file", file)
     formData.append("type", type)
 
     const token = localStorage.getItem("accessToken")
-    const response = await fetch("/api/users/upload-image/", {}
+    const response = await fetch("/api/users/upload-image/", {
       method: "POST",
       headers: {}
         Authorization: `Bearer ${token}`,
@@ -200,7 +197,7 @@ export default function ProfileEditPage() {
     setIsSaving(true)
 
     try {
-      const updatedProfile = { ...profile }
+      const updatedProfile = ...profile }
 
       // Upload files if changed;
       if (avatarFile) {
@@ -211,7 +208,7 @@ export default function ProfileEditPage() {
       }
 
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/profile/", {}
+      const response = await fetch("/api/users/profile/", {
         method: "PUT",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -229,36 +226,34 @@ export default function ProfileEditPage() {
         setAvatarPreview("")
         setCoverPreview("")
 
-        toast({}
-          title: "Profile Updated",
+        toast({title: "Profile Updated",
           description: "Your profile has been successfully updated.",
         })
       } else {}
         const errorData = await response.json()
         throw new Error(errorData.message || "Failed to update profile")
       }
-    } } catch {
+    } catch (error) {
       console.error("Profile update error:", error)
-      toast({}
-        title: "Update Failed",
+      toast({title: "Update Failed",
         description: error instanceof Error ? error.message : "Failed to update profile.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSaving(false)
     }
   }
 
-  const handleCancel = () => {}
+  const handleCancel = () => {
     if (hasChanges) {
-      if (confirm("You have unsaved changes. Are you sure you want to cancel?")) {}
+      if (confirm("You have unsaved changes. Are you sure you want to cancel?")) {
         fetchProfile()
         setHasChanges(false)
         setAvatarFile(null)
         setCoverFile(null)
         setAvatarPreview("")
         setCoverPreview("")
-        setErrors({})
+        setErrors({)
       }
     } else {}
       router.push("/dashboard/profile")
@@ -416,7 +411,7 @@ export default function ProfileEditPage() {
                   <div className="absolute bottom-4 right-4 flex space-x-2">
                     <Button;
                       size="sm"
-                      onClick={() => document.getElementById(&quot;cover-upload&quot;)?.click()}
+                      onClick={() => document.getElementById(&quot;cover-upload")?.click()}
                       className="bg-black/50 hover:bg-black/70 text-white"
                     >
                       <Upload className="w-4 h-4 mr-2" />
@@ -426,7 +421,7 @@ export default function ProfileEditPage() {
                       <Button;
                         size="sm"
                         variant="destructive"
-                        onClick={() => {}
+                        onClick={() => {
                           setCoverFile(null)
                           setCoverPreview("")
                           handleInputChange("coverImage", "")
@@ -442,7 +437,7 @@ export default function ProfileEditPage() {
                     type="file"
                     accept="image/*"
                     className="hidden"
-                    onChange={(e) => handleFileChange(&quot;cover&quot;, e.target.files?.[0] || null)}
+                    onChange={(e) => handleFileChange(&quot;cover", e.target.files?.[0] || null)}
                   />
                 </div>
               </CardContent>
@@ -482,7 +477,7 @@ export default function ProfileEditPage() {
                     </div>
                     <Button;
                       size="sm"
-                      onClick={() => document.getElementById(&quot;avatar-upload&quot;)?.click()}
+                      onClick={() => document.getElementById(&quot;avatar-upload")?.click()}
                       className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full bg-purple-500 hover:bg-purple-600 text-white p-0"
                     >
                       <Camera className="w-4 h-4" />
@@ -492,7 +487,7 @@ export default function ProfileEditPage() {
                       type="file"
                       accept="image/*"
                       className="hidden"
-                      onChange={(e) => handleFileChange(&quot;avatar&quot;, e.target.files?.[0] || null)}
+                      onChange={(e) => handleFileChange(&quot;avatar", e.target.files?.[0] || null)}
                     />
                   </div>
                   <div className="flex-1">
@@ -518,7 +513,7 @@ export default function ProfileEditPage() {
                     <Input;
                       id="username"
                       value={profile.username}
-                      onChange={(e) => handleInputChange(&quot;username&quot;, e.target.value)}
+                      onChange={(e) => handleInputChange(&quot;username", e.target.value)}
                       className="glass-card border-white/20 focus:border-purple-500/50 text-white placeholder-gray-400"
                       placeholder="Enter username"
                     />
@@ -533,7 +528,7 @@ export default function ProfileEditPage() {
                       id="email"
                       type="email"
                       value={profile.email}
-                      onChange={(e) => handleInputChange(&quot;email&quot;, e.target.value)}
+                      onChange={(e) => handleInputChange(&quot;email", e.target.value)}
                       className="glass-card border-white/20 focus:border-purple-500/50 text-white placeholder-gray-400"
                       placeholder="Enter email"
                     />
@@ -547,7 +542,7 @@ export default function ProfileEditPage() {
                     <Input;
                       id="firstName"
                       value={profile.firstName}
-                      onChange={(e) => handleInputChange(&quot;firstName&quot;, e.target.value)}
+                      onChange={(e) => handleInputChange(&quot;firstName", e.target.value)}
                       className="glass-card border-white/20 focus:border-purple-500/50 text-white placeholder-gray-400"
                       placeholder="Enter first name"
                     />
@@ -560,7 +555,7 @@ export default function ProfileEditPage() {
                     <Input;
                       id="lastName"
                       value={profile.lastName}
-                      onChange={(e) => handleInputChange(&quot;lastName&quot;, e.target.value)}
+                      onChange={(e) => handleInputChange(&quot;lastName", e.target.value)}
                       className="glass-card border-white/20 focus:border-purple-500/50 text-white placeholder-gray-400"
                       placeholder="Enter last name"
                     />
@@ -573,7 +568,7 @@ export default function ProfileEditPage() {
                     <Input;
                       id="displayName"
                       value={profile.displayName}
-                      onChange={(e) => handleInputChange(&quot;displayName&quot;, e.target.value)}
+                      onChange={(e) => handleInputChange(&quot;displayName", e.target.value)}
                       className="glass-card border-white/20 focus:border-purple-500/50 text-white placeholder-gray-400"
                       placeholder="Enter display name"
                     />
@@ -587,7 +582,7 @@ export default function ProfileEditPage() {
                     <Textarea;
                       id="bio"
                       value={profile.bio}
-                      onChange={(e) => handleInputChange(&quot;bio&quot;, e.target.value)}
+                      onChange={(e) => handleInputChange(&quot;bio", e.target.value)}
                       className="glass-card border-white/20 focus:border-purple-500/50 text-white placeholder-gray-400 min-h-[100px]"
                       placeholder="Tell us about yourself..."
                       maxLength={500}
@@ -605,7 +600,7 @@ export default function ProfileEditPage() {
                     <Input;
                       id="location"
                       value={profile.location}
-                      onChange={(e) => handleInputChange(&quot;location&quot;, e.target.value)}
+                      onChange={(e) => handleInputChange(&quot;location", e.target.value)}
                       className="glass-card border-white/20 focus:border-purple-500/50 text-white placeholder-gray-400"
                       placeholder="Enter location"
                     />
@@ -618,7 +613,7 @@ export default function ProfileEditPage() {
                     <Input;
                       id="website"
                       value={profile.website}
-                      onChange={(e) => handleInputChange(&quot;website&quot;, e.target.value)}
+                      onChange={(e) => handleInputChange(&quot;website", e.target.value)}
                       className="glass-card border-white/20 focus:border-purple-500/50 text-white placeholder-gray-400"
                       placeholder="https://example.com"
                     />
@@ -633,7 +628,7 @@ export default function ProfileEditPage() {
                       id="birthDate"
                       type="date"
                       value={profile.birthDate}
-                      onChange={(e) => handleInputChange(&quot;birthDate&quot;, e.target.value)}
+                      onChange={(e) => handleInputChange(&quot;birthDate", e.target.value)}
                       className="glass-card border-white/20 focus:border-purple-500/50 text-white"
                     />
                   </div>
@@ -645,7 +640,7 @@ export default function ProfileEditPage() {
                     <Input;
                       id="phone"
                       value={profile.phone}
-                      onChange={(e) => handleInputChange(&quot;phone&quot;, e.target.value)}
+                      onChange={(e) => handleInputChange(&quot;phone", e.target.value)}
                       className="glass-card border-white/20 focus:border-purple-500/50 text-white placeholder-gray-400"
                       placeholder="Enter phone number"
                     />
@@ -676,7 +671,7 @@ export default function ProfileEditPage() {
                     </div>
                     <Switch;
                       checked={profile.isPublic}
-                      onCheckedChange={(checked) => handleInputChange(&quot;isPublic&quot;, checked)}
+                      onCheckedChange={(checked) => handleInputChange(&quot;isPublic", checked)}
                     />
                   </div>
 
@@ -687,7 +682,7 @@ export default function ProfileEditPage() {
                     </div>
                     <Switch;
                       checked={profile.showEmail}
-                      onCheckedChange={(checked) => handleInputChange(&quot;showEmail&quot;, checked)}
+                      onCheckedChange={(checked) => handleInputChange(&quot;showEmail", checked)}
                     />
                   </div>
 
@@ -698,7 +693,7 @@ export default function ProfileEditPage() {
                     </div>
                     <Switch;
                       checked={profile.showLocation}
-                      onCheckedChange={(checked) => handleInputChange(&quot;showLocation&quot;, checked)}
+                      onCheckedChange={(checked) => handleInputChange(&quot;showLocation", checked)}
                     />
                   </div>
 
@@ -709,7 +704,7 @@ export default function ProfileEditPage() {
                     </div>
                     <Switch;
                       checked={profile.showBirthDate}
-                      onCheckedChange={(checked) => handleInputChange(&quot;showBirthDate&quot;, checked)}
+                      onCheckedChange={(checked) => handleInputChange(&quot;showBirthDate", checked)}
                     />
                   </div>
 
@@ -720,7 +715,7 @@ export default function ProfileEditPage() {
                     </div>
                     <Switch;
                       checked={profile.friendRequests}
-                      onCheckedChange={(checked) => handleInputChange(&quot;friendRequests&quot;, checked)}
+                      onCheckedChange={(checked) => handleInputChange(&quot;friendRequests", checked)}
                     />
                   </div>
 
@@ -731,7 +726,7 @@ export default function ProfileEditPage() {
                     </div>
                     <Switch;
                       checked={profile.partyInvites}
-                      onCheckedChange={(checked) => handleInputChange(&quot;partyInvites&quot;, checked)}
+                      onCheckedChange={(checked) => handleInputChange(&quot;partyInvites", checked)}
                     />
                   </div>
 
@@ -742,7 +737,7 @@ export default function ProfileEditPage() {
                     </div>
                     <Switch;
                       checked={profile.achievements}
-                      onCheckedChange={(checked) => handleInputChange(&quot;achievements&quot;, checked)}
+                      onCheckedChange={(checked) => handleInputChange(&quot;achievements", checked)}
                     />
                   </div>
                 </div>
@@ -771,7 +766,7 @@ export default function ProfileEditPage() {
                     </div>
                     <Switch;
                       checked={profile.emailNotifications}
-                      onCheckedChange={(checked) => handleInputChange(&quot;emailNotifications&quot;, checked)}
+                      onCheckedChange={(checked) => handleInputChange(&quot;emailNotifications", checked)}
                     />
                   </div>
 
@@ -782,7 +777,7 @@ export default function ProfileEditPage() {
                     </div>
                     <Switch;
                       checked={profile.pushNotifications}
-                      onCheckedChange={(checked) => handleInputChange(&quot;pushNotifications&quot;, checked)}
+                      onCheckedChange={(checked) => handleInputChange(&quot;pushNotifications", checked)}
                     />
                   </div>
 
@@ -793,7 +788,7 @@ export default function ProfileEditPage() {
                     </div>
                     <Switch;
                       checked={profile.marketingEmails}
-                      onCheckedChange={(checked) => handleInputChange(&quot;marketingEmails&quot;, checked)}
+                      onCheckedChange={(checked) => handleInputChange(&quot;marketingEmails", checked)}
                     />
                   </div>
                 </div>
@@ -818,7 +813,7 @@ export default function ProfileEditPage() {
                       <Clock className="w-4 h-4 inline mr-2" />
                       Timezone;
                     </Label>
-                    <Select value={profile.timezone} onValueChange={(value) => handleInputChange(&quot;timezone&quot;, value)}>
+                    <Select value={profile.timezone} onValueChange={(value) => handleInputChange(&quot;timezone", value)}>
                       <SelectTrigger className="glass-card border-white/20 focus:border-purple-500/50 text-white">
                         <SelectValue placeholder="Select timezone" />
                       </SelectTrigger>
@@ -840,7 +835,7 @@ export default function ProfileEditPage() {
                       <Languages className="w-4 h-4 inline mr-2" />
                       Language;
                     </Label>
-                    <Select value={profile.language} onValueChange={(value) => handleInputChange(&quot;language&quot;, value)}>
+                    <Select value={profile.language} onValueChange={(value) => handleInputChange(&quot;language", value)}>
                       <SelectTrigger className="glass-card border-white/20 focus:border-purple-500/50 text-white">
                         <SelectValue placeholder="Select language" />
                       </SelectTrigger>
@@ -863,7 +858,7 @@ export default function ProfileEditPage() {
                       <Sparkles className="w-4 h-4 inline mr-2" />
                       Theme;
                     </Label>
-                    <Select value={profile.theme} onValueChange={(value) => handleInputChange(&quot;theme&quot;, value)}>
+                    <Select value={profile.theme} onValueChange={(value) => handleInputChange(&quot;theme", value)}>
                       <SelectTrigger className="glass-card border-white/20 focus:border-purple-500/50 text-white">
                         <SelectValue placeholder="Select theme" />
                       </SelectTrigger>

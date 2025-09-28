@@ -70,7 +70,7 @@ describe("LoginPage", () => {}
     expect(screen.getByText("Welcome back!")).toBeInTheDocument()
   })
 
-  it("validates required fields", async () => {
+  it("validates required fields", async () => {}
     render(<LoginPage />)
 
     fireEvent.click(screen.getByRole("button", { name: /sign in/i }))
@@ -81,7 +81,7 @@ describe("LoginPage", () => {}
     })
   })
 
-  it("validates email format", async () => {
+  it("validates email format", async () => {}
     render(<LoginPage />)
 
     fireEvent.change(screen.getByLabelText(/email address/i), {}
@@ -95,7 +95,7 @@ describe("LoginPage", () => {}
     })
   })
 
-  it("submits form with valid data", async () => {
+  it("submits form with valid data", async () => {}
     render(<LoginPage />)
 
     fireEvent.change(screen.getByLabelText(/email address/i), {}

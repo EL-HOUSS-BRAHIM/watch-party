@@ -12,59 +12,58 @@ import { useToast } from "@/hooks/use-toast"
 import { formatDistanceToNow, format } from "date-fns"
 
 "use client"
-interface Video {}
-  id: string;
-  title: string;
-  description: string;
-  url: string;
-  thumbnail: string;
-  duration: number;
-  views: number;
-  likes: number;
-  dislikes: number;
-  uploadedAt: string;
-  updatedAt: string;
-  status: "processing" | "ready" | "failed"
-  visibility: "public" | "private" | "unlisted"
-  tags: string[]
+
+interface id {: string;,
+  title: string;,
+  description: string;,
+  url: string;,
+  thumbnail: string;,
+  duration: number;,
+  views: number;,
+  likes: number;,
+  dislikes: number;,
+  uploadedAt: string;,
+  updatedAt: string;,
+  status: "processing" | "ready" | "failed",
+  visibility: "public" | "private" | "unlisted",
+  tags: string[0],
   uploader: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
-    avatar?: string;
+    avatar?: string;,
     isVerified: boolean;
   }
   metadata: {}
-    resolution: string;
-    fileSize: number;
-    format: string;
+    resolution: string;,
+    fileSize: number;,
+    format: string;,
     bitrate: number;
   }
   analytics: {}
-    watchTime: number;
-    averageWatchTime: number;
-    retentionRate: number;
+    watchTime: number;,
+    averageWatchTime: number;,
+    retentionRate: number;,
     topCountries: Array<{ country: string; views: number }>
   }
 }
 
-interface Comment {}
-  id: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  likes: number;
-  dislikes: number;
+interface id {: string;,
+  content: string;,
+  createdAt: string;,
+  updatedAt: string;,
+  likes: number;,
+  dislikes: number;,
   author: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
     avatar?: string;
   }
-  replies: Comment[]
-  isLiked: boolean;
+  replies: Comment[0],
+  isLiked: boolean;,
   isDisliked: boolean;
 }
 
@@ -75,7 +74,7 @@ export default function VideoDetailsPage() {
   const { toast } = useToast()
   const videoId = params.videoId as string;
   const [video, setVideo] = useState<Video | null>(null)
-  const [comments, setComments] = useState<Comment[]>([])
+  const [comments, setComments] = useState<Comment[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
@@ -95,7 +94,7 @@ export default function VideoDetailsPage() {
   const loadVideo = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/`, {}
+      const response = await fetch(`/api/videos/${videoId}/`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -107,21 +106,19 @@ export default function VideoDetailsPage() {
         setIsLiked(videoData.isLiked || false)
         setIsDisliked(videoData.isDisliked || false)
       } else if (response.status === 404) {
-        toast({}
-          title: "Video Not Found",
+        toast({title: "Video Not Found",
           description: "The video you're looking for doesn't exist.",
           variant: "destructive",
         })
         router.push("/dashboard/videos")
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load video:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load video details.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -129,7 +126,7 @@ export default function VideoDetailsPage() {
   const loadComments = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/comments/`, {}
+      const response = await fetch(`/api/videos/${videoId}/comments/`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -137,9 +134,9 @@ export default function VideoDetailsPage() {
 
       if (response.ok) {
         const commentsData = await response.json()
-        setComments(commentsData.results || [])
+        setComments(commentsData.results || [0])
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load comments:", error)
     }
   }
@@ -147,7 +144,7 @@ export default function VideoDetailsPage() {
   const handleLike = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/like/`, {}
+      const response = await fetch(`/api/videos/${videoId}/like/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -168,7 +165,7 @@ export default function VideoDetailsPage() {
             : null,
         )
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to like video:", error)
     }
   }
@@ -176,7 +173,7 @@ export default function VideoDetailsPage() {
   const handleDislike = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/dislike/`, {}
+      const response = await fetch(`/api/videos/${videoId}/dislike/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -197,7 +194,7 @@ export default function VideoDetailsPage() {
             : null,
         )
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to dislike video:", error)
     }
   }
@@ -207,18 +204,16 @@ export default function VideoDetailsPage() {
 
     if (navigator.share) {
       try {
-        await navigator.share({}
-          title: video?.title,
+        await navigator.share({title: video?.title,
           text: video?.description,
           url: shareUrl,
         })
-      } } catch {
+      } catch (error) {
         console.log("Share cancelled")
       }
     } else {}
       navigator.clipboard.writeText(shareUrl)
-      toast({}
-        title: "Link Copied",
+      toast({title: "Link Copied",
         description: "Video link copied to clipboard.",
       })
     }
@@ -229,7 +224,7 @@ export default function VideoDetailsPage() {
     setIsSubmittingComment(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/comments/`, {}
+      const response = await fetch(`/api/videos/${videoId}/comments/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -242,31 +237,29 @@ export default function VideoDetailsPage() {
         const comment = await response.json()
         setComments((prev) => [comment, ...prev])
         setNewComment("")
-        toast({}
-          title: "Comment Added",
+        toast({title: "Comment Added",
           description: "Your comment has been posted.",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to submit comment:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to post comment.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSubmittingComment(false)
     }
   }
 
   const deleteVideo = async () => {
-    if (!confirm("Are you sure you want to delete this video? This action cannot be undone.")) {}
+    if (!confirm("Are you sure you want to delete this video? This action cannot be undone.")) {
       return;
     }
 
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/`, {}
+      const response = await fetch(`/api/videos/${videoId}/`, {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -274,37 +267,35 @@ export default function VideoDetailsPage() {
       })
 
       if (response.ok) {
-        toast({}
-          title: "Video Deleted",
+        toast({title: "Video Deleted",
           description: "The video has been permanently deleted.",
         })
         router.push("/dashboard/videos")
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to delete video:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to delete video.",
         variant: "destructive",
       })
     }
   }
 
-  const formatFileSize = (bytes: number) => {}
+  const formatFileSize = (bytes: number) => {
     const sizes = ["Bytes", "KB", "MB", "GB"]
     if (bytes === 0) return "0 Bytes"
     const i = Math.floor(Math.log(bytes) / Math.log(1024))
-    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i]
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i];
   }
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60;
     if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
     }
-    return `${minutes}:${secs.toString().padStart(2, "0")}`
+    return `${minutes}:${secs.toString().padStart(2, "0")}`;
   }
 
   if (isLoading) {
@@ -325,8 +316,8 @@ export default function VideoDetailsPage() {
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-2xl font-bold mb-4">Video Not Found</h1>
-          <p className="text-gray-600 mb-4">The video you&apos;re looking for doesn&apos;t exist.</p>
-          <Button onClick={() => router.push(&quot;/dashboard/videos&quot;)}>Back to Videos</Button>
+          <p className="text-gray-600 mb-4">The video you&apos;re looking for doesn't exist.</p>
+          <Button onClick={() => router.push(&quot;/dashboard/videos")}>Back to Videos</Button>
         </div>
       </div>
     )
@@ -338,7 +329,7 @@ export default function VideoDetailsPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">"
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -474,7 +465,7 @@ export default function VideoDetailsPage() {
                     <CardTitle>Description</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="whitespace-pre-wrap">{video.description || &quot;No description provided.&quot;}</p>
+                    <p className="whitespace-pre-wrap">{video.description || &quot;No description provided."}</p>&quot;
 
                     {video.tags.length > 0 && (
                       <div className="mt-4">
@@ -549,7 +540,7 @@ export default function VideoDetailsPage() {
                           <Button;
                             variant="outline"
                             size="sm"
-                            onClick={() => setNewComment(&quot;&quot;)}
+                            onClick={() => setNewComment(&quot;")}
                             disabled={!newComment.trim()}
                           >
                             Cancel;

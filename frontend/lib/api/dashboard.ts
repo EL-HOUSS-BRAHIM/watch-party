@@ -15,7 +15,7 @@ import type {}
 } from "./types"
 
 export class DashboardAPI {}
-  constructor(private readonly client: ApiClient = apiClient) {}
+  constructor(private readonly client: ApiClient = apiClient) {
 
   /**
    * Fetch key metrics for the current user including recent usage totals.

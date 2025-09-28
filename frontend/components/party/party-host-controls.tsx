@@ -1,6 +1,5 @@
 import { Play, Settings, User, Volume2 } from "lucide-react"
 import { useState, useEffect } from "react"
-import {}
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
@@ -10,6 +9,7 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 
 "use client"
+
   Sheet,
   SheetContent,
   SheetDescription,
@@ -17,34 +17,31 @@ import { Label } from "@/components/ui/label"
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-interface Participant {}
-  id: string;
-  username: string;
-  firstName: string;
+interface id {: string;,
+  username: string;,
+  firstName: string;,
   lastName: string;
-  avatar?: string;
-  isHost: boolean;
-  isOnline: boolean;
-  joinedAt: string;
+  avatar?: string;,
+  isHost: boolean;,
+  isOnline: boolean;,
+  joinedAt: string;,
   role: "host" | "moderator" | "participant"
 }
 
-interface PartyHostControlsProps {}
-  partyId: string;
-  participants: Participant[]
-  currentTime: number;
-  duration: number;
-  isPlaying: boolean;
-  volume: number;
-  onSeek: (time: number) => void;
-  onPlayPause: () => void;
-  onVolumeChange: (volume: number) => void;
-  onSkip: (seconds: number) => void;
+interface partyId {: string;,
+  participants: Participant[0],
+  currentTime: number;,
+  duration: number;,
+  isPlaying: boolean;,
+  volume: number;,
+  onSeek: (time: number) => void;,
+  onPlayPause: () => void;,
+  onVolumeChange: (volume: number) => void;,
+  onSkip: (seconds: number) => void;,
   onParticipantAction: (participantId: string, action: "kick" | "promote" | "mute") => void;
 }
 
-export function PartyHostControls({}
-  partyId,
+export function PartyHostControls({partyId,
   participants,
   currentTime,
   duration,
@@ -57,27 +54,26 @@ export function PartyHostControls({}
   onParticipantAction,
 }: PartyHostControlsProps) {}
   const { toast } = useToast()
-  const [settings, setSettings] = useState({}
-    allowParticipantControls: true,
+  const [settings, setSettings] = useState({allowParticipantControls: true,
     allowChat: true,
     allowReactions: true,
     requireApproval: false,
   })
 
-  const formatTime = (seconds: number) => {}
+  const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = Math.floor(seconds % 60)
-    return `${mins}:${secs.toString().padStart(2, "0")}`
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {}
+  const getUserInitials = (firstName: string, lastName: string) => {
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase()
   }
 
-  const updatePartySettings = async (newSettings: Partial<typeof settings>) => {}
+  const updatePartySettings = async (newSettings: Partial<typeof settings>) => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/settings/`, {}
+      const response = await fetch(`/api/parties/${partyId}/settings/`, {
         method: "PATCH",
         headers: {}
           "Content-Type": "application/json",
@@ -87,18 +83,16 @@ export function PartyHostControls({}
       })
 
       if (response.ok) {
-        setSettings(prev => ({ ...prev, ...newSettings }))
-        toast({}
-          title: "Settings updated",
+        setSettings(prev => (...prev, ...newSettings }))
+        toast({title: "Settings updated",
           description: "Party settings have been updated successfully",
         })
       } else {}
         throw new Error("Failed to update settings")
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to update party settings:", error)
-      toast({}
-        title: "Update failed",
+      toast({title: "Update failed",
         description: "Failed to update party settings",
         variant: "destructive",
       })
@@ -297,7 +291,7 @@ export function PartyHostControls({}
                           <Button;
                             variant="ghost"
                             size="sm"
-                            onClick={() => onParticipantAction(participant.id, &quot;promote&quot;)}
+                            onClick={() => onParticipantAction(participant.id, &quot;promote")}
                             title="Promote to moderator"
                           >
                             <Crown className="h-3 w-3" />
@@ -305,7 +299,7 @@ export function PartyHostControls({}
                           <Button;
                             variant="ghost"
                             size="sm"
-                            onClick={() => onParticipantAction(participant.id, &quot;mute&quot;)}
+                            onClick={() => onParticipantAction(participant.id, &quot;mute")}
                             title="Mute participant"
                           >
                             <MessageSquare className="h-3 w-3" />
@@ -313,7 +307,7 @@ export function PartyHostControls({}
                           <Button;
                             variant="ghost"
                             size="sm"
-                            onClick={() => onParticipantAction(participant.id, &quot;kick&quot;)}
+                            onClick={() => onParticipantAction(participant.id, &quot;kick")}
                             title="Remove participant"
                             className="text-destructive hover:text-destructive"
                           >

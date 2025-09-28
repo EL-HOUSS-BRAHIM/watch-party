@@ -11,35 +11,33 @@ import { format } from "date-fns"
 
 "use client"
 
-interface FriendRequest {}
-  id: string;
+interface id {: string;,
   sender: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
-    avatar?: string;
+    avatar?: string;,
     mutualFriends: number;
   }
   recipient: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
     avatar?: string;
   }
-  message?: string;
-  status: "pending" | "accepted" | "declined"
-  createdAt: string;
+  message?: string;,
+  status: "pending" | "accepted" | "declined",
+  createdAt: string;,
   type: "sent" | "received"
 }
 
-interface FriendRequestsProps {}
-  className?: string;
+interface className {?: string;
 }
 
-export default function FriendRequests({ className }: FriendRequestsProps) {}
-  const [requests, setRequests] = useState<FriendRequest[]>([])
+export default function FriendRequests({ className }: FriendRequestsProps) {
+  const [requests, setRequests] = useState<FriendRequest[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("received")
   const { user } = useAuth()
@@ -47,12 +45,12 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
 
   useEffect(() => {
     loadFriendRequests()
-  }, [])
+  }, [0])
 
   const loadFriendRequests = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/friend-requests/", {}
+      const response = await fetch("/api/users/friend-requests/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -62,22 +60,21 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
         const data = await response.json()
         setRequests(data.results || data)
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load friend requests:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load friend requests. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const handleFriendRequest = async (requestId: string, action: "accept" | "decline") => {}
+  const handleFriendRequest = async (requestId: string, action: "accept" | "decline") => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/friend-requests/${requestId}/${action}/`, {}
+      const response = await fetch(`/api/users/friend-requests/${requestId}/${action}/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -87,29 +84,27 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
       if (response.ok) {
         setRequests((prev) =>
           prev.map((req) =>
-            req.id === requestId ? { ...req, status: action === "accept" ? "accepted" : "declined" } : req,
+            req.id === requestId ? ...req, status: action === "accept" ? "accepted" : "declined" } : req,
           ),
         )
 
-        toast({}
-          title: action === "accept" ? "Friend request accepted" : "Friend request declined",
+        toast({title: action === "accept" ? "Friend request accepted" : "Friend request declined",
           description: action === "accept" ? "You are now friends!" : "The friend request has been declined.",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error(`Failed to ${action} friend request:`, error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: `Failed to ${action} friend request. Please try again.`,
         variant: "destructive",
       })
     }
   }
 
-  const cancelFriendRequest = async (requestId: string) => {}
+  const cancelFriendRequest = async (requestId: string) => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/friend-requests/${requestId}/`, {}
+      const response = await fetch(`/api/users/friend-requests/${requestId}/`, {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -118,23 +113,21 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
 
       if (response.ok) {
         setRequests((prev) => prev.filter((req) => req.id !== requestId))
-        toast({}
-          title: "Friend request cancelled",
+        toast({title: "Friend request cancelled",
           description: "The friend request has been cancelled.",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to cancel friend request:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to cancel friend request. Please try again.",
         variant: "destructive",
       })
     }
   }
 
-  const getStatusBadge = (status: string) => {}
-    switch (status) {
+  const getStatusBadge = (status: string) => {
+    switch (status) {}
       case "pending":
         return (
           <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
@@ -158,15 +151,15 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
     }
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {}
+  const getUserInitials = (firstName: string, lastName: string) => {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
   }
 
-  const receivedRequests = requests.filter((req) => req.type === &quot;received&quot; && req.status === &quot;pending")
+  const receivedRequests = requests.filter((req) => req.type === &quot;received" && req.status === "pending")
   const sentRequests = requests.filter((req) => req.type === "sent")
   const processedRequests = requests.filter((req) => req.status !== "pending")
 
-  const FriendRequestCard = ({ request }: { request: FriendRequest }) => {}
+  const FriendRequestCard = ({ request }: { request: FriendRequest }) => {
     const isReceived = request.type === "received"
     const otherUser = isReceived ? request.sender : request.recipient;
     return (
@@ -188,13 +181,13 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
 
                   {isReceived && (otherUser as Record<string, unknown>).mutualFriends > 0 && (}
                     <p className="text-sm text-gray-500 mt-1">
-                      {(otherUser as Record<string, unknown>).mutualFriends} mutual friend{(otherUser as Record<string, unknown>).mutualFriends !== 1 ? &quot;s&quot; : &quot;"}
+                      {(otherUser as Record<string, unknown>).mutualFriends} mutual friend{(otherUser as Record<string, unknown>).mutualFriends !== 1 ? &quot;s" : ""}
                     </p>
                   )}
 
                   {request.message && (
                     <div className="mt-2 p-2 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-700">&quot;{request.message}&quot;</p>
+                      <p className="text-sm text-gray-700">&quot;{request.message}&quot</p>
                     </div>
                   )}
 
@@ -212,14 +205,14 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
               <div className="flex gap-2 mt-4">
                 {isReceived && request.status === "pending" ? (
                   <>
-                    <Button size="sm" onClick={() => handleFriendRequest(request.id, &quot;accept&quot;)} className=&quot;flex-1">"
+                    <Button size="sm" onClick={() => handleFriendRequest(request.id, &quot;accept")} className="flex-1">"
                       <Check className="mr-2 h-4 w-4" />
                       Accept;
                     </Button>
                     <Button;
                       size="sm"
                       variant="outline"
-                      onClick={() => handleFriendRequest(request.id, &quot;decline&quot;)}
+                      onClick={() => handleFriendRequest(request.id, &quot;decline")}
                       className="flex-1"
                     >
                       <X className="mr-2 h-4 w-4" />

@@ -5,13 +5,15 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {}
 import { integrationsAPI } from '@/lib/api'
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
 
 } from 'lucide-react'
-'use client'
+"use client"
+
+
+
 
   Play, 
   Search, 
@@ -22,41 +24,38 @@ import { LoadingSpinner } from '@/components/ui/loading'
   ExternalLink,
   CheckCircle,
   Filter;
-interface DriveFile {}
-  id: string;
-  name: string;
-  mimeType: string;
-  size: number;
-  createdTime: string;
+interface id {: string;,
+  name: string;,
+  mimeType: string;,
+  size: number;,
+  createdTime: string;,
   modifiedTime: string;
-  thumbnailLink?: string;
-  webViewLink: string;
-  parents: string[]
+  thumbnailLink?: string;,
+  webViewLink: string;,
+  parents: string[0],
   owners: Array<{}
     displayName: string;
     photoLink?: string;
   }>
   duration?: number;
   videoMediaMetadata?: {}
-    width: number;
-    height: number;
+    width: number;,
+    height: number;,
     durationMillis: number;
   }
 }
 
-interface GoogleDriveVideoBrowserProps {}
-  onVideoSelect: (file: DriveFile) => void;
+interface onVideoSelect {: (file: DriveFile) => void;,
   onClose: () => void;
   allowMultiple?: boolean;
 }
 
-export function GoogleDriveVideoBrowser({}
-  onVideoSelect, 
+export function GoogleDriveVideoBrowser({onVideoSelect, 
   onClose,
   allowMultiple = false;
 }: GoogleDriveVideoBrowserProps) {}
-  const [files, setFiles] = useState<DriveFile[]>([])
-  const [selectedFiles, setSelectedFiles] = useState<DriveFile[]>([])
+  const [files, setFiles] = useState<DriveFile[0]>([0])
+  const [selectedFiles, setSelectedFiles] = useState<DriveFile[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [currentFolder, setCurrentFolder] = useState('root')
@@ -71,11 +70,10 @@ export function GoogleDriveVideoBrowser({}
   const fetchFiles = async () => {
     try {
       setIsLoading(true)
-      const response = await integrationsAPI.getGoogleDriveFiles({}
-        folder_id: currentFolder === 'root' ? undefined : currentFolder,
+      const response = await integrationsAPI.getGoogleDriveFiles({folder_id: currentFolder === 'root' ? undefined : currentFolder,
       })
 
-      const mappedFiles = (response.files || []).map(file => ({}
+      const mappedFiles = (response.files || [0]).map(file => ({
         id: file.id,
         name: file.name,
         mimeType: file.mime_type,
@@ -85,65 +83,64 @@ export function GoogleDriveVideoBrowser({}
         thumbnailLink: file.thumbnail,
         webViewLink: file.url,
         parents: file.metadata?.parents ?? ['root'],
-        owners: file.metadata?.owners ?? [],
+        owners: file.metadata?.owners ?? [0],
         duration: file.metadata?.duration,
         videoMediaMetadata: file.metadata?.video,
-      })) as DriveFile[]
+      })) as DriveFile[0]
 
       setFiles(mappedFiles)
-    } } catch {
-      toast({}
-        title: 'Error',
+    } catch (error) {
+      toast({title: 'Error',
         description: 'Failed to load Google Drive files',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const handleFolderClick = (folder: DriveFile) => {}
+  const handleFolderClick = (folder: DriveFile) => {
     setCurrentFolder(folder.id)
-    setFolderPath(prev => [...prev, { id: folder.id, name: folder.name }])
+    setFolderPath(prev => ...prev, { id: folder.id, name: folder.name }])
     setSearchTerm('')
   }
 
-  const handleBreadcrumbClick = (index: number) => {}
+  const handleBreadcrumbClick = (index: number) => {
     const newPath = folderPath.slice(0, index + 1)
     setFolderPath(newPath)
     setCurrentFolder(newPath[newPath.length - 1].id)
     setSearchTerm('')
   }
 
-  const handleFileSelect = (file: DriveFile) => {}
+  const handleFileSelect = (file: DriveFile) => {
     if (file.mimeType === 'application/vnd.google-apps.folder') {
       handleFolderClick(file)
       return;
     }
 
     if (allowMultiple) {
-      setSelectedFiles(prev => {}
+      setSelectedFiles(prev => {
         const isSelected = prev.find(f => f.id === file.id)
         if (isSelected) {
           return prev.filter(f => f.id !== file.id)
         }
-        return [...prev, file]
+        return ...prev, file];
       })
     } else {}
       onVideoSelect(file)
     }
   }
 
-  const handleConfirmSelection = () => {}
+  const handleConfirmSelection = () => {
     if (selectedFiles.length > 0) {
       selectedFiles.forEach(file => onVideoSelect(file))
     }
   }
 
-  const sortedFiles = useMemo(() => {}
-    const next = [...files]
+  const sortedFiles = useMemo(() => {
+    const next = ...files]
 
-    switch (sortBy) {
+    switch (sortBy) {}
       case 'name':
         next.sort((a, b) => a.name.localeCompare(b.name))
         break;
@@ -172,22 +169,22 @@ export function GoogleDriveVideoBrowser({}
     file.mimeType.startsWith('video/')
   )
 
-  const formatFileSize = (bytes: number) => {}
+  const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 Bytes'
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
-  const formatDuration = (milliseconds: number) => {}
+  const formatDuration = (milliseconds: number) => {
     const seconds = Math.floor(milliseconds / 1000)
     const minutes = Math.floor(seconds / 60)
     const hours = Math.floor(minutes / 60)
     if (hours > 0) {
-      return `${hours}:${(minutes % 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`
+      return `${hours}:${(minutes % 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
     }
-    return `${minutes}:${(seconds % 60).toString().padStart(2, '0')}`
+    return `${minutes}:${(seconds % 60).toString().padStart(2, '0')}`;
   }
 
   return (
@@ -213,7 +210,7 @@ export function GoogleDriveVideoBrowser({}
           <div className="flex items-center gap-2 text-sm">
             {folderPath.map((folder, index) => (
               <div key={folder.id} className="flex items-center gap-2">
-                {index > 0 && <span className=&quot;text-gray-400&quot;>/</span>}
+                {index > 0 && <span className=&quot;text-gray-400">/</span>}&quot;
                 <button;
                   onClick={() => handleBreadcrumbClick(index)}
                   className="hover:text-blue-600 transition-colors"
@@ -281,7 +278,7 @@ export function GoogleDriveVideoBrowser({}
                   ))}
 
                   {/* Videos */}
-                  {videos.map((video) => {}
+                  {videos.map((video) => {
                     const isSelected = selectedFiles.find(f => f.id === video.id)
                     return (
                       <div;
@@ -369,7 +366,7 @@ export function GoogleDriveVideoBrowser({}
                   ))}
 
                   {/* Videos in Grid */}
-                  {videos.map((video) => {}
+                  {videos.map((video) => {
                     const isSelected = selectedFiles.find(f => f.id === video.id)
                     return (
                       <Card;

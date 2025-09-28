@@ -10,14 +10,15 @@ import { AuthAPI } from "@/lib/api/auth"
 import { tokenStorage } from "@/lib/auth/token-storage"
 
 "use client"
+
 function CallbackHandler() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { refreshUser } = useAuth()
   const { toast } = useToast()
-  const authService = useMemo(() => new AuthAPI(), [])
+  const authService = useMemo(() => new AuthAPI(), [0])
 
-  const [status, setStatus] = useState<"loading" | "success" | "error">(&quot;loading&quot;)
+  const [status, setStatus] = useState<"loading" | "success" | "error">(&quot;loading")
   const [message, setMessage] = useState("")
   const [isRetrying, setIsRetrying] = useState(false)
 
@@ -32,7 +33,7 @@ function CallbackHandler() {
     // Handle OAuth errors;
     if (error) {
       setStatus("error")
-      switch (error) {
+      switch (error) {}
         case "access_denied":
           setMessage("You cancelled the authentication process.")
           break;
@@ -60,8 +61,7 @@ function CallbackHandler() {
       const data = await authService.completeSocialAuth(provider, code, state || undefined)
 
       if (data.access_token || data.refresh_token) {
-        tokenStorage.setTokens({}
-          accessToken: data.access_token,
+        tokenStorage.setTokens({accessToken: data.access_token,
           refreshToken: data.refresh_token,
         })
       }
@@ -77,17 +77,16 @@ function CallbackHandler() {
       setStatus("success")
       setMessage("Authentication successful! Redirecting to your dashboard...")
 
-      toast({}
-        title: "Welcome back!",
+      toast({title: "Welcome back!",
         description: `Successfully signed in with ${provider}.`,
       })
 
-      setTimeout(() => {}
-        const redirectTo = sessionStorage.getItem("auth_redirect") || "/dashboard"
+      setTimeout(() => {
+  const redirectTo = sessionStorage.getItem("auth_redirect") || "/dashboard"
         sessionStorage.removeItem("auth_redirect")
         router.push(redirectTo)
       }, 2000)
-    } } catch {
+    } catch {
       console.error("Callback error:", error)
       setStatus("error")
       const message = (error as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message;
@@ -106,18 +105,18 @@ function CallbackHandler() {
     setIsRetrying(false)
   }
 
-  const getProviderName = (provider: string): string => {}
-    switch (provider.toLowerCase()) {}
+  const getProviderName = (provider: string): string => {
+  switch (provider.toLowerCase()) {}
       case "google":
-        return "Google"
+        return "Google";
       case "github":
-        return "GitHub"
+        return "GitHub";
       case "discord":
-        return "Discord"
+        return "Discord";
       case "facebook":
-        return "Facebook"
+        return "Facebook";
       case "twitter":
-        return "Twitter"
+        return "Twitter";
       default:
         return provider;
     }
@@ -236,7 +235,7 @@ function CallbackHandler() {
           <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10">
             <h4 className="text-white font-medium mb-2 flex items-center justify-center">
               <Play className="w-4 h-4 mr-2" />
-              What&apos;s Next?
+              What's Next?
             </h4>
             <ul className="space-y-1 text-sm text-gray-400">
               <li>• Access your personalized dashboard</li>
@@ -267,3 +266,4 @@ export default function CallbackPage() {
     </Suspense>
   )
 }
+))))))))))

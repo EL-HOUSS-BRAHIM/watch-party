@@ -7,10 +7,10 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
-import {}
 import { format, parseISO } from "date-fns"
 
 "use client"
+
   BarChart,
   Bar,
   LineChart,
@@ -26,91 +26,90 @@ import { format, parseISO } from "date-fns"
   AreaChart,
   Area;
 } from "recharts"
-interface PartyAnalytics {}
-  party: {}
-    id: string;
-    title: string;
-    description: string;
-    created_at: string;
-    updated_at: string;
-    status: "upcoming" | "live" | "ended"
+interface party {: {}
+    id: string;,
+    title: string;,
+    description: string;,
+    created_at: string;,
+    updated_at: string;,
+    status: "upcoming" | "live" | "ended",
     host: {}
-      id: string;
-      username: string;
-      display_name: string;
+      id: string;,
+      username: string;,
+      display_name: string;,
       avatar_url: string;
     }
     video: {}
-      title: string;
-      url: string;
-      duration: number;
-      thumbnail: string;
+      title: string;,
+      url: string;,
+      duration: number;,
+      thumbnail: string;,
       platform: string;
     }
     settings: {}
-      is_public: boolean;
-      max_participants: number;
-      auto_start: boolean;
+      is_public: boolean;,
+      max_participants: number;,
+      auto_start: boolean;,
       allow_chat: boolean;
     }
   }
   overview: {}
-    total_participants: number;
-    peak_concurrent: number;
-    total_duration: number;
-    total_messages: number;
-    engagement_rate: number;
-    completion_rate: number;
-    average_watch_time: number;
+    total_participants: number;,
+    peak_concurrent: number;,
+    total_duration: number;,
+    total_messages: number;,
+    engagement_rate: number;,
+    completion_rate: number;,
+    average_watch_time: number;,
     unique_viewers: number;
   }
   participants: Array<{}
-    id: string;
+    id: string;,
     user: {}
-      id: string;
-      username: string;
-      display_name: string;
+      id: string;,
+      username: string;,
+      display_name: string;,
       avatar_url: string;
     }
     joined_at: string;
-    left_at?: string;
-    watch_time: number;
-    messages_sent: number;
-    reactions_sent: number;
-    engagement_score: number;
+    left_at?: string;,
+    watch_time: number;,
+    messages_sent: number;,
+    reactions_sent: number;,
+    engagement_score: number;,
     completion_percentage: number;
   }>
   timeline: Array<{}
-    timestamp: string;
+    timestamp: string;,
     event_type: "join" | "leave" | "play" | "pause" | "seek" | "message" | "reaction"
     user_id?: string;
     data?: Record<string, unknown>
   }>
   engagement: {}
     chat_activity: Array<{}
-      time: string;
-      message_count: number;
+      time: string;,
+      message_count: number;,
       active_users: number;
     }>
     viewer_count: Array<{}
-      time: string;
+      time: string;,
       count: number;
     }>
     reactions: Array<{}
-      type: string;
-      count: number;
+      type: string;,
+      count: number;,
       timestamp: string;
     }>
   }
   demographics: {}
-    by_location: Array<{ country: string; count: number }>
-    by_device: Array<{ device_type: string; count: number }>
-    by_timezone: Array<{ timezone: string; count: number }>
+    by_location: Array<{ country: string; count: number }>,
+    by_device: Array<{ device_type: string; count: number }>,
+    by_timezone: Array<{ timezone: string; count: number }>,
     by_join_time: Array<{ hour: number; count: number }>
   }
-  performance: {}
-    loading_times: Array<{ timestamp: string; duration: number }>
-    error_rates: Array<{ timestamp: string; error_count: number }>
+  performance: {
+    loading_times: Array<{ timestamp: string; duration: number }>,
+    error_rates: Array<{ timestamp: string; error_count: number }>,
     sync_quality: Array<{ timestamp: string; sync_offset: number }>
   }
 }
@@ -122,7 +121,7 @@ function PartyAnalyticsContent() {
 
   const [analytics, setAnalytics] = useState<PartyAnalytics | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [timeRange, setTimeRange] = useState<string>(&quot;all&quot;)
+  const [timeRange, setTimeRange] = useState<string>(&quot;all")
   const [activeTab, setActiveTab] = useState("overview")
 
   const loadPartyAnalytics = useCallback(async () => {
@@ -130,7 +129,7 @@ function PartyAnalyticsContent() {
     try {
       setIsLoading(true)
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/analytics/?timeRange=${timeRange}`, {}
+      const response = await fetch(`/api/parties/${partyId}/analytics/?timeRange=${timeRange}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
 
@@ -140,14 +139,13 @@ function PartyAnalyticsContent() {
       } else {}
         throw new Error("Failed to load analytics")
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load party analytics:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load party analytics.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }, [partyId, timeRange, toast])
@@ -162,7 +160,7 @@ function PartyAnalyticsContent() {
     if (!partyId) return;
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/analytics/export/`, {}
+      const response = await fetch(`/api/parties/${partyId}/analytics/export/`, {
         headers: { Authorization: `Bearer ${token}` }
       })
 
@@ -176,52 +174,50 @@ function PartyAnalyticsContent() {
         document.body.appendChild(a)
         a.click()
         window.URL.revokeObjectURL(url)
-        toast({}
-          title: "Export Complete",
+        toast({title: "Export Complete",
           description: "Analytics data has been downloaded.",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Export failed:", error)
-      toast({}
-        title: "Export Failed",
+      toast({title: "Export Failed",
         description: "Failed to export analytics data.",
         variant: "destructive",
       })
     }
   }
 
-  const getStatusColor = (status: string) => {}
-    switch (status) {
+  const getStatusColor = (status: string) => {
+    switch (status) {}
       case "live":
-        return "bg-green-500"
+        return "bg-green-500";
       case "upcoming":
-        return "bg-blue-500"
+        return "bg-blue-500";
       case "ended":
-        return "bg-gray-500"
+        return "bg-gray-500";
       default:
-        return "bg-gray-500"
+        return "bg-gray-500";
     }
   }
 
-  const getEngagementColor = (score: number) => {}
-    if (score >= 80) return &quot;text-green-600"
+  const getEngagementColor = (score: number) => {
+    if (score >= 80) return "text-green-600"
     if (score >= 60) return "text-yellow-600"
-    return "text-red-600"
+    return "text-red-600";
   }
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60;
     if (hours > 0) {
-      return `${hours}h ${minutes}m ${secs}s`
+      return `${hours}h ${minutes}m ${secs}s`;
     }
-    return `${minutes}m ${secs}s`
+    return `${minutes}m ${secs}s`;
   }
 
-  const formatPercentage = (value: number) => {}
-    return `${Math.round(value * 100) / 100}%`
+  const formatPercentage = (value: number) => {
+    return `${Math.round(value * 100) / 100}%`;
   }
 
   if (isLoading) {
@@ -398,12 +394,12 @@ function PartyAnalyticsContent() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis;
                         dataKey="time" 
-                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm&quot;)}
+                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm")}
                       />
                       <YAxis />
                       <Tooltip;
-                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss&quot;)}
-                        formatter={(value: number) => [value, &quot;Viewers"]}
+                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss")}
+                        formatter={(value: number) => [value, "Viewers"]}
                       />
                       <Area;
                         type="monotone" 
@@ -431,12 +427,12 @@ function PartyAnalyticsContent() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis;
                         dataKey="time" 
-                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm&quot;)}
+                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm")}
                       />
                       <YAxis yAxisId="left" />
                       <YAxis yAxisId="right" orientation="right" />
                       <Tooltip;
-                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss&quot;)}
+                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss")}
                       />
                       <Bar yAxisId="left" dataKey="message_count" fill="#8884d8" name="Messages" />
                       <Line;
@@ -546,7 +542,7 @@ function PartyAnalyticsContent() {
                 <CardContent className="p-6 text-center">
                   <Heart className="h-8 w-8 text-red-500 mx-auto mb-2" />
                   <p className="text-2xl font-bold">
-                    {analytics.engagement.reactions.find(r => r.type === &apos;heart&apos;)?.count || 0}
+                    {analytics.engagement.reactions.find(r => r.type === &apos;heart')?.count || 0}
                   </p>
                   <p className="text-gray-600">Hearts</p>
                 </CardContent>
@@ -555,7 +551,7 @@ function PartyAnalyticsContent() {
                 <CardContent className="p-6 text-center">
                   <Star className="h-8 w-8 text-yellow-500 mx-auto mb-2" />
                   <p className="text-2xl font-bold">
-                    {analytics.engagement.reactions.find(r => r.type === &apos;star&apos;)?.count || 0}
+                    {analytics.engagement.reactions.find(r => r.type === &apos;star')?.count || 0}
                   </p>
                   <p className="text-gray-600">Stars</p>
                 </CardContent>
@@ -564,7 +560,7 @@ function PartyAnalyticsContent() {
                 <CardContent className="p-6 text-center">
                   <Share2 className="h-8 w-8 text-blue-500 mx-auto mb-2" />
                   <p className="text-2xl font-bold">
-                    {analytics.engagement.reactions.find(r => r.type === &apos;share&apos;)?.count || 0}
+                    {analytics.engagement.reactions.find(r => r.type === &apos;share')?.count || 0}
                   </p>
                   <p className="text-gray-600">Shares</p>
                 </CardContent>
@@ -696,7 +692,7 @@ function PartyAnalyticsContent() {
                       <YAxis />
                       <Tooltip;
                         labelFormatter={(value) => `${value}:00`}
-                        formatter={(value: number) => [value, &quot;Participants&quot;]}
+                        formatter={(value: number) => [value, &quot;Participants"]}
                       />
                       <Bar dataKey="count" fill="#8884d8" />
                     </BarChart>
@@ -720,12 +716,12 @@ function PartyAnalyticsContent() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis;
                         dataKey="timestamp" 
-                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm&quot;)}
+                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm")}
                       />
                       <YAxis />
                       <Tooltip;
-                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss&quot;)}
-                        formatter={(value: number) => [`${value}ms`, &quot;Loading Time"]}
+                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss")}
+                        formatter={(value: number) => [`${value}ms`, "Loading Time"]}
                       />
                       <Line;
                         type="monotone" 
@@ -752,12 +748,12 @@ function PartyAnalyticsContent() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis;
                         dataKey="timestamp" 
-                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm&quot;)}
+                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm")}
                       />
                       <YAxis />
                       <Tooltip;
-                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss&quot;)}
-                        formatter={(value: number) => [`${value}ms`, &quot;Sync Offset"]}
+                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss")}
+                        formatter={(value: number) => [`${value}ms`, "Sync Offset"]}
                       />
                       <Area;
                         type="monotone" 
@@ -785,12 +781,12 @@ function PartyAnalyticsContent() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis;
                         dataKey="timestamp" 
-                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm&quot;)}
+                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm")}
                       />
                       <YAxis />
                       <Tooltip;
-                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss&quot;)}
-                        formatter={(value: number) => [value, &quot;Errors"]}
+                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss")}
+                        formatter={(value: number) => [value, "Errors"]}
                       />
                       <Bar dataKey="error_count" fill="#ff7300" />
                     </BarChart>

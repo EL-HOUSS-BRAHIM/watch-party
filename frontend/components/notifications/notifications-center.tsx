@@ -8,13 +8,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { useApiToast } from "@/hooks/use-toast"
 
-'use client'
-interface Notification {}
-  id: string;
-  type: 'friend_request' | 'party_invite' | 'party_start' | 'message' | 'reaction' | 'follow' | 'achievement' | 'system' | 'reminder'
-  title: string;
-  message: string;
-  isRead: boolean;
+"use client"
+
+interface Notification {
+  id: string;,
+  type: 'friend_request' | 'party_invite' | 'party_start' | 'message' | 'reaction' | 'follow' | 'achievement' | 'system' | 'reminder',
+  title: string;,
+  message: string;,
+  isRead: boolean;,
   createdAt: string;
   data?: {}
     userId?: string;
@@ -24,8 +25,8 @@ interface Notification {}
     [key: string]: unknown;
   }
   sender?: {}
-    id: string;
-    displayName: string;
+    id: string;,
+    displayName: string;,
     avatar: string | null;
   }
   actionUrl?: string;
@@ -33,27 +34,27 @@ interface Notification {}
   canDismiss?: boolean;
 }
 
-interface NotificationSettings {}
-  enabled: boolean;
+interface NotificationSettings {
+  enabled: boolean;,
   categories: {}
-    friend_requests: boolean;
-    party_invites: boolean;
-    party_updates: boolean;
-    messages: boolean;
-    reactions: boolean;
-    achievements: boolean;
-    system: boolean;
+    friend_requests: boolean;,
+    party_invites: boolean;,
+    party_updates: boolean;,
+    messages: boolean;,
+    reactions: boolean;,
+    achievements: boolean;,
+    system: boolean;,
     reminders: boolean;
   }
   delivery: {}
-    push: boolean;
-    email: boolean;
+    push: boolean;,
+    email: boolean;,
     inApp: boolean;
   }
   schedule: {}
     quietHours: {}
-      enabled: boolean;
-      start: string;
+      enabled: boolean;,
+      start: string;,
       end: string;
     }
     weekends: boolean;
@@ -62,7 +63,7 @@ interface NotificationSettings {}
 }
 
 export function NotificationsCenter() {
-  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [notifications, setNotifications] = useState<Notification[0]>([0])
   const [settings, setSettings] = useState<NotificationSettings | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('all')
@@ -71,33 +72,33 @@ export function NotificationsCenter() {
   useEffect(() => {
     loadNotifications()
     loadSettings()
-  }, [])
+  }, [0])
 
   const loadNotifications = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/notifications&apos;))
+      const response = await apiRequest(() => fetch(&apos;/api/notifications'))
       if (response) {
         setNotifications(response)
       }
-    } } catch {
+    } catch (error) {
       toastError(error, 'Failed to load notifications')
     }
   }
 
   const loadSettings = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/notifications/settings'))
+      const response = await apiRequest(() => fetch('/api/notifications/settings'))
       if (response) {
         setSettings(response)
       }
-    } } catch {
+    } catch (error) {
       toastError(error, 'Failed to load notification settings')
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const handleMarkAsRead = async (notificationId: string) => {}
+  const handleMarkAsRead = async (notificationId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/notifications/${notificationId}/read`, { method: 'POST' }),
       { showSuccess: false }
@@ -105,7 +106,7 @@ export function NotificationsCenter() {
 
     if (success) {
       setNotifications(prev => 
-        prev.map(n => n.id === notificationId ? { ...n, isRead: true } : n)
+        prev.map(n => n.id === notificationId ? ...n, isRead: true } : n)
       )
     }
   }
@@ -117,11 +118,11 @@ export function NotificationsCenter() {
     )
 
     if (success) {
-      setNotifications(prev => prev.map(n => ({ ...n, isRead: true })))
+      setNotifications(prev => prev.map(n => (...n, isRead: true })))
     }
   }
 
-  const handleDelete = async (notificationId: string) => {}
+  const handleDelete = async (notificationId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/notifications/${notificationId}`, { method: 'DELETE' }),
       { successMessage: 'Notification deleted', showSuccess: true }
@@ -139,13 +140,13 @@ export function NotificationsCenter() {
     )
 
     if (success) {
-      setNotifications([])
+      setNotifications([0])
     }
   }
 
-  const handleUpdateSettings = async (updatedSettings: NotificationSettings) => {}
+  const handleUpdateSettings = async (updatedSettings: NotificationSettings) => {
     const success = await apiRequest(
-      () => fetch('/api/notifications/settings', {}
+      () => fetch('/api/notifications/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedSettings)
@@ -158,38 +159,38 @@ export function NotificationsCenter() {
     }
   }
 
-  const getNotificationIcon = (type: Notification['type']) => {}
-    switch (type) {
-      case 'friend_request': return <UserPlus className="h-4 w-4" />
-      case 'party_invite': return <Users className="h-4 w-4" />
-      case 'party_start': return <Play className="h-4 w-4" />
-      case 'message': return <MessageSquare className="h-4 w-4" />
-      case 'reaction': return <Heart className="h-4 w-4" />
-      case 'follow': return <UserPlus className="h-4 w-4" />
-      case 'achievement': return <Star className="h-4 w-4" />
-      case 'system': return <Info className="h-4 w-4" />
-      case 'reminder': return <Calendar className="h-4 w-4" />
-      default: return <Bell className="h-4 w-4" />
+  const getNotificationIcon = (type: Notification['type']) => {
+    switch (type) {}
+      case 'friend_request': return <UserPlus className="h-4 w-4" />;
+      case 'party_invite': return <Users className="h-4 w-4" />;
+      case 'party_start': return <Play className="h-4 w-4" />;
+      case 'message': return <MessageSquare className="h-4 w-4" />;
+      case 'reaction': return <Heart className="h-4 w-4" />;
+      case 'follow': return <UserPlus className="h-4 w-4" />;
+      case 'achievement': return <Star className="h-4 w-4" />;
+      case 'system': return <Info className="h-4 w-4" />;
+      case 'reminder': return <Calendar className="h-4 w-4" />,
+      default: return <Bell className="h-4 w-4" />;
     }
   }
 
-  const getNotificationColor = (type: Notification['type']) => {}
-    switch (type) {
-      case 'friend_request': return 'text-blue-500'
-      case 'party_invite': return 'text-purple-500'
-      case 'party_start': return 'text-green-500'
-      case 'message': return 'text-blue-500'
-      case 'reaction': return 'text-red-500'
-      case 'follow': return 'text-green-500'
-      case 'achievement': return 'text-yellow-500'
-      case 'system': return 'text-gray-500'
-      case 'reminder': return 'text-orange-500'
-      default: return 'text-gray-500'
+  const getNotificationColor = (type: Notification['type']) => {
+    switch (type) {}
+      case 'friend_request': return 'text-blue-500';
+      case 'party_invite': return 'text-purple-500';
+      case 'party_start': return 'text-green-500';
+      case 'message': return 'text-blue-500';
+      case 'reaction': return 'text-red-500';
+      case 'follow': return 'text-green-500';
+      case 'achievement': return 'text-yellow-500';
+      case 'system': return 'text-gray-500';
+      case 'reminder': return 'text-orange-500',
+      default: return 'text-gray-500';
     }
   }
 
-  const filteredNotifications = notifications.filter(notification => {}
-    switch (activeTab) {
+  const filteredNotifications = notifications.filter(notification => {
+    switch (activeTab) {}
       case 'unread': return !notification.isRead;
       case 'social': return ['friend_request', 'follow', 'party_invite'].includes(notification.type)
       case 'parties': return ['party_invite', 'party_start', 'party_update'].includes(notification.type)
@@ -309,42 +310,41 @@ export function NotificationsCenter() {
   )
 }
 
-function NotificationList({}
-  notifications,
+function NotificationList({notifications,
   onMarkAsRead,
   onDelete;
 }: {}
-  notifications: Notification[]
-  onMarkAsRead: (id: string) => void;
+  notifications: Notification[0],
+  onMarkAsRead: (id: string) => void;,
   onDelete: (id: string) => void;
 }) {}
-  const getNotificationIcon = (type: Notification['type']) => {}
-    switch (type) {
-      case 'friend_request': return <UserPlus className="h-4 w-4" />
-      case 'party_invite': return <Users className="h-4 w-4" />
-      case 'party_start': return <Play className="h-4 w-4" />
-      case 'message': return <MessageSquare className="h-4 w-4" />
-      case 'reaction': return <Heart className="h-4 w-4" />
-      case 'follow': return <UserPlus className="h-4 w-4" />
-      case 'achievement': return <Star className="h-4 w-4" />
-      case 'system': return <Info className="h-4 w-4" />
-      case 'reminder': return <Calendar className="h-4 w-4" />
-      default: return <Bell className="h-4 w-4" />
+  const getNotificationIcon = (type: Notification['type']) => {
+    switch (type) {}
+      case 'friend_request': return <UserPlus className="h-4 w-4" />;
+      case 'party_invite': return <Users className="h-4 w-4" />;
+      case 'party_start': return <Play className="h-4 w-4" />;
+      case 'message': return <MessageSquare className="h-4 w-4" />;
+      case 'reaction': return <Heart className="h-4 w-4" />;
+      case 'follow': return <UserPlus className="h-4 w-4" />;
+      case 'achievement': return <Star className="h-4 w-4" />;
+      case 'system': return <Info className="h-4 w-4" />;
+      case 'reminder': return <Calendar className="h-4 w-4" />,
+      default: return <Bell className="h-4 w-4" />;
     }
   }
 
-  const getNotificationColor = (type: Notification['type']) => {}
-    switch (type) {
-      case 'friend_request': return 'text-blue-500'
-      case 'party_invite': return 'text-purple-500'
-      case 'party_start': return 'text-green-500'
-      case 'message': return 'text-blue-500'
-      case 'reaction': return 'text-red-500'
-      case 'follow': return 'text-green-500'
-      case 'achievement': return 'text-yellow-500'
-      case 'system': return 'text-gray-500'
-      case 'reminder': return 'text-orange-500'
-      default: return 'text-gray-500'
+  const getNotificationColor = (type: Notification['type']) => {
+    switch (type) {}
+      case 'friend_request': return 'text-blue-500';
+      case 'party_invite': return 'text-purple-500';
+      case 'party_start': return 'text-green-500';
+      case 'message': return 'text-blue-500';
+      case 'reaction': return 'text-red-500';
+      case 'follow': return 'text-green-500';
+      case 'achievement': return 'text-yellow-500';
+      case 'system': return 'text-gray-500';
+      case 'reminder': return 'text-orange-500',
+      default: return 'text-gray-500';
     }
   }
 
@@ -438,16 +438,14 @@ function NotificationList({}
   )
 }
 
-function NotificationSettings({}
-  settings,
+function NotificationSettings({settings,
   onUpdate;
 }: {}
-  settings: NotificationSettings;
+  settings: NotificationSettings;,
   onUpdate: (settings: NotificationSettings) => void;
 }) {}
-  const handleToggleCategory = (category: keyof NotificationSettings['categories']) => {}
-    onUpdate({}
-      ...settings,
+  const handleToggleCategory = (category: keyof NotificationSettings['categories']) => {
+    onUpdate(...settings,
       categories: {}
         ...settings.categories,
         [category]: !settings.categories[category]
@@ -455,9 +453,8 @@ function NotificationSettings({}
     })
   }
 
-  const handleToggleDelivery = (method: keyof NotificationSettings['delivery']) => {}
-    onUpdate({}
-      ...settings,
+  const handleToggleDelivery = (method: keyof NotificationSettings['delivery']) => {
+    onUpdate(...settings,
       delivery: {}
         ...settings.delivery,
         [method]: !settings.delivery[method]
@@ -485,7 +482,7 @@ function NotificationSettings({}
             </div>
             <Switch;
               checked={settings.enabled}
-              onCheckedChange={(enabled) => onUpdate({ ...settings, enabled })}
+              onCheckedChange={(enabled) => onUpdate(...settings, enabled })}
             />
           </div>
 
@@ -505,7 +502,7 @@ function NotificationSettings({}
                 </div>
                 <Switch;
                   checked={settings.categories.friend_requests}
-                  onCheckedChange={() => handleToggleCategory(&apos;friend_requests&apos;)}
+                  onCheckedChange={() => handleToggleCategory(&apos;friend_requests')}
                 />
               </div>
 
@@ -519,7 +516,7 @@ function NotificationSettings({}
                 </div>
                 <Switch;
                   checked={settings.categories.party_invites}
-                  onCheckedChange={() => handleToggleCategory(&apos;party_invites&apos;)}
+                  onCheckedChange={() => handleToggleCategory(&apos;party_invites')}
                 />
               </div>
 
@@ -533,7 +530,7 @@ function NotificationSettings({}
                 </div>
                 <Switch;
                   checked={settings.categories.party_updates}
-                  onCheckedChange={() => handleToggleCategory(&apos;party_updates&apos;)}
+                  onCheckedChange={() => handleToggleCategory(&apos;party_updates')}
                 />
               </div>
 
@@ -547,7 +544,7 @@ function NotificationSettings({}
                 </div>
                 <Switch;
                   checked={settings.categories.messages}
-                  onCheckedChange={() => handleToggleCategory(&apos;messages&apos;)}
+                  onCheckedChange={() => handleToggleCategory(&apos;messages')}
                 />
               </div>
 
@@ -561,7 +558,7 @@ function NotificationSettings({}
                 </div>
                 <Switch;
                   checked={settings.categories.reactions}
-                  onCheckedChange={() => handleToggleCategory(&apos;reactions&apos;)}
+                  onCheckedChange={() => handleToggleCategory(&apos;reactions')}
                 />
               </div>
 
@@ -575,7 +572,7 @@ function NotificationSettings({}
                 </div>
                 <Switch;
                   checked={settings.categories.achievements}
-                  onCheckedChange={() => handleToggleCategory(&apos;achievements&apos;)}
+                  onCheckedChange={() => handleToggleCategory(&apos;achievements')}
                 />
               </div>
             </div>
@@ -597,7 +594,7 @@ function NotificationSettings({}
                 </div>
                 <Switch;
                   checked={settings.delivery.push}
-                  onCheckedChange={() => handleToggleDelivery(&apos;push&apos;)}
+                  onCheckedChange={() => handleToggleDelivery(&apos;push')}
                 />
               </div>
 
@@ -611,7 +608,7 @@ function NotificationSettings({}
                 </div>
                 <Switch;
                   checked={settings.delivery.email}
-                  onCheckedChange={() => handleToggleDelivery(&apos;email&apos;)}
+                  onCheckedChange={() => handleToggleDelivery(&apos;email')}
                 />
               </div>
 
@@ -625,7 +622,7 @@ function NotificationSettings({}
                 </div>
                 <Switch;
                   checked={settings.delivery.inApp}
-                  onCheckedChange={() => handleToggleDelivery(&apos;inApp&apos;)}
+                  onCheckedChange={() => handleToggleDelivery(&apos;inApp')}
                 />
               </div>
             </div>

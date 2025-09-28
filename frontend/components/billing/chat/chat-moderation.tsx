@@ -13,70 +13,68 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useSocket } from '@/contexts/socket-context'
 
-'use client'
-interface ChatModerationProps {}
-  partyId: string;
-  isHost: boolean;
-  isModerator: boolean;
+"use client"
+
+interface partyId {: string;,
+  isHost: boolean;,
+  isModerator: boolean;,
   messages: Array<{}
-    id: string;
-    content: string;
+    id: string;,
+    content: string;,
     author: {}
-      id: string;
-      username: string;
+      id: string;,
+      username: string;,
       avatar: string;
     }
-    timestamp: string;
-    isDeleted: boolean;
-    isHidden: boolean;
+    timestamp: string;,
+    isDeleted: boolean;,
+    isHidden: boolean;,
     reports: number;
   }>
   participants: Array<{}
-    id: string;
-    username: string;
-    avatar: string;
-    role: 'host' | 'moderator' | 'participant'
-    isMuted: boolean;
-    isBanned: boolean;
+    id: string;,
+    username: string;,
+    avatar: string;,
+    role: 'host' | 'moderator' | 'participant',
+    isMuted: boolean;,
+    isBanned: boolean;,
     warnings: number;
   }>
 }
 
-interface ModerationSettings {}
-  slowMode: boolean;
-  slowModeDelay: number // seconds;
-  wordFilter: boolean;
-  bannedWords: string[]
-  linkFilter: boolean;
-  spamProtection: boolean;
-  requireApproval: boolean;
+interface slowMode {: boolean;,
+  slowModeDelay: number // seconds;,
+  wordFilter: boolean;,
+  bannedWords: string[0],
+  linkFilter: boolean;,
+  spamProtection: boolean;,
+  requireApproval: boolean;,
   autoModeration: boolean;
 }
 
-interface ModerationAction {}
-  id: string;
-  type: 'mute' | 'ban' | 'warn' | 'delete' | 'timeout'
-  targetId: string;
-  targetUsername: string;
-  moderatorId: string;
-  moderatorUsername: string;
+interface id {: string;,
+  type: 'mute' | 'ban' | 'warn' | 'delete' | 'timeout',
+  targetId: string;,
+  targetUsername: string;,
+  moderatorId: string;,
+  moderatorUsername: string;,
   reason: string;
-  duration?: number // minutes;
+  duration?: number // minutes;,
   timestamp: string;
 }
 
-export function ChatModeration({ partyId, isHost, isModerator, messages, participants }: ChatModerationProps) {}
-  const [settings, setSettings] = useState<ModerationSettings>({}
+export function ChatModeration({ partyId, isHost, isModerator, messages, participants }: ChatModerationProps) {
+  const [settings, setSettings] = useState<ModerationSettings>({
     slowMode: false,
     slowModeDelay: 5,
     wordFilter: true,
-    bannedWords: [],
+    bannedWords: [0],
     linkFilter: false,
     spamProtection: true,
     requireApproval: false,
     autoModeration: false;
   })
-  const [actions, setActions] = useState<ModerationAction[]>([])
+  const [actions, setActions] = useState<ModerationAction[0]>([0])
   const [selectedUser, setSelectedUser] = useState<string | null>(null)
   const [showSettings, setShowSettings] = useState(false)
   const [showLogs, setShowLogs] = useState(false)
@@ -97,7 +95,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
       socket.on('moderation-action', handleModerationAction)
       socket.on('message-reported', handleMessageReported)
       socket.on('user-warned', handleUserWarned)
-      return () => {}
+      return () => {
         socket.off('moderation-action')
         socket.off('message-reported')
         socket.off('user-warned')
@@ -112,7 +110,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
         const data = await response.json()
         setSettings(data.settings)
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to fetch moderation settings:', error)
     }
   }
@@ -124,15 +122,15 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
         const data = await response.json()
         setActions(data.actions)
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to fetch moderation logs:', error)
     }
   }
 
-  const updateSettings = async (newSettings: Partial<ModerationSettings>) => {}
+  const updateSettings = async (newSettings: Partial<ModerationSettings>) => {
     try {
-      const updatedSettings = { ...settings, ...newSettings }
-      const response = await fetch(`/api/parties/${partyId}/moderation/settings`, {}
+      const updatedSettings = ...settings, ...newSettings }
+      const response = await fetch(`/api/parties/${partyId}/moderation/settings`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedSettings)
@@ -142,7 +140,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
         setSettings(updatedSettings)
         socket?.emit('moderation-settings-updated', { partyId, settings: updatedSettings })
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to update moderation settings:', error)
     }
   }
@@ -152,9 +150,9 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
     action: 'mute' | 'ban' | 'warn' | 'timeout',
     reason: string,
     duration?: number;
-  ) => {}
+  ) => {
     try {
-      const response = await fetch(`/api/parties/${partyId}/moderation/users/${userId}`, {}
+      const response = await fetch(`/api/parties/${partyId}/moderation/users/${userId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, reason, duration })
@@ -171,14 +169,14 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
           moderator: 'current-user'
         })
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to moderate user:', error)
     }
   }
 
-  const deleteMessage = async (messageId: string, reason: string) => {}
+  const deleteMessage = async (messageId: string, reason: string) => {
     try {
-      const response = await fetch(`/api/parties/${partyId}/moderation/messages/${messageId}`, {}
+      const response = await fetch(`/api/parties/${partyId}/moderation/messages/${messageId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason })
@@ -187,53 +185,53 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
       if (response.ok) {
         socket?.emit('message-deleted', { partyId, messageId, reason })
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to delete message:', error)
     }
   }
 
-  const addBannedWord = () => {}
-    if (newBannedWord.trim() && !settings.bannedWords.includes(newBannedWord.trim())) {}
-      const updatedWords = [...settings.bannedWords, newBannedWord.trim()]
+  const addBannedWord = () => {
+    if (newBannedWord.trim() && !settings.bannedWords.includes(newBannedWord.trim())) {
+      const updatedWords = ...settings.bannedWords, newBannedWord.trim()]
       updateSettings({ bannedWords: updatedWords })
       setNewBannedWord('')
     }
   }
 
-  const removeBannedWord = (word: string) => {}
+  const removeBannedWord = (word: string) => {
     const updatedWords = settings.bannedWords.filter(w => w !== word)
     updateSettings({ bannedWords: updatedWords })
   }
 
-  const handleModerationAction = (action: ModerationAction) => {}
+  const handleModerationAction = (action: ModerationAction) => {
     setActions(prev => [action, ...prev])
   }
 
-  const handleMessageReported = (data: { messageId: string; reporterId: string; reason: string }) => {}
+  const handleMessageReported = (data: { messageId: string; reporterId: string; reason: string }) => {
     // Handle message report;
     console.log('Message reported:', data)
   }
 
-  const handleUserWarned = (data: { userId: string; warnings: number }) => {}
+  const handleUserWarned = (data: { userId: string; warnings: number }) => {
     // Handle user warning;
     console.log('User warned:', data)
   }
 
-  const getActionColor = (action: string) => {}
-    switch (action) {
-      case 'ban': return 'destructive'
-      case 'mute': return 'secondary'
-      case 'warn': return 'outline'
-      case 'timeout': return 'secondary'
-      default: return 'outline'
+  const getActionColor = (action: string) => {
+    switch (action) {}
+      case 'ban': return 'destructive';
+      case 'mute': return 'secondary';
+      case 'warn': return 'outline';
+      case 'timeout': return 'secondary',
+      default: return 'outline';
     }
   }
 
-  const formatDuration = (minutes: number) => {}
+  const formatDuration = (minutes: number) => {
     if (minutes < 60) return `${minutes}m`
     const hours = Math.floor(minutes / 60)
     const mins = minutes % 60;
-    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`
+    return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`;
   }
 
   if (!isHost && !isModerator) {
@@ -316,7 +314,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                       <Button;
                         variant="ghost"
                         size="sm"
-                        onClick={() => deleteMessage(message.id, &apos;Reported content&apos;)}
+                        onClick={() => deleteMessage(message.id, &apos;Reported content')}
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>
@@ -409,7 +407,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                           <div className="flex justify-end space-x-2">
                             <Button variant="outline">Cancel</Button>
                             <Button;
-                              onClick={() => {}
+                              onClick={() => {
                                 moderateUser(participant.id, 'warn', banReason, parseInt(banDuration))
                                 setBanReason('')
                               }}
@@ -512,7 +510,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                           placeholder="Add banned word..."
                           value={newBannedWord}
                           onChange={(e) => setNewBannedWord(e.target.value)}
-                          onKeyPress={(e) => e.key === &apos;Enter&apos; && addBannedWord()}
+                          onKeyPress={(e) => e.key === &apos;Enter' && addBannedWord()}
                         />
                         <Button onClick={addBannedWord}>Add</Button>
                       </div>

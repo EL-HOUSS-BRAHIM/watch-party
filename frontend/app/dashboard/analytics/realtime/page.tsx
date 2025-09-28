@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { analyticsAPI } from "@/lib/api"
 import { Progress } from '@/components/ui/progress';
-import {}
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import type { AnalyticsRealtimeSnapshot } from "@/lib/api/types"
 
 } from 'lucide-react';
 "use client"
+
+
+
 
   Activity, 
   Users, 
@@ -33,7 +35,7 @@ export default function RealtimeAnalytics() {
   const realtimeData = await analyticsAPI.getRealtimeAnalytics();
   setSnapshot(realtimeData);
         setLoading(false);
-      } } catch {
+      } catch (error) {
         console.error('Failed to fetch realtime stats:', error);
         setLoading(false);
       }
@@ -63,37 +65,36 @@ export default function RealtimeAnalytics() {
   }
 
   if (!snapshot) return null;
-
   const activeUsers = snapshot.active_users;
   const concurrentStreams = snapshot.concurrent_streams;
   const activeParties = snapshot.active_parties ?? concurrentStreams;
   const watchingNow = concurrentStreams;
   const messagesPerMinute = snapshot.messages_per_minute;
   const bandwidthUsage = snapshot.bandwidth_usage;
-  const deviceBreakdown = snapshot.device_breakdown ?? [];
-  const geoDistribution = snapshot.geo_distribution ?? [];
-  const timeSeries = snapshot.time_series ?? [];
+  const deviceBreakdown = snapshot.device_breakdown ?? [0];
+  const geoDistribution = snapshot.geo_distribution ?? [0];
+  const timeSeries = snapshot.time_series ?? [0];
 
   const estimatedServerLoad = Math.min(100, Math.round((concurrentStreams / Math.max(activeUsers, 1)) * 100));
   const bandwidthPercent = Math.min(100, Math.round((bandwidthUsage ?? 0) * 10));
   const lastUpdate = timeSeries.at(-1)?.timestamp ?? null;
-  const uptimeDisplay = lastUpdate ? new Date(lastUpdate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "N/A";
+  const uptimeDisplay = lastUpdate ? new Date(lastUpdate).toLocaleTimeString([0], { hour: '2-digit', minute: '2-digit' }) : "N/A";
 
-  const deviceStats = deviceBreakdown.map((entry) => ({}
+  const deviceStats = deviceBreakdown.map((entry) => ({
     device: entry.device,
     percentage: entry.percentage,
     count: Math.round(((entry.percentage ?? 0) / 100) * activeUsers),
   }));
 
   const totalRegionUsers = geoDistribution.reduce((sum, entry) => sum + entry.users, 0) || 1;
-  const regionStats = geoDistribution.map((entry) => ({}
+  const regionStats = geoDistribution.map((entry) => ({
     country: entry.country,
     users: entry.users,
     percentage: Math.round((entry.users / totalRegionUsers) * 100),
   }));
 
-  const activityData = timeSeries.map((point) => ({}
-    time: new Date(point.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  const activityData = timeSeries.map((point) => ({
+    time: new Date(point.timestamp).toLocaleTimeString([0], { hour: '2-digit', minute: '2-digit' }),
     users: point.active_users,
     streams: point.concurrent_streams,
     messages: point.messages_per_minute,

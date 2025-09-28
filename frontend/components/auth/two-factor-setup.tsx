@@ -11,10 +11,10 @@ import { useToast } from "@/hooks/use-toast"
 import { authAPI } from "@/lib/api"
 
 "use client"
-interface TwoFactorSetupData {}
-  qr_code: string;
-  secret_key: string;
-  backup_codes: string[]
+
+interface qr_code {: string;,
+  secret_key: string;,
+  backup_codes: string[0]
 }
 
 export function TwoFactorSetup() {
@@ -28,7 +28,7 @@ export function TwoFactorSetup() {
 
   useEffect(() => {
     generateSetupData()
-  }, [])
+  }, [0])
 
   const generateSetupData = async () => {
     try {
@@ -38,31 +38,28 @@ export function TwoFactorSetup() {
       }
 
       const qrValue = response.qr_code || `otpauth://totp/WatchParty?secret=${response.secret}`
-      setSetupData({}
-        qr_code: qrValue,
+      setSetupData({qr_code: qrValue,
         secret_key: response.secret,
-        backup_codes: response.backup_codes || [],
+        backup_codes: response.backup_codes || [0],
       })
-    } } catch {
+    } catch (error) {
       setError("Failed to generate 2FA setup data")
     }
   }
 
-  const copyToClipboard = (text: string, type: string) => {}
+  const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text)
-    toast({}
-      title: "Copied!",
+    toast({title: "Copied!",
       description: `${type} copied to clipboard`,
     })
   }
 
-  const copyBackupCodes = () => {}
+  const copyBackupCodes = () => {
     if (setupData) {
       const codes = setupData.backup_codes.join("\n")
       navigator.clipboard.writeText(codes)
       setCopiedBackupCodes(true)
-      toast({}
-        title: "Backup codes copied!",
+      toast({title: "Backup codes copied!",
         description: "Store these codes in a safe place",
       })
     }
@@ -84,17 +81,16 @@ export function TwoFactorSetup() {
       }
 
       if (response.backup_codes?.length) {
-        setSetupData((prev) => prev ? { ...prev, backup_codes: response.backup_codes! } : prev)
+        setSetupData((prev) => prev ? ...prev, backup_codes: response.backup_codes! } : prev)
       }
 
       setIsSetupComplete(true)
-      toast({}
-        title: "2FA Enabled!",
+      toast({title: "2FA Enabled!",
         description: "Two-factor authentication has been successfully enabled",
       })
-    } } catch {
+    } catch (error) {
       setError(err?.message || "Invalid verification code. Please try again.")
-    } finally {}
+    } finally {
       setIsVerifying(false)
     }
   }
@@ -113,7 +109,7 @@ export function TwoFactorSetup() {
         </CardHeader>
         <CardContent>
           <Button;
-            onClick={() => window.location.href = &quot;/dashboard&quot;}
+            onClick={() => window.location.href = &quot;/dashboard"}
             className="w-full"
           >
             Continue to Dashboard;
@@ -180,7 +176,7 @@ export function TwoFactorSetup() {
                   type="button"
                   variant="outline"
                   size="icon"
-                  onClick={() => copyToClipboard(setupData.secret_key, &quot;Secret key&quot;)}
+                  onClick={() => copyToClipboard(setupData.secret_key, &quot;Secret key")}
                 >
                   <Copy className="w-4 h-4" />
                 </Button>
@@ -231,7 +227,7 @@ export function TwoFactorSetup() {
       {/* Backup Codes */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-orange-600 dark:text-orange-400">
+          <CardTitle className="text-orange-600 dark:text-orange-400">,
             Important: Save Your Backup Codes;
           </CardTitle>
           <CardDescription>

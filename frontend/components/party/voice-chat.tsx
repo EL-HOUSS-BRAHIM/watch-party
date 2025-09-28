@@ -9,36 +9,35 @@ import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useSocket } from '@/contexts/socket-context'
 
-'use client'
-interface VoiceChatProps {}
-  partyId: string;
-  isHost: boolean;
+"use client"
+
+interface partyId {: string;,
+  isHost: boolean;,
   participants: Array<{}
-    id: string;
-    username: string;
-    avatar: string;
-    isMuted: boolean;
-    isDeafened: boolean;
-    isConnected: boolean;
+    id: string;,
+    username: string;,
+    avatar: string;,
+    isMuted: boolean;,
+    isDeafened: boolean;,
+    isConnected: boolean;,
     volume: number;
   }>
 }
 
-interface AudioDevice {}
-  deviceId: string;
-  kind: 'audioinput' | 'audiooutput'
+interface deviceId {: string;,
+  kind: 'audioinput' | 'audiooutput',
   label: string;
 }
 
-export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
+export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {
   const [isConnected, setIsConnected] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
   const [isDeafened, setIsDeafened] = useState(false)
   const [masterVolume, setMasterVolume] = useState([50])
   const [microphoneVolume, setMicrophoneVolume] = useState([50])
-  const [audioDevices, setAudioDevices] = useState<AudioDevice[]>([])
-  const [selectedMicrophone, setSelectedMicrophone] = useState<string>(&apos;&apos;)
-  const [selectedSpeaker, setSelectedSpeaker] = useState<string>(&apos;&apos;)
+  const [audioDevices, setAudioDevices] = useState<AudioDevice[0]>([0])
+  const [selectedMicrophone, setSelectedMicrophone] = useState<string>(&apos;')
+  const [selectedSpeaker, setSelectedSpeaker] = useState<string>(&apos;')
   const [showSettings, setShowSettings] = useState(false)
   const [voiceActivity, setVoiceActivity] = useState<Record<string, boolean>>({})
   const [error, setError] = useState<string | null>(null)
@@ -50,10 +49,10 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
 
   useEffect(() => {
     getAudioDevices()
-    return () => {}
+    return () => {
       cleanup()
     }
-  }, [])
+  }, [0])
 
   useEffect(() => {
     if (socket) {
@@ -64,7 +63,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
       socket.on('voice-chat-ice-candidate', handleIceCandidate)
       socket.on('voice-chat-user-muted', handleUserMuted)
 
-      return () => {}
+      return () => {
         socket.off('voice-chat-user-joined')
         socket.off('voice-chat-user-left')
         socket.off('voice-chat-offer')
@@ -80,14 +79,14 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
       const devices = await navigator.mediaDevices.enumerateDevices()
       const audioDevices = devices.filter(device => 
         device.kind === 'audioinput' || device.kind === 'audiooutput'
-      ) as AudioDevice[]
+      ) as AudioDevice[0]
       setAudioDevices(audioDevices)
       // Set default devices;
-      const defaultMic = audioDevices.find(d => d.kind === &apos;audioinput&apos;)
-      const defaultSpeaker = audioDevices.find(d => d.kind === &apos;audiooutput')
+      const defaultMic = audioDevices.find(d => d.kind === &apos;audioinput')
+      const defaultSpeaker = audioDevices.find(d => d.kind === 'audiooutput')
       if (defaultMic) setSelectedMicrophone(defaultMic.deviceId)
       if (defaultSpeaker) setSelectedSpeaker(defaultSpeaker.deviceId)
-    } } catch {
+    } catch (error) {
       console.error('Failed to get audio devices:', error)
       setError('Failed to access audio devices')
     }
@@ -96,8 +95,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
   const connectToVoiceChat = async () => {
     try {
       setError(null)
-      const stream = await navigator.mediaDevices.getUserMedia({}
-        audio: {}
+      const stream = await navigator.mediaDevices.getUserMedia({audio: {
           deviceId: selectedMicrophone ? { exact: selectedMicrophone } : undefined,
           echoCancellation: true,
           noiseSuppression: true,
@@ -109,19 +107,19 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
       setIsConnected(true)
       // Join voice chat room;
       socket?.emit('join-voice-chat', { partyId })
-    } } catch {
+    } catch (error) {
       console.error('Failed to connect to voice chat:', error)
       setError('Failed to access microphone. Please check permissions.')
     }
   }
 
-  const disconnectFromVoiceChat = () => {}
+  const disconnectFromVoiceChat = () => {
     cleanup()
     setIsConnected(false)
     socket?.emit('leave-voice-chat', { partyId })
   }
 
-  const cleanup = () => {}
+  const cleanup = () => {
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach(track => track.stop())
       localStreamRef.current = null;
@@ -133,7 +131,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
     }
   }
 
-  const setupAudioAnalyzer = (stream: MediaStream) => {}
+  const setupAudioAnalyzer = (stream: MediaStream) => {
     try {
       audioContextRef.current = new AudioContext()
       analyserRef.current = audioContextRef.current.createAnalyser()
@@ -141,20 +139,20 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
       source.connect(analyserRef.current)
       analyserRef.current.fftSize = 256;
       startVoiceActivityDetection()
-    } } catch {
+    } catch (error) {
       console.error('Failed to setup audio analyzer:', error)
     }
   }
 
-  const startVoiceActivityDetection = () => {}
+  const startVoiceActivityDetection = () => {
     if (!analyserRef.current) return;
     const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount)
-    const detectActivity = () => {}
+    const detectActivity = () => {
       if (!analyserRef.current) return;
       analyserRef.current.getByteFrequencyData(dataArray)
       const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
       const isActive = average > 30 && !isMuted // Threshold for voice activity;
-      setVoiceActivity(prev => ({ ...prev, local: isActive }))
+      setVoiceActivity(prev => (...prev, local: isActive }))
       if (isConnected) {
         requestAnimationFrame(detectActivity)
       }
@@ -162,7 +160,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
     detectActivity()
   }
 
-  const toggleMute = () => {}
+  const toggleMute = () => {
     if (localStreamRef.current) {
       const audioTrack = localStreamRef.current.getAudioTracks()[0]
       if (audioTrack) {
@@ -173,11 +171,11 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
     }
   }
 
-  const toggleDeafen = () => {}
+  const toggleDeafen = () => {
     setIsDeafened(!isDeafened)
     // Mute all remote audio when deafened;
-    Object.values(peerConnectionsRef.current).forEach((pc: RTCPeerConnection) => {}
-      pc.getReceivers().forEach((receiver: RTCRtpReceiver) => {}
+    Object.values(peerConnectionsRef.current).forEach((pc: RTCPeerConnection) => {
+      pc.getReceivers().forEach((receiver: RTCRtpReceiver) => {
         if (receiver.track && receiver.track.kind === 'audio') {
           receiver.track.enabled = isDeafened;
         }
@@ -185,20 +183,20 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
     })
   }
 
-  const handleUserJoined = (data: { userId: string }) => {}
+  const handleUserJoined = (data: { userId: string }) => {
     if (isConnected && localStreamRef.current) {
       createPeerConnection(data.userId)
     }
   }
 
-  const handleUserLeft = (data: { userId: string }) => {}
+  const handleUserLeft = (data: { userId: string }) => {
     if (peerConnectionsRef.current[data.userId]) {
       peerConnectionsRef.current[data.userId].close()
       delete peerConnectionsRef.current[data.userId]
     }
   }
 
-  const handleOffer = async (data: { offer: RTCSessionDescriptionInit; from: string }) => {}
+  const handleOffer = async (data: { offer: RTCSessionDescriptionInit; from: string }) => {
     const pc = createPeerConnection(data.from)
     await pc.setRemoteDescription(data.offer)
     const answer = await pc.createAnswer()
@@ -206,35 +204,34 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
     socket?.emit('voice-chat-answer', { answer, to: data.from, partyId })
   }
 
-  const handleAnswer = async (data: { answer: RTCSessionDescriptionInit; from: string }) => {}
+  const handleAnswer = async (data: { answer: RTCSessionDescriptionInit; from: string }) => {
     const pc = peerConnectionsRef.current[data.from]
     if (pc) {
       await pc.setRemoteDescription(data.answer)
     }
   }
 
-  const handleIceCandidate = async (data: { candidate: RTCIceCandidateInit; from: string }) => {}
+  const handleIceCandidate = async (data: { candidate: RTCIceCandidateInit; from: string }) => {
     const pc = peerConnectionsRef.current[data.from]
     if (pc) {
       await pc.addIceCandidate(data.candidate)
     }
   }
 
-  const handleUserMuted = (data: { userId: string; isMuted: boolean }) => {}
-    setVoiceActivity(prev => ({ ...prev, [data.userId]: !data.isMuted }))
+  const handleUserMuted = (data: { userId: string; isMuted: boolean }) => {
+    setVoiceActivity(prev => (...prev, [data.userId]: !data.isMuted }))
   }
 
-  const createPeerConnection = (userId: string): RTCPeerConnection => {}
-    const pc = new RTCPeerConnection({}
-      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+  const createPeerConnection = (userId: string): RTCPeerConnection => {
+    const pc = new RTCPeerConnection({iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
     })
     peerConnectionsRef.current[userId] = pc;
     if (localStreamRef.current) {
-      localStreamRef.current.getTracks().forEach(track => {}
+      localStreamRef.current.getTracks().forEach(track => {
         pc.addTrack(track, localStreamRef.current!)
       })
     }
-    pc.onicecandidate = (event) => {}
+    pc.onicecandidate = (event) => {
       if (event.candidate) {
         socket?.emit('voice-chat-ice-candidate', {}
           candidate: event.candidate,
@@ -243,7 +240,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
         })
       }
     }
-    pc.ontrack = (event) => {}
+    pc.ontrack = (event) => {
       const remoteAudio = new Audio()
       remoteAudio.srcObject = event.streams[0]
       remoteAudio.volume = masterVolume[0] / 100;
@@ -252,7 +249,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
     return pc;
   }
 
-  const muteUser = (userId: string) => {}
+  const muteUser = (userId: string) => {
     if (isHost) {
       socket?.emit('voice-chat-mute-user', { userId, partyId })
     }
@@ -314,14 +311,14 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
                 size="sm"
                 onClick={toggleMute}
               >
-                {isMuted ? <MicOff className="h-4 w-4" /> : <Mic className=&quot;h-4 w-4&quot; />}
+                {isMuted ? <MicOff className="h-4 w-4" /> : <Mic className=&quot;h-4 w-4" />}"
               </Button>
               <Button;
                 variant={isDeafened ? "destructive" : "outline"}
                 size="sm"
                 onClick={toggleDeafen}
               >
-                {isDeafened ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4&quot; />}
+                {isDeafened ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4" />}"
               </Button>
             </div>
 
@@ -362,7 +359,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
                       className="w-full p-2 border rounded-md"
                     >
                       {audioDevices;
-                        .filter(device => device.kind === &apos;audioinput&apos;)
+                        .filter(device => device.kind === &apos;audioinput')
                         .map(device => (
                           <option key={device.deviceId} value={device.deviceId}>
                             {device.label || `Microphone ${device.deviceId.slice(0, 8)}`}
@@ -378,7 +375,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {}
                       className="w-full p-2 border rounded-md"
                     >
                       {audioDevices;
-                        .filter(device => device.kind === &apos;audiooutput&apos;)
+                        .filter(device => device.kind === &apos;audiooutput')
                         .map(device => (
                           <option key={device.deviceId} value={device.deviceId}>
                             {device.label || `Speaker ${device.deviceId.slice(0, 8)}`}

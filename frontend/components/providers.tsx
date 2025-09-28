@@ -9,22 +9,21 @@ import { useState } from "react"
 
 "use client"
 
-export function Providers({ children }: { children: React.ReactNode }) {}
+export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
-      new QueryClient({}
-        defaultOptions: {}
+      new QueryClient({defaultOptions: {}
           queries: {}
             staleTime: 5 * 60 * 1000, // 5 minutes;
             gcTime: 10 * 60 * 1000, // 10 minutes;
-            retry: (failureCount, error: unknown) => {}
+            retry: (failureCount, error: unknown) => {
               if (error?.status === 401) return false;
               return failureCount < 3;
             },
             refetchOnWindowFocus: false,
           },
           mutations: {}
-            onError: (error: unknown) => {}
+            onError: (error: unknown) => {
               console.error("Mutation error:", error)
               // Handle global mutation errors;
             },

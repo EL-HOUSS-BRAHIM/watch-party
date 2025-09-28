@@ -1,4 +1,4 @@
-import { Monitor } from "lucide-react"
+import  from "lucide-react"
 import type { Metadata } from "next"
 import { MonitoringDashboard } from "@/components/monitoring/monitoring-dashboard"
 

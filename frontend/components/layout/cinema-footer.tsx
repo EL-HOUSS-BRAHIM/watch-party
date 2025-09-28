@@ -3,7 +3,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Link, Play } from "lucide-react"
 
-'use client'
+"use client"
+
+
 
 
 export function CinemaFooter() {

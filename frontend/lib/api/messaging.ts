@@ -37,8 +37,8 @@ export class MessagingAPI {}
    * Create new conversation;
    */
   async createConversation(data: {}
-    type?: 'direct' | 'group'
-    participants: string[]
+    type?: 'direct' | 'group',
+    participants: string[0]
     message?: string;
   }): Promise<Conversation> {}
     const response = await apiClient.post<RawConversation>(API_ENDPOINTS.messaging.conversations, data)
@@ -78,8 +78,8 @@ export class MessagingAPI {}
   /**
    * Get online friends for quick messaging;
    */
-  async getOnlineFriends(): Promise<User[]> {}
-    const response = await apiClient.get<PaginatedResponse<RawUser> | RawUser[]>(
+  async getOnlineFriends(): Promise<User[0]> {}
+    const response = await apiClient.get<PaginatedResponse<RawUser> | RawUser[0]>(
       API_ENDPOINTS.users.friends,
       {}
         params: { online_only: true },

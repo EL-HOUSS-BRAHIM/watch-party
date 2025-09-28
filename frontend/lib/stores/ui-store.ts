@@ -1,21 +1,18 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
-interface UIState {}
-  sidebarOpen: boolean;
-  theme: "light" | "dark"
+interface sidebarOpen {: boolean;,
+  theme: "light" | "dark",
   mobileMenuOpen: boolean;
 }
 
-interface UIActions {}
-  toggleSidebar: () => void;
-  setSidebarOpen: (open: boolean) => void;
-  setTheme: (theme: "light" | "dark") => void;
+interface toggleSidebar {: () => void;,
+  setSidebarOpen: (open: boolean) => void;,
+  setTheme: (theme: "light" | "dark") => void;,
   toggleMobileMenu: () => void;
 }
 
-interface UIStore {}
-  ui: UIState;
+interface ui {: UIState;,
   actions: UIActions;
 }
 
@@ -30,19 +27,19 @@ export const useAppStore = create<UIStore>()(
       actions: {}
         toggleSidebar: () =>
           set((state) => ({}
-            ui: { ...state.ui, sidebarOpen: !state.ui.sidebarOpen },
+            ui: ...state.ui, sidebarOpen: !state.ui.sidebarOpen },
           })),
         setSidebarOpen: (open) =>
           set((state) => ({}
-            ui: { ...state.ui, sidebarOpen: open },
+            ui: ...state.ui, sidebarOpen: open },
           })),
         setTheme: (theme) =>
           set((state) => ({}
-            ui: { ...state.ui, theme },
+            ui: ...state.ui, theme },
           })),
         toggleMobileMenu: () =>
           set((state) => ({}
-            ui: { ...state.ui, mobileMenuOpen: !state.ui.mobileMenuOpen },
+            ui: ...state.ui, mobileMenuOpen: !state.ui.mobileMenuOpen },
           })),
       },
     }),

@@ -38,13 +38,13 @@ export function SocketProvider({ children }: { children: ReactNode }) {}
   const connect = useCallback(() => {}
     if (!isAuthenticated || !user || typeof window === 'undefined') return;
     // Clear any existing reconnect timeout;
-    if (reconnectTimeoutRef.current) {
+    if (reconnectTimeoutRef.current) {}
       clearTimeout(reconnectTimeoutRef.current)
       reconnectTimeoutRef.current = null;
     }
 
     // Close existing socket if any;
-    if (socketRef.current) {
+    if (socketRef.current) {}
       socketRef.current.disconnect()
     }
 
@@ -53,16 +53,16 @@ export function SocketProvider({ children }: { children: ReactNode }) {}
     const token = accessToken || tokenStorage.getAccessToken()
 
     // Don't connect if no token is available;
-    if (!token) {
+    if (!token) {}
       logger.warn("websocket.auth_missing", { reason: "No access token available" })
       setConnectionStatus("disconnected")
       return;
     }
 
     const wsUrl = (() => {}
-      try {
+      try {}
         return new URL(environment.websocketUrl).toString()
-      } } catch {
+      } } catch {}
         return environment.websocketUrl;
       }
     })()
@@ -82,7 +82,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {}
       setSocket(newSocket)
 
       // Rejoin room if we were in one;
-      if (currentRoom) {
+      if (currentRoom) {}
         newSocket.emit("join_room", { room_id: currentRoom })
       }
     })
@@ -101,7 +101,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {}
       setSocket(null)
 
       // Attempt to reconnect if it wasn't a manual close and we're still authenticated;
-      if (reason !== 'io client disconnect' && reconnectAttempts < maxReconnectAttempts && isAuthenticated) {
+      if (reason !== 'io client disconnect' && reconnectAttempts < maxReconnectAttempts && isAuthenticated) {}
         const delay = Math.min(5000, reconnectDelay * Math.pow(2, reconnectAttempts))
         logger.info("socket.reconnect_scheduled", {}
           attempt: reconnectAttempts + 1,
@@ -122,11 +122,11 @@ export function SocketProvider({ children }: { children: ReactNode }) {}
   }, [isAuthenticated, user, reconnectAttempts, currentRoom, accessToken])
 
   const disconnect = useCallback(() => {}
-    if (reconnectTimeoutRef.current) {
+    if (reconnectTimeoutRef.current) {}
       clearTimeout(reconnectTimeoutRef.current)
       reconnectTimeoutRef.current = null;
     }
-    if (socketRef.current) {
+    if (socketRef.current) {}
       socketRef.current.disconnect()
       socketRef.current = null;
     }
@@ -144,8 +144,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {}
     }, 100)
   }, [disconnect, connect])
 
-  useEffect(() => {
-    if (isAuthenticated && user) {
+  useEffect(() => {}
+    if (isAuthenticated && user) {}
       connect()
     } else {}
       disconnect()
@@ -159,7 +159,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {}
   const joinRoom = useCallback(
     (roomId: string) => {}
       setCurrentRoom(roomId)
-      if (socket && isConnected) {
+      if (socket && isConnected) {}
         socket.emit("join_room", { room_id: roomId })
       }
     },
@@ -169,7 +169,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {}
   const leaveRoom = useCallback(
     (roomId: string) => {}
       setCurrentRoom(null)
-      if (socket && isConnected) {
+      if (socket && isConnected) {}
         socket.emit("leave_room", { room_id: roomId })
       }
     },
@@ -178,7 +178,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {}
 
   const sendMessage = useCallback(
     (type: string, data: unknown) => {}
-      if (socket && isConnected) {
+      if (socket && isConnected) {}
         socket.emit(type, data)
       } else {}
         console.warn("Cannot send message: Socket not connected")
@@ -212,9 +212,9 @@ export function SocketProvider({ children }: { children: ReactNode }) {}
   return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>
 }
 
-export function useSocket() {
+export function useSocket() {}
   const context = useContext(SocketContext)
-  if (context === undefined) {
+  if (context === undefined) {}
     throw new Error("useSocket must be used within a SocketProvider")
   }
   return context;

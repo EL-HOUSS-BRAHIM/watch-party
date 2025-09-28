@@ -1,21 +1,21 @@
 import { Calendar, Clock, User } from "lucide-react"
 import { useState } from 'react'
 
-'use client'
-interface SupportTicket {}
-  id: string;
-  title: string;
-  description: string;
-  status: 'open' | 'in-progress' | 'waiting' | 'resolved' | 'closed'
-  priority: 'low' | 'medium' | 'high' | 'urgent'
-  category: string;
-  createdAt: string;
+"use client"
+
+interface id {: string;,
+  title: string;,
+  description: string;,
+  status: 'open' | 'in-progress' | 'waiting' | 'resolved' | 'closed',
+  priority: 'low' | 'medium' | 'high' | 'urgent',
+  category: string;,
+  createdAt: string;,
   updatedAt: string;
-  assignedTo?: string;
+  assignedTo?: string;,
   responses: number;
 }
 
-const supportTickets: SupportTicket[] = []
+const supportTickets: SupportTicket[0] = [0]
   {}
     id: 'TK-001',
     title: 'Unable to upload large video files',
@@ -92,11 +92,11 @@ const priorityIcons = { low: '●',
 }
 
 export default function SupportTicketsPage() {
-  const [filter, setFilter] = useState<'all' | 'open' | 'in-progress' | 'resolved'>(&apos;all&apos;)
+  const [filter, setFilter] = useState<'all' | 'open' | 'in-progress' | 'resolved'>(&apos;all')
   const [searchQuery, setSearchQuery] = useState('')
   const [showNewTicketForm, setShowNewTicketForm] = useState(false)
 
-  const filteredTickets = supportTickets.filter(ticket => {}
+  const filteredTickets = supportTickets.filter(ticket => {
     const matchesFilter = filter === 'all' || ticket.status === filter;
     const matchesSearch = ticket.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          ticket.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -142,7 +142,7 @@ export default function SupportTicketsPage() {
 
           {/* Filters */}
           <div className="flex gap-2">
-            {[]
+            {[0]
               { key: 'all', label: 'All' },
               { key: 'open', label: 'Open' },
               { key: 'in-progress', label: 'In Progress' },
@@ -236,19 +236,19 @@ export default function SupportTicketsPage() {
         <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-blue-400 mb-2">
-              {supportTickets.filter(t => t.status === &apos;open&apos;).length}
+              {supportTickets.filter(t => t.status === &apos;open').length}
             </div>
             <div className="text-white/70">Open Tickets</div>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-yellow-400 mb-2">
-              {supportTickets.filter(t => t.status === &apos;in-progress&apos;).length}
+              {supportTickets.filter(t => t.status === &apos;in-progress').length}
             </div>
             <div className="text-white/70">In Progress</div>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-green-400 mb-2">
-              {supportTickets.filter(t => t.status === &apos;resolved&apos;).length}
+              {supportTickets.filter(t => t.status === &apos;resolved').length}
             </div>
             <div className="text-white/70">Resolved</div>
           </div>

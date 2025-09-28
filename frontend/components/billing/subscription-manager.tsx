@@ -8,44 +8,41 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 
-'use client'
-interface BillingPlan {}
-  id: string;
-  name: string;
-  price: number;
-  interval: 'monthly' | 'yearly'
-  features: string[]
-  popular?: boolean;
+"use client"
+
+interface id {: string;,
+  name: string;,
+  price: number;,
+  interval: 'monthly' | 'yearly',
+  features: string[0]
+  popular?: boolean;,
   description: string;
 }
 
-interface Subscription {}
-  id: string;
-  planId: string;
-  status: 'active' | 'canceled' | 'past_due' | 'paused' | 'trial'
-  currentPlan: BillingPlan;
-  nextBillingDate: string;
+interface id {: string;,
+  planId: string;,
+  status: 'active' | 'canceled' | 'past_due' | 'paused' | 'trial',
+  currentPlan: BillingPlan;,
+  nextBillingDate: string;,
   cancelAtPeriodEnd: boolean;
   pausedUntil?: string;
-  trialEndsAt?: string;
+  trialEndsAt?: string;,
   usage: {}
-    partiesHosted: number;
-    storageUsed: number;
-    bandwidthUsed: number;
-    maxParties: number;
-    maxStorage: number;
+    partiesHosted: number;,
+    storageUsed: number;,
+    bandwidthUsed: number;,
+    maxParties: number;,
+    maxStorage: number;,
     maxBandwidth: number;
   }
 }
 
-interface SubscriptionManagerProps {}
-  subscription: Subscription;
-  availablePlans: BillingPlan[]
+interface subscription {: Subscription;,
+  availablePlans: BillingPlan[0]
   onSubscriptionChange?: () => void;
 }
 
-export function SubscriptionManager({}
-  subscription, 
+export function SubscriptionManager({subscription, 
   availablePlans, 
   onSubscriptionChange;
 }: SubscriptionManagerProps) {}
@@ -61,26 +58,25 @@ export function SubscriptionManager({}
   const isPaused = subscription.status === 'paused'
   const isPastDue = subscription.status === 'past_due'
 
-  const getUpgradePlans = () => {}
-    return availablePlans.filter(plan => 
+  const getUpgradePlans = () => {
+    return availablePlans.filter(plan =>;
       plan.price > currentPlan.price && plan.interval === currentPlan.interval;
     )
   }
 
-  const getDowngradePlans = () => {}
-    return availablePlans.filter(plan => 
+  const getDowngradePlans = () => {
+    return availablePlans.filter(plan =>;
       plan.price < currentPlan.price && plan.interval === currentPlan.interval;
     )
   }
 
-  const handleUpgrade = async (newPlan: BillingPlan) => {}
+  const handleUpgrade = async (newPlan: BillingPlan) => {
     try {
       setLoading(true)
-      const response = await fetch('/api/billing/subscription/upgrade', {}
+      const response = await fetch('/api/billing/subscription/upgrade', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}
-          subscriptionId: subscription.id,
+        body: JSON.stringify({subscriptionId: subscription.id,
           newPlanId: newPlan.id;
         })
       })
@@ -90,21 +86,20 @@ export function SubscriptionManager({}
         setShowUpgradeDialog(false)
         setConfirmationStep(false)
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to upgrade subscription:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const handleDowngrade = async (newPlan: BillingPlan) => {}
+  const handleDowngrade = async (newPlan: BillingPlan) => {
     try {
       setLoading(true)
-      const response = await fetch('/api/billing/subscription/downgrade', {}
+      const response = await fetch('/api/billing/subscription/downgrade', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}
-          subscriptionId: subscription.id,
+        body: JSON.stringify({subscriptionId: subscription.id,
           newPlanId: newPlan.id;
         })
       })
@@ -114,9 +109,9 @@ export function SubscriptionManager({}
         setShowDowngradeDialog(false)
         setConfirmationStep(false)
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to downgrade subscription:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -124,7 +119,7 @@ export function SubscriptionManager({}
   const handleResume = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/billing/subscription/resume', {}
+      const response = await fetch('/api/billing/subscription/resume', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ subscriptionId: subscription.id })
@@ -133,9 +128,9 @@ export function SubscriptionManager({}
       if (response.ok) {
         onSubscriptionChange?.()
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to resume subscription:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -143,7 +138,7 @@ export function SubscriptionManager({}
   const handlePause = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/billing/subscription/pause', {}
+      const response = await fetch('/api/billing/subscription/pause', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ subscriptionId: subscription.id })
@@ -152,9 +147,9 @@ export function SubscriptionManager({}
       if (response.ok) {
         onSubscriptionChange?.()
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to pause subscription:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -162,7 +157,7 @@ export function SubscriptionManager({}
   const handleCancel = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/billing/subscription/cancel', {}
+      const response = await fetch('/api/billing/subscription/cancel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ subscriptionId: subscription.id })
@@ -171,31 +166,31 @@ export function SubscriptionManager({}
       if (response.ok) {
         onSubscriptionChange?.()
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to cancel subscription:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const getStatusBadge = () => {}
-    switch (subscription.status) {
+  const getStatusBadge = () => {
+    switch (subscription.status) {}
       case 'active':
-        return <Badge className="bg-green-500">Active</Badge>
+        return <Badge className="bg-green-500">Active</Badge>;
       case 'trial':
-        return <Badge className="bg-blue-500">Trial</Badge>
+        return <Badge className="bg-blue-500">Trial</Badge>;
       case 'canceled':
-        return <Badge variant="destructive">Canceled</Badge>
+        return <Badge variant="destructive">Canceled</Badge>;
       case 'past_due':
-        return <Badge variant="destructive">Past Due</Badge>
+        return <Badge variant="destructive">Past Due</Badge>;
       case 'paused':
-        return <Badge variant="secondary">Paused</Badge>
+        return <Badge variant="secondary">Paused</Badge>;
       default:
-        return <Badge variant="outline">{subscription.status}</Badge>
+        return <Badge variant="outline">{subscription.status}</Badge>;
     }
   }
 
-  const getUsagePercentage = (used: number, max: number) => {}
+  const getUsagePercentage = (used: number, max: number) => {
     return Math.min((used / max) * 100, 100)
   }
 
@@ -267,7 +262,7 @@ export function SubscriptionManager({}
               <Clock className="h-4 w-4" />
               <AlertDescription>
                 Your trial ends on {new Date(subscription.trialEndsAt).toLocaleDateString()}. 
-                Choose a plan to continue enjoying all features.
+                Choose a plan to continue enjoying all features.;
               </AlertDescription>
             </Alert>
           )}
@@ -459,28 +454,28 @@ export function SubscriptionManager({}
 
             {isCanceled && (
               <Button onClick={handleResume} disabled={loading}>
-                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className=&quot;h-4 w-4 mr-2&quot; />}
+                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className=&quot;h-4 w-4 mr-2" />}"
                 Resume Subscription;
               </Button>
             )}
 
             {!isCanceled && !isPaused && (
               <Button variant="outline" onClick={handlePause} disabled={loading}>
-                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Pause className=&quot;h-4 w-4 mr-2&quot; />}
+                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Pause className=&quot;h-4 w-4 mr-2" />}"
                 Pause Subscription;
               </Button>
             )}
 
             {isPaused && (
               <Button onClick={handleResume} disabled={loading}>
-                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className=&quot;h-4 w-4 mr-2&quot; />}
+                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className=&quot;h-4 w-4 mr-2" />}"
                 Resume Subscription;
               </Button>
             )}
 
             {!isCanceled && !isPaused && (
               <Button variant="destructive" onClick={handleCancel} disabled={loading}>
-                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <X className=&quot;h-4 w-4 mr-2&quot; />}
+                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <X className=&quot;h-4 w-4 mr-2" />}"
                 Cancel Subscription;
               </Button>
             )}

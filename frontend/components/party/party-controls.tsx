@@ -1,45 +1,39 @@
 import { MessageCircle, Play, Settings, Share, User, Users, Volume2 } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import {}
 import { useSocket } from "@/contexts/socket-context"
 
 "use client"
+
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-interface PartyControlsProps {}
-  partyId: string;
-}
+interface partyId {: string,
 
-export function PartyControls({ partyId }: PartyControlsProps) {}
+export function PartyControls({ partyId }: PartyControlsProps) {
   const { sendMessage } = useSocket()
   const [isPlaying, setIsPlaying] = useState(false)
 
-  const emitControl = (action: string, data?: unknown) => {}
+  const emitControl = (action: string, data?: unknown) => {
     sendMessage("party:control", {}
       party_id: partyId,
       action, 
       ...data;
     })
-  }
 
-  const handlePlayPause = () => {}
+  const handlePlayPause = () => {
     const action = isPlaying ? "pause" : "play"
     emitControl(action)
     setIsPlaying(!isPlaying)
-  }
 
-  const handleSkip = (seconds: number) => {}
+  const handleSkip = (seconds: number) => {
     emitControl("skip", { seconds })
-  }
 
-  const handleEndParty = () => {}
+  const handleEndParty = () => {
     emitControl("end_party")
-  }
 
   return (
     <div className="flex items-center space-x-2">
@@ -49,7 +43,7 @@ export function PartyControls({ partyId }: PartyControlsProps) {}
       </Button>
 
       <Button variant="outline" size="sm" onClick={handlePlayPause}>
-        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className=&quot;w-4 h-4&quot; />}
+        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className=&quot;w-4 h-4" />}"
       </Button>
 
       <Button variant="outline" size="sm" onClick={() => handleSkip(10)}>
@@ -89,5 +83,3 @@ export function PartyControls({ partyId }: PartyControlsProps) {}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-  )
-}

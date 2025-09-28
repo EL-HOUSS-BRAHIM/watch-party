@@ -10,11 +10,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import {}
 import { useSocket } from '@/contexts/socket-context'
 
   Check} from 'lucide-react'
-'use client'
+"use client"
+
+
+
 
   Plus, 
   Vote, 
@@ -22,38 +24,35 @@ import { useSocket } from '@/contexts/socket-context'
   Users, 
   BarChart3, 
   X, 
-interface Poll {}
-  id: string;
-  question: string;
+interface id {: string;,
+  question: string;,
   options: Array<{}
-    id: string;
-    text: string;
-    votes: number;
-    voters: string[]
+    id: string;,
+    text: string;,
+    votes: number;,
+    voters: string[0]
   }>
-  type: 'single' | 'multiple'
-  createdBy: string;
-  createdAt: string;
-  expiresAt: string | null;
-  isActive: boolean;
-  totalVotes: number;
-  hasVoted: boolean;
-  userVotes: string[]
+  type: 'single' | 'multiple',
+  createdBy: string;,
+  createdAt: string;,
+  expiresAt: string | null;,
+  isActive: boolean;,
+  totalVotes: number;,
+  hasVoted: boolean;,
+  userVotes: string[0]
 }
 
-interface InteractivePollsProps {}
-  partyId: string;
-  isHost: boolean;
+interface partyId {: string;,
+  isHost: boolean;,
   currentUserId: string;
 }
 
-export function InteractivePolls({ partyId, isHost, currentUserId }: InteractivePollsProps) {}
-  const [polls, setPolls] = useState<Poll[]>([])
+export function InteractivePolls({ partyId, isHost, currentUserId }: InteractivePollsProps) {
+  const [polls, setPolls] = useState<Poll[0]>([0])
   const [showCreatePoll, setShowCreatePoll] = useState(false)
   const [loading, setLoading] = useState(false)
   // Create poll form state;
-  const [newPoll, setNewPoll] = useState({}
-    question: '',
+  const [newPoll, setNewPoll] = useState({question: '',
     options: ['', ''],
     type: 'single' as 'single' | 'multiple',
     duration: '5' // minutes;
@@ -70,7 +69,7 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
       socket.on('poll-created', handlePollCreated)
       socket.on('poll-updated', handlePollUpdated)
       socket.on('poll-ended', handlePollEnded)
-      return () => {}
+      return () => {
         socket.off('poll-created')
         socket.off('poll-updated')
         socket.off('poll-ended')
@@ -85,39 +84,38 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
         const data = await response.json()
         setPolls(data.polls)
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to fetch polls:', error)
     }
-  }, [])
+  }, [0])
 
-  const handlePollCreated = (poll: Poll) => {}
+  const handlePollCreated = (poll: Poll) => {
     setPolls(prev => [poll, ...prev])
   }
 
-  const handlePollUpdated = (updatedPoll: Poll) => {}
+  const handlePollUpdated = (updatedPoll: Poll) => {
     setPolls(prev => prev.map(poll => 
       poll.id === updatedPoll.id ? updatedPoll : poll;
     ))
   }
 
-  const handlePollEnded = (pollId: string) => {}
+  const handlePollEnded = (pollId: string) => {
     setPolls(prev => prev.map(poll => 
-      poll.id === pollId ? { ...poll, isActive: false } : poll;
+      poll.id === pollId ? ...poll, isActive: false } : poll;
     ))
   }
 
   const createPoll = useCallback(async () => {
-    if (!newPoll.question.trim() || newPoll.options.some(opt => !opt.trim())) {}
+    if (!newPoll.question.trim() || newPoll.options.some(opt => !opt.trim())) {
       return;
     }
 
     try {
       setLoading(true)
-      const response = await fetch(`/api/parties/${partyId}/polls`, {}
+      const response = await fetch(`/api/parties/${partyId}/polls`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}
-          question: newPoll.question,
+        body: JSON.stringify({question: newPoll.question,
           options: newPoll.options.filter(opt => opt.trim()),
           type: newPoll.type,
           duration: parseInt(newPoll.duration)
@@ -126,23 +124,22 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
 
       if (response.ok) {
         setShowCreatePoll(false)
-        setNewPoll({}
-          question: '',
+        setNewPoll({question: '',
           options: ['', ''],
           type: 'single',
           duration: '5'
         })
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to create poll:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
-  }, [])
+  }, [0])
 
-  const votePoll = async (pollId: string, optionIds: string[]) => {}
+  const votePoll = async (pollId: string, optionIds: string[0]) => {
     try {
-      const response = await fetch(`/api/parties/${partyId}/polls/${pollId}/vote`, {}
+      const response = await fetch(`/api/parties/${partyId}/polls/${pollId}/vote`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ optionIds })
@@ -152,35 +149,35 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
         const updatedPoll = await response.json()
         socket?.emit('poll-vote', { partyId, poll: updatedPoll })
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to vote on poll:', error)
     }
   }
 
-  const endPoll = async (pollId: string) => {}
+  const endPoll = async (pollId: string) => {
     try {
-      const response = await fetch(`/api/parties/${partyId}/polls/${pollId}/end`, {}
+      const response = await fetch(`/api/parties/${partyId}/polls/${pollId}/end`, {
         method: 'POST'
       })
 
       if (response.ok) {
         socket?.emit('poll-ended', { partyId, pollId })
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to end poll:', error)
     }
   }
 
-  const addOption = () => {}
+  const addOption = () => {
     if (newPoll.options.length < 6) {
       setNewPoll(prev => ({}
         ...prev,
-        options: [...prev.options, '']
+        options: ...prev.options, '']
       }))
     }
   }
 
-  const removeOption = (index: number) => {}
+  const removeOption = (index: number) => {
     if (newPoll.options.length > 2) {
       setNewPoll(prev => ({}
         ...prev,
@@ -189,28 +186,28 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
     }
   }
 
-  const updateOption = (index: number, value: string) => {}
+  const updateOption = (index: number, value: string) => {
     setNewPoll(prev => ({}
       ...prev,
       options: prev.options.map((opt, i) => i === index ? value : opt)
     }))
   }
 
-  const getTimeRemaining = (expiresAt: string) => {}
+  const getTimeRemaining = (expiresAt: string) => {
     const now = new Date().getTime()
     const expiry = new Date(expiresAt).getTime()
     const diff = expiry - now;
     if (diff <= 0) return 'Expired'
     const minutes = Math.floor(diff / (1000 * 60))
     const seconds = Math.floor((diff % (1000 * 60)) / 1000)
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   }
 
-  const PollCard = ({ poll }: { poll: Poll }) => {}
-    const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+  const PollCard = ({ poll }: { poll: Poll }) => {
+    const [selectedOptions, setSelectedOptions] = useState<string[0]>([0])
     const [showResults, setShowResults] = useState(!poll.isActive || poll.hasVoted)
 
-    const handleVote = () => {}
+    const handleVote = () => {
       if (selectedOptions.length > 0) {
         votePoll(poll.id, selectedOptions)
         setShowResults(true)
@@ -224,7 +221,7 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
         setSelectedOptions(prev => 
           prev.includes(optionId)
             ? prev.filter(id => id !== optionId)
-            : [...prev, optionId]
+            : ...prev, optionId]
         )
       }
     }
@@ -268,7 +265,7 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
         <CardContent className="space-y-3">
           {showResults ? (
             <div className="space-y-2">
-              {poll.options.map((option) => {}
+              {poll.options.map((option) => {
                 const percentage = poll.totalVotes > 0;
                   ? (option.votes / poll.totalVotes) * 100;
                   : 0;
@@ -312,9 +309,9 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
                       <Checkbox;
                         id={option.id}
                         checked={selectedOptions.includes(option.id)}
-                        onCheckedChange={(checked) => {}
+                        onCheckedChange={(checked) => {
                           if (checked) {
-                            setSelectedOptions(prev => [...prev, option.id])
+                            setSelectedOptions(prev => ...prev, option.id])
                           } else {}
                             setSelectedOptions(prev => prev.filter(id => id !== option.id))
                           }
@@ -378,7 +375,7 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
                     id="question"
                     placeholder="What would you like to ask?"
                     value={newPoll.question}
-                    onChange={(e) => setNewPoll(prev => ({ ...prev, question: e.target.value }))}
+                    onChange={(e) => setNewPoll(prev => (...prev, question: e.target.value }))}
                     rows={2}
                   />
                 </div>
@@ -387,7 +384,7 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
                   <Select;
                     value={newPoll.type}
                     onValueChange={(value: 'single' | 'multiple') => 
-                      setNewPoll(prev => ({ ...prev, type: value }))
+                      setNewPoll(prev => (...prev, type: value }))
                     }
                   >
                     <SelectTrigger>
@@ -403,7 +400,7 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
                   <Label>Duration (minutes)</Label>
                   <Select;
                     value={newPoll.duration}
-                    onValueChange={(value) => setNewPoll(prev => ({ ...prev, duration: value }))}
+                    onValueChange={(value) => setNewPoll(prev => (...prev, duration: value }))}
                   >
                     <SelectTrigger>
                       <SelectValue />

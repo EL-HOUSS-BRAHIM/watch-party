@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 "use client"
 
 export function ThemeSwitcher() {
-  const { setTheme, theme } = useTheme()
+  const { setTheme} = useTheme()
 
   return (
     <DropdownMenu>
@@ -26,21 +26,21 @@ export function ThemeSwitcher() {
         className="bg-watch-party-elevation-1 border-watch-party-border shadow-watch-party-deep"
       >
         <DropdownMenuItem;
-          onClick={() => setTheme(&quot;light&quot;)}
+          onClick={() => setTheme(&quot;light")}
           className="hover:bg-watch-party-surface focus:bg-watch-party-surface text-watch-party-text-primary"
         >
           <Sun className="mr-2 h-4 w-4 text-watch-party-primary" />
           <span>Light</span>
         </DropdownMenuItem>
         <DropdownMenuItem;
-          onClick={() => setTheme(&quot;dark&quot;)}
+          onClick={() => setTheme(&quot;dark")}
           className="hover:bg-watch-party-surface focus:bg-watch-party-surface text-watch-party-text-primary"
         >
           <Moon className="mr-2 h-4 w-4 text-watch-party-primary" />
           <span>Dark</span>
         </DropdownMenuItem>
         <DropdownMenuItem;
-          onClick={() => setTheme(&quot;system&quot;)}
+          onClick={() => setTheme(&quot;system")}
           className="hover:bg-watch-party-surface focus:bg-watch-party-surface text-watch-party-text-primary"
         >
           <Monitor className="mr-2 h-4 w-4 text-watch-party-primary" />

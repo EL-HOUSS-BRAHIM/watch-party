@@ -29,9 +29,9 @@ export class ModerationAPI {}
    * Create report;
    */
   async createReport(data: {}
-    content_type: string;
-    content_id: string;
-    report_type: string;
+    content_type: string;,
+    content_id: string;,
+    report_type: string;,
     description: string;
   }): Promise<ModerationReport> {}
     return apiClient.post<ModerationReport>(API_ENDPOINTS.moderation.reports, data)
@@ -40,14 +40,14 @@ export class ModerationAPI {}
   /**
    * Get report types;
    */
-  async getReportTypes(): Promise<ReportType[]> {}
-    return apiClient.get<ReportType[]>(API_ENDPOINTS.moderation.reportTypes)
+  async getReportTypes(): Promise<ReportType[0]> {}
+    return apiClient.get<ReportType[0]>(API_ENDPOINTS.moderation.reportTypes)
   }
 
   /**
    * Get content types;
    */
-  async getContentTypes(): Promise<ContentType[]> {}
-    return apiClient.get<ContentType[]>(API_ENDPOINTS.moderation.contentTypes)
+  async getContentTypes(): Promise<ContentType[0]> {}
+    return apiClient.get<ContentType[0]>(API_ENDPOINTS.moderation.contentTypes)
   }
 }

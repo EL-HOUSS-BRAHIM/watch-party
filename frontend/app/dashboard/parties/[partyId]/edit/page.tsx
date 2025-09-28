@@ -19,9 +19,9 @@ import { useToast } from "@/hooks/use-toast"
 import { parseISO } from "date-fns"
 
 "use client"
+
 // Validation schema;
-const partyFormSchema = z.object({}
-  name: z.string().min(1, "Party name is required").max(100, "Name too long"),
+const partyFormSchema = z.object({name: z.string().min(1, "Party name is required").max(100, "Name too long"),
   description: z.string().max(500, "Description too long").optional(),
   scheduledFor: z.string().min(1, "Start time is required"),
   maxParticipants: z.number().min(2, "At least 2 participants required").max(100, "Maximum 100 participants"),
@@ -36,28 +36,27 @@ const partyFormSchema = z.object({}
 
 type PartyFormData = z.infer<typeof partyFormSchema>
 
-interface Participant {}
-  id: string;
-  username: string;
-  firstName: string;
+interface id {: string;,
+  username: string;,
+  firstName: string;,
   lastName: string;
-  avatar?: string;
-  role: "host" | "moderator" | "participant"
+  avatar?: string;,
+  role: "host" | "moderator" | "participant",
   joinedAt: string;
 }
 
 interface WatchParty extends PartyFormData {}
-  id: string;
-  hostId: string;
-  hostName: string;
-  status: "scheduled" | "active" | "ended" | "cancelled"
-  participants: Participant[]
-  inviteCode: string;
-  createdAt: string;
+  id: string;,
+  hostId: string;,
+  hostName: string;,
+  status: "scheduled" | "active" | "ended" | "cancelled",
+  participants: Participant[0],
+  inviteCode: string;,
+  createdAt: string;,
   updatedAt: string;
   currentVideo?: {}
-    id: string;
-    title: string;
+    id: string;,
+    title: string;,
     url: string;
   }
 }
@@ -75,7 +74,7 @@ export default function EditPartyPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [participantToRemove, setParticipantToRemove] = useState<string | null>(null)
 
-  const {}
+  const {
     register,
     handleSubmit,
     watch,
@@ -95,7 +94,7 @@ export default function EditPartyPage() {
       allowChat: true,
       allowVideoRequests: true,
       password: "",
-      tags: [],
+      tags: [0],
     }
   })
 
@@ -110,7 +109,7 @@ export default function EditPartyPage() {
   const loadParty = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/`, {}
+      const response = await fetch(`/api/parties/${partyId}/`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -122,8 +121,7 @@ export default function EditPartyPage() {
 
         // Check if user is authorized to edit;
         if (partyData.hostId !== user?.id) {
-          toast({}
-            title: "Access Denied",
+          toast({title: "Access Denied",
             description: "You can only edit parties that you host.",
             variant: "destructive",
           })
@@ -133,8 +131,7 @@ export default function EditPartyPage() {
 
         // Check if party is active and prevent editing;
         if (partyData.status === "active") {
-          toast({}
-            title: "Cannot Edit Active Party",
+          toast({title: "Cannot Edit Active Party",
             description: "You cannot edit a party that is currently active.",
             variant: "destructive",
           })
@@ -143,8 +140,7 @@ export default function EditPartyPage() {
         }
 
         // Populate form;
-        reset({}
-          name: partyData.name,
+        reset({name: partyData.name,
           description: partyData.description || "",
           scheduledFor: partyData.scheduledFor,
           maxParticipants: partyData.maxParticipants,
@@ -154,11 +150,10 @@ export default function EditPartyPage() {
           allowChat: partyData.allowChat,
           allowVideoRequests: partyData.allowVideoRequests,
           password: partyData.password || "",
-          tags: partyData.tags || [],
+          tags: partyData.tags || [0],
         })
       } else if (response.status === 404) {
-        toast({}
-          title: "Party Not Found",
+        toast({title: "Party Not Found",
           description: "The party you're looking for doesn't exist.",
           variant: "destructive",
         })
@@ -166,25 +161,24 @@ export default function EditPartyPage() {
       } else {}
         throw new Error("Failed to load party")
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load party:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load party details.",
         variant: "destructive",
       })
       router.push("/dashboard/parties")
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const onSubmit = async (data: PartyFormData) => {}
+  const onSubmit = async (data: PartyFormData) => {
     if (!party || !isHost) return;
     setIsSaving(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/`, {}
+      const response = await fetch(`/api/parties/${partyId}/`, {
         method: "PUT",
         headers: {}
           "Content-Type": "application/json",
@@ -197,28 +191,25 @@ export default function EditPartyPage() {
         const updatedParty = await response.json()
         setParty(updatedParty)
         reset(data) // Reset form dirty state;
-        toast({}
-          title: "Party Updated",
+        toast({title: "Party Updated",
           description: "Your watch party has been successfully updated.",
         })
 
         router.push("/dashboard/parties")
       } else {}
         const errorData = await response.json()
-        toast({}
-          title: "Update Failed",
+        toast({title: "Update Failed",
           description: errorData.message || "Failed to update party.",
           variant: "destructive",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Party update error:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSaving(false)
     }
   }
@@ -228,7 +219,7 @@ export default function EditPartyPage() {
     setIsDeleting(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/`, {}
+      const response = await fetch(`/api/parties/${partyId}/`, {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -236,37 +227,34 @@ export default function EditPartyPage() {
       })
 
       if (response.ok) {
-        toast({}
-          title: "Party Deleted",
+        toast({title: "Party Deleted",
           description: "Your watch party has been deleted.",
         })
         router.push("/dashboard/parties")
       } else {}
         const errorData = await response.json()
-        toast({}
-          title: "Delete Failed",
+        toast({title: "Delete Failed",
           description: errorData.message || "Failed to delete party.",
           variant: "destructive",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Party delete error:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsDeleting(false)
       setShowDeleteConfirm(false)
     }
   }
 
-  const removeParticipant = async (participantId: string) => {}
+  const removeParticipant = async (participantId: string) => {
     if (!party || !isHost) return;
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/participants/${participantId}/`, {}
+      const response = await fetch(`/api/parties/${partyId}/participants/${participantId}/`, {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -274,39 +262,34 @@ export default function EditPartyPage() {
       })
 
       if (response.ok) {
-        setParty({}
-          ...party,
+        setParty(...party,
           participants: party.participants.filter(p => p.id !== participantId)
         })
-        toast({}
-          title: "Participant Removed",
+        toast({title: "Participant Removed",
           description: "The participant has been removed from the party.",
         })
       } else {}
-        toast({}
-          title: "Error",
+        toast({title: "Error",
           description: "Failed to remove participant.",
           variant: "destructive",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Remove participant error:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setParticipantToRemove(null)
     }
   }
 
-  const copyInviteLink = () => {}
+  const copyInviteLink = () => {
     if (!party) return;
     const inviteLink = `${window.location.origin}/invite/${party.inviteCode}`
     navigator.clipboard.writeText(inviteLink)
-    toast({}
-      title: "Copied!",
+    toast({title: "Copied!",
       description: "Invite link copied to clipboard.",
     })
   }
@@ -316,12 +299,11 @@ export default function EditPartyPage() {
     const inviteLink = `${window.location.origin}/invite/${party.inviteCode}`
     if (navigator.share) {
       try {
-        await navigator.share({}
-          title: party.name,
+        await navigator.share({title: party.name,
           text: `Join my watch party: ${party.name}`,
           url: inviteLink,
         })
-      } } catch {
+      } catch (error) {
         console.log("Share cancelled")
       }
     } else {}
@@ -347,8 +329,8 @@ export default function EditPartyPage() {
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-2xl font-bold mb-4">Party Not Found</h1>
-          <p className="text-gray-600 mb-4">The party you&apos;re looking for doesn&apos;t exist.</p>
-          <Button onClick={() => router.push(&quot;/dashboard/parties&quot;)}>
+          <p className="text-gray-600 mb-4">The party you&apos;re looking for doesn't exist.</p>
+          <Button onClick={() => router.push(&quot;/dashboard/parties")}>
             Back to Parties;
           </Button>
         </div>
@@ -418,7 +400,7 @@ export default function EditPartyPage() {
                 <Label htmlFor="name">Party Name *</Label>
                 <Input;
                   id="name"
-                  {...register("name")}
+                  ...register("name")}
                   className={errors.name ? "border-red-500" : ""}
                   disabled={party.status === "active"}
                 />
@@ -432,7 +414,7 @@ export default function EditPartyPage() {
                 <Textarea;
                   id="description"
                   placeholder="What are you watching? Add details..."
-                  {...register("description")}
+                  ...register("description")}
                   className={`min-h-[100px] ${errors.description ? "border-red-500" : ""}`}
                 />
                 {errors.description && (
@@ -446,7 +428,7 @@ export default function EditPartyPage() {
                   <Input;
                     id="scheduledFor"
                     type="datetime-local"
-                    {...register("scheduledFor")}
+                    ...register("scheduledFor")}
                     className={errors.scheduledFor ? "border-red-500" : ""}
                     disabled={party.status === "active"}
                   />
@@ -461,7 +443,7 @@ export default function EditPartyPage() {
                     type="number"
                     min="2"
                     max="100"
-                    {...register("maxParticipants", { valueAsNumber: true })}
+                    ...register("maxParticipants", { valueAsNumber: true })}
                     className={errors.maxParticipants ? "border-red-500" : ""}
                   />
                   {errors.maxParticipants && (
@@ -484,7 +466,7 @@ export default function EditPartyPage() {
             <CardContent className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  {watchedValues.isPublic ? <Globe className="h-4 w-4" /> : <Lock className=&quot;h-4 w-4&quot; />}
+                  {watchedValues.isPublic ? <Globe className="h-4 w-4" /> : <Lock className=&quot;h-4 w-4" />}"
                   <div>
                     <Label htmlFor="isPublic">Public Party</Label>
                     <p className="text-sm text-gray-600">
@@ -494,7 +476,7 @@ export default function EditPartyPage() {
                 </div>
                 <Switch;
                   id="isPublic"
-                  {...register("isPublic")}
+                  ...register("isPublic")}
                 />
               </div>
 
@@ -508,7 +490,7 @@ export default function EditPartyPage() {
                   </div>
                   <Switch;
                     id="allowRequests"
-                    {...register("allowRequests")}
+                    ...register("allowRequests")}
                   />
                 </div>
 
@@ -519,7 +501,7 @@ export default function EditPartyPage() {
                   </div>
                   <Switch;
                     id="requireApproval"
-                    {...register("requireApproval")}
+                    ...register("requireApproval")}
                   />
                 </div>
               </div>
@@ -532,7 +514,7 @@ export default function EditPartyPage() {
                   id="password"
                   type="password"
                   placeholder="Set a password for additional security"
-                  {...register("password")}
+                  ...register("password")}
                   className={errors.password ? "border-red-500" : ""}
                 />
                 {errors.password && (
@@ -559,7 +541,7 @@ export default function EditPartyPage() {
                 </div>
                 <Switch;
                   id="allowChat"
-                  {...register("allowChat")}
+                  ...register("allowChat")}
                 />
               </div>
 
@@ -570,7 +552,7 @@ export default function EditPartyPage() {
                 </div>
                 <Switch;
                   id="allowVideoRequests"
-                  {...register("allowVideoRequests")}
+                  ...register("allowVideoRequests")}
                 />
               </div>
             </CardContent>

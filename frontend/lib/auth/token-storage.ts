@@ -8,14 +8,14 @@ let inMemoryAccessToken: string | null = null;
 let inMemoryRefreshToken: string | null = null;
 const listeners = new Set<TokenChangeListener>()
 
-const getStorage = (): Storage | null => {}
+const getStorage = (): Storage | null => {
   if (!isBrowser) {
     return null;
   }
 
   try {
     return window.sessionStorage;
-  } } catch {
+  } catch (error) {
     console.warn("Session storage is not accessible, falling back to in-memory tokens only.")
     return null;
   }
@@ -23,13 +23,13 @@ const getStorage = (): Storage | null => {}
 
 const storage = getStorage()
 
-const notify = () => {}
+const notify = () => {
   for (const listener of listeners) {
     listener(inMemoryAccessToken, inMemoryRefreshToken)
   }
 }
 
-const persist = () => {}
+const persist = () => {
   if (!storage) return;
   try {
     if (inMemoryAccessToken) {
@@ -43,18 +43,18 @@ const persist = () => {}
     } else {}
       storage.removeItem(REFRESH_TOKEN_KEY)
     }
-  } } catch {
+  } catch (error) {
     console.warn("Failed to persist auth tokens to sessionStorage", error)
   }
 }
 
-const hydrateFromStorage = () => {}
+const hydrateFromStorage = () => {
   if (!storage) return;
   inMemoryAccessToken = storage.getItem(ACCESS_TOKEN_KEY)
   inMemoryRefreshToken = storage.getItem(REFRESH_TOKEN_KEY)
 }
 
-const patchLegacyLocalStorageBridge = () => {}
+const patchLegacyLocalStorageBridge = () => {
   if (!isBrowser || typeof window.localStorage === "undefined") {
     return;
   }
@@ -67,24 +67,24 @@ const patchLegacyLocalStorageBridge = () => {}
   const isAccessKey = (key: string) => key === "access_token" || key === "accessToken"
   const isRefreshKey = (key: string) => key === "refresh_token" || key === "refreshToken"
 
-  window.localStorage.getItem = (key: string): string | null => {}
-    if (isAccessKey(key)) {}
+  window.localStorage.getItem = (key: string): string | null => {
+    if (isAccessKey(key)) {
       return inMemoryAccessToken ?? storage?.getItem(ACCESS_TOKEN_KEY) ?? null;
     }
-    if (isRefreshKey(key)) {}
+    if (isRefreshKey(key)) {
       return inMemoryRefreshToken ?? storage?.getItem(REFRESH_TOKEN_KEY) ?? null;
     }
     return originalGetItem(key)
   }
 
-  window.localStorage.setItem = (key: string, value: string): void => {}
-    if (isAccessKey(key)) {}
+  window.localStorage.setItem = (key: string, value: string): void => {
+    if (isAccessKey(key)) {
       inMemoryAccessToken = value;
       persist()
       notify()
       return;
     }
-    if (isRefreshKey(key)) {}
+    if (isRefreshKey(key)) {
       inMemoryRefreshToken = value;
       persist()
       notify()
@@ -93,14 +93,14 @@ const patchLegacyLocalStorageBridge = () => {}
     originalSetItem(key, value)
   }
 
-  window.localStorage.removeItem = (key: string): void => {}
-    if (isAccessKey(key)) {}
+  window.localStorage.removeItem = (key: string): void => {
+    if (isAccessKey(key)) {
       inMemoryAccessToken = null;
       persist()
       notify()
       return;
     }
-    if (isRefreshKey(key)) {}
+    if (isRefreshKey(key)) {
       inMemoryRefreshToken = null;
       persist()
       notify()
@@ -109,7 +109,7 @@ const patchLegacyLocalStorageBridge = () => {}
     originalRemoveItem(key)
   }
 
-  window.localStorage.clear = (): void => {}
+  window.localStorage.clear = (): void => {
     inMemoryAccessToken = null;
     inMemoryRefreshToken = null;
     persist()
@@ -123,7 +123,7 @@ if (isBrowser) {
   patchLegacyLocalStorageBridge()
 }
 
-export const tokenStorage = { getAccessToken(): string | null {}
+export const tokenStorage = { getAccessToken(): string | null {
     return inMemoryAccessToken;
   },
   getRefreshToken(): string | null {}

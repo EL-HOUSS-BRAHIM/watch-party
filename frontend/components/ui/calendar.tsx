@@ -1,17 +1,18 @@
 import * as React from 'react'
-import {}
 import { DayButton, DayPicker, getDefaultClassNames } from 'react-day-picker'
 import { cn } from '@/lib/utils'
 import { Button, buttonVariants } from '@/components/ui/button'
 
 } from 'lucide-react'
-'use client'
+"use client"
+
+
+
 
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-function Calendar({}
-  className,
+function Calendar({className,
   classNames,
   showOutsideDays = true,
   captionLayout = 'label',
@@ -20,21 +21,21 @@ function Calendar({}
   components,
   ...props;
 }: React.ComponentProps<typeof DayPicker> & {}
-  buttonVariant?: React.ComponentProps<typeof Button>[&apos;variant&apos;]
+  buttonVariant?: React.ComponentProps<typeof Button>[&apos;variant']
 }) {}
   const defaultClassNames = getDefaultClassNames()
 
   return (
-    <DayPicker;
+    <DayPicker,
       showOutsideDays={showOutsideDays}
       className={cn(
         'bg-background group/calendar p-3 [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent',
-        String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
-        String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
+        String.raw`rtl:**:.rdp-button\_next>svg]:rotate-180`,
+        String.raw`rtl:**:.rdp-button\_previous>svg]:rotate-180`,
         className;
       )}
       captionLayout={captionLayout}
-      formatters={{}
+      formatters={{
         formatMonthDropdown: date =>
           date.toLocaleString('default', { month: 'short' }),
         ...formatters,
@@ -124,55 +125,45 @@ function Calendar({}
         ...classNames,
       }}
       components={{}
-        Root: ({ className, rootRef, ...props }) => {}
+        Root: ({ className, rootRef, ...props }) => {
           return (
-            <div;
+            <div,
               data-slot="calendar"
               ref={rootRef}
               className={cn(className)}
-              {...props}
+              ...props}
             />
-          )
         },
-        Chevron: ({ className, orientation, ...props }) => {}
+        Chevron: ({ className, orientation, ...props }) => {
           if (orientation === 'left') {
             return (
-              <ChevronLeftIcon className={cn('size-4', className)} {...props} />
-            )
-          }
+              <ChevronLeftIcon className={cn('size-4', className)} ...props} />
 
           if (orientation === 'right') {
             return (
-              <ChevronRightIcon;
+              <ChevronRightIcon,
                 className={cn('size-4', className)}
-                {...props}
+                ...props}
               />
-            )
-          }
 
           return (
-            <ChevronDownIcon className={cn('size-4', className)} {...props} />
-          )
+            <ChevronDownIcon className={cn('size-4', className)} ...props} />
         },
         DayButton: CalendarDayButton,
-        WeekNumber: ({ children, ...props }) => {}
+        WeekNumber: ({ children, ...props }) => {
           return (
-            <td {...props}>
+            <td ...props}>
               <div className="flex size-[--cell-size] items-center justify-center text-center">
                 {children}
               </div>
             </td>
-          )
         },
         ...components,
       }}
-      {...props}
+      ...props}
     />
-  )
-}
 
-function CalendarDayButton({}
-  className,
+function CalendarDayButton({className,
   day,
   modifiers,
   ...props;
@@ -185,7 +176,7 @@ function CalendarDayButton({}
   }, [modifiers.focused])
 
   return (
-    <Button;
+    <Button,
       ref={ref}
       variant="ghost"
       size="icon"
@@ -194,8 +185,7 @@ function CalendarDayButton({}
         modifiers.selected &&
         !modifiers.range_start &&
         !modifiers.range_end &&
-        !modifiers.range_middle;
-      }
+        !modifiers.range_middle,
       data-range-start={modifiers.range_start}
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
@@ -204,9 +194,7 @@ function CalendarDayButton({}
         defaultClassNames.day,
         className;
       )}
-      {...props}
+      ...props}
     />
-  )
-}
 
 export { Calendar, CalendarDayButton }

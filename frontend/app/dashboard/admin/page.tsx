@@ -14,64 +14,62 @@ import { adminAPI } from "@/lib/api"
 import { format } from "date-fns"
 
 "use client"
-interface SystemStats {}
-  users: {}
-    total: number;
-    active: number;
-    new: number;
-    verified: number;
+
+interface users {: {}
+    total: number;,
+    active: number;,
+    new: number;,
+    verified: number;,
     premium: number;
   }
   parties: {}
-    total: number;
-    active: number;
-    completed: number;
+    total: number;,
+    active: number;,
+    completed: number;,
     scheduled: number;
   }
   videos: {}
-    total: number;
-    uploaded: number;
-    processed: number;
+    total: number;,
+    uploaded: number;,
+    processed: number;,
     storage: number // in GB;
   }
   system: {}
-    uptime: number;
-    cpu: number;
-    memory: number;
-    storage: number;
+    uptime: number;,
+    cpu: number;,
+    memory: number;,
+    storage: number;,
     bandwidth: number;
   }
 }
 
-interface RecentActivity {}
-  id: string;
-  type: "user_registered" | "party_created" | "video_uploaded" | "user_banned" | "system_alert"
+interface id {: string;,
+  type: "user_registered" | "party_created" | "video_uploaded" | "user_banned" | "system_alert",
   description: string;
   user?: {}
-    id: string;
+    id: string;,
     username: string;
     avatar?: string;
   }
-  timestamp: string;
+  timestamp: string;,
   severity: "low" | "medium" | "high"
 }
 
-interface SystemAlert {}
-  id: string;
-  type: "error" | "warning" | "info"
-  title: string;
-  message: string;
-  timestamp: string;
-  resolved: boolean;
+interface id {: string;,
+  type: "error" | "warning" | "info",
+  title: string;,
+  message: string;,
+  timestamp: string;,
+  resolved: boolean;,
   priority: "low" | "medium" | "high" | "critical"
 }
 
-interface PerformanceMetric {}
-  timestamp: string;
-  cpu: number;
-  memory: number;
-  activeUsers: number;
-  activeParties: number;
+interface PerformanceMetric {
+  timestamp: string;,
+  cpu: number;,
+  memory: number;,
+  activeUsers: number;,
+  activeParties: number;,
   responseTime: number;
 }
 
@@ -80,16 +78,16 @@ export default function AdminDashboardPage() {
   const { toast } = useToast()
   const router = useRouter()
 
-  const [stats, setStats] = useState<SystemStats>({}
+  const [stats, setStats] = useState<SystemStats>({
     users: { total: 0, active: 0, new: 0, verified: 0, premium: 0 },
     parties: { total: 0, active: 0, completed: 0, scheduled: 0 },
     videos: { total: 0, uploaded: 0, processed: 0, storage: 0 },
     system: { uptime: 0, cpu: 0, memory: 0, storage: 0, bandwidth: 0 },
   })
 
-  const [recentActivity] = useState<RecentActivity[]>([])
-  const [systemAlerts, setSystemAlerts] = useState<SystemAlert[]>([])
-  const [performanceData] = useState<PerformanceMetric[]>([])
+  const [recentActivity] = useState<RecentActivity[0]>([0])
+  const [systemAlerts, setSystemAlerts] = useState<SystemAlert[0]>([0])
+  const [performanceData] = useState<PerformanceMetric[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
 
@@ -120,14 +118,13 @@ export default function AdminDashboardPage() {
       await adminAPI.getSystemHealth()
       // Update stats with health data if needed;
       setLastUpdated(new Date())
-    } } catch {
+    } catch (error) {
       console.error("Failed to load admin dashboard data:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load dashboard data.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -140,42 +137,40 @@ export default function AdminDashboardPage() {
     return () => clearInterval(interval)
   }, [loadDashboardData])
 
-  const resolveAlert = async (alertId: string) => {}
+  const resolveAlert = async (alertId: string) => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/alerts/${alertId}/resolve/`, {}
+      const response = await fetch(`/api/admin/alerts/${alertId}/resolve/`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       })
 
       if (response.ok) {
-        setSystemAlerts((prev) => prev.map((alert) => (alert.id === alertId ? { ...alert, resolved: true } : alert)))
-        toast({}
-          title: "Alert Resolved",
+        setSystemAlerts((prev) => prev.map((alert) => (alert.id === alertId ? ...alert, resolved: true } : alert)))
+        toast({title: "Alert Resolved",
           description: "The alert has been marked as resolved.",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to resolve alert:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to resolve alert.",
         variant: "destructive",
       })
     }
   }
 
-  const exportData = async (type: "users" | "parties" | "videos" | "analytics") => {}
+  const exportData = async (type: "users" | "parties" | "videos" | "analytics") => {
     try {
       let downloadData;
-      switch (type) {
+      switch (type) {}
         case "users":
           downloadData = await adminAPI.exportUsers({ format: 'csv' })
           break;
         default:
           // For other types, we can extend the adminAPI or use a generic export;
           const token = localStorage.getItem("accessToken")
-          const response = await fetch(`/api/admin/export/${type}/`, {}
+          const response = await fetch(`/api/admin/export/${type}/`, {
             headers: { Authorization: `Bearer ${token}` },
           })
 
@@ -190,8 +185,7 @@ export default function AdminDashboardPage() {
             document.body.removeChild(a)
             window.URL.revokeObjectURL(url)
 
-            toast({}
-              title: "Export Complete",
+            toast({title: "Export Complete",
               description: `${type} data has been exported successfully.`,
             })
             return;
@@ -208,63 +202,61 @@ export default function AdminDashboardPage() {
         a.click()
         document.body.removeChild(a)
 
-        toast({}
-          title: "Export Complete",
+        toast({title: "Export Complete",
           description: `${type} data has been exported successfully.`,
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to export data:", error)
-      toast({}
-        title: "Export Failed",
+      toast({title: "Export Failed",
         description: "Failed to export data.",
         variant: "destructive",
       })
     }
   }
 
-  const getActivityIcon = (type: string) => {}
-    switch (type) {
+  const getActivityIcon = (type: string) => {
+    switch (type) {}
       case "user_registered":
-        return <UserCheck className="h-4 w-4 text-green-500" />
+        return <UserCheck className="h-4 w-4 text-green-500" />;
       case "party_created":
-        return <PlayCircle className="h-4 w-4 text-blue-500" />
+        return <PlayCircle className="h-4 w-4 text-blue-500" />;
       case "video_uploaded":
-        return <Video className="h-4 w-4 text-purple-500" />
+        return <Video className="h-4 w-4 text-purple-500" />;
       case "user_banned":
-        return <UserX className="h-4 w-4 text-red-500" />
+        return <UserX className="h-4 w-4 text-red-500" />;
       case "system_alert":
-        return <AlertTriangle className="h-4 w-4 text-yellow-500" />
+        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
       default:
-        return <Activity className="h-4 w-4 text-gray-500" />
+        return <Activity className="h-4 w-4 text-gray-500" />;
     }
   }
 
-  const getAlertIcon = (type: string) => {}
-    switch (type) {
+  const getAlertIcon = (type: string) => {
+    switch (type) {}
       case "error":
-        return <XCircle className="h-5 w-5 text-red-500" />
+        return <XCircle className="h-5 w-5 text-red-500" />;
       case "warning":
-        return <AlertTriangle className="h-5 w-5 text-yellow-500" />
+        return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
       case "info":
-        return <CheckCircle className="h-5 w-5 text-blue-500" />
+        return <CheckCircle className="h-5 w-5 text-blue-500" />;
       default:
-        return <AlertTriangle className="h-5 w-5 text-gray-500" />
+        return <AlertTriangle className="h-5 w-5 text-gray-500" />;
     }
   }
 
-  const formatUptime = (seconds: number) => {}
+  const formatUptime = (seconds: number) => {
     const days = Math.floor(seconds / 86400)
     const hours = Math.floor((seconds % 86400) / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    return `${days}d ${hours}h ${minutes}m`
+    return `${days}d ${hours}h ${minutes}m`;
   }
 
-  const formatBytes = (bytes: number) => {}
+  const formatBytes = (bytes: number) => {
     const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
     if (bytes === 0) return "0 Bytes"
     const i = Math.floor(Math.log(bytes) / Math.log(1024))
-    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i]
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i];
   }
 
 
@@ -276,7 +268,7 @@ export default function AdminDashboardPage() {
           <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
           <p className="text-muted-foreground mb-4">You don&apos;t have permission to access the admin dashboard.</p>
-          <Button onClick={() => router.push(&quot;/dashboard&quot;)}>Back to Dashboard</Button>
+          <Button onClick={() => router.push(&quot;/dashboard")}>Back to Dashboard</Button>
         </div>
       </div>
     )
@@ -308,7 +300,7 @@ export default function AdminDashboardPage() {
             <p className="text-muted-foreground mt-2">System overview and management tools</p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Last updated: {format(lastUpdated, &quot;HH:mm:ss&quot;)}</span>
+            <span className="text-sm text-muted-foreground">Last updated: {format(lastUpdated, &quot;HH:mm:ss")}</span>&quot;
             <Button variant="outline" onClick={loadDashboardData}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh;
@@ -344,7 +336,7 @@ export default function AdminDashboardPage() {
                         <h4 className="font-medium">{alert.title}</h4>
                         <div className="flex items-center gap-2">
                           <Badge;
-                            variant={}
+                            variant={
                               alert.priority === "critical"
                                 ? "destructive"
                                 : alert.priority === "high"
@@ -522,7 +514,7 @@ export default function AdminDashboardPage() {
                   <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => router.push(&quot;/dashboard/admin/users&quot;)}
+                    onClick={() => router.push(&quot;/dashboard/admin/users")}
                   >
                     <Users className="h-4 w-4 mr-2" />
                     Manage Users;
@@ -530,7 +522,7 @@ export default function AdminDashboardPage() {
                   <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => router.push(&quot;/dashboard/admin/reports&quot;)}
+                    onClick={() => router.push(&quot;/dashboard/admin/reports")}
                   >
                     <AlertTriangle className="h-4 w-4 mr-2" />
                     View Reports;
@@ -538,7 +530,7 @@ export default function AdminDashboardPage() {
                   <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => router.push(&quot;/dashboard/admin/analytics&quot;)}
+                    onClick={() => router.push(&quot;/dashboard/admin/analytics")}
                   >
                     <BarChart3 className="h-4 w-4 mr-2" />
                     Analytics;
@@ -546,7 +538,7 @@ export default function AdminDashboardPage() {
                   <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => exportData(&quot;analytics&quot;)}
+                    onClick={() => exportData(&quot;analytics")}
                   >
                     <Download className="h-4 w-4 mr-2" />
                     Export Data;
@@ -576,7 +568,7 @@ export default function AdminDashboardPage() {
                             {format(new Date(activity.timestamp), "MMM dd, HH:mm")}
                           </span>
                           <Badge;
-                            variant={}
+                            variant={
                               activity.severity === "high"
                                 ? "destructive"
                                 : activity.severity === "medium"
@@ -701,7 +693,7 @@ export default function AdminDashboardPage() {
                   <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => exportData(&quot;users&quot;)}
+                    onClick={() => exportData(&quot;users")}
                   >
                     <Users className="h-4 w-4 mr-2" />
                     Export User Data;
@@ -709,7 +701,7 @@ export default function AdminDashboardPage() {
                   <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => exportData(&quot;parties&quot;)}
+                    onClick={() => exportData(&quot;parties")}
                   >
                     <Calendar className="h-4 w-4 mr-2" />
                     Export Party Data;
@@ -717,7 +709,7 @@ export default function AdminDashboardPage() {
                   <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => exportData(&quot;videos&quot;)}
+                    onClick={() => exportData(&quot;videos")}
                   >
                     <Video className="h-4 w-4 mr-2" />
                     Export Video Data;
@@ -725,7 +717,7 @@ export default function AdminDashboardPage() {
                   <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => exportData(&quot;analytics&quot;)}
+                    onClick={() => exportData(&quot;analytics")}
                   >
                     <BarChart3 className="h-4 w-4 mr-2" />
                     Export Analytics;
@@ -741,7 +733,7 @@ export default function AdminDashboardPage() {
                   <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => router.push(&quot;/dashboard/admin/users&quot;)}
+                    onClick={() => router.push(&quot;/dashboard/admin/users")}
                   >
                     <Users className="h-4 w-4 mr-2" />
                     User Management;
@@ -749,7 +741,7 @@ export default function AdminDashboardPage() {
                   <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => router.push(&quot;/dashboard/admin/reports&quot;)}
+                    onClick={() => router.push(&quot;/dashboard/admin/reports")}
                   >
                     <AlertTriangle className="h-4 w-4 mr-2" />
                     Content Moderation;
@@ -757,7 +749,7 @@ export default function AdminDashboardPage() {
                   <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => router.push(&quot;/dashboard/admin/analytics&quot;)}
+                    onClick={() => router.push(&quot;/dashboard/admin/analytics")}
                   >
                     <TrendingUp className="h-4 w-4 mr-2" />
                     Advanced Analytics;

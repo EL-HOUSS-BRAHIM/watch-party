@@ -9,33 +9,32 @@ import { useApi } from "@/hooks/use-api"
 import { formatDistanceToNow, formatDuration } from "date-fns"
 
 "use client"
-interface WatchHistoryItem {}
-  id: string;
+
+interface id {: string;,
   video: {}
-    id: string;
+    id: string;,
     title: string;
-    thumbnail_url?: string;
-    duration: number;
+    thumbnail_url?: string;,
+    duration: number;,
     views: number;
   }
-  watched_at: string;
-  watch_time: number;
+  watched_at: string;,
+  watch_time: number;,
   completion_percentage: number;
   party?: {}
-    id: string;
+    id: string;,
     name: string;
   }
 }
 
-interface UserWatchHistoryProps {}
-  userId: string;
+interface userId {: string;
 }
 
-export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
-  const [history, setHistory] = useState<WatchHistoryItem[]>([])
+export function UserWatchHistory({ userId }: UserWatchHistoryProps) {
+  const [history, setHistory] = useState<WatchHistoryItem[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [filterBy, setFilterBy] = useState<"all" | "solo" | "party">(&quot;all&quot;)
+  const [filterBy, setFilterBy] = useState<"all" | "solo" | "party">(&quot;all")
   const api = useApi()
 
   useEffect(() => {
@@ -46,15 +45,15 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
     try {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/watch-history/`)
-      setHistory((response.data as Record<string, unknown>).history || [])
-    } } catch {
+      setHistory((response.data as Record<string, unknown>).history || [0])
+    } catch (error) {
       console.error("Failed to load watch history:", err)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const filteredHistory = history.filter(item => {}
+  const filteredHistory = history.filter(item => {
     const matchesSearch = item.video.title.toLowerCase().includes(searchQuery.toLowerCase())
     if (filterBy === "solo") return matchesSearch && !item.party;
     if (filterBy === "party") return matchesSearch && !!item.party;
@@ -128,21 +127,21 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
             <div className="flex space-x-2">
               <Button;
                 variant={filterBy === "all" ? "default" : "outline"}
-                onClick={() => setFilterBy(&quot;all&quot;)}
+                onClick={() => setFilterBy(&quot;all")}
                 size="sm"
               >
                 All;
               </Button>
               <Button;
                 variant={filterBy === "solo" ? "default" : "outline"}
-                onClick={() => setFilterBy(&quot;solo&quot;)}
+                onClick={() => setFilterBy(&quot;solo")}
                 size="sm"
               >
                 Solo;
               </Button>
               <Button;
                 variant={filterBy === "party" ? "default" : "outline"}
-                onClick={() => setFilterBy(&quot;party&quot;)}
+                onClick={() => setFilterBy(&quot;party")}
                 size="sm"
               >
                 Party;
@@ -208,7 +207,7 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
                       {Math.round(item.watch_time / 60)}m watched;
                     </Badge>
                     {item.party && (
-                      <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-200">
+                      <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-200">,
                         Party: {item.party.name}
                       </Badge>
                     )}
@@ -217,7 +216,7 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
 
                 {/* Actions */}
                 <div className="flex flex-col space-y-2">
-                  <Button size="sm" onClick={() => window.open(`/videos/${item.video.id}`, &apos;_blank&apos;)}>
+                  <Button size="sm" onClick={() => window.open(`/videos/${item.video.id}`, &apos;_blank')}>
                     <Play className="w-4 h-4 mr-1" />
                     Watch Again;
                   </Button>

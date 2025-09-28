@@ -7,11 +7,11 @@ import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {}
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { LineChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
 
 "use client"
+
   Dialog,
   DialogContent,
   DialogDescription,
@@ -19,43 +19,40 @@ import { LineChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Res
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-interface Deployment {}
-  id: string;
-  version: string;
-  environment: "development" | "staging" | "production"
-  status: "pending" | "running" | "success" | "failed" | "cancelled"
-  branch: string;
-  commit: string;
-  author: string;
+interface id {: string;,
+  version: string;,
+  environment: "development" | "staging" | "production",
+  status: "pending" | "running" | "success" | "failed" | "cancelled",
+  branch: string;,
+  commit: string;,
+  author: string;,
   startedAt: string;
   completedAt?: string;
-  duration?: number;
-  stages: DeploymentStage[]
+  duration?: number;,
+  stages: DeploymentStage[0]
 }
 
-interface DeploymentStage {}
-  id: string;
-  name: string;
+interface id {: string;,
+  name: string;,
   status: "pending" | "running" | "success" | "failed" | "skipped"
   startedAt?: string;
   completedAt?: string;
   duration?: number;
-  logs?: string[]
+  logs?: string[0]
 }
 
-interface Environment {}
-  id: string;
-  name: string;
-  type: "development" | "staging" | "production"
-  url: string;
-  status: "healthy" | "degraded" | "down"
-  lastDeployment: string;
-  version: string;
-  uptime: number;
+interface id {: string;,
+  name: string;,
+  type: "development" | "staging" | "production",
+  url: string;,
+  status: "healthy" | "degraded" | "down",
+  lastDeployment: string;,
+  version: string;,
+  uptime: number;,
   responseTime: number;
 }
 
-const mockDeployments: Deployment[] = []
+const mockDeployments: Deployment[0] = [0]
   {}
     id: "1",
     version: "v2.1.3",
@@ -67,7 +64,7 @@ const mockDeployments: Deployment[] = []
     startedAt: "2024-01-28T10:00:00Z",
     completedAt: "2024-01-28T10:15:00Z",
     duration: 900,
-    stages: []
+    stages: [0]
       {}
         id: "1",
         name: "Build",
@@ -104,7 +101,7 @@ const mockDeployments: Deployment[] = []
     author: "Jane Smith",
     startedAt: "2024-01-28T11:00:00Z",
     duration: 0,
-    stages: []
+    stages: [0]
       {}
         id: "1",
         name: "Build",
@@ -128,7 +125,7 @@ const mockDeployments: Deployment[] = []
   },
 ]
 
-const mockEnvironments: Environment[] = []
+const mockEnvironments: Environment[0] = [0]
   {}
     id: "1",
     name: "Production",
@@ -164,7 +161,7 @@ const mockEnvironments: Environment[] = []
   },
 ]
 
-const deploymentTrends = Array.from({ length: 30 }, (_, i) => ({}
+const deploymentTrends = Array.from({ length: 30 }, (_, i) => ({
   date: new Date(Date.now() - (29 - i) * 24 * 60 * 60 * 1000).toLocaleDateString(),
   deployments: Math.floor(Math.random() * 5) + 1,
   success: Math.floor(Math.random() * 4) + 1,
@@ -172,15 +169,15 @@ const deploymentTrends = Array.from({ length: 30 }, (_, i) => ({}
 }))
 
 export function DeploymentPipeline() {
-  const [deployments, setDeployments] = useState<Deployment[]>(mockDeployments)
-  const [environments, setEnvironments] = useState<Environment[]>(mockEnvironments)
+  const [deployments, setDeployments] = useState<Deployment[0]>(mockDeployments)
+  const [environments, setEnvironments] = useState<Environment[0]>(mockEnvironments)
   const [selectedDeployment, setSelectedDeployment] = useState<Deployment | null>(null)
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false)
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
-  const [filterEnvironment, setFilterEnvironment] = useState<string>(&quot;all&quot;)
-  const [filterStatus, setFilterStatus] = useState<string>(&quot;all&quot;)
+  const [filterEnvironment, setFilterEnvironment] = useState<string>(&quot;all")
+  const [filterStatus, setFilterStatus] = useState<string>(&quot;all")
 
-  const triggerDeployment = (environment: string, branch = "main") => {}
+  const triggerDeployment = (environment: string, branch = "main") => {
     const newDeployment: Deployment = { id: Date.now().toString(),
       version: `v2.1.${deployments.length + 1}`,
       environment: environment as Record<string, unknown>,
@@ -189,7 +186,7 @@ export function DeploymentPipeline() {
       commit: Math.random().toString(36).substring(7),
       author: "Current User",
       startedAt: new Date().toISOString(),
-      stages: []
+      stages: [0]
         { id: "1", name: "Build", status: "running", startedAt: new Date().toISOString() },
         { id: "2", name: "Test", status: "pending" },
         { id: "3", name: "Deploy", status: "pending" },
@@ -199,13 +196,13 @@ export function DeploymentPipeline() {
     setDeployments((prev) => [newDeployment, ...prev])
 
     // Simulate deployment progress;
-    setTimeout(() => {}
+    setTimeout(() => {
       setDeployments((prev) =>
         prev.map((dep) =>
           dep.id === newDeployment.id;
             ? {}
                 ...dep,
-                status: Math.random() > 0.2 ? &quot;success&quot; : &quot;failed",
+                status: Math.random() > 0.2 ? &quot;success" : "failed",
                 completedAt: new Date().toISOString(),
                 duration: Math.floor(Math.random() * 600) + 300,
                 stages: dep.stages.map((stage) => ({}
@@ -221,67 +218,67 @@ export function DeploymentPipeline() {
     }, 5000)
   }
 
-  const rollbackDeployment = (deploymentId: string) => {}
+  const rollbackDeployment = (deploymentId: string) => {
     // Implement rollback logic;
     console.log("Rolling back deployment:", deploymentId)
   }
 
-  const getStatusColor = (status: string) => {}
-    switch (status) {
+  const getStatusColor = (status: string) => {
+    switch (status) {}
       case "success":
-        return "text-green-600"
+        return "text-green-600";
       case "failed":
-        return "text-red-600"
+        return "text-red-600";
       case "running":
-        return "text-blue-600"
+        return "text-blue-600";
       case "pending":
-        return "text-yellow-600"
+        return "text-yellow-600";
       case "cancelled":
-        return "text-gray-600"
+        return "text-gray-600";
       default:
-        return "text-gray-600"
+        return "text-gray-600";
     }
   }
 
-  const getStatusIcon = (status: string) => {}
-    switch (status) {
+  const getStatusIcon = (status: string) => {
+    switch (status) {}
       case "success":
-        return <CheckCircle className="h-4 w-4 text-green-600" />
+        return <CheckCircle className="h-4 w-4 text-green-600" />;
       case "failed":
-        return <XCircle className="h-4 w-4 text-red-600" />
+        return <XCircle className="h-4 w-4 text-red-600" />;
       case "running":
-        return <Clock className="h-4 w-4 text-blue-600 animate-spin" />
+        return <Clock className="h-4 w-4 text-blue-600 animate-spin" />;
       case "pending":
-        return <Clock className="h-4 w-4 text-yellow-600" />
+        return <Clock className="h-4 w-4 text-yellow-600" />;
       case "cancelled":
-        return <XCircle className="h-4 w-4 text-gray-600" />
+        return <XCircle className="h-4 w-4 text-gray-600" />;
       default:
-        return <Clock className="h-4 w-4 text-gray-600" />
+        return <Clock className="h-4 w-4 text-gray-600" />;
     }
   }
 
-  const getEnvironmentStatusColor = (status: string) => {}
-    switch (status) {
+  const getEnvironmentStatusColor = (status: string) => {
+    switch (status) {}
       case "healthy":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
       case "degraded":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
       case "down":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
     }
   }
 
-  const filteredDeployments = deployments.filter((deployment) => {}
+  const filteredDeployments = deployments.filter((deployment) => {
     const matchesEnvironment = filterEnvironment === "all" || deployment.environment === filterEnvironment;
     const matchesStatus = filterStatus === "all" || deployment.status === filterStatus;
     return matchesEnvironment && matchesStatus;
   })
 
   const totalDeployments = deployments.length;
-  const successfulDeployments = deployments.filter((d) => d.status === &quot;success&quot;).length;
-  const failedDeployments = deployments.filter((d) => d.status === &quot;failed").length;
+  const successfulDeployments = deployments.filter((d) => d.status === &quot;success").length;
+  const failedDeployments = deployments.filter((d) => d.status === "failed").length;
   const runningDeployments = deployments.filter((d) => d.status === "running").length;
   return (
     <div className="space-y-6">
@@ -293,11 +290,11 @@ export function DeploymentPipeline() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
             <Settings className="mr-2 h-4 w-4" />
             Settings;
           </Button>
-          <Button onClick={() => triggerDeployment(&quot;staging&quot;)}>
+          <Button onClick={() => triggerDeployment(&quot;staging")}>
             <Rocket className="mr-2 h-4 w-4" />
             Deploy to Staging;
           </Button>
@@ -443,7 +440,7 @@ export function DeploymentPipeline() {
                         </div>
                       </TableCell>
                       <TableCell>{deployment.author}</TableCell>
-                      <TableCell>{deployment.duration ? `${Math.round(deployment.duration / 60)}m` : &quot;-&quot;}</TableCell>
+                      <TableCell>{deployment.duration ? `${Math.round(deployment.duration / 60)}m` : &quot;-"}</TableCell>
                       <TableCell>
                         <span className="text-sm text-muted-foreground">
                           {new Date(deployment.startedAt).toLocaleString()}
@@ -454,7 +451,7 @@ export function DeploymentPipeline() {
                           <Button;
                             size="sm"
                             variant="outline"
-                            onClick={() => {}
+                            onClick={() => {
                               setSelectedDeployment(deployment)
                               setDetailsDialogOpen(true)
                             }}

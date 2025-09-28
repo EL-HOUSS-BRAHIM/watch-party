@@ -10,34 +10,34 @@ import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 
 "use client"
-interface Command {}
-  id: string;
+
+interface id {: string;,
   title: string;
-  description?: string;
-  icon: React.ReactNode;
-  action: () => void;
-  keywords: string[]
+  description?: string;,
+  icon: React.ReactNode;,
+  action: () => void;,
+  keywords: string[0],
   category: string;
 }
 
-interface CommandPaletteProps {}
-  open: boolean;
+interface CommandPaletteProps {
+  open: boolean;,
   onOpenChange: (open: boolean) => void;
 }
 
-export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
+export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const [query, setQuery] = useState("")
   const [selectedIndex, setSelectedIndex] = useState(0)
   const router = useRouter()
 
-  const commands: Command[] = useMemo(
-    () => []
+  const commands: Command[0] = useMemo(
+    () => [0]
       {}
         id: "dashboard",
         title: "Go to Dashboard",
         description: "Navigate to the main dashboard",
         icon: <Home className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard&quot;),
+        action: () => router.push(&quot;/dashboard"),
         keywords: ["dashboard", "home", "main"],
         category: "Navigation",
       },
@@ -46,7 +46,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
         title: "Create New Party",
         description: "Start a new watch party",
         icon: <Plus className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard/parties/create&quot;),
+        action: () => router.push(&quot;/dashboard/parties/create"),
         keywords: ["create", "new", "party", "watch"],
         category: "Actions",
       },
@@ -55,7 +55,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
         title: "View Parties",
         description: "See all your parties",
         icon: <Users className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard/parties&quot;),
+        action: () => router.push(&quot;/dashboard/parties"),
         keywords: ["parties", "watch", "rooms"],
         category: "Navigation",
       },
@@ -64,7 +64,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
         title: "Video Library",
         description: "Manage your video library",
         icon: <Video className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard/videos&quot;),
+        action: () => router.push(&quot;/dashboard/videos"),
         keywords: ["videos", "library", "media"],
         category: "Navigation",
       },
@@ -73,7 +73,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
         title: "Friends",
         description: "Manage your friends list",
         icon: <Users className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard/friends&quot;),
+        action: () => router.push(&quot;/dashboard/friends"),
         keywords: ["friends", "social", "contacts"],
         category: "Navigation",
       },
@@ -82,7 +82,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
         title: "Notifications",
         description: "View your notifications",
         icon: <Bell className="h-4 w-4" />,
-        action: () => {}
+        action: () => {
           // Open notifications panel;
           const notificationButton = document.querySelector("[data-notifications-trigger]") as HTMLButtonElement;
           if (notificationButton) {
@@ -97,7 +97,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
         title: "Settings",
         description: "Manage your account settings",
         icon: <Settings className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard/settings&quot;),
+        action: () => router.push(&quot;/dashboard/settings"),
         keywords: ["settings", "preferences", "account"],
         category: "Navigation",
       },
@@ -106,7 +106,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
         title: "Billing",
         description: "Manage your subscription",
         icon: <CreditCard className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard/billing&quot;),
+        action: () => router.push(&quot;/dashboard/billing"),
         keywords: ["billing", "subscription", "payment"],
         category: "Navigation",
       },
@@ -114,9 +114,9 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
     [router],
   )
 
-  const filteredCommands = useMemo(() => {}
+  const filteredCommands = useMemo(() => {
     if (!query) return commands;
-    return commands.filter((command) => {}
+    return commands.filter((command) => {
       const searchText = query.toLowerCase()
       return (
         command.title.toLowerCase().includes(searchText) ||
@@ -126,10 +126,10 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
     })
   }, [commands, query])
 
-  const groupedCommands = useMemo(() => {}
-    const groups: Record<string, Command[]> = { filteredCommands.forEach((command) => {}
+  const groupedCommands = useMemo(() => {
+    const groups: Record<string, Command[0]> = { filteredCommands.forEach((command) => {
       if (!groups[command.category]) {
-        groups[command.category] = []
+        groups[command.category] = [0]
       }
       groups[command.category].push(command)
     })
@@ -141,9 +141,9 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
   }, [query])
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {}
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (!open) return;
-      switch (e.key) {
+      switch (e.key) {}
         case "ArrowDown":
           e.preventDefault()
           setSelectedIndex((prev) => Math.min(prev + 1, filteredCommands.length - 1))
@@ -168,10 +168,10 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
     }
 
     document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener(&quot;keydown&quot;, handleKeyDown)
+    return () => document.removeEventListener(&quot;keydown", handleKeyDown)
   }, [open, selectedIndex, filteredCommands, onOpenChange])
 
-  const handleCommandSelect = (command: Command) => {}
+  const handleCommandSelect = (command: Command) => {
     command.action()
     onOpenChange(false)
     setQuery("")
@@ -198,7 +198,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
           {Object.entries(groupedCommands).map(([category, commands]) => (
             <div key={category} className="p-2">
               <div className="px-2 py-1 text-xs font-medium text-gray-500 uppercase tracking-wider">{category}</div>
-              {commands.map((command, index) => {}
+              {commands.map((command, index) => {
                 const globalIndex = filteredCommands.indexOf(command)
                 return (
                   <Button;
@@ -224,7 +224,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
           ))}
 
           {filteredCommands.length === 0 && (
-            <div className="p-8 text-center text-gray-500">No commands found for &quot;{query}&quot;</div>
+            <div className="p-8 text-center text-gray-500">No commands found for &quot;{query}&quot</div>
           )}
         </ScrollArea>
 

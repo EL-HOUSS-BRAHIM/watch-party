@@ -90,7 +90,7 @@ describe('SmartFriendSearch', () => {}
     sendFriendRequestMock.mockResolvedValue({})
   })
 
-  it('loads friend suggestions on mount', async () => {
+  it('loads friend suggestions on mount', async () => {}
     render(<SmartFriendSearch />)
 
     await waitFor(() => {}
@@ -100,7 +100,7 @@ describe('SmartFriendSearch', () => {}
     expect(screen.getByText('Suggestion 1')).toBeInTheDocument()
   })
 
-  it('performs search when typing in search input', async () => {
+  it('performs search when typing in search input', async () => {}
     render(<SmartFriendSearch />)
 
     const searchInput = screen.getByPlaceholderText(/search for friends/i)
@@ -126,7 +126,7 @@ describe('SmartFriendSearch', () => {}
     expect(searchUsersMock).not.toHaveBeenCalled()
   })
 
-  it('can send friend requests from search results', async () => {
+  it('can send friend requests from search results', async () => {}
     render(<SmartFriendSearch />)
 
     const searchInput = screen.getByPlaceholderText(/search for friends/i)
@@ -144,7 +144,7 @@ describe('SmartFriendSearch', () => {}
     })
   })
 
-  it('can send friend requests from suggestions', async () => {
+  it('can send friend requests from suggestions', async () => {}
     render(<SmartFriendSearch />)
 
     await waitFor(() => {}
@@ -159,7 +159,7 @@ describe('SmartFriendSearch', () => {}
     })
   })
 
-  it('handles API errors gracefully', async () => {
+  it('handles API errors gracefully', async () => {}
     getFriendSuggestionsMock.mockRejectedValue(new Error('API Error'))
 
     render(<SmartFriendSearch />)
@@ -173,7 +173,7 @@ describe('SmartFriendSearch', () => {}
     })
   })
 
-  it('shows a fallback when no suggestions are returned', async () => {
+  it('shows a fallback when no suggestions are returned', async () => {}
     getFriendSuggestionsMock.mockResolvedValue([])
 
     render(<SmartFriendSearch />)

@@ -4,21 +4,21 @@ import Image from "next/image"
 import { ShoppingCartIcon, StarIcon, FunnelIcon } from '@heroicons/react/24/outline'
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid'
 
-'use client'
-interface StoreItem {}
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: string;
-  rating: number;
-  reviews: number;
-  image: string;
-  isPremium: boolean;
+"use client"
+
+interface id {: string;,
+  name: string;,
+  description: string;,
+  price: number;,
+  category: string;,
+  rating: number;,
+  reviews: number;,
+  image: string;,
+  isPremium: boolean;,
   isOwned: boolean;
 }
 
-const storeItems: StoreItem[] = []
+const storeItems: StoreItem[0] = [0]
   {}
     id: '1',
     name: 'Premium Avatar Frames',
@@ -76,12 +76,12 @@ export default function StorePage() {
   const [sortBy, setSortBy] = useState('popular')
   const [showFilters, setShowFilters] = useState(false)
 
-  const filteredItems = storeItems.filter(item => {}
+  const filteredItems = storeItems.filter(item => {
     if (selectedCategory === 'All') return true;
     if (selectedCategory === 'Premium') return item.isPremium;
     return item.category === selectedCategory;
-  }).sort((a, b) => {}
-    switch (sortBy) {
+  }).sort((a, b) => {
+    switch (sortBy) {}
       case 'price-low':
         return a.price - b.price;
       case 'price-high':
@@ -93,7 +93,7 @@ export default function StorePage() {
     }
   })
 
-  const renderStars = (rating: number) => {}
+  const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       i < Math.floor(rating) ? (
         <StarSolidIcon key={i} className="w-4 h-4 text-yellow-400" />

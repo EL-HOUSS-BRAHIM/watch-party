@@ -5,8 +5,7 @@ import { useIntersectionObserver } from "@/lib/performance/lazy-loading"
 
 "use client"
 
-interface LazyImageProps {}
-  src: string;
+interface src {: string;,
   alt: string;
   className?: string;
   placeholder?: string;
@@ -15,8 +14,7 @@ interface LazyImageProps {}
   onError?: () => void;
 }
 
-export function LazyImage({}
-  src,
+export function LazyImage({src,
   alt,
   className,
   placeholder = "/placeholder.svg",
@@ -27,20 +25,19 @@ export function LazyImage({}
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasError, setHasError] = useState(false)
   const [imageSrc, setImageSrc] = useState(placeholder)
-  const { targetRef, hasIntersected } = useIntersectionObserver({}
-    threshold: 0.1,
+  const { targetRef, hasIntersected } = useIntersectionObserver({threshold: 0.1,
     rootMargin: "50px",
   })
 
   useEffect(() => {
     if (hasIntersected && !isLoaded && !hasError) {
       const img = new Image()
-      img.onload = () => {}
+      img.onload = () => {
         setImageSrc(src)
         setIsLoaded(true)
         onLoad?.()
       }
-      img.onerror = () => {}
+      img.onerror = () => {
         setHasError(true)
         onError?.()
       }
@@ -49,7 +46,7 @@ export function LazyImage({}
   }, [hasIntersected, src, isLoaded, hasError, onLoad, onError])
 
   return (
-    <div ref={targetRef as React.RefObject<HTMLDivElement>} className={cn(&quot;relative overflow-hidden&quot;, className)}>
+    <div ref={targetRef as React.RefObject<HTMLDivElement>} className={cn(&quot;relative overflow-hidden", className)}>"
       <img;
         src={imageSrc || "/placeholder.svg"}
         alt={alt}

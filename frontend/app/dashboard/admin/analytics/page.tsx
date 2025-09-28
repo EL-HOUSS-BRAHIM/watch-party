@@ -1,5 +1,5 @@
 import { Activity, BarChart, Clock, Download, Eye, Info, Loader2, MessageCircle, PieChart, Play, Refresh, Star, TrendingDown, TrendingUp, Trophy, User, Users, X } from "lucide-react"
-import { useState, useEffect , useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -9,10 +9,10 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
-import {}
 import { format } from "date-fns"
 
 "use client"
+
   BarChart,
   Bar,
   XAxis,
@@ -24,63 +24,55 @@ import { format } from "date-fns"
   Line,
   PieChart,
   Pie,
-  Cell;
 } from "recharts"
-interface AnalyticsData {}
-  party_analytics: {}
-    total_parties: number;
-    active_parties: number;
-    completed_parties: number;
-    average_duration_minutes: number;
-    total_watch_time_hours: number;
-    unique_participants: number;
-    total_participants: number;
-    average_participants_per_party: number;
-    popular_genres: Array<{ genre: string; count: number; percentage: number }>
-    peak_hours: Array<{ hour: number; party_count: number }>
+interface party_analytics {: {}
+    total_parties: number,
+    active_parties: number,
+    completed_parties: number,
+    average_duration_minutes: number,
+    total_watch_time_hours: number,
+    unique_participants: number,
+    total_participants: number,
+    average_participants_per_party: number,
+    popular_genres: Array<{ genre: string; count: number; percentage: number }>,
+    peak_hours: Array<{ hour: number; party_count: number }>,
     engagement_metrics: {}
-      total_messages: number;
-      total_reactions: number;
-      average_messages_per_party: number;
-      average_reactions_per_party: number;
-    }
-  }
+      total_messages: number,
+      total_reactions: number,
+      average_messages_per_party: number,
+      average_reactions_per_party: number,
   host_analytics: {}
     top_hosts: Array<{}
-      id: string;
-      username: string;
-      avatar?: string;
-      parties_hosted: number;
-      total_participants: number;
-      average_rating: number;
+      id: string,
+      username: string,
+      avatar?: string,
+      parties_hosted: number,
+      total_participants: number,
+      average_rating: number,
       total_watch_time: number;
     }>
-    host_distribution: Array<{ range: string; count: number }>
-    retention_rate: number;
-  }
+    host_distribution: Array<{ range: string; count: number }>,
+    retention_rate: number,
   time_series: {}
-    daily_parties: Array<{ date: string; parties: number; participants: number }>
-    weekly_growth: Array<{ week: string; new_parties: number; growth_rate: number }>
-    monthly_trends: Array<{ month: string; parties: number; users: number; watch_time: number }>
-  }
+    daily_parties: Array<{ date: string; parties: number; participants: number }>,
+    weekly_growth: Array<{ week: string; new_parties: number; growth_rate: number }>,
+    monthly_trends: Array<{ month: string; parties: number; users: number; watch_time: number }>,
   geographic_data: Array<{}
-    country: string;
-    country_code: string;
-    parties: number;
-    users: number;
+    country: string,
+    country_code: string,
+    parties: number,
+    users: number,
     percentage: number;
   }>
   content_analytics: {}
     most_watched: Array<{}
-      title: string;
-      genre: string;
-      times_watched: number;
-      total_duration: number;
+      title: string,
+      genre: string,
+      times_watched: number,
+      total_duration: number,
       average_rating: number;
     }>
     content_distribution: Array<{ type: string; count: number; percentage: number }>
-  }
-}
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#0088fe', '#00c49f', '#ffbb28', '#ff8042']
 
@@ -96,11 +88,9 @@ export default function PartyAnalyticsPage() {
   const [selectedMetric, setSelectedMetric] = useState("parties")
 
   useEffect(() => {
-    // Check if user has admin permissions;
+    // Check if user has admin permissions,
     if (!user?.is_staff && !user?.is_superuser) {
       router.push("/dashboard")
-      return;
-    }
     loadAnalytics()
   }, [user, router, timeRange])
 
@@ -108,33 +98,28 @@ export default function PartyAnalyticsPage() {
     try {
       const data = await adminAPI.getAnalytics()
       setAnalytics(data)
-    } } catch {
+    } catch (error) {
       console.error("Failed to load analytics:", error)
-      if ((error as Record<string, unknown>)?.response?.status === 403) {}
-        toast({}
-          title: "Access Denied",
+      if ((error as Record<string, unknown>)?.response?.status === 403) {
+        toast({title: "Access Denied",
           description: "You don't have permission to access this page.",
           variant: "destructive",
         })
         router.push("/dashboard")
       } else {}
-        toast({}
-          title: "Error",
+        toast({title: "Error",
           description: "Failed to load analytics data.",
           variant: "destructive",
         })
-      }
-    } finally {}
+    } finally {
       setIsLoading(false)
-    }
-  }
 
   const exportAnalytics = async () => {
     try {
       // Since there's no direct export analytics method in adminAPI, 
-      // we can use a generic approach or extend the API;
+      // we can use a generic approach or extend the API,
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/analytics/export/?time_range=${timeRange}`, {}
+      const response = await fetch(`/api/admin/analytics/export/?time_range=${timeRange}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
 
@@ -142,56 +127,46 @@ export default function PartyAnalyticsPage() {
         const blob = await response.blob()
         const url = URL.createObjectURL(blob)
         const a = document.createElement("a")
-        a.href = url;
+        a.href = url,
         a.download = `party-analytics-${timeRange}-${format(new Date(), "yyyy-MM-dd")}.csv`
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
         URL.revokeObjectURL(url)
 
-        toast({}
-          title: "Export Complete",
+        toast({title: "Export Complete",
           description: "Analytics data has been exported successfully.",
         })
-      }
-    } } catch {
+    } catch (error) {
       console.error("Export error:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to export analytics data.",
         variant: "destructive",
       })
-    }
-  }
 
-  const formatDuration = (minutes: number) => {}
+  const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60;
-    return `${hours}h ${mins}m`
-  }
+    const mins = minutes % 60,
+    return `${hours}h ${mins}m`;
 
-  const formatWatchTime = (hours: number) => {}
+  const formatWatchTime = (hours: number) => {
     if (hours < 24) return `${hours}h`
     const days = Math.floor(hours / 24)
-    const remainingHours = hours % 24;
-    return `${days}d ${remainingHours}h`
-  }
+    const remainingHours = hours % 24,
+    return `${days}d ${remainingHours}h`;
 
-  const getGrowthColor = (rate: number) => {}
-    if (rate > 0) return &quot;text-green-600&quot;
+  const getGrowthColor = (rate: number) => {
+    if (rate > 0) return &quot;text-green-600&quot,
     if (rate < 0) return "text-red-600"
-    return "text-gray-600"
-  }
+    return "text-gray-600";
 
-  const getGrowthIcon = (rate: number) => {}
-    if (rate > 0) return <TrendingUp className=&quot;h-4 w-4&quot; />
+  const getGrowthIcon = (rate: number) => {
+    if (rate > 0) return <TrendingUp className=&quot;h-4 w-4" />"
     if (rate < 0) return <TrendingDown className="h-4 w-4" />
-    return <Activity className="h-4 w-4" />
-  }
+    return <Activity className="h-4 w-4" />;
 
   if (!user?.is_staff && !user?.is_superuser) {
-    return null // Will redirect in useEffect;
-  }
+    return null // Will redirect in useEffect,
 
   if (isLoading) {
     return (
@@ -201,8 +176,6 @@ export default function PartyAnalyticsPage() {
           <p>Loading analytics...</p>
         </div>
       </div>
-    )
-  }
 
   if (!analytics) {
     return (
@@ -214,8 +187,6 @@ export default function PartyAnalyticsPage() {
           </AlertDescription>
         </Alert>
       </div>
-    )
-  }
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -244,11 +215,9 @@ export default function PartyAnalyticsPage() {
             </Select>
             <Button variant="outline" onClick={exportAnalytics}>
               <Download className="h-4 w-4 mr-2" />
-              Export;
             </Button>
             <Button variant="outline" onClick={loadAnalytics}>
               <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh;
             </Button>
           </div>
         </div>
@@ -342,24 +311,24 @@ export default function PartyAnalyticsPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={analytics.time_series.daily_parties}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis;
+                    <XAxis,
                       dataKey="date" 
                       tick={{ fontSize: 12 }}
-                      tickFormatter={(date) => format(new Date(date), &quot;MMM d&quot;)}
+                      tickFormatter={(date) => format(new Date(date), &quot;MMM d")}
                     />
                     <YAxis tick={{ fontSize: 12 }} />
-                    <Tooltip;
-                      labelFormatter={(date) => format(new Date(date), &quot;MMM d, yyyy&quot;)}
-                      formatter={(value, name) => [value, name === &quot;parties" ? "Parties" : "Participants"]}
+                    <Tooltip,
+                      labelFormatter={(date) => format(new Date(date), &quot;MMM d, yyyy")}
+                      formatter={(value, name) => [value, name === "parties" ? "Parties" : "Participants"]}
                     />
-                    <Line;
+                    <Line,
                       type="monotone" 
                       dataKey="parties" 
                       stroke="#8884d8" 
                       strokeWidth={2}
                       dot={{ fill: "#8884d8", strokeWidth: 2, r: 4 }}
                     />
-                    <Line;
+                    <Line,
                       type="monotone" 
                       dataKey="participants" 
                       stroke="#82ca9d" 
@@ -387,7 +356,7 @@ export default function PartyAnalyticsPage() {
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
-                    <Pie;
+                    <Pie,
                       data={analytics.party_analytics.popular_genres}
                       cx="50%"
                       cy="50%"
@@ -427,15 +396,15 @@ export default function PartyAnalyticsPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={analytics.party_analytics.peak_hours}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis;
+                    <XAxis,
                       dataKey="hour" 
                       tick={{ fontSize: 12 }}
                       tickFormatter={(hour) => `${hour}:00`}
                     />
                     <YAxis tick={{ fontSize: 12 }} />
-                    <Tooltip;
+                    <Tooltip,
                       labelFormatter={(hour) => `${hour}:00 - ${(hour + 1) % 24}:00`}
-                      formatter={(value) => [value, &quot;Parties Created&quot;]}
+                      formatter={(value) => [value, &quot;Parties Created"]}
                     />
                     <Bar dataKey="party_count" fill="#8884d8" radius={[4, 4, 0, 0]} />
                   </BarChart>
@@ -504,7 +473,7 @@ export default function PartyAnalyticsPage() {
                           <p className="font-medium">{host.username}</p>
                           <div className="flex items-center gap-1">
                             {Array.from({ length: 5 }, (_, i) => (
-                              <Star;
+                              <Star,
                                 key={i} 
                                 className={`h-3 w-3 ${i < Math.floor(host.average_rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
                               />
@@ -513,7 +482,7 @@ export default function PartyAnalyticsPage() {
                           </div>
                         </div>
                       </div>
-                      <Button;
+                      <Button,
                         variant="outline" 
                         size="sm"
                         onClick={() => router.push(`/dashboard/admin/users/${host.id}`)}
@@ -596,5 +565,3 @@ export default function PartyAnalyticsPage() {
         </Card>
       </div>
     </div>
-  )
-}

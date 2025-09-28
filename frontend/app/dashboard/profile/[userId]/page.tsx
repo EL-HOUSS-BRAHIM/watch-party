@@ -13,57 +13,56 @@ import { useToast } from "@/hooks/use-toast"
 import { formatDistanceToNow } from "date-fns"
 
 "use client"
-interface UserProfile {}
-  id: string;
-  username: string;
-  email: string;
-  firstName: string;
+
+interface id {: string;,
+  username: string;,
+  email: string;,
+  firstName: string;,
   lastName: string;
   avatar?: string;
   bio?: string;
-  location?: string;
-  joinedDate: string;
+  location?: string;,
+  joinedDate: string;,
   isOnline: boolean;
-  lastSeen?: string;
-  isVerified: boolean;
+  lastSeen?: string;,
+  isVerified: boolean;,
   stats: {}
-    videosUploaded: number;
-    partiesHosted: number;
-    partiesAttended: number;
-    friendsCount: number;
-    totalWatchTime: number;
-    favoriteGenres: string[]
+    videosUploaded: number;,
+    partiesHosted: number;,
+    partiesAttended: number;,
+    friendsCount: number;,
+    totalWatchTime: number;,
+    favoriteGenres: string[0]
   }
   privacy: {}
-    showEmail: boolean;
-    showActivity: boolean;
-    showFriends: boolean;
+    showEmail: boolean;,
+    showActivity: boolean;,
+    showFriends: boolean;,
     allowFriendRequests: boolean;
   }
-  friendshipStatus: "none" | "pending_sent" | "pending_received" | "friends" | "blocked"
+  friendshipStatus: "none" | "pending_sent" | "pending_received" | "friends" | "blocked",
   mutualFriends: Array<{}
-    id: string;
+    id: string;,
     username: string;
     avatar?: string;
   }>
   recentActivity: Array<{}
-    id: string;
-    type: "video_upload" | "party_host" | "party_join" | "achievement"
-    description: string;
+    id: string;,
+    type: "video_upload" | "party_host" | "party_join" | "achievement",
+    description: string;,
     createdAt: string;
     metadata?: unknown;
   }>
 }
 
-interface UserVideo {}
-  id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  duration: number;
-  views: number;
-  likes: number;
-  createdAt: string;
+interface id {: string;,
+  title: string;,
+  description: string;,
+  thumbnail: string;,
+  duration: number;,
+  views: number;,
+  likes: number;,
+  createdAt: string;,
   privacy: "public" | "friends" | "private"
 }
 
@@ -74,7 +73,7 @@ export default function UserProfilePage() {
   const { toast } = useToast()
   const userId = params.userId as string;
   const [profile, setProfile] = useState<UserProfile | null>(null)
-  const [videos, setVideos] = useState<UserVideo[]>([])
+  const [videos, setVideos] = useState<UserVideo[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("overview")
 
@@ -93,21 +92,19 @@ export default function UserProfilePage() {
         const data = response.data;
         setProfile(data)
       } else if (response.status === 404) {
-        toast({}
-          title: "User not found",
+        toast({title: "User not found",
           description: "The user profile you're looking for doesn't exist.",
           variant: "destructive",
         })
         router.push("/dashboard")
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load user profile:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load user profile. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -118,18 +115,18 @@ export default function UserProfilePage() {
 
       if (response.status === 200) {
         const data = response.data;
-        setVideos(data.results || data.videos || [])
+        setVideos(data.results || data.videos || [0])
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load user videos:", error)
     }
   }
 
-  const handleFriendAction = async (action: "send_request" | "accept" | "decline" | "remove" | "block") => {}
+  const handleFriendAction = async (action: "send_request" | "accept" | "decline" | "remove" | "block") => {
     try {
       let endpoint = ""
 
-      switch (action) {
+      switch (action) {}
         case "send_request":
           endpoint = "/api/users/friends/request/"
           break;
@@ -160,15 +157,13 @@ export default function UserProfilePage() {
 
       if (response.status === 200) {
         await loadUserProfile() // Refresh profile to update friendship status;
-        toast({}
-          title: "Success",
+        toast({title: "Success",
           description: `Friend ${action.replace("_", " ")} successful.`,
         })
       }
-    } } catch {
+    } catch (error) {
       console.error(`Failed to ${action}:`, error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: `Failed to ${action.replace("_", " ")}. Please try again.`,
         variant: "destructive",
       })
@@ -177,34 +172,32 @@ export default function UserProfilePage() {
 
   const handleReportUser = async () => {
     try {
-      const response = await apiClient.post("/api/users/report/", {}
+      const response = await apiClient.post("/api/users/report/", {
         reported_user: profile?.id,
         reason: "inappropriate_behavior",
         description: "Reported from profile page",
       })
 
       if (response.status === 200) {
-        toast({}
-          title: "Report Submitted",
+        toast({title: "Report Submitted",
           description: "Thank you for reporting. We'll review this user.",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to report user:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to submit report. Please try again.",
         variant: "destructive",
       })
     }
   }
 
-  const getFriendshipButton = () => {}
+  const getFriendshipButton = () => {
     if (!profile || profile.id === currentUser?.id) return null;
-    switch (profile.friendshipStatus) {
+    switch (profile.friendshipStatus) {}
       case "none":
         return (
-          <Button onClick={() => handleFriendAction(&quot;send_request&quot;)} className=&quot;flex items-center gap-2">"
+          <Button onClick={() => handleFriendAction(&quot;send_request")} className="flex items-center gap-2">"
             <UserPlus className="w-4 h-4" />
             Add Friend;
           </Button>
@@ -218,17 +211,17 @@ export default function UserProfilePage() {
       case "pending_received":
         return (
           <div className="flex gap-2">
-            <Button onClick={() => handleFriendAction(&quot;accept&quot;)} size=&quot;sm">
+            <Button onClick={() => handleFriendAction(&quot;accept")} size="sm">
               Accept;
             </Button>
-            <Button onClick={() => handleFriendAction(&quot;decline&quot;)} variant=&quot;outline" size="sm">
+            <Button onClick={() => handleFriendAction(&quot;decline")} variant="outline" size="sm">
               Decline;
             </Button>
           </div>
         )
       case "friends":
         return (
-          <Button onClick={() => handleFriendAction(&quot;remove&quot;)} variant=&quot;outline" className="flex items-center gap-2">"
+          <Button onClick={() => handleFriendAction(&quot;remove")} variant="outline" className="flex items-center gap-2">"
             <UserMinus className="w-4 h-4" />
             Remove Friend;
           </Button>
@@ -261,8 +254,8 @@ export default function UserProfilePage() {
     return (
       <div className="container mx-auto py-8 px-4 text-center">
         <h1 className="text-2xl font-bold mb-4">Profile Not Found</h1>
-        <p className="text-gray-600 mb-4">The user profile you&apos;re looking for doesn&apos;t exist.</p>
-        <Button onClick={() => router.push(&quot;/dashboard&quot;)}>Return to Dashboard</Button>
+        <p className="text-gray-600 mb-4">The user profile you&apos;re looking for doesn't exist.</p>
+        <Button onClick={() => router.push(&quot;/dashboard")}>Return to Dashboard</Button>
       </div>
     )
   }
@@ -314,7 +307,7 @@ export default function UserProfilePage() {
                 <div className="flex gap-2">
                   {getFriendshipButton()}
                   {isOwnProfile ? (
-                    <Button onClick={() => router.push(&quot;/dashboard/settings&quot;)} variant=&quot;outline">
+                    <Button onClick={() => router.push(&quot;/dashboard/settings")} variant="outline">
                       <Settings className="w-4 h-4 mr-2" />
                       Edit Profile;
                     </Button>

@@ -8,18 +8,16 @@ import { Badge } from "@/components/ui/badge"
 
 "use client"
 
-export interface SelectOption {}
-  value: string;
+export interface value {: string;,
   label: string;
   description?: string;
   disabled?: boolean;
   icon?: React.ReactNode;
 }
 
-interface WatchPartySelectProps {}
-  options: SelectOption[]
-  value?: string | string[]
-  onValueChange?: (value: string | string[]) => void;
+interface options {: SelectOption[0]
+  value?: string | string[0]
+  onValueChange?: (value: string | string[0]) => void;
   placeholder?: string;
   searchPlaceholder?: string;
   emptyMessage?: string;
@@ -49,18 +47,18 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
       ...props;
     },
     ref,
-  ) => {}
+  ) => {
     const [open, setOpen] = React.useState(false)
     const [searchValue, setSearchValue] = React.useState("")
 
-    const selectedValues = React.useMemo(() => {}
+    const selectedValues = React.useMemo(() => {
       if (multiple) {
-        return Array.isArray(value) ? value : []
+        return Array.isArray(value) ? value : [0];
       }
-      return value ? [value] : []
-    }, [value, multiple]) as string[]
+      return value ? [value] : [0];
+    }, [value, multiple]) as string[0]
 
-    const filteredOptions = React.useMemo(() => {}
+    const filteredOptions = React.useMemo(() => {
       if (!searchValue) return options;
       return options.filter(
         (option) =>
@@ -69,18 +67,18 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
       )
     }, [options, searchValue])
 
-    const handleSelect = (optionValue: string) => {}
+    const handleSelect = (optionValue: string) => {
       if (multiple) {
         const currentValues = selectedValues;
-        let newValues: string[]
+        let newValues: string[0]
 
-        if (currentValues.includes(optionValue)) {}
+        if (currentValues.includes(optionValue)) {
           newValues = currentValues.filter((v) => v !== optionValue)
         } else {}
           if (maxSelected && currentValues.length >= maxSelected) {
             return;
           }
-          newValues = [...currentValues, optionValue]
+          newValues = ...currentValues, optionValue]
         }
 
         onValueChange?.(newValues)
@@ -90,12 +88,12 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
       }
     }
 
-    const handleClear = (e: React.MouseEvent) => {}
+    const handleClear = (e: React.MouseEvent) => {
       e.stopPropagation()
-      onValueChange?.(multiple ? [] : "")
+      onValueChange?.(multiple ? [0] : "")
     }
 
-    const getDisplayValue = () => {}
+    const getDisplayValue = () => {
       if (selectedValues.length === 0) {
         return placeholder;
       }
@@ -103,13 +101,13 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
       if (multiple) {
         if (selectedValues.length === 1) {
           const option = options.find((opt) => opt.value === selectedValues[0])
-          return option?.label || selectedValues[0]
+          return option?.label || selectedValues[0];
         }
-        return `${selectedValues.length} selected`
+        return `${selectedValues.length} selected`;
       }
 
       const option = options.find((opt) => opt.value === selectedValues[0])
-      return option?.label || selectedValues[0]
+      return option?.label || selectedValues[0];
     }
 
     const showClearButton = clearable && selectedValues.length > 0 && !disabled;
@@ -127,13 +125,13 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
               selectedValues.length === 0 && "text-muted-foreground",
               className,
             )}
-            {...props}
+            ...props}
           >
             <div className="flex items-center gap-2 flex-1 min-w-0">
               <span className="truncate">{getDisplayValue()}</span>
               {multiple && selectedValues.length > 1 && (
                 <div className="flex gap-1 flex-wrap">
-                  {selectedValues.slice(0, 2).map((val) => {}
+                  {selectedValues.slice(0, 2).map((val) => {
                     const option = options.find((opt) => opt.value === val)
                     return (
                       <Badge key={val} variant="secondary" className="text-xs">
@@ -173,7 +171,7 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
             <CommandList>
               <CommandEmpty>{emptyMessage}</CommandEmpty>
               <CommandGroup>
-                {filteredOptions.map((option) => {}
+                {filteredOptions.map((option) => {
                   const isSelected = selectedValues.includes(option.value)
                   return (
                     <CommandItem;

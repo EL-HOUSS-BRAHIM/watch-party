@@ -2,7 +2,7 @@ import { Suspense } from "react"
 import { JoinParty } from "@/components/party/join-party"
 
 function JoinPartyWrapper() {
-  return <JoinParty />
+  return <JoinParty />;
 }
 
 export default function JoinPage() {

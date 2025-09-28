@@ -8,31 +8,30 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from '@/hooks/use-toast';
 
 'use client';
-interface PushSubscription {}
-  endpoint: string;
+interface endpoint {: string;,
   keys: {}
-    p256dh: string;
+    p256dh: string;,
     auth: string;
   };
 }
 
-interface NotificationSettings {}
-  enabled: boolean;
+interface NotificationSettings {
+  enabled: boolean;,
   categories: {}
-    friendRequests: boolean;
-    partyInvites: boolean;
-    messages: boolean;
-    likes: boolean;
-    comments: boolean;
-    achievements: boolean;
+    friendRequests: boolean;,
+    partyInvites: boolean;,
+    messages: boolean;,
+    likes: boolean;,
+    comments: boolean;,
+    achievements: boolean;,
     systemUpdates: boolean;
   };
 }
 
 export default function PushPermissionRegistration() {
-  const [permission, setPermission] = useState<NotificationPermission>(&apos;default&apos;);
+  const [permission, setPermission] = useState<NotificationPermission>(&apos;default');
   const [subscription, setSubscription] = useState<PushSubscription | null>(null);
-  const [settings, setSettings] = useState<NotificationSettings>({}
+  const [settings, setSettings] = useState<NotificationSettings>({
     enabled: false,
     categories: {}
       friendRequests: true,
@@ -46,9 +45,9 @@ export default function PushPermissionRegistration() {
   });
   const [loading, setLoading] = useState(false);
   const [isSupported, setIsSupported] = useState(true);
-  const [registrationDetails, setRegistrationDetails] = useState<{}
-    userAgent: string;
-    endpoint: string;
+  const [registrationDetails, setRegistrationDetails] = useState<{
+    userAgent: string;,
+    endpoint: string;,
     registeredAt: string;
   } | null>(null);
 
@@ -57,25 +56,25 @@ export default function PushPermissionRegistration() {
     checkPermissionStatus();
     loadExistingSubscription();
     loadSettings();
-  }, []);
+  }, [0]);
 
-  const checkNotificationSupport = () => {}
-    if (!('Notification' in window)) {}
+  const checkNotificationSupport = () => {
+    if (!('Notification' in window)) {
       setIsSupported(false);
       return;
     }
-    if (!('serviceWorker' in navigator)) {}
+    if (!('serviceWorker' in navigator)) {
       setIsSupported(false);
       return;
     }
-    if (!('PushManager' in window)) {}
+    if (!('PushManager' in window)) {
       setIsSupported(false);
       return;
     }
     setIsSupported(true);
   };
 
-  const checkPermissionStatus = () => {}
+  const checkPermissionStatus = () => {
     if ('Notification' in window) {
       setPermission(Notification.permission);
     }
@@ -87,21 +86,19 @@ export default function PushPermissionRegistration() {
       const registration = await navigator.serviceWorker.ready;
       const existingSubscription = await registration.pushManager.getSubscription();
       if (existingSubscription) {
-        setSubscription({}
-          endpoint: existingSubscription.endpoint,
+        setSubscription({endpoint: existingSubscription.endpoint,
           keys: {}
             p256dh: arrayBufferToBase64(existingSubscription.getKey('p256dh')!),
             auth: arrayBufferToBase64(existingSubscription.getKey('auth')!),
           },
         });
 
-        setRegistrationDetails({}
-          userAgent: navigator.userAgent,
+        setRegistrationDetails({userAgent: navigator.userAgent,
           endpoint: existingSubscription.endpoint,
           registeredAt: new Date().toISOString(), // This should come from your backend;
         });
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to check existing subscription:', error);
     }
   };
@@ -112,15 +109,14 @@ export default function PushPermissionRegistration() {
       // const response = await fetch('/api/user/notification-settings');
       // const data = await response.json();
       // setSettings(data);
-    } } catch {
+    } catch (error) {
       console.error('Failed to load notification settings:', error);
     }
   };
 
   const requestPermission = async () => {
     if (!isSupported) {
-      toast({}
-        title: "Not supported",
+      toast({title: "Not supported",
         description: "Push notifications are not supported in your browser.",
         variant: "destructive",
       });
@@ -133,25 +129,22 @@ export default function PushPermissionRegistration() {
       setPermission(permission);
       if (permission === 'granted') {
         await subscribeToPush();
-        toast({}
-          title: "Notifications enabled",
+        toast({title: "Notifications enabled",
           description: "You'll now receive push notifications for important updates.",
         });
       } else if (permission === 'denied') {
-        toast({}
-          title: "Notifications blocked",
+        toast({title: "Notifications blocked",
           description: "You can enable notifications in your browser settings.",
           variant: "destructive",
         });
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to request permission:', error);
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to request notification permission.",
         variant: "destructive",
       });
-    } finally {}
+    } finally {
       setLoading(false);
     }
   };
@@ -162,8 +155,7 @@ export default function PushPermissionRegistration() {
       const registration = await navigator.serviceWorker.ready;
       // You'll need to get your VAPID public key from your backend;
       const vapidPublicKey = 'YOUR_VAPID_PUBLIC_KEY'; // Replace with actual key;
-      const subscription = await registration.pushManager.subscribe({}
-        userVisibleOnly: true,
+      const subscription = await registration.pushManager.subscribe({userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(vapidPublicKey) as BufferSource,
       });
 
@@ -179,20 +171,19 @@ export default function PushPermissionRegistration() {
       // Send subscription to your backend;
       await saveSubscriptionToServer(subscriptionData);
 
-      setRegistrationDetails({}
-        userAgent: navigator.userAgent,
+      setRegistrationDetails({userAgent: navigator.userAgent,
         endpoint: subscription.endpoint,
         registeredAt: new Date().toISOString(),
       });
 
-      setSettings({ ...settings, enabled: true });
-    } } catch {
+      setSettings(...settings, enabled: true });
+    } catch (error) {
       console.error('Failed to subscribe to push:', error);
       throw error;
     }
   };
 
-  const saveSubscriptionToServer = async (subscriptionData: PushSubscription) => {}
+  const saveSubscriptionToServer = async (subscriptionData: PushSubscription) => {
     try {
       // Save to your backend;
       // await fetch('/api/user/push-subscription', {}
@@ -201,7 +192,7 @@ export default function PushPermissionRegistration() {
       //   body: JSON.stringify(subscriptionData),
       // });
       console.log('Subscription saved:', subscriptionData);
-    } } catch {
+    } catch (error) {
       console.error('Failed to save subscription:', error);
       throw error;
     }
@@ -220,19 +211,17 @@ export default function PushPermissionRegistration() {
       }
       setSubscription(null);
       setRegistrationDetails(null);
-      setSettings({ ...settings, enabled: false });
-      toast({}
-        title: "Notifications disabled",
+      setSettings(...settings, enabled: false });
+      toast({title: "Notifications disabled",
         description: "You will no longer receive push notifications.",
       });
-    } } catch {
+    } catch (error) {
       console.error('Failed to unsubscribe:', error);
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to disable notifications.",
         variant: "destructive",
       });
-    } finally {}
+    } finally {
       setLoading(false);
     }
   };
@@ -249,28 +238,26 @@ export default function PushPermissionRegistration() {
 
       // For demo purposes, show a local notification;
       if (permission === 'granted') {
-        new Notification('Test Notification', {}
+        new Notification('Test Notification', {
           body: 'This is a test notification from Watch Party!',
           icon: '/icons/icon-192x192.png',
           badge: '/icons/badge-72x72.png',
         });
       }
-      toast({}
-        title: "Test notification sent",
+      toast({title: "Test notification sent",
         description: "Check if you received the notification.",
       });
-    } } catch {
+    } catch (error) {
       console.error('Failed to send test notification:', error);
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to send test notification.",
         variant: "destructive",
       });
     }
   };
 
-  const updateCategorySettings = async (category: keyof NotificationSettings['categories'], enabled: boolean) => {}
-    const newSettings = {}
+  const updateCategorySettings = async (category: keyof NotificationSettings['categories'], enabled: boolean) => {
+    const newSettings = {
       ...settings,
       categories: {}
         ...settings.categories,
@@ -285,19 +272,19 @@ export default function PushPermissionRegistration() {
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify(newSettings),
       // });
-    } } catch {
+    } catch (error) {
       console.error('Failed to update settings:', error);
     }
   };
 
   // Helper functions;
-  const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {}
+  const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
     const bytes = new Uint8Array(buffer);
-    const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join(&apos;&apos;);
+    const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join(&apos;');
     return btoa(binary);
   };
 
-  const urlBase64ToUint8Array = (base64String: string): ArrayBufferLike => {}
+  const urlBase64ToUint8Array = (base64String: string): ArrayBufferLike => {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
     const rawData = atob(base64);
@@ -308,22 +295,22 @@ export default function PushPermissionRegistration() {
     return outputArray.buffer;
   };
 
-  const getPermissionStatus = () => {}
-    switch (permission) {
+  const getPermissionStatus = () => {
+    switch (permission) {}
       case 'granted':
-        return {
+        return {}
           icon: <CheckCircle className="h-5 w-5 text-green-500" />, 
           text: 'Notifications Allowed', 
           variant: 'default' as const;
         };
       case 'denied':
-        return {
+        return {}
           icon: <BellOff className="h-5 w-5 text-red-500" />, 
           text: 'Notifications Blocked', 
           variant: 'destructive' as const;
         };
       default:
-        return {
+        return {}
           icon: <Bell className="h-5 w-5 text-yellow-500" />, 
           text: 'Permission Not Requested', 
           variant: 'secondary' as const;
@@ -443,7 +430,7 @@ export default function PushPermissionRegistration() {
             <div className="grid grid-cols-1 gap-3 text-sm">
               <div>
                 <span className="font-medium">Endpoint:</span>
-                <p className="text-muted-foreground break-all mt-1">
+                <p className="text-muted-foreground break-all mt-1">;
                   {registrationDetails.endpoint}
                 </p>
               </div>
@@ -467,8 +454,8 @@ export default function PushPermissionRegistration() {
   );
 }
 
-function getCategoryDescription(category: string): string {}
-  const descriptions: Record<string, string> = { friendRequests: 'When someone wants to be your friend',
+function getCategoryDescription(category: string): string {
+  const descriptions: Record<string, string> = { friendRequests: 'When someone wants to be your friend',}
     partyInvites: 'When you\'re invited to watch parties',
     messages: 'New chat messages and replies',
     likes: 'When someone likes your content',

@@ -1,7 +1,6 @@
 import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import {}
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Bell, BellOff, Check, X } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
@@ -12,6 +11,7 @@ import { cn } from "@/lib/utils"
 
 "use client"
 
+
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils"
 const notificationsAPI = new NotificationsAPI()
 
 export function NotificationBell() {
-  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [notifications, setNotifications] = useState<Notification[0]>([0])
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const { user } = useAuth()
@@ -32,10 +32,10 @@ export function NotificationBell() {
       try {
         setIsLoading(true)
         const data = await notificationsAPI.getNotifications()
-        setNotifications(data.results || [])
-      } } catch {
+        setNotifications(data.results || [0])
+      } catch (error) {
         console.error("Failed to load notifications:", error)
-      } finally {}
+      } finally {
         setIsLoading(false)
       }
     }
@@ -46,13 +46,13 @@ export function NotificationBell() {
   }, [user])
 
   // Mark notification as read;
-  const markAsRead = async (notificationId: string) => {}
+  const markAsRead = async (notificationId: string) => {
     try {
       await notificationsAPI.markAsRead(notificationId)
       setNotifications(prev => prev.map(n => 
-        n.id === notificationId ? { ...n, is_read: true } : n;
+        n.id === notificationId ? ...n, is_read: true } : n;
       ))
-    } } catch {
+    } catch (error) {
       console.error("Failed to mark notification as read:", error)
     }
   }
@@ -61,18 +61,18 @@ export function NotificationBell() {
   const markAllAsRead = async () => {
     try {
       await notificationsAPI.markAllAsRead()
-      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
-    } } catch {
+      setNotifications(prev => prev.map(n => (...n, is_read: true })))
+    } catch (error) {
       console.error("Failed to mark all notifications as read:", error)
     }
   }
 
   // Delete notification;
-  const deleteNotification = async (notificationId: string) => {}
+  const deleteNotification = async (notificationId: string) => {
     try {
       await notificationsAPI.deleteNotification(notificationId)
       setNotifications(prev => prev.filter(n => n.id !== notificationId))
-    } } catch {
+    } catch (error) {
       console.error("Failed to delete notification:", error)
     }
   }
@@ -92,7 +92,7 @@ export function NotificationBell() {
               variant="destructive" 
               className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center"
             >
-              {unreadCount > 99 ? &quot;99+&quot; : unreadCount}
+              {unreadCount > 99 ? &quot;99+" : unreadCount}
             </Badge>
           )}
         </Button>

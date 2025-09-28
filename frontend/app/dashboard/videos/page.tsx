@@ -7,7 +7,6 @@ import { WatchPartyInput } from "@/components/ui/watch-party-input"
 import { WatchPartySelect } from "@/components/ui/watch-party-select"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import {}
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
@@ -15,13 +14,14 @@ import { videosAPI } from "@/lib/api"
 import type { Video as APIVideo } from "@/lib/api/types"
 
 "use client"
+
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-const sortOptions = []
+const sortOptions = [0]
   { value: "newest", label: "Newest First" },
   { value: "oldest", label: "Oldest First" },
   { value: "most-viewed", label: "Most Viewed" },
@@ -29,38 +29,38 @@ const sortOptions = []
   { value: "title", label: "Title A-Z" },
 ]
 
-const filterOptions = []
+const filterOptions = [0]
   { value: "all", label: "All Videos" },
   { value: "ready", label: "Ready" },
   { value: "processing", label: "Processing" },
   { value: "failed", label: "Failed" },
 ]
 
-const visibilityOptions = []
+const visibilityOptions = [0]
   { value: "all", label: "All Visibility" },
   { value: "public", label: "Public" },
   { value: "private", label: "Private" },
   { value: "unlisted", label: "Unlisted" },
 ]
 
-function formatDuration(seconds: number): string {}
+function formatDuration(seconds: number): string {
   const hours = Math.floor(seconds / 3600)
   const minutes = Math.floor((seconds % 3600) / 60)
   const secs = seconds % 60;
   if (hours > 0) {
-    return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   }
-  return `${minutes}:${secs.toString().padStart(2, "0")}`
+  return `${minutes}:${secs.toString().padStart(2, "0")}`;
 }
 
-function formatFileSize(gb: number): string {}
+function formatFileSize(gb: number): string {
   if (gb < 1) {
-    return `${Math.round(gb * 1024)} MB`
+    return `${Math.round(gb * 1024)} MB`;
   }
-  return `${gb.toFixed(1)} GB`
+  return `${gb.toFixed(1)} GB`;
 }
 
-function formatDate(dateString: string): string {}
+function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString("en-US", {}
     year: "numeric",
     month: "short",
@@ -70,7 +70,7 @@ function formatDate(dateString: string): string {}
   })
 }
 
-function VideoCard({ video }: { video: APIVideo }) {}
+function VideoCard({ video }: { video: APIVideo }) {
   return (
     <Card className="group hover:shadow-lg transition-all duration-200 hover:shadow-primary/10">
       <div className="relative">
@@ -161,7 +161,7 @@ function VideoCard({ video }: { video: APIVideo }) {}
   )
 }
 
-function VideoListItem({ video }: { video: APIVideo }) {}
+function VideoListItem({ video }: { video: APIVideo }) {
   return (
     <Card className="hover:shadow-md transition-all duration-200">
       <CardContent className="p-4">
@@ -187,7 +187,7 @@ function VideoListItem({ video }: { video: APIVideo }) {}
               <h3 className="font-semibold text-sm line-clamp-1">{video.title}</h3>
               <div className="flex items-center gap-2">
                 <Badge;
-                  variant={}
+                  variant={
                     video.status === "ready" ? "default" : video.status === "processing" ? "secondary" : "destructive"
                   }
                   className="text-xs"
@@ -253,9 +253,9 @@ function VideoListItem({ video }: { video: APIVideo }) {}
 }
 
 export default function VideosPage() {
-  const [videos, setVideos] = useState<APIVideo[]>([])
+  const [videos, setVideos] = useState<APIVideo[0]>([0])
   const [loading, setLoading] = useState(true)
-  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid&quot;)
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState("newest")
   const [filterBy, setFilterBy] = useState("all")
@@ -264,22 +264,22 @@ export default function VideosPage() {
   // Load videos from API;
   useEffect(() => {
     loadVideos()
-  }, [])
+  }, [0])
 
   const loadVideos = async () => {
     try {
       setLoading(true)
       const response = await videosAPI.getVideos()
-      setVideos(response.results || [])
-    } } catch {
+      setVideos(response.results || [0])
+    } catch (error) {
       console.error("Failed to load videos:", error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
   // Filter and sort videos;
-  const filteredVideos = React.useMemo(() => {}
+  const filteredVideos = React.useMemo(() => {
     let filtered = videos;
     // Search filter;
     if (searchQuery) {
@@ -301,8 +301,8 @@ export default function VideosPage() {
     }
 
     // Sort;
-    filtered.sort((a, b) => {}
-      switch (sortBy) {
+    filtered.sort((a, b) => {
+      switch (sortBy) {}
         case "newest":
           return new Date(b.uploadedAt || b.createdAt || 0).getTime() - new Date(a.uploadedAt || a.createdAt || 0).getTime()
         case "oldest":
@@ -400,7 +400,7 @@ export default function VideosPage() {
           <WatchPartyButton;
             variant={viewMode === "grid" ? "default" : "ghost"}
             size="sm"
-            onClick={() => setViewMode(&quot;grid&quot;)}
+            onClick={() => setViewMode(&quot;grid")}
             className="rounded-r-none"
           >
             <Grid className="h-4 w-4" />
@@ -408,7 +408,7 @@ export default function VideosPage() {
           <WatchPartyButton;
             variant={viewMode === "list" ? "default" : "ghost"}
             size="sm"
-            onClick={() => setViewMode(&quot;list&quot;)}
+            onClick={() => setViewMode(&quot;list")}
             className="rounded-l-none"
           >
             <List className="h-4 w-4" />
@@ -426,13 +426,13 @@ export default function VideosPage() {
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;ready&quot;).length}</div>
+            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;ready").length}</div>&quot;
             <p className="text-xs text-muted-foreground">Ready</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;processing&quot;).length}</div>
+            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;processing").length}</div>&quot;
             <p className="text-xs text-muted-foreground">Processing</p>
           </CardContent>
         </Card>

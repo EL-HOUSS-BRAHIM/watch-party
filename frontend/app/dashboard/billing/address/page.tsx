@@ -6,5 +6,5 @@ export const metadata: Metadata = { title: 'Billing Address - Watch Party',
 }
 
 export default function BillingAddressPage() {
-  return <BillingAddressView />
+  return <BillingAddressView />;
 }

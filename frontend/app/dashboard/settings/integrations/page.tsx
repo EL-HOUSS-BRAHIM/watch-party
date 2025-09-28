@@ -1,12 +1,12 @@
 import { Check, CheckCircle, Cloud, Link, X } from "lucide-react"
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
-import {}
 import { integrationsAPI } from '@/lib/api'
 import type {}
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
 
-'use client'
+"use client"
+
   LinkIcon,
   ArrowPathIcon,
   CheckCircleIcon,
@@ -20,30 +20,29 @@ import { LoadingSpinner } from '@/components/ui/loading'
   IntegrationDefinition,
   IntegrationStatusOverview,
 } from '@/lib/api'
-interface IntegrationDisplay {}
-  definition: IntegrationDefinition;
+interface definition {: IntegrationDefinition;,
   connection: IntegrationConnection | null;
   status?: IntegrationStatusOverview;
 }
 
-const PROVIDER_ICON_MAP: Record<string, ReactNode> = { google_drive: <CloudIcon className="w-6 h-6" />,
+const PROVIDER_ICON_MAP: Record<string, ReactNode> = { google_drive: <CloudIcon className=&quot;w-6 h-6" />,}
   discord: <ChatBubbleLeftRightIcon className="w-6 h-6" />,
 }
 
-function getStatusColor(status: IntegrationStatusOverview | undefined) {}
-  switch (status?.status) {
+function getStatusColor(status: IntegrationStatusOverview | undefined) {
+  switch (status?.status) {}
     case 'available':
-      return 'text-green-400'
+      return 'text-green-400';
     case 'degraded':
-      return 'text-yellow-400'
+      return 'text-yellow-400';
     case 'unavailable':
-      return 'text-red-400'
+      return 'text-red-400';
     default:
-      return 'text-blue-400'
+      return 'text-blue-400';
   }
 }
 
-function getConnectionBadge(connection: IntegrationConnection | null) {}
+function getConnectionBadge(connection: IntegrationConnection | null) {
   if (!connection) return { text: 'Not connected', className: 'text-yellow-400 border-yellow-400/40' }
   if (connection.status === 'error') return { text: 'Error', className: 'text-red-400 border-red-400/40' }
   if (connection.status === 'pending') return { text: 'Pending', className: 'text-blue-400 border-blue-400/40' }
@@ -51,8 +50,8 @@ function getConnectionBadge(connection: IntegrationConnection | null) {}
 }
 
 export default function IntegrationsPage() {
-  const [definitions, setDefinitions] = useState<IntegrationDefinition[]>([])
-  const [connections, setConnections] = useState<IntegrationConnection[]>([])
+  const [definitions, setDefinitions] = useState<IntegrationDefinition[0]>([0])
+  const [connections, setConnections] = useState<IntegrationConnection[0]>([0])
   const [status, setStatus] = useState<Record<string, IntegrationStatusOverview>>({})
   const [health, setHealth] = useState<HealthStatus | null>(null)
   const [loading, setLoading] = useState(true)
@@ -62,29 +61,28 @@ export default function IntegrationsPage() {
   const loadData = useCallback(async () => {
     setLoading(true)
     try {
-      const [definitionsResponse, connectionsResponse, statusResponse, healthResponse] = await Promise.all([]
+      const [definitionsResponse, connectionsResponse, statusResponse, healthResponse] = await Promise.all([0]
         integrationsAPI.getIntegrationTypes(),
         integrationsAPI.getConnections(),
-        integrationsAPI.getStatus().catch(() => ({ integrations: [] })),
+        integrationsAPI.getStatus().catch(() => ({ integrations: [0] })),
         integrationsAPI.getHealth().catch(() => null),
       ])
 
-      setDefinitions(definitionsResponse.integrations || [])
-      setConnections(connectionsResponse.connections || [])
+      setDefinitions(definitionsResponse.integrations || [0])
+      setConnections(connectionsResponse.connections || [0])
 
-      const mappedStatus: Record<string, IntegrationStatusOverview> = { for (const entry of statusResponse.integrations || []) {}
+      const mappedStatus: Record<string, IntegrationStatusOverview> = { for (const entry of statusResponse.integrations || [0]) {
         mappedStatus[entry.provider] = entry;
       }
       setStatus(mappedStatus)
       setHealth(healthResponse)
-    } } catch {
+    } catch (error) {
       console.error('Failed to load integrations data', error)
-      toast({}
-        title: 'Unable to load integrations',
+      toast({title: 'Unable to load integrations',
         description: 'Check your network connection and try again.',
         variant: 'destructive',
       })
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }, [toast])
@@ -98,7 +96,7 @@ export default function IntegrationsPage() {
     [connections]
   )
 
-  const handleConnect = async (provider: string) => {}
+  const handleConnect = async (provider: string) => {
     setActionProvider(provider)
     try {
       const isGoogleDrive = provider === 'google_drive'
@@ -107,42 +105,39 @@ export default function IntegrationsPage() {
         : await integrationsAPI.getAuthUrl(provider)
 
       window.location.assign(auth_url)
-    } } catch {
+    } catch (error) {
       console.error('Failed to start integration authorization', error)
-      toast({}
-        title: 'Connection failed',
+      toast({title: 'Connection failed',
         description: 'We were unable to start the authorization flow. Try again later.',
         variant: 'destructive',
       })
-    } finally {}
+    } finally {
       setActionProvider(null)
     }
   }
 
-  const handleDisconnect = async (provider: string) => {}
+  const handleDisconnect = async (provider: string) => {
     const connection = connectionFor(provider)
     if (!connection) return;
     setActionProvider(provider)
     try {
       await integrationsAPI.disconnectConnection(connection.id)
-      toast({}
-        title: `${connection.display_name || provider} disconnected`,
+      toast({title: `${connection.display_name || provider} disconnected`,
         description: 'The integration has been disconnected from your account.',
       })
       await loadData()
-    } } catch {
+    } catch (error) {
       console.error('Failed to disconnect integration', error)
-      toast({}
-        title: 'Unable to disconnect',
+      toast({title: 'Unable to disconnect',
         description: 'We could not disconnect the integration. Please try again.',
         variant: 'destructive',
       })
-    } finally {}
+    } finally {
       setActionProvider(null)
     }
   }
 
-  const displays: IntegrationDisplay[] = useMemo(() => {}
+  const displays: IntegrationDisplay[0] = useMemo(() => {
     return definitions.map(definition => ({}
       definition,
       connection: connectionFor(definition.provider),
@@ -151,12 +146,12 @@ export default function IntegrationsPage() {
   }, [definitions, connectionFor, status])
 
   const connectedCount = useMemo(
-    () => connections.filter(connection => connection.status === &apos;connected&apos;).length,
+    () => connections.filter(connection => connection.status === &apos;connected').length,
     [connections]
   )
 
   const issueCount = useMemo(
-    () => connections.filter(connection => connection.status === &apos;error').length,
+    () => connections.filter(connection => connection.status === 'error').length,
     [connections]
   )
 
@@ -212,7 +207,7 @@ export default function IntegrationsPage() {
                       key={service.name}
                       className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3"
                     >
-                      <span className="font-medium capitalize">{service.name.replace(/_/g, &apos; &apos;)}</span>
+                      <span className="font-medium capitalize">{service.name.replace(/_/g, &apos; ')}</span>
                       <span className={service.status === 'up' ? 'text-green-300' : 'text-red-300'}>
                         {service.status === 'up' ? 'Operational' : 'Unavailable'}
                       </span>
@@ -223,7 +218,7 @@ export default function IntegrationsPage() {
             )}
 
             <section className="space-y-6">
-              {displays.map(({ definition, connection, status: statusEntry }) => {}
+              {displays.map(({ definition, connection, status: statusEntry }) => {
                 const badge = getConnectionBadge(connection)
                 const isBusy = actionProvider === definition.provider;
                 return (

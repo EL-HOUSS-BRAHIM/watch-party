@@ -10,36 +10,34 @@ import { usersAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
 'use client';
-interface User {}
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string;
-  isOnline: boolean;
-  mutualFriends: number;
-  commonInterests: string[];
-  location?: string;
-  joinedDate: string;
-  watchedGenres: string[];
-  favoriteMovies: string[];
-  isVerified: boolean;
+interface id {: string;,
+  username: string;,
+  displayName: string;,
+  avatar: string;,
+  isOnline: boolean;,
+  mutualFriends: number;,
+  commonInterests: string[0];
+  location?: string;,
+  joinedDate: string;,
+  watchedGenres: string[0];,
+  favoriteMovies: string[0];,
+  isVerified: boolean;,
   friendshipStatus: 'none' | 'pending_sent' | 'pending_received' | 'friends' | 'blocked';
-  bio?: string;
+  bio?: string;,
   stats: {}
-    moviesWatched: number;
-    partiesHosted: number;
+    moviesWatched: number;,
+    partiesHosted: number;,
     friendsCount: number;
   };
 }
 
-interface SearchFilters {}
-  sortBy: 'relevance' | 'mutual_friends' | 'activity' | 'recent';
-  location: 'any' | 'nearby' | 'same_city';
-  hasAvatar: boolean;
-  isOnline: boolean;
-  verifiedOnly: boolean;
-  minMutualFriends: number;
-  genres: string[];
+interface sortBy {: 'relevance' | 'mutual_friends' | 'activity' | 'recent';,
+  location: 'any' | 'nearby' | 'same_city';,
+  hasAvatar: boolean;,
+  isOnline: boolean;,
+  verifiedOnly: boolean;,
+  minMutualFriends: number;,
+  genres: string[0];
 }
 
 const fallbackId = (prefix: string) =>
@@ -47,7 +45,7 @@ const fallbackId = (prefix: string) =>
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
-const normalizeSearchUser = (user: unknown): User => ({}
+const normalizeSearchUser = (user: unknown): User => ({
   id: String(user?.id ?? user?.user_id ?? user?.username ?? fallbackId('user')),
   username: user?.username ?? user?.handle ?? 'user',
   displayName:
@@ -71,15 +69,15 @@ const normalizeSearchUser = (user: unknown): User => ({}
       ? user.interests;
       : Array.isArray(user?.genres)
         ? user.genres;
-        : [],
+        : [0],
   location: user?.location ?? user?.city ?? user?.region,
   joinedDate: user?.joined_at ?? user?.created_at ?? new Date().toISOString(),
   watchedGenres: Array.isArray(user?.watched_genres)
     ? user.watched_genres;
     : Array.isArray(user?.favorite_genres)
       ? user.favorite_genres;
-      : [],
-  favoriteMovies: Array.isArray(user?.favorite_movies) ? user.favorite_movies : [],
+      : [0],
+  favoriteMovies: Array.isArray(user?.favorite_movies) ? user.favorite_movies : [0],
   isVerified: Boolean(user?.is_verified ?? user?.verified),
   friendshipStatus: user?.friendship_status ?? 'none',
   bio: user?.bio ?? user?.about ?? '',
@@ -90,7 +88,7 @@ const normalizeSearchUser = (user: unknown): User => ({}
   },
 });
 
-const buildSearchParams = (searchTerm: string, filters: SearchFilters) => {}
+const buildSearchParams = (searchTerm: string, filters: SearchFilters) => {
   const result = { q: searchTerm || '',
     limit: 20,
     sort: filters.sortBy,
@@ -125,22 +123,22 @@ const buildSearchParams = (searchTerm: string, filters: SearchFilters) => {}
 
 export default function SmartFriendSearch() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[0]>([0]);
   const [loading, setLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<User[]>([]);
+  const [suggestions, setSuggestions] = useState<User[0]>([0]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
-  const [filters, setFilters] = useState<SearchFilters>({}
+  const [filters, setFilters] = useState<SearchFilters>({
     sortBy: 'relevance',
     location: 'any',
     hasAvatar: false,
     isOnline: false,
     verifiedOnly: false,
     minMutualFriends: 0,
-    genres: [],
+    genres: [0],
   });
   const { toast } = useToast();
 
-  const availableGenres = []
+  const availableGenres = [0]
     'Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi',
     'Romance', 'Thriller', 'Documentary', 'Animation', 'Fantasy'
   ];
@@ -149,16 +147,15 @@ export default function SmartFriendSearch() {
     setLoadingSuggestions(true);
     try {
       const response = await usersAPI.getFriendSuggestions({ limit: 12 });
-      const normalized = (response ?? []).map((item: unknown) => normalizeSearchUser(item));
+      const normalized = (response ?? [0]).map((item: unknown) => normalizeSearchUser(item));
       setSuggestions(normalized);
-    } } catch {
+    } catch (error) {
       console.error('Failed to load friend suggestions:', error);
-      toast({}
-        title: 'Unable to load suggestions',
+      toast({title: 'Unable to load suggestions',
         description: 'Please try refreshing suggestions in a moment.',
         variant: 'destructive',
       });
-    } finally {}
+    } finally {
       setLoadingSuggestions(false);
     }
   }, [toast]);
@@ -167,7 +164,7 @@ export default function SmartFriendSearch() {
     if (searchTerm.length > 2) {
       searchUsers();
     } else {}
-      setUsers([]);
+      setUsers([0]);
     }
   }, [searchTerm, filters]);
 
@@ -180,22 +177,21 @@ export default function SmartFriendSearch() {
     try {
       const params = buildSearchParams(searchTerm, filters);
       const response = await usersAPI.searchUsers(params);
-      const results = response?.results ?? [];
+      const results = response?.results ?? [0];
       setUsers(results.map((result: unknown) => normalizeSearchUser(result)));
-    } } catch {
+    } catch (error) {
       console.error('Failed to search users:', error);
-      toast({}
-        title: 'Search failed',
+      toast({title: 'Search failed',
         description: 'We could not complete that search. Please try again.',
         variant: 'destructive',
       });
-    } finally {}
+    } finally {
       setLoading(false);
     }
   };
 
-  const applyFilters = (list: User[]) => {}
-    const filtered = list.filter(user => {}
+  const applyFilters = (list: User[0]) => {
+    const filtered = list.filter(user => {
       if (filters.hasAvatar && !user.avatar) return false;
       if (filters.isOnline && !user.isOnline) return false;
       if (filters.verifiedOnly && !user.isVerified) return false;
@@ -207,9 +203,9 @@ export default function SmartFriendSearch() {
       return true;
     });
 
-    const sorted = [...filtered];
+    const sorted = ...filtered];
 
-    switch (filters.sortBy) {
+    switch (filters.sortBy) {}
       case 'mutual_friends':
         sorted.sort((a, b) => b.mutualFriends - a.mutualFriends);
         break;
@@ -220,7 +216,7 @@ export default function SmartFriendSearch() {
         sorted.sort((a, b) => new Date(b.joinedDate).getTime() - new Date(a.joinedDate).getTime());
         break;
       default:
-        sorted.sort((a, b) => {}
+        sorted.sort((a, b) => {
           const aScore = a.mutualFriends * 2 + a.commonInterests.length;
           const bScore = b.mutualFriends * 2 + b.commonInterests.length;
           return bScore - aScore;
@@ -323,14 +319,14 @@ export default function SmartFriendSearch() {
     </Card>
   );
 
-  const handleSendFriendRequest = async (userId: string) => {}
+  const handleSendFriendRequest = async (userId: string) => {
     try {
       await usersAPI.sendFriendRequestToUser(userId);
 
       setUsers(prev =>
         prev.map(user =>
           user.id === userId;
-            ? { ...user, friendshipStatus: 'pending_sent' }
+            ? ...user, friendshipStatus: 'pending_sent' }
             : user;
         )
       );
@@ -338,26 +334,24 @@ export default function SmartFriendSearch() {
       setSuggestions(prev =>
         prev.map(user =>
           user.id === userId;
-            ? { ...user, friendshipStatus: 'pending_sent' }
+            ? ...user, friendshipStatus: 'pending_sent' }
             : user;
         )
       );
 
-      toast({}
-        title: 'Friend request sent',
+      toast({title: 'Friend request sent',
         description: 'We let them know you want to connect.',
       });
-    } } catch {
+    } catch (error) {
       console.error('Failed to send friend request:', error);
-      toast({}
-        title: 'Unable to send request',
+      toast({title: 'Unable to send request',
         description: 'Please try again in a moment.',
         variant: 'destructive',
       });
     }
   };
 
-  const handleAcceptFriendRequest = async (userId: string) => {}
+  const handleAcceptFriendRequest = async (userId: string) => {
     try {
       // API call to accept friend request;
       console.log('Accepting friend request from:', userId);
@@ -365,7 +359,7 @@ export default function SmartFriendSearch() {
       setUsers(prev =>
         prev.map(user =>
           user.id === userId;
-            ? { ...user, friendshipStatus: 'friends' }
+            ? ...user, friendshipStatus: 'friends' }
             : user;
         )
       );
@@ -373,27 +367,25 @@ export default function SmartFriendSearch() {
       setSuggestions(prev =>
         prev.map(user =>
           user.id === userId;
-            ? { ...user, friendshipStatus: 'friends' }
+            ? ...user, friendshipStatus: 'friends' }
             : user;
         )
       );
 
-      toast({}
-        title: 'Friend request accepted',
+      toast({title: 'Friend request accepted',
         description: 'You are now connected.',
       });
-    } } catch {
+    } catch (error) {
       console.error('Failed to accept friend request:', error);
-      toast({}
-        title: 'Unable to update request',
+      toast({title: 'Unable to update request',
         description: 'Please try again later.',
         variant: 'destructive',
       });
     }
   };
 
-  const getFriendshipButton = (user: User) => {}
-    switch (user.friendshipStatus) {
+  const getFriendshipButton = (user: User) => {
+    switch (user.friendshipStatus) {}
       case 'none':
         return (
           <Button;
@@ -568,7 +560,7 @@ export default function SmartFriendSearch() {
                   <Select;
                     value={filters.sortBy}
                     onValueChange={(value: SearchFilters['sortBy']) =>
-                      setFilters({ ...filters, sortBy: value })
+                      setFilters(...filters, sortBy: value })
                     }
                   >
                     <SelectTrigger>
@@ -588,7 +580,7 @@ export default function SmartFriendSearch() {
                   <Select;
                     value={filters.location}
                     onValueChange={(value: SearchFilters['location']) =>
-                      setFilters({ ...filters, location: value })
+                      setFilters(...filters, location: value })
                     }
                   >
                     <SelectTrigger>
@@ -609,7 +601,7 @@ export default function SmartFriendSearch() {
                   <Select;
                     value={filters.minMutualFriends.toString()}
                     onValueChange={(value) =>
-                      setFilters({ ...filters, minMutualFriends: parseInt(value) })
+                      setFilters(...filters, minMutualFriends: parseInt(value) })
                     }
                   >
                     <SelectTrigger>
@@ -632,11 +624,11 @@ export default function SmartFriendSearch() {
                         key={genre}
                         variant={filters.genres.includes(genre) ? "default" : "outline"}
                         className="cursor-pointer"
-                        onClick={() => {}
+                        onClick={() => {
                           const newGenres = filters.genres.includes(genre)
                             ? filters.genres.filter(g => g !== genre)
-                            : [...filters.genres, genre];
-                          setFilters({ ...filters, genres: newGenres });
+                            : ...filters.genres, genre];
+                          setFilters(...filters, genres: newGenres });
                         }}
                       >
                         {genre}

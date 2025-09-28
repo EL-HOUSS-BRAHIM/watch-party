@@ -9,65 +9,55 @@ import { formatDistanceToNow } from "date-fns"
 
 "use client"
 
-interface Participant {}
-  id: string;
+interface id {: string,
   user: {}
-    id: string;
-    username: string;
-    avatar?: string;
-  }
-  is_host: boolean;
-  joined_at: string;
+    id: string,
+    username: string,
+    avatar?: string,
+  is_host: boolean,
+  joined_at: string,
   permissions: {}
-    can_control_video: boolean;
-    can_chat: boolean;
-    can_invite: boolean;
-    can_kick: boolean;
-  }
-}
+    can_control_video: boolean,
+    can_chat: boolean,
+    can_invite: boolean,
+    can_kick: boolean,
 
-interface ParticipantListProps {}
-  participants: Participant[]
-  currentUserId?: string;
-  isHost: boolean;
-  className?: string;
-}
+interface participants {: Participant[0]
+  currentUserId?: string,
+  isHost: boolean,
+  className?: string,
 
-export function ParticipantList({ participants, currentUserId, isHost, className }: ParticipantListProps) {}
+export function ParticipantList({ participants, currentUserId, isHost, className }: ParticipantListProps) {
   const [mutedUsers, setMutedUsers] = useState<Set<string>>(new Set())
 
-  const toggleMute = (userId: string) => {}
-    setMutedUsers((prev) => {}
+  const toggleMute = (userId: string) => {
+    setMutedUsers((prev) => {
       const newSet = new Set(prev)
-      if (newSet.has(userId)) {}
+      if (newSet.has(userId)) {
         newSet.delete(userId)
       } else {}
         newSet.add(userId)
-      }
       return newSet;
     })
-  }
 
-  const kickUser = (userId: string) => {}
-    // Implement kick functionality;
+  const kickUser = (userId: string) => {
+    // Implement kick functionality,
     console.log("Kick user:", userId)
-  }
 
-  const promoteUser = (userId: string) => {}
-    // Implement promote functionality;
+  const promoteUser = (userId: string) => {
+    // Implement promote functionality,
     console.log("Promote user:", userId)
-  }
 
   return (
     <div className={cn("flex flex-col", className)}>
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-3">
-          {participants.map((participant) => {}
-            const isCurrentUser = participant.user.id === currentUserId;
+          {participants.map((participant) => {
+            const isCurrentUser = participant.user.id === currentUserId,
             const isMuted = mutedUsers.has(participant.user.id)
 
             return (
-              <div;
+              <div,
                 key={participant.id}
                 className={cn(
                   "flex items-center space-x-3 p-3 rounded-lg transition-colors",
@@ -95,12 +85,10 @@ export function ParticipantList({ participants, currentUserId, isHost, className
                     <p className="text-sm font-medium truncate">{participant.user.username}</p>
                     {isCurrentUser && (
                       <Badge variant="secondary" className="text-xs">
-                        You;
                       </Badge>
                     )}
                     {participant.is_host && (
                       <Badge variant="secondary" className="text-xs bg-accent-premium/20 text-accent-premium">
-                        Host;
                       </Badge>
                     )}
                   </div>
@@ -111,13 +99,13 @@ export function ParticipantList({ participants, currentUserId, isHost, className
 
                 {/* Audio Controls */}
                 <div className="flex items-center space-x-1">
-                  <Button;
+                  <Button,
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8"
                     onClick={() => toggleMute(participant.user.id)}
                   >
-                    {isMuted ? <VolumeX className="w-4 h-4 text-muted-foreground" /> : <Volume2 className=&quot;w-4 h-4&quot; />}
+                    {isMuted ? <VolumeX className="w-4 h-4 text-muted-foreground" /> : <Volume2 className=&quot;w-4 h-4" />}"
                   </Button>
 
                   {/* Participant Actions (Host Only) */}
@@ -133,7 +121,7 @@ export function ParticipantList({ participants, currentUserId, isHost, className
                           <Shield className="w-4 h-4 mr-2" />
                           Make Co-host;
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => kickUser(participant.user.id)} className=&quot;text-destructive&quot;>
+                        <DropdownMenuItem onClick={() => kickUser(participant.user.id)} className=&quot;text-destructive">"
                           <UserMinus className="w-4 h-4 mr-2" />
                           Remove from Party;
                         </DropdownMenuItem>
@@ -142,7 +130,6 @@ export function ParticipantList({ participants, currentUserId, isHost, className
                   )}
                 </div>
               </div>
-            )
           })}
         </div>
       </ScrollArea>
@@ -161,5 +148,3 @@ export function ParticipantList({ participants, currentUserId, isHost, className
         </div>
       </div>
     </div>
-  )
-}

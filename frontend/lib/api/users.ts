@@ -45,7 +45,7 @@ export class UsersAPI {}
     )
 
     const { profile, ...user } = response;
-    return {
+    return {}
       ...transformUser(user),
       profile,
     }
@@ -61,7 +61,7 @@ export class UsersAPI {}
     )
 
     const { profile, ...user } = response;
-    return {
+    return {}
       ...transformUser(user),
       profile,
     }
@@ -71,7 +71,7 @@ export class UsersAPI {}
    * Upload user avatar;
    */
   async uploadAvatar(file: File, onProgress?: (progress: number) => void): Promise<{}
-    success: boolean;
+    success: boolean;,
     avatar_url: string;
   }> {}
     return apiClient.upload(API_ENDPOINTS.users.avatarUpload, file, onProgress)
@@ -80,8 +80,8 @@ export class UsersAPI {}
   /**
    * Get user achievements;
    */
-  async getAchievements(): Promise<Achievement[]> {}
-    return apiClient.get<Achievement[]>(API_ENDPOINTS.users.achievements)
+  async getAchievements(): Promise<Achievement[0]> {}
+    return apiClient.get<Achievement[0]>(API_ENDPOINTS.users.achievements)
   }
 
   /**
@@ -94,9 +94,9 @@ export class UsersAPI {}
   /**
    * Complete user onboarding;
    */
-  async completeOnboarding(data: {}
-    interests: string[]
-    preferred_genres: string[]
+  async completeOnboarding(data: {
+    interests: string[0],
+    preferred_genres: string[0],
     notifications_enabled: boolean;
   }): Promise<APIResponse> {}
     return apiClient.post<APIResponse>(API_ENDPOINTS.users.onboarding, data)
@@ -106,7 +106,7 @@ export class UsersAPI {}
    * Change password;
    */
   async changePassword(data: {}
-    current_password: string;
+    current_password: string;,
     new_password: string;
   }): Promise<APIResponse> {}
     return apiClient.post<APIResponse>(API_ENDPOINTS.users.password, data)
@@ -115,8 +115,8 @@ export class UsersAPI {}
   /**
    * Get user inventory;
    */
-  async getInventory(): Promise<Record<string, unknown>[]> {}
-    return apiClient.get<Record<string, unknown>[]>(API_ENDPOINTS.users.inventory)
+  async getInventory(): Promise<Record<string, unknown>[0]> {}
+    return apiClient.get<Record<string, unknown>[0]>(API_ENDPOINTS.users.inventory)
   }
 
   // === SESSION MANAGEMENT ===
@@ -124,14 +124,14 @@ export class UsersAPI {}
   /**
    * Get user sessions;
    */
-  async getSessions(): Promise<UserSession[]> {}
-    return apiClient.get<UserSession[]>(API_ENDPOINTS.users.sessions)
+  async getSessions(): Promise<UserSession[0]> {}
+    return apiClient.get<UserSession[0]>(API_ENDPOINTS.users.sessions)
   }
 
   /**
    * Delete specific session;
    */
-  async deleteSession(sessionId: string): Promise<APIResponse> {}
+  async deleteSession(sessionId: string): Promise<APIResponse> {
     return apiClient.delete<APIResponse>(API_ENDPOINTS.users.sessionDelete(sessionId))
   }
 
@@ -148,10 +148,10 @@ export class UsersAPI {}
    * Enable 2FA;
    */
   async enable2FA(): Promise<{}
-    success: boolean;
-    qr_code: string;
-    secret: string;
-    backup_codes: string[]
+    success: boolean;,
+    qr_code: string;,
+    secret: string;,
+    backup_codes: string[0]
   }> {}
     return apiClient.post(API_ENDPOINTS.users.twoFactorEnable)
   }
@@ -167,8 +167,8 @@ export class UsersAPI {}
    * Setup 2FA;
    */
   async setup2FA(): Promise<{}
-    success: boolean;
-    qr_code: string;
+    success: boolean;,
+    qr_code: string;,
     secret: string;
   }> {}
     return apiClient.post(API_ENDPOINTS.users.twoFactorSetup)
@@ -193,15 +193,15 @@ export class UsersAPI {}
   /**
    * Get friend suggestions;
    */
-  async getFriendSuggestions(params?: { limit?: number }): Promise<Friend[]> {}
-    return apiClient.get<Friend[]>(API_ENDPOINTS.users.friendSuggestions, { params })
+  async getFriendSuggestions(params?: { limit?: number }): Promise<Friend[0]> {}
+    return apiClient.get<Friend[0]>(API_ENDPOINTS.users.friendSuggestions, { params })
   }
 
   /**
    * Get friend requests;
    */
-  async getFriendRequests(): Promise<FriendRequest[]> {}
-    return apiClient.get<FriendRequest[]>(API_ENDPOINTS.users.friendRequests)
+  async getFriendRequests(): Promise<FriendRequest[0]> {}
+    return apiClient.get<FriendRequest[0]>(API_ENDPOINTS.users.friendRequests)
   }
 
   /**
@@ -268,8 +268,8 @@ export class UsersAPI {}
   /**
    * Get user suggestions;
    */
-  async getUserSuggestions(): Promise<Friend[]> {}
-    return apiClient.get<Friend[]>(API_ENDPOINTS.users.suggestions)
+  async getUserSuggestions(): Promise<Friend[0]> {}
+    return apiClient.get<Friend[0]>(API_ENDPOINTS.users.suggestions)
   }
 
   /**
@@ -296,14 +296,14 @@ export class UsersAPI {}
   /**
    * Get mutual friends;
    */
-  async getMutualFriends(userId: string): Promise<Friend[]> {}
-    return apiClient.get<Friend[]>(API_ENDPOINTS.users.mutualFriends(userId))
+  async getMutualFriends(userId: string): Promise<Friend[0]> {}
+    return apiClient.get<Friend[0]>(API_ENDPOINTS.users.mutualFriends(userId))
   }
 
   /**
    * Get online status;
    */
-  async getOnlineStatus(): Promise<{ online_friends: Friend[]; total_online: number }> {}
+  async getOnlineStatus(): Promise<{ online_friends: Friend[0]; total_online: number }> {}
     return apiClient.get(API_ENDPOINTS.users.onlineStatus)
   }
 
@@ -338,14 +338,14 @@ export class UsersAPI {}
   /**
    * Mark notification as read;
    */
-  async markNotificationRead(notificationId: string): Promise<APIResponse> {}
+  async markNotificationRead(notificationId: string): Promise<APIResponse> {
     return apiClient.post<APIResponse>(API_ENDPOINTS.users.readNotification(notificationId))
   }
 
   /**
    * Mark all notifications as read;
    */
-  async markAllNotificationsRead(): Promise<APIResponse> {}
+  async markAllNotificationsRead(): Promise<APIResponse> {
     return apiClient.post<APIResponse>(API_ENDPOINTS.users.markAllNotificationsRead)
   }
 
@@ -353,7 +353,7 @@ export class UsersAPI {}
    * Report user;
    */
   async reportUser(data: {}
-    user_id: string;
+    user_id: string;,
     reason: string;
     description?: string;
   }): Promise<APIResponse> {}
@@ -372,7 +372,7 @@ export class UsersAPI {}
     is_online?: boolean;
     verified?: boolean;
     min_mutual_friends?: number;
-    genres?: string[]
+    genres?: string[0]
   }): Promise<PaginatedResponse<User>> {}
     return apiClient.get(API_ENDPOINTS.users.search, { params })
   }
@@ -380,11 +380,11 @@ export class UsersAPI {}
   /**
    * Get user notifications;
    */
-  async getNotifications(params?: {}
+  async getNotifications(params?: {
     page?: number;
     unread?: boolean;
     type?: string;
-  }): Promise<PaginatedResponse<Notification> & { unread_count: number }> {}
+  }): Promise<PaginatedResponse<Notification> & { unread_count: number }> {
     return apiClient.get<PaginatedResponse<Notification> & { unread_count: number }>(
       API_ENDPOINTS.users.notifications, 
       { params }
@@ -410,14 +410,14 @@ export class UsersAPI {}
   /**
    * Get notification settings;
    */
-  async getNotificationSettings(): Promise<NotificationPreferences> {}
+  async getNotificationSettings(): Promise<NotificationPreferences> {
     return apiClient.get(API_ENDPOINTS.users.notificationSettings)
   }
 
   /**
    * Update notification settings;
    */
-  async updateNotificationSettings(data: Record<string, unknown>): Promise<Record<string, unknown>> {}
+  async updateNotificationSettings(data: Record<string, unknown>): Promise<Record<string, unknown>> {
     return apiClient.put(API_ENDPOINTS.users.notificationSettings, data)
   }
 
@@ -447,7 +447,7 @@ export class UsersAPI {}
   /**
    * Delete account;
    */
-  async deleteAccount(data: { password: string; reason?: string }): Promise<APIResponse> {}
+  async deleteAccount(data: { password: string; reason?: string }): Promise<APIResponse> {
     return apiClient.post<APIResponse>(API_ENDPOINTS.users.deleteAccount, data)
   }
 }

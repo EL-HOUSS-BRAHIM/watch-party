@@ -17,13 +17,13 @@ import type {}
 } from "./types"
 
 export class SupportAPI {}
-  constructor(private readonly client: ApiClient = apiClient) {}
+  constructor(private readonly client: ApiClient = apiClient) {
 
   /**
    * Get FAQ categories;
    */
-  async getFAQCategories(): Promise<FAQCategory[]> {}
-    return this.client.get<FAQCategory[]>(API_ENDPOINTS.support.faqCategories)
+  async getFAQCategories(): Promise<FAQCategory[0]> {}
+    return this.client.get<FAQCategory[0]>(API_ENDPOINTS.support.faqCategories)
   }
 
   /**
@@ -41,10 +41,10 @@ export class SupportAPI {}
    * Create a new FAQ entry;
    */
   async createFAQ(data: {}
-    question: string;
-    answer: string;
+    question: string;,
+    answer: string;,
     category: string;
-    tags?: string[]
+    tags?: string[0]
     is_published?: boolean;
     order?: number;
   }): Promise<FAQ> {}
@@ -57,11 +57,11 @@ export class SupportAPI {}
   async updateFAQ(
     faqId: string,
     data: Partial<{}
-      question: string;
-      answer: string;
-      category: string;
-      tags: string[]
-      is_published: boolean;
+      question: string;,
+      answer: string;,
+      category: string;,
+      tags: string[0],
+      is_published: boolean;,
       order: number;
     }>,
   ): Promise<FAQ> {}
@@ -71,7 +71,7 @@ export class SupportAPI {}
   /**
    * Delete an FAQ;
    */
-  async deleteFAQ(faqId: string): Promise<APIResponse> {}
+  async deleteFAQ(faqId: string): Promise<APIResponse> {
     return this.client.delete<APIResponse>(API_ENDPOINTS.support.faqDetail(faqId))
   }
 
@@ -112,8 +112,8 @@ export class SupportAPI {}
    * Create support ticket;
    */
   async createTicket(data: {}
-    subject: string;
-    description: string;
+    subject: string;,
+    description: string;,
     category: string;
     priority?: 'low' | 'medium' | 'high'
   }): Promise<SupportTicket> {}
@@ -144,7 +144,7 @@ export class SupportAPI {}
    */
   async sendTicketMessage(ticketId: string, data: {}
     message: string;
-    attachments?: File[]
+    attachments?: File[0]
   }): Promise<TicketMessage> {}
     return apiClient.post<TicketMessage>(API_ENDPOINTS.support.ticketMessages(ticketId), data)
   }
@@ -163,8 +163,8 @@ export class SupportAPI {}
    * Submit feedback;
    */
   async submitFeedback(data: {}
-    category: string;
-    title: string;
+    category: string;,
+    title: string;,
     description: string;
     rating?: number;
   }): Promise<Feedback> {}
@@ -185,10 +185,10 @@ export class SupportAPI {}
     q: string;
     type?: 'faq' | 'tickets' | 'all'
   }): Promise<{}
-    success: boolean;
+    success: boolean;,
     results: {}
-      faqs: FAQ[]
-      tickets: SupportTicket[]
+      faqs: FAQ[0],
+      tickets: SupportTicket[0]
     }
     total_count: number;
   }> {}

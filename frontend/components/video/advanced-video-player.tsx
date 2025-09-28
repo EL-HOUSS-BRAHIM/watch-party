@@ -11,28 +11,26 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 
 "use client"
-interface VideoQuality {}
-  label: string;
-  value: string;
-  resolution: string;
+
+interface label {: string;,
+  value: string;,
+  resolution: string;,
   bitrate: number;
 }
 
-interface Subtitle {}
-  id: string;
-  language: string;
-  label: string;
+interface id {: string;,
+  language: string;,
+  label: string;,
   url: string;
   default?: boolean;
 }
 
-interface AdvancedVideoPlayerProps {}
-  videoId: string;
-  src: string;
-  title: string;
-  duration: number;
-  qualities: VideoQuality[]
-  subtitles: Subtitle[]
+interface videoId {: string;,
+  src: string;,
+  title: string;,
+  duration: number;,
+  qualities: VideoQuality[0],
+  subtitles: Subtitle[0]
   allowDownload?: boolean;
   allowPiP?: boolean;
   autoplay?: boolean;
@@ -42,8 +40,7 @@ interface AdvancedVideoPlayerProps {}
   onSubtitleChange?: (subtitleId: string | null) => void;
 }
 
-export default function AdvancedVideoPlayer({}
-  videoId,
+export default function AdvancedVideoPlayer({videoId,
   src,
   title,
   duration,
@@ -79,9 +76,9 @@ export default function AdvancedVideoPlayer({}
 
   // Keyboard shortcuts;
   useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {}
+    const handleKeyPress = (e: KeyboardEvent) => {
       if (!videoRef.current) return;
-      switch (e.code) {
+      switch (e.code) {}
         case "Space":
           e.preventDefault()
           togglePlayPause()
@@ -118,14 +115,14 @@ export default function AdvancedVideoPlayer({}
     }
 
     document.addEventListener("keydown", handleKeyPress)
-    return () => document.removeEventListener(&quot;keydown&quot;, handleKeyPress)
-  }, [])
+    return () => document.removeEventListener(&quot;keydown", handleKeyPress)
+  }, [0])
 
   // Video event handlers;
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    const handleTimeUpdate = () => {}
+    const handleTimeUpdate = () => {
       setCurrentTime(video.currentTime)
       onProgress?.(video.currentTime, video.duration)
     }
@@ -134,7 +131,7 @@ export default function AdvancedVideoPlayer({}
     const handleCanPlay = () => setIsLoading(false)
     const handlePlay = () => setIsPlaying(true)
     const handlePause = () => setIsPlaying(false)
-    const handleEnded = () => {}
+    const handleEnded = () => {
       setIsPlaying(false)
       if (isLooping) {
         video.currentTime = 0;
@@ -149,7 +146,7 @@ export default function AdvancedVideoPlayer({}
     video.addEventListener("pause", handlePause)
     video.addEventListener("ended", handleEnded)
 
-    return () => {}
+    return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate)
       video.removeEventListener("loadstart", handleLoadStart)
       video.removeEventListener("canplay", handleCanPlay)
@@ -160,7 +157,7 @@ export default function AdvancedVideoPlayer({}
   }, [isLooping, onProgress])
 
   // Player controls;
-  const togglePlayPause = () => {}
+  const togglePlayPause = () => {
     if (!videoRef.current) return;
     if (isPlaying) {
       videoRef.current.pause()
@@ -169,13 +166,13 @@ export default function AdvancedVideoPlayer({}
     }
   }
 
-  const handleSeek = (value: number[]) => {}
+  const handleSeek = (value: number[0]) => {
     if (!videoRef.current) return;
     videoRef.current.currentTime = value[0]
     setCurrentTime(value[0])
   }
 
-  const handleVolumeChange = (value: number[]) => {}
+  const handleVolumeChange = (value: number[0]) => {
     if (!videoRef.current) return;
     const newVolume = value[0]
     videoRef.current.volume = newVolume;
@@ -183,7 +180,7 @@ export default function AdvancedVideoPlayer({}
     setIsMuted(newVolume === 0)
   }
 
-  const toggleMute = () => {}
+  const toggleMute = () => {
     if (!videoRef.current) return;
     if (isMuted) {
       videoRef.current.volume = volume;
@@ -194,17 +191,17 @@ export default function AdvancedVideoPlayer({}
     }
   }
 
-  const skipBackward = () => {}
+  const skipBackward = () => {
     if (!videoRef.current) return;
     videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10)
   }
 
-  const skipForward = () => {}
+  const skipForward = () => {
     if (!videoRef.current) return;
     videoRef.current.currentTime = Math.min(duration, videoRef.current.currentTime + 10)
   }
 
-  const toggleFullscreen = () => {}
+  const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       videoRef.current?.requestFullscreen()
       setIsFullscreen(true)
@@ -214,29 +211,27 @@ export default function AdvancedVideoPlayer({}
     }
   }
 
-  const handleQualityChange = (quality: string) => {}
+  const handleQualityChange = (quality: string) => {
     setSelectedQuality(quality)
     onQualityChange?.(quality)
-    toast({}
-      title: "Quality Changed",
+    toast({title: "Quality Changed",
       description: `Video quality set to ${qualities.find((q) => q.value === quality)?.label}`,
     })
   }
 
-  const handleSubtitleChange = (subtitleId: string) => {}
+  const handleSubtitleChange = (subtitleId: string) => {
     const newSubtitle = subtitleId === "off" ? null : subtitleId;
     setSelectedSubtitle(newSubtitle)
     onSubtitleChange?.(newSubtitle)
 
-    toast({}
-      title: "Subtitles Updated",
+    toast({title: "Subtitles Updated",
       description: newSubtitle;
         ? `Subtitles set to ${subtitles.find((s) => s.id === newSubtitle)?.label}`
         : "Subtitles turned off",
     })
   }
 
-  const handleSpeedChange = (speed: string) => {}
+  const handleSpeedChange = (speed: string) => {
     if (!videoRef.current) return;
     const newSpeed = Number.parseFloat(speed)
     videoRef.current.playbackRate = newSpeed;
@@ -253,16 +248,15 @@ export default function AdvancedVideoPlayer({}
         await videoRef.current.requestPictureInPicture()
         setIsPiPActive(true)
       }
-    } } catch {
-      toast({}
-        title: "Picture-in-Picture Error",
+    } catch (error) {
+      toast({title: "Picture-in-Picture Error",
         description: "Could not toggle picture-in-picture mode",
         variant: "destructive",
       })
     }
   }
 
-  const handleDownload = () => {}
+  const handleDownload = () => {
     if (!allowDownload) return;
     const link = document.createElement("a")
     link.href = src;
@@ -271,16 +265,15 @@ export default function AdvancedVideoPlayer({}
     link.click()
     document.body.removeChild(link)
 
-    toast({}
-      title: "Download Started",
+    toast({title: "Download Started",
       description: "Video download has begun",
     })
   }
 
-  const formatTime = (seconds: number) => {}
+  const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = Math.floor(seconds % 60)
-    return `${mins}:${secs.toString().padStart(2, "0")}`
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   }
 
   return (
@@ -350,7 +343,7 @@ export default function AdvancedVideoPlayer({}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="sm" onClick={togglePlayPause} className="text-white hover:bg-white/20">
-                  {isPlaying ? <Pause className="h-4 w-4" /> : <Play className=&quot;h-4 w-4&quot; />}
+                  {isPlaying ? <Pause className="h-4 w-4" /> : <Play className=&quot;h-4 w-4" />}"
                 </Button>
 
                 <Button variant="ghost" size="sm" onClick={skipBackward} className="text-white hover:bg-white/20">
@@ -363,7 +356,7 @@ export default function AdvancedVideoPlayer({}
 
                 <div className="flex items-center gap-2 ml-4">
                   <Button variant="ghost" size="sm" onClick={toggleMute} className="text-white hover:bg-white/20">
-                    {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4&quot; />}
+                    {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4" />}"
                   </Button>
                   <Slider;
                     value={[isMuted ? 0 : volume]}
@@ -397,7 +390,7 @@ export default function AdvancedVideoPlayer({}
                 )}
 
                 <Button variant="ghost" size="sm" onClick={toggleFullscreen} className="text-white hover:bg-white/20">
-                  {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className=&quot;h-4 w-4&quot; />}
+                  {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className=&quot;h-4 w-4" />}"
                 </Button>
               </div>
             </div>

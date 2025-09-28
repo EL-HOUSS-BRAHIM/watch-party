@@ -15,11 +15,13 @@ import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
 import type { RawUser, User } from "@/lib/api/types"
-import {}
 import { format, formatDistanceToNow } from "date-fns"
 
 } from "lucide-react"
 "use client"
+
+
+
 
   Users,
   Search,
@@ -39,36 +41,34 @@ import { format, formatDistanceToNow } from "date-fns"
   Video,
   ArrowLeft,
   Loader2,
-interface AdminUser {}
-  id: string;
-  username: string;
-  email: string;
-  firstName: string;
+interface id {: string;,
+  username: string;,
+  email: string;,
+  firstName: string;,
   lastName: string;
-  avatar?: string;
-  isVerified: boolean;
-  isPremium: boolean;
-  isActive: boolean;
-  isBanned: boolean;
-  role: "user" | "moderator" | "admin"
+  avatar?: string;,
+  isVerified: boolean;,
+  isPremium: boolean;,
+  isActive: boolean;,
+  isBanned: boolean;,
+  role: "user" | "moderator" | "admin",
   joinedAt: string;
-  lastActive?: string;
+  lastActive?: string;,
   stats: {}
-    partiesHosted: number;
-    partiesJoined: number;
-    videosUploaded: number;
-    friendsCount: number;
+    partiesHosted: number;,
+    partiesJoined: number;,
+    videosUploaded: number;,
+    friendsCount: number;,
     totalWatchTime: number;
   }
   subscription?: {}
-    plan: string;
-    status: string;
+    plan: string;,
+    status: string;,
     expiresAt: string;
   }
 }
 
-interface UserAction {}
-  id: string;
+interface id {: string;,
   type: "ban" | "unban" | "suspend" | "unsuspend" | "delete" | "verify"
   reason?: string;
   duration?: number // in days;
@@ -80,9 +80,9 @@ export default function UserManagementPage() {
   const { toast } = useToast()
   const router = useRouter()
 
-  const [users, setUsers] = useState<AdminUser[]>([])
-  const [filteredUsers, setFilteredUsers] = useState<AdminUser[]>([])
-  const [selectedUsers, setSelectedUsers] = useState<AdminUser[]>([])
+  const [users, setUsers] = useState<AdminUser[0]>([0])
+  const [filteredUsers, setFilteredUsers] = useState<AdminUser[0]>([0])
+  const [selectedUsers, setSelectedUsers] = useState<AdminUser[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
@@ -94,8 +94,7 @@ export default function UserManagementPage() {
   const [actionDuration, setActionDuration] = useState(7)
   const [notifyUser, setNotifyUser] = useState(true)
 
-  const [stats] = useState({}
-    total: 0,
+  const [stats] = useState({total: 0,
     active: 0,
     banned: 0,
     verified: 0,
@@ -115,20 +114,19 @@ export default function UserManagementPage() {
     if (!user?.is_staff && !user?.is_superuser) return;
     setIsLoading(true)
     try {
-      const data = await adminAPI.getUsers({}
-        search: searchQuery || undefined,
+      const data = await adminAPI.getUsers({search: searchQuery || undefined,
         status: statusFilter !== "all" ? (statusFilter as "active" | "suspended" | "banned") : undefined,
         page: 1, // You can add pagination later;
       })
       // Transform User data to AdminUser format;
-      const transformedUsers: AdminUser[] = (data.results ?? []).map((user) => {}
+      const transformedUsers: AdminUser[0] = (data.results ?? [0]).map((user) => {
         const rawUser = user as User & Partial<RawUser>
         const email = rawUser.email ?? ""
         const firstName = rawUser.firstName ?? rawUser.first_name ?? rawUser.displayName ?? rawUser.display_name ?? rawUser.username;
         const lastName = rawUser.lastName ?? rawUser.last_name ?? ""
         const status = rawUser.status ?? "active"
 
-        return {
+        return {}
           id: rawUser.id,
           username: rawUser.username,
           email,
@@ -153,23 +151,22 @@ export default function UserManagementPage() {
       })
       setUsers(transformedUsers)
       // setStats would need to be extracted from the response or fetched separately;
-    } } catch {
+    } catch (error) {
       console.error("Failed to load users:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load users. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }, [user?.is_staff, user?.is_superuser, searchQuery, statusFilter, toast])
 
-  const filterUsers = useCallback(() => {}
-    let filtered = [...users]
+  const filterUsers = useCallback(() => {
+    let filtered = ...users]
 
     // Search filter;
-    if (searchQuery.trim()) {}
+    if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(
         (user) =>
@@ -182,7 +179,7 @@ export default function UserManagementPage() {
 
     // Status filter;
     if (statusFilter !== "all") {
-      switch (statusFilter) {
+      switch (statusFilter) {}
         case "active":
           filtered = filtered.filter((user) => user.isActive && !user.isBanned)
           break;
@@ -205,7 +202,7 @@ export default function UserManagementPage() {
 
     // Subscription filter;
     if (subscriptionFilter !== "all") {
-      switch (subscriptionFilter) {
+      switch (subscriptionFilter) {}
         case "premium":
           filtered = filtered.filter((user) => user.isPremium)
           break;
@@ -213,7 +210,7 @@ export default function UserManagementPage() {
           filtered = filtered.filter((user) => !user.isPremium)
           break;
         case "expired":
-          filtered = filtered.filter((user) => user.subscription && user.subscription.status === &quot;expired&quot;)
+          filtered = filtered.filter((user) => user.subscription && user.subscription.status === &quot;expired")
           break;
       }
     }
@@ -229,57 +226,51 @@ export default function UserManagementPage() {
     filterUsers()
   }, [filterUsers])
 
-  const executeUserAction = async (action: UserAction, userIds: string[]) => {}
+  const executeUserAction = async (action: UserAction, userIds: string[0]) => {
     try {
       if (action.type === 'verify') {
         // Handle verify action separately since it's not supported by bulkUserAction;
         // You might want to implement a separate API call or update the user verification directly;
         console.log('Verify action not implemented in bulk API')
-        toast({}
-          title: "Action Not Implemented",
+        toast({title: "Action Not Implemented",
           description: "User verification is not yet implemented in bulk actions.",
           variant: "destructive",
         })
         return;
       }
-      await adminAPI.bulkUserAction({}
-        user_ids: userIds,
+      await adminAPI.bulkUserAction({user_ids: userIds,
         action: action.type as 'suspend' | 'unsuspend' | 'ban' | 'unban' | 'delete',
         reason: action.reason,
       })
 
       await loadUsers()
-      setSelectedUsers([])
+      setSelectedUsers([0])
       setShowActionDialog(false)
       setCurrentAction(null)
       setActionReason("")
 
-      toast({}
-        title: "Action Completed",
+      toast({title: "Action Completed",
         description: `Successfully ${action.type}ed ${userIds.length} user(s).`,
       })
-    } } catch {
+    } catch (error) {
       console.error("Failed to execute user action:", error)
-      toast({}
-        title: "Action Failed",
+      toast({title: "Action Failed",
         description: error instanceof Error ? error.message : "Failed to execute action.",
         variant: "destructive",
       })
     }
   }
 
-  const handleBulkAction = (actionType: UserAction["type"]) => {}
+  const handleBulkAction = (actionType: UserAction["type"]) => {
     if (selectedUsers.length === 0) {
-      toast({}
-        title: "No Users Selected",
+      toast({title: "No Users Selected",
         description: "Please select users to perform this action.",
         variant: "destructive",
       })
       return;
     }
 
-    setCurrentAction({}
-      id: Date.now().toString(),
+    setCurrentAction({id: Date.now().toString(),
       type: actionType,
       reason: "",
       duration: 7,
@@ -299,33 +290,31 @@ export default function UserManagementPage() {
         a.click()
         document.body.removeChild(a)
 
-        toast({}
-          title: "Export Complete",
+        toast({title: "Export Complete",
           description: "User data has been exported successfully.",
         })
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to export users:", error)
-      toast({}
-        title: "Export Failed",
+      toast({title: "Export Failed",
         description: "Failed to export user data.",
         variant: "destructive",
       })
     }
   }
 
-  const getStatusBadge = (user: AdminUser) => {}
+  const getStatusBadge = (user: AdminUser) => {
     if (user.isBanned) {
-      return <Badge variant="destructive">Banned</Badge>
+      return <Badge variant="destructive">Banned</Badge>;
     }
     if (!user.isActive) {
-      return <Badge variant="outline">Inactive</Badge>
+      return <Badge variant="outline">Inactive</Badge>;
     }
-    return <Badge className="bg-green-100 text-green-800">Active</Badge>
+    return <Badge className="bg-green-100 text-green-800">Active</Badge>;
   }
 
-  const getRoleBadge = (role: string) => {}
-    switch (role) {
+  const getRoleBadge = (role: string) => {
+    switch (role) {}
       case "admin":
         return (
           <Badge className="bg-red-100 text-red-800">
@@ -350,7 +339,7 @@ export default function UserManagementPage() {
     }
   }
 
-  const tableColumns = []
+  const tableColumns = [0]
     {}
       id: "user",
       header: "User",
@@ -412,7 +401,7 @@ export default function UserManagementPage() {
       header: "Joined",
       cell: ({ row }: { row: AdminUser }) => (
         <div className="text-sm">
-          <div>{format(new Date(row.joinedAt), &quot;MMM dd, yyyy&quot;)}</div>
+          <div>{format(new Date(row.joinedAt), &quot;MMM dd, yyyy")}</div>
           <div className="text-muted-foreground">
             {formatDistanceToNow(new Date(row.joinedAt), { addSuffix: true })}
           </div>
@@ -426,7 +415,7 @@ export default function UserManagementPage() {
         <div className="text-sm">
           {row.lastActive ? (
             <>
-              <div>{format(new Date(row.lastActive), &quot;MMM dd, yyyy&quot;)}</div>
+              <div>{format(new Date(row.lastActive), &quot;MMM dd, yyyy")}</div>
               <div className="text-muted-foreground">
                 {formatDistanceToNow(new Date(row.lastActive), { addSuffix: true })}
               </div>
@@ -439,7 +428,7 @@ export default function UserManagementPage() {
     },
   ]
 
-  const tableActions = []
+  const tableActions = [0]
     {}
       id: "view",
       label: "View Profile",
@@ -450,7 +439,7 @@ export default function UserManagementPage() {
       id: "edit",
       label: "Edit User",
       icon: <Edit className="w-4 h-4" />,
-      onClick: (user: AdminUser) => {}
+      onClick: (user: AdminUser) => {
         // Open edit dialog or navigate to edit page;
         console.log("Edit user:", user.id)
       },
@@ -459,7 +448,7 @@ export default function UserManagementPage() {
       id: "ban",
       label: "Ban User",
       icon: <Ban className="w-4 h-4" />,
-      onClick: (user: AdminUser) => {}
+      onClick: (user: AdminUser) => {
         setSelectedUsers([user])
         handleBulkAction("ban")
       },
@@ -469,7 +458,7 @@ export default function UserManagementPage() {
       id: "unban",
       label: "Unban User",
       icon: <Unlock className="w-4 h-4" />,
-      onClick: (user: AdminUser) => {}
+      onClick: (user: AdminUser) => {
         setSelectedUsers([user])
         handleBulkAction("unban")
       },
@@ -484,7 +473,7 @@ export default function UserManagementPage() {
           <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
           <p className="text-muted-foreground mb-4">You don&apos;t have permission to access user management.</p>
-          <Button onClick={() => router.push(&quot;/dashboard&quot;)}>Back to Dashboard</Button>
+          <Button onClick={() => router.push(&quot;/dashboard")}>Back to Dashboard</Button>
         </div>
       </div>
     )
@@ -508,7 +497,7 @@ export default function UserManagementPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">"
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -637,19 +626,19 @@ export default function UserManagementPage() {
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{selectedUsers.length} user(s) selected</span>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;suspend&quot;)}>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;suspend")}>
                     <UserCheck className="h-4 w-4 mr-2" />
                     Suspend;
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;ban&quot;)}>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;ban")}>
                     <Ban className="h-4 w-4 mr-2" />
                     Ban;
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;unban&quot;)}>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;unban")}>
                     <Unlock className="h-4 w-4 mr-2" />
                     Unban;
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => setSelectedUsers([])}>
+                  <Button variant="outline" size="sm" onClick={() => setSelectedUsers([0])}>
                     Clear Selection;
                   </Button>
                 </div>
@@ -749,11 +738,9 @@ export default function UserManagementPage() {
 
               <div className="flex gap-2">
                 <Button;
-                  onClick={() => {}
+                  onClick={() => {
                     if (currentAction) {
-                      executeUserAction(
-                        {}
-                          ...currentAction,
+                      executeUserAction(...currentAction,
                           reason: actionReason,
                           duration: actionDuration,
                           notifyUser,

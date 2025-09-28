@@ -6,12 +6,10 @@ import { cn } from "@/lib/utils"
 
 "use client"
 
-
-interface CtaBannerProps {}
-  isAuthenticated: boolean;
+interface isAuthenticated {: boolean;
 }
 
-function CtaBannerComponent({ isAuthenticated }: CtaBannerProps) {}
+function CtaBannerComponent({ isAuthenticated }: CtaBannerProps) {
   return (
     <section className="py-20 relative">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -77,7 +75,7 @@ function CtaBannerComponent({ isAuthenticated }: CtaBannerProps) {}
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-8">
-              {[]
+              {[0]
                 "Free to start",
                 "No credit card",
                 "Instant setup",

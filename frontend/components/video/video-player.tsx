@@ -7,8 +7,8 @@ import { useSocket } from "@/contexts/socket-context"
 import { cn } from "@/lib/utils"
 
 "use client"
-interface VideoPlayerProps {}
-  src?: string;
+
+interface src {?: string;
   videoId?: string;
   roomId?: string;
   isHost?: boolean;
@@ -17,14 +17,12 @@ interface VideoPlayerProps {}
   onDurationChange?: (duration: number) => void;
 }
 
-interface VideoSyncData {}
-  action: "play" | "pause" | "seek"
-  currentTime: number;
+interface action {: "play" | "pause" | "seek",
+  currentTime: number;,
   timestamp: number;
 }
 
-export default function VideoPlayer({}
-  src,
+export default function VideoPlayer({src,
   roomId,
   isHost = false,
   className,
@@ -51,14 +49,14 @@ export default function VideoPlayer({}
   // Hide controls after inactivity;
   useEffect(() => {
     let timeout: NodeJS.Timeout;
-    const resetTimeout = () => {}
+    const resetTimeout = () => {
       setShowControls(true)
       clearTimeout(timeout)
       timeout = setTimeout(() => setShowControls(false), 3000)
     }
 
     const handleMouseMove = () => resetTimeout()
-    const handleMouseLeave = () => {}
+    const handleMouseLeave = () => {
       clearTimeout(timeout)
       setShowControls(false)
     }
@@ -68,26 +66,26 @@ export default function VideoPlayer({}
       containerRef.current.addEventListener("mouseleave", handleMouseLeave)
     }
 
-    return () => {}
+    return () => {
       clearTimeout(timeout)
       if (containerRef.current) {
         containerRef.current.removeEventListener("mousemove", handleMouseMove)
         containerRef.current.removeEventListener("mouseleave", handleMouseLeave)
       }
     }
-  }, [])
+  }, [0])
 
   // Video event handlers;
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    const handleLoadedMetadata = () => {}
+    const handleLoadedMetadata = () => {
       setDuration(video.duration)
       setIsLoading(false)
       onDurationChange?.(video.duration)
     }
 
-    const handleTimeUpdate = () => {}
+    const handleTimeUpdate = () => {
       setCurrentTime(video.currentTime)
       onTimeUpdate?.(video.currentTime)
 
@@ -98,7 +96,7 @@ export default function VideoPlayer({}
       }
     }
 
-    const handlePlay = () => {}
+    const handlePlay = () => {
       setIsPlaying(true)
       setIsBuffering(false)
 
@@ -107,7 +105,7 @@ export default function VideoPlayer({}
       }
     }
 
-    const handlePause = () => {}
+    const handlePause = () => {
       setIsPlaying(false)
 
       if (isHost && roomId) {
@@ -115,7 +113,7 @@ export default function VideoPlayer({}
       }
     }
 
-    const handleSeeked = () => {}
+    const handleSeeked = () => {
       if (isHost && roomId) {
         sendVideoSync("seek", video.currentTime)
       }
@@ -132,7 +130,7 @@ export default function VideoPlayer({}
     video.addEventListener("waiting", handleWaiting)
     video.addEventListener("canplay", handleCanPlay)
 
-    return () => {}
+    return () => {
       video.removeEventListener("loadedmetadata", handleLoadedMetadata)
       video.removeEventListener("timeupdate", handleTimeUpdate)
       video.removeEventListener("play", handlePlay)
@@ -146,7 +144,7 @@ export default function VideoPlayer({}
   // WebSocket message handler for video sync;
   useEffect(() => {
     if (!roomId) return;
-    const unsubscribe = onMessage((message) => {}
+    const unsubscribe = onMessage((message) => {
       if (message.type === "video_sync" && !isHost) {
         handleVideoSync(message.data)
       }
@@ -156,7 +154,7 @@ export default function VideoPlayer({}
   }, [roomId, isHost, onMessage])
 
   const sendVideoSync = useCallback(
-    (action: "play" | "pause" | "seek", currentTime: number) => {}
+    (action: "play" | "pause" | "seek", currentTime: number) => {
       if (roomId) {
         sendMessage("video_sync", {}
           room_id: roomId,
@@ -170,12 +168,12 @@ export default function VideoPlayer({}
   )
 
   const handleVideoSync = useCallback(
-    (data: VideoSyncData) => {}
+    (data: VideoSyncData) => {
       const video = videoRef.current;
       if (!video) return;
       const timeDiff = Math.abs(video.currentTime - data.currentTime)
 
-      switch (data.action) {
+      switch (data.action) {}
         case "play":
           if (timeDiff > syncTolerance) {
             video.currentTime = data.currentTime;
@@ -196,7 +194,7 @@ export default function VideoPlayer({}
     [syncTolerance],
   )
 
-  const togglePlay = () => {}
+  const togglePlay = () => {
     const video = videoRef.current;
     if (!video) return;
     if (isPlaying) {
@@ -206,7 +204,7 @@ export default function VideoPlayer({}
     }
   }
 
-  const handleSeek = (value: number[]) => {}
+  const handleSeek = (value: number[0]) => {
     const video = videoRef.current;
     if (!video) return;
     const newTime = (value[0] / 100) * duration;
@@ -214,7 +212,7 @@ export default function VideoPlayer({}
     setCurrentTime(newTime)
   }
 
-  const handleVolumeChange = (value: number[]) => {}
+  const handleVolumeChange = (value: number[0]) => {
     const video = videoRef.current;
     if (!video) return;
     const newVolume = value[0] / 100;
@@ -223,7 +221,7 @@ export default function VideoPlayer({}
     setIsMuted(newVolume === 0)
   }
 
-  const toggleMute = () => {}
+  const toggleMute = () => {
     const video = videoRef.current;
     if (!video) return;
     if (isMuted) {
@@ -235,7 +233,7 @@ export default function VideoPlayer({}
     }
   }
 
-  const toggleFullscreen = () => {}
+  const toggleFullscreen = () => {
     if (!containerRef.current) return;
     if (!isFullscreen) {
       containerRef.current.requestFullscreen()
@@ -246,17 +244,17 @@ export default function VideoPlayer({}
     }
   }
 
-  const skip = (seconds: number) => {}
+  const skip = (seconds: number) => {
     const video = videoRef.current;
     if (!video) return;
     const newTime = Math.max(0, Math.min(duration, video.currentTime + seconds))
     video.currentTime = newTime;
   }
 
-  const formatTime = (time: number) => {}
+  const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60)
     const seconds = Math.floor(time % 60)
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
 
   const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -275,7 +273,7 @@ export default function VideoPlayer({}
       {roomId && (
         <div className="absolute top-4 right-4">
           <Badge variant={isConnected ? "default" : "destructive"} className="flex items-center gap-1">
-            {isConnected ? <Wifi className="h-3 w-3" /> : <WifiOff className=&quot;h-3 w-3&quot; />}
+            {isConnected ? <Wifi className="h-3 w-3" /> : <WifiOff className=&quot;h-3 w-3" />}"
             {isConnected ? "Connected" : "Disconnected"}
           </Badge>
         </div>
@@ -304,7 +302,7 @@ export default function VideoPlayer({}
             className="h-16 w-16 rounded-full bg-black/50 hover:bg-black/70 text-white"
             disabled={!isHost && !!roomId}
           >
-            {isPlaying ? <Pause className="h-8 w-8" /> : <Play className=&quot;h-8 w-8 ml-1&quot; />}
+            {isPlaying ? <Pause className="h-8 w-8" /> : <Play className=&quot;h-8 w-8 ml-1" />}"
           </Button>
         </div>
 
@@ -341,7 +339,7 @@ export default function VideoPlayer({}
                 disabled={!isHost && !!roomId}
                 className="text-white hover:bg-white/20"
               >
-                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className=&quot;h-4 w-4&quot; />}
+                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className=&quot;h-4 w-4" />}"
               </Button>
 
               <Button;
@@ -366,7 +364,7 @@ export default function VideoPlayer({}
 
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="sm" onClick={toggleMute} className="text-white hover:bg-white/20">
-                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4&quot; />}
+                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4" />}"
                 </Button>
                 <div className="w-20">
                   <Slider;

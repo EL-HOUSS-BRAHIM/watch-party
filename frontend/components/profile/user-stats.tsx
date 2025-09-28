@@ -8,31 +8,30 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useApi } from "@/hooks/use-api"
 
 "use client"
-interface UserStats {}
-  total_watch_time: number;
-  videos_watched: number;
-  parties_hosted: number;
-  parties_joined: number;
-  friends_count: number;
-  achievements_earned: number;
-  favorite_genres: string[]
+
+interface total_watch_time {: number;,
+  videos_watched: number;,
+  parties_hosted: number;,
+  parties_joined: number;,
+  friends_count: number;,
+  achievements_earned: number;,
+  favorite_genres: string[0],
   recent_activity: Array<{}
-    type: string;
-    description: string;
+    type: string;,
+    description: string;,
     timestamp: string;
   }>
   weekly_stats: Array<{}
-    week: string;
-    watch_time: number;
+    week: string;,
+    watch_time: number;,
     parties: number;
   }>
 }
 
-interface UserStatsProps {}
-  userId: string;
+interface userId {: string;
 }
 
-export function UserStats({ userId }: UserStatsProps) {}
+export function UserStats({ userId }: UserStatsProps) {
   const [stats, setStats] = useState<UserStats | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [timeframe, setTimeframe] = useState("month")
@@ -47,9 +46,9 @@ export function UserStats({ userId }: UserStatsProps) {}
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/stats/?timeframe=${timeframe}`)
       setStats(response.data as UserStats)
-    } } catch {
+    } catch (error) {
       console.error("Failed to load user stats:", err)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -79,13 +78,13 @@ export function UserStats({ userId }: UserStatsProps) {}
     )
   }
 
-  const formatWatchTime = (seconds: number) => {}
+  const formatWatchTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     if (hours > 0) {
-      return `${hours}h ${minutes}m`
+      return `${hours}h ${minutes}m`;
     }
-    return `${minutes}m`
+    return `${minutes}m`;
   }
 
   return (
@@ -96,21 +95,21 @@ export function UserStats({ userId }: UserStatsProps) {}
         <div className="flex justify-center space-x-2">
           <Button;
             variant={timeframe === "week" ? "default" : "outline"}
-            onClick={() => setTimeframe(&quot;week&quot;)}
+            onClick={() => setTimeframe(&quot;week")}
             size="sm"
           >
             This Week;
           </Button>
           <Button;
             variant={timeframe === "month" ? "default" : "outline"}
-            onClick={() => setTimeframe(&quot;month&quot;)}
+            onClick={() => setTimeframe(&quot;month")}
             size="sm"
           >
             This Month;
           </Button>
           <Button;
             variant={timeframe === "year" ? "default" : "outline"}
-            onClick={() => setTimeframe(&quot;year&quot;)}
+            onClick={() => setTimeframe(&quot;year")}
             size="sm"
           >
             This Year;

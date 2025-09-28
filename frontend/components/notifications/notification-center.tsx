@@ -1,11 +1,10 @@
-import { useState, useEffect , useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import {}
 import { useAuth } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
 import { formatDistanceToNow } from "date-fns"
@@ -15,18 +14,20 @@ import type { Notification, NotificationPreferences } from "@/lib/api/types"
 } from "lucide-react"
 "use client"
 
+
+
+
   Bell,
   BellOff,
   Check,
   CheckCheck,
   X,
-interface NotificationCenterProps {}
-  className?: string;
-}
+interface NotificationCenterProps {
+  className?: string,
 
-export function NotificationCenter({ className }: NotificationCenterProps) {}
-  const [notifications, setNotifications] = useState<Notification[]>([])
-  const [preferences, setPreferences] = useState<NotificationPreferences>({}
+export function NotificationCenter({ className }: NotificationCenterProps) {
+  const [notifications, setNotifications] = useState<Notification[0]>([0])
+  const [preferences, setPreferences] = useState<NotificationPreferences>({
     email_notifications: true,
     push_notifications: true,
     friend_requests: true,
@@ -38,83 +39,71 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
   const [isLoading, setIsLoading] = useState(true)
   const { user } = useAuth()
 
-  // Load notifications;
+  // Load notifications,
   useEffect(() => {
     const loadNotifications = async () => {
-      if (!user) return;
+      if (!user) return,
       try {
         setIsLoading(true)
         const data = await notificationsAPI.getNotifications()
-        setNotifications(data.results || [])
-      } } catch {
+        setNotifications(data.results || [0])
+      } catch (error) {
         console.error("Failed to load notifications:", error)
-      } finally {}
+      } finally {
         setIsLoading(false)
-      }
-    }
 
     loadNotifications()
   }, [user])
 
-  // Load preferences;
+  // Load preferences,
   useEffect(() => {
     const loadPreferences = async () => {
-      if (!user) return;
+      if (!user) return,
       try {
         const data = await notificationsAPI.getPreferences()
         setPreferences(data)
-      } } catch {
+      } catch (error) {
         console.error("Failed to load preferences:", error)
-      }
-    }
 
     loadPreferences()
   }, [user])
 
-  // Mark notification as read;
-  const markAsRead = async (notificationId: string) => {}
+  // Mark notification as read,
+  const markAsRead = async (notificationId: string) => {
     try {
       await notificationsAPI.markAsRead(notificationId)
       setNotifications(prev => prev.map(n => 
-        n.id === notificationId ? { ...n, is_read: true } : n;
+        n.id === notificationId ? ...n, is_read: true } : n;
       ))
-    } } catch {
+    } catch (error) {
       console.error("Failed to mark notification as read:", error)
-    }
-  }
 
-  // Mark all notifications as read;
+  // Mark all notifications as read,
   const markAllAsRead = async () => {
     try {
       await notificationsAPI.markAllAsRead()
-      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
-    } } catch {
+      setNotifications(prev => prev.map(n => (...n, is_read: true })))
+    } catch (error) {
       console.error("Failed to mark all notifications as read:", error)
-    }
-  }
 
-  // Delete notification;
-  const deleteNotification = async (notificationId: string) => {}
+  // Delete notification,
+  const deleteNotification = async (notificationId: string) => {
     try {
       await notificationsAPI.deleteNotification(notificationId)
       setNotifications(prev => prev.filter(n => n.id !== notificationId))
-    } } catch {
+    } catch (error) {
       console.error("Failed to delete notification:", error)
-    }
-  }
 
-  // Update preferences;
-  const updatePreferences = async (updatedPreferences: Partial<NotificationPreferences>) => {}
+  // Update preferences,
+  const updatePreferences = async (updatedPreferences: Partial<NotificationPreferences>) => {
     try {
-      const newPreferences = { ...preferences, ...updatedPreferences }
+      const newPreferences = ...preferences, ...updatedPreferences }
       await notificationsAPI.updatePreferences(newPreferences)
       setPreferences(newPreferences)
-    } } catch {
+    } catch (error) {
       console.error("Failed to update preferences:", error)
-    }
-  }
 
-  const unreadCount = notifications.filter(n => !n.is_read).length;
+  const unreadCount = notifications.filter(n => !n.is_read).length,
   return (
     <div className={cn("w-full max-w-2xl mx-auto", className)}>
       <Card>
@@ -130,7 +119,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
               )}
             </div>
             {unreadCount > 0 && (
-              <Button;
+              <Button,
                 variant="outline"
                 size="sm"
                 onClick={markAllAsRead}
@@ -157,7 +146,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
               <ScrollArea className="h-[400px]">
                 {notifications.map((notification) => (
                   <Card key={notification.id} className={cn(
-                    "mb-3 transition-all hover:shadow-md", 
+                    "mb-3 transition-all hover:shadow-md",  />
                     !notification.is_read && "border-blue-200 bg-blue-50" />
                   )}>
                     <CardContent className="p-4">
@@ -175,7 +164,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
                             </h4>
                             <div className="flex items-center gap-1">
                               {!notification.is_read && (
-                                <Button;
+                                <Button,
                                   variant="ghost"
                                   size="sm"
                                   onClick={() => markAsRead(notification.id)}
@@ -184,7 +173,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
                                   <Check className="h-3 w-3" />
                                 </Button>
                               )}
-                              <Button;
+                              <Button,
                                 variant="ghost"
                                 size="sm"
                                 onClick={() => deleteNotification(notification.id)}
@@ -222,7 +211,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <Label htmlFor="email-notifications">Email Notifications</Label>
-            <Switch;
+            <Switch,
               id="email-notifications"
               checked={preferences.email_notifications}
               onCheckedChange={(checked) => updatePreferences({ email_notifications: checked })}
@@ -230,7 +219,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
           </div>
           <div className="flex items-center justify-between">
             <Label htmlFor="push-notifications">Push Notifications</Label>
-            <Switch;
+            <Switch,
               id="push-notifications"
               checked={preferences.push_notifications}
               onCheckedChange={(checked) => updatePreferences({ push_notifications: checked })}
@@ -238,7 +227,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
           </div>
           <div className="flex items-center justify-between">
             <Label htmlFor="friend-requests">Friend Requests</Label>
-            <Switch;
+            <Switch,
               id="friend-requests"
               checked={preferences.friend_requests}
               onCheckedChange={(checked) => updatePreferences({ friend_requests: checked })}
@@ -246,7 +235,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
           </div>
           <div className="flex items-center justify-between">
             <Label htmlFor="party-invites">Party Invitations</Label>
-            <Switch;
+            <Switch,
               id="party-invites"
               checked={preferences.party_invites}
               onCheckedChange={(checked) => updatePreferences({ party_invites: checked })}
@@ -254,7 +243,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
           </div>
           <div className="flex items-center justify-between">
             <Label htmlFor="system-updates">System Updates</Label>
-            <Switch;
+            <Switch,
               id="system-updates"
               checked={preferences.system_updates}
               onCheckedChange={(checked) => updatePreferences({ system_updates: checked })}
@@ -262,7 +251,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
           </div>
           <div className="flex items-center justify-between">
             <Label htmlFor="video-uploads">Video Upload Notifications</Label>
-            <Switch;
+            <Switch,
               id="video-uploads"
               checked={preferences.video_uploads}
               onCheckedChange={(checked) => updatePreferences({ video_uploads: checked })}
@@ -270,7 +259,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
           </div>
           <div className="flex items-center justify-between">
             <Label htmlFor="marketing">Marketing Communications</Label>
-            <Switch;
+            <Switch,
               id="marketing"
               checked={preferences.marketing}
               onCheckedChange={(checked) => updatePreferences({ marketing: checked })}
@@ -279,7 +268,5 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
         </CardContent>
       </Card>
     </div>
-  )
-}
 
 export default NotificationCenter;

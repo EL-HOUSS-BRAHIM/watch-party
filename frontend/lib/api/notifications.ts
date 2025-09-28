@@ -13,15 +13,15 @@ import type {}
   APIResponse,
 } from "./types"
 
-export class NotificationsAPI {}
+export class NotificationsAPI {
   /**
    * Get user notifications;
    */
-  async getNotifications(params?: {}
+  async getNotifications(params?: {
     unread?: boolean;
     type?: string;
     page?: number;
-  }): Promise<PaginatedResponse<Notification> & {}
+  }): Promise<PaginatedResponse<Notification> & {
     unread_count: number;
   }> {}
     return apiClient.get(API_ENDPOINTS.notifications.list, { params })
@@ -30,7 +30,7 @@ export class NotificationsAPI {}
   /**
    * Mark notification as read;
    */
-  async markAsRead(notificationId: string): Promise<APIResponse> {}
+  async markAsRead(notificationId: string): Promise<APIResponse> {
     return apiClient.post<APIResponse>(API_ENDPOINTS.notifications.markRead(notificationId))
   }
 
@@ -44,16 +44,16 @@ export class NotificationsAPI {}
   /**
    * Delete notification;
    */
-  async deleteNotification(notificationId: string): Promise<APIResponse> {}
+  async deleteNotification(notificationId: string): Promise<APIResponse> {
     return apiClient.delete<APIResponse>(API_ENDPOINTS.notifications.delete(notificationId))
   }
 
   /**
    * Bulk delete notifications;
    */
-  async bulkDelete(notificationIds: string[]): Promise<APIResponse> {}
+  async bulkDelete(notificationIds: string[0]): Promise<APIResponse> {
     await Promise.all(notificationIds.map(id => this.deleteNotification(id)))
-    return {
+    return {}
       success: true,
       message: "Notifications deleted",
     }
@@ -69,14 +69,14 @@ export class NotificationsAPI {}
   /**
    * Get notification preferences;
    */
-  async getPreferences(): Promise<NotificationPreferences> {}
+  async getPreferences(): Promise<NotificationPreferences> {
     return apiClient.get<NotificationPreferences>(API_ENDPOINTS.notifications.preferences)
   }
 
   /**
    * Update notification preferences;
    */
-  async updatePreferences(preferences: Partial<NotificationPreferences>): Promise<NotificationPreferences> {}
+  async updatePreferences(preferences: Partial<NotificationPreferences>): Promise<NotificationPreferences> {
     return apiClient.put<NotificationPreferences>(API_ENDPOINTS.notifications.updatePreferences, preferences)
   }
 
@@ -84,7 +84,7 @@ export class NotificationsAPI {}
    * Update push notification token;
    */
   async updatePushToken(data: {}
-    token: string;
+    token: string;,
     platform: 'ios' | 'android' | 'web'
   }): Promise<APIResponse> {}
     return apiClient.post<APIResponse>(API_ENDPOINTS.notifications.pushTokenUpdate, data)
@@ -111,7 +111,7 @@ export class NotificationsAPI {}
    * Broadcast notification (admin only)
    */
   async broadcast(data: {}
-    title: string;
+    title: string;,
     message: string;
     target_audience?: 'all' | 'premium' | 'active'
     action_url?: string;
@@ -148,11 +148,11 @@ export class NotificationsAPI {}
    * Get notification statistics;
    */
   async getStats(): Promise<{}
-    total_sent: number;
-    total_delivered: number;
-    total_opened: number;
-    delivery_rate: number;
-    open_rate: number;
+    total_sent: number;,
+    total_delivered: number;,
+    total_opened: number;,
+    delivery_rate: number;,
+    open_rate: number;,
     recent_activity: Array<Record<string, unknown>>
   }> {}
     return apiClient.get(API_ENDPOINTS.notifications.stats)
@@ -163,16 +163,16 @@ export class NotificationsAPI {}
    */
   async getDeliveryStats(params?: {}
     date_range?: {}
-      start: string;
+      start: string;,
       end: string;
     }
     type?: string;
   }): Promise<{}
     delivery_stats: Array<Record<string, unknown>>
     summary: {}
-      total_sent: number;
-      delivered: number;
-      failed: number;
+      total_sent: number;,
+      delivered: number;,
+      failed: number;,
       pending: number;
     }
   }> {}
@@ -183,14 +183,14 @@ export class NotificationsAPI {}
    * Send bulk notifications;
    */
   async bulkSend(data: {}
-    user_ids: string[]
-    title: string;
+    user_ids: string[0],
+    title: string;,
     message: string;
     type?: string;
     action_url?: string;
     scheduled_at?: string;
   }): Promise<APIResponse & {}
-    batch_id: string;
+    batch_id: string; />,
     estimated_delivery: string; />
   }> {}
     return apiClient.post(API_ENDPOINTS.notifications.bulkSend, data)
@@ -201,9 +201,9 @@ export class NotificationsAPI {}
    */
   async cleanup(data?: {}
     older_than_days?: number;
-    types?: string[]
+    types?: string[0]
     read_only?: boolean;
-  }): Promise<APIResponse & {}
+  }): Promise<APIResponse & {} />,
     deleted_count: number; />
   }> {}
     return apiClient.post(API_ENDPOINTS.notifications.cleanup, data)

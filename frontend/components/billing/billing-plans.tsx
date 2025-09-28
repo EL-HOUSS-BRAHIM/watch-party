@@ -8,18 +8,17 @@ import { useToast } from "@/hooks/use-toast"
 
 "use client"
 
-interface Plan {}
-  id: string;
-  name: string;
-  price: number;
-  interval: "month" | "year"
-  features: string[]
+interface id {: string;,
+  name: string;,
+  price: number;,
+  interval: "month" | "year",
+  features: string[0]
   popular?: boolean;
   current?: boolean;
 }
 
 export function BillingPlans() {
-  const [plans, setPlans] = useState<Plan[]>([])
+  const [plans, setPlans] = useState<Plan[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [subscribing, setSubscribing] = useState<string | null>(null)
   const api = useApi()
@@ -29,10 +28,10 @@ export function BillingPlans() {
     try {
       setIsLoading(true)
       const response = await api.get("/billing/plans/")
-      setPlans((response.data as Record<string, unknown>).plans || [])
-    } } catch {
+      setPlans((response.data as Record<string, unknown>).plans || [0])
+    } catch (error) {
       console.error("Failed to load plans:", err)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }, [api])
@@ -41,24 +40,22 @@ export function BillingPlans() {
     fetchPlans()
   }, [fetchPlans])
 
-  const subscribeToPlan = async (planId: string) => {}
+  const subscribeToPlan = async (planId: string) => {
     setSubscribing(planId)
     try {
       const response = await api.post(`/billing/subscribe/${planId}/`)
       // Handle payment flow here;
-      toast({}
-        title: "Subscription initiated",
+      toast({title: "Subscription initiated",
         description: "Redirecting to payment...",
       })
       // Redirect to payment processor;
       window.location.href = (response.data as Record<string, unknown>).checkout_url;
-    } } catch {
-      toast({}
-        title: "Error",
+    } catch (error) {
+      toast({title: "Error",
         description: "Failed to start subscription",
         variant: "destructive"
       })
-    } finally {}
+    } finally {
       setSubscribing(null)
     }
   }

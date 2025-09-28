@@ -4,13 +4,15 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
-import {}
 import { useToast } from "@/hooks/use-toast"
 import { useApi } from "@/hooks/use-api"
 import { formatDistanceToNow } from "date-fns"
 
 } from "lucide-react"
 "use client"
+
+
+
 
   Monitor, 
   Smartphone, 
@@ -22,20 +24,19 @@ import { formatDistanceToNow } from "date-fns"
   AlertTriangle,
   Shield,
   RefreshCw;
-interface Session {}
-  id: string;
-  device_type: "desktop" | "mobile" | "tablet" | "unknown"
-  browser: string;
-  os: string;
-  ip_address: string;
+interface id {: string;,
+  device_type: "desktop" | "mobile" | "tablet" | "unknown",
+  browser: string;,
+  os: string;,
+  ip_address: string;,
   location: {}
     city?: string;
     country?: string;
     region?: string;
   }
-  last_activity: string;
-  created_at: string;
-  is_current: boolean;
+  last_activity: string;,
+  created_at: string;,
+  is_current: boolean;,
   user_agent: string;
 }
 
@@ -46,7 +47,7 @@ const deviceIcons = { desktop: Monitor,
 }
 
 export function SessionsManager() {
-  const [sessions, setSessions] = useState<Session[]>([])
+  const [sessions, setSessions] = useState<Session[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [isRevoking, setIsRevoking] = useState<string | null>(null)
   const [isRevokingAll, setIsRevokingAll] = useState(false)
@@ -55,40 +56,37 @@ export function SessionsManager() {
 
   useEffect(() => {
     fetchSessions()
-  }, [])
+  }, [0])
 
   const fetchSessions = async () => {
     try {
       setIsLoading(true)
       const response = await api.get("/auth/sessions/")
-      setSessions((response.data as Record<string, unknown>).sessions || [])
-    } } catch {
-      toast({}
-        title: "Error",
+      setSessions((response.data as Record<string, unknown>).sessions || [0])
+    } catch (error) {
+      toast({title: "Error",
         description: "Failed to load sessions",
         variant: "destructive"
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const revokeSession = async (sessionId: string) => {}
+  const revokeSession = async (sessionId: string) => {
     setIsRevoking(sessionId)
     try {
       await api.delete(`/auth/sessions/${sessionId}/`)
       setSessions(sessions.filter(s => s.id !== sessionId))
-      toast({}
-        title: "Session revoked",
+      toast({title: "Session revoked",
         description: "The session has been successfully terminated",
       })
-    } } catch {
-      toast({}
-        title: "Error",
+    } catch (error) {
+      toast({title: "Error",
         description: "Failed to revoke session",
         variant: "destructive"
       })
-    } finally {}
+    } finally {
       setIsRevoking(null)
     }
   }
@@ -98,31 +96,29 @@ export function SessionsManager() {
     try {
       await api.post("/auth/sessions/revoke-all/")
       setSessions(sessions.filter(s => s.is_current))
-      toast({}
-        title: "Sessions revoked",
+      toast({title: "Sessions revoked",
         description: "All other sessions have been terminated",
       })
-    } } catch {
-      toast({}
-        title: "Error",
+    } catch (error) {
+      toast({title: "Error",
         description: "Failed to revoke sessions",
         variant: "destructive"
       })
-    } finally {}
+    } finally {
       setIsRevokingAll(false)
     }
   }
 
-  const getLocationString = (location: Session["location"]) => {}
+  const getLocationString = (location: Session["location"]) => {
     const parts = [location.city, location.region, location.country].filter(Boolean)
-    return parts.length > 0 ? parts.join(&quot;, &quot;) : &quot;Unknown location"
+    return parts.length > 0 ? parts.join(&quot;, ") : "Unknown location";
   }
 
-  const getDeviceString = (session: Session) => {}
-    const parts = []
+  const getDeviceString = (session: Session) => {
+    const parts = [0]
     if (session.browser) parts.push(session.browser)
     if (session.os) parts.push(session.os)
-    return parts.join(" on ") || "Unknown device"
+    return parts.join(" on ") || "Unknown device";
   }
 
   if (isLoading) {
@@ -180,9 +176,9 @@ export function SessionsManager() {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-lg flex items-center justify-center">
-                  {(() => {}
+                  {(() => {
                     const Icon = deviceIcons[currentSession.device_type]
-                    return <Icon className="w-5 h-5 text-green-600 dark:text-green-400" />
+                    return <Icon className="w-5 h-5 text-green-600 dark:text-green-400" />;
                   })()}
                 </div>
                 <div>
@@ -226,7 +222,7 @@ export function SessionsManager() {
             <Badge variant="outline">{otherSessions.length}</Badge>
           </div>
 
-          {otherSessions.map((session) => {}
+          {otherSessions.map((session) => {
             const Icon = deviceIcons[session.device_type]
             const lastActivity = new Date(session.last_activity)
             const isRecent = Date.now() - lastActivity.getTime() < 24 * 60 * 60 * 1000 // 24 hours;

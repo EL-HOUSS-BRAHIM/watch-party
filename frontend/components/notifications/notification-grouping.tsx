@@ -7,13 +7,12 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
 import { Checkbox } from "@/components/ui/checkbox"
-import {}
-import {}
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { formatDistanceToNow, isToday, isYesterday, format } from "date-fns"
 import { notificationsAPI } from "@/lib/api"
 
 "use client"
+
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -26,20 +25,20 @@ import { notificationsAPI } from "@/lib/api"
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
-interface Notification {}
-  id: string;
-  type: "friend_request" | "party_invite" | "message" | "achievement" | "store" | "system"
-  title: string;
-  message: string;
+interface Notification {
+  id: string;,
+  type: "friend_request" | "party_invite" | "message" | "achievement" | "store" | "system",
+  title: string;,
+  message: string;,
   createdAt: string;
   readAt?: string;
   actionUrl?: string;
-  actionData?: unknown;
+  actionData?: unknown;,
   priority: "low" | "normal" | "high"
   sender?: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
     avatar?: string;
   }
@@ -48,29 +47,28 @@ interface Notification {}
   isGrouped?: boolean;
 }
 
-interface NotificationGroup {}
-  key: string;
-  type: string;
-  notifications: Notification[]
-  latestAt: string;
-  unreadCount: number;
+interface NotificationGroup {
+  key: string;,
+  type: string;,
+  notifications: Notification[0],
+  latestAt: string;,
+  unreadCount: number;,
   isExpanded: boolean;
 }
 
-interface NotificationGroupingProps {}
+interface NotificationGroupingProps {
   className?: string;
 }
 
-export default function NotificationGrouping({ className }: NotificationGroupingProps) {}
-  const [notifications, setNotifications] = useState<Notification[]>([])
-  const [groups, setGroups] = useState<NotificationGroup[]>([])
+export default function NotificationGrouping({ className }: NotificationGroupingProps) {
+  const [notifications, setNotifications] = useState<Notification[0]>([0])
+  const [groups, setGroups] = useState<NotificationGroup[0]>([0])
   const [selectedNotifications, setSelectedNotifications] = useState<Set<string>>(new Set())
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
-  const [filters, setFilters] = useState({}
-    types: [] as string[],
-    priority: [] as string[],
+  const [filters, setFilters] = useState({types: [0] as string[0],
+    priority: [0] as string[0],
     readStatus: "all" as "all" | "unread" | "read",
     timeRange: "all" as "all" | "today" | "week" | "month",
   })
@@ -79,7 +77,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
 
   useEffect(() => {
     loadNotifications()
-  }, [])
+  }, [0])
 
   useEffect(() => {
     groupNotifications()
@@ -92,9 +90,9 @@ export default function NotificationGrouping({ className }: NotificationGrouping
         ? (data as Record<string, unknown>).results;
         : Array.isArray((data as Record<string, unknown>)?.notifications)
           ? (data as Record<string, unknown>).notifications;
-          : []
+          : [0]
 
-      const mapped = items.map((item: unknown) => ({}
+      const mapped = items.map((item: unknown) => ({
         id: item.id,
         type: item.type || "system",
         title: item.title || item.message || "Notification",
@@ -118,19 +116,18 @@ export default function NotificationGrouping({ className }: NotificationGrouping
       }))
 
       setNotifications(mapped)
-    } } catch {
+    } catch (error) {
       console.error("Failed to load notifications:", error)
-      toast({}
-        title: "Failed to load notifications",
+      toast({title: "Failed to load notifications",
         description: "Please try refreshing the page",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const groupNotifications = () => {}
+  const groupNotifications = () => {
     let filtered = notifications;
     // Apply search filter;
     if (searchQuery) {
@@ -164,7 +161,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
     if (filters.timeRange !== "all") {
       const now = new Date()
       const cutoff = new Date()
-      switch (filters.timeRange) {
+      switch (filters.timeRange) {}
         case "today":
           cutoff.setHours(0, 0, 0, 0)
           break;
@@ -179,25 +176,25 @@ export default function NotificationGrouping({ className }: NotificationGrouping
     }
 
     // Group similar notifications;
-    const groupMap = new Map<string, Notification[]>()
-    filtered.forEach(notification => {}
+    const groupMap = new Map<string, Notification[0]>()
+    filtered.forEach(notification => {
       // Create grouping key based on type and sender;
       let groupKey = notification.type;
       if (notification.sender) {
         groupKey += `_${notification.sender.id}`
       }
-      if (!groupMap.has(groupKey)) {}
-        groupMap.set(groupKey, [])
+      if (!groupMap.has(groupKey)) {
+        groupMap.set(groupKey, [0])
       }
       groupMap.get(groupKey)!.push(notification)
     })
 
     // Convert to group objects;
-    const newGroups: NotificationGroup[] = Array.from(groupMap.entries()).map(([key, notifications]) => {}
+    const newGroups: NotificationGroup[0] = Array.from(groupMap.entries()).map(([key, notifications]) => {
       const sortedNotifications = notifications.sort((a, b) => 
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       )
-      return {
+      return {}
         key,
         type: notifications[0].type,
         notifications: sortedNotifications,
@@ -210,84 +207,78 @@ export default function NotificationGrouping({ className }: NotificationGrouping
     setGroups(newGroups)
   }
 
-  const markAsRead = async (notificationIds: string[]) => {}
+  const markAsRead = async (notificationIds: string[0]) => {
     try {
       await Promise.all(notificationIds.map(id => notificationsAPI.markAsRead(id)))
       setNotifications(prev =>
         prev.map(n =>
           notificationIds.includes(n.id)
-            ? { ...n, readAt: new Date().toISOString() }
+            ? ...n, readAt: new Date().toISOString() }
             : n;
         )
       )
-      toast({}
-        title: "Marked as read",
+      toast({title: "Marked as read",
         description: `${notificationIds.length} notification(s) marked as read`,
       })
-    } } catch {
+    } catch (error) {
       console.error("Failed to mark as read:", error)
-      toast({}
-        title: "Failed to mark as read",
+      toast({title: "Failed to mark as read",
         description: "Please try again",
         variant: "destructive",
       })
     }
   }
 
-  const markAsUnread = async (notificationIds: string[]) => {}
+  const markAsUnread = async (notificationIds: string[0]) => {
     try {
       setNotifications(prev =>
         prev.map(n =>
           notificationIds.includes(n.id)
-            ? { ...n, readAt: undefined }
+            ? ...n, readAt: undefined }
             : n;
         )
       )
-      toast({}
-        title: "Marked locally",
+      toast({title: "Marked locally",
         description: "Notifications marked as unread locally. Backend does not support this action yet.",
       })
-    } } catch {
+    } catch (error) {
       console.error("Failed to mark as unread:", error)
-      toast({}
-        title: "Failed to mark as unread",
+      toast({title: "Failed to mark as unread",
         description: "Please try again",
         variant: "destructive",
       })
     }
   }
 
-  const deleteNotifications = async (notificationIds: string[]) => {}
+  const deleteNotifications = async (notificationIds: string[0]) => {
     try {
       await Promise.all(notificationIds.map(id => notificationsAPI.deleteNotification(id)))
       setNotifications(prev => prev.filter(n => !notificationIds.includes(n.id)))
       setSelectedNotifications(new Set())
-      toast({}
-        title: "Notifications deleted",
+      toast({title: "Notifications deleted",
         description: `${notificationIds.length} notification(s) deleted`,
       })
-    } } catch {
+    } catch (error) {
       console.error("Failed to delete notifications:", error)
-      toast({}
-        title: "Failed to delete notifications",
+      toast({title: "Failed to delete notifications",
         description: "Please try again",
         variant: "destructive",
       })
     }
   }
 
-  const toggleGroupExpansion = (groupKey: string) => {}
+  const toggleGroupExpansion = (groupKey: string) => {
     setGroups(prev => 
       prev.map(group => 
         group.key === groupKey;
-          ? { ...group, isExpanded: !group.isExpanded }
+          ? ...group, isExpanded: !group.isExpanded }
           : group;
       )
     )
   }
 
-  const selectNotification = (notificationId: string, checked: boolean) => {}
-    setSelectedNotifications(prev => {}
+  const selectNotification = (notificationId: string, checked: boolean) => {
+    setSelectedNotifications(prev => {
       const newSet = new Set(prev)
       if (checked) {
         newSet.add(notificationId)
@@ -298,10 +289,10 @@ export default function NotificationGrouping({ className }: NotificationGrouping
     })
   }
 
-  const selectAllInGroup = (group: NotificationGroup, checked: boolean) => {}
-    setSelectedNotifications(prev => {}
+  const selectAllInGroup = (group: NotificationGroup, checked: boolean) => {
+    setSelectedNotifications(prev => {
       const newSet = new Set(prev)
-      group.notifications.forEach(n => {}
+      group.notifications.forEach(n => {
         if (checked) {
           newSet.add(n.id)
         } else {}
@@ -312,30 +303,30 @@ export default function NotificationGrouping({ className }: NotificationGrouping
     })
   }
 
-  const getNotificationIcon = (type: string) => {}
-    switch (type) {
-      case "friend_request": return <Users className="h-4 w-4" />
-      case "party_invite": return <Calendar className="h-4 w-4" />
-      case "message": return <MessageSquare className="h-4 w-4" />
-      case "achievement": return <Star className="h-4 w-4" />
-      case "store": return <Zap className="h-4 w-4" />
-      case "system": return <Settings className="h-4 w-4" />
-      default: return <Bell className="h-4 w-4" />
+  const getNotificationIcon = (type: string) => {
+    switch (type) {}
+      case "friend_request": return <Users className="h-4 w-4" />;
+      case "party_invite": return <Calendar className="h-4 w-4" />;
+      case "message": return <MessageSquare className="h-4 w-4" />;
+      case "achievement": return <Star className="h-4 w-4" />;
+      case "store": return <Zap className="h-4 w-4" />;
+      case "system": return <Settings className="h-4 w-4" />,
+      default: return <Bell className="h-4 w-4" />;
     }
   }
 
-  const getTimeGroupLabel = (createdAt: string) => {}
+  const getTimeGroupLabel = (createdAt: string) => {
     const date = new Date(createdAt)
     if (isToday(date)) return "Today"
     if (isYesterday(date)) return "Yesterday"
     return format(date, "MMM d, yyyy")
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {}
+  const getUserInitials = (firstName: string, lastName: string) => {
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase()
   }
 
-  const NotificationCard = ({ notification, isInGroup = false }: { notification: Notification; isInGroup?: boolean }) => {}
+  const NotificationCard = ({ notification, isInGroup = false }: { notification: Notification; isInGroup?: boolean }) => {
     const isSelected = selectedNotifications.has(notification.id)
     const isUnread = !notification.readAt;
     return (
@@ -396,18 +387,18 @@ export default function NotificationGrouping({ className }: NotificationGrouping
     )
   }
 
-  const NotificationGroupCard = ({ group }: { group: NotificationGroup }) => {}
+  const NotificationGroupCard = ({ group }: { group: NotificationGroup }) => {
     const isGroupSelected = group.notifications.every(n => selectedNotifications.has(n.id))
     const isSomeSelected = group.notifications.some(n => selectedNotifications.has(n.id))
 
     if (group.notifications.length === 1) {
-      return <NotificationCard notification={group.notifications[0]} />
+      return <NotificationCard notification={group.notifications[0]} />;
     }
 
     return (
       <div className="space-y-2">
         <Collapsible open={group.isExpanded} onOpenChange={() => toggleGroupExpansion(group.key)}>
-          <Card className={`transition-all ${group.unreadCount > 0 ? &apos;border-l-4 border-l-primary&apos; : &apos;'}`}>
+          <Card className={`transition-all ${group.unreadCount > 0 ? &apos;border-l-4 border-l-primary' : ''}`}>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <Checkbox;
@@ -553,11 +544,11 @@ export default function NotificationGrouping({ className }: NotificationGrouping
                   <DropdownMenuCheckboxItem;
                     key={type}
                     checked={filters.types.includes(type)}
-                    onCheckedChange={(checked) => {}
+                    onCheckedChange={(checked) => {
                       setFilters(prev => ({}
                         ...prev,
                         types: checked;
-                          ? [...prev.types, type]
+                          ? ...prev.types, type]
                           : prev.types.filter(t => t !== type)
                       }))
                     }}
@@ -571,11 +562,11 @@ export default function NotificationGrouping({ className }: NotificationGrouping
                   <DropdownMenuCheckboxItem;
                     key={priority}
                     checked={filters.priority.includes(priority)}
-                    onCheckedChange={(checked) => {}
+                    onCheckedChange={(checked) => {
                       setFilters(prev => ({}
                         ...prev,
                         priority: checked;
-                          ? [...prev.priority, priority]
+                          ? ...prev.priority, priority]
                           : prev.priority.filter(p => p !== priority)
                       }))
                     }}

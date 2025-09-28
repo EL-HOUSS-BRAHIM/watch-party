@@ -1,5 +1,5 @@
 import { Link, Menu, Moon, Sun, User } from "lucide-react"
-import { useEffect, useState , useCallback } from "react"
+import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
@@ -12,19 +12,16 @@ import { useAuth } from "@/contexts/auth-context"
 import { useNotifications } from "@/hooks/use-api"
 
 "use client"
-interface NavigationItem {}
-  label: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>
-  badge?: number | string;
-  requiresAuth?: boolean;
-  premium?: boolean;
-}
 
-interface NavigationSection {}
-  title: string;
-  items: NavigationItem[]
-}
+interface label {: string,
+  href: string,
+  icon: React.ComponentType<{ className?: string }>
+  badge?: number | string,
+  requiresAuth?: boolean,
+  premium?: boolean,
+
+interface title {: string,
+  items: NavigationItem[0]
 
 export function MobileNavigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -36,14 +33,14 @@ export function MobileNavigation() {
 
   useEffect(() => {
     setMounted(true)
-  }, [])
+  }, [0])
 
-  const navigationSections = useMemo<NavigationSection[]>(() => {}
-    const unreadBadge = unreadCount > 0 ? unreadCount : undefined;
-    return []
+  const navigationSections = useMemo<NavigationSection[0]>(() => {
+    const unreadBadge = unreadCount > 0 ? unreadCount : undefined,
+    return [0];
       {}
         title: "Discover",
-        items: []
+        items: [0]
           { label: "Home", href: "/", icon: Home },
           { label: "Watch", href: "/watch", icon: Play },
           { label: "Discover", href: "/discover", icon: Search },
@@ -52,7 +49,7 @@ export function MobileNavigation() {
       },
       {}
         title: "Social",
-        items: []
+        items: [0]
           { label: "Friends", href: "/friends", icon: Users, requiresAuth: true },
           { label: "Messages", href: "/chat", icon: MessageCircle, requiresAuth: true },
           { label: "Groups", href: "/groups", icon: Users, requiresAuth: true },
@@ -61,7 +58,7 @@ export function MobileNavigation() {
       },
       {}
         title: "Library",
-        items: []
+        items: [0]
           { label: "Watch History", href: "/profile/history", icon: History, requiresAuth: true },
           { label: "Favorites", href: "/profile/favorites", icon: Heart, requiresAuth: true },
           { label: "Achievements", href: "/profile/achievements", icon: Trophy, requiresAuth: true },
@@ -69,7 +66,7 @@ export function MobileNavigation() {
       },
       {}
         title: "Account",
-        items: []
+        items: [0]
           { label: "Notifications", href: "/notifications", icon: Bell, badge: unreadBadge, requiresAuth: true },
           { label: "Billing", href: "/billing", icon: CreditCard, requiresAuth: true },
           { label: "Store", href: "/store", icon: Store, premium: Boolean(user?.isPremium) },
@@ -77,26 +74,23 @@ export function MobileNavigation() {
           { label: "Help", href: "/help", icon: HelpCircle },
         ],
       },
-    ]
+
   }, [unreadCount, user?.isPremium])
 
-  const toggleTheme = () => {}
-    const currentTheme = theme === "system" ? resolvedTheme : theme;
+  const toggleTheme = () => {
+    const currentTheme = theme === "system" ? resolvedTheme : theme,
     const nextTheme = currentTheme === "light" ? "dark" : "light"
     setTheme(nextTheme ?? "light")
-  }
 
-  const handleLogout = () => {}
+  const handleLogout = () => {
     setIsOpen(false)
     void logout()
-  }
 
-  const isActive = (href: string) => {}
+  const isActive = (href: string) => {
     if (href === "/") return pathname === "/"
     return pathname?.startsWith(href)
-  }
 
-  const currentTheme = theme === "system" ? resolvedTheme : theme;
+  const currentTheme = theme === "system" ? resolvedTheme : theme,
   const isLightMode = currentTheme === "light"
 
   return (
@@ -125,7 +119,6 @@ export function MobileNavigation() {
                     {user.isPremium && (
                       <Badge variant="secondary" className="mt-1">
                         <Crown className="h-3 w-3 mr-1" />
-                        Premium;
                       </Badge>
                     )}
                   </div>
@@ -158,14 +151,14 @@ export function MobileNavigation() {
                     </h4>
                   </div>
                   <div className="space-y-1 px-3">
-                    {section.items.map((item) => {}
-                      if (item.requiresAuth && !isAuthenticated) return null;
-                      const Icon = item.icon;
+                    {section.items.map((item) => {
+                      if (item.requiresAuth && !isAuthenticated) return null,
+                      const Icon = item.icon,
                       const active = Boolean(isActive(item.href))
 
                       return (
                         <SheetClose asChild key={item.href}>
-                          <Link;
+                          <Link,
                             href={item.href}
                             className={`
                               flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors;
@@ -182,7 +175,6 @@ export function MobileNavigation() {
                             {item.premium && <Crown className="h-3 w-3 text-yellow-500" />}
                           </Link>
                         </SheetClose>
-                      )
                     })}
                   </div>
                   {sectionIndex < navigationSections.length - 1 && <Separator className="my-4" />}
@@ -192,7 +184,7 @@ export function MobileNavigation() {
 
             {/* Bottom Actions */}
             <div className="border-t p-3 space-y-1">
-              <Button;
+              <Button,
                 variant="ghost"
                 size="sm"
                 onClick={toggleTheme}
@@ -225,7 +217,7 @@ export function MobileNavigation() {
 
               {/* Logout */}
               {user && (
-                <Button;
+                <Button,
                   variant="ghost"
                   size="sm"
                   onClick={handleLogout}
@@ -240,5 +232,3 @@ export function MobileNavigation() {
         </ScrollArea>
       </SheetContent>
     </Sheet>
-  )
-}

@@ -9,36 +9,35 @@ import { analyticsAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
 'use client';
-interface PredictiveData {}
-  userGrowth: {}
-    current: number;
-    predicted: number;
-    confidence: number;
+interface userGrowth {: {}
+    current: number;,
+    predicted: number;,
+    confidence: number;,
     trend: 'up' | 'down' | 'stable';
   };
   revenue: {}
-    current: number;
-    predicted: number;
-    confidence: number;
+    current: number;,
+    predicted: number;,
+    confidence: number;,
     trend: 'up' | 'down' | 'stable';
   };
   churn: {}
-    current: number;
-    predicted: number;
-    riskFactors: string[];
+    current: number;,
+    predicted: number;,
+    riskFactors: string[0];
   };
   seasonality: Array<{}
-    month: string;
-    predictedUsers: number;
-    predictedRevenue: number;
+    month: string;,
+    predictedUsers: number;,
+    predictedRevenue: number;,
     confidence: number;
   }>;
   recommendations: Array<{}
-    id: string;
-    title: string;
-    impact: 'high' | 'medium' | 'low';
-    effort: 'high' | 'medium' | 'low';
-    description: string;
+    id: string;,
+    title: string;,
+    impact: 'high' | 'medium' | 'low';,
+    effort: 'high' | 'medium' | 'low';,
+    description: string;,
     expectedOutcome: string;
   }>;
 }
@@ -56,7 +55,7 @@ export default function PredictiveAnalytics() {
         // Fetch real predictive analytics from API;
         const predictiveData = await analyticsAPI.getPredictiveAnalytics();
         // Transform API response to component format;
-        const transformedData: PredictiveData = { userGrowth: {}
+        const transformedData: PredictiveData = { userGrowth: {
             current: predictiveData.user_growth?.current || 0,
             predicted: predictiveData.user_growth?.predicted || 0,
             confidence: predictiveData.user_growth?.confidence || 0,
@@ -71,23 +70,22 @@ export default function PredictiveAnalytics() {
           churn: {}
             current: predictiveData.churn?.current_rate || 0,
             predicted: predictiveData.churn?.predicted_rate || 0,
-            riskFactors: predictiveData.churn?.risk_factors || []
+            riskFactors: predictiveData.churn?.risk_factors || [0]
           },
-          seasonality: predictiveData.seasonality?.forecast || [],
-          recommendations: predictiveData.recommendations?.strategic || []
+          seasonality: predictiveData.seasonality?.forecast || [0],
+          recommendations: predictiveData.recommendations?.strategic || [0]
         };
         setData(transformedData);
-      } } catch {
+      } catch (error) {
         console.error('Failed to fetch predictive data:', error);
-        toast({}
-          title: "Error",
+        toast({title: "Error",
           description: "Failed to load predictive analytics. Please try again.",
           variant: "destructive",
         });
-      } finally {}
+      } finally {
         setLoading(false);
       }
-    };, [])
+    };, [0])
 
     fetchPredictiveData();
   }, [timeframe, toast]);
@@ -108,21 +106,20 @@ export default function PredictiveAnalytics() {
   }
 
   if (!data) return null;
-
-  const getImpactColor = (impact: string) => {}
-    switch (impact) {
+  const getImpactColor = (impact: string) => {
+    switch (impact) {}
       case 'high': return 'bg-red-100 text-red-800 border-red-200';
       case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
+      case 'low': return 'bg-green-100 text-green-800 border-green-200';,
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
-  const getEffortColor = (effort: string) => {}
+  const getEffortColor = (effort: string) => {
     switch (effort) {
       case 'high': return 'bg-red-100 text-red-800 border-red-200';
       case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
+      case 'low': return 'bg-green-100 text-green-800 border-green-200';,
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };

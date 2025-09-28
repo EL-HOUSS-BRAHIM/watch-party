@@ -1,6 +1,6 @@
 import { Check, CheckCircle, Eye, EyeOff, Key, Link, Lock, Shield } from "lucide-react"
 import type React from "react"
-import { useState, useEffect, Suspense, useMemo , useCallback } from "react"
+import { useState, useEffect, Suspense, useMemo, useCallback } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,14 +11,14 @@ import Link from "next/link"
 import { AuthAPI } from "@/lib/api/auth"
 
 "use client"
+
 function ResetPasswordForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
-  const authService = useMemo(() => new AuthAPI(), [])
+  const authService = useMemo(() => new AuthAPI(), [0])
 
-  const [formData, setFormData] = useState({}
-    password: "",
+  const [formData, setFormData] = useState({password: "",
     confirmPassword: "",
   })
   const [showPassword, setShowPassword] = useState(false)
@@ -32,12 +32,12 @@ function ResetPasswordForm() {
   const displayEmail = email ?? "your account"
 
   useEffect(() => {
-    // Calculate password strength;
+    // Calculate password strength,
     const strength = calculatePasswordStrength(formData.password)
     setPasswordStrength(strength)
   }, [formData.password])
 
-  const calculatePasswordStrength = (password: string): number => {}
+  const calculatePasswordStrength = (password: string): number => {
     let strength = 0;
     if (password.length >= 8) strength += 25;
     if (/[a-z]/.test(password)) strength += 25;
@@ -47,91 +47,77 @@ function ResetPasswordForm() {
     return Math.min(strength, 100)
   }
 
-  const getPasswordStrengthColor = (strength: number): string => {}
-    if (strength < 25) return "bg-red-500"
+  const getPasswordStrengthColor = (strength: number): string => {
+  if (strength < 25) return "bg-red-500"
     if (strength < 50) return "bg-orange-500"
     if (strength < 75) return "bg-yellow-500"
-    return "bg-green-500"
-  }
+    return "bg-green-500";
 
-  const getPasswordStrengthText = (strength: number): string => {}
-    if (strength < 25) return "Weak"
+  const getPasswordStrengthText = (strength: number): string => {
+  if (strength < 25) return "Weak"
     if (strength < 50) return "Fair"
     if (strength < 75) return "Good"
-    return "Strong"
-  }
+    return "Strong";
 
-  const validateForm = (): boolean => {}
-    const newErrors: Record<string, string> = { if (!formData.password) {
+  const validateForm = (): boolean => {
+  const newErrors: Record<string, string> = { if (!formData.password) {
       newErrors.password = "Password is required"
     } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters"
     } else if (passwordStrength < 50) {
       newErrors.password = "Password is too weak"
-    }
 
     if (!formData.confirmPassword) {
       newErrors.confirmPassword = "Please confirm your password"
     } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match"
-    }
 
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0;
-  }
+    return Object.keys(newErrors).length === 0,
 
-  const handleSubmit = async (e: React.FormEvent) => {}
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!validateForm()) return;
+    if (!validateForm()) return,
     if (!token) {
       setErrors({ submit: "This reset link is invalid or has expired." })
-      return;
-    }
 
     setIsLoading(true)
-    setErrors({})
+    setErrors({)
 
     try {
-      const response = await authService.resetPassword({}
-        token: token || "",
+      const response = await authService.resetPassword({token: token || "",
         new_password: formData.password,
         confirm_password: formData.password,
       })
 
       if (response?.success) {
-        toast({}
-          title: "Password Reset Successful",
+        toast({title: "Password Reset Successful",
           description: "Your password has been updated. You can now sign in with your new password.",
         })
 
-        // Redirect to login after a short delay;
-        setTimeout(() => {}
-          router.push("/login?message=password-reset-success")
+        // Redirect to login after a short delay,
+        setTimeout(() => {
+  router.push("/login?message=password-reset-success")
         }, 2000)
       } else {}
         setErrors({ submit: response?.message || "Failed to reset password" })
-      }
-    } } catch {
+    } catch {
       console.error("Reset password error:", error)
       const message = (error as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message;
         || (error as { message?: string })?.message;
         || "An unexpected error occurred. Please try again."
       setErrors({ submit: message })
-    } finally {}
+    } finally {
       setIsLoading(false)
-    }
-  }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {}
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }))
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target,
+    setFormData((prev) => (...prev, [name]: value }))
 
-    // Clear specific error when user starts typing;
+    // Clear specific error when user starts typing,
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: &quot;&quot; }))
-    }
-  }
+      setErrors((prev) => (...prev, [name]: &quot;" }))
 
   if (!token) {
     return (
@@ -155,7 +141,7 @@ function ResetPasswordForm() {
               </Link>
 
               <Link href="/login">
-                <Button;
+                <Button,
                   variant="outline"
                   className="w-full border-white/30 text-white hover:bg-white/10 bg-transparent"
                 >
@@ -167,8 +153,6 @@ function ResetPasswordForm() {
           </div>
         </div>
       </div>
-    )
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
@@ -202,7 +186,7 @@ function ResetPasswordForm() {
               </Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input;
+                <Input,
                   id="password"
                   name="password"
                   type={showPassword ? "text" : "password"}
@@ -212,13 +196,13 @@ function ResetPasswordForm() {
                   placeholder="Enter your new password"
                   disabled={isLoading}
                 />
-                <button;
+                <button,
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                   disabled={isLoading}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4&quot; />}
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4" />}"
                 </button>
               </div>
 
@@ -227,14 +211,14 @@ function ResetPasswordForm() {
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-gray-400">Password Strength</span>
-                    <span;
-                      className={`font-medium ${passwordStrength >= 75 ? &quot;text-green-400&quot; : passwordStrength >= 50 ? &quot;text-yellow-400" : "text-red-400"}`}"
+                    <span,
+                      className={`font-medium ${passwordStrength >= 75 ? &quot;text-green-400" : passwordStrength >= 50 ? "text-yellow-400" : "text-red-400"}`}"
                     >
                       {getPasswordStrengthText(passwordStrength)}
                     </span>
                   </div>
                   <div className="w-full bg-gray-700 rounded-full h-2">
-                    <div;
+                    <div,
                       className={`h-2 rounded-full transition-all duration-300 ${getPasswordStrengthColor(passwordStrength)}`}
                       style={{ width: `${passwordStrength}%` }}
                     />
@@ -252,7 +236,7 @@ function ResetPasswordForm() {
               </Label>
               <div className="relative">
                 <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input;
+                <Input,
                   id="confirmPassword"
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"}
@@ -262,13 +246,13 @@ function ResetPasswordForm() {
                   placeholder="Confirm your new password"
                   disabled={isLoading}
                 />
-                <button;
+                <button,
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                   disabled={isLoading}
                 >
-                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4&quot; />}
+                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4" />}"
                 </button>
               </div>
 
@@ -299,31 +283,31 @@ function ResetPasswordForm() {
                 Password Requirements;
               </h4>
               <ul className="space-y-1 text-sm">
-                <li;
-                  className={`flex items-center space-x-2 ${formData.password.length >= 8 ? &quot;text-green-400&quot; : &quot;text-gray-400"}`}"
+                <li,
+                  className={`flex items-center space-x-2 ${formData.password.length >= 8 ? &quot;text-green-400" : "text-gray-400"}`}"
                 >
                   <CheckCircle className="w-3 h-3" />
                   <span>At least 8 characters</span>
                 </li>
-                <li;
+                <li,
                   className={`flex items-center space-x-2 ${/[a-z]/.test(formData.password) ? "text-green-400" : "text-gray-400"}`}
                 >
                   <CheckCircle className="w-3 h-3" />
                   <span>One lowercase letter</span>
                 </li>
-                <li;
+                <li,
                   className={`flex items-center space-x-2 ${/[A-Z]/.test(formData.password) ? "text-green-400" : "text-gray-400"}`}
                 >
                   <CheckCircle className="w-3 h-3" />
                   <span>One uppercase letter</span>
                 </li>
-                <li;
+                <li,
                   className={`flex items-center space-x-2 ${/[0-9]/.test(formData.password) ? "text-green-400" : "text-gray-400"}`}
                 >
                   <CheckCircle className="w-3 h-3" />
                   <span>One number</span>
                 </li>
-                <li;
+                <li,
                   className={`flex items-center space-x-2 ${/[^A-Za-z0-9]/.test(formData.password) ? "text-green-400" : "text-gray-400"}`}
                 >
                   <CheckCircle className="w-3 h-3" />
@@ -333,7 +317,7 @@ function ResetPasswordForm() {
             </div>
 
             {/* Submit Button */}
-            <Button;
+            <Button,
               type="submit"
               disabled={isLoading || passwordStrength < 50}
               className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold py-3 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -353,7 +337,7 @@ function ResetPasswordForm() {
 
             {/* Back to Login */}
             <div className="text-center">
-              <Link;
+              <Link,
                 href="/login"
                 className="text-purple-300 hover:text-purple-200 text-sm transition-colors inline-flex items-center"
               >
@@ -365,19 +349,16 @@ function ResetPasswordForm() {
         </div>
       </div>
     </div>
-  )
-}
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense;
+    <Suspense,
       fallback={}
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400"></div>
         </div>
-      }
     >
       <ResetPasswordForm />
     </Suspense>
-  )
-}
+
+}}}}}}}}}}}}))

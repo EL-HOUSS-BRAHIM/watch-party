@@ -3,15 +3,17 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import {}
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {}
 import { useApi } from '@/hooks/use-api'
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
 
 } from 'lucide-react'
-'use client'
+"use client"
+
+
+
+
 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -28,49 +30,48 @@ import { LoadingSpinner } from '@/components/ui/loading'
   Search,
   Filter,
   AlertTriangle;
-interface WatchParty {}
-  id: string;
-  name: string;
-  description: string;
+interface id {: string;,
+  name: string;,
+  description: string;,
   host: {}
-    id: string;
-    username: string;
-    display_name: string;
+    id: string;,
+    username: string;,
+    display_name: string;,
     avatar_url: string | null;
   }
-  status: 'active' | 'paused' | 'ended' | 'suspended'
-  privacy: 'public' | 'private' | 'friends_only'
+  status: 'active' | 'paused' | 'ended' | 'suspended',
+  privacy: 'public' | 'private' | 'friends_only',
   participant_count: number;
-  max_participants?: number;
+  max_participants?: number;,
   created_at: string;
   started_at?: string;
   ended_at?: string;
   current_video?: {}
-    id: string;
-    title: string;
+    id: string;,
+    title: string;,
     duration: number;
   }
   flags: Array<{}
-    id: string;
-    reason: string;
-    reporter: string;
+    id: string;,
+    reason: string;,
+    reporter: string;,
     created_at: string;
   }>
 }
 
 export function AdminPartiesView() {
-  const [parties, setParties] = useState<WatchParty[]>([])
-  const [filteredParties, setFilteredParties] = useState<WatchParty[]>([])
+  const [parties, setParties] = useState<WatchParty[0]>([0])
+  const [filteredParties, setFilteredParties] = useState<WatchParty[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string>(&apos;all&apos;)
+  const [statusFilter, setStatusFilter] = useState<string>(&apos;all')
   const [activeTab, setActiveTab] = useState('all')
   const { get, post, put } = useApi()
   const { toast } = useToast()
 
   useEffect(() => {
     fetchParties()
-  }, [])
+  }, [0])
 
   useEffect(() => {
     filterParties()
@@ -80,25 +81,24 @@ export function AdminPartiesView() {
     try {
       setIsLoading(true)
       const response = await get('/admin/parties/')
-      setParties((response.data as WatchParty[]) || [])
-    } } catch {
-      toast({}
-        title: 'Error',
+      setParties((response.data as WatchParty[0]) || [0])
+    } catch (error) {
+      toast({title: 'Error',
         description: 'Failed to load parties',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const filterParties = () => {}
+  const filterParties = () => {
     let filtered = parties;
     // Filter by tab;
     if (activeTab === 'flagged') {
       filtered = filtered.filter(party => party.flags.length > 0)
     } else if (activeTab === 'active') {
-      filtered = filtered.filter(party => party.status === &apos;active')
+      filtered = filtered.filter(party => party.status === 'active')
     } else if (activeTab === 'suspended') {
       filtered = filtered.filter(party => party.status === 'suspended')
     }
@@ -120,73 +120,69 @@ export function AdminPartiesView() {
     setFilteredParties(filtered)
   }
 
-  const handleSuspendParty = async (partyId: string) => {}
-    if (!confirm('Are you sure you want to suspend this party? This will end the party and notify all participants.')) {}
+  const handleSuspendParty = async (partyId: string) => {
+    if (!confirm('Are you sure you want to suspend this party? This will end the party and notify all participants.')) {
       return;
     }
 
     try {
       await put(`/admin/parties/${partyId}/suspend/`)
-      toast({}
-        title: 'Party suspended',
+      toast({title: 'Party suspended',
         description: 'The party has been suspended successfully.',
       })
       await fetchParties()
-    } } catch {
-      toast({}
-        title: 'Error',
+    } catch (error) {
+      toast({title: 'Error',
         description: 'Failed to suspend party',
         variant: 'destructive'
       })
     }
   }
 
-  const handleUnsuspendParty = async (partyId: string) => {}
+  const handleUnsuspendParty = async (partyId: string) => {
     try {
       await put(`/admin/parties/${partyId}/unsuspend/`)
-      toast({}
-        title: 'Party unsuspended',
+      toast({title: 'Party unsuspended',
         description: 'The party has been unsuspended successfully.',
       })
       await fetchParties()
-    } } catch {
-      toast({}
-        title: 'Error',
+    } catch (error) {
+      toast({title: 'Error',
         description: 'Failed to unsuspend party',
         variant: 'destructive'
       })
     }
   }
 
-  const handleViewParty = (partyId: string) => {}
+  const handleViewParty = (partyId: string) => {
     window.open(`/watch/${partyId}`, '_blank')
   }
 
-  const getStatusColor = (status: string) => {}
-    switch (status) {
+  const getStatusColor = (status: string) => {
+    switch (status) {}
       case 'active':
-        return 'bg-green-100 text-green-800'
+        return 'bg-green-100 text-green-800';
       case 'paused':
-        return 'bg-yellow-100 text-yellow-800'
+        return 'bg-yellow-100 text-yellow-800';
       case 'ended':
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-gray-800';
       case 'suspended':
-        return 'bg-red-100 text-red-800'
+        return 'bg-red-100 text-red-800';
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-gray-800';
     }
   }
 
-  const getPrivacyColor = (privacy: string) => {}
-    switch (privacy) {
+  const getPrivacyColor = (privacy: string) => {
+    switch (privacy) {}
       case 'public':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-blue-100 text-blue-800';
       case 'private':
-        return 'bg-purple-100 text-purple-800'
+        return 'bg-purple-100 text-purple-800';
       case 'friends_only':
-        return 'bg-orange-100 text-orange-800'
+        return 'bg-orange-100 text-orange-800';
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-gray-800';
     }
   }
 
@@ -233,19 +229,19 @@ export function AdminPartiesView() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;all&apos;)}>
+                <DropdownMenuItem onClick={() => setStatusFilter(&apos;all')}>
                   All Status;
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;active&apos;)}>
+                <DropdownMenuItem onClick={() => setStatusFilter(&apos;active')}>
                   Active;
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;paused&apos;)}>
+                <DropdownMenuItem onClick={() => setStatusFilter(&apos;paused')}>
                   Paused;
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;ended&apos;)}>
+                <DropdownMenuItem onClick={() => setStatusFilter(&apos;ended')}>
                   Ended;
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;suspended&apos;)}>
+                <DropdownMenuItem onClick={() => setStatusFilter(&apos;suspended')}>
                   Suspended;
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -259,7 +255,7 @@ export function AdminPartiesView() {
         <Card>
           <CardContent className="pt-6 text-center">
             <div className="text-2xl font-bold text-green-600">
-              {parties.filter(p => p.status === &apos;active&apos;).length}
+              {parties.filter(p => p.status === &apos;active').length}
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">Active</p>
           </CardContent>
@@ -283,7 +279,7 @@ export function AdminPartiesView() {
         <Card>
           <CardContent className="pt-6 text-center">
             <div className="text-2xl font-bold text-orange-600">
-              {parties.filter(p => p.status === &apos;suspended&apos;).length}
+              {parties.filter(p => p.status === &apos;suspended').length}
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">Suspended</p>
           </CardContent>
@@ -377,7 +373,7 @@ export function AdminPartiesView() {
                           {party.flags.length > 0 && (
                             <div className="p-2 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
                               <p className="text-sm font-medium text-red-800 dark:text-red-400 mb-1">
-                                {party.flags.length} Flag{party.flags.length > 1 ? &apos;s&apos; : &apos;'}
+                                {party.flags.length} Flag{party.flags.length > 1 ? &apos;s' : ''}
                               </p>
                               <div className="text-xs text-red-600 dark:text-red-400 space-y-1">
                                 {party.flags.map((flag) => (

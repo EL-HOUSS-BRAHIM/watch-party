@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { Copy, Link as LinkIcon, Mail, QrCode, Share, Share2, User, Users } from "lucide-react"
-import {}
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,27 +9,27 @@ import { Badge } from "@/components/ui/badge"
 
 "use client"
 
+
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-interface PartyInviteDialogProps {}
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+interface open {: boolean;,
+  onOpenChange: (open: boolean) => void;,
   party: {}
-    id: string;
-    title: string;
+    id: string;,
+    title: string;,
     roomCode: string;
-    inviteCode?: string;
-    maxParticipants: number;
-    participantCount: number;
+    inviteCode?: string;,
+    maxParticipants: number;,
+    participantCount: number;,
     isPrivate: boolean;
   }
 }
 
-export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDialogProps) {}
+export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDialogProps) {
   const { toast } = useToast()
   const [emailList, setEmailList] = useState("")
   const [customMessage, setCustomMessage] = useState("")
@@ -39,10 +38,9 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
   const inviteUrl = `${window.location.origin}/invite?code=${party.inviteCode || party.roomCode}`
   const watchUrl = `${window.location.origin}/watch/${party.id}`
 
-  const copyToClipboard = (text: string, description: string) => {}
+  const copyToClipboard = (text: string, description: string) => {
     navigator.clipboard.writeText(text)
-    toast({}
-      title: "Copied!",
+    toast({title: "Copied!",
       description: `${description} copied to clipboard`,
     })
   }
@@ -50,13 +48,12 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
   const shareNatively = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({}
-          title: `Join "${party.title}" on WatchParty`,
+        await navigator.share({title: `Join "${party.title}" on WatchParty`,
           text: `You're invited to watch "${party.title}" together! Use code: ${party.roomCode}`,
           url: inviteUrl,
         })
-      } } catch {
-        if ((error as Error).name !== 'AbortError') {}
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
           console.error('Error sharing:', error)
         }
       }
@@ -66,9 +63,8 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
   }
 
   const sendEmailInvites = async () => {
-    if (!emailList.trim()) {}
-      toast({}
-        title: "No emails provided",
+    if (!emailList.trim()) {
+      toast({title: "No emails provided",
         description: "Please enter at least one email address",
         variant: "destructive",
       })
@@ -78,36 +74,33 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
     setIsSendingEmails(true)
     try {
       const emails = emailList.split(',').map(email => email.trim()).filter(Boolean)
-      const response = await fetch(`/api/parties/${party.id}/invite/`, {}
+      const response = await fetch(`/api/parties/${party.id}/invite/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
-        body: JSON.stringify({}
-          emails,
+        body: JSON.stringify({emails,
           message: customMessage,
         }),
       })
 
       if (response.ok) {
-        toast({}
-          title: "Invitations sent!",
-          description: `Successfully sent invites to ${emails.length} email${emails.length > 1 ? &apos;s&apos; : &apos;'}`,
+        toast({title: "Invitations sent!",
+          description: `Successfully sent invites to ${emails.length} email${emails.length > 1 ? &apos;s' : ''}`,
         })
         setEmailList("")
         setCustomMessage("")
       } else {}
         throw new Error("Failed to send invitations")
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to send email invites:", error)
-      toast({}
-        title: "Failed to send invites",
+      toast({title: "Failed to send invites",
         description: "Please try again or use the invite link",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSendingEmails(false)
     }
   }
@@ -163,7 +156,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
                 <Button;
                   size="icon"
                   variant="outline"
-                  onClick={() => copyToClipboard(inviteUrl, &quot;Invite link&quot;)}
+                  onClick={() => copyToClipboard(inviteUrl, &quot;Invite link")}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
@@ -182,7 +175,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
                 <Button;
                   size="icon"
                   variant="outline"
-                  onClick={() => copyToClipboard(watchUrl, &quot;Watch link&quot;)}
+                  onClick={() => copyToClipboard(watchUrl, &quot;Watch link")}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
@@ -201,7 +194,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
               </Button>
               <Button;
                 variant="outline"
-                onClick={() => copyToClipboard(party.roomCode, &quot;Room code&quot;)}
+                onClick={() => copyToClipboard(party.roomCode, &quot;Room code")}
               >
                 <Copy className="h-4 w-4 mr-2" />
                 Copy Code;

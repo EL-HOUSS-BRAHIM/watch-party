@@ -1,13 +1,12 @@
 
 "use client"
 
-interface PublicProfilePageProps {}
-  params: {}
+interface params {: {}
     userId: string;
   }
 }
 
-const PublicProfilePage = ({ params }: PublicProfilePageProps) => {}
+const PublicProfilePage = ({ params }: PublicProfilePageProps) => {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-4">Public Profile</h1>

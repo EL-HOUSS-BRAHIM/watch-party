@@ -3,6 +3,7 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 
 "use client"
+
 export interface WatchPartyInputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
   label?: string;
   error?: string;
@@ -17,7 +18,7 @@ const WatchPartyInput = React.forwardRef<HTMLInputElement, WatchPartyInputProps>
   (
     { className, type, label, error, success, hint, icon, showPasswordToggle = false, variant = "default", ...props },
     ref,
-  ) => {}
+  ) => {
     const [showPassword, setShowPassword] = React.useState(false)
     const [isFocused, setIsFocused] = React.useState(false)
 
@@ -66,15 +67,15 @@ const WatchPartyInput = React.forwardRef<HTMLInputElement, WatchPartyInputProps>
               className,
             )}
             ref={ref}
-            onFocus={(e) => {}
+            onFocus={(e) => {
               setIsFocused(true)
               props.onFocus?.(e)
             }}
-            onBlur={(e) => {}
+            onBlur={(e) => {
               setIsFocused(false)
               props.onBlur?.(e)
             }}
-            {...props}
+            ...props}
           />
 
           {/* Password toggle button */}
@@ -85,7 +86,7 @@ const WatchPartyInput = React.forwardRef<HTMLInputElement, WatchPartyInputProps>
               onClick={() => setShowPassword(!showPassword)}
               tabIndex={-1}
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4&quot; />}
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4" />}"
             </button>
           )}
 

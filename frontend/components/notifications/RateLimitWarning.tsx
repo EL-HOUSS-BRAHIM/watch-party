@@ -6,30 +6,27 @@ import { Progress } from '@/components/ui/progress';
 
 'use client';
 
-interface RateLimitWarningProps {}
-  isVisible: boolean;
+interface isVisible {: boolean;,
   rateLimitInfo: {}
-    limit: number;
-    remaining: number;
-    resetTime: Date;
+    limit: number;,
+    remaining: number;,
+    resetTime: Date;,
     action: string;
   };
   onDismiss: () => void;
   severity?: 'warning' | 'critical';
 }
 
-export default function RateLimitWarning({}
-  isVisible,
+export default function RateLimitWarning({isVisible,
   rateLimitInfo,
   onDismiss,
   severity = 'warning'
 }: RateLimitWarningProps) {}
-  const [timeUntilReset, setTimeUntilReset] = useState<string>(&apos;&apos;);
+  const [timeUntilReset, setTimeUntilReset] = useState<string>(&apos;');
 
   useEffect(() => {
     if (!isVisible) return;
-
-    const updateCountdown = () => {}
+    const updateCountdown = () => {
       const now = new Date();
       const resetTime = new Date(rateLimitInfo.resetTime);
       const diff = resetTime.getTime() - now.getTime();
@@ -51,20 +48,18 @@ export default function RateLimitWarning({}
   }, [isVisible, rateLimitInfo.resetTime]);
 
   if (!isVisible) return null;
-
   const usagePercentage = ((rateLimitInfo.limit - rateLimitInfo.remaining) / rateLimitInfo.limit) * 100;
   const isCritical = severity === 'critical' || usagePercentage >= 90;
-
   return (
     <div className="fixed top-4 right-4 z-50 w-96">
       <Card className={`p-4 border-l-4 ${}}
         isCritical;
-          ? 'border-l-red-500 bg-red-50 dark:bg-red-900/10' 
+          ? 'border-l-red-500 bg-red-50 dark:bg-red-900/10'  />
           : 'border-l-yellow-500 bg-yellow-50 dark:bg-yellow-900/10' />
       }`}>
         <div className="flex items-start justify-between">
           <div className="flex items-start space-x-3">
-            <AlertTriangle className={`w-5 h-5 mt-0.5 ${}}
+            <AlertTriangle className={`w-5 h-5 mt-0.5 ${}} />
               isCritical ? 'text-red-500' : 'text-yellow-500' />
             }`} />
             <div className="flex-1">
@@ -86,7 +81,7 @@ export default function RateLimitWarning({}
                 <Progress;
                   value={usagePercentage} 
                   className={`h-2 ${}
-                    isCritical ? '[&>div]:bg-red-500&apos; : &apos;[&>div]:bg-yellow-500&apos;
+                    isCritical ? '[&>div]:bg-red-500&apos; : '[&>div]:bg-yellow-500'
                   }`}
                 />
               </div>
@@ -119,26 +114,26 @@ export default function RateLimitWarning({}
 
 // Hook for managing rate limit warnings;
 export function useRateLimitWarning() {
-  const [warnings, setWarnings] = useState<Array<{}
-    id: string;
-    rateLimitInfo: RateLimitWarningProps['rateLimitInfo'];
+  const [warnings, setWarnings] = useState<Array<{
+    id: string;,
+    rateLimitInfo: RateLimitWarningProps['rateLimitInfo'];,
     severity: 'warning' | 'critical';
-  }>>([]);
+  }>>([0]);
 
-  const showWarning = (rateLimitInfo: RateLimitWarningProps['rateLimitInfo'], severity: 'warning' | 'critical' = 'warning') => {}
+  const showWarning = (rateLimitInfo: RateLimitWarningProps['rateLimitInfo'], severity: 'warning' | 'critical' = 'warning') => {
     const id = `${rateLimitInfo.action}-${Date.now()}`;
-    setWarnings(prev => [...prev, { id, rateLimitInfo, severity }]);
+    setWarnings(prev => ...prev, { id, rateLimitInfo, severity }]);
   };
 
-  const dismissWarning = (id: string) => {}
+  const dismissWarning = (id: string) => {
     setWarnings(prev => prev.filter(warning => warning.id !== id));
   };
 
-  const dismissAll = () => {}
-    setWarnings([]);
+  const dismissAll = () => {
+    setWarnings([0]);
   };
 
-  return {
+  return {}
     warnings,
     showWarning,
     dismissWarning,

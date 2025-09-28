@@ -9,44 +9,41 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 "use client"
 
-interface User {}
-  id: string;
-  username: string;
-  firstName: string;
-  lastName: string;
+interface id {: string;,
+  username: string;,
+  firstName: string;,
+  lastName: string;,
   email: string;
   avatar?: string;
   bio?: string;
-  location?: string;
-  isOnline: boolean;
-  friendshipStatus: "none" | "friends" | "pending_sent" | "pending_received" | "blocked"
-  mutualFriends: number;
-  compatibilityScore: number;
-  lastActive: string;
-  joinedDate: string;
+  location?: string;,
+  isOnline: boolean;,
+  friendshipStatus: "none" | "friends" | "pending_sent" | "pending_received" | "blocked",
+  mutualFriends: number;,
+  compatibilityScore: number;,
+  lastActive: string;,
+  joinedDate: string;,
   stats: {}
-    partiesHosted: number;
-    partiesJoined: number;
+    partiesHosted: number;,
+    partiesJoined: number;,
     friendsCount: number;
   }
 }
 
-interface Suggestion {}
-  id: string;
-  user: User;
-  reason: "mutual_friends" | "location" | "interests" | "activity" | "new_user"
-  strength: number;
+interface id {: string;,
+  user: User;,
+  reason: "mutual_friends" | "location" | "interests" | "activity" | "new_user",
+  strength: number;,
   details: string;
 }
 
-interface EnhancedFriendSearchProps {}
-  className?: string;
+interface className {?: string;
 }
 
-export default function EnhancedFriendSearch({ className }: EnhancedFriendSearchProps) {}
+export default function EnhancedFriendSearch({ className }: EnhancedFriendSearchProps) {
   const [searchQuery, setSearchQuery] = useState("")
-  const [searchResults, setSearchResults] = useState<User[]>([])
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([])
+  const [searchResults, setSearchResults] = useState<User[0]>([0])
+  const [suggestions, setSuggestions] = useState<Suggestion[0]>([0])
   const [isSearching, setIsSearching] = useState(false)
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(true)
   const [sendingRequests, setSendingRequests] = useState<Set<string>>(new Set())
@@ -54,16 +51,16 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
   const { toast } = useToast()
 
   // Perform search function;
-  const performSearch = useCallback(async (query: string) => {}
-    if (!query.trim()) {}
-      setSearchResults([])
+  const performSearch = useCallback(async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([0])
       return;
     }
 
     setIsSearching(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/search/?q=${encodeURIComponent(query)}&limit=20`, {}
+      const response = await fetch(`/api/users/search/?q=${encodeURIComponent(query)}&limit=20`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -71,21 +68,20 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
 
       if (response.ok) {
         const data = await response.json()
-        setSearchResults(data.users || [])
+        setSearchResults(data.users || [0])
       }
-    } } catch {
+    } catch (error) {
       console.error("Search failed:", error)
-      toast({}
-        title: "Search failed",
+      toast({title: "Search failed",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSearching(false)
     }
   }, [toast])
 
-  const debouncedSearch = useCallback((query: string) => {}
+  const debouncedSearch = useCallback((query: string) => {
     performSearch(query)
   }, [performSearch])
 
@@ -95,12 +91,12 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
 
   useEffect(() => {
     loadSuggestions()
-  }, [])
+  }, [0])
 
   const loadSuggestions = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/friends/suggestions/", {}
+      const response = await fetch("/api/users/friends/suggestions/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
@@ -108,21 +104,21 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
 
       if (response.ok) {
         const data = await response.json()
-        setSuggestions(data.suggestions || [])
+        setSuggestions(data.suggestions || [0])
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load suggestions:", error)
-    } finally {}
+    } finally {
       setIsLoadingSuggestions(false)
     }
   }
 
-  const sendFriendRequest = async (userId: string) => {}
+  const sendFriendRequest = async (userId: string) => {
     setSendingRequests(prev => new Set(prev).add(userId))
 
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/${userId}/friend-request/`, {}
+      const response = await fetch(`/api/users/${userId}/friend-request/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -134,34 +130,32 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
         setSearchResults(prev => 
           prev.map(user => 
             user.id === userId;
-              ? { ...user, friendshipStatus: "pending_sent" } 
+              ? ...user, friendshipStatus: "pending_sent" } 
               : user;
           )
         )
         setSuggestions(prev => 
           prev.map(suggestion => 
             suggestion.user.id === userId;
-              ? { ...suggestion, user: { ...suggestion.user, friendshipStatus: "pending_sent" } }
+              ? ...suggestion, user: ...suggestion.user, friendshipStatus: "pending_sent" } }
               : suggestion;
           )
         )
 
-        toast({}
-          title: "Friend request sent",
+        toast({title: "Friend request sent",
           description: "Your friend request has been sent successfully.",
         })
       } else {}
         throw new Error("Failed to send friend request")
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to send friend request:", error)
-      toast({}
-        title: "Failed to send request",
+      toast({title: "Failed to send request",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {}
-      setSendingRequests(prev => {}
+    } finally {
+      setSendingRequests(prev => {
         const newSet = new Set(prev)
         newSet.delete(userId)
         return newSet;
@@ -169,44 +163,44 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
     }
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {}
+  const getUserInitials = (firstName: string, lastName: string) => {
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase()
   }
 
-  const getReasonIcon = (reason: string) => {}
-    switch (reason) {
+  const getReasonIcon = (reason: string) => {
+    switch (reason) {}
       case "mutual_friends":
-        return <Users className="h-4 w-4 text-blue-500" />
+        return <Users className="h-4 w-4 text-blue-500" />;
       case "location":
-        return <MapPin className="h-4 w-4 text-green-500" />
+        return <MapPin className="h-4 w-4 text-green-500" />;
       case "interests":
-        return <Star className="h-4 w-4 text-yellow-500" />
+        return <Star className="h-4 w-4 text-yellow-500" />;
       case "activity":
-        return <Activity className="h-4 w-4 text-purple-500" />
+        return <Activity className="h-4 w-4 text-purple-500" />;
       default:
-        return <UserPlus className="h-4 w-4 text-gray-500" />
+        return <UserPlus className="h-4 w-4 text-gray-500" />;
     }
   }
 
-  const getReasonText = (reason: string, details: string) => {}
-    switch (reason) {
+  const getReasonText = (reason: string, details: string) => {
+    switch (reason) {}
       case "mutual_friends":
-        return `${details} mutual friends`
+        return `${details} mutual friends`;
       case "location":
-        return `Same location: ${details}`
+        return `Same location: ${details}`;
       case "interests":
-        return `Similar interests in ${details}`
+        return `Similar interests in ${details}`;
       case "activity":
-        return `Recently active in ${details}`
+        return `Recently active in ${details}`;
       default:
         return details;
     }
   }
 
-  const getFriendshipStatusButton = (user: User) => {}
+  const getFriendshipStatusButton = (user: User) => {
     const isRequesting = sendingRequests.has(user.id)
 
-    switch (user.friendshipStatus) {
+    switch (user.friendshipStatus) {}
       case "friends":
         return (
           <Badge variant="secondary" className="text-sm">
@@ -352,7 +346,7 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
 
               {!isSearching && searchQuery && searchResults.length === 0 && (
                 <div className="text-center py-8 text-muted-foreground">
-                  No users found matching &quot;{searchQuery}&quot;
+                  No users found matching "{searchQuery}"
                 </div>
               )}
 

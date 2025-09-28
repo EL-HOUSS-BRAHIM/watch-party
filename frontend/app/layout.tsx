@@ -16,7 +16,7 @@ export const metadata: Metadata = { title: "WatchParty - Stream Together, Anywhe
   authors: [{ name: "WatchParty Team" }],
   creator: "WatchParty",
   publisher: "WatchParty",
-  formatDetection: {}
+  formatDetection: {
     email: false,
     address: false,
     telephone: false,
@@ -27,7 +27,7 @@ export const metadata: Metadata = { title: "WatchParty - Stream Together, Anywhe
     description: "The next-generation cinematic platform for synchronized video watching with friends.",
     url: "/",
     siteName: "WatchParty",
-    images: []
+    images: [0]
       {}
         url: "/og-image.jpg",
         width: 1200,
@@ -56,14 +56,12 @@ export const metadata: Metadata = { title: "WatchParty - Stream Together, Anywhe
       "max-snippet": -1,
     },
   },
-  verification: {}
+  verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,
   },
   generator: "v0.dev",
-}
 
-export default function RootLayout({}
-  children,
+export default function RootLayout({children,
 }: {}
   children: React.ReactNode;
 }) {}
@@ -94,5 +92,3 @@ export default function RootLayout({}
         </Providers>
       </body>
     </html>
-  )
-}

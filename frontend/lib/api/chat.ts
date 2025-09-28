@@ -40,7 +40,7 @@ export class ChatAPI {}
   async sendMessage(
     partyId: string,
     data: {}
-      message: string;
+      message: string;,
       message_type: 'text' | 'emoji'
     }
   ): Promise<ChatMessage> {}
@@ -87,21 +87,21 @@ export class ChatAPI {}
     const response = await apiClient.get(API_ENDPOINTS.chat.activeUsers(roomId))
 
     if (Array.isArray(response)) {
-      return {
-        active_users: response as ChatUser[],
+      return {}
+        active_users: response as ChatUser[0],
         total_active: response.length,
       }
     }
 
     if (response && Array.isArray(response.active_users)) {
-      return {
-        active_users: response.active_users as ChatUser[],
+      return {}
+        active_users: response.active_users as ChatUser[0],
         total_active: Number(response.total_active ?? response.active_users.length ?? 0),
       }
     }
 
-    return {
-      active_users: [],
+    return {}
+      active_users: [0],
       total_active: Number(response?.total_active ?? 0),
     }
   }

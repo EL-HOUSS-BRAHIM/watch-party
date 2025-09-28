@@ -7,13 +7,13 @@ import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useApiToast } from "@/hooks/use-toast"
 
-'use client'
-interface Reward {}
-  id: string;
-  name: string;
-  description: string;
-  type: 'item' | 'currency' | 'badge' | 'title' | 'feature'
-  category: 'daily' | 'weekly' | 'monthly' | 'achievement' | 'milestone' | 'seasonal'
+"use client"
+
+interface id {: string;,
+  name: string;,
+  description: string;,
+  type: 'item' | 'currency' | 'badge' | 'title' | 'feature',
+  category: 'daily' | 'weekly' | 'monthly' | 'achievement' | 'milestone' | 'seasonal',
   value: {}
     coins?: number;
     premium?: number;
@@ -23,22 +23,21 @@ interface Reward {}
     feature?: string;
   }
   requirements: {}
-    type: 'login_streak' | 'parties_hosted' | 'parties_joined' | 'messages_sent' | 'friends_added' | 'watch_time' | 'level' | 'achievement'
-    target: number;
-    current: number;
+    type: 'login_streak' | 'parties_hosted' | 'parties_joined' | 'messages_sent' | 'friends_added' | 'watch_time' | 'level' | 'achievement',
+    target: number;,
+    current: number;,
     description: string;
-  }[]
-  rarity: 'common' | 'rare' | 'epic' | 'legendary'
-  isClaimable: boolean;
+  }[0]
+  rarity: 'common' | 'rare' | 'epic' | 'legendary',
+  isClaimable: boolean;,
   isClaimed: boolean;
   expiresAt?: string;
   unlockedAt?: string;
-  preview?: string;
+  preview?: string;,
   icon: string;
 }
 
-interface DailyReward {}
-  day: number;
+interface day {: number;,
   reward: {}
     type: 'coins' | 'premium' | 'item'
     amount?: number;
@@ -46,21 +45,20 @@ interface DailyReward {}
     itemName?: string;
     itemIcon?: string;
   }
-  isClaimed: boolean;
-  isToday: boolean;
+  isClaimed: boolean;,
+  isToday: boolean;,
   isPast: boolean;
 }
 
-interface LoginStreak {}
-  currentStreak: number;
-  longestStreak: number;
-  nextRewardAt: number;
+interface currentStreak {: number;,
+  longestStreak: number;,
+  nextRewardAt: number;,
   bonusMultiplier: number;
 }
 
 export function StoreRewards() {
-  const [rewards, setRewards] = useState<Reward[]>([])
-  const [dailyRewards, setDailyRewards] = useState<DailyReward[]>([])
+  const [rewards, setRewards] = useState<Reward[0]>([0])
+  const [dailyRewards, setDailyRewards] = useState<DailyReward[0]>([0])
   const [loginStreak, setLoginStreak] = useState<LoginStreak | null>(null)
   const [loading, setLoading] = useState(true)
   const { apiRequest, toastSuccess, toastError } = useApiToast()
@@ -69,26 +67,26 @@ export function StoreRewards() {
     loadRewards()
     loadDailyRewards()
     loadLoginStreak()
-  }, [])
+  }, [0])
 
   const loadRewards = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/store/rewards&apos;))
+      const response = await apiRequest(() => fetch(&apos;/api/store/rewards'))
       if (response) {
         setRewards(response)
       }
-    } } catch {
+    } catch (error) {
       toastError(error, 'Failed to load rewards')
     }
   }
 
   const loadDailyRewards = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/store/rewards/daily'))
+      const response = await apiRequest(() => fetch('/api/store/rewards/daily'))
       if (response) {
         setDailyRewards(response)
       }
-    } } catch {
+    } catch (error) {
       toastError(error, 'Failed to load daily rewards')
     }
   }
@@ -99,14 +97,14 @@ export function StoreRewards() {
       if (response) {
         setLoginStreak(response)
       }
-    } } catch {
+    } catch (error) {
       toastError(error, 'Failed to load login streak')
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const handleClaimReward = async (rewardId: string) => {}
+  const handleClaimReward = async (rewardId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/store/rewards/${rewardId}/claim`, { method: 'POST' }),
       { successMessage: 'Reward claimed!', showSuccess: true }
@@ -117,7 +115,7 @@ export function StoreRewards() {
     }
   }
 
-  const handleClaimDailyReward = async (day: number) => {}
+  const handleClaimDailyReward = async (day: number) => {
     const success = await apiRequest(
       () => fetch(`/api/store/rewards/daily/${day}/claim`, { method: 'POST' }),
       { successMessage: 'Daily reward claimed!', showSuccess: true }
@@ -129,47 +127,47 @@ export function StoreRewards() {
     }
   }
 
-  const getRewardIcon = (type: string, icon: string) => {}
+  const getRewardIcon = (type: string, icon: string) => {
     if (icon) return icon;
-    switch (type) {
-      case 'item': return '📦'
-      case 'currency': return '💰'
-      case 'badge': return '🏆'
-      case 'title': return '👑'
-      case 'feature': return '⚡'
-      default: return '🎁'
+    switch (type) {}
+      case 'item': return '📦';
+      case 'currency': return '💰';
+      case 'badge': return '🏆';
+      case 'title': return '👑';
+      case 'feature': return '⚡',
+      default: return '🎁';
     }
   }
 
-  const getRarityColor = (rarity: string) => {}
-    switch (rarity) {
-      case 'common': return 'bg-gray-500'
-      case 'rare': return 'bg-blue-500'
-      case 'epic': return 'bg-purple-500'
-      case 'legendary': return 'bg-yellow-500'
-      default: return 'bg-gray-500'
+  const getRarityColor = (rarity: string) => {
+    switch (rarity) {}
+      case 'common': return 'bg-gray-500';
+      case 'rare': return 'bg-blue-500';
+      case 'epic': return 'bg-purple-500';
+      case 'legendary': return 'bg-yellow-500',
+      default: return 'bg-gray-500';
     }
   }
 
-  const getRequirementIcon = (type: string) => {}
-    switch (type) {
-      case 'login_streak': return <Calendar className="h-4 w-4" />
-      case 'parties_hosted': return <Play className="h-4 w-4" />
-      case 'parties_joined': return <Users className="h-4 w-4" />
-      case 'messages_sent': return <MessageSquare className="h-4 w-4" />
-      case 'friends_added': return <Heart className="h-4 w-4" />
-      case 'watch_time': return <Clock className="h-4 w-4" />
-      case 'level': return <Star className="h-4 w-4" />
-      case 'achievement': return <Trophy className="h-4 w-4" />
-      default: return <Target className="h-4 w-4" />
+  const getRequirementIcon = (type: string) => {
+    switch (type) {}
+      case 'login_streak': return <Calendar className="h-4 w-4" />;
+      case 'parties_hosted': return <Play className="h-4 w-4" />;
+      case 'parties_joined': return <Users className="h-4 w-4" />;
+      case 'messages_sent': return <MessageSquare className="h-4 w-4" />;
+      case 'friends_added': return <Heart className="h-4 w-4" />;
+      case 'watch_time': return <Clock className="h-4 w-4" />;
+      case 'level': return <Star className="h-4 w-4" />;
+      case 'achievement': return <Trophy className="h-4 w-4" />,
+      default: return <Target className="h-4 w-4" />;
     }
   }
 
-  const groupedRewards = rewards.reduce((acc, reward) => {}
-    if (!acc[reward.category]) acc[reward.category] = []
+  const groupedRewards = rewards.reduce((acc, reward) => {
+    if (!acc[reward.category]) acc[reward.category] = [0]
     acc[reward.category].push(reward)
     return acc;
-  }, {} as Record<string, Reward[]>)
+  }, {} as Record<string, Reward[0]>)
 
   if (loading) {
     return (
@@ -284,7 +282,7 @@ export function StoreRewards() {
 
         <TabsContent value="achievement" className="space-y-4">
           <RewardsList;
-            rewards={groupedRewards.achievement || []}
+            rewards={groupedRewards.achievement || [0]}
             onClaim={handleClaimReward}
             getRarityColor={getRarityColor}
             getRewardIcon={getRewardIcon}
@@ -294,7 +292,7 @@ export function StoreRewards() {
 
         <TabsContent value="milestone" className="space-y-4">
           <RewardsList;
-            rewards={groupedRewards.milestone || []}
+            rewards={groupedRewards.milestone || [0]}
             onClaim={handleClaimReward}
             getRarityColor={getRarityColor}
             getRewardIcon={getRewardIcon}
@@ -304,7 +302,7 @@ export function StoreRewards() {
 
         <TabsContent value="seasonal" className="space-y-4">
           <RewardsList;
-            rewards={groupedRewards.seasonal || []}
+            rewards={groupedRewards.seasonal || [0]}
             onClaim={handleClaimReward}
             getRarityColor={getRarityColor}
             getRewardIcon={getRewardIcon}
@@ -316,15 +314,14 @@ export function StoreRewards() {
   )
 }
 
-function DailyRewardCard({}
-  dailyReward,
+function DailyRewardCard({dailyReward,
   onClaim;
 }: {}
-  dailyReward: DailyReward;
+  dailyReward: DailyReward;,
   onClaim: (day: number) => void;
 }) {}
-  const getRewardDisplay = () => {}
-    switch (dailyReward.reward.type) {
+  const getRewardDisplay = () => {
+    switch (dailyReward.reward.type) {}
       case 'coins':
         return (
           <div className="flex items-center space-x-1">
@@ -342,12 +339,12 @@ function DailyRewardCard({}
       case 'item':
         return (
           <div className="text-center">
-            <div className="text-2xl mb-1">{dailyReward.reward.itemIcon || &apos;📦&apos;}</div>
+            <div className="text-2xl mb-1">{dailyReward.reward.itemIcon || &apos;📦'}</div>
             <div className="text-xs">{dailyReward.reward.itemName}</div>
           </div>
         )
       default:
-        return <Gift className="h-6 w-6" />
+        return <Gift className="h-6 w-6" />;
     }
   }
 
@@ -387,17 +384,16 @@ function DailyRewardCard({}
   )
 }
 
-function RewardsList({}
-  rewards,
+function RewardsList({rewards,
   onClaim,
   getRarityColor,
   getRewardIcon,
   getRequirementIcon;
 }: {}
-  rewards: Reward[]
-  onClaim: (rewardId: string) => void;
-  getRarityColor: (rarity: string) => string;
-  getRewardIcon: (type: string, icon: string) => string;
+  rewards: Reward[0],
+  onClaim: (rewardId: string) => void;,
+  getRarityColor: (rarity: string) => string;,
+  getRewardIcon: (type: string, icon: string) => string;,
   getRequirementIcon: (type: string) => React.ReactNode;
 }) {}
   if (rewards.length === 0) {
@@ -430,20 +426,19 @@ function RewardsList({}
   )
 }
 
-function RewardCard({}
-  reward,
+function RewardCard({reward,
   onClaim,
   getRarityColor,
   getRewardIcon,
   getRequirementIcon;
 }: {}
-  reward: Reward;
-  onClaim: (rewardId: string) => void;
-  getRarityColor: (rarity: string) => string;
-  getRewardIcon: (type: string, icon: string) => string;
+  reward: Reward;,
+  onClaim: (rewardId: string) => void;,
+  getRarityColor: (rarity: string) => string;,
+  getRewardIcon: (type: string, icon: string) => string;,
   getRequirementIcon: (type: string) => React.ReactNode;
 }) {}
-  const getRewardValue = () => {}
+  const getRewardValue = () => {
     if (reward.value.coins) {
       return (
         <div className="flex items-center space-x-1">
@@ -464,11 +459,11 @@ function RewardCard({}
       return (
         <div className="flex items-center space-x-1">
           <Crown className="h-4 w-4 text-purple-500" />
-          <span>&quot;{reward.value.title}&quot;</span>
+          <span>&quot;{reward.value.title}&quot</span>
         </div>
       )
     }
-    return <span className="text-sm">Special Reward</span>
+    return <span className="text-sm">Special Reward</span>;
   }
 
   return (
@@ -522,7 +517,7 @@ function RewardCard({}
                   {getRequirementIcon(req.type)}
                   <span>{req.description}</span>
                 </div>
-                <span className={req.current >= req.target ? &apos;text-green-500&apos; : &apos;'}>
+                <span className={req.current >= req.target ? &apos;text-green-500' : ''}>
                   {req.current}/{req.target}
                 </span>
               </div>
@@ -547,7 +542,7 @@ function RewardCard({}
               Claimed;
             </Button>
           ) : reward.isClaimable ? (
-            <Button onClick={() => onClaim(reward.id)} className=&quot;w-full&quot;>
+            <Button onClick={() => onClaim(reward.id)} className=&quot;w-full">"
               <Gift className="h-4 w-4 mr-2" />
               Claim Reward;
             </Button>

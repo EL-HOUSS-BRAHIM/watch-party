@@ -9,40 +9,38 @@ import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts'
 
-'use client'
-interface PartyAnalyticsModalProps {}
-  isOpen: boolean;
-  onClose: () => void;
-  partyId: string;
+"use client"
+
+interface isOpen {: boolean;,
+  onClose: () => void;,
+  partyId: string;,
   partyTitle: string;
 }
 
-interface ParticipantData {}
-  id: string;
-  username: string;
-  avatar: string;
-  joinTime: string;
-  watchTime: number;
-  reactions: number;
-  messages: number;
+interface id {: string;,
+  username: string;,
+  avatar: string;,
+  joinTime: string;,
+  watchTime: number;,
+  reactions: number;,
+  messages: number;,
   isActive: boolean;
 }
 
-interface AnalyticsData {}
-  totalParticipants: number;
-  currentViewers: number;
-  averageWatchTime: number;
-  totalReactions: number;
-  totalMessages: number;
-  peakViewers: number;
-  retentionRate: number;
-  engagementScore: number;
-  viewershipData: Array<{ time: string; viewers: number }>
-  reactionData: Array<{ type: string; count: number; color: string }>
-  participantActivity: ParticipantData[]
+interface totalParticipants {: number;,
+  currentViewers: number;,
+  averageWatchTime: number;,
+  totalReactions: number;,
+  totalMessages: number;,
+  peakViewers: number;,
+  retentionRate: number;,
+  engagementScore: number;,
+  viewershipData: Array<{ time: string; viewers: number }>,
+  reactionData: Array<{ type: string; count: number; color: string }>,
+  participantActivity: ParticipantData[0]
 }
 
-export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: PartyAnalyticsModalProps) {}
+export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: PartyAnalyticsModalProps) {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -60,14 +58,14 @@ export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: Pa
         const data = await response.json()
         setAnalytics(data)
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to fetch party analytics:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const exportData = () => {}
+  const exportData = () => {
     if (!analytics) return;
     const csvContent = "data:text/csv;charset=utf-8," + 
       "Metric,Value\n" +
@@ -89,10 +87,10 @@ export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: Pa
     document.body.removeChild(link)
   }
 
-  const formatDuration = (minutes: number) => {}
+  const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60)
     const mins = minutes % 60;
-    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
+    return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
   }
 
   if (loading) {

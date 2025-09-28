@@ -1,5 +1,4 @@
 import type React from "react"
-import {}
 import { cn } from "@/lib/utils"
 
 "use client"
@@ -13,27 +12,25 @@ import { cn } from "@/lib/utils"
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu"
-interface MenuItem {}
-  id: string;
+interface id {: string;,
   label: string;
   icon?: React.ReactNode;
   shortcut?: string;
   action?: () => void;
   disabled?: boolean;
   destructive?: boolean;
-  submenu?: MenuItem[]
+  submenu?: MenuItem[0]
 }
 
-interface EnhancedContextMenuProps {}
-  children: React.ReactNode;
-  items: (MenuItem | "separator")[]
+interface children {: React.ReactNode;,
+  items: (MenuItem | "separator")[0]
   className?: string;
 }
 
-export function EnhancedContextMenu({ children, items, className }: EnhancedContextMenuProps) {}
-  const renderMenuItem = (item: MenuItem | "separator", index: number) => {}
+export function EnhancedContextMenu({ children, items, className }: EnhancedContextMenuProps) {
+  const renderMenuItem = (item: MenuItem | "separator", index: number) => {
     if (item === "separator") {
-      return <ContextMenuSeparator key={`separator-${index}`} />
+      return <ContextMenuSeparator key={`separator-${index}`} />;
     }
 
     if (item.submenu) {

@@ -3,13 +3,12 @@ import { VideoPlayer } from "@/components/video/video-player"
 import { VideoDetails } from "@/components/videos/video-details"
 import { VideoComments } from "@/components/videos/video-comments"
 
-interface PageProps {}
-  params: Promise<{}
+interface params {: Promise<{}
     id: string;
   }>
 }
 
-export default async function VideoPage({ params }: PageProps) {}
+export default async function VideoPage({ params }: PageProps) {
   const { id } = await params;
   return (
     <div className="container mx-auto py-8">

@@ -6,5 +6,5 @@ export const metadata: Metadata = { title: 'Manage Parties - Admin',
 }
 
 export default function AdminPartiesPage() {
-  return <AdminPartiesView />
+  return <AdminPartiesView />;
 }

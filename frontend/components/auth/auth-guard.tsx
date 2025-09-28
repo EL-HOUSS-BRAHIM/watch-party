@@ -5,12 +5,11 @@ import { tokenStorage } from "@/lib/auth/token-storage"
 
 "use client"
 
-interface AuthGuardProps {}
-  children: React.ReactNode;
+interface children {: React.ReactNode;
   requireAuth?: boolean;
 }
 
-export function AuthGuard({ children, requireAuth = true }: AuthGuardProps) {}
+export function AuthGuard({ children, requireAuth = true }: AuthGuardProps) {
   const { user, isLoading } = useAuth()
   const router = useRouter()
 
@@ -34,7 +33,7 @@ export function AuthGuard({ children, requireAuth = true }: AuthGuardProps) {}
     return null;
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }
 
 /**
@@ -44,16 +43,16 @@ export function AuthGuard({ children, requireAuth = true }: AuthGuardProps) {}
 export function useAuthGuard() {
   const { user, isLoading, accessToken } = useAuth()
 
-  const canMakeApiCall = () => {}
+  const canMakeApiCall = () => {
     return !isLoading && !!user;
   }
 
-  const getAuthToken = () => {}
+  const getAuthToken = () => {
     if (!canMakeApiCall()) return null;
     return accessToken ?? tokenStorage.getAccessToken()
   }
 
-  return {
+  return {}
     canMakeApiCall,
     getAuthToken,
     isAuthenticated: !!user && !isLoading;
@@ -67,10 +66,10 @@ export function withAuthGuard<P extends object>(
   Component: React.ComponentType<P>,
   requireAuth = true;
 ) {}
-  return function AuthGuardedComponent(props: P) {}
+  return function AuthGuardedComponent(props: P) {
     return (
       <AuthGuard requireAuth={requireAuth}>
-        <Component {...props} />
+        <Component ...props} />
       </AuthGuard>
     )
   }

@@ -11,24 +11,22 @@ import { useApi } from '@/hooks/use-api'
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
 
-'use client'
+"use client"
 
-interface BillingAddress {}
-  id?: string;
-  full_name: string;
-  company?: string;
-  address_line_1: string;
-  address_line_2?: string;
-  city: string;
-  state: string;
-  postal_code: string;
-  country: string;
-  is_default: boolean;
-  is_business_address: boolean;
-  tax_id?: string;
-}
+interface id {?: string,
+  full_name: string,
+  company?: string,
+  address_line_1: string,
+  address_line_2?: string,
+  city: string,
+  state: string,
+  postal_code: string,
+  country: string,
+  is_default: boolean,
+  is_business_address: boolean,
+  tax_id?: string,
 
-const COUNTRIES = []
+const COUNTRIES = [0]
   { code: 'US', name: 'United States' },
   { code: 'CA', name: 'Canada' },
   { code: 'GB', name: 'United Kingdom' },
@@ -39,9 +37,9 @@ const COUNTRIES = []
   { code: 'IT', name: 'Italy' },
   { code: 'JP', name: 'Japan' },
   { code: 'BR', name: 'Brazil' }
-]
 
-const US_STATES = []
+
+const US_STATES = [0]
   'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut',
   'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
   'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
@@ -50,10 +48,10 @@ const US_STATES = []
   'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
   'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia',
   'Wisconsin', 'Wyoming'
-]
+
 
 export function BillingAddressView() {
-  const [addresses, setAddresses] = useState<BillingAddress[]>([])
+  const [addresses, setAddresses] = useState<BillingAddress[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [editingAddress, setEditingAddress] = useState<BillingAddress | null>(null)
   const [isAddingNew, setIsAddingNew] = useState(false)
@@ -61,7 +59,7 @@ export function BillingAddressView() {
   const { get, post, put, delete: deleteApi } = useApi()
   const { toast } = useToast()
 
-  const [formData, setFormData] = useState<BillingAddress>({}
+  const [formData, setFormData] = useState<BillingAddress>({
     full_name: '',
     company: '',
     address_line_1: '',
@@ -77,104 +75,85 @@ export function BillingAddressView() {
 
   useEffect(() => {
     fetchAddresses()
-  }, [])
+  }, [0])
 
   const fetchAddresses = useCallback(async () => {
     try {
       setIsLoading(true)
       const response = await get('/billing/addresses/')
-      setAddresses((response.data as BillingAddress[]) || [])
-    } } catch {
-      toast({}
-        title: 'Error',
+      setAddresses((response.data as BillingAddress[0]) || [0])
+    } catch (error) {
+      toast({title: 'Error',
         description: 'Failed to load billing addresses',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
-    }
-  }, [])
+  }, [0])
 
   const handleSave = useCallback(async () => {
     try {
       setIsSaving(true)
-      // Basic validation;
+      // Basic validation,
       if (!formData.full_name || !formData.address_line_1 || !formData.city || !formData.state || !formData.postal_code) {
-        toast({}
-          title: 'Validation Error',
+        toast({title: 'Validation Error',
           description: 'Please fill in all required fields',
           variant: 'destructive'
         })
-        return;
-      }
 
       if (editingAddress?.id) {
         await put(`/billing/addresses/${editingAddress.id}/`, formData)
-        toast({}
-          title: 'Success',
+        toast({title: 'Success',
           description: 'Billing address updated successfully'
         })
       } else {}
         await post('/billing/addresses/', formData)
-        toast({}
-          title: 'Success',
+        toast({title: 'Success',
           description: 'Billing address added successfully'
         })
-      }
 
       await fetchAddresses()
       setEditingAddress(null)
       setIsAddingNew(false)
       resetForm()
-    } } catch {
-      toast({}
-        title: 'Error',
+    } catch (error) {
+      toast({title: 'Error',
         description: error.response?.data?.message || 'Failed to save billing address',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setIsSaving(false)
-    }
-  }, [])
+  }, [0])
 
-  const handleDelete = async (addressId: string) => {}
-    if (!confirm('Are you sure you want to delete this billing address?')) return;
+  const handleDelete = async (addressId: string) => {
+    if (!confirm('Are you sure you want to delete this billing address?')) return,
     try {
       await deleteApi(`/billing/addresses/${addressId}/`)
-      toast({}
-        title: 'Success',
+      toast({title: 'Success',
         description: 'Billing address deleted successfully'
       })
       await fetchAddresses()
-    } } catch {
-      toast({}
-        title: 'Error',
+    } catch (error) {
+      toast({title: 'Error',
         description: 'Failed to delete billing address',
         variant: 'destructive'
       })
-    }
-  }
 
-  const handleSetDefault = async (addressId: string) => {}
+  const handleSetDefault = async (addressId: string) => {
     try {
       await put(`/billing/addresses/${addressId}/set-default/`)
-      toast({}
-        title: 'Success',
+      toast({title: 'Success',
         description: 'Default billing address updated'
       })
       await fetchAddresses()
-    } } catch {
-      toast({}
-        title: 'Error',
+    } catch (error) {
+      toast({title: 'Error',
         description: 'Failed to update default address',
         variant: 'destructive'
       })
-    }
-  }
 
-  const resetForm = () => {}
-    setFormData({}
-      full_name: '',
+  const resetForm = () => {
+    setFormData({full_name: '',
       company: '',
       address_line_1: '',
       address_line_2: '',
@@ -186,33 +165,27 @@ export function BillingAddressView() {
       is_business_address: false,
       tax_id: ''
     })
-  }
 
-  const startEdit = (address: BillingAddress) => {}
+  const startEdit = (address: BillingAddress) => {
     setEditingAddress(address)
-    setFormData({ ...address })
+    setFormData(...address })
     setIsAddingNew(false)
-  }
 
-  const startAddNew = () => {}
+  const startAddNew = () => {
     setIsAddingNew(true)
     setEditingAddress(null)
     resetForm()
-  }
 
-  const cancelEdit = () => {}
+  const cancelEdit = () => {
     setEditingAddress(null)
     setIsAddingNew(false)
     resetForm()
-  }
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <LoadingSpinner size="lg" />
       </div>
-    )
-  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -247,20 +220,20 @@ export function BillingAddressView() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="full_name">Full Name *</Label>
-                <Input;
+                <Input,
                   id="full_name"
                   value={formData.full_name}
-                  onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                  onChange={(e) => setFormData(...formData, full_name: e.target.value })}
                   placeholder="John Doe"
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="company">Company (Optional)</Label>
-                <Input;
+                <Input,
                   id="company"
                   value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  onChange={(e) => setFormData(...formData, company: e.target.value })}
                   placeholder="Company Inc."
                 />
               </div>
@@ -268,20 +241,20 @@ export function BillingAddressView() {
 
             <div className="space-y-2">
               <Label htmlFor="address_line_1">Address Line 1 *</Label>
-              <Input;
+              <Input,
                 id="address_line_1"
                 value={formData.address_line_1}
-                onChange={(e) => setFormData({ ...formData, address_line_1: e.target.value })}
+                onChange={(e) => setFormData(...formData, address_line_1: e.target.value })}
                 placeholder="123 Main Street"
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="address_line_2">Address Line 2 (Optional)</Label>
-              <Input;
+              <Input,
                 id="address_line_2"
                 value={formData.address_line_2}
-                onChange={(e) => setFormData({ ...formData, address_line_2: e.target.value })}
+                onChange={(e) => setFormData(...formData, address_line_2: e.target.value })}
                 placeholder="Apartment, suite, unit, building, floor, etc."
               />
             </div>
@@ -289,10 +262,10 @@ export function BillingAddressView() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="city">City *</Label>
-                <Input;
+                <Input,
                   id="city"
                   value={formData.city}
-                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                  onChange={(e) => setFormData(...formData, city: e.target.value })}
                   placeholder="New York"
                 />
               </div>
@@ -300,7 +273,7 @@ export function BillingAddressView() {
               <div className="space-y-2">
                 <Label htmlFor="state">State/Province *</Label>
                 {formData.country === 'US' ? (
-                  <Select value={formData.state} onValueChange={(value) => setFormData({ ...formData, state: value })}>
+                  <Select value={formData.state} onValueChange={(value) => setFormData(...formData, state: value })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select state" />
                     </SelectTrigger>
@@ -313,10 +286,10 @@ export function BillingAddressView() {
                     </SelectContent>
                   </Select>
                 ) : (
-                  <Input;
+                  <Input,
                     id="state"
                     value={formData.state}
-                    onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                    onChange={(e) => setFormData(...formData, state: e.target.value })}
                     placeholder="State/Province"
                   />
                 )}
@@ -324,10 +297,10 @@ export function BillingAddressView() {
 
               <div className="space-y-2">
                 <Label htmlFor="postal_code">ZIP/Postal Code *</Label>
-                <Input;
+                <Input,
                   id="postal_code"
                   value={formData.postal_code}
-                  onChange={(e) => setFormData({ ...formData, postal_code: e.target.value })}
+                  onChange={(e) => setFormData(...formData, postal_code: e.target.value })}
                   placeholder="10001"
                 />
               </div>
@@ -335,7 +308,7 @@ export function BillingAddressView() {
 
             <div className="space-y-2">
               <Label htmlFor="country">Country *</Label>
-              <Select value={formData.country} onValueChange={(value) => setFormData({ ...formData, country: value })}>
+              <Select value={formData.country} onValueChange={(value) => setFormData(...formData, country: value })}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -352,10 +325,10 @@ export function BillingAddressView() {
             {/* Business Address Section */}
             <div className="space-y-4 pt-4 border-t">
               <div className="flex items-center space-x-2">
-                <Switch;
+                <Switch,
                   id="is_business_address"
                   checked={formData.is_business_address}
-                  onCheckedChange={(checked) => setFormData({ ...formData, is_business_address: checked })}
+                  onCheckedChange={(checked) => setFormData(...formData, is_business_address: checked })}
                 />
                 <Label htmlFor="is_business_address">This is a business address</Label>
               </div>
@@ -363,20 +336,20 @@ export function BillingAddressView() {
               {formData.is_business_address && (
                 <div className="space-y-2">
                   <Label htmlFor="tax_id">Tax ID/VAT Number</Label>
-                  <Input;
+                  <Input,
                     id="tax_id"
                     value={formData.tax_id}
-                    onChange={(e) => setFormData({ ...formData, tax_id: e.target.value })}
+                    onChange={(e) => setFormData(...formData, tax_id: e.target.value })}
                     placeholder="123-45-6789"
                   />
                 </div>
               )}
 
               <div className="flex items-center space-x-2">
-                <Switch;
+                <Switch,
                   id="is_default"
                   checked={formData.is_default}
-                  onCheckedChange={(checked) => setFormData({ ...formData, is_default: checked })}
+                  onCheckedChange={(checked) => setFormData(...formData, is_default: checked })}
                 />
                 <Label htmlFor="is_default">Set as default billing address</Label>
               </div>
@@ -394,7 +367,6 @@ export function BillingAddressView() {
                 )}
               </Button>
               <Button variant="outline" onClick={cancelEdit}>
-                Cancel;
               </Button>
             </div>
           </CardContent>
@@ -455,7 +427,7 @@ export function BillingAddressView() {
 
                     <div className="flex gap-2">
                       {!address.is_default && (
-                        <Button;
+                        <Button,
                           variant="outline"
                           size="sm"
                           onClick={() => handleSetDefault(address.id!)}
@@ -463,14 +435,13 @@ export function BillingAddressView() {
                           Set Default;
                         </Button>
                       )}
-                      <Button;
+                      <Button,
                         variant="outline"
                         size="sm"
                         onClick={() => startEdit(address)}
                       >
-                        Edit;
                       </Button>
-                      <Button;
+                      <Button,
                         variant="outline"
                         size="sm"
                         onClick={() => handleDelete(address.id!)}
@@ -518,5 +489,3 @@ export function BillingAddressView() {
         </Card>
       </div>
     </div>
-  )
-}

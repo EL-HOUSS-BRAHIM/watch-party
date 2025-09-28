@@ -6,11 +6,13 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
-import {}
 import { formatDistanceToNow, parseISO } from "date-fns"
 
 } from "lucide-react"
 "use client"
+
+
+
 
   ShoppingCart,
   Star,
@@ -30,95 +32,91 @@ import { formatDistanceToNow, parseISO } from "date-fns"
   Package,
   ShoppingBag,
   Banknote;
-interface StoreItem {}
-  id: string;
-  name: string;
-  description: string;
-  category: "themes" | "emotes" | "avatars" | "badges" | "features" | "bundles"
-  type: "theme" | "emote_pack" | "avatar_frame" | "title" | "badge" | "premium_feature" | "bundle"
+interface id {: string;,
+  name: string;,
+  description: string;,
+  category: "themes" | "emotes" | "avatars" | "badges" | "features" | "bundles",
+  type: "theme" | "emote_pack" | "avatar_frame" | "title" | "badge" | "premium_feature" | "bundle",
   price: {}
-    currency: "points" | "coins" | "gems" | "usd"
+    currency: "points" | "coins" | "gems" | "usd",
     amount: number;
   }
-  preview_images: string[]
-  icon: string;
-  owned: boolean;
-  featured: boolean;
-  new: boolean;
+  preview_images: string[0],
+  icon: string;,
+  owned: boolean;,
+  featured: boolean;,
+  new: boolean;,
   limited_time: boolean;
   discount?: {}
-    percentage: number;
-    original_price: number;
+    percentage: number;,
+    original_price: number;,
     ends_at: string;
   }
-  requirements?: string[]
-  bundle_items?: string[]
+  requirements?: string[0]
+  bundle_items?: string[0],
   rating: {}
-    average: number;
+    average: number;,
     count: number;
   }
-  popularity_rank: number;
-  release_date: string;
-  tags: string[]
+  popularity_rank: number;,
+  release_date: string;,
+  tags: string[0]
 }
 
-interface UserInventory {}
-  themes: Array<{ id: string; name: string; active: boolean }>
-  emotes: Array<{ id: string; name: string; pack: string }>
-  avatars: Array<{ id: string; name: string; active: boolean }>
-  badges: Array<{ id: string; name: string; equipped: boolean }>
-  features: Array<{ id: string; name: string; expires_at?: string }>
+interface themes {: Array<{ id: string; name: string; active: boolean }>,
+  emotes: Array<{ id: string; name: string; pack: string }>,
+  avatars: Array<{ id: string; name: string; active: boolean }>,
+  badges: Array<{ id: string; name: string; equipped: boolean }>,
+  features: Array<{ id: string; name: string; expires_at?: string }>,
   currency: {}
-    points: number;
-    coins: number;
+    points: number;,
+    coins: number;,
     gems: number;
   }
 }
 
-interface CartItem {}
-  item: StoreItem;
+interface item {: StoreItem;,
   quantity: number;
 }
 
 export default function StorePage() {
   const { toast } = useToast()
 
-  const [storeItems, setStoreItems] = useState<StoreItem[]>([])
+  const [storeItems, setStoreItems] = useState<StoreItem[0]>([0])
   const [inventory, setInventory] = useState<UserInventory | null>(null)
-  const [cart, setCart] = useState<CartItem[]>([])
+  const [cart, setCart] = useState<CartItem[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState<string>(&quot;all&quot;)
-  const [sortBy, setSortBy] = useState<string>(&quot;featured&quot;)
-  const [priceFilter, setPriceFilter] = useState<string>(&quot;all&quot;)
+  const [selectedCategory, setSelectedCategory] = useState<string>(&quot;all")
+  const [sortBy, setSortBy] = useState<string>(&quot;featured")
+  const [priceFilter, setPriceFilter] = useState<string>(&quot;all")
   const [showCart, setShowCart] = useState(false)
   const [processingPurchase, setProcessingPurchase] = useState(false)
 
   const loadStoreData = useCallback(async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const [storeRes, inventoryRes] = await Promise.all([]
+      const [storeRes, inventoryRes] = await Promise.all([0]
         fetch("/api/store/items/", { headers: { Authorization: `Bearer ${token}` } }),
         fetch("/api/users/inventory/", { headers: { Authorization: `Bearer ${token}` } })
       ])
 
       if (storeRes.ok) {
         const data = await storeRes.json()
-        setStoreItems(data.items || [])
+        setStoreItems(data.items || [0])
       }
 
       if (inventoryRes.ok) {
         const data = await inventoryRes.json()
         setInventory(data)
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to load store data:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load store data.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }, [toast])
@@ -127,51 +125,48 @@ export default function StorePage() {
     loadStoreData()
   }, [loadStoreData])
 
-  const addToCart = (item: StoreItem) => {}
+  const addToCart = (item: StoreItem) => {
     if (item.owned) {
-      toast({}
-        title: "Already Owned",
+      toast({title: "Already Owned",
         description: "You already own this item.",
         variant: "destructive",
       })
       return;
     }
 
-    setCart(prev => {}
+    setCart(prev => {
       const existing = prev.find(cartItem => cartItem.item.id === item.id)
       if (existing) {
-        return prev.map(cartItem =>
+        return prev.map(cartItem =>;
           cartItem.item.id === item.id;
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            ? ...cartItem, quantity: cartItem.quantity + 1 }
             : cartItem;
         )
       }
-      return [...prev, { item, quantity: 1 }]
+      return ...prev, { item, quantity: 1 }];
     })
 
-    toast({}
-      title: "Added to Cart",
+    toast({title: "Added to Cart",
       description: `${item.name} has been added to your cart.`,
     })
   }
 
-  const removeFromCart = (itemId: string) => {}
+  const removeFromCart = (itemId: string) => {
     setCart(prev => prev.filter(cartItem => cartItem.item.id !== itemId))
   }
 
-  const purchaseItem = async (item: StoreItem) => {}
+  const purchaseItem = async (item: StoreItem) => {
     setProcessingPurchase(true)
 
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/store/purchase/`, {}
+      const response = await fetch(`/api/store/purchase/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({}
-          items: [{ item_id: item.id, quantity: 1 }]
+        body: JSON.stringify({items: [{ item_id: item.id, quantity: 1 }]
         }),
       })
 
@@ -181,7 +176,7 @@ export default function StorePage() {
         setStoreItems(prev => 
           prev.map(storeItem => 
             storeItem.id === item.id;
-              ? { ...storeItem, owned: true }
+              ? ...storeItem, owned: true }
               : storeItem;
           )
         )
@@ -189,22 +184,20 @@ export default function StorePage() {
         if (inventory) {
           setInventory(data.updated_inventory)
         }
-        toast({}
-          title: "Purchase Successful!",
+        toast({title: "Purchase Successful!",
           description: `You've successfully purchased ${item.name}!`,
         })
       } else {}
         const error = await response.json()
         throw new Error(error.message || "Purchase failed")
       }
-    } } catch {
+    } catch (error) {
       console.error("Purchase error:", error)
-      toast({}
-        title: "Purchase Failed",
+      toast({title: "Purchase Failed",
         description: error instanceof Error ? error.message : "Failed to complete purchase.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setProcessingPurchase(false)
     }
   }
@@ -215,14 +208,13 @@ export default function StorePage() {
 
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/store/purchase/`, {}
+      const response = await fetch(`/api/store/purchase/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({}
-          items: cart.map(cartItem => ({}
+        body: JSON.stringify({items: cart.map(cartItem => ({
             item_id: cartItem.item.id,
             quantity: cartItem.quantity;
           }))
@@ -236,17 +228,16 @@ export default function StorePage() {
         setStoreItems(prev => 
           prev.map(storeItem => 
             purchasedIds.includes(storeItem.id) 
-              ? { ...storeItem, owned: true }
+              ? ...storeItem, owned: true }
               : storeItem;
           )
         )
         // Clear cart and update inventory;
-        setCart([])
+        setCart([0])
         if (inventory) {
           setInventory(data.updated_inventory)
         }
-        toast({}
-          title: "Purchase Successful!",
+        toast({title: "Purchase Successful!",
           description: `You've successfully purchased ${cart.length} items!`,
         })
         setShowCart(false)
@@ -254,55 +245,54 @@ export default function StorePage() {
         const error = await response.json()
         throw new Error(error.message || "Purchase failed")
       }
-    } } catch {
+    } catch (error) {
       console.error("Cart purchase error:", error)
-      toast({}
-        title: "Purchase Failed",
+      toast({title: "Purchase Failed",
         description: error instanceof Error ? error.message : "Failed to complete purchase.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setProcessingPurchase(false)
     }
   }
 
-  const getCategoryIcon = (category: string) => {}
-    switch (category) {
+  const getCategoryIcon = (category: string) => {
+    switch (category) {}
       case "themes":
-        return <Palette className="h-4 w-4" />
+        return <Palette className="h-4 w-4" />;
       case "emotes":
-        return <Smile className="h-4 w-4" />
+        return <Smile className="h-4 w-4" />;
       case "avatars":
-        return <Camera className="h-4 w-4" />
+        return <Camera className="h-4 w-4" />;
       case "badges":
-        return <Shield className="h-4 w-4" />
+        return <Shield className="h-4 w-4" />;
       case "features":
-        return <Zap className="h-4 w-4" />
+        return <Zap className="h-4 w-4" />;
       case "bundles":
-        return <Package className="h-4 w-4" />
+        return <Package className="h-4 w-4" />;
       default:
-        return <ShoppingBag className="h-4 w-4" />
+        return <ShoppingBag className="h-4 w-4" />;
     }
   }
 
-  const getCurrencyIcon = (currency: string) => {}
-    switch (currency) {
+  const getCurrencyIcon = (currency: string) => {
+    switch (currency) {}
       case "points":
-        return <Star className="h-4 w-4 text-yellow-500" />
+        return <Star className="h-4 w-4 text-yellow-500" />;
       case "coins":
-        return <Coins className="h-4 w-4 text-orange-500" />
+        return <Coins className="h-4 w-4 text-orange-500" />;
       case "gems":
-        return <Gem className="h-4 w-4 text-purple-500" />
+        return <Gem className="h-4 w-4 text-purple-500" />;
       case "usd":
-        return <Banknote className="h-4 w-4 text-green-500" />
+        return <Banknote className="h-4 w-4 text-green-500" />;
       default:
-        return <Star className="h-4 w-4" />
+        return <Star className="h-4 w-4" />;
     }
   }
 
-  const filteredItems = storeItems.filter(item => {}
+  const filteredItems = storeItems.filter(item => {
     // Search filter;
-    if (searchQuery.trim()) {}
+    if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
       if (!item.name.toLowerCase().includes(query) && 
           !item.description.toLowerCase().includes(query) &&
@@ -319,7 +309,7 @@ export default function StorePage() {
     // Price filter;
     if (priceFilter !== "all") {
       const price = item.price.amount;
-      switch (priceFilter) {
+      switch (priceFilter) {}
         case "free":
           return price === 0;
         case "low":
@@ -332,8 +322,8 @@ export default function StorePage() {
     }
 
     return true;
-  }).sort((a, b) => {}
-    switch (sortBy) {
+  }).sort((a, b) => {
+    switch (sortBy) {}
       case "price_low":
         return a.price.amount - b.price.amount;
       case "price_high":
@@ -350,8 +340,8 @@ export default function StorePage() {
     }
   })
 
-  const getCartTotal = () => {}
-    return cart.reduce((total, cartItem) => {}
+  const getCartTotal = () => {
+    return cart.reduce((total, cartItem) => {
       return total + (cartItem.item.price.amount * cartItem.quantity)
     }, 0)
   }
@@ -660,7 +650,7 @@ export default function StorePage() {
                   <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No items found</h3>
                   <p className="text-gray-600">
-                    Try adjusting your search or filters to find what you&apos;re looking for.
+                    Try adjusting your search or filters to find what you're looking for.
                   </p>
                 </CardContent>
               </Card>

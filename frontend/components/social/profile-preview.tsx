@@ -5,47 +5,45 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
-'use client'
-interface UserProfile {}
-  id: string;
-  username: string;
-  displayName: string;
+"use client"
+
+interface id {: string;,
+  username: string;,
+  displayName: string;,
   avatar: string;
   bio?: string;
-  location?: string;
-  joinedDate: string;
+  location?: string;,
+  joinedDate: string;,
   isOnline: boolean;
-  lastSeen?: string;
-  isVerified: boolean;
-  isPremium: boolean;
+  lastSeen?: string;,
+  isVerified: boolean;,
+  isPremium: boolean;,
   stats: {}
-    friendsCount: number;
-    partiesHosted: number;
+    friendsCount: number;,
+    partiesHosted: number;,
     watchTime: number;
   }
   mutualFriends: Array<{}
-    id: string;
-    username: string;
+    id: string;,
+    username: string;,
     avatar: string;
   }>
   badges: Array<{}
-    id: string;
-    name: string;
-    icon: string;
+    id: string;,
+    name: string;,
+    icon: string;,
     color: string;
   }>
   relationship?: 'friend' | 'pending_out' | 'pending_in' | 'blocked' | 'none'
 }
 
-interface ProfilePreviewProps {}
-  userId: string;
+interface userId {: string;,
   children: React.ReactNode;
   trigger?: 'hover' | 'click'
   disabled?: boolean;
 }
 
-export function ProfilePreview({}
-  userId, 
+export function ProfilePreview({userId, 
   children, 
   trigger = 'hover',
   disabled = false;
@@ -69,103 +67,101 @@ export function ProfilePreview({}
         const data = await response.json()
         setProfile(data.profile)
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to fetch profile preview:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
   const sendFriendRequest = async () => {
     try {
-      const response = await fetch('/api/friends/requests', {}
+      const response = await fetch('/api/friends/requests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ recipientId: userId })
       })
 
       if (response.ok && profile) {
-        setProfile({ ...profile, relationship: 'pending_out' })
+        setProfile(...profile, relationship: 'pending_out' })
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to send friend request:', error)
     }
   }
 
   const acceptFriendRequest = async () => {
     try {
-      const response = await fetch(`/api/friends/requests/${userId}/accept`, {}
+      const response = await fetch(`/api/friends/requests/${userId}/accept`, {
         method: 'POST'
       })
 
       if (response.ok && profile) {
-        setProfile({ ...profile, relationship: 'friend' })
+        setProfile(...profile, relationship: 'friend' })
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to accept friend request:', error)
     }
   }
 
   const removeFriend = async () => {
     try {
-      const response = await fetch(`/api/friends/${userId}`, {}
+      const response = await fetch(`/api/friends/${userId}`, {
         method: 'DELETE'
       })
 
       if (response.ok && profile) {
-        setProfile({ ...profile, relationship: 'none' })
+        setProfile(...profile, relationship: 'none' })
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to remove friend:', error)
     }
   }
 
   const blockUser = async () => {
     try {
-      const response = await fetch('/api/users/block', {}
+      const response = await fetch('/api/users/block', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, blockType: 'full' })
       })
 
       if (response.ok && profile) {
-        setProfile({ ...profile, relationship: 'blocked' })
+        setProfile(...profile, relationship: 'blocked' })
       }
-    } } catch {
+    } catch (error) {
       console.error('Failed to block user:', error)
     }
   }
 
-  const handleMouseEnter = (event: React.MouseEvent) => {}
+  const handleMouseEnter = (event: React.MouseEvent) => {
     if (disabled || trigger !== 'hover') return;
     const rect = event.currentTarget.getBoundingClientRect()
-    setPosition({}
-      x: rect.left + rect.width / 2,
+    setPosition({x: rect.left + rect.width / 2,
       y: rect.bottom + 8;
     })
     setIsVisible(true)
   }
 
-  const handleMouseLeave = () => {}
+  const handleMouseLeave = () => {
     if (trigger !== 'hover') return;
     setIsVisible(false)
   }
 
-  const handleClick = (event: React.MouseEvent) => {}
+  const handleClick = (event: React.MouseEvent) => {
     if (disabled || trigger !== 'click') return;
     event.preventDefault()
     event.stopPropagation()
     const rect = event.currentTarget.getBoundingClientRect()
-    setPosition({}
-      x: rect.left + rect.width / 2,
+    setPosition({x: rect.left + rect.width / 2,
       y: rect.bottom + 8;
     })
     setIsVisible(!isVisible)
   }
 
-  const getRelationshipButton = () => {}
+  const getRelationshipButton = () => {
     if (!profile) return null;
-    switch (profile.relationship) {
+    switch (profile.relationship) {}
       case 'friend':
         return (
           <Button variant="outline" size="sm" onClick={removeFriend}>
@@ -204,9 +200,9 @@ export function ProfilePreview({}
     }
   }
 
-  const formatWatchTime = (minutes: number) => {}
+  const formatWatchTime = (minutes: number) => {
     const hours = Math.floor(minutes / 60)
-    return hours > 0 ? `${hours}h` : `${minutes}m`
+    return hours > 0 ? `${hours}h` : `${minutes}m`;
   }
 
   return (
@@ -277,7 +273,7 @@ export function ProfilePreview({}
                           ) : (
                             <>
                               <Clock className="h-3 w-3" />
-                              <span>Last seen {profile.lastSeen ? new Date(profile.lastSeen).toLocaleDateString() : &apos;recently&apos;}</span>
+                              <span>Last seen {profile.lastSeen ? new Date(profile.lastSeen).toLocaleDateString() : &apos;recently'}</span>
                             </>
                           )}
                         </div>

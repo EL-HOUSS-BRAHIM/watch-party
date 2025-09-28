@@ -16,9 +16,10 @@ import { formatDistanceToNow } from "date-fns"
 import { CheckedState } from "@radix-ui/react-checkbox"
 
 "use client"
-interface Notification {}
-  id: string;
-  type:
+
+interface Notification {
+  id: string;,
+  type: string
     | "friend_request"
     | "friend_accepted"
     | "party_invite"
@@ -29,9 +30,9 @@ interface Notification {}
     | "system"
     | "achievement"
     | "message"
-  title: string;
-  message: string;
-  is_read: boolean;
+  title: string;,
+  message: string;,
+  is_read: boolean;,
   created_at: string;
   action_data?: {}
     userId?: string;
@@ -49,21 +50,21 @@ interface Notification {}
   action_url?: string;
   requiresAction?: boolean;
   actionButtons?: Array<{}
-    label: string;
+    label: string;,
     action: string;
     variant?: "default" | "destructive" | "outline"
   }>
 }
 
-interface NotificationStats {}
-  total: number;
-  unread: number;
-  today: number;
-  thisWeek: number;
+interface NotificationStats {
+  total: number;,
+  unread: number;,
+  today: number;,
+  thisWeek: number;,
   byCategory: {}
-    social: number;
-    content: number;
-    system: number;
+    social: number;,
+    content: number;,
+    system: number;,
     achievement: number;
   }
 }
@@ -73,14 +74,14 @@ export default function NotificationsPage() {
   const { toast } = useToast()
   const router = useRouter()
 
-  const [notifications, setNotifications] = useState<Notification[]>([])
-  const [filteredNotifications, setFilteredNotifications] = useState<Notification[]>([])
-  const [selectedNotifications, setSelectedNotifications] = useState<string[]>([])
+  const [notifications, setNotifications] = useState<Notification[0]>([0])
+  const [filteredNotifications, setFilteredNotifications] = useState<Notification[0]>([0])
+  const [selectedNotifications, setSelectedNotifications] = useState<string[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
   const [filterType, setFilterType] = useState("all")
   const [showUnreadOnly, setShowUnreadOnly] = useState(false)
-  const [stats, setStats] = useState<NotificationStats>({}
+  const [stats, setStats] = useState<NotificationStats>({
     total: 0,
     unread: 0,
     today: 0,
@@ -95,7 +96,7 @@ export default function NotificationsPage() {
 
   useEffect(() => {
     loadNotifications()
-  }, [])
+  }, [0])
 
   useEffect(() => {
     filterNotifications()
@@ -105,25 +106,24 @@ export default function NotificationsPage() {
     setIsLoading(true)
     try {
       const data = await notificationsAPI.getNotifications()
-      setNotifications((data.results || []) as Notification[])
+      setNotifications((data.results || [0]) as Notification[0])
       setStats(prev => ({}
         ...prev,
         unread: data.unread_count || 0;
       }))
-    } } catch {
+    } catch (error) {
       console.error("Failed to load notifications:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load notifications. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const filterNotifications = () => {}
-    let filtered = [...notifications]
+  const filterNotifications = () => {
+    let filtered = ...notifications]
 
     // Tab filter;
     if (activeTab === "unread") {
@@ -145,12 +145,12 @@ export default function NotificationsPage() {
     setFilteredNotifications(filtered)
   }
 
-  const markAsRead = async (notificationId: string) => {}
+  const markAsRead = async (notificationId: string) => {
     try {
       await notificationsAPI.markAsRead(notificationId)
-      setNotifications((prev) => prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n)))
-      setStats((prev) => ({ ...prev, unread: Math.max(0, prev.unread - 1) }))
-    } } catch {
+      setNotifications((prev) => prev.map((n) => (n.id === notificationId ? ...n, is_read: true } : n)))
+      setStats((prev) => (...prev, unread: Math.max(0, prev.unread - 1) }))
+    } catch (error) {
       console.error("Failed to mark notification as read:", error)
     }
   }
@@ -158,23 +158,21 @@ export default function NotificationsPage() {
   const markAllAsRead = async () => {
     try {
       await notificationsAPI.markAllAsRead()
-      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })))
-      setStats((prev) => ({ ...prev, unread: 0 }))
-      toast({}
-        title: "All Marked as Read",
+      setNotifications((prev) => prev.map((n) => (...n, is_read: true })))
+      setStats((prev) => (...prev, unread: 0 }))
+      toast({title: "All Marked as Read",
         description: "All notifications have been marked as read.",
       })
-    } } catch {
+    } catch (error) {
       console.error("Failed to mark all as read:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to mark all notifications as read.",
         variant: "destructive",
       })
     }
   }
 
-  const deleteNotification = async (notificationId: string) => {}
+  const deleteNotification = async (notificationId: string) => {
     try {
       await notificationsAPI.deleteNotification(notificationId)
       setNotifications((prev) => prev.filter((n) => n.id !== notificationId))
@@ -183,10 +181,9 @@ export default function NotificationsPage() {
         total: prev.total - 1,
         unread: prev.unread - (notifications.find((n) => n.id === notificationId)?.is_read ? 0 : 1),
       }))
-    } } catch {
+    } catch (error) {
       console.error("Failed to delete notification:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to delete notification.",
         variant: "destructive",
       })
@@ -204,23 +201,21 @@ export default function NotificationsPage() {
         total: prev.total - selectedNotifications.length,
         unread: prev.unread - unreadCount,
       }))
-      setSelectedNotifications([])
+      setSelectedNotifications([0])
 
-      toast({}
-        title: "Notifications Deleted",
+      toast({title: "Notifications Deleted",
         description: `${selectedNotifications.length} notifications deleted.`,
       })
-    } } catch {
+    } catch (error) {
       console.error("Failed to delete selected notifications:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to delete selected notifications.",
         variant: "destructive",
       })
     }
   }
 
-  const handleNotificationAction = async (notification: Notification, action: string) => {}
+  const handleNotificationAction = async (notification: Notification, action: string) => {
     try {
       const token = localStorage.getItem("accessToken")
 
@@ -230,7 +225,7 @@ export default function NotificationsPage() {
             ? `/api/users/friends/${notification.action_data?.requestId}/accept/`
             : `/api/users/friends/${notification.action_data?.requestId}/decline/`
 
-        const response = await fetch(endpoint, {}
+        const response = await fetch(endpoint, {
           method: "POST",
           headers: {}
             Authorization: `Bearer ${token}`,
@@ -239,8 +234,7 @@ export default function NotificationsPage() {
 
         if (response.ok) {
           markAsRead(notification.id)
-          toast({}
-            title: "Success",
+          toast({title: "Success",
             description: `Friend request ${action}ed.`,
           })
         }
@@ -249,60 +243,59 @@ export default function NotificationsPage() {
       } else if (notification.action_url) {
         router.push(notification.action_url)
       }
-    } } catch {
+    } catch (error) {
       console.error("Failed to handle notification action:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to process action.",
         variant: "destructive",
       })
     }
   }
 
-  const getNotificationIcon = (type: string) => {}
-    switch (type) {
+  const getNotificationIcon = (type: string) => {
+    switch (type) {}
       case "friend_request":
       case "friend_accepted":
-        return <UserPlus className="w-5 h-5 text-blue-500" />
+        return <UserPlus className="w-5 h-5 text-blue-500" />;
       case "party_invite":
       case "party_started":
-        return <Calendar className="w-5 h-5 text-purple-500" />
+        return <Calendar className="w-5 h-5 text-purple-500" />;
       case "video_like":
-        return <Heart className="w-5 h-5 text-red-500" />
+        return <Heart className="w-5 h-5 text-red-500" />;
       case "video_comment":
-        return <MessageCircle className="w-5 h-5 text-blue-500" />
+        return <MessageCircle className="w-5 h-5 text-blue-500" />;
       case "video_upload":
-        return <Video className="w-5 h-5 text-green-500" />
+        return <Video className="w-5 h-5 text-green-500" />;
       case "message":
-        return <MessageCircle className="w-5 h-5 text-green-500" />
+        return <MessageCircle className="w-5 h-5 text-green-500" />;
       case "achievement":
-        return <Star className="w-5 h-5 text-yellow-500" />
+        return <Star className="w-5 h-5 text-yellow-500" />;
       case "system":
-        return <Info className="w-5 h-5 text-gray-500" />
+        return <Info className="w-5 h-5 text-gray-500" />;
       default:
-        return <Bell className="w-5 h-5 text-gray-500" />
+        return <Bell className="w-5 h-5 text-gray-500" />;
     }
   }
 
-  const getPriorityBadge = (priority: string) => {}
+  const getPriorityBadge = (priority: string) => {
     // Priority not available in API response, return null;
     return null;
   }
 
-  const toggleNotificationSelection = (notificationId: string) => {}
+  const toggleNotificationSelection = (notificationId: string) => {
     setSelectedNotifications((prev) =>
-      prev.includes(notificationId) ? prev.filter((id) => id !== notificationId) : [...prev, notificationId],
+      prev.includes(notificationId) ? prev.filter((id) => id !== notificationId) : ...prev, notificationId],
     )
   }
 
-  const toggleAllSelection = () => {}
+  const toggleAllSelection = () => {
     const visibleIds = filteredNotifications.map((n) => n.id)
     const allSelected = visibleIds.every((id) => selectedNotifications.includes(id))
 
     if (allSelected) {
       setSelectedNotifications((prev) => prev.filter((id) => !visibleIds.includes(id)))
     } else {}
-      setSelectedNotifications((prev) => [...new Set([...prev, ...visibleIds])])
+      setSelectedNotifications((prev) => ...new Set(...prev, ...visibleIds])])
     }
   }
 
@@ -324,7 +317,7 @@ export default function NotificationsPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">"
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -350,7 +343,7 @@ export default function NotificationsPage() {
                 Mark All Read;
               </Button>
             )}
-            <Button variant="outline" onClick={() => router.push(&quot;/dashboard/settings&quot;)}>
+            <Button variant="outline" onClick={() => router.push(&quot;/dashboard/settings")}>
               <Settings className="h-4 w-4 mr-2" />
               Settings;
             </Button>
@@ -405,7 +398,7 @@ export default function NotificationsPage() {
               <Checkbox;
                 id="unread-only" 
                 checked={showUnreadOnly} 
-                onCheckedChange={(checked: CheckedState) => {}
+                onCheckedChange={(checked: CheckedState) => {
                   setShowUnreadOnly(checked === true)
                 }} 
               />
@@ -422,7 +415,7 @@ export default function NotificationsPage() {
                 <Trash2 className="w-4 h-4 mr-1" />
                 Delete;
               </Button>
-              <Button variant="outline" size="sm" onClick={() => setSelectedNotifications([])}>
+              <Button variant="outline" size="sm" onClick={() => setSelectedNotifications([0])}>
                 Clear;
               </Button>
             </div>
@@ -463,10 +456,10 @@ export default function NotificationsPage() {
                       filteredNotifications.length > 0 &&
                       filteredNotifications.every((n) => selectedNotifications.includes(n.id))
                     }
-                    onCheckedChange={(checked: CheckedState) => {}
+                    onCheckedChange={(checked: CheckedState) => {
                       if (checked === true) {
                         const visibleIds = filteredNotifications.map((n) => n.id)
-                        setSelectedNotifications((prev) => [...new Set([...prev, ...visibleIds])])
+                        setSelectedNotifications((prev) => ...new Set(...prev, ...visibleIds])])
                       } else {}
                         const visibleIds = filteredNotifications.map((n) => n.id)
                         setSelectedNotifications((prev) => prev.filter((id) => !visibleIds.includes(id)))
@@ -568,13 +561,13 @@ export default function NotificationsPage() {
                               <div className="flex items-center gap-2">
                                 {notification.type === "friend_request" && (
                                   <>
-                                    <Button size="sm" onClick={() => handleNotificationAction(notification, &quot;accept&quot;)}>
+                                    <Button size="sm" onClick={() => handleNotificationAction(notification, &quot;accept")}>
                                       Accept;
                                     </Button>
                                     <Button;
                                       variant="outline"
                                       size="sm"
-                                      onClick={() => handleNotificationAction(notification, &quot;decline&quot;)}
+                                      onClick={() => handleNotificationAction(notification, &quot;decline")}
                                     >
                                       Decline;
                                     </Button>
@@ -584,7 +577,7 @@ export default function NotificationsPage() {
                                   <Button;
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => handleNotificationAction(notification, &quot;view&quot;)}
+                                    onClick={() => handleNotificationAction(notification, &quot;view")}
                                   >
                                     View;
                                   </Button>

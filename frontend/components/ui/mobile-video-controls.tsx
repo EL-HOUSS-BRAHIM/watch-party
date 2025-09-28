@@ -7,23 +7,21 @@ import { useIsMobile } from "@/hooks/use-mobile"
 
 "use client"
 
-interface MobileVideoControlsProps {}
-  isPlaying: boolean;
-  currentTime: number;
-  duration: number;
-  volume: number;
-  isMuted: boolean;
-  onPlayPause: () => void;
-  onSeek: (time: number) => void;
-  onVolumeChange: (volume: number) => void;
-  onMute: () => void;
-  onFullscreen: () => void;
+interface isPlaying {: boolean;,
+  currentTime: number;,
+  duration: number;,
+  volume: number;,
+  isMuted: boolean;,
+  onPlayPause: () => void;,
+  onSeek: (time: number) => void;,
+  onVolumeChange: (volume: number) => void;,
+  onMute: () => void;,
+  onFullscreen: () => void;,
   onSkip: (seconds: number) => void;
   className?: string;
 }
 
-export function MobileVideoControls({}
-  isPlaying,
+export function MobileVideoControls({isPlaying,
   currentTime,
   duration,
   volume,
@@ -46,26 +44,26 @@ export function MobileVideoControls({}
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
-      timeoutRef.current = setTimeout(() => {}
+      timeoutRef.current = setTimeout(() => {
         setShowControls(false)
       }, 3000)
     }
 
-    return () => {}
+    return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
     }
   }, [showControls])
 
-  const handleTouchStart = () => {}
+  const handleTouchStart = () => {
     setShowControls(true)
   }
 
-  const formatTime = (time: number) => {}
+  const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60)
     const seconds = Math.floor(time % 60)
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
 
   const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
@@ -94,7 +92,7 @@ export function MobileVideoControls({}
           onClick={onPlayPause}
           className="h-20 w-20 rounded-full bg-black/50 hover:bg-black/70 text-white"
         >
-          {isPlaying ? <Pause className="h-10 w-10" /> : <Play className=&quot;h-10 w-10 ml-1&quot; />}
+          {isPlaying ? <Pause className="h-10 w-10" /> : <Play className=&quot;h-10 w-10 ml-1" />}"
         </Button>
       </div>
 
@@ -116,15 +114,15 @@ export function MobileVideoControls({}
         {/* Control buttons */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={() => onSkip(-10)} className=&quot;text-white hover:bg-white/20&quot;>
+            <Button variant="ghost" size="sm" onClick={() => onSkip(-10)} className=&quot;text-white hover:bg-white/20">"
               <SkipBack className="h-5 w-5" />
             </Button>
 
             <Button variant="ghost" size="sm" onClick={onPlayPause} className="text-white hover:bg-white/20">
-              {isPlaying ? <Pause className="h-5 w-5" /> : <Play className=&quot;h-5 w-5&quot; />}
+              {isPlaying ? <Pause className="h-5 w-5" /> : <Play className=&quot;h-5 w-5" />}"
             </Button>
 
-            <Button variant="ghost" size="sm" onClick={() => onSkip(10)} className=&quot;text-white hover:bg-white/20&quot;>
+            <Button variant="ghost" size="sm" onClick={() => onSkip(10)} className=&quot;text-white hover:bg-white/20">"
               <SkipForward className="h-5 w-5" />
             </Button>
           </div>
@@ -137,7 +135,7 @@ export function MobileVideoControls({}
                 onClick={() => setShowVolumeSlider(!showVolumeSlider)}
                 className="text-white hover:bg-white/20"
               >
-                {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className=&quot;h-5 w-5&quot; />}
+                {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className=&quot;h-5 w-5" />}"
               </Button>
 
               {showVolumeSlider && (

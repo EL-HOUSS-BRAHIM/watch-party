@@ -2,26 +2,26 @@ import { Calendar, Clock, Eye, Heart, User, Users } from "lucide-react"
 import { useState } from 'react'
 import Image from "next/image"
 
-'use client'
-interface VideoAnalytics {}
-  id: string;
-  title: string;
-  thumbnail: string;
-  views: number;
-  likes: number;
-  comments: number;
-  downloads: number;
-  uploadDate: string;
-  duration: string;
+"use client"
+
+interface id {: string;,
+  title: string;,
+  thumbnail: string;,
+  views: number;,
+  likes: number;,
+  comments: number;,
+  downloads: number;,
+  uploadDate: string;,
+  duration: string;,
   engagement: number;
-  revenue?: number;
-  watchTime: number;
-  viewsChange: number;
-  likesChange: number;
+  revenue?: number;,
+  watchTime: number;,
+  viewsChange: number;,
+  likesChange: number;,
   commentsChange: number;
 }
 
-const videoAnalytics: VideoAnalytics[] = []
+const videoAnalytics: VideoAnalytics[0] = [0]
   {}
     id: '1',
     title: 'Epic Movie Night Compilation',
@@ -75,28 +75,28 @@ const videoAnalytics: VideoAnalytics[] = []
   }
 ]
 
-const formatNumber = (num: number) => {}
+const formatNumber = (num: number) => {
   if (num >= 1000000) {
-    return (num / 1000000).toFixed(1) + 'M'
+    return (num / 1000000).toFixed(1) + 'M';
   }
   if (num >= 1000) {
-    return (num / 1000).toFixed(1) + 'K'
+    return (num / 1000).toFixed(1) + 'K';
   }
   return num.toString()
 }
 
-const formatDuration = (seconds: number) => {}
+const formatDuration = (seconds: number) => {
   const hours = Math.floor(seconds / 3600)
   const minutes = Math.floor((seconds % 3600) / 60)
-  return `${hours}:${minutes.toString().padStart(2, '0')}h`
+  return `${hours}:${minutes.toString().padStart(2, '0')}h`;
 }
 
 export default function VideoAnalyticsPage() {
-  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>(&apos;30d&apos;)
-  const [sortBy, setSortBy] = useState<'views' | 'likes' | 'engagement' | 'revenue'>(&apos;views&apos;)
+  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>(&apos;30d')
+  const [sortBy, setSortBy] = useState<'views' | 'likes' | 'engagement' | 'revenue'>(&apos;views')
 
-  const sortedVideos = [...videoAnalytics].sort((a, b) => {}
-    switch (sortBy) {
+  const sortedVideos = ...videoAnalytics].sort((a, b) => {
+    switch (sortBy) {}
       case 'likes':
         return b.likes - a.likes;
       case 'engagement':
@@ -131,7 +131,7 @@ export default function VideoAnalyticsPage() {
         <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-8">
           {/* Time Range */}
           <div className="flex gap-2">
-            {[]
+            {[0]
               { key: '7d', label: 'Last 7 days' },
               { key: '30d', label: 'Last 30 days' },
               { key: '90d', label: 'Last 90 days' },
@@ -271,7 +271,7 @@ export default function VideoAnalyticsPage() {
                     <td className="p-4">
                       <div className="text-white font-medium">{formatNumber(video.views)}</div>
                       <div className={`flex items-center gap-1 text-sm ${}}
-                        video.viewsChange >= 0 ? &apos;text-green-400&apos; : &apos;text-red-400'
+                        video.viewsChange >= 0 ? &apos;text-green-400' : 'text-red-400'
                       }`}>
                         {video.viewsChange >= 0 ? (
                           <ArrowTrendingUpIcon className="w-3 h-3" />
@@ -284,7 +284,7 @@ export default function VideoAnalyticsPage() {
                     <td className="p-4">
                       <div className="text-white font-medium">{formatNumber(video.likes)}</div>
                       <div className={`flex items-center gap-1 text-sm ${}}
-                        video.likesChange >= 0 ? &apos;text-green-400&apos; : &apos;text-red-400'
+                        video.likesChange >= 0 ? &apos;text-green-400' : 'text-red-400'
                       }`}>
                         {video.likesChange >= 0 ? (
                           <ArrowTrendingUpIcon className="w-3 h-3" />
@@ -297,7 +297,7 @@ export default function VideoAnalyticsPage() {
                     <td className="p-4">
                       <div className="text-white font-medium">{video.comments}</div>
                       <div className={`flex items-center gap-1 text-sm ${}}
-                        video.commentsChange >= 0 ? &apos;text-green-400&apos; : &apos;text-red-400'
+                        video.commentsChange >= 0 ? &apos;text-green-400' : 'text-red-400'
                       }`}>
                         {video.commentsChange >= 0 ? (
                           <ArrowTrendingUpIcon className="w-3 h-3" />

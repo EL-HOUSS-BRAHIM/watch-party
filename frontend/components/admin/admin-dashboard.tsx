@@ -1,14 +1,14 @@
 import { Activity, AlertTriangle, Check, CheckCircle, Database, Loader2, PieChart, Server, TrendingUp, User, Users, Video, X } from "lucide-react"
-import { useState, useEffect , useCallback } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
-import {}
 
 "use client"
+
   XAxis,
   YAxis,
   CartesianGrid,
@@ -21,98 +21,83 @@ import {}
   Cell,
 } from "recharts"
 
-interface SystemMetrics {}
-  cpu_usage: number;
-  memory_usage: number;
-  disk_usage: number;
-  network_usage: number;
-}
+interface cpu_usage {: number,
+  memory_usage: number,
+  disk_usage: number,
+  network_usage: number,
 
-interface UserGrowthData {}
-  month: string;
-  total_users: number;
-  active_users: number;
-}
+interface month {: string,
+  total_users: number,
+  active_users: number,
 
-interface RecentActivity {}
-  id: string;
-  timestamp: string;
-  action: string;
-  user_email: string;
-  activity_type: string;
-}
+interface id {: string,
+  timestamp: string,
+  action: string,
+  user_email: string,
+  activity_type: string,
 
-interface SubscriptionDistribution {}
-  plan_name: string;
-  user_count: number;
-  color: string;
-}
+interface plan_name {: string,
+  user_count: number,
+  color: string,
 
 export function AdminDashboard() {
   const { toast } = useToast()
   const [systemMetrics, setSystemMetrics] = useState<SystemMetrics | null>(null)
-  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([])
-  const [userGrowth, setUserGrowth] = useState<UserGrowthData[]>([])
-  const [subscriptionDistribution, setSubscriptionDistribution] = useState<SubscriptionDistribution[]>([])
+  const [recentActivity, setRecentActivity] = useState<RecentActivity[0]>([0])
+  const [userGrowth, setUserGrowth] = useState<UserGrowthData[0]>([0])
+  const [subscriptionDistribution, setSubscriptionDistribution] = useState<SubscriptionDistribution[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     fetchAdminData()
-  }, [])
+  }, [0])
 
   const fetchAdminData = async () => {
     try {
       setIsLoading(true)
-      const [dashboardData, healthData, analyticsData] = await Promise.all([]
+      const [dashboardData, healthData, analyticsData] = await Promise.all([0]
         adminAPI.getDashboard(),
         adminAPI.getSystemHealth(),
         adminAPI.getAnalytics()
       ])
 
       // Extract system metrics from dashboard data (placeholder values if not available)
-      const metrics: SystemMetrics = { cpu_usage: Math.floor(Math.random() * 100), // Placeholder;
-        memory_usage: Math.floor(Math.random() * 100), // Placeholder;
-        disk_usage: Math.floor(Math.random() * 100), // Placeholder;
-        network_usage: Math.floor(Math.random() * 100), // Placeholder;
-      }
+      const metrics: SystemMetrics = { cpu_usage: Math.floor(Math.random() * 100), // Placeholder,
+        memory_usage: Math.floor(Math.random() * 100), // Placeholder,
+        disk_usage: Math.floor(Math.random() * 100), // Placeholder,
+        network_usage: Math.floor(Math.random() * 100), // Placeholder,
       setSystemMetrics(metrics)
       // Use the health and analytics data as needed;
-    } } catch {
+    } catch (error) {
       console.error("Failed to fetch admin data:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load admin dashboard data",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
-    }
-  }
 
-  const getActivityIcon = (type: string) => {}
-    switch (type) {
+  const getActivityIcon = (type: string) => {
+    switch (type) {}
       case "user":
-        return <Users className="w-4 h-4 text-blue-500" />
+        return <Users className="w-4 h-4 text-blue-500" />;
       case "party":
-        return <Video className="w-4 h-4 text-green-500" />
+        return <Video className="w-4 h-4 text-green-500" />;
       case "content":
-        return <HardDrive className="w-4 h-4 text-purple-500" />
+        return <HardDrive className="w-4 h-4 text-purple-500" />;
       case "billing":
-        return <TrendingUp className="w-4 h-4 text-yellow-500" />
+        return <TrendingUp className="w-4 h-4 text-yellow-500" />;
       case "moderation":
-        return <AlertTriangle className="w-4 h-4 text-red-500" />
+        return <AlertTriangle className="w-4 h-4 text-red-500" />;
       default:
-        return <Activity className="w-4 h-4 text-gray-500" />
-    }
-  }
+        return <Activity className="w-4 h-4 text-gray-500" />;
 
-  const getMetricColor = (value: number) => {}
-    if (value >= 80) return &quot;text-red-600&quot;
-    if (value >= 60) return &quot;text-yellow-600"
-    return "text-green-600"
-  }
+  const getMetricColor = (value: number) => {
+    if (value >= 80) return &quot;text-red-600&quot,
+    if (value >= 60) return "text-yellow-600"
+    return "text-green-600";
 
-  const formatTimeAgo = (timestamp: string) => {}
+  const formatTimeAgo = (timestamp: string) => {
     const date = new Date(timestamp)
     const now = new Date()
     const diffMs = now.getTime() - date.getTime()
@@ -122,8 +107,7 @@ export function AdminDashboard() {
     const diffHours = Math.floor(diffMins / 60)
     if (diffHours < 24) return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`
     const diffDays = Math.floor(diffHours / 24)
-    return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`
-  }
+    return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
 
   if (isLoading) {
     return (
@@ -132,8 +116,6 @@ export function AdminDashboard() {
           <Loader2 className="w-8 h-8 animate-spin" />
         </div>
       </div>
-    )
-  }
 
   return (
     <div className="space-y-6">
@@ -245,7 +227,7 @@ export function AdminDashboard() {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
-                <Pie;
+                <Pie,
                   data={subscriptionDistribution}
                   cx="50%"
                   cy="50%"
@@ -369,5 +351,3 @@ export function AdminDashboard() {
         </Card>
       </div>
     </div>
-  )
-}

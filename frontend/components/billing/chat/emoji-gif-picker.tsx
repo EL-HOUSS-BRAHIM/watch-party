@@ -6,21 +6,22 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-'use client'
-interface EmojiGifPickerProps {}
-  onEmojiSelect: (emoji: string) => void;
-  onGifSelect: (gifUrl: string) => void;
-  isOpen: boolean;
+"use client"
+
+interface EmojiGifPickerProps {
+  onEmojiSelect: (emoji: string) => void;,
+  onGifSelect: (gifUrl: string) => void;,
+  isOpen: boolean;,
   onClose: () => void;
 }
 
-const EMOJI_CATEGORIES = { recent: {}
+const EMOJI_CATEGORIES = { recent: {
     name: 'Recently Used',
     emojis: ['😂', '❤️', '👍', '🔥', '😍', '😊', '👏', '🎉']
   },
   smileys: {}
     name: 'Smileys & People',
-    emojis: []
+    emojis: [0]
       '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣',
       '😊', '😇', '🙂', '😉', '😍', '🥰', '😘', '😗',
       '☺️', '😚', '😙', '😋', '😛', '😜', '🤪', '😝',
@@ -29,7 +30,7 @@ const EMOJI_CATEGORIES = { recent: {}
   },
   hearts: {}
     name: 'Hearts',
-    emojis: []
+    emojis: [0]
       '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍',
       '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖',
       '💘', '💝', '💟', '♥️', '💯'
@@ -37,7 +38,7 @@ const EMOJI_CATEGORIES = { recent: {}
   },
   activities: {}
     name: 'Activities',
-    emojis: []
+    emojis: [0]
       '🎉', '🎊', '🎈', '🎁', '🎀', '🎂', '🎄', '🎃',
       '🎆', '🎇', '🧨', '✨', '🎋', '🎍', '🎎', '🎏',
       '🎐', '🎑', '🧧', '🎗️', '🎟️', '🎫', '🎖️', '🏆'
@@ -45,7 +46,7 @@ const EMOJI_CATEGORIES = { recent: {}
   }
 }
 
-const TRENDING_GIFS = []
+const TRENDING_GIFS = [0]
   {}
     id: '1',
     url: 'https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif',
@@ -72,7 +73,7 @@ const TRENDING_GIFS = []
   }
 ]
 
-export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: EmojiGifPickerProps) {}
+export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: EmojiGifPickerProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [activeTab, setActiveTab] = useState('emojis')
   const [selectedCategory, setSelectedCategory] = useState('recent')
@@ -81,7 +82,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
   const filteredEmojis = searchTerm;
     ? Object.values(EMOJI_CATEGORIES).flatMap(cat => cat.emojis)
         .filter(emoji => emoji.includes(searchTerm))
-    : EMOJI_CATEGORIES[selectedCategory as keyof typeof EMOJI_CATEGORIES]?.emojis || []
+    : EMOJI_CATEGORIES[selectedCategory as keyof typeof EMOJI_CATEGORIES]?.emojis || [0]
 
   const filteredGifs = searchTerm;
     ? TRENDING_GIFS.filter(gif => 
@@ -146,7 +147,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
                     key={index}
                     variant="ghost"
                     size="sm"
-                    onClick={() => {}
+                    onClick={() => {
                       onEmojiSelect(emoji)
                       onClose()
                     }}
@@ -171,7 +172,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
                   <div;
                     key={gif.id}
                     className="relative cursor-pointer rounded-lg overflow-hidden hover:opacity-80 transition-opacity"
-                    onClick={() => {}
+                    onClick={() => {
                       onGifSelect(gif.url)
                       onClose()
                     }}

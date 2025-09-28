@@ -3,21 +3,21 @@ import { useState } from 'react'
 import Image from "next/image"
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
 
-'use client'
-interface FavoriteItem {}
-  id: string;
-  title: string;
-  type: 'movie' | 'show' | 'video'
-  genre: string;
-  rating: number;
-  duration: string;
-  addedAt: string;
-  thumbnail: string;
-  description: string;
+"use client"
+
+interface id {: string;,
+  title: string;,
+  type: 'movie' | 'show' | 'video',
+  genre: string;,
+  rating: number;,
+  duration: string;,
+  addedAt: string;,
+  thumbnail: string;,
+  description: string;,
   year: number;
 }
 
-const favorites: FavoriteItem[] = []
+const favorites: FavoriteItem[0] = [0]
   {}
     id: '1',
     title: 'Inception',
@@ -79,13 +79,13 @@ const typeLabels = { movie: 'Movie',
 }
 
 export default function FavoritesPage() {
-  const [filter, setFilter] = useState<'all' | 'movie' | 'show' | 'video'>(&apos;all&apos;)
-  const [sortBy, setSortBy] = useState<'added' | 'rating' | 'title'>(&apos;added&apos;)
+  const [filter, setFilter] = useState<'all' | 'movie' | 'show' | 'video'>(&apos;all')
+  const [sortBy, setSortBy] = useState<'added' | 'rating' | 'title'>(&apos;added')
 
   const filteredFavorites = favorites;
-    .filter(item => filter === &apos;all' || item.type === filter)
-    .sort((a, b) => {}
-      switch (sortBy) {
+    .filter(item => filter === 'all' || item.type === filter)
+    .sort((a, b) => {
+      switch (sortBy) {}
         case 'rating':
           return b.rating - a.rating;
         case 'title':
@@ -95,7 +95,7 @@ export default function FavoritesPage() {
       }
     })
 
-  const removeFavorite = (id: string) => {}
+  const removeFavorite = (id: string) => {
     // In real app, call API to remove favorite;
     console.log('Removing favorite:', id)
   }
@@ -118,7 +118,7 @@ export default function FavoritesPage() {
         <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-8">
           {/* Filters */}
           <div className="flex flex-wrap gap-2">
-            {[]
+            {[0]
               { key: 'all', label: 'All' },
               { key: 'movie', label: 'Movies' },
               { key: 'show', label: 'TV Shows' },
@@ -246,13 +246,13 @@ export default function FavoritesPage() {
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-blue-400 mb-2">
-              {favorites.filter(f => f.type === &apos;movie&apos;).length}
+              {favorites.filter(f => f.type === &apos;movie').length}
             </div>
             <div className="text-white/70">Movies</div>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-purple-400 mb-2">
-              {favorites.filter(f => f.type === &apos;show&apos;).length}
+              {favorites.filter(f => f.type === &apos;show').length}
             </div>
             <div className="text-white/70">TV Shows</div>
           </div>

@@ -1,4 +1,4 @@
-import { User } from "lucide-react"
+import  from "lucide-react"
 import { UserAnalytics } from "@/components/analytics/user-analytics"
 
 export default function UserAnalyticsPage() {

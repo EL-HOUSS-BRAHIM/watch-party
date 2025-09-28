@@ -6,12 +6,9 @@ import { cn } from "@/lib/utils"
 
 "use client"
 
+interface features {: MarketingFeature[0]
 
-interface FeatureGridProps {}
-  features: MarketingFeature[]
-}
-
-function FeatureGridComponent({ features }: FeatureGridProps) {}
+function FeatureGridComponent({ features }: FeatureGridProps) {
   return (
     <section className="py-20 relative">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -30,10 +27,10 @@ function FeatureGridComponent({ features }: FeatureGridProps) {}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature) => {}
-            const Icon = feature.icon;
+          {features.map((feature) => {
+            const Icon = feature.icon,
             return (
-              <div;
+              <div,
                 key={feature.title}
                 className={cn(
                   "group rounded-lg border border-white/10 bg-white/5 p-8 backdrop-blur-sm transition-all duration-500",
@@ -53,12 +50,9 @@ function FeatureGridComponent({ features }: FeatureGridProps) {}
                   </div>
                 </div>
               </div>
-            )
           })}
         </div>
       </div>
     </section>
-  )
-}
 
 export const FeatureGrid = memo(FeatureGridComponent)

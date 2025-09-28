@@ -11,31 +11,30 @@ import { chatAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
 'use client';
-interface ChatStats {}
-  totalMessages: number;
-  totalUsers: number;
-  activeUsers: number;
-  averageMessagesPerUser: number;
+interface totalMessages {: number;,
+  totalUsers: number;,
+  activeUsers: number;,
+  averageMessagesPerUser: number;,
   topChannels: Array<{}
-    id: string;
-    name: string;
-    messageCount: number;
+    id: string;,
+    name: string;,
+    messageCount: number;,
     userCount: number;
   }>;
   messagesByHour: Array<{}
-    hour: number;
+    hour: number;,
     count: number;
   }>;
   moderationActions: Array<{}
-    type: string;
-    count: number;
+    type: string;,
+    count: number;,
     color: string;
   }>;
   recentActivity: Array<{}
-    id: string;
-    type: 'message' | 'join' | 'leave' | 'moderation';
-    user: string;
-    channel: string;
+    id: string;,
+    type: 'message' | 'join' | 'leave' | 'moderation';,
+    user: string;,
+    channel: string;,
     timestamp: string;
     details?: string;
   }>;
@@ -49,12 +48,12 @@ export default function ChatStatsPage() {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const normalizeActivityType = (type: unknown): 'message' | 'join' | 'leave' | 'moderation' => {}
-    const typeStr = String(type).toLowerCase()
+  const normalizeActivityType = (type: unknown): 'message' | 'join' | 'leave' | 'moderation' => {
+  const typeStr = String(type).toLowerCase()
     if (typeStr.includes('moderation') || typeStr.includes('mod') || typeStr.includes('ban') || typeStr.includes('warn')) return 'moderation'
     if (typeStr.includes('join') || typeStr.includes('enter')) return 'join'
     if (typeStr.includes('leave') || typeStr.includes('exit')) return 'leave'
-    return 'message'
+    return 'message';
   }
 
   const fetchChatStats = useCallback(async () => {
@@ -63,11 +62,11 @@ export default function ChatStatsPage() {
       // Fetch chat statistics from multiple API endpoints;
       const defaultRoomId = selectedChannel !== 'all' ? selectedChannel : 'global'
 
-      const [messagesResponse, usersResponse, moderationResponse] = await Promise.allSettled([]
+      const [messagesResponse, usersResponse, moderationResponse] = await Promise.allSettled([0]
         chatAPI.getMessages(defaultRoomId, { limit: 1000 }),
         typeof chatAPI.getActiveUsers === 'function'
           ? chatAPI.getActiveUsers(defaultRoomId)
-          : Promise.resolve({ active_users: [], total_active: 0 }),
+          : Promise.resolve({ active_users: [0], total_active: 0 }),
         chatAPI.getModerationLog ? chatAPI.getModerationLog(defaultRoomId, { page: 1 }) : Promise.resolve(null)
       ])
 
@@ -75,10 +74,10 @@ export default function ChatStatsPage() {
         totalUsers: 0,
         activeUsers: 0,
         averageMessagesPerUser: 0,
-        topChannels: [],
-        messagesByHour: [],
-        moderationActions: [],
-        recentActivity: []
+        topChannels: [0],
+        messagesByHour: [0],
+        moderationActions: [0],
+        recentActivity: [0]
       }
 
       // Process messages data;
@@ -92,7 +91,7 @@ export default function ChatStatsPage() {
         }))
 
         // Generate default channel data since API doesn't provide it;
-        chatStats.topChannels = []
+        chatStats.topChannels = [0]
           { id: '1', name: 'general', messageCount: Math.floor(Math.random() * 1000) + 100, userCount: Math.floor(Math.random() * 50) + 10 },
           { id: '2', name: 'random', messageCount: Math.floor(Math.random() * 500) + 50, userCount: Math.floor(Math.random() * 30) + 5 },
           { id: '3', name: 'announcements', messageCount: Math.floor(Math.random() * 300) + 30, userCount: Math.floor(Math.random() * 40) + 8 },
@@ -101,7 +100,7 @@ export default function ChatStatsPage() {
         ]
 
         // Generate default recent activity data since API doesn't provide it;
-        chatStats.recentActivity = []
+        chatStats.recentActivity = [0]
           { id: '1', type: 'join', user: 'user1', channel: 'general', timestamp: new Date().toISOString() },
           { id: '2', type: 'message', user: 'user2', channel: 'general', timestamp: new Date(Date.now() - 60000).toISOString() },
           { id: '3', type: 'moderation', user: 'admin', channel: 'general', timestamp: new Date(Date.now() - 120000).toISOString(), details: 'Message deleted' },
@@ -116,12 +115,12 @@ export default function ChatStatsPage() {
 
       // Process users data;
       if (usersResponse.status === 'fulfilled' && usersResponse.value) {
-        const usersData = usersResponse.value as { active_users?: unknown[]; total_active?: number; total_users?: number; total?: number }
+        const usersData = usersResponse.value as { active_users?: unknown[0]; total_active?: number; total_users?: number; total?: number }
         const activeList = Array.isArray(usersData.active_users)
           ? usersData.active_users;
           : Array.isArray(usersResponse.value)
-            ? (usersResponse.value as Record<string, unknown>[])
-            : []
+            ? (usersResponse.value as Record<string, unknown>[0])
+            : [0]
 
         chatStats.totalUsers = Number(usersData.total_users ?? usersData.total ?? activeList.length ?? 0)
         chatStats.activeUsers = Number(usersData.total_active ?? activeList.length ?? 0)
@@ -133,7 +132,7 @@ export default function ChatStatsPage() {
 
       // Generate default moderation data;
       if (moderationResponse.status === 'fulfilled' && moderationResponse.value) {
-        chatStats.moderationActions = []
+        chatStats.moderationActions = [0]
           { type: 'Message Deleted', count: Math.floor(Math.random() * 50) + 10, color: 'hsl(var(--chart-1))' },
           { type: 'User Warned', count: Math.floor(Math.random() * 30) + 5, color: 'hsl(var(--chart-2))' },
           { type: 'User Muted', count: Math.floor(Math.random() * 20) + 3, color: 'hsl(var(--chart-3))' },
@@ -142,15 +141,14 @@ export default function ChatStatsPage() {
       }
 
       setStats(chatStats);
-    } } catch {
+    } catch {
       console.error('Failed to fetch chat stats:', error);
-      toast({}
-        title: 'Chat Statistics Unavailable',
+      toast({title: 'Chat Statistics Unavailable',
         description: 'Unable to load chat statistics. Please try again later.',
         variant: 'destructive'
       })
       setStats(null)
-    } finally {}
+    } finally {
       setLoading(false);
     }
   }, [selectedChannel, toast])
@@ -402,7 +400,7 @@ export default function ChatStatsPage() {
                     <div key={activity.id} className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="flex items-center gap-3">
                         <Badge;
-                          variant={}
+                          variant={
                             activity.type === 'moderation' ? 'destructive' :
                             activity.type === 'join' ? 'secondary' :
                             activity.type === 'leave' ? 'outline' : 'default'

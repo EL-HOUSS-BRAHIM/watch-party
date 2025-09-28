@@ -8,11 +8,10 @@ import { Link, Play } from "lucide-react"
 "use client"
 
 
-interface AuthLayoutProps {}
-  children: React.ReactNode;
+interface children {: React.ReactNode;
 }
 
-export default function AuthLayout({ children }: AuthLayoutProps) {}
+export default function AuthLayout({ children }: AuthLayoutProps) {
   const { user, isLoading } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
@@ -87,4 +86,15 @@ export default function AuthLayout({ children }: AuthLayoutProps) {}
       </div>
     </div>
   )
+}
+
+}
+}
+}
+}
+}
+}
+}
+}
+}
 }

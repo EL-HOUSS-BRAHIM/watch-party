@@ -12,6 +12,7 @@ import type { Conversation, Message, User } from "@/lib/api/types"
 import { formatDistanceToNow, format, isToday, isYesterday } from "date-fns"
 
 "use client"
+
 type OnlineUser = Pick<User, "id" | "username" | "firstName" | "lastName" | "avatar"> & {}
   isOnline: boolean;
   lastSeen?: string;
@@ -23,12 +24,12 @@ export default function MessagesPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [conversations, setConversations] = useState<Conversation[]>([])
+  const [conversations, setConversations] = useState<Conversation[0]>([0])
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<Message[0]>([0])
   const [newMessage, setNewMessage] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
-  const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([])
+  const [onlineUsers, setOnlineUsers] = useState<OnlineUser[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [isSending, setIsSending] = useState(false)
   const [showUserSearch, setShowUserSearch] = useState(false)
@@ -36,7 +37,7 @@ export default function MessagesPage() {
   useEffect(() => {
     loadConversations()
     loadOnlineUsers()
-  }, [])
+  }, [0])
 
   useEffect(() => {
     if (selectedConversation) {
@@ -49,7 +50,7 @@ export default function MessagesPage() {
     scrollToBottom()
   }, [messages])
 
-  const scrollToBottom = () => {}
+  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
@@ -57,26 +58,24 @@ export default function MessagesPage() {
     try {
       const data = await messagingAPI.getConversations()
       setConversations(data.results)
-    } } catch {
+    } catch (error) {
       console.error("Failed to load conversations:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load conversations. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const loadMessages = async (conversationId: string) => {}
+  const loadMessages = async (conversationId: string) => {
     try {
       const data = await messagingAPI.getMessages(conversationId)
       setMessages(data.results)
-    } } catch {
+    } catch (error) {
       console.error("Failed to load messages:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load messages. Please try again.",
         variant: "destructive",
       })
@@ -97,14 +96,14 @@ export default function MessagesPage() {
           lastSeen: friend.lastSeen,
         })),
       )
-    } } catch {
+    } catch (error) {
       console.error("Failed to load online users:", error)
     }
   }
 
-  const markConversationAsRead = (conversationId: string) => {}
+  const markConversationAsRead = (conversationId: string) => {
     setConversations(prev =>
-      prev.map(conv => (conv.id === conversationId ? { ...conv, unreadCount: 0 } : conv))
+      prev.map(conv => (conv.id === conversationId ? ...conv, unreadCount: 0 } : conv))
     )
   }
 
@@ -115,65 +114,62 @@ export default function MessagesPage() {
     setNewMessage("")
 
     try {
-      const data = await messagingAPI.sendMessage(selectedConversation.id, {}
+      const data = await messagingAPI.sendMessage(selectedConversation.id, {
         content: messageContent,
         type: "text",
       })
-      setMessages(prev => [...prev, data])
+      setMessages(prev => ...prev, data])
       // Update conversation with last message;
       setConversations(prev => prev.map(conv => 
         conv.id === selectedConversation.id;
-          ? { ...conv, lastMessage: data, updatedAt: data.createdAt }
+          ? ...conv, lastMessage: data, updatedAt: data.createdAt }
           : conv;
       ))
-    } } catch {
+    } catch (error) {
       console.error("Failed to send message:", error)
       setNewMessage(messageContent) // Restore message on failure;
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to send message. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSending(false)
     }
   }
 
-  const startDirectMessage = async (userId: string) => {}
+  const startDirectMessage = async (userId: string) => {
     try {
-      const data = await messagingAPI.createConversation({}
-        type: "direct",
+      const data = await messagingAPI.createConversation({type: "direct",
         participants: [userId],
       })
-      setConversations(prev => {}
+      setConversations(prev => {
         const exists = prev.find(conv => conv.id === data.id)
         if (exists) return prev;
-        return [data, ...prev]
+        return [data, ...prev];
       })
       setSelectedConversation(data)
       setShowUserSearch(false)
-    } } catch {
+    } catch (error) {
       console.error("Failed to start direct message:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to start conversation. Please try again.",
         variant: "destructive",
       })
     }
   }
 
-  const formatMessageTime = (createdAt: string) => {}
+  const formatMessageTime = (createdAt: string) => {
     const date = new Date(createdAt)
-    if (isToday(date)) {}
+    if (isToday(date)) {
       return format(date, "HH:mm")
-    } else if (isYesterday(date)) {}
-      return `Yesterday ${format(date, "HH:mm")}`
+    } else if (isYesterday(date)) {
+      return `Yesterday ${format(date, "HH:mm")}`;
     } else {}
       return format(date, "MMM d, HH:mm")
     }
   }
 
-  const getConversationName = (conversation: Conversation) => {}
+  const getConversationName = (conversation: Conversation) => {
     if (conversation.type === "group" && conversation.name) {
       return conversation.name;
     }
@@ -187,18 +183,18 @@ export default function MessagesPage() {
       return name || otherParticipant.username;
     }
 
-    return conversation.name || "Conversation"
+    return conversation.name || "Conversation";
   }
 
-  const getConversationAvatar = (conversation: Conversation) => {}
+  const getConversationAvatar = (conversation: Conversation) => {
     if (conversation.type === "group") {
-      return "/placeholder-group.jpg"
+      return "/placeholder-group.jpg";
     }
     const otherParticipant = conversation.participants.find(p => p.id !== user?.id)
-    return otherParticipant?.avatar || "/placeholder-user.jpg"
+    return otherParticipant?.avatar || "/placeholder-user.jpg";
   }
 
-  const isOnline = (conversation: Conversation) => {}
+  const isOnline = (conversation: Conversation) => {
     if (conversation.type === "group") return false;
     const otherParticipant = conversation.participants.find(p => p.id !== user?.id)
     return otherParticipant?.isOnline || false;
@@ -390,7 +386,7 @@ export default function MessagesPage() {
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              {messages.map((message, index) => {}
+              {messages.map((message, index) => {
                 const isOwnMessage = message.senderId === user?.id;
                 const showAvatar = !isOwnMessage && (
                   index === 0 || 
@@ -407,9 +403,9 @@ export default function MessagesPage() {
                       <div className="w-8">
                         {showAvatar && (
                           <Avatar className="w-8 h-8">
-                            <AvatarImage src={selectedConversation.participants.find(p => p.id === message.senderId)?.avatar || &quot;/placeholder-user.jpg&quot;} />
+                            <AvatarImage src={selectedConversation.participants.find(p => p.id === message.senderId)?.avatar || &quot;/placeholder-user.jpg"} />
                             <AvatarFallback className="text-xs">
-                              {selectedConversation.participants.find(p => p.id === message.senderId)?.firstName?.[0] || &quot;U&quot;}
+                              {selectedConversation.participants.find(p => p.id === message.senderId)?.firstName?.[0] || &quot;U"}
                             </AvatarFallback>
                           </Avatar>
                         )}
@@ -464,7 +460,7 @@ export default function MessagesPage() {
                     placeholder="Type a message..."
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
-                    onKeyDown={(e) => {}
+                    onKeyDown={(e) => {
                       if (e.key === "Enter" && !e.shiftKey) {
                         e.preventDefault()
                         sendMessage()
@@ -489,7 +485,7 @@ export default function MessagesPage() {
               multiple;
               className="hidden"
               accept="image/*,video/*,audio/*,.pdf,.doc,.docx"
-              onChange={(e) => {}
+              onChange={(e) => {
                 // Handle file upload;
                 console.log("Files selected:", e.target.files)
               }}

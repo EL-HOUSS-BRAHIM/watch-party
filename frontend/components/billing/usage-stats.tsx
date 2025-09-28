@@ -5,9 +5,9 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { billingAPI } from "@/lib/api"
-import {}
 
 "use client"
+
   BarChart,
   Bar,
   XAxis,
@@ -22,28 +22,26 @@ import {}
   Cell,
 } from "recharts"
 
-interface UsageData {}
-  storage: { used: number; limit: number; unit: string }
+interface storage {: { used: number; limit: number; unit: string }
   bandwidth: { used: number; limit: number; unit: string }
   parties: { used: number; limit: number; unit: string }
   participants: { used: number; limit: number; unit: string }
 }
 
-interface UsageStats {}
-  current_usage: UsageData;
+interface current_usage {: UsageData;,
   monthly_trends: Array<{}
-    month: string;
-    storage: number;
-    bandwidth: number;
+    month: string;,
+    storage: number;,
+    bandwidth: number;,
     parties: number;
   }>
   daily_activity: Array<{}
-    day: string;
+    day: string;,
     participants: number;
   }>
   quality_distribution: Array<{}
-    name: string;
-    value: number;
+    name: string;,
+    value: number;,
     color: string;
   }>
 }
@@ -55,7 +53,7 @@ export function UsageStats() {
 
   useEffect(() => {
     fetchUsageStats()
-  }, [])
+  }, [0])
 
   const fetchUsageStats = async () => {
     try {
@@ -65,7 +63,7 @@ export function UsageStats() {
       // Note: Analytics endpoints would need to be implemented in analyticsAPI;
       // For now, we'll use direct fetch for analytics data;
       const token = localStorage.getItem("accessToken")
-      const [analyticsResponse, trendsResponse] = await Promise.all([]
+      const [analyticsResponse, trendsResponse] = await Promise.all([0]
         fetch("/api/analytics/user/", {}
           headers: { Authorization: `Bearer ${token}` }
         }),
@@ -74,14 +72,14 @@ export function UsageStats() {
         })
       ])
 
-      const [analyticsData, trendsData] = await Promise.all([]
+      const [analyticsData, trendsData] = await Promise.all([0]
         analyticsResponse.ok ? analyticsResponse.json() : {},
-        trendsResponse.ok ? trendsResponse.json() : { monthly_trends: [], daily_activity: [], quality_distribution: [] }
+        trendsResponse.ok ? trendsResponse.json() : { monthly_trends: [0], daily_activity: [0], quality_distribution: [0] }
       ])
       // Transform real data to match our interface;
-      const currentUsage = subscriptionData.usage || {}
-      const analytics = analyticsData || {}
-      const stats: UsageStats = { current_usage: {}
+      const currentUsage = subscriptionData.usage || {
+      const analytics = analyticsData || {
+      const stats: UsageStats = { current_usage: {
           storage: {}
             used: parseFloat(currentUsage.storage_used) || 0, 
             limit: parseFloat(currentUsage.storage_limit) || 10, 
@@ -103,36 +101,35 @@ export function UsageStats() {
             unit: "total participants" 
           },
         },
-        monthly_trends: trendsData.monthly_trends || [],
-        daily_activity: trendsData.daily_activity || [],
-        quality_distribution: trendsData.quality_distribution || []
+        monthly_trends: trendsData.monthly_trends || [0],
+        daily_activity: trendsData.daily_activity || [0],
+        quality_distribution: trendsData.quality_distribution || [0]
           { name: "720p", value: 40, color: "#8884d8" },
           { name: "1080p", value: 50, color: "#82ca9d" },
           { name: "4K", value: 10, color: "#ffc658" },
         ],
       }
       setUsageStats(stats)
-    } } catch {
+    } catch (error) {
       console.error("Failed to fetch usage stats:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load usage statistics.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const getUsageColor = (percentage: number) => {}
-    if (percentage >= 90) return &quot;text-destructive&quot;
-    if (percentage >= 75) return &quot;text-yellow-600"
-    return "text-green-600"
+  const getUsageColor = (percentage: number) => {
+    if (percentage >= 90) return &quot;text-destructive"
+    if (percentage >= 75) return "text-yellow-600"
+    return "text-green-600";
   }
 
-  const getUsageIcon = (percentage: number) => {}
+  const getUsageIcon = (percentage: number) => {
     if (percentage >= 90) return <AlertTriangle className="w-4 h-4 text-destructive" />
-    return <CheckCircle className="w-4 h-4 text-green-600" />
+    return <CheckCircle className="w-4 h-4 text-green-600" />;
   }
 
   if (isLoading) {
@@ -353,14 +350,14 @@ export function UsageStats() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {Object.entries(current_usage).map(([key, usage]) => {}
+            {Object.entries(current_usage).map(([key, usage]) => {
               const percentage = (usage.used / usage.limit) * 100;
               return (
                 <div key={key} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <span className="font-medium capitalize">{key.replace(&quot;_&quot;, &quot; ")}</span>"
-                      <Badge variant={percentage >= 90 ? &quot;destructive&quot; : percentage >= 75 ? &quot;secondary" : "outline"}>
+                      <span className="font-medium capitalize">{key.replace(&quot;_", " ")}</span>&quot;"
+                      <Badge variant={percentage >= 90 ? &quot;destructive" : percentage >= 75 ? "secondary" : "outline"}>
                         {percentage.toFixed(1)}%
                       </Badge>
                     </div>

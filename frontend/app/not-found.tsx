@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertTriangle, Home, Link, Refresh, RefreshCw } from "lucide-react"
+import { AlertTriangle, Home, Link,RefreshCw } from "lucide-react"
 import Link from "next/link"
 
 "use client"
@@ -14,7 +14,7 @@ export default function NotFound() {
             <AlertTriangle className="w-8 h-8 text-white" />
           </div>
           <CardTitle className="text-2xl text-white">Page Not Found</CardTitle>
-          <CardDescription className="text-white/70">The page you&apos;re looking for doesn&apos;t exist or has been moved.</CardDescription>
+          <CardDescription className=&quot;text-white/70&quot;>The page you&apos;re looking for doesn&apos;t exist or has been moved.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">

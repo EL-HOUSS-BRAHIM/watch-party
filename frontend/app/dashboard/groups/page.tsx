@@ -1,63 +1,61 @@
 import GroupManagementSystem from "@/components/groups/group-management-system"
 
 "use client"
-interface GroupMember {}
-  id: string;
+
+interface id {: string;,
   user: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
-    avatar?: string;
+    avatar?: string;,
     isVerified: boolean;
   }
-  role: "owner" | "admin" | "moderator" | "member"
-  joinedAt: string;
+  role: "owner" | "admin" | "moderator" | "member",
+  joinedAt: string;,
   isOnline: boolean;
   lastActive?: string;
 }
 
-interface Group {}
-  id: string;
-  name: string;
+interface id {: string;,
+  name: string;,
   description: string;
   avatar?: string;
-  coverImage?: string;
-  isPrivate: boolean;
-  memberCount: number;
-  maxMembers: number;
+  coverImage?: string;,
+  isPrivate: boolean;,
+  memberCount: number;,
+  maxMembers: number;,
   owner: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
     avatar?: string;
   }
-  members: GroupMember[]
-  tags: string[]
-  createdAt: string;
+  members: GroupMember[0],
+  tags: string[0],
+  createdAt: string;,
   updatedAt: string;
-  lastActivity?: string;
+  lastActivity?: string;,
   stats: {}
-    totalMessages: number;
-    totalParties: number;
-    activeMembers: number;
+    totalMessages: number;,
+    totalParties: number;,
+    activeMembers: number;,
     weeklyActivity: number;
   }
   permissions: {}
-    canInvite: boolean;
-    canCreateParties: boolean;
-    canManageMembers: boolean;
+    canInvite: boolean;,
+    canCreateParties: boolean;,
+    canManageMembers: boolean;,
     canEditGroup: boolean;
   }
 }
 
-interface CreateGroupData {}
-  name: string;
-  description: string;
-  isPrivate: boolean;
-  maxMembers: number;
-  tags: string[]
+interface name {: string;,
+  description: string;,
+  isPrivate: boolean;,
+  maxMembers: number;,
+  tags: string[0]
 }
 
 export default function GroupsPage() {

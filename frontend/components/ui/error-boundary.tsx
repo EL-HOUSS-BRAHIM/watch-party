@@ -6,13 +6,13 @@ import { AlertTriangle, Refresh, RefreshCw } from "lucide-react"
 "use client"
 
 
-interface Props {}
-  children: ReactNode;
+
+
+interface children {: ReactNode;
   fallback?: ReactNode;
 }
 
-interface State {}
-  hasError: boolean;
+interface hasError {: boolean;
   error?: Error;
 }
 
@@ -34,7 +34,7 @@ export class ErrorBoundary extends Component<Props, State> {}
     }
   }
 
-  private handleReset = () => {}
+  private handleReset = () => {
     this.setState({ hasError: false, error: undefined })
   }
 
@@ -67,7 +67,7 @@ export class ErrorBoundary extends Component<Props, State> {}
                   <RefreshCw className="w-4 h-4 mr-2" />
                   Try Again;
                 </Button>
-                <Button variant="outline" onClick={() => (window.location.href = &quot;/dashboard&quot;)} className=&quot;flex-1">"
+                <Button variant="outline" onClick={() => (window.location.href = &quot;/dashboard")} className="flex-1">"
                   Go Home;
                 </Button>
               </div>

@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils"
 const watchPartyButtonVariants = cva(
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-watch-party-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {}
-    variants: {}
-      variant: {}
+    variants: {
+      variant: {
         default: "bg-watch-party-primary text-white hover:bg-watch-party-primary/90 shadow-sm hover:shadow-md",
         destructive: "bg-watch-party-error text-white hover:bg-watch-party-error/90 shadow-sm hover:shadow-md",
         outline:
@@ -44,9 +44,9 @@ export interface WatchPartyButtonProps;
 }
 
 const WatchPartyButton = React.forwardRef<HTMLButtonElement, WatchPartyButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {}
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
-    return <Comp className={cn(watchPartyButtonVariants({ variant, size, className }))} ref={ref} {...props} />
+    return <Comp className={cn(watchPartyButtonVariants({ variant, size, className }))} ref={ref} ...props} />;
   },
 )
 WatchPartyButton.displayName = "WatchPartyButton"

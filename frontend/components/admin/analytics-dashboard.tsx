@@ -6,9 +6,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
-import {}
 
 "use client"
+
   XAxis,
   YAxis,
   CartesianGrid,
@@ -25,34 +25,33 @@ import {}
   Area,
 } from "recharts"
 
-interface AnalyticsData {}
-  user_growth: Array<{}
-    date: string;
-    total_users: number;
-    active_users: number;
+interface user_growth {: Array<{}
+    date: string;,
+    total_users: number;,
+    active_users: number;,
     new_users: number;
   }>
   revenue_data: Array<{}
-    month: string;
-    revenue: number;
-    subscriptions: number;
+    month: string;,
+    revenue: number;,
+    subscriptions: number;,
     avg_revenue: number;
   }>
   engagement_data: Array<{}
-    hour: string;
-    parties: number;
-    viewers: number;
+    hour: string;,
+    parties: number;,
+    viewers: number;,
     messages: number;
   }>
   device_data: Array<{}
-    name: string;
-    value: number;
+    name: string;,
+    value: number;,
     color: string;
   }>
   content_data: Array<{}
-    category: string;
-    uploads: number;
-    views: number;
+    category: string;,
+    uploads: number;,
+    views: number;,
     duration: number;
   }>
   kpi_data: {}
@@ -84,19 +83,18 @@ export function AnalyticsDashboard() {
       }
       const data = await adminAPI.getAnalytics()
       setAnalyticsData(data)
-    } } catch {
+    } catch (error) {
       console.error("Failed to fetch analytics data:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load analytics data.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const getTrendIcon = (trend: string) => {}
+  const getTrendIcon = (trend: string) => {
     return trend === "up" ? (
       <TrendingUp className="w-4 h-4 text-green-600" />
     ) : (
@@ -104,8 +102,8 @@ export function AnalyticsDashboard() {
     )
   }
 
-  const getTrendColor = (trend: string) => {}
-    return trend === "up" ? "text-green-600" : "text-red-600"
+  const getTrendColor = (trend: string) => {
+    return trend === "up" ? "text-green-600" : "text-red-600";
   }
 
   const exportData = async () => {
@@ -122,10 +120,9 @@ export function AnalyticsDashboard() {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-    } } catch {
+    } catch (error) {
       console.error("Failed to export data:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to export analytics data.",
         variant: "destructive",
       })
@@ -456,7 +453,7 @@ export function AnalyticsDashboard() {
             <Card>
               <CardHeader>
                 <CardTitle>Device Statistics</CardTitle>
-                <CardDescription>Detailed breakdown by device type</CardDescription>
+                <CardDescription>Detailed breakdown by device type</CardDescription>;
               </CardHeader>
               <CardContent className="space-y-4">
                 {deviceData.map((device, index) => (

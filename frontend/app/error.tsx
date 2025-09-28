@@ -5,8 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import Link from "next/link"
 
 "use client"
-export default function Error({}
-  error,
+
+export default function Error({error,
   reset,
 }: {}
   error: Error & { digest?: string }

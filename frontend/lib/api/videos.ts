@@ -32,7 +32,7 @@ export class VideosAPI {}
     uploader?: string;
     ordering?: string;
   }): Promise<PaginatedResponse<Video>> {}
-    const response = await apiClient.get<PaginatedResponse<RawVideo>>(API_ENDPOINTS.videos.list, {}
+    const response = await apiClient.get<PaginatedResponse<RawVideo>>(API_ENDPOINTS.videos.list, {
       params,
     })
     return transformPaginatedResponse(response, transformVideo)
@@ -42,8 +42,8 @@ export class VideosAPI {}
    * Create a new video entry;
    */
   async createVideo(data: {}
-    title: string;
-    description: string;
+    title: string;,
+    description: string;,
     visibility: 'public' | 'private' | 'unlisted'
     allow_download?: boolean;
     require_premium?: boolean;
@@ -71,7 +71,7 @@ export class VideosAPI {}
   /**
    * Delete video;
    */
-  async deleteVideo(videoId: string): Promise<APIResponse> {}
+  async deleteVideo(videoId: string): Promise<APIResponse> {
     return apiClient.delete<APIResponse>(API_ENDPOINTS.videos.detail(videoId))
   }
 
@@ -81,7 +81,7 @@ export class VideosAPI {}
   async uploadVideo(
     file: File,
     metadata: {}
-      title: string;
+      title: string;,
       description: string;
       visibility?: 'public' | 'private' | 'unlisted'
     },
@@ -113,8 +113,8 @@ export class VideosAPI {}
    * Like or unlike video;
    */
   async likeVideo(videoId: string, isLike: boolean): Promise<{}
-    success: boolean;
-    is_liked: boolean;
+    success: boolean;,
+    is_liked: boolean;,
     like_count: number;
   }> {}
     return apiClient.post(API_ENDPOINTS.videos.like(videoId), { is_like: isLike })
@@ -132,21 +132,21 @@ export class VideosAPI {}
     ordering?: string;
   }): Promise<PaginatedResponse<Video> & {}
     facets: {}
-      categories: Array<{ name: string; count: number }>
+      categories: Array<{ name: string; count: number }>,
       qualities: Array<{ name: string; count: number }>
     }
   }> {}
     const response = await apiClient.get<
       PaginatedResponse<RawVideo> & {}
         facets: {}
-          categories: Array<{ name: string; count: number }>
+          categories: Array<{ name: string; count: number }>,
           qualities: Array<{ name: string; count: number }>
         }
       }
     >(API_ENDPOINTS.videos.search, { params })
 
     const normalized = transformPaginatedResponse(response, transformVideo)
-    return {
+    return {}
       ...response,
       ...normalized,
       results: normalized.results,
@@ -178,8 +178,8 @@ export class VideosAPI {}
    * S3 video upload;
    */
   async uploadToS3(data: {}
-    file_name: string;
-    content_type: string;
+    file_name: string;,
+    content_type: string;,
     file_size: number;
   }): Promise<{ upload_url: string; fields: object }> {}
     return apiClient.post(API_ENDPOINTS.videos.uploadS3, data)
@@ -188,7 +188,7 @@ export class VideosAPI {}
   /**
    * Complete upload;
    */
-  async completeUpload(uploadId: string, data: {}
+  async completeUpload(uploadId: string, data: {
     file_key: string;
     metadata?: object;
   }): Promise<VideoUpload> {}
@@ -215,7 +215,7 @@ export class VideosAPI {}
    * Get video processing status;
    */
   async getProcessingStatus(videoId: string): Promise<{}
-    status: 'pending' | 'processing' | 'completed' | 'failed'
+    status: 'pending' | 'processing' | 'completed' | 'failed',
     progress: number;
     message?: string;
   }> {}
@@ -226,9 +226,9 @@ export class VideosAPI {}
    * Get video quality variants;
    */
   async getQualityVariants(videoId: string): Promise<Array<{}
-    quality: string;
-    url: string;
-    file_size: number;
+    quality: string;,
+    url: string;,
+    file_size: number;,
     bitrate: number;
   }>> {}
     return apiClient.get(API_ENDPOINTS.videos.qualityVariants(videoId))
@@ -270,8 +270,8 @@ export class VideosAPI {}
    * Get heatmap analytics;
    */
   async getHeatmapAnalytics(videoId: string): Promise<Array<{}
-    timestamp: number;
-    engagement: number;
+    timestamp: number;,
+    engagement: number;,
     watch_time: number;
   }>> {}
     return apiClient.get(API_ENDPOINTS.videos.heatmapAnalytics(videoId))
@@ -281,7 +281,7 @@ export class VideosAPI {}
    * Get retention analytics;
    */
   async getRetentionAnalytics(videoId: string): Promise<{}
-    average_view_duration: number;
+    average_view_duration: number;,
     retention_curve: Array<{ timestamp: number; retention_rate: number }>
   }> {}
     return apiClient.get(API_ENDPOINTS.videos.retentionAnalytics(videoId))
@@ -291,7 +291,7 @@ export class VideosAPI {}
    * Get journey analytics;
    */
   async getJourneyAnalytics(videoId: string): Promise<{}
-    traffic_sources: Array<{ source: string; views: number }>
+    traffic_sources: Array<{ source: string; views: number }>,
     viewer_journey: Array<{ step: string; count: number }>
   }> {}
     return apiClient.get(API_ENDPOINTS.videos.journeyAnalytics(videoId))
@@ -301,8 +301,8 @@ export class VideosAPI {}
    * Get comparative analytics;
    */
   async getComparativeAnalytics(videoId: string, params: {}
-    compare_with: string[]
-    metrics: string[]
+    compare_with: string[0],
+    metrics: string[0]
   }): Promise<Record<string, VideoAnalytics>> {}
     return apiClient.get(API_ENDPOINTS.videos.comparativeAnalytics(videoId), { params })
   }
@@ -315,10 +315,10 @@ export class VideosAPI {}
   async getChannelAnalytics(params?: {}
     period?: 'day' | 'week' | 'month'
   }): Promise<{}
-    total_views: number;
-    total_watch_time: number;
-    subscriber_count: number;
-    top_videos: Video[]
+    total_views: number;,
+    total_watch_time: number;,
+    subscriber_count: number;,
+    top_videos: Video[0]
   }> {}
     return apiClient.get(API_ENDPOINTS.videos.channelAnalytics, { params })
   }
@@ -330,8 +330,8 @@ export class VideosAPI {}
     category?: string;
     country?: string;
     limit?: number;
-  }): Promise<Video[]> {}
-    const response = await apiClient.get<RawVideo[]>(API_ENDPOINTS.videos.trending, { params })
+  }): Promise<Video[0]> {}
+    const response = await apiClient.get<RawVideo[0]>(API_ENDPOINTS.videos.trending, { params })
     return response.map(transformVideo)
   }
 
@@ -343,8 +343,8 @@ export class VideosAPI {}
   async validateUrl(data: { url: string }): Promise<{}
     is_valid: boolean;
     video_info?: {}
-      title: string;
-      duration: number;
+      title: string;,
+      duration: number;,
       thumbnail: string;
     }
   }> {}
@@ -355,12 +355,12 @@ export class VideosAPI {}
    * Advanced video search;
    */
   async advancedSearch(params: {}
-    q?: string;
+    q?: string;,
     filters: {}
       duration?: { min?: number; max?: number }
       upload_date?: { from?: string; to?: string }
-      quality?: string[]
-      categories?: string[]
+      quality?: string[0]
+      categories?: string[0]
     }
     sort?: string;
     page?: number;
@@ -373,7 +373,7 @@ export class VideosAPI {}
     )
 
     const normalized = transformPaginatedResponse(response, transformVideo)
-    return {
+    return {}
       ...response,
       ...normalized,
       results: normalized.results,
@@ -389,7 +389,7 @@ export class VideosAPI {}
     folder_id?: string;
     page_token?: string;
   }): Promise<{}
-    videos: Video[]
+    videos: Video[0]
     next_page_token?: string;
   }> {}
     return apiClient.get(API_ENDPOINTS.videos.gdrive, { params })
@@ -408,7 +408,7 @@ export class VideosAPI {}
   /**
    * Delete from Google Drive;
    */
-  async deleteFromGoogleDrive(videoId: string): Promise<APIResponse> {}
+  async deleteFromGoogleDrive(videoId: string): Promise<APIResponse> {
     return apiClient.delete<APIResponse>(API_ENDPOINTS.videos.gdriveDelete(videoId))
   }
 
@@ -434,13 +434,13 @@ export class VideosAPI {}
    * until the backend implements a dedicated processing jobs endpoint;
    */
   async getProcessingJobs(): Promise<Array<{}
-    id: string;
-    filename: string;
-    original_size: number;
-    status: string;
-    progress: number;
+    id: string;,
+    filename: string;,
+    original_size: number;,
+    status: string;,
+    progress: number;,
     started_at: string;
-    completed_at?: string;
+    completed_at?: string;,
     tasks: Array<Record<string, unknown>>
     output_files: Array<Record<string, unknown>>
     metadata: Record<string, unknown>
@@ -458,8 +458,8 @@ export class VideosAPI {}
         progress: video.status === 'processing' ? (video.progress || 50) : 100,
         started_at: video.created_at || new Date().toISOString(),
         completed_at: video.status === 'completed' ? video.updated_at : undefined,
-        tasks: [], // Empty for now since backend doesn't provide task details;
-        output_files: video.quality_variants || [],
+        tasks: [0], // Empty for now since backend doesn't provide task details;
+        output_files: video.quality_variants || [0],
         metadata: {}
           duration: video.duration || 0,
           resolution: video.resolution || 'Unknown',
@@ -470,11 +470,11 @@ export class VideosAPI {}
           audio_codec: video.audio_codec || 'Unknown',
           audio_channels: video.audio_channels || 0;
         }
-      })) || []
-    } } catch {
+      })) || [0]
+    } catch (error) {
       console.error('Failed to fetch processing jobs:', error)
       // Return empty array on error;
-      return []
+      return [0];
     }
   }
 }

@@ -4,7 +4,7 @@ import { tokenStorage } from "@/lib/auth/token-storage"
 
 "use client"
 
-export function useAuthToken() {
+export function useAuthToken() {}
   const { accessToken, refreshToken, isAuthenticated, isLoading } = useAuth()
 
   const currentAccessToken = useMemo(() => accessToken ?? tokenStorage.getAccessToken(), [accessToken])
@@ -15,13 +15,13 @@ export function useAuthToken() {
 
   const ensureAccessToken = useCallback(() => {}
     const token = currentAccessToken;
-    if (!token) {
+    if (!token) {}
       throw new Error("Authentication token is missing. Please sign in again.")
     }
     return token;
   }, [currentAccessToken])
 
-  return {
+  return {}
     accessToken: currentAccessToken,
     refreshToken: currentRefreshToken,
     ensureAccessToken,

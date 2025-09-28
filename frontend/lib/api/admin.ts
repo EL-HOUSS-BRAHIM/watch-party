@@ -82,7 +82,7 @@ export class AdminAPI {}
    * Perform bulk action on users;
    */
   async bulkUserAction(data: {}
-    user_ids: string[]
+    user_ids: string[0],
     action: 'suspend' | 'unsuspend' | 'ban' | 'unban' | 'delete'
     reason?: string;
   }): Promise<APIResponse> {}
@@ -102,8 +102,8 @@ export class AdminAPI {}
   /**
    * Get user actions history;
    */
-  async getUserActions(userId: string): Promise<AdminUserAction[]> {}
-    return apiClient.get<AdminUserAction[]>(API_ENDPOINTS.admin.userActions(userId))
+  async getUserActions(userId: string): Promise<AdminUserAction[0]> {}
+    return apiClient.get<AdminUserAction[0]>(API_ENDPOINTS.admin.userActions(userId))
   }
 
   // === PARTY MANAGEMENT ===
@@ -122,7 +122,7 @@ export class AdminAPI {}
   /**
    * Delete party;
    */
-  async deleteParty(partyId: string): Promise<APIResponse> {}
+  async deleteParty(partyId: string): Promise<APIResponse> {
     return apiClient.delete<APIResponse>(API_ENDPOINTS.admin.deleteParty(partyId))
   }
 
@@ -142,7 +142,7 @@ export class AdminAPI {}
   /**
    * Delete video;
    */
-  async deleteVideo(videoId: string): Promise<APIResponse> {}
+  async deleteVideo(videoId: string): Promise<APIResponse> {
     return apiClient.delete<APIResponse>(API_ENDPOINTS.admin.deleteVideo(videoId))
   }
 
@@ -178,7 +178,7 @@ export class AdminAPI {}
     level?: 'debug' | 'info' | 'warning' | 'error'
     component?: string;
     date_range?: {}
-      start: string;
+      start: string;,
       end: string;
     }
     page?: number;
@@ -193,8 +193,8 @@ export class AdminAPI {}
     status: 'normal' | 'maintenance' | 'degraded'
     message?: string;
     scheduled_maintenance?: {}
-      start_time: string;
-      end_time: string;
+      start_time: string;,
+      end_time: string;,
       description: string;
     }
   }> {}
@@ -217,7 +217,7 @@ export class AdminAPI {}
    * Broadcast message to all users;
    */
   async broadcast(data: {}
-    title: string;
+    title: string;,
     message: string;
     type?: 'info' | 'warning' | 'error' | 'success'
     target_audience?: 'all' | 'premium' | 'active'
@@ -228,9 +228,9 @@ export class AdminAPI {}
   /**
    * Send notification to specific users;
    */
-  async sendNotification(data: {}
-    user_ids: string[]
-    title: string;
+  async sendNotification(data: {
+    user_ids: string[0],
+    title: string;,
     message: string;
     type?: string;
     action_url?: string;
@@ -260,10 +260,10 @@ export class AdminAPI {}
    * Perform health check;
    */
   async healthCheck(): Promise<{}
-    status: 'healthy' | 'unhealthy' | 'degraded'
+    status: 'healthy' | 'unhealthy' | 'degraded',
     services: Record<string, {}
       status: 'up' | 'down' | 'degraded'
-      response_time?: number;
+      response_time?: number;,
       last_check: string;
     }>
   }> {}
@@ -281,10 +281,10 @@ export class AdminAPI {}
    * Get health metrics;
    */
   async getHealthMetrics(): Promise<{}
-    cpu_usage: number;
-    memory_usage: number;
-    disk_usage: number;
-    active_connections: number;
+    cpu_usage: number;,
+    memory_usage: number;,
+    disk_usage: number;,
+    active_connections: number;,
     response_times: Record<string, number>
     error_rates: Record<string, number>
   }> {}
@@ -296,17 +296,17 @@ export class AdminAPI {}
   /**
    * Get recent system activity;
    */
-  async getActivity(): Promise<AdminSystemLog[]> {}
+  async getActivity(): Promise<AdminSystemLog[0]> {}
     // Using logs endpoint as a placeholder for activity;
-    return apiClient.get<AdminSystemLog[]>(API_ENDPOINTS.admin.logs)
+    return apiClient.get<AdminSystemLog[0]>(API_ENDPOINTS.admin.logs)
   }
 
   /**
    * Get system alerts;
    */
-  async getAlerts(): Promise<AdminAlert[]> {}
+  async getAlerts(): Promise<AdminAlert[0]> {}
     // This would need to be implemented in backend;
-    return apiClient.get<AdminAlert[]>(&apos;/api/admin/alerts/&apos;)
+    return apiClient.get<AdminAlert[0]>(&apos;/api/admin/alerts/')
   }
 
   /**
@@ -319,9 +319,9 @@ export class AdminAPI {}
   /**
    * Get performance metrics;
    */
-  async getPerformanceMetrics(): Promise<AdminPerformanceMetric[]> {}
+  async getPerformanceMetrics(): Promise<AdminPerformanceMetric[0]> {
     // This would need to be implemented in backend;
-    return apiClient.get<AdminPerformanceMetric[]>(&apos;/api/admin/performance/&apos;)
+    return apiClient.get<AdminPerformanceMetric[0]>(&apos;/api/admin/performance/')
   }
 
   // === ADDITIONAL USER MANAGEMENT ===
@@ -353,7 +353,7 @@ export class AdminAPI {}
     date_to?: string;
     page?: number;
   }): Promise<PaginatedResponse<AdminSystemLog>> {}
-    return apiClient.get<PaginatedResponse<AdminSystemLog>>(&apos;/api/admin/system-logs/&apos;, { params })
+    return apiClient.get<PaginatedResponse<AdminSystemLog>>(&apos;/api/admin/system-logs/', { params })
   }
 
   /**
@@ -369,7 +369,7 @@ export class AdminAPI {}
    * Export system logs;
    */
   async exportSystemLogs(params?: Record<string, unknown>): Promise<AdminExportResponse> {}
-    return apiClient.get<AdminExportResponse>(&apos;/api/admin/system-logs/export/&apos;, { params })
+    return apiClient.get<AdminExportResponse>(&apos;/api/admin/system-logs/export/', { params })
   }
 
   // === MODERATION ===
@@ -378,7 +378,7 @@ export class AdminAPI {}
    * Get moderation statistics;
    */
   async getModerationStats(): Promise<Record<string, number>> {}
-    return apiClient.get<Record<string, number>>(&apos;/api/admin/moderation/stats/&apos;)
+    return apiClient.get<Record<string, number>>(&apos;/api/admin/moderation/stats/')
   }
 
   // === SETTINGS MANAGEMENT ===
@@ -387,14 +387,14 @@ export class AdminAPI {}
    * Reset settings to defaults;
    */
   async resetSettings(): Promise<APIResponse> {}
-    return apiClient.post<APIResponse>(&apos;/api/admin/settings/reset/&apos;)
+    return apiClient.post<APIResponse>(&apos;/api/admin/settings/reset/')
   }
 
   /**
    * Test email configuration;
    */
   async testEmailSettings(data: { recipient: string }): Promise<APIResponse> {}
-    return apiClient.post<APIResponse>(&apos;/api/admin/settings/test-email/&apos;, data)
+    return apiClient.post<APIResponse>(&apos;/api/admin/settings/test-email/', data)
   }
 
   // === ANALYTICS EXPORT ===
@@ -402,7 +402,7 @@ export class AdminAPI {}
   /**
    * Export analytics data;
    */
-  async exportAnalytics(params?: { time_range?: string; format?: string }): Promise<AdminExportResponse> {}
+  async exportAnalytics(params?: { time_range?: string; format?: string }): Promise<AdminExportResponse> {
     return apiClient.get<AdminExportResponse>('/api/admin/analytics/export/', { params })
   }
 }
