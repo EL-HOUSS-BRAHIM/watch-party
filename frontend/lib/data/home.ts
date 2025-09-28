@@ -18,58 +18,66 @@ export type Testimonial = {
 
 export const features: Feature[] = [
   {
-    title: "Crystal-clear synchronisation",
+    title: "Ambient palette switcher",
     description:
-      "Enjoy films, series, and livestreams together with automatic playback syncing and resilient network recovery.",
-    highlight: "Sync that never drifts",
+      "Pair crisp daytime whites with twilight indigos using a single slider. WatchParty remembers which cues belong to sunrise lobbies or midnight encores and swaps them instantly.",
+    highlight: "Sunrise → midnight",
   },
   {
-    title: "Cinematic presentation",
+    title: "Director’s stage manager",
     description:
-      "A monochrome interface that keeps the focus on your content while surfacing party chat, polls, and reactions when you need them.",
+      "Trigger countdowns, lighting changes, and spotlight transitions from one schedule. Every change respects captions and the primary frame, even during encore reactions.",
+    highlight: "Live scripting",
   },
   {
-    title: "Planning tools",
+    title: "Guided arrivals",
     description:
-      "Coordinate across time zones, share curated playlists, and collect RSVP responses without leaving the experience.",
+      "Pre-show soundtracks, host notes, and check-ins roll out automatically so guests join a polished lobby rather than a blank screen.",
+    highlight: "Lobby rituals",
+  },
+  {
+    title: "Community overlays",
+    description:
+      "Spoiler-safe chat lanes, timed polls, and reaction bursts fade with the next scene. Your audience stays expressive without losing sync.",
+    highlight: "Quiet sync chat",
   },
 ]
 
 export const metrics: Metric[] = [
   {
-    label: "Monthly parties hosted",
-    value: "12k+",
-    description: "Communities rely on WatchParty to premiere episodes and host film clubs every week.",
+    label: "Rooms orchestrated monthly",
+    value: "24k hosts",
+    description: "Film clubs, classrooms, and creator collectives run sunrise briefings and midnight finales on the same dashboard.",
   },
   {
-    label: "Average satisfaction",
-    value: "4.9 / 5",
-    description: "Post-party surveys show consistently high ratings for video quality and ease of use.",
+    label: "Average sync drift",
+    value: "±18 ms",
+    description: "Frame-perfect playback even when audiences scrub, pause, or rejoin after connection blips.",
   },
   {
-    label: "Set-up time",
-    value: "< 2 minutes",
-    description: "From invitation to start time, hosts launch an event faster than brewing popcorn.",
+    label: "Setup time saved",
+    value: "72%",
+    description: "Templates, ambience presets, and auto-invites get the show rolling before the trailers end.",
   },
 ]
 
 export const testimonials: Testimonial[] = [
   {
-    author: "Jordan Michaels",
-    role: "Community manager, FlickStream",
+    author: "Maya Castillo",
+    role: "Festival host",
     message:
-      "The black and white aesthetic keeps our festivals feeling premium, and the sync tech just works even when viewers join late.",
+      "Our premieres glide from daylight Q&As to neon encores without rebuilding scenes. WatchParty keeps lighting, chat, and sync exactly where we need them.",
   },
   {
-    author: "Priya Das",
-    role: "Indie filmmaker",
+    author: "Arjun Patel",
+    role: "University film society",
     message:
-      "Hosting premieres with WatchParty means I can focus on chatting with fans instead of troubleshooting stream issues.",
+      "Students join from dorms at sunrise and stay for midnight retrospectives. Automations handle the transitions so we can focus on discussion.",
   },
   {
-    author: "Liam Chen",
-    role: "Esports commentator",
+    author: "Sophie Lin",
+    role: "Streaming curator",
     message:
-      "We co-stream tournaments with zero playback drift. The real-time poll overlays are a huge hit with our audience.",
+      "Tens of thousands of fans react in the same beat. The dual ambience presets let us theme each act without sacrificing precision sync.",
   },
 ]

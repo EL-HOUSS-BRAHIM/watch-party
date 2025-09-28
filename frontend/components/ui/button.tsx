@@ -8,18 +8,21 @@ import { cn } from "@/lib/utils"
 type ButtonElement = HTMLButtonElement
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium transition-colors",
+  "inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent",
   {
     variants: {
       variant: {
-        primary: "bg-zinc-50 text-zinc-900 hover:bg-zinc-200",
-        secondary: "bg-zinc-900 text-zinc-50 ring-1 ring-inset ring-zinc-700 hover:bg-zinc-800",
-        ghost: "bg-transparent text-zinc-50 hover:bg-zinc-900/60",
+        primary:
+          "relative overflow-hidden bg-[var(--color-accent-500)] text-[#1c0c06] shadow-[0_20px_60px_rgba(255,194,140,0.55)] transition-transform duration-300 before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.4),transparent_60%)] before:opacity-0 before:transition-opacity before:duration-300 hover:-translate-y-0.5 hover:shadow-[0_26px_70px_rgba(255,194,140,0.65)] hover:before:opacity-100 focus-visible:ring-white/70",
+        secondary:
+          "border border-white/20 bg-white/10 text-white shadow-[0_14px_40px_rgba(12,8,45,0.45)] backdrop-blur-md hover:border-white/35 hover:bg-white/14",
+        ghost:
+          "bg-transparent text-white/70 hover:bg-white/10 hover:text-white",
       },
       size: {
-        default: "h-10 px-4",
-        sm: "h-8 px-3 text-xs",
-        lg: "h-12 px-6 text-base",
+        default: "h-10 px-5",
+        sm: "h-8 px-4 text-xs",
+        lg: "h-12 px-7 text-base",
       },
     },
     defaultVariants: {

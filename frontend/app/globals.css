@@ -4,16 +4,288 @@
 
 :root {
   color-scheme: dark;
+  --color-midnight-950: #050118;
+  --color-midnight-900: #0a0724;
+  --color-midnight-700: #141039;
+  --color-twilight-500: #2a1f54;
+  --color-twilight-400: #3a2b6a;
+  --color-horizon-200: #f4edff;
+  --color-horizon-150: #fdf9ff;
+  --color-sunrise-amber: rgba(255, 204, 150, 0.75);
+  --color-sunrise-rose: rgba(255, 178, 178, 0.75);
+  --color-accent-600: color-mix(in oklab, oklch(42% .18 15) 110%, black 12%);
+  --color-accent-500: oklch(42% .18 15);
+  --color-accent-400: color-mix(in oklab, oklch(42% .18 15) 65%, white 35%);
+  --color-text-primary: #f9f8ff;
+  --color-text-muted: rgba(241, 238, 255, 0.72);
+  --color-text-soft: rgba(241, 238, 255, 0.55);
+  --shadow-ambient: 0 60px 160px rgba(7, 5, 28, 0.65);
+  --shadow-elevated: 0 34px 120px rgba(9, 6, 36, 0.6);
+  font-feature-settings: "ss01", "cv05";
 }
 
 body {
-  @apply bg-zinc-950 text-zinc-50 antialiased;
+  position: relative;
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% -10%, rgba(255, 255, 255, 0.2), transparent 55%),
+    radial-gradient(circle at 80% -5%, rgba(255, 214, 170, 0.28), transparent 60%),
+    linear-gradient(180deg, rgba(248, 245, 255, 0.07) 0%, rgba(22, 15, 54, 0.72) 45%, rgba(5, 2, 18, 0.95) 100%);
+  color: var(--color-text-primary);
+  overflow-x: hidden;
+  @apply antialiased;
+}
+
+::selection {
+  background-color: color-mix(in oklab, var(--color-accent-400) 40%, transparent);
+  color: #1c0f33;
+}
+
+body::before,
+body::after {
+  position: fixed;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  z-index: -2;
+}
+
+body::before {
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 255, 255, 0.45), transparent 55%),
+    radial-gradient(circle at 88% 14%, rgba(255, 222, 178, 0.3), transparent 55%),
+    radial-gradient(circle at 30% 80%, rgba(110, 82, 255, 0.28), transparent 60%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 62%);
+  filter: blur(16px);
+  mix-blend-mode: screen;
+  opacity: 0.7;
+}
+
+body::after {
+  background:
+    radial-gradient(circle at 50% 110%, rgba(30, 19, 72, 0.95), transparent 70%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 40%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' fill='none'%3E%3Cfilter id='b' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence baseFrequency='0.8' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23b)' opacity='0.24'/%3E%3C/svg%3E");
+  background-size: cover;
+  mix-blend-mode: screen;
+  opacity: 0.35;
+  animation: auroraDrift 18s ease-in-out infinite alternate;
 }
 
 a {
-  @apply text-white;
+  color: inherit;
+  text-decoration-color: rgba(255, 255, 255, 0.32);
+  text-underline-offset: 6px;
+  transition: color 200ms ease, text-decoration-color 200ms ease;
+}
+
+a:hover {
+  color: var(--color-horizon-150);
+  text-decoration-color: rgba(255, 255, 255, 0.6);
 }
 
 button {
-  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black;
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent;
+}
+
+.card-sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.card-sheen::before {
+  position: absolute;
+  inset: -130% -40%;
+  content: "";
+  background:
+    conic-gradient(from 120deg, transparent 5%, rgba(255, 255, 255, 0.18), transparent 55%, rgba(255, 255, 255, 0.08));
+  animation: sheenSweep 9s linear infinite;
+  opacity: 0.6;
+}
+
+.card-sheen::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.85), transparent 75%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' fill='none'%3E%3Cfilter id='c' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23c)' opacity='0.3'/%3E%3C/svg%3E");
+  mix-blend-mode: soft-light;
+  opacity: 0.18;
+  pointer-events: none;
+}
+
+.loading-reel {
+  position: relative;
+  width: 6rem;
+  height: 6rem;
+  display: grid;
+  place-items: center;
+  border-radius: 9999px;
+  background:
+    conic-gradient(from 120deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0) 55%, rgba(255, 214, 170, 0.65) 75%, transparent 90%),
+    radial-gradient(circle at 28% 28%, rgba(255, 255, 255, 0.35), transparent 55%),
+    radial-gradient(circle at 72% 72%, rgba(111, 82, 255, 0.25), transparent 55%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(13, 6, 36, 0.65));
+  box-shadow: 0 28px 70px rgba(10, 6, 40, 0.65);
+  animation: reelOrbit 4s linear infinite;
+}
+
+.loading-reel::before {
+  content: "";
+  position: absolute;
+  inset: 18%;
+  border-radius: inherit;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.22),
+      rgba(255, 255, 255, 0.22) 8px,
+      rgba(255, 255, 255, 0.05) 8px,
+      rgba(255, 255, 255, 0.05) 16px
+    );
+  mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+  animation: filmPulse 2.8s ease-in-out infinite;
+  opacity: 0.9;
+}
+
+.loading-reel::after {
+  content: "";
+  position: absolute;
+  inset: 32%;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.4), transparent 70%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 10px,
+      rgba(255, 255, 255, 0.25) 10px,
+      rgba(255, 255, 255, 0.25) 18px
+    );
+  opacity: 0.8;
+  animation: reelGlow 3.4s ease-in-out infinite;
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06));
+  background-size: 240px 100%;
+  animation: skeletonPan 1.8s linear infinite;
+}
+
+.skeleton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.12) 0,
+      rgba(255, 255, 255, 0.12) 12px,
+      rgba(255, 255, 255, 0.02) 12px,
+      rgba(255, 255, 255, 0.02) 20px
+    );
+  opacity: 0.4;
+  mix-blend-mode: screen;
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 6% 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 12px,
+      rgba(255, 255, 255, 0.15) 12px,
+      rgba(255, 255, 255, 0.15) 16px
+    );
+  opacity: 0.35;
+}
+
+@keyframes sheenSweep {
+  0% {
+    transform: translate3d(-35%, -35%, 0) rotate(10deg);
+  }
+  50% {
+    transform: translate3d(35%, 35%, 0) rotate(10deg);
+  }
+  100% {
+    transform: translate3d(85%, 85%, 0) rotate(10deg);
+  }
+}
+
+@keyframes auroraDrift {
+  0% {
+    transform: translate3d(-2%, -2%, 0) scale(1.02);
+  }
+  50% {
+    transform: translate3d(1%, 2%, 0) scale(1.05);
+  }
+  100% {
+    transform: translate3d(2%, 4%, 0) scale(1.01);
+  }
+}
+
+@keyframes reelOrbit {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  to {
+    transform: rotate(360deg) scale(1.03);
+  }
+}
+
+@keyframes filmPulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes reelGlow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes skeletonPan {
+  0% {
+    background-position: -240px 0;
+  }
+  100% {
+    background-position: 240px 0;
+  }
 }
