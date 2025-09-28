@@ -1,13 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import {
   Trophy,
@@ -18,41 +16,23 @@ import {
   Gift,
   Crown,
   Shield,
-  Heart,
   Play,
   Users,
   Clock,
-  Calendar,
-  TrendingUp,
   Sparkles,
   Flame,
   Diamond,
   Gem,
   Medal,
   Coins,
-  ChevronRight,
   Lock,
   CheckCircle,
-  Plus,
   Loader2,
-  RotateCcw,
-  ArrowUp,
-  Eye,
-  Share2,
-  Download,
   Smile,
   Palette,
-  Volume2,
-  Camera,
-  Gamepad2,
-  Music,
-  Video,
-  Coffee,
-  Mountain,
-  Rocket,
-  Snowflake
+  Camera
 } from "lucide-react"
-import { formatDistanceToNow, format, parseISO } from "date-fns"
+import { formatDistanceToNow, parseISO } from "date-fns"
 
 interface Achievement {
   id: string
@@ -126,8 +106,6 @@ interface LeaderboardEntry {
 }
 
 export default function RewardsPage() {
-  const router = useRouter()
-  const { user } = useAuth()
   const { toast } = useToast()
 
   const [achievements, setAchievements] = useState<Achievement[]>([])
@@ -140,9 +118,9 @@ export default function RewardsPage() {
 
   useEffect(() => {
     loadRewardsData()
-  }, [])
+  }, [loadRewardsData])
 
-  const loadRewardsData = async () => {
+  const loadRewardsData = useCallback(async () => {
     try {
       const token = localStorage.getItem("accessToken")
       const [achievementsRes, rewardsRes, statsRes, leaderboardRes] = await Promise.all([
@@ -181,7 +159,7 @@ export default function RewardsPage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [toast])
 
   const claimReward = async (rewardId: string) => {
     setClaimingRewards(prev => new Set(prev).add(rewardId))
@@ -222,7 +200,7 @@ export default function RewardsPage() {
         const error = await response.json()
         throw new Error(error.message || "Failed to claim reward")
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Claim reward error:", error)
       toast({
         title: "Error",

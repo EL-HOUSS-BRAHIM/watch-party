@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import Image from "next/image"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -199,35 +199,35 @@ const formatVideoDurationLabel = (duration: unknown): string => {
   return "Live"
 }
 
-const extractTags = (entity: any): string[] => {
+const extractTags = (entity: Record<string, unknown>): string[] => {
   if (!entity) {
     return []
   }
 
   if (Array.isArray(entity.tags)) {
-    return entity.tags.map((tag: any) => String(tag))
+    return entity.tags.map((tag: unknown) => String(tag))
   }
 
   if (Array.isArray(entity.categories)) {
-    return entity.categories.map((tag: any) => String(tag))
+    return entity.categories.map((tag: unknown) => String(tag))
   }
 
   if (Array.isArray(entity.genres)) {
-    return entity.genres.map((tag: any) => String(tag))
+    return entity.genres.map((tag: unknown) => String(tag))
   }
 
   if (Array.isArray(entity.topics)) {
-    return entity.topics.map((tag: any) => String(tag))
+    return entity.topics.map((tag: unknown) => String(tag))
   }
 
   if (Array.isArray(entity.metadata?.tags)) {
-    return entity.metadata.tags.map((tag: any) => String(tag))
+    return entity.metadata.tags.map((tag: unknown) => String(tag))
   }
 
   return []
 }
 
-const resolvePartyActive = (party: any): boolean => {
+const resolvePartyActive = (party: Record<string, unknown>): boolean => {
   if (typeof party?.is_active === "boolean") {
     return party.is_active
   }
@@ -240,7 +240,7 @@ const resolvePartyActive = (party: any): boolean => {
   return ["live", "active", "running"].includes(status)
 }
 
-const buildVideoCard = (video: any): TrendingVideoCard => {
+const buildVideoCard = (video: Record<string, unknown>): TrendingVideoCard => {
   const id = video?.id ?? video?.video_id ?? fallbackId("video")
   const uploader = video?.uploader ?? video?.author ?? video?.creator ?? {}
   const tags = extractTags(video)
@@ -283,7 +283,7 @@ const buildVideoCard = (video: any): TrendingVideoCard => {
   }
 }
 
-const buildPartyCard = (party: any, highlight?: "trending" | "recommended"): FeaturedPartyCard => {
+const buildPartyCard = (party: Record<string, unknown>, highlight?: "trending" | "recommended"): FeaturedPartyCard => {
   const host = party?.host ?? party?.owner ?? party?.organizer ?? {}
   const id = party?.id ?? party?.room_code ?? fallbackId("party")
 
@@ -353,7 +353,7 @@ const dedupePartyCards = (parties: FeaturedPartyCard[]): FeaturedPartyCard[] => 
 }
 
 const buildSuggestedUserCard = (
-  raw: any,
+  raw: Record<string, unknown>,
   fallbackReason: SuggestionReason = "popular",
 ): SuggestedUserCard => {
   const username =
@@ -476,7 +476,7 @@ const dedupeSuggestions = (suggestions: SuggestedUserCard[]): SuggestedUserCard[
   return Array.from(byId.values())
 }
 
-const buildCategoryCard = (category: any, index: number): DiscoverCategoryCard => {
+const buildCategoryCard = (category: Record<string, unknown>, index: number): DiscoverCategoryCard => {
   const id = category?.id ?? category?.slug ?? category?.name ?? fallbackId("category")
   const itemCount = safeNumber(
     category?.content_count ?? category?.video_count ?? category?.count,
@@ -611,14 +611,14 @@ export default function DiscoverPage() {
             .filter((item: DiscoverRecommendation) => item?.type === "user")
             .map((item: DiscoverRecommendation) =>
               buildSuggestedUserCard(
-                (item?.metadata ?? item) as Record<string, any>,
+                (item?.metadata ?? item) as Record<string, unknown>,
                 "popular",
               ),
             )
         : []
 
       const suggestionResults: SuggestedUserCard[] = Array.isArray(userSuggestionsPayload)
-        ? userSuggestionsPayload.map((user: Record<string, any>) =>
+        ? userSuggestionsPayload.map((user: Record<string, unknown>) =>
             buildSuggestedUserCard(user, "mutual_friends"),
           )
         : []
@@ -720,18 +720,18 @@ export default function DiscoverPage() {
         }
 
         const normalizedVideos = Array.isArray(videoResults?.results)
-          ? videoResults.results.map((video: any) => buildVideoCard(video))
+          ? videoResults.results.map((video: Record<string, unknown>) => buildVideoCard(video))
           : []
 
         const normalizedParties = dedupePartyCards(
           Array.isArray(partyResults?.results)
-            ? partyResults.results.map((party: any) => buildPartyCard(party, "trending"))
+            ? partyResults.results.map((party: Record<string, unknown>) => buildPartyCard(party, "trending"))
             : [],
         )
 
         const normalizedSuggestions = dedupeSuggestions(
           Array.isArray(userResults?.results)
-            ? userResults.results.map((user: any) =>
+            ? userResults.results.map((user: Record<string, unknown>) =>
                 buildSuggestedUserCard(user, "common_interests"),
               )
             : [],
@@ -740,7 +740,7 @@ export default function DiscoverPage() {
         const normalizedCategories =
           Array.isArray(videoResults?.facets?.categories) &&
           videoResults.facets.categories.length > 0
-            ? videoResults.facets.categories.map((facet: any, index: number) =>
+            ? videoResults.facets.categories.map((facet: Record<string, unknown>, index: number) =>
                 buildCategoryCard(
                   {
                     id: facet.name,
@@ -1008,9 +1008,10 @@ export default function DiscoverPage() {
                           className="group bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 cursor-pointer"
                         >
                           <div className="relative aspect-video">
-                            <img
+                            <Image
                               src={video.thumbnail || "/placeholder.svg"}
                               alt={video.title}
+                              fill
                               className="w-full h-full object-cover"
                             />
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-200 flex items-center justify-center">
@@ -1113,7 +1114,7 @@ export default function DiscoverPage() {
                     <div className="flex items-center space-x-3">
                       <Zap className="w-6 h-6 text-yellow-500" />
                       <h2 className="text-2xl font-bold text-white">Featured Parties</h2>
-                      <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">Editor's Choice</Badge>
+                      <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">Editor&apos;s Choice</Badge>
                     </div>
                     <Button variant="ghost" className="text-purple-400 hover:text-purple-300">
                       View All
@@ -1130,9 +1131,10 @@ export default function DiscoverPage() {
                         >
                           {party.thumbnail && (
                             <div className="relative aspect-video">
-                              <img
+                              <Image
                                 src={party.thumbnail || "/placeholder.svg"}
                                 alt={party.title}
+                                fill
                                 className="w-full h-full object-cover"
                               />
                               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-200" />
