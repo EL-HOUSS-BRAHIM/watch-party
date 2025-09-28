@@ -121,7 +121,7 @@ export default function WatchRoomPage() {
   const [showChat, setShowChat] = useState(true)
   const [newMessage, setNewMessage] = useState("")
   const [isHost, setIsHost] = useState(false)
-  const [userRole, setUserRole] = useState<"host" | "moderator" | "participant">(&quot;participant&quot;)
+  const [userRole, setUserRole] = useState<"host" | "moderator" | "participant">("participant")
 
   const wsRef = useRef<WebSocket | null>(null)
 
@@ -442,8 +442,8 @@ export default function WatchRoomPage() {
           <CardContent className="p-8 text-center">
             <AlertTriangle className="h-12 w-12 text-white mx-auto mb-4" />
             <h2 className="text-xl font-bold text-white mb-2">Party Not Found</h2>
-            <p className="text-white/70 mb-6">This watch party doesn&apos;t exist or you don&apos;t have access to it.</p>
-            <Button onClick={() => router.push(&quot;/dashboard&quot;)} className=&quot;bg-white text-black hover:bg-white/90">"
+            <p className="text-white/70 mb-6">This watch party doesn't exist or you don't have access to it.</p>
+            <Button onClick={() => router.push("/dashboard")} className="bg-white text-black hover:bg-white/90">"
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Dashboard
             </Button>
@@ -461,7 +461,7 @@ export default function WatchRoomPage() {
           <div className="flex items-center space-x-4">
             <Button
               variant="ghost"
-              onClick={() => router.push(&quot;/dashboard&quot;)}
+              onClick={() => router.push("/dashboard")}
               className="text-white hover:bg-white/10"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -541,7 +541,7 @@ export default function WatchRoomPage() {
                     max={party.video.duration}
                     step={1}
                     className="w-full"
-                    onValueChange={([value]) => handleVideoControl(&quot;seek&quot;, value)}
+                    onValueChange={([value]) => handleVideoControl("seek", value)}
                   />
                   <div className="flex justify-between text-xs text-white/70 mt-1">
                     <span>{formatTime(syncState.currentTime)}</span>
@@ -555,10 +555,10 @@ export default function WatchRoomPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleVideoControl(syncState.isPlaying ? &quot;pause&quot; : &quot;play")}
+                      onClick={() => handleVideoControl(syncState.isPlaying ? "pause" : "play")}
                       className="text-white hover:bg-white/20"
                     >
-                      {syncState.isPlaying ? <Pause className="h-5 w-5" /> : <Play className=&quot;h-5 w-5&quot; />}
+                      {syncState.isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
                     </Button>
 
                     <div className="flex items-center space-x-2">
@@ -568,7 +568,7 @@ export default function WatchRoomPage() {
                         onClick={() => setIsMuted(!isMuted)}
                         className="text-white hover:bg-white/20"
                       >
-                        {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4&quot; />}
+                        {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                       </Button>
                       <Slider
                         value={[volume]}
@@ -591,7 +591,7 @@ export default function WatchRoomPage() {
                       onClick={() => setIsFullscreen(!isFullscreen)}
                       className="text-white hover:bg-white/20"
                     >
-                      {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className=&quot;h-4 w-4&quot; />}
+                      {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
                     </Button>
                   </div>
                 </div>
@@ -604,7 +604,7 @@ export default function WatchRoomPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => sendReaction(&quot;heart&quot;)}
+                  onClick={() => sendReaction("heart")}
                   className="bg-black/50 text-white hover:bg-black/70"
                 >
                   <Heart className="h-4 w-4" />
@@ -612,7 +612,7 @@ export default function WatchRoomPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => sendReaction(&quot;like&quot;)}
+                  onClick={() => sendReaction("like")}
                   className="bg-black/50 text-white hover:bg-black/70"
                 >
                   <ThumbsUp className="h-4 w-4" />
@@ -731,7 +731,7 @@ export default function WatchRoomPage() {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Type a message..."
-                    onKeyPress={(e) => e.key === &quot;Enter&quot; && sendChatMessage()}
+                    onKeyPress={(e) => e.key === "Enter" && sendChatMessage()}
                     className="flex-1 bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white/40"
                   />
                   <Button onClick={sendChatMessage} className="bg-white text-black hover:bg-white/90">

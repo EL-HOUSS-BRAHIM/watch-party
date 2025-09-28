@@ -143,7 +143,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
       })
 
       if (response.ok) {
-        setProfile(prev => prev ? { ...prev, friendshipStatus: &quot;pending_sent&quot; } : null)
+        setProfile(prev => prev ? { ...prev, friendshipStatus: "pending_sent" } : null)
         toast({title: "Friend request sent",
           description: `Friend request sent to ${profile.firstName}`,
         })
@@ -174,7 +174,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
       })
 
       if (response.ok) {
-        setProfile(prev => prev ? { ...prev, friendshipStatus: &quot;none" } : null)
+        setProfile(prev => prev ? { ...prev, friendshipStatus: "none" } : null)
         toast({title: "Friend removed",
           description: `Removed ${profile.firstName} from your friends`,
         })

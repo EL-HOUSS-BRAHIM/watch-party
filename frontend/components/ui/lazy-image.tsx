@@ -48,7 +48,7 @@ export function LazyImage({src,
   }, [hasIntersected, src, isLoaded, hasError, onLoad, onError])
 
   return (
-    <div ref={targetRef as React.RefObject<HTMLDivElement>} className={cn(&quot;relative overflow-hidden&quot;, className)}>
+    <div ref={targetRef as React.RefObject<HTMLDivElement>} className={cn("relative overflow-hidden", className)}>
       <img
         src={imageSrc || "/placeholder.svg"}
         alt={alt}

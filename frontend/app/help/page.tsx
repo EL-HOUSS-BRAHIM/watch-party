@@ -338,7 +338,7 @@ export default function HelpPage() {
                       <p className="text-gray-600 mb-6">
                         Try adjusting your search or browse by category
                       </p>
-                      <Button variant="outline" onClick={() => setSearchQuery(&quot;&quot;)}>
+                      <Button variant="outline" onClick={() => setSearchQuery("")}>
                         Clear Search
                       </Button>
                     </CardContent>
@@ -560,7 +560,7 @@ export default function HelpPage() {
                   <div className="text-center py-12">
                     <MessageCircle className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-xl font-semibold mb-2">No support tickets</h3>
-                    <p className="text-gray-600 mb-6">You haven&apos;t created any support tickets yet.</p>
+                    <p className="text-gray-600 mb-6">You haven't created any support tickets yet.</p>
                     <Button>Create New Ticket</Button>
                   </div>
                 )}

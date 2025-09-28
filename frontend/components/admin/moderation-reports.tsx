@@ -86,9 +86,9 @@ export function ModerationReports() {
   const [loading, setLoading] = useState(true)
   const [selectedReport, setSelectedReport] = useState<Report | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string>(&apos;all&apos;)
-  const [priorityFilter, setPriorityFilter] = useState<string>(&apos;all&apos;)
-  const [typeFilter, setTypeFilter] = useState<string>(&apos;all&apos;)
+  const [statusFilter, setStatusFilter] = useState<string>('all')
+  const [priorityFilter, setPriorityFilter] = useState<string>('all')
+  const [typeFilter, setTypeFilter] = useState<string>('all')
 
   useEffect(() => {
     loadReports()
@@ -259,30 +259,30 @@ export function ModerationReports() {
       <Tabs defaultValue="pending" className="space-y-4">
         <TabsList>
           <TabsTrigger value="pending">
-            Pending ({reports.filter(r => r.status === &apos;pending&apos;).length})
+            Pending ({reports.filter(r => r.status === 'pending').length})
           </TabsTrigger>
           <TabsTrigger value="investigating">
-            Investigating ({reports.filter(r => r.status === &apos;investigating&apos;).length})
+            Investigating ({reports.filter(r => r.status === 'investigating').length})
           </TabsTrigger>
           <TabsTrigger value="resolved">
-            Resolved ({reports.filter(r => r.status === &apos;resolved&apos;).length})
+            Resolved ({reports.filter(r => r.status === 'resolved').length})
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="pending" className="space-y-4">
-          {filteredReports.filter(r => r.status === &apos;pending&apos;).map((report) => (
+          {filteredReports.filter(r => r.status === 'pending').map((report) => (
             <ReportCard key={report.id} report={report} onViewDetails={setSelectedReport} />
           ))}
         </TabsContent>
 
         <TabsContent value="investigating" className="space-y-4">
-          {filteredReports.filter(r => r.status === &apos;investigating&apos;).map((report) => (
+          {filteredReports.filter(r => r.status === 'investigating').map((report) => (
             <ReportCard key={report.id} report={report} onViewDetails={setSelectedReport} />
           ))}
         </TabsContent>
 
         <TabsContent value="resolved" className="space-y-4">
-          {filteredReports.filter(r => r.status === &apos;resolved&apos;).map((report) => (
+          {filteredReports.filter(r => r.status === 'resolved').map((report) => (
             <ReportCard key={report.id} report={report} onViewDetails={setSelectedReport} />
           ))}
         </TabsContent>

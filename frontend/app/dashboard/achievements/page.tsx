@@ -86,7 +86,7 @@ const rarityBorders = { common: 'border-gray-400',
 }
 
 export default function DashboardAchievementsPage() {
-  const [filter, setFilter] = useState<'all' | 'completed' | 'in-progress'>(&apos;all&apos;)
+  const [filter, setFilter] = useState<'all' | 'completed' | 'in-progress'>('all')
   const filteredAchievements = achievements.filter(achievement => {}
     switch (filter) {
       case 'completed':

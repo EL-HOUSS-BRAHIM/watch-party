@@ -159,7 +159,7 @@ function SearchContent() {
           Object.entries(filters.videoFilters).filter(([_, v]) => v !== undefined)
         ),
         ...Object.fromEntries(
-          Object.entries(filters.partyFilters).filter(([_, v]) => v !== undefined && v !== &quot;all&quot;)
+          Object.entries(filters.partyFilters).filter(([_, v]) => v !== undefined && v !== "all")
         ),
       })
 
@@ -284,7 +284,7 @@ function SearchContent() {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  onClick={() => setQuery(&quot;&quot;)}
+                  onClick={() => setQuery("")}
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
                 >
                   <X className="h-4 w-4" />
@@ -419,7 +419,7 @@ function SearchContent() {
 
       {/* Results */}
       {query && (
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as SearchFilters[&quot;type&quot;])}>
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as SearchFilters["type"])}>
           <TabsList className="grid w-full grid-cols-4 mb-6">
             <TabsTrigger value="all">All Results</TabsTrigger>
             <TabsTrigger value="users">Users ({users.length})</TabsTrigger>
@@ -440,7 +440,7 @@ function SearchContent() {
                 <p className="text-gray-600 mb-4">
                   No results found for "{query}". Try adjusting your search terms or filters.
                 </p>
-                <Button variant="outline" onClick={() => setQuery(&quot;&quot;)}>
+                <Button variant="outline" onClick={() => setQuery("")}>
                   Clear Search
                 </Button>
               </CardContent>

@@ -46,7 +46,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState("uploadedAt")
   const [filterBy, setFilterBy] = useState("all")
-  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid&quot;)
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [isLoading, setIsLoading] = useState(true)
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null)
   const { user } = useAuth()
@@ -247,7 +247,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
                   <Download className="mr-2 h-4 w-4" />
                   Download
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-red-600&quot;>
+                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className="text-red-600">
                   <Trash2 className="mr-2 h-4 w-4" />
                   Delete
                 </DropdownMenuItem>
@@ -338,7 +338,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
                       <Download className="mr-2 h-4 w-4" />
                       Download
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-red-600&quot;>
+                    <DropdownMenuItem onClick={() => deleteVideo(video.id)} className="text-red-600">
                       <Trash2 className="mr-2 h-4 w-4" />
                       Delete
                     </DropdownMenuItem>
@@ -361,8 +361,8 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
           <p className="text-gray-600">Manage your uploaded videos</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => setViewMode(viewMode === &quot;grid&quot; ? &quot;list" : "grid")}>
-            {viewMode === "grid" ? <List className="h-4 w-4" /> : <Grid className=&quot;h-4 w-4&quot; />}
+          <Button variant="outline" size="sm" onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}>
+            {viewMode === "grid" ? <List className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
           </Button>
         </div>
       </div>

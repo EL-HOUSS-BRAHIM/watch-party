@@ -365,7 +365,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                 ) : (
                   <Cast className="h-4 w-4" />
                 )}
-                <span>{loading ? &apos;Starting...&apos; : &apos;Share Screen'}</span>
+                <span>{loading ? 'Starting...' : 'Share Screen'}</span>
               </Button>
             )}
             {isSharing && (
@@ -434,7 +434,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
               </div>
               <div className="absolute bottom-2 left-2">
                 <Badge>
-                  {participants.find(p => p.id === activeSharer)?.username || &apos;Unknown&apos;}&apos;s Screen
+                  {participants.find(p => p.id === activeSharer)?.username || 'Unknown'}'s Screen
                 </Badge>
               </div>
             </div>

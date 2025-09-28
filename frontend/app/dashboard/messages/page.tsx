@@ -403,9 +403,9 @@ export default function MessagesPage() {
                       <div className="w-8">
                         {showAvatar && (
                           <Avatar className="w-8 h-8">
-                            <AvatarImage src={selectedConversation.participants.find(p => p.id === message.senderId)?.avatar || &quot;/placeholder-user.jpg&quot;} />
+                            <AvatarImage src={selectedConversation.participants.find(p => p.id === message.senderId)?.avatar || "/placeholder-user.jpg"} />
                             <AvatarFallback className="text-xs">
-                              {selectedConversation.participants.find(p => p.id === message.senderId)?.firstName?.[0] || &quot;U&quot;}
+                              {selectedConversation.participants.find(p => p.id === message.senderId)?.firstName?.[0] || "U"}
                             </AvatarFallback>
                           </Avatar>
                         )}

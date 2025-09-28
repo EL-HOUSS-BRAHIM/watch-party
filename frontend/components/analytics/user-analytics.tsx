@@ -432,7 +432,7 @@ export function UserAnalytics() {
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(value) => [formatDuration(value as number), &apos;Watch Time&apos;]} />
+                      <Tooltip formatter={(value) => [formatDuration(value as number), 'Watch Time']} />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>

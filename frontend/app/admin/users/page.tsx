@@ -1,4 +1,4 @@
-import { User } from "lucide-react"
+import  from "lucide-react"
 import { UserManagement } from "@/components/admin/user-management"
 
 export default function AdminUsersPage() {

@@ -228,11 +228,11 @@ export function AdvancedAnalyticsDashboard() {
             </SelectContent>
           </Select>
 
-          <Button onClick={() => exportData(&quot;csv&quot;)} variant=&quot;outline">
+          <Button onClick={() => exportData("csv")} variant="outline">
             <Download className="mr-2 h-4 w-4" />
             Export CSV
           </Button>
-          <Button onClick={() => exportData(&quot;excel&quot;)} variant=&quot;outline">
+          <Button onClick={() => exportData("excel")} variant="outline">
             <Download className="mr-2 h-4 w-4" />
             Export PDF
           </Button>
@@ -490,7 +490,7 @@ export function AdvancedAnalyticsDashboard() {
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold text-green-600">${plan.revenue}</div>
-                        <Progress value={(plan.revenue / data.revenueMetrics.plans.reduce((sum, p) => sum + p.revenue, 0)) * 100} className=&quot;w-20&quot; />
+                        <Progress value={(plan.revenue / data.revenueMetrics.plans.reduce((sum, p) => sum + p.revenue, 0)) * 100} className="w-20" />
                       </div>
                     </div>
                   ))}

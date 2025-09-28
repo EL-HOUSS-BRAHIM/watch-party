@@ -26,7 +26,7 @@ export function VideoUpload() {
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadComplete, setUploadComplete] = useState(false)
-  const [uploadMethod, setUploadMethod] = useState<"local" | "drive">(&quot;local&quot;)
+  const [uploadMethod, setUploadMethod] = useState<"local" | "drive">("local")
   const [videoDetails, setVideoDetails] = useState({title: "",
     description: "",
     tags: "",
@@ -137,7 +137,7 @@ export function VideoUpload() {
             <Button onClick={() => window.location.reload()}>
               Upload Another Video
             </Button>
-            <Button variant="outline" onClick={() => window.location.href = &quot;/videos/manage&quot;}>
+            <Button variant="outline" onClick={() => window.location.href = "/videos/manage"}>
               Manage Videos
             </Button>
           </div>

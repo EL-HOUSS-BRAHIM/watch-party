@@ -350,7 +350,7 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
 
               {!isSearching && searchQuery && searchResults.length === 0 && (
                 <div className="text-center py-8 text-muted-foreground">
-                  No users found matching &quot;{searchQuery}&quot
+                  No users found matching "{searchQuery}&quot
                 </div>
               )}
 

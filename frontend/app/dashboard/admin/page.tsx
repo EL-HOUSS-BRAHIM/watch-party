@@ -270,8 +270,8 @@ export default function AdminDashboardPage() {
         <div className="max-w-2xl mx-auto text-center">
           <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
-          <p className="text-muted-foreground mb-4">You don&apos;t have permission to access the admin dashboard.</p>
-          <Button onClick={() => router.push(&quot;/dashboard&quot;)}>Back to Dashboard</Button>
+          <p className="text-muted-foreground mb-4">You don't have permission to access the admin dashboard.</p>
+          <Button onClick={() => router.push("/dashboard")}>Back to Dashboard</Button>
         </div>
       </div>
     )
@@ -303,7 +303,7 @@ export default function AdminDashboardPage() {
             <p className="text-muted-foreground mt-2">System overview and management tools</p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Last updated: {format(lastUpdated, &quot;HH:mm:ss&quot;)}</span>
+            <span className="text-sm text-muted-foreground">Last updated: {format(lastUpdated, "HH:mm:ss")}</span>
             <Button variant="outline" onClick={loadDashboardData}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh
@@ -517,7 +517,7 @@ export default function AdminDashboardPage() {
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => router.push(&quot;/dashboard/admin/users&quot;)}
+                    onClick={() => router.push("/dashboard/admin/users")}
                   >
                     <Users className="h-4 w-4 mr-2" />
                     Manage Users
@@ -525,7 +525,7 @@ export default function AdminDashboardPage() {
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => router.push(&quot;/dashboard/admin/reports&quot;)}
+                    onClick={() => router.push("/dashboard/admin/reports")}
                   >
                     <AlertTriangle className="h-4 w-4 mr-2" />
                     View Reports
@@ -533,7 +533,7 @@ export default function AdminDashboardPage() {
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => router.push(&quot;/dashboard/admin/analytics&quot;)}
+                    onClick={() => router.push("/dashboard/admin/analytics")}
                   >
                     <BarChart3 className="h-4 w-4 mr-2" />
                     Analytics
@@ -541,7 +541,7 @@ export default function AdminDashboardPage() {
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => exportData(&quot;analytics&quot;)}
+                    onClick={() => exportData("analytics")}
                   >
                     <Download className="h-4 w-4 mr-2" />
                     Export Data
@@ -696,7 +696,7 @@ export default function AdminDashboardPage() {
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => exportData(&quot;users&quot;)}
+                    onClick={() => exportData("users")}
                   >
                     <Users className="h-4 w-4 mr-2" />
                     Export User Data
@@ -704,7 +704,7 @@ export default function AdminDashboardPage() {
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => exportData(&quot;parties&quot;)}
+                    onClick={() => exportData("parties")}
                   >
                     <Calendar className="h-4 w-4 mr-2" />
                     Export Party Data
@@ -712,7 +712,7 @@ export default function AdminDashboardPage() {
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => exportData(&quot;videos&quot;)}
+                    onClick={() => exportData("videos")}
                   >
                     <Video className="h-4 w-4 mr-2" />
                     Export Video Data
@@ -720,7 +720,7 @@ export default function AdminDashboardPage() {
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => exportData(&quot;analytics&quot;)}
+                    onClick={() => exportData("analytics")}
                   >
                     <BarChart3 className="h-4 w-4 mr-2" />
                     Export Analytics
@@ -736,7 +736,7 @@ export default function AdminDashboardPage() {
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => router.push(&quot;/dashboard/admin/users&quot;)}
+                    onClick={() => router.push("/dashboard/admin/users")}
                   >
                     <Users className="h-4 w-4 mr-2" />
                     User Management
@@ -744,7 +744,7 @@ export default function AdminDashboardPage() {
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => router.push(&quot;/dashboard/admin/reports&quot;)}
+                    onClick={() => router.push("/dashboard/admin/reports")}
                   >
                     <AlertTriangle className="h-4 w-4 mr-2" />
                     Content Moderation
@@ -752,7 +752,7 @@ export default function AdminDashboardPage() {
                   <Button
                     variant="outline"
                     className="w-full justify-start bg-transparent"
-                    onClick={() => router.push(&quot;/dashboard/admin/analytics&quot;)}
+                    onClick={() => router.push("/dashboard/admin/analytics")}
                   >
                     <TrendingUp className="h-4 w-4 mr-2" />
                     Advanced Analytics

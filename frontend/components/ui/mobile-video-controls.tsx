@@ -94,7 +94,7 @@ export function MobileVideoControls({isPlaying,
           onClick={onPlayPause}
           className="h-20 w-20 rounded-full bg-black/50 hover:bg-black/70 text-white"
         >
-          {isPlaying ? <Pause className="h-10 w-10" /> : <Play className=&quot;h-10 w-10 ml-1&quot; />}
+          {isPlaying ? <Pause className="h-10 w-10" /> : <Play className="h-10 w-10 ml-1" />}
         </Button>
       </div>
 
@@ -116,15 +116,15 @@ export function MobileVideoControls({isPlaying,
         {/* Control buttons */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={() => onSkip(-10)} className=&quot;text-white hover:bg-white/20&quot;>
+            <Button variant="ghost" size="sm" onClick={() => onSkip(-10)} className="text-white hover:bg-white/20">
               <SkipBack className="h-5 w-5" />
             </Button>
 
             <Button variant="ghost" size="sm" onClick={onPlayPause} className="text-white hover:bg-white/20">
-              {isPlaying ? <Pause className="h-5 w-5" /> : <Play className=&quot;h-5 w-5&quot; />}
+              {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
             </Button>
 
-            <Button variant="ghost" size="sm" onClick={() => onSkip(10)} className=&quot;text-white hover:bg-white/20&quot;>
+            <Button variant="ghost" size="sm" onClick={() => onSkip(10)} className="text-white hover:bg-white/20">
               <SkipForward className="h-5 w-5" />
             </Button>
           </div>
@@ -137,7 +137,7 @@ export function MobileVideoControls({isPlaying,
                 onClick={() => setShowVolumeSlider(!showVolumeSlider)}
                 className="text-white hover:bg-white/20"
               >
-                {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className=&quot;h-5 w-5&quot; />}
+                {isMuted ? <VolumeX className="h-5 w-5" /> : <Volume2 className="h-5 w-5" />}
               </Button>
 
               {showVolumeSlider && (

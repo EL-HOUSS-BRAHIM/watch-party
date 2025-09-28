@@ -73,7 +73,7 @@ export function UserManagement() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [roleFilter, setRoleFilter] = useState("all")
   const [sortBy, setSortBy] = useState("createdAt")
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">(&quot;desc&quot;)
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc")
   const [isLoading, setIsLoading] = useState(true)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [userActions, setUserActions] = useState<UserAction[]>([])
@@ -423,7 +423,7 @@ export function UserManagement() {
                     </p>
                     {user.lastLoginAt && (
                       <p>
-                        <strong>Last Login:</strong>{&quot; &quot;}
+                        <strong>Last Login:</strong>{" "}
                         {formatDistanceToNow(new Date(user.lastLoginAt), { addSuffix: true })}
                       </p>
                     )}
@@ -673,13 +673,13 @@ export function UserManagement() {
                             View Details
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => updateUserStatus(user.id, &quot;suspended&quot;, &quot;Administrative action")}
+                            onClick={() => updateUserStatus(user.id, "suspended", "Administrative action")}
                           >
                             <Ban className="mr-2 h-4 w-4" />
                             Suspend
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => updateUserRole(user.id, user.role === &quot;moderator&quot; ? &quot;user" : "moderator")}
+                            onClick={() => updateUserRole(user.id, user.role === "moderator" ? "user" : "moderator")}
                           >
                             <Shield className="mr-2 h-4 w-4" />
                             {user.role === "moderator" ? "Remove Moderator" : "Make Moderator"}
@@ -740,12 +740,12 @@ export function UserManagement() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-2">
-              <Button onClick={() => bulkUpdateUsers(&quot;suspend&quot;, selectedUsers, &quot;Bulk suspension")}>Suspend All</Button>
-              <Button onClick={() => bulkUpdateUsers(&quot;activate&quot;, selectedUsers, &quot;Bulk activation")}>
+              <Button onClick={() => bulkUpdateUsers("suspend", selectedUsers, "Bulk suspension")}>Suspend All</Button>
+              <Button onClick={() => bulkUpdateUsers("activate", selectedUsers, "Bulk activation")}>
                 Activate All
               </Button>
-              <Button onClick={() => bulkUpdateUsers(&quot;verify&quot;, selectedUsers, &quot;Bulk verification")}>Verify All</Button>
-              <Button variant="destructive" onClick={() => bulkUpdateUsers(&quot;delete&quot;, selectedUsers, &quot;Bulk deletion")}>
+              <Button onClick={() => bulkUpdateUsers("verify", selectedUsers, "Bulk verification")}>Verify All</Button>
+              <Button variant="destructive" onClick={() => bulkUpdateUsers("delete", selectedUsers, "Bulk deletion")}>
                 Delete All
               </Button>
             </div>

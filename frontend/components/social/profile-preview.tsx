@@ -275,7 +275,7 @@ export function ProfilePreview({userId,
                           ) : (
                             <>
                               <Clock className="h-3 w-3" />
-                              <span>Last seen {profile.lastSeen ? new Date(profile.lastSeen).toLocaleDateString() : &apos;recently&apos;}</span>
+                              <span>Last seen {profile.lastSeen ? new Date(profile.lastSeen).toLocaleDateString() : 'recently'}</span>
                             </>
                           )}
                         </div>

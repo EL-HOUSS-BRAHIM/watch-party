@@ -275,7 +275,7 @@ export default function VideoPlayer({src,
       {roomId && (
         <div className="absolute top-4 right-4">
           <Badge variant={isConnected ? "default" : "destructive"} className="flex items-center gap-1">
-            {isConnected ? <Wifi className="h-3 w-3" /> : <WifiOff className=&quot;h-3 w-3&quot; />}
+            {isConnected ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
             {isConnected ? "Connected" : "Disconnected"}
           </Badge>
         </div>
@@ -304,7 +304,7 @@ export default function VideoPlayer({src,
             className="h-16 w-16 rounded-full bg-black/50 hover:bg-black/70 text-white"
             disabled={!isHost && !!roomId}
           >
-            {isPlaying ? <Pause className="h-8 w-8" /> : <Play className=&quot;h-8 w-8 ml-1&quot; />}
+            {isPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8 ml-1" />}
           </Button>
         </div>
 
@@ -341,7 +341,7 @@ export default function VideoPlayer({src,
                 disabled={!isHost && !!roomId}
                 className="text-white hover:bg-white/20"
               >
-                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className=&quot;h-4 w-4&quot; />}
+                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
               </Button>
 
               <Button
@@ -366,7 +366,7 @@ export default function VideoPlayer({src,
 
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="sm" onClick={toggleMute} className="text-white hover:bg-white/20">
-                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4&quot; />}
+                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
                 </Button>
                 <div className="w-20">
                   <Slider

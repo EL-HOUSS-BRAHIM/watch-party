@@ -39,8 +39,8 @@ export function MutualFriendsSuggestions() {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filter, setFilter] = useState<'all' | 'mutual_friends' | 'location' | 'interests'>(&apos;all&apos;)
-  const [sortBy, setSortBy] = useState<'confidence' | 'mutual_friends' | 'recent'>(&apos;confidence&apos;)
+  const [filter, setFilter] = useState<'all' | 'mutual_friends' | 'location' | 'interests'>('all')
+  const [sortBy, setSortBy] = useState<'confidence' | 'mutual_friends' | 'recent'>('confidence')
 
   useEffect(() => {
     fetchSuggestions()

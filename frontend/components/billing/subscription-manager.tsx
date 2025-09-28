@@ -457,28 +457,28 @@ export function SubscriptionManager({subscription,
 
             {isCanceled && (
               <Button onClick={handleResume} disabled={loading}>
-                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className=&quot;h-4 w-4 mr-2&quot; />}
+                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className="h-4 w-4 mr-2" />}
                 Resume Subscription
               </Button>
             )}
 
             {!isCanceled && !isPaused && (
               <Button variant="outline" onClick={handlePause} disabled={loading}>
-                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Pause className=&quot;h-4 w-4 mr-2&quot; />}
+                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Pause className="h-4 w-4 mr-2" />}
                 Pause Subscription
               </Button>
             )}
 
             {isPaused && (
               <Button onClick={handleResume} disabled={loading}>
-                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className=&quot;h-4 w-4 mr-2&quot; />}
+                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className="h-4 w-4 mr-2" />}
                 Resume Subscription
               </Button>
             )}
 
             {!isCanceled && !isPaused && (
               <Button variant="destructive" onClick={handleCancel} disabled={loading}>
-                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <X className=&quot;h-4 w-4 mr-2&quot; />}
+                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <X className="h-4 w-4 mr-2" />}
                 Cancel Subscription
               </Button>
             )}

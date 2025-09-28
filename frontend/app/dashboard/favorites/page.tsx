@@ -80,11 +80,11 @@ const typeLabels = { movie: 'Movie',
 }
 
 export default function DashboardFavoritesPage() {
-  const [filter, setFilter] = useState<'all' | 'movie' | 'show' | 'video' | 'party'>(&apos;all&apos;)
-  const [sortBy, setSortBy] = useState<'added' | 'rating' | 'title'>(&apos;added&apos;)
+  const [filter, setFilter] = useState<'all' | 'movie' | 'show' | 'video' | 'party'>('all')
+  const [sortBy, setSortBy] = useState<'added' | 'rating' | 'title'>('added')
 
   const filteredFavorites = favorites
-    .filter(item => filter === &apos;all' || item.type === filter)
+    .filter(item => filter === 'all' || item.type === filter)
     .sort((a, b) => {}
       switch (sortBy) {
         case 'rating':
@@ -261,19 +261,19 @@ export default function DashboardFavoritesPage() {
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-blue-400 mb-2">
-              {favorites.filter(f => f.type === &apos;movie&apos;).length}
+              {favorites.filter(f => f.type === 'movie').length}
             </div>
             <div className="text-white/70">Movies</div>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-purple-400 mb-2">
-              {favorites.filter(f => f.type === &apos;show&apos;).length}
+              {favorites.filter(f => f.type === 'show').length}
             </div>
             <div className="text-white/70">TV Shows</div>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-orange-400 mb-2">
-              {favorites.filter(f => f.type === &apos;party&apos;).length}
+              {favorites.filter(f => f.type === 'party').length}
             </div>
             <div className="text-white/70">Parties</div>
           </div>

@@ -115,7 +115,7 @@ export function AuthCallback() {
             <p className="text-sm text-muted-foreground">{error}</p>
             <div className="flex space-x-2">
               <Button
-                onClick={() => router.push(&quot;/login&quot;)}
+                onClick={() => router.push("/login")}
                 className="flex-1"
               >
                 Back to Login

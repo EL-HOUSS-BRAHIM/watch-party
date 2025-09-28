@@ -78,7 +78,7 @@ export function RealTimeSyncIndicator({syncStatus,
 
   const formatTimeDifference = (diff: number) => {}
     if (Math.abs(diff) < 0.5) return 'Perfect sync'
-    const sign = diff > 0 ? &apos;+&apos; : &apos;'
+    const sign = diff > 0 ? '+' : ''
     return `${sign}${diff.toFixed(1)}s`
   }
 
@@ -198,7 +198,7 @@ export function RealTimeSyncIndicator({syncStatus,
           {syncStatus.is_synced ? 'Synced' : 'Out of Sync'}
         </Badge>
         <Badge
-          variant={syncStatus.buffer_health > 50 ? &quot;secondary&quot; : &quot;destructive"}
+          variant={syncStatus.buffer_health > 50 ? "secondary" : "destructive"}
           className="text-xs"
         >
           Buffer: {syncStatus.buffer_health}%

@@ -143,7 +143,7 @@ export default function AccessibilityPanel() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-2xl font-bold">{Math.round(accessibilityScore)}%</span>
-              <Badge variant={accessibilityScore >= 80 ? &quot;default&quot; : accessibilityScore >= 60 ? &quot;secondary" : "destructive"}>
+              <Badge variant={accessibilityScore >= 80 ? "default" : accessibilityScore >= 60 ? "secondary" : "destructive"}>
                 {accessibilityScore >= 80 ? "Excellent" : accessibilityScore >= 60 ? "Good" : "Needs Improvement"}
               </Badge>
             </div>
@@ -174,7 +174,7 @@ export default function AccessibilityPanel() {
               <Button
                 variant={themeSettings.theme === 'light' ? "default" : "outline"}
                 size="sm"
-                onClick={() => updateThemeSetting(&apos;theme&apos;, &apos;light')}
+                onClick={() => updateThemeSetting('theme', 'light')}
                 className="flex items-center space-x-2"
               >
                 <Sun className="w-4 h-4" />
@@ -183,7 +183,7 @@ export default function AccessibilityPanel() {
               <Button
                 variant={themeSettings.theme === 'dark' ? "default" : "outline"}
                 size="sm"
-                onClick={() => updateThemeSetting(&apos;theme&apos;, &apos;dark')}
+                onClick={() => updateThemeSetting('theme', 'dark')}
                 className="flex items-center space-x-2"
               >
                 <Moon className="w-4 h-4" />
@@ -192,7 +192,7 @@ export default function AccessibilityPanel() {
               <Button
                 variant={themeSettings.theme === 'auto' ? "default" : "outline"}
                 size="sm"
-                onClick={() => updateThemeSetting(&apos;theme&apos;, &apos;auto')}
+                onClick={() => updateThemeSetting('theme', 'auto')}
                 className="flex items-center space-x-2"
               >
                 <Monitor className="w-4 h-4" />
@@ -208,7 +208,7 @@ export default function AccessibilityPanel() {
               {accentColors.map((color) => (
                 <button
                   key={color.value}
-                  onClick={() => updateThemeSetting(&apos;accentColor&apos;, color.value)}
+                  onClick={() => updateThemeSetting('accentColor', color.value)}
                   className={`w-10 h-10 rounded-full border-2 ${}
                     themeSettings.accentColor === color.value ? 'border-gray-900 dark:border-gray-100' : 'border-gray-300'
                   }`}
@@ -226,7 +226,7 @@ export default function AccessibilityPanel() {
               <Button
                 variant={themeSettings.fontSize === 'small' ? "default" : "outline"}
                 size="sm"
-                onClick={() => updateThemeSetting(&apos;fontSize&apos;, &apos;small')}
+                onClick={() => updateThemeSetting('fontSize', 'small')}
               >
                 <Type className="w-3 h-3 mr-2" />
                 Small
@@ -234,7 +234,7 @@ export default function AccessibilityPanel() {
               <Button
                 variant={themeSettings.fontSize === 'medium' ? "default" : "outline"}
                 size="sm"
-                onClick={() => updateThemeSetting(&apos;fontSize&apos;, &apos;medium')}
+                onClick={() => updateThemeSetting('fontSize', 'medium')}
               >
                 <Type className="w-4 h-4 mr-2" />
                 Medium
@@ -242,7 +242,7 @@ export default function AccessibilityPanel() {
               <Button
                 variant={themeSettings.fontSize === 'large' ? "default" : "outline"}
                 size="sm"
-                onClick={() => updateThemeSetting(&apos;fontSize&apos;, &apos;large')}
+                onClick={() => updateThemeSetting('fontSize', 'large')}
               >
                 <Type className="w-5 h-5 mr-2" />
                 Large
@@ -257,21 +257,21 @@ export default function AccessibilityPanel() {
               <Button
                 variant={themeSettings.density === 'compact' ? "default" : "outline"}
                 size="sm"
-                onClick={() => updateThemeSetting(&apos;density&apos;, &apos;compact')}
+                onClick={() => updateThemeSetting('density', 'compact')}
               >
                 Compact
               </Button>
               <Button
                 variant={themeSettings.density === 'comfortable' ? "default" : "outline"}
                 size="sm"
-                onClick={() => updateThemeSetting(&apos;density&apos;, &apos;comfortable')}
+                onClick={() => updateThemeSetting('density', 'comfortable')}
               >
                 Comfortable
               </Button>
               <Button
                 variant={themeSettings.density === 'spacious' ? "default" : "outline"}
                 size="sm"
-                onClick={() => updateThemeSetting(&apos;density&apos;, &apos;spacious')}
+                onClick={() => updateThemeSetting('density', 'spacious')}
               >
                 Spacious
               </Button>
@@ -297,7 +297,7 @@ export default function AccessibilityPanel() {
               </div>
               <Switch
                 checked={accessibilitySettings.reducedMotion}
-                onCheckedChange={(checked) => updateAccessibilitySetting(&apos;reducedMotion&apos;, checked)}
+                onCheckedChange={(checked) => updateAccessibilitySetting('reducedMotion', checked)}
               />
             </div>
 
@@ -308,7 +308,7 @@ export default function AccessibilityPanel() {
               </div>
               <Switch
                 checked={accessibilitySettings.highContrast}
-                onCheckedChange={(checked) => updateAccessibilitySetting(&apos;highContrast&apos;, checked)}
+                onCheckedChange={(checked) => updateAccessibilitySetting('highContrast', checked)}
               />
             </div>
 
@@ -319,7 +319,7 @@ export default function AccessibilityPanel() {
               </div>
               <Switch
                 checked={accessibilitySettings.largeText}
-                onCheckedChange={(checked) => updateAccessibilitySetting(&apos;largeText&apos;, checked)}
+                onCheckedChange={(checked) => updateAccessibilitySetting('largeText', checked)}
               />
             </div>
 
@@ -330,7 +330,7 @@ export default function AccessibilityPanel() {
               </div>
               <Switch
                 checked={accessibilitySettings.screenReader}
-                onCheckedChange={(checked) => updateAccessibilitySetting(&apos;screenReader&apos;, checked)}
+                onCheckedChange={(checked) => updateAccessibilitySetting('screenReader', checked)}
               />
             </div>
 
@@ -341,7 +341,7 @@ export default function AccessibilityPanel() {
               </div>
               <Switch
                 checked={accessibilitySettings.keyboardNavigation}
-                onCheckedChange={(checked) => updateAccessibilitySetting(&apos;keyboardNavigation&apos;, checked)}
+                onCheckedChange={(checked) => updateAccessibilitySetting('keyboardNavigation', checked)}
               />
             </div>
 
@@ -352,7 +352,7 @@ export default function AccessibilityPanel() {
               </div>
               <Switch
                 checked={accessibilitySettings.colorBlindSupport}
-                onCheckedChange={(checked) => updateAccessibilitySetting(&apos;colorBlindSupport&apos;, checked)}
+                onCheckedChange={(checked) => updateAccessibilitySetting('colorBlindSupport', checked)}
               />
             </div>
 
@@ -363,7 +363,7 @@ export default function AccessibilityPanel() {
               </div>
               <Switch
                 checked={accessibilitySettings.focusIndicators}
-                onCheckedChange={(checked) => updateAccessibilitySetting(&apos;focusIndicators&apos;, checked)}
+                onCheckedChange={(checked) => updateAccessibilitySetting('focusIndicators', checked)}
               />
             </div>
           </div>

@@ -124,9 +124,9 @@ export function DocumentationManager() {
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false)
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const [filterType, setFilterType] = useState<string>(&quot;all&quot;)
-  const [filterStatus, setFilterStatus] = useState<string>(&quot;all&quot;)
-  const [filterCategory, setFilterCategory] = useState<string>(&quot;all&quot;)
+  const [filterType, setFilterType] = useState<string>("all")
+  const [filterStatus, setFilterStatus] = useState<string>("all")
+  const [filterCategory, setFilterCategory] = useState<string>("all")
 
   const createDocument = () => {}
     const newDocument: DocumentationItem = { id: Date.now().toString(),
@@ -195,8 +195,8 @@ export function DocumentationManager() {
   })
 
   const totalDocuments = documents.length
-  const publishedDocuments = documents.filter((doc) => doc.status === &quot;published&quot;).length
-  const draftDocuments = documents.filter((doc) => doc.status === &quot;draft").length
+  const publishedDocuments = documents.filter((doc) => doc.status === "published").length
+  const draftDocuments = documents.filter((doc) => doc.status === "draft").length
   const totalViews = documents.reduce((sum, doc) => sum + doc.views, 0)
 
   return (
@@ -209,7 +209,7 @@ export function DocumentationManager() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
+          <Button onClick={() => setSettingsDialogOpen(true)} variant="outline">
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
@@ -522,7 +522,7 @@ export function DocumentationManager() {
                   <div className="flex justify-between items-center">
                     <span className="text-sm">Review</span>
                     <span className="text-sm font-medium text-blue-600">
-                      {documents.filter((doc) => doc.status === &quot;review&quot;).length}
+                      {documents.filter((doc) => doc.status === "review").length}
                     </span>
                   </div>
                 </div>

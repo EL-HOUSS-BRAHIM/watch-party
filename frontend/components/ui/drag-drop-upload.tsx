@@ -148,7 +148,7 @@ export function DragDropUpload({onFilesSelected,
       >
         <Upload className="h-12 w-12 mx-auto mb-4 text-gray-400" />
         <div className="space-y-2">
-          <p className="text-lg font-medium">{isDragOver ? &quot;Drop files here&quot; : &quot;Drag and drop files here"}</p>"
+          <p className="text-lg font-medium">{isDragOver ? "Drop files here" : "Drag and drop files here"}</p>"
           <p className="text-sm text-gray-500">
             or{" "}
             <Button

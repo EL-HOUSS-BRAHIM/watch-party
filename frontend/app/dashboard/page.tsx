@@ -383,7 +383,7 @@ export default function DashboardPage() {
                         }
                         asChild
                       >
-                        <Link href={`/watch/${party.id}`}>{party.status === &quot;live&quot; ? &quot;Join" : "View"}</Link>
+                        <Link href={`/watch/${party.id}`}>{party.status === "live" ? "Join" : "View"}</Link>
                       </Button>
                     </div>
                   ))}
@@ -410,8 +410,8 @@ export default function DashboardPage() {
                       </Avatar>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm text-white">
-                          <span className="font-medium">{activity.user.name}</span>{&quot; &quot;}
-                          <span className="text-purple-300">{activity.action}</span>{&quot; &quot;}
+                          <span className="font-medium">{activity.user.name}</span>{" "}
+                          <span className="text-purple-300">{activity.action}</span>{" "}
                           <span className="font-medium text-purple-200">{activity.content}</span>
                         </p>
                         <p className="text-xs text-purple-400 mt-1">{formatTimeAgo(activity.timestamp)}</p>

@@ -34,7 +34,7 @@ function useCarousel() {
   const context = React.useContext(CarouselContext)
 
   if (!context) {
-    throw new Error("useCarousel must be used within a <Carousel />&quot;)
+    throw new Error("useCarousel must be used within a <Carousel />")
   }
 
   return context
@@ -193,7 +193,7 @@ CarouselItem.displayName = "CarouselItem"
 const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
->(({ className, variant = &quot;outline&quot;, size = &quot;icon", ...props }, ref) => {}
+>(({ className, variant = "outline", size = "icon", ...props }, ref) => {}
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
 
   return (
@@ -222,7 +222,7 @@ CarouselPrevious.displayName = "CarouselPrevious"
 const CarouselNext = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof Button>
->(({ className, variant = &quot;outline&quot;, size = &quot;icon", ...props }, ref) => {}
+>(({ className, variant = "outline", size = "icon", ...props }, ref) => {}
   const { orientation, scrollNext, canScrollNext } = useCarousel()
 
   return (

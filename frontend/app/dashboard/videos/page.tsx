@@ -256,7 +256,7 @@ function VideoListItem({ video }: { video: APIVideo }) {}
 export default function VideosPage() {
   const [videos, setVideos] = useState<APIVideo[]>([])
   const [loading, setLoading] = useState(true)
-  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid&quot;)
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState("newest")
   const [filterBy, setFilterBy] = useState("all")
@@ -401,7 +401,7 @@ export default function VideosPage() {
           <WatchPartyButton
             variant={viewMode === "grid" ? "default" : "ghost"}
             size="sm"
-            onClick={() => setViewMode(&quot;grid&quot;)}
+            onClick={() => setViewMode("grid")}
             className="rounded-r-none"
           >
             <Grid className="h-4 w-4" />
@@ -409,7 +409,7 @@ export default function VideosPage() {
           <WatchPartyButton
             variant={viewMode === "list" ? "default" : "ghost"}
             size="sm"
-            onClick={() => setViewMode(&quot;list&quot;)}
+            onClick={() => setViewMode("list")}
             className="rounded-l-none"
           >
             <List className="h-4 w-4" />
@@ -427,13 +427,13 @@ export default function VideosPage() {
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;ready&quot;).length}</div>
+            <div className="text-2xl font-bold">{videos.filter((v) => v.status === "ready").length}</div>
             <p className="text-xs text-muted-foreground">Ready</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;processing&quot;).length}</div>
+            <div className="text-2xl font-bold">{videos.filter((v) => v.status === "processing").length}</div>
             <p className="text-xs text-muted-foreground">Processing</p>
           </CardContent>
         </Card>

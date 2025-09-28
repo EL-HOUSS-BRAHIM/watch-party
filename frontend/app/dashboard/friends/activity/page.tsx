@@ -127,7 +127,7 @@ const normalizeActivity = (activity: unknown): ActivityItem => {}
 export default function FriendsActivityFeed() {
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | ActivityItem['type']>(&apos;all&apos;);
+  const [filter, setFilter] = useState<'all' | ActivityItem['type']>('all');
   const [timeframe, setTimeframe] = useState('today');
   const { toast } = useToast();
 
@@ -242,7 +242,7 @@ export default function FriendsActivityFeed() {
               <CardContent className="p-12 text-center">
                 <Clock className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-medium mb-2">No activity yet</h3>
-                <p className="text-muted-foreground">Your friends haven&apos;t been active recently.</p>
+                <p className="text-muted-foreground">Your friends haven't been active recently.</p>
               </CardContent>
             </Card>
           ) : (
@@ -254,7 +254,7 @@ export default function FriendsActivityFeed() {
                       <Avatar className="h-12 w-12">
                         <AvatarImage src={activity.user.avatar} alt={activity.user.displayName} />
                         <AvatarFallback>
-                          {activity.user.displayName.split(' ').map(n => n[0]).join(&apos;&apos;)}
+                          {activity.user.displayName.split(' ').map(n => n[0]).join('')}
                         </AvatarFallback>
                       </Avatar>
                       {activity.user.isOnline && (

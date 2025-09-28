@@ -125,8 +125,8 @@ export function UsageStats() {
   }
 
   const getUsageColor = (percentage: number) => {}
-    if (percentage >= 90) return &quot;text-destructive&quot
-    if (percentage >= 75) return &quot;text-yellow-600"
+    if (percentage >= 90) return "text-destructive&quot
+    if (percentage >= 75) return "text-yellow-600"
     return "text-green-600"
   }
 
@@ -359,8 +359,8 @@ export function UsageStats() {
                 <div key={key} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <span className="font-medium capitalize">{key.replace(&quot;_&quot;, &quot; ")}</span>"
-                      <Badge variant={percentage >= 90 ? &quot;destructive&quot; : percentage >= 75 ? &quot;secondary" : "outline"}>
+                      <span className="font-medium capitalize">{key.replace("_", " ")}</span>"
+                      <Badge variant={percentage >= 90 ? "destructive" : percentage >= 75 ? "secondary" : "outline"}>
                         {percentage.toFixed(1)}%
                       </Badge>
                     </div>

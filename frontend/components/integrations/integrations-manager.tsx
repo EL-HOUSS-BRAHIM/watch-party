@@ -153,7 +153,7 @@ export function IntegrationsManager() {
 
   const loadIntegrations = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/integrations&apos;))
+      const response = await apiRequest(() => fetch('/api/integrations'))
       if (response) {
         // Merge with available integrations to show all possible integrations
         const mergedIntegrations = AVAILABLE_INTEGRATIONS.map(available => {}
@@ -179,7 +179,7 @@ export function IntegrationsManager() {
 
   const handleConnect = async (integrationId: string) => {}
     const success = await apiRequest(
-      () => fetch(`/api/integrations/${integrationId}/connect`, { method: &apos;POST' }),
+      () => fetch(`/api/integrations/${integrationId}/connect`, { method: 'POST' }),
       { successMessage: 'Integration connected successfully!', showSuccess: true }
     )
 
@@ -391,7 +391,7 @@ export function IntegrationsManager() {
         <TabsContent value="streaming" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {integrations
-              .filter(i => i.category === &apos;streaming&apos;)
+              .filter(i => i.category === 'streaming')
               .map((integration) => (
                 <IntegrationCard
                   key={integration.id}
@@ -412,7 +412,7 @@ export function IntegrationsManager() {
         <TabsContent value="social" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {integrations
-              .filter(i => i.category === &apos;social&apos;)
+              .filter(i => i.category === 'social')
               .map((integration) => (
                 <IntegrationCard
                   key={integration.id}
@@ -433,7 +433,7 @@ export function IntegrationsManager() {
         <TabsContent value="entertainment" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {integrations
-              .filter(i => i.category === &apos;entertainment&apos;)
+              .filter(i => i.category === 'entertainment')
               .map((integration) => (
                 <IntegrationCard
                   key={integration.id}

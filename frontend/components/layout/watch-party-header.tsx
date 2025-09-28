@@ -163,7 +163,7 @@ export function WatchPartyHeader() {
               className="md:hidden"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className=&quot;h-4 w-4&quot; />}
+              {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </WatchPartyButton>
           </div>
         </div>

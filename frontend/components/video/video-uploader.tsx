@@ -40,7 +40,7 @@ export function VideoUploader({onUploadComplete,
 }: VideoUploaderProps) {}
   const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([])
   const [isDragOver, setIsDragOver] = useState(false)
-  const [uploadSource, setUploadSource] = useState<"local" | "cloud">(&quot;local&quot;)
+  const [uploadSource, setUploadSource] = useState<"local" | "cloud">("local")
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { user } = useAuth()
   const { toast } = useToast()
@@ -235,7 +235,7 @@ export function VideoUploader({onUploadComplete,
   }
 
   const uploadAllFiles = async () => {
-    const pendingFiles = uploadFiles.filter((f) => f.status === &quot;pending&quot;)
+    const pendingFiles = uploadFiles.filter((f) => f.status === "pending")
 
     for (const file of pendingFiles) {
       await uploadFile(file)
@@ -316,7 +316,7 @@ export function VideoUploader({onUploadComplete,
           <div className="grid grid-cols-2 gap-4">
             <Button
               variant={uploadSource === "local" ? "default" : "outline"}
-              onClick={() => setUploadSource(&quot;local&quot;)}
+              onClick={() => setUploadSource("local")}
               className="h-20 flex-col"
             >
               <HardDrive className="w-6 h-6 mb-2" />
@@ -324,7 +324,7 @@ export function VideoUploader({onUploadComplete,
             </Button>
             <Button
               variant={uploadSource === "cloud" ? "default" : "outline"}
-              onClick={() => setUploadSource(&quot;cloud&quot;)}
+              onClick={() => setUploadSource("cloud")}
               className="h-20 flex-col"
             >
               <Cloud className="w-6 h-6 mb-2" />
@@ -383,7 +383,7 @@ export function VideoUploader({onUploadComplete,
                     <Button
                       variant="outline"
                       onClick={() => setUploadFiles([])}
-                      disabled={uploadFiles.some((f) => f.status === &quot;uploading&quot; || f.status === &quot;processing")}
+                      disabled={uploadFiles.some((f) => f.status === "uploading" || f.status === "processing")}
                     >
                       Clear All
                     </Button>
@@ -391,8 +391,8 @@ export function VideoUploader({onUploadComplete,
                       onClick={uploadAllFiles}
                       disabled={}
                         uploadFiles.length === 0 ||
-                        uploadFiles.every((f) => f.status !== &quot;pending&quot;) ||
-                        uploadFiles.some((f) => f.status === &quot;uploading" || f.status === "processing")
+                        uploadFiles.every((f) => f.status !== "pending") ||
+                        uploadFiles.some((f) => f.status === "uploading" || f.status === "processing")
                       }
                     >
                       Upload All

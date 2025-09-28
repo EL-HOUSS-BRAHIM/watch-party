@@ -33,7 +33,7 @@ const faqData: FAQItem[] = []
   {}
     id: '4',
     question: 'Is my data secure?',
-    answer: 'Yes, we take privacy seriously. All data is encrypted, and we comply with GDPR regulations. You can export or delete your data anytime from Settings > Data Management.&apos;,
+    answer: 'Yes, we take privacy seriously. All data is encrypted, and we comply with GDPR regulations. You can export or delete your data anytime from Settings > Data Management.',
     category: 'Privacy & Security'
   },
   {}

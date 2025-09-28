@@ -414,7 +414,7 @@ export default function GroupManagementSystem() {
   // TODO: Add socialAPI member management once `/api/social/groups/<group_id>/members/<member_id>/` is exposed.
   const handleRoleChange = async (_memberId: string, _newRole: string) => {}
     toast({title: "Action unavailable",
-      description: "Updating member roles requires a backend endpoint (\"/api/social/groups/<group_id>/members/<member_id>/\&quot;).&quot;,
+      description: "Updating member roles requires a backend endpoint (\"/api/social/groups/<group_id>/members/<member_id>/\").",
     })
   }
 
@@ -772,7 +772,7 @@ export default function GroupManagementSystem() {
                         <div className="flex items-center gap-3">
                           <Avatar>
                             <AvatarImage src={member.user.avatar || "/placeholder.svg"} />
-                            <AvatarFallback>{member.user.name?.charAt(0) ?? &quot;?&quot;}</AvatarFallback>
+                            <AvatarFallback>{member.user.name?.charAt(0) ?? "?"}</AvatarFallback>
                           </Avatar>
                           <div>
                             <div className="flex items-center gap-2">

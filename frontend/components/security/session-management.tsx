@@ -390,7 +390,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
         </Card>
         <Card className="bg-white/5 border-white/10">
           <CardContent className="p-4 text-center">
-            <div className={`text-2xl font-bold mb-1 ${suspiciousSessions > 0 ? &apos;text-red-400&apos; : &apos;text-green-400'}`}>
+            <div className={`text-2xl font-bold mb-1 ${suspiciousSessions > 0 ? 'text-red-400' : 'text-green-400'}`}>
               {suspiciousSessions}
             </div>
             <div className="text-white/70 text-sm">Suspicious Sessions</div>

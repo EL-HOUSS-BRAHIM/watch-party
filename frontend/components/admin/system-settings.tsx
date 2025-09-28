@@ -216,7 +216,7 @@ export default function SystemSettings() {
             Reset to Defaults
           </Button>
           <Button onClick={saveSettings} disabled={!hasChanges || isSaving}>
-            {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className=&quot;mr-2 h-4 w-4&quot; />}
+            {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
             Save Changes
           </Button>
         </div>
@@ -227,7 +227,7 @@ export default function SystemSettings() {
           <CardContent className="p-4">
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-yellow-600" />
-              <p className="text-yellow-800">You have unsaved changes. Don&apos;t forget to save your settings.</p>
+              <p className="text-yellow-800">You have unsaved changes. Don't forget to save your settings.</p>
             </div>
           </CardContent>
         </Card>
@@ -259,7 +259,7 @@ export default function SystemSettings() {
                   <Input
                     id="siteName"
                     value={settings.general.siteName}
-                    onChange={(e) => updateSetting(&quot;general&quot;, &quot;siteName", e.target.value)}
+                    onChange={(e) => updateSetting("general", "siteName", e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
@@ -268,7 +268,7 @@ export default function SystemSettings() {
                     id="supportEmail"
                     type="email"
                     value={settings.general.supportEmail}
-                    onChange={(e) => updateSetting(&quot;general&quot;, &quot;supportEmail", e.target.value)}
+                    onChange={(e) => updateSetting("general", "supportEmail", e.target.value)}
                   />
                 </div>
               </div>
@@ -278,7 +278,7 @@ export default function SystemSettings() {
                 <Textarea
                   id="siteDescription"
                   value={settings.general.siteDescription}
-                  onChange={(e) => updateSetting(&quot;general&quot;, &quot;siteDescription", e.target.value)}
+                  onChange={(e) => updateSetting("general", "siteDescription", e.target.value)}
                   rows={3}
                 />
               </div>
@@ -293,7 +293,7 @@ export default function SystemSettings() {
                   </div>
                   <Switch
                     checked={settings.general.maintenanceMode}
-                    onCheckedChange={(checked) => updateSetting(&quot;general&quot;, &quot;maintenanceMode", checked)}
+                    onCheckedChange={(checked) => updateSetting("general", "maintenanceMode", checked)}
                   />
                 </div>
 
@@ -304,7 +304,7 @@ export default function SystemSettings() {
                   </div>
                   <Switch
                     checked={settings.general.registrationEnabled}
-                    onCheckedChange={(checked) => updateSetting(&quot;general&quot;, &quot;registrationEnabled", checked)}
+                    onCheckedChange={(checked) => updateSetting("general", "registrationEnabled", checked)}
                   />
                 </div>
 
@@ -315,7 +315,7 @@ export default function SystemSettings() {
                   </div>
                   <Switch
                     checked={settings.general.inviteOnlyMode}
-                    onCheckedChange={(checked) => updateSetting(&quot;general&quot;, &quot;inviteOnlyMode", checked)}
+                    onCheckedChange={(checked) => updateSetting("general", "inviteOnlyMode", checked)}
                   />
                 </div>
               </div>
@@ -329,7 +329,7 @@ export default function SystemSettings() {
                     id="maxUsersPerParty"
                     type="number"
                     value={settings.general.maxUsersPerParty}
-                    onChange={(e) => updateSetting(&quot;general&quot;, &quot;maxUsersPerParty", Number.parseInt(e.target.value))}
+                    onChange={(e) => updateSetting("general", "maxUsersPerParty", Number.parseInt(e.target.value))}
                   />
                 </div>
                 <div className="space-y-2">
@@ -338,14 +338,14 @@ export default function SystemSettings() {
                     id="maxPartyDuration"
                     type="number"
                     value={settings.general.maxPartyDuration}
-                    onChange={(e) => updateSetting(&quot;general&quot;, &quot;maxPartyDuration", Number.parseInt(e.target.value))}
+                    onChange={(e) => updateSetting("general", "maxPartyDuration", Number.parseInt(e.target.value))}
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="defaultVideoQuality">Default Video Quality</Label>
                   <Select
                     value={settings.general.defaultVideoQuality}
-                    onValueChange={(value) => updateSetting(&quot;general&quot;, &quot;defaultVideoQuality", value)}
+                    onValueChange={(value) => updateSetting("general", "defaultVideoQuality", value)}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -380,7 +380,7 @@ export default function SystemSettings() {
                     id="passwordMinLength"
                     type="number"
                     value={settings.security.passwordMinLength}
-                    onChange={(e) => updateSetting(&quot;security&quot;, &quot;passwordMinLength", Number.parseInt(e.target.value))}
+                    onChange={(e) => updateSetting("security", "passwordMinLength", Number.parseInt(e.target.value))}
                   />
                 </div>
                 <div className="space-y-2">
@@ -389,7 +389,7 @@ export default function SystemSettings() {
                     id="sessionTimeout"
                     type="number"
                     value={settings.security.sessionTimeout}
-                    onChange={(e) => updateSetting(&quot;security&quot;, &quot;sessionTimeout", Number.parseInt(e.target.value))}
+                    onChange={(e) => updateSetting("security", "sessionTimeout", Number.parseInt(e.target.value))}
                   />
                 </div>
               </div>
@@ -401,7 +401,7 @@ export default function SystemSettings() {
                     id="maxLoginAttempts"
                     type="number"
                     value={settings.security.maxLoginAttempts}
-                    onChange={(e) => updateSetting(&quot;security&quot;, &quot;maxLoginAttempts", Number.parseInt(e.target.value))}
+                    onChange={(e) => updateSetting("security", "maxLoginAttempts", Number.parseInt(e.target.value))}
                   />
                 </div>
               </div>
@@ -416,7 +416,7 @@ export default function SystemSettings() {
                   </div>
                   <Switch
                     checked={settings.security.requireEmailVerification}
-                    onCheckedChange={(checked) => updateSetting(&quot;security&quot;, &quot;requireEmailVerification", checked)}
+                    onCheckedChange={(checked) => updateSetting("security", "requireEmailVerification", checked)}
                   />
                 </div>
 
@@ -427,7 +427,7 @@ export default function SystemSettings() {
                   </div>
                   <Switch
                     checked={settings.security.enableTwoFactor}
-                    onCheckedChange={(checked) => updateSetting(&quot;security&quot;, &quot;enableTwoFactor", checked)}
+                    onCheckedChange={(checked) => updateSetting("security", "enableTwoFactor", checked)}
                   />
                 </div>
 
@@ -438,7 +438,7 @@ export default function SystemSettings() {
                   </div>
                   <Switch
                     checked={settings.security.rateLimitEnabled}
-                    onCheckedChange={(checked) => updateSetting(&quot;security&quot;, &quot;rateLimitEnabled", checked)}
+                    onCheckedChange={(checked) => updateSetting("security", "rateLimitEnabled", checked)}
                   />
                 </div>
               </div>
@@ -450,7 +450,7 @@ export default function SystemSettings() {
                 <Textarea
                   id="corsOrigins"
                   value={settings.security.corsOrigins.join("\n")}
-                  onChange={(e) => updateSetting(&quot;security&quot;, &quot;corsOrigins", e.target.value.split("\n").filter(Boolean))}
+                  onChange={(e) => updateSetting("security", "corsOrigins", e.target.value.split("\n").filter(Boolean))}
                   rows={4}
                   placeholder="https://yourdomain.com&#10;https://app.yourdomain.com"
                 />
@@ -473,7 +473,7 @@ export default function SystemSettings() {
                 <Label htmlFor="emailProvider">Email Provider</Label>
                 <Select
                   value={settings.email.provider}
-                  onValueChange={(value) => updateSetting(&quot;email&quot;, &quot;provider", value)}
+                  onValueChange={(value) => updateSetting("email", "provider", value)}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -495,7 +495,7 @@ export default function SystemSettings() {
                       <Input
                         id="smtpHost"
                         value={settings.email.smtpHost}
-                        onChange={(e) => updateSetting(&quot;email&quot;, &quot;smtpHost", e.target.value)}
+                        onChange={(e) => updateSetting("email", "smtpHost", e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
@@ -504,7 +504,7 @@ export default function SystemSettings() {
                         id="smtpPort"
                         type="number"
                         value={settings.email.smtpPort}
-                        onChange={(e) => updateSetting(&quot;email&quot;, &quot;smtpPort", Number.parseInt(e.target.value))}
+                        onChange={(e) => updateSetting("email", "smtpPort", Number.parseInt(e.target.value))}
                       />
                     </div>
                   </div>
@@ -515,7 +515,7 @@ export default function SystemSettings() {
                       <Input
                         id="smtpUsername"
                         value={settings.email.smtpUsername}
-                        onChange={(e) => updateSetting(&quot;email&quot;, &quot;smtpUsername", e.target.value)}
+                        onChange={(e) => updateSetting("email", "smtpUsername", e.target.value)}
                       />
                     </div>
                     <div className="space-y-2">
@@ -524,7 +524,7 @@ export default function SystemSettings() {
                         id="smtpPassword"
                         type="password"
                         value={settings.email.smtpPassword}
-                        onChange={(e) => updateSetting(&quot;email&quot;, &quot;smtpPassword", e.target.value)}
+                        onChange={(e) => updateSetting("email", "smtpPassword", e.target.value)}
                       />
                     </div>
                   </div>
@@ -538,7 +538,7 @@ export default function SystemSettings() {
                     id="fromEmail"
                     type="email"
                     value={settings.email.fromEmail}
-                    onChange={(e) => updateSetting(&quot;email&quot;, &quot;fromEmail", e.target.value)}
+                    onChange={(e) => updateSetting("email", "fromEmail", e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
@@ -546,7 +546,7 @@ export default function SystemSettings() {
                   <Input
                     id="fromName"
                     value={settings.email.fromName}
-                    onChange={(e) => updateSetting(&quot;email&quot;, &quot;fromName", e.target.value)}
+                    onChange={(e) => updateSetting("email", "fromName", e.target.value)}
                   />
                 </div>
               </div>
@@ -560,7 +560,7 @@ export default function SystemSettings() {
                 </div>
                 <Switch
                   checked={settings.email.enableEmailNotifications}
-                  onCheckedChange={(checked) => updateSetting(&quot;email&quot;, &quot;enableEmailNotifications", checked)}
+                  onCheckedChange={(checked) => updateSetting("email", "enableEmailNotifications", checked)}
                 />
               </div>
 
@@ -588,7 +588,7 @@ export default function SystemSettings() {
                 <Label htmlFor="storageProvider">Storage Provider</Label>
                 <Select
                   value={settings.storage.provider}
-                  onValueChange={(value) => updateSetting(&quot;storage&quot;, &quot;provider", value)}
+                  onValueChange={(value) => updateSetting("storage", "provider", value)}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -609,7 +609,7 @@ export default function SystemSettings() {
                     id="maxFileSize"
                     type="number"
                     value={settings.storage.maxFileSize}
-                    onChange={(e) => updateSetting(&quot;storage&quot;, &quot;maxFileSize", Number.parseInt(e.target.value))}
+                    onChange={(e) => updateSetting("storage", "maxFileSize", Number.parseInt(e.target.value))}
                   />
                 </div>
                 <div className="space-y-2">
@@ -618,7 +618,7 @@ export default function SystemSettings() {
                     id="videoRetentionDays"
                     type="number"
                     value={settings.storage.videoRetentionDays}
-                    onChange={(e) => updateSetting(&quot;storage&quot;, &quot;videoRetentionDays", Number.parseInt(e.target.value))}
+                    onChange={(e) => updateSetting("storage", "videoRetentionDays", Number.parseInt(e.target.value))}
                   />
                 </div>
               </div>
@@ -648,7 +648,7 @@ export default function SystemSettings() {
                 </div>
                 <Switch
                   checked={settings.storage.enableCdn}
-                  onCheckedChange={(checked) => updateSetting(&quot;storage&quot;, &quot;enableCdn", checked)}
+                  onCheckedChange={(checked) => updateSetting("storage", "enableCdn", checked)}
                 />
               </div>
 
@@ -658,7 +658,7 @@ export default function SystemSettings() {
                   <Input
                     id="cdnUrl"
                     value={settings.storage.cdnUrl}
-                    onChange={(e) => updateSetting(&quot;storage&quot;, &quot;cdnUrl", e.target.value)}
+                    onChange={(e) => updateSetting("storage", "cdnUrl", e.target.value)}
                     placeholder="https://cdn.yourdomain.com"
                   />
                 </div>
@@ -684,7 +684,7 @@ export default function SystemSettings() {
                 </div>
                 <Switch
                   checked={settings.payment.enableBilling}
-                  onCheckedChange={(checked) => updateSetting(&quot;payment&quot;, &quot;enableBilling", checked)}
+                  onCheckedChange={(checked) => updateSetting("payment", "enableBilling", checked)}
                 />
               </div>
 
@@ -696,7 +696,7 @@ export default function SystemSettings() {
                       <Input
                         id="stripePublishableKey"
                         value={settings.payment.stripePublishableKey}
-                        onChange={(e) => updateSetting(&quot;payment&quot;, &quot;stripePublishableKey", e.target.value)}
+                        onChange={(e) => updateSetting("payment", "stripePublishableKey", e.target.value)}
                         placeholder="pk_..."
                       />
                     </div>
@@ -706,7 +706,7 @@ export default function SystemSettings() {
                         id="stripeSecretKey"
                         type="password"
                         value={settings.payment.stripeSecretKey}
-                        onChange={(e) => updateSetting(&quot;payment&quot;, &quot;stripeSecretKey", e.target.value)}
+                        onChange={(e) => updateSetting("payment", "stripeSecretKey", e.target.value)}
                         placeholder="sk_..."
                       />
                     </div>
@@ -717,7 +717,7 @@ export default function SystemSettings() {
                       <Label htmlFor="currency">Currency</Label>
                       <Select
                         value={settings.payment.currency}
-                        onValueChange={(value) => updateSetting(&quot;payment&quot;, &quot;currency", value)}
+                        onValueChange={(value) => updateSetting("payment", "currency", value)}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -737,7 +737,7 @@ export default function SystemSettings() {
                         type="number"
                         step="0.01"
                         value={settings.payment.taxRate}
-                        onChange={(e) => updateSetting(&quot;payment&quot;, &quot;taxRate", Number.parseFloat(e.target.value))}
+                        onChange={(e) => updateSetting("payment", "taxRate", Number.parseFloat(e.target.value))}
                       />
                     </div>
                   </div>
@@ -769,7 +769,7 @@ export default function SystemSettings() {
                     </div>
                     <Switch
                       checked={settings.features.enableChat}
-                      onCheckedChange={(checked) => updateSetting(&quot;features&quot;, &quot;enableChat", checked)}
+                      onCheckedChange={(checked) => updateSetting("features", "enableChat", checked)}
                     />
                   </div>
 
@@ -783,7 +783,7 @@ export default function SystemSettings() {
                     </div>
                     <Switch
                       checked={settings.features.enableVideoUpload}
-                      onCheckedChange={(checked) => updateSetting(&quot;features&quot;, &quot;enableVideoUpload", checked)}
+                      onCheckedChange={(checked) => updateSetting("features", "enableVideoUpload", checked)}
                     />
                   </div>
 
@@ -797,7 +797,7 @@ export default function SystemSettings() {
                     </div>
                     <Switch
                       checked={settings.features.enableSocialFeatures}
-                      onCheckedChange={(checked) => updateSetting(&quot;features&quot;, &quot;enableSocialFeatures", checked)}
+                      onCheckedChange={(checked) => updateSetting("features", "enableSocialFeatures", checked)}
                     />
                   </div>
                 </div>
@@ -813,7 +813,7 @@ export default function SystemSettings() {
                     </div>
                     <Switch
                       checked={settings.features.enableNotifications}
-                      onCheckedChange={(checked) => updateSetting(&quot;features&quot;, &quot;enableNotifications", checked)}
+                      onCheckedChange={(checked) => updateSetting("features", "enableNotifications", checked)}
                     />
                   </div>
 
@@ -824,7 +824,7 @@ export default function SystemSettings() {
                     </div>
                     <Switch
                       checked={settings.features.enableAnalytics}
-                      onCheckedChange={(checked) => updateSetting(&quot;features&quot;, &quot;enableAnalytics", checked)}
+                      onCheckedChange={(checked) => updateSetting("features", "enableAnalytics", checked)}
                     />
                   </div>
 
@@ -838,7 +838,7 @@ export default function SystemSettings() {
                     </div>
                     <Switch
                       checked={settings.features.enableModeration}
-                      onCheckedChange={(checked) => updateSetting(&quot;features&quot;, &quot;enableModeration", checked)}
+                      onCheckedChange={(checked) => updateSetting("features", "enableModeration", checked)}
                     />
                   </div>
                 </div>

@@ -433,7 +433,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
           {selectedVideos.length > 0 && (
             <div className="flex items-center gap-4 mt-4 p-4 bg-muted rounded-lg">
               <span className="text-sm font-medium">
-                {selectedVideos.length} video{selectedVideos.length > 1 ? &apos;s&apos; : &apos;'} selected
+                {selectedVideos.length} video{selectedVideos.length > 1 ? 's' : ''} selected
               </span>
               <Select value={bulkAction} onValueChange={setBulkAction}>
                 <SelectTrigger className="w-40">
@@ -583,23 +583,23 @@ export function VideoManagement({ className }: VideoManagementProps) {}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         {video.status === 'active' ? (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;deactivate&apos;)}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'deactivate')}>
                             <Pause className="w-4 h-4 mr-2" />
                             Deactivate
                           </DropdownMenuItem>
                         ) : (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;activate&apos;)}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'activate')}>
                             <Play className="w-4 h-4 mr-2" />
                             Activate
                           </DropdownMenuItem>
                         )}
                         {video.isPublished ? (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;unpublish&apos;)}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'unpublish')}>
                             <EyeOff className="w-4 h-4 mr-2" />
                             Unpublish
                           </DropdownMenuItem>
                         ) : (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;publish&apos;)}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'publish')}>
                             <Eye className="w-4 h-4 mr-2" />
                             Publish
                           </DropdownMenuItem>
@@ -621,7 +621,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleVideoAction(video.id, &apos;delete&apos;)}>
+                              <AlertDialogAction onClick={() => handleVideoAction(video.id, 'delete')}>
                                 Delete
                               </AlertDialogAction>
                             </AlertDialogFooter>

@@ -266,8 +266,8 @@ export default function FriendSuggestionsPage() {
   }
 
   const getCompatibilityColor = (score: number) => {}
-    if (score >= 80) return &quot;text-green-600 bg-green-50&quot
-    if (score >= 60) return &quot;text-yellow-600 bg-yellow-50"
+    if (score >= 80) return "text-green-600 bg-green-50&quot
+    if (score >= 60) return "text-yellow-600 bg-yellow-50"
     return "text-gray-600 bg-gray-50"
   }
 
@@ -402,7 +402,7 @@ export default function FriendSuggestionsPage() {
                   <UserPlus className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No suggestions found</h3>
                   <p className="text-gray-600">
-                    {searchQuery || Object.values(filters).some(f => f !== &quot;all&quot; && f !== false)
+                    {searchQuery || Object.values(filters).some(f => f !== "all" && f !== false)
                       ? "Try adjusting your search or filters"
                       : "Check back later for new friend suggestions"
                     }

@@ -208,8 +208,8 @@ export default function BugReports() {
 
   const getBugStats = () => {}
     const stats = { total: bugs.length,
-      open: bugs.filter(b => b.status === &apos;open&apos;).length,
-      inProgress: bugs.filter(b => b.status === &apos;in-progress').length,
+      open: bugs.filter(b => b.status === 'open').length,
+      inProgress: bugs.filter(b => b.status === 'in-progress').length,
       resolved: bugs.filter(b => b.status === 'resolved').length,
       closed: bugs.filter(b => b.status === 'closed').length,
       critical: bugs.filter(b => b.priority === 'critical').length,

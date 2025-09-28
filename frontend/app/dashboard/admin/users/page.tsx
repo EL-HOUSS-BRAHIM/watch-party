@@ -211,7 +211,7 @@ export default function UserManagementPage() {
           filtered = filtered.filter((user) => !user.isPremium)
           break
         case "expired":
-          filtered = filtered.filter((user) => user.subscription && user.subscription.status === &quot;expired&quot;)
+          filtered = filtered.filter((user) => user.subscription && user.subscription.status === "expired")
           break
       }
     }
@@ -402,7 +402,7 @@ export default function UserManagementPage() {
       header: "Joined",
       cell: ({ row }: { row: AdminUser }) => (
         <div className="text-sm">
-          <div>{format(new Date(row.joinedAt), &quot;MMM dd, yyyy&quot;)}</div>
+          <div>{format(new Date(row.joinedAt), "MMM dd, yyyy")}</div>
           <div className="text-muted-foreground">
             {formatDistanceToNow(new Date(row.joinedAt), { addSuffix: true })}
           </div>
@@ -416,7 +416,7 @@ export default function UserManagementPage() {
         <div className="text-sm">
           {row.lastActive ? (
             <>
-              <div>{format(new Date(row.lastActive), &quot;MMM dd, yyyy&quot;)}</div>
+              <div>{format(new Date(row.lastActive), "MMM dd, yyyy")}</div>
               <div className="text-muted-foreground">
                 {formatDistanceToNow(new Date(row.lastActive), { addSuffix: true })}
               </div>
@@ -473,8 +473,8 @@ export default function UserManagementPage() {
         <div className="max-w-2xl mx-auto text-center">
           <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
-          <p className="text-muted-foreground mb-4">You don&apos;t have permission to access user management.</p>
-          <Button onClick={() => router.push(&quot;/dashboard&quot;)}>Back to Dashboard</Button>
+          <p className="text-muted-foreground mb-4">You don't have permission to access user management.</p>
+          <Button onClick={() => router.push("/dashboard")}>Back to Dashboard</Button>
         </div>
       </div>
     )
@@ -498,7 +498,7 @@ export default function UserManagementPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
+          <Button variant="ghost" onClick={() => router.back()} className="p-2">
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -627,15 +627,15 @@ export default function UserManagementPage() {
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{selectedUsers.length} user(s) selected</span>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;suspend&quot;)}>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction("suspend")}>
                     <UserCheck className="h-4 w-4 mr-2" />
                     Suspend
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;ban&quot;)}>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction("ban")}>
                     <Ban className="h-4 w-4 mr-2" />
                     Ban
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;unban&quot;)}>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction("unban")}>
                     <Unlock className="h-4 w-4 mr-2" />
                     Unban
                   </Button>

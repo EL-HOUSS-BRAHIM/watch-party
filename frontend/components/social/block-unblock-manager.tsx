@@ -58,12 +58,12 @@ export function BlockUnblockManager() {
   const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filter, setFilter] = useState<'all' | 'full' | 'messages' | 'parties' | 'profile'>(&apos;all&apos;)
+  const [filter, setFilter] = useState<'all' | 'full' | 'messages' | 'parties' | 'profile'>('all')
   const [showBlockDialog, setShowBlockDialog] = useState(false)
   const [newBlockUser, setNewBlockUser] = useState('')
-  const [blockReason, setBlockReason] = useState<BlockReason['type']>(&apos;other&apos;)
+  const [blockReason, setBlockReason] = useState<BlockReason['type']>('other')
   const [customReason, setCustomReason] = useState('')
-  const [blockType, setBlockType] = useState<BlockedUser['blockType']>(&apos;full&apos;)
+  const [blockType, setBlockType] = useState<BlockedUser['blockType']>('full')
 
   useEffect(() => {
     fetchBlockedUsers()
@@ -87,7 +87,7 @@ export function BlockUnblockManager() {
   const blockUser = async () => {
     if (!newBlockUser.trim()) return
     try {
-      const reason = blockReason === 'other' ? customReason : BLOCK_REASONS.find(r => r.type === blockReason)?.description || &apos;'
+      const reason = blockReason === 'other' ? customReason : BLOCK_REASONS.find(r => r.type === blockReason)?.description || ''
       const response = await fetch('/api/users/block', {}
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -450,11 +450,11 @@ export function BlockUnblockManager() {
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <Badge variant="outline">
                 <Ban className="h-3 w-3 mr-1" />
-                Full: {blockedUsers.filter(u => u.blockType === &apos;full&apos;).length}
+                Full: {blockedUsers.filter(u => u.blockType === 'full').length}
               </Badge>
               <Badge variant="outline">
                 <MessageCircle className="h-3 w-3 mr-1" />
-                Messages: {blockedUsers.filter(u => u.blockType === &apos;messages&apos;).length}
+                Messages: {blockedUsers.filter(u => u.blockType === 'messages').length}
               </Badge>
             </div>
           </CardTitle>

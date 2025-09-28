@@ -64,7 +64,7 @@ export function AdminPartiesView() {
   const [filteredParties, setFilteredParties] = useState<WatchParty[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string>(&apos;all&apos;)
+  const [statusFilter, setStatusFilter] = useState<string>('all')
   const [activeTab, setActiveTab] = useState('all')
   const { get, post, put } = useApi()
   const { toast } = useToast()
@@ -98,7 +98,7 @@ export function AdminPartiesView() {
     if (activeTab === 'flagged') {
       filtered = filtered.filter(party => party.flags.length > 0)
     } else if (activeTab === 'active') {
-      filtered = filtered.filter(party => party.status === &apos;active')
+      filtered = filtered.filter(party => party.status === 'active')
     } else if (activeTab === 'suspended') {
       filtered = filtered.filter(party => party.status === 'suspended')
     }
@@ -229,19 +229,19 @@ export function AdminPartiesView() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;all&apos;)}>
+                <DropdownMenuItem onClick={() => setStatusFilter('all')}>
                   All Status
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;active&apos;)}>
+                <DropdownMenuItem onClick={() => setStatusFilter('active')}>
                   Active
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;paused&apos;)}>
+                <DropdownMenuItem onClick={() => setStatusFilter('paused')}>
                   Paused
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;ended&apos;)}>
+                <DropdownMenuItem onClick={() => setStatusFilter('ended')}>
                   Ended
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;suspended&apos;)}>
+                <DropdownMenuItem onClick={() => setStatusFilter('suspended')}>
                   Suspended
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -255,7 +255,7 @@ export function AdminPartiesView() {
         <Card>
           <CardContent className="pt-6 text-center">
             <div className="text-2xl font-bold text-green-600">
-              {parties.filter(p => p.status === &apos;active&apos;).length}
+              {parties.filter(p => p.status === 'active').length}
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">Active</p>
           </CardContent>
@@ -279,7 +279,7 @@ export function AdminPartiesView() {
         <Card>
           <CardContent className="pt-6 text-center">
             <div className="text-2xl font-bold text-orange-600">
-              {parties.filter(p => p.status === &apos;suspended&apos;).length}
+              {parties.filter(p => p.status === 'suspended').length}
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">Suspended</p>
           </CardContent>
@@ -373,7 +373,7 @@ export function AdminPartiesView() {
                           {party.flags.length > 0 && (
                             <div className="p-2 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
                               <p className="text-sm font-medium text-red-800 dark:text-red-400 mb-1">
-                                {party.flags.length} Flag{party.flags.length > 1 ? &apos;s&apos; : &apos;'}
+                                {party.flags.length} Flag{party.flags.length > 1 ? 's' : ''}
                               </p>
                               <div className="text-xs text-red-600 dark:text-red-400 space-y-1">
                                 {party.flags.map((flag) => (

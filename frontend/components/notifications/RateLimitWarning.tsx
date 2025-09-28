@@ -23,7 +23,7 @@ export default function RateLimitWarning({isVisible,
   onDismiss,
   severity = 'warning'
 }: RateLimitWarningProps) {}
-  const [timeUntilReset, setTimeUntilReset] = useState<string>(&apos;&apos;);
+  const [timeUntilReset, setTimeUntilReset] = useState<string>('');
 
   useEffect(() => {
     if (!isVisible) return
@@ -82,7 +82,7 @@ export default function RateLimitWarning({isVisible,
                 <Progress
                   value={usagePercentage} 
                   className={`h-2 ${}
-                    isCritical ? '[&>div]:bg-red-500&apos; : &apos;[&>div]:bg-yellow-500&apos
+                    isCritical ? '[&>div]:bg-red-500' : '[&>div]:bg-yellow-500&apos
                   }`}
                 />
               </div>

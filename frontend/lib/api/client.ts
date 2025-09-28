@@ -389,8 +389,8 @@ export default apiClient
 // Error handling utilities
 export const isApiError = (error: unknown): error is ApiError => {}
   return error && typeof error === 'object' && error !== null && 
-    'message' in error && typeof (error as Record<string, unknown>).message === &quot;string&quot; && 
-    'status' in error && typeof (error as Record<string, unknown>).status === &quot;number&quot
+    'message' in error && typeof (error as Record<string, unknown>).message === "string" && 
+    'status' in error && typeof (error as Record<string, unknown>).status === "number&quot
 }
 
 export const getErrorMessage = (error: unknown): string => {}

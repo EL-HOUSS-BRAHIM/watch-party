@@ -34,8 +34,8 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
   const [favorites, setFavorites] = useState<FavoriteVideo[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid&quot;)
-  const [genreFilter, setGenreFilter] = useState<string>(&quot;all&quot;)
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [genreFilter, setGenreFilter] = useState<string>("all")
   const api = useApi()
 
   useEffect(() => {
@@ -138,14 +138,14 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
               <Button
                 variant={viewMode === "grid" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setViewMode(&quot;grid&quot;)}
+                onClick={() => setViewMode("grid")}
               >
                 <Grid className="w-4 h-4" />
               </Button>
               <Button
                 variant={viewMode === "list" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setViewMode(&quot;list&quot;)}
+                onClick={() => setViewMode("list")}
               >
                 <List className="w-4 h-4" />
               </Button>

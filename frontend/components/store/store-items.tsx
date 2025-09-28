@@ -73,9 +73,9 @@ export function StoreItems() {
   const [userCurrency, setUserCurrency] = useState<UserCurrency>({ coins: 0, premium: 0 })
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState<string>(&apos;all&apos;)
-  const [rarityFilter, setRarityFilter] = useState<string>(&apos;all&apos;)
-  const [sortBy, setSortBy] = useState<string>(&apos;featured&apos;)
+  const [categoryFilter, setCategoryFilter] = useState<string>('all')
+  const [rarityFilter, setRarityFilter] = useState<string>('all')
+  const [sortBy, setSortBy] = useState<string>('featured')
   const [showOwned, setShowOwned] = useState(false)
   const [selectedItem, setSelectedItem] = useState<StoreItem | null>(null)
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false)
@@ -88,7 +88,7 @@ export function StoreItems() {
 
   const loadStoreItems = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/store/items&apos;))
+      const response = await apiRequest(() => fetch('/api/store/items'))
       if (response) {
         setItems(response)
       }
@@ -101,7 +101,7 @@ export function StoreItems() {
 
   const loadUserCurrency = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/store/currency'))
+      const response = await apiRequest(() => fetch('/api/store/currency'))
       if (response) {
         setUserCurrency(response)
       }

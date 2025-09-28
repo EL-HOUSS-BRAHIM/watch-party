@@ -37,7 +37,7 @@ export default function DiscordIntegrationPage() {
         integrationsAPI.getHealth().catch(() => null),
       ])
       const discordConnection = connectionsResponse.connections?.find(
-        (item) => item.provider === &apos;discord&apos
+        (item) => item.provider === 'discord&apos
       )
       setConnection(discordConnection ?? null)
       setHealth(healthResponse)
@@ -103,7 +103,7 @@ export default function DiscordIntegrationPage() {
 
   const healthMessage = useMemo(() => {}
     if (!health) return 'Discord service status is currently unavailable.'
-    const discordService = health.services?.find((service) => service.name === &apos;discord')
+    const discordService = health.services?.find((service) => service.name === 'discord')
     if (!discordService) return 'Discord health information is not available from the status endpoint.'
     return discordService.status === 'up'
       ? 'Discord integrations are operational.'

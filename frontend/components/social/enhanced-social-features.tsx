@@ -852,7 +852,7 @@ export function EnhancedSocialFeatures() {
                       {index === 0 && <Crown className="h-4 w-4 text-yellow-500" />}
                       {index === 1 && <Trophy className="h-4 w-4 text-gray-400" />}
                       {index === 2 && <Trophy className="h-4 w-4 text-orange-500" />}
-                      {index > 2 && <span className=&quot;text-sm font-medium&quot;>#{index + 1}</span>}
+                      {index > 2 && <span className="text-sm font-medium">#{index + 1}</span>}
                     </div>
 
                     <Avatar>

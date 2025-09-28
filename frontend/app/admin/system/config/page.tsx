@@ -490,7 +490,7 @@ export default function SystemConfiguration() {
           <CardContent className="p-4">
             <div className="flex items-center space-x-2 text-yellow-800 dark:text-yellow-200">
               <AlertTriangle className="w-4 h-4" />
-              <span>You have unsaved changes. Don&apos;t forget to save your configuration.</span>
+              <span>You have unsaved changes. Don't forget to save your configuration.</span>
             </div>
           </CardContent>
         </Card>

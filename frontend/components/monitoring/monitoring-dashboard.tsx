@@ -207,8 +207,8 @@ export function MonitoringDashboard() {
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null)
   const [alertDialogOpen, setAlertDialogOpen] = useState(false)
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
-  const [logFilter, setLogFilter] = useState<string>(&quot;all&quot;)
-  const [alertFilter, setAlertFilter] = useState<string>(&quot;all&quot;)
+  const [logFilter, setLogFilter] = useState<string>("all")
+  const [alertFilter, setAlertFilter] = useState<string>("all")
   const [isRealTime, setIsRealTime] = useState(true)
 
   // Simulate real-time updates
@@ -227,7 +227,7 @@ export function MonitoringDashboard() {
   }, [isRealTime])
 
   const acknowledgeAlert = (alertId: string) => {}
-    setAlerts((prev) => prev.map((alert) => (alert.id === alertId ? { ...alert, status: &quot;acknowledged" } : alert)))
+    setAlerts((prev) => prev.map((alert) => (alert.id === alertId ? { ...alert, status: "acknowledged" } : alert)))
   }
 
   const resolveAlert = (alertId: string) => {}
@@ -294,8 +294,8 @@ export function MonitoringDashboard() {
     }
   }
 
-  const filteredLogs = logs.filter((log) => logFilter === &quot;all&quot; || log.level === logFilter)
-  const filteredAlerts = alerts.filter((alert) => alertFilter === &quot;all" || alert.severity === alertFilter)
+  const filteredLogs = logs.filter((log) => logFilter === "all" || log.level === logFilter)
+  const filteredAlerts = alerts.filter((alert) => alertFilter === "all" || alert.severity === alertFilter)
 
   const activeAlerts = alerts.filter((alert) => alert.status === "active").length
   const criticalAlerts = alerts.filter((alert) => alert.severity === "critical" && alert.status === "active").length
@@ -312,11 +312,11 @@ export function MonitoringDashboard() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
+          <Button onClick={() => setSettingsDialogOpen(true)} variant="outline">
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
-          <Button onClick={() => setIsRealTime(!isRealTime)} variant={isRealTime ? &quot;default&quot; : &quot;outline"}>
+          <Button onClick={() => setIsRealTime(!isRealTime)} variant={isRealTime ? "default" : "outline"}>
             <Activity className="mr-2 h-4 w-4" />
             {isRealTime ? "Live" : "Paused"}
           </Button>
@@ -346,7 +346,7 @@ export function MonitoringDashboard() {
             <Bell className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${activeAlerts > 0 ? &quot;text-red-600&quot; : &quot;text-green-600"}`}>"
+            <div className={`text-2xl font-bold ${activeAlerts > 0 ? "text-red-600" : "text-green-600"}`}>"
               {activeAlerts}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">{criticalAlerts} critical</div>

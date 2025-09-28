@@ -255,7 +255,7 @@ export default function ContentModeration() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600">Category:</span>
-                      <span className="capitalize">{report.category.replace(&quot;_&quot;, &quot; ")}</span>"
+                      <span className="capitalize">{report.category.replace("_", " ")}</span>"
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600">Status:</span>
@@ -391,7 +391,7 @@ export default function ContentModeration() {
                   </div>
 
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => updateReportStatus(report.id, &quot;dismissed&quot;, resolution)}>
+                    <Button variant="outline" onClick={() => updateReportStatus(report.id, "dismissed", resolution)}>
                       Dismiss
                     </Button>
                     <Button onClick={handleResolve} disabled={!resolution}>
@@ -558,7 +558,7 @@ export default function ContentModeration() {
                     <TableCell>
                       <div>
                         <p className="font-medium text-sm">#{report.id.slice(-8)}</p>
-                        <p className="text-xs text-gray-500 capitalize">{report.category.replace(&quot;_&quot;, &quot; ")}</p>"
+                        <p className="text-xs text-gray-500 capitalize">{report.category.replace("_", " ")}</p>"
                       </div>
                     </TableCell>
                     <TableCell>
@@ -597,18 +597,18 @@ export default function ContentModeration() {
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => updateReportStatus(report.id, &quot;reviewing&quot;)}>
+                          <DropdownMenuItem onClick={() => updateReportStatus(report.id, "reviewing")}>
                             <Shield className="mr-2 h-4 w-4" />
                             Start Review
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => updateReportStatus(report.id, &quot;resolved&quot;, &quot;Quick resolution")}
+                            onClick={() => updateReportStatus(report.id, "resolved", "Quick resolution")}
                           >
                             <Check className="mr-2 h-4 w-4" />
                             Quick Resolve
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => updateReportStatus(report.id, &quot;dismissed&quot;, &quot;Not actionable")}
+                            onClick={() => updateReportStatus(report.id, "dismissed", "Not actionable")}
                           >
                             <X className="mr-2 h-4 w-4" />
                             Dismiss

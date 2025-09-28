@@ -36,7 +36,7 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
   const [history, setHistory] = useState<WatchHistoryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [filterBy, setFilterBy] = useState<"all" | "solo" | "party">(&quot;all&quot;)
+  const [filterBy, setFilterBy] = useState<"all" | "solo" | "party">("all")
   const api = useApi()
 
   useEffect(() => {
@@ -129,21 +129,21 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
             <div className="flex space-x-2">
               <Button
                 variant={filterBy === "all" ? "default" : "outline"}
-                onClick={() => setFilterBy(&quot;all&quot;)}
+                onClick={() => setFilterBy("all")}
                 size="sm"
               >
                 All
               </Button>
               <Button
                 variant={filterBy === "solo" ? "default" : "outline"}
-                onClick={() => setFilterBy(&quot;solo&quot;)}
+                onClick={() => setFilterBy("solo")}
                 size="sm"
               >
                 Solo
               </Button>
               <Button
                 variant={filterBy === "party" ? "default" : "outline"}
-                onClick={() => setFilterBy(&quot;party&quot;)}
+                onClick={() => setFilterBy("party")}
                 size="sm"
               >
                 Party
@@ -218,7 +218,7 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
 
                 {/* Actions */}
                 <div className="flex flex-col space-y-2">
-                  <Button size="sm" onClick={() => window.open(`/videos/${item.video.id}`, &apos;_blank&apos;)}>
+                  <Button size="sm" onClick={() => window.open(`/videos/${item.video.id}`, '_blank')}>
                     <Play className="w-4 h-4 mr-1" />
                     Watch Again
                   </Button>

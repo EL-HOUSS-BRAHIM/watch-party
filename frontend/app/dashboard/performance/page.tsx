@@ -203,7 +203,7 @@ const PerformancePage = () => {}
             current: performanceData.avgResponseTime || 145.2,
             previous: performanceData.prevAvgResponseTime || 132.8,
             unit: "ms",
-            trend: performanceData.avgResponseTime > performanceData.prevAvgResponseTime ? &quot;up&quot; : &quot;down",
+            trend: performanceData.avgResponseTime > performanceData.prevAvgResponseTime ? "up" : "down",
             threshold: { warning: 200, critical: 500 },
           },
           {}
@@ -334,8 +334,8 @@ const PerformancePage = () => {}
 
   const getSystemHealthStatus = () => {}
     const avgUsage = (systemHealth.cpu + systemHealth.memory + systemHealth.disk) / 3
-    if (avgUsage > 80) return &quot;critical&quot
-    if (avgUsage > 60) return &quot;warning"
+    if (avgUsage > 80) return "critical&quot
+    if (avgUsage > 60) return "warning"
     return "healthy"
   }
 

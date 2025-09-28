@@ -114,7 +114,7 @@ export default function RewardsPage() {
   const [userStats, setUserStats] = useState<UserStats | null>(null)
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [selectedCategory, setSelectedCategory] = useState<string>(&quot;all&quot;)
+  const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const [claimingRewards, setClaimingRewards] = useState<Set<string>>(new Set())
 
   useEffect(() => {
@@ -420,7 +420,7 @@ export default function RewardsPage() {
               <Button
                 variant={selectedCategory === "all" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedCategory(&quot;all&quot;)}
+                onClick={() => setSelectedCategory("all")}
               >
                 All Categories
               </Button>

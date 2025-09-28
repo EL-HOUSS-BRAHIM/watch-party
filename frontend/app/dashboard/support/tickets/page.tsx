@@ -93,7 +93,7 @@ const priorityIcons = { low: '●',
 }
 
 export default function SupportTicketsPage() {
-  const [filter, setFilter] = useState<'all' | 'open' | 'in-progress' | 'resolved'>(&apos;all&apos;)
+  const [filter, setFilter] = useState<'all' | 'open' | 'in-progress' | 'resolved'>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [showNewTicketForm, setShowNewTicketForm] = useState(false)
 
@@ -237,19 +237,19 @@ export default function SupportTicketsPage() {
         <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-blue-400 mb-2">
-              {supportTickets.filter(t => t.status === &apos;open&apos;).length}
+              {supportTickets.filter(t => t.status === 'open').length}
             </div>
             <div className="text-white/70">Open Tickets</div>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-yellow-400 mb-2">
-              {supportTickets.filter(t => t.status === &apos;in-progress&apos;).length}
+              {supportTickets.filter(t => t.status === 'in-progress').length}
             </div>
             <div className="text-white/70">In Progress</div>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-green-400 mb-2">
-              {supportTickets.filter(t => t.status === &apos;resolved&apos;).length}
+              {supportTickets.filter(t => t.status === 'resolved').length}
             </div>
             <div className="text-white/70">Resolved</div>
           </div>

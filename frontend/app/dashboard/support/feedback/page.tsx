@@ -52,7 +52,7 @@ const feedbackCategories: FeedbackCategory[] = []
 ]
 
 export default function FeedbackPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>(&apos;&apos;)
+  const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [rating, setRating] = useState<number>(0)
   const [subject, setSubject] = useState('')
   const [description, setDescription] = useState('')

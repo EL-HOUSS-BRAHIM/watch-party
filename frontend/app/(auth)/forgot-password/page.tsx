@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Check, CheckCircle, Mail } from "lucide-react"
+import { ArrowLeft,CheckCircle, Mail } from "lucide-react"
 import { WatchPartyButton } from "@/components/ui/watch-party-button"
 import { WatchPartyInput } from "@/components/ui/watch-party-input"
 import {WatchPartyCard,WatchPartyCardHeader,WatchPartyCardTitle,WatchPartyCardDescription,WatchPartyCardContent,WatchPartyCardFooter
@@ -97,7 +97,7 @@ export default function ForgotPasswordPage() {
           </div>
           <WatchPartyCardTitle className="text-2xl">Forgot your password?</WatchPartyCardTitle>
           <WatchPartyCardDescription>
-            Enter your email address and we&apos;ll send you a link to reset your password.
+            Enter your email address and we'll send you a link to reset your password.
           </WatchPartyCardDescription>
         </WatchPartyCardHeader>
 

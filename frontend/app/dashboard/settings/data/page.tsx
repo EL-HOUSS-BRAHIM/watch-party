@@ -83,7 +83,7 @@ const getStatusLabel = (status: string) => {}
 }
 
 export default function DataManagementPage() {
-  const [selectedExportType, setSelectedExportType] = useState<string>(&apos;&apos;)
+  const [selectedExportType, setSelectedExportType] = useState<string>('')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deletePassword, setDeletePassword] = useState('')
   const [isExporting, setIsExporting] = useState(false)
@@ -152,7 +152,7 @@ export default function DataManagementPage() {
               </p>
               <ul className="text-blue-200 text-sm space-y-1 list-disc list-inside">
                 <li>Request a copy of all data we have about you</li>
-                <li>Have your data corrected if it&apos;s inaccurate</li>
+                <li>Have your data corrected if it's inaccurate</li>
                 <li>Request deletion of your account and associated data</li>
                 <li>Withdraw consent for data processing</li>
               </ul>
@@ -290,7 +290,7 @@ export default function DataManagementPage() {
                     <li>All your videos will be removed</li>
                     <li>Your watch party history will be deleted</li>
                     <li>Your profile and settings will be permanently removed</li>
-                    <li>You&apos;ll be removed from all friend lists</li>
+                    <li>You'll be removed from all friend lists</li>
                     <li>Any premium subscriptions will be cancelled</li>
                   </ul>
                 </div>

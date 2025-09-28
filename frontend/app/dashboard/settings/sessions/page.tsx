@@ -242,13 +242,13 @@ export default function SessionsPage() {
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-green-400 mb-2">
-              {sessions.filter(s => s.deviceType === &apos;desktop&apos;).length}
+              {sessions.filter(s => s.deviceType === 'desktop').length}
             </div>
             <div className="text-white/70">Desktop Sessions</div>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-purple-400 mb-2">
-              {sessions.filter(s => s.deviceType === &apos;mobile&apos; || s.deviceType === &apos;tablet').length}
+              {sessions.filter(s => s.deviceType === 'mobile' || s.deviceType === 'tablet').length}
             </div>
             <div className="text-white/70">Mobile Sessions</div>
           </div>

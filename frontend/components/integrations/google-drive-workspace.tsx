@@ -42,7 +42,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
     setIsLoadingConnection(true)
     try {
       const { connections } = await integrationsAPI.getConnections()
-      const driveConnection = connections.find(conn => conn.provider === &apos;google_drive&apos;) || null
+      const driveConnection = connections.find(conn => conn.provider === 'google_drive') || null
       setConnection(driveConnection)
     } catch (err) {
       console.error('Failed to load Google Drive connection', error)
@@ -232,7 +232,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
         </CardContent>
         <CardFooter className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-sm text-muted-foreground">
-            {files.length > 0 ? `${files.length} files • ${formatBytes(totalSize)}` : &apos;No files loaded yet&apos;}
+            {files.length > 0 ? `${files.length} files • ${formatBytes(totalSize)}` : 'No files loaded yet'}
           </div>
           <div className="flex items-center gap-2">
             <Button

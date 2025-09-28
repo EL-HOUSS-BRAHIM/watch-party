@@ -367,10 +367,10 @@ export default function ReportsManagementPage() {
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline">
-              {filteredReports.filter(r => r.status === &quot;pending&quot;).length} Pending
+              {filteredReports.filter(r => r.status === "pending").length} Pending
             </Badge>
             <Badge variant="outline">
-              {filteredReports.filter(r => r.severity === &quot;critical&quot; || r.severity === &quot;high").length} High Priority
+              {filteredReports.filter(r => r.severity === "critical" || r.severity === "high").length} High Priority
             </Badge>
           </div>
         </div>
@@ -473,7 +473,7 @@ export default function ReportsManagementPage() {
                     <Shield className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No reports found</h3>
                     <p className="text-gray-600">
-                      {searchQuery || Object.values(filters).some(f => f !== &quot;all&quot; && f !== false)
+                      {searchQuery || Object.values(filters).some(f => f !== "all" && f !== false)
                         ? "Try adjusting your search or filters"
                         : "All caught up! No pending reports to review"
                       }
@@ -589,7 +589,7 @@ export default function ReportsManagementPage() {
                       </div>
                       <div className="flex justify-between">
                         <span>Created:</span>
-                        <span>{format(parseISO(selectedReport.created_at), &quot;MMM d, yyyy&quot;)}</span>
+                        <span>{format(parseISO(selectedReport.created_at), "MMM d, yyyy")}</span>
                       </div>
                     </div>
                   </div>
@@ -642,7 +642,7 @@ export default function ReportsManagementPage() {
                         </div>
                         <div className="flex justify-between">
                           <span>Status:</span>
-                          <span>{selectedReport.reported_user.is_banned ? &quot;Banned&quot; : &quot;Active"}</span>
+                          <span>{selectedReport.reported_user.is_banned ? "Banned" : "Active"}</span>
                         </div>
                       </div>
                     </div>
@@ -659,7 +659,7 @@ export default function ReportsManagementPage() {
                             variant="outline"
                             size="sm"
                             className="w-full justify-start"
-                            onClick={() => window.open(url, &quot;_blank&quot;)}
+                            onClick={() => window.open(url, "_blank")}
                           >
                             <ExternalLink className="h-4 w-4 mr-2" />
                             Evidence {index + 1}
@@ -703,7 +703,7 @@ export default function ReportsManagementPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => updateReportStatus(selectedReport.id, &quot;under_review&quot;)}
+                          onClick={() => updateReportStatus(selectedReport.id, "under_review")}
                           disabled={processingActions.has(selectedReport.id)}
                         >
                           <Eye className="h-4 w-4 mr-1" />
@@ -712,7 +712,7 @@ export default function ReportsManagementPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => updateReportStatus(selectedReport.id, &quot;dismissed&quot;, &quot;No violation found")}
+                          onClick={() => updateReportStatus(selectedReport.id, "dismissed", "No violation found")}
                           disabled={processingActions.has(selectedReport.id)}
                         >
                           <XCircle className="h-4 w-4 mr-1" />
@@ -726,7 +726,7 @@ export default function ReportsManagementPage() {
                             variant="destructive"
                             size="sm"
                             className="w-full"
-                            onClick={() => takeAction(selectedReport.id, &quot;ban_user&quot;, &quot;Violation of community guidelines")}
+                            onClick={() => takeAction(selectedReport.id, "ban_user", "Violation of community guidelines")}
                             disabled={processingActions.has(selectedReport.id)}
                           >
                             <Ban className="h-4 w-4 mr-1" />
@@ -736,7 +736,7 @@ export default function ReportsManagementPage() {
                             variant="outline"
                             size="sm"
                             className="w-full"
-                            onClick={() => takeAction(selectedReport.id, &quot;warn_user&quot;, &quot;Warning for reported behavior")}
+                            onClick={() => takeAction(selectedReport.id, "warn_user", "Warning for reported behavior")}
                             disabled={processingActions.has(selectedReport.id)}
                           >
                             <AlertTriangle className="h-4 w-4 mr-1" />
@@ -748,7 +748,7 @@ export default function ReportsManagementPage() {
                       <Button
                         size="sm"
                         className="w-full"
-                        onClick={() => updateReportStatus(selectedReport.id, &quot;resolved&quot;, &quot;Issue has been addressed")}
+                        onClick={() => updateReportStatus(selectedReport.id, "resolved", "Issue has been addressed")}
                         disabled={processingActions.has(selectedReport.id)}
                       >
                         {processingActions.has(selectedReport.id) ? (

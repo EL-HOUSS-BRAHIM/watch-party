@@ -7,10 +7,10 @@ const createJestConfig = nextJest({}
 })
 
 // Add any custom config to be passed to Jest;
-const customJestConfig = { setupFilesAfterEnv: ["<rootDir>/jest.setup.js&quot;],
+const customJestConfig = { setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   testEnvironment: "jest-environment-jsdom",
   moduleNameMapper: {}
-    "^@/(.*)$": "<rootDir>/$1&quot;,
+    "^@/(.*)$": "<rootDir>/$1",
   },
   collectCoverageFrom: []
     "components/**/*.{js,jsx,ts,tsx}",
@@ -20,7 +20,7 @@ const customJestConfig = { setupFilesAfterEnv: ["<rootDir>/jest.setup.js&quot;],
     "!**/*.d.ts",
     "!**/node_modules/**",
   ],
-  testPathIgnorePatterns: ["<rootDir>/.next/&quot;, &quot;<rootDir>/node_modules/&quot;, &quot;<rootDir>/e2e/"],
+  testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/", "<rootDir>/e2e/"],
   transform: {}
     "^.+\\.(js|jsx|ts|tsx)$": ["babel-jest", { presets: ["next/babel"] }],
   },

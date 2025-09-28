@@ -400,7 +400,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
     return (
       <div className="space-y-2">
         <Collapsible open={group.isExpanded} onOpenChange={() => toggleGroupExpansion(group.key)}>
-          <Card className={`transition-all ${group.unreadCount > 0 ? &apos;border-l-4 border-l-primary&apos; : &apos;'}`}>
+          <Card className={`transition-all ${group.unreadCount > 0 ? 'border-l-4 border-l-primary' : ''}`}>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <Checkbox

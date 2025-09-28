@@ -339,7 +339,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => addReaction(message.id, &quot;👍&quot;)}
+                        onClick={() => addReaction(message.id, "👍")}
                         className="h-6 w-6 p-0"
                       >
                         <ThumbsUp className="h-3 w-3" />
@@ -347,17 +347,17 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => addReaction(message.id, &quot;❤️&quot;)}
+                        onClick={() => addReaction(message.id, "❤️")}
                         className="h-6 w-6 p-0"
                       >
                         <Heart className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => startReply(message)} className=&quot;h-6 w-6 p-0&quot;>
+                      <Button variant="ghost" size="sm" onClick={() => startReply(message)} className="h-6 w-6 p-0">
                         <Reply className="h-3 w-3" />
                       </Button>
                       {(message.user.id === user?.id || canModerate) && (
                         <>
-                          <Button variant="ghost" size="sm" onClick={() => startEdit(message)} className=&quot;h-6 w-6 p-0&quot;>
+                          <Button variant="ghost" size="sm" onClick={() => startEdit(message)} className="h-6 w-6 p-0">
                             <Edit className="h-3 w-3" />
                           </Button>
                           <Button

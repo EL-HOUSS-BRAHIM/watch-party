@@ -247,7 +247,7 @@ export default function PublicProfilePage() {
       })
 
       if (response.ok) {
-        setProfile((prev) => (prev ? { ...prev, friendshipStatus: &quot;blocked&quot; } : null))
+        setProfile((prev) => (prev ? { ...prev, friendshipStatus: "blocked" } : null))
         toast({title: "User Blocked",
           description: "This user has been blocked and can no longer interact with you.",
         })
@@ -320,7 +320,7 @@ export default function PublicProfilePage() {
         return {
           text: "Add Friend",
           icon: UserPlus,
-          action: () => handleFriendAction(&quot;add"),
+          action: () => handleFriendAction("add"),
           variant: "default" as const,
           className: "bg-white text-black hover:bg-white/90",
         }

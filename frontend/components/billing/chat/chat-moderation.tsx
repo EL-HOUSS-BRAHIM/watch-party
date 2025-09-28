@@ -317,7 +317,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => deleteMessage(message.id, &apos;Reported content&apos;)}
+                        onClick={() => deleteMessage(message.id, 'Reported content')}
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>
@@ -513,7 +513,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                           placeholder="Add banned word..."
                           value={newBannedWord}
                           onChange={(e) => setNewBannedWord(e.target.value)}
-                          onKeyPress={(e) => e.key === &apos;Enter&apos; && addBannedWord()}
+                          onKeyPress={(e) => e.key === 'Enter' && addBannedWord()}
                         />
                         <Button onClick={addBannedWord}>Add</Button>
                       </div>

@@ -51,7 +51,7 @@ const resolveStatus = (status: unknown, isOnlineFallback?: boolean): OnlineFrien
 
 const normalizeActivity = (activity: unknown): OnlineFriend['activity'] | undefined => {}
   if (!activity) return undefined
-  let type: NonNullable<OnlineFriend['activity']>[&apos;type&apos;] = &apos;watching';
+  let type: NonNullable<OnlineFriend['activity']>['type'] = 'watching';
 
   const rawType = (activity.type ?? activity.activity_type ?? '').toString().toLowerCase();
   if (rawType.includes('party')) {}
@@ -161,8 +161,8 @@ export default function OnlineStatusIndicators() {
     return () => clearInterval(interval);
   }, [fetchOnlineFriends]);
 
-  const onlineFriends = friends.filter(friend => friend.status !== &apos;offline&apos;);
-  const offlineFriends = friends.filter(friend => friend.status === &apos;offline');
+  const onlineFriends = friends.filter(friend => friend.status !== 'offline');
+  const offlineFriends = friends.filter(friend => friend.status === 'offline');
 
   const handleStartChat = (friendId: string) => {}
     // Implement chat functionality
@@ -220,7 +220,7 @@ export default function OnlineStatusIndicators() {
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={friend.avatar} alt={friend.displayName} />
                     <AvatarFallback>
-                      {friend.displayName.split(' ').map(n => n[0]).join(&apos;&apos;)}
+                      {friend.displayName.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute -bottom-1 -right-1">
@@ -297,7 +297,7 @@ export default function OnlineStatusIndicators() {
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={friend.avatar} alt={friend.displayName} />
                     <AvatarFallback>
-                      {friend.displayName.split(' ').map(n => n[0]).join(&apos;&apos;)}
+                      {friend.displayName.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute -bottom-1 -right-1">

@@ -103,8 +103,8 @@ export function SEOAccessibilityOptimizer() {
           {}
             name: "Page Speed",
             score: analyticsData.performance?.page_speed || 85,
-            status: (analyticsData.performance?.page_speed || 85) >= 90 ? &quot;good&quot; : 
-                   (analyticsData.performance?.page_speed || 85) >= 70 ? &quot;needs-improvement" : "poor",
+            status: (analyticsData.performance?.page_speed || 85) >= 90 ? "good" : 
+                   (analyticsData.performance?.page_speed || 85) >= 70 ? "needs-improvement" : "poor",
             description: "How fast your pages load",
             recommendations: ["Optimize images for web", "Enable compression", "Minimize JavaScript"],
           },
@@ -239,7 +239,7 @@ export function SEOAccessibilityOptimizer() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
+          <Button onClick={() => setSettingsDialogOpen(true)} variant="outline">
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
@@ -296,7 +296,7 @@ export function SEOAccessibilityOptimizer() {
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${criticalIssues > 0 ? &quot;text-red-600&quot; : &quot;text-green-600"}`}>"
+            <div className={`text-2xl font-bold ${criticalIssues > 0 ? "text-red-600" : "text-green-600"}`}>"
               {criticalIssues}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">Require immediate attention</div>

@@ -62,7 +62,7 @@ const mutualFriends: MutualFriend[] = []
 
 export default function MutualFriendsPage() {
   const params = useParams()
-  const [sortBy, setSortBy] = useState<'mutualCount' | 'name' | 'online'>(&apos;mutualCount&apos;)
+  const [sortBy, setSortBy] = useState<'mutualCount' | 'name' | 'online'>('mutualCount')
 
   const sortedFriends = [...mutualFriends].sort((a, b) => {}
     switch (sortBy) {

@@ -29,7 +29,7 @@ const textareaVariants = cva(
 )
 
 export interface WatchPartyTextareaProps
-  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, &quot;onChange&quot;>,
+  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, "onChange">,
     VariantProps<typeof textareaVariants> {}
   autoResize?: boolean
   maxLength?: number
@@ -138,7 +138,7 @@ const WatchPartyTextarea = React.forwardRef<HTMLTextAreaElement, WatchPartyTexta
             {showCharCount && (
               <span
                 className={cn(
-                  maxLength && charCount > maxLength * 0.9 && &quot;text-warning&quot;,
+                  maxLength && charCount > maxLength * 0.9 && "text-warning",
                   maxLength && charCount === maxLength && "text-destructive",
                 )}
               >

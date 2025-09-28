@@ -123,7 +123,7 @@ function PartyAnalyticsContent() {
 
   const [analytics, setAnalytics] = useState<PartyAnalytics | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [timeRange, setTimeRange] = useState<string>(&quot;all&quot;)
+  const [timeRange, setTimeRange] = useState<string>("all")
   const [activeTab, setActiveTab] = useState("overview")
 
   const loadPartyAnalytics = useCallback(async () => {
@@ -203,7 +203,7 @@ function PartyAnalyticsContent() {
   }
 
   const getEngagementColor = (score: number) => {}
-    if (score >= 80) return &quot;text-green-600"
+    if (score >= 80) return "text-green-600"
     if (score >= 60) return "text-yellow-600"
     return "text-red-600"
   }
@@ -244,8 +244,8 @@ function PartyAnalyticsContent() {
               Analytics data is not available for this party. This may be because:
             </p>
             <ul className="text-gray-600 text-sm mt-2 space-y-1">
-              <li>• The party hasn&apos;t started yet</li>
-              <li>• You don&apos;t have permission to view this data</li>
+              <li>• The party hasn't started yet</li>
+              <li>• You don't have permission to view this data</li>
               <li>• The party ID is invalid</li>
             </ul>
           </CardContent>
@@ -396,12 +396,12 @@ function PartyAnalyticsContent() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis
                         dataKey="time" 
-                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm&quot;)}
+                        tickFormatter={(value) => format(parseISO(value), "HH:mm")}
                       />
                       <YAxis />
                       <Tooltip
-                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss&quot;)}
-                        formatter={(value: number) => [value, &quot;Viewers"]}
+                        labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
+                        formatter={(value: number) => [value, "Viewers"]}
                       />
                       <Area
                         type="monotone" 
@@ -429,12 +429,12 @@ function PartyAnalyticsContent() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis
                         dataKey="time" 
-                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm&quot;)}
+                        tickFormatter={(value) => format(parseISO(value), "HH:mm")}
                       />
                       <YAxis yAxisId="left" />
                       <YAxis yAxisId="right" orientation="right" />
                       <Tooltip
-                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss&quot;)}
+                        labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
                       />
                       <Bar yAxisId="left" dataKey="message_count" fill="#8884d8" name="Messages" />
                       <Line
@@ -544,7 +544,7 @@ function PartyAnalyticsContent() {
                 <CardContent className="p-6 text-center">
                   <Heart className="h-8 w-8 text-red-500 mx-auto mb-2" />
                   <p className="text-2xl font-bold">
-                    {analytics.engagement.reactions.find(r => r.type === &apos;heart&apos;)?.count || 0}
+                    {analytics.engagement.reactions.find(r => r.type === 'heart')?.count || 0}
                   </p>
                   <p className="text-gray-600">Hearts</p>
                 </CardContent>
@@ -553,7 +553,7 @@ function PartyAnalyticsContent() {
                 <CardContent className="p-6 text-center">
                   <Star className="h-8 w-8 text-yellow-500 mx-auto mb-2" />
                   <p className="text-2xl font-bold">
-                    {analytics.engagement.reactions.find(r => r.type === &apos;star&apos;)?.count || 0}
+                    {analytics.engagement.reactions.find(r => r.type === 'star')?.count || 0}
                   </p>
                   <p className="text-gray-600">Stars</p>
                 </CardContent>
@@ -562,7 +562,7 @@ function PartyAnalyticsContent() {
                 <CardContent className="p-6 text-center">
                   <Share2 className="h-8 w-8 text-blue-500 mx-auto mb-2" />
                   <p className="text-2xl font-bold">
-                    {analytics.engagement.reactions.find(r => r.type === &apos;share&apos;)?.count || 0}
+                    {analytics.engagement.reactions.find(r => r.type === 'share')?.count || 0}
                   </p>
                   <p className="text-gray-600">Shares</p>
                 </CardContent>
@@ -694,7 +694,7 @@ function PartyAnalyticsContent() {
                       <YAxis />
                       <Tooltip
                         labelFormatter={(value) => `${value}:00`}
-                        formatter={(value: number) => [value, &quot;Participants&quot;]}
+                        formatter={(value: number) => [value, "Participants"]}
                       />
                       <Bar dataKey="count" fill="#8884d8" />
                     </BarChart>
@@ -718,12 +718,12 @@ function PartyAnalyticsContent() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis
                         dataKey="timestamp" 
-                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm&quot;)}
+                        tickFormatter={(value) => format(parseISO(value), "HH:mm")}
                       />
                       <YAxis />
                       <Tooltip
-                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss&quot;)}
-                        formatter={(value: number) => [`${value}ms`, &quot;Loading Time"]}
+                        labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
+                        formatter={(value: number) => [`${value}ms`, "Loading Time"]}
                       />
                       <Line
                         type="monotone" 
@@ -750,12 +750,12 @@ function PartyAnalyticsContent() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis
                         dataKey="timestamp" 
-                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm&quot;)}
+                        tickFormatter={(value) => format(parseISO(value), "HH:mm")}
                       />
                       <YAxis />
                       <Tooltip
-                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss&quot;)}
-                        formatter={(value: number) => [`${value}ms`, &quot;Sync Offset"]}
+                        labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
+                        formatter={(value: number) => [`${value}ms`, "Sync Offset"]}
                       />
                       <Area
                         type="monotone" 
@@ -783,12 +783,12 @@ function PartyAnalyticsContent() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis
                         dataKey="timestamp" 
-                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm&quot;)}
+                        tickFormatter={(value) => format(parseISO(value), "HH:mm")}
                       />
                       <YAxis />
                       <Tooltip
-                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss&quot;)}
-                        formatter={(value: number) => [value, &quot;Errors"]}
+                        labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
+                        formatter={(value: number) => [value, "Errors"]}
                       />
                       <Bar dataKey="error_count" fill="#ff7300" />
                     </BarChart>

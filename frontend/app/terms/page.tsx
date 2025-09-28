@@ -23,7 +23,7 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-semibold mb-4">1. Acceptance of Terms</h2>
             <p className="mb-4">
-              By accessing and using WatchParty (&quot;the Platform,&quot; &quot;Service,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;), 
+              By accessing and using WatchParty ("the Platform," "Service," "we," "us," or "our"), 
               you accept and agree to be bound by the terms and provision of this agreement. 
               If you do not agree to abide by the above, please do not use this service.
             </p>
@@ -67,7 +67,7 @@ export default function TermsOfServicePage() {
             <h3 className="text-xl font-medium mb-3">3.2 Age Requirements</h3>
             <p className="mb-4">
               You must be at least 13 years old to use WatchParty. If you are between 13 and 18
-              years old, you represent that you have your parent&apos;s or guardian&apos;s permission to
+              years old, you represent that you have your parent's or guardian's permission to
               use the service.
             </p>
 
@@ -92,7 +92,7 @@ export default function TermsOfServicePage() {
               <li>Upload, share, or stream copyrighted content without proper authorization</li>
               <li>Engage in harassment, bullying, or abusive behavior toward other users</li>
               <li>Share inappropriate, offensive, or harmful content</li>
-              <li>Attempt to hack, disrupt, or compromise the platform&apos;s security</li>
+              <li>Attempt to hack, disrupt, or compromise the platform's security</li>
               <li>Create multiple accounts to evade bans or restrictions</li>
               <li>Use automated tools or bots to access the service</li>
               <li>Violate any applicable laws or regulations</li>
@@ -161,7 +161,7 @@ export default function TermsOfServicePage() {
             <h2 className="text-2xl font-semibold mb-4">8. Disclaimers and Limitations</h2>
             <h3 className="text-xl font-medium mb-3">8.1 Service Availability</h3>
             <p className="mb-4">
-              WatchParty is provided &quot;as is&quot; without warranties of any kind. We do not guarantee
+              WatchParty is provided "as is" without warranties of any kind. We do not guarantee
               uninterrupted or error-free service. The platform may experience downtime for
               maintenance or unforeseen issues.
             </p>
@@ -258,7 +258,7 @@ export default function TermsOfServicePage() {
           <h3 className="text-lg font-semibold mb-2">Questions?</h3>
           <p className="text-gray-700">
             If you have any questions about these Terms of Service or need clarification
-            on any section, please don&apos;t hesitate to contact our support team. We&apos;re here
+            on any section, please don't hesitate to contact our support team. We're here
             to help ensure you have a great experience on WatchParty.
           </p>
         </div>

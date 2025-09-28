@@ -38,13 +38,14 @@ function ResetPasswordForm() {
   }, [formData.password])
 
   const calculatePasswordStrength = (password: string): number => {
-  let strength = 0,
-    if (password.length >= 8) strength += 25,
-    if (/[a-z]/.test(password)) strength += 25,
-    if (/[A-Z]/.test(password)) strength += 25,
-    if (/[0-9]/.test(password)) strength += 12.5,
-    if (/[^A-Za-z0-9]/.test(password)) strength += 12.5,
+    let strength = 0
+    if (password.length >= 8) strength += 25
+    if (/[a-z]/.test(password)) strength += 25
+    if (/[A-Z]/.test(password)) strength += 25
+    if (/[0-9]/.test(password)) strength += 12.5
+    if (/[^A-Za-z0-9]/.test(password)) strength += 12.5
     return Math.min(strength, 100)
+  }
 
   const getPasswordStrengthColor = (strength: number): string => {
   if (strength < 25) return "bg-red-500"

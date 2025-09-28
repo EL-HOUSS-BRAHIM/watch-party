@@ -32,7 +32,7 @@ export default function EventSchedulingSystem() {
   const [selectedEvent, setSelectedEvent] = useState<WatchEvent | null>(null)
   const [eventAttendees, setEventAttendees] = useState<EventAttendee[]>([])
   const [showCreateDialog, setShowCreateDialog] = useState(false)
-  const [viewMode, setViewMode] = useState<"calendar" | "list">(&quot;calendar&quot;)
+  const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar")
   const [filterStatus, setFilterStatus] = useState("all")
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingEvents, setIsLoadingEvents] = useState(true)
@@ -170,7 +170,7 @@ export default function EventSchedulingSystem() {
     try {
       await eventsAPI.cancelEvent(eventId)
       // Update local state
-      setEvents((prev) => prev.map((event) => (event.id === eventId ? { ...event, status: &quot;cancelled&quot; } : event)))
+      setEvents((prev) => prev.map((event) => (event.id === eventId ? { ...event, status: "cancelled" } : event)))
 
       toast({title: "Event Cancelled",
         description: "The event has been cancelled and attendees will be notified.",
@@ -408,7 +408,7 @@ export default function EventSchedulingSystem() {
           {/* Events for Selected Date */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle>Events for {format(selectedDate, &quot;MMMM d, yyyy&quot;)}</CardTitle>
+              <CardTitle>Events for {format(selectedDate, "MMMM d, yyyy")}</CardTitle>
               <CardDescription>
                 {eventsForSelectedDate.length} event{eventsForSelectedDate.length !== 1 ? "s" : ""} scheduled
               </CardDescription>
@@ -466,10 +466,10 @@ export default function EventSchedulingSystem() {
 
                           {event.status === "scheduled" && !event.rsvp_status && (
                             <div className="flex gap-1">
-                              <Button size="sm" variant="outline" onClick={() => handleRSVP(event.id, &quot;going&quot;)}>
+                              <Button size="sm" variant="outline" onClick={() => handleRSVP(event.id, "going")}>
                                 Going
                               </Button>
-                              <Button size="sm" variant="outline" onClick={() => handleRSVP(event.id, &quot;maybe&quot;)}>
+                              <Button size="sm" variant="outline" onClick={() => handleRSVP(event.id, "maybe")}>
                                 Maybe
                               </Button>
                             </div>
@@ -566,13 +566,13 @@ export default function EventSchedulingSystem() {
 
                         {event.status === "scheduled" && !event.rsvp_status && (
                           <div className="flex gap-2">
-                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;going&quot;)}>
+                            <Button variant="outline" onClick={() => handleRSVP(event.id, "going")}>
                               Going
                             </Button>
-                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;maybe&quot;)}>
+                            <Button variant="outline" onClick={() => handleRSVP(event.id, "maybe")}>
                               Maybe
                             </Button>
-                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;not-going&quot;)}>
+                            <Button variant="outline" onClick={() => handleRSVP(event.id, "not-going")}>
                               Can't Go
                             </Button>
                           </div>
@@ -679,7 +679,7 @@ export default function EventSchedulingSystem() {
                           className="w-16 h-12 object-cover rounded"
                         />
                         <div>
-                          <p className="font-medium">{selectedEvent.video?.title || &quot;No video&quot;}</p>
+                          <p className="font-medium">{selectedEvent.video?.title || "No video"}</p>
                           <p className="text-sm text-muted-foreground">
                             {selectedEvent.video?.duration ? Math.floor(selectedEvent.video.duration / 60) : 0} minutes
                           </p>

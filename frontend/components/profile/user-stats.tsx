@@ -97,21 +97,21 @@ export function UserStats({ userId }: UserStatsProps) {}
         <div className="flex justify-center space-x-2">
           <Button
             variant={timeframe === "week" ? "default" : "outline"}
-            onClick={() => setTimeframe(&quot;week&quot;)}
+            onClick={() => setTimeframe("week")}
             size="sm"
           >
             This Week
           </Button>
           <Button
             variant={timeframe === "month" ? "default" : "outline"}
-            onClick={() => setTimeframe(&quot;month&quot;)}
+            onClick={() => setTimeframe("month")}
             size="sm"
           >
             This Month
           </Button>
           <Button
             variant={timeframe === "year" ? "default" : "outline"}
-            onClick={() => setTimeframe(&quot;year&quot;)}
+            onClick={() => setTimeframe("year")}
             size="sm"
           >
             This Year

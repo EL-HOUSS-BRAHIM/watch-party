@@ -290,7 +290,7 @@ describe("Phase 1 foundation API clients", () => {}
 
     try {
       const languageResponse = await localizationApi.getLanguages()
-      expect(languageResponse.map((lang) => lang.code)).toContain(&quot;es&quot;)
+      expect(languageResponse.map((lang) => lang.code)).toContain("es")
 
       const submission = await localizationApi.submitString("proj-1", {}
         key: "dashboard.title",

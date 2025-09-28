@@ -59,7 +59,7 @@ const extractNumber = (...values: unknown[]): number | undefined => {
 }
 
 const determineTrend = (change: number): 'up' | 'down' | 'stable' => {
-  if (change > 0) return &apos;up&apos
+  if (change > 0) return 'up&apos
   if (change < 0) return 'down'
   return 'stable'
 }
@@ -274,7 +274,7 @@ const getDeviceIcon = (type: string) => {
 export default function AdvancedAnalyticsPage() {
   const { toast } = useToast()
   const [dateRange, setDateRange] = useState('30d')
-  const [viewType, setViewType] = useState<'overview' | 'users' | 'content' | 'revenue'>(&apos;overview&apos;)
+  const [viewType, setViewType] = useState<'overview' | 'users' | 'content' | 'revenue'>('overview')
   const [metrics, setMetrics] = useState<AnalyticsMetric[]>([])
   const [userSegments, setUserSegments] = useState<UserSegment[]>([])
   const [regions, setRegions] = useState<RegionData[]>([])
@@ -557,7 +557,7 @@ export default function AdvancedAnalyticsPage() {
                           </div>
                           <div className="flex items-center justify-between mt-1 text-sm">
                             <span className="text-white/60">{segment.percentage.toFixed(1)}%</span>
-                            <span className={segment.growth >= 0 ? &apos;text-green-400&apos; : &apos;text-red-400'}>
+                            <span className={segment.growth >= 0 ? 'text-green-400' : 'text-red-400'}>
                               {segment.growth >= 0 ? '+' : ''}{segment.growth.toFixed(1)}%
                             </span>
                           </div>

@@ -150,7 +150,7 @@ export default function FAQManagement() {
   const [faqs, setFaqs] = useState<FAQ[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>(&apos;all&apos;)
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [showPublishedOnly, setShowPublishedOnly] = useState(false)
   const [editingFAQ, setEditingFAQ] = useState<FAQ | null>(null)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -502,7 +502,7 @@ export default function FAQManagement() {
   const getCategoryName = (categoryId: string) =>
     categories.find((category) => category.id === categoryId)?.name ?? categoryId
   const getCategoryColor = (categoryId: string) =>
-    categories.find((category) => category.id === categoryId)?.color ?? &apos;bg-gray-500&apos
+    categories.find((category) => category.id === categoryId)?.color ?? 'bg-gray-500&apos
   if (loading) {
     return (
       <Card className="bg-white/5 border-white/10">
@@ -557,7 +557,7 @@ export default function FAQManagement() {
               </DialogTrigger>
               <DialogContent className="bg-black/90 border-white/20 max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle>{editingFAQ ? &apos;Edit FAQ&apos; : &apos;Create New FAQ'}</DialogTitle>
+                  <DialogTitle>{editingFAQ ? 'Edit FAQ' : 'Create New FAQ'}</DialogTitle>
                   <DialogDescription>
                     {editingFAQ ? 'Update the FAQ details below' : 'Add a new frequently asked question'}
                   </DialogDescription>
@@ -770,7 +770,7 @@ export default function FAQManagement() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleReorderFAQ(faq.id, &apos;up&apos;)}
+                        onClick={() => handleReorderFAQ(faq.id, 'up')}
                         disabled={index === 0 || isProcessing}
                       >
                         <ArrowUpIcon className="w-4 h-4" />
@@ -778,7 +778,7 @@ export default function FAQManagement() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleReorderFAQ(faq.id, &apos;down&apos;)}
+                        onClick={() => handleReorderFAQ(faq.id, 'down')}
                         disabled={index === filteredFAQs.length - 1 || isProcessing}
                       >
                         <ArrowDownIcon className="w-4 h-4" />

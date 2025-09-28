@@ -44,7 +44,7 @@ const WatchPartyCardDescription = React.forwardRef<HTMLDivElement, React.HTMLAtt
 WatchPartyCardDescription.displayName = "WatchPartyCardDescription"
 
 const WatchPartyCardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => <div ref={ref} className={cn(&quot;p-6 pt-0&quot;, className)} {...props} />,
+  ({ className, ...props }, ref) => <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />,
 )
 WatchPartyCardContent.displayName = "WatchPartyCardContent"
 

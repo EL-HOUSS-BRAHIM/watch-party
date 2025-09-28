@@ -75,11 +75,11 @@ export function ParticipantListSidebar({participants,
   }
 
   const formatPing = (ping: number) => {}
-    if (ping > 1000) return &apos;1000+ ms&apos
+    if (ping > 1000) return '1000+ ms&apos
     return `${ping} ms`
   }
 
-  const connectedCount = participants.filter(p => p.connection_status === &apos;connected').length
+  const connectedCount = participants.filter(p => p.connection_status === 'connected').length
   const syncedCount = participants.filter(p => 
     p.connection_status === 'connected' && 
     Math.abs(p.video_position - currentVideoPosition) <= syncTolerance
@@ -161,7 +161,7 @@ export function ParticipantListSidebar({participants,
                         <span>
                           {participant.connection_status === 'connected' 
                             ? (isOutOfSync
-                                ? `${timeDiff > 0 ? &apos;+&apos; : &apos;'}${timeDiff.toFixed(1)}s` 
+                                ? `${timeDiff > 0 ? '+' : ''}${timeDiff.toFixed(1)}s` 
                                 : 'Synced'
                               )
                             : participant.connection_status

@@ -110,7 +110,7 @@ export function TwoFactorSetup() {
         </CardHeader>
         <CardContent>
           <Button
-            onClick={() => window.location.href = &quot;/dashboard&quot;}
+            onClick={() => window.location.href = "/dashboard"}
             className="w-full"
           >
             Continue to Dashboard
@@ -177,7 +177,7 @@ export function TwoFactorSetup() {
                   type="button"
                   variant="outline"
                   size="icon"
-                  onClick={() => copyToClipboard(setupData.secret_key, &quot;Secret key&quot;)}
+                  onClick={() => copyToClipboard(setupData.secret_key, "Secret key")}
                 >
                   <Copy className="w-4 h-4" />
                 </Button>

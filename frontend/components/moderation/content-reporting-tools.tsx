@@ -142,13 +142,13 @@ export default function ContentReportingTools({contentType,
   onClose,
   onSubmit
 }: ContentReportingProps) {}
-  const [selectedReason, setSelectedReason] = useState<string>(&apos;&apos;)
+  const [selectedReason, setSelectedReason] = useState<string>('')
   const [description, setDescription] = useState('')
   const [evidence, setEvidence] = useState<File[]>([])
   const [anonymous, setAnonymous] = useState(false)
   const [blockUser, setBlockUser] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [step, setStep] = useState<'reason' | 'details' | 'confirmation'>(&apos;reason&apos;)
+  const [step, setStep] = useState<'reason' | 'details' | 'confirmation'>('reason')
 
   if (!isOpen) return null
   const selectedReasonData = reportReasons.find(r => r.id === selectedReason)
@@ -251,7 +251,7 @@ export default function ContentReportingTools({contentType,
                 Cancel
               </Button>
               <Button
-                onClick={() => setStep(&apos;details&apos;)}
+                onClick={() => setStep('details')}
                 disabled={!selectedReason}
               >
                 Next
@@ -379,10 +379,10 @@ export default function ContentReportingTools({contentType,
             </div>
 
             <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={() => setStep(&apos;reason&apos;)}>
+              <Button variant="outline" onClick={() => setStep('reason')}>
                 Back
               </Button>
-              <Button onClick={() => setStep(&apos;confirmation&apos;)}>
+              <Button onClick={() => setStep('confirmation')}>
                 Review Report
               </Button>
             </div>
@@ -467,7 +467,7 @@ export default function ContentReportingTools({contentType,
             </Card>
 
             <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={() => setStep(&apos;details&apos;)}>
+              <Button variant="outline" onClick={() => setStep('details')}>
                 Back
               </Button>
               <Button

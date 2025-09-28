@@ -155,11 +155,11 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
               <SelectItem value="90d">Last 90 days</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" onClick={() => exportData(&apos;csv&apos;)}>
+          <Button variant="outline" onClick={() => exportData('csv')}>
             <Download className="h-4 w-4 mr-2" />
             Export CSV
           </Button>
-          <Button variant="outline" onClick={() => exportData(&apos;json&apos;)}>
+          <Button variant="outline" onClick={() => exportData('json')}>
             <Download className="h-4 w-4 mr-2" />
             Export JSON
           </Button>

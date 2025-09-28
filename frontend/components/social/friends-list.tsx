@@ -245,8 +245,8 @@ export function FriendsList({ className }: FriendsListProps) {}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="all">All Friends ({friends.length})</TabsTrigger>
-          <TabsTrigger value="online">Online ({friends.filter((f) => f.status === &quot;online&quot;).length})</TabsTrigger>
-          <TabsTrigger value="offline">Offline ({friends.filter((f) => f.status === &quot;offline&quot;).length})</TabsTrigger>
+          <TabsTrigger value="online">Online ({friends.filter((f) => f.status === "online").length})</TabsTrigger>
+          <TabsTrigger value="offline">Offline ({friends.filter((f) => f.status === "offline").length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className="mt-6">
@@ -328,11 +328,11 @@ export function FriendsList({ className }: FriendsListProps) {}
                             <Video className="w-4 h-4 mr-2" />
                             Invite to Party
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => removeFriend(friend.id)} className=&quot;text-orange-600&quot;>
+                          <DropdownMenuItem onClick={() => removeFriend(friend.id)} className="text-orange-600">
                             <UserMinus className="w-4 h-4 mr-2" />
                             Remove Friend
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => blockUser(friend.id)} className=&quot;text-destructive&quot;>
+                          <DropdownMenuItem onClick={() => blockUser(friend.id)} className="text-destructive">
                             <UserX className="w-4 h-4 mr-2" />
                             Block User
                           </DropdownMenuItem>
@@ -376,11 +376,11 @@ export function FriendsList({ className }: FriendsListProps) {}
 
                     {/* Quick Actions */}
                     <div className="flex space-x-2 mt-4">
-                      <Button variant="outline" size="sm" onClick={() => startChat(friend.id)} className=&quot;flex-1&quot;>
+                      <Button variant="outline" size="sm" onClick={() => startChat(friend.id)} className="flex-1">
                         <MessageCircle className="w-4 h-4 mr-1" />
                         Chat
                       </Button>
-                      <Button variant="outline" size="sm" onClick={() => inviteToParty(friend.id)} className=&quot;flex-1&quot;>
+                      <Button variant="outline" size="sm" onClick={() => inviteToParty(friend.id)} className="flex-1">
                         <Video className="w-4 h-4 mr-1" />
                         Invite
                       </Button>

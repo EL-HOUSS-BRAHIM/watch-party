@@ -207,12 +207,12 @@ export default function TwoFactorSetupPage() {
                         : "bg-white/10 text-gray-400"
                     }`}
                   >
-                    {step > stepNumber ? <CheckCircle className=&quot;w-4 h-4&quot; /> : stepNumber}
+                    {step > stepNumber ? <CheckCircle className="w-4 h-4" /> : stepNumber}
                   </div>
                   {stepNumber < 3 && (}
                     <div
                       className={`w-8 h-0.5 mx-2 transition-all duration-300 ${}
-                        step > stepNumber ? &quot;bg-gradient-to-r from-green-500 to-blue-500&quot; : &quot;bg-white/20"
+                        step > stepNumber ? "bg-gradient-to-r from-green-500 to-blue-500" : "bg-white/20"
                       }`}
                     />
                   )}
@@ -267,7 +267,7 @@ export default function TwoFactorSetupPage() {
                       </Button>
                     </div>
                     <code className="text-xs text-gray-300 break-all bg-black/20 p-2 rounded block">{secretKey}</code>
-                    <p className="text-xs text-gray-500 mt-2">Use this key if you can&apos;t scan the QR code</p>
+                    <p className="text-xs text-gray-500 mt-2">Use this key if you can't scan the QR code</p>
                   </div>
 
                   <div className="flex space-x-3">
@@ -427,7 +427,7 @@ export default function TwoFactorSetupPage() {
                 </h4>
                 <ul className="space-y-1 text-sm text-gray-400">
                   <li>• Store backup codes in a secure password manager</li>
-                  <li>• Don&apos;t share these codes with anyone</li>
+                  <li>• Don't share these codes with anyone</li>
                   <li>• Each code can only be used once</li>
                   <li>• Generate new codes if these are compromised</li>
                 </ul>

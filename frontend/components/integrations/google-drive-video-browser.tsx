@@ -211,7 +211,7 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
           <div className="flex items-center gap-2 text-sm">
             {folderPath.map((folder, index) => (
               <div key={folder.id} className="flex items-center gap-2">
-                {index > 0 && <span className=&quot;text-gray-400&quot;>/</span>}
+                {index > 0 && <span className="text-gray-400">/</span>}
                 <button
                   onClick={() => handleBreadcrumbClick(index)}
                   className="hover:text-blue-600 transition-colors"

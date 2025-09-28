@@ -222,7 +222,7 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
                   <XAxis dataKey="timestamp" />
                   <YAxis domain={[0, 100]} />
                   <Tooltip
-                    formatter={(value) => [`${value}%`, &apos;Retention&apos;]}
+                    formatter={(value) => [`${value}%`, 'Retention']}
                     labelFormatter={(label) => `Time: ${label}%`}
                   />
                   <Area

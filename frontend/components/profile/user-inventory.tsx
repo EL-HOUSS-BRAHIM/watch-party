@@ -127,7 +127,7 @@ export function UserInventory({ userId }: UserInventoryProps) {}
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-primary">
-              {items.filter(item => item.rarity === &quot;legendary&quot;).length}
+              {items.filter(item => item.rarity === "legendary").length}
             </div>
             <div className="text-sm text-muted-foreground">Legendary</div>
           </div>

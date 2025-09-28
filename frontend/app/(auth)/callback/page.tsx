@@ -18,7 +18,7 @@ function CallbackHandler() {
   const { toast } = useToast()
   const authService = useMemo(() => new AuthAPI(), [])
 
-  const [status, setStatus] = useState<"loading" | "success" | "error">(&quot;loading&quot;)
+  const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
   const [message, setMessage] = useState("")
   const [isRetrying, setIsRetrying] = useState(false)
 
@@ -235,7 +235,7 @@ function CallbackHandler() {
           <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10">
             <h4 className="text-white font-medium mb-2 flex items-center justify-center">
               <Play className="w-4 h-4 mr-2" />
-              What&apos;s Next?
+              What's Next?
             </h4>
             <ul className="space-y-1 text-sm text-gray-400">
               <li>• Access your personalized dashboard</li>

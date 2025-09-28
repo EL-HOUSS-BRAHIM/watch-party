@@ -62,7 +62,7 @@ export default function ABTestingDashboard() {
   const [tests, setTests] = useState<ABTest[]>([]);
   const [selectedTest, setSelectedTest] = useState<ABTest | null>(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [filter, setFilter] = useState<'all' | ABTest['status']>(&apos;all&apos;);
+  const [filter, setFilter] = useState<'all' | ABTest['status']>('all');
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -131,7 +131,7 @@ export default function ABTestingDashboard() {
     }
   };
 
-  const filteredTests = tests.filter(test => filter === &apos;all' || test.status === filter);
+  const filteredTests = tests.filter(test => filter === 'all' || test.status === filter);
 
   const getStatusColor = (status: ABTest['status']) => {}
     switch (status) {
@@ -260,10 +260,10 @@ export default function ABTestingDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {tests.filter(t => t.status === &apos;running&apos;).length}
+              {tests.filter(t => t.status === 'running').length}
             </div>
             <p className="text-xs text-muted-foreground">
-              {tests.filter(t => t.status === &apos;paused&apos;).length} paused
+              {tests.filter(t => t.status === 'paused').length} paused
             </p>
           </CardContent>
         </Card>
@@ -379,8 +379,8 @@ export default function ABTestingDashboard() {
                         <div>
                           <span className="text-muted-foreground">Significance:</span>
                           <span className={`font-medium ml-1 ${}}
-                            test.results.significance > 95 ? &apos;text-green-600&apos; : 
-                            test.results.significance > 90 ? &apos;text-yellow-600' : 
+                            test.results.significance > 95 ? 'text-green-600' : 
+                            test.results.significance > 90 ? 'text-yellow-600' : 
                             'text-red-600'
                           }`}>
                             {test.results.significance.toFixed(1)}%
@@ -482,7 +482,7 @@ export default function ABTestingDashboard() {
                               <div className="text-right">
                                 {variant.lift !== 0 && (
                                   <div className={`font-medium ${}}
-                                    variant.lift > 0 ? &apos;text-green-600&apos; : &apos;text-red-600'
+                                    variant.lift > 0 ? 'text-green-600' : 'text-red-600'
                                   }`}>
                                     {variant.lift > 0 ? '+' : ''}{variant.lift.toFixed(1)}%
                                   </div>

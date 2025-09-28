@@ -259,7 +259,7 @@ const buildVideoCard = (video: Record<string, unknown>): TrendingVideoCard => {}
   }
 }
 
-const buildPartyCard = (party: Record<string, unknown>, highlight?: &quot;trending&quot; | &quot;recommended"): FeaturedPartyCard => {}
+const buildPartyCard = (party: Record<string, unknown>, highlight?: "trending" | "recommended"): FeaturedPartyCard => {}
   const host = party?.host ?? party?.owner ?? party?.organizer ?? {}
   const id = party?.id ?? party?.room_code ?? fallbackId("party")
 
@@ -347,7 +347,7 @@ const buildSuggestedUserCard = (
     username
   const nameParts = fullName.trim().split(/\s+/)
   const firstName = nameParts[0] ?? username
-  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(&quot; &quot;) : firstName
+  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : firstName
   const mutualFriends = safeNumber(
     raw?.mutual_friends_count ?? raw?.mutual_friends ?? raw?.mutualFriends,
     0,
@@ -555,11 +555,11 @@ export default function DiscoverPage() {
         : []
 
       const discoverParties: FeaturedPartyCard[] = Array.isArray(discoverData.trending_parties)
-        ? discoverData.trending_parties.map((party) => buildPartyCard(party, &quot;trending&quot;))
+        ? discoverData.trending_parties.map((party) => buildPartyCard(party, "trending"))
         : []
 
       const trendingParties: FeaturedPartyCard[] = Array.isArray(trendingPartiesPayload)
-        ? trendingPartiesPayload.map((party) => buildPartyCard(party, &quot;trending"))
+        ? trendingPartiesPayload.map((party) => buildPartyCard(party, "trending"))
         : []
 
       const recommendedParties: FeaturedPartyCard[] = Array.isArray(recommendedPartiesPayload)
@@ -686,7 +686,7 @@ export default function DiscoverPage() {
 
         const normalizedParties = dedupePartyCards(
           Array.isArray(partyResults?.results)
-            ? partyResults.results.map((party: Record<string, unknown>) => buildPartyCard(party, &quot;trending&quot;))
+            ? partyResults.results.map((party: Record<string, unknown>) => buildPartyCard(party, "trending"))
             : [],
         )
 
@@ -1069,7 +1069,7 @@ export default function DiscoverPage() {
                     <div className="flex items-center space-x-3">
                       <Zap className="w-6 h-6 text-yellow-500" />
                       <h2 className="text-2xl font-bold text-white">Featured Parties</h2>
-                      <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">Editor&apos;s Choice</Badge>
+                      <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">Editor's Choice</Badge>
                     </div>
                     <Button variant="ghost" className="text-purple-400 hover:text-purple-300">
                       View All

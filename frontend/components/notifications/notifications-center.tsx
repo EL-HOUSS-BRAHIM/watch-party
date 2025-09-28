@@ -76,7 +76,7 @@ export function NotificationsCenter() {
 
   const loadNotifications = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/notifications&apos;))
+      const response = await apiRequest(() => fetch('/api/notifications'))
       if (response) {
         setNotifications(response)
       }
@@ -87,7 +87,7 @@ export function NotificationsCenter() {
 
   const loadSettings = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/notifications/settings'))
+      const response = await apiRequest(() => fetch('/api/notifications/settings'))
       if (response) {
         setSettings(response)
       }
@@ -502,7 +502,7 @@ function NotificationSettings({settings,
                 </div>
                 <Switch
                   checked={settings.categories.friend_requests}
-                  onCheckedChange={() => handleToggleCategory(&apos;friend_requests&apos;)}
+                  onCheckedChange={() => handleToggleCategory('friend_requests')}
                 />
               </div>
 
@@ -516,7 +516,7 @@ function NotificationSettings({settings,
                 </div>
                 <Switch
                   checked={settings.categories.party_invites}
-                  onCheckedChange={() => handleToggleCategory(&apos;party_invites&apos;)}
+                  onCheckedChange={() => handleToggleCategory('party_invites')}
                 />
               </div>
 
@@ -530,7 +530,7 @@ function NotificationSettings({settings,
                 </div>
                 <Switch
                   checked={settings.categories.party_updates}
-                  onCheckedChange={() => handleToggleCategory(&apos;party_updates&apos;)}
+                  onCheckedChange={() => handleToggleCategory('party_updates')}
                 />
               </div>
 
@@ -544,7 +544,7 @@ function NotificationSettings({settings,
                 </div>
                 <Switch
                   checked={settings.categories.messages}
-                  onCheckedChange={() => handleToggleCategory(&apos;messages&apos;)}
+                  onCheckedChange={() => handleToggleCategory('messages')}
                 />
               </div>
 
@@ -558,7 +558,7 @@ function NotificationSettings({settings,
                 </div>
                 <Switch
                   checked={settings.categories.reactions}
-                  onCheckedChange={() => handleToggleCategory(&apos;reactions&apos;)}
+                  onCheckedChange={() => handleToggleCategory('reactions')}
                 />
               </div>
 
@@ -572,7 +572,7 @@ function NotificationSettings({settings,
                 </div>
                 <Switch
                   checked={settings.categories.achievements}
-                  onCheckedChange={() => handleToggleCategory(&apos;achievements&apos;)}
+                  onCheckedChange={() => handleToggleCategory('achievements')}
                 />
               </div>
             </div>
@@ -594,7 +594,7 @@ function NotificationSettings({settings,
                 </div>
                 <Switch
                   checked={settings.delivery.push}
-                  onCheckedChange={() => handleToggleDelivery(&apos;push&apos;)}
+                  onCheckedChange={() => handleToggleDelivery('push')}
                 />
               </div>
 
@@ -608,7 +608,7 @@ function NotificationSettings({settings,
                 </div>
                 <Switch
                   checked={settings.delivery.email}
-                  onCheckedChange={() => handleToggleDelivery(&apos;email&apos;)}
+                  onCheckedChange={() => handleToggleDelivery('email')}
                 />
               </div>
 
@@ -622,7 +622,7 @@ function NotificationSettings({settings,
                 </div>
                 <Switch
                   checked={settings.delivery.inApp}
-                  onCheckedChange={() => handleToggleDelivery(&apos;inApp&apos;)}
+                  onCheckedChange={() => handleToggleDelivery('inApp')}
                 />
               </div>
             </div>

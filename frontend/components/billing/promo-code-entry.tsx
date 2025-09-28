@@ -205,7 +205,7 @@ export function PromoCodeEntry({onCodeApplied,
                 placeholder="Enter promo code"
                 value={promoCode}
                 onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                onKeyPress={(e) => e.key === &apos;Enter&apos; && validatePromoCode()}
+                onKeyPress={(e) => e.key === 'Enter' && validatePromoCode()}
                 disabled={loading}
               />
               <Button

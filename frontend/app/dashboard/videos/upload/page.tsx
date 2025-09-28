@@ -272,7 +272,7 @@ export default function VideoUploadPage() {
   const router = useRouter()
   const [files, setFiles] = useState<UploadFile[]>([])
   const [uploading, setUploading] = useState(false)
-  const [currentStep, setCurrentStep] = useState<"upload" | "details">(&quot;upload&quot;)
+  const [currentStep, setCurrentStep] = useState<"upload" | "details">("upload")
   const [metadata, setMetadata] = useState<VideoMetadata>({}
     title: "",
     description: "",
@@ -304,7 +304,7 @@ export default function VideoUploadPage() {
     setUploading(true)
 
     // Update status to uploading
-    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: &quot;uploading&quot; as const } : f)))
+    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: "uploading" as const } : f)))
 
     // Simulate upload progress
     for (let progress = 0; progress <= 100; progress += 10) {
@@ -313,7 +313,7 @@ export default function VideoUploadPage() {
     }
 
     // Switch to processing
-    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: &quot;processing&quot; as const, progress: 0 } : f)))
+    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: "processing" as const, progress: 0 } : f)))
 
     // Simulate processing
     for (let progress = 0; progress <= 100; progress += 20) {
@@ -352,7 +352,7 @@ export default function VideoUploadPage() {
     router.push("/dashboard/videos")
   }
 
-  const completedFiles = files.filter((f) => f.status === &quot;completed&quot;)
+  const completedFiles = files.filter((f) => f.status === "completed")
   const canProceed = completedFiles.length > 0
   return (
     <div className="container mx-auto p-6 max-w-4xl">
@@ -383,7 +383,7 @@ export default function VideoUploadPage() {
 
           {canProceed && (
             <div className="flex justify-end">
-              <WatchPartyButton onClick={() => setCurrentStep(&quot;details&quot;)}>Continue to Details</WatchPartyButton>
+              <WatchPartyButton onClick={() => setCurrentStep("details")}>Continue to Details</WatchPartyButton>
             </div>
           )}
         </TabsContent>
@@ -484,7 +484,7 @@ export default function VideoUploadPage() {
             </div>
 
             <FormActions>
-              <WatchPartyButton variant="outline" onClick={() => setCurrentStep(&quot;upload&quot;)}>
+              <WatchPartyButton variant="outline" onClick={() => setCurrentStep("upload")}>
                 Back
               </WatchPartyButton>
               <WatchPartyButton type="submit">Publish Videos</WatchPartyButton>

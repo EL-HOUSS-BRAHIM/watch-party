@@ -159,7 +159,7 @@ export function HostControlPanel({participants,
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">
-              {participants.filter(p => p.status === &apos;active&apos;).length}
+              {participants.filter(p => p.status === 'active').length}
             </div>
             <div className="text-xs text-gray-600 dark:text-gray-400">
               Active
@@ -227,14 +227,14 @@ export function HostControlPanel({participants,
                       <>
                         {participant.role === 'member' ? (
                           <DropdownMenuItem
-                            onClick={() => handleAction(&apos;promote&apos;, participant.id, &apos;co-host')}
+                            onClick={() => handleAction('promote', participant.id, 'co-host')}
                           >
                             <UserCheck className="w-4 h-4 mr-2" />
                             Promote to Co-host
                           </DropdownMenuItem>
                         ) : (
                           <DropdownMenuItem
-                            onClick={() => handleAction(&apos;demote&apos;, participant.id)}
+                            onClick={() => handleAction('demote', participant.id)}
                           >
                             <UserX className="w-4 h-4 mr-2" />
                             Demote to Member
@@ -245,7 +245,7 @@ export function HostControlPanel({participants,
                     )}
 
                     <DropdownMenuItem
-                      onClick={() => handleAction(&apos;mute&apos;, participant.id, !participant.is_muted)}
+                      onClick={() => handleAction('mute', participant.id, !participant.is_muted)}
                     >
                       {participant.is_muted ? (
                         <>
@@ -263,7 +263,7 @@ export function HostControlPanel({participants,
                     <DropdownMenuSeparator />
 
                     <DropdownMenuItem
-                      onClick={() => handleAction(&apos;kick&apos;, participant.id)}
+                      onClick={() => handleAction('kick', participant.id)}
                       className="text-orange-600"
                     >
                       <UserX className="w-4 h-4 mr-2" />
@@ -272,7 +272,7 @@ export function HostControlPanel({participants,
 
                     {isHost && (
                       <DropdownMenuItem
-                        onClick={() => handleAction(&apos;ban&apos;, participant.id)}
+                        onClick={() => handleAction('ban', participant.id)}
                         className="text-red-600"
                       >
                         <MessageSquareOff className="w-4 h-4 mr-2" />

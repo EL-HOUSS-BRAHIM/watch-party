@@ -117,7 +117,7 @@ export function JoinParty() {
         </Button>
 
         <div className="text-center text-sm text-muted-foreground">
-          <p>Don&apos;t have a party code?</p>
+          <p>Don't have a party code?</p>
           <Button variant="link" className="text-sm p-0 h-auto">
             Create your own party
           </Button>

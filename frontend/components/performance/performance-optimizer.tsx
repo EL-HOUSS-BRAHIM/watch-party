@@ -184,7 +184,7 @@ export function PerformanceOptimizer() {
       if (trendLower.includes('down') || trendLower.includes('decrease')) return 'down'
     }
     if (typeof trend === 'number') {
-      if (trend > 0.05) return &apos;up&apos
+      if (trend > 0.05) return 'up&apos
       if (trend < -0.05) return 'down'
     }
     return 'stable'
@@ -438,7 +438,7 @@ export function PerformanceOptimizer() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
+          <Button onClick={() => setSettingsDialogOpen(true)} variant="outline">
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>

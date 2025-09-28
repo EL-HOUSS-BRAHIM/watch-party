@@ -114,7 +114,7 @@ export function EnhancedInput({label,
               className="h-auto p-0 hover:bg-transparent"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <EyeOff className="h-4 w-4 text-gray-500" /> : <Eye className=&quot;h-4 w-4 text-gray-500&quot; />}
+              {showPassword ? <EyeOff className="h-4 w-4 text-gray-500" /> : <Eye className="h-4 w-4 text-gray-500" />}
             </Button>
           )}
 
@@ -171,7 +171,7 @@ export function PasswordStrengthIndicator({ password }: { password: string }) {}
           />
         ))}
       </div>
-      <p className="text-sm text-gray-600">Password strength: {strengthLabels[strength - 1] || &quot;Very Weak&quot;}</p>
+      <p className="text-sm text-gray-600">Password strength: {strengthLabels[strength - 1] || "Very Weak"}</p>
     </div>
   )
 }

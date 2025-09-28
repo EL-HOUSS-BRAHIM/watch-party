@@ -113,7 +113,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
       })
 
       if (response.ok) {
-        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: &quot;pending_sent&quot; } : u)))
+        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: "pending_sent" } : u)))
         toast({title: "Friend request sent",
           description: "Your friend request has been sent successfully.",
         })
@@ -146,7 +146,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
       })
 
       if (response.ok) {
-        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: &quot;friends" } : u)))
+        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: "friends" } : u)))
         toast({title: "Friend request accepted",
           description: "You are now friends!",
         })

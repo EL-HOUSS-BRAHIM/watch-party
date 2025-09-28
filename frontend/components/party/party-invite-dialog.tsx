@@ -89,7 +89,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
 
       if (response.ok) {
         toast({title: "Invitations sent!",
-          description: `Successfully sent invites to ${emails.length} email${emails.length > 1 ? &apos;s&apos; : &apos;'}`,
+          description: `Successfully sent invites to ${emails.length} email${emails.length > 1 ? 's' : ''}`,
         })
         setEmailList("")
         setCustomMessage("")
@@ -158,7 +158,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
                 <Button
                   size="icon"
                   variant="outline"
-                  onClick={() => copyToClipboard(inviteUrl, &quot;Invite link&quot;)}
+                  onClick={() => copyToClipboard(inviteUrl, "Invite link")}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
@@ -177,7 +177,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
                 <Button
                   size="icon"
                   variant="outline"
-                  onClick={() => copyToClipboard(watchUrl, &quot;Watch link&quot;)}
+                  onClick={() => copyToClipboard(watchUrl, "Watch link")}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
@@ -196,7 +196,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
               </Button>
               <Button
                 variant="outline"
-                onClick={() => copyToClipboard(party.roomCode, &quot;Room code&quot;)}
+                onClick={() => copyToClipboard(party.roomCode, "Room code")}
               >
                 <Copy className="h-4 w-4 mr-2" />
                 Copy Code
