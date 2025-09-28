@@ -1,3 +1,4 @@
+import { AlertTriangle, Check, CheckCircle, Download, Info, Save, Settings, Zap } from "lucide-react"
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -342,7 +343,7 @@ export default function SystemConfiguration() {
     }
   ]);
 
-  const updateSetting = (settingId: string, newValue: string | number | boolean) => {}
+  const updateSetting = (settingId: string, newValue: string | number | boolean) => {
     setConfigSections(prev => prev.map(section => ({}
       ...section,
       settings: section.settings.map(setting => 
@@ -362,18 +363,18 @@ export default function SystemConfiguration() {
     alert('Configuration saved successfully!');
   };
 
-  const resetToDefaults = () => {}
+  const resetToDefaults = () => {
     if (confirm('Are you sure you want to reset all settings to their default values?')) {}
       // Reset logic would go here;
       setHasChanges(true);
     }
   };
 
-  const exportConfiguration = () => {}
+  const exportConfiguration = () => {
     const config: Record<string, string | number | boolean> = {};
-    configSections.forEach(section => {}
-      section.settings.forEach(setting => {}
-        config[setting.id] = setting.value;
+    configSections.forEach(section => {
+  section.settings.forEach(setting => {
+  config[setting.id] = setting.value;
       });
     });
     const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
@@ -387,11 +388,11 @@ export default function SystemConfiguration() {
     URL.revokeObjectURL(url);
   };
 
-  const getFilteredSections = () => {}
+  const getFilteredSections = () => {
     return configSections.map(section => ({}
       ...section,
-      settings: section.settings.filter(setting => {}
-        const matchesSearch = !searchTerm || 
+      settings: section.settings.filter(setting => {
+  const matchesSearch = !searchTerm || 
           setting.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           setting.description.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesCategory = selectedCategory === 'all' || setting.category === selectedCategory;
@@ -402,7 +403,7 @@ export default function SystemConfiguration() {
 
   const categories = Array.from(new Set(configSections.flatMap(s => s.settings.map(setting => setting.category))));
 
-  const renderSettingInput = (setting: SystemSetting) => {}
+  const renderSettingInput = (setting: SystemSetting) => {
     switch (setting.type) {
       case 'boolean':
         return (

@@ -136,8 +136,8 @@ export default function AdminBroadcastSystem() {
 
     try {
       // Map message types to API types;
-      const getAPIType = (messageType: string): 'info' | 'warning' | 'error' | 'success' => {}
-        switch (messageType) {
+      const getAPIType = (messageType: string): 'info' | 'warning' | 'error' | 'success' => {
+  switch (messageType) {
           case 'alert': return 'error';
           case 'maintenance': return 'warning';
           case 'feature': return 'success';
@@ -146,8 +146,8 @@ export default function AdminBroadcastSystem() {
       };
 
       // Map audience types to API types;
-      const getAPIAudience = (audienceType: string): 'all' | 'premium' | 'active' => {}
-        switch (audienceType) {
+      const getAPIAudience = (audienceType: string): 'all' | 'premium' | 'active' => {
+  switch (audienceType) {
           case 'premium': return 'premium';
           case 'active': return 'active';
           default: return 'all';
@@ -201,8 +201,8 @@ export default function AdminBroadcastSystem() {
 
       // Simulate sending process;
       if (message.scheduling.sendNow) {
-        setTimeout(() => {}
-          setMessages(prev => prev.map(m => 
+        setTimeout(() => {
+  setMessages(prev => prev.map(m => 
             m.id === message.id;
               ? {}
                   ...m, 
@@ -230,7 +230,7 @@ export default function AdminBroadcastSystem() {
     }
   };
 
-  const cancelMessage = (messageId: string) => {}
+  const cancelMessage = (messageId: string) => {
     setMessages(prev => prev.map(m => 
       m.id === messageId ? { ...m, status: 'draft' as const } : m;
     ));
@@ -240,7 +240,7 @@ export default function AdminBroadcastSystem() {
     });
   };
 
-  const duplicateMessage = (message: BroadcastMessage) => {}
+  const duplicateMessage = (message: BroadcastMessage) => {
     const duplicate: BroadcastMessage = {}
       ...message,
       id: Date.now().toString(),
@@ -257,7 +257,7 @@ export default function AdminBroadcastSystem() {
     });
   };
 
-  const getStatusBadge = (status: BroadcastMessage['status']) => {}
+  const getStatusBadge = (status: BroadcastMessage['status']) => {
     const variants = { draft: 'secondary',
       scheduled: 'default',
       sending: 'default',
@@ -279,7 +279,7 @@ export default function AdminBroadcastSystem() {
     );
   };
 
-  const getChannelIcon = (channel: string) => {}
+  const getChannelIcon = (channel: string) => {
     switch (channel) {
       case 'in-app': return <MessageSquare className="h-4 w-4" />;
       case 'email': return <Mail className="h-4 w-4" />;
@@ -289,14 +289,14 @@ export default function AdminBroadcastSystem() {
     }
   };
 
-  const getTypeIcon = (type: string) => {}
+  const getTypeIcon = (type: string) => {
     const messageType = messageTypes.find(t => t.value === type);
     if (!messageType) return <Megaphone className="h-4 w-4" />;
     const Icon = messageType.icon;
     return <Icon className="h-4 w-4" />;
   };
 
-  const formatDate = (date: Date) => {}
+  const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {}
       year: 'numeric',
       month: 'short',
@@ -306,7 +306,7 @@ export default function AdminBroadcastSystem() {
     }).format(date);
   };
 
-  const calculateEngagementRate = (stats: BroadcastMessage['stats']) => {}
+  const calculateEngagementRate = (stats: BroadcastMessage['stats']) => {
     if (!stats || stats.delivered === 0) return 0;
     return ((stats.opened / stats.delivered) * 100).toFixed(1);
   };
@@ -395,8 +395,8 @@ export default function AdminBroadcastSystem() {
                         type="checkbox"
                         id={channel.id}
                         checked={newMessage.channels?.includes(channel.id as Record<string, unknown>) || false}
-                        onChange={(e) => {}
-                          const channels = newMessage.channels || [];
+                        onChange={(e) => {
+  const channels = newMessage.channels || [];
                           if (e.target.checked) {
                             setNewMessage({...newMessage, channels: [...channels, channel.id as Record<string, unknown>]});
                           } else {}
@@ -729,3 +729,4 @@ export default function AdminBroadcastSystem() {
     </div>
   );
 }
+))))))))))))))))))))

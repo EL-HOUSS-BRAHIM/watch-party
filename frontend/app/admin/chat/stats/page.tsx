@@ -49,8 +49,8 @@ export default function ChatStatsPage() {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const normalizeActivityType = (type: unknown): 'message' | 'join' | 'leave' | 'moderation' => {}
-    const typeStr = String(type).toLowerCase()
+  const normalizeActivityType = (type: unknown): 'message' | 'join' | 'leave' | 'moderation' => {
+  const typeStr = String(type).toLowerCase()
     if (typeStr.includes('moderation') || typeStr.includes('mod') || typeStr.includes('ban') || typeStr.includes('warn')) return 'moderation'
     if (typeStr.includes('join') || typeStr.includes('enter')) return 'join'
     if (typeStr.includes('leave') || typeStr.includes('exit')) return 'leave'

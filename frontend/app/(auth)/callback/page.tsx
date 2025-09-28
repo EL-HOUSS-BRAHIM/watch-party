@@ -82,8 +82,8 @@ function CallbackHandler() {
         description: `Successfully signed in with ${provider}.`,
       })
 
-      setTimeout(() => {}
-        const redirectTo = sessionStorage.getItem("auth_redirect") || "/dashboard"
+      setTimeout(() => {
+  const redirectTo = sessionStorage.getItem("auth_redirect") || "/dashboard"
         sessionStorage.removeItem("auth_redirect")
         router.push(redirectTo)
       }, 2000)
@@ -106,8 +106,8 @@ function CallbackHandler() {
     setIsRetrying(false)
   }
 
-  const getProviderName = (provider: string): string => {}
-    switch (provider.toLowerCase()) {}
+  const getProviderName = (provider: string): string => {
+  switch (provider.toLowerCase()) {}
       case "google":
         return "Google"
       case "github":

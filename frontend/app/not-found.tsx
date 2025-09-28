@@ -1,9 +1,9 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertTriangle, Home, Link, Refresh, RefreshCw } from "lucide-react"
+import { AlertTriangle, Home, RefreshCw } from "lucide-react"
 import Link from "next/link"
-
-"use client"
 
 export default function NotFound() {
   return (

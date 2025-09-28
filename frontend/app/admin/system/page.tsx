@@ -1,3 +1,24 @@
+'use client'
+
+import { 
+  AlertTriangle, 
+  Check, 
+  CheckCircle, 
+  Clock, 
+  Download, 
+  Refresh, 
+  Search, 
+  User, 
+  X,
+  Server,
+  Activity,
+  Database,
+  Cpu,
+  HardDrive,
+  Network,
+  RefreshCw,
+  XAxis
+} from "lucide-react"
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -7,26 +28,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast'
 import { adminAPI, analyticsAPI } from '@/lib/api'
 import type { SystemHealth } from '@/lib/api/types'
-import {}
-import {}
-
-} from 'lucide-react'
-'use client'
-
-  Server,
-  Activity,
-  AlertTriangle,
-  CheckCircle,
-  Database,
-  Cpu,
-  HardDrive,
-  Network,
-  RefreshCw,
-  Download,
-  Search,
-  Clock,
-  User,
-  XAxis,
   YAxis,
   CartesianGrid,
   ResponsiveContainer,
@@ -64,7 +65,7 @@ interface HistoricalPoint {}
   disk: number;
 }
 
-const extractNumber = (...values: unknown[]): number | undefined => {}
+const extractNumber = (...values: unknown[]): number | undefined => {
   for (const value of values) {
     if (value === undefined || value === null) continue;
     const numberValue = Number(value)
@@ -93,7 +94,7 @@ const buildHistoricalData = (
   systemAnalytics: unknown,
   logStats: unknown,
   metrics: HealthMetricsSnapshot | null,
-): HistoricalPoint[] => {}
+): HistoricalPoint[] => {
   const source =
     (Array.isArray((systemAnalytics as Record<string, unknown>)?.timeline) && (systemAnalytics as Record<string, unknown[]>).timeline) ||
     (Array.isArray((systemAnalytics as Record<string, unknown>)?.performance) && (systemAnalytics as Record<string, unknown[]>).performance) ||
@@ -101,8 +102,8 @@ const buildHistoricalData = (
     []
 
   if (source.length > 0) {
-    return source.map((point: unknown, index: number) => {}
-      const p = point as Record<string, unknown>
+    return source.map((point: unknown, index: number) => {
+  const p = point as Record<string, unknown>
       return {
         time: p.timestamp;
           ? new Date(p.timestamp as string).toLocaleTimeString()
@@ -126,14 +127,14 @@ const buildHistoricalData = (
   return []
 }
 
-const randomId = () => {}
+const randomId = () => {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
     return crypto.randomUUID()
   }
   return Math.random().toString(36).slice(2)
 }
 
-const normalizeLogs = (logsResponse: unknown): LogEntry[] => {}
+const normalizeLogs = (logsResponse: unknown): LogEntry[] => {
   const response = logsResponse as Record<string, unknown>
   const results = Array.isArray(response?.results)
     ? response.results;
@@ -141,8 +142,8 @@ const normalizeLogs = (logsResponse: unknown): LogEntry[] => {}
       ? logsResponse as unknown[]
       : []
 
-  return results.map((log: unknown) => {}
-    const l = log as Record<string, unknown>
+  return results.map((log: unknown) => {
+  const l = log as Record<string, unknown>
     return {
       id: String(l.id ?? l.log_id ?? randomId()),
       timestamp: new Date((l.timestamp ?? l.created_at ?? Date.now()) as string | number),
@@ -169,8 +170,8 @@ export default function SystemMonitoring() {
   const [serviceFilter, setServiceFilter] = useState('all')
   const [autoRefresh, setAutoRefresh] = useState(false)
 
-  const serviceOptions = useMemo(() => {}
-    const unique = new Set<string>()
+  const serviceOptions = useMemo(() => {
+  const unique = new Set<string>()
     logs.forEach((log) => unique.add(log.service))
     return Array.from(unique.values()).sort()
   }, [logs])
@@ -223,16 +224,16 @@ export default function SystemMonitoring() {
       return;
     }
 
-    const interval = setInterval(() => {}
-      void fetchSystemData()
+    const interval = setInterval(() => {
+  void fetchSystemData()
     }, 30_000)
 
     return () => clearInterval(interval)
   }, [autoRefresh, fetchSystemData])
 
   useEffect(() => {
-    const filtered = logs.filter((log) => {}
-      const matchesLevel = levelFilter === 'all' || log.level === levelFilter;
+    const filtered = logs.filter((log) => {
+  const matchesLevel = levelFilter === 'all' || log.level === levelFilter;
       const matchesService = serviceFilter === 'all' || log.service === serviceFilter;
       const query = searchTerm.trim().toLowerCase()
       const matchesSearch =
@@ -246,13 +247,13 @@ export default function SystemMonitoring() {
     setFilteredLogs(filtered)
   }, [logs, levelFilter, serviceFilter, searchTerm])
 
-  const getHealthStatus = (percentage: number) => {}
+  const getHealthStatus = (percentage: number) => {
     if (percentage < 50) return { status: 'healthy', color: 'text-green-600', bg: 'bg-green-100' }
     if (percentage < 80) return { status: 'warning', color: 'text-yellow-600', bg: 'bg-yellow-100' }
     return { status: 'critical', color: 'text-red-600', bg: 'bg-red-100' }
   }
 
-  const downloadLogs = () => {}
+  const downloadLogs = () => {
     const csv = []
       'Timestamp,Level,Service,Message,Metadata,User ID,Request ID',
       ...filteredLogs.map((log) =>

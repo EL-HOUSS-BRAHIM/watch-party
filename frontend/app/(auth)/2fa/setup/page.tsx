@@ -144,7 +144,7 @@ export default function TwoFactorSetupPage() {
     }
   }
 
-  const downloadBackupCodes = () => {}
+  const downloadBackupCodes = () => {
     const codesText = backupCodes.join("\n")
     const blob = new Blob([`WatchParty 2FA Backup Codes\n\n${codesText}\n\nKeep these codes safe and secure!`], {}
       type: "text/plain",
@@ -181,7 +181,7 @@ export default function TwoFactorSetupPage() {
     }
   }
 
-  const finishSetup = () => {}
+  const finishSetup = () => {
     router.push("/dashboard/settings?tab=security&success=2fa-enabled")
   }
 
@@ -327,8 +327,8 @@ export default function TwoFactorSetupPage() {
                     id="verificationCode"
                     type="text"
                     value={verificationCode}
-                    onChange={(e) => {}
-                      const value = e.target.value.replace(/\D/g, "").slice(0, 6)
+                    onChange={(e) => {
+  const value = e.target.value.replace(/\D/g, "").slice(0, 6)
                       setVerificationCode(value)
                       if (errors.code) setErrors({})
                     }}

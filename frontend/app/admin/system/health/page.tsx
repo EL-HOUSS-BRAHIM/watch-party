@@ -1,10 +1,8 @@
+'use client'
+
 import { Check, CheckCircle, Clock, Cloud, Server, Shield, X, XCircle } from "lucide-react"
 import { useState, useEffect, useCallback } from 'react'
-import {}
-import { adminAPI } from '@/lib/api'
-import { useToast } from '@/hooks/use-toast'
-
-'use client'
+import {
   CpuChipIcon,
   ServerIcon,
   ClockIcon,
@@ -14,8 +12,10 @@ import { useToast } from '@/hooks/use-toast'
   ChartBarIcon,
   BoltIcon,
   CloudIcon,
-  ShieldCheckIcon;
+  ShieldCheckIcon
 } from '@heroicons/react/24/outline'
+import { adminAPI } from '@/lib/api'
+import { useToast } from '@/hooks/use-toast'
 interface ServerMetric {}
   id: string;
   name: string;
@@ -140,7 +140,7 @@ export default function SystemHealthPage() {
     }
   }, [toast])
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {
       case 'healthy':
       case 'online':
@@ -156,7 +156,7 @@ export default function SystemHealthPage() {
     }
   }
 
-  const getStatusIcon = (status: string) => {}
+  const getStatusIcon = (status: string) => {
     switch (status) {
       case 'healthy':
       case 'online':
@@ -172,7 +172,7 @@ export default function SystemHealthPage() {
     }
   }
 
-  const getComponentIcon = (type: string) => {}
+  const getComponentIcon = (type: string) => {
     switch (type) {
       case 'service':
         return <ServerIcon className="w-6 h-6" />

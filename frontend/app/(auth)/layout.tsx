@@ -1,18 +1,17 @@
+"use client"
+
 import React from "react"
-import { useEffect , useCallback } from "react"
+import { useEffect } from "react"
 import { useRouter, usePathname } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
 import Link from "next/link"
-import { Link, Play } from "lucide-react"
+import { Play } from "lucide-react"
 
-"use client"
-
-
-interface AuthLayoutProps {}
-  children: React.ReactNode;
+interface AuthLayoutProps {
+  children: React.ReactNode
 }
 
-export default function AuthLayout({ children }: AuthLayoutProps) {}
+export default function AuthLayout({ children }: AuthLayoutProps) {
   const { user, isLoading } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
@@ -45,7 +44,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {}
 
   // Don't render auth layout for authenticated users (except callback)
   if (user && pathname !== "/callback") {
-    return null;
+    return null
   }
 
   return (
@@ -73,13 +72,13 @@ export default function AuthLayout({ children }: AuthLayoutProps) {}
         <div className="flex flex-col sm:flex-row items-center justify-center sm:justify-between space-y-2 sm:space-y-0">
           <div className="flex items-center space-x-4 text-sm text-white/60">
             <Link href="/privacy" className="hover:text-white transition-colors">
-              Privacy;
+              Privacy
             </Link>
             <Link href="/terms" className="hover:text-white transition-colors">
-              Terms;
+              Terms
             </Link>
             <Link href="/help" className="hover:text-white transition-colors">
-              Help;
+              Help
             </Link>
           </div>
           <div className="text-sm text-white/40">© 2025 WatchParty Cinema</div>

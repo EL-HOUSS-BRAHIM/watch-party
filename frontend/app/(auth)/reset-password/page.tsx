@@ -37,8 +37,8 @@ function ResetPasswordForm() {
     setPasswordStrength(strength)
   }, [formData.password])
 
-  const calculatePasswordStrength = (password: string): number => {}
-    let strength = 0;
+  const calculatePasswordStrength = (password: string): number => {
+  let strength = 0;
     if (password.length >= 8) strength += 25;
     if (/[a-z]/.test(password)) strength += 25;
     if (/[A-Z]/.test(password)) strength += 25;
@@ -47,22 +47,22 @@ function ResetPasswordForm() {
     return Math.min(strength, 100)
   }
 
-  const getPasswordStrengthColor = (strength: number): string => {}
-    if (strength < 25) return "bg-red-500"
+  const getPasswordStrengthColor = (strength: number): string => {
+  if (strength < 25) return "bg-red-500"
     if (strength < 50) return "bg-orange-500"
     if (strength < 75) return "bg-yellow-500"
     return "bg-green-500"
   }
 
-  const getPasswordStrengthText = (strength: number): string => {}
-    if (strength < 25) return "Weak"
+  const getPasswordStrengthText = (strength: number): string => {
+  if (strength < 25) return "Weak"
     if (strength < 50) return "Fair"
     if (strength < 75) return "Good"
     return "Strong"
   }
 
-  const validateForm = (): boolean => {}
-    const newErrors: Record<string, string> = { if (!formData.password) {
+  const validateForm = (): boolean => {
+  const newErrors: Record<string, string> = { if (!formData.password) {
       newErrors.password = "Password is required"
     } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters"
@@ -80,7 +80,7 @@ function ResetPasswordForm() {
     return Object.keys(newErrors).length === 0;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {}
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!validateForm()) return;
@@ -106,8 +106,8 @@ function ResetPasswordForm() {
         })
 
         // Redirect to login after a short delay;
-        setTimeout(() => {}
-          router.push("/login?message=password-reset-success")
+        setTimeout(() => {
+  router.push("/login?message=password-reset-success")
         }, 2000)
       } else {}
         setErrors({ submit: response?.message || "Failed to reset password" })
@@ -123,7 +123,7 @@ function ResetPasswordForm() {
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {}
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }))
 

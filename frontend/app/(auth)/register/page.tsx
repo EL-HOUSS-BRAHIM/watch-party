@@ -30,7 +30,7 @@ export default function RegisterPage() {
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [passwordStrength, setPasswordStrength] = useState(0)
 
-  const validatePassword = (password: string) => {}
+  const validatePassword = (password: string) => {
     let strength = 0;
     if (password.length >= 8) strength++
     if (/[A-Z]/.test(password)) strength++
@@ -44,7 +44,7 @@ export default function RegisterPage() {
     setPasswordStrength(validatePassword(formData.password))
   }, [formData.password])
 
-  const validateForm = () => {}
+  const validateForm = () => {
     const newErrors: Record<string, string> = { if (!formData.firstName.trim()) {}
       newErrors.firstName = "First name is required"
     }
@@ -81,7 +81,7 @@ export default function RegisterPage() {
     return Object.keys(newErrors).length === 0;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {}
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!validateForm()) return;
@@ -115,7 +115,7 @@ export default function RegisterPage() {
     }
   }
 
-  const handleSocialLogin = async (provider: "google" | "github") => {}
+  const handleSocialLogin = async (provider: "google" | "github") => {
     try {
       await socialLogin(provider)
     } } catch {
@@ -127,21 +127,21 @@ export default function RegisterPage() {
     }
   }
 
-  const handleInputChange = (field: string, value: string) => {}
+  const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: &quot;&quot; }))
     }
   }
 
-  const getPasswordStrengthColor = () => {}
+  const getPasswordStrengthColor = () => {
     if (passwordStrength <= 1) return "bg-red-500"
     if (passwordStrength <= 2) return "bg-yellow-500"
     if (passwordStrength <= 3) return "bg-blue-500"
     return "bg-green-500"
   }
 
-  const getPasswordStrengthText = () => {}
+  const getPasswordStrengthText = () => {
     if (passwordStrength <= 1) return "Weak"
     if (passwordStrength <= 2) return "Fair"
     if (passwordStrength <= 3) return "Good"
@@ -434,8 +434,8 @@ export default function RegisterPage() {
             <Checkbox;
               id="terms"
               checked={agreedToTerms}
-              onCheckedChange={(checked) => {}
-                setAgreedToTerms(checked as boolean)
+              onCheckedChange={(checked) => {
+  setAgreedToTerms(checked as boolean)
                 if (errors.terms) {
                   setErrors((prev) => ({ ...prev, terms: &quot;&quot; }))
                 }

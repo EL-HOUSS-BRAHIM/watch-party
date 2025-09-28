@@ -40,9 +40,9 @@ function TwoFactorVerifyForm() {
     }
 
     // Start countdown timer;
-    const timer = setInterval(() => {}
-      setTimeRemaining((prev) => {}
-        if (prev <= 1) {
+    const timer = setInterval(() => {
+  setTimeRemaining((prev) => {
+  if (prev <= 1) {
           clearInterval(timer)
           router.push("/login?error=2fa-expired")
           return 0;
@@ -54,13 +54,13 @@ function TwoFactorVerifyForm() {
     return () => clearInterval(timer)
   }, [email, tempToken, router])
 
-  const formatTime = (seconds: number): string => {}
-    const minutes = Math.floor(seconds / 60)
+  const formatTime = (seconds: number): string => {
+  const minutes = Math.floor(seconds / 60)
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
   }
 
-  const handleCodeChange = (index: number, value: string) => {}
+  const handleCodeChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return;
     const newCode = verificationCode.split("")
     newCode[index] = value;
@@ -83,13 +83,13 @@ function TwoFactorVerifyForm() {
     }
   }
 
-  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {}
+  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
     if (e.key === "Backspace" && !verificationCode[index] && index > 0) {
       inputRefs.current[index - 1]?.focus()
     }
   }
 
-  const handlePaste = (e: React.ClipboardEvent) => {}
+  const handlePaste = (e: React.ClipboardEvent) => {
     e.preventDefault()
     const pastedData = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6)
     if (pastedData.length === 6) {
@@ -98,7 +98,7 @@ function TwoFactorVerifyForm() {
     }
   }
 
-  const handleVerify = async (code?: string) => {}
+  const handleVerify = async (code?: string) => {
     const codeToVerify = code || verificationCode;
     const backupCodeToVerify = useBackupCode ? backupCode : ""
 
@@ -246,8 +246,8 @@ function TwoFactorVerifyForm() {
                     {Array.from({ length: 6 }).map((_, index) => (
                       <Input;
                         key={index}
-                        ref={(el) => {}
-                          inputRefs.current[index] = el;
+                        ref={(el) => {
+  inputRefs.current[index] = el;
                         }}
                         type="text"
                         inputMode="numeric"
@@ -300,8 +300,8 @@ function TwoFactorVerifyForm() {
                     id="backupCode"
                     type="text"
                     value={backupCode}
-                    onChange={(e) => {}
-                      setBackupCode(e.target.value.toUpperCase())
+                    onChange={(e) => {
+  setBackupCode(e.target.value.toUpperCase())
                       if (errors.backup) setErrors((prev) => ({ ...prev, backup: &quot;&quot; }))
                     }}
                     className="text-center text-lg font-mono bg-white/5 border-white/20 text-white placeholder-gray-400 focus:border-orange-500/50"
@@ -335,8 +335,8 @@ function TwoFactorVerifyForm() {
             <div className="text-center">
               <button;
                 type="button"
-                onClick={() => {}
-                  setUseBackupCode(!useBackupCode)
+                onClick={() => {
+  setUseBackupCode(!useBackupCode)
                   setVerificationCode("")
                   setBackupCode("")
                   setErrors({})

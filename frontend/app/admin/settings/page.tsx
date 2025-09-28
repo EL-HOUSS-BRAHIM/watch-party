@@ -160,7 +160,7 @@ export default function AdminSettings() {
   );
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
 
-  const toggleFeatureFlag = (flagId: string) => {}
+  const toggleFeatureFlag = (flagId: string) => {
     setFeatureFlags(prev => prev.map(flag => 
       flag.id === flagId;
         ? {}
@@ -174,7 +174,7 @@ export default function AdminSettings() {
     setHasUnsavedChanges(true);
   };
 
-  const updateSystemSetting = (settingId: string, newValue: string | number | boolean) => {}
+  const updateSystemSetting = (settingId: string, newValue: string | number | boolean) => {
     setSystemSettings(prev => prev.map(setting => 
       setting.id === settingId;
         ? { ...setting, value: newValue }
@@ -183,10 +183,10 @@ export default function AdminSettings() {
     setHasUnsavedChanges(true);
   };
 
-  const saveChanges = () => {}
+  const saveChanges = () => {
     // Simulate API call to save changes;
-    setTimeout(() => {}
-      setHasUnsavedChanges(false);
+    setTimeout(() => {
+  setHasUnsavedChanges(false);
       toast({}
         title: "Settings Saved",
         description: "All configuration changes have been saved successfully.",
@@ -194,7 +194,7 @@ export default function AdminSettings() {
     }, 1000);
   };
 
-  const enableMaintenanceMode = () => {}
+  const enableMaintenanceMode = () => {
     setMaintenanceMode(true);
     setFeatureFlags(prev => prev.map(flag => 
       flag.id === 'maintenance_mode' 
@@ -208,7 +208,7 @@ export default function AdminSettings() {
     });
   };
 
-  const disableMaintenanceMode = () => {}
+  const disableMaintenanceMode = () => {
     setMaintenanceMode(false);
     setFeatureFlags(prev => prev.map(flag => 
       flag.id === 'maintenance_mode' 
@@ -221,7 +221,7 @@ export default function AdminSettings() {
     });
   };
 
-  const getCategoryIcon = (category: string) => {}
+  const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'features': return <Zap className="w-4 h-4 text-blue-500" />;
       case 'experiments': return <Palette className="w-4 h-4 text-purple-500" />;
@@ -231,7 +231,7 @@ export default function AdminSettings() {
     }
   };
 
-  const getCategoryColor = (category: string) => {}
+  const getCategoryColor = (category: string) => {
     switch (category) {
       case 'features': return 'bg-blue-100 text-blue-800 border-blue-200';
       case 'experiments': return 'bg-purple-100 text-purple-800 border-purple-200';
@@ -241,8 +241,8 @@ export default function AdminSettings() {
     }
   };
 
-  const groupedSettings = systemSettings.reduce((acc, setting) => {}
-    if (!acc[setting.category]) {
+  const groupedSettings = systemSettings.reduce((acc, setting) => {
+  if (!acc[setting.category]) {
       acc[setting.category] = [];
     }
     acc[setting.category].push(setting);
@@ -468,8 +468,8 @@ export default function AdminSettings() {
                           id={setting.id}
                           type={setting.type === 'number' ? 'number' : 'text'}
                           value={setting.value.toString()}
-                          onChange={(e) => {}
-                            const value = setting.type === 'number' 
+                          onChange={(e) => {
+  const value = setting.type === 'number' 
                               ? parseInt(e.target.value) || 0;
                               : e.target.value;
                             updateSystemSetting(setting.id, value);

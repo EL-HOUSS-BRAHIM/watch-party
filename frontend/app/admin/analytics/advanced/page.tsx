@@ -46,7 +46,7 @@ interface HeatmapCell {}
   label: string;
 }
 
-const extractNumber = (...values: unknown[]): number | undefined => {}
+const extractNumber = (...values: unknown[]): number | undefined => {
   for (const value of values) {
     if (value === undefined || value === null) continue;
     const numberValue = Number(value)
@@ -57,7 +57,7 @@ const extractNumber = (...values: unknown[]): number | undefined => {}
   return undefined;
 }
 
-const determineTrend = (change: number): 'up' | 'down' | 'stable' => {}
+const determineTrend = (change: number): 'up' | 'down' | 'stable' => {
   if (change > 0) return &apos;up&apos;
   if (change < 0) return 'down'
   return 'stable'
@@ -67,7 +67,7 @@ const buildMetrics = (
   dashboard: unknown,
   realtime: unknown,
   adminAnalytics: unknown,
-): AnalyticsMetric[] => {}
+): AnalyticsMetric[] => {
   const metrics: AnalyticsMetric[] = []
   const overview = dashboard?.overview ?? {}
   const growth = adminAnalytics?.growth ?? adminAnalytics?.deltas ?? {}
@@ -79,8 +79,8 @@ const buildMetrics = (
     changeCandidates: unknown[],
     period: 'day' | 'week' | 'month',
     format?: 'currency' | 'minutes',
-  ) => {}
-    const value = extractNumber(...valueCandidates)
+  ) => {
+  const value = extractNumber(...valueCandidates)
     if (value === undefined) {
       return;
     }
@@ -160,7 +160,7 @@ const buildMetrics = (
   return metrics;
 }
 
-const buildSegments = (adminAnalytics: unknown, dashboard: unknown): UserSegment[] => {}
+const buildSegments = (adminAnalytics: unknown, dashboard: unknown): UserSegment[] => {
   const source =
     (Array.isArray(adminAnalytics?.segments) && adminAnalytics.segments) ||
     (Array.isArray(adminAnalytics?.user_segments) && adminAnalytics.user_segments) ||
@@ -179,7 +179,7 @@ const buildSegments = (adminAnalytics: unknown, dashboard: unknown): UserSegment
     .filter((segment: UserSegment) => segment.count > 0 || segment.percentage > 0)
 }
 
-const buildRegions = (systemAnalytics: unknown, realtime: unknown): RegionData[] => {}
+const buildRegions = (systemAnalytics: unknown, realtime: unknown): RegionData[] => {
   const source =
     (Array.isArray(systemAnalytics?.regions) && systemAnalytics.regions) ||
     (Array.isArray(systemAnalytics?.geo_distribution) && systemAnalytics.geo_distribution) ||
@@ -195,15 +195,15 @@ const buildRegions = (systemAnalytics: unknown, realtime: unknown): RegionData[]
   }))
 }
 
-const buildDevices = (systemAnalytics: unknown, realtime: unknown): DeviceData[] => {}
+const buildDevices = (systemAnalytics: unknown, realtime: unknown): DeviceData[] => {
   const source =
     (Array.isArray(realtime?.device_breakdown) && realtime.device_breakdown) ||
     (Array.isArray(systemAnalytics?.device_breakdown) && systemAnalytics.device_breakdown) ||
     (Array.isArray(systemAnalytics?.devices) && systemAnalytics.devices) ||
     []
 
-  return source.map((device: unknown, index: number) => {}
-    const typeValue = String(device.device ?? device.type ?? 'desktop').toLowerCase()
+  return source.map((device: unknown, index: number) => {
+  const typeValue = String(device.device ?? device.type ?? 'desktop').toLowerCase()
     const type: DeviceData['type'] = typeValue.includes('mobile')
       ? 'mobile'
       : typeValue.includes('tablet')
@@ -229,7 +229,7 @@ const buildActivitySeries = (
   realtime: unknown,
   adminAnalytics: unknown,
   dashboard: unknown,
-): Array<{ timestamp: string; value: number }> => {}
+): Array<{ timestamp: string; value: number }> => {
   const source =
     (Array.isArray(realtime?.time_series) && realtime.time_series) ||
     (Array.isArray(adminAnalytics?.activity?.timeline) && adminAnalytics.activity.timeline) ||
@@ -257,7 +257,7 @@ const buildActivitySeries = (
     : []
 }
 
-const getDeviceIcon = (type: string) => {}
+const getDeviceIcon = (type: string) => {
   switch (type) {
     case 'desktop':
       return <ComputerDesktopIcon className="w-5 h-5" />
@@ -333,8 +333,8 @@ export default function AdvancedAnalyticsPage() {
     void loadAnalytics()
   }, [loadAnalytics])
 
-  const heatmapCells = useMemo<HeatmapCell[]>(() => {}
-    if (activitySeries.length === 0) {
+  const heatmapCells = useMemo<HeatmapCell[]>(() => {
+  if (activitySeries.length === 0) {
       return Array.from({ length: 168 }, (_, index) => ({}
         id: `cell-${index}`,
         value: 0,
@@ -344,8 +344,8 @@ export default function AdvancedAnalyticsPage() {
     }
 
     const maxValue = Math.max(...activitySeries.map((point) => point.value), 1)
-    return Array.from({ length: 168 }, (_, index) => {}
-      const point = activitySeries[Math.min(index, activitySeries.length - 1)]
+    return Array.from({ length: 168 }, (_, index) => {
+  const point = activitySeries[Math.min(index, activitySeries.length - 1)]
       const intensity = point ? Math.min(point.value / maxValue, 1) : 0;
       return {
         id: `cell-${index}`,
@@ -474,8 +474,8 @@ export default function AdvancedAnalyticsPage() {
               </div>
             )}
 
-            {metrics.map((metric) => {}
-              const formattedValue = metric.format === 'currency'
+            {metrics.map((metric) => {
+  const formattedValue = metric.format === 'currency'
                 ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(metric.value)
                 : metric.format === 'minutes'
                   ? `${metric.value.toFixed(1)} min`
@@ -726,3 +726,4 @@ export default function AdvancedAnalyticsPage() {
     </div>
   )
 }
+))))))))))))))))))))))))))))))))))))))))))))))))))

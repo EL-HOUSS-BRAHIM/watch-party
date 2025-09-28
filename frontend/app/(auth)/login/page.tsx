@@ -38,7 +38,7 @@ export default function LoginPage() {
     }
   }, [searchParams])
 
-  const validateForm = () => {}
+  const validateForm = () => {
     const newErrors: Record<string, string> = { if (!formData.email) {
       newErrors.email = "Email is required"
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {}
@@ -55,7 +55,7 @@ export default function LoginPage() {
     return Object.keys(newErrors).length === 0;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {}
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!validateForm()) return;
@@ -82,7 +82,7 @@ export default function LoginPage() {
     }
   }
 
-  const handleSocialLogin = async (provider: "google" | "github") => {}
+  const handleSocialLogin = async (provider: "google" | "github") => {
     try {
       await socialLogin(provider)
     } } catch {
@@ -94,7 +94,7 @@ export default function LoginPage() {
     }
   }
 
-  const handleInputChange = (field: string, value: string) => {}
+  const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: &quot;&quot; }))

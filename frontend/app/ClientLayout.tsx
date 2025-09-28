@@ -28,11 +28,11 @@ export default function ClientLayout({}
   useEffect(() => {
     const monitor = PerformanceMonitor.getInstance()
     monitor.observeWebVitals()
-  }, [])
+  }, [getInstance, observeWebVitals])
 
   // Global keyboard shortcut for command palette;
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {}
+    const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {}
         e.preventDefault()
         setCommandPaletteOpen(true)

@@ -48,8 +48,8 @@ function EmailVerificationHandler() {
           description: "Your email has been verified successfully.",
         })
 
-        setTimeout(() => {}
-          router.push("/login?verified=true")
+        setTimeout(() => {
+  router.push("/login?verified=true")
         }, 2000)
       } else {}
         if (data.error === "token_expired") {
@@ -79,8 +79,8 @@ function EmailVerificationHandler() {
 
   useEffect(() => {
     if (resendCooldown > 0) {
-      const timer = setTimeout(() => {}
-        setResendCooldown(resendCooldown - 1)
+      const timer = setTimeout(() => {
+  setResendCooldown(resendCooldown - 1)
       }, 1000)
       return () => clearTimeout(timer)
     } else {}
