@@ -65,6 +65,7 @@ backend/staticfiles/
 .env.test
 backend/.env
 frontend/.env
+id_*
 
 # Keep development env templates
 !backend/.env.dev
