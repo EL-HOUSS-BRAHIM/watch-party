@@ -7,6 +7,7 @@ set -e
 
 LIGHTSAIL_HOST="35.181.116.57"
 DEPLOY_USER="deploy"
+APP_DIR="/srv/watch-party"
 REPO_URL="https://github.com/EL-HOUSS-BRAHIM/watch-party.git"
 
 echo "=== CONNECTING TO LIGHTSAIL SERVER ==="
@@ -33,11 +34,11 @@ fi
 
 echo
 echo "2. Updating repository on server..."
-run_remote "cd /home/deploy/watch-party && git pull origin master"
+run_remote "cd $APP_DIR && git pull origin master"
 
 echo
 echo "3. Running diagnostics on server..."
-run_remote "cd /home/deploy/watch-party && chmod +x debug-server.sh && ./debug-server.sh" | tee server-diagnostics.log
+run_remote "cd $APP_DIR && chmod +x debug-server.sh && ./debug-server.sh" | tee server-diagnostics.log
 
 echo
 echo "4. Checking if AWS is configured..."
@@ -45,25 +46,25 @@ AWS_CONFIGURED=$(run_remote "aws sts get-caller-identity > /dev/null 2>&1 && ech
 
 if [ "$AWS_CONFIGURED" = "NO" ]; then
     echo "❌ AWS not configured. Configuring now..."
-    run_remote "cd /home/deploy/watch-party && chmod +x configure-aws.sh && ./configure-aws.sh"
+    run_remote "cd $APP_DIR && chmod +x configure-aws.sh && ./configure-aws.sh"
 else
     echo "✅ AWS already configured"
 fi
 
 echo
 echo "5. Checking Docker container status..."
-CONTAINER_STATUS=$(run_remote "cd /home/deploy/watch-party && sudo docker-compose ps --services --filter 'status=running' | wc -l")
+CONTAINER_STATUS=$(run_remote "cd $APP_DIR && docker-compose ps --services --filter 'status=running' | wc -l")
 echo "Running containers: $CONTAINER_STATUS"
 
 if [ "$CONTAINER_STATUS" -lt 5 ]; then
     echo "❌ Not all containers are running. Attempting restart..."
-    run_remote "cd /home/deploy/watch-party && sudo docker-compose down && sudo docker-compose up -d"
+    run_remote "cd $APP_DIR && docker-compose down && docker-compose up -d"
     
     echo "Waiting 30 seconds for containers to start..."
     sleep 30
     
     echo "Checking container status again..."
-    run_remote "cd /home/deploy/watch-party && sudo docker-compose ps"
+    run_remote "cd $APP_DIR && docker-compose ps"
 else
     echo "✅ All expected containers are running"
 fi
@@ -89,7 +90,7 @@ run_remote "sudo tail -10 /var/log/nginx/error.log" || echo "No nginx error log 
 
 echo
 echo "Recent application logs:"
-run_remote "cd /home/deploy/watch-party && sudo docker-compose logs --tail=20 backend" || echo "Cannot retrieve backend logs"
+run_remote "cd $APP_DIR && docker-compose logs --tail=20 backend" || echo "Cannot retrieve backend logs"
 
 echo
 echo "=== DIAGNOSIS SUMMARY ==="

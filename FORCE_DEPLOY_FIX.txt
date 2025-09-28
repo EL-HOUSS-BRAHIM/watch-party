@@ -1,0 +1,3 @@
+# Temporary file to force new deployment
+# This file will be deleted after successful deployment
+echo "Forcing new deployment to fix watchparty module error - $(date)"

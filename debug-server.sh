@@ -3,56 +3,57 @@
 echo "=== WATCH PARTY DEPLOYMENT DIAGNOSTICS ==="
 echo "Date: $(date)"
 echo "Server: $(hostname)"
+echo "Current directory: $(pwd)"
 echo
 
 echo "=== 1. DOCKER STATUS ==="
 echo "Docker service status:"
-sudo systemctl status docker --no-pager -l
+systemctl status docker --no-pager -l
 
 echo
 echo "Running containers:"
-sudo docker-compose ps
+docker-compose ps
 
 echo
 echo "All containers (including stopped):"
-sudo docker ps -a
+docker ps -a
 
 echo
 echo "=== 2. DOCKER COMPOSE LOGS ==="
 echo "Recent logs from all services:"
-sudo docker-compose logs --tail=50
+docker-compose logs --tail=50
 
 echo
 echo "=== 3. NGINX STATUS ==="
 echo "Nginx status:"
-sudo systemctl status nginx --no-pager -l
+systemctl status nginx --no-pager -l
 
 echo
 echo "Nginx configuration test:"
-sudo nginx -t
+nginx -t
 
 echo
 echo "=== 4. NETWORK STATUS ==="
 echo "Port 80 (HTTP):"
-sudo netstat -tlnp | grep :80
+netstat -tlnp | grep :80
 
 echo "Port 443 (HTTPS):"
-sudo netstat -tlnp | grep :443
+netstat -tlnp | grep :443
 
 echo "Port 8000 (Backend):"
-sudo netstat -tlnp | grep :8000
+netstat -tlnp | grep :8000
 
 echo "Port 3000 (Frontend):"
-sudo netstat -tlnp | grep :3000
+netstat -tlnp | grep :3000
 
 echo
 echo "=== 5. ENVIRONMENT FILES ==="
 echo "Backend .env file exists:"
-ls -la /home/deploy/watch-party/backend/.env
+ls -la backend/.env
 
 echo
 echo "Frontend .env.local file exists:"
-ls -la /home/deploy/watch-party/frontend/.env.local
+ls -la frontend/.env.local
 
 echo
 echo "=== 6. AWS CONFIGURATION ==="
