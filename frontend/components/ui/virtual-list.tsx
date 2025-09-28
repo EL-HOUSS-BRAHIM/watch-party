@@ -1,17 +1,16 @@
-"use client"
-
 import type React from "react"
 import { useState, useRef, useMemo } from "react"
 import { cn } from "@/lib/utils"
 
+"use client"
 
 interface VirtualListProps<T> {}
   items: T[]
-  itemHeight: number
-  containerHeight: number
-  renderItem: (item: T, index: number) => React.ReactNode
-  className?: string
-  overscan?: number
+  itemHeight: number;
+  containerHeight: number;
+  renderItem: (item: T, index: number) => React.ReactNode;
+  className?: string;
+  overscan?: number;
 }
 
 export function VirtualList<T>({}
@@ -34,7 +33,7 @@ export function VirtualList<T>({}
       index: startIndex + index,
     }))
 
-    return {
+    return {}
       visibleItems,
       totalHeight: items.length * itemHeight,
       offsetY: startIndex * itemHeight,
@@ -46,7 +45,7 @@ export function VirtualList<T>({}
   }
 
   return (
-    <div
+    <div;
       ref={scrollElementRef}
       className={cn("overflow-auto", className)}
       style={{ height: containerHeight }}

@@ -1,9 +1,7 @@
-"use client"
-
 import type React from "react"
-
 import { cn } from "@/lib/utils"
 
+"use client"
 
   ContextMenu,
   ContextMenuContent,
@@ -15,29 +13,29 @@ import { cn } from "@/lib/utils"
   ContextMenuTrigger,
 } from "@/components/ui/context-menu"
 interface MenuItem {}
-  id: string
-  label: string
-  icon?: React.ReactNode
-  shortcut?: string
-  action?: () => void
-  disabled?: boolean
-  destructive?: boolean
+  id: string;
+  label: string;
+  icon?: React.ReactNode;
+  shortcut?: string;
+  action?: () => void;
+  disabled?: boolean;
+  destructive?: boolean;
   submenu?: MenuItem[]
 }
 
 interface EnhancedContextMenuProps {}
-  children: React.ReactNode
+  children: React.ReactNode;
   items: (MenuItem | "separator")[]
-  className?: string
+  className?: string;
 }
 
 export function EnhancedContextMenu({ children, items, className }: EnhancedContextMenuProps) {}
   const renderMenuItem = (item: MenuItem | "separator", index: number) => {}
-    if (item === "separator") {
+    if (item === "separator") {}
       return <ContextMenuSeparator key={`separator-${index}`} />
     }
 
-    if (item.submenu) {
+    if (item.submenu) {}
       return (
         <ContextMenuSub key={item.id}>
           <ContextMenuSubTrigger className="flex items-center gap-2">
@@ -52,7 +50,7 @@ export function EnhancedContextMenu({ children, items, className }: EnhancedCont
     }
 
     return (
-      <ContextMenuItem
+      <ContextMenuItem;
         key={item.id}
         onClick={item.action}
         disabled={item.disabled}

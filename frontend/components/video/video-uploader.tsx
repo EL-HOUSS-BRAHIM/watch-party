@@ -1,5 +1,3 @@
-"use client"
-
 import { Check, CheckCircle, Cloud, File, Loader2, Upload, X } from "lucide-react"
 import type React from "react"
 import { useState, useRef, useCallback } from "react"
@@ -14,33 +12,35 @@ import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
 
+"use client"
+
 interface UploadFile {}
-  id: string
-  file: File
-  title: string
-  description: string
+  id: string;
+  file: File;
+  title: string;
+  description: string;
   privacy: "private" | "friends" | "public"
   tags: string[]
-  progress: number
+  progress: number;
   status: "pending" | "uploading" | "processing" | "completed" | "error"
-  error?: string
+  error?: string;
 }
 
 interface VideoUploaderProps {}
-  onUploadComplete?: (videoId: string) => void
-  maxFiles?: number
-  maxFileSize?: number // in bytes
-  className?: string
+  onUploadComplete?: (videoId: string) => void;
+  maxFiles?: number;
+  maxFileSize?: number // in bytes;
+  className?: string;
 }
 
 export function VideoUploader({onUploadComplete,
   maxFiles = 5,
-  maxFileSize = 2 * 1024 * 1024 * 1024, // 2GB
+  maxFileSize = 2 * 1024 * 1024 * 1024, // 2GB;
   className,
 }: VideoUploaderProps) {}
   const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([])
   const [isDragOver, setIsDragOver] = useState(false)
-  const [uploadSource, setUploadSource] = useState<"local" | "cloud">("local")
+  const [uploadSource, setUploadSource] = useState<"local" | "cloud">(&quot;local")
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { user } = useAuth()
   const { toast } = useToast()
@@ -58,38 +58,38 @@ export function VideoUploader({onUploadComplete,
     if (!supportedFormats.includes(file.type)) {}
       return "Unsupported file format. Please use MP4, AVI, MOV, WMV, FLV, WebM, or MKV."
     }
-    if (file.size > maxFileSize) {
+    if (file.size > maxFileSize) {}
       return `File size exceeds ${formatFileSize(maxFileSize)} limit.`
     }
-    return null
+    return null;
   }
 
   const addFiles = (files: FileList | File[]) => {}
     const fileArray = Array.from(files)
 
-    if (uploadFiles.length + fileArray.length > maxFiles) {
+    if (uploadFiles.length + fileArray.length > maxFiles) {}
       toast({title: "Too many files",
         description: `You can only upload ${maxFiles} files at once.`,
         variant: "destructive",
       })
-      return
+      return;
     }
 
     const newFiles: UploadFile[] = []
 
-    for (const file of fileArray) {
+    for (const file of fileArray) {}
       const error = validateFile(file)
-      if (error) {
+      if (error) {}
         toast({title: "Invalid file",
           description: `${file.name}: ${error}`,
           variant: "destructive",
         })
-        continue
+        continue;
       }
 
       const uploadFile: UploadFile = { id: `upload_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
         file,
-        title: file.name.replace(/\.[^/.]+$/, ""), // Remove extension
+        title: file.name.replace(/\.[^/.]+$/, ""), // Remove extension;
         description: "",
         privacy: "private",
         tags: [],
@@ -112,11 +112,11 @@ export function VideoUploader({onUploadComplete,
   }
 
   const uploadFile = async (uploadFile: UploadFile) => {}
-    try {
+    try {}
       updateFile(uploadFile.id, { status: "uploading", progress: 0 })
 
       const token = localStorage.getItem("accessToken")
-      if (!token) {
+      if (!token) {}
         throw new Error("Authentication required")
       }
 
@@ -129,59 +129,59 @@ export function VideoUploader({onUploadComplete,
 
       const xhr = new XMLHttpRequest()
 
-      // Track upload progress
+      // Track upload progress;
       xhr.upload.addEventListener('progress', (e) => {}
-        if (e.lengthComputable) {
+        if (e.lengthComputable) {}
           const progress = Math.round((e.loaded / e.total) * 100)
           updateFile(uploadFile.id, { progress })
         }
       })
 
-      // Handle successful upload
+      // Handle successful upload;
       xhr.addEventListener('load', () => {}
-        if (xhr.status === 200 || xhr.status === 201) {
-          try {
+        if (xhr.status === 200 || xhr.status === 201) {}
+          try {}
             const response = JSON.parse(xhr.responseText)
             updateFile(uploadFile.id, { status: 'processing', progress: 100 })
-            // Poll for processing status
+            // Poll for processing status;
             pollProcessingStatus(uploadFile.id, response.id)
             toast({title: "Upload completed",
               description: `${uploadFile.title} is now being processed.`,
             })
-          } catch (err) {
+          } catch {}
             console.error("Failed to parse upload response:", parseError)
             updateFile(uploadFile.id, { status: 'error', error: 'Invalid response from server' })
           }
         } else {}
           let errorMessage = 'Upload failed'
-          try {
+          try {}
             const errorResponse = JSON.parse(xhr.responseText)
-            errorMessage = errorResponse.error || errorResponse.message || errorMessage
-          } catch (err) {
-            // Use default error message
+            errorMessage = errorResponse.error || errorResponse.message || errorMessage;
+          } catch {}
+            // Use default error message;
           }
           updateFile(uploadFile.id, { status: 'error', error: errorMessage })
         }
       })
 
-      // Handle upload errors
+      // Handle upload errors;
       xhr.addEventListener('error', () => {}
         updateFile(uploadFile.id, { status: 'error', error: 'Network error during upload' })
       })
 
-      // Handle upload timeout
+      // Handle upload timeout;
       xhr.addEventListener('timeout', () => {}
         updateFile(uploadFile.id, { status: 'error', error: 'Upload timed out' })
       })
 
-      // Configure and send request
+      // Configure and send request;
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
       xhr.open('POST', `${apiUrl}/api/videos/upload/`)
       xhr.setRequestHeader('Authorization', `Bearer ${token}`)
-      xhr.timeout = 30 * 60 * 1000 // 30 minutes timeout
+      xhr.timeout = 30 * 60 * 1000 // 30 minutes timeout;
       xhr.send(formData)
 
-    } catch (err) {
+    } catch {}
       console.error("Upload error:", error)
       updateFile(uploadFile.id, { status: "error", error: error instanceof Error ? error.message : "Upload failed" })
       toast({title: "Upload failed",
@@ -193,26 +193,26 @@ export function VideoUploader({onUploadComplete,
 
   const pollProcessingStatus = async (uploadFileId: string, videoId: string) => {}
     const token = localStorage.getItem("accessToken")
-    if (!token) return
+    if (!token) return;
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-    const pollInterval = setInterval(async () => {
-      try {
+    const pollInterval = setInterval(async () => {}
+      try {}
         const response = await fetch(`${apiUrl}/api/videos/${videoId}/status/`, {}
           headers: {}
             Authorization: `Bearer ${token}`,
           },
         })
 
-        if (response.ok) {
+        if (response.ok) {}
           const data = await response.json()
-          if (data.status === 'completed') {
+          if (data.status === 'completed') {}
             updateFile(uploadFileId, { status: 'completed' })
             onUploadComplete?.(videoId)
             clearInterval(pollInterval)
             toast({title: "Processing completed",
               description: "Your video is now ready to view!",
             })
-          } else if (data.status === 'failed') {
+          } else if (data.status === 'failed') {}
             updateFile(uploadFileId, { status: 'error', error: 'Processing failed' })
             clearInterval(pollInterval)
             toast({title: "Processing failed",
@@ -220,24 +220,24 @@ export function VideoUploader({onUploadComplete,
               variant: "destructive",
             })
           }
-          // If status is still 'processing', continue polling
+          // If status is still 'processing', continue polling;
         }
-      } catch (err) {
+      } catch {}
         console.error("Failed to check processing status:", error)
-        // Continue polling - don't clear interval on temporary errors
+        // Continue polling - don't clear interval on temporary errors;
       }
-    }, 5000) // Poll every 5 seconds
-    // Stop polling after 30 minutes
+    }, 5000) // Poll every 5 seconds;
+    // Stop polling after 30 minutes;
     setTimeout(() => {}
       clearInterval(pollInterval)
       updateFile(uploadFileId, { status: 'error', error: 'Processing timeout' })
     }, 30 * 60 * 1000)
   }
 
-  const uploadAllFiles = async () => {
-    const pendingFiles = uploadFiles.filter((f) => f.status === "pending")
+  const uploadAllFiles = async () => {}
+    const pendingFiles = uploadFiles.filter((f) => f.status === &quot;pending")
 
-    for (const file of pendingFiles) {
+    for (const file of pendingFiles) {}
       await uploadFile(file)
     }
   }
@@ -256,23 +256,23 @@ export function VideoUploader({onUploadComplete,
     e.preventDefault()
     setIsDragOver(false)
 
-    const files = e.dataTransfer.files
-    if (files.length > 0) {
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {}
       addFiles(files)
     }
   }, [])
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {}
-    const files = e.target.files
-    if (files && files.length > 0) {
+    const files = e.target.files;
+    if (files && files.length > 0) {}
       addFiles(files)
     }
-    // Reset input value to allow selecting the same file again
+    // Reset input value to allow selecting the same file again;
     e.target.value = ""
   }
 
   const getStatusIcon = (status: UploadFile["status"]) => {}
-    switch (status) {
+    switch (status) {}
       case "pending":
         return <FileVideo className="w-5 h-5 text-muted-foreground" />
       case "uploading":
@@ -288,7 +288,7 @@ export function VideoUploader({onUploadComplete,
   }
 
   const getStatusText = (file: UploadFile) => {}
-    switch (file.status) {
+    switch (file.status) {}
       case "pending":
         return "Ready to upload"
       case "uploading":
@@ -314,21 +314,21 @@ export function VideoUploader({onUploadComplete,
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
-            <Button
+            <Button;
               variant={uploadSource === "local" ? "default" : "outline"}
-              onClick={() => setUploadSource("local")}
+              onClick={() => setUploadSource(&quot;local")}
               className="h-20 flex-col"
             >
               <HardDrive className="w-6 h-6 mb-2" />
-              Local Files
+              Local Files;
             </Button>
-            <Button
+            <Button;
               variant={uploadSource === "cloud" ? "default" : "outline"}
-              onClick={() => setUploadSource("cloud")}
+              onClick={() => setUploadSource(&quot;cloud")}
               className="h-20 flex-col"
             >
               <Cloud className="w-6 h-6 mb-2" />
-              Cloud Storage
+              Cloud Storage;
             </Button>
           </div>
         </CardContent>
@@ -339,7 +339,7 @@ export function VideoUploader({onUploadComplete,
           {/* File Drop Zone */}
           <Card>
             <CardContent className="p-0">
-              <div
+              <div;
                 className={cn(
                   "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
                   isDragOver ? "border-primary bg-primary/5" : "border-muted-foreground/25",
@@ -353,10 +353,10 @@ export function VideoUploader({onUploadComplete,
                 <h3 className="text-lg font-semibold mb-2">Drop your videos here</h3>
                 <p className="text-muted-foreground mb-4">or click to browse your files</p>
                 <Button onClick={() => fileInputRef.current?.click()}>Select Files</Button>
-                <input
+                <input;
                   ref={fileInputRef}
                   type="file"
-                  multiple
+                  multiple;
                   accept="video/*"
                   onChange={handleFileSelect}
                   className="hidden"
@@ -380,22 +380,22 @@ export function VideoUploader({onUploadComplete,
                     <CardDescription>{uploadFiles.length} file(s) selected</CardDescription>
                   </div>
                   <div className="space-x-2">
-                    <Button
+                    <Button;
                       variant="outline"
                       onClick={() => setUploadFiles([])}
-                      disabled={uploadFiles.some((f) => f.status === "uploading" || f.status === "processing")}
+                      disabled={uploadFiles.some((f) => f.status === &quot;uploading" || f.status === "processing")}
                     >
-                      Clear All
+                      Clear All;
                     </Button>
-                    <Button
+                    <Button;
                       onClick={uploadAllFiles}
                       disabled={}
                         uploadFiles.length === 0 ||
-                        uploadFiles.every((f) => f.status !== "pending") ||
+                        uploadFiles.every((f) => f.status !== &quot;pending") ||
                         uploadFiles.some((f) => f.status === "uploading" || f.status === "processing")
                       }
                     >
-                      Upload All
+                      Upload All;
                     </Button>
                   </div>
                 </div>
@@ -413,7 +413,7 @@ export function VideoUploader({onUploadComplete,
                           </p>
                         </div>
                       </div>
-                      <Button
+                      <Button;
                         variant="ghost"
                         size="icon"
                         onClick={() => removeFile(file.id)}
@@ -434,7 +434,7 @@ export function VideoUploader({onUploadComplete,
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
                         <div className="space-y-2">
                           <Label htmlFor={`title-${file.id}`}>Title</Label>
-                          <Input
+                          <Input;
                             id={`title-${file.id}`}
                             value={file.title}
                             onChange={(e) => updateFile(file.id, { title: e.target.value })}
@@ -443,7 +443,7 @@ export function VideoUploader({onUploadComplete,
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor={`privacy-${file.id}`}>Privacy</Label>
-                          <Select
+                          <Select;
                             value={file.privacy}
                             onValueChange={(value) => updateFile(file.id, { privacy: value as Record<string, unknown> })}
                           >
@@ -459,7 +459,7 @@ export function VideoUploader({onUploadComplete,
                         </div>
                         <div className="space-y-2 md:col-span-2">
                           <Label htmlFor={`description-${file.id}`}>Description</Label>
-                          <Textarea
+                          <Textarea;
                             id={`description-${file.id}`}
                             value={file.description}
                             onChange={(e) => updateFile(file.id, { description: e.target.value })}
@@ -469,12 +469,12 @@ export function VideoUploader({onUploadComplete,
                         </div>
                         <div className="space-y-2 md:col-span-2">
                           <Label htmlFor={`tags-${file.id}`}>Tags (comma separated)</Label>
-                          <Input
+                          <Input;
                             id={`tags-${file.id}`}
                             value={file.tags.join(", ")}
                             onChange={(e) =>
                               updateFile(file.id, {}
-                                tags: e.target.value
+                                tags: e.target.value;
                                   .split(",")
                                   .map((tag) => tag.trim())
                                   .filter(Boolean),
@@ -500,13 +500,13 @@ export function VideoUploader({onUploadComplete,
             <p className="text-muted-foreground mb-4">Connect your cloud storage accounts to upload videos directly</p>
             <div className="space-y-2">
               <Button variant="outline" className="w-full bg-transparent">
-                Connect Google Drive
+                Connect Google Drive;
               </Button>
               <Button variant="outline" className="w-full bg-transparent">
-                Connect Dropbox
+                Connect Dropbox;
               </Button>
               <Button variant="outline" className="w-full bg-transparent">
-                Connect OneDrive
+                Connect OneDrive;
               </Button>
             </div>
             <p className="text-sm text-muted-foreground mt-4">Cloud storage integration coming soon</p>

@@ -3,12 +3,12 @@ import { UserStats } from "@/components/profile/user-stats"
 
 interface PageProps {}
   params: Promise<{}
-    userId: string
+    userId: string;
   }>
 }
 
 const StatsPage = async ({ params }: PageProps) => {}
-  const { userId } = await params
+  const { userId } = await params;
   return <StatsPageClient userId={userId} />
 }
 
@@ -25,4 +25,4 @@ function StatsPageClient({ userId }: { userId: string }) {}
   )
 }
 
-export default StatsPage
+export default StatsPage;

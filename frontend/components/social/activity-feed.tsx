@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -11,41 +9,42 @@ import { usersAPI } from "@/lib/api"
 import { cn } from "@/lib/utils"
 import { formatDistanceToNow } from "date-fns"
 
+"use client"
 
 interface ActivityItem {}
-  id: string
+  id: string;
   type: "friend_added" | "party_joined" | "party_created" | "video_watched" | "achievement_unlocked" | "party_completed"
   user: {}
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
-    isPremium: boolean
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+    isPremium: boolean;
   }
-  timestamp: string
+  timestamp: string;
   data: {}
-    friendName?: string
-    partyName?: string
-    partyId?: string
-    videoTitle?: string
-    videoId?: string
-    achievementName?: string
-    achievementIcon?: string
-    participantCount?: number
-    duration?: number
+    friendName?: string;
+    partyName?: string;
+    partyId?: string;
+    videoTitle?: string;
+    videoId?: string;
+    achievementName?: string;
+    achievementIcon?: string;
+    participantCount?: number;
+    duration?: number;
   }
-  isPublic: boolean
+  isPublic: boolean;
   reactions?: {}
-    likes: number
-    hearts: number
-    userReacted?: "like" | "heart" | null
+    likes: number;
+    hearts: number;
+    userReacted?: "like" | "heart" | null;
   }
 }
 
 interface ActivityFeedProps {}
-  userId?: string // If provided, show activities for specific user
-  className?: string
+  userId?: string // If provided, show activities for specific user;
+  className?: string;
 }
 
 export default function ActivityFeed({ userId, className }: ActivityFeedProps) {}
@@ -56,48 +55,48 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
   const [hasMore, setHasMore] = useState(true)
   const { user } = useAuth()
 
-  useEffect(() => {
+  useEffect(() => {}
     loadActivities()
   }, [activeTab, userId])
 
   const loadActivities = async (pageNum = 1) => {}
-    try {
-      if (!usersAPI) {
+    try {}
+      if (!usersAPI) {}
         console.error('Users API not available')
-        return
+        return;
       }
 
-      const params: Record<string, string | number> = { page: pageNum,
+      const params: Record<string, string | number> = { page: pageNum,}
         filter: activeTab,
       }
 
-      if (userId) {
-        params.user_id = userId
+      if (userId) {}
+        params.user_id = userId;
       }
 
       const response = await usersAPI.getActivity(params)
-      if (pageNum === 1) {
+      if (pageNum === 1) {}
         setActivities(response.results || [])
       } else {}
         setActivities((prev) => [...prev, ...(response.results || [])])
       }
       setHasMore(!!response.next)
       setPage(pageNum)
-    } catch (err) {
+    } catch {}
       console.error("Failed to load activity feed:", error)
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
   const loadMore = () => {}
-    if (hasMore && !isLoading) {
+    if (hasMore && !isLoading) {}
       loadActivities(page + 1)
     }
   }
 
   const reactToActivity = async (activityId: string, reactionType: "like" | "heart") => {}
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/users/activity/${activityId}/react/`, {}
         method: "POST",
@@ -108,19 +107,19 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
         body: JSON.stringify({ reaction: reactionType }),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setActivities((prev) =>
           prev.map((activity) => (activity.id === activityId ? { ...activity, reactions: data.reactions } : activity)),
         )
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to react to activity:", error)
     }
   }
 
   const getActivityIcon = (type: string) => {}
-    switch (type) {
+    switch (type) {}
       case "friend_added":
         return <UserPlus className="h-5 w-5 text-blue-500" />
       case "party_joined":
@@ -141,7 +140,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
   const getActivityText = (activity: ActivityItem) => {}
     const userName = `${activity.user.firstName} ${activity.user.lastName}`
 
-    switch (activity.type) {
+    switch (activity.type) {}
       case "friend_added":
         return `${userName} became friends with ${activity.data.friendName}`
       case "party_joined":
@@ -160,18 +159,18 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
   }
 
   const getActivitySubtext = (activity: ActivityItem) => {}
-    switch (activity.type) {
+    switch (activity.type) {}
       case "party_joined":
       case "party_created":
-        return activity.data.participantCount
+        return activity.data.participantCount;
           ? `${activity.data.participantCount} participant${activity.data.participantCount !== 1 ? "s" : ""}`
-          : null
+          : null;
       case "video_watched":
-        return activity.data.duration ? `${Math.floor(activity.data.duration / 60)} minutes` : null
+        return activity.data.duration ? `${Math.floor(activity.data.duration / 60)} minutes` : null;
       case "party_completed":
-        return activity.data.duration ? `Watched for ${Math.floor(activity.data.duration / 60)} minutes` : null
+        return activity.data.duration ? `Watched for ${Math.floor(activity.data.duration / 60)} minutes` : null;
       default:
-        return null
+        return null;
     }
   }
 
@@ -214,8 +213,8 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
 
                   {activity.reactions && (
                     <div className="flex items-center gap-3">
-                      <button
-                        onClick={() => reactToActivity(activity.id, "like")}
+                      <button;
+                        onClick={() => reactToActivity(activity.id, &quot;like")}
                         className={cn(
                           "flex items-center gap-1 hover:text-blue-600 transition-colors",
                           activity.reactions.userReacted === "like" && "text-blue-600",
@@ -225,8 +224,8 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
                         {activity.reactions.likes > 0 && activity.reactions.likes}
                       </button>
 
-                      <button
-                        onClick={() => reactToActivity(activity.id, "heart")}
+                      <button;
+                        onClick={() => reactToActivity(activity.id, &quot;heart")}
                         className={cn(
                           "flex items-center gap-1 hover:text-red-600 transition-colors",
                           activity.reactions.userReacted === "heart" && "text-red-600",
@@ -254,13 +253,13 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
             {/* Party info for party activities */}
             {(activity.type === "party_joined" || activity.type === "party_created") && activity.data.partyId && (
               <div className="mt-2">
-                <Button
+                <Button;
                   variant="outline"
                   size="sm"
                   onClick={() => (window.location.href = `/watch/${activity.data.partyId}`)}
                 >
                   <Video className="mr-2 h-4 w-4" />
-                  View Party
+                  View Party;
                 </Button>
               </div>
             )}
@@ -304,7 +303,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
             <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium mb-2">No activity yet</h3>
             <p className="text-gray-600">
-              {userId
+              {userId;
                 ? "This user hasn't had any recent activity."
                 : "Follow some friends to see their activities here!"}
             </p>

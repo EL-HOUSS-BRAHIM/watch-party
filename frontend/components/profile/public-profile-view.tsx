@@ -1,5 +1,3 @@
-"use client"
-
 import { Calendar, Link, MapPin, MessageCircle, Share, User } from "lucide-react"
 import { useState, useEffect } from 'react'
 import Image from "next/image"
@@ -10,46 +8,48 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useApi } from '@/hooks/use-api'
 import { LoadingSpinner } from '@/components/ui/loading'
 
+"use client"
+
 interface PublicProfile {}
-  id: string
-  username: string
-  display_name: string
-  bio: string
-  avatar_url: string | null
-  banner_url: string | null
-  location: string | null
-  website: string | null
-  joined_date: string
-  is_verified: boolean
+  id: string;
+  username: string;
+  display_name: string;
+  bio: string;
+  avatar_url: string | null;
+  banner_url: string | null;
+  location: string | null;
+  website: string | null;
+  joined_date: string;
+  is_verified: boolean;
   privacy_settings: {}
-    show_email: boolean
-    show_stats: boolean
-    show_activity: boolean
-    show_friends: boolean
+    show_email: boolean;
+    show_stats: boolean;
+    show_activity: boolean;
+    show_friends: boolean;
   }
   stats: {}
-    total_watch_time: number
-    parties_hosted: number
-    friends_count: number
-    videos_uploaded: number
+    total_watch_time: number;
+    parties_hosted: number;
+    friends_count: number;
+    videos_uploaded: number;
   }
   badges: Array<{}
-    id: string
-    name: string
-    description: string
-    icon_url: string
-    earned_at: string
+    id: string;
+    name: string;
+    description: string;
+    icon_url: string;
+    earned_at: string;
   }>
   recent_activity: Array<{}
-    id: string
+    id: string;
     type: 'party_hosted' | 'video_uploaded' | 'achievement_earned'
-    description: string
-    created_at: string
+    description: string;
+    created_at: string;
   }>
 }
 
 interface PublicProfileViewProps {}
-  userId: string
+  userId: string;
 }
 
 export function PublicProfileView({ userId }: PublicProfileViewProps) {}
@@ -58,51 +58,51 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {}
   const [error, setError] = useState<string | null>(null)
   const { get, post } = useApi()
 
-  useEffect(() => {
+  useEffect(() => {}
     fetchProfile()
   }, [userId])
 
-  const fetchProfile = useCallback(async () => {
-    try {
+  const fetchProfile = useCallback(async () => {}
+    try {}
       setIsLoading(true)
       const response = await get(`/users/${userId}/public-profile/`)
       setProfile(response.data as PublicProfile)
-    } catch (err) {
+    } catch {}
       setError(err.response?.data?.message || 'Failed to load profile')
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }, [])
 
-  const handleSendFriendRequest = useCallback(async () => {
-    try {
+  const handleSendFriendRequest = useCallback(async () => {}
+    try {}
       await post('/friends/requests/', { recipient_id: userId })
-      // Show success toast
-    } catch (err) {
-      // Show error toast
+      // Show success toast;
+    } catch {}
+      // Show error toast;
     }
   }, [])
 
-  const handleShare = useCallback(async () => {
+  const handleShare = useCallback(async () => {}
     const url = `${window.location.origin}/profile/${userId}/public`
-    if (navigator.share) {
+    if (navigator.share) {}
       await navigator.share({title: `${profile?.display_name}'s Profile`,
-        url
+        url;
       })
     } else {}
       await navigator.clipboard.writeText(url)
-      // Show copied toast
+      // Show copied toast;
     }
   }, [])
 
   const formatWatchTime = (minutes: number) => {}
     if (minutes < 60) return `${minutes}m`
     const hours = Math.floor(minutes / 60)
-    const remainingMinutes = minutes % 60
+    const remainingMinutes = minutes % 60;
     return `${hours}h ${remainingMinutes}m`
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <LoadingSpinner size="lg" />
@@ -110,11 +110,11 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {}
     )
   }
 
-  if (error || !profile) {
+  if (error || !profile) {}
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
-          Profile Not Found
+          Profile Not Found;
         </h2>
         <p className="text-gray-600 dark:text-gray-400">
           {error || 'This profile is private or does not exist.'}
@@ -128,7 +128,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {}
       {/* Banner */}
       <div className="relative h-48 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg overflow-hidden">
         {profile.banner_url && (
-          <img
+          <img;
             src={profile.banner_url} 
             alt="Profile banner"
             className="w-full h-full object-cover"
@@ -180,14 +180,14 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {}
                 )}
 
                 {profile.website && (
-                  <a
+                  <a;
                     href={profile.website}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-1 hover:text-purple-600"
                   >
                     <LinkIcon className="w-4 h-4" />
-                    Website
+                    Website;
                   </a>
                 )}
               </div>
@@ -196,15 +196,15 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {}
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={handleShare}>
                 <Share2 className="w-4 h-4 mr-1" />
-                Share
+                Share;
               </Button>
               <Button variant="outline" size="sm">
                 <MessageCircle className="w-4 h-4 mr-1" />
-                Message
+                Message;
               </Button>
               <Button size="sm" onClick={handleSendFriendRequest}>
                 <UserPlus className="w-4 h-4 mr-1" />
-                Add Friend
+                Add Friend;
               </Button>
             </div>
           </div>
@@ -265,14 +265,14 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {}
             <CardHeader>
               <CardTitle>Achievements</CardTitle>
               <CardDescription>
-                Public achievements and badges earned
+                Public achievements and badges earned;
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {profile.badges.map((badge) => (
                   <div key={badge.id} className="flex items-center gap-3 p-3 rounded-lg border">
-                    <img
+                    <img;
                       src={badge.icon_url} 
                       alt={badge.name}
                       className="w-10 h-10"
@@ -315,7 +315,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {}
             <Card>
               <CardContent className="pt-6 text-center">
                 <p className="text-gray-600 dark:text-gray-400">
-                  Activity is private
+                  Activity is private;
                 </p>
               </CardContent>
             </Card>
@@ -338,7 +338,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {}
             <Card>
               <CardContent className="pt-6 text-center">
                 <p className="text-gray-600 dark:text-gray-400">
-                  Friends list is private
+                  Friends list is private;
                 </p>
               </CardContent>
             </Card>

@@ -1,5 +1,3 @@
-"use client"
-
 import { Bell, Calendar, Check, ChevronDown, Filter, Mail, Search, Settings, Star, Trash, User, Users, Zap } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
@@ -9,11 +7,11 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
 import { Checkbox } from "@/components/ui/checkbox"
-
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { formatDistanceToNow, isToday, isYesterday, format } from "date-fns"
 import { notificationsAPI } from "@/lib/api"
+
+"use client"
 
   DropdownMenu,
   DropdownMenuContent,
@@ -28,38 +26,38 @@ import { notificationsAPI } from "@/lib/api"
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 interface Notification {}
-  id: string
+  id: string;
   type: "friend_request" | "party_invite" | "message" | "achievement" | "store" | "system"
-  title: string
-  message: string
-  createdAt: string
-  readAt?: string
-  actionUrl?: string
-  actionData?: unknown
+  title: string;
+  message: string;
+  createdAt: string;
+  readAt?: string;
+  actionUrl?: string;
+  actionData?: unknown;
   priority: "low" | "normal" | "high"
   sender?: {}
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
   }
-  groupKey?: string
-  groupCount?: number
-  isGrouped?: boolean
+  groupKey?: string;
+  groupCount?: number;
+  isGrouped?: boolean;
 }
 
 interface NotificationGroup {}
-  key: string
-  type: string
+  key: string;
+  type: string;
   notifications: Notification[]
-  latestAt: string
-  unreadCount: number
-  isExpanded: boolean
+  latestAt: string;
+  unreadCount: number;
+  isExpanded: boolean;
 }
 
 interface NotificationGroupingProps {}
-  className?: string
+  className?: string;
 }
 
 export default function NotificationGrouping({ className }: NotificationGroupingProps) {}
@@ -77,21 +75,21 @@ export default function NotificationGrouping({ className }: NotificationGrouping
 
   const { toast } = useToast()
 
-  useEffect(() => {
+  useEffect(() => {}
     loadNotifications()
   }, [])
 
-  useEffect(() => {
+  useEffect(() => {}
     groupNotifications()
   }, [notifications, searchQuery, filters])
 
-  const loadNotifications = async () => {
-    try {
+  const loadNotifications = async () => {}
+    try {}
       const data = await notificationsAPI.getNotifications()
       const items = Array.isArray((data as Record<string, unknown>)?.results)
-        ? (data as Record<string, unknown>).results
+        ? (data as Record<string, unknown>).results;
         : Array.isArray((data as Record<string, unknown>)?.notifications)
-          ? (data as Record<string, unknown>).notifications
+          ? (data as Record<string, unknown>).notifications;
           : []
 
       const mapped = items.map((item: unknown) => ({}
@@ -104,7 +102,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
         actionUrl: item.action_url || item.actionUrl,
         actionData: item.action_data || item.actionData,
         priority: (item.priority || "normal") as Notification["priority"],
-        sender: item.sender
+        sender: item.sender;
           ? {}
               id: item.sender.id,
               username: item.sender.username,
@@ -118,21 +116,21 @@ export default function NotificationGrouping({ className }: NotificationGrouping
       }))
 
       setNotifications(mapped)
-    } catch (err) {
+    } catch {}
       console.error("Failed to load notifications:", error)
       toast({title: "Failed to load notifications",
         description: "Please try refreshing the page",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
   const groupNotifications = () => {}
-    let filtered = notifications
-    // Apply search filter
-    if (searchQuery) {
+    let filtered = notifications;
+    // Apply search filter;
+    if (searchQuery) {}
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(n => 
         n.title.toLowerCase().includes(query) ||
@@ -142,47 +140,47 @@ export default function NotificationGrouping({ className }: NotificationGrouping
       )
     }
 
-    // Apply type filter
-    if (filters.types.length > 0) {
+    // Apply type filter;
+    if (filters.types.length > 0) {}
       filtered = filtered.filter(n => filters.types.includes(n.type))
     }
 
-    // Apply priority filter
-    if (filters.priority.length > 0) {
+    // Apply priority filter;
+    if (filters.priority.length > 0) {}
       filtered = filtered.filter(n => filters.priority.includes(n.priority))
     }
 
-    // Apply read status filter
-    if (filters.readStatus !== "all") {
+    // Apply read status filter;
+    if (filters.readStatus !== "all") {}
       filtered = filtered.filter(n => 
-        filters.readStatus === "unread" ? !n.readAt : !!n.readAt
+        filters.readStatus === "unread" ? !n.readAt : !!n.readAt;
       )
     }
 
-    // Apply time range filter
-    if (filters.timeRange !== "all") {
+    // Apply time range filter;
+    if (filters.timeRange !== "all") {}
       const now = new Date()
       const cutoff = new Date()
-      switch (filters.timeRange) {
+      switch (filters.timeRange) {}
         case "today":
           cutoff.setHours(0, 0, 0, 0)
-          break
+          break;
         case "week":
           cutoff.setDate(now.getDate() - 7)
-          break
+          break;
         case "month":
           cutoff.setMonth(now.getMonth() - 1)
-          break
+          break;
       }
       filtered = filtered.filter(n => new Date(n.createdAt) >= cutoff)
     }
 
-    // Group similar notifications
+    // Group similar notifications;
     const groupMap = new Map<string, Notification[]>()
     filtered.forEach(notification => {}
-      // Create grouping key based on type and sender
-      let groupKey = notification.type
-      if (notification.sender) {
+      // Create grouping key based on type and sender;
+      let groupKey = notification.type;
+      if (notification.sender) {}
         groupKey += `_${notification.sender.id}`
       }
       if (!groupMap.has(groupKey)) {}
@@ -191,12 +189,12 @@ export default function NotificationGrouping({ className }: NotificationGrouping
       groupMap.get(groupKey)!.push(notification)
     })
 
-    // Convert to group objects
+    // Convert to group objects;
     const newGroups: NotificationGroup[] = Array.from(groupMap.entries()).map(([key, notifications]) => {}
       const sortedNotifications = notifications.sort((a, b) => 
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       )
-      return {
+      return {}
         key,
         type: notifications[0].type,
         notifications: sortedNotifications,
@@ -210,19 +208,19 @@ export default function NotificationGrouping({ className }: NotificationGrouping
   }
 
   const markAsRead = async (notificationIds: string[]) => {}
-    try {
+    try {}
       await Promise.all(notificationIds.map(id => notificationsAPI.markAsRead(id)))
       setNotifications(prev =>
         prev.map(n =>
           notificationIds.includes(n.id)
             ? { ...n, readAt: new Date().toISOString() }
-            : n
+            : n;
         )
       )
       toast({title: "Marked as read",
         description: `${notificationIds.length} notification(s) marked as read`,
       })
-    } catch (err) {
+    } catch {}
       console.error("Failed to mark as read:", error)
       toast({title: "Failed to mark as read",
         description: "Please try again",
@@ -232,18 +230,18 @@ export default function NotificationGrouping({ className }: NotificationGrouping
   }
 
   const markAsUnread = async (notificationIds: string[]) => {}
-    try {
+    try {}
       setNotifications(prev =>
         prev.map(n =>
           notificationIds.includes(n.id)
             ? { ...n, readAt: undefined }
-            : n
+            : n;
         )
       )
       toast({title: "Marked locally",
         description: "Notifications marked as unread locally. Backend does not support this action yet.",
       })
-    } catch (err) {
+    } catch {}
       console.error("Failed to mark as unread:", error)
       toast({title: "Failed to mark as unread",
         description: "Please try again",
@@ -253,14 +251,14 @@ export default function NotificationGrouping({ className }: NotificationGrouping
   }
 
   const deleteNotifications = async (notificationIds: string[]) => {}
-    try {
+    try {}
       await Promise.all(notificationIds.map(id => notificationsAPI.deleteNotification(id)))
       setNotifications(prev => prev.filter(n => !notificationIds.includes(n.id)))
       setSelectedNotifications(new Set())
       toast({title: "Notifications deleted",
         description: `${notificationIds.length} notification(s) deleted`,
       })
-    } catch (err) {
+    } catch {}
       console.error("Failed to delete notifications:", error)
       toast({title: "Failed to delete notifications",
         description: "Please try again",
@@ -272,9 +270,9 @@ export default function NotificationGrouping({ className }: NotificationGrouping
   const toggleGroupExpansion = (groupKey: string) => {}
     setGroups(prev => 
       prev.map(group => 
-        group.key === groupKey
+        group.key === groupKey;
           ? { ...group, isExpanded: !group.isExpanded }
-          : group
+          : group;
       )
     )
   }
@@ -282,12 +280,12 @@ export default function NotificationGrouping({ className }: NotificationGrouping
   const selectNotification = (notificationId: string, checked: boolean) => {}
     setSelectedNotifications(prev => {}
       const newSet = new Set(prev)
-      if (checked) {
+      if (checked) {}
         newSet.add(notificationId)
       } else {}
         newSet.delete(notificationId)
       }
-      return newSet
+      return newSet;
     })
   }
 
@@ -295,18 +293,18 @@ export default function NotificationGrouping({ className }: NotificationGrouping
     setSelectedNotifications(prev => {}
       const newSet = new Set(prev)
       group.notifications.forEach(n => {}
-        if (checked) {
+        if (checked) {}
           newSet.add(n.id)
         } else {}
           newSet.delete(n.id)
         }
       })
-      return newSet
+      return newSet;
     })
   }
 
   const getNotificationIcon = (type: string) => {}
-    switch (type) {
+    switch (type) {}
       case "friend_request": return <Users className="h-4 w-4" />
       case "party_invite": return <Calendar className="h-4 w-4" />
       case "message": return <MessageSquare className="h-4 w-4" />
@@ -330,12 +328,12 @@ export default function NotificationGrouping({ className }: NotificationGrouping
 
   const NotificationCard = ({ notification, isInGroup = false }: { notification: Notification; isInGroup?: boolean }) => {}
     const isSelected = selectedNotifications.has(notification.id)
-    const isUnread = !notification.readAt
+    const isUnread = !notification.readAt;
     return (
       <Card className={`transition-all ${isUnread ? 'border-l-4 border-l-primary' : ''} ${isSelected ? 'ring-2 ring-primary' : ''} ${isInGroup ? 'ml-4' : ''}`}>
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
-            <Checkbox
+            <Checkbox;
               checked={isSelected}
               onCheckedChange={(checked) => selectNotification(notification.id, checked as boolean)}
             />
@@ -377,7 +375,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
                   <span>{formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}</span>
                   {notification.actionUrl && (
                     <Button size="sm" variant="outline" className="h-6 text-xs">
-                      View
+                      View;
                     </Button>
                   )}
                 </div>
@@ -393,17 +391,17 @@ export default function NotificationGrouping({ className }: NotificationGrouping
     const isGroupSelected = group.notifications.every(n => selectedNotifications.has(n.id))
     const isSomeSelected = group.notifications.some(n => selectedNotifications.has(n.id))
 
-    if (group.notifications.length === 1) {
+    if (group.notifications.length === 1) {}
       return <NotificationCard notification={group.notifications[0]} />
     }
 
     return (
       <div className="space-y-2">
         <Collapsible open={group.isExpanded} onOpenChange={() => toggleGroupExpansion(group.key)}>
-          <Card className={`transition-all ${group.unreadCount > 0 ? 'border-l-4 border-l-primary' : ''}`}>
+          <Card className={`transition-all ${group.unreadCount > 0 ? &apos;border-l-4 border-l-primary' : ''}`}>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
-                <Checkbox
+                <Checkbox;
                   checked={isGroupSelected}
                   onCheckedChange={(checked) => selectAllInGroup(group, checked as boolean)}
                 />
@@ -423,7 +421,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
                       </h4>
                       {group.unreadCount > 0 && (
                         <Badge variant="secondary" className="text-xs mt-1">
-                          {group.unreadCount} unread
+                          {group.unreadCount} unread;
                         </Badge>
                       )}
                     </div>
@@ -445,7 +443,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
 
           <CollapsibleContent className="space-y-2">
             {group.notifications.map((notification) => (
-              <NotificationCard
+              <NotificationCard;
                 key={notification.id} 
                 notification={notification} 
                 isInGroup={true}
@@ -457,10 +455,10 @@ export default function NotificationGrouping({ className }: NotificationGrouping
     )
   }
 
-  const unreadCount = notifications.filter(n => !n.readAt).length
+  const unreadCount = notifications.filter(n => !n.readAt).length;
   const selectedArray = Array.from(selectedNotifications)
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className={className}>
         <Card>
@@ -482,7 +480,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
-              Notifications
+              Notifications;
               {unreadCount > 0 && (
                 <Badge variant="destructive">
                   {unreadCount}
@@ -493,29 +491,29 @@ export default function NotificationGrouping({ className }: NotificationGrouping
             {/* Bulk Actions */}
             {selectedArray.length > 0 && (
               <div className="flex items-center gap-2">
-                <Button
+                <Button;
                   size="sm"
                   variant="outline"
                   onClick={() => markAsRead(selectedArray)}
                 >
                   <CheckCheck className="h-4 w-4 mr-2" />
-                  Mark Read
+                  Mark Read;
                 </Button>
-                <Button
+                <Button;
                   size="sm"
                   variant="outline"
                   onClick={() => markAsUnread(selectedArray)}
                 >
                   <Mail className="h-4 w-4 mr-2" />
-                  Mark Unread
+                  Mark Unread;
                 </Button>
-                <Button
+                <Button;
                   size="sm"
                   variant="destructive"
                   onClick={() => deleteNotifications(selectedArray)}
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Delete
+                  Delete;
                 </Button>
               </div>
             )}
@@ -525,7 +523,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
           <div className="flex items-center gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
+              <Input;
                 placeholder="Search notifications..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -537,19 +535,19 @@ export default function NotificationGrouping({ className }: NotificationGrouping
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm">
                   <Filter className="h-4 w-4 mr-2" />
-                  Filters
+                  Filters;
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>Filter by Type</DropdownMenuLabel>
                 {["friend_request", "party_invite", "message", "achievement", "store", "system"].map((type) => (
-                  <DropdownMenuCheckboxItem
+                  <DropdownMenuCheckboxItem;
                     key={type}
                     checked={filters.types.includes(type)}
                     onCheckedChange={(checked) => {}
                       setFilters(prev => ({}
                         ...prev,
-                        types: checked
+                        types: checked;
                           ? [...prev.types, type]
                           : prev.types.filter(t => t !== type)
                       }))
@@ -561,19 +559,19 @@ export default function NotificationGrouping({ className }: NotificationGrouping
                 <DropdownMenuSeparator />
                 <DropdownMenuLabel>Filter by Priority</DropdownMenuLabel>
                 {["high", "normal", "low"].map((priority) => (
-                  <DropdownMenuCheckboxItem
+                  <DropdownMenuCheckboxItem;
                     key={priority}
                     checked={filters.priority.includes(priority)}
                     onCheckedChange={(checked) => {}
                       setFilters(prev => ({}
                         ...prev,
-                        priority: checked
+                        priority: checked;
                           ? [...prev.priority, priority]
                           : prev.priority.filter(p => p !== priority)
                       }))
                     }}
                   >
-                    {priority.charAt(0).toUpperCase() + priority.slice(1)} Priority
+                    {priority.charAt(0).toUpperCase() + priority.slice(1)} Priority;
                   </DropdownMenuCheckboxItem>
                 ))}
               </DropdownMenuContent>
@@ -618,7 +616,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {groups
+                  {groups;
                     .filter(group => group.unreadCount > 0)
                     .map((group) => (
                       <NotificationGroupCard key={group.key} group={group} />
@@ -635,7 +633,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {groups
+                  {groups;
                     .filter(group => group.unreadCount === 0)
                     .map((group) => (
                       <NotificationGroupCard key={group.key} group={group} />

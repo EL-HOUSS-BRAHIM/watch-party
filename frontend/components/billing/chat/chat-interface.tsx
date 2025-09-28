@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useRef, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,26 +8,27 @@ import { useSocket } from "@/contexts/socket-context"
 import { useAuth } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
 
+"use client"
 
 interface Message {}
-  id: string
+  id: string;
   user: {}
-    id: string
-    username: string
-    avatar?: string
+    id: string;
+    username: string;
+    avatar?: string;
     role: "user" | "admin" | "moderator"
   }
-  content: string
-  timestamp: string
+  content: string;
+  timestamp: string;
   type: "text" | "image" | "file"
   reactions?: { [emoji: string]: string[] }
-  isEdited?: boolean
-  replyTo?: string
+  isEdited?: boolean;
+  replyTo?: string;
 }
 
 interface ChatInterfaceProps {}
-  roomId: string
-  className?: string
+  roomId: string;
+  className?: string;
 }
 
 export default function ChatInterface({ roomId, className }: ChatInterfaceProps) {}
@@ -51,43 +50,43 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
   const { sendMessage, onMessage } = useSocket()
   const { user } = useAuth()
 
-  // Load chat history
-  useEffect(() => {
+  // Load chat history;
+  useEffect(() => {}
     loadChatHistory()
   }, [roomId])
 
-  // WebSocket message handler
-  useEffect(() => {
+  // WebSocket message handler;
+  useEffect(() => {}
     const unsubscribe = onMessage((message) => {}
-      switch (message.type) {
+      switch (message.type) {}
         case "chat_message":
           handleNewMessage(message.data)
-          break
+          break;
         case "typing":
           handleTypingIndicator(message.data)
-          break
+          break;
         case "message_reaction":
           handleMessageReaction(message.data)
-          break
+          break;
         case "message_edit":
           handleMessageEdit(message.data)
-          break
+          break;
         case "message_delete":
           handleMessageDelete(message.data)
-          break
+          break;
       }
     })
 
-    return unsubscribe
+    return unsubscribe;
   }, [onMessage])
 
-  // Auto-scroll to bottom
-  useEffect(() => {
+  // Auto-scroll to bottom;
+  useEffect(() => {}
     scrollToBottom()
   }, [messages])
 
-  const loadChatHistory = async () => {
-    try {
+  const loadChatHistory = async () => {}
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/chat/${roomId}/messages/?page=${page}`, {}
         headers: {}
@@ -95,13 +94,13 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setMessages((prev) => (page === 1 ? data.results : [...data.results, ...prev]))
         setHasMore(!!data.next)
         setIsLoading(false)
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to load chat history:", error)
       setIsLoading(false)
     }
@@ -113,7 +112,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
 
   const handleTypingIndicator = (data: { user_id: string; username: string; is_typing: boolean }) => {}
     setIsTyping((prev) => {}
-      if (data.is_typing) {
+      if (data.is_typing) {}
         return prev.includes(data.username) ? prev : [...prev, data.username]
       } else {}
         return prev.filter((username) => username !== data.username)
@@ -122,31 +121,31 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
   }
 
   const handleMessageReaction = (data: {}
-    message_id: string
-    emoji: string
-    user_id: string
+    message_id: string;
+    emoji: string;
+    user_id: string;
     action: "add" | "remove"
   }) => {}
     setMessages((prev) =>
       prev.map((msg) => {}
-        if (msg.id === data.message_id) {
+        if (msg.id === data.message_id) {}
           const reactions = { ...msg.reactions }
           if (!reactions[data.emoji]) reactions[data.emoji] = []
 
-          if (data.action === "add") {
+          if (data.action === "add") {}
             if (!reactions[data.emoji].includes(data.user_id)) {}
               reactions[data.emoji].push(data.user_id)
             }
           } else {}
             reactions[data.emoji] = reactions[data.emoji].filter((id) => id !== data.user_id)
-            if (reactions[data.emoji].length === 0) {
+            if (reactions[data.emoji].length === 0) {}
               delete reactions[data.emoji]
             }
           }
 
           return { ...msg, reactions }
         }
-        return msg
+        return msg;
       }),
     )
   }
@@ -161,23 +160,23 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
     setMessages((prev) => prev.filter((msg) => msg.id !== data.message_id))
   }
 
-  const sendChatMessage = async () => {
-    if (!newMessage.trim() || !user) return
+  const sendChatMessage = async () => {}
+    if (!newMessage.trim() || !user) return;
     const messageData = { room_id: roomId,
       content: newMessage.trim(),
       type: "text",
       reply_to: replyingTo?.id,
     }
 
-    if (editingMessage) {
-      // Edit existing message
+    if (editingMessage) {}
+      // Edit existing message;
       sendMessage("edit_message", {}
         message_id: editingMessage,
         content: newMessage.trim(),
       })
       setEditingMessage(null)
     } else {}
-      // Send new message
+      // Send new message;
       sendMessage("chat_message", messageData)
     }
 
@@ -192,7 +191,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
       is_typing: true,
     })
 
-    if (typingTimeoutRef.current) {
+    if (typingTimeoutRef.current) {}
       clearTimeout(typingTimeoutRef.current)
     }
 
@@ -239,13 +238,13 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
-  const filteredMessages = searchQuery
+  const filteredMessages = searchQuery;
     ? messages.filter(
         (msg) =>
           msg.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
           msg.user.username.toLowerCase().includes(searchQuery.toLowerCase()),
       )
-    : messages
+    : messages;
   const canModerate = user?.role === "admin" || user?.role === "moderator"
 
   return (
@@ -268,7 +267,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
       {/* Search bar */}
       {showSearch && (
         <div className="p-4 border-b">
-          <Input
+          <Input;
             placeholder="Search messages..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -313,7 +312,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                     {message.reactions && Object.keys(message.reactions).length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
                         {Object.entries(message.reactions).map(([emoji, userIds]) => (
-                          <Button
+                          <Button;
                             key={emoji}
                             variant="ghost"
                             size="sm"
@@ -336,31 +335,31 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                   {/* Message actions */}
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="flex items-center gap-1">
-                      <Button
+                      <Button;
                         variant="ghost"
                         size="sm"
-                        onClick={() => addReaction(message.id, "👍")}
+                        onClick={() => addReaction(message.id, &quot;👍")}
                         className="h-6 w-6 p-0"
                       >
                         <ThumbsUp className="h-3 w-3" />
                       </Button>
-                      <Button
+                      <Button;
                         variant="ghost"
                         size="sm"
-                        onClick={() => addReaction(message.id, "❤️")}
+                        onClick={() => addReaction(message.id, &quot;❤️")}
                         className="h-6 w-6 p-0"
                       >
                         <Heart className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => startReply(message)} className="h-6 w-6 p-0">
+                      <Button variant="ghost" size="sm" onClick={() => startReply(message)} className=&quot;h-6 w-6 p-0">"
                         <Reply className="h-3 w-3" />
                       </Button>
                       {(message.user.id === user?.id || canModerate) && (
                         <>
-                          <Button variant="ghost" size="sm" onClick={() => startEdit(message)} className="h-6 w-6 p-0">
+                          <Button variant="ghost" size="sm" onClick={() => startEdit(message)} className=&quot;h-6 w-6 p-0">"
                             <Edit className="h-3 w-3" />
                           </Button>
-                          <Button
+                          <Button;
                             variant="ghost"
                             size="sm"
                             onClick={() => deleteMessage(message.id)}
@@ -414,7 +413,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
             <Paperclip className="h-4 w-4" />
           </Button>
           <div className="flex-1 relative">
-            <Input
+            <Input;
               ref={inputRef}
               placeholder={editingMessage ? "Edit message..." : "Type a message..."}
               value={newMessage}
@@ -423,14 +422,14 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                 handleTyping()
               }}
               onKeyPress={(e) => {}
-                if (e.key === "Enter" && !e.shiftKey) {
+                if (e.key === "Enter" && !e.shiftKey) {}
                   e.preventDefault()
                   sendChatMessage()
                 }
               }}
             />
             {editingMessage && (
-              <Button
+              <Button;
                 variant="ghost"
                 size="sm"
                 className="absolute right-2 top-1/2 -translate-y-1/2"
@@ -439,7 +438,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                   setNewMessage("")
                 }}
               >
-                Cancel
+                Cancel;
               </Button>
             )}
           </div>

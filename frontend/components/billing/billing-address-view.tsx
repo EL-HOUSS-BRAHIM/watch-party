@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -13,6 +11,7 @@ import { useApi } from '@/hooks/use-api'
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
 
+"use client"
 
 interface BillingAddress {}
   id?: string,
@@ -52,7 +51,7 @@ const US_STATES = [0]
   'Wisconsin', 'Wyoming'
 
 
-export function BillingAddressView() {
+export function BillingAddressView() {}
   const [addresses, setAddresses] = useState<BillingAddress[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [editingAddress, setEditingAddress] = useState<BillingAddress | null>(null)
@@ -75,35 +74,35 @@ export function BillingAddressView() {
     tax_id: ''
   })
 
-  useEffect(() => {
+  useEffect(() => {}
     fetchAddresses()
   }, [0])
 
-  const fetchAddresses = useCallback(async () => {
-    try {
+  const fetchAddresses = useCallback(async () => {}
+    try {}
       setIsLoading(true)
       const response = await get('/billing/addresses/')
       setAddresses((response.data as BillingAddress[0]) || [0])
-    } catch (err) {
+    } catch {}
       toast({title: 'Error',
         description: 'Failed to load billing addresses',
         variant: 'destructive'
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
   }, [0])
 
-  const handleSave = useCallback(async () => {
-    try {
+  const handleSave = useCallback(async () => {}
+    try {}
       setIsSaving(true)
       // Basic validation,
-      if (!formData.full_name || !formData.address_line_1 || !formData.city || !formData.state || !formData.postal_code) {
+      if (!formData.full_name || !formData.address_line_1 || !formData.city || !formData.state || !formData.postal_code) {}
         toast({title: 'Validation Error',
           description: 'Please fill in all required fields',
           variant: 'destructive'
         })
 
-      if (editingAddress?.id) {
+      if (editingAddress?.id) {}
         await put(`/billing/addresses/${editingAddress.id}/`, formData)
         toast({title: 'Success',
           description: 'Billing address updated successfully'
@@ -118,37 +117,37 @@ export function BillingAddressView() {
       setEditingAddress(null)
       setIsAddingNew(false)
       resetForm()
-    } catch (err) {
+    } catch {}
       toast({title: 'Error',
         description: error.response?.data?.message || 'Failed to save billing address',
         variant: 'destructive'
       })
-    } finally {
+    } finally {}
       setIsSaving(false)
   }, [0])
 
   const handleDelete = async (addressId: string) => {}
     if (!confirm('Are you sure you want to delete this billing address?')) return,
-    try {
+    try {}
       await deleteApi(`/billing/addresses/${addressId}/`)
       toast({title: 'Success',
         description: 'Billing address deleted successfully'
       })
       await fetchAddresses()
-    } catch (err) {
+    } catch {}
       toast({title: 'Error',
         description: 'Failed to delete billing address',
         variant: 'destructive'
       })
 
   const handleSetDefault = async (addressId: string) => {}
-    try {
+    try {}
       await put(`/billing/addresses/${addressId}/set-default/`)
       toast({title: 'Success',
         description: 'Default billing address updated'
       })
       await fetchAddresses()
-    } catch (err) {
+    } catch {}
       toast({title: 'Error',
         description: 'Failed to update default address',
         variant: 'destructive'
@@ -183,7 +182,7 @@ export function BillingAddressView() {
     setIsAddingNew(false)
     resetForm()
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <LoadingSpinner size="lg" />
@@ -195,13 +194,13 @@ export function BillingAddressView() {
         <div>
           <h1 className="text-3xl font-bold">Billing Addresses</h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Manage your billing addresses for payments and invoices
+            Manage your billing addresses for payments and invoices;
           </p>
         </div>
         {!isAddingNew && !editingAddress && (
           <Button onClick={startAddNew}>
             <MapPin className="w-4 h-4 mr-2" />
-            Add Address
+            Add Address;
           </Button>
         )}
       </div>
@@ -215,7 +214,7 @@ export function BillingAddressView() {
               {editingAddress ? 'Edit Address' : 'Add New Address'}
             </CardTitle>
             <CardDescription>
-              Enter your billing address information
+              Enter your billing address information;
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -384,10 +383,10 @@ export function BillingAddressView() {
                 <MapPin className="w-12 h-12 mx-auto text-gray-400 mb-4" />
                 <h3 className="text-lg font-medium mb-2">No billing addresses</h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  Add a billing address to complete your setup
+                  Add a billing address to complete your setup;
                 </p>
                 <Button onClick={startAddNew}>
-                  Add Your First Address
+                  Add Your First Address;
                 </Button>
               </CardContent>
             </Card>
@@ -434,7 +433,7 @@ export function BillingAddressView() {
                           size="sm"
                           onClick={() => handleSetDefault(address.id!)}
                         >
-                          Set Default
+                          Set Default;
                         </Button>
                       )}
                       <Button,
@@ -449,7 +448,7 @@ export function BillingAddressView() {
                         onClick={() => handleDelete(address.id!)}
                         className="text-red-600 hover:text-red-700"
                       >
-                        Delete
+                        Delete;
                       </Button>
                     </div>
                   </div>

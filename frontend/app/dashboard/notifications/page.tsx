@@ -1,5 +1,3 @@
-"use client"
-
 import { Bell, Calendar, Check, Heart, Info, Loader2, MessageCircle, MoreHorizontal, Refresh, Settings, Star, Trash, User, Video } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { useRouter } from "next/navigation"
@@ -17,8 +15,10 @@ import type { Notification as APINotification } from "@/lib/api/types"
 import { formatDistanceToNow } from "date-fns"
 import { CheckedState } from "@radix-ui/react-checkbox"
 
+"use client"
+
 interface Notification {}
-  id: string
+  id: string;
   type:
     | "friend_request"
     | "friend_accepted"
@@ -30,46 +30,46 @@ interface Notification {}
     | "system"
     | "achievement"
     | "message"
-  title: string
-  message: string
-  is_read: boolean
-  created_at: string
+  title: string;
+  message: string;
+  is_read: boolean;
+  created_at: string;
   action_data?: {}
-    userId?: string
-    userName?: string
-    userAvatar?: string
-    partyId?: string
-    partyName?: string
-    videoId?: string
-    videoTitle?: string
-    requestId?: string
-    achievementId?: string
-    messageId?: string
-    url?: string
+    userId?: string;
+    userName?: string;
+    userAvatar?: string;
+    partyId?: string;
+    partyName?: string;
+    videoId?: string;
+    videoTitle?: string;
+    requestId?: string;
+    achievementId?: string;
+    messageId?: string;
+    url?: string;
   }
-  action_url?: string
-  requiresAction?: boolean
+  action_url?: string;
+  requiresAction?: boolean;
   actionButtons?: Array<{}
-    label: string
-    action: string
+    label: string;
+    action: string;
     variant?: "default" | "destructive" | "outline"
   }>
 }
 
 interface NotificationStats {}
-  total: number
-  unread: number
-  today: number
-  thisWeek: number
+  total: number;
+  unread: number;
+  today: number;
+  thisWeek: number;
   byCategory: {}
-    social: number
-    content: number
-    system: number
-    achievement: number
+    social: number;
+    content: number;
+    system: number;
+    achievement: number;
   }
 }
 
-export default function NotificationsPage() {
+export default function NotificationsPage() {}
   const { user } = useAuth()
   const { toast } = useToast()
   const router = useRouter()
@@ -94,30 +94,30 @@ export default function NotificationsPage() {
     },
   })
 
-  useEffect(() => {
+  useEffect(() => {}
     loadNotifications()
   }, [])
 
-  useEffect(() => {
+  useEffect(() => {}
     filterNotifications()
   }, [notifications, activeTab, filterType, showUnreadOnly])
 
-  const loadNotifications = async () => {
+  const loadNotifications = async () => {}
     setIsLoading(true)
-    try {
+    try {}
       const data = await notificationsAPI.getNotifications()
       setNotifications((data.results || []) as Notification[])
       setStats(prev => ({}
         ...prev,
-        unread: data.unread_count || 0
+        unread: data.unread_count || 0;
       }))
-    } catch (err) {
+    } catch {}
       console.error("Failed to load notifications:", error)
       toast({title: "Error",
         description: "Failed to load notifications. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
@@ -125,20 +125,20 @@ export default function NotificationsPage() {
   const filterNotifications = () => {}
     let filtered = [...notifications]
 
-    // Tab filter
-    if (activeTab === "unread") {
+    // Tab filter;
+    if (activeTab === "unread") {}
       filtered = filtered.filter((n) => !n.is_read)
-    } else if (activeTab === "actions") {
+    } else if (activeTab === "actions") {}
       filtered = filtered.filter((n) => n.requiresAction && !n.is_read)
     }
 
-    // Category filter - Since we don't have category in API response, skip this filter
-    // if (filterType !== "all") {
+    // Category filter - Since we don't have category in API response, skip this filter;
+    // if (filterType !== "all") {}
     //   filtered = filtered.filter((n) => n.category === filterType)
     // }
 
-    // Unread only filter
-    if (showUnreadOnly) {
+    // Unread only filter;
+    if (showUnreadOnly) {}
       filtered = filtered.filter((n) => !n.is_read)
     }
 
@@ -146,24 +146,24 @@ export default function NotificationsPage() {
   }
 
   const markAsRead = async (notificationId: string) => {}
-    try {
+    try {}
       await notificationsAPI.markAsRead(notificationId)
       setNotifications((prev) => prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n)))
       setStats((prev) => ({ ...prev, unread: Math.max(0, prev.unread - 1) }))
-    } catch (err) {
+    } catch {}
       console.error("Failed to mark notification as read:", error)
     }
   }
 
-  const markAllAsRead = async () => {
-    try {
+  const markAllAsRead = async () => {}
+    try {}
       await notificationsAPI.markAllAsRead()
       setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })))
       setStats((prev) => ({ ...prev, unread: 0 }))
       toast({title: "All Marked as Read",
         description: "All notifications have been marked as read.",
       })
-    } catch (err) {
+    } catch {}
       console.error("Failed to mark all as read:", error)
       toast({title: "Error",
         description: "Failed to mark all notifications as read.",
@@ -173,7 +173,7 @@ export default function NotificationsPage() {
   }
 
   const deleteNotification = async (notificationId: string) => {}
-    try {
+    try {}
       await notificationsAPI.deleteNotification(notificationId)
       setNotifications((prev) => prev.filter((n) => n.id !== notificationId))
       setStats((prev) => ({}
@@ -181,7 +181,7 @@ export default function NotificationsPage() {
         total: prev.total - 1,
         unread: prev.unread - (notifications.find((n) => n.id === notificationId)?.is_read ? 0 : 1),
       }))
-    } catch (err) {
+    } catch {}
       console.error("Failed to delete notification:", error)
       toast({title: "Error",
         description: "Failed to delete notification.",
@@ -190,11 +190,11 @@ export default function NotificationsPage() {
     }
   }
 
-  const deleteSelected = async () => {
-    if (selectedNotifications.length === 0) return
-    try {
+  const deleteSelected = async () => {}
+    if (selectedNotifications.length === 0) return;
+    try {}
       await notificationsAPI.bulkDelete(selectedNotifications)
-      const unreadCount = selectedNotifications.filter((id) => !notifications.find((n) => n.id === id)?.is_read).length
+      const unreadCount = selectedNotifications.filter((id) => !notifications.find((n) => n.id === id)?.is_read).length;
       setNotifications((prev) => prev.filter((n) => !selectedNotifications.includes(n.id)))
       setStats((prev) => ({}
         ...prev,
@@ -206,7 +206,7 @@ export default function NotificationsPage() {
       toast({title: "Notifications Deleted",
         description: `${selectedNotifications.length} notifications deleted.`,
       })
-    } catch (err) {
+    } catch {}
       console.error("Failed to delete selected notifications:", error)
       toast({title: "Error",
         description: "Failed to delete selected notifications.",
@@ -216,10 +216,10 @@ export default function NotificationsPage() {
   }
 
   const handleNotificationAction = async (notification: Notification, action: string) => {}
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
 
-      if (notification.type === "friend_request") {
+      if (notification.type === "friend_request") {}
         const endpoint =
           action === "accept"
             ? `/api/users/friends/${notification.action_data?.requestId}/accept/`
@@ -232,18 +232,18 @@ export default function NotificationsPage() {
           },
         })
 
-        if (response.ok) {
+        if (response.ok) {}
           markAsRead(notification.id)
           toast({title: "Success",
             description: `Friend request ${action}ed.`,
           })
         }
-      } else if (notification.type === "party_invite" && action === "view") {
+      } else if (notification.type === "party_invite" && action === "view") {}
         router.push(`/watch/${notification.action_data?.partyId}`)
-      } else if (notification.action_url) {
+      } else if (notification.action_url) {}
         router.push(notification.action_url)
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to handle notification action:", error)
       toast({title: "Error",
         description: "Failed to process action.",
@@ -253,7 +253,7 @@ export default function NotificationsPage() {
   }
 
   const getNotificationIcon = (type: string) => {}
-    switch (type) {
+    switch (type) {}
       case "friend_request":
       case "friend_accepted":
         return <UserPlus className="w-5 h-5 text-blue-500" />
@@ -278,8 +278,8 @@ export default function NotificationsPage() {
   }
 
   const getPriorityBadge = (priority: string) => {}
-    // Priority not available in API response, return null
-    return null
+    // Priority not available in API response, return null;
+    return null;
   }
 
   const toggleNotificationSelection = (notificationId: string) => {}
@@ -292,14 +292,14 @@ export default function NotificationsPage() {
     const visibleIds = filteredNotifications.map((n) => n.id)
     const allSelected = visibleIds.every((id) => selectedNotifications.includes(id))
 
-    if (allSelected) {
+    if (allSelected) {}
       setSelectedNotifications((prev) => prev.filter((id) => !visibleIds.includes(id)))
     } else {}
       setSelectedNotifications((prev) => [...new Set([...prev, ...visibleIds])])
     }
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-4xl mx-auto">
@@ -317,13 +317,13 @@ export default function NotificationsPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className="p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">"
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <Bell className="h-8 w-8" />
-              Notifications
+              Notifications;
               {stats.unread > 0 && (
                 <Badge variant="destructive" className="h-6 text-sm">
                   {stats.unread}
@@ -335,17 +335,17 @@ export default function NotificationsPage() {
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={loadNotifications}>
               <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh
+              Refresh;
             </Button>
             {stats.unread > 0 && (
               <Button onClick={markAllAsRead}>
                 <CheckCheck className="h-4 w-4 mr-2" />
-                Mark All Read
+                Mark All Read;
               </Button>
             )}
-            <Button variant="outline" onClick={() => router.push("/dashboard/settings")}>
+            <Button variant="outline" onClick={() => router.push(&quot;/dashboard/settings")}>
               <Settings className="h-4 w-4 mr-2" />
-              Settings
+              Settings;
             </Button>
           </div>
         </div>
@@ -395,7 +395,7 @@ export default function NotificationsPage() {
             </Select>
 
             <div className="flex items-center space-x-2">
-              <Checkbox
+              <Checkbox;
                 id="unread-only" 
                 checked={showUnreadOnly} 
                 onCheckedChange={(checked: CheckedState) => {}
@@ -403,7 +403,7 @@ export default function NotificationsPage() {
                 }} 
               />
               <label htmlFor="unread-only" className="text-sm">
-                Unread only
+                Unread only;
               </label>
             </div>
           </div>
@@ -413,10 +413,10 @@ export default function NotificationsPage() {
               <span className="text-sm text-muted-foreground">{selectedNotifications.length} selected</span>
               <Button variant="outline" size="sm" onClick={deleteSelected}>
                 <Trash2 className="w-4 h-4 mr-1" />
-                Delete
+                Delete;
               </Button>
               <Button variant="outline" size="sm" onClick={() => setSelectedNotifications([])}>
-                Clear
+                Clear;
               </Button>
             </div>
           )}
@@ -451,13 +451,13 @@ export default function NotificationsPage() {
               <>
                 {/* Select All */}
                 <div className="flex items-center gap-2 p-2">
-                  <Checkbox
+                  <Checkbox;
                     checked={}
                       filteredNotifications.length > 0 &&
                       filteredNotifications.every((n) => selectedNotifications.includes(n.id))
                     }
                     onCheckedChange={(checked: CheckedState) => {}
-                      if (checked === true) {
+                      if (checked === true) {}
                         const visibleIds = filteredNotifications.map((n) => n.id)
                         setSelectedNotifications((prev) => [...new Set([...prev, ...visibleIds])])
                       } else {}
@@ -472,7 +472,7 @@ export default function NotificationsPage() {
                 {/* Notifications List */}
                 <div className="space-y-3">
                   {filteredNotifications.map((notification) => (
-                    <Card
+                    <Card;
                       key={notification.id}
                       className={`transition-all hover:shadow-md ${}
                         !notification.is_read ? "border-blue-200 bg-blue-50" : "hover:bg-gray-50"
@@ -481,7 +481,7 @@ export default function NotificationsPage() {
                       <CardContent className="p-4">
                         <div className="flex items-start gap-3">
                           {/* Selection Checkbox */}
-                          <Checkbox
+                          <Checkbox;
                             checked={selectedNotifications.includes(notification.id)}
                             onCheckedChange={() => toggleNotificationSelection(notification.id)}
                           />
@@ -523,15 +523,15 @@ export default function NotificationsPage() {
                                     {!notification.is_read && (
                                       <DropdownMenuItem onClick={() => markAsRead(notification.id)}>
                                         <Check className="w-4 h-4 mr-2" />
-                                        Mark as Read
+                                        Mark as Read;
                                       </DropdownMenuItem>
                                     )}
-                                    <DropdownMenuItem
+                                    <DropdownMenuItem;
                                       onClick={() => deleteNotification(notification.id)}
                                       className="text-destructive"
                                     >
                                       <Trash2 className="w-4 h-4 mr-2" />
-                                      Delete
+                                      Delete;
                                     </DropdownMenuItem>
                                   </DropdownMenuContent>
                                 </DropdownMenu>
@@ -544,7 +544,7 @@ export default function NotificationsPage() {
                             {notification.requiresAction && !notification.is_read && notification.actionButtons && (
                               <div className="flex items-center gap-2">
                                 {notification.actionButtons.map((button, index) => (
-                                  <Button
+                                  <Button;
                                     key={index}
                                     size="sm"
                                     variant={button.variant || "default"}
@@ -561,25 +561,25 @@ export default function NotificationsPage() {
                               <div className="flex items-center gap-2">
                                 {notification.type === "friend_request" && (
                                   <>
-                                    <Button size="sm" onClick={() => handleNotificationAction(notification, "accept")}>
-                                      Accept
+                                    <Button size="sm" onClick={() => handleNotificationAction(notification, &quot;accept")}>
+                                      Accept;
                                     </Button>
-                                    <Button
+                                    <Button;
                                       variant="outline"
                                       size="sm"
-                                      onClick={() => handleNotificationAction(notification, "decline")}
+                                      onClick={() => handleNotificationAction(notification, &quot;decline")}
                                     >
-                                      Decline
+                                      Decline;
                                     </Button>
                                   </>
                                 )}
                                 {(notification.type === "party_invite" || notification.action_url) && (
-                                  <Button
+                                  <Button;
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => handleNotificationAction(notification, "view")}
+                                    onClick={() => handleNotificationAction(notification, &quot;view")}
                                   >
-                                    View
+                                    View;
                                   </Button>
                                 )}
                               </div>

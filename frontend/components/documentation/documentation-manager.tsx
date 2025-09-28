@@ -1,5 +1,3 @@
-"use client"
-
 import { AlertTriangle, Check, CheckCircle, Clock, Download, Edit, Eye, File, FileText, Plus, Search, Settings, Trash } from "lucide-react"
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,9 +8,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
+
+"use client"
 
   Dialog,
   DialogContent,
@@ -22,25 +21,25 @@ import { ScrollArea } from "@/components/ui/scroll-area"
   DialogTitle,
 } from "@/components/ui/dialog"
 interface DocumentationItem {}
-  id: string
-  title: string
+  id: string;
+  title: string;
   type: "guide" | "api" | "tutorial" | "reference" | "changelog"
-  category: string
+  category: string;
   status: "draft" | "review" | "published" | "archived"
-  author: string
-  lastModified: string
-  version: string
-  views: number
-  content: string
+  author: string;
+  lastModified: string;
+  version: string;
+  views: number;
+  content: string;
   tags: string[]
 }
 
 interface DocumentationCategory {}
-  id: string
-  name: string
-  description: string
-  itemCount: number
-  color: string
+  id: string;
+  name: string;
+  description: string;
+  itemCount: number;
+  color: string;
 }
 
 const mockDocuments: DocumentationItem[] = []
@@ -116,7 +115,7 @@ const mockCategories: DocumentationCategory[] = []
   },
 ]
 
-export function DocumentationManager() {
+export function DocumentationManager() {}
   const [documents, setDocuments] = useState<DocumentationItem[]>(mockDocuments)
   const [categories, setCategories] = useState<DocumentationCategory[]>(mockCategories)
   const [selectedDocument, setSelectedDocument] = useState<DocumentationItem | null>(null)
@@ -124,9 +123,9 @@ export function DocumentationManager() {
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false)
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const [filterType, setFilterType] = useState<string>("all")
-  const [filterStatus, setFilterStatus] = useState<string>("all")
-  const [filterCategory, setFilterCategory] = useState<string>("all")
+  const [filterType, setFilterType] = useState<string>(&quot;all")
+  const [filterStatus, setFilterStatus] = useState<string>(&quot;all")
+  const [filterCategory, setFilterCategory] = useState<string>(&quot;all")
 
   const createDocument = () => {}
     const newDocument: DocumentationItem = { id: Date.now().toString(),
@@ -151,7 +150,7 @@ export function DocumentationManager() {
   }
 
   const getStatusColor = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case "published":
         return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
       case "review":
@@ -166,7 +165,7 @@ export function DocumentationManager() {
   }
 
   const getTypeIcon = (type: string) => {}
-    switch (type) {
+    switch (type) {}
       case "guide":
         return <Book className="h-4 w-4" />
       case "api":
@@ -188,15 +187,15 @@ export function DocumentationManager() {
       doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doc.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doc.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-    const matchesType = filterType === "all" || doc.type === filterType
-    const matchesStatus = filterStatus === "all" || doc.status === filterStatus
-    const matchesCategory = filterCategory === "all" || doc.category === filterCategory
-    return matchesSearch && matchesType && matchesStatus && matchesCategory
+    const matchesType = filterType === "all" || doc.type === filterType;
+    const matchesStatus = filterStatus === "all" || doc.status === filterStatus;
+    const matchesCategory = filterCategory === "all" || doc.category === filterCategory;
+    return matchesSearch && matchesType && matchesStatus && matchesCategory;
   })
 
-  const totalDocuments = documents.length
-  const publishedDocuments = documents.filter((doc) => doc.status === "published").length
-  const draftDocuments = documents.filter((doc) => doc.status === "draft").length
+  const totalDocuments = documents.length;
+  const publishedDocuments = documents.filter((doc) => doc.status === &quot;published").length;
+  const draftDocuments = documents.filter((doc) => doc.status === "draft").length;
   const totalViews = documents.reduce((sum, doc) => sum + doc.views, 0)
 
   return (
@@ -209,13 +208,13 @@ export function DocumentationManager() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant="outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
             <Settings className="mr-2 h-4 w-4" />
-            Settings
+            Settings;
           </Button>
           <Button onClick={createDocument}>
             <Plus className="mr-2 h-4 w-4" />
-            New Document
+            New Document;
           </Button>
         </div>
       </div>
@@ -288,7 +287,7 @@ export function DocumentationManager() {
                 <div className="flex gap-2">
                   <div className="relative">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
+                    <Input;
                       placeholder="Search documents..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
@@ -360,7 +359,7 @@ export function DocumentationManager() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
-                          <Button
+                          <Button;
                             size="sm"
                             variant="outline"
                             onClick={() => {}
@@ -370,7 +369,7 @@ export function DocumentationManager() {
                           >
                             <Eye className="h-4 w-4" />
                           </Button>
-                          <Button
+                          <Button;
                             size="sm"
                             variant="outline"
                             onClick={() => {}
@@ -409,11 +408,11 @@ export function DocumentationManager() {
                   <div className="flex gap-2">
                     <Button size="sm" variant="outline">
                       <Edit className="mr-2 h-4 w-4" />
-                      Edit
+                      Edit;
                     </Button>
                     <Button size="sm" variant="outline">
                       <Eye className="mr-2 h-4 w-4" />
-                      View Docs
+                      View Docs;
                     </Button>
                   </div>
                 </CardContent>
@@ -454,7 +453,7 @@ export function DocumentationManager() {
                 <div className="md:col-span-2">
                   <Button>
                     <Plus className="mr-2 h-4 w-4" />
-                    Create Category
+                    Create Category;
                   </Button>
                 </div>
               </div>
@@ -471,7 +470,7 @@ export function DocumentationManager() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  {documents
+                  {documents;
                     .sort((a, b) => b.views - a.views)
                     .slice(0, 5)
                     .map((doc) => (
@@ -490,7 +489,7 @@ export function DocumentationManager() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  {documents
+                  {documents;
                     .sort((a, b) => new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime())
                     .slice(0, 5)
                     .map((doc) => (
@@ -522,7 +521,7 @@ export function DocumentationManager() {
                   <div className="flex justify-between items-center">
                     <span className="text-sm">Review</span>
                     <span className="text-sm font-medium text-blue-600">
-                      {documents.filter((doc) => doc.status === "review").length}
+                      {documents.filter((doc) => doc.status === &quot;review").length}
                     </span>
                   </div>
                 </div>
@@ -713,7 +712,7 @@ export function DocumentationManager() {
               <div>
                 <Label htmlFor="doc-content">Content</Label>
                 <ScrollArea className="h-60">
-                  <Textarea
+                  <Textarea;
                     id="doc-content"
                     value={selectedDocument.content}
                     className="min-h-[240px] font-mono text-sm"
@@ -726,7 +725,7 @@ export function DocumentationManager() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
-              Cancel
+              Cancel;
             </Button>
             <Button onClick={() => setEditDialogOpen(false)}>Save Changes</Button>
           </DialogFooter>
@@ -751,7 +750,7 @@ export function DocumentationManager() {
                 <Badge className={getStatusColor(selectedDocument.status)}>{selectedDocument.status}</Badge>
                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
                   <Eye className="h-3 w-3" />
-                  {selectedDocument.views} views
+                  {selectedDocument.views} views;
                 </div>
               </div>
 
@@ -765,11 +764,11 @@ export function DocumentationManager() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setPreviewDialogOpen(false)}>
-              Close
+              Close;
             </Button>
             <Button onClick={() => setPreviewDialogOpen(false)}>
               <Download className="mr-2 h-4 w-4" />
-              Export
+              Export;
             </Button>
           </DialogFooter>
         </DialogContent>

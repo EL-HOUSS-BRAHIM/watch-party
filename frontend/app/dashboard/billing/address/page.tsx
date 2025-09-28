@@ -5,6 +5,6 @@ export const metadata: Metadata = { title: 'Billing Address - Watch Party',
   description: 'Manage your billing address and tax information'
 }
 
-export default function BillingAddressPage() {
+export default function BillingAddressPage() {}
   return <BillingAddressView />
 }

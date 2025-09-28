@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,6 +10,7 @@ import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { billingAPI } from "@/lib/api"
 
+"use client"
 
 interface Plan {}
   id: string,
@@ -33,7 +32,7 @@ interface SubscriptionPlansProps {}
   className?: string,
 
 export default function SubscriptionPlans({ className }: SubscriptionPlansProps) {}
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(&quot;monthly")
   const [isLoading, setIsLoading] = useState<string | null>(null)
   const { user } = useAuth()
   const { toast } = useToast()
@@ -105,7 +104,7 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
         storage: "500GB",
         videoQuality: "4K",
       },
-      current: user?.is_premium === true, // Assuming pro is also premium
+      current: user?.is_premium === true, // Assuming pro is also premium;
     },
 
 
@@ -113,29 +112,29 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
     if (planId === "free") return,
     setIsLoading(planId)
 
-    try {
+    try {}
       const response = await billingAPI.subscribe({plan_id: planId,
-        payment_method_id: "", // This would come from a payment method selector
-        // promo_code: "" // Optional promo code
+        payment_method_id: "", // This would come from a payment method selector;
+        // promo_code: "" // Optional promo code;
       })
 
-      if (response.success) {
+      if (response.success) {}
         toast({title: "Subscription Created",
           description: "Your subscription has been successfully created!",
         })
         // Refresh user data or redirect,
         window.location.reload()
-    } catch (err) {
+    } catch {}
       console.error("Subscription error:", error)
       toast({title: "Subscription Error",
         description: "Failed to start subscription process. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(null)
 
   const getPlanIcon = (planId: string) => {}
-    switch (planId) {
+    switch (planId) {}
       case "free":
         return <Users className="h-6 w-6 text-gray-500" />
       case "premium":
@@ -164,7 +163,7 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
           <Switch,
             id="billing-toggle"
             checked={billingCycle === "yearly"}
-            onCheckedChange={(checked) => setBillingCycle(checked ? "yearly" : "monthly")}
+            onCheckedChange={(checked) => setBillingCycle(checked ? &quot;yearly" : "monthly")}
           />
           <Label htmlFor="billing-toggle" className={cn(billingCycle === "yearly" && "font-semibold")}>
             <Badge variant="secondary" className="ml-2">
@@ -239,11 +238,11 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
                   <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
                     <div className="flex items-center gap-1">
                       <Video className="h-3 w-3" />
-                      {plan.limits.parties} parties
+                      {plan.limits.parties} parties;
                     </div>
                     <div className="flex items-center gap-1">
                       <Users className="h-3 w-3" />
-                      {plan.limits.participants} participants
+                      {plan.limits.participants} participants;
                     </div>
                     <div className="flex items-center gap-1">
                       <Cloud className="h-3 w-3" />
@@ -263,9 +262,9 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
                   onClick={() => handleSubscribe(plan.id)}
                   disabled={plan.current || isLoading === plan.id}
                 >
-                  {isLoading === plan.id
+                  {isLoading === plan.id;
                     ? "Processing..."
-                    : plan.current
+                    : plan.current;
                       ? "Current Plan"
                       : plan.id === "free"
                         ? "Get Started"
@@ -276,7 +275,7 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
                   <div className="text-center">
                     <div className="flex items-center justify-center gap-1 text-xs text-gray-500">
                       <Shield className="h-3 w-3" />
-                      30-day money-back guarantee
+                      30-day money-back guarantee;
                     </div>
                   </div>
                 )}

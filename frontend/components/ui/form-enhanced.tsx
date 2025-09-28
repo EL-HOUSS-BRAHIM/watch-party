@@ -1,5 +1,3 @@
-"use client"
-
 import { Check, Eye, EyeOff, X } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Input } from "@/components/ui/input"
@@ -8,23 +6,25 @@ import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { cn } from "@/lib/utils"
 
+"use client"
+
 interface ValidationRule {}
-  test: (value: string) => boolean
-  message: string
+  test: (value: string) => boolean;
+  message: string;
 }
 
 interface EnhancedInputProps {}
-  label: string
-  type?: string
-  placeholder?: string
-  value: string
-  onChange: (value: string) => void
+  label: string;
+  type?: string;
+  placeholder?: string;
+  value: string;
+  onChange: (value: string) => void;
   validationRules?: ValidationRule[]
-  required?: boolean
-  disabled?: boolean
-  className?: string
-  showValidation?: boolean
-  realTimeValidation?: boolean
+  required?: boolean;
+  disabled?: boolean;
+  className?: string;
+  showValidation?: boolean;
+  realTimeValidation?: boolean;
 }
 
 export function EnhancedInput({label,
@@ -42,7 +42,7 @@ export function EnhancedInput({label,
   const [touched, setTouched] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [validationResults, setValidationResults] = useState<{}
-    isValid: boolean
+    isValid: boolean;
     errors: string[]
   }>({ isValid: true, errors: [] })
 
@@ -59,27 +59,27 @@ export function EnhancedInput({label,
       }
     })
 
-    return {
+    return {}
       isValid: errors.length === 0,
       errors,
     }
   }
 
-  useEffect(() => {
-    if (realTimeValidation && touched) {
+  useEffect(() => {}
+    if (realTimeValidation && touched) {}
       setValidationResults(validateInput(value))
     }
   }, [value, touched, realTimeValidation])
 
   const handleBlur = () => {}
     setTouched(true)
-    if (!realTimeValidation) {
+    if (!realTimeValidation) {}
       setValidationResults(validateInput(value))
     }
   }
 
-  const inputType = type === "password" && showPassword ? "text" : type
-  const hasErrors = touched && showValidation && validationResults.errors.length > 0
+  const inputType = type === "password" && showPassword ? "text" : type;
+  const hasErrors = touched && showValidation && validationResults.errors.length > 0;
   const isValid = touched && showValidation && validationResults.isValid && value.trim()
 
   return (
@@ -90,7 +90,7 @@ export function EnhancedInput({label,
       </Label>
 
       <div className="relative">
-        <Input
+        <Input;
           id={label}
           type={inputType}
           placeholder={placeholder}
@@ -107,14 +107,14 @@ export function EnhancedInput({label,
 
         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
           {type === "password" && (
-            <Button
+            <Button;
               type="button"
               variant="ghost"
               size="sm"
               className="h-auto p-0 hover:bg-transparent"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <EyeOff className="h-4 w-4 text-gray-500" /> : <Eye className="h-4 w-4 text-gray-500" />}
+              {showPassword ? <EyeOff className="h-4 w-4 text-gray-500" /> : <Eye className=&quot;h-4 w-4 text-gray-500" />}"
             </Button>
           )}
 
@@ -141,17 +141,17 @@ export function EnhancedInput({label,
   )
 }
 
-// Password strength indicator
+// Password strength indicator;
 export function PasswordStrengthIndicator({ password }: { password: string }) {}
   const getStrength = (pwd: string) => {}
-    let score = 0
+    let score = 0;
     if (pwd.length >= 8) score++
     if (/[a-z]/.test(pwd)) score++
     if (/[A-Z]/.test(pwd)) score++
     if (/[0-9]/.test(pwd)) score++
     if (/[^A-Za-z0-9]/.test(pwd)) score++
 
-    return score
+    return score;
   }
 
   const strength = getStrength(password)
@@ -162,7 +162,7 @@ export function PasswordStrengthIndicator({ password }: { password: string }) {}
     <div className="space-y-2">
       <div className="flex gap-1">
         {Array.from({ length: 5 }).map((_, index) => (
-          <div
+          <div;
             key={index}
             className={cn(
               "h-2 flex-1 rounded-full transition-colors",
@@ -171,7 +171,7 @@ export function PasswordStrengthIndicator({ password }: { password: string }) {}
           />
         ))}
       </div>
-      <p className="text-sm text-gray-600">Password strength: {strengthLabels[strength - 1] || "Very Weak"}</p>
+      <p className="text-sm text-gray-600">Password strength: {strengthLabels[strength - 1] || &quot;Very Weak"}</p>"
     </div>
   )
 }

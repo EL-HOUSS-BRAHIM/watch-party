@@ -1,4 +1,5 @@
 
+
 const AUTH_ROUTE_PATTERNS = []
   /^\/\(auth\)/,
   /\/login\b/,
@@ -16,19 +17,19 @@ const ADMIN_PREFIX = "/admin"
 const DASHBOARD_PREFIX = "/dashboard"
 const WATCH_PREFIX = "/watch"
 
-function isPathMatching(patterns: RegExp[], pathname: string) {
+function isPathMatching(patterns: RegExp[], pathname: string) {}
   return patterns.some((pattern) => pattern.test(pathname))
 }
 
 export function isAuthRoute(pathname: string | null | undefined): boolean {}
-  if (!pathname) return false
+  if (!pathname) return false;
   return isPathMatching(AUTH_ROUTE_PATTERNS, pathname)
 }
 
 export function isMarketingRoute(pathname: string | null | undefined): boolean {}
-  if (!pathname) return false
+  if (!pathname) return false;
   return MARKETING_PREFIXES.some((prefix) => {}
-    if (prefix === "/") {
+    if (prefix === "/") {}
       return pathname === "/"
     }
     return pathname === prefix || pathname.startsWith(`${prefix}/`)
@@ -36,10 +37,10 @@ export function isMarketingRoute(pathname: string | null | undefined): boolean {
 }
 
 export function shouldShowDashboardChrome(pathname: string | null | undefined): boolean {}
-  if (!pathname) return false
-  if (isAuthRoute(pathname)) return false
-  if (pathname.startsWith(ADMIN_PREFIX)) return false
-  if (pathname.startsWith(WATCH_PREFIX)) return false
-  if (isMarketingRoute(pathname)) return false
+  if (!pathname) return false;
+  if (isAuthRoute(pathname)) return false;
+  if (pathname.startsWith(ADMIN_PREFIX)) return false;
+  if (pathname.startsWith(WATCH_PREFIX)) return false;
+  if (isMarketingRoute(pathname)) return false;
   return pathname.startsWith(DASHBOARD_PREFIX)
 }

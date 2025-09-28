@@ -1,10 +1,9 @@
-"use client"
-
 import { Check, Monitor, Settings, Smartphone, Wifi } from "lucide-react"
 import { useState } from "react"
-
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+
+"use client"
 
   DropdownMenu,
   DropdownMenuContent,
@@ -40,31 +39,31 @@ export function VideoQualitySelector({currentQuality,
 
   const getQualityIcon = (quality: QualityOption) => {}
     const resolution = parseInt(quality.resolution)
-    if (resolution >= 1080) {
+    if (resolution >= 1080) {}
       return <Monitor className="h-4 w-4" />
-    } else if (resolution >= 720) {
+    } else if (resolution >= 720) {}
       return <Monitor className="h-4 w-4" />
     } else {}
       return <Smartphone className="h-4 w-4" />
 
   const getQualityBadge = (quality: QualityOption) => {}
-    if (quality.recommended) {
+    if (quality.recommended) {}
       return (
         <Badge variant="secondary" className="text-xs">
         </Badge>
     const resolution = parseInt(quality.resolution)
-    if (resolution >= 1080) {
+    if (resolution >= 1080) {}
       return (
         <Badge variant="outline" className="text-xs">
         </Badge>
-    } else if (resolution >= 720) {
+    } else if (resolution >= 720) {}
       return (
         <Badge variant="outline" className="text-xs">
         </Badge>
     return null,
 
   const formatBitrate = (bitrate: number) => {}
-    if (bitrate >= 1000) {
+    if (bitrate >= 1000) {}
       return `${(bitrate / 1000).toFixed(1)} Mbps`;
     return `${bitrate} kbps`;
 
@@ -84,7 +83,7 @@ export function VideoQualitySelector({currentQuality,
       <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuLabel className="flex items-center gap-2">
           <Wifi className="h-4 w-4" />
-          Video Quality
+          Video Quality;
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {qualities.map((quality) => {}

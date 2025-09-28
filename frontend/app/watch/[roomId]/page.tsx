@@ -1,5 +1,3 @@
-"use client"
-
 import { AlertTriangle, Heart, Loader2, MessageCircle, MoreHorizontal, Play, Settings, Share, ThumbsUp, User, Users, Volume2, Wifi, WifiOff } from "lucide-react"
 import { useState, useEffect, useRef , useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
@@ -13,87 +11,89 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 
+"use client"
+
 interface Participant {}
-  id: string
+  id: string;
   user: {}
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
-    isVerified: boolean
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+    isVerified: boolean;
   }
   role: "host" | "moderator" | "participant"
-  joinedAt: string
-  isOnline: boolean
-  isMuted: boolean
-  hasVideo: boolean
+  joinedAt: string;
+  isOnline: boolean;
+  isMuted: boolean;
+  hasVideo: boolean;
   reactions: {}
-    hearts: number
-    likes: number
+    hearts: number;
+    likes: number;
   }
 }
 
 interface ChatMessage {}
-  id: string
+  id: string;
   user: {}
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
   }
-  message: string
-  timestamp: string
+  message: string;
+  timestamp: string;
   type: "message" | "system" | "reaction"
   reactions?: {}
-    hearts: number
-    likes: number
-    userReacted?: "heart" | "like" | null
+    hearts: number;
+    likes: number;
+    userReacted?: "heart" | "like" | null;
   }
 }
 
 interface Party {}
-  id: string
-  title: string
-  description?: string
+  id: string;
+  title: string;
+  description?: string;
   video: {}
-    id: string
-    title: string
-    url: string
-    thumbnail?: string
-    duration: number
+    id: string;
+    title: string;
+    url: string;
+    thumbnail?: string;
+    duration: number;
   }
   host: {}
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
   }
   status: "waiting" | "playing" | "paused" | "ended"
-  currentTime: number
-  scheduledFor: string
-  startedAt?: string
-  endedAt?: string
-  isPrivate: boolean
-  maxParticipants: number
+  currentTime: number;
+  scheduledFor: string;
+  startedAt?: string;
+  endedAt?: string;
+  isPrivate: boolean;
+  maxParticipants: number;
   settings: {}
-    allowChat: boolean
-    allowReactions: boolean
-    allowParticipantControls: boolean
-    requireApproval: boolean
+    allowChat: boolean;
+    allowReactions: boolean;
+    allowParticipantControls: boolean;
+    requireApproval: boolean;
   }
 }
 
 interface SyncState {}
-  isPlaying: boolean
-  currentTime: number
-  playbackRate: number
-  lastUpdate: string
+  isPlaying: boolean;
+  currentTime: number;
+  playbackRate: number;
+  lastUpdate: string;
 }
 
-export default function WatchRoomPage() {
+export default function WatchRoomPage() {}
   const params = useParams()
   const router = useRouter()
   const { user } = useAuth()
@@ -101,7 +101,7 @@ export default function WatchRoomPage() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const chatScrollRef = useRef<HTMLDivElement>(null)
 
-  const roomId = params.roomId as string
+  const roomId = params.roomId as string;
   const [party, setParty] = useState<Party | null>(null)
   const [participants, setParticipants] = useState<Participant[]>([])
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([])
@@ -121,30 +121,30 @@ export default function WatchRoomPage() {
   const [showChat, setShowChat] = useState(true)
   const [newMessage, setNewMessage] = useState("")
   const [isHost, setIsHost] = useState(false)
-  const [userRole, setUserRole] = useState<"host" | "moderator" | "participant">("participant")
+  const [userRole, setUserRole] = useState<"host" | "moderator" | "participant">(&quot;participant")
 
   const wsRef = useRef<WebSocket | null>(null)
 
-  useEffect(() => {
+  useEffect(() => {}
     loadPartyData()
     connectWebSocket()
 
     return () => {}
-      if (wsRef.current) {
+      if (wsRef.current) {}
         wsRef.current.close()
       }
     }
   }, [roomId])
 
-  useEffect(() => {
-    if (chatScrollRef.current) {
-      chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight
+  useEffect(() => {}
+    if (chatScrollRef.current) {}
+      chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
     }
   }, [chatMessages])
 
-  const loadPartyData = async () => {
+  const loadPartyData = async () => {}
     setIsLoading(true)
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/parties/${roomId}/`, {}
         headers: {}
@@ -152,7 +152,7 @@ export default function WatchRoomPage() {
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const partyData = await response.json()
         setParty(partyData)
         setIsHost(partyData.host.id === user?.id)
@@ -162,9 +162,9 @@ export default function WatchRoomPage() {
       } else {}
         throw new Error("Failed to load party data")
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to load party:", error)
-      // Mock data for demonstration
+      // Mock data for demonstration;
       setParty({id: roomId,
         title: "Friday Night Movie Club",
         description: "Weekly gathering for movie enthusiasts",
@@ -262,7 +262,7 @@ export default function WatchRoomPage() {
       ])
 
       setIsConnected(true)
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
@@ -288,7 +288,7 @@ export default function WatchRoomPage() {
       console.log("WebSocket disconnected")
 
       setTimeout(() => {}
-        if (wsRef.current?.readyState === WebSocket.CLOSED) {
+        if (wsRef.current?.readyState === WebSocket.CLOSED) {}
           connectWebSocket()
         }
       }, 3000)
@@ -301,42 +301,42 @@ export default function WatchRoomPage() {
   }
 
   const handleWebSocketMessage = (data: unknown) => {}
-    switch (data.type) {
+    switch (data.type) {}
       case "sync_state":
         setSyncState(data.sync_state)
         syncVideo(data.sync_state)
-        break
+        break;
       case "participant_joined":
         setParticipants((prev) => [...prev, data.participant])
         addSystemMessage(`${data.participant.user.firstName} joined the party`)
-        break
+        break;
       case "participant_left":
         setParticipants((prev) => prev.filter((p) => p.id !== data.participant_id))
         addSystemMessage(`${data.username} left the party`)
-        break
+        break;
       case "chat_message":
         setChatMessages((prev) => [...prev, data.message])
-        break
+        break;
       case "reaction":
-        // Handle reactions
-        break
+        // Handle reactions;
+        break;
       default:
         console.log("Unknown message type:", data.type)
     }
   }
 
   const syncVideo = (state: SyncState) => {}
-    if (videoRef.current) {
-      const video = videoRef.current
+    if (videoRef.current) {}
+      const video = videoRef.current;
       const timeDiff = Math.abs(video.currentTime - state.currentTime)
 
-      if (timeDiff > 1) {
-        video.currentTime = state.currentTime
+      if (timeDiff > 1) {}
+        video.currentTime = state.currentTime;
       }
 
-      if (state.isPlaying && video.paused) {
+      if (state.isPlaying && video.paused) {}
         video.play().catch(console.error)
-      } else if (!state.isPlaying && !video.paused) {
+      } else if (!state.isPlaying && !video.paused) {}
         video.pause()
       }
     }
@@ -353,7 +353,7 @@ export default function WatchRoomPage() {
   }
 
   const sendChatMessage = () => {}
-    if (!newMessage.trim() || !user) return
+    if (!newMessage.trim() || !user) return;
     const message: ChatMessage = { id: Date.now().toString(),
       user: {}
         id: user.id,
@@ -370,7 +370,7 @@ export default function WatchRoomPage() {
     setChatMessages((prev) => [...prev, message])
     setNewMessage("")
 
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {}
       wsRef.current.send(
         JSON.stringify({type: "chat_message",
           message: message.message,
@@ -380,7 +380,7 @@ export default function WatchRoomPage() {
   }
 
   const sendReaction = (type: "heart" | "like") => {}
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {}
       wsRef.current.send(
         JSON.stringify({type: "reaction",
           reaction: type,
@@ -390,7 +390,7 @@ export default function WatchRoomPage() {
   }
 
   const kickParticipant = (participantId: string) => {}
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {}
       wsRef.current.send(
         JSON.stringify({type: "kick_participant",
           participant_id: participantId,
@@ -400,15 +400,15 @@ export default function WatchRoomPage() {
   }
 
   const handleVideoControl = (action: "play" | "pause" | "seek", value?: number) => {}
-    if (!isHost && !party?.settings.allowParticipantControls) {
+    if (!isHost && !party?.settings.allowParticipantControls) {}
       toast({title: "Permission Denied",
         description: "Only the host can control playback.",
         variant: "destructive",
       })
-      return
+      return;
     }
 
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {}
       wsRef.current.send(
         JSON.stringify({type: "video_control",
           action,
@@ -424,7 +424,7 @@ export default function WatchRoomPage() {
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
@@ -435,17 +435,17 @@ export default function WatchRoomPage() {
     )
   }
 
-  if (!party) {
+  if (!party) {}
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <Card className="bg-white/10 border-white/20 max-w-md w-full mx-4">
           <CardContent className="p-8 text-center">
             <AlertTriangle className="h-12 w-12 text-white mx-auto mb-4" />
             <h2 className="text-xl font-bold text-white mb-2">Party Not Found</h2>
-            <p className="text-white/70 mb-6">This watch party doesn't exist or you don't have access to it.</p>
-            <Button onClick={() => router.push("/dashboard")} className="bg-white text-black hover:bg-white/90">"
+            <p className="text-white/70 mb-6">This watch party doesn&apos;t exist or you don't have access to it.</p>
+            <Button onClick={() => router.push(&quot;/dashboard")} className="bg-white text-black hover:bg-white/90">"
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
+              Back to Dashboard;
             </Button>
           </CardContent>
         </Card>
@@ -459,13 +459,13 @@ export default function WatchRoomPage() {
       <div className="bg-white/10 border-b border-white/20 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Button
+            <Button;
               variant="ghost"
-              onClick={() => router.push("/dashboard")}
+              onClick={() => router.push(&quot;/dashboard")}
               className="text-white hover:bg-white/10"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
-              Leave Party
+              Leave Party;
             </Button>
             <div>
               <h1 className="text-xl font-bold text-white">{party.title}</h1>
@@ -478,17 +478,17 @@ export default function WatchRoomPage() {
               {isConnected ? (
                 <>
                   <Wifi className="h-3 w-3 mr-1" />
-                  Connected
+                  Connected;
                 </>
               ) : (
                 <>
                   <WifiOff className="h-3 w-3 mr-1" />
-                  Disconnected
+                  Disconnected;
                 </>
               )}
             </Badge>
 
-            <Button
+            <Button;
               variant="ghost"
               onClick={() => setShowParticipants(!showParticipants)}
               className="text-white hover:bg-white/10"
@@ -516,13 +516,13 @@ export default function WatchRoomPage() {
         <div className="flex-1 flex flex-col">
           {/* Video Player */}
           <div className="flex-1 bg-black relative group">
-            <video
+            <video;
               ref={videoRef}
               src={party.video.url}
               poster={party.video.thumbnail}
               className="w-full h-full object-contain"
               onTimeUpdate={() => {}
-                if (videoRef.current) {
+                if (videoRef.current) {}
                   setSyncState((prev) => ({}
                     ...prev,
                     currentTime: videoRef.current!.currentTime,
@@ -536,12 +536,12 @@ export default function WatchRoomPage() {
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
                 {/* Progress Bar */}
                 <div className="mb-4">
-                  <Slider
+                  <Slider;
                     value={[syncState.currentTime]}
                     max={party.video.duration}
                     step={1}
                     className="w-full"
-                    onValueChange={([value]) => handleVideoControl("seek", value)}
+                    onValueChange={([value]) => handleVideoControl(&quot;seek", value)}
                   />
                   <div className="flex justify-between text-xs text-white/70 mt-1">
                     <span>{formatTime(syncState.currentTime)}</span>
@@ -552,25 +552,25 @@ export default function WatchRoomPage() {
                 {/* Control Buttons */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <Button
+                    <Button;
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleVideoControl(syncState.isPlaying ? "pause" : "play")}
+                      onClick={() => handleVideoControl(syncState.isPlaying ? &quot;pause" : "play")}
                       className="text-white hover:bg-white/20"
                     >
-                      {syncState.isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+                      {syncState.isPlaying ? <Pause className="h-5 w-5" /> : <Play className=&quot;h-5 w-5" />}"
                     </Button>
 
                     <div className="flex items-center space-x-2">
-                      <Button
+                      <Button;
                         variant="ghost"
                         size="sm"
                         onClick={() => setIsMuted(!isMuted)}
                         className="text-white hover:bg-white/20"
                       >
-                        {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                        {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4" />}"
                       </Button>
-                      <Slider
+                      <Slider;
                         value={[volume]}
                         max={100}
                         step={1}
@@ -585,13 +585,13 @@ export default function WatchRoomPage() {
                       <span className="text-white/70">Now playing:</span> {party.video.title}
                     </div>
 
-                    <Button
+                    <Button;
                       variant="ghost"
                       size="sm"
                       onClick={() => setIsFullscreen(!isFullscreen)}
                       className="text-white hover:bg-white/20"
                     >
-                      {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className="h-4 w-4" />}
+                      {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className=&quot;h-4 w-4" />}"
                     </Button>
                   </div>
                 </div>
@@ -601,18 +601,18 @@ export default function WatchRoomPage() {
             {/* Reaction Buttons */}
             {party.settings.allowReactions && (
               <div className="absolute bottom-20 right-4 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <Button
+                <Button;
                   variant="ghost"
                   size="sm"
-                  onClick={() => sendReaction("heart")}
+                  onClick={() => sendReaction(&quot;heart")}
                   className="bg-black/50 text-white hover:bg-black/70"
                 >
                   <Heart className="h-4 w-4" />
                 </Button>
-                <Button
+                <Button;
                   variant="ghost"
                   size="sm"
-                  onClick={() => sendReaction("like")}
+                  onClick={() => sendReaction(&quot;like")}
                   className="bg-black/50 text-white hover:bg-black/70"
                 >
                   <ThumbsUp className="h-4 w-4" />
@@ -642,7 +642,7 @@ export default function WatchRoomPage() {
                               {participant.user.firstName[0]}
                               {participant.user.lastName[0]}
                             </div>
-                            <div
+                            <div;
                               className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border border-black ${}
                                 participant.isOnline ? "bg-white" : "bg-white/40"
                               }`}
@@ -662,12 +662,12 @@ export default function WatchRoomPage() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                              <DropdownMenuItem
+                              <DropdownMenuItem;
                                 onClick={() => kickParticipant(participant.id)}
                                 className="text-red-600"
                               >
                                 <UserMinus className="h-4 w-4 mr-2" />
-                                Remove
+                                Remove;
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -686,7 +686,7 @@ export default function WatchRoomPage() {
               <div className="p-4 border-b border-white/20">
                 <h3 className="font-semibold flex items-center gap-2 text-white">
                   <MessageCircle className="h-4 w-4" />
-                  Chat
+                  Chat;
                 </h3>
               </div>
 
@@ -727,11 +727,11 @@ export default function WatchRoomPage() {
               {/* Message Input */}
               <div className="p-4 border-t border-white/20">
                 <div className="flex gap-2">
-                  <Input
+                  <Input;
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Type a message..."
-                    onKeyPress={(e) => e.key === "Enter" && sendChatMessage()}
+                    onKeyPress={(e) => e.key === &quot;Enter" && sendChatMessage()}
                     className="flex-1 bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white/40"
                   />
                   <Button onClick={sendChatMessage} className="bg-white text-black hover:bg-white/90">
@@ -748,82 +748,82 @@ export default function WatchRoomPage() {
 }
 
 interface Participant {}
-  id: string
+  id: string;
   user: {}
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
-    isVerified: boolean
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+    isVerified: boolean;
   }
   role: "host" | "moderator" | "participant"
-  joinedAt: string
-  isOnline: boolean
-  isMuted: boolean
-  hasVideo: boolean
+  joinedAt: string;
+  isOnline: boolean;
+  isMuted: boolean;
+  hasVideo: boolean;
   reactions: {}
-    hearts: number
-    likes: number
+    hearts: number;
+    likes: number;
   }
 }
 
 interface ChatMessage {}
-  id: string
+  id: string;
   user: {}
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
   }
-  message: string
-  timestamp: string
+  message: string;
+  timestamp: string;
   type: "message" | "system" | "reaction"
   reactions?: {}
-    hearts: number
-    likes: number
-    userReacted?: "heart" | "like" | null
+    hearts: number;
+    likes: number;
+    userReacted?: "heart" | "like" | null;
   }
 }
 
 interface Party {}
-  id: string
-  title: string
-  description?: string
+  id: string;
+  title: string;
+  description?: string;
   video: {}
-    id: string
-    title: string
-    url: string
-    thumbnail?: string
-    duration: number
+    id: string;
+    title: string;
+    url: string;
+    thumbnail?: string;
+    duration: number;
   }
   host: {}
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
   }
   status: "waiting" | "playing" | "paused" | "ended"
-  currentTime: number
-  scheduledFor: string
-  startedAt?: string
-  endedAt?: string
-  isPrivate: boolean
-  maxParticipants: number
+  currentTime: number;
+  scheduledFor: string;
+  startedAt?: string;
+  endedAt?: string;
+  isPrivate: boolean;
+  maxParticipants: number;
   settings: {}
-    allowChat: boolean
-    allowReactions: boolean
-    allowParticipantControls: boolean
-    requireApproval: boolean
+    allowChat: boolean;
+    allowReactions: boolean;
+    allowParticipantControls: boolean;
+    requireApproval: boolean;
   }
 }
 
 interface SyncState {}
-  isPlaying: boolean
-  currentTime: number
-  playbackRate: number
-  lastUpdate: string
+  isPlaying: boolean;
+  currentTime: number;
+  playbackRate: number;
+  lastUpdate: string;
 }
 

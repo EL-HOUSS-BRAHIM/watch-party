@@ -1,15 +1,14 @@
-"use client"
-
 import { useState } from "react"
 import AdvancedVideoPlayer from "@/components/video/advanced-video-player"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
+"use client"
 
-export default function AdvancedVideoPlayerPage() {
+export default function AdvancedVideoPlayerPage() {}
   const [currentVideo] = useState({id: "video-1",
     title: "Sample Video - Advanced Features Demo",
     src: "/placeholder.svg?height=720&width=1280&text=Video+Player+Demo",
-    duration: 300, // 5 minutes
+    duration: 300, // 5 minutes;
     qualities: []
       { label: "4K", value: "2160p", resolution: "3840x2160", bitrate: 15000 },
       { label: "1080p", value: "1080p", resolution: "1920x1080", bitrate: 8000 },
@@ -47,7 +46,7 @@ export default function AdvancedVideoPlayerPage() {
           </p>
         </div>
 
-        <AdvancedVideoPlayer
+        <AdvancedVideoPlayer;
           videoId={currentVideo.id}
           src={currentVideo.src}
           title={currentVideo.title}
@@ -89,28 +88,28 @@ export default function AdvancedVideoPlayerPage() {
             <CardContent>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">Space</kbd> - Play/Pause
+                  <kbd className="px-2 py-1 bg-muted rounded">Space</kbd> - Play/Pause;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">←</kbd> - Skip backward 10s
+                  <kbd className="px-2 py-1 bg-muted rounded">←</kbd> - Skip backward 10s;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">→</kbd> - Skip forward 10s
+                  <kbd className="px-2 py-1 bg-muted rounded">→</kbd> - Skip forward 10s;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">↑</kbd> - Volume up
+                  <kbd className="px-2 py-1 bg-muted rounded">↑</kbd> - Volume up;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">↓</kbd> - Volume down
+                  <kbd className="px-2 py-1 bg-muted rounded">↓</kbd> - Volume down;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">M</kbd> - Toggle mute
+                  <kbd className="px-2 py-1 bg-muted rounded">M</kbd> - Toggle mute;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">F</kbd> - Toggle fullscreen
+                  <kbd className="px-2 py-1 bg-muted rounded">F</kbd> - Toggle fullscreen;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">L</kbd> - Toggle loop
+                  <kbd className="px-2 py-1 bg-muted rounded">L</kbd> - Toggle loop;
                 </li>
               </ul>
             </CardContent>

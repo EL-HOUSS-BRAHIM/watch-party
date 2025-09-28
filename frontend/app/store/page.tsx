@@ -1,22 +1,22 @@
-"use client"
-
 import { ShoppingCart, Star } from "lucide-react"
 import { useState } from 'react'
 import Image from "next/image"
 import { ShoppingCartIcon, StarIcon, FunnelIcon } from '@heroicons/react/24/outline'
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid'
 
+"use client"
+
 interface StoreItem {}
-  id: string
-  name: string
-  description: string
-  price: number
-  category: string
-  rating: number
-  reviews: number
-  image: string
-  isPremium: boolean
-  isOwned: boolean
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  rating: number;
+  reviews: number;
+  image: string;
+  isPremium: boolean;
+  isOwned: boolean;
 }
 
 const storeItems: StoreItem[] = []
@@ -30,7 +30,7 @@ const storeItems: StoreItem[] = []
     reviews: 1250,
     image: '/placeholder.jpg',
     isPremium: true,
-    isOwned: false
+    isOwned: false;
   },
   {}
     id: '2',
@@ -42,7 +42,7 @@ const storeItems: StoreItem[] = []
     reviews: 890,
     image: '/placeholder.jpg',
     isPremium: false,
-    isOwned: false
+    isOwned: false;
   },
   {}
     id: '3',
@@ -54,7 +54,7 @@ const storeItems: StoreItem[] = []
     reviews: 567,
     image: '/placeholder.jpg',
     isPremium: true,
-    isOwned: false
+    isOwned: false;
   },
   {}
     id: '4',
@@ -66,31 +66,31 @@ const storeItems: StoreItem[] = []
     reviews: 234,
     image: '/placeholder.jpg',
     isPremium: false,
-    isOwned: true
+    isOwned: true;
   }
 ]
 
 const categories = ['All', 'Avatar', 'Emojis', 'Themes', 'Badges', 'Premium']
 
-export default function StorePage() {
+export default function StorePage() {}
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [sortBy, setSortBy] = useState('popular')
   const [showFilters, setShowFilters] = useState(false)
 
   const filteredItems = storeItems.filter(item => {}
-    if (selectedCategory === 'All') return true
-    if (selectedCategory === 'Premium') return item.isPremium
-    return item.category === selectedCategory
+    if (selectedCategory === 'All') return true;
+    if (selectedCategory === 'Premium') return item.isPremium;
+    return item.category === selectedCategory;
   }).sort((a, b) => {}
-    switch (sortBy) {
+    switch (sortBy) {}
       case 'price-low':
-        return a.price - b.price
+        return a.price - b.price;
       case 'price-high':
-        return b.price - a.price
+        return b.price - a.price;
       case 'rating':
-        return b.rating - a.rating
+        return b.rating - a.rating;
       default:
-        return b.reviews - a.reviews
+        return b.reviews - a.reviews;
     }
   })
 
@@ -111,11 +111,11 @@ export default function StorePage() {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">
             <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-              Premium Store
+              Premium Store;
             </span>
           </h1>
           <p className="text-white/70 text-lg">
-            Enhance your WatchParty experience with exclusive items
+            Enhance your WatchParty experience with exclusive items;
           </p>
         </div>
 
@@ -125,11 +125,11 @@ export default function StorePage() {
             {/* Categories */}
             <div className="flex flex-wrap gap-2">
               {categories.map(category => (
-                <button
+                <button;
                   key={category}
                   onClick={() => setSelectedCategory(category)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${}
-                    selectedCategory === category
+                    selectedCategory === category;
                       ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-black'
                       : 'bg-white/10 text-white/70 hover:bg-white/20'
                   }`}
@@ -141,14 +141,14 @@ export default function StorePage() {
 
             {/* Sort Options */}
             <div className="flex items-center gap-4">
-              <button
+              <button;
                 onClick={() => setShowFilters(!showFilters)}
                 className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
               >
                 <FunnelIcon className="w-4 h-4" />
-                Filters
+                Filters;
               </button>
-              <select
+              <select;
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 className="px-4 py-2 bg-white/10 rounded-lg border border-white/20 text-white focus:outline-none focus:border-yellow-400"
@@ -165,25 +165,25 @@ export default function StorePage() {
         {/* Items Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredItems.map(item => (
-            <div
+            <div;
               key={item.id}
               className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 overflow-hidden hover:border-yellow-400/50 transition-all group"
             >
               {/* Item Image */}
               <div className="relative aspect-square bg-gradient-to-br from-purple-500/20 to-blue-500/20">
-                <img
+                <img;
                   src={item.image}
                   alt={item.name}
                   className="w-full h-full object-cover"
                 />
                 {item.isPremium && (
                   <div className="absolute top-2 right-2 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-2 py-1 rounded-full text-xs font-bold">
-                    PREMIUM
+                    PREMIUM;
                   </div>
                 )}
                 {item.isOwned && (
                   <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                    OWNED
+                    OWNED;
                   </div>
                 )}
               </div>
@@ -210,12 +210,12 @@ export default function StorePage() {
                 {/* Price & Action */}
                 <div className="flex items-center justify-between">
                   <div className="text-xl font-bold text-yellow-400">
-                    {item.price} coins
+                    {item.price} coins;
                   </div>
-                  <button
+                  <button;
                     disabled={item.isOwned}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${}
-                      item.isOwned
+                      item.isOwned;
                         ? 'bg-green-500/20 text-green-400 cursor-not-allowed'
                         : 'bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:scale-105'
                     }`}
@@ -225,7 +225,7 @@ export default function StorePage() {
                     ) : (
                       <>
                         <ShoppingCartIcon className="w-4 h-4" />
-                        Buy
+                        Buy;
                       </>
                     )}
                   </button>
@@ -246,7 +246,7 @@ export default function StorePage() {
 
         {/* Coin Balance */}
         <div className="fixed bottom-6 right-6 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-6 py-3 rounded-full font-bold shadow-lg">
-          💰 1,250 coins
+          💰 1,250 coins;
         </div>
       </div>
     </div>

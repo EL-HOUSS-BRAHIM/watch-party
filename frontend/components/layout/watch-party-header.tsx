@@ -1,5 +1,3 @@
-"use client"
-
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Bell, Link, Menu, Play, Search, X } from "lucide-react"
@@ -8,9 +6,9 @@ import { WatchPartyButton } from "@/components/ui/watch-party-button"
 import { ThemeSwitcher } from "@/components/theme/theme-switcher"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-
 import { useAuth } from "@/contexts/auth-context"
 
+"use client"
 
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +17,7 @@ import { useAuth } from "@/contexts/auth-context"
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-export function WatchPartyHeader() {
+export function WatchPartyHeader() {}
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
   const { user, logout } = useAuth()
@@ -32,7 +30,7 @@ export function WatchPartyHeader() {
   ]
 
   const isActive = (href: string) => {}
-    if (href === "/") {
+    if (href === "/") {}
       return pathname === "/"
     }
     return pathname.startsWith(href)
@@ -53,7 +51,7 @@ export function WatchPartyHeader() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-6">
             {navigation.map((item) => (
-              <Link
+              <Link;
                 key={item.name}
                 href={item.href}
                 className={`text-sm font-medium transition-colors hover:text-watch-party-primary ${}
@@ -69,7 +67,7 @@ export function WatchPartyHeader() {
           <div className="hidden lg:flex items-center flex-1 max-w-sm mx-8">
             <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-watch-party-text-secondary" />
-              <Input
+              <Input;
                 placeholder="Search videos, parties, friends..."
                 className="pl-10 bg-watch-party-elevation-1 border-watch-party-border text-watch-party-text-primary placeholder:text-watch-party-muted focus:border-watch-party-primary focus:ring-watch-party-primary"
               />
@@ -86,7 +84,7 @@ export function WatchPartyHeader() {
                 <WatchPartyButton variant="ghost" size="icon" className="relative">
                   <Bell className="h-4 w-4" />
                   <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-watch-party-error text-white text-xs flex items-center justify-center p-0">
-                    3
+                    3;
                   </Badge>
                 </WatchPartyButton>
 
@@ -103,10 +101,10 @@ export function WatchPartyHeader() {
                       </Avatar>
                     </WatchPartyButton>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent
+                  <DropdownMenuContent;
                     className="w-56 bg-watch-party-elevation-1 border-watch-party-border"
                     align="end"
-                    forceMount
+                    forceMount;
                   >
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
@@ -119,28 +117,28 @@ export function WatchPartyHeader() {
                     <DropdownMenuSeparator className="bg-watch-party-border" />
                     <DropdownMenuItem asChild>
                       <Link href="/dashboard" className="text-watch-party-text-primary hover:bg-watch-party-surface">
-                        Dashboard
+                        Dashboard;
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link
+                      <Link;
                         href="/dashboard/profile"
                         className="text-watch-party-text-primary hover:bg-watch-party-surface"
                       >
-                        Profile
+                        Profile;
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link
+                      <Link;
                         href="/dashboard/settings"
                         className="text-watch-party-text-primary hover:bg-watch-party-surface"
                       >
-                        Settings
+                        Settings;
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-watch-party-border" />
                     <DropdownMenuItem onClick={logout} className="text-watch-party-error hover:bg-watch-party-error/10">
-                      Log out
+                      Log out;
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -157,13 +155,13 @@ export function WatchPartyHeader() {
             )}
 
             {/* Mobile Menu Button */}
-            <WatchPartyButton
+            <WatchPartyButton;
               variant="ghost"
               size="icon"
               className="md:hidden"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className=&quot;h-4 w-4" />}"
             </WatchPartyButton>
           </div>
         </div>
@@ -176,7 +174,7 @@ export function WatchPartyHeader() {
               <div className="px-3 py-2">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-watch-party-text-secondary" />
-                  <Input
+                  <Input;
                     placeholder="Search..."
                     className="pl-10 bg-watch-party-elevation-1 border-watch-party-border text-watch-party-text-primary"
                   />
@@ -185,7 +183,7 @@ export function WatchPartyHeader() {
 
               {/* Mobile Navigation */}
               {navigation.map((item) => (
-                <Link
+                <Link;
                   key={item.name}
                   href={item.href}
                   className={`block px-3 py-2 text-base font-medium transition-colors hover:bg-watch-party-elevation-1 rounded-md ${}
@@ -204,12 +202,12 @@ export function WatchPartyHeader() {
                 <div className="px-3 py-2 space-y-2">
                   <WatchPartyButton variant="outline" className="w-full" asChild>
                     <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                      Sign In
+                      Sign In;
                     </Link>
                   </WatchPartyButton>
                   <WatchPartyButton variant="gradient" className="w-full" asChild>
                     <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
-                      Get Started
+                      Get Started;
                     </Link>
                   </WatchPartyButton>
                 </div>

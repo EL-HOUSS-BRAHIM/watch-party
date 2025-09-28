@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from 'react'
 import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,49 +9,52 @@ import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
 import { Clock, Eye, Flag, Heart, MessageCircle, Play, Share, Share2, Star, ThumbsDown, ThumbsUp, Video } from "lucide-react"
 
+"use client"
+
+
 
 
 interface VideoDetailsProps {}
-  videoId: string
-  onWatchParty?: () => void
-  onAddToWatchlist?: () => void
+  videoId: string;
+  onWatchParty?: () => void;
+  onAddToWatchlist?: () => void;
 }
 
 interface VideoInfo {}
-  id: string
-  title: string
-  description: string
-  duration: number
-  thumbnailUrl: string
+  id: string;
+  title: string;
+  description: string;
+  duration: number;
+  thumbnailUrl: string;
   uploadedBy: {}
-    id: string
-    username: string
-    avatar: string
+    id: string;
+    username: string;
+    avatar: string;
   }
-  uploadedAt: string
-  views: number
-  likes: number
-  dislikes: number
-  rating: number
+  uploadedAt: string;
+  views: number;
+  likes: number;
+  dislikes: number;
+  rating: number;
   tags: string[]
   genre: string[]
-  quality: string
-  size: string
-  isLiked: boolean
-  isDisliked: boolean
-  inWatchlist: boolean
+  quality: string;
+  size: string;
+  isLiked: boolean;
+  isDisliked: boolean;
+  inWatchlist: boolean;
 }
 
 interface Comment {}
-  id: string
+  id: string;
   user: {}
-    id: string
-    username: string
-    avatar: string
+    id: string;
+    username: string;
+    avatar: string;
   }
-  content: string
-  createdAt: string
-  likes: number
+  content: string;
+  createdAt: string;
+  likes: number;
   replies: Comment[]
 }
 
@@ -65,14 +66,14 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
   const [activeTab, setActiveTab] = useState('overview')
   const { toast } = useToast()
 
-  useEffect(() => {
+  useEffect(() => {}
     loadVideoDetails()
     loadComments()
     loadRelatedVideos()
   }, [videoId])
 
-  const loadVideoDetails = useCallback(async () => {
-    try {
+  const loadVideoDetails = useCallback(async () => {}
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/`, {}
         headers: {}
@@ -80,23 +81,23 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setVideoInfo(data)
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to load video details:', error)
       toast({title: 'Error',
         description: 'Failed to load video details.',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }, [])
 
-  const loadComments = useCallback(async () => {
-    try {
+  const loadComments = useCallback(async () => {}
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/comments/`, {}
         headers: {}
@@ -104,17 +105,17 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setComments(data.results || [])
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to load comments:', error)
     }
   }, [])
 
-  const loadRelatedVideos = useCallback(async () => {
-    try {
+  const loadRelatedVideos = useCallback(async () => {}
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/related/`, {}
         headers: {}
@@ -122,17 +123,17 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setRelatedVideos(data.results || [])
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to load related videos:', error)
     }
   }, [])
 
-  const handleLike = useCallback(async () => {
-    try {
+  const handleLike = useCallback(async () => {}
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/like/`, {}
         method: 'POST',
@@ -141,16 +142,16 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setVideoInfo(prev => prev ? {}
           ...prev,
           isLiked: !prev.isLiked,
           isDisliked: false,
           likes: prev.isLiked ? prev.likes - 1 : prev.likes + 1,
-          dislikes: prev.isDisliked ? prev.dislikes - 1 : prev.dislikes
+          dislikes: prev.isDisliked ? prev.dislikes - 1 : prev.dislikes;
         } : null)
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to like video:', error)
       toast({title: 'Error',
         description: 'Failed to like video.',
@@ -159,8 +160,8 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
     }
   }, [])
 
-  const handleDislike = useCallback(async () => {
-    try {
+  const handleDislike = useCallback(async () => {}
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/dislike/`, {}
         method: 'POST',
@@ -169,16 +170,16 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setVideoInfo(prev => prev ? {}
           ...prev,
           isDisliked: !prev.isDisliked,
           isLiked: false,
           dislikes: prev.isDisliked ? prev.dislikes - 1 : prev.dislikes + 1,
-          likes: prev.isLiked ? prev.likes - 1 : prev.likes
+          likes: prev.isLiked ? prev.likes - 1 : prev.likes;
         } : null)
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to dislike video:', error)
       toast({title: 'Error',
         description: 'Failed to dislike video.',
@@ -187,8 +188,8 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
     }
   }, [])
 
-  const handleAddToWatchlist = useCallback(async () => {
-    try {
+  const handleAddToWatchlist = useCallback(async () => {}
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/watchlist/`, {}
         method: videoInfo?.inWatchlist ? 'DELETE' : 'POST',
@@ -197,17 +198,17 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setVideoInfo(prev => prev ? {}
           ...prev,
-          inWatchlist: !prev.inWatchlist
+          inWatchlist: !prev.inWatchlist;
         } : null)
         toast({title: 'Success',
           description: videoInfo?.inWatchlist ? 'Removed from watchlist' : 'Added to watchlist',
         })
         onAddToWatchlist?.()
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to update watchlist:', error)
       toast({title: 'Error',
         description: 'Failed to update watchlist.',
@@ -219,8 +220,8 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
   const formatDuration = (seconds: number) => {}
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60
-    if (hours > 0) {
+    const secs = seconds % 60;
+    if (hours > 0) {}
       return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
     }
     return `${minutes}:${secs.toString().padStart(2, '0')}`
@@ -228,16 +229,16 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
 
   const formatFileSize = (bytes: number) => {}
     const units = ['B', 'KB', 'MB', 'GB']
-    let size = bytes
-    let unitIndex = 0
-    while (size >= 1024 && unitIndex < units.length - 1) {
-      size /= 1024
+    let size = bytes;
+    let unitIndex = 0;
+    while (size >= 1024 && unitIndex < units.length - 1) {}
+      size /= 1024;
       unitIndex++
     }
     return `${size.toFixed(1)} ${units[unitIndex]}`
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -245,7 +246,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
     )
   }
 
-  if (!videoInfo) {
+  if (!videoInfo) {}
     return (
       <div className="text-center py-8">
         <p className="text-muted-foreground">Video not found</p>
@@ -260,7 +261,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         <CardContent className="p-6">
           <div className="flex items-start gap-4">
             <div className="relative w-32 h-20 rounded-lg overflow-hidden bg-gray-200 flex-shrink-0">
-              <img
+              <img;
                 src={videoInfo.thumbnailUrl}
                 alt={videoInfo.title}
                 className="w-full h-full object-cover"
@@ -274,7 +275,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
               <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
                 <div className="flex items-center gap-1">
                   <Eye className="w-4 h-4" />
-                  {videoInfo.views.toLocaleString()} views
+                  {videoInfo.views.toLocaleString()} views;
                 </div>
                 <div className="flex items-center gap-1">
                   <Clock className="w-4 h-4" />
@@ -282,7 +283,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
                 </div>
                 <div className="flex items-center gap-1">
                   <Star className="w-4 h-4" />
-                  {videoInfo.rating.toFixed(1)}/5
+                  {videoInfo.rating.toFixed(1)}/5;
                 </div>
               </div>
 
@@ -308,9 +309,9 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
             <div className="flex flex-col gap-2">
               <Button onClick={onWatchParty} className="w-32">
                 <Play className="w-4 h-4 mr-2" />
-                Watch Party
+                Watch Party;
               </Button>
-              <Button
+              <Button;
                 variant="outline" 
                 onClick={handleAddToWatchlist}
                 className="w-32"
@@ -325,7 +326,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
 
           {/* Action Buttons */}
           <div className="flex items-center gap-4">
-            <Button
+            <Button;
               variant="ghost"
               size="sm"
               onClick={handleLike}
@@ -334,7 +335,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
               <ThumbsUp className={`w-4 h-4 mr-2 ${videoInfo.isLiked ? 'fill-current' : ''}`} />
               {videoInfo.likes}
             </Button>
-            <Button
+            <Button;
               variant="ghost"
               size="sm"
               onClick={handleDislike}
@@ -346,17 +347,17 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
 
             <Button variant="ghost" size="sm">
               <MessageCircle className="w-4 h-4 mr-2" />
-              {comments.length} Comments
+              {comments.length} Comments;
             </Button>
 
             <Button variant="ghost" size="sm">
               <Share2 className="w-4 h-4 mr-2" />
-              Share
+              Share;
             </Button>
 
             <Button variant="ghost" size="sm">
               <Flag className="w-4 h-4 mr-2" />
-              Report
+              Report;
             </Button>
           </div>
         </CardContent>
@@ -418,7 +419,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
                         {comment.likes}
                       </Button>
                       <Button variant="ghost" size="sm">
-                        Reply
+                        Reply;
                       </Button>
                     </div>
                   </div>
@@ -434,7 +435,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
               <Card key={video.id} className="cursor-pointer hover:shadow-md transition-shadow">
                 <CardContent className="p-4">
                   <div className="relative w-full h-32 rounded-lg overflow-hidden mb-3">
-                    <img
+                    <img;
                       src={video.thumbnailUrl}
                       alt={video.title}
                       className="w-full h-full object-cover"
@@ -445,7 +446,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
                   </div>
                   <h3 className="font-medium mb-1 line-clamp-2">{video.title}</h3>
                   <p className="text-sm text-muted-foreground">
-                    {video.views.toLocaleString()} views
+                    {video.views.toLocaleString()} views;
                   </p>
                 </CardContent>
               </Card>

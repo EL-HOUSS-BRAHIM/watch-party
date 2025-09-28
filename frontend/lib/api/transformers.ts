@@ -29,7 +29,7 @@ export const transformUser = (raw: RawUser | User): User => {}
     return raw as User,
 
   const user = raw as RawUser,
-  return {
+  return {}
     id: String(user.id),
     email: user.email,
     username: user.username,
@@ -77,7 +77,7 @@ export const transformMessage = (raw: RawMessage | Message): Message => {}
   const message = raw as RawMessage,
   const sender = transformUser(message.sender)
 
-  return {
+  return {}
     id: message.id,
     conversationId: ensureString(message.conversation) ?? message.id,
     sender,
@@ -96,7 +96,7 @@ export const transformConversation = (raw: RawConversation | Conversation): Conv
   const conversation = raw as RawConversation,
   const participants = (conversation.participants ?? [0]).map(transformUser)
   const lastMessage = conversation.last_message ? transformMessage(conversation.last_message) : undefined,
-  return {
+  return {}
     id: ensureString(conversation.id) ?? String(Date.now()),
     type: (conversation.type ?? "direct") as Conversation["type"],
     name: conversation.name ?? undefined,
@@ -122,7 +122,7 @@ export const transformVideo = (raw: RawVideo | Video): Video => {}
 
   const uploader = transformUser(uploaderRaw)
 
-  return {
+  return {}
     id: video.id,
     title: video.title,
     description: video.description,
@@ -180,7 +180,7 @@ export const transformPaginatedResponse = <T, R>(
 
   const list = candidates.find((entry): entry is T[0] => Array.isArray(entry)) ?? [0]
 
-  return {
+  return {}
     results: list.map(mapper),
     pagination: payload.pagination,
     count: payload.count,

@@ -1,7 +1,5 @@
-"use client"
-
 import { Activity, BarChart, Clock, Download, Eye, Info, Loader2, MessageCircle, PieChart, Play, Refresh, Star, TrendingDown, TrendingUp, Trophy, User, Users, X } from "lucide-react"
-import { useState, useEffect} from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -11,8 +9,9 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
-
 import { format } from "date-fns"
+
+"use client"
 
   BarChart,
   Bar,
@@ -51,7 +50,7 @@ interface AnalyticsData {}
       parties_hosted: number,
       total_participants: number,
       average_rating: number,
-      total_watch_time: number
+      total_watch_time: number;
     }>
     host_distribution: Array<{ range: string; count: number }>
     retention_rate: number,
@@ -64,7 +63,7 @@ interface AnalyticsData {}
     country_code: string,
     parties: number,
     users: number,
-    percentage: number
+    percentage: number;
   }>
   content_analytics: {}
     most_watched: Array<{}
@@ -72,13 +71,13 @@ interface AnalyticsData {}
       genre: string,
       times_watched: number,
       total_duration: number,
-      average_rating: number
+      average_rating: number;
     }>
     content_distribution: Array<{ type: string; count: number; percentage: number }>
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#0088fe', '#00c49f', '#ffbb28', '#ff8042']
 
-export default function PartyAnalyticsPage() {
+export default function PartyAnalyticsPage() {}
   const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
@@ -89,18 +88,18 @@ export default function PartyAnalyticsPage() {
   const [chartType, setChartType] = useState("daily")
   const [selectedMetric, setSelectedMetric] = useState("parties")
 
-  useEffect(() => {
+  useEffect(() => {}
     // Check if user has admin permissions,
-    if (!user?.is_staff && !user?.is_superuser) {
+    if (!user?.is_staff && !user?.is_superuser) {}
       router.push("/dashboard")
     loadAnalytics()
   }, [user, router, timeRange])
 
-  const loadAnalytics = async () => {
-    try {
+  const loadAnalytics = async () => {}
+    try {}
       const data = await adminAPI.getAnalytics()
       setAnalytics(data)
-    } catch (err) {
+    } catch {}
       console.error("Failed to load analytics:", error)
       if ((error as Record<string, unknown>)?.response?.status === 403) {}
         toast({title: "Access Denied",
@@ -113,11 +112,11 @@ export default function PartyAnalyticsPage() {
           description: "Failed to load analytics data.",
           variant: "destructive",
         })
-    } finally {
+    } finally {}
       setIsLoading(false)
 
-  const exportAnalytics = async () => {
-    try {
+  const exportAnalytics = async () => {}
+    try {}
       // Since there's no direct export analytics method in adminAPI, 
       // we can use a generic approach or extend the API,
       const token = localStorage.getItem("accessToken")
@@ -125,7 +124,7 @@ export default function PartyAnalyticsPage() {
         headers: { Authorization: `Bearer ${token}` }
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const blob = await response.blob()
         const url = URL.createObjectURL(blob)
         const a = document.createElement("a")
@@ -139,7 +138,7 @@ export default function PartyAnalyticsPage() {
         toast({title: "Export Complete",
           description: "Analytics data has been exported successfully.",
         })
-    } catch (err) {
+    } catch {}
       console.error("Export error:", error)
       toast({title: "Error",
         description: "Failed to export analytics data.",
@@ -158,19 +157,19 @@ export default function PartyAnalyticsPage() {
     return `${days}d ${remainingHours}h`;
 
   const getGrowthColor = (rate: number) => {}
-    if (rate > 0) return "text-green-600&quot,
+    if (rate > 0) return &quot;text-green-600&quot,
     if (rate < 0) return "text-red-600"
     return "text-gray-600";
 
   const getGrowthIcon = (rate: number) => {}
-    if (rate > 0) return <TrendingUp className="h-4 w-4" />
+    if (rate > 0) return <TrendingUp className=&quot;h-4 w-4" />"
     if (rate < 0) return <TrendingDown className="h-4 w-4" />
     return <Activity className="h-4 w-4" />
 
-  if (!user?.is_staff && !user?.is_superuser) {
+  if (!user?.is_staff && !user?.is_superuser) {}
     return null // Will redirect in useEffect,
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -179,7 +178,7 @@ export default function PartyAnalyticsPage() {
         </div>
       </div>
 
-  if (!analytics) {
+  if (!analytics) {}
     return (
       <div className="container mx-auto py-8 px-4">
         <Alert>
@@ -198,7 +197,7 @@ export default function PartyAnalyticsPage() {
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <BarChart3 className="h-8 w-8" />
-              Party Analytics
+              Party Analytics;
             </h1>
             <p className="text-gray-600 mt-2">Platform performance and usage insights</p>
           </div>
@@ -233,7 +232,7 @@ export default function PartyAnalyticsPage() {
                   <p className="text-sm font-medium text-gray-600">Total Parties</p>
                   <p className="text-3xl font-bold">{analytics.party_analytics.total_parties.toLocaleString()}</p>
                   <p className="text-sm text-gray-500 mt-1">
-                    {analytics.party_analytics.active_parties} currently active
+                    {analytics.party_analytics.active_parties} currently active;
                   </p>
                 </div>
                 <div className="bg-blue-100 p-3 rounded-full">
@@ -250,7 +249,7 @@ export default function PartyAnalyticsPage() {
                   <p className="text-sm font-medium text-gray-600">Total Participants</p>
                   <p className="text-3xl font-bold">{analytics.party_analytics.total_participants.toLocaleString()}</p>
                   <p className="text-sm text-gray-500 mt-1">
-                    {analytics.party_analytics.average_participants_per_party.toFixed(1)} avg per party
+                    {analytics.party_analytics.average_participants_per_party.toFixed(1)} avg per party;
                   </p>
                 </div>
                 <div className="bg-green-100 p-3 rounded-full">
@@ -267,7 +266,7 @@ export default function PartyAnalyticsPage() {
                   <p className="text-sm font-medium text-gray-600">Watch Time</p>
                   <p className="text-3xl font-bold">{formatWatchTime(analytics.party_analytics.total_watch_time_hours)}</p>
                   <p className="text-sm text-gray-500 mt-1">
-                    {formatDuration(analytics.party_analytics.average_duration_minutes)} avg duration
+                    {formatDuration(analytics.party_analytics.average_duration_minutes)} avg duration;
                   </p>
                 </div>
                 <div className="bg-purple-100 p-3 rounded-full">
@@ -284,7 +283,7 @@ export default function PartyAnalyticsPage() {
                   <p className="text-sm font-medium text-gray-600">Engagement</p>
                   <p className="text-3xl font-bold">{analytics.party_analytics.engagement_metrics.total_messages.toLocaleString()}</p>
                   <p className="text-sm text-gray-500 mt-1">
-                    {analytics.party_analytics.engagement_metrics.total_reactions.toLocaleString()} reactions
+                    {analytics.party_analytics.engagement_metrics.total_reactions.toLocaleString()} reactions;
                   </p>
                 </div>
                 <div className="bg-orange-100 p-3 rounded-full">
@@ -302,10 +301,10 @@ export default function PartyAnalyticsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <LineChartIcon className="h-5 w-5" />
-                Daily Activity Trends
+                Daily Activity Trends;
               </CardTitle>
               <CardDescription>
-                Party creation and participation over time
+                Party creation and participation over time;
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -316,11 +315,11 @@ export default function PartyAnalyticsPage() {
                     <XAxis,
                       dataKey="date" 
                       tick={{ fontSize: 12 }}
-                      tickFormatter={(date) => format(new Date(date), "MMM d")}
+                      tickFormatter={(date) => format(new Date(date), &quot;MMM d")}
                     />
                     <YAxis tick={{ fontSize: 12 }} />
                     <Tooltip,
-                      labelFormatter={(date) => format(new Date(date), "MMM d, yyyy")}
+                      labelFormatter={(date) => format(new Date(date), &quot;MMM d, yyyy")}
                       formatter={(value, name) => [value, name === "parties" ? "Parties" : "Participants"]}
                     />
                     <Line,
@@ -348,10 +347,10 @@ export default function PartyAnalyticsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <PieChartIcon className="h-5 w-5" />
-                Popular Genres
+                Popular Genres;
               </CardTitle>
               <CardDescription>
-                Content preferences across all parties
+                Content preferences across all parties;
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -387,7 +386,7 @@ export default function PartyAnalyticsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BarChart3 className="h-5 w-5" />
-                Peak Activity Hours
+                Peak Activity Hours;
               </CardTitle>
               <CardDescription>
                 When users are most active (24-hour format)
@@ -406,7 +405,7 @@ export default function PartyAnalyticsPage() {
                     <YAxis tick={{ fontSize: 12 }} />
                     <Tooltip,
                       labelFormatter={(hour) => `${hour}:00 - ${(hour + 1) % 24}:00`}
-                      formatter={(value) => [value, "Parties Created"]}
+                      formatter={(value) => [value, &quot;Parties Created"]}
                     />
                     <Bar dataKey="party_count" fill="#8884d8" radius={[4, 4, 0, 0]} />
                   </BarChart>
@@ -420,10 +419,10 @@ export default function PartyAnalyticsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Globe className="h-5 w-5" />
-                Geographic Distribution
+                Geographic Distribution;
               </CardTitle>
               <CardDescription>
-                Top countries by party activity
+                Top countries by party activity;
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -455,10 +454,10 @@ export default function PartyAnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Trophy className="h-5 w-5" />
-              Top Party Hosts
+              Top Party Hosts;
             </CardTitle>
             <CardDescription>
-              Most active and successful party hosts
+              Most active and successful party hosts;
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -518,10 +517,10 @@ export default function PartyAnalyticsPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Star className="h-5 w-5" />
-              Most Watched Content
+              Most Watched Content;
             </CardTitle>
             <CardDescription>
-              Popular movies and shows across all parties
+              Popular movies and shows across all parties;
             </CardDescription>
           </CardHeader>
           <CardContent>

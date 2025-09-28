@@ -1,12 +1,11 @@
-"use client"
-
 import { Link, Play, Plus, Video } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-
 import { useAuth } from "@/contexts/auth-context"
+
+"use client"
 
   Sidebar,
   SidebarContent,
@@ -88,7 +87,7 @@ const adminItems = []
   },
 ]
 
-export function DashboardSidebar() {
+export function DashboardSidebar() {}
   const pathname = usePathname()
   const { user } = useAuth()
 

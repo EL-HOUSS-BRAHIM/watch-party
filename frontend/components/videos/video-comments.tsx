@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -8,6 +6,9 @@ import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
 import { Filter, Flag, MessageCircle, MoreHorizontal, Reply, Search, Send, ThumbsDown, ThumbsUp } from "lucide-react"
+
+"use client"
+
 
 
 
@@ -25,45 +26,45 @@ import { Filter, Flag, MessageCircle, MoreHorizontal, Reply, Search, Send, Thumb
 } from '@/components/ui/select'
 
 interface VideoCommentsProps {}
-  videoId: string
-  className?: string
+  videoId: string;
+  className?: string;
 }
 
 interface Comment {}
-  id: string
+  id: string;
   user: {}
-    id: string
-    username: string
-    avatar: string
-    isVerified: boolean
+    id: string;
+    username: string;
+    avatar: string;
+    isVerified: boolean;
     role?: 'admin' | 'moderator' | 'vip'
   }
-  content: string
-  createdAt: string
-  updatedAt?: string
-  likes: number
-  dislikes: number
-  replyCount: number
-  isLiked: boolean
-  isDisliked: boolean
-  isPinned: boolean
-  isEdited: boolean
-  parentId?: string
+  content: string;
+  createdAt: string;
+  updatedAt?: string;
+  likes: number;
+  dislikes: number;
+  replyCount: number;
+  isLiked: boolean;
+  isDisliked: boolean;
+  isPinned: boolean;
+  isEdited: boolean;
+  parentId?: string;
   replies: Comment[]
   reactions: {}
-    heart: number
-    laugh: number
-    wow: number
-    sad: number
-    angry: number
+    heart: number;
+    laugh: number;
+    wow: number;
+    sad: number;
+    angry: number;
   }
 }
 
 interface CommentStats {}
-  total: number
-  today: number
-  thisWeek: number
-  averageRating: number
+  total: number;
+  today: number;
+  thisWeek: number;
+  averageRating: number;
 }
 
 export function VideoComments({ videoId, className }: VideoCommentsProps) {}
@@ -81,13 +82,13 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
   const [hasMore, setHasMore] = useState(true)
   const { toast } = useToast()
 
-  useEffect(() => {
+  useEffect(() => {}
     loadComments()
     loadStats()
   }, [videoId, sortBy, filterBy, searchQuery])
 
   const loadComments = async (page = 1, append = false) => {}
-    try {
+    try {}
       const token = localStorage.getItem('accessToken')
       const params = new URLSearchParams({page: page.toString(),
         sort: sortBy,
@@ -101,9 +102,9 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
-        if (append) {
+        if (append) {}
           setComments(prev => [...prev, ...(data.results || [])])
         } else {}
           setComments(data.results || [])
@@ -111,19 +112,19 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
         setHasMore(data.hasNext || false)
         setCurrentPage(page)
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to load comments:', error)
       toast({title: 'Error',
         description: 'Failed to load comments.',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const loadStats = async () => {
-    try {
+  const loadStats = async () => {}
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/comments/stats/`, {}
         headers: {}
@@ -131,19 +132,19 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setStats(data)
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to load comment stats:', error)
     }
   }
 
-  const handleSubmitComment = async () => {
-    if (!newComment.trim()) return
+  const handleSubmitComment = async () => {}
+    if (!newComment.trim()) return;
     setIsSubmitting(true)
-    try {
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/comments/`, {}
         method: 'POST',
@@ -155,7 +156,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
         }),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const newCommentData = await response.json()
         setComments(prev => [newCommentData, ...prev])
         setNewComment('')
@@ -164,21 +165,21 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
           description: 'Comment posted successfully!',
         })
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to post comment:', error)
       toast({title: 'Error',
         description: 'Failed to post comment.',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setIsSubmitting(false)
     }
   }
 
   const handleSubmitReply = async (parentId: string) => {}
-    if (!replyContent.trim()) return
+    if (!replyContent.trim()) return;
     setIsSubmitting(true)
-    try {
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/comments/`, {}
         method: 'POST',
@@ -191,12 +192,12 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
         }),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const replyData = await response.json()
         setComments(prev => prev.map(comment => 
-          comment.id === parentId
+          comment.id === parentId;
             ? { ...comment, replies: [...comment.replies, replyData], replyCount: comment.replyCount + 1 }
-            : comment
+            : comment;
         ))
         setReplyContent('')
         setReplyingTo(null)
@@ -204,19 +205,19 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
           description: 'Reply posted successfully!',
         })
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to post reply:', error)
       toast({title: 'Error',
         description: 'Failed to post reply.',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setIsSubmitting(false)
     }
   }
 
   const handleLikeComment = async (commentId: string) => {}
-    try {
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/comments/${commentId}/like/`, {}
         method: 'POST',
@@ -225,41 +226,41 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setComments(prev => prev.map(comment => {}
-          if (comment.id === commentId) {
-            return {
+          if (comment.id === commentId) {}
+            return {}
               ...comment,
               isLiked: !comment.isLiked,
               isDisliked: false,
               likes: comment.isLiked ? comment.likes - 1 : comment.likes + 1,
-              dislikes: comment.isDisliked ? comment.dislikes - 1 : comment.dislikes
+              dislikes: comment.isDisliked ? comment.dislikes - 1 : comment.dislikes;
             }
           }
-          // Handle replies
-          return {
+          // Handle replies;
+          return {}
             ...comment,
             replies: comment.replies.map(reply => 
-              reply.id === commentId
+              reply.id === commentId;
                 ? {}
                     ...reply,
                     isLiked: !reply.isLiked,
                     isDisliked: false,
                     likes: reply.isLiked ? reply.likes - 1 : reply.likes + 1,
-                    dislikes: reply.isDisliked ? reply.dislikes - 1 : reply.dislikes
+                    dislikes: reply.isDisliked ? reply.dislikes - 1 : reply.dislikes;
                   }
-                : reply
+                : reply;
             )
           }
         }))
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to like comment:', error)
     }
   }
 
   const handleDislikeComment = async (commentId: string) => {}
-    try {
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/comments/${commentId}/dislike/`, {}
         method: 'POST',
@@ -268,41 +269,41 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setComments(prev => prev.map(comment => {}
-          if (comment.id === commentId) {
-            return {
+          if (comment.id === commentId) {}
+            return {}
               ...comment,
               isDisliked: !comment.isDisliked,
               isLiked: false,
               dislikes: comment.isDisliked ? comment.dislikes - 1 : comment.dislikes + 1,
-              likes: comment.isLiked ? comment.likes - 1 : comment.likes
+              likes: comment.isLiked ? comment.likes - 1 : comment.likes;
             }
           }
-          // Handle replies
-          return {
+          // Handle replies;
+          return {}
             ...comment,
             replies: comment.replies.map(reply => 
-              reply.id === commentId
+              reply.id === commentId;
                 ? {}
                     ...reply,
                     isDisliked: !reply.isDisliked,
                     isLiked: false,
                     dislikes: reply.isDisliked ? reply.dislikes - 1 : reply.dislikes + 1,
-                    likes: reply.isLiked ? reply.likes - 1 : reply.likes
+                    likes: reply.isLiked ? reply.likes - 1 : reply.likes;
                   }
-                : reply
+                : reply;
             )
           }
         }))
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to dislike comment:', error)
     }
   }
 
   const handleReportComment = async (commentId: string) => {}
-    try {
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/comments/${commentId}/report/`, {}
         method: 'POST',
@@ -311,12 +312,12 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         toast({title: 'Success',
           description: 'Comment reported successfully. We will review it shortly.',
         })
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to report comment:', error)
       toast({title: 'Error',
         description: 'Failed to report comment.',
@@ -326,7 +327,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
   }
 
   const handleDeleteComment = async (commentId: string) => {}
-    try {
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/comments/${commentId}/`, {}
         method: 'DELETE',
@@ -335,14 +336,14 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setComments(prev => prev.filter(comment => comment.id !== commentId))
         setStats(prev => ({ ...prev, total: prev.total - 1 }))
         toast({title: 'Success',
           description: 'Comment deleted successfully.',
         })
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to delete comment:', error)
       toast({title: 'Error',
         description: 'Failed to delete comment.',
@@ -352,13 +353,13 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
   }
 
   const loadMoreComments = () => {}
-    if (hasMore && !isLoading) {
+    if (hasMore && !isLoading) {}
       loadComments(currentPage + 1, true)
     }
   }
 
   const getRoleBadge = (role?: string) => {}
-    switch (role) {
+    switch (role) {}
       case 'admin':
         return <Badge variant="destructive" className="text-xs">Admin</Badge>
       case 'moderator':
@@ -366,7 +367,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
       case 'vip':
         return <Badge variant="outline" className="text-xs">VIP</Badge>
       default:
-        return null
+        return null;
     }
   }
 
@@ -386,7 +387,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
       {comment.isPinned && !isReply && (
         <div className="flex items-center gap-1 mb-2 text-sm text-muted-foreground">
           <MessageCircle className="w-3 h-3" />
-          Pinned comment
+          Pinned comment;
         </div>
       )}
       <Card className={comment.isPinned && !isReply ? 'border-primary' : ''}>
@@ -411,7 +412,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
               <p className="text-sm mb-3 whitespace-pre-wrap">{comment.content}</p>
               {/* Reactions */}
               <div className="flex items-center gap-4 mb-2">
-                <Button
+                <Button;
                   variant="ghost"
                   size="sm"
                   onClick={() => handleLikeComment(comment.id)}
@@ -420,7 +421,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
                   <ThumbsUp className={`w-3 h-3 mr-1 ${comment.isLiked ? 'fill-current' : ''}`} />
                   {comment.likes}
                 </Button>
-                <Button
+                <Button;
                   variant="ghost"
                   size="sm"
                   onClick={() => handleDislikeComment(comment.id)}
@@ -431,13 +432,13 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
                 </Button>
 
                 {!isReply && (
-                  <Button
+                  <Button;
                     variant="ghost"
                     size="sm"
                     onClick={() => setReplyingTo(comment.id)}
                   >
                     <Reply className="w-3 h-3 mr-1" />
-                    Reply
+                    Reply;
                   </Button>
                 )}
 
@@ -450,10 +451,10 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
                   <DropdownMenuContent>
                     <DropdownMenuItem onClick={() => handleReportComment(comment.id)}>
                       <Flag className="w-4 h-4 mr-2" />
-                      Report
+                      Report;
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleDeleteComment(comment.id)}>
-                      Delete Comment
+                      Delete Comment;
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -462,22 +463,22 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
               {/* Reply form */}
               {replyingTo === comment.id && (
                 <div className="mt-3 space-y-2">
-                  <Textarea
+                  <Textarea;
                     placeholder="Write a reply..."
                     value={replyContent}
                     onChange={(e) => setReplyContent(e.target.value)}
                     className="min-h-[80px]"
                   />
                   <div className="flex gap-2">
-                    <Button
+                    <Button;
                       size="sm"
                       onClick={() => handleSubmitReply(comment.id)}
                       disabled={isSubmitting || !replyContent.trim()}
                     >
                       <Send className="w-3 h-3 mr-1" />
-                      Reply
+                      Reply;
                     </Button>
-                    <Button
+                    <Button;
                       variant="outline"
                       size="sm"
                       onClick={() => {}
@@ -485,7 +486,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
                         setReplyContent('')
                       }}
                     >
-                      Cancel
+                      Cancel;
                     </Button>
                   </div>
                 </div>
@@ -509,7 +510,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
     </div>
   )
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="flex items-center justify-center h-32">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -524,7 +525,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
         <CardHeader>
           <CardTitle className="text-lg">Comments ({stats.total})</CardTitle>
           <CardDescription>
-            {stats.today} today • {stats.thisWeek} this week • Average rating: {stats.averageRating.toFixed(1)}/5
+            {stats.today} today • {stats.thisWeek} this week • Average rating: {stats.averageRating.toFixed(1)}/5;
           </CardDescription>
         </CardHeader>
       </Card>
@@ -534,7 +535,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
         <div className="flex-1">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
+            <Input;
               placeholder="Search comments..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -574,7 +575,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
       <Card>
         <CardContent className="p-4">
           <div className="space-y-3">
-            <Textarea
+            <Textarea;
               placeholder="Add a comment..."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
@@ -582,14 +583,14 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
             />
             <div className="flex justify-between">
               <div className="text-sm text-muted-foreground">
-                {newComment.length}/500 characters
+                {newComment.length}/500 characters;
               </div>
-              <Button
+              <Button;
                 onClick={handleSubmitComment}
                 disabled={isSubmitting || !newComment.trim() || newComment.length > 500}
               >
                 <Send className="w-4 h-4 mr-2" />
-                Post Comment
+                Post Comment;
               </Button>
             </div>
           </div>
@@ -603,7 +604,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {}
         ))}
         {hasMore && (
           <div className="text-center">
-            <Button
+            <Button;
               variant="outline"
               onClick={loadMoreComments}
               disabled={isLoading}

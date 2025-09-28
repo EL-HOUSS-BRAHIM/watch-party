@@ -1,24 +1,23 @@
-"use client"
-
 import { useState } from 'react'
 import { AlertTriangle, Wifi, WifiOff } from "lucide-react"
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
+"use client"
 
 interface SocialLoginErrorProps {}
   error: 'cancelled' | 'failed' | 'network' | 'denied' | 'invalid_state'
   provider: 'google' | 'discord' | 'github'
-  onRetry: () => void
-  onDismiss: () => void
+  onRetry: () => void;
+  onDismiss: () => void;
 }
 
 export function SocialLoginError({ error, provider, onRetry, onDismiss }: SocialLoginErrorProps) {}
   const getErrorConfig = () => {}
-    switch (error) {
+    switch (error) {}
       case 'cancelled':
-        return {
+        return {}
           title: 'Login Cancelled',
           description: `You cancelled the ${provider} login process.`,
           action: 'Try Again',
@@ -26,7 +25,7 @@ export function SocialLoginError({ error, provider, onRetry, onDismiss }: Social
           icon: <AlertTriangle className="h-4 w-4" />
         }
       case 'failed':
-        return {
+        return {}
           title: 'Login Failed',
           description: `Unable to sign in with ${provider}. Please try again.`,
           action: 'Retry Login',
@@ -34,7 +33,7 @@ export function SocialLoginError({ error, provider, onRetry, onDismiss }: Social
           icon: <AlertTriangle className="h-4 w-4" />
         }
       case 'network':
-        return {
+        return {}
           title: 'Connection Error',
           description: 'Unable to connect to the authentication service.',
           action: 'Check Connection',
@@ -42,7 +41,7 @@ export function SocialLoginError({ error, provider, onRetry, onDismiss }: Social
           icon: <WifiOff className="h-4 w-4" />
         }
       case 'denied':
-        return {
+        return {}
           title: 'Access Denied',
           description: `${provider} denied the login request. Please check your permissions.`,
           action: 'Try Again',
@@ -50,7 +49,7 @@ export function SocialLoginError({ error, provider, onRetry, onDismiss }: Social
           icon: <AlertTriangle className="h-4 w-4" />
         }
       case 'invalid_state':
-        return {
+        return {}
           title: 'Security Error',
           description: 'Login request appears to be invalid. Please start over.',
           action: 'Start Over',
@@ -58,7 +57,7 @@ export function SocialLoginError({ error, provider, onRetry, onDismiss }: Social
           icon: <AlertTriangle className="h-4 w-4" />
         }
       default:
-        return {
+        return {}
           title: 'Unknown Error',
           description: 'Something went wrong during login.',
           action: 'Try Again',
@@ -83,14 +82,14 @@ export function SocialLoginError({ error, provider, onRetry, onDismiss }: Social
       </CardHeader>
       <CardContent>
         <div className="flex gap-2">
-          <Button
+          <Button;
             variant="outline" 
             onClick={onDismiss}
             className="flex-1"
           >
-            Cancel
+            Cancel;
           </Button>
-          <Button
+          <Button;
             variant={config.variant}
             onClick={onRetry}
             className="flex-1"

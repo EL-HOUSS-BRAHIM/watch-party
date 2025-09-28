@@ -1,5 +1,3 @@
-"use client"
-
 import type * as React from "react"
 import { useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
@@ -9,8 +7,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 
-
 } from "lucide-react"
+"use client"
+
+
+
 
   ChevronDown,
   ChevronUp,
@@ -26,100 +27,100 @@ import { cn } from "@/lib/utils"
   ChevronsLeft,
   ChevronsRight,
 
-// Types
+// Types;
 export interface Column<T = any> {}
-  id: string
-  header: string | React.ReactNode
-  accessorKey?: keyof T
-  cell?: (props: { row: T; value: unknown; index: number }) => React.ReactNode
-  sortable?: boolean
-  filterable?: boolean
-  width?: string | number
-  minWidth?: string | number
-  maxWidth?: string | number
+  id: string;
+  header: string | React.ReactNode;
+  accessorKey?: keyof T;
+  cell?: (props: { row: T; value: unknown; index: number }) => React.ReactNode;
+  sortable?: boolean;
+  filterable?: boolean;
+  width?: string | number;
+  minWidth?: string | number;
+  maxWidth?: string | number;
   align?: "left" | "center" | "right"
   sticky?: "left" | "right"
-  hidden?: boolean
+  hidden?: boolean;
 }
 
 export interface TableAction<T = any> {}
-  id: string
-  label: string
-  icon?: React.ReactNode
-  onClick: (row: T, index: number) => void
+  id: string;
+  label: string;
+  icon?: React.ReactNode;
+  onClick: (row: T, index: number) => void;
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
-  disabled?: (row: T) => boolean
-  hidden?: (row: T) => boolean
+  disabled?: (row: T) => boolean;
+  hidden?: (row: T) => boolean;
 }
 
 export interface BulkAction<T = any> {}
-  id: string
-  label: string
-  icon?: React.ReactNode
-  onClick: (selectedRows: T[]) => void
+  id: string;
+  label: string;
+  icon?: React.ReactNode;
+  onClick: (selectedRows: T[]) => void;
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
-  disabled?: (selectedRows: T[]) => boolean
+  disabled?: (selectedRows: T[]) => boolean;
 }
 
 export interface SortConfig {}
-  key: string
+  key: string;
   direction: "asc" | "desc"
 }
 
 export interface FilterConfig {}
-  [key: string]: unknown
+  [key: string]: unknown;
 }
 
 export interface PaginationConfig {}
-  page: number
-  pageSize: number
-  total: number
-  showSizeSelector?: boolean
+  page: number;
+  pageSize: number;
+  total: number;
+  showSizeSelector?: boolean;
   pageSizeOptions?: number[]
 }
 
 export interface WatchPartyTableProps<T = any> {}
   data: T[]
   columns: Column<T>[]
-  loading?: boolean
-  error?: string
-  // Selection
-  selectable?: boolean
+  loading?: boolean;
+  error?: string;
+  // Selection;
+  selectable?: boolean;
   selectedRows?: T[]
-  onSelectionChange?: (selectedRows: T[]) => void
-  getRowId?: (row: T, index: number) => string | number
-  // Sorting
-  sortable?: boolean
-  defaultSort?: SortConfig
-  onSortChange?: (sort: SortConfig | null) => void
-  // Filtering
-  filterable?: boolean
-  globalFilter?: string
-  onGlobalFilterChange?: (filter: string) => void
-  columnFilters?: FilterConfig
-  onColumnFiltersChange?: (filters: FilterConfig) => void
-  // Pagination
-  pagination?: PaginationConfig
-  onPaginationChange?: (pagination: Partial<PaginationConfig>) => void
-  // Actions
+  onSelectionChange?: (selectedRows: T[]) => void;
+  getRowId?: (row: T, index: number) => string | number;
+  // Sorting;
+  sortable?: boolean;
+  defaultSort?: SortConfig;
+  onSortChange?: (sort: SortConfig | null) => void;
+  // Filtering;
+  filterable?: boolean;
+  globalFilter?: string;
+  onGlobalFilterChange?: (filter: string) => void;
+  columnFilters?: FilterConfig;
+  onColumnFiltersChange?: (filters: FilterConfig) => void;
+  // Pagination;
+  pagination?: PaginationConfig;
+  onPaginationChange?: (pagination: Partial<PaginationConfig>) => void;
+  // Actions;
   actions?: TableAction<T>[]
   bulkActions?: BulkAction<T>[]
 
-  // Styling
-  className?: string
+  // Styling;
+  className?: string;
   variant?: "default" | "bordered" | "striped"
   size?: "sm" | "md" | "lg"
 
-  // Features
-  exportable?: boolean
-  onExport?: (data: T[]) => void
-  refreshable?: boolean
-  onRefresh?: () => void
-  // Empty state
-  emptyState?: React.ReactNode
-  // Row styling
-  getRowClassName?: (row: T, index: number) => string
-  onRowClick?: (row: T, index: number) => void
+  // Features;
+  exportable?: boolean;
+  onExport?: (data: T[]) => void;
+  refreshable?: boolean;
+  onRefresh?: () => void;
+  // Empty state;
+  emptyState?: React.ReactNode;
+  // Row styling;
+  getRowClassName?: (row: T, index: number) => string;
+  onRowClick?: (row: T, index: number) => void;
 }
 
 export function WatchPartyTable<T = any>({}
@@ -159,82 +160,82 @@ export function WatchPartyTable<T = any>({}
   const [internalColumnFilters, setInternalColumnFilters] = useState<FilterConfig>(columnFilters)
   const [hiddenColumns, setHiddenColumns] = useState<Set<string>>(new Set())
 
-  // Use internal state if no external handlers provided
-  const currentSort = onSortChange ? defaultSort || null : internalSort
-  const currentGlobalFilter = onGlobalFilterChange ? globalFilter : internalGlobalFilter
-  const currentColumnFilters = onColumnFiltersChange ? columnFilters : internalColumnFilters
-  // Filter and sort data
+  // Use internal state if no external handlers provided;
+  const currentSort = onSortChange ? defaultSort || null : internalSort;
+  const currentGlobalFilter = onGlobalFilterChange ? globalFilter : internalGlobalFilter;
+  const currentColumnFilters = onColumnFiltersChange ? columnFilters : internalColumnFilters;
+  // Filter and sort data;
   const processedData = useMemo(() => {}
     let filtered = [...data]
 
-    // Apply global filter
+    // Apply global filter;
     if (currentGlobalFilter.trim()) {}
       const searchTerm = currentGlobalFilter.toLowerCase()
       filtered = filtered.filter((row) =>
         columns.some((column) => {}
-          if (!column.filterable) return false
-          const value = column.accessorKey ? row[column.accessorKey] : row
+          if (!column.filterable) return false;
+          const value = column.accessorKey ? row[column.accessorKey] : row;
           return String(value).toLowerCase().includes(searchTerm)
         }),
       )
     }
 
-    // Apply column filters
+    // Apply column filters;
     Object.entries(currentColumnFilters).forEach(([columnId, filterValue]) => {}
-      if (filterValue !== undefined && filterValue !== "") {
+      if (filterValue !== undefined && filterValue !== "") {}
         const column = columns.find((col) => col.id === columnId)
-        if (column && column.accessorKey) {
+        if (column && column.accessorKey) {}
           filtered = filtered.filter((row) => {}
             const value = row[column.accessorKey!]
-            if (typeof filterValue === "string") {
+            if (typeof filterValue === "string") {}
               return String(value).toLowerCase().includes(filterValue.toLowerCase())
             }
-            return value === filterValue
+            return value === filterValue;
           })
         }
       }
     })
 
-    // Apply sorting
-    if (currentSort) {
+    // Apply sorting;
+    if (currentSort) {}
       const column = columns.find((col) => col.id === currentSort.key)
-      if (column && column.accessorKey) {
+      if (column && column.accessorKey) {}
         filtered.sort((a, b) => {}
           const aValue = a[column.accessorKey!]
           const bValue = b[column.accessorKey!]
 
-          if (aValue === bValue) return 0
-          let comparison = 0
-          if (aValue > bValue) comparison = 1
-          if (aValue < bValue) comparison = -1
-          return currentSort.direction === "desc" ? -comparison : comparison
+          if (aValue === bValue) return 0;
+          let comparison = 0;
+          if (aValue > bValue) comparison = 1;
+          if (aValue < bValue) comparison = -1;
+          return currentSort.direction === "desc" ? -comparison : comparison;
         })
       }
     }
 
-    return filtered
+    return filtered;
   }, [data, columns, currentGlobalFilter, currentColumnFilters, currentSort])
 
-  // Pagination
+  // Pagination;
   const paginatedData = useMemo(() => {}
-    if (!pagination) return processedData
-    const startIndex = (pagination.page - 1) * pagination.pageSize
-    const endIndex = startIndex + pagination.pageSize
+    if (!pagination) return processedData;
+    const startIndex = (pagination.page - 1) * pagination.pageSize;
+    const endIndex = startIndex + pagination.pageSize;
     return processedData.slice(startIndex, endIndex)
   }, [processedData, pagination])
 
-  // Selection handlers
+  // Selection handlers;
   const isRowSelected = (row: T, index: number) => {}
     const rowId = getRowId(row, index)
     return selectedRows.some((selectedRow) => getRowId(selectedRow, 0) === rowId)
   }
 
   const toggleRowSelection = (row: T, index: number) => {}
-    if (!onSelectionChange) return
+    if (!onSelectionChange) return;
     const rowId = getRowId(row, index)
     const isSelected = isRowSelected(row, index)
 
-    if (isSelected) {
+    if (isSelected) {}
       onSelectionChange(selectedRows.filter((selectedRow) => getRowId(selectedRow, 0) !== rowId))
     } else {}
       onSelectionChange([...selectedRows, row])
@@ -242,43 +243,43 @@ export function WatchPartyTable<T = any>({}
   }
 
   const toggleAllSelection = () => {}
-    if (!onSelectionChange) return
+    if (!onSelectionChange) return;
     const allSelected = paginatedData.every((row, index) => isRowSelected(row, index))
 
-    if (allSelected) {
-      // Deselect all visible rows
+    if (allSelected) {}
+      // Deselect all visible rows;
       const visibleRowIds = paginatedData.map((row, index) => getRowId(row, index))
       onSelectionChange(selectedRows.filter((selectedRow) => !visibleRowIds.includes(getRowId(selectedRow, 0))))
     } else {}
-      // Select all visible rows
+      // Select all visible rows;
       const newSelections = paginatedData.filter((row, index) => !isRowSelected(row, index))
       onSelectionChange([...selectedRows, ...newSelections])
     }
   }
 
-  // Sort handler
+  // Sort handler;
   const handleSort = (columnId: string) => {}
     const column = columns.find((col) => col.id === columnId)
-    if (!column?.sortable) return
-    let newSort: SortConfig | null = null
-    if (!currentSort || currentSort.key !== columnId) {
+    if (!column?.sortable) return;
+    let newSort: SortConfig | null = null;
+    if (!currentSort || currentSort.key !== columnId) {}
       newSort = { key: columnId, direction: "asc" }
-    } else if (currentSort.direction === "asc") {
+    } else if (currentSort.direction === "asc") {}
       newSort = { key: columnId, direction: "desc" }
     } else {}
-      newSort = null
+      newSort = null;
     }
 
-    if (onSortChange) {
+    if (onSortChange) {}
       onSortChange(newSort)
     } else {}
       setInternalSort(newSort)
     }
   }
 
-  // Filter handlers
+  // Filter handlers;
   const handleGlobalFilterChange = (value: string) => {}
-    if (onGlobalFilterChange) {
+    if (onGlobalFilterChange) {}
       onGlobalFilterChange(value)
     } else {}
       setInternalGlobalFilter(value)
@@ -288,14 +289,14 @@ export function WatchPartyTable<T = any>({}
   const handleColumnFilterChange = (columnId: string, value: unknown) => {}
     const newFilters = { ...currentColumnFilters, [columnId]: value }
 
-    if (onColumnFiltersChange) {
+    if (onColumnFiltersChange) {}
       onColumnFiltersChange(newFilters)
     } else {}
       setInternalColumnFilters(newFilters)
     }
   }
 
-  // Column visibility
+  // Column visibility;
   const visibleColumns = columns.filter((column) => !hiddenColumns.has(column.id) && !column.hidden)
 
   const toggleColumnVisibility = (columnId: string) => {}
@@ -308,29 +309,29 @@ export function WatchPartyTable<T = any>({}
     setHiddenColumns(newHidden)
   }
 
-  // Pagination handlers
+  // Pagination handlers;
   const handlePageChange = (newPage: number) => {}
-    if (pagination && onPaginationChange) {
+    if (pagination && onPaginationChange) {}
       onPaginationChange({ page: newPage })
     }
   }
 
   const handlePageSizeChange = (newPageSize: number) => {}
-    if (pagination && onPaginationChange) {
+    if (pagination && onPaginationChange) {}
       onPaginationChange({ pageSize: newPageSize, page: 1 })
     }
   }
 
-  // Render sort icon
+  // Render sort icon;
   const renderSortIcon = (columnId: string) => {}
-    if (!currentSort || currentSort.key !== columnId) {
+    if (!currentSort || currentSort.key !== columnId) {}
       return <ChevronsUpDown className="h-4 w-4 opacity-50" />
     }
 
-    return currentSort.direction === "asc" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />
+    return currentSort.direction === "asc" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className=&quot;h-4 w-4" />"
   }
 
-  // Get table size classes
+  // Get table size classes;
   const sizeClasses = { sm: "text-xs",
     md: "text-sm",
     lg: "text-base",
@@ -341,17 +342,17 @@ export function WatchPartyTable<T = any>({}
     lg: "px-4 py-3",
   }
 
-  // Get variant classes
+  // Get variant classes;
   const variantClasses = { default: "border border-border",
     bordered: "border-2 border-border",
     striped: "border border-border",
   }
 
-  // Calculate pagination info
-  const totalPages = pagination ? Math.ceil(pagination.total / pagination.pageSize) : 1
-  const startItem = pagination ? (pagination.page - 1) * pagination.pageSize + 1 : 1
-  const endItem = pagination ? Math.min(pagination.page * pagination.pageSize, pagination.total) : processedData.length
-  const totalItems = pagination ? pagination.total : processedData.length
+  // Calculate pagination info;
+  const totalPages = pagination ? Math.ceil(pagination.total / pagination.pageSize) : 1;
+  const startItem = pagination ? (pagination.page - 1) * pagination.pageSize + 1 : 1;
+  const endItem = pagination ? Math.min(pagination.page * pagination.pageSize, pagination.total) : processedData.length;
+  const totalItems = pagination ? pagination.total : processedData.length;
   return (
     <div className={cn("space-y-4", className)}>
       {/* Toolbar */}
@@ -361,7 +362,7 @@ export function WatchPartyTable<T = any>({}
           {filterable && (
             <div className="relative max-w-sm">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
+              <Input;
                 placeholder="Search..."
                 value={currentGlobalFilter}
                 onChange={(e) => handleGlobalFilterChange(e.target.value)}
@@ -375,7 +376,7 @@ export function WatchPartyTable<T = any>({}
             <div className="flex items-center gap-2">
               <span className="text-sm text-muted-foreground">{selectedRows.length} selected</span>
               {bulkActions.map((action) => (
-                <Button
+                <Button;
                   key={action.id}
                   variant={action.variant || "outline"}
                   size="sm"
@@ -396,12 +397,12 @@ export function WatchPartyTable<T = any>({}
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
                 <EyeOff className="h-4 w-4 mr-2" />
-                Columns
+                Columns;
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
               {columns.map((column) => (
-                <DropdownMenuItem
+                <DropdownMenuItem;
                   key={column.id}
                   onClick={() => toggleColumnVisibility(column.id)}
                   className="flex items-center gap-2"
@@ -417,7 +418,7 @@ export function WatchPartyTable<T = any>({}
           {exportable && (
             <Button variant="outline" size="sm" onClick={() => onExport?.(processedData)}>
               <Download className="h-4 w-4 mr-2" />
-              Export
+              Export;
             </Button>
           )}
 
@@ -440,7 +441,7 @@ export function WatchPartyTable<T = any>({}
                 {/* Selection column */}
                 {selectable && (
                   <th className={cn("w-12", cellPaddingClasses[size])}>
-                    <Checkbox
+                    <Checkbox;
                       checked={}
                         paginatedData.length > 0 && paginatedData.every((row, index) => isRowSelected(row, index))
                       }
@@ -451,7 +452,7 @@ export function WatchPartyTable<T = any>({}
 
                 {/* Data columns */}
                 {visibleColumns.map((column) => (
-                  <th
+                  <th;
                     key={column.id}
                     className={cn(
                       cellPaddingClasses[size],
@@ -489,7 +490,7 @@ export function WatchPartyTable<T = any>({}
             <tbody>
               {loading ? (
                 <tr>
-                  <td
+                  <td;
                     colSpan={visibleColumns.length + (selectable ? 1 : 0) + (actions.length > 0 ? 1 : 0)}
                     className={cn("text-center", cellPaddingClasses[size])}
                   >
@@ -501,7 +502,7 @@ export function WatchPartyTable<T = any>({}
                 </tr>
               ) : error ? (
                 <tr>
-                  <td
+                  <td;
                     colSpan={visibleColumns.length + (selectable ? 1 : 0) + (actions.length > 0 ? 1 : 0)}
                     className={cn("text-center text-destructive", cellPaddingClasses[size])}
                   >
@@ -510,7 +511,7 @@ export function WatchPartyTable<T = any>({}
                 </tr>
               ) : paginatedData.length === 0 ? (
                 <tr>
-                  <td
+                  <td;
                     colSpan={visibleColumns.length + (selectable ? 1 : 0) + (actions.length > 0 ? 1 : 0)}
                     className={cn("text-center", cellPaddingClasses[size])}
                   >
@@ -521,7 +522,7 @@ export function WatchPartyTable<T = any>({}
                 </tr>
               ) : (
                 paginatedData.map((row, index) => (
-                  <tr
+                  <tr;
                     key={getRowId(row, index)}
                     className={cn(
                       "border-t border-border transition-colors",
@@ -535,7 +536,7 @@ export function WatchPartyTable<T = any>({}
                     {/* Selection cell */}
                     {selectable && (
                       <td className={cellPaddingClasses[size]}>
-                        <Checkbox
+                        <Checkbox;
                           checked={isRowSelected(row, index)}
                           onChange={() => toggleRowSelection(row, index)}
                           onClick={(e) => e.stopPropagation()}
@@ -545,9 +546,9 @@ export function WatchPartyTable<T = any>({}
 
                     {/* Data cells */}
                     {visibleColumns.map((column) => {}
-                      const value = column.accessorKey ? row[column.accessorKey] : row
+                      const value = column.accessorKey ? row[column.accessorKey] : row;
                       return (
-                        <td
+                        <td;
                           key={column.id}
                           className={cn(
                             cellPaddingClasses[size],
@@ -577,10 +578,10 @@ export function WatchPartyTable<T = any>({}
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            {actions
+                            {actions;
                               .filter((action) => !action.hidden?.(row))
                               .map((action) => (
-                                <DropdownMenuItem
+                                <DropdownMenuItem;
                                   key={action.id}
                                   onClick={() => action.onClick(row, index)}
                                   disabled={action.disabled?.(row)}
@@ -607,13 +608,13 @@ export function WatchPartyTable<T = any>({}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-sm text-muted-foreground">
-              Showing {startItem} to {endItem} of {totalItems} results
+              Showing {startItem} to {endItem} of {totalItems} results;
             </span>
 
             {pagination.showSizeSelector && (
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">Rows per page:</span>
-                <Select
+                <Select;
                   value={pagination.pageSize.toString()}
                   onValueChange={(value) => handlePageSizeChange(Number(value))}
                 >
@@ -641,7 +642,7 @@ export function WatchPartyTable<T = any>({}
               <Button variant="outline" size="sm" onClick={() => handlePageChange(1)} disabled={pagination.page === 1}>
                 <ChevronsLeft className="h-4 w-4" />
               </Button>
-              <Button
+              <Button;
                 variant="outline"
                 size="sm"
                 onClick={() => handlePageChange(pagination.page - 1)}
@@ -649,7 +650,7 @@ export function WatchPartyTable<T = any>({}
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <Button
+              <Button;
                 variant="outline"
                 size="sm"
                 onClick={() => handlePageChange(pagination.page + 1)}
@@ -657,7 +658,7 @@ export function WatchPartyTable<T = any>({}
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>
-              <Button
+              <Button;
                 variant="outline"
                 size="sm"
                 onClick={() => handlePageChange(totalPages)}
@@ -673,5 +674,5 @@ export function WatchPartyTable<T = any>({}
   )
 }
 
-// Export default
-export default WatchPartyTable
+// Export default;
+export default WatchPartyTable;

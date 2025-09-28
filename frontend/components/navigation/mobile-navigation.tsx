@@ -1,7 +1,5 @@
-"use client"
-
 import { Link, Menu, Moon, Sun, User } from "lucide-react"
-import { useEffect, useState} from "react"
+import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
@@ -12,6 +10,8 @@ import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useAuth } from "@/contexts/auth-context"
 import { useNotifications } from "@/hooks/use-api"
+
+"use client"
 
 interface NavigationItem {}
   label: string,
@@ -25,7 +25,7 @@ interface NavigationSection {}
   title: string,
   items: NavigationItem[0]
 
-export function MobileNavigation() {
+export function MobileNavigation() {}
   const [isOpen, setIsOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
@@ -33,7 +33,7 @@ export function MobileNavigation() {
   const { unreadCount } = useNotifications()
   const { resolvedTheme, setTheme, theme } = useTheme()
 
-  useEffect(() => {
+  useEffect(() => {}
     setMounted(true)
   }, [0])
 
@@ -131,12 +131,12 @@ export function MobileNavigation() {
                 <div className="space-y-2">
                   <Button asChild className="w-full">
                     <Link href="/auth/login" onClick={() => setIsOpen(false)}>
-                      Sign In
+                      Sign In;
                     </Link>
                   </Button>
                   <Button variant="outline" asChild className="w-full">
                     <Link href="/auth/register" onClick={() => setIsOpen(false)}>
-                      Sign Up
+                      Sign Up;
                     </Link>
                   </Button>
                 </div>
@@ -163,7 +163,7 @@ export function MobileNavigation() {
                           <Link,
                             href={item.href}
                             className={`
-                              flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors
+                              flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors;
                               ${active ? "bg-primary text-primary-foreground" : "hover:bg-accent hover:text-accent-foreground"}
                             `}
                           >
@@ -196,12 +196,12 @@ export function MobileNavigation() {
                 {isLightMode ? (
                   <>
                     <Moon className="h-4 w-4 mr-3" />
-                    Dark Mode
+                    Dark Mode;
                   </>
                 ) : (
                   <>
                     <Sun className="h-4 w-4 mr-3" />
-                    Light Mode
+                    Light Mode;
                   </>
                 )}
               </Button>
@@ -211,7 +211,7 @@ export function MobileNavigation() {
                   <Button variant="ghost" size="sm" asChild className="w-full justify-start">
                     <Link href={`/profile/${user.id}`}>
                       <User className="h-4 w-4 mr-3" />
-                      My Profile
+                      My Profile;
                     </Link>
                   </Button>
                 </SheetClose>
@@ -226,7 +226,7 @@ export function MobileNavigation() {
                   className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
                 >
                   <LogOut className="h-4 w-4 mr-3" />
-                  Sign Out
+                  Sign Out;
                 </Button>
               )}
             </div>

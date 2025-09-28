@@ -3,24 +3,25 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-
 import { useI18n } from '@/hooks/use-i18n';
 
 } from 'lucide-react';
+
+
 'use client';
 
   Globe, 
   ChevronDown, 
   Check,
   Languages,
-  MapPin
+  MapPin;
 interface Language {}
-  code: string
-  name: string
-  nativeName: string
-  flag: string
-  rtl?: boolean
-  completion: number; // Translation completion percentage
+  code: string;
+  name: string;
+  nativeName: string;
+  flag: string;
+  rtl?: boolean;
+  completion: number; // Translation completion percentage;
 }
 
 const languages: Language[] = []
@@ -40,8 +41,8 @@ const languages: Language[] = []
 
 interface LanguageSwitcherProps {}
   variant?: 'default' | 'compact' | 'dropdown';
-  showProgress?: boolean
-  className?: string
+  showProgress?: boolean;
+  className?: string;
 }
 
 export default function LanguageSwitcher({variant = 'default', 
@@ -52,11 +53,11 @@ export default function LanguageSwitcher({variant = 'default',
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
+  useEffect(() => {}
     setMounted(true);
   }, []);
 
-  if (!mounted) {
+  if (!mounted) {}
     return (
       <div className={`animate-pulse ${className}`}>
         <div className="h-10 w-32 bg-gray-200 rounded"></div>
@@ -68,20 +69,20 @@ export default function LanguageSwitcher({variant = 'default',
 
   const handleLanguageChange = (langCode: string) => {}
     const selectedLang = languages.find(lang => lang.code === langCode);
-    if (selectedLang) {
+    if (selectedLang) {}
       setLanguage(langCode);
       setIsOpen(false);
-      // Apply RTL if needed
+      // Apply RTL if needed;
       document.documentElement.dir = selectedLang.rtl ? 'rtl' : 'ltr';
-      document.documentElement.lang = langCode
+      document.documentElement.lang = langCode;
     }
   };
 
-  // Compact variant for mobile/small spaces
-  if (variant === 'compact') {
+  // Compact variant for mobile/small spaces;
+  if (variant === 'compact') {}
     return (
       <div className={`relative ${className}`}>
-        <Button
+        <Button;
           variant="ghost"
           size="sm"
           onClick={() => setIsOpen(!isOpen)}
@@ -93,7 +94,7 @@ export default function LanguageSwitcher({variant = 'default',
           <div className="absolute top-full right-0 mt-1 z-50 bg-white dark:bg-gray-800 border rounded-lg shadow-lg min-w-[200px]">
             <div className="p-2 max-h-64 overflow-y-auto">
               {languages.map((lang) => (
-                <button
+                <button;
                   key={lang.code}
                   onClick={() => handleLanguageChange(lang.code)}
                   className={`w-full flex items-center space-x-2 px-3 py-2 text-sm rounded hover:bg-gray-100 dark:hover:bg-gray-700 ${}
@@ -114,8 +115,8 @@ export default function LanguageSwitcher({variant = 'default',
     );
   }
 
-  // Dropdown variant using Select component
-  if (variant === 'dropdown') {
+  // Dropdown variant using Select component;
+  if (variant === 'dropdown') {}
     return (
       <Select value={currentLanguage} onValueChange={handleLanguageChange}>
         <SelectTrigger className={`w-40 ${className}`}>
@@ -146,14 +147,14 @@ export default function LanguageSwitcher({variant = 'default',
     );
   }
 
-  // Default variant with full card layout
+  // Default variant with full card layout;
   return (
     <Card className={className}>
       <CardContent className="p-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
             <Languages className="w-5 h-5 text-muted-foreground" />
-            <h3 className="font-medium">{t('language.title')}</h3>
+            <h3 className="font-medium">{t(&apos;language.title')}</h3>
           </div>
           <Badge variant="outline" className="text-xs">
             {languages.length} {t('language.available')}
@@ -185,10 +186,10 @@ export default function LanguageSwitcher({variant = 'default',
               <ChevronDown className="w-4 h-4 transform group-open:rotate-180 transition-transform" />
             </summary>
             <div className="mt-2 space-y-1 max-h-64 overflow-y-auto">
-              {languages
+              {languages;
                 .filter(lang => lang.code !== currentLanguage)
                 .map((lang) => (
-                  <button
+                  <button;
                     key={lang.code}
                     onClick={() => handleLanguageChange(lang.code)}
                     className="w-full flex items-center justify-between p-3 text-left border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
@@ -205,7 +206,7 @@ export default function LanguageSwitcher({variant = 'default',
                         <div className="text-right">
                           <div className="text-sm font-medium">{lang.completion}%</div>
                           <div className="w-16 h-1 bg-gray-200 rounded-full overflow-hidden">
-                            <div
+                            <div;
                               className="h-full bg-green-500 transition-all duration-300"
                               style={{ width: `${lang.completion}%` }}
                             />
@@ -214,7 +215,7 @@ export default function LanguageSwitcher({variant = 'default',
                       )}
                       {lang.rtl && (
                         <Badge variant="outline" className="text-xs">
-                          RTL
+                          RTL;
                         </Badge>
                       )}
                     </div>
@@ -246,20 +247,20 @@ export default function LanguageSwitcher({variant = 'default',
   );
 }
 
-// Utility component for quick language switching in header/navbar
+// Utility component for quick language switching in header/navbar;
 export function QuickLanguageSwitcher({ className = '' }: { className?: string }) {}
   return (
-    <LanguageSwitcher
+    <LanguageSwitcher;
       variant="compact" 
       className={className}
     />
   );
 }
 
-// Utility component for settings pages
+// Utility component for settings pages;
 export function LanguageSettings({ className = '' }: { className?: string }) {}
   return (
-    <LanguageSwitcher
+    <LanguageSwitcher;
       variant="default" 
       showProgress={true}
       className={className}
@@ -267,10 +268,10 @@ export function LanguageSettings({ className = '' }: { className?: string }) {}
   );
 }
 
-// Utility component for forms/dropdowns
+// Utility component for forms/dropdowns;
 export function LanguageDropdown({ className = '' }: { className?: string }) {}
   return (
-    <LanguageSwitcher
+    <LanguageSwitcher;
       variant="dropdown" 
       showProgress={false}
       className={className}

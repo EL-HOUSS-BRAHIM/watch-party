@@ -1,8 +1,9 @@
+
 "use client"
 
 interface PublicProfilePageProps {}
   params: {}
-    userId: string
+    userId: string;
   }
 }
 
@@ -20,4 +21,4 @@ const PublicProfilePage = ({ params }: PublicProfilePageProps) => {}
   )
 }
 
-export default PublicProfilePage
+export default PublicProfilePage;

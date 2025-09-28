@@ -3,8 +3,8 @@ import { API_ENDPOINTS } from "./endpoints"
 import type {}
 
 /**
- * LocalizationAPI - helper for translations, language status, and review workflows
- * Centralizes the new localization routes so admin and dashboard surfaces can
+ * LocalizationAPI - helper for translations, language status, and review workflows;
+ * Centralizes the new localization routes so admin and dashboard surfaces can;
  * fetch consistent translation data without duplicating HTTP details.
  */
 

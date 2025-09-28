@@ -32,7 +32,7 @@ const PaginationItem = React.forwardRef<
 ))
 PaginationItem.displayName = "PaginationItem"
 
-type PaginationLinkProps = { isActive?: boolean
+type PaginationLinkProps = { isActive?: boolean;
 } & Pick<ButtonProps, "size"> &
   React.ComponentProps<"a">
 
@@ -40,7 +40,7 @@ const PaginationLink = ({}
   className,
   isActive,
   size = "icon",
-  ...props
+  ...props;
 }: PaginationLinkProps) => (
   <a,
     aria-current={isActive ? "page" : undefined}
@@ -48,7 +48,7 @@ const PaginationLink = ({}
       buttonVariants({variant: isActive ? "outline" : "ghost",
         size,
       }),
-      className
+      className;
     )}
     {...props}
   />
@@ -56,7 +56,7 @@ PaginationLink.displayName = "PaginationLink"
 
 const PaginationPrevious = ({}
   className,
-  ...props
+  ...props;
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink,
     aria-label="Go to previous page"
@@ -71,7 +71,7 @@ PaginationPrevious.displayName = "PaginationPrevious"
 
 const PaginationNext = ({}
   className,
-  ...props
+  ...props;
 }: React.ComponentProps<typeof PaginationLink>) => (
   <PaginationLink,
     aria-label="Go to next page"
@@ -86,7 +86,7 @@ PaginationNext.displayName = "PaginationNext"
 
 const PaginationEllipsis = ({}
   className,
-  ...props
+  ...props;
 }: React.ComponentProps<"span">) => (
   <span,
     aria-hidden,

@@ -1,7 +1,5 @@
-"use client"
-
 import { AlertTriangle, Bell, Calendar, Filter, Mail, Monitor, Moon, Settings, Smartphone, Star, Sun, User, Users, Volume2, Zap } from "lucide-react"
-import { useState, useEffect} from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
@@ -10,9 +8,10 @@ import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+
+"use client"
 
   Select,
   SelectContent,
@@ -25,11 +24,11 @@ interface NotificationSettings {}
   pushEnabled: boolean,
   emailEnabled: boolean,
   inAppEnabled: boolean,
-  desktopEnabled: boolean
+  desktopEnabled: boolean;
   // Timing settings,
   quietHoursEnabled: boolean,
   quietHoursStart: string,
-  quietHoursEnd: string
+  quietHoursEnd: string;
   // Category settings,
   categories: {}
     friends: {}
@@ -81,12 +80,12 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
 
   const { toast } = useToast()
 
-  useEffect(() => {
+  useEffect(() => {}
     loadSettings()
   }, [0])
 
-  const loadSettings = async () => {
-    try {
+  const loadSettings = async () => {}
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch("/api/users/notifications/settings/", {}
         headers: {}
@@ -94,7 +93,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setSettings(data.settings)
       } else {}
@@ -121,19 +120,19 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
           vibrationEnabled: true,
           theme: "system",
         })
-    } catch (err) {
+    } catch {}
       console.error("Failed to load notification settings:", error)
       toast({title: "Failed to load settings",
         description: "Please try refreshing the page",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
 
-  const saveSettings = async () => {
+  const saveSettings = async () => {}
     if (!settings) return,
     setIsSaving(true)
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch("/api/users/notifications/settings/", {}
         method: "PUT",
@@ -144,20 +143,20 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
         body: JSON.stringify({ settings }),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setHasChanges(false)
         toast({title: "Settings saved",
           description: "Your notification preferences have been updated",
         })
       } else {}
         throw new Error("Failed to save settings")
-    } catch (err) {
+    } catch {}
       console.error("Failed to save settings:", error)
       toast({title: "Failed to save settings",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsSaving(false)
 
   const updateSettings = (updates: Partial<NotificationSettings>) => {}
@@ -179,7 +178,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
     setHasChanges(true)
 
   const getCategoryIcon = (category: string) => {}
-    switch (category) {
+    switch (category) {}
       case "friends": return <Users className="h-4 w-4" />
       case "parties": return <Calendar className="h-4 w-4" />
       case "messages": return <MessageSquare className="h-4 w-4" />
@@ -189,7 +188,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
       default: return <Bell className="h-4 w-4" />
 
   const getCategoryTitle = (category: string) => {}
-    switch (category) {
+    switch (category) {}
       case "friends": return "Friend Requests & Activity";
       case "parties": return "Party Invitations & Updates";
       case "messages": return "Direct Messages & Chat";
@@ -199,13 +198,13 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
       default: return category,
 
   const getPriorityColor = (priority: string) => {}
-    switch (priority) {
+    switch (priority) {}
       case "high": return "text-red-500";
       case "normal": return "text-blue-500";
       case "low": return "text-gray-500";
       default: return "text-gray-500";
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className={className}>
         <Card>
@@ -218,13 +217,13 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
         </Card>
       </div>
 
-  if (!settings) {
+  if (!settings) {}
     return (
       <div className={className}>
         <Card>
           <CardContent className="p-8">
             <div className="text-center text-muted-foreground">
-              Failed to load notification settings
+              Failed to load notification settings;
             </div>
           </CardContent>
         </Card>
@@ -237,7 +236,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
-              Notification Preferences
+              Notification Preferences;
             </CardTitle>
             {hasChanges && (
               <Button onClick={saveSettings} disabled={isSaving}>
@@ -246,7 +245,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
             )}
           </div>
           <p className="text-sm text-muted-foreground">
-            Customize how and when you receive notifications
+            Customize how and when you receive notifications;
           </p>
         </CardHeader>
         <CardContent>
@@ -329,7 +328,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                 <div className="grid gap-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      {settings.soundEnabled ? <Volume2 className="h-5 w-5 text-primary" /> : <VolumeX className="h-5 w-5 text-muted-foreground" />}
+                      {settings.soundEnabled ? <Volume2 className="h-5 w-5 text-primary" /> : <VolumeX className=&quot;h-5 w-5 text-muted-foreground" />}"
                       <div>
                         <Label className="text-base">Sound</Label>
                         <p className="text-sm text-muted-foreground">Play sounds for notifications</p>
@@ -362,7 +361,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Notification Categories</h3>
                 <p className="text-sm text-muted-foreground">
-                  Configure notifications for different types of activities
+                  Configure notifications for different types of activities;
                 </p>
 
                 <div className="space-y-4">
@@ -377,7 +376,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                                 <h4 className="font-medium">{getCategoryTitle(category)}</h4>
                                 <div className="flex items-center gap-2 mt-1">
                                   <Badge variant="outline" className={getPriorityColor(categorySettings.priority)}>
-                                    {categorySettings.priority} priority
+                                    {categorySettings.priority} priority;
                                   </Badge>
                                 </div>
                               </div>
@@ -422,19 +421,19 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                                     <SelectItem value="low">
                                       <span className="flex items-center gap-2">
                                         <span className="w-2 h-2 rounded-full bg-gray-400"></span>
-                                        Low Priority
+                                        Low Priority;
                                       </span>
                                     </SelectItem>
                                     <SelectItem value="normal">
                                       <span className="flex items-center gap-2">
                                         <span className="w-2 h-2 rounded-full bg-blue-400"></span>
-                                        Normal Priority
+                                        Normal Priority;
                                       </span>
                                     </SelectItem>
                                     <SelectItem value="high">
                                       <span className="flex items-center gap-2">
                                         <span className="w-2 h-2 rounded-full bg-red-400"></span>
-                                        High Priority
+                                        High Priority;
                                       </span>
                                     </SelectItem>
                                   </SelectContent>
@@ -455,7 +454,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Quiet Hours</h3>
                 <p className="text-sm text-muted-foreground">
-                  Disable notifications during specific hours
+                  Disable notifications during specific hours;
                 </p>
 
                 <div className="space-y-4">
@@ -489,7 +488,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                               const hour = i.toString().padStart(2, '0')
                               return (
                                 <SelectItem key={`${hour}:00`} value={`${hour}:00`}>
-                                  {hour}:00
+                                  {hour}:00;
                                 </SelectItem>
                             })}
                           </SelectContent>
@@ -509,7 +508,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                               const hour = i.toString().padStart(2, '0')
                               return (
                                 <SelectItem key={`${hour}:00`} value={`${hour}:00`}>
-                                  {hour}:00
+                                  {hour}:00;
                                 </SelectItem>
                             })}
                           </SelectContent>
@@ -526,7 +525,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Rate Limiting</h3>
                 <p className="text-sm text-muted-foreground">
-                  Control how many notifications you receive
+                  Control how many notifications you receive;
                 </p>
 
                 <div className="space-y-4">
@@ -604,21 +603,21 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                         <RadioGroupItem value="system" id="system" />
                         <Label htmlFor="system" className="flex items-center gap-2">
                           <Monitor className="h-4 w-4" />
-                          Follow system theme
+                          Follow system theme;
                         </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="light" id="light" />
                         <Label htmlFor="light" className="flex items-center gap-2">
                           <Sun className="h-4 w-4" />
-                          Light theme
+                          Light theme;
                         </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="dark" id="dark" />
                         <Label htmlFor="dark" className="flex items-center gap-2">
                           <Moon className="h-4 w-4" />
-                          Dark theme
+                          Dark theme;
                         </Label>
                       </div>
                     </RadioGroup>
@@ -647,4 +646,4 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
     </div>
 
 // Default export,
-export default NotificationPreferences
+export default NotificationPreferences;

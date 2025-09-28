@@ -1,5 +1,3 @@
-"use client"
-
 import { Check, Image, Info, MessageCircle, Phone, Plus, Search, User, Video } from "lucide-react"
 import { useState, useEffect, useRef , useCallback } from "react"
 import Image from "next/image"
@@ -13,12 +11,14 @@ import { messagingAPI } from "@/lib/api"
 import type { Conversation, Message, User } from "@/lib/api/types"
 import { formatDistanceToNow, format, isToday, isYesterday } from "date-fns"
 
+"use client"
+
 type OnlineUser = Pick<User, "id" | "username" | "firstName" | "lastName" | "avatar"> & {}
-  isOnline: boolean
-  lastSeen?: string
+  isOnline: boolean;
+  lastSeen?: string;
 }
 
-export default function MessagesPage() {
+export default function MessagesPage() {}
   const { user } = useAuth()
   const { toast } = useToast()
   const messagesEndRef = useRef<HTMLDivElement>(null)
@@ -34,19 +34,19 @@ export default function MessagesPage() {
   const [isSending, setIsSending] = useState(false)
   const [showUserSearch, setShowUserSearch] = useState(false)
 
-  useEffect(() => {
+  useEffect(() => {}
     loadConversations()
     loadOnlineUsers()
   }, [])
 
-  useEffect(() => {
-    if (selectedConversation) {
+  useEffect(() => {}
+    if (selectedConversation) {}
       loadMessages(selectedConversation.id)
       markConversationAsRead(selectedConversation.id)
     }
   }, [selectedConversation])
 
-  useEffect(() => {
+  useEffect(() => {}
     scrollToBottom()
   }, [messages])
 
@@ -54,26 +54,26 @@ export default function MessagesPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
-  const loadConversations = async () => {
-    try {
+  const loadConversations = async () => {}
+    try {}
       const data = await messagingAPI.getConversations()
       setConversations(data.results)
-    } catch (err) {
+    } catch {}
       console.error("Failed to load conversations:", error)
       toast({title: "Error",
         description: "Failed to load conversations. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
   const loadMessages = async (conversationId: string) => {}
-    try {
+    try {}
       const data = await messagingAPI.getMessages(conversationId)
       setMessages(data.results)
-    } catch (err) {
+    } catch {}
       console.error("Failed to load messages:", error)
       toast({title: "Error",
         description: "Failed to load messages. Please try again.",
@@ -82,8 +82,8 @@ export default function MessagesPage() {
     }
   }
 
-  const loadOnlineUsers = async () => {
-    try {
+  const loadOnlineUsers = async () => {}
+    try {}
       const data = await messagingAPI.getOnlineFriends()
       setOnlineUsers(
         data.map(friend => ({}
@@ -96,7 +96,7 @@ export default function MessagesPage() {
           lastSeen: friend.lastSeen,
         })),
       )
-    } catch (err) {
+    } catch {}
       console.error("Failed to load online users:", error)
     }
   }
@@ -107,49 +107,49 @@ export default function MessagesPage() {
     )
   }
 
-  const sendMessage = async () => {
-    if (!newMessage.trim() || !selectedConversation || isSending) return
+  const sendMessage = async () => {}
+    if (!newMessage.trim() || !selectedConversation || isSending) return;
     setIsSending(true)
     const messageContent = newMessage.trim()
     setNewMessage("")
 
-    try {
+    try {}
       const data = await messagingAPI.sendMessage(selectedConversation.id, {}
         content: messageContent,
         type: "text",
       })
       setMessages(prev => [...prev, data])
-      // Update conversation with last message
+      // Update conversation with last message;
       setConversations(prev => prev.map(conv => 
-        conv.id === selectedConversation.id
+        conv.id === selectedConversation.id;
           ? { ...conv, lastMessage: data, updatedAt: data.createdAt }
-          : conv
+          : conv;
       ))
-    } catch (err) {
+    } catch {}
       console.error("Failed to send message:", error)
-      setNewMessage(messageContent) // Restore message on failure
+      setNewMessage(messageContent) // Restore message on failure;
       toast({title: "Error",
         description: "Failed to send message. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsSending(false)
     }
   }
 
   const startDirectMessage = async (userId: string) => {}
-    try {
+    try {}
       const data = await messagingAPI.createConversation({type: "direct",
         participants: [userId],
       })
       setConversations(prev => {}
         const exists = prev.find(conv => conv.id === data.id)
-        if (exists) return prev
+        if (exists) return prev;
         return [data, ...prev]
       })
       setSelectedConversation(data)
       setShowUserSearch(false)
-    } catch (err) {
+    } catch {}
       console.error("Failed to start direct message:", error)
       toast({title: "Error",
         description: "Failed to start conversation. Please try again.",
@@ -170,24 +170,24 @@ export default function MessagesPage() {
   }
 
   const getConversationName = (conversation: Conversation) => {}
-    if (conversation.type === "group" && conversation.name) {
-      return conversation.name
+    if (conversation.type === "group" && conversation.name) {}
+      return conversation.name;
     }
 
     const otherParticipant = conversation.participants.find(p => p.id !== user?.id)
-    if (otherParticipant) {
+    if (otherParticipant) {}
       const first =
-        otherParticipant.firstName ?? otherParticipant.displayName ?? otherParticipant.username
+        otherParticipant.firstName ?? otherParticipant.displayName ?? otherParticipant.username;
       const last = otherParticipant.lastName ?? ""
       const name = [first, last].filter(Boolean).join(" ")
-      return name || otherParticipant.username
+      return name || otherParticipant.username;
     }
 
     return conversation.name || "Conversation"
   }
 
   const getConversationAvatar = (conversation: Conversation) => {}
-    if (conversation.type === "group") {
+    if (conversation.type === "group") {}
       return "/placeholder-group.jpg"
     }
     const otherParticipant = conversation.participants.find(p => p.id !== user?.id)
@@ -195,9 +195,9 @@ export default function MessagesPage() {
   }
 
   const isOnline = (conversation: Conversation) => {}
-    if (conversation.type === "group") return false
+    if (conversation.type === "group") return false;
     const otherParticipant = conversation.participants.find(p => p.id !== user?.id)
-    return otherParticipant?.isOnline || false
+    return otherParticipant?.isOnline || false;
   }
 
   const filteredConversations = conversations.filter(conv => 
@@ -218,9 +218,9 @@ export default function MessagesPage() {
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-xl font-bold flex items-center gap-2">
               <MessageCircle className="h-6 w-6" />
-              Messages
+              Messages;
             </h1>
-            <Button
+            <Button;
               variant="outline" 
               size="sm"
               onClick={() => setShowUserSearch(!showUserSearch)}
@@ -232,7 +232,7 @@ export default function MessagesPage() {
           {/* Search */}
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
+            <Input;
               placeholder="Search conversations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -247,7 +247,7 @@ export default function MessagesPage() {
             <h3 className="text-sm font-medium text-gray-700 mb-3">Start New Conversation</h3>
             <div className="space-y-2 max-h-40 overflow-y-auto">
               {filteredOnlineUsers.map((onlineUser) => (
-                <div
+                <div;
                   key={onlineUser.id}
                   className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer"
                   onClick={() => startDirectMessage(onlineUser.id)}
@@ -285,10 +285,10 @@ export default function MessagesPage() {
           ) : filteredConversations.length > 0 ? (
             <div className="space-y-1 p-2">
               {filteredConversations.map((conversation) => (
-                <div
+                <div;
                   key={conversation.id}
                   className={`p-3 rounded-lg cursor-pointer transition-colors ${}
-                    selectedConversation?.id === conversation.id
+                    selectedConversation?.id === conversation.id;
                       ? "bg-blue-100 border-blue-200"
                       : "hover:bg-gray-100"
                   }`}
@@ -338,7 +338,7 @@ export default function MessagesPage() {
               <p className="text-gray-600 mb-4">Start a conversation with your friends!</p>
               <Button onClick={() => setShowUserSearch(true)}>
                 <Plus className="w-4 h-4 mr-2" />
-                New Message
+                New Message;
               </Button>
             </div>
           )}
@@ -387,15 +387,15 @@ export default function MessagesPage() {
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((message, index) => {}
-                const isOwnMessage = message.senderId === user?.id
+                const isOwnMessage = message.senderId === user?.id;
                 const showAvatar = !isOwnMessage && (
                   index === 0 || 
                   messages[index - 1].senderId !== message.senderId ||
-                  new Date(message.createdAt).getTime() - new Date(messages[index - 1].createdAt).getTime() > 300000 // 5 minutes
+                  new Date(message.createdAt).getTime() - new Date(messages[index - 1].createdAt).getTime() > 300000 // 5 minutes;
                 )
 
                 return (
-                  <div
+                  <div;
                     key={message.id}
                     className={`flex gap-3 ${isOwnMessage ? "justify-end" : "justify-start"}`}
                   >
@@ -403,9 +403,9 @@ export default function MessagesPage() {
                       <div className="w-8">
                         {showAvatar && (
                           <Avatar className="w-8 h-8">
-                            <AvatarImage src={selectedConversation.participants.find(p => p.id === message.senderId)?.avatar || "/placeholder-user.jpg"} />
+                            <AvatarImage src={selectedConversation.participants.find(p => p.id === message.senderId)?.avatar || &quot;/placeholder-user.jpg"} />
                             <AvatarFallback className="text-xs">
-                              {selectedConversation.participants.find(p => p.id === message.senderId)?.firstName?.[0] || "U"}
+                              {selectedConversation.participants.find(p => p.id === message.senderId)?.firstName?.[0] || &quot;U"}
                             </AvatarFallback>
                           </Avatar>
                         )}
@@ -413,9 +413,9 @@ export default function MessagesPage() {
                     )}
 
                     <div className={`max-w-xs lg:max-w-md ${isOwnMessage ? "order-1" : ""}`}>
-                      <div
+                      <div;
                         className={`px-4 py-2 rounded-2xl ${}
-                          isOwnMessage
+                          isOwnMessage;
                             ? "bg-blue-500 text-white rounded-br-md"
                             : "bg-gray-200 text-gray-900 rounded-bl-md"
                         }`}
@@ -456,12 +456,12 @@ export default function MessagesPage() {
                 </div>
 
                 <div className="flex-1 relative">
-                  <Input
+                  <Input;
                     placeholder="Type a message..."
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={(e) => {}
-                      if (e.key === "Enter" && !e.shiftKey) {
+                      if (e.key === "Enter" && !e.shiftKey) {}
                         e.preventDefault()
                         sendMessage()
                       }
@@ -479,14 +479,14 @@ export default function MessagesPage() {
               </div>
             </div>
 
-            <input
+            <input;
               ref={fileInputRef}
               type="file"
-              multiple
+              multiple;
               className="hidden"
               accept="image/*,video/*,audio/*,.pdf,.doc,.docx"
               onChange={(e) => {}
-                // Handle file upload
+                // Handle file upload;
                 console.log("Files selected:", e.target.files)
               }}
             />
@@ -499,7 +499,7 @@ export default function MessagesPage() {
               <p className="text-gray-600 mb-6">Choose a conversation from the sidebar to start messaging.</p>
               <Button onClick={() => setShowUserSearch(true)}>
                 <Plus className="w-4 h-4 mr-2" />
-                Start New Conversation
+                Start New Conversation;
               </Button>
             </div>
           </div>

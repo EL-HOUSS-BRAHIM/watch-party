@@ -12,31 +12,31 @@ import { useToast } from '@/hooks/use-toast';
 'use client';
 
 interface ActivityItem {}
-  id: string
-  userId: string
+  id: string;
+  userId: string;
   user: {}
-    id: string
-    username: string
-    displayName: string
-    avatar: string
-    isOnline: boolean
-    lastSeen?: string
+    id: string;
+    username: string;
+    displayName: string;
+    avatar: string;
+    isOnline: boolean;
+    lastSeen?: string;
   };
   type: 'watch_video' | 'join_party' | 'like_video' | 'comment' | 'achievement' | 'friend_added';
   content: {}
-    title: string
-    description?: string
-    thumbnail?: string
-    videoId?: string
-    partyId?: string
-    achievementId?: string
+    title: string;
+    description?: string;
+    thumbnail?: string;
+    videoId?: string;
+    partyId?: string;
+    achievementId?: string;
   };
-  timestamp: string
+  timestamp: string;
   privacy: 'public' | 'friends_only' | 'private';
 }
 
 const ActivityIcon = ({ type }: { type: ActivityItem['type'] }) => {}
-  switch (type) {
+  switch (type) {}
     case 'watch_video':
       return <Play className="h-4 w-4 text-blue-500" />;
     case 'join_party':
@@ -55,7 +55,7 @@ const ActivityIcon = ({ type }: { type: ActivityItem['type'] }) => {}
 };
 
 const fallbackId = (prefix: string) =>
-  typeof crypto !== 'undefined' && 'randomUUID' in crypto
+  typeof crypto !== 'undefined' && 'randomUUID' in crypto;
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
@@ -80,7 +80,7 @@ const normalizePrivacy = (privacy: unknown): ActivityItem['privacy'] => {}
 const formatTimestamp = (timestamp: string) => {}
   const date = new Date(timestamp);
   if (Number.isNaN(date.getTime())) {}
-    return timestamp
+    return timestamp;
   }
   return date.toLocaleString();
 };
@@ -98,8 +98,8 @@ const normalizeActivity = (activity: unknown): ActivityItem => {}
     metadata.achievement_name ??
     'Activity update';
 
-  const description = metadata.description ?? metadata.summary ?? null
-  return {
+  const description = metadata.description ?? metadata.summary ?? null;
+  return {}
     id: String(activity?.id ?? fallbackId('activity')),
     userId: String(user?.id ?? activity?.user_id ?? fallbackId('user')),
     user: {}
@@ -124,49 +124,49 @@ const normalizeActivity = (activity: unknown): ActivityItem => {}
   };
 };
 
-export default function FriendsActivityFeed() {
+export default function FriendsActivityFeed() {}
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | ActivityItem['type']>('all');
+  const [filter, setFilter] = useState<'all' | ActivityItem['type']>(&apos;all');
   const [timeframe, setTimeframe] = useState('today');
   const { toast } = useToast();
 
-  const fetchActivities = useCallback(async () => {
+  const fetchActivities = useCallback(async () => {}
     setLoading(true);
-    try {
+    try {}
       const params: Record<string, any> = { page: 1 };
-      if (filter !== 'all') {
-        params.type = filter
+      if (filter !== 'all') {}
+        params.type = filter;
       }
-      if (timeframe) {
-        params.timeframe = timeframe
+      if (timeframe) {}
+        params.timeframe = timeframe;
       }
 
       const response = await usersAPI.getActivity(params);
       const results = Array.isArray(response?.results) ? response.results : [];
       setActivities(results.map((item: unknown) => normalizeActivity(item)));
-    } catch (err) {
+    } catch {}
       console.error('Failed to fetch activities:', error);
       toast({title: 'Could not load friend activity',
         description: 'Please try again later.',
         variant: 'destructive',
       });
       setActivities([]);
-    } finally {
+    } finally {}
       setLoading(false);
     }
   }, [filter, timeframe, toast]);
 
-  useEffect(() => {
+  useEffect(() => {}
     fetchActivities();
   }, [fetchActivities]);
 
   const filteredActivities = activities.filter(activity => 
-    filter === 'all' || activity.type === filter
+    filter === 'all' || activity.type === filter;
   );
 
   const getActivityText = (activity: ActivityItem) => {}
-    switch (activity.type) {
+    switch (activity.type) {}
       case 'watch_video':
         return 'watched a video';
       case 'join_party':
@@ -184,7 +184,7 @@ export default function FriendsActivityFeed() {
     }
   };
 
-  if (loading) {
+  if (loading) {}
     return (
       <div className="space-y-4">
         {Array.from({ length: 5 }).map((_, i) => (
@@ -242,7 +242,7 @@ export default function FriendsActivityFeed() {
               <CardContent className="p-12 text-center">
                 <Clock className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-medium mb-2">No activity yet</h3>
-                <p className="text-muted-foreground">Your friends haven't been active recently.</p>
+                <p className="text-muted-foreground">Your friends haven&apos;t been active recently.</p>
               </CardContent>
             </Card>
           ) : (
@@ -254,7 +254,7 @@ export default function FriendsActivityFeed() {
                       <Avatar className="h-12 w-12">
                         <AvatarImage src={activity.user.avatar} alt={activity.user.displayName} />
                         <AvatarFallback>
-                          {activity.user.displayName.split(' ').map(n => n[0]).join('')}
+                          {activity.user.displayName.split(' ').map(n => n[0]).join(&apos;')}
                         </AvatarFallback>
                       </Avatar>
                       {activity.user.isOnline && (
@@ -276,7 +276,7 @@ export default function FriendsActivityFeed() {
 
                       <div className="flex items-start gap-4">
                         {activity.content.thumbnail && (
-                          <img
+                          <img;
                             src={activity.content.thumbnail}
                             alt=""
                             className="w-16 h-12 object-cover rounded border"
@@ -301,12 +301,12 @@ export default function FriendsActivityFeed() {
                         <div className="flex gap-2">
                           {activity.type === 'watch_video' && activity.content.videoId && (
                             <Button variant="outline" size="sm">
-                              Watch Too
+                              Watch Too;
                             </Button>
                           )}
                           {activity.type === 'join_party' && activity.content.partyId && (
                             <Button variant="outline" size="sm">
-                              Join Party
+                              Join Party;
                             </Button>
                           )}
                           <Button variant="ghost" size="sm">

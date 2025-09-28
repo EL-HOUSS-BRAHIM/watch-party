@@ -1,20 +1,19 @@
-"use client"
-
 import type React from "react"
 import { useState } from "react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 
+"use client"
 
 interface EnhancedTooltipProps {}
-  children: React.ReactNode
-  content: React.ReactNode
+  children: React.ReactNode;
+  content: React.ReactNode;
   side?: "top" | "right" | "bottom" | "left"
   align?: "start" | "center" | "end"
-  delay?: number
-  className?: string
-  showArrow?: boolean
-  interactive?: boolean
+  delay?: number;
+  className?: string;
+  showArrow?: boolean;
+  interactive?: boolean;
 }
 
 export function EnhancedTooltip({children,
@@ -32,7 +31,7 @@ export function EnhancedTooltip({children,
     <TooltipProvider delayDuration={delay}>
       <Tooltip open={open} onOpenChange={setOpen}>
         <TooltipTrigger asChild>{children}</TooltipTrigger>
-        <TooltipContent
+        <TooltipContent;
           side={side}
           align={align}
           className={cn(

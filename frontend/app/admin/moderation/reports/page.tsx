@@ -1,6 +1,6 @@
 import { ModerationReports } from "@/components/admin/moderation-reports"
 
-export default function ModerationReportsPage() {
+export default function ModerationReportsPage() {}
   return (
     <div className="space-y-6">
       <div>

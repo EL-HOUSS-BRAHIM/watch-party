@@ -1,7 +1,6 @@
-"use client"
-
 import { cn } from '@/lib/utils'
 
+"use client"
 
 interface LoadingSpinnerProps {}
   size?: 'sm' | 'md' | 'lg'
@@ -17,6 +16,6 @@ export function LoadingSpinner({ size = 'md', className }: LoadingSpinnerProps) 
       className={cn(
         'animate-spin rounded-full border-2 border-gray-300 border-t-blue-600',
         sizeClasses[size],
-        className
+        className;
       )}
     />

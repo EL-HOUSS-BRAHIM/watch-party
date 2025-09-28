@@ -1,19 +1,18 @@
-"use client"
-
 import { useState, useEffect , useCallback } from "react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { useIntersectionObserver } from "@/lib/performance/lazy-loading"
 
+"use client"
 
 interface LazyImageProps {}
-  src: string
-  alt: string
-  className?: string
-  placeholder?: string
-  blurDataURL?: string
-  onLoad?: () => void
-  onError?: () => void
+  src: string;
+  alt: string;
+  className?: string;
+  placeholder?: string;
+  blurDataURL?: string;
+  onLoad?: () => void;
+  onError?: () => void;
 }
 
 export function LazyImage({src,
@@ -31,8 +30,8 @@ export function LazyImage({src,
     rootMargin: "50px",
   })
 
-  useEffect(() => {
-    if (hasIntersected && !isLoaded && !hasError) {
+  useEffect(() => {}
+    if (hasIntersected && !isLoaded && !hasError) {}
       const img = new Image()
       img.onload = () => {}
         setImageSrc(src)
@@ -43,13 +42,13 @@ export function LazyImage({src,
         setHasError(true)
         onError?.()
       }
-      img.src = src
+      img.src = src;
     }
   }, [hasIntersected, src, isLoaded, hasError, onLoad, onError])
 
   return (
-    <div ref={targetRef as React.RefObject<HTMLDivElement>} className={cn("relative overflow-hidden", className)}>
-      <img
+    <div ref={targetRef as React.RefObject<HTMLDivElement>} className={cn(&quot;relative overflow-hidden", className)}>"
+      <img;
         src={imageSrc || "/placeholder.svg"}
         alt={alt}
         className={cn("transition-opacity duration-300", isLoaded ? "opacity-100" : "opacity-70", className)}

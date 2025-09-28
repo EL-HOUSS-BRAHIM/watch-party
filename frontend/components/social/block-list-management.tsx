@@ -1,5 +1,3 @@
-"use client"
-
 import { AlertTriangle, Calendar, Loader2, Search, Shield } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
@@ -9,8 +7,9 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
-
 import { formatDistanceToNow } from "date-fns"
+
+"use client"
 
   DropdownMenu,
   DropdownMenuContent,
@@ -20,28 +19,28 @@ import { formatDistanceToNow } from "date-fns"
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 interface BlockedUser {}
-  id: string
+  id: string;
   blockedUser: {}
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    email: string
-    avatar?: string
-    bio?: string
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    avatar?: string;
+    bio?: string;
   }
-  blockedAt: string
-  reason?: string
+  blockedAt: string;
+  reason?: string;
   blockedBy: {}
-    id: string
-    username: string
-    firstName: string
-    lastName: string
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
   }
 }
 
 interface BlockListManagementProps {}
-  className?: string
+  className?: string;
 }
 
 export default function BlockListManagement({ className }: BlockListManagementProps) {}
@@ -54,17 +53,17 @@ export default function BlockListManagement({ className }: BlockListManagementPr
 
   const { toast } = useToast()
 
-  useEffect(() => {
+  useEffect(() => {}
     loadBlockedUsers()
   }, [])
 
-  useEffect(() => {
-    // Filter users based on search query
-    if (!searchQuery) {
+  useEffect(() => {}
+    // Filter users based on search query;
+    if (!searchQuery) {}
       setFilteredUsers(blockedUsers)
     } else {}
       const filtered = blockedUsers.filter(block => {}
-        const user = block.blockedUser
+        const user = block.blockedUser;
         const query = searchQuery.toLowerCase()
         return (
           user.username.toLowerCase().includes(query) ||
@@ -77,8 +76,8 @@ export default function BlockListManagement({ className }: BlockListManagementPr
     }
   }, [searchQuery, blockedUsers])
 
-  const loadBlockedUsers = async () => {
-    try {
+  const loadBlockedUsers = async () => {}
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch("/api/users/blocks/", {}
         headers: {}
@@ -86,17 +85,17 @@ export default function BlockListManagement({ className }: BlockListManagementPr
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setBlockedUsers(data.blocks || [])
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to load blocked users:", error)
       toast({title: "Failed to load blocked users",
         description: "Please try refreshing the page",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
@@ -104,7 +103,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
   const unblockUser = async (blockId: string, username: string) => {}
     setProcessingUsers(prev => new Set(prev).add(blockId))
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/users/blocks/${blockId}/`, {}
         method: "DELETE",
@@ -113,7 +112,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setBlockedUsers(prev => prev.filter(block => block.id !== blockId))
         toast({title: "User unblocked",
           description: `${username} has been unblocked successfully`,
@@ -121,24 +120,24 @@ export default function BlockListManagement({ className }: BlockListManagementPr
       } else {}
         throw new Error("Failed to unblock user")
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to unblock user:", error)
       toast({title: "Failed to unblock user",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setProcessingUsers(prev => {}
         const newSet = new Set(prev)
         newSet.delete(blockId)
-        return newSet
+        return newSet;
       })
       setUserToUnblock(null)
     }
   }
 
   const blockUser = async (userId: string, reason?: string) => {}
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/users/${userId}/block/`, {}
         method: "POST",
@@ -149,15 +148,15 @@ export default function BlockListManagement({ className }: BlockListManagementPr
         body: JSON.stringify({ reason }),
       })
 
-      if (response.ok) {
-        await loadBlockedUsers() // Refresh the list
+      if (response.ok) {}
+        await loadBlockedUsers() // Refresh the list;
         toast({title: "User blocked",
           description: "The user has been blocked successfully",
         })
       } else {}
         throw new Error("Failed to block user")
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to block user:", error)
       toast({title: "Failed to block user",
         description: "Please try again",
@@ -172,7 +171,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
 
   const getReasonDisplay = (reason?: string) => {}
     if (!reason) return { label: "No reason provided", color: "secondary" }
-    const reasonMap: Record<string, { label: string; color: string }> = { harassment: { label: "Harassment", color: "destructive" },
+    const reasonMap: Record<string, { label: string; color: string }> = { harassment: { label: &quot;Harassment", color: "destructive" },
       spam: { label: "Spam", color: "warning" },
       inappropriate: { label: "Inappropriate Content", color: "warning" },
       abuse: { label: "Abuse", color: "destructive" },
@@ -184,7 +183,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
 
   const BlockedUserCard = ({ block }: { block: BlockedUser }) => {}
     const isProcessing = processingUsers.has(block.id)
-    const { blockedUser } = block
+    const { blockedUser } = block;
     const reasonDisplay = getReasonDisplay(block.reason)
 
     return (
@@ -213,18 +212,18 @@ export default function BlockListManagement({ className }: BlockListManagementPr
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm">
-                        Actions
+                        Actions;
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Block Actions</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem
+                      <DropdownMenuItem;
                         onClick={() => setUserToUnblock(block.id)}
                         className="text-green-600 dark:text-green-400"
                       >
                         <RotateCcw className="h-4 w-4 mr-2" />
-                        Unblock User
+                        Unblock User;
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -238,7 +237,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
               )}
 
               <div className="flex items-center gap-2 mb-2">
-                <Badge variant={reasonDisplay.color as Record<string, unknown>} className="text-xs">
+                <Badge variant={reasonDisplay.color as Record<string, unknown>} className=&quot;text-xs">"
                   <ShieldAlert className="h-3 w-3 mr-1" />
                   {reasonDisplay.label}
                 </Badge>
@@ -260,7 +259,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
     )
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className={className}>
         <Card>
@@ -281,7 +280,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            Blocked Users
+            Blocked Users;
             {blockedUsers.length > 0 && (
               <Badge variant="secondary">
                 {blockedUsers.length}
@@ -297,7 +296,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
           {blockedUsers.length > 0 && (
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
+              <Input;
                 placeholder="Search blocked users..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -312,12 +311,12 @@ export default function BlockListManagement({ className }: BlockListManagementPr
               {searchQuery ? (
                 <>
                   <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>No blocked users found matching "{searchQuery}&quot</p>
+                  <p>No blocked users found matching &quot;{searchQuery}&quot</p>
                 </>
               ) : (
                 <>
                   <Shield className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>You haven't blocked any users</p>
+                  <p>You haven&apos;t blocked any users</p>
                   <p className="text-sm">Blocked users will appear here when you block someone</p>
                 </>
               )}
@@ -348,8 +347,8 @@ export default function BlockListManagement({ className }: BlockListManagementPr
                     <p className="font-medium">About blocking users:</p>
                     <ul className="space-y-1 text-muted-foreground">
                       <li>• Blocked users cannot send you messages or friend requests</li>
-                      <li>• They won't be able to see your profile or join your parties</li>
-                      <li>• You won't see their content in shared spaces</li>
+                      <li>• They won&apos;t be able to see your profile or join your parties</li>
+                      <li>• You won&apos;t see their content in shared spaces</li>
                       <li>• You can unblock them at any time</li>
                     </ul>
                   </div>
@@ -371,11 +370,11 @@ export default function BlockListManagement({ className }: BlockListManagementPr
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
+            <AlertDialogAction;
               onClick={() => {}
-                if (userToUnblock) {
+                if (userToUnblock) {}
                   const block = blockedUsers.find(b => b.id === userToUnblock)
-                  if (block) {
+                  if (block) {}
                     unblockUser(userToUnblock, block.blockedUser.username)
                   }
                 }
@@ -383,7 +382,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
               className="bg-green-600 text-white hover:bg-green-700"
             >
               <RotateCcw className="h-4 w-4 mr-2" />
-              Unblock User
+              Unblock User;
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

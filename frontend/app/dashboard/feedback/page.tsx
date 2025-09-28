@@ -1,5 +1,3 @@
-"use client"
-
 import { AlertTriangle, File, FileText, Filter, Heart, Loader2, MessageCircle, Plus, Search, Shield, Tag, ThumbsDown, ThumbsUp, TrendingUp, Upload, User, X } from "lucide-react"
 import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,49 +14,51 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import { formatDistanceToNow, parseISO } from "date-fns"
 
+"use client"
+
 interface FeedbackItem {}
-  id: string
-  title: string
-  description: string
+  id: string;
+  title: string;
+  description: string;
   category: "bug" | "feature" | "improvement" | "question" | "complaint" | "compliment" | "other"
   priority: "low" | "medium" | "high" | "urgent"
   status: "open" | "in_progress" | "resolved" | "closed" | "duplicate"
   user: {}
-    id: string
-    username: string
-    email: string
-    display_name: string
-    avatar?: string
+    id: string;
+    username: string;
+    email: string;
+    display_name: string;
+    avatar?: string;
   }
-  created_at: string
-  updated_at: string
+  created_at: string;
+  updated_at: string;
   attachments: Array<{}
-    id: string
-    filename: string
-    url: string
-    size: number
-    type: string
+    id: string;
+    filename: string;
+    url: string;
+    size: number;
+    type: string;
   }>
   responses: Array<{}
-    id: string
-    message: string
+    id: string;
+    message: string;
     author: {}
-      id: string
-      username: string
-      is_staff: boolean
+      id: string;
+      username: string;
+      is_staff: boolean;
     }
-    created_at: string
-    is_internal: boolean
+    created_at: string;
+    is_internal: boolean;
   }>
   votes: {}
-    upvotes: number
-    downvotes: number
-    user_vote?: "up" | "down" | null
+    upvotes: number;
+    downvotes: number;
+    user_vote?: "up" | "down" | null;
   }
   tags: string[]
-  is_public: boolean
-  admin_notes?: string
-  resolution_notes?: string
+  is_public: boolean;
+  admin_notes?: string;
+  resolution_notes?: string;
 }
 
 const feedbackSchema = z.object({title: z.string().min(5, "Title must be at least 5 characters").max(100, "Title too long"),
@@ -73,15 +73,15 @@ const responseSchema = z.object({message: z.string().min(10, "Response must be a
 })
 
 interface FilterOptions {}
-  search: string
-  category: string
-  status: string
-  priority: string
-  sortBy: string
-  showMyFeedback: boolean
+  search: string;
+  category: string;
+  status: string;
+  priority: string;
+  sortBy: string;
+  showMyFeedback: boolean;
 }
 
-export default function FeedbackPage() {
+export default function FeedbackPage() {}
   const { user } = useAuth()
   const { toast } = useToast()
 
@@ -98,7 +98,7 @@ export default function FeedbackPage() {
     status: "all",
     priority: "all",
     sortBy: "recent",
-    showMyFeedback: false
+    showMyFeedback: false;
   })
 
   const submitForm = useForm<z.infer<typeof feedbackSchema>>({}
@@ -120,26 +120,26 @@ export default function FeedbackPage() {
     },
   })
 
-  const loadFeedback = useCallback(async () => {
-    try {
+  const loadFeedback = useCallback(async () => {}
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch("/api/feedback/", {}
         headers: { Authorization: `Bearer ${token}` }
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setFeedback(data.results || data.feedback || [])
       } else {}
         throw new Error("Failed to load feedback")
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to load feedback:", error)
       toast({title: "Error",
         description: "Failed to load feedback.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }, [toast])
@@ -147,7 +147,7 @@ export default function FeedbackPage() {
   const filterFeedback = useCallback(() => {}
     let filtered = [...feedback]
 
-    // Search filter
+    // Search filter;
     if (filters.search.trim()) {}
       const query = filters.search.toLowerCase()
       filtered = filtered.filter(item =>
@@ -157,64 +157,64 @@ export default function FeedbackPage() {
       )
     }
 
-    // Category filter
-    if (filters.category !== "all") {
+    // Category filter;
+    if (filters.category !== "all") {}
       filtered = filtered.filter(item => item.category === filters.category)
     }
 
-    // Status filter
-    if (filters.status !== "all") {
+    // Status filter;
+    if (filters.status !== "all") {}
       filtered = filtered.filter(item => item.status === filters.status)
     }
 
-    // Priority filter
-    if (filters.priority !== "all") {
+    // Priority filter;
+    if (filters.priority !== "all") {}
       filtered = filtered.filter(item => item.priority === filters.priority)
     }
 
-    // My feedback filter
-    if (filters.showMyFeedback) {
+    // My feedback filter;
+    if (filters.showMyFeedback) {}
       filtered = filtered.filter(item => item.user.id === user?.id)
     }
 
-    // Sort
-    switch (filters.sortBy) {
+    // Sort;
+    switch (filters.sortBy) {}
       case "votes":
         filtered.sort((a, b) => (b.votes.upvotes - b.votes.downvotes) - (a.votes.upvotes - a.votes.downvotes))
-        break
+        break;
       case "title":
         filtered.sort((a, b) => a.title.localeCompare(b.title))
-        break
+        break;
       case "priority":
         const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 }
         filtered.sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority])
-        break
+        break;
       case "recent":
       default:
         filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-        break
+        break;
     }
 
     setFilteredFeedback(filtered)
   }, [feedback, filters, user?.id])
 
-  useEffect(() => {
+  useEffect(() => {}
     loadFeedback()
   }, [loadFeedback])
 
-  useEffect(() => {
+  useEffect(() => {}
     filterFeedback()
   }, [filterFeedback])
 
   const submitFeedback = async (data: z.infer<typeof feedbackSchema>) => {}
     setIsSubmitting(true)
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const formData = new FormData()
-      // Add form fields
+      // Add form fields;
       Object.entries(data).forEach(([key, value]) => {}
-        if (key === "tags") {
+        if (key === "tags") {}
           const tags = typeof value === "string" ? value.split(",").map((tag: string) => tag.trim()).filter(Boolean) : []
           formData.append(key, JSON.stringify(tags))
         } else {}
@@ -222,7 +222,7 @@ export default function FeedbackPage() {
         }
       })
 
-      // Add files
+      // Add files;
       uploadedFiles.forEach((file, index) => {}
         formData.append(`attachment_${index}`, file)
       })
@@ -235,7 +235,7 @@ export default function FeedbackPage() {
         body: formData,
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const newFeedback = await response.json()
         setFeedback(prev => [newFeedback, ...prev])
         setShowSubmitForm(false)
@@ -247,19 +247,19 @@ export default function FeedbackPage() {
       } else {}
         throw new Error("Failed to submit feedback")
       }
-    } catch (err) {
+    } catch {}
       console.error("Submit feedback error:", error)
       toast({title: "Error",
         description: "Failed to submit feedback.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsSubmitting(false)
     }
   }
 
   const submitResponse = async (feedbackId: string, data: z.infer<typeof responseSchema>) => {}
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/feedback/${feedbackId}/responses/`, {}
         method: "POST",
@@ -270,18 +270,18 @@ export default function FeedbackPage() {
         body: JSON.stringify(data),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const newResponse = await response.json()
         setFeedback(prev => 
           prev.map(item => 
-            item.id === feedbackId
+            item.id === feedbackId;
               ? { ...item, responses: [...item.responses, newResponse] }
-              : item
+              : item;
           )
         )
-        if (selectedFeedback?.id === feedbackId) {
+        if (selectedFeedback?.id === feedbackId) {}
           setSelectedFeedback(prev => 
-            prev ? { ...prev, responses: [...prev.responses, newResponse] } : null
+            prev ? { ...prev, responses: [...prev.responses, newResponse] } : null;
           )
         }
         responseForm.reset()
@@ -291,7 +291,7 @@ export default function FeedbackPage() {
       } else {}
         throw new Error("Failed to submit response")
       }
-    } catch (err) {
+    } catch {}
       console.error("Submit response error:", error)
       toast({title: "Error",
         description: "Failed to submit response.",
@@ -303,7 +303,7 @@ export default function FeedbackPage() {
   const voteFeedback = async (feedbackId: string, voteType: "up" | "down") => {}
     setProcessingVotes(prev => new Set(prev).add(feedbackId))
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/feedback/${feedbackId}/vote/`, {}
         method: "POST",
@@ -314,48 +314,48 @@ export default function FeedbackPage() {
         body: JSON.stringify({ vote: voteType }),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setFeedback(prev => 
           prev.map(item => 
-            item.id === feedbackId
+            item.id === feedbackId;
               ? { ...item, votes: data.votes }
-              : item
+              : item;
           )
         )
-        if (selectedFeedback?.id === feedbackId) {
+        if (selectedFeedback?.id === feedbackId) {}
           setSelectedFeedback(prev => 
-            prev ? { ...prev, votes: data.votes } : null
+            prev ? { ...prev, votes: data.votes } : null;
           )
         }
       } else {}
         throw new Error("Failed to vote")
       }
-    } catch (err) {
+    } catch {}
       console.error("Vote error:", error)
       toast({title: "Error",
         description: "Failed to submit vote.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setProcessingVotes(prev => {}
         const newSet = new Set(prev)
         newSet.delete(feedbackId)
-        return newSet
+        return newSet;
       })
     }
   }
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {}
     const files = Array.from(event.target.files || [])
-    const validFiles = files.filter(file => file.size <= 10 * 1024 * 1024) // 10MB limit
-    if (validFiles.length !== files.length) {
+    const validFiles = files.filter(file => file.size <= 10 * 1024 * 1024) // 10MB limit;
+    if (validFiles.length !== files.length) {}
       toast({title: "File Size Limit",
         description: "Some files were skipped. Maximum file size is 10MB.",
         variant: "destructive",
       })
     }
-    setUploadedFiles(prev => [...prev, ...validFiles].slice(0, 5)) // Max 5 files
+    setUploadedFiles(prev => [...prev, ...validFiles].slice(0, 5)) // Max 5 files;
   }
 
   const removeFile = (index: number) => {}
@@ -363,7 +363,7 @@ export default function FeedbackPage() {
   }
 
   const getCategoryIcon = (category: string) => {}
-    switch (category) {
+    switch (category) {}
       case "bug":
         return <Bug className="h-4 w-4 text-red-600" />
       case "feature":
@@ -382,7 +382,7 @@ export default function FeedbackPage() {
   }
 
   const getCategoryColor = (category: string) => {}
-    switch (category) {
+    switch (category) {}
       case "bug":
         return "bg-red-100 text-red-800"
       case "feature":
@@ -401,7 +401,7 @@ export default function FeedbackPage() {
   }
 
   const getStatusColor = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case "open":
         return "bg-blue-100 text-blue-800"
       case "in_progress":
@@ -418,7 +418,7 @@ export default function FeedbackPage() {
   }
 
   const getPriorityColor = (priority: string) => {}
-    switch (priority) {
+    switch (priority) {}
       case "urgent":
         return "bg-red-100 text-red-800"
       case "high":
@@ -432,7 +432,7 @@ export default function FeedbackPage() {
     }
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -451,13 +451,13 @@ export default function FeedbackPage() {
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <MessageCircle className="h-8 w-8" />
-              Feedback & Support
+              Feedback & Support;
             </h1>
             <p className="text-gray-600 mt-2">Share your ideas, report issues, and help us improve</p>
           </div>
           <Button onClick={() => setShowSubmitForm(true)}>
             <Plus className="h-4 w-4 mr-2" />
-            Submit Feedback
+            Submit Feedback;
           </Button>
         </div>
 
@@ -476,7 +476,7 @@ export default function FeedbackPage() {
                   <div className="flex-1">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                      <Input
+                      <Input;
                         placeholder="Search feedback..."
                         value={filters.search}
                         onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
@@ -487,7 +487,7 @@ export default function FeedbackPage() {
 
                   {/* Filter controls */}
                   <div className="flex gap-2">
-                    <Select
+                    <Select;
                       value={filters.category}
                       onValueChange={(value) => setFilters(prev => ({ ...prev, category: value }))}
                     >
@@ -506,7 +506,7 @@ export default function FeedbackPage() {
                       </SelectContent>
                     </Select>
 
-                    <Select
+                    <Select;
                       value={filters.status}
                       onValueChange={(value) => setFilters(prev => ({ ...prev, status: value }))}
                     >
@@ -522,7 +522,7 @@ export default function FeedbackPage() {
                       </SelectContent>
                     </Select>
 
-                    <Select
+                    <Select;
                       value={filters.sortBy}
                       onValueChange={(value) => setFilters(prev => ({ ...prev, sortBy: value }))}
                     >
@@ -537,13 +537,13 @@ export default function FeedbackPage() {
                       </SelectContent>
                     </Select>
 
-                    <Button
+                    <Button;
                       variant={filters.showMyFeedback ? "default" : "outline"}
                       size="sm"
                       onClick={() => setFilters(prev => ({ ...prev, showMyFeedback: !prev.showMyFeedback }))}
                     >
                       <User className="h-4 w-4 mr-2" />
-                      My Feedback
+                      My Feedback;
                     </Button>
                   </div>
                 </div>
@@ -558,7 +558,7 @@ export default function FeedbackPage() {
                     <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No feedback found</h3>
                     <p className="text-gray-600">
-                      {filters.search || Object.values(filters).some(f => f !== "all" && f !== "recent" && f !== false)
+                      {filters.search || Object.values(filters).some(f => f !== &quot;all" && f !== "recent" && f !== false)
                         ? "Try adjusting your search or filters"
                         : "Be the first to share your feedback!"
                       }
@@ -589,7 +589,7 @@ export default function FeedbackPage() {
                                 {item.status.replace("_", " ")}
                               </Badge>
                               <Badge className={getPriorityColor(item.priority)}>
-                                {item.priority} priority
+                                {item.priority} priority;
                               </Badge>
                               {item.tags.map(tag => (
                                 <Badge key={tag} variant="outline" className="text-xs">
@@ -606,12 +606,12 @@ export default function FeedbackPage() {
                                 {item.responses.length > 0 && (
                                   <span className="flex items-center gap-1">
                                     <Reply className="h-3 w-3" />
-                                    {item.responses.length} responses
+                                    {item.responses.length} responses;
                                   </span>
                                 )}
                               </div>
                               <div className="flex items-center gap-2">
-                                <Button
+                                <Button;
                                   variant="ghost"
                                   size="sm"
                                   onClick={(e) => {}
@@ -624,7 +624,7 @@ export default function FeedbackPage() {
                                   <ThumbsUp className="h-4 w-4 mr-1" />
                                   {item.votes.upvotes}
                                 </Button>
-                                <Button
+                                <Button;
                                   variant="ghost"
                                   size="sm"
                                   onClick={(e) => {}
@@ -654,7 +654,7 @@ export default function FeedbackPage() {
               <CardHeader>
                 <CardTitle>Submit New Feedback</CardTitle>
                 <CardDescription>
-                  Help us improve by sharing your thoughts, reporting bugs, or requesting features
+                  Help us improve by sharing your thoughts, reporting bugs, or requesting features;
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -662,9 +662,9 @@ export default function FeedbackPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm font-medium mb-2 block">Category *</label>
-                      <Select
+                      <Select;
                         value={submitForm.watch("category")}
-                        onValueChange={(value: string) => submitForm.setValue("category", value as "bug" | "feature" | "improvement" | "question" | "complaint" | "compliment" | "other")}
+                        onValueChange={(value: string) => submitForm.setValue(&quot;category", value as "bug" | "feature" | "improvement" | "question" | "complaint" | "compliment" | "other")}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -673,43 +673,43 @@ export default function FeedbackPage() {
                           <SelectItem value="bug">
                             <div className="flex items-center gap-2">
                               <Bug className="h-4 w-4" />
-                              Bug Report
+                              Bug Report;
                             </div>
                           </SelectItem>
                           <SelectItem value="feature">
                             <div className="flex items-center gap-2">
                               <Lightbulb className="h-4 w-4" />
-                              Feature Request
+                              Feature Request;
                             </div>
                           </SelectItem>
                           <SelectItem value="improvement">
                             <div className="flex items-center gap-2">
                               <TrendingUp className="h-4 w-4" />
-                              Improvement
+                              Improvement;
                             </div>
                           </SelectItem>
                           <SelectItem value="question">
                             <div className="flex items-center gap-2">
                               <MessageCircle className="h-4 w-4" />
-                              Question
+                              Question;
                             </div>
                           </SelectItem>
                           <SelectItem value="complaint">
                             <div className="flex items-center gap-2">
                               <AlertTriangle className="h-4 w-4" />
-                              Complaint
+                              Complaint;
                             </div>
                           </SelectItem>
                           <SelectItem value="compliment">
                             <div className="flex items-center gap-2">
                               <Heart className="h-4 w-4" />
-                              Compliment
+                              Compliment;
                             </div>
                           </SelectItem>
                           <SelectItem value="other">
                             <div className="flex items-center gap-2">
                               <FileText className="h-4 w-4" />
-                              Other
+                              Other;
                             </div>
                           </SelectItem>
                         </SelectContent>
@@ -718,9 +718,9 @@ export default function FeedbackPage() {
 
                     <div>
                       <label className="text-sm font-medium mb-2 block">Priority *</label>
-                      <Select
+                      <Select;
                         value={submitForm.watch("priority")}
-                        onValueChange={(value: string) => submitForm.setValue("priority", value as "low" | "medium" | "high" | "urgent")}
+                        onValueChange={(value: string) => submitForm.setValue(&quot;priority", value as "low" | "medium" | "high" | "urgent")}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -737,7 +737,7 @@ export default function FeedbackPage() {
 
                   <div>
                     <label className="text-sm font-medium mb-2 block">Title *</label>
-                    <Input
+                    <Input;
                       {...submitForm.register("title")}
                       placeholder="Brief summary of your feedback..."
                     />
@@ -748,7 +748,7 @@ export default function FeedbackPage() {
 
                   <div>
                     <label className="text-sm font-medium mb-2 block">Description *</label>
-                    <Textarea
+                    <Textarea;
                       {...submitForm.register("description")}
                       placeholder="Provide detailed information about your feedback. For bugs, include steps to reproduce the issue..."
                       rows={6}
@@ -760,7 +760,7 @@ export default function FeedbackPage() {
 
                   <div>
                     <label className="text-sm font-medium mb-2 block">Tags (comma-separated)</label>
-                    <Input
+                    <Input;
                       {...submitForm.register("tags")}
                       placeholder="ui, mobile, performance, accessibility..."
                     />
@@ -775,21 +775,21 @@ export default function FeedbackPage() {
                         <p className="text-sm text-gray-600 mb-2">
                           Upload screenshots, videos, or other files (max 10MB each, 5 files total)
                         </p>
-                        <input
+                        <input;
                           type="file"
-                          multiple
+                          multiple;
                           accept="image/*,video/*,.pdf,.doc,.docx,.txt"
                           onChange={handleFileUpload}
                           className="hidden"
                           id="file-upload"
                         />
-                        <Button
+                        <Button;
                           type="button"
                           variant="outline"
-                          onClick={() => document.getElementById("file-upload")?.click()}
+                          onClick={() => document.getElementById(&quot;file-upload")?.click()}
                         >
                           <Paperclip className="h-4 w-4 mr-2" />
-                          Choose Files
+                          Choose Files;
                         </Button>
                       </div>
                     </div>
@@ -805,7 +805,7 @@ export default function FeedbackPage() {
                                 ({(file.size / 1024 / 1024).toFixed(1)} MB)
                               </span>
                             </div>
-                            <Button
+                            <Button;
                               type="button"
                               variant="ghost"
                               size="sm"
@@ -820,7 +820,7 @@ export default function FeedbackPage() {
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <input
+                    <input;
                       type="checkbox"
                       id="is_public"
                       {...submitForm.register("is_public")}
@@ -840,7 +840,7 @@ export default function FeedbackPage() {
                     ) : (
                       <>
                         <Send className="h-4 w-4 mr-2" />
-                        Submit Feedback
+                        Submit Feedback;
                       </>
                     )}
                   </Button>
@@ -867,11 +867,11 @@ export default function FeedbackPage() {
                         {selectedFeedback.status.replace("_", " ")}
                       </Badge>
                       <Badge className={getPriorityColor(selectedFeedback.priority)}>
-                        {selectedFeedback.priority} priority
+                        {selectedFeedback.priority} priority;
                       </Badge>
                     </div>
                   </div>
-                  <Button
+                  <Button;
                     variant="ghost"
                     size="sm"
                     onClick={() => setSelectedFeedback(null)}
@@ -889,7 +889,7 @@ export default function FeedbackPage() {
                       <h4 className="font-medium mb-2">Attachments:</h4>
                       <div className="space-y-2">
                         {selectedFeedback.attachments.map((attachment) => (
-                          <a
+                          <a;
                             key={attachment.id}
                             href={attachment.url}
                             target="_blank"
@@ -916,7 +916,7 @@ export default function FeedbackPage() {
                           {response.author.is_staff && (
                             <Badge variant="outline" className="text-xs">
                               <Shield className="h-3 w-3 mr-1" />
-                              Staff
+                              Staff;
                             </Badge>
                           )}
                         </div>
@@ -930,7 +930,7 @@ export default function FeedbackPage() {
 
                   {/* Add Response Form */}
                   <form onSubmit={responseForm.handleSubmit((data) => submitResponse(selectedFeedback.id, data))}>
-                    <Textarea
+                    <Textarea;
                       {...responseForm.register("message")}
                       placeholder="Add your response..."
                       rows={3}
@@ -938,7 +938,7 @@ export default function FeedbackPage() {
                     />
                     <Button type="submit" size="sm">
                       <Reply className="h-4 w-4 mr-2" />
-                      Add Response
+                      Add Response;
                     </Button>
                   </form>
                 </div>

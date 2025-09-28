@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -9,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { Crown, MoreHorizontal, Shield, User, UserMinus, Volume2, VolumeX } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 
+"use client"
 
 interface Participant {}
   id: string,
@@ -108,7 +107,7 @@ export function ParticipantList({ participants, currentUserId, isHost, className
                     className="h-8 w-8"
                     onClick={() => toggleMute(participant.user.id)}
                   >
-                    {isMuted ? <VolumeX className="w-4 h-4 text-muted-foreground" /> : <Volume2 className="w-4 h-4" />}
+                    {isMuted ? <VolumeX className="w-4 h-4 text-muted-foreground" /> : <Volume2 className=&quot;w-4 h-4" />}"
                   </Button>
 
                   {/* Participant Actions (Host Only) */}
@@ -122,11 +121,11 @@ export function ParticipantList({ participants, currentUserId, isHost, className
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => promoteUser(participant.user.id)}>
                           <Shield className="w-4 h-4 mr-2" />
-                          Make Co-host
+                          Make Co-host;
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => kickUser(participant.user.id)} className="text-destructive">
+                        <DropdownMenuItem onClick={() => kickUser(participant.user.id)} className=&quot;text-destructive">"
                           <UserMinus className="w-4 h-4 mr-2" />
-                          Remove from Party
+                          Remove from Party;
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -141,11 +140,11 @@ export function ParticipantList({ participants, currentUserId, isHost, className
       <div className="p-4 border-t border-border/40">
         <div className="text-center">
           <p className="text-sm text-muted-foreground mb-2">
-            {participants.length} participant{participants.length !== 1 ? "s" : ""} watching
+            {participants.length} participant{participants.length !== 1 ? "s" : ""} watching;
           </p>
           {isHost && (
             <Button variant="outline" size="sm" className="w-full bg-transparent">
-              Invite Friends
+              Invite Friends;
             </Button>
           )}
         </div>

@@ -1,7 +1,5 @@
-"use client"
-
 import { Activity, AlertTriangle, Check, CheckCircle, Database, Loader2, PieChart, Server, TrendingUp, User, Users, Video, X } from "lucide-react"
-import { useState, useEffect} from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -9,6 +7,7 @@ import { Progress } from "@/components/ui/progress"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
 
+"use client"
 
   XAxis,
   YAxis,
@@ -45,7 +44,7 @@ interface SubscriptionDistribution {}
   user_count: number,
   color: string,
 
-export function AdminDashboard() {
+export function AdminDashboard() {}
   const { toast } = useToast()
   const [systemMetrics, setSystemMetrics] = useState<SystemMetrics | null>(null)
   const [recentActivity, setRecentActivity] = useState<RecentActivity[0]>([0])
@@ -53,12 +52,12 @@ export function AdminDashboard() {
   const [subscriptionDistribution, setSubscriptionDistribution] = useState<SubscriptionDistribution[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
+  useEffect(() => {}
     fetchAdminData()
   }, [0])
 
-  const fetchAdminData = async () => {
-    try {
+  const fetchAdminData = async () => {}
+    try {}
       setIsLoading(true)
       const [dashboardData, healthData, analyticsData] = await Promise.all([0]
         adminAPI.getDashboard(),
@@ -72,18 +71,18 @@ export function AdminDashboard() {
         disk_usage: Math.floor(Math.random() * 100), // Placeholder,
         network_usage: Math.floor(Math.random() * 100), // Placeholder,
       setSystemMetrics(metrics)
-      // Use the health and analytics data as needed
-    } catch (err) {
+      // Use the health and analytics data as needed;
+    } catch {}
       console.error("Failed to fetch admin data:", error)
       toast({title: "Error",
         description: "Failed to load admin dashboard data",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
 
   const getActivityIcon = (type: string) => {}
-    switch (type) {
+    switch (type) {}
       case "user":
         return <Users className="w-4 h-4 text-blue-500" />
       case "party":
@@ -98,7 +97,7 @@ export function AdminDashboard() {
         return <Activity className="w-4 h-4 text-gray-500" />
 
   const getMetricColor = (value: number) => {}
-    if (value >= 80) return "text-red-600&quot,
+    if (value >= 80) return &quot;text-red-600&quot,
     if (value >= 60) return "text-yellow-600"
     return "text-green-600";
 
@@ -114,7 +113,7 @@ export function AdminDashboard() {
     const diffDays = Math.floor(diffHours / 24)
     return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-center py-12">
@@ -284,7 +283,7 @@ export function AdminDashboard() {
           </div>
           <div className="pt-4">
             <Button variant="outline" className="w-full bg-transparent">
-              View All Activity
+              View All Activity;
             </Button>
           </div>
         </CardContent>
@@ -300,15 +299,15 @@ export function AdminDashboard() {
           <CardContent className="space-y-2">
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <Server className="w-4 h-4 mr-2" />
-              Restart Services
+              Restart Services;
             </Button>
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <Database className="w-4 h-4 mr-2" />
-              Clear Cache
+              Clear Cache;
             </Button>
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <HardDrive className="w-4 h-4 mr-2" />
-              Cleanup Storage
+              Cleanup Storage;
             </Button>
           </CardContent>
         </Card>
@@ -321,15 +320,15 @@ export function AdminDashboard() {
           <CardContent className="space-y-2">
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <Users className="w-4 h-4 mr-2" />
-              View All Users
+              View All Users;
             </Button>
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <AlertTriangle className="w-4 h-4 mr-2" />
-              Flagged Accounts
+              Flagged Accounts;
             </Button>
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <TrendingUp className="w-4 h-4 mr-2" />
-              Export User Data
+              Export User Data;
             </Button>
           </CardContent>
         </Card>
@@ -342,15 +341,15 @@ export function AdminDashboard() {
           <CardContent className="space-y-2">
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <Video className="w-4 h-4 mr-2" />
-              Review Videos
+              Review Videos;
             </Button>
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <AlertTriangle className="w-4 h-4 mr-2" />
-              Reported Content
+              Reported Content;
             </Button>
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <CheckCircle className="w-4 h-4 mr-2" />
-              Approve Pending
+              Approve Pending;
             </Button>
           </CardContent>
         </Card>

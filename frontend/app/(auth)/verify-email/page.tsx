@@ -1,5 +1,3 @@
-"use client"
-
 import { Check, CheckCircle, Clock, Link, Mail, Refresh } from "lucide-react"
 import { useState, useEffect, Suspense, useCallback } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -9,12 +7,14 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import Link from "next/link"
 
-function EmailVerificationHandler() {
+"use client"
+
+function EmailVerificationHandler() {}
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
 
-  const [status, setStatus] = useState<"loading" | "success" | "error" | "expired">("loading")
+  const [status, setStatus] = useState<"loading" | "success" | "error" | "expired">(&quot;loading")
   const [message, setMessage] = useState("")
   const [isResending, setIsResending] = useState(false)
   const [canResend, setCanResend] = useState(false)
@@ -23,10 +23,10 @@ function EmailVerificationHandler() {
   const token = searchParams.get("token")
   const email = searchParams.get("email")
 
-  const verifyEmail = useCallback(async () => {
+  const verifyEmail = useCallback(async () => {}
     setStatus("loading")
 
-    try {
+    try {}
       const response = await fetch("/api/auth/verify-email/", {}
         method: "POST",
         headers: {}
@@ -39,7 +39,7 @@ function EmailVerificationHandler() {
 
       const data = await response.json()
 
-      if (response.ok) {
+      if (response.ok) {}
         setStatus("success")
         setMessage("Email verified successfully! You can now log in.")
 
@@ -47,11 +47,11 @@ function EmailVerificationHandler() {
           description: "Your email has been verified successfully.",
         })
 
-        setTimeout(() => {
+        setTimeout(() => {}
   router.push("/login?verified=true")
         }, 2000)
       } else {}
-        if (data.error === "token_expired") {
+        if (data.error === "token_expired") {}
           setStatus("expired")
           setMessage("This verification link has expired. Please request a new one.")
         } else {}
@@ -59,26 +59,26 @@ function EmailVerificationHandler() {
           setMessage(data.message || "Email verification failed. Please try again.")
         }
       }
-    } catch (err) {
+    } catch {}
       console.error("Email verification error:", error)
       setStatus("error")
       setMessage("An unexpected error occurred. Please try again.")
     }
   }, [token, email, toast, router])
 
-  useEffect(() => {
-    if (!token || !email) {
+  useEffect(() => {}
+    if (!token || !email) {}
       setStatus("error")
       setMessage("Invalid verification link. Please check your email and try again.")
-      return
+      return;
     }
 
     verifyEmail()
   }, [token, email, verifyEmail])
 
-  useEffect(() => {
-    if (resendCooldown > 0) {
-      const timer = setTimeout(() => {
+  useEffect(() => {}
+    if (resendCooldown > 0) {}
+      const timer = setTimeout(() => {}
   setResendCooldown(resendCooldown - 1)
       }, 1000)
       return () => clearTimeout(timer)
@@ -89,11 +89,11 @@ function EmailVerificationHandler() {
 
 
 
-  const resendVerificationEmail = async () => {
+  const resendVerificationEmail = async () => {}
     setIsResending(true)
     setCanResend(false)
-    setResendCooldown(60) // 60 second cooldown
-    try {
+    setResendCooldown(60) // 60 second cooldown;
+    try {}
       const response = await fetch("/api/auth/resend-verification/", {}
         method: "POST",
         headers: {}
@@ -105,14 +105,14 @@ function EmailVerificationHandler() {
 
       const data = await response.json()
 
-      if (response.ok) {
+      if (response.ok) {}
         toast({title: "Verification Email Sent",
           description: "A new verification email has been sent to your inbox.",
         })
       } else {}
         throw new Error(data.message || "Failed to resend verification email")
       }
-    } catch (err) {
+    } catch {}
       console.error("Resend verification error:", error)
       toast({title: "Resend Failed",
         description: "Failed to resend verification email. Please try again later.",
@@ -120,7 +120,7 @@ function EmailVerificationHandler() {
       })
       setCanResend(true)
       setResendCooldown(0)
-    } finally {
+    } finally {}
       setIsResending(false)
     }
   }
@@ -180,7 +180,7 @@ function EmailVerificationHandler() {
                 <Link href="/login">
                   <Button className="w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white">
                     <CheckCircle className="w-4 h-4 mr-2" />
-                    Sign In to Your Account
+                    Sign In to Your Account;
                   </Button>
                 </Link>
               </div>
@@ -207,7 +207,7 @@ function EmailVerificationHandler() {
               </Alert>
 
               <div className="space-y-3">
-                <Button
+                <Button;
                   onClick={resendVerificationEmail}
                   disabled={isResending || !canResend}
                   className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
@@ -220,22 +220,22 @@ function EmailVerificationHandler() {
                   ) : !canResend ? (
                     <div className="flex items-center justify-center">
                       <Clock className="w-4 h-4 mr-2" />
-                      Resend in {resendCooldown}s
+                      Resend in {resendCooldown}s;
                     </div>
                   ) : (
                     <div className="flex items-center justify-center">
                       <Send className="w-4 h-4 mr-2" />
-                      Send New Verification Email
+                      Send New Verification Email;
                     </div>
                   )}
                 </Button>
 
                 <Link href="/login">
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full border-white/30 text-white hover:bg-white/10 bg-transparent"
                   >
-                    Back to Sign In
+                    Back to Sign In;
                   </Button>
                 </Link>
               </div>
@@ -257,7 +257,7 @@ function EmailVerificationHandler() {
               </Alert>
 
               <div className="space-y-3">
-                <Button
+                <Button;
                   onClick={resendVerificationEmail}
                   disabled={isResending || !canResend}
                   className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
@@ -270,22 +270,22 @@ function EmailVerificationHandler() {
                   ) : !canResend ? (
                     <div className="flex items-center justify-center">
                       <Clock className="w-4 h-4 mr-2" />
-                      Resend in {resendCooldown}s
+                      Resend in {resendCooldown}s;
                     </div>
                   ) : (
                     <div className="flex items-center justify-center">
                       <RefreshCw className="w-4 h-4 mr-2" />
-                      Send New Verification Email
+                      Send New Verification Email;
                     </div>
                   )}
                 </Button>
 
                 <Link href="/register">
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full border-white/30 text-white hover:bg-white/10 bg-transparent"
                   >
-                    Create New Account
+                    Create New Account;
                   </Button>
                 </Link>
               </div>
@@ -293,7 +293,7 @@ function EmailVerificationHandler() {
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-500 mb-2">Still having issues?</p>
                 <Link href="/help" className="text-purple-300 hover:text-purple-200 text-sm transition-colors">
-                  Contact Support
+                  Contact Support;
                 </Link>
               </div>
             </>
@@ -305,7 +305,7 @@ function EmailVerificationHandler() {
           <div className="bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10">
             <h4 className="text-white font-medium mb-2 flex items-center">
               <Mail className="w-4 h-4 mr-2" />
-              Email Verification Tips
+              Email Verification Tips;
             </h4>
             <ul className="space-y-1 text-sm text-gray-400">
               <li>• Check your spam/junk folder</li>
@@ -320,9 +320,9 @@ function EmailVerificationHandler() {
   )
 }
 
-export default function VerifyEmailPage() {
+export default function VerifyEmailPage() {}
   return (
-    <Suspense
+    <Suspense;
       fallback={}
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
           <div className="flex flex-col items-center space-y-4">

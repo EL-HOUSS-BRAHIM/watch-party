@@ -1,5 +1,3 @@
-"use client"
-
 import { Check, CheckCircle, Clock, Download, Eye, Flag, Search, Settings, Shield, User, Video, X, XCircle } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -7,13 +5,14 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { moderationAPI, adminAPI } from "@/lib/api"
 import { useToast } from "@/hooks/use-toast"
+
+"use client"
 
   Dialog,
   DialogContent,
@@ -23,39 +22,39 @@ import { useToast } from "@/hooks/use-toast"
   DialogTitle,
 } from "@/components/ui/dialog"
 interface ModerationItem {}
-  id: string
+  id: string;
   type: "video" | "comment" | "user" | "party"
-  title: string
-  content: string
-  author: string
+  title: string;
+  content: string;
+  author: string;
   reportedBy: string[]
   reportReason: string[]
   status: "pending" | "approved" | "rejected" | "flagged"
   priority: "low" | "medium" | "high" | "critical"
-  createdAt: string
-  reviewedAt?: string
-  reviewedBy?: string
-  aiScore: number
+  createdAt: string;
+  reviewedAt?: string;
+  reviewedBy?: string;
+  aiScore: number;
   aiFlags: string[]
 }
 
 interface ModerationStats {}
-  totalReports: number
-  pendingReviews: number
-  autoApproved: number
-  autoRejected: number
-  manualReviews: number
-  averageReviewTime: number
-  accuracyRate: number
+  totalReports: number;
+  pendingReviews: number;
+  autoApproved: number;
+  autoRejected: number;
+  manualReviews: number;
+  averageReviewTime: number;
+  accuracyRate: number;
 }
 
-export function ContentModerationSystem() {
+export function ContentModerationSystem() {}
   const [items, setItems] = useState<ModerationItem[]>([])
   const [stats, setStats] = useState<ModerationStats | null>(null)
   const [selectedItems, setSelectedItems] = useState<string[]>([])
-  const [filterStatus, setFilterStatus] = useState<string>("all")
-  const [filterType, setFilterType] = useState<string>("all")
-  const [filterPriority, setFilterPriority] = useState<string>("all")
+  const [filterStatus, setFilterStatus] = useState<string>(&quot;all")
+  const [filterType, setFilterType] = useState<string>(&quot;all")
+  const [filterPriority, setFilterPriority] = useState<string>(&quot;all")
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedItem, setSelectedItem] = useState<ModerationItem | null>(null)
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false)
@@ -63,20 +62,20 @@ export function ContentModerationSystem() {
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
-  useEffect(() => {
+  useEffect(() => {}
     fetchModerationData()
   }, [])
 
-  const fetchModerationData = async () => {
+  const fetchModerationData = async () => {}
     setLoading(true)
-    try {
-      // Fetch moderation reports and statistics from API
+    try {}
+      // Fetch moderation reports and statistics from API;
       const [reportsData, moderationStats] = await Promise.all([]
         moderationAPI.getReports({ status: 'pending' }),
         adminAPI.getModerationStats()
       ])
 
-      // Transform reports data
+      // Transform reports data;
       const transformedReports = (reportsData.results || []).map((report: unknown) => ({}
         id: report.id,
         type: report.content_type,
@@ -100,47 +99,47 @@ export function ContentModerationSystem() {
         autoRejected: moderationStats.auto_rejected || 0,
         manualReviews: moderationStats.manual_reviews || 0,
         averageReviewTime: moderationStats.average_review_time || 0,
-        accuracyRate: moderationStats.accuracy_rate || 0
+        accuracyRate: moderationStats.accuracy_rate || 0;
       }
 
       setItems(transformedReports)
       setStats(transformedStats)
-    } catch (err) {
+    } catch {}
       console.error('Failed to fetch moderation data:', error)
       toast({title: "Error",
         description: "Failed to load moderation data. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
   const filteredItems = items.filter((item) => {}
-    const matchesStatus = filterStatus === "all" || item.status === filterStatus
-    const matchesType = filterType === "all" || item.type === filterType
-    const matchesPriority = filterPriority === "all" || item.priority === filterPriority
+    const matchesStatus = filterStatus === "all" || item.status === filterStatus;
+    const matchesType = filterType === "all" || item.type === filterType;
+    const matchesPriority = filterPriority === "all" || item.priority === filterPriority;
     const matchesSearch =
       searchQuery === "" ||
       item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.author.toLowerCase().includes(searchQuery.toLowerCase())
 
-    return matchesStatus && matchesType && matchesPriority && matchesSearch
+    return matchesStatus && matchesType && matchesPriority && matchesSearch;
   })
 
   const handleItemAction = async (itemId: string, action: "approve" | "reject" | "flag", reason?: string) => {}
-    try {
-      // Call API to resolve the report
+    try {}
+      // Call API to resolve the report;
       await adminAPI.resolveReport(itemId, {}
         action: action === "approve" ? "dismiss" : action === "reject" ? "ban" : "warning",
-        reason: reason
+        reason: reason;
       })
 
-      // Update local state
+      // Update local state;
       setItems((prev) =>
         prev.map((item) =>
-          item.id === itemId
+          item.id === itemId;
             ? {}
                 ...item,
                 status: action === "approve" ? "approved" : action === "reject" ? "rejected" : "flagged",
@@ -154,7 +153,7 @@ export function ContentModerationSystem() {
       toast({title: "Success",
         description: `Report ${action}d successfully.`,
       })
-    } catch (err) {
+    } catch {}
       console.error(`Failed to ${action} report:`, error)
       toast({title: "Error",
         description: `Failed to ${action} report. Please try again.`,
@@ -164,13 +163,13 @@ export function ContentModerationSystem() {
   }
 
   const handleBulkAction = async (action: "approve" | "reject" | "flag") => {}
-    try {
-      // Process all selected items
+    try {}
+      // Process all selected items;
       await Promise.all(
         selectedItems.map(itemId => handleItemAction(itemId, action))
       )
       setSelectedItems([])
-    } catch (err) {
+    } catch {}
       console.error('Failed to perform bulk action:', error)
       toast({title: "Error",
         description: "Failed to perform bulk action. Please try again.",
@@ -180,7 +179,7 @@ export function ContentModerationSystem() {
   }
 
   const getPriorityColor = (priority: string) => {}
-    switch (priority) {
+    switch (priority) {}
       case "critical":
         return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
       case "high":
@@ -195,7 +194,7 @@ export function ContentModerationSystem() {
   }
 
   const getStatusColor = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case "approved":
         return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
       case "rejected":
@@ -210,7 +209,7 @@ export function ContentModerationSystem() {
   }
 
   const getTypeIcon = (type: string) => {}
-    switch (type) {
+    switch (type) {}
       case "video":
         return <Video className="h-4 w-4" />
       case "comment":
@@ -234,13 +233,13 @@ export function ContentModerationSystem() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant="outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
             <Settings className="mr-2 h-4 w-4" />
-            Settings
+            Settings;
           </Button>
           <Button variant="outline">
             <Download className="mr-2 h-4 w-4" />
-            Export
+            Export;
           </Button>
         </div>
       </div>
@@ -303,7 +302,7 @@ export function ContentModerationSystem() {
               <Label htmlFor="search">Search</Label>
               <div className="relative">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
+                <Input;
                   id="search"
                   placeholder="Search content, users, or reports..."
                   value={searchQuery}
@@ -364,17 +363,17 @@ export function ContentModerationSystem() {
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{selectedItems.length} item(s) selected</span>
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => handleBulkAction("approve")}>
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction(&quot;approve")}>
                   <CheckCircle className="mr-2 h-4 w-4" />
-                  Approve
+                  Approve;
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => handleBulkAction("reject")}>
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction(&quot;reject")}>
                   <XCircle className="mr-2 h-4 w-4" />
-                  Reject
+                  Reject;
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => handleBulkAction("flag")}>
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction(&quot;flag")}>
                   <Flag className="mr-2 h-4 w-4" />
-                  Flag
+                  Flag;
                 </Button>
               </div>
             </div>
@@ -393,10 +392,10 @@ export function ContentModerationSystem() {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12">
-                  <Checkbox
+                  <Checkbox;
                     checked={selectedItems.length === filteredItems.length}
                     onCheckedChange={(checked) => {}
-                      if (checked) {
+                      if (checked) {}
                         setSelectedItems(filteredItems.map((item) => item.id))
                       } else {}
                         setSelectedItems([])
@@ -418,10 +417,10 @@ export function ContentModerationSystem() {
               {filteredItems.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell>
-                    <Checkbox
+                    <Checkbox;
                       checked={selectedItems.includes(item.id)}
                       onCheckedChange={(checked) => {}
-                        if (checked) {
+                        if (checked) {}
                           setSelectedItems((prev) => [...prev, item.id])
                         } else {}
                           setSelectedItems((prev) => prev.filter((id) => id !== item.id))
@@ -477,7 +476,7 @@ export function ContentModerationSystem() {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-1">
-                      <Button
+                      <Button;
                         size="sm"
                         variant="outline"
                         onClick={() => {}
@@ -489,10 +488,10 @@ export function ContentModerationSystem() {
                       </Button>
                       {item.status === "pending" && (
                         <>
-                          <Button size="sm" variant="outline" onClick={() => handleItemAction(item.id, "approve")}>
+                          <Button size="sm" variant="outline" onClick={() => handleItemAction(item.id, &quot;approve")}>
                             <CheckCircle className="h-4 w-4 text-green-600" />
                           </Button>
-                          <Button size="sm" variant="outline" onClick={() => handleItemAction(item.id, "reject")}>
+                          <Button size="sm" variant="outline" onClick={() => handleItemAction(item.id, &quot;reject")}>
                             <XCircle className="h-4 w-4 text-red-600" />
                           </Button>
                         </>
@@ -564,18 +563,18 @@ export function ContentModerationSystem() {
 
               <div>
                 <Label>Reported By</Label>
-                <p>{selectedItem.reportedBy.join(", ")}</p>
+                <p>{selectedItem.reportedBy.join(&quot;, ")}</p>
               </div>
             </div>
           )}
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setReviewDialogOpen(false)}>
-              Close
+              Close;
             </Button>
             {selectedItem?.status === "pending" && (
               <>
-                <Button
+                <Button;
                   variant="outline"
                   onClick={() => {}
                     handleItemAction(selectedItem.id, "approve")
@@ -583,9 +582,9 @@ export function ContentModerationSystem() {
                   }}
                 >
                   <CheckCircle className="mr-2 h-4 w-4" />
-                  Approve
+                  Approve;
                 </Button>
-                <Button
+                <Button;
                   variant="outline"
                   onClick={() => {}
                     handleItemAction(selectedItem.id, "reject")
@@ -593,7 +592,7 @@ export function ContentModerationSystem() {
                   }}
                 >
                   <XCircle className="mr-2 h-4 w-4" />
-                  Reject
+                  Reject;
                 </Button>
               </>
             )}
@@ -651,7 +650,7 @@ export function ContentModerationSystem() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setSettingsDialogOpen(false)}>
-              Cancel
+              Cancel;
             </Button>
             <Button onClick={() => setSettingsDialogOpen(false)}>Save Settings</Button>
           </DialogFooter>

@@ -1,5 +1,3 @@
-"use client"
-
 import { Calendar, Eye, Grid, Heart, Link, List, MessageCircle, MoreHorizontal, Play, Search, Upload, Video } from "lucide-react"
 import * as React from "react"
 import Image from "next/image"
@@ -9,12 +7,13 @@ import { WatchPartyInput } from "@/components/ui/watch-party-input"
 import { WatchPartySelect } from "@/components/ui/watch-party-select"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-
 import { Progress } from "@/components/ui/progress"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 import { videosAPI } from "@/lib/api"
 import type { Video as APIVideo } from "@/lib/api/types"
+
+"use client"
 
   DropdownMenu,
   DropdownMenuContent,
@@ -47,15 +46,15 @@ const visibilityOptions = []
 function formatDuration(seconds: number): string {}
   const hours = Math.floor(seconds / 3600)
   const minutes = Math.floor((seconds % 3600) / 60)
-  const secs = seconds % 60
-  if (hours > 0) {
+  const secs = seconds % 60;
+  if (hours > 0) {}
     return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
   }
   return `${minutes}:${secs.toString().padStart(2, "0")}`
 }
 
 function formatFileSize(gb: number): string {}
-  if (gb < 1) {
+  if (gb < 1) {}
     return `${Math.round(gb * 1024)} MB`
   }
   return `${gb.toFixed(1)} GB`
@@ -75,7 +74,7 @@ function VideoCard({ video }: { video: APIVideo }) {}
   return (
     <Card className="group hover:shadow-lg transition-all duration-200 hover:shadow-primary/10">
       <div className="relative">
-        <img
+        <img;
           src={video.thumbnail || "/placeholder.svg"}
           alt={video.title}
           className="w-full h-48 object-cover rounded-t-lg"
@@ -92,7 +91,7 @@ function VideoCard({ video }: { video: APIVideo }) {}
             </div>
           </div>
         )}
-        <Badge
+        <Badge;
           variant={video.status === "ready" ? "default" : video.status === "processing" ? "secondary" : "destructive"}
           className="absolute top-2 left-2"
         >
@@ -114,11 +113,11 @@ function VideoCard({ video }: { video: APIVideo }) {}
             <DropdownMenuContent align="end">
               <DropdownMenuItem>
                 <Play className="mr-2 h-4 w-4" />
-                Play Video
+                Play Video;
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Eye className="mr-2 h-4 w-4" />
-                View Details
+                View Details;
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-destructive">Delete Video</DropdownMenuItem>
@@ -153,7 +152,7 @@ function VideoCard({ video }: { video: APIVideo }) {}
           {video.status === "ready" && (
             <WatchPartyButton size="sm" variant="outline">
               <Play className="mr-1 h-3 w-3" />
-              Play
+              Play;
             </WatchPartyButton>
           )}
         </div>
@@ -168,7 +167,7 @@ function VideoListItem({ video }: { video: APIVideo }) {}
       <CardContent className="p-4">
         <div className="flex items-center gap-4">
           <div className="relative flex-shrink-0">
-            <img
+            <img;
               src={video.thumbnail || "/placeholder.svg"}
               alt={video.title}
               className="w-24 h-16 object-cover rounded"
@@ -187,7 +186,7 @@ function VideoListItem({ video }: { video: APIVideo }) {}
             <div className="flex items-start justify-between mb-1">
               <h3 className="font-semibold text-sm line-clamp-1">{video.title}</h3>
               <div className="flex items-center gap-2">
-                <Badge
+                <Badge;
                   variant={}
                     video.status === "ready" ? "default" : video.status === "processing" ? "secondary" : "destructive"
                   }
@@ -222,7 +221,7 @@ function VideoListItem({ video }: { video: APIVideo }) {}
                 {video.status === "ready" && (
                   <WatchPartyButton size="sm" variant="outline">
                     <Play className="mr-1 h-3 w-3" />
-                    Play
+                    Play;
                   </WatchPartyButton>
                 )}
                 <DropdownMenu>
@@ -234,11 +233,11 @@ function VideoListItem({ video }: { video: APIVideo }) {}
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>
                       <Play className="mr-2 h-4 w-4" />
-                      Play Video
+                      Play Video;
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <Eye className="mr-2 h-4 w-4" />
-                      View Details
+                      View Details;
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="text-destructive">Delete Video</DropdownMenuItem>
@@ -253,37 +252,37 @@ function VideoListItem({ video }: { video: APIVideo }) {}
   )
 }
 
-export default function VideosPage() {
+export default function VideosPage() {}
   const [videos, setVideos] = useState<APIVideo[]>([])
   const [loading, setLoading] = useState(true)
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState("newest")
   const [filterBy, setFilterBy] = useState("all")
   const [visibilityFilter, setVisibilityFilter] = useState("all")
 
-  // Load videos from API
-  useEffect(() => {
+  // Load videos from API;
+  useEffect(() => {}
     loadVideos()
   }, [])
 
-  const loadVideos = async () => {
-    try {
+  const loadVideos = async () => {}
+    try {}
       setLoading(true)
       const response = await videosAPI.getVideos()
       setVideos(response.results || [])
-    } catch (err) {
+    } catch {}
       console.error("Failed to load videos:", error)
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
-  // Filter and sort videos
+  // Filter and sort videos;
   const filteredVideos = React.useMemo(() => {}
-    let filtered = videos
-    // Search filter
-    if (searchQuery) {
+    let filtered = videos;
+    // Search filter;
+    if (searchQuery) {}
       filtered = filtered.filter(
         (video) =>
           video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -291,38 +290,38 @@ export default function VideosPage() {
       )
     }
 
-    // Status filter
-    if (filterBy !== "all") {
+    // Status filter;
+    if (filterBy !== "all") {}
       filtered = filtered.filter((video) => video.status === filterBy)
     }
 
-    // Visibility filter
-    if (visibilityFilter !== "all") {
+    // Visibility filter;
+    if (visibilityFilter !== "all") {}
       filtered = filtered.filter((video) => video.visibility === visibilityFilter)
     }
 
-    // Sort
+    // Sort;
     filtered.sort((a, b) => {}
-      switch (sortBy) {
+      switch (sortBy) {}
         case "newest":
           return new Date(b.uploadedAt || b.createdAt || 0).getTime() - new Date(a.uploadedAt || a.createdAt || 0).getTime()
         case "oldest":
           return new Date(a.uploadedAt || a.createdAt || 0).getTime() - new Date(b.uploadedAt || b.createdAt || 0).getTime()
         case "most-viewed":
-          return b.views - a.views
+          return b.views - a.views;
         case "most-liked":
-          return b.likes - a.likes
+          return b.likes - a.likes;
         case "title":
           return a.title.localeCompare(b.title)
         default:
-          return 0
+          return 0;
       }
     })
 
-    return filtered
+    return filtered;
   }, [videos, searchQuery, sortBy, filterBy, visibilityFilter])
 
-  if (loading) {
+  if (loading) {}
     return (
       <div className="container mx-auto p-6">
         <div className="flex items-center justify-between mb-6">
@@ -359,7 +358,7 @@ export default function VideosPage() {
         <Link href="/dashboard/videos/upload">
           <WatchPartyButton>
             <Upload className="mr-2 h-4 w-4" />
-            Upload Video
+            Upload Video;
           </WatchPartyButton>
         </Link>
       </div>
@@ -367,7 +366,7 @@ export default function VideosPage() {
       {/* Filters and Search */}
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="flex-1">
-          <WatchPartyInput
+          <WatchPartyInput;
             placeholder="Search videos..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -375,21 +374,21 @@ export default function VideosPage() {
           />
         </div>
         <div className="flex gap-2">
-          <WatchPartySelect
+          <WatchPartySelect;
             options={sortOptions}
             value={sortBy}
             onValueChange={(value) => setSortBy(value as string)}
             placeholder="Sort by..."
             className="w-40"
           />
-          <WatchPartySelect
+          <WatchPartySelect;
             options={filterOptions}
             value={filterBy}
             onValueChange={(value) => setFilterBy(value as string)}
             placeholder="Filter..."
             className="w-32"
           />
-          <WatchPartySelect
+          <WatchPartySelect;
             options={visibilityOptions}
             value={visibilityFilter}
             onValueChange={(value) => setVisibilityFilter(value as string)}
@@ -398,18 +397,18 @@ export default function VideosPage() {
           />
         </div>
         <div className="flex border rounded-md">
-          <WatchPartyButton
+          <WatchPartyButton;
             variant={viewMode === "grid" ? "default" : "ghost"}
             size="sm"
-            onClick={() => setViewMode("grid")}
+            onClick={() => setViewMode(&quot;grid")}
             className="rounded-r-none"
           >
             <Grid className="h-4 w-4" />
           </WatchPartyButton>
-          <WatchPartyButton
+          <WatchPartyButton;
             variant={viewMode === "list" ? "default" : "ghost"}
             size="sm"
-            onClick={() => setViewMode("list")}
+            onClick={() => setViewMode(&quot;list")}
             className="rounded-l-none"
           >
             <List className="h-4 w-4" />
@@ -427,13 +426,13 @@ export default function VideosPage() {
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{videos.filter((v) => v.status === "ready").length}</div>
+            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;ready").length}</div>"
             <p className="text-xs text-muted-foreground">Ready</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{videos.filter((v) => v.status === "processing").length}</div>
+            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;processing").length}</div>"
             <p className="text-xs text-muted-foreground">Processing</p>
           </CardContent>
         </Card>
@@ -459,13 +458,13 @@ export default function VideosPage() {
             <Link href="/dashboard/videos/upload">
               <WatchPartyButton>
                 <Upload className="mr-2 h-4 w-4" />
-                Upload Video
+                Upload Video;
               </WatchPartyButton>
             </Link>
           </CardContent>
         </Card>
       ) : (
-        <div
+        <div;
           className={}
             viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" : "space-y-4"
           }

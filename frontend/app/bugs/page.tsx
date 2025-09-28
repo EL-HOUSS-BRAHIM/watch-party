@@ -10,38 +10,38 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 'use client';
 interface BugReport {}
-  id: string
-  title: string
-  description: string
+  id: string;
+  title: string;
+  description: string;
   status: 'open' | 'in-progress' | 'resolved' | 'closed';
   priority: 'low' | 'medium' | 'high' | 'critical';
   severity: 'minor' | 'moderate' | 'major' | 'critical';
   category: 'ui' | 'functionality' | 'performance' | 'security' | 'compatibility';
-  reporter: string
-  assignee?: string
-  createdAt: Date
-  updatedAt: Date
+  reporter: string;
+  assignee?: string;
+  createdAt: Date;
+  updatedAt: Date;
   tags: string[];
   comments: Comment[];
   stepsToReproduce: string[];
-  expectedBehavior: string
-  actualBehavior: string
+  expectedBehavior: string;
+  actualBehavior: string;
   environment: {}
-    browser: string
-    os: string
-    version: string
+    browser: string;
+    os: string;
+    version: string;
   };
   attachments?: string[];
 }
 
 interface Comment {}
-  id: string
-  author: string
-  content: string
-  createdAt: Date
+  id: string;
+  author: string;
+  content: string;
+  createdAt: Date;
 }
 
-export default function BugReports() {
+export default function BugReports() {}
   const [bugs, setBugs] = useState<BugReport[]>([]
     {}
       id: 'BUG-001',
@@ -154,10 +154,10 @@ export default function BugReports() {
   const [selectedBug, setSelectedBug] = useState<BugReport | null>(null);
   const [showNewBugForm, setShowNewBugForm] = useState(false);
 
-  // Filter bugs based on search and filters
-  useEffect(() => {
-    let filtered = bugs
-    if (searchTerm) {
+  // Filter bugs based on search and filters;
+  useEffect(() => {}
+    let filtered = bugs;
+    if (searchTerm) {}
       filtered = filtered.filter(bug => 
         bug.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         bug.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -165,11 +165,11 @@ export default function BugReports() {
       );
     }
 
-    if (statusFilter !== 'all') {
+    if (statusFilter !== 'all') {}
       filtered = filtered.filter(bug => bug.status === statusFilter);
     }
 
-    if (priorityFilter !== 'all') {
+    if (priorityFilter !== 'all') {}
       filtered = filtered.filter(bug => bug.priority === priorityFilter);
     }
 
@@ -177,7 +177,7 @@ export default function BugReports() {
   }, [bugs, searchTerm, statusFilter, priorityFilter]);
 
   const getStatusColor = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case 'open': return 'bg-red-100 text-red-800 border-red-200';
       case 'in-progress': return 'bg-blue-100 text-blue-800 border-blue-200';
       case 'resolved': return 'bg-green-100 text-green-800 border-green-200';
@@ -187,7 +187,7 @@ export default function BugReports() {
   };
 
   const getPriorityColor = (priority: string) => {}
-    switch (priority) {
+    switch (priority) {}
       case 'critical': return 'bg-red-100 text-red-800 border-red-200';
       case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
       case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
@@ -197,7 +197,7 @@ export default function BugReports() {
   };
 
   const getStatusIcon = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case 'open': return <AlertCircle className="w-4 h-4" />;
       case 'in-progress': return <Clock className="w-4 h-4" />;
       case 'resolved': return <CheckCircle className="w-4 h-4" />;
@@ -208,14 +208,14 @@ export default function BugReports() {
 
   const getBugStats = () => {}
     const stats = { total: bugs.length,
-      open: bugs.filter(b => b.status === 'open').length,
+      open: bugs.filter(b => b.status === &apos;open').length,
       inProgress: bugs.filter(b => b.status === 'in-progress').length,
       resolved: bugs.filter(b => b.status === 'resolved').length,
       closed: bugs.filter(b => b.status === 'closed').length,
       critical: bugs.filter(b => b.priority === 'critical').length,
-      high: bugs.filter(b => b.priority === 'high').length
+      high: bugs.filter(b => b.priority === 'high').length;
     };
-    return stats
+    return stats;
   };
 
   const stats = getBugStats();
@@ -230,7 +230,7 @@ export default function BugReports() {
         </div>
         <Button onClick={() => setShowNewBugForm(true)}>
           <Plus className="w-4 h-4 mr-2" />
-          Report Bug
+          Report Bug;
         </Button>
       </div>
 
@@ -301,7 +301,7 @@ export default function BugReports() {
             <div className="flex-1">
               <div className="relative">
                 <Search className="w-4 h-4 absolute left-3 top-3 text-muted-foreground" />
-                <Input
+                <Input;
                   placeholder="Search bugs..."
                   className="pl-10"
                   value={searchTerm}
@@ -343,7 +343,7 @@ export default function BugReports() {
           <h2 className="text-xl font-semibold">Bug Reports ({filteredBugs.length})</h2>
           <div className="space-y-3 max-h-[600px] overflow-y-auto">
             {filteredBugs.map((bug) => (
-              <Card
+              <Card;
                 key={bug.id} 
                 className={`cursor-pointer transition-colors hover:bg-muted/50 ${}
                   selectedBug?.id === bug.id ? 'ring-2 ring-primary' : ''
@@ -536,7 +536,7 @@ export default function BugReports() {
                 <Bug className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Select a Bug Report</h3>
                 <p className="text-muted-foreground">
-                  Choose a bug from the list to view details
+                  Choose a bug from the list to view details;
                 </p>
               </CardContent>
             </Card>

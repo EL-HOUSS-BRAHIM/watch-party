@@ -5,6 +5,6 @@ export const metadata: Metadata = { title: 'Manage Parties - Admin',
   description: 'Manage and moderate watch parties'
 }
 
-export default function AdminPartiesPage() {
+export default function AdminPartiesPage() {}
   return <AdminPartiesView />
 }

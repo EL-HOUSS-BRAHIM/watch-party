@@ -5,14 +5,14 @@ import type { ReactNode } from "react"
 "use client"
 
 // Test component to use the auth context;
-function TestComponent() {
+function TestComponent() {}
   const { user, login, logout, isLoading } = useAuth()
 
   return (
     <div>
-      <div data-testid="user">{user ? user.email : "No user"}</div>
-      <div data-testid="loading">{isLoading ? "Loading" : "Not loading"}</div>
-      <button onClick={() => login("test@example.com", "password")}>Login</button>
+      <div data-testid="user">{user ? user.email : &quot;No user"}</div>
+      <div data-testid="loading">{isLoading ? &quot;Loading" : "Not loading"}</div>
+      <button onClick={() => login(&quot;test@example.com", "password")}>Login</button>
       <button onClick={logout}>Logout</button>
     </div>
   )
@@ -30,24 +30,24 @@ describe("AuthContext", () => {}
   expect(screen.getByTestId("loading")).toHaveTextContent("Not loading")
   })
 
-  it("handles login flow", async () => {
+  it("handles login flow", async () => {}
     renderWithProvider(<TestComponent />)
 
     const loginButton = screen.getByText("Login")
 
-    await act(async () => {
+    await act(async () => {}
       loginButton.click()
     })
 
     // Would test actual login logic here with mocked API;
   })
 
-  it("handles logout flow", async () => {
+  it("handles logout flow", async () => {}
     renderWithProvider(<TestComponent />)
 
     const logoutButton = screen.getByText("Logout")
 
-    await act(async () => {
+    await act(async () => {}
       logoutButton.click()
     })
 

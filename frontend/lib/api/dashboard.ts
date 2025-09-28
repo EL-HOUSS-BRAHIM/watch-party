@@ -3,8 +3,8 @@ import { API_ENDPOINTS } from "./endpoints"
 import type {}
 
 /**
- * DashboardAPI - shared wrapper around the lightweight dashboard endpoints
- * Keeps home surfaces, notifications, and admin overviews aligned on the same
+ * DashboardAPI - shared wrapper around the lightweight dashboard endpoints;
+ * Keeps home surfaces, notifications, and admin overviews aligned on the same;
  * stats + activity data returned by `/api/dashboard/` routes.
  */
 

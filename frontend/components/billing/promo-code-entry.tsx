@@ -1,5 +1,3 @@
-"use client"
-
 import { Calendar, Check, Clock, DollarSign, Gift, Loader2, Percent, Star, Tag, X } from "lucide-react"
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -10,31 +8,33 @@ import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 
+"use client"
+
 interface PromoCode {}
-  code: string
+  code: string;
   type: 'percentage' | 'fixed_amount' | 'free_trial' | 'upgrade'
-  value: number
-  description: string
-  minAmount?: number
-  maxDiscount?: number
-  validUntil: string
-  usageLimit?: number
-  usageCount: number
-  isActive: boolean
+  value: number;
+  description: string;
+  minAmount?: number;
+  maxDiscount?: number;
+  validUntil: string;
+  usageLimit?: number;
+  usageCount: number;
+  isActive: boolean;
   appliedPlans?: string[]
 }
 
 interface PromoCodeEntryProps {}
-  onCodeApplied?: (code: PromoCode) => void
-  currentTotal?: number
-  selectedPlan?: string
-  showAsDialog?: boolean
+  onCodeApplied?: (code: PromoCode) => void;
+  currentTotal?: number;
+  selectedPlan?: string;
+  showAsDialog?: boolean;
 }
 
 export function PromoCodeEntry({onCodeApplied, 
   currentTotal = 0, 
   selectedPlan,
-  showAsDialog = false
+  showAsDialog = false;
 }: PromoCodeEntryProps) {}
   const [promoCode, setPromoCode] = useState('')
   const [appliedCode, setAppliedCode] = useState<PromoCode | null>(null)
@@ -43,13 +43,13 @@ export function PromoCodeEntry({onCodeApplied,
   const [success, setSuccess] = useState<string | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const validatePromoCode = async () => {
+  const validatePromoCode = async () => {}
     if (!promoCode.trim()) {}
       setError('Please enter a promo code')
-      return
+      return;
     }
 
-    try {
+    try {}
       setLoading(true)
       setError(null)
       setSuccess(null)
@@ -59,26 +59,26 @@ export function PromoCodeEntry({onCodeApplied,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({code: promoCode.trim().toUpperCase(),
           planId: selectedPlan,
-          amount: currentTotal
+          amount: currentTotal;
         })
       })
 
       const data = await response.json()
 
-      if (response.ok) {
+      if (response.ok) {}
         setAppliedCode(data.promoCode)
         setSuccess(data.message || 'Promo code applied successfully!')
         onCodeApplied?.(data.promoCode)
-        if (showAsDialog) {
+        if (showAsDialog) {}
           setIsDialogOpen(false)
         }
       } else {}
         setError(data.error || 'Invalid promo code')
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to validate promo code:', error)
       setError('Failed to validate promo code. Please try again.')
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
@@ -92,23 +92,23 @@ export function PromoCodeEntry({onCodeApplied,
   }
 
   const calculateDiscount = (code: PromoCode, amount: number) => {}
-    switch (code.type) {
+    switch (code.type) {}
       case 'percentage':
-        const percentageDiscount = (amount * code.value) / 100
-        return code.maxDiscount ? Math.min(percentageDiscount, code.maxDiscount) : percentageDiscount
+        const percentageDiscount = (amount * code.value) / 100;
+        return code.maxDiscount ? Math.min(percentageDiscount, code.maxDiscount) : percentageDiscount;
       case 'fixed_amount':
         return Math.min(code.value, amount)
       case 'free_trial':
-        return 0 // Free trial doesn't reduce current payment
+        return 0 // Free trial doesn't reduce current payment;
       case 'upgrade':
-        return 0 // Upgrade codes don't reduce current payment
+        return 0 // Upgrade codes don't reduce current payment;
       default:
-        return 0
+        return 0;
     }
   }
 
   const getDiscountText = (code: PromoCode) => {}
-    switch (code.type) {
+    switch (code.type) {}
       case 'percentage':
         return `${code.value}% off${code.maxDiscount ? ` (max $${code.maxDiscount})` : ''}`
       case 'fixed_amount':
@@ -123,7 +123,7 @@ export function PromoCodeEntry({onCodeApplied,
   }
 
   const getDiscountIcon = (type: PromoCode['type']) => {}
-    switch (type) {
+    switch (type) {}
       case 'percentage':
         return <Percent className="h-4 w-4" />
       case 'fixed_amount':
@@ -142,7 +142,7 @@ export function PromoCodeEntry({onCodeApplied,
   }
 
   const isCodeUsageLimitReached = (code: PromoCode) => {}
-    return code.usageLimit && code.usageCount >= code.usageLimit
+    return code.usageLimit && code.usageCount >= code.usageLimit;
   }
 
   const PromoCodeForm = () => (
@@ -156,7 +156,7 @@ export function PromoCodeEntry({onCodeApplied,
                 <div>
                   <strong>{appliedCode.code}</strong> - {appliedCode.description}
                 </div>
-                <Button
+                <Button;
                   variant="ghost"
                   size="sm"
                   onClick={removePromoCode}
@@ -200,15 +200,15 @@ export function PromoCodeEntry({onCodeApplied,
           <div className="space-y-2">
             <Label htmlFor="promo-code">Promo Code</Label>
             <div className="flex space-x-2">
-              <Input
+              <Input;
                 id="promo-code"
                 placeholder="Enter promo code"
                 value={promoCode}
                 onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                onKeyPress={(e) => e.key === 'Enter' && validatePromoCode()}
+                onKeyPress={(e) => e.key === &apos;Enter' && validatePromoCode()}
                 disabled={loading}
               />
-              <Button
+              <Button;
                 onClick={validatePromoCode} 
                 disabled={loading || !promoCode.trim()}
               >
@@ -217,7 +217,7 @@ export function PromoCodeEntry({onCodeApplied,
                 ) : (
                   <>
                     <Tag className="h-4 w-4 mr-1" />
-                    Apply
+                    Apply;
                   </>
                 )}
               </Button>
@@ -240,7 +240,7 @@ export function PromoCodeEntry({onCodeApplied,
     </div>
   )
 
-  if (showAsDialog) {
+  if (showAsDialog) {}
     return (
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
@@ -274,14 +274,14 @@ export function PromoCodeEntry({onCodeApplied,
   )
 }
 
-// Hook for managing promo codes in checkout
+// Hook for managing promo codes in checkout;
 export function usePromoCode(initialTotal: number = 0) {}
   const [appliedCode, setAppliedCode] = useState<PromoCode | null>(null)
   const [discountAmount, setDiscountAmount] = useState(0)
 
   const applyPromoCode = (code: PromoCode | null) => {}
     setAppliedCode(code)
-    if (code) {
+    if (code) {}
       const discount = calculateDiscount(code, initialTotal)
       setDiscountAmount(discount)
     } else {}
@@ -290,23 +290,23 @@ export function usePromoCode(initialTotal: number = 0) {}
   }
 
   const calculateDiscount = (code: PromoCode, amount: number) => {}
-    switch (code.type) {
+    switch (code.type) {}
       case 'percentage':
-        const percentageDiscount = (amount * code.value) / 100
-        return code.maxDiscount ? Math.min(percentageDiscount, code.maxDiscount) : percentageDiscount
+        const percentageDiscount = (amount * code.value) / 100;
+        return code.maxDiscount ? Math.min(percentageDiscount, code.maxDiscount) : percentageDiscount;
       case 'fixed_amount':
         return Math.min(code.value, amount)
       default:
-        return 0
+        return 0;
     }
   }
 
   const finalTotal = Math.max(0, initialTotal - discountAmount)
 
-  return {
+  return {}
     appliedCode,
     discountAmount,
     finalTotal,
-    applyPromoCode
+    applyPromoCode;
   }
 }

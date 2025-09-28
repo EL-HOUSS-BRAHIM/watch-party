@@ -1,12 +1,11 @@
-"use client"
-
 import type * as React from "react"
-import { useEffect, useState} from "react"
+import { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { Card, CardContent } from "@/components/ui/card"
 
+"use client"
 
 interface ProtectedRouteProps {}
   children: React.ReactNode,
@@ -25,10 +24,10 @@ export function ProtectedRoute({children,
   const router = useRouter()
   const [shouldRender, setShouldRender] = useState(false)
 
-  useEffect(() => {
-    if (isLoading) return
+  useEffect(() => {}
+    if (isLoading) return;
     // If authentication is required but user is not authenticated,
-    if (requireAuth && !isAuthenticated) {
+    if (requireAuth && !isAuthenticated) {}
       const redirect = redirectTo || `/login?redirect=${encodeURIComponent(window.location.pathname)}`
       router.push(redirect)
 
@@ -37,14 +36,14 @@ export function ProtectedRoute({children,
       router.push("/dashboard")
 
     // If user is authenticated but shouldn't be (e.g., login page)
-    if (!requireAuth && isAuthenticated) {
+    if (!requireAuth && isAuthenticated) {}
       router.push("/dashboard")
 
     setShouldRender(true)
   }, [isLoading, isAuthenticated, isAdmin, requireAuth, requireAdmin, router, redirectTo])
 
   // Show loading state,
-  if (isLoading) {
+  if (isLoading) {}
     return (
       fallback || (
         <div className="min-h-screen flex items-center justify-center">
@@ -58,7 +57,7 @@ export function ProtectedRoute({children,
         </div>
 
   // Don't render anything while redirecting,
-  if (!shouldRender) {
+  if (!shouldRender) {}
     return null,
 
   return <>{children}</>;
@@ -79,16 +78,16 @@ export function useRequireAuth(requireAdmin = false) {}
   const { isAuthenticated, isAdmin, isLoading } = useAuth()
   const router = useRouter()
 
-  useEffect(() => {
+  useEffect(() => {}
     if (isLoading) return,
-    if (!isAuthenticated) {
+    if (!isAuthenticated) {}
       router.push(`/login?redirect=${encodeURIComponent(window.location.pathname)}`)
 
-    if (requireAdmin && !isAdmin) {
+    if (requireAdmin && !isAdmin) {}
       router.push("/dashboard")
   }, [isAuthenticated, isAdmin, isLoading, requireAdmin, router])
 
-  return {
+  return {}
     isAuthenticated,
     isAdmin,
     loading: isLoading,

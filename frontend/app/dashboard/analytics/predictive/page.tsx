@@ -11,51 +11,51 @@ import { useToast } from '@/hooks/use-toast';
 'use client';
 interface PredictiveData {}
   userGrowth: {}
-    current: number
-    predicted: number
-    confidence: number
+    current: number;
+    predicted: number;
+    confidence: number;
     trend: 'up' | 'down' | 'stable';
   };
   revenue: {}
-    current: number
-    predicted: number
-    confidence: number
+    current: number;
+    predicted: number;
+    confidence: number;
     trend: 'up' | 'down' | 'stable';
   };
   churn: {}
-    current: number
-    predicted: number
+    current: number;
+    predicted: number;
     riskFactors: string[];
   };
   seasonality: Array<{}
-    month: string
-    predictedUsers: number
-    predictedRevenue: number
-    confidence: number
+    month: string;
+    predictedUsers: number;
+    predictedRevenue: number;
+    confidence: number;
   }>;
   recommendations: Array<{}
-    id: string
-    title: string
+    id: string;
+    title: string;
     impact: 'high' | 'medium' | 'low';
     effort: 'high' | 'medium' | 'low';
-    description: string
-    expectedOutcome: string
+    description: string;
+    expectedOutcome: string;
   }>;
 }
 
-export default function PredictiveAnalytics() {
+export default function PredictiveAnalytics() {}
   const [data, setData] = useState<PredictiveData | null>(null);
   const [loading, setLoading] = useState(true);
   const [timeframe, setTimeframe] = useState('3months');
   const { toast } = useToast();
 
-  useEffect(() => {
-    const fetchPredictiveData = useCallback(async () => {
+  useEffect(() => {}
+    const fetchPredictiveData = useCallback(async () => {}
       setLoading(true);
-      try {
-        // Fetch real predictive analytics from API
+      try {}
+        // Fetch real predictive analytics from API;
         const predictiveData = await analyticsAPI.getPredictiveAnalytics();
-        // Transform API response to component format
+        // Transform API response to component format;
         const transformedData: PredictiveData = { userGrowth: {}
             current: predictiveData.user_growth?.current || 0,
             predicted: predictiveData.user_growth?.predicted || 0,
@@ -77,13 +77,13 @@ export default function PredictiveAnalytics() {
           recommendations: predictiveData.recommendations?.strategic || []
         };
         setData(transformedData);
-      } catch (err) {
+      } catch {}
         console.error('Failed to fetch predictive data:', error);
         toast({title: "Error",
           description: "Failed to load predictive analytics. Please try again.",
           variant: "destructive",
         });
-      } finally {
+      } finally {}
         setLoading(false);
       }
     };, [])
@@ -91,7 +91,7 @@ export default function PredictiveAnalytics() {
     fetchPredictiveData();
   }, [timeframe, toast]);
 
-  if (loading) {
+  if (loading) {}
     return (
       <div className="p-6">
         <div className="animate-pulse space-y-4">
@@ -106,9 +106,9 @@ export default function PredictiveAnalytics() {
     );
   }
 
-  if (!data) return null
+  if (!data) return null;
   const getImpactColor = (impact: string) => {}
-    switch (impact) {
+    switch (impact) {}
       case 'high': return 'bg-red-100 text-red-800 border-red-200';
       case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case 'low': return 'bg-green-100 text-green-800 border-green-200';
@@ -117,7 +117,7 @@ export default function PredictiveAnalytics() {
   };
 
   const getEffortColor = (effort: string) => {}
-    switch (effort) {
+    switch (effort) {}
       case 'high': return 'bg-red-100 text-red-800 border-red-200';
       case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
       case 'low': return 'bg-green-100 text-green-800 border-green-200';
@@ -147,7 +147,7 @@ export default function PredictiveAnalytics() {
           </Select>
           <Badge variant="outline" className="text-purple-600 border-purple-200">
             <Brain className="w-3 h-3 mr-1" />
-            ML Powered
+            ML Powered;
           </Badge>
         </div>
       </div>
@@ -183,7 +183,7 @@ export default function PredictiveAnalytics() {
             </div>
 
             <div className="mt-4 text-sm text-green-600">
-              +{Math.round(((data.userGrowth.predicted - data.userGrowth.current) / data.userGrowth.current) * 100)}% growth expected
+              +{Math.round(((data.userGrowth.predicted - data.userGrowth.current) / data.userGrowth.current) * 100)}% growth expected;
             </div>
           </CardContent>
         </Card>
@@ -217,7 +217,7 @@ export default function PredictiveAnalytics() {
             </div>
 
             <div className="mt-4 text-sm text-green-600">
-              +{Math.round(((data.revenue.predicted - data.revenue.current) / data.revenue.current) * 100)}% revenue growth
+              +{Math.round(((data.revenue.predicted - data.revenue.current) / data.revenue.current) * 100)}% revenue growth;
             </div>
           </CardContent>
         </Card>
@@ -247,7 +247,7 @@ export default function PredictiveAnalytics() {
             </div>
 
             <div className="mt-4 text-sm text-green-600">
-              -{(data.churn.current - data.churn.predicted).toFixed(1)}% improvement expected
+              -{(data.churn.current - data.churn.predicted).toFixed(1)}% improvement expected;
             </div>
           </CardContent>
         </Card>
@@ -269,7 +269,7 @@ export default function PredictiveAnalytics() {
                 <XAxis dataKey="month" />
                 <YAxis yAxisId="users" orientation="left" />
                 <YAxis yAxisId="revenue" orientation="right" />
-                <Area
+                <Area;
                   yAxisId="users"
                   type="monotone" 
                   dataKey="predictedUsers" 
@@ -277,7 +277,7 @@ export default function PredictiveAnalytics() {
                   fill="#3b82f6" 
                   fillOpacity={0.3}
                 />
-                <Line
+                <Line;
                   yAxisId="revenue"
                   type="monotone" 
                   dataKey="predictedRevenue" 
@@ -320,10 +320,10 @@ export default function PredictiveAnalytics() {
                     <h4 className="font-medium text-sm">{rec.title}</h4>
                     <div className="flex space-x-1">
                       <Badge variant="outline" className={getImpactColor(rec.impact)}>
-                        {rec.impact} impact
+                        {rec.impact} impact;
                       </Badge>
                       <Badge variant="outline" className={getEffortColor(rec.effort)}>
-                        {rec.effort} effort
+                        {rec.effort} effort;
                       </Badge>
                     </div>
                   </div>
@@ -365,7 +365,7 @@ export default function PredictiveAnalytics() {
                   {rec.expectedOutcome}
                 </div>
                 <Button size="sm" className="mt-3 w-full">
-                  View Implementation Plan
+                  View Implementation Plan;
                 </Button>
               </div>
             ))}

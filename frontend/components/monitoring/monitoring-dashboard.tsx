@@ -1,5 +1,3 @@
-"use client"
-
 import { Activity, AlertTriangle, Bell, Check, CheckCircle, Clock, Download, Eye, Refresh, Server, Settings, Wifi, X, XCircle } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import { useState, useEffect , useCallback } from "react"
@@ -9,10 +7,10 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
+"use client"
 
   Dialog,
   DialogContent,
@@ -34,43 +32,43 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 } from "recharts"
 
 interface SystemMetric {}
-  name: string
-  value: number
-  unit: string
+  name: string;
+  value: number;
+  unit: string;
   status: "healthy" | "warning" | "critical"
-  threshold: number
+  threshold: number;
   trend: "up" | "down" | "stable"
 }
 
-interface LogEntry {
-  id: string
-  timestamp: string
+interface LogEntry {}
+  id: string;
+  timestamp: string;
   level: "info" | "warn" | "error" | "debug"
-  service: string
-  message: string
+  service: string;
+  message: string;
   metadata?: Record<string, any>
 }
 
 interface Alert {}
-  id: string
-  title: string
-  description: string
+  id: string;
+  title: string;
+  description: string;
   severity: "low" | "medium" | "high" | "critical"
   status: "active" | "acknowledged" | "resolved"
-  timestamp: string
-  service: string
-  metric?: string
+  timestamp: string;
+  service: string;
+  metric?: string;
 }
 
 interface Service {}
-  id: string
-  name: string
+  id: string;
+  name: string;
   status: "healthy" | "degraded" | "down"
-  uptime: number
-  responseTime: number
-  errorRate: number
-  lastCheck: string
-  version: string
+  uptime: number;
+  responseTime: number;
+  errorRate: number;
+  lastCheck: string;
+  version: string;
 }
 
 const mockMetrics: SystemMetric[] = []
@@ -199,7 +197,7 @@ const performanceData = Array.from({ length: 24 }, (_, i) => ({}
   requests: Math.floor(Math.random() * 1000) + 500,
 }))
 
-export function MonitoringDashboard() {
+export function MonitoringDashboard() {}
   const [metrics, setMetrics] = useState<SystemMetric[]>(mockMetrics)
   const [logs, setLogs] = useState<LogEntry[]>(mockLogs)
   const [alerts, setAlerts] = useState<Alert[]>(mockAlerts)
@@ -207,13 +205,13 @@ export function MonitoringDashboard() {
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null)
   const [alertDialogOpen, setAlertDialogOpen] = useState(false)
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
-  const [logFilter, setLogFilter] = useState<string>("all")
-  const [alertFilter, setAlertFilter] = useState<string>("all")
+  const [logFilter, setLogFilter] = useState<string>(&quot;all")
+  const [alertFilter, setAlertFilter] = useState<string>(&quot;all")
   const [isRealTime, setIsRealTime] = useState(true)
 
-  // Simulate real-time updates
-  useEffect(() => {
-    if (!isRealTime) return
+  // Simulate real-time updates;
+  useEffect(() => {}
+    if (!isRealTime) return;
     const interval = setInterval(() => {}
       setMetrics((prev) =>
         prev.map((metric) => ({}
@@ -235,7 +233,7 @@ export function MonitoringDashboard() {
   }
 
   const getStatusColor = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case "healthy":
         return "text-green-600"
       case "warning":
@@ -250,7 +248,7 @@ export function MonitoringDashboard() {
   }
 
   const getStatusIcon = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case "healthy":
         return <CheckCircle className="h-4 w-4 text-green-600" />
       case "warning":
@@ -265,7 +263,7 @@ export function MonitoringDashboard() {
   }
 
   const getLogLevelColor = (level: string) => {}
-    switch (level) {
+    switch (level) {}
       case "error":
         return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
       case "warn":
@@ -280,7 +278,7 @@ export function MonitoringDashboard() {
   }
 
   const getSeverityColor = (severity: string) => {}
-    switch (severity) {
+    switch (severity) {}
       case "critical":
         return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
       case "high":
@@ -294,12 +292,12 @@ export function MonitoringDashboard() {
     }
   }
 
-  const filteredLogs = logs.filter((log) => logFilter === "all" || log.level === logFilter)
+  const filteredLogs = logs.filter((log) => logFilter === &quot;all" || log.level === logFilter)
   const filteredAlerts = alerts.filter((alert) => alertFilter === "all" || alert.severity === alertFilter)
 
-  const activeAlerts = alerts.filter((alert) => alert.status === "active").length
-  const criticalAlerts = alerts.filter((alert) => alert.severity === "critical" && alert.status === "active").length
-  const healthyServices = services.filter((service) => service.status === "healthy").length
+  const activeAlerts = alerts.filter((alert) => alert.status === "active").length;
+  const criticalAlerts = alerts.filter((alert) => alert.severity === "critical" && alert.status === "active").length;
+  const healthyServices = services.filter((service) => service.status === "healthy").length;
   const avgResponseTime = Math.round(services.reduce((sum, service) => sum + service.responseTime, 0) / services.length)
 
   return (
@@ -312,11 +310,11 @@ export function MonitoringDashboard() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant="outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
             <Settings className="mr-2 h-4 w-4" />
-            Settings
+            Settings;
           </Button>
-          <Button onClick={() => setIsRealTime(!isRealTime)} variant={isRealTime ? "default" : "outline"}>
+          <Button onClick={() => setIsRealTime(!isRealTime)} variant={isRealTime ? &quot;default" : "outline"}>
             <Activity className="mr-2 h-4 w-4" />
             {isRealTime ? "Live" : "Paused"}
           </Button>
@@ -335,7 +333,7 @@ export function MonitoringDashboard() {
               {Math.round((healthyServices / services.length) * 100)}%
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
-              {healthyServices}/{services.length} services healthy
+              {healthyServices}/{services.length} services healthy;
             </div>
           </CardContent>
         </Card>
@@ -346,7 +344,7 @@ export function MonitoringDashboard() {
             <Bell className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${activeAlerts > 0 ? "text-red-600" : "text-green-600"}`}>"
+            <div className={`text-2xl font-bold ${activeAlerts > 0 ? &quot;text-red-600" : "text-green-600"}`}>"
               {activeAlerts}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">{criticalAlerts} critical</div>
@@ -605,15 +603,15 @@ export function MonitoringDashboard() {
                     <div className="flex gap-2">
                       {alert.status === "active" && (
                         <Button size="sm" onClick={() => acknowledgeAlert(alert.id)}>
-                          Acknowledge
+                          Acknowledge;
                         </Button>
                       )}
                       {alert.status !== "resolved" && (
                         <Button size="sm" variant="outline" onClick={() => resolveAlert(alert.id)}>
-                          Resolve
+                          Resolve;
                         </Button>
                       )}
-                      <Button
+                      <Button;
                         size="sm"
                         variant="outline"
                         onClick={() => {}
@@ -655,7 +653,7 @@ export function MonitoringDashboard() {
                   </Select>
                   <Button size="sm" variant="outline">
                     <Download className="mr-2 h-4 w-4" />
-                    Export
+                    Export;
                   </Button>
                 </div>
               </div>
@@ -792,16 +790,16 @@ export function MonitoringDashboard() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setAlertDialogOpen(false)}>
-              Close
+              Close;
             </Button>
             {selectedAlert?.status === "active" && (
-              <Button
+              <Button;
                 onClick={() => {}
                   acknowledgeAlert(selectedAlert.id)
                   setAlertDialogOpen(false)
                 }}
               >
-                Acknowledge
+                Acknowledge;
               </Button>
             )}
           </DialogFooter>
@@ -864,7 +862,7 @@ export function MonitoringDashboard() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setSettingsDialogOpen(false)}>
-              Cancel
+              Cancel;
             </Button>
             <Button onClick={() => setSettingsDialogOpen(false)}>Save Settings</Button>
           </DialogFooter>

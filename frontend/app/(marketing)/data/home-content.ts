@@ -2,24 +2,24 @@ import type { LucideIcon } from "lucide-react"
 import { Smartphone } from "lucide-react"
 
 export interface MarketingFeature {}
-  icon: LucideIcon
-  title: string
-  description: string
-  stats: string
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  stats: string;
 }
 
 export interface MarketingStat {}
-  number: string
-  label: string
-  icon: LucideIcon
+  number: string;
+  label: string;
+  icon: LucideIcon;
 }
 
 export interface MarketingTestimonial {}
-  name: string
-  username: string
-  content: string
-  rating: number
-  verified: boolean
+  name: string;
+  username: string;
+  content: string;
+  rating: number;
+  verified: boolean;
 }
 
 export const marketingFeatures: MarketingFeature[] = []

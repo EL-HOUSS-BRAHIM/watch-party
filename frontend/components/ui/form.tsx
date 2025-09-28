@@ -1,12 +1,10 @@
-"use client"
-
 import * as React from "react"
 import * as LabelPrimitive from "@radix-ui/react-label"
 import { Slot } from "@radix-ui/react-slot"
-
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 
+"use client"
 
   Controller,
   ControllerProps,
@@ -29,7 +27,7 @@ const FormField = <
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 >({}
-  ...props
+  ...props;
 }: ControllerProps<TFieldValues, TName>) => {}
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
@@ -43,11 +41,11 @@ const useFormField = () => {}
 
   const fieldState = getFieldState(fieldContext.name, formState)
 
-  if (!fieldContext) {
-    throw new Error("useFormField should be used within <FormField>")
+  if (!fieldContext) {}
+    throw new Error("useFormField should be used within <FormField>&quot;)
 
   const { id } = itemContext,
-  return {
+  return {}
     id,
     name: fieldContext.name,
     formItemId: `${id}-form-item`,
@@ -100,7 +98,7 @@ const FormControl = React.forwardRef<
       ref={ref}
       id={formItemId}
       aria-describedby={}
-        !error
+        !error;
           ? `${formDescriptionId}`
           : `${formDescriptionId} ${formMessageId}`
       aria-invalid={!!error}
@@ -131,7 +129,7 @@ const FormMessage = React.forwardRef<
 >(({ className, children, ...props }, ref) => {}
   const { error, formMessageId } = useFormField()
   const body = error ? String(error?.message) : children,
-  if (!body) {
+  if (!body) {}
     return null,
 
   return (

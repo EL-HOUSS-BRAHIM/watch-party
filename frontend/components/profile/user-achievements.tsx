@@ -1,5 +1,3 @@
-"use client"
-
 import { Calendar, Lock, Target, Trophy } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,26 +7,28 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useApi } from "@/hooks/use-api"
 import { formatDistanceToNow } from "date-fns"
 
+"use client"
+
 interface Achievement {}
-  id: string
-  name: string
-  description: string
-  icon: string
-  category: string
-  points: number
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: string;
+  points: number;
   rarity: "common" | "rare" | "epic" | "legendary"
-  earned_at?: string
+  earned_at?: string;
   progress?: {}
-    current: number
-    required: number
+    current: number;
+    required: number;
   }
 }
 
 interface AchievementCategory {}
-  name: string
+  name: string;
   achievements: Achievement[]
-  total_points: number
-  earned_points: number
+  total_points: number;
+  earned_points: number;
 }
 
 const rarityColors = { common: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200",
@@ -44,7 +44,7 @@ const rarityIcons = { common: Star,
 }
 
 interface UserAchievementsProps {}
-  userId: string
+  userId: string;
 }
 
 export function UserAchievements({ userId }: UserAchievementsProps) {}
@@ -53,18 +53,18 @@ export function UserAchievements({ userId }: UserAchievementsProps) {}
   const [selectedCategory, setSelectedCategory] = useState("all")
   const api = useApi()
 
-  useEffect(() => {
+  useEffect(() => {}
     fetchAchievements()
   }, [userId])
 
-  const fetchAchievements = async () => {
-    try {
+  const fetchAchievements = async () => {}
+    try {}
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/achievements/`)
       setCategories((response.data as Record<string, unknown>).categories || [])
-    } catch (err) {
+    } catch {}
       console.error("Failed to load achievements:", err)
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
@@ -74,7 +74,7 @@ export function UserAchievements({ userId }: UserAchievementsProps) {}
   const totalPoints = categories.reduce((sum, cat) => sum + cat.total_points, 0)
   const earnedPoints = categories.reduce((sum, cat) => sum + cat.earned_points, 0)
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <Card>
         <CardContent className="flex items-center justify-center p-8">
@@ -88,7 +88,7 @@ export function UserAchievements({ userId }: UserAchievementsProps) {}
   }
 
   const filteredAchievements = selectedCategory === "all" 
-    ? allAchievements
+    ? allAchievements;
     : categories.find(cat => cat.name === selectedCategory)?.achievements || []
 
   return (
@@ -129,7 +129,7 @@ export function UserAchievements({ userId }: UserAchievementsProps) {}
                 <span>Achievement Progress</span>
                 <span>{earnedAchievements.length} / {allAchievements.length}</span>
               </div>
-              <Progress
+              <Progress;
                 value={allAchievements.length > 0 ? (earnedAchievements.length / allAchievements.length) * 100 : 0} 
                 className="h-2"
               />
@@ -140,7 +140,7 @@ export function UserAchievements({ userId }: UserAchievementsProps) {}
                   <span>{category.name}</span>
                   <span>{category.earned_points} / {category.total_points} pts</span>
                 </div>
-                <Progress
+                <Progress;
                   value={category.total_points > 0 ? (category.earned_points / category.total_points) * 100 : 0} 
                   className="h-1"
                 />
@@ -164,10 +164,10 @@ export function UserAchievements({ userId }: UserAchievementsProps) {}
         <TabsContent value={selectedCategory} className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredAchievements.map((achievement) => {}
-              const isEarned = !!achievement.earned_at
+              const isEarned = !!achievement.earned_at;
               const RarityIcon = rarityIcons[achievement.rarity]
               return (
-                <Card
+                <Card;
                   key={achievement.id} 
                   className={`relative ${isEarned ? "ring-2 ring-primary" : "opacity-60"}`}
                 >
@@ -203,7 +203,7 @@ export function UserAchievements({ userId }: UserAchievementsProps) {}
                             <span>Progress</span>
                             <span>{achievement.progress.current} / {achievement.progress.required}</span>
                           </div>
-                          <Progress
+                          <Progress;
                             value={(achievement.progress.current / achievement.progress.required) * 100} 
                             className="h-1"
                           />

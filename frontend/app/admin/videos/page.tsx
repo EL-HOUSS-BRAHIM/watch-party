@@ -14,73 +14,73 @@ import { adminAPI, videosAPI } from '@/lib/api';
 
 'use client';
 interface VideoContent {}
-  id: string
-  title: string
-  description: string
-  thumbnail: string
-  duration: number
-  uploadDate: string
+  id: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  duration: number;
+  uploadDate: string;
   uploader: {}
-    id: string
-    username: string
-    displayName: string
-    avatar: string
+    id: string;
+    username: string;
+    displayName: string;
+    avatar: string;
   };
   status: 'pending' | 'approved' | 'rejected' | 'flagged' | 'removed';
   moderationFlags: Array<{}
-    id: string
+    id: string;
     type: 'inappropriate' | 'copyright' | 'spam' | 'violence' | 'adult_content' | 'hate_speech';
-    reporter: string
-    timestamp: string
-    reason: string
+    reporter: string;
+    timestamp: string;
+    reason: string;
     severity: 'low' | 'medium' | 'high';
   }>;
   aiAnalysis?: {}
-    contentScore: number
+    contentScore: number;
     categories: string[];
-    confidence: number
+    confidence: number;
     suggestedAction: 'approve' | 'review' | 'reject';
     detectedObjects: string[];
     audioAnalysis?: {}
-      language: string
-      profanityScore: number
-      sentiment: number
+      language: string;
+      profanityScore: number;
+      sentiment: number;
     };
   };
-  views: number
-  likes: number
-  comments: number
-  reports: number
-  lastModerated?: string
-  moderatedBy?: string
-  moderationNotes?: string
+  views: number;
+  likes: number;
+  comments: number;
+  reports: number;
+  lastModerated?: string;
+  moderatedBy?: string;
+  moderationNotes?: string;
 }
 
-export default function VideoModerationPage() {
+export default function VideoModerationPage() {}
   const [videos, setVideos] = useState<VideoContent[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<VideoContent | null>(null);
-  const [filter, setFilter] = useState<'all' | VideoContent['status']>('all');
+  const [filter, setFilter] = useState<'all' | VideoContent['status']>(&apos;all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'date' | 'reports' | 'views'>('date');
+  const [sortBy, setSortBy] = useState<'date' | 'reports' | 'views'>(&apos;date');
   const [showModerationDialog, setShowModerationDialog] = useState(false);
-  const [moderationAction, setModerationAction] = useState<'approve' | 'reject' | 'flag'>('approve');
+  const [moderationAction, setModerationAction] = useState<'approve' | 'reject' | 'flag'>(&apos;approve');
   const [moderationNotes, setModerationNotes] = useState('');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  useEffect(() => {}
     fetchVideos();
   }, []);
 
-  const fetchVideos = async () => {
+  const fetchVideos = async () => {}
     setLoading(true);
-    try {
-      // Fetch videos data from admin API
+    try {}
+      // Fetch videos data from admin API;
       const videosData = await adminAPI.getVideos({search: searchTerm,
         status: filter === 'all' ? undefined : (filter as 'active' | 'processing' | 'failed'),
-        page: 1
+        page: 1;
       });
 
-      // Transform API data to component format
+      // Transform API data to component format;
       const transformedVideos: VideoContent[] = (videosData.results || []).map((video: unknown) => ({}
         id: video.id,
         title: video.title,
@@ -128,37 +128,37 @@ export default function VideoModerationPage() {
       })) || [];
 
       setVideos(transformedVideos);
-    } catch (err) {
+    } catch {}
       console.error('Failed to fetch videos:', error);
       toast({title: "Error",
         description: "Failed to load videos. Please try again.",
         variant: "destructive",
       });
-    } finally {
+    } finally {}
       setLoading(false);
     }
   };
 
-  const filteredVideos = videos
+  const filteredVideos = videos;
     .filter(video => {}
-      if (filter !== 'all' && video.status !== filter) return false
+      if (filter !== 'all' && video.status !== filter) return false;
       if (searchTerm && !video.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          !video.uploader.displayName.toLowerCase().includes(searchTerm.toLowerCase())) return false
-      return true
+          !video.uploader.displayName.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+      return true;
     })
     .sort((a, b) => {}
-      switch (sortBy) {
+      switch (sortBy) {}
         case 'reports':
-          return b.reports - a.reports
+          return b.reports - a.reports;
         case 'views':
-          return b.views - a.views
+          return b.views - a.views;
         default:
           return new Date(b.uploadDate).getTime() - new Date(a.uploadDate).getTime();
       }
     });
 
   const getStatusColor = (status: VideoContent['status']) => {}
-    switch (status) {
+    switch (status) {}
       case 'pending': return 'bg-yellow-500';
       case 'approved': return 'bg-green-500';
       case 'rejected': return 'bg-red-500';
@@ -169,7 +169,7 @@ export default function VideoModerationPage() {
   };
 
   const getStatusIcon = (status: VideoContent['status']) => {}
-    switch (status) {
+    switch (status) {}
       case 'pending': return <Clock className="h-4 w-4" />;
       case 'approved': return <CheckCircle className="h-4 w-4" />;
       case 'rejected': return <Ban className="h-4 w-4" />;
@@ -180,7 +180,7 @@ export default function VideoModerationPage() {
   };
 
   const getSeverityColor = (severity: 'low' | 'medium' | 'high') => {}
-    switch (severity) {
+    switch (severity) {}
       case 'low': return 'text-green-600 bg-green-50 border-green-200';
       case 'medium': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
       case 'high': return 'text-red-600 bg-red-50 border-red-200';
@@ -190,18 +190,18 @@ export default function VideoModerationPage() {
 
   const formatDuration = (seconds: number) => {}
     const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60
+    const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
   const moderateVideo = async (videoId: string, action: 'approve' | 'reject' | 'flag', notes: string) => {}
-    try {
-      // Call admin API to moderate video
-      if (action === 'reject') {
+    try {}
+      // Call admin API to moderate video;
+      if (action === 'reject') {}
         await adminAPI.deleteVideo(videoId);
       } else {}
-        // For approve/flag, we'd need an appropriate API endpoint
-        // For now, we'll simulate the action
+        // For approve/flag, we'd need an appropriate API endpoint;
+        // For now, we'll simulate the action;
         console.log(`Moderating video ${videoId} with action: ${action}`);
       }
 
@@ -210,7 +210,7 @@ export default function VideoModerationPage() {
         action === 'reject' ? 'rejected' : 'flagged';
 
       setVideos(videos.map(video => 
-        video.id === videoId
+        video.id === videoId;
           ? {}
               ...video, 
               status: newStatus,
@@ -218,7 +218,7 @@ export default function VideoModerationPage() {
               moderatedBy: 'current_admin',
               moderationNotes: notes,
             }
-          : video
+          : video;
       ));
 
       toast({title: "Video moderated",
@@ -228,7 +228,7 @@ export default function VideoModerationPage() {
       setShowModerationDialog(false);
       setSelectedVideo(null);
       setModerationNotes('');
-    } catch (err) {
+    } catch {}
       console.error('Failed to moderate video:', error);
       toast({title: "Error",
         description: "Failed to moderate video. Please try again.",
@@ -238,7 +238,7 @@ export default function VideoModerationPage() {
   };
 
   const bulkModerate = async (action: 'approve' | 'reject', videoIds: string[]) => {}
-    // Implement bulk moderation
+    // Implement bulk moderation;
     console.log(`Bulk ${action}:`, videoIds);
   };
 
@@ -251,10 +251,10 @@ export default function VideoModerationPage() {
         </div>
         <div className="flex gap-4">
           <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-            {videos.filter(v => v.status === 'pending').length} Pending Review
+            {videos.filter(v => v.status === &apos;pending').length} Pending Review;
           </Badge>
           <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
-            {videos.filter(v => v.status === 'flagged').length} Flagged
+            {videos.filter(v => v.status === &apos;flagged').length} Flagged;
           </Badge>
         </div>
       </div>
@@ -263,7 +263,7 @@ export default function VideoModerationPage() {
       <div className="flex items-center gap-4">
         <div className="relative flex-1 max-w-sm">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
+          <Input;
             placeholder="Search videos or uploaders..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -303,7 +303,7 @@ export default function VideoModerationPage() {
               <div className="flex gap-4">
                 {/* Thumbnail */}
                 <div className="relative w-32 h-20 bg-gray-200 rounded overflow-hidden flex-shrink-0">
-                  <img
+                  <img;
                     src={video.thumbnail} 
                     alt={video.title}
                     className="w-full h-full object-cover"
@@ -327,7 +327,7 @@ export default function VideoModerationPage() {
                         {video.description}
                       </p>
                     </div>
-                    <Badge
+                    <Badge;
                       variant="secondary" 
                       className={`${getStatusColor(video.status)} text-white ml-4`}
                     >
@@ -358,16 +358,16 @@ export default function VideoModerationPage() {
                   <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
                     <div className="flex items-center gap-1">
                       <Eye className="h-4 w-4" />
-                      {video.views.toLocaleString()} views
+                      {video.views.toLocaleString()} views;
                     </div>
                     <div className="flex items-center gap-1">
                       <MessageSquare className="h-4 w-4" />
-                      {video.comments} comments
+                      {video.comments} comments;
                     </div>
                     {video.reports > 0 && (
                       <div className="flex items-center gap-1 text-red-600">
                         <Flag className="h-4 w-4" />
-                        {video.reports} reports
+                        {video.reports} reports;
                       </div>
                     )}
                   </div>
@@ -378,12 +378,12 @@ export default function VideoModerationPage() {
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-sm font-medium">AI Analysis:</span>
                         <Badge variant="outline">
-                          Score: {video.aiAnalysis.contentScore}/10
+                          Score: {video.aiAnalysis.contentScore}/10;
                         </Badge>
                         <Badge variant="outline">
                           Confidence: {(video.aiAnalysis.confidence * 100).toFixed(0)}%
                         </Badge>
-                        <Badge
+                        <Badge;
                           variant={}
                             video.aiAnalysis.suggestedAction === 'approve' ? 'default' :
                             video.aiAnalysis.suggestedAction === 'review' ? 'secondary' : 'destructive'
@@ -409,7 +409,7 @@ export default function VideoModerationPage() {
                       <div className="space-y-2">
                         {video.moderationFlags.map((flag) => (
                           <div key={flag.id} className="flex items-start gap-2 text-sm">
-                            <Badge
+                            <Badge;
                               variant="outline" 
                               className={getSeverityColor(flag.severity)}
                             >
@@ -440,7 +440,7 @@ export default function VideoModerationPage() {
 
                 {/* Actions */}
                 <div className="flex flex-col gap-2">
-                  <Button
+                  <Button;
                     variant="outline"
                     size="sm"
                     onClick={() => {}
@@ -449,24 +449,24 @@ export default function VideoModerationPage() {
                     }}
                   >
                     <Eye className="h-4 w-4 mr-1" />
-                    Review
+                    Review;
                   </Button>
                   {video.status === 'pending' && (
                     <>
-                      <Button
+                      <Button;
                         size="sm"
-                        onClick={() => moderateVideo(video.id, 'approve', 'Auto-approved')}
+                        onClick={() => moderateVideo(video.id, &apos;approve', 'Auto-approved')}
                       >
                         <CheckCircle className="h-4 w-4 mr-1" />
-                        Approve
+                        Approve;
                       </Button>
-                      <Button
+                      <Button;
                         variant="destructive"
                         size="sm"
-                        onClick={() => moderateVideo(video.id, 'reject', 'Content policy violation')}
+                        onClick={() => moderateVideo(video.id, &apos;reject', 'Content policy violation')}
                       >
                         <Ban className="h-4 w-4 mr-1" />
-                        Reject
+                        Reject;
                       </Button>
                     </>
                   )}
@@ -502,7 +502,7 @@ export default function VideoModerationPage() {
             <div className="space-y-6">
               {/* Video Preview */}
               <div className="aspect-video bg-gray-200 rounded overflow-hidden">
-                <img
+                <img;
                   src={selectedVideo.thumbnail} 
                   alt={selectedVideo.title}
                   className="w-full h-full object-cover"
@@ -571,31 +571,31 @@ export default function VideoModerationPage() {
                 <h3 className="font-semibold mb-4">Moderation Action</h3>
                 <div className="space-y-4">
                   <div className="flex gap-4">
-                    <Button
+                    <Button;
                       variant={moderationAction === 'approve' ? 'default' : 'outline'}
-                      onClick={() => setModerationAction('approve')}
+                      onClick={() => setModerationAction(&apos;approve')}
                     >
                       <CheckCircle className="h-4 w-4 mr-2" />
-                      Approve
+                      Approve;
                     </Button>
-                    <Button
+                    <Button;
                       variant={moderationAction === 'reject' ? 'destructive' : 'outline'}
-                      onClick={() => setModerationAction('reject')}
+                      onClick={() => setModerationAction(&apos;reject')}
                     >
                       <Ban className="h-4 w-4 mr-2" />
-                      Reject
+                      Reject;
                     </Button>
-                    <Button
+                    <Button;
                       variant={moderationAction === 'flag' ? 'secondary' : 'outline'}
-                      onClick={() => setModerationAction('flag')}
+                      onClick={() => setModerationAction(&apos;flag')}
                     >
                       <Flag className="h-4 w-4 mr-2" />
-                      Flag for Review
+                      Flag for Review;
                     </Button>
                   </div>
                   <div>
                     <label className="text-sm font-medium">Moderation Notes</label>
-                    <Textarea
+                    <Textarea;
                       value={moderationNotes}
                       onChange={(e) => setModerationNotes(e.target.value)}
                       placeholder="Add notes about your moderation decision..."
@@ -607,13 +607,13 @@ export default function VideoModerationPage() {
 
               {/* Action Buttons */}
               <div className="flex justify-end gap-2">
-                <Button
+                <Button;
                   variant="outline" 
                   onClick={() => setShowModerationDialog(false)}
                 >
-                  Cancel
+                  Cancel;
                 </Button>
-                <Button
+                <Button;
                   onClick={() => moderateVideo(selectedVideo.id, moderationAction, moderationNotes)}
                 >
                   Apply {moderationAction === 'approve' ? 'Approval' : moderationAction === 'reject' ? 'Rejection' : 'Flag'}

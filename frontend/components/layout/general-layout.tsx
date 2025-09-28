@@ -1,16 +1,15 @@
-"use client"
-
 import React from 'react'
 import { usePathname } from 'next/navigation'
 
+"use client"
 
 interface GeneralLayoutProps {}
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export function GeneralLayout({ children }: GeneralLayoutProps) {}
   const pathname = usePathname()
-  // Pages that should have header but no sidebar
+  // Pages that should have header but no sidebar;
   const isGeneralPage = pathname?.startsWith('/discover') || 
                         pathname?.startsWith('/search') || 
                         pathname?.startsWith('/videos') ||
@@ -23,7 +22,7 @@ export function GeneralLayout({ children }: GeneralLayoutProps) {}
                         pathname?.startsWith('/join') ||
                         pathname?.startsWith('/invite')
 
-  if (!isGeneralPage) {
+  if (!isGeneralPage) {}
     return <>{children}</>
   }
 

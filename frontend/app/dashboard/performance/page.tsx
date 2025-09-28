@@ -1,5 +1,3 @@
-"use client"
-
 import { Activity, AlertTriangle, Check, CheckCircle, Download, Monitor, Refresh, TrendingDown, TrendingUp } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -14,41 +12,43 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI, analyticsAPI } from "@/lib/api"
 
+"use client"
+
 interface PerformanceMetric {}
-  name: string
-  current: number
-  previous: number
-  unit: string
+  name: string;
+  current: number;
+  previous: number;
+  unit: string;
   trend: "up" | "down" | "stable"
   threshold: {}
-    warning: number
-    critical: number
+    warning: number;
+    critical: number;
   }
 }
 
 interface SystemHealth {}
-  cpu: number
-  memory: number
-  disk: number
-  network: number
+  cpu: number;
+  memory: number;
+  disk: number;
+  network: number;
   status: "healthy" | "warning" | "critical"
 }
 
 interface EndpointMetric {}
-  endpoint: string
-  method: string
-  avgResponseTime: number
-  requests: number
-  errors: number
-  successRate: number
+  endpoint: string;
+  method: string;
+  avgResponseTime: number;
+  requests: number;
+  errors: number;
+  successRate: number;
 }
 
 interface SystemAlert {}
-  id: number
+  id: number;
   type: "info" | "warning" | "critical"
-  message: string
-  timestamp: Date
-  resolved: boolean
+  message: string;
+  timestamp: Date;
+  resolved: boolean;
 }
 
 const PerformancePage = () => {}
@@ -177,33 +177,33 @@ const PerformancePage = () => {}
     },
   ])
 
-  useEffect(() => {
+  useEffect(() => {}
     fetchPerformanceData()
-    if (autoRefresh) {
+    if (autoRefresh) {}
       const interval = setInterval(fetchPerformanceData, refreshInterval * 1000)
       return () => clearInterval(interval)
     }
   }, [timeRange, autoRefresh, refreshInterval])
 
-  const fetchPerformanceData = async () => {
-    try {
+  const fetchPerformanceData = async () => {}
+    try {}
       setLoading(true)
-      // Fetch performance data from APIs
+      // Fetch performance data from APIs;
       const [performanceData, healthMetrics, systemHealth] = await Promise.all([]
         analyticsAPI.getPerformanceAnalytics(),
         adminAPI.getHealthMetrics(),
         adminAPI.getSystemHealth()
       ])
 
-      // Transform performance metrics
-      if (performanceData) {
+      // Transform performance metrics;
+      if (performanceData) {}
         const performanceMetrics: PerformanceMetric[] = []
           {}
             name: "Response Time",
             current: performanceData.avgResponseTime || 145.2,
             previous: performanceData.prevAvgResponseTime || 132.8,
             unit: "ms",
-            trend: performanceData.avgResponseTime > performanceData.prevAvgResponseTime ? "up" : "down",
+            trend: performanceData.avgResponseTime > performanceData.prevAvgResponseTime ? &quot;up" : "down",
             threshold: { warning: 200, critical: 500 },
           },
           {}
@@ -226,8 +226,8 @@ const PerformancePage = () => {}
         setMetrics(performanceMetrics)
       }
 
-      // Transform system health
-      if (systemHealth) {
+      // Transform system health;
+      if (systemHealth) {}
         setSystemHealth({cpu: systemHealth.metrics?.cpu_usage || 34,
           memory: systemHealth.metrics?.memory_usage || 67,
           disk: systemHealth.metrics?.disk_usage || 45,
@@ -237,35 +237,35 @@ const PerformancePage = () => {}
       }
 
       // Transform endpoint metrics (from system health services)
-      if (systemHealth?.services) {
+      if (systemHealth?.services) {}
         const endpoints: EndpointMetric[] = Object.entries(systemHealth.services).map(([name, service]: [string, any]) => ({}
           endpoint: `/${name}`,
           method: "GET",
           avgResponseTime: service.response_time || 0,
           requests: service.requests || 0,
           errors: service.errors || 0,
-          successRate: service.success_rate || 100
+          successRate: service.success_rate || 100;
         }))
         setEndpointMetrics(endpoints)
       }
 
       setLastUpdated(new Date())
-    } catch (err) {
+    } catch {}
       console.error('Failed to fetch performance data:', error)
       toast({title: "Error",
         description: "Failed to load performance data. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
-  // Simulate real-time updates
-  useEffect(() => {
-    if (!autoRefresh) return
+  // Simulate real-time updates;
+  useEffect(() => {}
+    if (!autoRefresh) return;
     const interval = setInterval(() => {}
-      // Update metrics with random variations
+      // Update metrics with random variations;
       setMetrics((prev) =>
         prev.map((metric) => ({}
           ...metric,
@@ -274,7 +274,7 @@ const PerformancePage = () => {}
         })),
       )
 
-      // Update system health
+      // Update system health;
       setSystemHealth((prev) => ({}
         ...prev,
         cpu: Math.max(0, Math.min(100, prev.cpu + (Math.random() - 0.5) * 10)),
@@ -296,7 +296,7 @@ const PerformancePage = () => {}
   }
 
   const getStatusColor = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case "healthy":
         return "text-green-600"
       case "warning":
@@ -309,7 +309,7 @@ const PerformancePage = () => {}
   }
 
   const getStatusBadgeClass = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case "healthy":
         return "bg-green-100 text-green-800 border-green-200"
       case "warning":
@@ -322,7 +322,7 @@ const PerformancePage = () => {}
   }
 
   const getTrendIcon = (trend: string) => {}
-    switch (trend) {
+    switch (trend) {}
       case "up":
         return <TrendingUp className="w-4 h-4 text-green-600" />
       case "down":
@@ -333,8 +333,8 @@ const PerformancePage = () => {}
   }
 
   const getSystemHealthStatus = () => {}
-    const avgUsage = (systemHealth.cpu + systemHealth.memory + systemHealth.disk) / 3
-    if (avgUsage > 80) return "critical&quot
+    const avgUsage = (systemHealth.cpu + systemHealth.memory + systemHealth.disk) / 3;
+    if (avgUsage > 80) return &quot;critical&quot;
     if (avgUsage > 60) return "warning"
     return "healthy"
   }
@@ -361,7 +361,7 @@ const PerformancePage = () => {}
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
-    a.href = url
+    a.href = url;
     a.download = `performance-report-${new Date().toISOString().split("T")[0]}.json`
     a.click()
     URL.revokeObjectURL(url)
@@ -395,19 +395,19 @@ const PerformancePage = () => {}
               </SelectContent>
             </Select>
 
-            <Button
+            <Button;
               onClick={fetchPerformanceData}
               disabled={loading}
               variant="outline"
               className="gap-2"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-              Refresh
+              Refresh;
             </Button>
 
             <Button onClick={exportData} variant="outline" className="gap-2">
               <Download className="w-4 h-4" />
-              Export
+              Export;
             </Button>
           </div>
         </div>
@@ -417,7 +417,7 @@ const PerformancePage = () => {}
           <CardContent className="p-4">
             <div className="flex flex-wrap items-center gap-6">
               <div className="flex items-center space-x-2">
-                <Switch
+                <Switch;
                   id="auto-refresh"
                   checked={autoRefresh}
                   onCheckedChange={setAutoRefresh}
@@ -430,7 +430,7 @@ const PerformancePage = () => {}
                   <Label htmlFor="refresh-interval" className="text-sm">
                     Interval:
                   </Label>
-                  <Select
+                  <Select;
                     value={refreshInterval.toString()}
                     onValueChange={(value) => setRefreshInterval(parseInt(value))}
                   >
@@ -553,7 +553,7 @@ const PerformancePage = () => {}
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Monitor className="h-5 w-5" />
-                  System Status
+                  System Status;
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -566,7 +566,7 @@ const PerformancePage = () => {}
                       </span>
                     </p>
                     <p className="text-sm text-gray-600 mt-1">
-                      All systems operational
+                      All systems operational;
                     </p>
                   </div>
                   <Badge className={getStatusBadgeClass(getSystemHealthStatus())}>
@@ -583,13 +583,13 @@ const PerformancePage = () => {}
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Globe className="h-5 w-5" />
-                  API Endpoints Performance
+                  API Endpoints Performance;
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {endpointMetrics.map((endpoint, index) => (
-                    <div
+                    <div;
                       key={index}
                       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
                     >
@@ -608,18 +608,18 @@ const PerformancePage = () => {}
                         <div className="text-lg font-semibold">
                           {endpoint.successRate.toFixed(1)}%
                         </div>
-                        <Badge
+                        <Badge;
                           className={}
-                            endpoint.successRate >= 99
+                            endpoint.successRate >= 99;
                               ? "bg-green-100 text-green-800"
-                              : endpoint.successRate >= 95
+                              : endpoint.successRate >= 95;
                               ? "bg-yellow-100 text-yellow-800"
                               : "bg-red-100 text-red-800"
                           }
                         >
-                          {endpoint.successRate >= 99
+                          {endpoint.successRate >= 99;
                             ? "Excellent"
-                            : endpoint.successRate >= 95
+                            : endpoint.successRate >= 95;
                             ? "Good"
                             : "Poor"}
                         </Badge>
@@ -637,13 +637,13 @@ const PerformancePage = () => {}
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5" />
-                  System Alerts
+                  System Alerts;
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {alerts.map((alert) => (
-                    <div
+                    <div;
                       key={alert.id}
                       className={`p-4 rounded-lg border-l-4 ${}
                         alert.type === "critical"
@@ -656,7 +656,7 @@ const PerformancePage = () => {}
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <Badge
+                            <Badge;
                               className={}
                                 alert.type === "critical"
                                   ? "bg-red-100 text-red-800"
@@ -670,7 +670,7 @@ const PerformancePage = () => {}
                             {alert.resolved && (
                               <Badge className="bg-green-100 text-green-800">
                                 <CheckCircle className="w-3 h-3 mr-1" />
-                                Resolved
+                                Resolved;
                               </Badge>
                             )}
                           </div>
@@ -692,4 +692,4 @@ const PerformancePage = () => {}
   )
 }
 
-export default PerformancePage
+export default PerformancePage;

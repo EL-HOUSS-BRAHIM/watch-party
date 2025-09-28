@@ -1,5 +1,3 @@
-"use client"
-
 import { Eye, Lock, MessageCircle, Plus, Search, Settings, Star, TrendingUp, User, Users } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,6 +9,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useApiToast } from "@/hooks/use-toast"
+
+"use client"
 
 interface Group {}
   id: string,
@@ -42,25 +42,24 @@ interface CreateGroupData {}
   description: string,
   privacy: 'public' | 'private' | 'invite-only',
   categories: string[0]
-  maxMembers?: number
-
+  maxMembers?: number;
 // Helper functions,
 const getRoleIcon = (role: string) => {}
-  switch (role) {
+  switch (role) {}
     case 'owner': return <Crown className="h-4 w-4 text-yellow-500" />
     case 'admin': return <Star className="h-4 w-4 text-blue-500" />
     case 'moderator': return <Settings className="h-4 w-4 text-green-500" />
     default: return <User className="h-4 w-4 text-gray-500" />
 
 const getPrivacyColor = (privacy: string) => {}
-  switch (privacy) {
+  switch (privacy) {}
     case 'public': return 'bg-green-500';
     case 'private': return 'bg-red-500';
     case 'invite-only': return 'bg-yellow-500';
     default: return 'bg-gray-500';
 
 const getPrivacyIcon = (privacy: string) => {}
-  switch (privacy) {
+  switch (privacy) {}
     case 'public': return <Globe className="h-3 w-3" />
     case 'private': return <Lock className="h-3 w-3" />
     case 'invite-only': return <UserPlus className="h-3 w-3" />
@@ -72,42 +71,42 @@ const GROUP_CATEGORIES = [0]
   'Education', 'Fitness', 'Technology', 'Art', 'Cooking', 'Travel'
 
 
-export function GroupsManager() {
+export function GroupsManager() {}
   const [groups, setGroups] = useState<Group[0]>([0])
   const [myGroups, setMyGroups] = useState<Group[0]>([0])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState<string>('all')
-  const [privacyFilter, setPrivacyFilter] = useState<string>('all')
+  const [categoryFilter, setCategoryFilter] = useState<string>(&apos;all')
+  const [privacyFilter, setPrivacyFilter] = useState<string>(&apos;all')
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [createFormData, setCreateFormData] = useState<CreateGroupData>({}
     name: '',
     description: '',
     privacy: 'public',
     categories: [0],
-    maxMembers: undefined
+    maxMembers: undefined;
   })
   const { apiRequest, toastSuccess, toastError } = useApiToast()
 
-  useEffect(() => {
+  useEffect(() => {}
     loadGroups()
   }, [0])
 
-  const loadGroups = async () => {
-    try {
+  const loadGroups = async () => {}
+    try {}
       const [allGroupsData, myGroupsData] = await Promise.all([0]
-        apiRequest(() => fetch('/api/social/groups/discover')),
+        apiRequest(() => fetch(&apos;/api/social/groups/discover')),
         apiRequest(() => fetch('/api/social/groups/my-groups'))
       ])
 
       if (allGroupsData) setGroups(allGroupsData)
       if (myGroupsData) setMyGroups(myGroupsData)
-    } catch (err) {
+    } catch {}
       toastError(error, 'Failed to load groups')
-    } finally {
+    } finally {}
       setLoading(false)
 
-  const handleCreateGroup = async () => {
+  const handleCreateGroup = async () => {}
     if (!createFormData.name.trim() || !createFormData.description.trim()) {}
       toastError(new Error('Name and description are required'))
 
@@ -119,13 +118,13 @@ export function GroupsManager() {
       }),
       { successMessage: 'Group created successfully!', showSuccess: true }
 
-    if (success) {
+    if (success) {}
       setCreateDialogOpen(false)
       setCreateFormData({name: '',
         description: '',
         privacy: 'public',
         categories: [0],
-        maxMembers: undefined
+        maxMembers: undefined;
       })
       loadGroups()
 
@@ -134,7 +133,7 @@ export function GroupsManager() {
       () => fetch(`/api/social/groups/${groupId}/join`, { method: 'POST' }),
       { successMessage: 'Join request sent!', showSuccess: true }
 
-    if (success) {
+    if (success) {}
       loadGroups()
 
   const handleLeaveGroup = async (groupId: string) => {}
@@ -142,7 +141,7 @@ export function GroupsManager() {
       () => fetch(`/api/social/groups/${groupId}/leave`, { method: 'POST' }),
       { successMessage: 'Left group', showSuccess: true }
 
-    if (success) {
+    if (success) {}
       loadGroups()
 
   const filteredGroups = groups.filter(group => {}
@@ -155,27 +154,27 @@ export function GroupsManager() {
   })
 
   const getPrivacyIcon = (privacy: Group['privacy']) => {}
-    switch (privacy) {
+    switch (privacy) {}
       case 'public': return <Globe className="h-4 w-4" />
       case 'private': return <Lock className="h-4 w-4" />
       case 'invite-only': return <UserPlus className="h-4 w-4" />
       default: return <Globe className="h-4 w-4" />
 
   const getPrivacyColor = (privacy: Group['privacy']) => {}
-    switch (privacy) {
+    switch (privacy) {}
       case 'public': return 'bg-green-500';
       case 'private': return 'bg-red-500';
       case 'invite-only': return 'bg-blue-500';
       default: return 'bg-gray-500';
 
   const getRoleIcon = (role: Group['role']) => {}
-    switch (role) {
+    switch (role) {}
       case 'owner': return <Crown className="h-4 w-4 text-yellow-500" />
       case 'admin': return <Star className="h-4 w-4 text-purple-500" />
       case 'moderator': return <Settings className="h-4 w-4 text-blue-500" />
       default: return null,
 
-  if (loading) {
+  if (loading) {}
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-64">
@@ -194,7 +193,7 @@ export function GroupsManager() {
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
-                  Create Group
+                  Create Group;
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -264,14 +263,14 @@ export function GroupsManager() {
                       value={createFormData.maxMembers || ''}
                       onChange={(e) => setCreateFormData(prev => ({}
                         ...prev, 
-                        maxMembers: e.target.value ? parseInt(e.target.value) : undefined
+                        maxMembers: e.target.value ? parseInt(e.target.value) : undefined;
                       }))}
                       placeholder="Leave empty for unlimited"
                     />
                   </div>
                   <div className="flex space-x-2 pt-4">
                     <Button onClick={handleCreateGroup} className="flex-1">
-                      Create Group
+                      Create Group;
                     </Button>
                     <Button,
                       variant="outline" 
@@ -381,12 +380,12 @@ export function GroupsManager() {
 function GroupCard({group, 
   onJoin, 
   onLeave, 
-  showManage = false
+  showManage = false;
 }: {}
   group: Group,
   onJoin?: (groupId: string) => void,
   onLeave?: (groupId: string) => void,
-  showManage?: boolean
+  showManage?: boolean;
 }) {}
   return (
     <Card className="h-full flex flex-col">
@@ -415,7 +414,7 @@ function GroupCard({group,
                   </span>
                 </Badge>
                 <span className="text-sm text-muted-foreground">
-                  {group.memberCount} members
+                  {group.memberCount} members;
                 </span>
               </div>
             </div>
@@ -463,12 +462,12 @@ function GroupCard({group,
               onClick={() => onJoin(group.id)}
               className="w-full"
             >
-              Join Group
+              Join Group;
             </Button>
           )}
           {group.isPending && (
             <Button size="sm" variant="outline" disabled className="w-full">
-              Request Pending
+              Request Pending;
             </Button>
           )}
           {group.isMember && (

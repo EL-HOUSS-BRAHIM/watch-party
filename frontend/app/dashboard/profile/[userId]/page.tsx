@@ -1,5 +1,3 @@
-"use client"
-
 import { Calendar, Eye, Flag, Heart, MapPin, MessageCircle, Settings, Share, Shield, TrendingUp, User, Users, Video } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import Image from "next/image"
@@ -14,156 +12,158 @@ import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { formatDistanceToNow } from "date-fns"
 
+"use client"
+
 interface UserProfile {}
-  id: string
-  username: string
-  email: string
-  firstName: string
-  lastName: string
-  avatar?: string
-  bio?: string
-  location?: string
-  joinedDate: string
-  isOnline: boolean
-  lastSeen?: string
-  isVerified: boolean
+  id: string;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  avatar?: string;
+  bio?: string;
+  location?: string;
+  joinedDate: string;
+  isOnline: boolean;
+  lastSeen?: string;
+  isVerified: boolean;
   stats: {}
-    videosUploaded: number
-    partiesHosted: number
-    partiesAttended: number
-    friendsCount: number
-    totalWatchTime: number
+    videosUploaded: number;
+    partiesHosted: number;
+    partiesAttended: number;
+    friendsCount: number;
+    totalWatchTime: number;
     favoriteGenres: string[]
   }
   privacy: {}
-    showEmail: boolean
-    showActivity: boolean
-    showFriends: boolean
-    allowFriendRequests: boolean
+    showEmail: boolean;
+    showActivity: boolean;
+    showFriends: boolean;
+    allowFriendRequests: boolean;
   }
   friendshipStatus: "none" | "pending_sent" | "pending_received" | "friends" | "blocked"
   mutualFriends: Array<{}
-    id: string
-    username: string
-    avatar?: string
+    id: string;
+    username: string;
+    avatar?: string;
   }>
   recentActivity: Array<{}
-    id: string
+    id: string;
     type: "video_upload" | "party_host" | "party_join" | "achievement"
-    description: string
-    createdAt: string
-    metadata?: unknown
+    description: string;
+    createdAt: string;
+    metadata?: unknown;
   }>
 }
 
 interface UserVideo {}
-  id: string
-  title: string
-  description: string
-  thumbnail: string
-  duration: number
-  views: number
-  likes: number
-  createdAt: string
+  id: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  duration: number;
+  views: number;
+  likes: number;
+  createdAt: string;
   privacy: "public" | "friends" | "private"
 }
 
-export default function UserProfilePage() {
+export default function UserProfilePage() {}
   const params = useParams()
   const router = useRouter()
   const { user: currentUser } = useAuth()
   const { toast } = useToast()
-  const userId = params.userId as string
+  const userId = params.userId as string;
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [videos, setVideos] = useState<UserVideo[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("overview")
 
-  useEffect(() => {
-    if (userId) {
+  useEffect(() => {}
+    if (userId) {}
       loadUserProfile()
       loadUserVideos()
     }
   }, [userId])
 
-  const loadUserProfile = async () => {
-    try {
+  const loadUserProfile = async () => {}
+    try {}
       const response = await apiClient.get(`/api/users/${userId}/profile/`)
 
-      if (response.status === 200) {
-        const data = response.data
+      if (response.status === 200) {}
+        const data = response.data;
         setProfile(data)
-      } else if (response.status === 404) {
+      } else if (response.status === 404) {}
         toast({title: "User not found",
           description: "The user profile you're looking for doesn't exist.",
           variant: "destructive",
         })
         router.push("/dashboard")
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to load user profile:", error)
       toast({title: "Error",
         description: "Failed to load user profile. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const loadUserVideos = async () => {
-    try {
+  const loadUserVideos = async () => {}
+    try {}
       const response = await apiClient.get(`/api/users/${userId}/videos/`)
 
-      if (response.status === 200) {
-        const data = response.data
+      if (response.status === 200) {}
+        const data = response.data;
         setVideos(data.results || data.videos || [])
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to load user videos:", error)
     }
   }
 
   const handleFriendAction = async (action: "send_request" | "accept" | "decline" | "remove" | "block") => {}
-    try {
+    try {}
       let endpoint = ""
 
-      switch (action) {
+      switch (action) {}
         case "send_request":
           endpoint = "/api/users/friends/request/"
-          break
+          break;
         case "accept":
           endpoint = `/api/users/friends/${profile?.id}/accept/`
-          break
+          break;
         case "decline":
           endpoint = `/api/users/friends/${profile?.id}/decline/`
-          break
+          break;
         case "remove":
           endpoint = `/api/users/friends/${profile?.username}/remove/`
-          break
+          break;
         case "block":
           endpoint = "/api/users/block/"
-          break
+          break;
       }
 
-      let response
+      let response;
       const data = { username: profile?.username,
         user_id: profile?.id,
       }
 
-      if (action === "remove") {
+      if (action === "remove") {}
         response = await apiClient.delete(endpoint, { data })
       } else {}
         response = await apiClient.post(endpoint, data)
       }
 
-      if (response.status === 200) {
-        await loadUserProfile() // Refresh profile to update friendship status
+      if (response.status === 200) {}
+        await loadUserProfile() // Refresh profile to update friendship status;
         toast({title: "Success",
           description: `Friend ${action.replace("_", " ")} successful.`,
         })
       }
-    } catch (err) {
+    } catch {}
       console.error(`Failed to ${action}:`, error)
       toast({title: "Error",
         description: `Failed to ${action.replace("_", " ")}. Please try again.`,
@@ -172,20 +172,20 @@ export default function UserProfilePage() {
     }
   }
 
-  const handleReportUser = async () => {
-    try {
+  const handleReportUser = async () => {}
+    try {}
       const response = await apiClient.post("/api/users/report/", {}
         reported_user: profile?.id,
         reason: "inappropriate_behavior",
         description: "Reported from profile page",
       })
 
-      if (response.status === 200) {
+      if (response.status === 200) {}
         toast({title: "Report Submitted",
           description: "Thank you for reporting. We'll review this user.",
         })
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to report user:", error)
       toast({title: "Error",
         description: "Failed to submit report. Please try again.",
@@ -195,53 +195,53 @@ export default function UserProfilePage() {
   }
 
   const getFriendshipButton = () => {}
-    if (!profile || profile.id === currentUser?.id) return null
-    switch (profile.friendshipStatus) {
+    if (!profile || profile.id === currentUser?.id) return null;
+    switch (profile.friendshipStatus) {}
       case "none":
         return (
-          <Button onClick={() => handleFriendAction("send_request")} className="flex items-center gap-2">"
+          <Button onClick={() => handleFriendAction(&quot;send_request")} className="flex items-center gap-2">"
             <UserPlus className="w-4 h-4" />
-            Add Friend
+            Add Friend;
           </Button>
         )
       case "pending_sent":
         return (
           <Button variant="outline" disabled>
-            Friend Request Sent
+            Friend Request Sent;
           </Button>
         )
       case "pending_received":
         return (
           <div className="flex gap-2">
-            <Button onClick={() => handleFriendAction("accept")} size="sm">
-              Accept
+            <Button onClick={() => handleFriendAction(&quot;accept")} size="sm">
+              Accept;
             </Button>
-            <Button onClick={() => handleFriendAction("decline")} variant="outline" size="sm">
-              Decline
+            <Button onClick={() => handleFriendAction(&quot;decline")} variant="outline" size="sm">
+              Decline;
             </Button>
           </div>
         )
       case "friends":
         return (
-          <Button onClick={() => handleFriendAction("remove")} variant="outline" className="flex items-center gap-2">"
+          <Button onClick={() => handleFriendAction(&quot;remove")} variant="outline" className="flex items-center gap-2">"
             <UserMinus className="w-4 h-4" />
-            Remove Friend
+            Remove Friend;
           </Button>
         )
       case "blocked":
         return (
           <Badge variant="destructive" className="flex items-center gap-1">
             <Shield className="w-3 h-3" />
-            Blocked
+            Blocked;
           </Badge>
         )
       default:
-        return null
+        return null;
     }
   }
 
-  const isOwnProfile = profile?.id === currentUser?.id
-  if (isLoading) {
+  const isOwnProfile = profile?.id === currentUser?.id;
+  if (isLoading) {}
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -252,12 +252,12 @@ export default function UserProfilePage() {
     )
   }
 
-  if (!profile) {
+  if (!profile) {}
     return (
       <div className="container mx-auto py-8 px-4 text-center">
         <h1 className="text-2xl font-bold mb-4">Profile Not Found</h1>
-        <p className="text-gray-600 mb-4">The user profile you're looking for doesn't exist.</p>
-        <Button onClick={() => router.push("/dashboard")}>Return to Dashboard</Button>
+        <p className="text-gray-600 mb-4">The user profile you&apos;re looking for doesn't exist.</p>
+        <Button onClick={() => router.push(&quot;/dashboard")}>Return to Dashboard</Button>
       </div>
     )
   }
@@ -279,9 +279,9 @@ export default function UserProfilePage() {
               <div className="flex items-center gap-2 mb-2">
                 <div className={`w-3 h-3 rounded-full ${profile.isOnline ? "bg-green-500" : "bg-gray-400"}`} />
                 <span className="text-sm text-gray-600">
-                  {profile.isOnline
+                  {profile.isOnline;
                     ? "Online"
-                    : profile.lastSeen
+                    : profile.lastSeen;
                       ? `Last seen ${formatDistanceToNow(new Date(profile.lastSeen), { addSuffix: true })}`
                       : "Offline"}
                 </span>
@@ -289,7 +289,7 @@ export default function UserProfilePage() {
               {profile.isVerified && (
                 <Badge variant="default" className="mb-2">
                   <Shield className="w-3 h-3 mr-1" />
-                  Verified
+                  Verified;
                 </Badge>
               )}
             </div>
@@ -309,9 +309,9 @@ export default function UserProfilePage() {
                 <div className="flex gap-2">
                   {getFriendshipButton()}
                   {isOwnProfile ? (
-                    <Button onClick={() => router.push("/dashboard/settings")} variant="outline">
+                    <Button onClick={() => router.push(&quot;/dashboard/settings")} variant="outline">
                       <Settings className="w-4 h-4 mr-2" />
-                      Edit Profile
+                      Edit Profile;
                     </Button>
                   ) : (
                     <>
@@ -343,11 +343,11 @@ export default function UserProfilePage() {
                 </div>
                 <div className="flex items-center gap-1 text-gray-600">
                   <Users className="w-4 h-4" />
-                  {profile.stats.friendsCount} friends
+                  {profile.stats.friendsCount} friends;
                 </div>
                 <div className="flex items-center gap-1 text-gray-600">
                   <Video className="w-4 h-4" />
-                  {profile.stats.videosUploaded} videos
+                  {profile.stats.videosUploaded} videos;
                 </div>
               </div>
             </div>
@@ -442,7 +442,7 @@ export default function UserProfilePage() {
               {videos.map((video) => (
                 <Card key={video.id} className="overflow-hidden">
                   <div className="aspect-video bg-gray-200 relative">
-                    <img
+                    <img;
                       src={video.thumbnail || "/placeholder.jpg"}
                       alt={video.title}
                       className="w-full h-full object-cover"
@@ -456,7 +456,7 @@ export default function UserProfilePage() {
                     <div className="flex items-center justify-between text-sm text-gray-600 mb-2">
                       <div className="flex items-center gap-1">
                         <Eye className="w-3 h-3" />
-                        {video.views.toLocaleString()} views
+                        {video.views.toLocaleString()} views;
                       </div>
                       <div className="flex items-center gap-1">
                         <Heart className="w-3 h-3" />
@@ -531,7 +531,7 @@ export default function UserProfilePage() {
               <CardContent className="p-8 text-center">
                 <Users className="w-12 h-12 mx-auto mb-4 text-gray-400" />
                 <h3 className="text-lg font-semibold mb-2">Friends List Private</h3>
-                <p className="text-gray-600">This user's friends list is private.</p>
+                <p className="text-gray-600">This user&apos;s friends list is private.</p>
               </CardContent>
             </Card>
           )}

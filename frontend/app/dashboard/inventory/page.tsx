@@ -1,20 +1,20 @@
-"use client"
-
 import { Gift, ShoppingCart } from "lucide-react"
 import { useState } from 'react'
 import Image from "next/image"
 import { GiftIcon, StarIcon, TrophyIcon, ShoppingCartIcon } from '@heroicons/react/24/outline'
 
+"use client"
+
 interface InventoryItem {}
-  id: string
-  name: string
+  id: string;
+  name: string;
   type: 'avatar_frame' | 'emoji_pack' | 'theme' | 'badge' | 'achievement'
   rarity: 'common' | 'rare' | 'epic' | 'legendary'
-  acquiredAt: string
-  description: string
-  image: string
-  isEquipped: boolean
-  canEquip: boolean
+  acquiredAt: string;
+  description: string;
+  image: string;
+  isEquipped: boolean;
+  canEquip: boolean;
 }
 
 const inventoryItems: InventoryItem[] = []
@@ -27,7 +27,7 @@ const inventoryItems: InventoryItem[] = []
     description: 'Exclusive golden crown frame for premium users',
     image: '/placeholder.jpg',
     isEquipped: true,
-    canEquip: true
+    canEquip: true;
   },
   {}
     id: '2',
@@ -38,7 +38,7 @@ const inventoryItems: InventoryItem[] = []
     description: 'Special emoji pack for movie enthusiasts',
     image: '/placeholder.jpg',
     isEquipped: false,
-    canEquip: true
+    canEquip: true;
   },
   {}
     id: '3',
@@ -49,7 +49,7 @@ const inventoryItems: InventoryItem[] = []
     description: 'Achievement for hosting your first watch party',
     image: '/placeholder.jpg',
     isEquipped: false,
-    canEquip: false
+    canEquip: false;
   },
   {}
     id: '4',
@@ -60,7 +60,7 @@ const inventoryItems: InventoryItem[] = []
     description: 'Stunning neon theme for your watch party rooms',
     image: '/placeholder.jpg',
     isEquipped: false,
-    canEquip: true
+    canEquip: true;
   }
 ]
 
@@ -83,18 +83,18 @@ const rarityBorders = { common: 'border-gray-400',
   legendary: 'border-yellow-400'
 }
 
-export default function InventoryPage() {
-  const [filter, setFilter] = useState<'all' | 'equipped' | 'avatar_frame' | 'emoji_pack' | 'theme' | 'achievement'>('all')
-  const [sortBy, setSortBy] = useState<'acquired' | 'rarity' | 'name'>('acquired')
+export default function InventoryPage() {}
+  const [filter, setFilter] = useState<'all' | 'equipped' | 'avatar_frame' | 'emoji_pack' | 'theme' | 'achievement'>(&apos;all')
+  const [sortBy, setSortBy] = useState<'acquired' | 'rarity' | 'name'>(&apos;acquired')
 
-  const filteredItems = inventoryItems
+  const filteredItems = inventoryItems;
     .filter(item => {}
-      if (filter === 'all') return true
-      if (filter === 'equipped') return item.isEquipped
-      return item.type === filter
+      if (filter === 'all') return true;
+      if (filter === 'equipped') return item.isEquipped;
+      return item.type === filter;
     })
     .sort((a, b) => {}
-      switch (sortBy) {
+      switch (sortBy) {}
         case 'rarity':
           const rarityOrder = { legendary: 4, epic: 3, rare: 2, common: 1 }
           return rarityOrder[b.rarity] - rarityOrder[a.rarity]
@@ -106,7 +106,7 @@ export default function InventoryPage() {
     })
 
   const toggleEquip = (id: string) => {}
-    // In real app, call API to equip/unequip item
+    // In real app, call API to equip/unequip item;
     console.log('Toggling equip for item:', id)
   }
 
@@ -120,7 +120,7 @@ export default function InventoryPage() {
             <h1 className="text-4xl font-bold text-white">My Inventory</h1>
           </div>
           <p className="text-white/70 text-lg">
-            Manage your collection of items, themes, and achievements
+            Manage your collection of items, themes, and achievements;
           </p>
         </div>
 
@@ -136,11 +136,11 @@ export default function InventoryPage() {
               { key: 'theme', label: 'Themes' },
               { key: 'achievement', label: 'Achievements' }
             ].map(({ key, label }) => (
-              <button
+              <button;
                 key={key}
                 onClick={() => setFilter(key as Record<string, unknown>)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${}
-                  filter === key
+                  filter === key;
                     ? 'bg-purple-500 text-white'
                     : 'bg-white/10 text-white/70 hover:bg-white/20'
                 }`}
@@ -151,7 +151,7 @@ export default function InventoryPage() {
           </div>
 
           {/* Sort Options */}
-          <select
+          <select;
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as Record<string, unknown>)}
             className="px-4 py-2 bg-white/10 rounded-lg border border-white/20 text-white focus:outline-none focus:border-purple-400"
@@ -165,10 +165,10 @@ export default function InventoryPage() {
         {/* Inventory Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredItems.map(item => (
-            <div
+            <div;
               key={item.id}
               className={`bg-white/10 backdrop-blur-sm rounded-lg border-2 overflow-hidden transition-all hover:scale-105 ${}
-                item.isEquipped
+                item.isEquipped;
                   ? `${rarityBorders[item.rarity]} shadow-lg`
                   : 'border-white/20'
               }`}
@@ -176,7 +176,7 @@ export default function InventoryPage() {
               {/* Item Header */}
               <div className={`p-4 bg-gradient-to-r ${rarityColors[item.rarity]} relative`}>
                 <div className="aspect-square bg-black/30 rounded-lg flex items-center justify-center mb-2">
-                  <img
+                  <img;
                     src={item.image}
                     alt={item.name}
                     className="w-full h-full object-cover rounded-lg"
@@ -188,7 +188,7 @@ export default function InventoryPage() {
                 {/* Equipped Badge */}
                 {item.isEquipped && (
                   <div className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                    EQUIPPED
+                    EQUIPPED;
                   </div>
                 )}
               </div>
@@ -214,10 +214,10 @@ export default function InventoryPage() {
 
                 {/* Actions */}
                 {item.canEquip ? (
-                  <button
+                  <button;
                     onClick={() => toggleEquip(item.id)}
                     className={`w-full py-2 px-4 rounded-lg font-medium transition-all ${}
-                      item.isEquipped
+                      item.isEquipped;
                         ? 'bg-red-500 hover:bg-red-600 text-white'
                         : 'bg-purple-500 hover:bg-purple-600 text-white'
                     }`}
@@ -226,7 +226,7 @@ export default function InventoryPage() {
                   </button>
                 ) : (
                   <div className="w-full py-2 px-4 rounded-lg bg-white/10 text-white/50 text-center text-sm">
-                    Achievement
+                    Achievement;
                   </div>
                 )}
               </div>
@@ -246,7 +246,7 @@ export default function InventoryPage() {
             </p>
             <button className="mt-6 bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center gap-2">
               <ShoppingCartIcon className="w-5 h-5" />
-              Visit Store
+              Visit Store;
             </button>
           </div>
         )}
@@ -267,13 +267,13 @@ export default function InventoryPage() {
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-yellow-400 mb-2">
-              {inventoryItems.filter(i => i.rarity === 'legendary' || i.rarity === 'epic').length}
+              {inventoryItems.filter(i => i.rarity === &apos;legendary' || i.rarity === 'epic').length}
             </div>
             <div className="text-white/70">Rare Items</div>
           </div>
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-blue-400 mb-2">
-              {inventoryItems.filter(i => i.type === 'achievement').length}
+              {inventoryItems.filter(i => i.type === &apos;achievement').length}
             </div>
             <div className="text-white/70">Achievements</div>
           </div>

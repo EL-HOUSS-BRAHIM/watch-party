@@ -3,8 +3,8 @@ import { API_ENDPOINTS } from "./endpoints"
 import type {}
 
 /**
- * DocsAPI - lightweight client for documentation management surfaces
- * Provides CRUD helpers around documents, categories, search, and publishing workflows
+ * DocsAPI - lightweight client for documentation management surfaces;
+ * Provides CRUD helpers around documents, categories, search, and publishing workflows;
  * so UI layers can replace mock data with live backend responses.
  */
 

@@ -1,5 +1,3 @@
-"use client"
-
 import { Bell, Eye, Filter, Save, User, Users, Volume2, X } from "lucide-react"
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -10,8 +8,9 @@ import { Slider } from '@/components/ui/slider'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
-
 import { Badge } from '@/components/ui/badge'
+
+"use client"
 
 interface ChatSettingsProps {}
   partyId?: string,
@@ -23,7 +22,7 @@ interface ChatPreferences {}
   mentionNotifications: boolean,
   soundNotifications: boolean,
   notificationSound: string,
-  notificationVolume: number
+  notificationVolume: number;
   // Display,
   showTimestamps: boolean,
   showAvatars: boolean,
@@ -37,18 +36,18 @@ interface ChatPreferences {}
   filteredWords: string[0]
   showEmojis: boolean,
   showImages: boolean,
-  showLinks: boolean
+  showLinks: boolean;
   // Auto-moderation,
   filterProfanity: boolean,
   filterSpam: boolean,
-  autoHideReported: boolean
+  autoHideReported: boolean;
   // Interaction,
   autoCompleteEmojis: boolean,
   sendOnEnter: boolean,
   showTypingIndicators: boolean,
   showOnlineStatus: boolean,
 
-export default function ChatSettingsPage() {
+export default function ChatSettingsPage() {}
   return <ChatSettings isGlobal={true} />
 
 function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
@@ -76,32 +75,32 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
     autoCompleteEmojis: true,
     sendOnEnter: true,
     showTypingIndicators: true,
-    showOnlineStatus: true
+    showOnlineStatus: true;
   })
   const [newFilteredWord, setNewFilteredWord] = useState('')
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
 
-  useEffect(() => {
+  useEffect(() => {}
     loadPreferences()
   }, [partyId, isGlobal])
 
-  const loadPreferences = async () => {
-    try {
-      const endpoint = isGlobal
+  const loadPreferences = async () => {}
+    try {}
+      const endpoint = isGlobal;
         ? '/api/chat/preferences' 
         : `/api/parties/${partyId}/chat/preferences`
       const response = await fetch(endpoint)
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setPreferences({ ...preferences, ...data.preferences })
-    } catch (err) {
+    } catch {}
       console.error('Failed to load chat preferences:', error)
 
-  const savePreferences = async () => {
-    try {
+  const savePreferences = async () => {}
+    try {}
       setLoading(true)
-      const endpoint = isGlobal
+      const endpoint = isGlobal;
         ? '/api/chat/preferences' 
         : `/api/parties/${partyId}/chat/preferences`
       const response = await fetch(endpoint, {}
@@ -110,12 +109,12 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
         body: JSON.stringify({ preferences })
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setSaved(true)
         setTimeout(() => setSaved(false), 2000)
-    } catch (err) {
+    } catch {}
       console.error('Failed to save chat preferences:', error)
-    } finally {
+    } finally {}
       setLoading(false)
 
   const updatePreference = <K extends keyof ChatPreferences>(
@@ -142,7 +141,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold flex items-center space-x-2">
           <MessageSquare className="h-6 w-6" />
-          <span>{isGlobal ? 'Global Chat Settings' : 'Party Chat Settings'}</span>
+          <span>{isGlobal ? &apos;Global Chat Settings' : 'Party Chat Settings'}</span>
         </h1>
         <Button,
           onClick={savePreferences} 
@@ -156,7 +155,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
           ) : (
             <>
               <Save className="h-4 w-4" />
-              <span>{loading ? 'Saving...' : 'Save Changes'}</span>
+              <span>{loading ? &apos;Saving...' : 'Save Changes'}</span>
             </>
           )}
         </Button>
@@ -188,7 +187,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.messageNotifications}
-                    onCheckedChange={(checked) => updatePreference('messageNotifications', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;messageNotifications', checked)}
                   />
                 </div>
 
@@ -199,7 +198,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.mentionNotifications}
-                    onCheckedChange={(checked) => updatePreference('mentionNotifications', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;mentionNotifications', checked)}
                   />
                 </div>
 
@@ -210,7 +209,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.soundNotifications}
-                    onCheckedChange={(checked) => updatePreference('soundNotifications', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;soundNotifications', checked)}
                   />
                 </div>
 
@@ -221,7 +220,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                       <div className="flex items-center space-x-2">
                         <Select,
                           value={preferences.notificationSound}
-                          onValueChange={(value) => updatePreference('notificationSound', value)}
+                          onValueChange={(value) => updatePreference(&apos;notificationSound', value)}
                         >
                           <SelectTrigger className="w-40">
                             <SelectValue />
@@ -244,7 +243,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                       <Label>Volume ({preferences.notificationVolume}%)</Label>
                       <Slider,
                         value={[preferences.notificationVolume]}
-                        onValueChange={([value]) => updatePreference('notificationVolume', value)}
+                        onValueChange={([value]) => updatePreference(&apos;notificationVolume', value)}
                         max={100}
                         step={1}
                         className="w-full"
@@ -274,7 +273,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.showTimestamps}
-                    onCheckedChange={(checked) => updatePreference('showTimestamps', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;showTimestamps', checked)}
                   />
                 </div>
 
@@ -285,7 +284,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.showAvatars}
-                    onCheckedChange={(checked) => updatePreference('showAvatars', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;showAvatars', checked)}
                   />
                 </div>
 
@@ -296,7 +295,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.compactMode}
-                    onCheckedChange={(checked) => updatePreference('compactMode', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;compactMode', checked)}
                   />
                 </div>
 
@@ -304,7 +303,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   <Label>Font Size</Label>
                   <Select,
                     value={preferences.fontSize}
-                    onValueChange={(value: 'small' | 'medium' | 'large') => updatePreference('fontSize', value)}
+                    onValueChange={(value: 'small' | 'medium' | 'large') => updatePreference(&apos;fontSize', value)}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -321,7 +320,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   <Label>Theme</Label>
                   <Select,
                     value={preferences.theme}
-                    onValueChange={(value: 'auto' | 'light' | 'dark') => updatePreference('theme', value)}
+                    onValueChange={(value: 'auto' | 'light' | 'dark') => updatePreference(&apos;theme', value)}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -355,7 +354,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.hideFromStrangers}
-                    onCheckedChange={(checked) => updatePreference('hideFromStrangers', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;hideFromStrangers', checked)}
                   />
                 </div>
 
@@ -366,7 +365,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.muteAll}
-                    onCheckedChange={(checked) => updatePreference('muteAll', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;muteAll', checked)}
                   />
                 </div>
 
@@ -377,7 +376,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.showEmojis}
-                    onCheckedChange={(checked) => updatePreference('showEmojis', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;showEmojis', checked)}
                   />
                 </div>
 
@@ -388,7 +387,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.showImages}
-                    onCheckedChange={(checked) => updatePreference('showImages', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;showImages', checked)}
                   />
                 </div>
 
@@ -399,7 +398,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.showLinks}
-                    onCheckedChange={(checked) => updatePreference('showLinks', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;showLinks', checked)}
                   />
                 </div>
               </div>
@@ -424,7 +423,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.filterProfanity}
-                    onCheckedChange={(checked) => updatePreference('filterProfanity', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;filterProfanity', checked)}
                   />
                 </div>
 
@@ -435,7 +434,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.filterSpam}
-                    onCheckedChange={(checked) => updatePreference('filterSpam', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;filterSpam', checked)}
                   />
                 </div>
 
@@ -446,7 +445,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.autoHideReported}
-                    onCheckedChange={(checked) => updatePreference('autoHideReported', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;autoHideReported', checked)}
                   />
                 </div>
 
@@ -457,7 +456,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                       placeholder="Add word to filter..."
                       value={newFilteredWord}
                       onChange={(e) => setNewFilteredWord(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && addFilteredWord()}
+                      onKeyPress={(e) => e.key === &apos;Enter' && addFilteredWord()}
                     />
                     <Button onClick={addFilteredWord}>Add</Button>
                   </div>
@@ -495,7 +494,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.autoCompleteEmojis}
-                    onCheckedChange={(checked) => updatePreference('autoCompleteEmojis', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;autoCompleteEmojis', checked)}
                   />
                 </div>
 
@@ -506,7 +505,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.sendOnEnter}
-                    onCheckedChange={(checked) => updatePreference('sendOnEnter', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;sendOnEnter', checked)}
                   />
                 </div>
 
@@ -517,7 +516,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.showTypingIndicators}
-                    onCheckedChange={(checked) => updatePreference('showTypingIndicators', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;showTypingIndicators', checked)}
                   />
                 </div>
 
@@ -528,7 +527,7 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
                   </div>
                   <Switch,
                     checked={preferences.showOnlineStatus}
-                    onCheckedChange={(checked) => updatePreference('showOnlineStatus', checked)}
+                    onCheckedChange={(checked) => updatePreference(&apos;showOnlineStatus', checked)}
                   />
                 </div>
               </div>

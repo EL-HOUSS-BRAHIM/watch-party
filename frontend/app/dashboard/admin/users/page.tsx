@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -17,10 +15,13 @@ import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
 import type { RawUser, User } from "@/lib/api/types"
-
 import { format, formatDistanceToNow } from "date-fns"
 
 } from "lucide-react"
+"use client"
+
+
+
 
   Users,
   Search,
@@ -41,42 +42,42 @@ import { format, formatDistanceToNow } from "date-fns"
   ArrowLeft,
   Loader2,
 interface AdminUser {}
-  id: string
-  username: string
-  email: string
-  firstName: string
-  lastName: string
-  avatar?: string
-  isVerified: boolean
-  isPremium: boolean
-  isActive: boolean
-  isBanned: boolean
+  id: string;
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  avatar?: string;
+  isVerified: boolean;
+  isPremium: boolean;
+  isActive: boolean;
+  isBanned: boolean;
   role: "user" | "moderator" | "admin"
-  joinedAt: string
-  lastActive?: string
+  joinedAt: string;
+  lastActive?: string;
   stats: {}
-    partiesHosted: number
-    partiesJoined: number
-    videosUploaded: number
-    friendsCount: number
-    totalWatchTime: number
+    partiesHosted: number;
+    partiesJoined: number;
+    videosUploaded: number;
+    friendsCount: number;
+    totalWatchTime: number;
   }
   subscription?: {}
-    plan: string
-    status: string
-    expiresAt: string
+    plan: string;
+    status: string;
+    expiresAt: string;
   }
 }
 
 interface UserAction {}
-  id: string
+  id: string;
   type: "ban" | "unban" | "suspend" | "unsuspend" | "delete" | "verify"
-  reason?: string
-  duration?: number // in days
-  notifyUser?: boolean
+  reason?: string;
+  duration?: number // in days;
+  notifyUser?: boolean;
 }
 
-export default function UserManagementPage() {
+export default function UserManagementPage() {}
   const { user } = useAuth()
   const { toast } = useToast()
   const router = useRouter()
@@ -103,31 +104,31 @@ export default function UserManagementPage() {
     newToday: 0,
   })
 
-  // Check if user is admin
-  useEffect(() => {
-    if (user && !user.is_staff && !user.is_superuser) {
+  // Check if user is admin;
+  useEffect(() => {}
+    if (user && !user.is_staff && !user.is_superuser) {}
       router.push("/dashboard")
-      return
+      return;
     }
   }, [user, router])
 
-  const loadUsers = useCallback(async () => {
-    if (!user?.is_staff && !user?.is_superuser) return
+  const loadUsers = useCallback(async () => {}
+    if (!user?.is_staff && !user?.is_superuser) return;
     setIsLoading(true)
-    try {
+    try {}
       const data = await adminAPI.getUsers({search: searchQuery || undefined,
         status: statusFilter !== "all" ? (statusFilter as "active" | "suspended" | "banned") : undefined,
-        page: 1, // You can add pagination later
+        page: 1, // You can add pagination later;
       })
-      // Transform User data to AdminUser format
+      // Transform User data to AdminUser format;
       const transformedUsers: AdminUser[] = (data.results ?? []).map((user) => {}
         const rawUser = user as User & Partial<RawUser>
         const email = rawUser.email ?? ""
-        const firstName = rawUser.firstName ?? rawUser.first_name ?? rawUser.displayName ?? rawUser.display_name ?? rawUser.username
+        const firstName = rawUser.firstName ?? rawUser.first_name ?? rawUser.displayName ?? rawUser.display_name ?? rawUser.username;
         const lastName = rawUser.lastName ?? rawUser.last_name ?? ""
         const status = rawUser.status ?? "active"
 
-        return {
+        return {}
           id: rawUser.id,
           username: rawUser.username,
           email,
@@ -151,14 +152,14 @@ export default function UserManagementPage() {
         }
       })
       setUsers(transformedUsers)
-      // setStats would need to be extracted from the response or fetched separately
-    } catch (err) {
+      // setStats would need to be extracted from the response or fetched separately;
+    } catch {}
       console.error("Failed to load users:", error)
       toast({title: "Error",
         description: "Failed to load users. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }, [user?.is_staff, user?.is_superuser, searchQuery, statusFilter, toast])
@@ -166,7 +167,7 @@ export default function UserManagementPage() {
   const filterUsers = useCallback(() => {}
     let filtered = [...users]
 
-    // Search filter
+    // Search filter;
     if (searchQuery.trim()) {}
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(
@@ -178,66 +179,66 @@ export default function UserManagementPage() {
       )
     }
 
-    // Status filter
-    if (statusFilter !== "all") {
-      switch (statusFilter) {
+    // Status filter;
+    if (statusFilter !== "all") {}
+      switch (statusFilter) {}
         case "active":
           filtered = filtered.filter((user) => user.isActive && !user.isBanned)
-          break
+          break;
         case "inactive":
           filtered = filtered.filter((user) => !user.isActive)
-          break
+          break;
         case "banned":
           filtered = filtered.filter((user) => user.isBanned)
-          break
+          break;
         case "verified":
           filtered = filtered.filter((user) => user.isVerified)
-          break
+          break;
       }
     }
 
-    // Role filter
-    if (roleFilter !== "all") {
+    // Role filter;
+    if (roleFilter !== "all") {}
       filtered = filtered.filter((user) => user.role === roleFilter)
     }
 
-    // Subscription filter
-    if (subscriptionFilter !== "all") {
-      switch (subscriptionFilter) {
+    // Subscription filter;
+    if (subscriptionFilter !== "all") {}
+      switch (subscriptionFilter) {}
         case "premium":
           filtered = filtered.filter((user) => user.isPremium)
-          break
+          break;
         case "free":
           filtered = filtered.filter((user) => !user.isPremium)
-          break
+          break;
         case "expired":
-          filtered = filtered.filter((user) => user.subscription && user.subscription.status === "expired")
-          break
+          filtered = filtered.filter((user) => user.subscription && user.subscription.status === &quot;expired")
+          break;
       }
     }
 
     setFilteredUsers(filtered)
   }, [users, searchQuery, statusFilter, roleFilter, subscriptionFilter])
 
-  useEffect(() => {
+  useEffect(() => {}
     loadUsers()
   }, [loadUsers])
 
-  useEffect(() => {
+  useEffect(() => {}
     filterUsers()
   }, [filterUsers])
 
   const executeUserAction = async (action: UserAction, userIds: string[]) => {}
-    try {
-      if (action.type === 'verify') {
-        // Handle verify action separately since it's not supported by bulkUserAction
-        // You might want to implement a separate API call or update the user verification directly
+    try {}
+      if (action.type === 'verify') {}
+        // Handle verify action separately since it's not supported by bulkUserAction;
+        // You might want to implement a separate API call or update the user verification directly;
         console.log('Verify action not implemented in bulk API')
         toast({title: "Action Not Implemented",
           description: "User verification is not yet implemented in bulk actions.",
           variant: "destructive",
         })
-        return
+        return;
       }
       await adminAPI.bulkUserAction({user_ids: userIds,
         action: action.type as 'suspend' | 'unsuspend' | 'ban' | 'unban' | 'delete',
@@ -253,7 +254,7 @@ export default function UserManagementPage() {
       toast({title: "Action Completed",
         description: `Successfully ${action.type}ed ${userIds.length} user(s).`,
       })
-    } catch (err) {
+    } catch {}
       console.error("Failed to execute user action:", error)
       toast({title: "Action Failed",
         description: error instanceof Error ? error.message : "Failed to execute action.",
@@ -263,12 +264,12 @@ export default function UserManagementPage() {
   }
 
   const handleBulkAction = (actionType: UserAction["type"]) => {}
-    if (selectedUsers.length === 0) {
+    if (selectedUsers.length === 0) {}
       toast({title: "No Users Selected",
         description: "Please select users to perform this action.",
         variant: "destructive",
       })
-      return
+      return;
     }
 
     setCurrentAction({id: Date.now().toString(),
@@ -280,12 +281,12 @@ export default function UserManagementPage() {
     setShowActionDialog(true)
   }
 
-  const exportUsers = async () => {
-    try {
+  const exportUsers = async () => {}
+    try {}
       const downloadData = await adminAPI.exportUsers({ format: 'csv' })
-      if (downloadData?.download_url) {
+      if (downloadData?.download_url) {}
         const a = document.createElement("a")
-        a.href = downloadData.download_url
+        a.href = downloadData.download_url;
         a.download = `users-export-${format(new Date(), "yyyy-MM-dd")}.csv`
         document.body.appendChild(a)
         a.click()
@@ -295,7 +296,7 @@ export default function UserManagementPage() {
           description: "User data has been exported successfully.",
         })
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to export users:", error)
       toast({title: "Export Failed",
         description: "Failed to export user data.",
@@ -305,36 +306,36 @@ export default function UserManagementPage() {
   }
 
   const getStatusBadge = (user: AdminUser) => {}
-    if (user.isBanned) {
+    if (user.isBanned) {}
       return <Badge variant="destructive">Banned</Badge>
     }
-    if (!user.isActive) {
+    if (!user.isActive) {}
       return <Badge variant="outline">Inactive</Badge>
     }
     return <Badge className="bg-green-100 text-green-800">Active</Badge>
   }
 
   const getRoleBadge = (role: string) => {}
-    switch (role) {
+    switch (role) {}
       case "admin":
         return (
           <Badge className="bg-red-100 text-red-800">
             <Shield className="w-3 h-3 mr-1" />
-            Admin
+            Admin;
           </Badge>
         )
       case "moderator":
         return (
           <Badge className="bg-blue-100 text-blue-800">
             <Star className="w-3 h-3 mr-1" />
-            Moderator
+            Moderator;
           </Badge>
         )
       default:
         return (
           <Badge variant="outline">
             <Users className="w-3 h-3 mr-1" />
-            User
+            User;
           </Badge>
         )
     }
@@ -402,7 +403,7 @@ export default function UserManagementPage() {
       header: "Joined",
       cell: ({ row }: { row: AdminUser }) => (
         <div className="text-sm">
-          <div>{format(new Date(row.joinedAt), "MMM dd, yyyy")}</div>
+          <div>{format(new Date(row.joinedAt), &quot;MMM dd, yyyy")}</div>
           <div className="text-muted-foreground">
             {formatDistanceToNow(new Date(row.joinedAt), { addSuffix: true })}
           </div>
@@ -416,7 +417,7 @@ export default function UserManagementPage() {
         <div className="text-sm">
           {row.lastActive ? (
             <>
-              <div>{format(new Date(row.lastActive), "MMM dd, yyyy")}</div>
+              <div>{format(new Date(row.lastActive), &quot;MMM dd, yyyy")}</div>
               <div className="text-muted-foreground">
                 {formatDistanceToNow(new Date(row.lastActive), { addSuffix: true })}
               </div>
@@ -441,7 +442,7 @@ export default function UserManagementPage() {
       label: "Edit User",
       icon: <Edit className="w-4 h-4" />,
       onClick: (user: AdminUser) => {}
-        // Open edit dialog or navigate to edit page
+        // Open edit dialog or navigate to edit page;
         console.log("Edit user:", user.id)
       },
     },
@@ -467,20 +468,20 @@ export default function UserManagementPage() {
     },
   ]
 
-  if (!user?.is_staff && !user?.is_superuser) {
+  if (!user?.is_staff && !user?.is_superuser) {}
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-2xl mx-auto text-center">
           <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
-          <p className="text-muted-foreground mb-4">You don't have permission to access user management.</p>
-          <Button onClick={() => router.push("/dashboard")}>Back to Dashboard</Button>
+          <p className="text-muted-foreground mb-4">You don&apos;t have permission to access user management.</p>
+          <Button onClick={() => router.push(&quot;/dashboard")}>Back to Dashboard</Button>
         </div>
       </div>
     )
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto">
@@ -498,24 +499,24 @@ export default function UserManagementPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className="p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">"
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <Users className="h-8 w-8" />
-              User Management
+              User Management;
             </h1>
             <p className="text-muted-foreground mt-2">Manage users, roles, and permissions</p>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={loadUsers}>
               <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh
+              Refresh;
             </Button>
             <Button variant="outline" onClick={exportUsers}>
               <Download className="h-4 w-4 mr-2" />
-              Export
+              Export;
             </Button>
           </div>
         </div>
@@ -568,7 +569,7 @@ export default function UserManagementPage() {
               <div className="flex-1">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                  <Input
+                  <Input;
                     placeholder="Search users..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -627,20 +628,20 @@ export default function UserManagementPage() {
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{selectedUsers.length} user(s) selected</span>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => handleBulkAction("suspend")}>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;suspend")}>
                     <UserCheck className="h-4 w-4 mr-2" />
-                    Suspend
+                    Suspend;
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => handleBulkAction("ban")}>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;ban")}>
                     <Ban className="h-4 w-4 mr-2" />
-                    Ban
+                    Ban;
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => handleBulkAction("unban")}>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;unban")}>
                     <Unlock className="h-4 w-4 mr-2" />
-                    Unban
+                    Unban;
                   </Button>
                   <Button variant="outline" size="sm" onClick={() => setSelectedUsers([])}>
-                    Clear Selection
+                    Clear Selection;
                   </Button>
                 </div>
               </div>
@@ -649,11 +650,11 @@ export default function UserManagementPage() {
         )}
 
         {/* Users Table */}
-        <WatchPartyTable
+        <WatchPartyTable;
           data={filteredUsers}
           columns={tableColumns}
           actions={tableActions}
-          selectable
+          selectable;
           selectedRows={selectedUsers}
           onSelectionChange={setSelectedUsers}
           pagination={{}
@@ -663,9 +664,9 @@ export default function UserManagementPage() {
             showSizeSelector: true,
             pageSizeOptions: [10, 25, 50, 100],
           }}
-          exportable
+          exportable;
           onExport={exportUsers}
-          refreshable
+          refreshable;
           onRefresh={loadUsers}
           className="bg-background"
         />
@@ -697,7 +698,7 @@ export default function UserManagementPage() {
 
               <div>
                 <Label htmlFor="reason">Reason</Label>
-                <Textarea
+                <Textarea;
                   id="reason"
                   placeholder="Enter reason for this action..."
                   value={actionReason}
@@ -709,7 +710,7 @@ export default function UserManagementPage() {
               {currentAction?.type === "ban" && (
                 <div>
                   <Label htmlFor="duration">Duration (days)</Label>
-                  <Select
+                  <Select;
                     value={actionDuration.toString()}
                     onValueChange={(value) => setActionDuration(Number.parseInt(value))}
                   >
@@ -729,7 +730,7 @@ export default function UserManagementPage() {
               )}
 
               <div className="flex items-center space-x-2">
-                <Checkbox
+                <Checkbox;
                   id="notify" 
                   checked={notifyUser} 
                   onCheckedChange={(checked) => setNotifyUser(checked === true)} 
@@ -738,9 +739,9 @@ export default function UserManagementPage() {
               </div>
 
               <div className="flex gap-2">
-                <Button
+                <Button;
                   onClick={() => {}
-                    if (currentAction) {
+                    if (currentAction) {}
                       executeUserAction({...currentAction,
                           reason: actionReason,
                           duration: actionDuration,
@@ -756,7 +757,7 @@ export default function UserManagementPage() {
                   Confirm {currentAction?.type}
                 </Button>
                 <Button variant="outline" onClick={() => setShowActionDialog(false)}>
-                  Cancel
+                  Cancel;
                 </Button>
               </div>
             </div>

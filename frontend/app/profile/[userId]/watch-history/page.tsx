@@ -3,12 +3,12 @@ import { UserWatchHistory } from "@/components/profile/user-watch-history"
 
 interface PageProps {}
   params: Promise<{}
-    userId: string
+    userId: string;
   }>
 }
 
 const WatchHistoryPage = async ({ params }: PageProps) => {}
-  const { userId } = await params
+  const { userId } = await params;
   return <WatchHistoryPageClient userId={userId} />
 }
 
@@ -25,4 +25,4 @@ function WatchHistoryPageClient({ userId }: { userId: string }) {}
   )
 }
 
-export default WatchHistoryPage
+export default WatchHistoryPage;

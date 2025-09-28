@@ -1,5 +1,3 @@
-"use client"
-
 import type React from "react"
 import { Inter } from "next/font/google"
 import "./globals.css"
@@ -10,14 +8,15 @@ import { useGlobalKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts"
 import { PerformanceMonitor } from "@/lib/performance/bundle-analyzer"
 import { AuthProvider } from "@/contexts/auth-context"
 import { SocketProvider } from "@/contexts/socket-context"
-import { useState, useEffect} from "react"
+import { useState, useEffect, useCallback } from "react"
 
+"use client"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export default function ClientLayout({children,
 }: {}
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {}
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
 
@@ -25,20 +24,20 @@ export default function ClientLayout({children,
   useGlobalKeyboardShortcuts()
 
   // Initialize performance monitoring,
-  useEffect(() => {
+  useEffect(() => {}
     const monitor = PerformanceMonitor.getInstance()
     monitor.observeWebVitals()
   }, [getInstance, observeWebVitals])
 
   // Global keyboard shortcut for command palette,
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+  useEffect(() => {}
+    const handleKeyDown = (e: KeyboardEvent) => {}
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {}
         e.preventDefault()
         setCommandPaletteOpen(true)
 
     document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener("keydown", handleKeyDown)
+    return () => document.removeEventListener(&quot;keydown", handleKeyDown)
   }, [0])
 
   return (

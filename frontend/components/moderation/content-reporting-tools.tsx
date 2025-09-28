@@ -1,5 +1,3 @@
-"use client"
-
 import { Check, File, Flag, Video, X } from "lucide-react"
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -11,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { toast } from '@/hooks/use-toast'
 
+"use client"
 
   ExclamationTriangleIcon, 
   FlagIcon, 
@@ -18,35 +17,35 @@ import { toast } from '@/hooks/use-toast'
   CheckIcon,
   DocumentTextIcon,
   PhotoIcon,
-  VideoCameraIcon
+  VideoCameraIcon;
 } from '@heroicons/react/24/outline'
 
 interface ReportReason {}
-  id: string
-  label: string
-  description: string
+  id: string;
+  label: string;
+  description: string;
   category: 'content' | 'behavior' | 'safety' | 'spam'
   severity: 'low' | 'medium' | 'high' | 'critical'
 }
 
 interface ContentReportingProps {}
   contentType: 'video' | 'comment' | 'party' | 'user' | 'message'
-  contentId: string
-  contentTitle?: string
-  contentAuthor?: string
-  isOpen: boolean
-  onClose: () => void
-  onSubmit?: (report: ReportData) => void
+  contentId: string;
+  contentTitle?: string;
+  contentAuthor?: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onSubmit?: (report: ReportData) => void;
 }
 
 interface ReportData {}
-  contentId: string
-  contentType: string
-  reasonId: string
-  description: string
+  contentId: string;
+  contentType: string;
+  reasonId: string;
+  description: string;
   evidence: File[]
-  anonymous: boolean
-  blockUser: boolean
+  anonymous: boolean;
+  blockUser: boolean;
 }
 
 const reportReasons: ReportReason[] = []
@@ -131,7 +130,7 @@ const severityColors = { low: 'bg-yellow-500/20 text-yellow-400',
 const categoryIcons = { content: DocumentTextIcon,
   behavior: ExclamationTriangleIcon,
   safety: ExclamationTriangleIcon,
-  spam: FlagIcon
+  spam: FlagIcon;
 }
 
 export default function ContentReportingTools({contentType,
@@ -140,60 +139,60 @@ export default function ContentReportingTools({contentType,
   contentAuthor,
   isOpen,
   onClose,
-  onSubmit
+  onSubmit;
 }: ContentReportingProps) {}
-  const [selectedReason, setSelectedReason] = useState<string>('')
+  const [selectedReason, setSelectedReason] = useState<string>(&apos;')
   const [description, setDescription] = useState('')
   const [evidence, setEvidence] = useState<File[]>([])
   const [anonymous, setAnonymous] = useState(false)
   const [blockUser, setBlockUser] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [step, setStep] = useState<'reason' | 'details' | 'confirmation'>('reason')
+  const [step, setStep] = useState<'reason' | 'details' | 'confirmation'>(&apos;reason')
 
-  if (!isOpen) return null
+  if (!isOpen) return null;
   const selectedReasonData = reportReasons.find(r => r.id === selectedReason)
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {}
     const files = Array.from(event.target.files || [])
-    setEvidence(prev => [...prev, ...files].slice(0, 5)) // Max 5 files
+    setEvidence(prev => [...prev, ...files].slice(0, 5)) // Max 5 files;
   }
 
   const removeFile = (index: number) => {}
     setEvidence(prev => prev.filter((_, i) => i !== index))
   }
 
-  const handleSubmit = async () => {
-    if (!selectedReason) return
+  const handleSubmit = async () => {}
+    if (!selectedReason) return;
     setSubmitting(true)
-    try {
+    try {}
       const reportData: ReportData = { contentId,
         contentType,
         reasonId: selectedReason,
         description,
         evidence,
         anonymous,
-        blockUser
+        blockUser;
       }
 
-      // Mock API call - replace with actual implementation
+      // Mock API call - replace with actual implementation;
       await new Promise(resolve => setTimeout(resolve, 2000))
 
       toast({title: 'Report Submitted',
         description: 'Thank you for your report. Our moderation team will review it shortly.',
       })
 
-      if (onSubmit) {
+      if (onSubmit) {}
         onSubmit(reportData)
       }
 
       onClose()
       resetForm()
-    } catch (err) {
+    } catch {}
       toast({title: 'Error',
         description: 'Failed to submit report. Please try again.',
         variant: 'destructive'
       })
-    } finally {
+    } finally {}
       setSubmitting(false)
     }
   }
@@ -208,7 +207,7 @@ export default function ContentReportingTools({contentType,
   }
 
   const renderStepContent = () => {}
-    switch (step) {
+    switch (step) {}
       case 'reason':
         return (
           <div className="space-y-4">
@@ -225,7 +224,7 @@ export default function ContentReportingTools({contentType,
                   const IconComponent = categoryIcons[reason.category]
                   return (
                     <div key={reason.id} className="flex items-start space-x-3">
-                      <RadioGroupItem
+                      <RadioGroupItem;
                         value={reason.id} 
                         id={reason.id}
                         className="mt-1"
@@ -248,13 +247,13 @@ export default function ContentReportingTools({contentType,
 
             <div className="flex justify-between pt-4">
               <Button variant="outline" onClick={onClose}>
-                Cancel
+                Cancel;
               </Button>
-              <Button
-                onClick={() => setStep('details')}
+              <Button;
+                onClick={() => setStep(&apos;details')}
                 disabled={!selectedReason}
               >
-                Next
+                Next;
               </Button>
             </div>
           </div>
@@ -290,7 +289,7 @@ export default function ContentReportingTools({contentType,
               <Label htmlFor="description" className="text-sm font-medium">
                 Description (Optional)
               </Label>
-              <Textarea
+              <Textarea;
                 id="description"
                 placeholder="Provide additional context or details about this report..."
                 value={description}
@@ -308,20 +307,20 @@ export default function ContentReportingTools({contentType,
               <p className="text-white/60 text-xs mb-2">
                 Upload screenshots or other evidence to support your report (max 5 files)
               </p>
-              <input
+              <input;
                 type="file"
-                multiple
+                multiple;
                 accept="image/*,video/*,.pdf"
                 onChange={handleFileUpload}
                 className="hidden"
                 id="evidence-upload"
               />
-              <Label
+              <Label;
                 htmlFor="evidence-upload"
                 className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg cursor-pointer transition-colors"
               >
                 <PhotoIcon className="w-4 h-4" />
-                Upload Files
+                Upload Files;
               </Label>
 
               {evidence.length > 0 && (
@@ -338,7 +337,7 @@ export default function ContentReportingTools({contentType,
                         )}
                         <span className="text-sm truncate">{file.name}</span>
                       </div>
-                      <Button
+                      <Button;
                         variant="ghost"
                         size="sm"
                         onClick={() => removeFile(index)}
@@ -354,36 +353,36 @@ export default function ContentReportingTools({contentType,
             {/* Options */}
             <div className="space-y-3">
               <div className="flex items-center space-x-2">
-                <Checkbox
+                <Checkbox;
                   id="anonymous"
                   checked={anonymous}
                   onCheckedChange={(checked) => setAnonymous(checked as boolean)}
                 />
                 <Label htmlFor="anonymous" className="text-sm">
-                  Submit anonymously
+                  Submit anonymously;
                 </Label>
               </div>
 
               {contentType === 'user' || contentType === 'comment' || contentType === 'message' ? (
                 <div className="flex items-center space-x-2">
-                  <Checkbox
+                  <Checkbox;
                     id="block-user"
                     checked={blockUser}
                     onCheckedChange={(checked) => setBlockUser(checked as boolean)}
                   />
                   <Label htmlFor="block-user" className="text-sm">
-                    Block this user
+                    Block this user;
                   </Label>
                 </div>
               ) : null}
             </div>
 
             <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={() => setStep('reason')}>
-                Back
+              <Button variant="outline" onClick={() => setStep(&apos;reason')}>
+                Back;
               </Button>
-              <Button onClick={() => setStep('confirmation')}>
-                Review Report
+              <Button onClick={() => setStep(&apos;confirmation')}>
+                Review Report;
               </Button>
             </div>
           </div>
@@ -467,10 +466,10 @@ export default function ContentReportingTools({contentType,
             </Card>
 
             <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={() => setStep('details')}>
-                Back
+              <Button variant="outline" onClick={() => setStep(&apos;details')}>
+                Back;
               </Button>
-              <Button
+              <Button;
                 onClick={handleSubmit}
                 disabled={submitting}
                 className="bg-red-600 hover:bg-red-700"
@@ -482,7 +481,7 @@ export default function ContentReportingTools({contentType,
         )
 
       default:
-        return null
+        return null;
     }
   }
 
@@ -504,7 +503,7 @@ export default function ContentReportingTools({contentType,
             {['reason', 'details', 'confirmation'].map((stepName, index) => (
               <div key={stepName} className="flex items-center">
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs ${}}
-                  step === stepName
+                  step === stepName;
                     ? 'bg-red-500 text-white' 
                     : index < ['reason', 'details', 'confirmation'].indexOf(step)
                     ? 'bg-green-500 text-white'
@@ -513,7 +512,7 @@ export default function ContentReportingTools({contentType,
                   {index < ['reason', 'details', 'confirmation'].indexOf(step) ? (}
                     <CheckIcon className="w-3 h-3" />
                   ) : (
-                    index + 1
+                    index + 1;
                   )}
                 </div>
                 {index < 2 && (}

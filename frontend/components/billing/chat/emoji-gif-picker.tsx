@@ -1,5 +1,3 @@
-"use client"
-
 import { Image, Search, TrendingUp } from "lucide-react"
 import { useState } from 'react'
 import Image from "next/image"
@@ -8,11 +6,13 @@ import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
+"use client"
+
 interface EmojiGifPickerProps {}
-  onEmojiSelect: (emoji: string) => void
-  onGifSelect: (gifUrl: string) => void
-  isOpen: boolean
-  onClose: () => void
+  onEmojiSelect: (emoji: string) => void;
+  onGifSelect: (gifUrl: string) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 const EMOJI_CATEGORIES = { recent: {}
@@ -78,18 +78,18 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
   const [activeTab, setActiveTab] = useState('emojis')
   const [selectedCategory, setSelectedCategory] = useState('recent')
 
-  if (!isOpen) return null
-  const filteredEmojis = searchTerm
+  if (!isOpen) return null;
+  const filteredEmojis = searchTerm;
     ? Object.values(EMOJI_CATEGORIES).flatMap(cat => cat.emojis)
         .filter(emoji => emoji.includes(searchTerm))
     : EMOJI_CATEGORIES[selectedCategory as keyof typeof EMOJI_CATEGORIES]?.emojis || []
 
-  const filteredGifs = searchTerm
+  const filteredGifs = searchTerm;
     ? TRENDING_GIFS.filter(gif => 
         gif.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         gif.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
       )
-    : TRENDING_GIFS
+    : TRENDING_GIFS;
   return (
     <div className="absolute bottom-12 left-0 z-50">
       <Card className="w-80 shadow-lg border-2">
@@ -102,7 +102,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
           </div>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
+            <Input;
               placeholder="Search emojis or GIFs..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -116,11 +116,11 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
             <TabsList className="grid w-full grid-cols-2 mx-4 mb-4">
               <TabsTrigger value="emojis" className="flex items-center gap-2">
                 <Smile className="w-4 h-4" />
-                Emojis
+                Emojis;
               </TabsTrigger>
               <TabsTrigger value="gifs" className="flex items-center gap-2">
                 <Image className="w-4 h-4" alt="" />
-                GIFs
+                GIFs;
               </TabsTrigger>
             </TabsList>
 
@@ -128,7 +128,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
               {!searchTerm && (
                 <div className="flex gap-1 px-4 mb-3 overflow-x-auto">
                   {Object.entries(EMOJI_CATEGORIES).map(([key, category]) => (
-                    <Button
+                    <Button;
                       key={key}
                       variant={selectedCategory === key ? "default" : "ghost"}
                       size="sm"
@@ -143,7 +143,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
 
               <div className="grid grid-cols-8 gap-1 p-4 max-h-64 overflow-y-auto">
                 {filteredEmojis.map((emoji, index) => (
-                  <Button
+                  <Button;
                     key={index}
                     variant="ghost"
                     size="sm"
@@ -169,7 +169,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
 
               <div className="grid grid-cols-2 gap-2 p-4 max-h-64 overflow-y-auto">
                 {filteredGifs.map((gif) => (
-                  <div
+                  <div;
                     key={gif.id}
                     className="relative cursor-pointer rounded-lg overflow-hidden hover:opacity-80 transition-opacity"
                     onClick={() => {}
@@ -178,10 +178,10 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
                     }}
                   >
                     <div className="relative w-full h-24">
-                      <Image
+                      <Image;
                         src={gif.url}
                         alt={gif.title || "GIF"}
-                        fill
+                        fill;
                         className="object-cover"
                       />
                     </div>

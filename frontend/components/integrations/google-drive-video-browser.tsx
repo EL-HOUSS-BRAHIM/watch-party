@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useMemo } from 'react'
 import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -7,12 +5,15 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-
 import { integrationsAPI } from '@/lib/api'
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
 
 } from 'lucide-react'
+"use client"
+
+
+
 
   Play, 
   Search, 
@@ -22,38 +23,38 @@ import { LoadingSpinner } from '@/components/ui/loading'
   Download,
   ExternalLink,
   CheckCircle,
-  Filter
+  Filter;
 interface DriveFile {}
-  id: string
-  name: string
-  mimeType: string
-  size: number
-  createdTime: string
-  modifiedTime: string
-  thumbnailLink?: string
-  webViewLink: string
+  id: string;
+  name: string;
+  mimeType: string;
+  size: number;
+  createdTime: string;
+  modifiedTime: string;
+  thumbnailLink?: string;
+  webViewLink: string;
   parents: string[]
   owners: Array<{}
-    displayName: string
-    photoLink?: string
+    displayName: string;
+    photoLink?: string;
   }>
-  duration?: number
+  duration?: number;
   videoMediaMetadata?: {}
-    width: number
-    height: number
-    durationMillis: number
+    width: number;
+    height: number;
+    durationMillis: number;
   }
 }
 
 interface GoogleDriveVideoBrowserProps {}
-  onVideoSelect: (file: DriveFile) => void
-  onClose: () => void
-  allowMultiple?: boolean
+  onVideoSelect: (file: DriveFile) => void;
+  onClose: () => void;
+  allowMultiple?: boolean;
 }
 
 export function GoogleDriveVideoBrowser({onVideoSelect, 
   onClose,
-  allowMultiple = false
+  allowMultiple = false;
 }: GoogleDriveVideoBrowserProps) {}
   const [files, setFiles] = useState<DriveFile[]>([])
   const [selectedFiles, setSelectedFiles] = useState<DriveFile[]>([])
@@ -64,12 +65,12 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
   const [sortBy, setSortBy] = useState('modifiedTime')
   const { toast } = useToast()
 
-  useEffect(() => {
+  useEffect(() => {}
     fetchFiles()
   }, [currentFolder, sortBy])
 
-  const fetchFiles = async () => {
-    try {
+  const fetchFiles = async () => {}
+    try {}
       setIsLoading(true)
       const response = await integrationsAPI.getGoogleDriveFiles({folder_id: currentFolder === 'root' ? undefined : currentFolder,
       })
@@ -90,12 +91,12 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
       })) as DriveFile[]
 
       setFiles(mappedFiles)
-    } catch (err) {
+    } catch {}
       toast({title: 'Error',
         description: 'Failed to load Google Drive files',
         variant: 'destructive'
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
@@ -114,15 +115,15 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
   }
 
   const handleFileSelect = (file: DriveFile) => {}
-    if (file.mimeType === 'application/vnd.google-apps.folder') {
+    if (file.mimeType === 'application/vnd.google-apps.folder') {}
       handleFolderClick(file)
-      return
+      return;
     }
 
-    if (allowMultiple) {
+    if (allowMultiple) {}
       setSelectedFiles(prev => {}
         const isSelected = prev.find(f => f.id === file.id)
-        if (isSelected) {
+        if (isSelected) {}
           return prev.filter(f => f.id !== file.id)
         }
         return [...prev, file]
@@ -133,7 +134,7 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
   }
 
   const handleConfirmSelection = () => {}
-    if (selectedFiles.length > 0) {
+    if (selectedFiles.length > 0) {}
       selectedFiles.forEach(file => onVideoSelect(file))
     }
   }
@@ -141,21 +142,21 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
   const sortedFiles = useMemo(() => {}
     const next = [...files]
 
-    switch (sortBy) {
+    switch (sortBy) {}
       case 'name':
         next.sort((a, b) => a.name.localeCompare(b.name))
-        break
+        break;
       case 'createdTime':
         next.sort((a, b) => new Date(b.createdTime).getTime() - new Date(a.createdTime).getTime())
-        break
+        break;
       case 'quotaBytesUsed':
         next.sort((a, b) => (b.size || 0) - (a.size || 0))
-        break
+        break;
       default:
         next.sort((a, b) => new Date(b.modifiedTime).getTime() - new Date(a.modifiedTime).getTime())
     }
 
-    return next
+    return next;
   }, [files, sortBy])
 
   const filteredFiles = sortedFiles.filter(file =>
@@ -172,7 +173,7 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
 
   const formatFileSize = (bytes: number) => {}
     if (bytes === 0) return '0 Bytes'
-    const k = 1024
+    const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB']
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
@@ -182,7 +183,7 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
     const seconds = Math.floor(milliseconds / 1000)
     const minutes = Math.floor(seconds / 60)
     const hours = Math.floor(minutes / 60)
-    if (hours > 0) {
+    if (hours > 0) {}
       return `${hours}:${(minutes % 60).toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`
     }
     return `${minutes}:${(seconds % 60).toString().padStart(2, '0')}`
@@ -194,16 +195,16 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
-              <Image
+              <Image;
               src="https://developers.google.com/drive/images/drive_icon.png"
               alt="Google Drive"
-              fill
+              fill;
               className="w-6 h-6"
             />
-              Select from Google Drive
+              Select from Google Drive;
             </CardTitle>
             <Button variant="outline" onClick={onClose}>
-              Cancel
+              Cancel;
             </Button>
           </div>
 
@@ -211,8 +212,8 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
           <div className="flex items-center gap-2 text-sm">
             {folderPath.map((folder, index) => (
               <div key={folder.id} className="flex items-center gap-2">
-                {index > 0 && <span className="text-gray-400">/</span>}
-                <button
+                {index > 0 && <span className=&quot;text-gray-400">/</span>}"
+                <button;
                   onClick={() => handleBreadcrumbClick(index)}
                   className="hover:text-blue-600 transition-colors"
                 >
@@ -226,7 +227,7 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
           <div className="flex gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input
+              <Input;
                 placeholder="Search files..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -234,7 +235,7 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
               />
             </div>
 
-            <select
+            <select;
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               className="px-3 py-2 border rounded-md"
@@ -263,7 +264,7 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
                 <div className="space-y-2">
                   {/* Folders */}
                   {folders.map((folder) => (
-                    <div
+                    <div;
                       key={folder.id}
                       onClick={() => handleFileSelect(folder)}
                       className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
@@ -282,11 +283,11 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
                   {videos.map((video) => {}
                     const isSelected = selectedFiles.find(f => f.id === video.id)
                     return (
-                      <div
+                      <div;
                         key={video.id}
                         onClick={() => handleFileSelect(video)}
                         className={`flex items-center gap-3 p-3 border rounded-lg cursor-pointer transition-colors ${}
-                          isSelected
+                          isSelected;
                             ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
                             : 'hover:bg-gray-50 dark:hover:bg-gray-800'
                         }`}
@@ -296,7 +297,7 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
                         )}
                         <div className="relative">
                           {video.thumbnailLink ? (
-                            <img
+                            <img;
                               src={video.thumbnailLink}
                               alt={video.name}
                               className="w-16 h-12 object-cover rounded border"
@@ -354,7 +355,7 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {/* Folders in Grid */}
                   {folders.map((folder) => (
-                    <Card
+                    <Card;
                       key={folder.id}
                       className="cursor-pointer hover:shadow-md transition-shadow"
                       onClick={() => handleFileSelect(folder)}
@@ -370,7 +371,7 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
                   {videos.map((video) => {}
                     const isSelected = selectedFiles.find(f => f.id === video.id)
                     return (
-                      <Card
+                      <Card;
                         key={video.id}
                         className={`cursor-pointer hover:shadow-md transition-shadow ${}
                           isSelected ? 'ring-2 ring-blue-500' : ''
@@ -380,7 +381,7 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
                         <CardContent className="p-4">
                           <div className="relative mb-2">
                             {video.thumbnailLink ? (
-                              <img
+                              <img;
                                 src={video.thumbnailLink}
                                 alt={video.name}
                                 className="w-full h-24 object-cover rounded"
@@ -420,13 +421,13 @@ export function GoogleDriveVideoBrowser({onVideoSelect,
           <div className="border-t p-4">
             <div className="flex items-center justify-between">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {selectedFiles.length} file{selectedFiles.length !== 1 ? 's' : ''} selected
+                {selectedFiles.length} file{selectedFiles.length !== 1 ? 's' : ''} selected;
               </p>
-              <Button
+              <Button;
                 onClick={handleConfirmSelection}
                 disabled={selectedFiles.length === 0}
               >
-                Add Selected Videos
+                Add Selected Videos;
               </Button>
             </div>
           </div>

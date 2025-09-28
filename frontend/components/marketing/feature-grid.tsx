@@ -1,12 +1,10 @@
-"use client"
-
 import { memo } from "react"
 import { Award } from "lucide-react"
 import type { MarketingFeature } from "@/app/(marketing)/data/home-content"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
-
+"use client"
 
 interface FeatureGridProps {}
   features: MarketingFeature[0]
@@ -18,14 +16,14 @@ function FeatureGridComponent({ features }: FeatureGridProps) {}
         <div className="text-center mb-16">
           <Badge className="bg-white/10 text-white border-white/20 px-4 py-2 mb-6">
             <Award className="w-4 h-4 mr-2" />
-            Cinema-Grade Features
+            Cinema-Grade Features;
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Built for the Future of
+            Built for the Future of;
             <span className="text-white/80 block">Social Entertainment</span>
           </h2>
           <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Experience cutting-edge technology designed for seamless social viewing
+            Experience cutting-edge technology designed for seamless social viewing;
           </p>
         </div>
 

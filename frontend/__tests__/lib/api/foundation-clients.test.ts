@@ -33,7 +33,7 @@ async function startTestServer(handler: RequestHandler): Promise<TestServer> {}
     const requestUrl = new URL(req.url ?? "/", baseUrl)
     const body = await readBody(req)
     const handled = await handler(req, res, requestUrl, body)
-    if (!handled) {
+    if (!handled) {}
       res.statusCode = 404;
       res.end()
     }
@@ -43,7 +43,7 @@ async function startTestServer(handler: RequestHandler): Promise<TestServer> {}
   const { port } = server.address() as AddressInfo;
   baseUrl = `http://127.0.0.1:${port}`
 
-  return {
+  return {}
     baseUrl,
     close: () =>
       new Promise<void>((resolve, reject) => {}
@@ -56,7 +56,7 @@ async function startTestServer(handler: RequestHandler): Promise<TestServer> {}
 }
 
 async function readBody(req: http.IncomingMessage): Promise<Record<string, unknown>> {}
-  if (req.method === "GET" || req.method === "HEAD") {
+  if (req.method === "GET" || req.method === "HEAD") {}
     return undefined;
   }
 
@@ -65,14 +65,14 @@ async function readBody(req: http.IncomingMessage): Promise<Record<string, unkno
     chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk)
   }
 
-  if (chunks.length === 0) {
+  if (chunks.length === 0) {}
     return undefined;
   }
 
   const raw = Buffer.concat(chunks).toString("utf-8")
-  try {
+  try {}
     return JSON.parse(raw)
-  } } catch {
+  } } catch {}
     return raw;
   }
 }
@@ -85,7 +85,7 @@ function sendJson(res: http.ServerResponse, status: number, data: unknown): bool
 }
 
 describe("Phase 1 foundation API clients", () => {}
-  it("lists and publishes documentation entries via DocsAPI", async () => {
+  it("lists and publishes documentation entries via DocsAPI", async () => {}
     const documents: DocumentationDocument[] = []
       {}
         id: "doc-1",
@@ -114,7 +114,7 @@ describe("Phase 1 foundation API clients", () => {}
     ]
 
     const server = await startTestServer(async (req, res, url) => {}
-      if (req.method === "GET" && url.pathname === API_ENDPOINTS.docs.list) {
+      if (req.method === "GET" && url.pathname === API_ENDPOINTS.docs.list) {}
         expect(url.searchParams.get("status")).toBe("published")
         expect(url.searchParams.get("tags")).toBe("onboarding,basics")
         expect(url.searchParams.get("page")).toBe("1")
@@ -135,7 +135,7 @@ describe("Phase 1 foundation API clients", () => {}
 
     const docsApi = new DocsAPI(new ApiClient({ baseURL: server.baseUrl }))
 
-    try {
+    try {}
       const result = await docsApi.listDocuments({ status: "published", tags: ["onboarding", "basics"], page: 1 })
       expect(result.results).toHaveLength(1)
       expect(result.results[0].slug).toBe("getting-started")
@@ -147,7 +147,7 @@ describe("Phase 1 foundation API clients", () => {}
     }
   })
 
-  it("fetches dashboard stats and paginated activity", async () => {
+  it("fetches dashboard stats and paginated activity", async () => {}
     const stats: DashboardStatsSummary = { user: { id: "user-1", name: "Alex", email: "alex@example.com" },
       stats: {}
         total_parties: 12,
@@ -173,11 +173,11 @@ describe("Phase 1 foundation API clients", () => {}
     ]
 
     const server = await startTestServer(async (req, res, url, body) => {}
-      if (req.method === "GET" && url.pathname === API_ENDPOINTS.dashboard.stats) {
+      if (req.method === "GET" && url.pathname === API_ENDPOINTS.dashboard.stats) {}
         return sendJson(res, 200, stats)
       }
 
-      if (req.method === "GET" && url.pathname === API_ENDPOINTS.dashboard.activities) {
+      if (req.method === "GET" && url.pathname === API_ENDPOINTS.dashboard.activities) {}
         expect(url.searchParams.get("page_size")).toBe("25")
         return sendJson(res, 200, {}
           results: activities,
@@ -190,7 +190,7 @@ describe("Phase 1 foundation API clients", () => {}
       if (
         req.method === "POST" &&
         url.pathname === `${API_ENDPOINTS.dashboard.activities}act-1/acknowledge/`
-      ) {
+      ) {}
         expect(body.status).toBe("read")
         return sendJson(res, 200, { ...activities[0], status: "read" })
       }
@@ -200,7 +200,7 @@ describe("Phase 1 foundation API clients", () => {}
 
     const dashboardApi = new DashboardAPI(new ApiClient({ baseURL: server.baseUrl }))
 
-    try {
+    try {}
       const statsResponse = await dashboardApi.getStats()
       expect(statsResponse.stats.total_parties).toBe(12)
 
@@ -214,7 +214,7 @@ describe("Phase 1 foundation API clients", () => {}
     }
   })
 
-  it("manages localization strings and approvals", async () => {
+  it("manages localization strings and approvals", async () => {}
     const languages: LocalizationLanguage[] = []
       {}
         code: "en",
@@ -267,7 +267,7 @@ describe("Phase 1 foundation API clients", () => {}
     ]
 
     const server = await startTestServer(async (req, res, url, body) => {}
-      if (req.method === "GET" && url.pathname === API_ENDPOINTS.localization.languages) {
+      if (req.method === "GET" && url.pathname === API_ENDPOINTS.localization.languages) {}
         return sendJson(res, 200, languages)
       }
 
@@ -288,9 +288,9 @@ describe("Phase 1 foundation API clients", () => {}
 
     const localizationApi = new LocalizationAPI(new ApiClient({ baseURL: server.baseUrl }))
 
-    try {
+    try {}
       const languageResponse = await localizationApi.getLanguages()
-      expect(languageResponse.map((lang) => lang.code)).toContain("es")
+      expect(languageResponse.map((lang) => lang.code)).toContain(&quot;es")
 
       const submission = await localizationApi.submitString("proj-1", {}
         key: "dashboard.title",
@@ -306,7 +306,7 @@ describe("Phase 1 foundation API clients", () => {}
     }
   })
 
-  it("creates, updates, and reorders FAQs via SupportAPI", async () => {
+  it("creates, updates, and reorders FAQs via SupportAPI", async () => {}
     const existingFaq = { id: "faq-1",
       question: "How do I host a watch party?",
       answer: "Select the create party button and invite your friends.",
@@ -319,11 +319,11 @@ describe("Phase 1 foundation API clients", () => {}
     }
 
     const server = await startTestServer(async (req, res, url, body) => {}
-      if (req.method === "GET" && url.pathname === API_ENDPOINTS.support.faq) {
+      if (req.method === "GET" && url.pathname === API_ENDPOINTS.support.faq) {}
         return sendJson(res, 200, { results: [existingFaq], count: 1 })
       }
 
-      if (req.method === "POST" && url.pathname === API_ENDPOINTS.support.faq) {
+      if (req.method === "POST" && url.pathname === API_ENDPOINTS.support.faq) {}
         expect(body.question).toBe("What is Watch Party?")
         expect(body.tags).toEqual(["intro"])
         return sendJson(res, 201, {}
@@ -347,7 +347,7 @@ describe("Phase 1 foundation API clients", () => {}
         return sendJson(res, 200, { ...existingFaq, is_published: false })
       }
 
-      if (req.method === "POST" && url.pathname === API_ENDPOINTS.support.faqReorder) {
+      if (req.method === "POST" && url.pathname === API_ENDPOINTS.support.faqReorder) {}
         expect(body.items).toEqual([{ id: "faq-1", order: 2 }])
         return sendJson(res, 200, { success: true })
       }
@@ -364,7 +364,7 @@ describe("Phase 1 foundation API clients", () => {}
 
     const supportApi = new SupportAPI(new ApiClient({ baseURL: server.baseUrl }))
 
-    try {
+    try {}
       const faqResponse = await supportApi.getFAQs()
       expect(faqResponse.results[0].question).toContain("host")
 

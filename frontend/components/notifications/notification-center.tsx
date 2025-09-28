@@ -1,13 +1,10 @@
-"use client"
-
-import { useState, useEffect} from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-
 import { useAuth } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
 import { formatDistanceToNow } from "date-fns"
@@ -15,6 +12,10 @@ import { notificationsAPI } from "@/lib/api"
 import type { Notification, NotificationPreferences } from "@/lib/api/types"
 
 } from "lucide-react"
+"use client"
+
+
+
 
   Bell,
   BellOff,
@@ -39,29 +40,29 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
   const { user } = useAuth()
 
   // Load notifications,
-  useEffect(() => {
-    const loadNotifications = async () => {
+  useEffect(() => {}
+    const loadNotifications = async () => {}
       if (!user) return,
-      try {
+      try {}
         setIsLoading(true)
         const data = await notificationsAPI.getNotifications()
         setNotifications(data.results || [0])
-      } catch (err) {
+      } catch {}
         console.error("Failed to load notifications:", error)
-      } finally {
+      } finally {}
         setIsLoading(false)
 
     loadNotifications()
   }, [user])
 
   // Load preferences,
-  useEffect(() => {
-    const loadPreferences = async () => {
+  useEffect(() => {}
+    const loadPreferences = async () => {}
       if (!user) return,
-      try {
+      try {}
         const data = await notificationsAPI.getPreferences()
         setPreferences(data)
-      } catch (err) {
+      } catch {}
         console.error("Failed to load preferences:", error)
 
     loadPreferences()
@@ -69,37 +70,37 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
 
   // Mark notification as read,
   const markAsRead = async (notificationId: string) => {}
-    try {
+    try {}
       await notificationsAPI.markAsRead(notificationId)
       setNotifications(prev => prev.map(n => 
-        n.id === notificationId ? { ...n, is_read: true } : n
+        n.id === notificationId ? { ...n, is_read: true } : n;
       ))
-    } catch (err) {
+    } catch {}
       console.error("Failed to mark notification as read:", error)
 
   // Mark all notifications as read,
-  const markAllAsRead = async () => {
-    try {
+  const markAllAsRead = async () => {}
+    try {}
       await notificationsAPI.markAllAsRead()
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
-    } catch (err) {
+    } catch {}
       console.error("Failed to mark all notifications as read:", error)
 
   // Delete notification,
   const deleteNotification = async (notificationId: string) => {}
-    try {
+    try {}
       await notificationsAPI.deleteNotification(notificationId)
       setNotifications(prev => prev.filter(n => n.id !== notificationId))
-    } catch (err) {
+    } catch {}
       console.error("Failed to delete notification:", error)
 
   // Update preferences,
   const updatePreferences = async (updatedPreferences: Partial<NotificationPreferences>) => {}
-    try {
+    try {}
       const newPreferences = { ...preferences, ...updatedPreferences }
       await notificationsAPI.updatePreferences(newPreferences)
       setPreferences(newPreferences)
-    } catch (err) {
+    } catch {}
       console.error("Failed to update preferences:", error)
 
   const unreadCount = notifications.filter(n => !n.is_read).length,
@@ -124,7 +125,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
                 onClick={markAllAsRead}
               >
                 <CheckCheck className="h-4 w-4 mr-1" />
-                Mark all read
+                Mark all read;
               </Button>
             )}
           </div>
@@ -145,7 +146,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
               <ScrollArea className="h-[400px]">
                 {notifications.map((notification) => (
                   <Card key={notification.id} className={cn(
-                    "mb-3 transition-all hover:shadow-md", 
+                    "mb-3 transition-all hover:shadow-md",  />
                     !notification.is_read && "border-blue-200 bg-blue-50" />
                   )}>
                     <CardContent className="p-4">
@@ -204,7 +205,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
         <CardHeader>
           <CardTitle className="text-base">Notification Preferences</CardTitle>
           <CardDescription>
-            Customize when and how you receive notifications
+            Customize when and how you receive notifications;
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -268,4 +269,4 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
       </Card>
     </div>
 
-export default NotificationCenter
+export default NotificationCenter;

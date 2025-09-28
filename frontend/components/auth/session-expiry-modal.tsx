@@ -1,12 +1,10 @@
-"use client"
-
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { useAuth } from '@/contexts/auth-context'
 
+"use client"
 
   Dialog,
   DialogContent,
@@ -26,7 +24,7 @@ export function SessionExpiryModal({ isOpen, onClose, expiresAt }: SessionExpiry
   const router = useRouter()
   const { logout, refreshTokens } = useAuth()
 
-  useEffect(() => {
+  useEffect(() => {}
     if (!isOpen) return,
     const updateTimer = () => {}
       const now = new Date().getTime()
@@ -34,7 +32,7 @@ export function SessionExpiryModal({ isOpen, onClose, expiresAt }: SessionExpiry
       const remaining = Math.max(0, expires - now)
       setTimeRemaining(remaining)
 
-      if (remaining === 0) {
+      if (remaining === 0) {}
         handleExpiry()
 
     updateTimer()
@@ -43,19 +41,19 @@ export function SessionExpiryModal({ isOpen, onClose, expiresAt }: SessionExpiry
     return () => clearInterval(interval)
   }, [isOpen, expiresAt])
 
-  const handleExpiry = async () => {
+  const handleExpiry = async () => {}
     await logout()
     router.push('/login?reason=session_expired')
     onClose()
 
-  const handleExtendSession = async () => {
+  const handleExtendSession = async () => {}
     setIsExtending(true)
-    try {
+    try {}
       await refreshTokens()
       onClose()
-    } catch (err) {
+    } catch {}
       await handleExpiry()
-    } finally {
+    } finally {}
       setIsExtending(false)
 
   const formatTime = (ms: number) => {}
@@ -69,7 +67,7 @@ export function SessionExpiryModal({ isOpen, onClose, expiresAt }: SessionExpiry
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            ⚠️ Session Expiring Soon
+            ⚠️ Session Expiring Soon;
           </DialogTitle>
           <DialogDescription>
             Your session will expire in {formatTime(timeRemaining)}. 
@@ -93,7 +91,7 @@ export function SessionExpiryModal({ isOpen, onClose, expiresAt }: SessionExpiry
             onClick={handleExpiry}
             disabled={isExtending}
           >
-            Logout Now
+            Logout Now;
           </Button>
           <Button,
             onClick={handleExtendSession}

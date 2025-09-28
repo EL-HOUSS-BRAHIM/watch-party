@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,25 +11,26 @@ import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { useDebounce } from "@/hooks/use-debounce"
 
+"use client"
 
 interface SearchUser {}
-  id: string
-  username: string
-  firstName: string
-  lastName: string
-  avatar?: string
-  isOnline: boolean
-  mutualFriends: number
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  avatar?: string;
+  isOnline: boolean;
+  mutualFriends: number;
   friendshipStatus: "none" | "pending_sent" | "pending_received" | "friends" | "blocked"
-  isPremium: boolean
-  lastActive?: string
-  bio?: string
-  location?: string
+  isPremium: boolean;
+  lastActive?: string;
+  bio?: string;
+  location?: string;
 }
 
 interface UserSearchProps {}
-  onUserSelect?: (user: SearchUser) => void
-  className?: string
+  onUserSelect?: (user: SearchUser) => void;
+  className?: string;
 }
 
 export default function UserSearch({ onUserSelect, className }: UserSearchProps) {}
@@ -52,18 +51,18 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
       if (!query.trim()) {}
         setUsers([])
         setHasSearched(false)
-        return
+        return;
       }
 
       if (!canMakeApiCall()) {}
         console.log("Cannot search users: user not authenticated")
-        return
+        return;
       }
 
       setIsLoading(true)
       setHasSearched(true)
 
-      try {
+      try {}
         const token = getAuthToken()
         const params = new URLSearchParams({q: query,
           sort: sortBy,
@@ -76,34 +75,34 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
           },
         })
 
-        if (response.ok) {
+        if (response.ok) {}
           const data = await response.json()
           setUsers(data.results || data)
         }
-      } catch (err) {
+      } catch {}
         console.error("Failed to search users:", error)
         toast({title: "Search Error",
           description: "Failed to search users. Please try again.",
           variant: "destructive",
         })
-      } finally {
+      } finally {}
         setIsLoading(false)
       }
     },
     [sortBy, filterBy, toast, canMakeApiCall, getAuthToken],
   )
 
-  useEffect(() => {
+  useEffect(() => {}
     searchUsers(debouncedSearchQuery)
   }, [debouncedSearchQuery, searchUsers])
 
   const sendFriendRequest = async (userId: string) => {}
     if (!canMakeApiCall()) {}
       console.log("Cannot send friend request: user not authenticated")
-      return
+      return;
     }
 
-    try {
+    try {}
       const token = getAuthToken()
       const response = await fetch(`/api/users/${userId}/friend-request/`, {}
         method: "POST",
@@ -112,13 +111,13 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
         },
       })
 
-      if (response.ok) {
-        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: "pending_sent" } : u)))
+      if (response.ok) {}
+        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: &quot;pending_sent" } : u)))
         toast({title: "Friend request sent",
           description: "Your friend request has been sent successfully.",
         })
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to send friend request:", error)
       toast({title: "Error",
         description: "Failed to send friend request. Please try again.",
@@ -130,10 +129,10 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
   const acceptFriendRequest = async (userId: string) => {}
     if (!canMakeApiCall()) {}
       console.log("Cannot accept friend request: user not authenticated")
-      return
+      return;
     }
 
-    try {
+    try {}
       const token = getAuthToken()
       // Find the request ID (this would come from the user data in a real implementation)
       const response = await fetch(`/api/users/friend-requests/accept/`, {}
@@ -145,13 +144,13 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
         body: JSON.stringify({ user_id: userId }),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: "friends" } : u)))
         toast({title: "Friend request accepted",
           description: "You are now friends!",
         })
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to accept friend request:", error)
       toast({title: "Error",
         description: "Failed to accept friend request. Please try again.",
@@ -161,50 +160,50 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
   }
 
   const startChat = (userId: string) => {}
-    // TODO: Implement chat functionality
+    // TODO: Implement chat functionality;
     toast({title: "Chat feature",
       description: "Direct messaging coming soon!",
     })
   }
 
   const getFriendshipStatusButton = (user: SearchUser) => {}
-    switch (user.friendshipStatus) {
+    switch (user.friendshipStatus) {}
       case "none":
         return (
           <Button size="sm" onClick={() => sendFriendRequest(user.id)}>
             <UserPlus className="mr-2 h-4 w-4" />
-            Add Friend
+            Add Friend;
           </Button>
         )
       case "pending_sent":
         return (
           <Button size="sm" variant="outline" disabled>
             <UserPlus className="mr-2 h-4 w-4" />
-            Request Sent
+            Request Sent;
           </Button>
         )
       case "pending_received":
         return (
           <Button size="sm" onClick={() => acceptFriendRequest(user.id)}>
             <UserPlus className="mr-2 h-4 w-4" />
-            Accept Request
+            Accept Request;
           </Button>
         )
       case "friends":
         return (
           <Button size="sm" variant="outline" onClick={() => startChat(user.id)}>
             <MessageCircle className="mr-2 h-4 w-4" />
-            Message
+            Message;
           </Button>
         )
       case "blocked":
         return (
           <Button size="sm" variant="outline" disabled>
-            Blocked
+            Blocked;
           </Button>
         )
       default:
-        return null
+        return null;
     }
   }
 
@@ -213,7 +212,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
   }
 
   const getStatusIndicator = (user: SearchUser) => {}
-    if (user.isOnline) {
+    if (user.isOnline) {}
       return <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
     }
     return <div className="w-3 h-3 bg-gray-400 rounded-full border-2 border-white" />
@@ -224,7 +223,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
       <div>
         <h2 className="text-2xl font-bold flex items-center gap-2 mb-2">
           <Search className="h-6 w-6" />
-          Find Friends
+          Find Friends;
         </h2>
         <p className="text-gray-600">Search for users to connect with</p>
       </div>
@@ -233,7 +232,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
       <div className="space-y-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input
+          <Input;
             placeholder="Search by username, name, or email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -290,7 +289,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
         ) : (
           <div className="space-y-3">
             {users.map((searchUser) => (
-              <Card
+              <Card;
                 key={searchUser.id}
                 className="hover:shadow-md transition-shadow cursor-pointer"
                 onClick={() => onUserSelect?.(searchUser)}
@@ -315,7 +314,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
                             {searchUser.isPremium && <Crown className="h-4 w-4 text-yellow-500" />}
                             {searchUser.isOnline && (
                               <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                                Online
+                                Online;
                               </Badge>
                             )}
                           </div>

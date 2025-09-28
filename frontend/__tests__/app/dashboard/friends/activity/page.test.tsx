@@ -106,7 +106,7 @@ describe('FriendsActivityFeed', () => {}
     getActivityMock.mockResolvedValue(mockActivityResponse)
   })
 
-  it('fetches activities on mount', async () => {
+  it('fetches activities on mount', async () => {}
     render(<FriendsActivityFeed />)
 
     await waitFor(() => {}
@@ -118,7 +118,7 @@ describe('FriendsActivityFeed', () => {}
     expect(screen.getByText('First Watch')).toBeInTheDocument()
   })
 
-  it('applies activity type filter', async () => {
+  it('applies activity type filter', async () => {}
     render(<FriendsActivityFeed />)
 
     await waitFor(() => {}
@@ -136,7 +136,7 @@ describe('FriendsActivityFeed', () => {}
     })
   })
 
-  it('applies timeframe filter', async () => {
+  it('applies timeframe filter', async () => {}
     render(<FriendsActivityFeed />)
 
     await waitFor(() => {}
@@ -157,7 +157,7 @@ describe('FriendsActivityFeed', () => {}
     })
   })
 
-  it('handles API errors gracefully', async () => {
+  it('handles API errors gracefully', async () => {}
     getActivityMock.mockRejectedValue(new Error('API Error'))
 
     render(<FriendsActivityFeed />)
@@ -171,7 +171,7 @@ describe('FriendsActivityFeed', () => {}
     })
   })
 
-  it('handles empty response gracefully', async () => {
+  it('handles empty response gracefully', async () => {}
     getActivityMock.mockResolvedValue({ results: [] })
 
     render(<FriendsActivityFeed />)
@@ -186,7 +186,7 @@ describe('FriendsActivityFeed', () => {}
     expect(screen.getByTestId('activity-loading')).toBeInTheDocument()
   })
 
-  it('normalizes malformed activity data', async () => {
+  it('normalizes malformed activity data', async () => {}
     const malformedResponse = { results: []
         {}
           id: '1',
@@ -210,7 +210,7 @@ describe('FriendsActivityFeed', () => {}
     expect(screen.getByText('Friend')).toBeInTheDocument()
   })
 
-  it('filters activities locally based on selected type', async () => {
+  it('filters activities locally based on selected type', async () => {}
     render(<FriendsActivityFeed />)
 
     await waitFor(() => {}
@@ -229,7 +229,7 @@ describe('FriendsActivityFeed', () => {}
     expect(screen.queryByText('First Watch')).not.toBeInTheDocument()
   })
 
-  it('refreshes data when filters change', async () => {
+  it('refreshes data when filters change', async () => {}
     render(<FriendsActivityFeed />)
 
     await waitFor(() => {}

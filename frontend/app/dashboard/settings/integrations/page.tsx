@@ -1,12 +1,11 @@
-"use client"
-
 import { Check, CheckCircle, Cloud, Link, X } from "lucide-react"
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
-
 import { integrationsAPI } from '@/lib/api'
 import type {}
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
+
+"use client"
 
   LinkIcon,
   ArrowPathIcon,
@@ -22,17 +21,17 @@ import { LoadingSpinner } from '@/components/ui/loading'
   IntegrationStatusOverview,
 } from '@/lib/api'
 interface IntegrationDisplay {}
-  definition: IntegrationDefinition
-  connection: IntegrationConnection | null
-  status?: IntegrationStatusOverview
+  definition: IntegrationDefinition;
+  connection: IntegrationConnection | null;
+  status?: IntegrationStatusOverview;
 }
 
-const PROVIDER_ICON_MAP: Record<string, ReactNode> = { google_drive: <CloudIcon className="w-6 h-6" />,
+const PROVIDER_ICON_MAP: Record<string, ReactNode> = { google_drive: <CloudIcon className=&quot;w-6 h-6" />,}
   discord: <ChatBubbleLeftRightIcon className="w-6 h-6" />,
 }
 
 function getStatusColor(status: IntegrationStatusOverview | undefined) {}
-  switch (status?.status) {
+  switch (status?.status) {}
     case 'available':
       return 'text-green-400'
     case 'degraded':
@@ -51,7 +50,7 @@ function getConnectionBadge(connection: IntegrationConnection | null) {}
   return { text: 'Connected', className: 'text-green-400 border-green-400/40' }
 }
 
-export default function IntegrationsPage() {
+export default function IntegrationsPage() {}
   const [definitions, setDefinitions] = useState<IntegrationDefinition[]>([])
   const [connections, setConnections] = useState<IntegrationConnection[]>([])
   const [status, setStatus] = useState<Record<string, IntegrationStatusOverview>>({})
@@ -60,9 +59,9 @@ export default function IntegrationsPage() {
   const [actionProvider, setActionProvider] = useState<string | null>(null)
   const { toast } = useToast()
 
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async () => {}
     setLoading(true)
-    try {
+    try {}
       const [definitionsResponse, connectionsResponse, statusResponse, healthResponse] = await Promise.all([]
         integrationsAPI.getIntegrationTypes(),
         integrationsAPI.getConnections(),
@@ -74,22 +73,22 @@ export default function IntegrationsPage() {
       setConnections(connectionsResponse.connections || [])
 
       const mappedStatus: Record<string, IntegrationStatusOverview> = { for (const entry of statusResponse.integrations || []) {}
-        mappedStatus[entry.provider] = entry
+        mappedStatus[entry.provider] = entry;
       }
       setStatus(mappedStatus)
       setHealth(healthResponse)
-    } catch (err) {
+    } catch {}
       console.error('Failed to load integrations data', error)
       toast({title: 'Unable to load integrations',
         description: 'Check your network connection and try again.',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }, [toast])
 
-  useEffect(() => {
+  useEffect(() => {}
     loadData()
   }, [loadData])
 
@@ -100,41 +99,41 @@ export default function IntegrationsPage() {
 
   const handleConnect = async (provider: string) => {}
     setActionProvider(provider)
-    try {
+    try {}
       const isGoogleDrive = provider === 'google_drive'
-      const { auth_url } = isGoogleDrive
+      const { auth_url } = isGoogleDrive;
         ? await integrationsAPI.getGoogleDriveAuthUrl()
         : await integrationsAPI.getAuthUrl(provider)
 
       window.location.assign(auth_url)
-    } catch (err) {
+    } catch {}
       console.error('Failed to start integration authorization', error)
       toast({title: 'Connection failed',
         description: 'We were unable to start the authorization flow. Try again later.',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setActionProvider(null)
     }
   }
 
   const handleDisconnect = async (provider: string) => {}
     const connection = connectionFor(provider)
-    if (!connection) return
+    if (!connection) return;
     setActionProvider(provider)
-    try {
+    try {}
       await integrationsAPI.disconnectConnection(connection.id)
       toast({title: `${connection.display_name || provider} disconnected`,
         description: 'The integration has been disconnected from your account.',
       })
       await loadData()
-    } catch (err) {
+    } catch {}
       console.error('Failed to disconnect integration', error)
       toast({title: 'Unable to disconnect',
         description: 'We could not disconnect the integration. Please try again.',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setActionProvider(null)
     }
   }
@@ -148,7 +147,7 @@ export default function IntegrationsPage() {
   }, [definitions, connectionFor, status])
 
   const connectedCount = useMemo(
-    () => connections.filter(connection => connection.status === 'connected').length,
+    () => connections.filter(connection => connection.status === &apos;connected').length,
     [connections]
   )
 
@@ -166,7 +165,7 @@ export default function IntegrationsPage() {
             <h1 className="text-4xl font-bold text-white">Integrations</h1>
           </div>
           <p className="text-white/70 text-lg max-w-2xl">
-            Connect Watch Party to the services your community relies on. Authorize providers, monitor health, and manage
+            Connect Watch Party to the services your community relies on. Authorize providers, monitor health, and manage;
             connections from a single control center.
           </p>
         </header>
@@ -196,7 +195,7 @@ export default function IntegrationsPage() {
             {health && (
               <section className="rounded-xl border border-white/10 bg-white/10 p-6 text-white shadow-sm backdrop-blur">
                 <h2 className="text-lg font-semibold mb-2 flex items-center gap-2">
-                  <ArrowPathIcon className="w-5 h-5" /> Integration health
+                  <ArrowPathIcon className="w-5 h-5" /> Integration health;
                 </h2>
                 <p className="text-sm text-white/70 mb-4">
                   {health.status === 'healthy'
@@ -205,11 +204,11 @@ export default function IntegrationsPage() {
                 </p>
                 <div className="grid gap-3 md:grid-cols-2">
                   {health.services?.map(service => (
-                    <div
+                    <div;
                       key={service.name}
                       className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3"
                     >
-                      <span className="font-medium capitalize">{service.name.replace(/_/g, ' ')}</span>
+                      <span className="font-medium capitalize">{service.name.replace(/_/g, &apos; ')}</span>
                       <span className={service.status === 'up' ? 'text-green-300' : 'text-red-300'}>
                         {service.status === 'up' ? 'Operational' : 'Unavailable'}
                       </span>
@@ -222,9 +221,9 @@ export default function IntegrationsPage() {
             <section className="space-y-6">
               {displays.map(({ definition, connection, status: statusEntry }) => {}
                 const badge = getConnectionBadge(connection)
-                const isBusy = actionProvider === definition.provider
+                const isBusy = actionProvider === definition.provider;
                 return (
-                  <div
+                  <div;
                     key={definition.provider}
                     data-testid={`integration-card-${definition.provider}`}
                     className="rounded-xl border border-white/10 bg-white/10 p-6 text-white shadow-sm backdrop-blur"
@@ -237,7 +236,7 @@ export default function IntegrationsPage() {
                         <div className="space-y-2">
                           <div className="flex items-center gap-3">
                             <h3 className="text-2xl font-semibold">{definition.name}</h3>
-                            <span
+                            <span;
                               className={`rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide ${badge.className}`}
                             >
                               {badge.text}
@@ -256,7 +255,7 @@ export default function IntegrationsPage() {
                           {definition.capabilities?.length > 0 && (
                             <ul className="flex flex-wrap gap-2 text-sm text-white/80">
                               {definition.capabilities.map(capability => (
-                                <li
+                                <li;
                                   key={capability}
                                   className="rounded-full border border-white/10 bg-white/5 px-3 py-1"
                                 >
@@ -287,7 +286,7 @@ export default function IntegrationsPage() {
                           )}
                         </div>
                         {connection ? (
-                          <button
+                          <button;
                             type="button"
                             onClick={() => handleDisconnect(definition.provider)}
                             disabled={isBusy}
@@ -302,12 +301,12 @@ export default function IntegrationsPage() {
                             ) : (
                               <>
                                 <XMarkIcon className="h-4 w-4" />
-                                Disconnect
+                                Disconnect;
                               </>
                             )}
                           </button>
                         ) : (
-                          <button
+                          <button;
                             type="button"
                             onClick={() => handleConnect(definition.provider)}
                             disabled={isBusy}
@@ -322,7 +321,7 @@ export default function IntegrationsPage() {
                             ) : (
                               <>
                                 <CheckCircleIcon className="h-4 w-4" />
-                                Connect
+                                Connect;
                               </>
                             )}
                           </button>

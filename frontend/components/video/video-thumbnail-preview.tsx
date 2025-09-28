@@ -1,9 +1,8 @@
-"use client"
-
 import { useState, useEffect, useRef } from 'react'
 import Image from "next/image"
 import { Card } from '@/components/ui/card'
 
+"use client"
 
 interface VideoThumbnailPreviewProps {}
   videoUrl: string,
@@ -25,14 +24,14 @@ export function VideoThumbnailPreview({videoUrl,
   const videoRef = useRef<HTMLVideoElement>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  useEffect(() => {
-    if (isHovering && videoRef.current) {
-      videoRef.current.currentTime = currentTime
+  useEffect(() => {}
+    if (isHovering && videoRef.current) {}
+      videoRef.current.currentTime = currentTime;
   }, [currentTime, isHovering])
 
   const handleMouseEnter = () => {}
     setIsHovering(true)
-    if (timeoutRef.current) {
+    if (timeoutRef.current) {}
       clearTimeout(timeoutRef.current)
 
   const handleMouseLeave = () => {}

@@ -1,16 +1,16 @@
-"use client"
-
 import { Check, Eye, EyeOff } from "lucide-react"
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
+"use client"
+
 export interface WatchPartyInputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
-  label?: string
-  error?: string
-  success?: string
-  hint?: string
-  icon?: React.ReactNode
-  showPasswordToggle?: boolean
+  label?: string;
+  error?: string;
+  success?: string;
+  hint?: string;
+  icon?: React.ReactNode;
+  showPasswordToggle?: boolean;
   variant?: "default" | "search" | "ghost"
 }
 
@@ -22,7 +22,7 @@ const WatchPartyInput = React.forwardRef<HTMLInputElement, WatchPartyInputProps>
     const [showPassword, setShowPassword] = React.useState(false)
     const [isFocused, setIsFocused] = React.useState(false)
 
-    const inputType = showPasswordToggle ? (showPassword ? "text" : "password") : type
+    const inputType = showPasswordToggle ? (showPassword ? "text" : "password") : type;
     const baseStyles =
       "flex h-12 w-full rounded-lg border px-3 py-2 text-sm transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
 
@@ -56,7 +56,7 @@ const WatchPartyInput = React.forwardRef<HTMLInputElement, WatchPartyInputProps>
         <div className="relative">
           {icon && <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">{icon}</div>}
 
-          <input
+          <input;
             type={inputType}
             className={cn(
               baseStyles,
@@ -80,13 +80,13 @@ const WatchPartyInput = React.forwardRef<HTMLInputElement, WatchPartyInputProps>
 
           {/* Password toggle button */}
           {showPasswordToggle && (
-            <button
+            <button;
               type="button"
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
               onClick={() => setShowPassword(!showPassword)}
               tabIndex={-1}
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4" />}"
             </button>
           )}
 

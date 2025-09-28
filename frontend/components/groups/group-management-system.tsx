@@ -1,5 +1,3 @@
-"use client"
-
 import { Calendar, Eye, Loader2, Lock, MessageCircle, Plus, Search, Settings, Shield, User, Users, Video } from "lucide-react"
 import { useState, useEffect, useCallback, useMemo } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,10 +8,10 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-
-
 import { useToast } from "@/hooks/use-toast"
 import { socialAPI } from "@/lib/api"
+
+"use client"
 
   Dialog,
   DialogContent,
@@ -33,38 +31,38 @@ import { socialAPI } from "@/lib/api"
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 interface Group {}
-  id: string
-  backendId?: number
-  name: string
-  description: string
-  avatar?: string
+  id: string;
+  backendId?: number;
+  name: string;
+  description: string;
+  avatar?: string;
   privacy: "public" | "private" | "invite-only"
-  memberCount: number
-  maxMembers?: number
-  category: string
+  memberCount: number;
+  maxMembers?: number;
+  category: string;
   tags: string[]
-  createdAt?: string
+  createdAt?: string;
   owner: {}
-    id: string
-    name: string
-    avatar?: string
+    id: string;
+    name: string;
+    avatar?: string;
   }
-  isOwner: boolean
-  isMember: boolean
+  isOwner: boolean;
+  isMember: boolean;
   role?: "owner" | "admin" | "moderator" | "member"
 }
 
 interface GroupMember {}
-  id: string
+  id: string;
   user: {}
-    id: string
-    name: string
-    avatar?: string
-    email?: string
+    id: string;
+    name: string;
+    avatar?: string;
+    email?: string;
   }
   role: "owner" | "admin" | "moderator" | "member"
-  joinedAt?: string
-  lastActive?: string
+  joinedAt?: string;
+  lastActive?: string;
   status: "active" | "inactive" | "banned"
 }
 
@@ -74,16 +72,16 @@ const fallbackId = (prefix: string) => `${prefix}-${Math.random().toString(36).s
 
 const extractCollection = (value: unknown): unknown[] => {}
   if (!value) return []
-  if (Array.isArray(value)) return value
-  if (Array.isArray(value?.results)) return value.results
-  if (Array.isArray(value?.data)) return value.data
+  if (Array.isArray(value)) return value;
+  if (Array.isArray(value?.results)) return value.results;
+  if (Array.isArray(value?.data)) return value.data;
   return []
 }
 
 const mapMemberStatus = (member: unknown): GroupMember["status"] => {}
   const rawStatus = member?.status ?? (member?.is_banned ? "banned" : member?.is_active === false ? "inactive" : undefined)
 
-  switch (rawStatus) {
+  switch (rawStatus) {}
     case "inactive":
       return "inactive"
     case "banned":
@@ -94,13 +92,13 @@ const mapMemberStatus = (member: unknown): GroupMember["status"] => {}
 }
 
 const normalizeGroupMember = (member: unknown): GroupMember => {}
-  const memberUser = member?.user ?? member
-  const firstName = memberUser?.first_name ?? memberUser?.firstName
-  const lastName = memberUser?.last_name ?? memberUser?.lastName
+  const memberUser = member?.user ?? member;
+  const firstName = memberUser?.first_name ?? memberUser?.firstName;
+  const lastName = memberUser?.last_name ?? memberUser?.lastName;
   const composedName = [firstName, lastName].filter(Boolean).join(" ")
   const name = (memberUser?.name ?? memberUser?.full_name ?? memberUser?.username ?? composedName) || "Member"
 
-  return {
+  return {}
     id: String(member?.id ?? memberUser?.id ?? fallbackId("member")),
     user: {}
       id: String(memberUser?.id ?? fallbackId("user")),
@@ -116,11 +114,11 @@ const normalizeGroupMember = (member: unknown): GroupMember => {}
 }
 
 const derivePrivacy = (group: unknown): Group["privacy"] => {}
-  if (group?.privacy === "invite-only" || group?.privacy === "private" || group?.privacy === "public") {
-    return group.privacy
+  if (group?.privacy === "invite-only" || group?.privacy === "private" || group?.privacy === "public") {}
+    return group.privacy;
   }
 
-  if (group?.is_public === false) {
+  if (group?.is_public === false) {}
     return group?.requires_invite ? "invite-only" : "private"
   }
 
@@ -130,8 +128,8 @@ const derivePrivacy = (group: unknown): Group["privacy"] => {}
 const normalizeGroup = (group: unknown): Group => {}
   const backendId = typeof group?.id === "number" ? group.id : Number.parseInt(String(group?.id ?? ""), 10)
   const owner = group?.owner ?? group?.created_by ?? {}
-  const firstName = owner?.first_name ?? owner?.firstName
-  const lastName = owner?.last_name ?? owner?.lastName
+  const firstName = owner?.first_name ?? owner?.firstName;
+  const lastName = owner?.last_name ?? owner?.lastName;
   const ownerName = (owner?.name ?? owner?.full_name ?? owner?.username ?? [firstName, lastName].filter(Boolean).join(" ")) || "Group Owner"
   const membership = group?.membership ?? {}
   const tags = Array.isArray(group?.tags)
@@ -143,9 +141,9 @@ const normalizeGroup = (group: unknown): Group => {}
     group?.member_count ??
     group?.members_count ??
     (Array.isArray(group?.members) ? group.members.length : undefined) ??
-    0
-  const maxMembers = group?.max_members ?? group?.member_limit ?? group?.capacity
-  return {
+    0;
+  const maxMembers = group?.max_members ?? group?.member_limit ?? group?.capacity;
+  return {}
     id: backendId && Number.isFinite(backendId) ? String(backendId) : String(group?.slug ?? fallbackId("group")),
     backendId: Number.isFinite(backendId) ? backendId : undefined,
     name: group?.name ?? group?.title ?? "Untitled Group",
@@ -170,10 +168,10 @@ const normalizeGroup = (group: unknown): Group => {}
 
 const parseGroupId = (groupId: string): number | null => {}
   const numeric = Number.parseInt(groupId, 10)
-  return Number.isNaN(numeric) ? null : numeric
+  return Number.isNaN(numeric) ? null : numeric;
 }
 
-export default function GroupManagementSystem() {
+export default function GroupManagementSystem() {}
   const { toast } = useToast()
   const [groups, setGroups] = useState<Group[]>([])
   const [selectedGroup, setSelectedGroup] = useState<Group | null>(null)
@@ -186,22 +184,22 @@ export default function GroupManagementSystem() {
   const [groupsError, setGroupsError] = useState<string | null>(null)
   const [showCreateDialog, setShowCreateDialog] = useState(false)
 
-  const loadGroups = useCallback(async () => {
-    if (typeof socialAPI.getGroups !== "function") {
+  const loadGroups = useCallback(async () => {}
+    if (typeof socialAPI.getGroups !== "function") {}
       setGroups([])
       setGroupsError("Social API is not available in this environment.")
       setIsFetchingGroups(false)
-      return
+      return;
     }
 
     setIsFetchingGroups(true)
     setGroupsError(null)
 
-    try {
+    try {}
       const response = await socialAPI.getGroups({ page: 1 })
       const results = extractCollection(response)
       setGroups(results.map((group) => normalizeGroup(group)))
-    } catch (err) {
+    } catch {}
       console.error("Failed to load groups", error)
       setGroups([])
       setGroupsError("Failed to load groups. Please try again.")
@@ -209,19 +207,19 @@ export default function GroupManagementSystem() {
         description: "Unable to load groups from the server. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsFetchingGroups(false)
     }
   }, [toast])
 
-  useEffect(() => {
+  useEffect(() => {}
     loadGroups()
   }, [loadGroups])
 
   const categories = useMemo(() => {}
     const categorySet = new Set(DEFAULT_CATEGORIES)
     groups.forEach((group) => {}
-      if (group.category) {
+      if (group.category) {}
         categorySet.add(group.category)
       }
     })
@@ -231,7 +229,7 @@ export default function GroupManagementSystem() {
   const upsertGroup = useCallback((group: Group) => {}
     setGroups((prev) => {}
       const exists = prev.some((existing) => existing.id === group.id)
-      if (exists) {
+      if (exists) {}
         return prev.map((existing) => (existing.id === group.id ? group : existing))
       }
       return [group, ...prev]
@@ -240,36 +238,36 @@ export default function GroupManagementSystem() {
 
   const refreshGroup = useCallback(
     async (groupId: string, fallbackId?: number) => {}
-      if (typeof socialAPI.getGroup !== "function") {
-        return null
+      if (typeof socialAPI.getGroup !== "function") {}
+        return null;
       }
 
       const numericId =
         parseGroupId(groupId) ?? (typeof fallbackId === "number" && Number.isFinite(fallbackId) ? fallbackId : null)
-      if (numericId === null) {
-        return null
+      if (numericId === null) {}
+        return null;
       }
 
-      try {
+      try {}
         const detail = await socialAPI.getGroup(numericId)
         const normalized = normalizeGroup(detail)
         upsertGroup(normalized)
         return { normalized, detail }
-      } catch (err) {
+      } catch {}
         console.error(`Failed to refresh group ${groupId}`, error)
-        return null
+        return null;
       }
     },
     [upsertGroup],
   )
 
   const handleCreateGroup = async (formData: FormData) => {}
-    if (typeof socialAPI.createGroup !== "function") {
+    if (typeof socialAPI.createGroup !== "function") {}
       toast({title: "Unavailable",
         description: "Creating groups is not available in this environment.",
         variant: "destructive",
       })
-      return
+      return;
     }
 
     const name = (formData.get("name") as string) ?? ""
@@ -279,16 +277,16 @@ export default function GroupManagementSystem() {
     const rawTags = (formData.get("tags") as string) ?? ""
     const maxMembersRaw = formData.get("maxMembers")
 
-    const tags = rawTags
+    const tags = rawTags;
       .split(",")
       .map((tag) => tag.trim())
       .filter(Boolean)
     const maxMembersValue =
-      typeof maxMembersRaw === "string" && maxMembersRaw.length > 0
+      typeof maxMembersRaw === "string" && maxMembersRaw.length > 0;
         ? Number.parseInt(maxMembersRaw, 10)
-        : undefined
+        : undefined;
     setIsCreatingGroup(true)
-    try {
+    try {}
       const isPublic = privacy === "public"
       const payload = { name,
         description,
@@ -304,7 +302,7 @@ export default function GroupManagementSystem() {
       const created = await socialAPI.createGroup(payload)
       let normalized = normalizeGroup(created)
 
-      if (tags.length && normalized.tags.length === 0) {
+      if (tags.length && normalized.tags.length === 0) {}
         normalized = { ...normalized, tags }
       }
 
@@ -316,27 +314,27 @@ export default function GroupManagementSystem() {
         normalized = { ...normalized, maxMembers: maxMembersValue }
       }
 
-      if (!normalized.privacy && !isPublic) {
+      if (!normalized.privacy && !isPublic) {}
         normalized = { ...normalized, privacy }
       }
 
       upsertGroup(normalized)
       setShowCreateDialog(false)
 
-      if (normalized.id) {
+      if (normalized.id) {}
         await refreshGroup(normalized.id, normalized.backendId)
       }
 
       toast({title: "Group Created",
         description: "Your group has been created successfully!",
       })
-    } catch (err) {
+    } catch {}
       console.error("Failed to create group", error)
       toast({title: "Error",
         description: "Failed to create group. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsCreatingGroup(false)
     }
   }
@@ -344,21 +342,21 @@ export default function GroupManagementSystem() {
   const handleJoinGroup = async (group: Group) => {}
     const numericId =
       typeof group.backendId === "number" && Number.isFinite(group.backendId)
-        ? group.backendId
+        ? group.backendId;
         : parseGroupId(group.id)
-    if (numericId === null || typeof socialAPI.joinGroup !== "function") {
+    if (numericId === null || typeof socialAPI.joinGroup !== "function") {}
       toast({title: "Error",
         description: "Joining this group is not available right now.",
         variant: "destructive",
       })
-      return
+      return;
     }
 
-    try {
+    try {}
       await socialAPI.joinGroup(numericId)
       const result = await refreshGroup(group.id, group.backendId)
 
-      if (result && selectedGroup?.id === result.normalized.id) {
+      if (result && selectedGroup?.id === result.normalized.id) {}
         setSelectedGroup(result.normalized)
         const members = extractCollection((result.detail as Record<string, unknown>)?.members).map((member) => normalizeGroupMember(member))
         setGroupMembers(members)
@@ -367,7 +365,7 @@ export default function GroupManagementSystem() {
       toast({title: "Joined Group",
         description: "You have successfully joined the group!",
       })
-    } catch (err) {
+    } catch {}
       console.error(`Failed to join group ${group.id}`, error)
       toast({title: "Error",
         description: "Failed to join group. Please try again.",
@@ -379,21 +377,21 @@ export default function GroupManagementSystem() {
   const handleLeaveGroup = async (group: Group) => {}
     const numericId =
       typeof group.backendId === "number" && Number.isFinite(group.backendId)
-        ? group.backendId
+        ? group.backendId;
         : parseGroupId(group.id)
-    if (numericId === null || typeof socialAPI.leaveGroup !== "function") {
+    if (numericId === null || typeof socialAPI.leaveGroup !== "function") {}
       toast({title: "Error",
         description: "Leaving this group is not available right now.",
         variant: "destructive",
       })
-      return
+      return;
     }
 
-    try {
+    try {}
       await socialAPI.leaveGroup(numericId)
       const result = await refreshGroup(group.id, group.backendId)
 
-      if (result && selectedGroup?.id === result.normalized.id) {
+      if (result && selectedGroup?.id === result.normalized.id) {}
         setSelectedGroup(result.normalized)
         const members = extractCollection((result.detail as Record<string, unknown>)?.members).map((member) => normalizeGroupMember(member))
         setGroupMembers(members)
@@ -402,7 +400,7 @@ export default function GroupManagementSystem() {
       toast({title: "Left Group",
         description: "You have left the group.",
       })
-    } catch (err) {
+    } catch {}
       console.error(`Failed to leave group ${group.id}`, error)
       toast({title: "Error",
         description: "Failed to leave group. Please try again.",
@@ -414,7 +412,7 @@ export default function GroupManagementSystem() {
   // TODO: Add socialAPI member management once `/api/social/groups/<group_id>/members/<member_id>/` is exposed.
   const handleRoleChange = async (_memberId: string, _newRole: string) => {}
     toast({title: "Action unavailable",
-      description: "Updating member roles requires a backend endpoint (\"/api/social/groups/<group_id>/members/<member_id>/\").",
+      description: "Updating member roles requires a backend endpoint (\"/api/social/groups/<group_id>/members/<member_id>/\&quot;).",
     })
   }
 
@@ -428,29 +426,29 @@ export default function GroupManagementSystem() {
     setSelectedGroup(group)
     setGroupMembers([])
 
-    if (typeof socialAPI.getGroup !== "function") {
+    if (typeof socialAPI.getGroup !== "function") {}
       toast({title: "Unavailable",
         description: "Group details are not available in this environment.",
         variant: "destructive",
       })
-      return
+      return;
     }
 
     setIsFetchingMembers(true)
-    try {
+    try {}
       const result = await refreshGroup(group.id, group.backendId)
-      if (result) {
+      if (result) {}
         setSelectedGroup(result.normalized)
         const members = extractCollection((result.detail as Record<string, unknown>)?.members).map((member) => normalizeGroupMember(member))
         setGroupMembers(members)
       }
-    } catch (err) {
+    } catch {}
       console.error(`Failed to load group ${group.id}`, error)
       toast({title: "Error",
         description: "Failed to load group details. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsFetchingMembers(false)
     }
   }
@@ -461,12 +459,12 @@ export default function GroupManagementSystem() {
     const matchesSearch =
       group.name.toLowerCase().includes(normalizedQuery) ||
       (group.description ?? "").toLowerCase().includes(normalizedQuery)
-    const matchesCategory = categoryFilter === "all" || group.category === categoryFilter
-    return matchesSearch && matchesCategory
+    const matchesCategory = categoryFilter === "all" || group.category === categoryFilter;
+    return matchesSearch && matchesCategory;
   })
 
   const getRoleIcon = (role: string) => {}
-    switch (role) {
+    switch (role) {}
       case "owner":
         return <Crown className="h-4 w-4 text-yellow-500" />
       case "admin":
@@ -479,7 +477,7 @@ export default function GroupManagementSystem() {
   }
 
   const getPrivacyIcon = (privacy: string) => {}
-    switch (privacy) {
+    switch (privacy) {}
       case "public":
         return <Globe className="h-4 w-4 text-green-500" />
       case "private":
@@ -504,7 +502,7 @@ export default function GroupManagementSystem() {
           <DialogTrigger asChild>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              Create Group
+              Create Group;
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
@@ -513,7 +511,7 @@ export default function GroupManagementSystem() {
               <DialogDescription>Create a new group for watch parties and discussions</DialogDescription>
             </DialogHeader>
 
-            <form
+            <form;
               onSubmit={(e) => {}
                 e.preventDefault()
                 const formData = new FormData(e.currentTarget)
@@ -573,7 +571,7 @@ export default function GroupManagementSystem() {
 
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={() => setShowCreateDialog(false)}>
-                  Cancel
+                  Cancel;
                 </Button>
                 <Button type="submit" disabled={isCreatingGroup}>
                   {isCreatingGroup ? "Creating..." : "Create Group"}
@@ -589,7 +587,7 @@ export default function GroupManagementSystem() {
         <div className="flex-1">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
+            <Input;
               placeholder="Search groups..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -668,7 +666,7 @@ export default function GroupManagementSystem() {
                   <Users className="h-4 w-4" />
                   <span>
                     {group.memberCount}
-                    {typeof group.maxMembers === "number" ? `/${group.maxMembers}` : ""} members
+                    {typeof group.maxMembers === "number" ? `/${group.maxMembers}` : ""} members;
                   </span>
                 </div>
                 {group.role && (
@@ -695,7 +693,7 @@ export default function GroupManagementSystem() {
               <div className="flex flex-col gap-2">
                 <Button variant="outline" size="sm" onClick={() => handleOpenGroup(group)}>
                   <Eye className="mr-2 h-4 w-4" />
-                  View Details
+                  View Details;
                 </Button>
 
                 <div className="flex gap-2">
@@ -703,13 +701,13 @@ export default function GroupManagementSystem() {
                     <>
                       <Button size="sm" className="flex-1">
                         <MessageCircle className="mr-2 h-4 w-4" />
-                        Chat
+                        Chat;
                       </Button>
                       {!group.isOwner && (
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button variant="outline" size="sm">
-                              Leave
+                              Leave;
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
@@ -722,7 +720,7 @@ export default function GroupManagementSystem() {
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction onClick={() => handleLeaveGroup(group)}>
-                                Leave Group
+                                Leave Group;
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
@@ -772,7 +770,7 @@ export default function GroupManagementSystem() {
                         <div className="flex items-center gap-3">
                           <Avatar>
                             <AvatarImage src={member.user.avatar || "/placeholder.svg"} />
-                            <AvatarFallback>{member.user.name?.charAt(0) ?? "?"}</AvatarFallback>
+                            <AvatarFallback>{member.user.name?.charAt(0) ?? &quot;?"}</AvatarFallback>
                           </Avatar>
                           <div>
                             <div className="flex items-center gap-2">
@@ -790,9 +788,9 @@ export default function GroupManagementSystem() {
 
                         {selectedGroup.isOwner && member.role !== "owner" && (
                           <div className="flex items-center gap-2">
-                            <Select
+                            <Select;
                               value={member.role}
-                              disabled
+                              disabled;
                               onValueChange={(value) => handleRoleChange(member.id, value)}
                             >
                               <SelectTrigger className="w-32">
@@ -821,7 +819,7 @@ export default function GroupManagementSystem() {
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>Close</AlertDialogCancel>
                                   <AlertDialogAction onClick={() => handleRemoveMember(member.id)}>
-                                    Acknowledge
+                                    Acknowledge;
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>

@@ -17,11 +17,11 @@ type RegisterData = APIRegisterData;
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 const normalizeUser = (data: APIUser | null): User | null => {}
-  if (!data) {
+  if (!data) {}
     return null;
   }
 
-  return {
+  return {}
     ...data,
     avatar: data.avatar ?? undefined,
   }
@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
   }, [user])
 
   // Keep local state in sync with storage updates;
-  useEffect(() => {
+  useEffect(() => {}
     const unsubscribe = tokenStorage.subscribe((nextAccessToken, nextRefreshToken) => {}
       setAccessToken(nextAccessToken)
       setRefreshToken(nextRefreshToken)
@@ -61,13 +61,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
   }, [])
 
   // Check for existing session on mount;
-  useEffect(() => {
+  useEffect(() => {}
     checkAuthStatus()
   }, [])
 
   // Auto-refresh token;
-  useEffect(() => {
-    if (isAuthenticated) {
+  useEffect(() => {}
+    if (isAuthenticated) {}
       const interval = setInterval(
         () => {}
           refreshTokens().catch(() => {}
@@ -81,10 +81,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
     }
   }, [isAuthenticated])
 
-  const checkAuthStatus = async () => {
-    try {
+  const checkAuthStatus = async () => {}
+    try {}
       // Check if we're in the browser environment;
-      if (typeof window === 'undefined') {
+      if (typeof window === 'undefined') {}
         setIsLoading(false)
         return;
       }
@@ -96,7 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
 
   const userData = await authAPI.getProfile()
   setUser(normalizeUser(userData))
-    } } catch {
+    } } catch {}
       console.error("Auth check failed:", error)
       tokenStorage.clearTokens()
       setAccessToken(null)
@@ -108,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
   }
 
   const login = async (email: string, password: string) => {}
-    try {
+    try {}
       const response = await authAPI.login({ email, password })
 
       tokenStorage.setTokens({}
@@ -120,23 +120,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
       setUser(normalizedUser)
 
       // Redirect based on user role;
-      if (normalizedUser?.role === "admin") {
+      if (normalizedUser?.role === "admin") {}
         router.push("/dashboard/admin")
       } else {}
         router.push("/dashboard")
       }
-    } } catch {
+    } } catch {}
       console.error("Login error:", error)
       throw error;
     }
   }
 
   const register = async (userData: RegisterData) => {}
-    try {
+    try {}
       const response = await authAPI.register(userData)
 
       // Auto-login after successful registration;
-      if (response.access_token && response.refresh_token) {
+      if (response.access_token && response.refresh_token) {}
         tokenStorage.setTokens({}
           accessToken: response.access_token,
           refreshToken: response.refresh_token,
@@ -147,15 +147,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
         // Email verification required;
         router.push("/login?message=Please check your email to verify your account")
       }
-    } } catch {
+    } } catch {}
       throw error;
     }
   }
 
-  const logout = async () => {
-    try {
+  const logout = async () => {}
+    try {}
       await authAPI.logout()
-    } } catch {
+    } } catch {}
       // Continue with logout even if API call fails;
       console.error("Logout API call failed:", error)
     } finally {}
@@ -168,75 +168,75 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
   }
 
   const forgotPassword = async (email: string) => {}
-    try {
+    try {}
       await authAPI.forgotPassword({ email })
-    } } catch {
+    } } catch {}
       throw error;
     }
   }
 
   const resetPassword = async (token: string, password: string) => {}
-    try {
+    try {}
       await authAPI.resetPassword({}
         token, 
         new_password: password,
         confirm_password: password;
       })
-    } } catch {
+    } } catch {}
       throw error;
     }
   }
 
   const verifyEmail = async (token: string) => {}
-    try {
+    try {}
       await authAPI.verifyEmail(token)
 
       // Update user data;
-      if (user) {
+      if (user) {}
         setUser({ ...user, isEmailVerified: true })
       }
-    } } catch {
+    } } catch {}
       throw error;
     }
   }
 
-  const resendVerification = async () => {
-    try {
-      if (!user?.email) {
+  const resendVerification = async () => {}
+    try {}
+      if (!user?.email) {}
         throw new Error("No user email available for verification resend")
       }
 
       await authAPI.resendVerification(user.email)
-    } } catch {
+    } } catch {}
       throw error;
     }
   }
 
   const socialLogin = async (provider: "google" | "github") => {}
-    try {
+    try {}
       const redirectUri = `${window.location.origin}/callback?provider=${provider}`
 
       const data = await authAPI.getSocialAuthUrl(provider, redirectUri)
 
-      if (data?.redirect_url) {
+      if (data?.redirect_url) {}
         window.location.href = data.redirect_url;
       } else {}
         throw new Error("No redirect URL received")
       }
-    } } catch {
+    } } catch {}
       console.error("Social login error:", error)
       throw error;
     }
   }
 
-  const refreshTokens = async () => {
-    try {
-      if (typeof window === 'undefined') {
+  const refreshTokens = async () => {}
+    try {}
+      if (typeof window === 'undefined') {}
         throw new Error("Cannot refresh token on server side")
       }
 
       const currentRefreshToken = tokenStorage.getRefreshToken()
-      if (!currentRefreshToken) {
+      if (!currentRefreshToken) {}
         throw new Error("No refresh token available")
       }
 
@@ -246,7 +246,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
   // Get updated user data;
   const userData = await authAPI.getProfile()
   setUser(normalizeUser(userData))
-    } } catch {
+    } } catch {}
       tokenStorage.clearTokens()
       setAccessToken(null)
       setRefreshToken(null)
@@ -256,9 +256,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
   }
 
   const updateProfile = async (data: Partial<User>) => {}
-    try {
+    try {}
       // Convert User data to UserProfile format for the API;
-      const profileData = { bio: (data as Record<string, unknown>).bio,
+      const profileData = { bio: (data as Record<string, unknown>).bio,}
         timezone: (data as Record<string, unknown>).timezone,
         language: (data as Record<string, unknown>).language,
         // Add other profile fields as needed;
@@ -266,14 +266,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
       const response = await usersAPI.updateProfile(profileData)
       const { profile, ...userData } = response;
       setUser(normalizeUser(userData))
-    } } catch {
+    } } catch {}
       throw error;
     }
   }
 
   const updateUser = (userData: Partial<User>) => {}
     setUser((prev) => {}
-      if (!prev) {
+      if (!prev) {}
         return null;
       }
 
@@ -282,7 +282,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
         ...userData,
       }
 
-      if ("avatar" in next) {
+      if ("avatar" in next) {}
         next.avatar = next.avatar ?? undefined;
       }
 
@@ -290,14 +290,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
     })
   }
 
-  const refreshUser = async () => {
-    try {
+  const refreshUser = async () => {}
+    try {}
       setIsLoading(true)
       if (tokenStorage.hasAccessToken()) {}
         const userData = await authAPI.getProfile()
         setUser(normalizeUser(userData))
       }
-    } } catch {
+    } } catch {}
       console.error("Failed to refresh user:", error)
     } finally {}
       setIsLoading(false)
@@ -327,9 +327,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {}
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-export function useAuth() {
+export function useAuth() {}
   const context = useContext(AuthContext)
-  if (context === undefined) {
+  if (context === undefined) {}
     throw new Error("useAuth must be used within an AuthProvider")
   }
   return context;

@@ -1,5 +1,3 @@
-"use client"
-
 import { AlertTriangle, Calendar, Check, CheckCircle, ChevronRight, External, Eye, File, FileText, Filter, Flag, Loader2, Search, Shield, User, Video, X, XCircle } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { useRouter } from "next/navigation"
@@ -14,77 +12,79 @@ import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
 import { formatDistanceToNow, format, parseISO } from "date-fns"
 
+"use client"
+
 interface ReportedUser {}
-  id: string
-  username: string
-  first_name: string
-  last_name: string
-  email: string
-  avatar?: string
-  is_verified: boolean
-  account_created: string
-  last_active: string
-  total_reports: number
-  is_banned: boolean
-  ban_reason?: string
+  id: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  avatar?: string;
+  is_verified: boolean;
+  account_created: string;
+  last_active: string;
+  total_reports: number;
+  is_banned: boolean;
+  ban_reason?: string;
 }
 
 interface Reporter {}
-  id: string
-  username: string
-  first_name: string
-  last_name: string
-  avatar?: string
-  is_verified: boolean
+  id: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  avatar?: string;
+  is_verified: boolean;
 }
 
 interface ReportContent {}
-  id: string
+  id: string;
   type: "message" | "party" | "profile" | "video" | "comment"
-  content?: string
-  url?: string
-  thumbnail?: string
-  title?: string
-  created_at: string
+  content?: string;
+  url?: string;
+  thumbnail?: string;
+  title?: string;
+  created_at: string;
 }
 
 interface Report {}
-  id: string
+  id: string;
   type: "user" | "content" | "party" | "harassment" | "spam" | "inappropriate_content" | "copyright" | "other"
-  category: string
-  reason: string
-  description?: string
+  category: string;
+  reason: string;
+  description?: string;
   severity: "low" | "medium" | "high" | "critical"
   status: "pending" | "under_review" | "resolved" | "dismissed" | "escalated"
-  created_at: string
-  updated_at: string
-  reporter: Reporter
-  reported_user?: ReportedUser
-  reported_content?: ReportContent
-  admin_notes?: string
-  resolution?: string
+  created_at: string;
+  updated_at: string;
+  reporter: Reporter;
+  reported_user?: ReportedUser;
+  reported_content?: ReportContent;
+  admin_notes?: string;
+  resolution?: string;
   resolved_by?: {}
-    id: string
-    username: string
-    first_name: string
-    last_name: string
+    id: string;
+    username: string;
+    first_name: string;
+    last_name: string;
   }
-  resolved_at?: string
+  resolved_at?: string;
   evidence_urls: string[]
-  priority_score: number
-  is_automated: boolean
-  related_reports_count: number
+  priority_score: number;
+  is_automated: boolean;
+  related_reports_count: number;
 }
 
 interface FilterOptions {}
-  status: string
-  type: string
-  severity: string
-  timeRange: string
-  assignedToMe: boolean
+  status: string;
+  type: string;
+  severity: string;
+  timeRange: string;
+  assignedToMe: boolean;
 }
 
-export default function ReportsManagementPage() {
+export default function ReportsManagementPage() {}
   const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
@@ -100,29 +100,29 @@ export default function ReportsManagementPage() {
     type: "all", 
     severity: "all",
     timeRange: "all",
-    assignedToMe: false
+    assignedToMe: false;
   })
 
-  useEffect(() => {
-    // Check if user has admin permissions
-    if (!user?.is_staff && !user?.is_superuser) {
+  useEffect(() => {}
+    // Check if user has admin permissions;
+    if (!user?.is_staff && !user?.is_superuser) {}
       router.push("/dashboard")
-      return
+      return;
     }
     loadReports()
   }, [user, router])
 
-  useEffect(() => {
+  useEffect(() => {}
     filterReports()
   }, [reports, searchQuery, filters])
 
-  const loadReports = async () => {
-    try {
-      const data = await adminAPI.getReports({status: filters.status !== "all" ? filters.status as Record<string, unknown> : undefined,
-        page: 1, // You can add pagination later
+  const loadReports = async () => {}
+    try {}
+      const data = await adminAPI.getReports({status: filters.status !== "all" ? filters.status as Record<string, unknown> : undefined,}
+        page: 1, // You can add pagination later;
       })
       setReports(data.results || [])
-    } catch (err) {
+    } catch {}
       console.error("Failed to load reports:", error)
       if ((error as Record<string, unknown>)?.response?.status === 403) {}
         toast({title: "Access Denied",
@@ -136,7 +136,7 @@ export default function ReportsManagementPage() {
           variant: "destructive",
         })
       }
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
@@ -144,7 +144,7 @@ export default function ReportsManagementPage() {
   const filterReports = () => {}
     let filtered = [...reports]
 
-    // Search filter
+    // Search filter;
     if (searchQuery.trim()) {}
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(report =>
@@ -156,45 +156,45 @@ export default function ReportsManagementPage() {
       )
     }
 
-    // Status filter
-    if (filters.status !== "all") {
+    // Status filter;
+    if (filters.status !== "all") {}
       filtered = filtered.filter(report => report.status === filters.status)
     }
 
-    // Type filter
-    if (filters.type !== "all") {
+    // Type filter;
+    if (filters.type !== "all") {}
       filtered = filtered.filter(report => report.type === filters.type)
     }
 
-    // Severity filter
-    if (filters.severity !== "all") {
+    // Severity filter;
+    if (filters.severity !== "all") {}
       filtered = filtered.filter(report => report.severity === filters.severity)
     }
 
-    // Time range filter
-    if (filters.timeRange !== "all") {
+    // Time range filter;
+    if (filters.timeRange !== "all") {}
       const now = new Date()
       filtered = filtered.filter(report => {}
         const reportDate = parseISO(report.created_at)
         const daysDiff = (now.getTime() - reportDate.getTime()) / (1000 * 60 * 60 * 24)
-        switch (filters.timeRange) {
+        switch (filters.timeRange) {}
           case "today":
-            return daysDiff <= 1
+            return daysDiff <= 1;
           case "week":
-            return daysDiff <= 7
+            return daysDiff <= 7;
           case "month":
-            return daysDiff <= 30
+            return daysDiff <= 30;
           default:
-            return true
+            return true;
         }
       })
     }
 
-    // Sort by priority and date
+    // Sort by priority and date;
     filtered.sort((a, b) => {}
       // First by priority score (high to low)
-      if (a.priority_score !== b.priority_score) {
-        return b.priority_score - a.priority_score
+      if (a.priority_score !== b.priority_score) {}
+        return b.priority_score - a.priority_score;
       }
       // Then by creation date (newest first)
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
@@ -206,35 +206,35 @@ export default function ReportsManagementPage() {
   const updateReportStatus = async (reportId: string, status: string, resolution?: string, adminNotes?: string) => {}
     setProcessingActions(prev => new Set(prev).add(reportId))
 
-    try {
+    try {}
       await adminAPI.resolveReport(reportId, {}
         action: status === "resolved" ? "dismiss" : status as Record<string, unknown>,
         reason: resolution || adminNotes,
       })
 
-      await loadReports() // Reload reports to get updated data
+      await loadReports() // Reload reports to get updated data;
       toast({title: "Report Updated",
         description: `Report has been ${status === "resolved" ? "resolved" : status}.`,
       })
 
-      if (selectedReport?.id === reportId) {
-        // Update the selected report from the refreshed data
+      if (selectedReport?.id === reportId) {}
+        // Update the selected report from the refreshed data;
         const updatedReport = reports.find(r => r.id === reportId)
-        if (updatedReport) {
+        if (updatedReport) {}
           setSelectedReport(updatedReport)
         }
       }
-    } catch (err) {
+    } catch {}
       console.error("Update report error:", error)
       toast({title: "Error",
         description: "Failed to update report status.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setProcessingActions(prev => {}
         const newSet = new Set(prev)
         newSet.delete(reportId)
-        return newSet
+        return newSet;
       })
     }
   }
@@ -242,7 +242,7 @@ export default function ReportsManagementPage() {
   const takeAction = async (reportId: string, action: string, reason?: string) => {}
     setProcessingActions(prev => new Set(prev).add(reportId))
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/admin/actions/`, {}
         method: "POST",
@@ -253,12 +253,12 @@ export default function ReportsManagementPage() {
         body: JSON.stringify({report_id: reportId,
           action,
           reason,
-          admin_id: user?.id
+          admin_id: user?.id;
         }),
       })
 
-      if (response.ok) {
-        await loadReports() // Reload to get updated data
+      if (response.ok) {}
+        await loadReports() // Reload to get updated data;
         const actionMessages = { ban_user: "User has been banned",
           suspend_user: "User has been suspended", 
           remove_content: "Content has been removed",
@@ -272,23 +272,23 @@ export default function ReportsManagementPage() {
       } else {}
         throw new Error("Failed to take action")
       }
-    } catch (err) {
+    } catch {}
       console.error("Take action error:", error)
       toast({title: "Error",
         description: "Failed to take action on report.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setProcessingActions(prev => {}
         const newSet = new Set(prev)
         newSet.delete(reportId)
-        return newSet
+        return newSet;
       })
     }
   }
 
   const getStatusColor = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case "pending":
         return "bg-yellow-100 text-yellow-800"
       case "under_review":
@@ -305,7 +305,7 @@ export default function ReportsManagementPage() {
   }
 
   const getSeverityColor = (severity: string) => {}
-    switch (severity) {
+    switch (severity) {}
       case "critical":
         return "bg-red-100 text-red-800 border-red-200"
       case "high":
@@ -320,7 +320,7 @@ export default function ReportsManagementPage() {
   }
 
   const getTypeIcon = (type: string) => {}
-    switch (type) {
+    switch (type) {}
       case "user":
         return <User className="h-4 w-4" />
       case "content":
@@ -338,11 +338,11 @@ export default function ReportsManagementPage() {
     }
   }
 
-  if (!user?.is_staff && !user?.is_superuser) {
-    return null // Will redirect in useEffect
+  if (!user?.is_staff && !user?.is_superuser) {}
+    return null // Will redirect in useEffect;
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -361,16 +361,16 @@ export default function ReportsManagementPage() {
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <Shield className="h-8 w-8" />
-              Reports Management
+              Reports Management;
             </h1>
             <p className="text-gray-600 mt-2">Review and moderate user reports</p>
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline">
-              {filteredReports.filter(r => r.status === "pending").length} Pending
+              {filteredReports.filter(r => r.status === &quot;pending").length} Pending;
             </Badge>
             <Badge variant="outline">
-              {filteredReports.filter(r => r.severity === "critical" || r.severity === "high").length} High Priority
+              {filteredReports.filter(r => r.severity === &quot;critical" || r.severity === "high").length} High Priority;
             </Badge>
           </div>
         </div>
@@ -383,7 +383,7 @@ export default function ReportsManagementPage() {
               <div className="flex-1">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                  <Input
+                  <Input;
                     placeholder="Search reports, users, or reasons..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -394,7 +394,7 @@ export default function ReportsManagementPage() {
 
               {/* Filter dropdowns */}
               <div className="flex gap-2">
-                <Select
+                <Select;
                   value={filters.status}
                   onValueChange={(value) => setFilters(prev => ({ ...prev, status: value }))}
                 >
@@ -411,7 +411,7 @@ export default function ReportsManagementPage() {
                   </SelectContent>
                 </Select>
 
-                <Select
+                <Select;
                   value={filters.severity}
                   onValueChange={(value) => setFilters(prev => ({ ...prev, severity: value }))}
                 >
@@ -427,7 +427,7 @@ export default function ReportsManagementPage() {
                   </SelectContent>
                 </Select>
 
-                <Select
+                <Select;
                   value={filters.type}
                   onValueChange={(value) => setFilters(prev => ({ ...prev, type: value }))}
                 >
@@ -444,7 +444,7 @@ export default function ReportsManagementPage() {
                   </SelectContent>
                 </Select>
 
-                <Select
+                <Select;
                   value={filters.timeRange}
                   onValueChange={(value) => setFilters(prev => ({ ...prev, timeRange: value }))}
                 >
@@ -473,7 +473,7 @@ export default function ReportsManagementPage() {
                     <Shield className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No reports found</h3>
                     <p className="text-gray-600">
-                      {searchQuery || Object.values(filters).some(f => f !== "all" && f !== false)
+                      {searchQuery || Object.values(filters).some(f => f !== &quot;all" && f !== false)
                         ? "Try adjusting your search or filters"
                         : "All caught up! No pending reports to review"
                       }
@@ -482,7 +482,7 @@ export default function ReportsManagementPage() {
                 </Card>
               ) : (
                 filteredReports.map((report) => (
-                  <Card
+                  <Card;
                     key={report.id} 
                     className={`cursor-pointer transition-all hover:shadow-md ${}
                       selectedReport?.id === report.id ? "ring-2 ring-blue-500" : ""
@@ -503,7 +503,7 @@ export default function ReportsManagementPage() {
                           )}
                           {report.related_reports_count > 0 && (
                             <Badge variant="outline" className="text-xs">
-                              +{report.related_reports_count} similar
+                              +{report.related_reports_count} similar;
                             </Badge>
                           )}
                         </div>
@@ -564,7 +564,7 @@ export default function ReportsManagementPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     {getTypeIcon(selectedReport.type)}
-                    Report Details
+                    Report Details;
                   </CardTitle>
                   <CardDescription>
                     ID: {selectedReport.id.slice(0, 8)}...
@@ -589,7 +589,7 @@ export default function ReportsManagementPage() {
                       </div>
                       <div className="flex justify-between">
                         <span>Created:</span>
-                        <span>{format(parseISO(selectedReport.created_at), "MMM d, yyyy")}</span>
+                        <span>{format(parseISO(selectedReport.created_at), &quot;MMM d, yyyy")}</span>
                       </div>
                     </div>
                   </div>
@@ -642,7 +642,7 @@ export default function ReportsManagementPage() {
                         </div>
                         <div className="flex justify-between">
                           <span>Status:</span>
-                          <span>{selectedReport.reported_user.is_banned ? "Banned" : "Active"}</span>
+                          <span>{selectedReport.reported_user.is_banned ? &quot;Banned" : "Active"}</span>
                         </div>
                       </div>
                     </div>
@@ -654,12 +654,12 @@ export default function ReportsManagementPage() {
                       <h4 className="font-medium mb-2">Evidence</h4>
                       <div className="space-y-2">
                         {selectedReport.evidence_urls.map((url, index) => (
-                          <Button
+                          <Button;
                             key={index}
                             variant="outline"
                             size="sm"
                             className="w-full justify-start"
-                            onClick={() => window.open(url, "_blank")}
+                            onClick={() => window.open(url, &quot;_blank")}
                           >
                             <ExternalLink className="h-4 w-4 mr-2" />
                             Evidence {index + 1}
@@ -700,55 +700,55 @@ export default function ReportsManagementPage() {
                     <div className="space-y-2">
                       <h4 className="font-medium">Quick Actions</h4>
                       <div className="grid grid-cols-2 gap-2">
-                        <Button
+                        <Button;
                           variant="outline"
                           size="sm"
-                          onClick={() => updateReportStatus(selectedReport.id, "under_review")}
+                          onClick={() => updateReportStatus(selectedReport.id, &quot;under_review")}
                           disabled={processingActions.has(selectedReport.id)}
                         >
                           <Eye className="h-4 w-4 mr-1" />
-                          Review
+                          Review;
                         </Button>
-                        <Button
+                        <Button;
                           variant="outline"
                           size="sm"
-                          onClick={() => updateReportStatus(selectedReport.id, "dismissed", "No violation found")}
+                          onClick={() => updateReportStatus(selectedReport.id, &quot;dismissed", "No violation found")}
                           disabled={processingActions.has(selectedReport.id)}
                         >
                           <XCircle className="h-4 w-4 mr-1" />
-                          Dismiss
+                          Dismiss;
                         </Button>
                       </div>
 
                       {selectedReport.reported_user && (
                         <div className="space-y-2">
-                          <Button
+                          <Button;
                             variant="destructive"
                             size="sm"
                             className="w-full"
-                            onClick={() => takeAction(selectedReport.id, "ban_user", "Violation of community guidelines")}
+                            onClick={() => takeAction(selectedReport.id, &quot;ban_user", "Violation of community guidelines")}
                             disabled={processingActions.has(selectedReport.id)}
                           >
                             <Ban className="h-4 w-4 mr-1" />
-                            Ban User
+                            Ban User;
                           </Button>
-                          <Button
+                          <Button;
                             variant="outline"
                             size="sm"
                             className="w-full"
-                            onClick={() => takeAction(selectedReport.id, "warn_user", "Warning for reported behavior")}
+                            onClick={() => takeAction(selectedReport.id, &quot;warn_user", "Warning for reported behavior")}
                             disabled={processingActions.has(selectedReport.id)}
                           >
                             <AlertTriangle className="h-4 w-4 mr-1" />
-                            Warn User
+                            Warn User;
                           </Button>
                         </div>
                       )}
 
-                      <Button
+                      <Button;
                         size="sm"
                         className="w-full"
-                        onClick={() => updateReportStatus(selectedReport.id, "resolved", "Issue has been addressed")}
+                        onClick={() => updateReportStatus(selectedReport.id, &quot;resolved", "Issue has been addressed")}
                         disabled={processingActions.has(selectedReport.id)}
                       >
                         {processingActions.has(selectedReport.id) ? (
@@ -756,7 +756,7 @@ export default function ReportsManagementPage() {
                         ) : (
                           <CheckCircle className="h-4 w-4 mr-1" />
                         )}
-                        Mark Resolved
+                        Mark Resolved;
                       </Button>
                     </div>
                   ) : (

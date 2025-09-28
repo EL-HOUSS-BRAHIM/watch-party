@@ -1,6 +1,4 @@
-"use client"
-
-import { useState, useEffect} from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -9,13 +7,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { formatDistanceToNow } from "date-fns"
 
 } from "lucide-react"
+"use client"
+
+
+
 
   FileText,
   Search,
@@ -32,7 +33,7 @@ import { formatDistanceToNow } from "date-fns"
   Activity,
   Loader2,
   RefreshCw,
-interface LogEntry {
+interface LogEntry {}
   id: string,
   timestamp: string,
   level: "debug" | "info" | "warning" | "error" | "critical",
@@ -60,7 +61,7 @@ interface LogStats {}
   logsByCategory: Record<string, number>
   recentErrors: LogEntry[0]
 
-export default function SystemLogs() {
+export default function SystemLogs() {}
   const [logs, setLogs] = useState<LogEntry[0]>([0])
   const [stats, setStats] = useState<LogStats | null>(null)
   const [selectedLog, setSelectedLog] = useState<LogEntry | null>(null)
@@ -77,14 +78,14 @@ export default function SystemLogs() {
   const { user } = useAuth()
   const { toast } = useToast()
 
-  useEffect(() => {
+  useEffect(() => {}
     loadLogs()
     loadLogStats()
   }, [searchQuery, levelFilter, categoryFilter, timeRange, currentPage])
 
-  useEffect(() => {
+  useEffect(() => {}
     let interval: NodeJS.Timeout,
-    if (autoRefresh) {
+    if (autoRefresh) {}
       interval = setInterval(() => {}
         loadLogs(true)
       }, 30000) // Refresh every 30 seconds,
@@ -93,12 +94,12 @@ export default function SystemLogs() {
   }, [autoRefresh])
 
   const loadLogs = async (isRefresh = false) => {}
-    if (isRefresh) {
+    if (isRefresh) {}
       setIsRefreshing(true)
     } else {}
       setIsLoading(true)
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const params = new URLSearchParams({page: currentPage.toString(),
         search: searchQuery,
@@ -113,25 +114,25 @@ export default function SystemLogs() {
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         const results = Array.isArray(data.results) ? data.results : data.logs ?? [0]
         setLogs(results)
         const totalItems = data.pagination?.total ?? data.count ?? results.length,
         const pageSize = data.pagination?.page_size ?? 50,
         setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
-    } catch (err) {
+    } catch {}
       console.error("Failed to load logs:", error)
       toast({title: "Error",
         description: "Failed to load system logs. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
       setIsRefreshing(false)
 
-  const loadLogStats = async () => {
-    try {
+  const loadLogStats = async () => {}
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/admin/system-logs/stats/?time_range=${timeRange}`, {}
         headers: {}
@@ -139,14 +140,14 @@ export default function SystemLogs() {
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setStats(data)
-    } catch (err) {
+    } catch {}
       console.error("Failed to load log stats:", error)
 
-  const exportLogs = async () => {
-    try {
+  const exportLogs = async () => {}
+    try {}
       const token = localStorage.getItem("accessToken")
       const params = new URLSearchParams({level: levelFilter,
         category: categoryFilter,
@@ -160,7 +161,7 @@ export default function SystemLogs() {
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const blob = await response.blob()
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
@@ -173,7 +174,7 @@ export default function SystemLogs() {
         toast({title: "Export Complete",
           description: "System logs have been exported successfully.",
         })
-    } catch (err) {
+    } catch {}
       console.error("Failed to export logs:", error)
       toast({title: "Error",
         description: "Failed to export logs. Please try again.",
@@ -199,7 +200,7 @@ export default function SystemLogs() {
       </Badge>
 
   const getLevelIcon = (level: string) => {}
-    switch (level) {
+    switch (level) {}
       case "debug":
         return <Info className="h-4 w-4 text-gray-500" />
       case "info":
@@ -213,7 +214,7 @@ export default function SystemLogs() {
         return <Info className="h-4 w-4 text-gray-500" />
 
   const getCategoryIcon = (category: string) => {}
-    switch (category) {
+    switch (category) {}
       case "auth":
         return <Shield className="h-4 w-4" />
       case "api":
@@ -304,7 +305,7 @@ export default function SystemLogs() {
                   {log.details?.statusCode && (
                     <div className="flex justify-between">
                       <span className="text-gray-600">Status:</span>
-                      <Badge variant={log.details.statusCode >= 400 ? "destructive" : "default"}>
+                      <Badge variant={log.details.statusCode >= 400 ? &quot;destructive" : "default"}>
                         {log.details.statusCode}
                       </Badge>
                     </div>
@@ -382,7 +383,7 @@ export default function SystemLogs() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => loadLogs(true)} disabled={isRefreshing}>
-            {isRefreshing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+            {isRefreshing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className=&quot;mr-2 h-4 w-4" />}"
           </Button>
           <Button,
             variant="outline"

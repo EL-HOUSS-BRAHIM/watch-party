@@ -1,23 +1,22 @@
-"use client"
-
 import { Heart, Star } from "lucide-react"
 import { useState } from 'react'
-
 import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid'
+
+"use client"
 
   ChatBubbleLeftEllipsisIcon,
   StarIcon,
   HeartIcon,
   LightBulbIcon,
   ExclamationTriangleIcon,
-  PaperAirplaneIcon
+  PaperAirplaneIcon;
 } from '@heroicons/react/24/outline'
 interface FeedbackCategory {}
-  id: string
-  name: string
-  icon: React.ReactNode
-  description: string
-  color: string
+  id: string;
+  name: string;
+  icon: React.ReactNode;
+  description: string;
+  color: string;
 }
 
 const feedbackCategories: FeedbackCategory[] = []
@@ -51,8 +50,8 @@ const feedbackCategories: FeedbackCategory[] = []
   }
 ]
 
-export default function FeedbackPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('')
+export default function FeedbackPage() {}
+  const [selectedCategory, setSelectedCategory] = useState<string>(&apos;')
   const [rating, setRating] = useState<number>(0)
   const [subject, setSubject] = useState('')
   const [description, setDescription] = useState('')
@@ -62,13 +61,13 @@ export default function FeedbackPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {}
     e.preventDefault()
-    if (!selectedCategory || !subject || !description) return
+    if (!selectedCategory || !subject || !description) return;
     setIsSubmitting(true)
-    // Simulate API call
+    // Simulate API call;
     await new Promise(resolve => setTimeout(resolve, 2000))
     setIsSubmitting(false)
     setSubmitted(true)
-    // Reset form after 3 seconds
+    // Reset form after 3 seconds;
     setTimeout(() => {}
       setSubmitted(false)
       setSelectedCategory('')
@@ -79,7 +78,7 @@ export default function FeedbackPage() {
     }, 3000)
   }
 
-  if (submitted) {
+  if (submitted) {}
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <div className="max-w-md mx-auto px-4 text-center">
@@ -109,7 +108,7 @@ export default function FeedbackPage() {
             <h1 className="text-4xl font-bold text-white">Share Your Feedback</h1>
           </div>
           <p className="text-white/70 text-lg">
-            Help us improve WatchParty by sharing your thoughts, ideas, and experiences
+            Help us improve WatchParty by sharing your thoughts, ideas, and experiences;
           </p>
         </div>
 
@@ -119,12 +118,12 @@ export default function FeedbackPage() {
             <h2 className="text-xl font-bold text-white mb-4">What type of feedback do you have?</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {feedbackCategories.map(category => (
-                <button
+                <button;
                   key={category.id}
                   type="button"
                   onClick={() => setSelectedCategory(category.id)}
                   className={`p-6 rounded-lg border-2 transition-all text-left ${}
-                    selectedCategory === category.id
+                    selectedCategory === category.id;
                       ? 'border-white bg-white/10'
                       : 'border-white/20 bg-white/5 hover:bg-white/10'
                   }`}
@@ -149,7 +148,7 @@ export default function FeedbackPage() {
               <h2 className="text-xl font-bold text-white mb-4">How would you rate your overall experience?</h2>
               <div className="flex gap-2">
                 {[1, 2, 3, 4, 5].map(star => (
-                  <button
+                  <button;
                     key={star}
                     type="button"
                     onClick={() => setRating(star)}
@@ -184,13 +183,13 @@ export default function FeedbackPage() {
                 {selectedCategory === 'improvement' && 'What\'s on your mind?'}
                 {selectedCategory === 'compliment' && 'What do you love most?'}
               </label>
-              <input
+              <input;
                 type="text"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 placeholder="Brief summary of your feedback..."
                 className="w-full px-4 py-3 bg-white/10 rounded-lg border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-green-400"
-                required
+                required;
               />
             </div>
           )}
@@ -201,16 +200,16 @@ export default function FeedbackPage() {
               <label className="block text-xl font-bold text-white mb-4">
                 Tell us more (optional)
               </label>
-              <textarea
+              <textarea;
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Provide more details about your feedback..."
                 rows={6}
                 className="w-full px-4 py-3 bg-white/10 rounded-lg border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-green-400 resize-vertical"
-                required
+                required;
               />
               <p className="text-white/50 text-sm mt-2">
-                {description.length}/1000 characters
+                {description.length}/1000 characters;
               </p>
             </div>
           )}
@@ -221,7 +220,7 @@ export default function FeedbackPage() {
               <label className="block text-xl font-bold text-white mb-4">
                 Email (optional)
               </label>
-              <input
+              <input;
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -229,7 +228,7 @@ export default function FeedbackPage() {
                 className="w-full px-4 py-3 bg-white/10 rounded-lg border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-green-400"
               />
               <p className="text-white/50 text-sm mt-2">
-                Leave your email if you'd like us to follow up with you
+                Leave your email if you'd like us to follow up with you;
               </p>
             </div>
           )}
@@ -237,7 +236,7 @@ export default function FeedbackPage() {
           {/* Submit Button */}
           {selectedCategory && subject && description && (
             <div className="flex justify-center">
-              <button
+              <button;
                 type="submit"
                 disabled={isSubmitting}
                 className="flex items-center gap-2 bg-green-500 hover:bg-green-600 disabled:bg-green-500/50 text-white px-8 py-4 rounded-lg font-bold text-lg transition-colors"
@@ -250,7 +249,7 @@ export default function FeedbackPage() {
                 ) : (
                   <>
                     <PaperAirplaneIcon className="w-5 h-5" />
-                    Submit Feedback
+                    Submit Feedback;
                   </>
                 )}
               </button>

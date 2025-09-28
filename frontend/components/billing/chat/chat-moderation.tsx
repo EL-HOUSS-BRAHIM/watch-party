@@ -1,5 +1,3 @@
-"use client"
-
 import { Clock, Eye, Filter, Flag, Settings, Shield, Trash, X } from "lucide-react"
 import { useState, useEffect } from 'react'
 import Image from "next/image"
@@ -15,55 +13,57 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useSocket } from '@/contexts/socket-context'
 
+"use client"
+
 interface ChatModerationProps {}
-  partyId: string
-  isHost: boolean
-  isModerator: boolean
+  partyId: string;
+  isHost: boolean;
+  isModerator: boolean;
   messages: Array<{}
-    id: string
-    content: string
+    id: string;
+    content: string;
     author: {}
-      id: string
-      username: string
-      avatar: string
+      id: string;
+      username: string;
+      avatar: string;
     }
-    timestamp: string
-    isDeleted: boolean
-    isHidden: boolean
-    reports: number
+    timestamp: string;
+    isDeleted: boolean;
+    isHidden: boolean;
+    reports: number;
   }>
   participants: Array<{}
-    id: string
-    username: string
-    avatar: string
+    id: string;
+    username: string;
+    avatar: string;
     role: 'host' | 'moderator' | 'participant'
-    isMuted: boolean
-    isBanned: boolean
-    warnings: number
+    isMuted: boolean;
+    isBanned: boolean;
+    warnings: number;
   }>
 }
 
 interface ModerationSettings {}
-  slowMode: boolean
-  slowModeDelay: number // seconds
-  wordFilter: boolean
+  slowMode: boolean;
+  slowModeDelay: number // seconds;
+  wordFilter: boolean;
   bannedWords: string[]
-  linkFilter: boolean
-  spamProtection: boolean
-  requireApproval: boolean
-  autoModeration: boolean
+  linkFilter: boolean;
+  spamProtection: boolean;
+  requireApproval: boolean;
+  autoModeration: boolean;
 }
 
 interface ModerationAction {}
-  id: string
+  id: string;
   type: 'mute' | 'ban' | 'warn' | 'delete' | 'timeout'
-  targetId: string
-  targetUsername: string
-  moderatorId: string
-  moderatorUsername: string
-  reason: string
-  duration?: number // minutes
-  timestamp: string
+  targetId: string;
+  targetUsername: string;
+  moderatorId: string;
+  moderatorUsername: string;
+  reason: string;
+  duration?: number // minutes;
+  timestamp: string;
 }
 
 export function ChatModeration({ partyId, isHost, isModerator, messages, participants }: ChatModerationProps) {}
@@ -75,7 +75,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
     linkFilter: false,
     spamProtection: true,
     requireApproval: false,
-    autoModeration: false
+    autoModeration: false;
   })
   const [actions, setActions] = useState<ModerationAction[]>([])
   const [selectedUser, setSelectedUser] = useState<string | null>(null)
@@ -83,18 +83,18 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
   const [showLogs, setShowLogs] = useState(false)
   const [newBannedWord, setNewBannedWord] = useState('')
   const [banReason, setBanReason] = useState('')
-  const [banDuration, setBanDuration] = useState('60') // minutes
+  const [banDuration, setBanDuration] = useState('60') // minutes;
   const { socket } = useSocket()
 
-  useEffect(() => {
-    if (isHost || isModerator) {
+  useEffect(() => {}
+    if (isHost || isModerator) {}
       fetchModerationSettings()
       fetchModerationLogs()
     }
   }, [partyId, isHost, isModerator])
 
-  useEffect(() => {
-    if (socket) {
+  useEffect(() => {}
+    if (socket) {}
       socket.on('moderation-action', handleModerationAction)
       socket.on('message-reported', handleMessageReported)
       socket.on('user-warned', handleUserWarned)
@@ -106,32 +106,32 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
     }
   }, [socket])
 
-  const fetchModerationSettings = async () => {
-    try {
+  const fetchModerationSettings = async () => {}
+    try {}
       const response = await fetch(`/api/parties/${partyId}/moderation/settings`)
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setSettings(data.settings)
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to fetch moderation settings:', error)
     }
   }
 
-  const fetchModerationLogs = async () => {
-    try {
+  const fetchModerationLogs = async () => {}
+    try {}
       const response = await fetch(`/api/parties/${partyId}/moderation/logs`)
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setActions(data.actions)
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to fetch moderation logs:', error)
     }
   }
 
   const updateSettings = async (newSettings: Partial<ModerationSettings>) => {}
-    try {
+    try {}
       const updatedSettings = { ...settings, ...newSettings }
       const response = await fetch(`/api/parties/${partyId}/moderation/settings`, {}
         method: 'PUT',
@@ -139,11 +139,11 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
         body: JSON.stringify(updatedSettings)
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setSettings(updatedSettings)
         socket?.emit('moderation-settings-updated', { partyId, settings: updatedSettings })
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to update moderation settings:', error)
     }
   }
@@ -152,16 +152,16 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
     userId: string, 
     action: 'mute' | 'ban' | 'warn' | 'timeout',
     reason: string,
-    duration?: number
+    duration?: number;
   ) => {}
-    try {
+    try {}
       const response = await fetch(`/api/parties/${partyId}/moderation/users/${userId}`, {}
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action, reason, duration })
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const result = await response.json()
         socket?.emit('user-moderated', {}
           partyId, 
@@ -172,23 +172,23 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
           moderator: 'current-user'
         })
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to moderate user:', error)
     }
   }
 
   const deleteMessage = async (messageId: string, reason: string) => {}
-    try {
+    try {}
       const response = await fetch(`/api/parties/${partyId}/moderation/messages/${messageId}`, {}
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason })
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         socket?.emit('message-deleted', { partyId, messageId, reason })
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to delete message:', error)
     }
   }
@@ -211,17 +211,17 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
   }
 
   const handleMessageReported = (data: { messageId: string; reporterId: string; reason: string }) => {}
-    // Handle message report
+    // Handle message report;
     console.log('Message reported:', data)
   }
 
   const handleUserWarned = (data: { userId: string; warnings: number }) => {}
-    // Handle user warning
+    // Handle user warning;
     console.log('User warned:', data)
   }
 
   const getActionColor = (action: string) => {}
-    switch (action) {
+    switch (action) {}
       case 'ban': return 'destructive'
       case 'mute': return 'secondary'
       case 'warn': return 'outline'
@@ -233,12 +233,12 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
   const formatDuration = (minutes: number) => {}
     if (minutes < 60) return `${minutes}m`
     const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60
+    const mins = minutes % 60;
     return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`
   }
 
-  if (!isHost && !isModerator) {
-    return null
+  if (!isHost && !isModerator) {}
+    return null;
   }
 
   return (
@@ -250,14 +250,14 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
             <span>Chat Moderation</span>
           </div>
           <div className="flex items-center space-x-2">
-            <Button
+            <Button;
               variant="ghost"
               size="sm"
               onClick={() => setShowLogs(true)}
             >
               <History className="h-4 w-4" />
             </Button>
-            <Button
+            <Button;
               variant="ghost"
               size="sm"
               onClick={() => setShowSettings(true)}
@@ -270,29 +270,29 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
       <CardContent className="space-y-4">
         {/* Quick Actions */}
         <div className="flex items-center space-x-2">
-          <Button
+          <Button;
             variant={settings.slowMode ? "default" : "outline"}
             size="sm"
             onClick={() => updateSettings({ slowMode: !settings.slowMode })}
           >
             <Clock className="h-3 w-3 mr-1" />
-            Slow Mode
+            Slow Mode;
           </Button>
-          <Button
+          <Button;
             variant={settings.wordFilter ? "default" : "outline"}
             size="sm"
             onClick={() => updateSettings({ wordFilter: !settings.wordFilter })}
           >
             <Filter className="h-3 w-3 mr-1" />
-            Word Filter
+            Word Filter;
           </Button>
-          <Button
+          <Button;
             variant={settings.requireApproval ? "default" : "outline"}
             size="sm"
             onClick={() => updateSettings({ requireApproval: !settings.requireApproval })}
           >
             <Eye className="h-3 w-3 mr-1" />
-            Approve Messages
+            Approve Messages;
           </Button>
         </div>
 
@@ -300,7 +300,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
         <div className="space-y-2">
           <h4 className="text-sm font-medium">Flagged Messages</h4>
           <div className="space-y-1 max-h-32 overflow-y-auto">
-            {messages
+            {messages;
               .filter(msg => msg.reports > 0)
               .map((message) => (
                 <div key={message.id} className="p-2 rounded-md border border-orange-200 bg-orange-50">
@@ -314,10 +314,10 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                       <p className="text-sm mt-1">{message.content}</p>
                     </div>
                     <div className="flex items-center space-x-1">
-                      <Button
+                      <Button;
                         variant="ghost"
                         size="sm"
-                        onClick={() => deleteMessage(message.id, 'Reported content')}
+                        onClick={() => deleteMessage(message.id, &apos;Reported content')}
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>
@@ -335,7 +335,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
             {participants.map((participant) => (
               <div key={participant.id} className="flex items-center justify-between p-2 rounded-md border">
                 <div className="flex items-center space-x-2">
-                  <img
+                  <img;
                     src={participant.avatar || '/placeholder-user.jpg'}
                     alt={participant.username}
                     className="w-6 h-6 rounded-full"
@@ -348,7 +348,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                       </Badge>
                       {participant.warnings > 0 && (
                         <Badge variant="destructive" className="text-xs">
-                          {participant.warnings} warnings
+                          {participant.warnings} warnings;
                         </Badge>
                       )}
                       {participant.isMuted && <VolumeX className="h-3 w-3 text-muted-foreground" />}
@@ -401,7 +401,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                           </div>
                           <div className="space-y-2">
                             <Label>Reason</Label>
-                            <Textarea
+                            <Textarea;
                               placeholder="Reason for moderation action..."
                               value={banReason}
                               onChange={(e) => setBanReason(e.target.value)}
@@ -409,13 +409,13 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                           </div>
                           <div className="flex justify-end space-x-2">
                             <Button variant="outline">Cancel</Button>
-                            <Button
+                            <Button;
                               onClick={() => {}
                                 moderateUser(participant.id, 'warn', banReason, parseInt(banDuration))
                                 setBanReason('')
                               }}
                             >
-                              Apply Action
+                              Apply Action;
                             </Button>
                           </div>
                         </div>
@@ -447,7 +447,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                       <Label>Slow Mode</Label>
                       <p className="text-sm text-muted-foreground">Limit message frequency</p>
                     </div>
-                    <Switch
+                    <Switch;
                       checked={settings.slowMode}
                       onCheckedChange={(checked) => updateSettings({ slowMode: checked })}
                     />
@@ -455,7 +455,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                   {settings.slowMode && (
                     <div className="space-y-2">
                       <Label>Slow Mode Delay (seconds)</Label>
-                      <Select
+                      <Select;
                         value={settings.slowModeDelay.toString()}
                         onValueChange={(value) => updateSettings({ slowModeDelay: parseInt(value) })}
                       >
@@ -476,7 +476,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                       <Label>Require Message Approval</Label>
                       <p className="text-sm text-muted-foreground">All messages need approval</p>
                     </div>
-                    <Switch
+                    <Switch;
                       checked={settings.requireApproval}
                       onCheckedChange={(checked) => updateSettings({ requireApproval: checked })}
                     />
@@ -486,7 +486,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                       <Label>Spam Protection</Label>
                       <p className="text-sm text-muted-foreground">Automatically detect spam</p>
                     </div>
-                    <Switch
+                    <Switch;
                       checked={settings.spamProtection}
                       onCheckedChange={(checked) => updateSettings({ spamProtection: checked })}
                     />
@@ -500,7 +500,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                       <Label>Word Filter</Label>
                       <p className="text-sm text-muted-foreground">Block banned words</p>
                     </div>
-                    <Switch
+                    <Switch;
                       checked={settings.wordFilter}
                       onCheckedChange={(checked) => updateSettings({ wordFilter: checked })}
                     />
@@ -509,11 +509,11 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                     <div className="space-y-2">
                       <Label>Banned Words</Label>
                       <div className="flex space-x-2">
-                        <Input
+                        <Input;
                           placeholder="Add banned word..."
                           value={newBannedWord}
                           onChange={(e) => setNewBannedWord(e.target.value)}
-                          onKeyPress={(e) => e.key === 'Enter' && addBannedWord()}
+                          onKeyPress={(e) => e.key === &apos;Enter' && addBannedWord()}
                         />
                         <Button onClick={addBannedWord}>Add</Button>
                       </div>
@@ -521,7 +521,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                         {settings.bannedWords.map((word) => (
                           <Badge key={word} variant="secondary" className="cursor-pointer">
                             {word}
-                            <X
+                            <X;
                               className="h-3 w-3 ml-1" 
                               onClick={() => removeBannedWord(word)}
                             />
@@ -535,7 +535,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                       <Label>Link Filter</Label>
                       <p className="text-sm text-muted-foreground">Block external links</p>
                     </div>
-                    <Switch
+                    <Switch;
                       checked={settings.linkFilter}
                       onCheckedChange={(checked) => updateSettings({ linkFilter: checked })}
                     />
@@ -549,7 +549,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                       <Label>Auto Moderation</Label>
                       <p className="text-sm text-muted-foreground">Automatically moderate based on rules</p>
                     </div>
-                    <Switch
+                    <Switch;
                       checked={settings.autoModeration}
                       onCheckedChange={(checked) => updateSettings({ autoModeration: checked })}
                     />

@@ -4,8 +4,8 @@ import { API_ENDPOINTS } from "./endpoints"
 import type {}
 
 /**
- * Admin API Service
- * Handles admin panel-related API calls including complete system management
+ * Admin API Service;
+ * Handles admin panel-related API calls including complete system management;
  */
 
   AdminDashboard,
@@ -26,26 +26,26 @@ import type {}
 
 export class AdminAPI {}
   /**
-   * Get admin dashboard overview
+   * Get admin dashboard overview;
    */
   async getDashboard(): Promise<AdminDashboard> {}
     return apiClient.get<AdminDashboard>(API_ENDPOINTS.admin.dashboard)
   }
 
   /**
-   * Get users for admin management
+   * Get users for admin management;
    */
   async getUsers(params?: {}
-    search?: string
+    search?: string;
     status?: 'active' | 'suspended' | 'banned'
     subscription?: 'active' | 'inactive'
-    page?: number
+    page?: number;
   }): Promise<PaginatedResponse<User>> {}
     return apiClient.get<PaginatedResponse<User>>(API_ENDPOINTS.admin.users, { params })
   }
 
   /**
-   * Get system health status
+   * Get system health status;
    */
   async getSystemHealth(): Promise<SystemHealth> {}
     return apiClient.get<SystemHealth>(API_ENDPOINTS.admin.systemHealth)
@@ -54,7 +54,7 @@ export class AdminAPI {}
   // === ANALYTICS ===
 
   /**
-   * Get admin analytics
+   * Get admin analytics;
    */
   async getAnalytics(): Promise<AdminDashboard> {}
     return apiClient.get<AdminDashboard>(API_ENDPOINTS.admin.analytics)
@@ -63,7 +63,7 @@ export class AdminAPI {}
   // === USER MANAGEMENT ===
 
   /**
-   * Suspend user account
+   * Suspend user account;
    */
   async suspendUser(userId: string, reason?: string): Promise<APIResponse> {}
     return apiClient.post<APIResponse>(API_ENDPOINTS.admin.suspendUser(userId), {}
@@ -72,25 +72,25 @@ export class AdminAPI {}
   }
 
   /**
-   * Unsuspend user account
+   * Unsuspend user account;
    */
   async unsuspendUser(userId: string): Promise<APIResponse> {}
     return apiClient.post<APIResponse>(API_ENDPOINTS.admin.unsuspendUser(userId))
   }
 
   /**
-   * Perform bulk action on users
+   * Perform bulk action on users;
    */
   async bulkUserAction(data: {}
     user_ids: string[]
     action: 'suspend' | 'unsuspend' | 'ban' | 'unban' | 'delete'
-    reason?: string
+    reason?: string;
   }): Promise<APIResponse> {}
     return apiClient.post<APIResponse>(API_ENDPOINTS.admin.bulkUserAction, data)
   }
 
   /**
-   * Export users data
+   * Export users data;
    */
   async exportUsers(params?: {}
     format?: 'csv' | 'excel'
@@ -100,7 +100,7 @@ export class AdminAPI {}
   }
 
   /**
-   * Get user actions history
+   * Get user actions history;
    */
   async getUserActions(userId: string): Promise<AdminUserAction[]> {}
     return apiClient.get<AdminUserAction[]>(API_ENDPOINTS.admin.userActions(userId))
@@ -109,18 +109,18 @@ export class AdminAPI {}
   // === PARTY MANAGEMENT ===
 
   /**
-   * Get parties for admin management
+   * Get parties for admin management;
    */
   async getParties(params?: {}
-    search?: string
+    search?: string;
     status?: 'active' | 'ended'
-    page?: number
+    page?: number;
   }): Promise<PaginatedResponse<WatchParty>> {}
     return apiClient.get<PaginatedResponse<WatchParty>>(API_ENDPOINTS.admin.parties, { params })
   }
 
   /**
-   * Delete party
+   * Delete party;
    */
   async deleteParty(partyId: string): Promise<APIResponse> {}
     return apiClient.delete<APIResponse>(API_ENDPOINTS.admin.deleteParty(partyId))
@@ -129,18 +129,18 @@ export class AdminAPI {}
   // === VIDEO MANAGEMENT ===
 
   /**
-   * Get videos for admin management
+   * Get videos for admin management;
    */
   async getVideos(params?: {}
-    search?: string
+    search?: string;
     status?: 'active' | 'processing' | 'failed'
-    page?: number
+    page?: number;
   }): Promise<PaginatedResponse<Video>> {}
     return apiClient.get<PaginatedResponse<Video>>(API_ENDPOINTS.admin.videos, { params })
   }
 
   /**
-   * Delete video
+   * Delete video;
    */
   async deleteVideo(videoId: string): Promise<APIResponse> {}
     return apiClient.delete<APIResponse>(API_ENDPOINTS.admin.deleteVideo(videoId))
@@ -149,22 +149,22 @@ export class AdminAPI {}
   // === CONTENT REPORTS ===
 
   /**
-   * Get content reports
+   * Get content reports;
    */
   async getReports(params?: {}
     status?: 'pending' | 'resolved' | 'dismissed'
-    type?: string
-    page?: number
+    type?: string;
+    page?: number;
   }): Promise<PaginatedResponse<ModerationReport>> {}
     return apiClient.get<PaginatedResponse<ModerationReport>>(API_ENDPOINTS.admin.reports, { params })
   }
 
   /**
-   * Resolve report
+   * Resolve report;
    */
   async resolveReport(reportId: string, data?: {}
     action: 'dismiss' | 'warning' | 'suspend' | 'ban'
-    reason?: string
+    reason?: string;
   }): Promise<APIResponse> {}
     return apiClient.post<APIResponse>(API_ENDPOINTS.admin.resolveReport(reportId), data)
   }
@@ -172,41 +172,41 @@ export class AdminAPI {}
   // === SYSTEM MANAGEMENT ===
 
   /**
-   * Get system logs
+   * Get system logs;
    */
   async getLogs(params?: {}
     level?: 'debug' | 'info' | 'warning' | 'error'
-    component?: string
+    component?: string;
     date_range?: {}
-      start: string
-      end: string
+      start: string;
+      end: string;
     }
-    page?: number
+    page?: number;
   }): Promise<PaginatedResponse<AdminSystemLog>> {}
     return apiClient.get<PaginatedResponse<AdminSystemLog>>(API_ENDPOINTS.admin.logs, { params })
   }
 
   /**
-   * Get system maintenance status
+   * Get system maintenance status;
    */
   async getMaintenance(): Promise<{}
     status: 'normal' | 'maintenance' | 'degraded'
-    message?: string
+    message?: string;
     scheduled_maintenance?: {}
-      start_time: string
-      end_time: string
-      description: string
+      start_time: string;
+      end_time: string;
+      description: string;
     }
   }> {}
     return apiClient.get(API_ENDPOINTS.admin.maintenance)
   }
 
   /**
-   * Update system maintenance
+   * Update system maintenance;
    */
   async updateMaintenance(data: {}
     status: 'normal' | 'maintenance' | 'degraded'
-    message?: string
+    message?: string;
   }): Promise<APIResponse> {}
     return apiClient.put<APIResponse>(API_ENDPOINTS.admin.maintenance, data)
   }
@@ -214,11 +214,11 @@ export class AdminAPI {}
   // === COMMUNICATION ===
 
   /**
-   * Broadcast message to all users
+   * Broadcast message to all users;
    */
   async broadcast(data: {}
-    title: string
-    message: string
+    title: string;
+    message: string;
     type?: 'info' | 'warning' | 'error' | 'success'
     target_audience?: 'all' | 'premium' | 'active'
   }): Promise<APIResponse> {}
@@ -226,14 +226,14 @@ export class AdminAPI {}
   }
 
   /**
-   * Send notification to specific users
+   * Send notification to specific users;
    */
   async sendNotification(data: {}
     user_ids: string[]
-    title: string
-    message: string
-    type?: string
-    action_url?: string
+    title: string;
+    message: string;
+    type?: string;
+    action_url?: string;
   }): Promise<APIResponse> {}
     return apiClient.post<APIResponse>(API_ENDPOINTS.admin.sendNotification, data)
   }
@@ -241,14 +241,14 @@ export class AdminAPI {}
   // === SETTINGS ===
 
   /**
-   * Get admin settings
+   * Get admin settings;
    */
   async getSettings(): Promise<AdminSettings> {}
     return apiClient.get<AdminSettings>(API_ENDPOINTS.admin.settings)
   }
 
   /**
-   * Update admin settings
+   * Update admin settings;
    */
   async updateSettings(data: Partial<AdminSettings>): Promise<APIResponse> {}
     return apiClient.put<APIResponse>(API_ENDPOINTS.admin.updateSettings, data)
@@ -257,34 +257,34 @@ export class AdminAPI {}
   // === HEALTH MONITORING ===
 
   /**
-   * Perform health check
+   * Perform health check;
    */
   async healthCheck(): Promise<{}
     status: 'healthy' | 'unhealthy' | 'degraded'
     services: Record<string, {}
       status: 'up' | 'down' | 'degraded'
-      response_time?: number
-      last_check: string
+      response_time?: number;
+      last_check: string;
     }>
   }> {}
     return apiClient.get(API_ENDPOINTS.admin.healthCheck)
   }
 
   /**
-   * Get health status
+   * Get health status;
    */
   async getHealthStatus(): Promise<SystemHealth> {}
     return apiClient.get<SystemHealth>(API_ENDPOINTS.admin.healthStatus)
   }
 
   /**
-   * Get health metrics
+   * Get health metrics;
    */
   async getHealthMetrics(): Promise<{}
-    cpu_usage: number
-    memory_usage: number
-    disk_usage: number
-    active_connections: number
+    cpu_usage: number;
+    memory_usage: number;
+    disk_usage: number;
+    active_connections: number;
     response_times: Record<string, number>
     error_rates: Record<string, number>
   }> {}
@@ -294,34 +294,34 @@ export class AdminAPI {}
   // === ACTIVITY & ALERTS ===
 
   /**
-   * Get recent system activity
+   * Get recent system activity;
    */
   async getActivity(): Promise<AdminSystemLog[]> {}
-    // Using logs endpoint as a placeholder for activity
+    // Using logs endpoint as a placeholder for activity;
     return apiClient.get<AdminSystemLog[]>(API_ENDPOINTS.admin.logs)
   }
 
   /**
-   * Get system alerts
+   * Get system alerts;
    */
   async getAlerts(): Promise<AdminAlert[]> {}
-    // This would need to be implemented in backend
-    return apiClient.get<AdminAlert[]>('/api/admin/alerts/')
+    // This would need to be implemented in backend;
+    return apiClient.get<AdminAlert[]>(&apos;/api/admin/alerts/')
   }
 
   /**
-   * Resolve system alert
+   * Resolve system alert;
    */
   async resolveAlert(alertId: string): Promise<APIResponse> {}
     return apiClient.post<APIResponse>(`/api/admin/alerts/${alertId}/resolve/`)
   }
 
   /**
-   * Get performance metrics
+   * Get performance metrics;
    */
   async getPerformanceMetrics(): Promise<AdminPerformanceMetric[]> {}
-    // This would need to be implemented in backend
-    return apiClient.get<AdminPerformanceMetric[]>('/api/admin/performance/')
+    // This would need to be implemented in backend;
+    return apiClient.get<AdminPerformanceMetric[]>(&apos;/api/admin/performance/')
   }
 
   // === ADDITIONAL USER MANAGEMENT ===
@@ -334,7 +334,7 @@ export class AdminAPI {}
   }
 
   /**
-   * Update user role
+   * Update user role;
    */
   async updateUserRole(userId: string, role: string): Promise<APIResponse> {}
     return apiClient.put<APIResponse>(`/api/admin/users/${userId}/role/`, { role })
@@ -346,66 +346,66 @@ export class AdminAPI {}
    * Get system logs (with enhanced parameters)
    */
   async getSystemLogs(params?: {}
-    level?: string
-    component?: string
-    search?: string
-    date_from?: string
-    date_to?: string
-    page?: number
+    level?: string;
+    component?: string;
+    search?: string;
+    date_from?: string;
+    date_to?: string;
+    page?: number;
   }): Promise<PaginatedResponse<AdminSystemLog>> {}
-    return apiClient.get<PaginatedResponse<AdminSystemLog>>('/api/admin/system-logs/', { params })
+    return apiClient.get<PaginatedResponse<AdminSystemLog>>(&apos;/api/admin/system-logs/', { params })
   }
 
   /**
-   * Get system logs statistics
+   * Get system logs statistics;
    */
   async getSystemLogsStats(timeRange?: string): Promise<Record<string, number>> {}
     return apiClient.get<Record<string, number>>(`/api/admin/system-logs/stats/`, { }
-      params: timeRange ? { time_range: timeRange } : undefined
+      params: timeRange ? { time_range: timeRange } : undefined;
     })
   }
 
   /**
-   * Export system logs
+   * Export system logs;
    */
   async exportSystemLogs(params?: Record<string, unknown>): Promise<AdminExportResponse> {}
-    return apiClient.get<AdminExportResponse>('/api/admin/system-logs/export/', { params })
+    return apiClient.get<AdminExportResponse>(&apos;/api/admin/system-logs/export/', { params })
   }
 
   // === MODERATION ===
 
   /**
-   * Get moderation statistics
+   * Get moderation statistics;
    */
   async getModerationStats(): Promise<Record<string, number>> {}
-    return apiClient.get<Record<string, number>>('/api/admin/moderation/stats/')
+    return apiClient.get<Record<string, number>>(&apos;/api/admin/moderation/stats/')
   }
 
   // === SETTINGS MANAGEMENT ===
 
   /**
-   * Reset settings to defaults
+   * Reset settings to defaults;
    */
   async resetSettings(): Promise<APIResponse> {}
-    return apiClient.post<APIResponse>('/api/admin/settings/reset/')
+    return apiClient.post<APIResponse>(&apos;/api/admin/settings/reset/')
   }
 
   /**
-   * Test email configuration
+   * Test email configuration;
    */
   async testEmailSettings(data: { recipient: string }): Promise<APIResponse> {}
-    return apiClient.post<APIResponse>('/api/admin/settings/test-email/', data)
+    return apiClient.post<APIResponse>(&apos;/api/admin/settings/test-email/', data)
   }
 
   // === ANALYTICS EXPORT ===
 
   /**
-   * Export analytics data
+   * Export analytics data;
    */
   async exportAnalytics(params?: { time_range?: string; format?: string }): Promise<AdminExportResponse> {}
     return apiClient.get<AdminExportResponse>('/api/admin/analytics/export/', { params })
   }
 }
 
-// Export the class but don't instantiate it immediately
-// Instance will be created by the lazy loader in index.ts
+// Export the class but don't instantiate it immediately;
+// Instance will be created by the lazy loader in index.ts;

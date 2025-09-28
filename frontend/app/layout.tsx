@@ -63,7 +63,7 @@ export const metadata: Metadata = { title: "WatchParty - Stream Together, Anywhe
 
 export default function RootLayout({children,
 }: {}
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {}
   return (
     <html lang="en" suppressHydrationWarning className="dark">

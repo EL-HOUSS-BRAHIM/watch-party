@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from 'react'
 import Image from "next/image"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -13,30 +11,31 @@ import { useApi } from '@/hooks/use-api'
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
 
+"use client"
 
 interface StoreItem {}
-  id: string
-  name: string
-  description: string
-  price: number
-  currency: string
-  image_url: string
-  category: string
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  currency: string;
+  image_url: string;
+  category: string;
   rarity: 'common' | 'rare' | 'epic' | 'legendary'
-  is_limited: boolean
-  stock_quantity?: number
+  is_limited: boolean;
+  stock_quantity?: number;
   tags: string[]
   requirements?: {}
-    level?: number
+    level?: number;
     achievements?: string[]
   }
 }
 
 interface StorePurchaseModalProps {}
-  item: StoreItem | null
-  isOpen: boolean
-  onClose: () => void
-  onPurchaseComplete: (item: StoreItem, quantity: number) => void
+  item: StoreItem | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onPurchaseComplete: (item: StoreItem, quantity: number) => void;
 }
 
 export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }: StorePurchaseModalProps) {}
@@ -48,9 +47,9 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
   const { post } = useApi()
   const { toast } = useToast()
 
-  if (!item) return null
+  if (!item) return null;
   const getRarityColor = (rarity: string) => {}
-    switch (rarity) {
+    switch (rarity) {}
       case 'common':
         return 'bg-gray-100 text-gray-800 border-gray-300'
       case 'rare':
@@ -64,29 +63,29 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
     }
   }
 
-  const subtotal = item.price * quantity
-  const discount = (subtotal * promoDiscount) / 100
-  const total = subtotal - discount
+  const subtotal = item.price * quantity;
+  const discount = (subtotal * promoDiscount) / 100;
+  const total = subtotal - discount;
   const handleQuantityChange = (delta: number) => {}
     const newQuantity = Math.max(1, quantity + delta)
-    if (item.stock_quantity) {
+    if (item.stock_quantity) {}
       setQuantity(Math.min(newQuantity, item.stock_quantity))
     } else {}
       setQuantity(newQuantity)
     }
   }
 
-  const validatePromoCode = async () => {
-    if (!promoCode.trim()) return
+  const validatePromoCode = async () => {}
+    if (!promoCode.trim()) return;
     setIsValidatingPromo(true)
-    try {
+    try {}
       const response = await post('/store/validate-promo/', {}
         code: promoCode,
         item_id: item.id,
-        quantity
+        quantity;
       })
       const data = response.data as { valid: boolean; discount_percentage: number }
-      if (data.valid) {
+      if (data.valid) {}
         setPromoDiscount(data.discount_percentage)
         toast({title: 'Promo code applied!',
           description: `${data.discount_percentage}% discount applied`,
@@ -98,24 +97,24 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
           variant: 'destructive'
         })
       }
-    } catch (err) {
+    } catch {}
       setPromoDiscount(0)
       toast({title: 'Error',
         description: 'Failed to validate promo code',
         variant: 'destructive'
       })
-    } finally {
+    } finally {}
       setIsValidatingPromo(false)
     }
   }
 
-  const handlePurchase = async () => {
+  const handlePurchase = async () => {}
     setPurchasing(true)
-    try {
+    try {}
       await post('/store/purchase/', {}
         item_id: item.id,
         quantity,
-        promo_code: promoCode || undefined
+        promo_code: promoCode || undefined;
       })
 
       toast({title: 'Purchase successful!',
@@ -124,12 +123,12 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
 
       onPurchaseComplete(item, quantity)
       onClose()
-    } catch (err) {
+    } catch {}
       toast({title: 'Purchase failed',
         description: error.response?.data?.message || 'Failed to complete purchase',
         variant: 'destructive'
       })
-    } finally {
+    } finally {}
       setPurchasing(false)
     }
   }
@@ -141,7 +140,7 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
   }
 
   const handleClose = () => {}
-    if (!isProcessing) {
+    if (!isProcessing) {}
       resetModal()
       onClose()
     }
@@ -153,17 +152,17 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <ShoppingCart className="w-5 h-5" />
-            Purchase Item
+            Purchase Item;
           </DialogTitle>
           <DialogDescription>
-            Review your purchase details before completing
+            Review your purchase details before completing;
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
           {/* Item Details */}
           <div className="flex gap-4">
-            <img
+            <img;
               src={item.image_url}
               alt={item.name}
               className="w-20 h-20 object-cover rounded-lg border"
@@ -186,14 +185,14 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
                 {item.is_limited && (
                   <Badge variant="outline" className="text-xs">
                     <Star className="w-3 h-3 mr-1" />
-                    Limited
+                    Limited;
                   </Badge>
                 )}
               </div>
 
               {item.stock_quantity && (
                 <p className="text-xs text-gray-500">
-                  {item.stock_quantity} in stock
+                  {item.stock_quantity} in stock;
                 </p>
               )}
             </div>
@@ -205,7 +204,7 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
           <div className="space-y-2">
             <Label>Quantity</Label>
             <div className="flex items-center gap-3">
-              <Button
+              <Button;
                 variant="outline"
                 size="sm"
                 onClick={() => handleQuantityChange(-1)}
@@ -214,7 +213,7 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
                 <Minus className="w-4 h-4" />
               </Button>
               <span className="w-12 text-center font-medium">{quantity}</span>
-              <Button
+              <Button;
                 variant="outline"
                 size="sm"
                 onClick={() => handleQuantityChange(1)}
@@ -229,14 +228,14 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
           <div className="space-y-2">
             <Label htmlFor="promo">Promo Code (Optional)</Label>
             <div className="flex gap-2">
-              <Input
+              <Input;
                 id="promo"
                 value={promoCode}
                 onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
                 placeholder="Enter promo code"
                 className="flex-1"
               />
-              <Button
+              <Button;
                 variant="outline"
                 onClick={validatePromoCode}
                 disabled={!promoCode.trim() || isValidatingPromo}
@@ -290,7 +289,7 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
 
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={handleClose} disabled={isProcessing}>
-            Cancel
+            Cancel;
           </Button>
           <Button onClick={handlePurchase} disabled={isProcessing}>
             {isProcessing ? (
@@ -301,7 +300,7 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
             ) : (
               <>
                 <CreditCard className="w-4 h-4 mr-2" />
-                Purchase Now
+                Purchase Now;
               </>
             )}
           </Button>

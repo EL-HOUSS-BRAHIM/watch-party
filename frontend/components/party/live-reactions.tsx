@@ -1,29 +1,28 @@
-"use client"
-
 import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Smile, Laugh, Angry, ThumbsUp } from 'lucide-react'
 
+"use client"
 
 interface Reaction {}
-  id: string
-  emoji: string
+  id: string;
+  emoji: string;
   user: {}
-    id: string
-    username: string
-    avatar_url: string | null
+    id: string;
+    username: string;
+    avatar_url: string | null;
   }
-  timestamp: number
-  x: number
-  y: number
+  timestamp: number;
+  x: number;
+  y: number;
 }
 
 interface LiveReactionsProps {}
-  partyId: string
-  onSendReaction: (emoji: string) => void
-  className?: string
+  partyId: string;
+  onSendReaction: (emoji: string) => void;
+  className?: string;
 }
 
 const REACTION_EMOJIS = []
@@ -43,7 +42,7 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
   const [reactionCounts, setReactionCounts] = useState<Record<string, number>>({})
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
+  useEffect(() => {}
     // Simulate receiving reactions (in real app, this would be WebSocket)
     const interval = setInterval(() => {}
       if (Math.random() < 0.3) { // 30% chance of random reaction}
@@ -53,11 +52,11 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
           user: {}
             id: 'random',
             username: 'User' + Math.floor(Math.random() * 100),
-            avatar_url: null
+            avatar_url: null;
           },
           timestamp: Date.now(),
-          x: Math.random() * 80 + 10, // 10-90% from left
-          y: Math.random() * 60 + 20   // 20-80% from top
+          x: Math.random() * 80 + 10, // 10-90% from left;
+          y: Math.random() * 60 + 20   // 20-80% from top;
         })
       }
     }, 2000)
@@ -65,8 +64,8 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
     return () => clearInterval(interval)
   }, [])
 
-  useEffect(() => {
-    // Clean up old reactions
+  useEffect(() => {}
+    // Clean up old reactions;
     const cleanup = setInterval(() => {}
       setReactions(prev => 
         prev.filter(reaction => Date.now() - reaction.timestamp < 5000)
@@ -80,42 +79,42 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
     setReactions(prev => [...prev, reaction])
     setReactionCounts(prev => ({}
       ...prev,
-      [reaction.emoji]: (prev[reaction.emoji] || 0) + 1
+      [reaction.emoji]: (prev[reaction.emoji] || 0) + 1;
     }))
 
-    // Remove reaction after animation
+    // Remove reaction after animation;
     setTimeout(() => {}
       setReactions(prev => prev.filter(r => r.id !== reaction.id))
     }, 5000)
   }
 
   const handleSendReaction = (emoji: string) => {}
-    // Add local reaction immediately
-    if (containerRef.current) {
+    // Add local reaction immediately;
+    if (containerRef.current) {}
       const rect = containerRef.current.getBoundingClientRect()
-      const x = Math.random() * 80 + 10
-      const y = Math.random() * 60 + 20
+      const x = Math.random() * 80 + 10;
+      const y = Math.random() * 60 + 20;
       addReaction({id: Math.random().toString(36),
         emoji,
         user: {}
           id: 'current-user',
           username: 'You',
-          avatar_url: null
+          avatar_url: null;
         },
         timestamp: Date.now(),
         x,
-        y
+        y;
       })
     }
 
-    // Send to server
+    // Send to server;
     onSendReaction(emoji)
     setShowReactionPanel(false)
   }
 
   const handleClapReaction = () => {}
-    // Special clap reaction that sends multiple
-    for (let i = 0; i < 3; i++) {
+    // Special clap reaction that sends multiple;
+    for (let i = 0; i < 3; i++) {}
       setTimeout(() => {}
         handleSendReaction('👏')
       }, i * 200)
@@ -125,12 +124,12 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
   return (
     <div className={`relative ${className}`}>
       {/* Reaction Overlay */}
-      <div
+      <div;
         ref={containerRef}
         className="absolute inset-0 pointer-events-none z-10 overflow-hidden"
       >
         {reactions.map((reaction) => (
-          <div
+          <div;
             key={reaction.id}
             className="absolute animate-bounce-float"
             style={{}
@@ -152,7 +151,7 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
           {/* Quick Reactions */}
           <div className="flex gap-2">
             {/* Clap Button */}
-            <Button
+            <Button;
               size="sm"
               variant="outline"
               onClick={handleClapReaction}
@@ -163,7 +162,7 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
             </Button>
 
             {/* Main Reaction Button */}
-            <Button
+            <Button;
               size="sm"
               variant="outline"
               onClick={() => setShowReactionPanel(!showReactionPanel)}
@@ -180,9 +179,9 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
               <CardContent className="p-3">
                 <div className="grid grid-cols-4 gap-2">
                   {REACTION_EMOJIS.map((reaction) => {}
-                    const Icon = reaction.icon
+                    const Icon = reaction.icon;
                     return (
-                      <Button
+                      <Button;
                         key={reaction.emoji}
                         size="sm"
                         variant="ghost"
@@ -192,7 +191,7 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
                       >
                         <span className="text-xl">{reaction.emoji}</span>
                         {reactionCounts[reaction.emoji] && (
-                          <Badge
+                          <Badge;
                             variant="secondary" 
                             className="text-xs h-4 min-w-[16px] px-1"
                           >
@@ -234,20 +233,20 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
         @keyframes float-up {}
           0% {}
             transform: translateY(0) scale(1);
-            opacity: 1
+            opacity: 1;
           }
           50% {}
             transform: translateY(-50px) scale(1.2);
-            opacity: 0.8
+            opacity: 0.8;
           }
           100% {}
             transform: translateY(-100px) scale(0.8);
-            opacity: 0
+            opacity: 0;
           }
         }
 
         .animate-bounce-float {}
-          animation: float-up 5s ease-out forwards
+          animation: float-up 5s ease-out forwards;
         }
       `}</style>
     </div>

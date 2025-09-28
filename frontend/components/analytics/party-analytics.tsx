@@ -1,5 +1,3 @@
-"use client"
-
 import { Activity, BarChart, Download, Eye, Heart, PieChart, Play, Share, TrendingUp, User, Users, X } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
+"use client"
 
   BarChart, 
   Bar, 
@@ -22,41 +21,41 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
   Pie,
   Cell,
   Area,
-  AreaChart
+  AreaChart;
 } from 'recharts'
 
 interface PartyAnalyticsData {}
-  id: string
-  title: string
+  id: string;
+  title: string;
   host: {}
-    id: string
-    displayName: string
-    avatar: string | null
+    id: string;
+    displayName: string;
+    avatar: string | null;
   }
-  createdAt: string
-  endedAt: string | null
+  createdAt: string;
+  endedAt: string | null;
   status: 'active' | 'ended' | 'paused'
-  totalParticipants: number
-  peakParticipants: number
-  currentParticipants: number
-  duration: number
+  totalParticipants: number;
+  peakParticipants: number;
+  currentParticipants: number;
+  duration: number;
   video: {}
-    title: string
-    duration: number
-    platform: string
+    title: string;
+    duration: number;
+    platform: string;
   }
   engagement: {}
-    totalMessages: number
-    totalReactions: number
-    totalShares: number
-    averageViewTime: number
-    participantRetention: number
+    totalMessages: number;
+    totalReactions: number;
+    totalShares: number;
+    averageViewTime: number;
+    participantRetention: number;
   }
   timeline: {}
-    timestamp: string
-    participants: number
-    messages: number
-    reactions: number
+    timestamp: string;
+    participants: number;
+    messages: number;
+    reactions: number;
   }[]
   demographics: {}
     ageGroups: { range: string; count: number }[]
@@ -71,7 +70,7 @@ interface PartyAnalyticsData {}
 }
 
 interface PartyAnalyticsProps {}
-  partyId: string
+  partyId: string;
 }
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8']
@@ -81,20 +80,20 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
   const [loading, setLoading] = useState(true)
   const [timeRange, setTimeRange] = useState('24h')
 
-  useEffect(() => {
+  useEffect(() => {}
     loadAnalytics()
   }, [partyId, timeRange])
 
-  const loadAnalytics = useCallback(async () => {
-    try {
+  const loadAnalytics = useCallback(async () => {}
+    try {}
       const response = await fetch(`/api/analytics/party/${partyId}?range=${timeRange}`)
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setAnalytics(data)
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to load party analytics:', error)
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }, [])
@@ -112,7 +111,7 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
   }
 
   const exportData = () => {}
-    if (!analytics) return
+    if (!analytics) return;
     const data = { party: analytics.title,
       host: analytics.host.displayName,
       duration: formatDuration(analytics.duration),
@@ -126,13 +125,13 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
-    a.href = url
+    a.href = url;
     a.download = `party-analytics-${partyId}.json`
     a.click()
     URL.revokeObjectURL(url)
   }
 
-  if (loading) {
+  if (loading) {}
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-64">
@@ -142,7 +141,7 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
     )
   }
 
-  if (!analytics) {
+  if (!analytics) {}
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center h-64">
@@ -157,7 +156,7 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
   }
 
   const getStatusColor = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case 'active': return 'bg-green-500'
       case 'paused': return 'bg-yellow-500'
       case 'ended': return 'bg-gray-500'
@@ -189,7 +188,7 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
           </Select>
           <Button variant="outline" size="sm" onClick={exportData}>
             <Download className="h-4 w-4 mr-2" />
-            Export
+            Export;
           </Button>
         </div>
       </div>
@@ -305,15 +304,15 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={analytics.timeline}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
+                    <XAxis;
                       dataKey="timestamp" 
                       tickFormatter={(value) => new Date(value).toLocaleTimeString()}
                     />
                     <YAxis />
-                    <Tooltip
+                    <Tooltip;
                       labelFormatter={(value) => new Date(value).toLocaleString()}
                     />
-                    <Area
+                    <Area;
                       type="monotone" 
                       dataKey="participants" 
                       stroke="#8884d8" 
@@ -356,7 +355,7 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie
+                      <Pie;
                         data={analytics.interactions.reactionTypes}
                         cx="50%"
                         cy="50%"
@@ -408,7 +407,7 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie
+                      <Pie;
                         data={analytics.demographics.devices}
                         cx="50%"
                         cy="50%"
@@ -444,14 +443,14 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
                     <XAxis dataKey="time" />
                     <YAxis />
                     <Tooltip />
-                    <Line
+                    <Line;
                       type="monotone" 
                       dataKey="joins" 
                       stroke="#00C49F" 
                       strokeWidth={2}
                       name="Joins"
                     />
-                    <Line
+                    <Line;
                       type="monotone" 
                       dataKey="leaves" 
                       stroke="#FF8042" 

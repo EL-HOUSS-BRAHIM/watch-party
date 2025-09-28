@@ -13,7 +13,7 @@ export function generateSEOMetadata({title,
   image = "/og-image.png",
   url = "https://watchparty.com",
 }: SEOConfig): Metadata {}
-  return {
+  return {}
     title: `${title} | WatchParty Pro`,
     description,
     keywords: ["watch party", "video streaming", "synchronized viewing", ...keywords],

@@ -1,5 +1,3 @@
-"use client"
-
 import { Activity, Award, Calendar, Clock, Eye, EyeOff, Flag, Image, Link, Lock, Mail, MapPin, MessageCircle, Play, Share, Shield, Star, Trophy, User, Users } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
@@ -14,59 +12,61 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import Image from "next/image"
 import Link from "next/link"
 
+"use client"
+
 interface PublicProfile {}
-  id: string
-  username: string
-  displayName: string
-  bio: string
-  avatar: string
-  coverImage: string
-  location: string
-  website: string
-  joinDate: string
-  isPublic: boolean
-  showEmail: boolean
-  showLocation: boolean
-  showBirthDate: boolean
-  email?: string
-  birthDate?: string
+  id: string;
+  username: string;
+  displayName: string;
+  bio: string;
+  avatar: string;
+  coverImage: string;
+  location: string;
+  website: string;
+  joinDate: string;
+  isPublic: boolean;
+  showEmail: boolean;
+  showLocation: boolean;
+  showBirthDate: boolean;
+  email?: string;
+  birthDate?: string;
   friendshipStatus: "none" | "pending" | "friends" | "blocked" | "self"
-  mutualFriends: number
+  mutualFriends: number;
   stats: {}
-    watchParties: number
-    hoursWatched: number
-    friendsCount: number
-    achievementsCount: number
-    favoriteMovies: number
-    totalRatings: number
-    averageRating: number
-    streakDays: number
+    watchParties: number;
+    hoursWatched: number;
+    friendsCount: number;
+    achievementsCount: number;
+    favoriteMovies: number;
+    totalRatings: number;
+    averageRating: number;
+    streakDays: number;
   }
   recentActivity: Array<{}
-    id: string
+    id: string;
     type: "party" | "rating" | "friend" | "achievement"
-    title: string
-    description: string
-    timestamp: string
-    isPublic: boolean
+    title: string;
+    description: string;
+    timestamp: string;
+    isPublic: boolean;
   }>
   achievements: Array<{}
-    id: string
-    name: string
-    description: string
-    icon: string
-    unlockedAt: string
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    unlockedAt: string;
     rarity: "common" | "rare" | "epic" | "legendary"
-    isPublic: boolean
+    isPublic: boolean;
   }>
   favoriteGenres: Array<{}
-    name: string
-    count: number
-    percentage: number
+    name: string;
+    count: number;
+    percentage: number;
   }>
 }
 
-export default function PublicProfilePage() {
+export default function PublicProfilePage() {}
   const params = useParams()
   const router = useRouter()
   const { user } = useAuth()
@@ -77,36 +77,36 @@ export default function PublicProfilePage() {
   const [isActionLoading, setIsActionLoading] = useState(false)
   const [activeTab, setActiveTab] = useState("overview")
 
-  const userId = params.userId as string
-  useEffect(() => {
-    if (userId) {
+  const userId = params.userId as string;
+  useEffect(() => {}
+    if (userId) {}
       fetchProfile()
     }
   }, [userId])
 
-  const fetchProfile = async () => {
-    try {
-      if (!usersAPI) {
+  const fetchProfile = async () => {}
+    try {}
+      if (!usersAPI) {}
         console.error('Users API not available')
-        return
+        return;
       }
       const data = await usersAPI.getUserProfile(userId)
       setProfile(data as PublicProfile)
-    } catch (err) {
+    } catch {}
       console.error("Profile fetch error:", error)
-      // Handle API errors
+      // Handle API errors;
       const apiError = error as Record<string, unknown>
-      if (apiError?.status === 404) {
+      if (apiError?.status === 404) {}
         router.push("/not-found")
-        return
-      } else if (apiError?.status === 403) {
+        return;
+      } else if (apiError?.status === 403) {}
         setProfile({...({} as PublicProfile),
           isPublic: false,
           friendshipStatus: "blocked",
         })
-        return
+        return;
       }
-      // Mock data for demonstration when API fails
+      // Mock data for demonstration when API fails;
       setProfile({id: userId,
         username: "sampleuser",
         displayName: "Sample User",
@@ -178,20 +178,20 @@ export default function PublicProfilePage() {
           { name: "Horror", count: 11, percentage: 13 },
         ],
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
   const handleFriendAction = async (action: "add" | "remove" | "accept" | "decline" | "cancel") => {}
-    if (!user) {
+    if (!user) {}
       router.push("/login")
-      return
+      return;
     }
 
     setIsActionLoading(true)
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/users/${userId}/friendship/`, {}
         method: "POST",
@@ -202,7 +202,7 @@ export default function PublicProfilePage() {
         body: JSON.stringify({ action }),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setProfile((prev) =>
           prev ? { ...prev, friendshipStatus: data.status, mutualFriends: data.mutualFriends } : null,
@@ -222,22 +222,22 @@ export default function PublicProfilePage() {
         const errorData = await response.json()
         throw new Error(errorData.message || "Action failed")
       }
-    } catch (err) {
+    } catch {}
       console.error("Friend action error:", error)
       toast({title: "Error",
         description: error instanceof Error ? error.message : "Action failed.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsActionLoading(false)
     }
   }
 
-  const handleBlock = async () => {
-    if (!user || !confirm("Are you sure you want to block this user?")) return
+  const handleBlock = async () => {}
+    if (!user || !confirm("Are you sure you want to block this user?")) return;
     setIsActionLoading(true)
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/users/${userId}/block/`, {}
         method: "POST",
@@ -246,29 +246,29 @@ export default function PublicProfilePage() {
         },
       })
 
-      if (response.ok) {
-        setProfile((prev) => (prev ? { ...prev, friendshipStatus: "blocked" } : null))
+      if (response.ok) {}
+        setProfile((prev) => (prev ? { ...prev, friendshipStatus: &quot;blocked" } : null))
         toast({title: "User Blocked",
           description: "This user has been blocked and can no longer interact with you.",
         })
       } else {}
         throw new Error("Failed to block user")
       }
-    } catch (err) {
+    } catch {}
       console.error("Block error:", error)
       toast({title: "Error",
         description: "Failed to block user.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsActionLoading(false)
     }
   }
 
-  const handleReport = async () => {
-    if (!user) {
+  const handleReport = async () => {}
+    if (!user) {}
       router.push("/login")
-      return
+      return;
     }
 
     toast({title: "Report Submitted",
@@ -285,7 +285,7 @@ export default function PublicProfilePage() {
   }
 
   const getRarityColor = (rarity: string): string => {}
-    switch (rarity) {
+    switch (rarity) {}
       case "common":
         return "bg-white/20 text-white border-white/30"
       case "rare":
@@ -300,24 +300,24 @@ export default function PublicProfilePage() {
   }
 
   const getActivityIcon = (type: string) => {}
-    switch (type) {
+    switch (type) {}
       case "party":
-        return Play
+        return Play;
       case "rating":
-        return Star
+        return Star;
       case "friend":
-        return Users
+        return Users;
       case "achievement":
-        return Trophy
+        return Trophy;
       default:
-        return Activity
+        return Activity;
     }
   }
 
   const getFriendButtonConfig = () => {}
-    switch (profile?.friendshipStatus) {
+    switch (profile?.friendshipStatus) {}
       case "none":
-        return {
+        return {}
           text: "Add Friend",
           icon: UserPlus,
           action: () => handleFriendAction("add"),
@@ -325,7 +325,7 @@ export default function PublicProfilePage() {
           className: "bg-white text-black hover:bg-white/90",
         }
       case "pending":
-        return {
+        return {}
           text: "Cancel Request",
           icon: UserX,
           action: () => handleFriendAction("cancel"),
@@ -333,7 +333,7 @@ export default function PublicProfilePage() {
           className: "border-white/30 text-white hover:bg-white/10 bg-transparent",
         }
       case "friends":
-        return {
+        return {}
           text: "Remove Friend",
           icon: UserMinus,
           action: () => handleFriendAction("remove"),
@@ -341,11 +341,11 @@ export default function PublicProfilePage() {
           className: "border-white/30 text-white hover:bg-white/10 bg-transparent",
         }
       default:
-        return null
+        return null;
     }
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="min-h-screen bg-black p-6">
         <div className="max-w-6xl mx-auto">
@@ -368,7 +368,7 @@ export default function PublicProfilePage() {
     )
   }
 
-  if (!profile) {
+  if (!profile) {}
     return (
       <div className="min-h-screen bg-black p-6">
         <div className="max-w-6xl mx-auto">
@@ -381,7 +381,7 @@ export default function PublicProfilePage() {
     )
   }
 
-  // Handle blocked or private profiles
+  // Handle blocked or private profiles;
   if (
     profile.friendshipStatus === "blocked" ||
     (!profile.isPublic && profile.friendshipStatus !== "friends" && profile.friendshipStatus !== "self")
@@ -408,7 +408,7 @@ export default function PublicProfilePage() {
               </p>
               <Link href="/dashboard">
                 <Button className="bg-white text-black hover:bg-white/90">
-                  Back to Dashboard
+                  Back to Dashboard;
                 </Button>
               </Link>
             </CardContent>
@@ -432,7 +432,7 @@ export default function PublicProfilePage() {
             )}
             <div className="absolute inset-0 bg-black/20"></div>
             <div className="absolute top-4 right-4 flex space-x-2">
-              <Button
+              <Button;
                 size="sm"
                 variant="outline"
                 onClick={handleReport}
@@ -440,7 +440,7 @@ export default function PublicProfilePage() {
               >
                 <Flag className="w-4 h-4" />
               </Button>
-              <Button
+              <Button;
                 size="sm"
                 onClick={() => {}
                   navigator.share?.({}
@@ -452,7 +452,7 @@ export default function PublicProfilePage() {
                 className="bg-black/50 hover:bg-black/70 text-white"
               >
                 <Share2 className="w-4 h-4 mr-2" />
-                Share
+                Share;
               </Button>
             </div>
           </div>
@@ -465,7 +465,7 @@ export default function PublicProfilePage() {
                 <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden bg-white/20 p-1">
                   <div className="w-full h-full rounded-full overflow-hidden bg-black">
                     {profile.avatar ? (
-                      <Image
+                      <Image;
                         src={profile.avatar || "/placeholder.svg"}
                         alt={profile.displayName}
                         width={128}
@@ -482,12 +482,12 @@ export default function PublicProfilePage() {
                 {profile.isPublic ? (
                   <Badge className="absolute -bottom-2 -right-2 bg-white/20 text-white border-white/30">
                     <Eye className="w-3 h-3 mr-1" />
-                    Public
+                    Public;
                   </Badge>
                 ) : (
                   <Badge className="absolute -bottom-2 -right-2 bg-white/30 text-white border-white/40">
                     <EyeOff className="w-3 h-3 mr-1" />
-                    Private
+                    Private;
                   </Badge>
                 )}
               </div>
@@ -523,13 +523,13 @@ export default function PublicProfilePage() {
                   {profile.website && (
                     <div className="flex items-center">
                       <Globe className="w-4 h-4 mr-2" />
-                      <a
+                      <a;
                         href={profile.website}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-white hover:text-white/80 transition-colors"
                       >
-                        Website
+                        Website;
                       </a>
                     </div>
                   )}
@@ -564,7 +564,7 @@ export default function PublicProfilePage() {
               {profile.friendshipStatus !== "self" && (
                 <div className="flex flex-col space-y-2">
                   {friendButtonConfig && (
-                    <Button
+                    <Button;
                       onClick={friendButtonConfig.action}
                       disabled={isActionLoading}
                       variant={friendButtonConfig.variant}
@@ -578,21 +578,21 @@ export default function PublicProfilePage() {
                       {friendButtonConfig.text}
                     </Button>
                   )}
-                  <Button
+                  <Button;
                     variant="outline"
                     className="border-white/30 hover:bg-white/10 text-white bg-transparent"
                   >
                     <MessageCircle className="w-4 h-4 mr-2" />
-                    Message
+                    Message;
                   </Button>
-                  <Button
+                  <Button;
                     variant="outline"
                     onClick={handleBlock}
                     disabled={isActionLoading}
                     className="border-white/30 hover:bg-white/10 text-white bg-transparent"
                   >
                     <Shield className="w-4 h-4 mr-2" />
-                    Block
+                    Block;
                   </Button>
                 </div>
               )}
@@ -603,26 +603,26 @@ export default function PublicProfilePage() {
         {/* Profile Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="bg-white/10 border border-white/20 p-1">
-            <TabsTrigger
+            <TabsTrigger;
               value="overview"
               className="data-[state=active]:bg-white data-[state=active]:text-black text-white"
             >
               <Activity className="w-4 h-4 mr-2" />
-              Overview
+              Overview;
             </TabsTrigger>
-            <TabsTrigger
+            <TabsTrigger;
               value="achievements"
               className="data-[state=active]:bg-white data-[state=active]:text-black text-white"
             >
               <Trophy className="w-4 h-4 mr-2" />
-              Achievements
+              Achievements;
             </TabsTrigger>
-            <TabsTrigger
+            <TabsTrigger;
               value="activity"
               className="data-[state=active]:bg-white data-[state=active]:text-black text-white"
             >
               <Clock className="w-4 h-4 mr-2" />
-              Activity
+              Activity;
             </TabsTrigger>
           </TabsList>
 
@@ -679,7 +679,7 @@ export default function PublicProfilePage() {
                     <CardHeader>
                       <CardTitle className="text-white flex items-center">
                         <Film className="w-5 h-5 mr-2" />
-                        Favorite Genres
+                        Favorite Genres;
                       </CardTitle>
                       <CardDescription className="text-white/60">Most watched content categories</CardDescription>
                     </CardHeader>
@@ -688,7 +688,7 @@ export default function PublicProfilePage() {
                         <div key={index} className="flex justify-between items-center">
                           <span className="text-white">{genre.name}</span>
                           <Badge className="bg-white/20 text-white border-white/30">
-                            {genre.count} movies
+                            {genre.count} movies;
                           </Badge>
                         </div>
                       ))}
@@ -703,12 +703,12 @@ export default function PublicProfilePage() {
                   <CardHeader>
                     <CardTitle className="text-white flex items-center">
                       <Trophy className="w-5 h-5 mr-2" />
-                      Recent Achievements
+                      Recent Achievements;
                     </CardTitle>
                     <CardDescription className="text-white/60">Latest unlocked achievements</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    {profile.achievements
+                    {profile.achievements;
                       .filter((a) => a.isPublic)
                       .slice(0, 5)
                       .map((achievement) => (
@@ -734,7 +734,7 @@ export default function PublicProfilePage() {
           {/* Achievements Tab */}
           <TabsContent value="achievements" className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {profile.achievements
+              {profile.achievements;
                 .filter((a) => a.isPublic)
                 .map((achievement) => (
                   <Card key={achievement.id} className="bg-white/10 border-white/20">
@@ -766,17 +766,17 @@ export default function PublicProfilePage() {
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
                   <Activity className="w-5 h-5 mr-2" />
-                  Recent Activity
+                  Recent Activity;
                 </CardTitle>
                 <CardDescription className="text-white/60">Public activities and interactions</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {profile.recentActivity
+                {profile.recentActivity;
                   .filter((a) => a.isPublic)
                   .map((activity) => {}
                     const IconComponent = getActivityIcon(activity.type)
                     return (
-                      <div
+                      <div;
                         key={activity.id}
                         className="flex items-start space-x-3 p-3 bg-white/5 rounded-lg border border-white/10"
                       >
@@ -807,54 +807,54 @@ export default function PublicProfilePage() {
 }
 
 interface PublicProfile {}
-  id: string
-  username: string
-  displayName: string
-  bio: string
-  avatar: string
-  coverImage: string
-  location: string
-  website: string
-  joinDate: string
-  isPublic: boolean
-  showEmail: boolean
-  showLocation: boolean
-  showBirthDate: boolean
-  email?: string
-  birthDate?: string
+  id: string;
+  username: string;
+  displayName: string;
+  bio: string;
+  avatar: string;
+  coverImage: string;
+  location: string;
+  website: string;
+  joinDate: string;
+  isPublic: boolean;
+  showEmail: boolean;
+  showLocation: boolean;
+  showBirthDate: boolean;
+  email?: string;
+  birthDate?: string;
   friendshipStatus: "none" | "pending" | "friends" | "blocked" | "self"
-  mutualFriends: number
+  mutualFriends: number;
   stats: {}
-    watchParties: number
-    hoursWatched: number
-    friendsCount: number
-    achievementsCount: number
-    favoriteMovies: number
-    totalRatings: number
-    averageRating: number
-    streakDays: number
+    watchParties: number;
+    hoursWatched: number;
+    friendsCount: number;
+    achievementsCount: number;
+    favoriteMovies: number;
+    totalRatings: number;
+    averageRating: number;
+    streakDays: number;
   }
   recentActivity: Array<{}
-    id: string
+    id: string;
     type: "party" | "rating" | "friend" | "achievement"
-    title: string
-    description: string
-    timestamp: string
-    isPublic: boolean
+    title: string;
+    description: string;
+    timestamp: string;
+    isPublic: boolean;
   }>
   achievements: Array<{}
-    id: string
-    name: string
-    description: string
-    icon: string
-    unlockedAt: string
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    unlockedAt: string;
     rarity: "common" | "rare" | "epic" | "legendary"
-    isPublic: boolean
+    isPublic: boolean;
   }>
   favoriteGenres: Array<{}
-    name: string
-    count: number
-    percentage: number
+    name: string;
+    count: number;
+    percentage: number;
   }>
 }
 

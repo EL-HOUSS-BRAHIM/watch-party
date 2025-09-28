@@ -1,5 +1,6 @@
 
-export default function TestSettingsPage() {
+
+export default function TestSettingsPage() {}
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold">Settings Page - Test</h1>

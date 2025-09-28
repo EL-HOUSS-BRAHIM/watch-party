@@ -1,5 +1,3 @@
-"use client"
-
 import { Activity, AlertTriangle, Check, CheckCircle, Clock, Shield, Target, TrendingUp, X, XCircle } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,50 +10,52 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI, analyticsAPI } from "@/lib/api"
 
+"use client"
+
 interface QualityMetric {}
-  id: string
-  name: string
+  id: string;
+  name: string;
   category: "functionality" | "performance" | "usability" | "security" | "compatibility"
-  score: number
-  target: number
+  score: number;
+  target: number;
   trend: "up" | "down" | "stable"
-  lastTested: Date
+  lastTested: Date;
   tests: QualityTest[]
 }
 
 interface QualityTest {}
-  id: string
-  name: string
+  id: string;
+  name: string;
   type: "manual" | "automated" | "user-testing"
   status: "passed" | "failed" | "pending" | "skipped"
   priority: "low" | "medium" | "high" | "critical"
-  environment: string
-  tester: string
-  duration: number
+  environment: string;
+  tester: string;
+  duration: number;
   issues: Issue[]
 }
 
 interface Issue {}
-  id: string
-  title: string
-  description: string
+  id: string;
+  title: string;
+  description: string;
   severity: "low" | "medium" | "high" | "critical"
   status: "open" | "in-progress" | "resolved"
-  assignee?: string
-  createdAt: Date
+  assignee?: string;
+  createdAt: Date;
 }
 
 interface QAReport {}
-  id: string
-  title: string
-  version: string
-  releaseDate: Date
-  testCoverage: number
-  passRate: number
-  criticalIssues: number
-  blockerIssues: number
+  id: string;
+  title: string;
+  version: string;
+  releaseDate: Date;
+  testCoverage: number;
+  passRate: number;
+  criticalIssues: number;
+  blockerIssues: number;
   status: "draft" | "review" | "approved" | "rejected"
-  approver?: string
+  approver?: string;
 }
 
 const QualityPage = () => {}
@@ -71,22 +71,22 @@ const QualityPage = () => {}
   const [issues, setIssues] = useState<Issue[]>([])
   const [qaReports, setQaReports] = useState<QAReport[]>([])
 
-  useEffect(() => {
+  useEffect(() => {}
     fetchQualityData()
   }, [])
 
-  const fetchQualityData = async () => {
-    try {
+  const fetchQualityData = async () => {}
+    try {}
       setLoading(true)
-      // Fetch quality data from APIs
+      // Fetch quality data from APIs;
       const [systemHealth, performanceData, systemLogs] = await Promise.all([]
         adminAPI.getSystemHealth(),
         analyticsAPI.getPerformanceAnalytics(),
         adminAPI.getLogs({ component: 'testing', level: 'info' })
       ])
 
-      // Transform system health to quality metrics
-      if (systemHealth && performanceData) {
+      // Transform system health to quality metrics;
+      if (systemHealth && performanceData) {}
         const transformedMetrics: QualityMetric[] = []
           {}
             id: "functionality",
@@ -104,7 +104,7 @@ const QualityPage = () => {}
             category: "performance", 
             score: performanceData.performance_score || 85,
             target: 90,
-            trend: (performanceData.performance_score || 85) > 85 ? "up" : "down",
+            trend: (performanceData.performance_score || 85) > 85 ? &quot;up" : "down",
             lastTested: new Date(),
             tests: []
           },
@@ -122,8 +122,8 @@ const QualityPage = () => {}
         setQualityMetrics(transformedMetrics)
       }
 
-      // Transform logs to quality tests and issues
-      if (systemLogs.results) {
+      // Transform logs to quality tests and issues;
+      if (systemLogs.results) {}
         const tests: QualityTest[] = systemLogs.results.slice(0, 10).map((log: unknown, index: number) => ({}
           id: log.id || `test-${index}`,
           name: log.message?.substring(0, 50) || `Quality Test ${index + 1}`,
@@ -137,8 +137,8 @@ const QualityPage = () => {}
         }))
         setQualityTests(tests)
 
-        // Transform error logs to issues
-        const errorLogs = systemLogs.results.filter((log: unknown) => log.level === 'error')
+        // Transform error logs to issues;
+        const errorLogs = systemLogs.results.filter((log: unknown) => log.level === &apos;error')
         const transformedIssues: Issue[] = errorLogs.slice(0, 5).map((log: unknown, index: number) => ({}
           id: log.id || `issue-${index}`,
           title: log.message?.substring(0, 60) || `Quality Issue ${index + 1}`,
@@ -150,7 +150,7 @@ const QualityPage = () => {}
         setIssues(transformedIssues)
       }
 
-      // Create QA reports based on current data
+      // Create QA reports based on current data;
       const reports: QAReport[] = []
         {}
           id: "report-1",
@@ -166,13 +166,13 @@ const QualityPage = () => {}
       ]
       setQaReports(reports)
 
-    } catch (err) {
+    } catch {}
       console.error('Failed to fetch quality data:', error)
       toast({title: "Error",
         description: "Failed to load quality data. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
@@ -190,7 +190,7 @@ const QualityPage = () => {}
   }
 
   const getStatusIcon = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case "passed":
         return <CheckCircle className="h-4 w-4 text-green-600" />
       case "failed":
@@ -210,7 +210,7 @@ const QualityPage = () => {}
       pending: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
       skipped: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200",
     }
-    return variants[status as keyof typeof variants] || variants.skipped
+    return variants[status as keyof typeof variants] || variants.skipped;
   }
 
   const getPriorityBadge = (priority: string) => {}
@@ -219,22 +219,22 @@ const QualityPage = () => {}
       high: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
       critical: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
     }
-    return variants[priority as keyof typeof variants] || variants.low
+    return variants[priority as keyof typeof variants] || variants.low;
   }
 
   const filteredMetrics = qualityMetrics.filter((metric) => {}
     const matchesSearch = metric.name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = filterCategory === "all" || metric.category === filterCategory
-    return matchesSearch && matchesCategory
+    const matchesCategory = filterCategory === "all" || metric.category === filterCategory;
+    return matchesSearch && matchesCategory;
   })
 
   const filteredTests = qualityTests.filter((test) => {}
     const matchesSearch = test.name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = filterStatus === "all" || test.status === filterStatus
-    return matchesSearch && matchesStatus
+    const matchesStatus = filterStatus === "all" || test.status === filterStatus;
+    return matchesSearch && matchesStatus;
   })
 
-  if (loading) {
+  if (loading) {}
     return (
       <div className="flex items-center justify-center h-96">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
@@ -254,11 +254,11 @@ const QualityPage = () => {}
         <div className="flex gap-2">
           <Button onClick={fetchQualityData} variant="outline">
             <Activity className="mr-2 h-4 w-4" />
-            Refresh
+            Refresh;
           </Button>
           <Button>
             <TestTube className="mr-2 h-4 w-4" />
-            Run Tests
+            Run Tests;
           </Button>
         </div>
       </div>
@@ -272,7 +272,7 @@ const QualityPage = () => {}
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {qualityMetrics.length > 0
+              {qualityMetrics.length > 0;
                 ? Math.round(qualityMetrics.reduce((sum, m) => sum + m.score, 0) / qualityMetrics.length)
                 : 0}
             </div>
@@ -290,10 +290,10 @@ const QualityPage = () => {}
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {qualityTests.filter(t => t.status === 'passed').length}
+              {qualityTests.filter(t => t.status === &apos;passed').length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
-              of {qualityTests.length} total tests
+              of {qualityTests.length} total tests;
             </div>
           </CardContent>
         </Card>
@@ -305,10 +305,10 @@ const QualityPage = () => {}
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
-              {issues.filter(i => i.status === 'open').length}
+              {issues.filter(i => i.status === &apos;open').length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
-              {issues.filter(i => i.severity === 'critical').length} critical
+              {issues.filter(i => i.severity === &apos;critical').length} critical;
             </div>
           </CardContent>
         </Card>
@@ -322,7 +322,7 @@ const QualityPage = () => {}
             <div className="text-2xl font-bold">85%</div>
             <div className="flex items-center text-xs text-muted-foreground">
               <TrendingUp className="mr-1 h-3 w-3" />
-              +2% from last week
+              +2% from last week;
             </div>
           </CardContent>
         </Card>
@@ -391,7 +391,7 @@ const QualityPage = () => {}
         <TabsContent value="tests" className="space-y-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
-              <Input
+              <Input;
                 placeholder="Search tests..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -483,7 +483,7 @@ const QualityPage = () => {}
                           </div>
                         </div>
                         <Button size="sm" variant="outline">
-                          View Details
+                          View Details;
                         </Button>
                       </div>
                     </div>
@@ -530,7 +530,7 @@ const QualityPage = () => {}
                       <div className="flex flex-col gap-2">
                         <Badge className={getStatusBadge(report.status)}>{report.status}</Badge>
                         <Button size="sm" variant="outline">
-                          Download
+                          Download;
                         </Button>
                       </div>
                     </div>
@@ -545,4 +545,4 @@ const QualityPage = () => {}
   )
 }
 
-export default QualityPage
+export default QualityPage;

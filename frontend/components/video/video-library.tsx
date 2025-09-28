@@ -1,6 +1,4 @@
-"use client"
-
-import { Check, CheckCircle, Download, Edit, Eye, File, Grid, List, Loader2, MoreVertical, Play, Search, Share, Trash, Video } from "lucide-react"
+import { Check, CheckCircle, Download, Edit, Eye, File, Grid, Image, List, Loader2, MoreVertical, Play, Search, Share, Trash, Video } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -14,31 +12,33 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { useAuth } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
 
+"use client"
+
 interface Video {}
-  id: string
-  title: string
-  description: string
-  filename: string
-  fileSize: number
-  duration: number
-  thumbnail?: string
-  uploadedAt: string
+  id: string;
+  title: string;
+  description: string;
+  filename: string;
+  fileSize: number;
+  duration: number;
+  thumbnail?: string;
+  uploadedAt: string;
   status: "processing" | "ready" | "failed"
-  processingProgress?: number
-  views: number
-  isPublic: boolean
+  processingProgress?: number;
+  views: number;
+  isPublic: boolean;
   tags: string[]
   qualityVariants: Array<{}
-    quality: string
-    url: string
-    fileSize: number
+    quality: string;
+    url: string;
+    fileSize: number;
   }>
 }
 
 interface VideoLibraryProps {}
-  onVideoSelect?: (video: Video) => void
-  selectionMode?: boolean
-  className?: string
+  onVideoSelect?: (video: Video) => void;
+  selectionMode?: boolean;
+  className?: string;
 }
 
 export default function VideoLibrary({ onVideoSelect, selectionMode = false, className }: VideoLibraryProps) {}
@@ -46,17 +46,17 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState("uploadedAt")
   const [filterBy, setFilterBy] = useState("all")
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
   const [isLoading, setIsLoading] = useState(true)
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null)
   const { user } = useAuth()
 
-  useEffect(() => {
+  useEffect(() => {}
     loadVideos()
   }, [sortBy, filterBy])
 
-  const loadVideos = async () => {
-    try {
+  const loadVideos = async () => {}
+    try {}
       const token = localStorage.getItem("accessToken")
       const params = new URLSearchParams({sort: sortBy,
         filter: filterBy,
@@ -68,20 +68,20 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setVideos(data.results || data)
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to load videos:", error)
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
   const deleteVideo = async (videoId: string) => {}
-    if (!confirm("Are you sure you want to delete this video?")) return
-    try {
+    if (!confirm("Are you sure you want to delete this video?")) return;
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/videos/${videoId}/`, {}
         method: "DELETE",
@@ -90,16 +90,16 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setVideos((prev) => prev.filter((v) => v.id !== videoId))
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to delete video:", error)
     }
   }
 
   const regenerateThumbnail = async (videoId: string) => {}
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       await fetch(`/api/videos/${videoId}/regenerate-thumbnail/`, {}
         method: "POST",
@@ -108,9 +108,9 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
         },
       })
 
-      // Reload videos to get updated thumbnail
+      // Reload videos to get updated thumbnail;
       loadVideos()
-    } catch (err) {
+    } catch {}
       console.error("Failed to regenerate thumbnail:", error)
     }
   }
@@ -127,14 +127,14 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = Math.floor(seconds % 60)
 
-    if (hours > 0) {
+    if (hours > 0) {}
       return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
     }
     return `${minutes}:${secs.toString().padStart(2, "0")}`
   }
 
   const getStatusIcon = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case "processing":
         return <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
       case "ready":
@@ -142,7 +142,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
       case "failed":
         return <AlertCircle className="h-4 w-4 text-red-500" />
       default:
-        return null
+        return null;
     }
   }
 
@@ -159,11 +159,11 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
       (filterBy === "public" && video.isPublic) ||
       (filterBy === "private" && !video.isPublic)
 
-    return matchesSearch && matchesFilter
+    return matchesSearch && matchesFilter;
   })
 
   const VideoCard = ({ video }: { video: Video }) => (
-    <Card
+    <Card;
       className={cn("hover:shadow-lg transition-shadow cursor-pointer", selectionMode && "hover:border-blue-500")}
       onClick={() => (selectionMode ? onVideoSelect?.(video) : setSelectedVideo(video))}
     >
@@ -229,27 +229,27 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
               <DropdownMenuContent align="end">
                 <DropdownMenuItem>
                   <Play className="mr-2 h-4 w-4" />
-                  Play
+                  Play;
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Edit className="mr-2 h-4 w-4" />
-                  Edit
+                  Edit;
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Share2 className="mr-2 h-4 w-4" />
-                  Share
+                  Share;
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => regenerateThumbnail(video.id)}>
                   <Eye className="mr-2 h-4 w-4" />
-                  Regenerate Thumbnail
+                  Regenerate Thumbnail;
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <Download className="mr-2 h-4 w-4" />
-                  Download
+                  Download;
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className="text-red-600">
+                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-red-600">"
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Delete
+                  Delete;
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -260,7 +260,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
   )
 
   const VideoListItem = ({ video }: { video: Video }) => (
-    <Card
+    <Card;
       className={cn("hover:shadow-md transition-shadow cursor-pointer", selectionMode && "hover:border-blue-500")}
       onClick={() => (selectionMode ? onVideoSelect?.(video) : setSelectedVideo(video))}
     >
@@ -268,7 +268,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
         <div className="flex gap-4">
           <div className="relative w-32 h-20 bg-gray-100 rounded overflow-hidden flex-shrink-0">
             {video.thumbnail ? (
-              <img
+              <img;
                 src={video.thumbnail || "/placeholder.svg"}
                 alt={video.title}
                 className="w-full h-full object-cover"
@@ -320,27 +320,27 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>
                       <Play className="mr-2 h-4 w-4" />
-                      Play
+                      Play;
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <Edit className="mr-2 h-4 w-4" />
-                      Edit
+                      Edit;
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <Share2 className="mr-2 h-4 w-4" />
-                      Share
+                      Share;
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => regenerateThumbnail(video.id)}>
                       <Eye className="mr-2 h-4 w-4" />
-                      Regenerate Thumbnail
+                      Regenerate Thumbnail;
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <Download className="mr-2 h-4 w-4" />
-                      Download
+                      Download;
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => deleteVideo(video.id)} className="text-red-600">
+                    <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-red-600">"
                       <Trash2 className="mr-2 h-4 w-4" />
-                      Delete
+                      Delete;
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -361,8 +361,8 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
           <p className="text-gray-600">Manage your uploaded videos</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => setViewMode(viewMode === "grid" ? "list" : "grid")}>
-            {viewMode === "grid" ? <List className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
+          <Button variant="outline" size="sm" onClick={() => setViewMode(viewMode === &quot;grid" ? "list" : "grid")}>
+            {viewMode === "grid" ? <List className="h-4 w-4" /> : <Grid className=&quot;h-4 w-4" />}"
           </Button>
         </div>
       </div>
@@ -371,7 +371,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input
+          <Input;
             placeholder="Search videos..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -421,7 +421,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
           </p>
         </div>
       ) : (
-        <div
+        <div;
           className={cn(viewMode === "grid" ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" : "space-y-4")}
         >
           {filteredVideos.map((video) =>
@@ -446,7 +446,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
             <div className="space-y-4">
               <div className="aspect-video bg-gray-100 rounded-lg overflow-hidden">
                 {selectedVideo.thumbnail ? (
-                  <img
+                  <img;
                     src={selectedVideo.thumbnail || "/placeholder.svg"}
                     alt={selectedVideo.title}
                     className="w-full h-full object-cover"
@@ -497,19 +497,19 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
               <div className="flex gap-2">
                 <Button>
                   <Play className="mr-2 h-4 w-4" />
-                  Play
+                  Play;
                 </Button>
                 <Button variant="outline">
                   <Edit className="mr-2 h-4 w-4" />
-                  Edit
+                  Edit;
                 </Button>
                 <Button variant="outline">
                   <Share2 className="mr-2 h-4 w-4" />
-                  Share
+                  Share;
                 </Button>
                 <Button variant="outline">
                   <Download className="mr-2 h-4 w-4" />
-                  Download
+                  Download;
                 </Button>
               </div>
             </div>

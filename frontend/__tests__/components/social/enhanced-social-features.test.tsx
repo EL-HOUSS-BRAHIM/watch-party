@@ -139,7 +139,7 @@ describe('EnhancedSocialFeatures', () => {}
     expect(screen.getByTestId('loading-spinner')).toBeInTheDocument()
   })
 
-  it('fetches and displays social data on mount', async () => {
+  it('fetches and displays social data on mount', async () => {}
     render(<EnhancedSocialFeatures />)
 
     await waitFor(() => {}
@@ -155,7 +155,7 @@ describe('EnhancedSocialFeatures', () => {}
     expect(screen.getByText('Test Community')).toBeInTheDocument()
   })
 
-  it('handles API errors gracefully', async () => {
+  it('handles API errors gracefully', async () => {}
     getFriendsMock.mockRejectedValue(new Error('API Error'))
 
     render(<EnhancedSocialFeatures />)
@@ -169,7 +169,7 @@ describe('EnhancedSocialFeatures', () => {}
     })
   })
 
-  it('can send friend requests', async () => {
+  it('can send friend requests', async () => {}
     sendFriendRequestMock.mockResolvedValue({})
 
     render(<EnhancedSocialFeatures />)
@@ -186,7 +186,7 @@ describe('EnhancedSocialFeatures', () => {}
     })
   })
 
-  it('handles empty responses gracefully', async () => {
+  it('handles empty responses gracefully', async () => {}
     getFriendsMock.mockResolvedValue({ results: [] })
     getFriendSuggestionsMock.mockResolvedValue([])
     getGroupsMock.mockResolvedValue({ results: [] })

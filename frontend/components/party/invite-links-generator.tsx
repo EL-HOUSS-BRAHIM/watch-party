@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -9,55 +7,56 @@ import { QRCodeSVG } from 'qrcode.react'
 import { Clock, Copy, Link, Share, Share2, User, Users } from "lucide-react"
 import { useToast } from '@/hooks/use-toast'
 
+"use client"
 
 interface InviteLinksGeneratorProps {}
-  partyId: string
-  partyName: string
-  hostName: string
-  isPublic: boolean
-  onTogglePublic: () => void
+  partyId: string;
+  partyName: string;
+  hostName: string;
+  isPublic: boolean;
+  onTogglePublic: () => void;
 }
 
 export function InviteLinksGenerator({partyId, 
   partyName, 
   hostName, 
   isPublic, 
-  onTogglePublic
+  onTogglePublic;
 }: InviteLinksGeneratorProps) {}
   const [inviteCode, setInviteCode] = useState(generateInviteCode())
   const [expiryHours, setExpiryHours] = useState(24)
-  const [maxUses, setMaxUses] = useState(0) // 0 = unlimited
+  const [maxUses, setMaxUses] = useState(0) // 0 = unlimited;
   const { toast } = useToast()
 
-  function generateInviteCode() {
+  function generateInviteCode() {}
     return Math.random().toString(36).substring(2, 8).toUpperCase()
   }
 
   const inviteUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/join/${inviteCode}`
 
-  const handleCopyLink = async () => {
+  const handleCopyLink = async () => {}
     await navigator.clipboard.writeText(inviteUrl)
     toast({title: 'Link copied!',
       description: 'Invite link has been copied to clipboard.',
     })
   }
 
-  const handleCopyCode = async () => {
+  const handleCopyCode = async () => {}
     await navigator.clipboard.writeText(inviteCode)
     toast({title: 'Code copied!',
       description: 'Invite code has been copied to clipboard.',
     })
   }
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
+  const handleShare = async () => {}
+    if (navigator.share) {}
+      try {}
         await navigator.share({title: `Join ${partyName}`,
           text: `${hostName} invited you to watch ${partyName} together!`,
-          url: inviteUrl
+          url: inviteUrl;
         })
-      } catch (err) {
-        // User cancelled sharing
+      } catch {}
+        // User cancelled sharing;
       }
     } else {}
       await handleCopyLink()
@@ -78,21 +77,21 @@ export function InviteLinksGenerator({partyId,
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Share2 className="w-5 h-5" />
-            Quick Share
+            Quick Share;
           </CardTitle>
           <CardDescription>
-            Share your watch party with friends
+            Share your watch party with friends;
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex gap-2">
             <Button onClick={handleShare} className="flex-1">
               <Share2 className="w-4 h-4 mr-2" />
-              Share Link
+              Share Link;
             </Button>
             <Button variant="outline" onClick={handleCopyLink}>
               <Copy className="w-4 h-4 mr-2" />
-              Copy
+              Copy;
             </Button>
           </div>
 
@@ -110,10 +109,10 @@ export function InviteLinksGenerator({partyId,
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Link className="w-5 h-5" />
-            Invite Code
+            Invite Code;
           </CardTitle>
           <CardDescription>
-            Share this code for easy joining
+            Share this code for easy joining;
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -123,7 +122,7 @@ export function InviteLinksGenerator({partyId,
                 {inviteCode}
               </div>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Enter this code at watchparty.app/join
+                Enter this code at watchparty.app/join;
               </p>
             </div>
           </div>
@@ -131,10 +130,10 @@ export function InviteLinksGenerator({partyId,
           <div className="flex gap-2">
             <Button variant="outline" onClick={handleCopyCode} className="flex-1">
               <Copy className="w-4 h-4 mr-2" />
-              Copy Code
+              Copy Code;
             </Button>
             <Button variant="outline" onClick={handleRegenerateCode}>
-              Regenerate
+              Regenerate;
             </Button>
           </div>
         </CardContent>
@@ -145,12 +144,12 @@ export function InviteLinksGenerator({partyId,
         <CardHeader>
           <CardTitle>QR Code</CardTitle>
           <CardDescription>
-            Scan to join instantly
+            Scan to join instantly;
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex justify-center p-6 bg-white rounded-lg">
-            <QRCodeSVG
+            <QRCodeSVG;
               value={inviteUrl}
               size={200}
               bgColor="#ffffff"
@@ -160,7 +159,7 @@ export function InviteLinksGenerator({partyId,
             />
           </div>
           <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-2">
-            Scan with any QR code reader
+            Scan with any QR code reader;
           </p>
         </CardContent>
       </Card>
@@ -170,7 +169,7 @@ export function InviteLinksGenerator({partyId,
         <CardHeader>
           <CardTitle>Invite Settings</CardTitle>
           <CardDescription>
-            Configure invite link options
+            Configure invite link options;
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -178,10 +177,10 @@ export function InviteLinksGenerator({partyId,
             <div>
               <p className="font-medium">Public Party</p>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Allow anyone to discover and join
+                Allow anyone to discover and join;
               </p>
             </div>
-            <Button
+            <Button;
               variant={isPublic ? "default" : "outline"}
               size="sm"
               onClick={onTogglePublic}
@@ -194,7 +193,7 @@ export function InviteLinksGenerator({partyId,
             <label className="text-sm font-medium">
               Link expires in (hours)
             </label>
-            <Input
+            <Input;
               type="number"
               value={expiryHours}
               onChange={(e) => setExpiryHours(parseInt(e.target.value) || 24)}
@@ -203,7 +202,7 @@ export function InviteLinksGenerator({partyId,
               className="w-full"
             />
             <p className="text-xs text-gray-600 dark:text-gray-400">
-              Link will expire in {expiryHours} hours
+              Link will expire in {expiryHours} hours;
             </p>
           </div>
 
@@ -211,7 +210,7 @@ export function InviteLinksGenerator({partyId,
             <label className="text-sm font-medium">
               Maximum uses (0 = unlimited)
             </label>
-            <Input
+            <Input;
               type="number"
               value={maxUses}
               onChange={(e) => setMaxUses(parseInt(e.target.value) || 0)}

@@ -1,44 +1,43 @@
-"use client"
-
 import { MoreVertical, Settings, Shield, User, Volume2 } from "lucide-react"
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-
 import { useToast } from '@/hooks/use-toast'
+
+"use client"
 
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuSeparator, 
-  DropdownMenuTrigger
+  DropdownMenuTrigger;
 } from '@/components/ui/dropdown-menu'
 interface Participant {}
-  id: string
-  username: string
-  display_name: string
-  avatar_url: string | null
+  id: string;
+  username: string;
+  display_name: string;
+  avatar_url: string | null;
   role: 'host' | 'co-host' | 'member'
   status: 'active' | 'away' | 'watching'
-  joined_at: string
-  is_muted: boolean
-  is_banned: boolean
+  joined_at: string;
+  is_muted: boolean;
+  is_banned: boolean;
   permissions: {}
-    can_control_playback: boolean
-    can_add_videos: boolean
-    can_moderate: boolean
+    can_control_playback: boolean;
+    can_add_videos: boolean;
+    can_moderate: boolean;
   }
 }
 
 interface HostControlPanelProps {}
   participants: Participant[]
-  currentUserId: string
-  onKickUser: (userId: string) => void
-  onPromoteUser: (userId: string, role: 'co-host' | 'member') => void
-  onMuteUser: (userId: string, muted: boolean) => void
-  onBanUser: (userId: string) => void
-  onUpdatePermissions: (userId: string, permissions: Participant['permissions']) => void
+  currentUserId: string;
+  onKickUser: (userId: string) => void;
+  onPromoteUser: (userId: string, role: 'co-host' | 'member') => void;
+  onMuteUser: (userId: string, muted: boolean) => void;
+  onBanUser: (userId: string) => void;
+  onUpdatePermissions: (userId: string, permissions: Participant['permissions']) => void;
 }
 
 export function HostControlPanel({participants,
@@ -47,7 +46,7 @@ export function HostControlPanel({participants,
   onPromoteUser,
   onMuteUser,
   onBanUser,
-  onUpdatePermissions
+  onUpdatePermissions;
 }: HostControlPanelProps) {}
   const [selectedUser, setSelectedUser] = useState<string | null>(null)
   const { toast } = useToast()
@@ -55,43 +54,43 @@ export function HostControlPanel({participants,
   const currentUser = participants.find(p => p.id === currentUserId)
   const isHost = currentUser?.role === 'host'
   const isCoHost = currentUser?.role === 'co-host'
-  const canModerate = isHost || isCoHost
+  const canModerate = isHost || isCoHost;
   const handleAction = async (action: string, userId: string, param?: unknown) => {}
-    try {
-      switch (action) {
+    try {}
+      switch (action) {}
         case 'kick':
           await onKickUser(userId)
           toast({title: 'User kicked',
             description: 'User has been removed from the party.',
           })
-          break
+          break;
         case 'promote':
           await onPromoteUser(userId, param)
           toast({title: 'User promoted',
             description: `User has been promoted to ${param}.`,
           })
-          break
+          break;
         case 'demote':
           await onPromoteUser(userId, 'member')
           toast({title: 'User demoted',
             description: 'User has been demoted to member.',
           })
-          break
+          break;
         case 'mute':
           await onMuteUser(userId, param)
           toast({title: param ? 'User muted' : 'User unmuted',
             description: `User has been ${param ? 'muted' : 'unmuted'}.`,
           })
-          break
+          break;
         case 'ban':
           await onBanUser(userId)
           toast({title: 'User banned',
             description: 'User has been banned from the party.',
             variant: 'destructive'
           })
-          break
+          break;
       }
-    } catch (err) {
+    } catch {}
       toast({title: 'Action failed',
         description: 'Unable to perform this action.',
         variant: 'destructive'
@@ -100,18 +99,18 @@ export function HostControlPanel({participants,
   }
 
   const getRoleIcon = (role: string) => {}
-    switch (role) {
+    switch (role) {}
       case 'host':
         return <Crown className="w-4 h-4 text-yellow-500" />
       case 'co-host':
         return <Shield className="w-4 h-4 text-blue-500" />
       default:
-        return null
+        return null;
     }
   }
 
   const getStatusColor = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case 'active':
         return 'bg-green-500'
       case 'away':
@@ -123,7 +122,7 @@ export function HostControlPanel({participants,
     }
   }
 
-  if (!canModerate) {
+  if (!canModerate) {}
     return (
       <Card>
         <CardContent className="pt-6 text-center">
@@ -140,10 +139,10 @@ export function HostControlPanel({participants,
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Settings className="w-5 h-5" />
-          Host Controls
+          Host Controls;
         </CardTitle>
         <CardDescription>
-          Manage participants and party settings
+          Manage participants and party settings;
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -154,15 +153,15 @@ export function HostControlPanel({participants,
               {participants.length}
             </div>
             <div className="text-xs text-gray-600 dark:text-gray-400">
-              Total
+              Total;
             </div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">
-              {participants.filter(p => p.status === 'active').length}
+              {participants.filter(p => p.status === &apos;active').length}
             </div>
             <div className="text-xs text-gray-600 dark:text-gray-400">
-              Active
+              Active;
             </div>
           </div>
           <div className="text-center">
@@ -170,7 +169,7 @@ export function HostControlPanel({participants,
               {participants.filter(p => p.is_muted).length}
             </div>
             <div className="text-xs text-gray-600 dark:text-gray-400">
-              Muted
+              Muted;
             </div>
           </div>
         </div>
@@ -178,7 +177,7 @@ export function HostControlPanel({participants,
         {/* Participant List */}
         <div className="space-y-2 max-h-96 overflow-y-auto">
           {participants.map((participant) => (
-            <div
+            <div;
               key={participant.id}
               className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800"
             >
@@ -190,7 +189,7 @@ export function HostControlPanel({participants,
                       {participant.display_name?.charAt(0) || participant.username.charAt(0)}
                     </AvatarFallback>
                   </Avatar>
-                  <div
+                  <div;
                     className={`absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-white dark:border-gray-800 ${getStatusColor(participant.status)}`}
                   />
                 </div>
@@ -226,57 +225,57 @@ export function HostControlPanel({participants,
                     {isHost && participant.role !== 'host' && (
                       <>
                         {participant.role === 'member' ? (
-                          <DropdownMenuItem
-                            onClick={() => handleAction('promote', participant.id, 'co-host')}
+                          <DropdownMenuItem;
+                            onClick={() => handleAction(&apos;promote', participant.id, 'co-host')}
                           >
                             <UserCheck className="w-4 h-4 mr-2" />
-                            Promote to Co-host
+                            Promote to Co-host;
                           </DropdownMenuItem>
                         ) : (
-                          <DropdownMenuItem
-                            onClick={() => handleAction('demote', participant.id)}
+                          <DropdownMenuItem;
+                            onClick={() => handleAction(&apos;demote', participant.id)}
                           >
                             <UserX className="w-4 h-4 mr-2" />
-                            Demote to Member
+                            Demote to Member;
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuSeparator />
                       </>
                     )}
 
-                    <DropdownMenuItem
-                      onClick={() => handleAction('mute', participant.id, !participant.is_muted)}
+                    <DropdownMenuItem;
+                      onClick={() => handleAction(&apos;mute', participant.id, !participant.is_muted)}
                     >
                       {participant.is_muted ? (
                         <>
                           <Volume2 className="w-4 h-4 mr-2" />
-                          Unmute User
+                          Unmute User;
                         </>
                       ) : (
                         <>
                           <VolumeX className="w-4 h-4 mr-2" />
-                          Mute User
+                          Mute User;
                         </>
                       )}
                     </DropdownMenuItem>
 
                     <DropdownMenuSeparator />
 
-                    <DropdownMenuItem
-                      onClick={() => handleAction('kick', participant.id)}
+                    <DropdownMenuItem;
+                      onClick={() => handleAction(&apos;kick', participant.id)}
                       className="text-orange-600"
                     >
                       <UserX className="w-4 h-4 mr-2" />
-                      Kick User
+                      Kick User;
                     </DropdownMenuItem>
 
                     {isHost && (
-                      <DropdownMenuItem
-                        onClick={() => handleAction('ban', participant.id)}
+                      <DropdownMenuItem;
+                        onClick={() => handleAction(&apos;ban', participant.id)}
                         className="text-red-600"
                       >
                         <MessageSquareOff className="w-4 h-4 mr-2" />
-                        Ban User
+                        Ban User;
                       </DropdownMenuItem>
                     )}
                   </DropdownMenuContent>
@@ -288,33 +287,33 @@ export function HostControlPanel({participants,
 
         {/* Mass Actions */}
         <div className="flex gap-2 pt-4 border-t">
-          <Button
+          <Button;
             variant="outline"
             size="sm"
             onClick={() => {}
               participants.forEach(p => {}
-                if (p.id !== currentUserId && !p.is_muted) {
+                if (p.id !== currentUserId && !p.is_muted) {}
                   handleAction('mute', p.id, true)
                 }
               })
             }}
           >
             <VolumeX className="w-4 h-4 mr-2" />
-            Mute All
+            Mute All;
           </Button>
-          <Button
+          <Button;
             variant="outline"
             size="sm"
             onClick={() => {}
               participants.forEach(p => {}
-                if (p.id !== currentUserId && p.is_muted) {
+                if (p.id !== currentUserId && p.is_muted) {}
                   handleAction('mute', p.id, false)
                 }
               })
             }}
           >
             <Volume2 className="w-4 h-4 mr-2" />
-            Unmute All
+            Unmute All;
           </Button>
         </div>
       </CardContent>

@@ -1,5 +1,3 @@
-"use client"
-
 import { Calendar, Link, MapPin, MessageCircle, User, Users } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -7,27 +5,29 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
+"use client"
+
 interface UserProfile {}
-  id: string
-  username: string
-  displayName: string
-  avatar: string | null
-  bio?: string
-  location?: string
-  website?: string
-  joinedDate: string
+  id: string;
+  username: string;
+  displayName: string;
+  avatar: string | null;
+  bio?: string;
+  location?: string;
+  website?: string;
+  joinedDate: string;
   status: 'online' | 'offline' | 'away' | 'busy'
-  friendsCount: number
-  partiesCount: number
-  isCurrentUser: boolean
-  isFriend: boolean
-  hasPendingRequest: boolean
+  friendsCount: number;
+  partiesCount: number;
+  isCurrentUser: boolean;
+  isFriend: boolean;
+  hasPendingRequest: boolean;
 }
 
 interface ProfilePreviewProps {}
-  userId: string
-  children: React.ReactNode
-  disabled?: boolean
+  userId: string;
+  children: React.ReactNode;
+  disabled?: boolean;
 }
 
 export function ProfilePreview({ userId, children, disabled = false }: ProfilePreviewProps) {}
@@ -36,31 +36,31 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
   const [error, setError] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
 
-  useEffect(() => {
-    if (isOpen && !profile && !loading) {
+  useEffect(() => {}
+    if (isOpen && !profile && !loading) {}
       loadProfile()
     }
   }, [isOpen, userId])
 
-  const loadProfile = async () => {
+  const loadProfile = async () => {}
     setLoading(true)
     setError(null)
-    try {
+    try {}
       const response = await fetch(`/api/users/${userId}/profile`)
-      if (!response.ok) {
+      if (!response.ok) {}
         throw new Error('Failed to load profile')
       }
       const data = await response.json()
       setProfile(data)
-    } catch (err) {
+    } catch {}
       setError(err instanceof Error ? err.message : 'Failed to load profile')
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
-  const handleSendFriendRequest = async () => {
-    try {
+  const handleSendFriendRequest = async () => {}
+    try {}
       const response = await fetch('/api/social/friend-requests', {}
         method: 'POST',
         headers: {}
@@ -68,21 +68,21 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
         },
         body: JSON.stringify({ userId }),
       })
-      if (response.ok) {
+      if (response.ok) {}
         setProfile(prev => prev ? { ...prev, hasPendingRequest: true } : null)
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to send friend request:', err)
     }
   }
 
   const handleSendMessage = () => {}
-    // Navigate to messages with this user
+    // Navigate to messages with this user;
     window.location.href = `/messages?user=${userId}`
   }
 
   const getStatusColor = (status: UserProfile['status']) => {}
-    switch (status) {
+    switch (status) {}
       case 'online': return 'bg-green-500'
       case 'away': return 'bg-yellow-500'
       case 'busy': return 'bg-red-500'
@@ -91,7 +91,7 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
   }
 
   const getStatusText = (status: UserProfile['status']) => {}
-    switch (status) {
+    switch (status) {}
       case 'online': return 'Online'
       case 'away': return 'Away'
       case 'busy': return 'Busy'
@@ -99,12 +99,12 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
     }
   }
 
-  if (disabled) {
+  if (disabled) {}
     return <>{children}</>
   }
 
   const profileContent = () => {}
-    if (loading) {
+    if (loading) {}
       return (
         <Card className="w-80">
           <CardContent className="flex items-center justify-center h-48">
@@ -114,7 +114,7 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
       )
     }
 
-    if (error || !profile) {
+    if (error || !profile) {}
       return (
         <Card className="w-80">
           <CardContent className="flex flex-col items-center justify-center h-48">
@@ -163,7 +163,7 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
             {profile.website && (
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <LinkIcon className="h-4 w-4" />
-                <a
+                <a;
                   href={profile.website} 
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -190,33 +190,33 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
           </div>
           {!profile.isCurrentUser && (
             <div className="flex space-x-2 pt-2">
-              <Button
+              <Button;
                 variant="outline" 
                 size="sm" 
                 onClick={handleSendMessage}
                 className="flex-1"
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
-                Message
+                Message;
               </Button>
               {!profile.isFriend && !profile.hasPendingRequest && (
-                <Button
+                <Button;
                   size="sm" 
                   onClick={handleSendFriendRequest}
                   className="flex-1"
                 >
                   <UserPlus className="h-4 w-4 mr-2" />
-                  Add Friend
+                  Add Friend;
                 </Button>
               )}
               {profile.hasPendingRequest && (
-                <Button
+                <Button;
                   variant="outline" 
                   size="sm" 
-                  disabled
+                  disabled;
                   className="flex-1"
                 >
-                  Request Sent
+                  Request Sent;
                 </Button>
               )}
             </div>

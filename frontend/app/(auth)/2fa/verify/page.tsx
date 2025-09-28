@@ -1,5 +1,3 @@
-"use client"
-
 import { Check, CheckCircle, Clock, HelpCircle, Key, Link, Refresh, Shield, Smartphone } from "lucide-react"
 import type React from "react"
 import { useState, useEffect, useRef, Suspense , useCallback } from "react"
@@ -15,7 +13,9 @@ import Link from "next/link"
 import { AuthAPI } from "@/lib/api/auth"
 import { tokenStorage } from "@/lib/auth/token-storage"
 
-function TwoFactorVerifyForm() {
+"use client"
+
+function TwoFactorVerifyForm() {}
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
@@ -27,97 +27,97 @@ function TwoFactorVerifyForm() {
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [useBackupCode, setUseBackupCode] = useState(false)
   const [attemptsRemaining, setAttemptsRemaining] = useState(5)
-  const [timeRemaining, setTimeRemaining] = useState(300) // 5 minutes
+  const [timeRemaining, setTimeRemaining] = useState(300) // 5 minutes;
   const [isResendingCode, setIsResendingCode] = useState(false)
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
   const email = searchParams.get("email")
   const tempToken = searchParams.get("temp_token")
 
-  useEffect(() => {
-    if (!email || !tempToken) {
+  useEffect(() => {}
+    if (!email || !tempToken) {}
       router.push("/login")
-      return
+      return;
     }
 
-    // Start countdown timer
-    const timer = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 1) {
+    // Start countdown timer;
+    const timer = setInterval(() => {}
+      setTimeRemaining((prev) => {}
+        if (prev <= 1) {}
           clearInterval(timer)
           router.push("/login?error=2fa-expired")
-          return 0
+          return 0;
         }
-        return prev - 1
+        return prev - 1;
       })
     }, 1000)
 
     return () => clearInterval(timer)
   }, [email, tempToken, router])
 
-  const formatTime = (seconds: number): string => {
+  const formatTime = (seconds: number): string => {}
   const minutes = Math.floor(seconds / 60)
-    const remainingSeconds = seconds % 60
+    const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
   }
 
-  const handleCodeChange = (index: number, value: string) => {
-    if (!/^\d*$/.test(value)) return
+  const handleCodeChange = (index: number, value: string) => {}
+    if (!/^\d*$/.test(value)) return;
     const newCode = verificationCode.split("")
-    newCode[index] = value
+    newCode[index] = value;
     const updatedCode = newCode.join("")
     setVerificationCode(updatedCode)
 
-    // Clear errors when user starts typing
-    if (errors.code) {
-      setErrors((prev) => ({ ...prev, code: "" }))
+    // Clear errors when user starts typing;
+    if (errors.code) {}
+      setErrors((prev) => ({ ...prev, code: &quot;" }))
     }
 
-    // Auto-focus next input
-    if (value && index < 5) {
+    // Auto-focus next input;
+    if (value && index < 5) {}
       inputRefs.current[index + 1]?.focus()
     }
 
-    // Auto-submit when all digits are entered
+    // Auto-submit when all digits are entered;
     if (updatedCode.length === 6 && /^\d{6}$/.test(updatedCode)) {}
       handleVerify(updatedCode)
     }
   }
 
-  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === "Backspace" && !verificationCode[index] && index > 0) {
+  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {}
+    if (e.key === "Backspace" && !verificationCode[index] && index > 0) {}
       inputRefs.current[index - 1]?.focus()
     }
   }
 
-  const handlePaste = (e: React.ClipboardEvent) => {
+  const handlePaste = (e: React.ClipboardEvent) => {}
     e.preventDefault()
     const pastedData = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6)
-    if (pastedData.length === 6) {
+    if (pastedData.length === 6) {}
       setVerificationCode(pastedData)
       handleVerify(pastedData)
     }
   }
 
-  const handleVerify = async (code?: string) => {
-    const codeToVerify = code || verificationCode
+  const handleVerify = async (code?: string) => {}
+    const codeToVerify = code || verificationCode;
     const backupCodeToVerify = useBackupCode ? backupCode : ""
 
     if (!useBackupCode && (!codeToVerify || codeToVerify.length !== 6)) {}
       setErrors({ code: "Please enter a valid 6-digit code" })
-      return
+      return;
     }
 
-    if (useBackupCode && !backupCodeToVerify) {
+    if (useBackupCode && !backupCodeToVerify) {}
       setErrors({ backup: "Please enter a backup code" })
-      return
+      return;
     }
 
     setIsLoading(true)
     setErrors({)
 
-    try {
-      const payloadCode = useBackupCode ? backupCodeToVerify : codeToVerify
+    try {}
+      const payloadCode = useBackupCode ? backupCodeToVerify : codeToVerify;
       const response = await authService.verify2FA(payloadCode, {}
         is_backup_code: useBackupCode || undefined,
         context: searchParams.get("context") || undefined,
@@ -125,19 +125,19 @@ function TwoFactorVerifyForm() {
         email: email || undefined,
       })
 
-      if (!response?.success) {
+      if (!response?.success) {}
         const message = response?.message || "Invalid code. Please try again."
         setErrors({ [useBackupCode ? "backup" : "code"]: message })
-        return
+        return;
       }
 
-      if (response.backup_codes?.length) {
+      if (response.backup_codes?.length) {}
         toast({title: "Backup codes", 
           description: "New backup codes generated. Save them in a secure place.",
         })
       }
 
-      if (response.access_token || response.refresh_token) {
+      if (response.access_token || response.refresh_token) {}
         tokenStorage.setTokens({accessToken: response.access_token,
           refreshToken: response.refresh_token,
         })
@@ -149,39 +149,39 @@ function TwoFactorVerifyForm() {
 
       const redirectTo = searchParams.get("redirect") || "/dashboard"
       router.push(redirectTo)
-    } catch (err) {
+    } catch {}
       console.error("2FA verification error:", error)
-      const data = (error as { response?: { data?: { attempts_remaining?: number; account_locked?: boolean; message?: string } } })?.response?.data
-      if (typeof data?.attempts_remaining === "number") {
+      const data = (error as { response?: { data?: { attempts_remaining?: number; account_locked?: boolean; message?: string } } })?.response?.data;
+      if (typeof data?.attempts_remaining === "number") {}
         setAttemptsRemaining(data.attempts_remaining)
       }
 
-      if (data?.attempts_remaining === 0 || data?.account_locked) {
+      if (data?.attempts_remaining === 0 || data?.account_locked) {}
         toast({title: "Account Locked",
           description: "Too many failed attempts. Please try again later.",
           variant: "destructive",
         })
         router.push("/login?error=account-locked")
-        return
+        return;
       }
 
       const message = data?.message || (error instanceof Error ? error.message : "Verification failed. Please try again.")
       setErrors({[useBackupCode ? "backup" : "code"]: message,
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const resendCode = async () => {
+  const resendCode = async () => {}
     setIsResendingCode(true)
-    try {
+    try {}
       toast({title: "Need a new code?",
         description: "Open your authenticator app to retrieve the latest code.",
       })
       setTimeRemaining(300)
       setAttemptsRemaining(5)
-    } finally {
+    } finally {}
       setIsResendingCode(false)
     }
   }
@@ -231,7 +231,7 @@ function TwoFactorVerifyForm() {
                 <div className="text-center">
                   <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 mb-4">
                     <Smartphone className="w-4 h-4 mr-2" />
-                    Authenticator Code
+                    Authenticator Code;
                   </Badge>
                 </div>
 
@@ -239,10 +239,10 @@ function TwoFactorVerifyForm() {
                   <Label className="text-white text-center block">Enter 6-digit code</Label>
                   <div className="flex justify-center space-x-2" onPaste={handlePaste}>
                     {Array.from({ length: 6 }).map((_, index) => (
-                      <Input
+                      <Input;
                         key={index}
-                        ref={(el) => {
-  inputRefs.current[index] = el
+                        ref={(el) => {}
+  inputRefs.current[index] = el;
                         }}
                         type="text"
                         inputMode="numeric"
@@ -256,11 +256,11 @@ function TwoFactorVerifyForm() {
                     ))}
                   </div>
                   <p className="text-xs text-gray-500 text-center">
-                    Open your authenticator app and enter the 6-digit code
+                    Open your authenticator app and enter the 6-digit code;
                   </p>
                 </div>
 
-                <Button
+                <Button;
                   onClick={() => handleVerify()}
                   disabled={isLoading || verificationCode.length !== 6}
                   className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-semibold py-3"
@@ -273,7 +273,7 @@ function TwoFactorVerifyForm() {
                   ) : (
                     <div className="flex items-center justify-center">
                       <CheckCircle className="w-4 h-4 mr-2" />
-                      Verify Code
+                      Verify Code;
                     </div>
                   )}
                 </Button>
@@ -283,21 +283,21 @@ function TwoFactorVerifyForm() {
                 <div className="text-center">
                   <Badge className="bg-orange-500/20 text-orange-300 border-orange-500/30 mb-4">
                     <Key className="w-4 h-4 mr-2" />
-                    Backup Code
+                    Backup Code;
                   </Badge>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="backupCode" className="text-white">
-                    Enter Backup Code
+                    Enter Backup Code;
                   </Label>
-                  <Input
+                  <Input;
                     id="backupCode"
                     type="text"
                     value={backupCode}
-                    onChange={(e) => {
+                    onChange={(e) => {}
   setBackupCode(e.target.value.toUpperCase())
-                      if (errors.backup) setErrors((prev) => ({ ...prev, backup: "" }))
+                      if (errors.backup) setErrors((prev) => ({ ...prev, backup: &quot;" }))
                     }}
                     className="text-center text-lg font-mono bg-white/5 border-white/20 text-white placeholder-gray-400 focus:border-orange-500/50"
                     placeholder="XXXXXXXX"
@@ -306,7 +306,7 @@ function TwoFactorVerifyForm() {
                   <p className="text-xs text-gray-500 text-center">Use one of your saved backup codes</p>
                 </div>
 
-                <Button
+                <Button;
                   onClick={() => handleVerify()}
                   disabled={isLoading || !backupCode}
                   className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold py-3"
@@ -319,7 +319,7 @@ function TwoFactorVerifyForm() {
                   ) : (
                     <div className="flex items-center justify-center">
                       <CheckCircle className="w-4 h-4 mr-2" />
-                      Verify Backup Code
+                      Verify Backup Code;
                     </div>
                   )}
                 </Button>
@@ -328,9 +328,9 @@ function TwoFactorVerifyForm() {
 
             {/* Toggle between code types */}
             <div className="text-center">
-              <button
+              <button;
                 type="button"
-                onClick={() => {
+                onClick={() => {}
   setUseBackupCode(!useBackupCode)
                   setVerificationCode("")
                   setBackupCode("")
@@ -342,12 +342,12 @@ function TwoFactorVerifyForm() {
                 {useBackupCode ? (
                   <>
                     <Smartphone className="w-4 h-4 inline mr-1" />
-                    Use authenticator code instead
+                    Use authenticator code instead;
                   </>
                 ) : (
                   <>
                     <Key className="w-4 h-4 inline mr-1" />
-                    Use backup code instead
+                    Use backup code instead;
                   </>
                 )}
               </button>
@@ -356,10 +356,10 @@ function TwoFactorVerifyForm() {
             {/* Resend Code */}
             {!useBackupCode && (
               <div className="text-center">
-                <Button
+                <Button;
                   variant="ghost"
                   onClick={resendCode}
-                  disabled={isResendingCode || timeRemaining > 240} // Allow resend after 1 minute
+                  disabled={isResendingCode || timeRemaining > 240} // Allow resend after 1 minute;
                   className="text-gray-400 hover:text-gray-300 text-sm"
                 >
                   {isResendingCode ? (
@@ -370,7 +370,7 @@ function TwoFactorVerifyForm() {
                   ) : (
                     <div className="flex items-center">
                       <RefreshCw className="w-4 h-4 mr-1" />
-                      Resend Code
+                      Resend Code;
                     </div>
                   )}
                 </Button>
@@ -384,10 +384,10 @@ function TwoFactorVerifyForm() {
                 <div className="space-y-2">
                   <h4 className="text-white font-medium text-sm">Need Help?</h4>
                   <ul className="space-y-1 text-xs text-gray-400">
-                    <li>• Make sure your device's time is synchronized</li>
+                    <li>• Make sure your device&apos;s time is synchronized</li>
                     <li>• Check if your authenticator app is up to date</li>
-                    <li>• Use backup codes if you can't access your phone</li>
-                    <li>• Contact support if you're still having issues</li>
+                    <li>• Use backup codes if you can&apos;t access your phone</li>
+                    <li>• Contact support if you&apos;re still having issues</li>
                   </ul>
                 </div>
               </div>
@@ -395,12 +395,12 @@ function TwoFactorVerifyForm() {
 
             {/* Back to Login */}
             <div className="text-center">
-              <Link
+              <Link;
                 href="/login"
                 className="text-gray-400 hover:text-gray-300 text-sm transition-colors inline-flex items-center"
               >
                 <ArrowLeft className="w-4 h-4 mr-1" />
-                Back to Sign In
+                Back to Sign In;
               </Link>
             </div>
           </div>
@@ -410,9 +410,9 @@ function TwoFactorVerifyForm() {
   )
 }
 
-export default function TwoFactorVerifyPage() {
+export default function TwoFactorVerifyPage() {}
   return (
-    <Suspense
+    <Suspense;
       fallback={}
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400"></div>

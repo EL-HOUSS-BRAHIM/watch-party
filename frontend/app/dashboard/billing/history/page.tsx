@@ -1,6 +1,6 @@
 import { BillingHistory } from "@/components/billing/billing-history"
 
-export default function BillingHistoryPage() {
+export default function BillingHistoryPage() {}
   return (
     <div className="container mx-auto py-8">
       <div className="max-w-4xl mx-auto">

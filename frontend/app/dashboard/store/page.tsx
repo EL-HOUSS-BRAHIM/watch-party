@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -8,10 +6,13 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
-
 import { formatDistanceToNow, parseISO } from "date-fns"
 
 } from "lucide-react"
+"use client"
+
+
+
 
   ShoppingCart,
   Star,
@@ -30,36 +31,36 @@ import { formatDistanceToNow, parseISO } from "date-fns"
   CreditCard,
   Package,
   ShoppingBag,
-  Banknote
+  Banknote;
 interface StoreItem {}
-  id: string
-  name: string
-  description: string
+  id: string;
+  name: string;
+  description: string;
   category: "themes" | "emotes" | "avatars" | "badges" | "features" | "bundles"
   type: "theme" | "emote_pack" | "avatar_frame" | "title" | "badge" | "premium_feature" | "bundle"
   price: {}
     currency: "points" | "coins" | "gems" | "usd"
-    amount: number
+    amount: number;
   }
   preview_images: string[]
-  icon: string
-  owned: boolean
-  featured: boolean
-  new: boolean
-  limited_time: boolean
+  icon: string;
+  owned: boolean;
+  featured: boolean;
+  new: boolean;
+  limited_time: boolean;
   discount?: {}
-    percentage: number
-    original_price: number
-    ends_at: string
+    percentage: number;
+    original_price: number;
+    ends_at: string;
   }
   requirements?: string[]
   bundle_items?: string[]
   rating: {}
-    average: number
-    count: number
+    average: number;
+    count: number;
   }
-  popularity_rank: number
-  release_date: string
+  popularity_rank: number;
+  release_date: string;
   tags: string[]
 }
 
@@ -70,18 +71,18 @@ interface UserInventory {}
   badges: Array<{ id: string; name: string; equipped: boolean }>
   features: Array<{ id: string; name: string; expires_at?: string }>
   currency: {}
-    points: number
-    coins: number
-    gems: number
+    points: number;
+    coins: number;
+    gems: number;
   }
 }
 
 interface CartItem {}
-  item: StoreItem
-  quantity: number
+  item: StoreItem;
+  quantity: number;
 }
 
-export default function StorePage() {
+export default function StorePage() {}
   const { toast } = useToast()
 
   const [storeItems, setStoreItems] = useState<StoreItem[]>([])
@@ -89,60 +90,60 @@ export default function StorePage() {
   const [cart, setCart] = useState<CartItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState<string>("all")
-  const [sortBy, setSortBy] = useState<string>("featured")
-  const [priceFilter, setPriceFilter] = useState<string>("all")
+  const [selectedCategory, setSelectedCategory] = useState<string>(&quot;all")
+  const [sortBy, setSortBy] = useState<string>(&quot;featured")
+  const [priceFilter, setPriceFilter] = useState<string>(&quot;all")
   const [showCart, setShowCart] = useState(false)
   const [processingPurchase, setProcessingPurchase] = useState(false)
 
-  const loadStoreData = useCallback(async () => {
-    try {
+  const loadStoreData = useCallback(async () => {}
+    try {}
       const token = localStorage.getItem("accessToken")
       const [storeRes, inventoryRes] = await Promise.all([]
         fetch("/api/store/items/", { headers: { Authorization: `Bearer ${token}` } }),
         fetch("/api/users/inventory/", { headers: { Authorization: `Bearer ${token}` } })
       ])
 
-      if (storeRes.ok) {
+      if (storeRes.ok) {}
         const data = await storeRes.json()
         setStoreItems(data.items || [])
       }
 
-      if (inventoryRes.ok) {
+      if (inventoryRes.ok) {}
         const data = await inventoryRes.json()
         setInventory(data)
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to load store data:", error)
       toast({title: "Error",
         description: "Failed to load store data.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }, [toast])
 
-  useEffect(() => {
+  useEffect(() => {}
     loadStoreData()
   }, [loadStoreData])
 
   const addToCart = (item: StoreItem) => {}
-    if (item.owned) {
+    if (item.owned) {}
       toast({title: "Already Owned",
         description: "You already own this item.",
         variant: "destructive",
       })
-      return
+      return;
     }
 
     setCart(prev => {}
       const existing = prev.find(cartItem => cartItem.item.id === item.id)
-      if (existing) {
+      if (existing) {}
         return prev.map(cartItem =>
-          cartItem.item.id === item.id
+          cartItem.item.id === item.id;
             ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem
+            : cartItem;
         )
       }
       return [...prev, { item, quantity: 1 }]
@@ -160,7 +161,7 @@ export default function StorePage() {
   const purchaseItem = async (item: StoreItem) => {}
     setProcessingPurchase(true)
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/store/purchase/`, {}
         method: "POST",
@@ -172,18 +173,18 @@ export default function StorePage() {
         }),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
-        // Update item as owned
+        // Update item as owned;
         setStoreItems(prev => 
           prev.map(storeItem => 
-            storeItem.id === item.id
+            storeItem.id === item.id;
               ? { ...storeItem, owned: true }
-              : storeItem
+              : storeItem;
           )
         )
-        // Update inventory
-        if (inventory) {
+        // Update inventory;
+        if (inventory) {}
           setInventory(data.updated_inventory)
         }
         toast({title: "Purchase Successful!",
@@ -193,22 +194,22 @@ export default function StorePage() {
         const error = await response.json()
         throw new Error(error.message || "Purchase failed")
       }
-    } catch (err) {
+    } catch {}
       console.error("Purchase error:", error)
       toast({title: "Purchase Failed",
         description: error instanceof Error ? error.message : "Failed to complete purchase.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setProcessingPurchase(false)
     }
   }
 
-  const purchaseCart = async () => {
-    if (cart.length === 0) return
+  const purchaseCart = async () => {}
+    if (cart.length === 0) return;
     setProcessingPurchase(true)
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/store/purchase/`, {}
         method: "POST",
@@ -218,25 +219,25 @@ export default function StorePage() {
         },
         body: JSON.stringify({items: cart.map(cartItem => ({}
             item_id: cartItem.item.id,
-            quantity: cartItem.quantity
+            quantity: cartItem.quantity;
           }))
         }),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
-        // Update items as owned
+        // Update items as owned;
         const purchasedIds = cart.map(item => item.item.id)
         setStoreItems(prev => 
           prev.map(storeItem => 
             purchasedIds.includes(storeItem.id) 
               ? { ...storeItem, owned: true }
-              : storeItem
+              : storeItem;
           )
         )
-        // Clear cart and update inventory
+        // Clear cart and update inventory;
         setCart([])
-        if (inventory) {
+        if (inventory) {}
           setInventory(data.updated_inventory)
         }
         toast({title: "Purchase Successful!",
@@ -247,19 +248,19 @@ export default function StorePage() {
         const error = await response.json()
         throw new Error(error.message || "Purchase failed")
       }
-    } catch (err) {
+    } catch {}
       console.error("Cart purchase error:", error)
       toast({title: "Purchase Failed",
         description: error instanceof Error ? error.message : "Failed to complete purchase.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setProcessingPurchase(false)
     }
   }
 
   const getCategoryIcon = (category: string) => {}
-    switch (category) {
+    switch (category) {}
       case "themes":
         return <Palette className="h-4 w-4" />
       case "emotes":
@@ -278,7 +279,7 @@ export default function StorePage() {
   }
 
   const getCurrencyIcon = (currency: string) => {}
-    switch (currency) {
+    switch (currency) {}
       case "points":
         return <Star className="h-4 w-4 text-yellow-500" />
       case "coins":
@@ -293,47 +294,47 @@ export default function StorePage() {
   }
 
   const filteredItems = storeItems.filter(item => {}
-    // Search filter
+    // Search filter;
     if (searchQuery.trim()) {}
       const query = searchQuery.toLowerCase()
       if (!item.name.toLowerCase().includes(query) && 
           !item.description.toLowerCase().includes(query) &&
           !item.tags.some(tag => tag.toLowerCase().includes(query))) {}
-        return false
+        return false;
       }
     }
 
-    // Category filter
-    if (selectedCategory !== "all" && item.category !== selectedCategory) {
-      return false
+    // Category filter;
+    if (selectedCategory !== "all" && item.category !== selectedCategory) {}
+      return false;
     }
 
-    // Price filter
-    if (priceFilter !== "all") {
-      const price = item.price.amount
-      switch (priceFilter) {
+    // Price filter;
+    if (priceFilter !== "all") {}
+      const price = item.price.amount;
+      switch (priceFilter) {}
         case "free":
-          return price === 0
+          return price === 0;
         case "low":
-          return price > 0 && price <= 100
+          return price > 0 && price <= 100;
         case "medium":
-          return price > 100 && price <= 500
+          return price > 100 && price <= 500;
         case "high":
-          return price > 500
+          return price > 500;
       }
     }
 
-    return true
+    return true;
   }).sort((a, b) => {}
-    switch (sortBy) {
+    switch (sortBy) {}
       case "price_low":
-        return a.price.amount - b.price.amount
+        return a.price.amount - b.price.amount;
       case "price_high":
-        return b.price.amount - a.price.amount
+        return b.price.amount - a.price.amount;
       case "rating":
-        return b.rating.average - a.rating.average
+        return b.rating.average - a.rating.average;
       case "popularity":
-        return a.popularity_rank - b.popularity_rank
+        return a.popularity_rank - b.popularity_rank;
       case "newest":
         return new Date(b.release_date).getTime() - new Date(a.release_date).getTime()
       case "featured":
@@ -348,7 +349,7 @@ export default function StorePage() {
     }, 0)
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -367,7 +368,7 @@ export default function StorePage() {
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <ShoppingCart className="h-8 w-8" />
-              Store
+              Store;
             </h1>
             <p className="text-gray-600 mt-2">Customize your watch party experience</p>
           </div>
@@ -390,13 +391,13 @@ export default function StorePage() {
               </div>
             )}
             {/* Cart Button */}
-            <Button
+            <Button;
               variant="outline"
               onClick={() => setShowCart(true)}
               className="relative"
             >
               <ShoppingCart className="h-4 w-4 mr-2" />
-              Cart
+              Cart;
               {cart.length > 0 && (
                 <Badge className="absolute -top-2 -right-2 bg-red-500 text-white">
                   {cart.length}
@@ -421,7 +422,7 @@ export default function StorePage() {
                   <div className="flex-1">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                      <Input
+                      <Input;
                         placeholder="Search items..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
@@ -483,7 +484,7 @@ export default function StorePage() {
               <div className="mb-8">
                 <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
                   <Star className="h-6 w-6 text-yellow-500" />
-                  Featured Items
+                  Featured Items;
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {filteredItems.filter(item => item.featured).slice(0, 3).map((item) => (
@@ -495,7 +496,7 @@ export default function StorePage() {
                             <div className="flex items-center gap-2 mb-2">
                               <Badge className="bg-yellow-500 text-white">
                                 <Star className="h-3 w-3 mr-1" />
-                                Featured
+                                Featured;
                               </Badge>
                               {item.new && (
                                 <Badge className="bg-green-500 text-white">New</Badge>
@@ -503,7 +504,7 @@ export default function StorePage() {
                               {item.limited_time && (
                                 <Badge className="bg-red-500 text-white">
                                   <Clock className="h-3 w-3 mr-1" />
-                                  Limited
+                                  Limited;
                                 </Badge>
                               )}
                             </div>
@@ -535,18 +536,18 @@ export default function StorePage() {
                           {item.owned ? (
                             <Badge className="bg-green-100 text-green-800">
                               <Check className="h-3 w-3 mr-1" />
-                              Owned
+                              Owned;
                             </Badge>
                           ) : (
                             <div className="flex gap-2">
-                              <Button
+                              <Button;
                                 size="sm"
                                 variant="outline"
                                 onClick={() => addToCart(item)}
                               >
                                 <ShoppingCart className="h-4 w-4" />
                               </Button>
-                              <Button
+                              <Button;
                                 size="sm"
                                 onClick={() => purchaseItem(item)}
                                 disabled={processingPurchase}
@@ -619,11 +620,11 @@ export default function StorePage() {
                     {item.owned ? (
                       <Badge className="w-full justify-center bg-green-100 text-green-800 py-2">
                         <Check className="h-3 w-3 mr-1" />
-                        Owned
+                        Owned;
                       </Badge>
                     ) : (
                       <div className="flex gap-2">
-                        <Button
+                        <Button;
                           size="sm"
                           variant="outline"
                           onClick={() => addToCart(item)}
@@ -631,13 +632,13 @@ export default function StorePage() {
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
-                        <Button
+                        <Button;
                           size="sm"
                           onClick={() => purchaseItem(item)}
                           disabled={processingPurchase}
                           className="flex-1"
                         >
-                          Buy
+                          Buy;
                         </Button>
                       </div>
                     )}
@@ -831,12 +832,12 @@ export default function StorePage() {
                               <span className="text-sm text-gray-600">× {cartItem.quantity}</span>
                             </div>
                           </div>
-                          <Button
+                          <Button;
                             variant="ghost"
                             size="sm"
                             onClick={() => removeFromCart(cartItem.item.id)}
                           >
-                            Remove
+                            Remove;
                           </Button>
                         </div>
                       ))}
@@ -847,7 +848,7 @@ export default function StorePage() {
                         <span className="font-medium">Total:</span>
                         <span className="font-bold text-lg">{getCartTotal().toLocaleString()}</span>
                       </div>
-                      <Button
+                      <Button;
                         onClick={purchaseCart}
                         disabled={processingPurchase}
                         className="w-full"
@@ -860,7 +861,7 @@ export default function StorePage() {
                         ) : (
                           <>
                             <CreditCard className="h-4 w-4 mr-2" />
-                            Purchase All
+                            Purchase All;
                           </>
                         )}
                       </Button>

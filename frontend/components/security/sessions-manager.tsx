@@ -1,17 +1,18 @@
-"use client"
-
 import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
-
 import { useToast } from "@/hooks/use-toast"
 import { useApi } from "@/hooks/use-api"
 import { formatDistanceToNow } from "date-fns"
 
 } from "lucide-react"
+"use client"
+
+
+
 
   Monitor, 
   Smartphone, 
@@ -22,22 +23,22 @@ import { formatDistanceToNow } from "date-fns"
   LogOut, 
   AlertTriangle,
   Shield,
-  RefreshCw
+  RefreshCw;
 interface Session {}
-  id: string
+  id: string;
   device_type: "desktop" | "mobile" | "tablet" | "unknown"
-  browser: string
-  os: string
-  ip_address: string
+  browser: string;
+  os: string;
+  ip_address: string;
   location: {}
-    city?: string
-    country?: string
-    region?: string
+    city?: string;
+    country?: string;
+    region?: string;
   }
-  last_activity: string
-  created_at: string
-  is_current: boolean
-  user_agent: string
+  last_activity: string;
+  created_at: string;
+  is_current: boolean;
+  user_agent: string;
 }
 
 const deviceIcons = { desktop: Monitor,
@@ -46,7 +47,7 @@ const deviceIcons = { desktop: Monitor,
   unknown: Globe,
 }
 
-export function SessionsManager() {
+export function SessionsManager() {}
   const [sessions, setSessions] = useState<Session[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [isRevoking, setIsRevoking] = useState<string | null>(null)
@@ -54,64 +55,64 @@ export function SessionsManager() {
   const { toast } = useToast()
   const api = useApi()
 
-  useEffect(() => {
+  useEffect(() => {}
     fetchSessions()
   }, [])
 
-  const fetchSessions = async () => {
-    try {
+  const fetchSessions = async () => {}
+    try {}
       setIsLoading(true)
       const response = await api.get("/auth/sessions/")
       setSessions((response.data as Record<string, unknown>).sessions || [])
-    } catch (err) {
+    } catch {}
       toast({title: "Error",
         description: "Failed to load sessions",
         variant: "destructive"
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
   const revokeSession = async (sessionId: string) => {}
     setIsRevoking(sessionId)
-    try {
+    try {}
       await api.delete(`/auth/sessions/${sessionId}/`)
       setSessions(sessions.filter(s => s.id !== sessionId))
       toast({title: "Session revoked",
         description: "The session has been successfully terminated",
       })
-    } catch (err) {
+    } catch {}
       toast({title: "Error",
         description: "Failed to revoke session",
         variant: "destructive"
       })
-    } finally {
+    } finally {}
       setIsRevoking(null)
     }
   }
 
-  const revokeAllOtherSessions = async () => {
+  const revokeAllOtherSessions = async () => {}
     setIsRevokingAll(true)
-    try {
+    try {}
       await api.post("/auth/sessions/revoke-all/")
       setSessions(sessions.filter(s => s.is_current))
       toast({title: "Sessions revoked",
         description: "All other sessions have been terminated",
       })
-    } catch (err) {
+    } catch {}
       toast({title: "Error",
         description: "Failed to revoke sessions",
         variant: "destructive"
       })
-    } finally {
+    } finally {}
       setIsRevokingAll(false)
     }
   }
 
   const getLocationString = (location: Session["location"]) => {}
     const parts = [location.city, location.region, location.country].filter(Boolean)
-    return parts.length > 0 ? parts.join(", ") : "Unknown location"
+    return parts.length > 0 ? parts.join(&quot;, ") : "Unknown location"
   }
 
   const getDeviceString = (session: Session) => {}
@@ -121,7 +122,7 @@ export function SessionsManager() {
     return parts.join(" on ") || "Unknown device"
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <Card>
         <CardContent className="flex items-center justify-center p-8">
@@ -149,17 +150,17 @@ export function SessionsManager() {
 
       {/* Actions */}
       <div className="flex justify-between items-center">
-        <Button
+        <Button;
           variant="outline"
           onClick={fetchSessions}
           disabled={isLoading}
         >
           <RefreshCw className="w-4 h-4 mr-2" />
-          Refresh
+          Refresh;
         </Button>
 
         {otherSessions.length > 0 && (
-          <Button
+          <Button;
             variant="destructive"
             onClick={revokeAllOtherSessions}
             disabled={isRevokingAll}
@@ -187,7 +188,7 @@ export function SessionsManager() {
                 </div>
               </div>
               <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                Active now
+                Active now;
               </Badge>
             </div>
           </CardHeader>
@@ -225,7 +226,7 @@ export function SessionsManager() {
           {otherSessions.map((session) => {}
             const Icon = deviceIcons[session.device_type]
             const lastActivity = new Date(session.last_activity)
-            const isRecent = Date.now() - lastActivity.getTime() < 24 * 60 * 60 * 1000 // 24 hours
+            const isRecent = Date.now() - lastActivity.getTime() < 24 * 60 * 60 * 1000 // 24 hours;
             return (
               <Card key={session.id}>
                 <CardContent className="p-4">
@@ -257,7 +258,7 @@ export function SessionsManager() {
                         </div>
                       </div>
                     </div>
-                    <Button
+                    <Button;
                       variant="destructive"
                       size="sm"
                       onClick={() => revokeSession(session.id)}
@@ -268,7 +269,7 @@ export function SessionsManager() {
                       ) : (
                         <>
                           <LogOut className="w-4 h-4 mr-1" />
-                          Revoke
+                          Revoke;
                         </>
                       )}
                     </Button>
@@ -304,7 +305,7 @@ export function SessionsManager() {
           <ul className="list-disc list-inside space-y-1 text-muted-foreground">
             <li>Always sign out from shared or public computers</li>
             <li>Regularly review your active sessions</li>
-            <li>Revoke any sessions you don't recognize immediately</li>
+            <li>Revoke any sessions you don&apos;t recognize immediately</li>
             <li>Enable two-factor authentication for extra security</li>
             <li>Use strong, unique passwords</li>
           </ul>

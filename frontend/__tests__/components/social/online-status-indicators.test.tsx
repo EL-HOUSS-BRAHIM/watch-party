@@ -59,7 +59,7 @@ describe('OnlineStatusIndicators', () => {}
     jest.useRealTimers()
   })
 
-  it('fetches online status on mount', async () => {
+  it('fetches online status on mount', async () => {}
     render(<OnlineStatusIndicators />)
 
     await waitFor(() => {}
@@ -71,7 +71,7 @@ describe('OnlineStatusIndicators', () => {}
     expect(screen.getByText('150 friends online')).toBeInTheDocument()
   })
 
-  it('displays different activity states correctly', async () => {
+  it('displays different activity states correctly', async () => {}
     render(<OnlineStatusIndicators />)
 
     await waitFor(() => {}
@@ -83,7 +83,7 @@ describe('OnlineStatusIndicators', () => {}
     expect(screen.getByText('🎉 In Party')).toBeInTheDocument()
   })
 
-  it('updates status every 30 seconds', async () => {
+  it('updates status every 30 seconds', async () => {}
     render(<OnlineStatusIndicators />)
 
     await waitFor(() => {}
@@ -98,7 +98,7 @@ describe('OnlineStatusIndicators', () => {}
     })
   })
 
-  it('handles API errors gracefully', async () => {
+  it('handles API errors gracefully', async () => {}
     ;(usersAPI.getOnlineStatus as jest.Mock).mockRejectedValue(new Error('API Error'))
 
     render(<OnlineStatusIndicators />)
@@ -112,7 +112,7 @@ describe('OnlineStatusIndicators', () => {}
     })
   })
 
-  it('only shows toast error once per error state', async () => {
+  it('only shows toast error once per error state', async () => {}
     ;(usersAPI.getOnlineStatus as jest.Mock).mockRejectedValue(new Error('API Error'))
 
     render(<OnlineStatusIndicators />)
@@ -130,7 +130,7 @@ describe('OnlineStatusIndicators', () => {}
     })
   })
 
-  it('handles empty response gracefully', async () => {
+  it('handles empty response gracefully', async () => {}
     ;(usersAPI.getOnlineStatus as jest.Mock).mockResolvedValue({}
       online_friends: [],
       total_online: 0;
@@ -143,7 +143,7 @@ describe('OnlineStatusIndicators', () => {}
     })
   })
 
-  it('handles malformed response gracefully', async () => {
+  it('handles malformed response gracefully', async () => {}
     ;(usersAPI.getOnlineStatus as jest.Mock).mockResolvedValue({}
       online_friends: null,
       total_online: undefined;
@@ -162,7 +162,7 @@ describe('OnlineStatusIndicators', () => {}
     expect(screen.getByTestId('online-status-loading')).toBeInTheDocument()
   })
 
-  it('clears loading state after data loads', async () => {
+  it('clears loading state after data loads', async () => {}
     render(<OnlineStatusIndicators />)
 
     await waitFor(() => {}

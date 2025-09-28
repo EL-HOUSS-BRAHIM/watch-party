@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "Performance Optimizer - Admin Dashbo
   description: "Monitor and optimize application performance with detailed metrics and suggestions",
 }
 
-export default function PerformanceOptimizerPage() {
+export default function PerformanceOptimizerPage() {}
   return (
     <div className="container mx-auto py-6">
       <PerformanceOptimizer />

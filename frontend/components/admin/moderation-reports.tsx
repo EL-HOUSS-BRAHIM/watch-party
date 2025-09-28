@@ -1,5 +1,3 @@
-"use client"
-
 import { AlertTriangle, Eye, Filter, Flag, Search, User, X, XCircle } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,46 +10,48 @@ import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 
+"use client"
+
 interface Report {}
-  id: string
+  id: string;
   type: 'user' | 'content' | 'party' | 'message'
   category: 'harassment' | 'spam' | 'inappropriate' | 'copyright' | 'violence' | 'other'
   status: 'pending' | 'investigating' | 'resolved' | 'dismissed'
   priority: 'low' | 'medium' | 'high' | 'critical'
   reporter: {}
-    id: string
-    username: string
-    displayName: string
-    avatar: string | null
+    id: string;
+    username: string;
+    displayName: string;
+    avatar: string | null;
   }
   reported: {}
-    id: string
-    username?: string
-    displayName?: string
-    avatar?: string | null
-    content?: string
-    title?: string
+    id: string;
+    username?: string;
+    displayName?: string;
+    avatar?: string | null;
+    content?: string;
+    title?: string;
   }
-  reason: string
-  description: string
+  reason: string;
+  description: string;
   evidence?: string[]
-  createdAt: string
-  updatedAt: string
+  createdAt: string;
+  updatedAt: string;
   assignedTo?: {}
-    id: string
-    name: string
+    id: string;
+    name: string;
   }
   resolution?: {}
-    action: string
-    reason: string
-    actionDate: string
-    moderator: string
+    action: string;
+    reason: string;
+    actionDate: string;
+    moderator: string;
   }
 }
 
-// Helper functions
+// Helper functions;
 const getCategoryIcon = (category: string) => {}
-  switch (category) {
+  switch (category) {}
     case 'harassment': return <User className="h-4 w-4 text-red-500" />
     case 'spam': return <Flag className="h-4 w-4 text-orange-500" />
     case 'inappropriate': return <AlertTriangle className="h-4 w-4 text-yellow-500" />
@@ -62,7 +62,7 @@ const getCategoryIcon = (category: string) => {}
 }
 
 const getStatusColor = (status: string) => {}
-  switch (status) {
+  switch (status) {}
     case 'pending': return 'bg-yellow-100 text-yellow-800'
     case 'investigating': return 'bg-blue-100 text-blue-800'
     case 'resolved': return 'bg-green-100 text-green-800'
@@ -72,7 +72,7 @@ const getStatusColor = (status: string) => {}
 }
 
 const getPriorityColor = (priority: string) => {}
-  switch (priority) {
+  switch (priority) {}
     case 'low': return 'bg-green-100 text-green-800'
     case 'medium': return 'bg-yellow-100 text-yellow-800'
     case 'high': return 'bg-orange-100 text-orange-800'
@@ -81,35 +81,35 @@ const getPriorityColor = (priority: string) => {}
   }
 }
 
-export function ModerationReports() {
+export function ModerationReports() {}
   const [reports, setReports] = useState<Report[]>([])
   const [loading, setLoading] = useState(true)
   const [selectedReport, setSelectedReport] = useState<Report | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string>('all')
-  const [priorityFilter, setPriorityFilter] = useState<string>('all')
-  const [typeFilter, setTypeFilter] = useState<string>('all')
+  const [statusFilter, setStatusFilter] = useState<string>(&apos;all')
+  const [priorityFilter, setPriorityFilter] = useState<string>(&apos;all')
+  const [typeFilter, setTypeFilter] = useState<string>(&apos;all')
 
-  useEffect(() => {
+  useEffect(() => {}
     loadReports()
   }, [])
 
-  const loadReports = async () => {
-    try {
+  const loadReports = async () => {}
+    try {}
       const response = await fetch('/api/admin/moderation/reports')
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setReports(data)
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to load reports:', error)
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
   const handleTakeAction = async (reportId: string, action: string, reason: string) => {}
-    try {
+    try {}
       const response = await fetch(`/api/admin/moderation/reports/${reportId}/action`, {}
         method: 'POST',
         headers: {}
@@ -118,17 +118,17 @@ export function ModerationReports() {
         body: JSON.stringify({ action, reason }),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         loadReports()
         setSelectedReport(null)
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to take action:', error)
     }
   }
 
   const handleAssignReport = async (reportId: string, moderatorId: string) => {}
-    try {
+    try {}
       const response = await fetch(`/api/admin/moderation/reports/${reportId}/assign`, {}
         method: 'POST',
         headers: {}
@@ -137,10 +137,10 @@ export function ModerationReports() {
         body: JSON.stringify({ moderatorId }),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         loadReports()
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to assign report:', error)
     }
   }
@@ -149,14 +149,14 @@ export function ModerationReports() {
     const matchesSearch = report.reason.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          report.reporter.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          report.reported.displayName?.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStatus = statusFilter === 'all' || report.status === statusFilter
-    const matchesPriority = priorityFilter === 'all' || report.priority === priorityFilter
-    const matchesType = typeFilter === 'all' || report.type === typeFilter
-    return matchesSearch && matchesStatus && matchesPriority && matchesType
+    const matchesStatus = statusFilter === 'all' || report.status === statusFilter;
+    const matchesPriority = priorityFilter === 'all' || report.priority === priorityFilter;
+    const matchesType = typeFilter === 'all' || report.type === typeFilter;
+    return matchesSearch && matchesStatus && matchesPriority && matchesType;
   })
 
   const getStatusColor = (status: Report['status']) => {}
-    switch (status) {
+    switch (status) {}
       case 'pending': return 'bg-yellow-500'
       case 'investigating': return 'bg-blue-500'
       case 'resolved': return 'bg-green-500'
@@ -166,7 +166,7 @@ export function ModerationReports() {
   }
 
   const getPriorityColor = (priority: Report['priority']) => {}
-    switch (priority) {
+    switch (priority) {}
       case 'critical': return 'bg-red-500'
       case 'high': return 'bg-orange-500'
       case 'medium': return 'bg-yellow-500'
@@ -176,7 +176,7 @@ export function ModerationReports() {
   }
 
   const getCategoryIcon = (category: Report['category']) => {}
-    switch (category) {
+    switch (category) {}
       case 'harassment': return <Flag className="h-4 w-4" />
       case 'spam': return <AlertTriangle className="h-4 w-4" />
       case 'inappropriate': return <Eye className="h-4 w-4" />
@@ -184,7 +184,7 @@ export function ModerationReports() {
     }
   }
 
-  if (loading) {
+  if (loading) {}
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-64">
@@ -208,7 +208,7 @@ export function ModerationReports() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
+              <Input;
                 placeholder="Search reports..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -259,30 +259,30 @@ export function ModerationReports() {
       <Tabs defaultValue="pending" className="space-y-4">
         <TabsList>
           <TabsTrigger value="pending">
-            Pending ({reports.filter(r => r.status === 'pending').length})
+            Pending ({reports.filter(r => r.status === &apos;pending').length})
           </TabsTrigger>
           <TabsTrigger value="investigating">
-            Investigating ({reports.filter(r => r.status === 'investigating').length})
+            Investigating ({reports.filter(r => r.status === &apos;investigating').length})
           </TabsTrigger>
           <TabsTrigger value="resolved">
-            Resolved ({reports.filter(r => r.status === 'resolved').length})
+            Resolved ({reports.filter(r => r.status === &apos;resolved').length})
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="pending" className="space-y-4">
-          {filteredReports.filter(r => r.status === 'pending').map((report) => (
+          {filteredReports.filter(r => r.status === &apos;pending').map((report) => (
             <ReportCard key={report.id} report={report} onViewDetails={setSelectedReport} />
           ))}
         </TabsContent>
 
         <TabsContent value="investigating" className="space-y-4">
-          {filteredReports.filter(r => r.status === 'investigating').map((report) => (
+          {filteredReports.filter(r => r.status === &apos;investigating').map((report) => (
             <ReportCard key={report.id} report={report} onViewDetails={setSelectedReport} />
           ))}
         </TabsContent>
 
         <TabsContent value="resolved" className="space-y-4">
-          {filteredReports.filter(r => r.status === 'resolved').map((report) => (
+          {filteredReports.filter(r => r.status === &apos;resolved').map((report) => (
             <ReportCard key={report.id} report={report} onViewDetails={setSelectedReport} />
           ))}
         </TabsContent>
@@ -292,7 +292,7 @@ export function ModerationReports() {
       <Dialog open={!!selectedReport} onOpenChange={() => setSelectedReport(null)}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           {selectedReport && (
-            <ReportDetails
+            <ReportDetails;
               report={selectedReport} 
               onTakeAction={handleTakeAction}
               onAssign={handleAssignReport}
@@ -341,7 +341,7 @@ function ReportCard({ report, onViewDetails }: { report: Report; onViewDetails: 
             <Badge className={`text-white ${getStatusColor(report.status)}`}>
               {report.status}
             </Badge>
-            <Button
+            <Button;
               variant="outline"
               size="sm"
               onClick={() => onViewDetails(report)}
@@ -357,11 +357,11 @@ function ReportCard({ report, onViewDetails }: { report: Report; onViewDetails: 
 
 function ReportDetails({report, 
   onTakeAction, 
-  onAssign
+  onAssign;
 }: {}
-  report: Report
-  onTakeAction: (reportId: string, action: string, reason: string) => void
-  onAssign: (reportId: string, moderatorId: string) => void
+  report: Report;
+  onTakeAction: (reportId: string, action: string, reason: string) => void;
+  onAssign: (reportId: string, moderatorId: string) => void;
 }) {}
   const [actionReason, setActionReason] = useState('')
   const [selectedAction, setSelectedAction] = useState('')
@@ -479,21 +479,21 @@ function ReportDetails({report,
                 </SelectContent>
               </Select>
             </div>
-            <Textarea
+            <Textarea;
               placeholder="Reason for action..."
               value={actionReason}
               onChange={(e) => setActionReason(e.target.value)}
               rows={3}
             />
             <div className="flex space-x-2">
-              <Button
+              <Button;
                 onClick={handleSubmitAction}
                 disabled={!selectedAction || !actionReason.trim()}
               >
-                Take Action
+                Take Action;
               </Button>
               <Button variant="outline">
-                Assign to Me
+                Assign to Me;
               </Button>
             </div>
           </CardContent>

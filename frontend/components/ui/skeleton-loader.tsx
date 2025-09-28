@@ -1,18 +1,17 @@
-"use client"
-
 import { cn } from "@/lib/utils"
 
+"use client"
 
 interface SkeletonProps {}
-  className?: string
+  className?: string;
 }
 
-export function Skeleton({ className }: SkeletonProps) {
+export function Skeleton({ className }: SkeletonProps) {}
   return <div className={cn("animate-pulse rounded-md bg-gray-200 dark:bg-gray-800", className)} />
 }
 
-// Specific skeleton components for different content types
-export function VideoCardSkeleton() {
+// Specific skeleton components for different content types;
+export function VideoCardSkeleton() {}
   return (
     <div className="space-y-3">
       <Skeleton className="h-48 w-full rounded-lg" />
@@ -24,7 +23,7 @@ export function VideoCardSkeleton() {
   )
 }
 
-export function PartyCardSkeleton() {
+export function PartyCardSkeleton() {}
   return (
     <div className="p-4 border rounded-lg space-y-3">
       <div className="flex items-center gap-3">
@@ -43,7 +42,7 @@ export function PartyCardSkeleton() {
   )
 }
 
-export function ChatMessageSkeleton() {
+export function ChatMessageSkeleton() {}
   return (
     <div className="flex gap-3">
       <Skeleton className="h-8 w-8 rounded-full" />
@@ -55,7 +54,7 @@ export function ChatMessageSkeleton() {
   )
 }
 
-export function UserListSkeleton() {
+export function UserListSkeleton() {}
   return (
     <div className="space-y-3">
       {Array.from({ length: 5 }).map((_, i) => (

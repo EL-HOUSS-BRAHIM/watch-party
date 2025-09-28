@@ -1,5 +1,3 @@
-"use client"
-
 import { Activity, BarChart, Calendar, Clock, Download, Heart, Loader2, MapPin, MessageCircle, PieChart, Share, Star, User, Users, Video, X } from "lucide-react"
 import { useState, useEffect, useCallback, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
@@ -9,8 +7,9 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
-
 import { format, parseISO } from "date-fns"
+
+"use client"
 
   BarChart,
   Bar,
@@ -25,82 +24,82 @@ import { format, parseISO } from "date-fns"
   Pie,
   Cell,
   AreaChart,
-  Area
+  Area;
 } from "recharts"
 interface PartyAnalytics {}
   party: {}
-    id: string
-    title: string
-    description: string
-    created_at: string
-    updated_at: string
+    id: string;
+    title: string;
+    description: string;
+    created_at: string;
+    updated_at: string;
     status: "upcoming" | "live" | "ended"
     host: {}
-      id: string
-      username: string
-      display_name: string
-      avatar_url: string
+      id: string;
+      username: string;
+      display_name: string;
+      avatar_url: string;
     }
     video: {}
-      title: string
-      url: string
-      duration: number
-      thumbnail: string
-      platform: string
+      title: string;
+      url: string;
+      duration: number;
+      thumbnail: string;
+      platform: string;
     }
     settings: {}
-      is_public: boolean
-      max_participants: number
-      auto_start: boolean
-      allow_chat: boolean
+      is_public: boolean;
+      max_participants: number;
+      auto_start: boolean;
+      allow_chat: boolean;
     }
   }
   overview: {}
-    total_participants: number
-    peak_concurrent: number
-    total_duration: number
-    total_messages: number
-    engagement_rate: number
-    completion_rate: number
-    average_watch_time: number
-    unique_viewers: number
+    total_participants: number;
+    peak_concurrent: number;
+    total_duration: number;
+    total_messages: number;
+    engagement_rate: number;
+    completion_rate: number;
+    average_watch_time: number;
+    unique_viewers: number;
   }
   participants: Array<{}
-    id: string
+    id: string;
     user: {}
-      id: string
-      username: string
-      display_name: string
-      avatar_url: string
+      id: string;
+      username: string;
+      display_name: string;
+      avatar_url: string;
     }
-    joined_at: string
-    left_at?: string
-    watch_time: number
-    messages_sent: number
-    reactions_sent: number
-    engagement_score: number
-    completion_percentage: number
+    joined_at: string;
+    left_at?: string;
+    watch_time: number;
+    messages_sent: number;
+    reactions_sent: number;
+    engagement_score: number;
+    completion_percentage: number;
   }>
   timeline: Array<{}
-    timestamp: string
+    timestamp: string;
     event_type: "join" | "leave" | "play" | "pause" | "seek" | "message" | "reaction"
-    user_id?: string
+    user_id?: string;
     data?: Record<string, unknown>
   }>
   engagement: {}
     chat_activity: Array<{}
-      time: string
-      message_count: number
-      active_users: number
+      time: string;
+      message_count: number;
+      active_users: number;
     }>
     viewer_count: Array<{}
-      time: string
-      count: number
+      time: string;
+      count: number;
     }>
     reactions: Array<{}
-      type: string
-      count: number
-      timestamp: string
+      type: string;
+      count: number;
+      timestamp: string;
     }>
   }
   demographics: {}
@@ -116,62 +115,62 @@ interface PartyAnalytics {}
   }
 }
 
-function PartyAnalyticsContent() {
+function PartyAnalyticsContent() {}
   const searchParams = useSearchParams()
   const partyId = searchParams.get('id')
   const { toast } = useToast()
 
   const [analytics, setAnalytics] = useState<PartyAnalytics | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [timeRange, setTimeRange] = useState<string>("all")
+  const [timeRange, setTimeRange] = useState<string>(&quot;all")
   const [activeTab, setActiveTab] = useState("overview")
 
-  const loadPartyAnalytics = useCallback(async () => {
-    if (!partyId) return
-    try {
+  const loadPartyAnalytics = useCallback(async () => {}
+    if (!partyId) return;
+    try {}
       setIsLoading(true)
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/parties/${partyId}/analytics/?timeRange=${timeRange}`, {}
         headers: { Authorization: `Bearer ${token}` }
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setAnalytics(data)
       } else {}
         throw new Error("Failed to load analytics")
       }
-    } catch (err) {
+    } catch {}
       console.error("Failed to load party analytics:", error)
       toast({title: "Error",
         description: "Failed to load party analytics.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }, [partyId, timeRange, toast])
 
-  useEffect(() => {
-    if (partyId) {
+  useEffect(() => {}
+    if (partyId) {}
       loadPartyAnalytics()
     }
   }, [partyId, loadPartyAnalytics])
 
-  const exportAnalytics = async () => {
-    if (!partyId) return
-    try {
+  const exportAnalytics = async () => {}
+    if (!partyId) return;
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/parties/${partyId}/analytics/export/`, {}
         headers: { Authorization: `Bearer ${token}` }
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const blob = await response.blob()
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.style.display = 'none'
-        a.href = url
+        a.href = url;
         a.download = `party-${partyId}-analytics.csv`
         document.body.appendChild(a)
         a.click()
@@ -180,7 +179,7 @@ function PartyAnalyticsContent() {
           description: "Analytics data has been downloaded.",
         })
       }
-    } catch (err) {
+    } catch {}
       console.error("Export failed:", error)
       toast({title: "Export Failed",
         description: "Failed to export analytics data.",
@@ -190,7 +189,7 @@ function PartyAnalyticsContent() {
   }
 
   const getStatusColor = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case "live":
         return "bg-green-500"
       case "upcoming":
@@ -211,8 +210,8 @@ function PartyAnalyticsContent() {
   const formatDuration = (seconds: number) => {}
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60
-    if (hours > 0) {
+    const secs = seconds % 60;
+    if (hours > 0) {}
       return `${hours}h ${minutes}m ${secs}s`
     }
     return `${minutes}m ${secs}s`
@@ -222,7 +221,7 @@ function PartyAnalyticsContent() {
     return `${Math.round(value * 100) / 100}%`
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -233,7 +232,7 @@ function PartyAnalyticsContent() {
     )
   }
 
-  if (!analytics) {
+  if (!analytics) {}
     return (
       <div className="container mx-auto py-8 px-4">
         <Card>
@@ -244,8 +243,8 @@ function PartyAnalyticsContent() {
               Analytics data is not available for this party. This may be because:
             </p>
             <ul className="text-gray-600 text-sm mt-2 space-y-1">
-              <li>• The party hasn't started yet</li>
-              <li>• You don't have permission to view this data</li>
+              <li>• The party hasn&apos;t started yet</li>
+              <li>• You don&apos;t have permission to view this data</li>
               <li>• The party ID is invalid</li>
             </ul>
           </CardContent>
@@ -298,7 +297,7 @@ function PartyAnalyticsContent() {
             </Select>
             <Button onClick={exportAnalytics} variant="outline">
               <Download className="h-4 w-4 mr-2" />
-              Export
+              Export;
             </Button>
           </div>
         </div>
@@ -357,7 +356,7 @@ function PartyAnalyticsContent() {
                   </div>
                   <div className="mt-2 flex items-center text-sm">
                     <span className="text-gray-600">
-                      {(analytics.overview.total_messages / analytics.overview.total_participants).toFixed(1)} per user
+                      {(analytics.overview.total_messages / analytics.overview.total_participants).toFixed(1)} per user;
                     </span>
                   </div>
                 </CardContent>
@@ -376,7 +375,7 @@ function PartyAnalyticsContent() {
                   </div>
                   <div className="mt-2 flex items-center text-sm">
                     <span className="text-gray-600">
-                      {formatPercentage(analytics.overview.completion_rate)} completion
+                      {formatPercentage(analytics.overview.completion_rate)} completion;
                     </span>
                   </div>
                 </CardContent>
@@ -394,16 +393,16 @@ function PartyAnalyticsContent() {
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={analytics.engagement.viewer_count}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis
+                      <XAxis;
                         dataKey="time" 
-                        tickFormatter={(value) => format(parseISO(value), "HH:mm")}
+                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm")}
                       />
                       <YAxis />
-                      <Tooltip
-                        labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
+                      <Tooltip;
+                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss")}
                         formatter={(value: number) => [value, "Viewers"]}
                       />
-                      <Area
+                      <Area;
                         type="monotone" 
                         dataKey="count" 
                         stroke="#8884d8" 
@@ -427,17 +426,17 @@ function PartyAnalyticsContent() {
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={analytics.engagement.chat_activity}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis
+                      <XAxis;
                         dataKey="time" 
-                        tickFormatter={(value) => format(parseISO(value), "HH:mm")}
+                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm")}
                       />
                       <YAxis yAxisId="left" />
                       <YAxis yAxisId="right" orientation="right" />
-                      <Tooltip
-                        labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
+                      <Tooltip;
+                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss")}
                       />
                       <Bar yAxisId="left" dataKey="message_count" fill="#8884d8" name="Messages" />
-                      <Line
+                      <Line;
                         yAxisId="right" 
                         type="monotone" 
                         dataKey="active_users" 
@@ -498,7 +497,7 @@ function PartyAnalyticsContent() {
                   ))}
                   {analytics.participants.length === 0 && (
                     <div className="text-center py-8 text-gray-500">
-                      No participants data available
+                      No participants data available;
                     </div>
                   )}
                 </div>
@@ -517,7 +516,7 @@ function PartyAnalyticsContent() {
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie
+                      <Pie;
                         data={analytics.engagement.reactions}
                         cx="50%"
                         cy="50%"
@@ -544,7 +543,7 @@ function PartyAnalyticsContent() {
                 <CardContent className="p-6 text-center">
                   <Heart className="h-8 w-8 text-red-500 mx-auto mb-2" />
                   <p className="text-2xl font-bold">
-                    {analytics.engagement.reactions.find(r => r.type === 'heart')?.count || 0}
+                    {analytics.engagement.reactions.find(r => r.type === &apos;heart')?.count || 0}
                   </p>
                   <p className="text-gray-600">Hearts</p>
                 </CardContent>
@@ -553,7 +552,7 @@ function PartyAnalyticsContent() {
                 <CardContent className="p-6 text-center">
                   <Star className="h-8 w-8 text-yellow-500 mx-auto mb-2" />
                   <p className="text-2xl font-bold">
-                    {analytics.engagement.reactions.find(r => r.type === 'star')?.count || 0}
+                    {analytics.engagement.reactions.find(r => r.type === &apos;star')?.count || 0}
                   </p>
                   <p className="text-gray-600">Stars</p>
                 </CardContent>
@@ -562,7 +561,7 @@ function PartyAnalyticsContent() {
                 <CardContent className="p-6 text-center">
                   <Share2 className="h-8 w-8 text-blue-500 mx-auto mb-2" />
                   <p className="text-2xl font-bold">
-                    {analytics.engagement.reactions.find(r => r.type === 'share')?.count || 0}
+                    {analytics.engagement.reactions.find(r => r.type === &apos;share')?.count || 0}
                   </p>
                   <p className="text-gray-600">Shares</p>
                 </CardContent>
@@ -610,7 +609,7 @@ function PartyAnalyticsContent() {
                   ))}
                   {analytics.timeline.length === 0 && (
                     <div className="text-center py-8 text-gray-500">
-                      No timeline events available
+                      No timeline events available;
                     </div>
                   )}
                 </div>
@@ -635,7 +634,7 @@ function PartyAnalyticsContent() {
                       </div>
                       <div className="flex items-center gap-2">
                         <div className="w-24 bg-gray-200 rounded-full h-2">
-                          <div
+                          <div;
                             className="bg-blue-500 h-2 rounded-full" 
                             style={{ width: `${(location.count / analytics.overview.total_participants) * 100}%` }}
                           />
@@ -658,7 +657,7 @@ function PartyAnalyticsContent() {
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie
+                      <Pie;
                         data={analytics.demographics.by_device}
                         cx="50%"
                         cy="50%"
@@ -692,9 +691,9 @@ function PartyAnalyticsContent() {
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis dataKey="hour" tickFormatter={(value) => `${value}:00`} />
                       <YAxis />
-                      <Tooltip
+                      <Tooltip;
                         labelFormatter={(value) => `${value}:00`}
-                        formatter={(value: number) => [value, "Participants"]}
+                        formatter={(value: number) => [value, &quot;Participants"]}
                       />
                       <Bar dataKey="count" fill="#8884d8" />
                     </BarChart>
@@ -716,16 +715,16 @@ function PartyAnalyticsContent() {
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={analytics.performance.loading_times}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis
+                      <XAxis;
                         dataKey="timestamp" 
-                        tickFormatter={(value) => format(parseISO(value), "HH:mm")}
+                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm")}
                       />
                       <YAxis />
-                      <Tooltip
-                        labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
+                      <Tooltip;
+                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss")}
                         formatter={(value: number) => [`${value}ms`, "Loading Time"]}
                       />
-                      <Line
+                      <Line;
                         type="monotone" 
                         dataKey="duration" 
                         stroke="#8884d8" 
@@ -748,16 +747,16 @@ function PartyAnalyticsContent() {
                   <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={analytics.performance.sync_quality}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis
+                      <XAxis;
                         dataKey="timestamp" 
-                        tickFormatter={(value) => format(parseISO(value), "HH:mm")}
+                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm")}
                       />
                       <YAxis />
-                      <Tooltip
-                        labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
+                      <Tooltip;
+                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss")}
                         formatter={(value: number) => [`${value}ms`, "Sync Offset"]}
                       />
-                      <Area
+                      <Area;
                         type="monotone" 
                         dataKey="sync_offset" 
                         stroke="#82ca9d" 
@@ -781,13 +780,13 @@ function PartyAnalyticsContent() {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={analytics.performance.error_rates}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis
+                      <XAxis;
                         dataKey="timestamp" 
-                        tickFormatter={(value) => format(parseISO(value), "HH:mm")}
+                        tickFormatter={(value) => format(parseISO(value), &quot;HH:mm")}
                       />
                       <YAxis />
-                      <Tooltip
-                        labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
+                      <Tooltip;
+                        labelFormatter={(value) => format(parseISO(value), &quot;HH:mm:ss")}
                         formatter={(value: number) => [value, "Errors"]}
                       />
                       <Bar dataKey="error_count" fill="#ff7300" />
@@ -803,7 +802,7 @@ function PartyAnalyticsContent() {
   )
 }
 
-export default function PartyAnalyticsPage() {
+export default function PartyAnalyticsPage() {}
   return (
     <Suspense fallback={} />
       <div className="container mx-auto py-8 px-4">

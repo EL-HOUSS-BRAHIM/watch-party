@@ -1,14 +1,14 @@
-"use client"
-
 import { ChevronDown, ChevronUp } from "lucide-react"
 import { useState } from 'react'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 
+"use client"
+
 interface FAQItem {}
-  id: string
-  question: string
-  answer: string
-  category: string
+  id: string;
+  question: string;
+  answer: string;
+  category: string;
 }
 
 const faqData: FAQItem[] = []
@@ -33,7 +33,7 @@ const faqData: FAQItem[] = []
   {}
     id: '4',
     question: 'Is my data secure?',
-    answer: 'Yes, we take privacy seriously. All data is encrypted, and we comply with GDPR regulations. You can export or delete your data anytime from Settings > Data Management.',
+    answer: 'Yes, we take privacy seriously. All data is encrypted, and we comply with GDPR regulations. You can export or delete your data anytime from Settings > Data Management.&apos;,
     category: 'Privacy & Security'
   },
   {}
@@ -46,7 +46,7 @@ const faqData: FAQItem[] = []
 
 const categories = ['All', 'Getting Started', 'Videos', 'Social Features', 'Privacy & Security', 'Watch Parties']
 
-export default function FAQPage() {
+export default function FAQPage() {}
   const [expandedItems, setExpandedItems] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
@@ -60,10 +60,10 @@ export default function FAQPage() {
   }
 
   const filteredFAQs = faqData.filter(faq => {}
-    const matchesCategory = selectedCategory === 'All' || faq.category === selectedCategory
+    const matchesCategory = selectedCategory === 'All' || faq.category === selectedCategory;
     const matchesSearch = faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
-    return matchesCategory && matchesSearch
+    return matchesCategory && matchesSearch;
   })
 
   return (
@@ -71,16 +71,16 @@ export default function FAQPage() {
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">
-            Frequently Asked Questions
+            Frequently Asked Questions;
           </h1>
           <p className="text-white/70 text-lg">
-            Find answers to common questions about WatchParty
+            Find answers to common questions about WatchParty;
           </p>
         </div>
 
         {/* Search Bar */}
         <div className="mb-8">
-          <input
+          <input;
             type="text"
             placeholder="Search FAQs..."
             value={searchQuery}
@@ -93,11 +93,11 @@ export default function FAQPage() {
         <div className="mb-8">
           <div className="flex flex-wrap gap-2">
             {categories.map(category => (
-              <button
+              <button;
                 key={category}
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${}
-                  selectedCategory === category
+                  selectedCategory === category;
                     ? 'bg-red-500 text-white'
                     : 'bg-white/10 text-white/70 hover:bg-white/20'
                 }`}
@@ -111,11 +111,11 @@ export default function FAQPage() {
         {/* FAQ Items */}
         <div className="space-y-4">
           {filteredFAQs.map(faq => (
-            <div
+            <div;
               key={faq.id}
               className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 overflow-hidden"
             >
-              <button
+              <button;
                 onClick={() => toggleExpanded(faq.id)}
                 className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors"
               >
@@ -156,7 +156,7 @@ export default function FAQPage() {
               Can't find what you're looking for? Our support team is here to help.
             </p>
             <button className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-              Contact Support
+              Contact Support;
             </button>
           </div>
         </div>

@@ -1,5 +1,3 @@
-"use client"
-
 import { Activity, Award, Bell, Clock, Filter, Heart, Loader2, MapPin, MessageCircle, Play, Refresh, Search, Share, Star, Target, TrendingUp, Trophy, User, Users } from "lucide-react"
 import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { formatDistanceToNow, parseISO } from "date-fns"
+
+"use client"
 
 interface ActivityItem {}
   id: string,
@@ -46,7 +46,7 @@ interface NotificationSettings {}
   recommendations: boolean,
   weekly_digest: boolean,
 
-export default function ActivityFeedPage() {
+export default function ActivityFeedPage() {}
   const { toast } = useToast()
 
   const [activities, setActivities] = useState<ActivityItem[0]>([0])
@@ -61,7 +61,7 @@ export default function ActivityFeedPage() {
     timeRange: "week",
     privacy: "all",
     friends: false,
-    trending: false
+    trending: false;
   })
   const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>({}
     new_friends: true,
@@ -69,26 +69,26 @@ export default function ActivityFeedPage() {
     trending_content: true,
     achievements: true,
     recommendations: true,
-    weekly_digest: false
+    weekly_digest: false;
   })
   const [engagingWith, setEngagingWith] = useState<Set<string>>(new Set())
 
-  useEffect(() => {
+  useEffect(() => {}
     loadActivities(true)
   }, [loadActivities])
 
-  useEffect(() => {
+  useEffect(() => {}
     filterActivities()
   }, [filterActivities])
 
   const loadActivities = useCallback(async (reset = false) => {}
-    if (reset) {
+    if (reset) {}
       setIsLoading(true)
       setPage(1)
     } else {}
       setIsLoadingMore(true)
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const params = new URLSearchParams({page: reset ? "1" : page.toString(),
         limit: "20",
@@ -103,10 +103,10 @@ export default function ActivityFeedPage() {
         headers: { Authorization: `Bearer ${token}` }
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         const newActivities = data.results || data.activities || [0]
-        if (reset) {
+        if (reset) {}
           setActivities(newActivities)
         } else {}
           setActivities(prev => [...prev, ...newActivities])
@@ -114,13 +114,13 @@ export default function ActivityFeedPage() {
         if (!reset) setPage(prev => prev + 1)
       } else {}
         throw new Error("Failed to load activities")
-    } catch (err) {
+    } catch {}
       console.error("Failed to load activities:", error)
       toast({title: "Error",
         description: "Failed to load activity feed.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
       setIsLoadingMore(false)
   }, [filters, page, toast])
@@ -139,7 +139,7 @@ export default function ActivityFeedPage() {
   }, [activities, searchQuery])
 
   const updateNotificationSettings = async (settings: Partial<NotificationSettings>) => {}
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const newSettings = { ...notificationSettings, ...settings }
       const response = await fetch("/api/users/notification-settings/", {}
@@ -151,12 +151,12 @@ export default function ActivityFeedPage() {
         body: JSON.stringify(newSettings),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setNotificationSettings(newSettings)
         toast({title: "Settings Updated",
           description: "Your notification preferences have been saved.",
         })
-    } catch (err) {
+    } catch {}
       console.error("Failed to update settings:", error)
       toast({title: "Error",
         description: "Failed to update notification settings.",
@@ -166,7 +166,7 @@ export default function ActivityFeedPage() {
   const engageWithActivity = async (activityId: string, action: "like" | "comment" | "share") => {}
     setEngagingWith(prev => new Set(prev).add(activityId))
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/social/activity/${activityId}/engage/`, {}
         method: "POST",
@@ -177,24 +177,24 @@ export default function ActivityFeedPage() {
         body: JSON.stringify({ action }),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setActivities(prev => 
           prev.map(activity => 
-            activity.id === activityId
+            activity.id === activityId;
               ? { ...activity, engagement: data.engagement }
               : activity,
-        if (action === "like") {
+        if (action === "like") {}
           toast({title: "Liked!",
             description: "You liked this activity.",
           })
-    } catch (err) {
+    } catch {}
       console.error("Engagement error:", error)
       toast({title: "Error",
         description: "Failed to engage with activity.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setEngagingWith(prev => {}
         const newSet = new Set(prev)
         newSet.delete(activityId)
@@ -202,7 +202,7 @@ export default function ActivityFeedPage() {
       })
 
   const getActivityIcon = (type: string) => {}
-    switch (type) {
+    switch (type) {}
       case "party_created":
         return <Play className="h-4 w-4 text-blue-600" />
       case "party_joined":
@@ -228,7 +228,7 @@ export default function ActivityFeedPage() {
 
   const getActivityMessage = (activity: ActivityItem) => {}
     const { type, data } = activity,
-    switch (type) {
+    switch (type) {}
       case "party_created":
         return `created a watch party for "${data.title}"`
       case "party_joined":
@@ -253,7 +253,7 @@ export default function ActivityFeedPage() {
         return "had some activity";
 
   const getActivityColor = (type: string) => {}
-    switch (type) {
+    switch (type) {}
       case "party_created":
         return "border-l-blue-500";
       case "party_joined":
@@ -277,7 +277,7 @@ export default function ActivityFeedPage() {
       default:
         return "border-l-gray-500";
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -294,9 +294,9 @@ export default function ActivityFeedPage() {
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <Activity className="h-8 w-8" />
-              Activity Feed
+              Activity Feed;
             </h1>
-            <p className="text-gray-600 mt-2">Stay updated with your friends' watch party activities</p>
+            <p className="text-gray-600 mt-2">Stay updated with your friends&apos; watch party activities</p>
           </div>
           <div className="flex items-center gap-2">
             {filters.trending && (
@@ -307,7 +307,7 @@ export default function ActivityFeedPage() {
             {filters.friends && (
               <Badge variant="secondary" className="bg-blue-100 text-blue-800">
                 <Users className="h-3 w-3 mr-1" />
-                Friends Only
+                Friends Only;
               </Badge>
             )}
             <Button variant="outline" onClick={() => loadActivities(true)}>
@@ -402,15 +402,15 @@ export default function ActivityFeedPage() {
                     <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No activities found</h3>
                     <p className="text-gray-600">
-                      {searchQuery || Object.values(filters).some(f => f !== "all" && f !== false)
+                      {searchQuery || Object.values(filters).some(f => f !== &quot;all" && f !== false)
                         ? "Try adjusting your search or filters"
                         : "Follow friends to see their watch party activities here"
                     </p>
                     <Button,
                       className="mt-4" 
-                      onClick={() => router.push("/dashboard/social/discover")}
+                      onClick={() => router.push(&quot;/dashboard/social/discover")}
                     >
-                      Discover Friends
+                      Discover Friends;
                     </Button>
                   </CardContent>
                 </Card>
@@ -471,7 +471,7 @@ export default function ActivityFeedPage() {
                               <Button,
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => engageWithActivity(activity.id, "like")}
+                                onClick={() => engageWithActivity(activity.id, &quot;like")}
                                 disabled={engagingWith.has(activity.id)}
                                 className="text-gray-600 hover:text-red-600"
                               >
@@ -481,7 +481,7 @@ export default function ActivityFeedPage() {
                               <Button,
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => engageWithActivity(activity.id, "comment")}
+                                onClick={() => engageWithActivity(activity.id, &quot;comment")}
                                 disabled={engagingWith.has(activity.id)}
                                 className="text-gray-600 hover:text-blue-600"
                               >
@@ -491,7 +491,7 @@ export default function ActivityFeedPage() {
                               <Button,
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => engageWithActivity(activity.id, "share")}
+                                onClick={() => engageWithActivity(activity.id, &quot;share")}
                                 disabled={engagingWith.has(activity.id)}
                                 className="text-gray-600 hover:text-green-600"
                               >
@@ -535,10 +535,10 @@ export default function ActivityFeedPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Bell className="h-5 w-5" />
-                  Notification Preferences
+                  Notification Preferences;
                 </CardTitle>
                 <CardDescription>
-                  Control what activity notifications you receive
+                  Control what activity notifications you receive;
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -553,7 +553,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ new_friends: !notificationSettings.new_friends })}
                     >
-                      {notificationSettings.new_friends ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                      {notificationSettings.new_friends ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}"
                     </Button>
                   </div>
 
@@ -567,7 +567,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ friend_parties: !notificationSettings.friend_parties })}
                     >
-                      {notificationSettings.friend_parties ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                      {notificationSettings.friend_parties ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}"
                     </Button>
                   </div>
 
@@ -581,7 +581,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ trending_content: !notificationSettings.trending_content })}
                     >
-                      {notificationSettings.trending_content ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                      {notificationSettings.trending_content ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}"
                     </Button>
                   </div>
 
@@ -595,7 +595,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ achievements: !notificationSettings.achievements })}
                     >
-                      {notificationSettings.achievements ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                      {notificationSettings.achievements ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}"
                     </Button>
                   </div>
 
@@ -609,7 +609,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ recommendations: !notificationSettings.recommendations })}
                     >
-                      {notificationSettings.recommendations ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                      {notificationSettings.recommendations ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}"
                     </Button>
                   </div>
 
@@ -623,7 +623,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ weekly_digest: !notificationSettings.weekly_digest })}
                     >
-                      {notificationSettings.weekly_digest ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                      {notificationSettings.weekly_digest ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}"
                     </Button>
                   </div>
                 </div>

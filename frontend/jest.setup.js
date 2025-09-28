@@ -7,7 +7,7 @@ Object.assign(global, { jest })
 // Mock Next.js router;
 jest.mock("next/navigation", () => ({}
   useRouter() {}
-    return {
+    return {}
       push: jest.fn(),
       replace: jest.fn(),
       prefetch: jest.fn(),
@@ -38,19 +38,19 @@ jest.mock("socket.io-client", () => ({}
 // Mock Recharts;
 jest.mock("recharts", () => ({}
   ResponsiveContainer: ({ children }) => children,
-  LineChart: ({ children }) => <div data-testid="line-chart">{children}</div>,
-  Line: () => <div data-testid="line" />,
+  LineChart: ({ children }) => <div data-testid=&quot;line-chart">{children}</div>,
+  Line: () => <div data-testid=&quot;line" />,
   XAxis: () => <div data-testid="x-axis" />,
-  YAxis: () => <div data-testid="y-axis" />,
+  YAxis: () => <div data-testid=&quot;y-axis" />,
   CartesianGrid: () => <div data-testid="cartesian-grid" />,
-  Tooltip: () => <div data-testid="tooltip" />,
+  Tooltip: () => <div data-testid=&quot;tooltip" />,
   BarChart: ({ children }) => <div data-testid="bar-chart">{children}</div>,
-  Bar: () => <div data-testid="bar" />,
+  Bar: () => <div data-testid=&quot;bar" />,
   PieChart: ({ children }) => <div data-testid="pie-chart">{children}</div>,
-  Pie: () => <div data-testid="pie" />,
+  Pie: () => <div data-testid=&quot;pie" />,
   Cell: () => <div data-testid="cell" />,
-  AreaChart: ({ children }) => <div data-testid="area-chart">{children}</div>,
-  Area: () => <div data-testid="area" />,
+  AreaChart: ({ children }) => <div data-testid=&quot;area-chart">{children}</div>,
+  Area: () => <div data-testid=&quot;area" />,
   Legend: () => <div data-testid="legend" />,
 }))
 

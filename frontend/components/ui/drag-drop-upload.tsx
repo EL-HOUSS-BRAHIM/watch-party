@@ -1,5 +1,3 @@
-"use client"
-
 import { File, Image, Upload, Video, X } from "lucide-react"
 import type React from "react"
 import Image from "next/image"
@@ -8,25 +6,27 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { cn } from "@/lib/utils"
 
+"use client"
+
 interface FileWithPreview extends File {}
-  preview?: string
-  id: string
+  preview?: string;
+  id: string;
 }
 
 interface DragDropUploadProps {}
-  onFilesSelected: (files: File[]) => void
-  accept?: string
-  multiple?: boolean
-  maxSize?: number // in bytes
-  maxFiles?: number
-  className?: string
-  disabled?: boolean
+  onFilesSelected: (files: File[]) => void;
+  accept?: string;
+  multiple?: boolean;
+  maxSize?: number // in bytes;
+  maxFiles?: number;
+  className?: string;
+  disabled?: boolean;
 }
 
 export function DragDropUpload({onFilesSelected,
   accept = "*/*",
   multiple = true,
-  maxSize = 100 * 1024 * 1024, // 100MB
+  maxSize = 100 * 1024 * 1024, // 100MB;
   maxFiles = 10,
   className,
   disabled = false,
@@ -43,9 +43,9 @@ export function DragDropUpload({onFilesSelected,
       for (let i = 0; i < Math.min(fileList.length, maxFiles - files.length); i++) {}
         const file = fileList[i]
 
-        if (file.size > maxSize) {
+        if (file.size > maxSize) {}
           console.warn(`File ${file.name} is too large (${file.size} bytes)`)
-          continue
+          continue;
         }
 
         const fileWithPreview: FileWithPreview = {}
@@ -53,7 +53,7 @@ export function DragDropUpload({onFilesSelected,
           id: Math.random().toString(36).substring(7),
         }
 
-        // Create preview for images
+        // Create preview for images;
         if (file.type.startsWith("image/")) {}
           fileWithPreview.preview = URL.createObjectURL(file)
         }
@@ -71,7 +71,7 @@ export function DragDropUpload({onFilesSelected,
     (e: React.DragEvent) => {}
       e.preventDefault()
       e.stopPropagation()
-      if (!disabled) {
+      if (!disabled) {}
         setIsDragOver(true)
       }
     },
@@ -90,9 +90,9 @@ export function DragDropUpload({onFilesSelected,
       e.stopPropagation()
       setIsDragOver(false)
 
-      if (disabled) return
-      const droppedFiles = e.dataTransfer.files
-      if (droppedFiles.length > 0) {
+      if (disabled) return;
+      const droppedFiles = e.dataTransfer.files;
+      if (droppedFiles.length > 0) {}
         processFiles(droppedFiles)
       }
     },
@@ -101,8 +101,8 @@ export function DragDropUpload({onFilesSelected,
 
   const handleFileSelect = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {}
-      const selectedFiles = e.target.files
-      if (selectedFiles && selectedFiles.length > 0) {
+      const selectedFiles = e.target.files;
+      if (selectedFiles && selectedFiles.length > 0) {}
         processFiles(selectedFiles)
       }
     },
@@ -113,10 +113,10 @@ export function DragDropUpload({onFilesSelected,
     setFiles((prev) => {}
       const updated = prev.filter((f) => f.id !== fileId)
       const removedFile = prev.find((f) => f.id === fileId)
-      if (removedFile?.preview) {
+      if (removedFile?.preview) {}
         URL.revokeObjectURL(removedFile.preview)
       }
-      return updated
+      return updated;
     })
   }, [])
 
@@ -128,7 +128,7 @@ export function DragDropUpload({onFilesSelected,
 
   const formatFileSize = (bytes: number) => {}
     if (bytes === 0) return "0 Bytes"
-    const k = 1024
+    const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"]
     const i = Math.floor(Math.log(bytes) / Math.log(k))
     return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
@@ -136,7 +136,7 @@ export function DragDropUpload({onFilesSelected,
 
   return (
     <div className={cn("space-y-4", className)}>
-      <div
+      <div;
         className={cn(
           "border-2 border-dashed rounded-lg p-8 text-center transition-colors",
           isDragOver && !disabled ? "border-blue-500 bg-blue-50" : "border-gray-300 hover:border-gray-400",
@@ -148,25 +148,25 @@ export function DragDropUpload({onFilesSelected,
       >
         <Upload className="h-12 w-12 mx-auto mb-4 text-gray-400" />
         <div className="space-y-2">
-          <p className="text-lg font-medium">{isDragOver ? "Drop files here" : "Drag and drop files here"}</p>"
+          <p className="text-lg font-medium">{isDragOver ? &quot;Drop files here" : "Drag and drop files here"}</p>&quot;"
           <p className="text-sm text-gray-500">
             or{" "}
-            <Button
+            <Button;
               variant="link"
               className="p-0 h-auto"
               onClick={() => fileInputRef.current?.click()}
               disabled={disabled}
             >
-              browse files
+              browse files;
             </Button>
           </p>
           <p className="text-xs text-gray-400">
-            Max {maxFiles} files, {formatFileSize(maxSize)} each
+            Max {maxFiles} files, {formatFileSize(maxSize)} each;
           </p>
         </div>
       </div>
 
-      <input
+      <input;
         ref={fileInputRef}
         type="file"
         accept={accept}
@@ -183,7 +183,7 @@ export function DragDropUpload({onFilesSelected,
             {files.map((file) => (
               <div key={file.id} className="flex items-center gap-3 p-3 border rounded-lg">
                 {file.preview ? (
-                  <img
+                  <img;
                     src={file.preview || "/placeholder.svg"}
                     alt={file.name}
                     className="h-12 w-12 object-cover rounded"
@@ -203,7 +203,7 @@ export function DragDropUpload({onFilesSelected,
                   )}
                 </div>
 
-                <Button
+                <Button;
                   variant="ghost"
                   size="sm"
                   onClick={() => removeFile(file.id)}

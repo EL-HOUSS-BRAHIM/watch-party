@@ -1,10 +1,9 @@
-"use client"
-
 import { MessageCircle, Play, Settings, Share, User, Users, Volume2 } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-
 import { useSocket } from "@/contexts/socket-context"
+
+"use client"
 
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +22,7 @@ export function PartyControls({ partyId }: PartyControlsProps) {}
     sendMessage("party:control", {}
       party_id: partyId,
       action, 
-      ...data
+      ...data;
     })
 
   const handlePlayPause = () => {}
@@ -45,7 +44,7 @@ export function PartyControls({ partyId }: PartyControlsProps) {}
       </Button>
 
       <Button variant="outline" size="sm" onClick={handlePlayPause}>
-        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className=&quot;w-4 h-4" />}"
       </Button>
 
       <Button variant="outline" size="sm" onClick={() => handleSkip(10)}>
@@ -57,30 +56,30 @@ export function PartyControls({ partyId }: PartyControlsProps) {}
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm">
             <Settings className="w-4 h-4 mr-2" />
-            Host Controls
+            Host Controls;
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem>
             <Users className="w-4 h-4 mr-2" />
-            Manage Participants
+            Manage Participants;
           </DropdownMenuItem>
           <DropdownMenuItem>
             <MessageCircle className="w-4 h-4 mr-2" />
-            Chat Settings
+            Chat Settings;
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Volume2 className="w-4 h-4 mr-2" />
-            Audio Settings
+            Audio Settings;
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Share className="w-4 h-4 mr-2" />
-            Share Party
+            Share Party;
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleEndParty} className="text-destructive">
             <StopCircle className="w-4 h-4 mr-2" />
-            End Party
+            End Party;
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

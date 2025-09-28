@@ -1,5 +1,3 @@
-"use client"
-
 import { Bookmark, Calendar, ChevronRight, Eye, Flame, Heart, Image, MapPin, MessageCircle, MoreHorizontal, Play, Search, Share, Star, TrendingUp, User, Users, Video, Zap } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
@@ -15,6 +13,8 @@ import { analyticsAPI, partiesAPI, searchAPI, usersAPI, videosAPI } from "@/lib/
 import type { DiscoverContent, DiscoverRecommendation } from "@/lib/api"
 import { formatDistanceToNow } from "date-fns"
 
+"use client"
+
 type SuggestionReason =
   | "mutual_friends"
   | "common_interests"
@@ -24,71 +24,71 @@ type SuggestionReason =
   | "similar_content"
 
 interface TrendingVideoCard {}
-  id: string
-  title: string
-  description?: string
-  thumbnail?: string | null
-  durationLabel: string
-  views: number
-  likes: number
-  createdAt: string
+  id: string;
+  title: string;
+  description?: string;
+  thumbnail?: string | null;
+  durationLabel: string;
+  views: number;
+  likes: number;
+  createdAt: string;
   uploader: {}
-    id: string
-    name: string
-    avatar?: string | null
-    isVerified: boolean
+    id: string;
+    name: string;
+    avatar?: string | null;
+    isVerified: boolean;
   }
   tags: string[]
-  trendingScore?: number
+  trendingScore?: number;
 }
 
 interface FeaturedPartyCard {}
-  id: string
-  title: string
-  description?: string
-  thumbnail?: string | null
+  id: string;
+  title: string;
+  description?: string;
+  thumbnail?: string | null;
   host: {}
-    id: string
-    name: string
-    avatar?: string | null
-    isVerified: boolean
+    id: string;
+    name: string;
+    avatar?: string | null;
+    isVerified: boolean;
   }
-  scheduledFor?: string | null
-  isActive: boolean
-  participantCount: number
-  maxParticipants?: number | null
+  scheduledFor?: string | null;
+  isActive: boolean;
+  participantCount: number;
+  maxParticipants?: number | null;
   tags: string[]
   highlight?: "trending" | "recommended"
 }
 
 interface SuggestedUserCard {}
-  id: string
-  username: string
-  firstName: string
-  lastName: string
-  avatar?: string | null
-  bio?: string
-  location?: string
-  isOnline: boolean
-  isVerified: boolean
-  mutualFriends: number
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  avatar?: string | null;
+  bio?: string;
+  location?: string;
+  isOnline: boolean;
+  isVerified: boolean;
+  mutualFriends: number;
   commonInterests: string[]
   stats: {}
-    videosUploaded: number
-    partiesHosted: number
-    friendsCount: number
+    videosUploaded: number;
+    partiesHosted: number;
+    friendsCount: number;
   }
-  reasonForSuggestion: SuggestionReason
+  reasonForSuggestion: SuggestionReason;
 }
 
 interface DiscoverCategoryCard {}
-  id: string
-  name: string
-  description?: string
-  icon: string
-  itemCount: number
-  isGrowing: boolean
-  colorClass: string
+  id: string;
+  name: string;
+  description?: string;
+  icon: string;
+  itemCount: number;
+  isGrowing: boolean;
+  colorClass: string;
 }
 
 const FALLBACK_AVATAR = "/placeholder-user.jpg"
@@ -109,26 +109,26 @@ const CATEGORY_ICONS = ["🎬", "🎮", "🎵", "📺", "📚", "⚽", "😂", "
 
 const safeNumber = (value: unknown, fallback = 0): number => {}
   if (typeof value === "number" && Number.isFinite(value)) {}
-    return value
+    return value;
   }
 
-  if (typeof value === "string") {
+  if (typeof value === "string") {}
     const parsed = Number(value)
     if (!Number.isNaN(parsed)) {}
-      return parsed
+      return parsed;
     }
   }
 
-  return fallback
+  return fallback;
 }
 
 const fallbackId = (prefix: string) =>
-  typeof crypto !== "undefined" && "randomUUID" in crypto
+  typeof crypto !== "undefined" && "randomUUID" in crypto;
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 11)}`
 
 const formatVideoDurationLabel = (duration: unknown): string => {}
-  if (duration === null || typeof duration === "undefined") {
+  if (duration === null || typeof duration === "undefined") {}
     return "Live"
   }
 
@@ -138,26 +138,26 @@ const formatVideoDurationLabel = (duration: unknown): string => {}
     const minutes = Math.floor((totalSeconds % 3600) / 60)
     const seconds = Math.floor(totalSeconds % 60)
 
-    if (hours > 0) {
+    if (hours > 0) {}
       return `${hours}h ${minutes}m`
     }
 
-    if (minutes > 0) {
+    if (minutes > 0) {}
       return `${minutes}m`
     }
 
     return `${seconds}s`
   }
 
-  if (typeof duration === "string") {
+  if (typeof duration === "string") {}
     if (duration.includes(":")) {}
       const parts = duration.split(":").map((part) => Number(part))
       if (parts.every((part) => Number.isFinite(part))) {}
-        const [hours = 0, minutes = 0, seconds = 0] = parts
-        if (hours > 0) {
+        const [hours = 0, minutes = 0, seconds = 0] = parts;
+        if (hours > 0) {}
           return `${hours}h ${minutes}m`
         }
-        if (minutes > 0) {
+        if (minutes > 0) {}
           return `${minutes}m`
         }
         return `${seconds}s`
@@ -169,34 +169,34 @@ const formatVideoDurationLabel = (duration: unknown): string => {}
       return formatVideoDurationLabel(parsed)
     }
 
-    return duration
+    return duration;
   }
 
   return "Live"
 }
 
 const extractTags = (entity: Record<string, unknown>): string[] => {}
-  if (!entity) {
+  if (!entity) {}
     return []
   }
 
-  if (Array.isArray(entity.tags)) {
+  if (Array.isArray(entity.tags)) {}
     return entity.tags.map((tag: unknown) => String(tag))
   }
 
-  if (Array.isArray(entity.categories)) {
+  if (Array.isArray(entity.categories)) {}
     return entity.categories.map((tag: unknown) => String(tag))
   }
 
-  if (Array.isArray(entity.genres)) {
+  if (Array.isArray(entity.genres)) {}
     return entity.genres.map((tag: unknown) => String(tag))
   }
 
-  if (Array.isArray(entity.topics)) {
+  if (Array.isArray(entity.topics)) {}
     return entity.topics.map((tag: unknown) => String(tag))
   }
 
-  if (Array.isArray(entity.metadata?.tags)) {
+  if (Array.isArray(entity.metadata?.tags)) {}
     return entity.metadata.tags.map((tag: unknown) => String(tag))
   }
 
@@ -204,12 +204,12 @@ const extractTags = (entity: Record<string, unknown>): string[] => {}
 }
 
 const resolvePartyActive = (party: Record<string, unknown>): boolean => {}
-  if (typeof party?.is_active === "boolean") {
-    return party.is_active
+  if (typeof party?.is_active === "boolean") {}
+    return party.is_active;
   }
 
-  if (typeof party?.isActive === "boolean") {
-    return party.isActive
+  if (typeof party?.isActive === "boolean") {}
+    return party.isActive;
   }
 
   const status = typeof party?.status === "string" ? party.status.toLowerCase() : ""
@@ -222,7 +222,7 @@ const buildVideoCard = (video: Record<string, unknown>): TrendingVideoCard => {}
   const tags = extractTags(video)
   const trendingScore = safeNumber(video?.trending_score ?? video?.score ?? Number.NaN, Number.NaN)
 
-  return {
+  return {}
     id: String(id),
     title: video?.title ?? video?.name ?? "Untitled video",
     description: video?.description ?? video?.summary ?? undefined,
@@ -259,11 +259,11 @@ const buildVideoCard = (video: Record<string, unknown>): TrendingVideoCard => {}
   }
 }
 
-const buildPartyCard = (party: Record<string, unknown>, highlight?: "trending" | "recommended"): FeaturedPartyCard => {}
+const buildPartyCard = (party: Record<string, unknown>, highlight?: &quot;trending" | "recommended"): FeaturedPartyCard => {}
   const host = party?.host ?? party?.owner ?? party?.organizer ?? {}
   const id = party?.id ?? party?.room_code ?? fallbackId("party")
 
-  return {
+  return {}
     id: String(id),
     title: party?.title ?? party?.name ?? "Watch Party",
     description: party?.description ?? party?.summary ?? undefined,
@@ -304,12 +304,12 @@ const buildPartyCard = (party: Record<string, unknown>, highlight?: "trending" |
 const dedupePartyCards = (parties: FeaturedPartyCard[]): FeaturedPartyCard[] => {}
   const byId = new Map<string, FeaturedPartyCard>()
 
-  for (const party of parties) {
+  for (const party of parties) {}
     const existing = byId.get(party.id)
 
-    if (!existing) {
+    if (!existing) {}
       byId.set(party.id, party)
-      continue
+      continue;
     }
 
     byId.set(party.id, {}
@@ -319,7 +319,7 @@ const dedupePartyCards = (parties: FeaturedPartyCard[]): FeaturedPartyCard[] => 
       tags: existing.tags.length >= party.tags.length ? existing.tags : party.tags,
       participantCount: Math.max(existing.participantCount, party.participantCount),
       maxParticipants:
-        existing.maxParticipants && party.maxParticipants
+        existing.maxParticipants && party.maxParticipants;
           ? Math.max(existing.maxParticipants, party.maxParticipants)
           : existing.maxParticipants ?? party.maxParticipants ?? null,
     })
@@ -344,10 +344,10 @@ const buildSuggestedUserCard = (
     raw?.name ??
     raw?.display_name ??
     raw?.user?.full_name ??
-    username
+    username;
   const nameParts = fullName.trim().split(/\s+/)
-  const firstName = nameParts[0] ?? username
-  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : firstName
+  const firstName = nameParts[0] ?? username;
+  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(&quot; ") : firstName;
   const mutualFriends = safeNumber(
     raw?.mutual_friends_count ?? raw?.mutual_friends ?? raw?.mutualFriends,
     0,
@@ -355,16 +355,16 @@ const buildSuggestedUserCard = (
 
   const commonInterests = extractTags(raw)
 
-  let reason: SuggestionReason = fallbackReason
-  if (mutualFriends > 0) {
+  let reason: SuggestionReason = fallbackReason;
+  if (mutualFriends > 0) {}
     reason = "mutual_friends"
-  } else if (commonInterests.length > 0) {
+  } else if (commonInterests.length > 0) {}
     reason = "common_interests"
-  } else if (raw?.is_new_user) {
+  } else if (raw?.is_new_user) {}
     reason = "new_user"
-  } else if (raw?.recent_activity) {
+  } else if (raw?.recent_activity) {}
     reason = "recent_activity"
-  } else if (raw?.similar_content) {
+  } else if (raw?.similar_content) {}
     reason = "similar_content"
   }
 
@@ -388,8 +388,8 @@ const buildSuggestedUserCard = (
     raw?.profile_image ??
     raw?.image ??
     raw?.user?.avatar ??
-    FALLBACK_AVATAR
-  return {
+    FALLBACK_AVATAR;
+  return {}
     id: String(raw?.id ?? username ?? fallbackId("user")),
     username,
     firstName,
@@ -412,17 +412,17 @@ const dedupeSuggestions = (suggestions: SuggestedUserCard[]): SuggestedUserCard[
   suggestions.forEach((suggestion) => {}
     const existing = byId.get(suggestion.id)
 
-    if (!existing) {
+    if (!existing) {}
       byId.set(suggestion.id, suggestion)
-      return
+      return;
     }
 
     byId.set(suggestion.id, {}
       ...existing,
       ...suggestion,
       commonInterests:
-        existing.commonInterests.length >= suggestion.commonInterests.length
-          ? existing.commonInterests
+        existing.commonInterests.length >= suggestion.commonInterests.length;
+          ? existing.commonInterests;
           : suggestion.commonInterests,
       stats: {}
         videosUploaded: Math.max(
@@ -440,7 +440,7 @@ const dedupeSuggestions = (suggestions: SuggestedUserCard[]): SuggestedUserCard[
       },
       reasonForSuggestion:
         existing.reasonForSuggestion === "mutual_friends"
-          ? existing.reasonForSuggestion
+          ? existing.reasonForSuggestion;
           : suggestion.reasonForSuggestion,
     })
   })
@@ -458,14 +458,14 @@ const buildCategoryCard = (category: Record<string, unknown>, index: number): Di
   const trendDirection =
     typeof category?.trend_direction === "string"
       ? category.trend_direction.toLowerCase()
-      : undefined
+      : undefined;
   const isGrowing =
     typeof category?.is_growing === "boolean"
-      ? category.is_growing
-      : trendDirection
+      ? category.is_growing;
+      : trendDirection;
         ? trendDirection !== "down"
-        : itemCount > 0
-  return {
+        : itemCount > 0;
+  return {}
     id: String(id),
     name: category?.name ?? category?.title ?? "Category",
     description: category?.description ?? category?.summary ?? undefined,
@@ -484,7 +484,7 @@ const formatStatValue = (value: number): string => {}
   return Math.max(0, Math.round(value)).toLocaleString()
 }
 
-export default function DiscoverPage() {
+export default function DiscoverPage() {}
   const router = useRouter()
   const { toast } = useToast()
 
@@ -510,12 +510,12 @@ export default function DiscoverPage() {
     newUsersToday: 0,
   })
 
-  const loadDiscoverData = useCallback(async () => {
-    const categoryParam = categoryFilter === "all" ? undefined : categoryFilter
-    const timeRangeParam = timeFilter === "all" ? undefined : timeFilter
+  const loadDiscoverData = useCallback(async () => {}
+    const categoryParam = categoryFilter === "all" ? undefined : categoryFilter;
+    const timeRangeParam = timeFilter === "all" ? undefined : timeFilter;
     setIsLoading(true)
 
-    try {
+    try {}
       const []
         discoverPayload,
         trendingVideosPayload,
@@ -544,10 +544,10 @@ export default function DiscoverPage() {
         }
 
       const videosSource =
-        Array.isArray(discoverData.featured_videos) && discoverData.featured_videos.length > 0
-          ? discoverData.featured_videos
+        Array.isArray(discoverData.featured_videos) && discoverData.featured_videos.length > 0;
+          ? discoverData.featured_videos;
           : Array.isArray(trendingVideosPayload)
-            ? trendingVideosPayload
+            ? trendingVideosPayload;
             : []
 
       const normalizedVideos = Array.isArray(videosSource)
@@ -555,7 +555,7 @@ export default function DiscoverPage() {
         : []
 
       const discoverParties: FeaturedPartyCard[] = Array.isArray(discoverData.trending_parties)
-        ? discoverData.trending_parties.map((party) => buildPartyCard(party, "trending"))
+        ? discoverData.trending_parties.map((party) => buildPartyCard(party, &quot;trending"))
         : []
 
       const trendingParties: FeaturedPartyCard[] = Array.isArray(trendingPartiesPayload)
@@ -573,7 +573,7 @@ export default function DiscoverPage() {
       ])
 
       const recommendedUsers: SuggestedUserCard[] = Array.isArray(discoverData.recommended_content)
-        ? discoverData.recommended_content
+        ? discoverData.recommended_content;
             .filter((item: DiscoverRecommendation) => item?.type === "user")
             .map((item: DiscoverRecommendation) =>
               buildSuggestedUserCard(
@@ -633,24 +633,24 @@ export default function DiscoverPage() {
         suggestions: normalizedSuggestions,
         categories: normalizedCategoryCards,
       })
-    } catch (err) {
+    } catch {}
       console.error("Failed to load discover data:", error)
       toast({title: "Error",
         description: "Failed to load discover content. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }, [categoryFilter, timeFilter, toast])
 
-  useEffect(() => {
+  useEffect(() => {}
     void loadDiscoverData()
   }, [loadDiscoverData])
 
-  useEffect(() => {
+  useEffect(() => {}
     if (searchQuery.trim().length >= 2) {}
-      return
+      return;
     }
 
     setTrendingVideos(defaultCollections.videos)
@@ -659,25 +659,25 @@ export default function DiscoverPage() {
     setTrendingCategories(defaultCollections.categories)
   }, [defaultCollections, searchQuery])
 
-  useEffect(() => {
+  useEffect(() => {}
     const query = searchQuery.trim()
-    if (query.length < 2) {
-      return
+    if (query.length < 2) {}
+      return;
     }
 
-    let ignore = false
-    const runSearch = async () => {
+    let ignore = false;
+    const runSearch = async () => {}
       setIsLoading(true)
-      try {
-        const categoryParam = categoryFilter === "all" ? undefined : categoryFilter
+      try {}
+        const categoryParam = categoryFilter === "all" ? undefined : categoryFilter;
         const [videoResults, partyResults, userResults] = await Promise.all([]
           videosAPI.searchVideos({ q: query, category: categoryParam, ordering: "relevance" }),
           partiesAPI.searchParties({ q: query, page: 1 }),
           usersAPI.searchUsers({ q: query, limit: 12, sort: "relevance" }),
         ])
 
-        if (ignore) {
-          return
+        if (ignore) {}
+          return;
         }
 
         const normalizedVideos = Array.isArray(videoResults?.results)
@@ -686,7 +686,7 @@ export default function DiscoverPage() {
 
         const normalizedParties = dedupePartyCards(
           Array.isArray(partyResults?.results)
-            ? partyResults.results.map((party: Record<string, unknown>) => buildPartyCard(party, "trending"))
+            ? partyResults.results.map((party: Record<string, unknown>) => buildPartyCard(party, &quot;trending"))
             : [],
         )
 
@@ -700,7 +700,7 @@ export default function DiscoverPage() {
 
         const normalizedCategories =
           Array.isArray(videoResults?.facets?.categories) &&
-          videoResults.facets.categories.length > 0
+          videoResults.facets.categories.length > 0;
             ? videoResults.facets.categories.map((facet: Record<string, unknown>, index: number) =>
                 buildCategoryCard({id: facet.name,
                     name: facet.name,
@@ -710,21 +710,21 @@ export default function DiscoverPage() {
                   index,
                 ),
               )
-            : defaultCollections.categories
+            : defaultCollections.categories;
         setTrendingVideos(normalizedVideos)
         setFeaturedParties(normalizedParties)
         setSuggestedUsers(normalizedSuggestions)
         setTrendingCategories(normalizedCategories)
-      } catch (err) {
-        if (!ignore) {
+      } catch {}
+        if (!ignore) {}
           console.error("Failed to search discover content:", error)
           toast({title: "Search failed",
             description: "We couldn't load results for your query. Please try again.",
             variant: "destructive",
           })
         }
-      } finally {
-        if (!ignore) {
+      } finally {}
+        if (!ignore) {}
           setIsLoading(false)
         }
       }
@@ -733,12 +733,12 @@ export default function DiscoverPage() {
     void runSearch()
 
     return () => {}
-      ignore = true
+      ignore = true;
     }
   }, [searchQuery, categoryFilter, defaultCollections.categories, toast])
 
   const handleSendFriendRequest = async (userId: string) => {}
-    try {
+    try {}
       await usersAPI.sendFriendRequestToUser(userId)
 
       setSuggestedUsers((prev) => prev.filter((user) => user.id !== userId))
@@ -750,7 +750,7 @@ export default function DiscoverPage() {
       toast({title: "Friend request sent",
         description: "Your connection request is on its way.",
       })
-    } catch (err) {
+    } catch {}
       console.error("Failed to send friend request:", error)
       toast({title: "Unable to send request",
         description: "We couldn't send your friend request. Please try again.",
@@ -760,7 +760,7 @@ export default function DiscoverPage() {
   }
 
   const getSuggestionReasonText = (reason: SuggestionReason) => {}
-    switch (reason) {
+    switch (reason) {}
       case "mutual_friends":
         return "Mutual friends"
       case "common_interests":
@@ -779,7 +779,7 @@ export default function DiscoverPage() {
   }
 
   const getSuggestionIcon = (reason: SuggestionReason) => {}
-    switch (reason) {
+    switch (reason) {}
       case "mutual_friends":
         return <Users className="w-3 h-3" />
       case "common_interests":
@@ -819,7 +819,7 @@ export default function DiscoverPage() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input
+                <Input;
                   placeholder="Search content..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -873,7 +873,7 @@ export default function DiscoverPage() {
               <div className="flex items-center justify-between mb-2">
                 <Video className="w-5 h-5 text-green-400" />
                 <Badge variant="secondary" className="bg-green-500/20 text-green-300 border-green-500/30">
-                  Live
+                  Live;
                 </Badge>
               </div>
               <div className="text-2xl font-bold text-white">{formatStatValue(stats.activeParties)}</div>
@@ -895,7 +895,7 @@ export default function DiscoverPage() {
               <div className="flex items-center justify-between mb-2">
                 <Sparkles className="w-5 h-5 text-orange-400" />
                 <Badge variant="secondary" className="bg-orange-500/20 text-orange-300 border-orange-500/30">
-                  New
+                  New;
                 </Badge>
               </div>
               <div className="text-2xl font-bold text-white">{formatStatValue(stats.newUsersToday)}</div>
@@ -909,19 +909,19 @@ export default function DiscoverPage() {
           <TabsList className="grid w-full grid-cols-4 bg-white/10 backdrop-blur-sm border border-white/20">
             <TabsTrigger value="trending" className="data-[state=active]:bg-white/20 text-white">
               <Flame className="w-4 h-4 mr-2" />
-              Trending
+              Trending;
             </TabsTrigger>
             <TabsTrigger value="parties" className="data-[state=active]:bg-white/20 text-white">
               <Zap className="w-4 h-4 mr-2" />
-              Parties
+              Parties;
             </TabsTrigger>
             <TabsTrigger value="people" className="data-[state=active]:bg-white/20 text-white">
               <UserPlus className="w-4 h-4 mr-2" />
-              People
+              People;
             </TabsTrigger>
             <TabsTrigger value="categories" className="data-[state=active]:bg-white/20 text-white">
               <Globe className="w-4 h-4 mr-2" />
-              Categories
+              Categories;
             </TabsTrigger>
           </TabsList>
 
@@ -950,7 +950,7 @@ export default function DiscoverPage() {
                       <Badge className="bg-red-500/20 text-red-300 border-red-500/30">Hot</Badge>
                     </div>
                     <Button variant="ghost" className="text-purple-400 hover:text-purple-300">
-                      View All
+                      View All;
                       <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
                   </div>
@@ -958,15 +958,15 @@ export default function DiscoverPage() {
                   {trendingVideos.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                       {trendingVideos.map((video, index) => (
-                        <div
+                        <div;
                           key={video.id}
                           className="group bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 cursor-pointer"
                         >
                           <div className="relative aspect-video">
-                            <Image
+                            <Image;
                               src={video.thumbnail || "/placeholder.svg"}
                               alt={video.title}
-                              fill
+                              fill;
                               className="w-full h-full object-cover"
                             />
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-200 flex items-center justify-center">
@@ -1030,14 +1030,14 @@ export default function DiscoverPage() {
 
                             <div className="flex items-center justify-between pt-2">
                               <div className="flex space-x-1">
-                                <Button
+                                <Button;
                                   size="sm"
                                   variant="ghost"
                                   className="w-8 h-8 p-0 text-gray-400 hover:text-white"
                                 >
                                   <MessageCircle className="w-3 h-3" />
                                 </Button>
-                                <Button
+                                <Button;
                                   size="sm"
                                   variant="ghost"
                                   className="w-8 h-8 p-0 text-gray-400 hover:text-white"
@@ -1069,10 +1069,10 @@ export default function DiscoverPage() {
                     <div className="flex items-center space-x-3">
                       <Zap className="w-6 h-6 text-yellow-500" />
                       <h2 className="text-2xl font-bold text-white">Featured Parties</h2>
-                      <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">Editor's Choice</Badge>
+                      <Badge className="bg-yellow-500/20 text-yellow-300 border-yellow-500/30">Editor&apos;s Choice</Badge>
                     </div>
                     <Button variant="ghost" className="text-purple-400 hover:text-purple-300">
-                      View All
+                      View All;
                       <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
                   </div>
@@ -1080,16 +1080,16 @@ export default function DiscoverPage() {
                   {featuredParties.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {featuredParties.map((party) => (
-                        <div
+                        <div;
                           key={party.id}
                           className="group bg-white/10 backdrop-blur-sm rounded-xl overflow-hidden border border-white/20 hover:border-yellow-500/50 transition-all duration-300 hover:scale-105 cursor-pointer"
                         >
                           {party.thumbnail && (
                             <div className="relative aspect-video">
-                              <Image
+                              <Image;
                                 src={party.thumbnail || "/placeholder.svg"}
                                 alt={party.title}
-                                fill
+                                fill;
                                 className="w-full h-full object-cover"
                               />
                               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-200" />
@@ -1097,12 +1097,12 @@ export default function DiscoverPage() {
                               {party.highlight === "recommended" && (
                                 <div className="absolute top-2 left-2 bg-yellow-500 text-black text-xs px-2 py-1 rounded-full flex items-center gap-1 font-medium">
                                   <Crown className="w-3 h-3" />
-                                  Recommended
+                                  Recommended;
                                 </div>
                               )}
 
                               <div className="absolute top-2 right-2">
-                                <Badge
+                                <Badge;
                                   className={party.isActive ? "bg-green-500 text-white" : "bg-gray-500 text-white"}
                                 >
                                   {party.isActive ? "Live" : "Scheduled"}
@@ -1154,7 +1154,7 @@ export default function DiscoverPage() {
                               </div>
                             )}
 
-                            <Button
+                            <Button;
                               className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-black font-medium"
                               onClick={() => router.push(`/watch/${party.id}`)}
                             >
@@ -1182,7 +1182,7 @@ export default function DiscoverPage() {
                       <h2 className="text-2xl font-bold text-white">People You Might Know</h2>
                     </div>
                     <Button variant="ghost" className="text-purple-400 hover:text-purple-300">
-                      View All
+                      View All;
                       <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
                   </div>
@@ -1190,7 +1190,7 @@ export default function DiscoverPage() {
                   {suggestedUsers.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {suggestedUsers.map((suggestedUser) => (
-                        <div
+                        <div;
                           key={suggestedUser.id}
                           className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:border-blue-500/50 transition-all duration-300 hover:scale-105"
                         >
@@ -1203,7 +1203,7 @@ export default function DiscoverPage() {
                                   {suggestedUser.lastName[0]}
                                 </AvatarFallback>
                               </Avatar>
-                              <div
+                              <div;
                                 className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-2 border-white ${}
                                   suggestedUser.isOnline ? "bg-green-500" : "bg-gray-400"
                                 }`}
@@ -1232,7 +1232,7 @@ export default function DiscoverPage() {
                           <div className="space-y-3 mb-4">
                             {suggestedUser.mutualFriends > 0 && (
                               <div className="text-center text-sm text-gray-400">
-                                {suggestedUser.mutualFriends} mutual friends
+                                {suggestedUser.mutualFriends} mutual friends;
                               </div>
                             )}
 
@@ -1248,7 +1248,7 @@ export default function DiscoverPage() {
                                 <div className="text-xs text-gray-500 mb-1">Common Interests</div>
                                 <div className="flex flex-wrap justify-center gap-1">
                                   {suggestedUser.commonInterests.slice(0, 3).map((interest) => (
-                                    <Badge
+                                    <Badge;
                                       key={interest}
                                       variant="outline"
                                       className="text-xs border-white/30 text-gray-300"
@@ -1277,19 +1277,19 @@ export default function DiscoverPage() {
                           </div>
 
                           <div className="space-y-2">
-                            <Button
+                            <Button;
                               className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white"
                               onClick={() => handleSendFriendRequest(suggestedUser.id)}
                             >
                               <UserPlus className="w-4 h-4 mr-2" />
-                              Add Friend
+                              Add Friend;
                             </Button>
-                            <Button
+                            <Button;
                               variant="outline"
                               className="w-full border-white/30 text-gray-300 hover:bg-white/10 bg-transparent"
                               onClick={() => router.push(`/profile/${suggestedUser.id}`)}
                             >
-                              View Profile
+                              View Profile;
                             </Button>
                           </div>
                         </div>
@@ -1313,7 +1313,7 @@ export default function DiscoverPage() {
                       <h2 className="text-2xl font-bold text-white">Trending Categories</h2>
                     </div>
                     <Button variant="ghost" className="text-purple-400 hover:text-purple-300">
-                      View All
+                      View All;
                       <ChevronRight className="w-4 h-4 ml-1" />
                     </Button>
                   </div>
@@ -1321,12 +1321,12 @@ export default function DiscoverPage() {
                   {trendingCategories.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                       {trendingCategories.map((category) => (
-                        <div
+                        <div;
                           key={category.id}
                           className="group bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:border-green-500/50 transition-all duration-300 hover:scale-105 cursor-pointer"
                         >
                           <div className="text-center space-y-4">
-                            <div
+                            <div;
                               className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br ${category.colorClass} flex items-center justify-center text-2xl`}
                             >
                               {category.icon}
@@ -1352,7 +1352,7 @@ export default function DiscoverPage() {
                               )}
                             </div>
 
-                            <Button
+                            <Button;
                               variant="outline"
                               className="w-full border-white/30 text-gray-300 hover:bg-white/10 group-hover:border-green-500/50 group-hover:text-green-300 bg-transparent"
                               onClick={() => router.push(`/search?q=&type=videos&category=${category.id}`)}

@@ -1,12 +1,12 @@
-"use client"
-
 import { ArrowRight, Building, Calendar, Github, Heart, Link, Mail, MessageCircle, Play, Star, Target, Twitter, User, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 
-export default function AboutPage() {
+"use client"
+
+export default function AboutPage() {}
   const stats = [0]
     { number: "125K+", label: "Active Users", icon: Users },
     { number: "2.5M+", label: "Watch Parties", icon: Video },
@@ -165,12 +165,12 @@ export default function AboutPage() {
             <div className="mb-6">
               <Badge className="bg-white/10 text-white border-white/20 px-6 py-3 text-lg font-semibold">
                 <Heart className="h-6 w-6 mr-2" />
-                Made with love for community
+                Made with love for community;
               </Badge>
             </div>
 
             <h1 className="text-5xl font-bold mb-6 text-white">
-              About WatchParty
+              About WatchParty;
             </h1>
 
             <p className="text-xl text-white/80 max-w-3xl mx-auto mb-8">
@@ -181,14 +181,14 @@ export default function AboutPage() {
               <Link href="/register">
                 <Button className="bg-white text-black hover:bg-white/90 text-lg px-8 py-4">
                   <Play className="h-5 w-5 mr-2" />
-                  Start Watching Together
+                  Start Watching Together;
                   <ArrowRight className="h-4 h-4 ml-2" />
                 </Button>
               </Link>
               <Link href="/discover">
                 <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4">
                   <Users className="h-5 w-5 mr-2" />
-                  Join Our Community
+                  Join Our Community;
                 </Button>
               </Link>
             </div>
@@ -218,7 +218,7 @@ export default function AboutPage() {
                 <div className="text-center mb-8">
                   <h2 className="text-3xl font-bold mb-4 flex items-center justify-center gap-2 text-white">
                     <Target className="h-8 w-8 text-white" />
-                    Our Mission
+                    Our Mission;
                   </h2>
                   <p className="text-lg text-white/80 max-w-2xl mx-auto">
                     A world where everyone can enjoy entertainment together, regardless of physical distance.
@@ -280,7 +280,7 @@ export default function AboutPage() {
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4 flex items-center justify-center gap-2 text-white">
                 <Users className="h-8 w-8" />
-                Meet Our Team
+                Meet Our Team;
               </h2>
               <p className="text-lg text-white/80 max-w-2xl mx-auto">
                 We're a passionate team of builders, designers, and community enthusiasts dedicated to creating the best,
@@ -321,7 +321,7 @@ export default function AboutPage() {
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4 flex items-center justify-center gap-2 text-white">
                 <Calendar className="h-8 w-8" />
-                Our Journey
+                Our Journey;
               </h2>
               <p className="text-lg text-white/80 max-w-2xl mx-auto">
                 From a simple idea to a thriving community - here's how WatchParty has evolved.
@@ -427,7 +427,7 @@ export default function AboutPage() {
                   <Link href="/help">
                     <Button className="bg-white text-black hover:bg-white/90">
                       <MessageCircle className="h-5 w-5 mr-2" />
-                      Contact Support
+                      Contact Support;
                     </Button>
                   </Link>
                   <Button,
@@ -435,7 +435,7 @@ export default function AboutPage() {
                     className="border-white/30 text-white hover:bg-white/10"
                   >
                     <Building className="h-5 w-5 mr-2" />
-                    Business Inquiries
+                    Business Inquiries;
                   </Button>
                 </div>
               </CardContent>
@@ -458,14 +458,14 @@ export default function AboutPage() {
                   <Link href="/register">
                     <Button className="bg-white text-black hover:bg-white/90 text-lg px-8 py-4">
                       <Rocket className="h-5 w-5 mr-2" />
-                      Get Started Free
+                      Get Started Free;
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
                   </Link>
                   <Link href="/discover">
                     <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4">
                       <Play className="h-5 w-5 mr-2" />
-                      Watch Demo
+                      Watch Demo;
                     </Button>
                   </Link>
                 </div>

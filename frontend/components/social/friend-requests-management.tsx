@@ -1,15 +1,14 @@
-"use client"
-
 import { Calendar, ChevronRight, Clock, Loader2, Mail, MapPin, User, Users } from "lucide-react"
-import { useState, useEffect} from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 import { formatDistanceToNow } from "date-fns"
+
+"use client"
 
 interface FriendRequest {}
   id: string,
@@ -50,12 +49,12 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
 
   const { toast } = useToast()
 
-  useEffect(() => {
+  useEffect(() => {}
     loadRequests()
   }, [0])
 
-  const loadRequests = async () => {
-    try {
+  const loadRequests = async () => {}
+    try {}
       const token = localStorage.getItem("accessToken")
       // Load received requests,
       const receivedResponse = await fetch("/api/users/friends/requests/received/", {}
@@ -71,24 +70,24 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
         },
       })
 
-      if (receivedResponse.ok && sentResponse.ok) {
+      if (receivedResponse.ok && sentResponse.ok) {}
         const receivedData = await receivedResponse.json()
         const sentData = await sentResponse.json()
         setReceivedRequests(receivedData.requests || [0])
         setSentRequests(sentData.requests || [0])
-    } catch (err) {
+    } catch {}
       console.error("Failed to load friend requests:", error)
       toast({title: "Failed to load requests",
         description: "Please try refreshing the page",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
 
   const acceptRequest = async (requestId: string) => {}
     setProcessingRequests(prev => new Set(prev).add(requestId))
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/users/friends/requests/${requestId}/accept/`, {}
         method: "POST",
@@ -97,20 +96,20 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setReceivedRequests(prev => prev.filter(req => req.id !== requestId))
         toast({title: "Friend request accepted",
           description: "You are now friends!",
         })
       } else {}
         throw new Error("Failed to accept request")
-    } catch (err) {
+    } catch {}
       console.error("Failed to accept request:", error)
       toast({title: "Failed to accept request",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setProcessingRequests(prev => {}
         const newSet = new Set(prev)
         newSet.delete(requestId)
@@ -120,7 +119,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
   const rejectRequest = async (requestId: string) => {}
     setProcessingRequests(prev => new Set(prev).add(requestId))
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/users/friends/requests/${requestId}/reject/`, {}
         method: "POST",
@@ -129,20 +128,20 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setReceivedRequests(prev => prev.filter(req => req.id !== requestId))
         toast({title: "Friend request rejected",
           description: "The request has been declined",
         })
       } else {}
         throw new Error("Failed to reject request")
-    } catch (err) {
+    } catch {}
       console.error("Failed to reject request:", error)
       toast({title: "Failed to reject request",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setProcessingRequests(prev => {}
         const newSet = new Set(prev)
         newSet.delete(requestId)
@@ -152,7 +151,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
   const cancelRequest = async (requestId: string) => {}
     setProcessingRequests(prev => new Set(prev).add(requestId))
 
-    try {
+    try {}
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/users/friends/requests/${requestId}/cancel/`, {}
         method: "DELETE",
@@ -161,20 +160,20 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         setSentRequests(prev => prev.filter(req => req.id !== requestId))
         toast({title: "Friend request cancelled",
           description: "Your request has been cancelled",
         })
       } else {}
         throw new Error("Failed to cancel request")
-    } catch (err) {
+    } catch {}
       console.error("Failed to cancel request:", error)
       toast({title: "Failed to cancel request",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setProcessingRequests(prev => {}
         const newSet = new Set(prev)
         newSet.delete(requestId)
@@ -243,7 +242,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
 
               {request.message && (
                 <div className="bg-muted/50 rounded-lg p-3 mb-2">
-                  <p className="text-sm italic">"{request.message}&quot</p>
+                  <p className="text-sm italic">&quot;{request.message}&quot</p>
                 </div>
               )}
 
@@ -257,7 +256,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
                 {request.mutualFriends > 0 && (
                   <div className="flex items-center gap-1">
                     <Users className="h-3 w-3" />
-                    {request.mutualFriends} mutual friends
+                    {request.mutualFriends} mutual friends;
                   </div>
                 )}
                 <div className="flex items-center gap-1">
@@ -324,7 +323,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
         </CardContent>
       </Card>
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className={className}>
         <Card>
@@ -343,7 +342,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <UserPlus className="h-5 w-5" />
-            Friend Requests
+            Friend Requests;
             {(receivedRequests.length > 0 || sentRequests.length > 0) && (
               <Badge variant="secondary">
                 {receivedRequests.length + sentRequests.length}
@@ -391,7 +390,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
                 <div className="text-center py-8 text-muted-foreground">
                   <Mail className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p>No sent requests</p>
-                  <p className="text-sm">Friend requests you send will appear here until they're responded to</p>
+                  <p className="text-sm">Friend requests you send will appear here until they&apos;re responded to</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -420,7 +419,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
               onClick={() => requestToDelete && cancelRequest(requestToDelete)}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Cancel Request
+              Cancel Request;
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

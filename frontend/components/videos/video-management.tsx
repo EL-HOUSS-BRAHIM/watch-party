@@ -1,5 +1,3 @@
-"use client"
-
 import { Check, CheckCircle, Clock, Download, Edit, Eye, EyeOff, File, FileText, MoreHorizontal, Play, Search, Share, Trash, Video, X, XCircle } from "lucide-react"
 import { useState, useEffect } from 'react'
 import Image from "next/image"
@@ -10,10 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/hooks/use-toast'
 
-
-
-
-
+"use client"
 
   Select,
   SelectContent,
@@ -54,42 +49,42 @@ import { useToast } from '@/hooks/use-toast'
 } from '@/components/ui/table'
 
 interface VideoManagementProps {}
-  className?: string
+  className?: string;
 }
 
 interface VideoItem {}
-  id: string
-  title: string
-  description: string
-  thumbnailUrl: string
-  duration: number
-  fileSize: string
-  quality: string
+  id: string;
+  title: string;
+  description: string;
+  thumbnailUrl: string;
+  duration: number;
+  fileSize: string;
+  quality: string;
   status: 'active' | 'inactive' | 'processing' | 'failed'
   visibility: 'public' | 'private' | 'unlisted'
   uploadedBy: {}
-    id: string
-    username: string
-    avatar: string
+    id: string;
+    username: string;
+    avatar: string;
   }
-  uploadedAt: string
-  views: number
-  likes: number
-  comments: number
+  uploadedAt: string;
+  views: number;
+  likes: number;
+  comments: number;
   tags: string[]
   genre: string[]
-  isPublished: boolean
-  publishedAt?: string
-  scheduledAt?: string
+  isPublished: boolean;
+  publishedAt?: string;
+  scheduledAt?: string;
 }
 
 interface VideoStats {}
-  totalVideos: number
-  activeVideos: number
-  totalViews: number
-  totalDuration: number
-  storageUsed: string
-  bandwidth: string
+  totalVideos: number;
+  activeVideos: number;
+  totalViews: number;
+  totalDuration: number;
+  storageUsed: string;
+  bandwidth: string;
 }
 
 export function VideoManagement({ className }: VideoManagementProps) {}
@@ -114,21 +109,21 @@ export function VideoManagement({ className }: VideoManagementProps) {}
   const [activeTab, setActiveTab] = useState('all')
   const { toast } = useToast()
 
-  useEffect(() => {
+  useEffect(() => {}
     loadVideos()
     loadStats()
   }, [currentPage, searchQuery, statusFilter, visibilityFilter, sortBy, activeTab])
 
-  const loadVideos = async () => {
+  const loadVideos = async () => {}
     setIsLoading(true)
-    try {
+    try {}
       const token = localStorage.getItem('accessToken')
       const params = new URLSearchParams({page: currentPage.toString(),
         search: searchQuery,
         status: statusFilter !== 'all' ? statusFilter : '',
         visibility: visibilityFilter !== 'all' ? visibilityFilter : '',
         sort: sortBy,
-        tab: activeTab
+        tab: activeTab;
       })
 
       const response = await fetch(`/api/admin/videos/?${params}`, {}
@@ -137,27 +132,27 @@ export function VideoManagement({ className }: VideoManagementProps) {}
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         const results = data.results ?? []
         setVideos(results)
-        const totalItems = data.pagination?.total ?? data.count ?? results.length
-        const pageSize = data.pagination?.page_size ?? 20
+        const totalItems = data.pagination?.total ?? data.count ?? results.length;
+        const pageSize = data.pagination?.page_size ?? 20;
         setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to load videos:', error)
       toast({title: 'Error',
         description: 'Failed to load videos.',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const loadStats = async () => {
-    try {
+  const loadStats = async () => {}
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch('/api/admin/videos/stats/', {}
         headers: {}
@@ -165,17 +160,17 @@ export function VideoManagement({ className }: VideoManagementProps) {}
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         const data = await response.json()
         setStats(data)
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to load video stats:', error)
     }
   }
 
   const handleVideoAction = async (videoId: string, action: string) => {}
-    try {
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/admin/videos/${videoId}/${action}/`, {}
         method: 'POST',
@@ -184,7 +179,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
         },
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         await loadVideos()
         const actionMessages = { publish: 'Video published successfully',
           unpublish: 'Video unpublished successfully',
@@ -196,7 +191,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
           description: actionMessages[action as keyof typeof actionMessages] || 'Action completed successfully',
         })
       }
-    } catch (err) {
+    } catch {}
       console.error(`Failed to ${action} video:`, error)
       toast({title: 'Error',
         description: `Failed to ${action} video.`,
@@ -205,9 +200,9 @@ export function VideoManagement({ className }: VideoManagementProps) {}
     }
   }
 
-  const handleBulkAction = async () => {
-    if (!bulkAction || selectedVideos.length === 0) return
-    try {
+  const handleBulkAction = async () => {}
+    if (!bulkAction || selectedVideos.length === 0) return;
+    try {}
       const token = localStorage.getItem('accessToken')
       const response = await fetch('/api/admin/videos/bulk/', {}
         method: 'POST',
@@ -220,7 +215,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
         }),
       })
 
-      if (response.ok) {
+      if (response.ok) {}
         await loadVideos()
         setSelectedVideos([])
         setBulkAction('')
@@ -228,7 +223,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
           description: `Bulk ${bulkAction} completed successfully`,
         })
       }
-    } catch (err) {
+    } catch {}
       console.error('Failed to perform bulk action:', error)
       toast({title: 'Error',
         description: 'Failed to perform bulk action.',
@@ -238,7 +233,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
   }
 
   const getStatusIcon = (status: string) => {}
-    switch (status) {
+    switch (status) {}
       case 'active':
         return <CheckCircle className="w-4 h-4 text-green-500" />
       case 'inactive':
@@ -253,7 +248,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
   }
 
   const getStatusBadge = (status: string) => {}
-    const variants: Record<string, "default" | "destructive" | "outline" | "secondary"> = { active: 'default',
+    const variants: Record<string, "default" | "destructive" | "outline" | "secondary"> = { active: &apos;default',}
       inactive: 'secondary',
       processing: 'outline',
       failed: 'destructive'
@@ -266,7 +261,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
   }
 
   const getVisibilityBadge = (visibility: string) => {}
-    const variants: Record<string, "default" | "destructive" | "outline" | "secondary"> = { public: 'default',
+    const variants: Record<string, "default" | "destructive" | "outline" | "secondary"> = { public: &apos;default',}
       private: 'secondary',
       unlisted: 'outline'
     }
@@ -280,8 +275,8 @@ export function VideoManagement({ className }: VideoManagementProps) {}
   const formatDuration = (seconds: number) => {}
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60
-    if (hours > 0) {
+    const secs = seconds % 60;
+    if (hours > 0) {}
       return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
     }
     return `${minutes}:${secs.toString().padStart(2, '0')}`
@@ -289,14 +284,14 @@ export function VideoManagement({ className }: VideoManagementProps) {}
 
   const formatFileSize = (sizeStr: string) => {}
     const size = parseFloat(sizeStr)
-    if (size >= 1024) {
+    if (size >= 1024) {}
       return `${(size / 1024).toFixed(1)} GB`
     }
     return `${size.toFixed(1)} MB`
   }
 
   const handleSelectVideo = (videoId: string, checked: boolean) => {}
-    if (checked) {
+    if (checked) {}
       setSelectedVideos(prev => [...prev, videoId])
     } else {}
       setSelectedVideos(prev => prev.filter(id => id !== videoId))
@@ -304,14 +299,14 @@ export function VideoManagement({ className }: VideoManagementProps) {}
   }
 
   const handleSelectAll = (checked: boolean) => {}
-    if (checked) {
+    if (checked) {}
       setSelectedVideos(videos.map(video => video.id))
     } else {}
       setSelectedVideos([])
     }
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -379,7 +374,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
+                <Input;
                   placeholder="Search videos..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -433,7 +428,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
           {selectedVideos.length > 0 && (
             <div className="flex items-center gap-4 mt-4 p-4 bg-muted rounded-lg">
               <span className="text-sm font-medium">
-                {selectedVideos.length} video{selectedVideos.length > 1 ? 's' : ''} selected
+                {selectedVideos.length} video{selectedVideos.length > 1 ? &apos;s' : ''} selected;
               </span>
               <Select value={bulkAction} onValueChange={setBulkAction}>
                 <SelectTrigger className="w-40">
@@ -449,10 +444,10 @@ export function VideoManagement({ className }: VideoManagementProps) {}
               </Select>
 
               <Button onClick={handleBulkAction} disabled={!bulkAction}>
-                Apply
+                Apply;
               </Button>
               <Button variant="outline" onClick={() => setSelectedVideos([])}>
-                Clear Selection
+                Clear Selection;
               </Button>
             </div>
           )}
@@ -464,7 +459,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
         <CardHeader>
           <CardTitle>Video Management</CardTitle>
           <CardDescription>
-            Manage all videos in the platform
+            Manage all videos in the platform;
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -472,7 +467,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12">
-                  <input
+                  <input;
                     type="checkbox"
                     checked={selectedVideos.length === videos.length && videos.length > 0}
                     onChange={(e) => handleSelectAll(e.target.checked)}
@@ -492,7 +487,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
               {videos.map((video) => (
                 <TableRow key={video.id}>
                   <TableCell>
-                    <input
+                    <input;
                       type="checkbox"
                       checked={selectedVideos.includes(video.id)}
                       onChange={(e) => handleSelectVideo(video.id, e.target.checked)}
@@ -501,7 +496,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <div className="relative w-16 h-10 rounded overflow-hidden bg-gray-200">
-                        <img
+                        <img;
                           src={video.thumbnailUrl}
                           alt={video.title}
                           className="w-full h-full object-cover"
@@ -536,7 +531,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
                     <div className="text-sm">
                       <div>{video.views.toLocaleString()} views</div>
                       <div className="text-muted-foreground">
-                        {video.likes} likes • {video.comments} comments
+                        {video.likes} likes • {video.comments} comments;
                       </div>
                     </div>
                   </TableCell>
@@ -567,41 +562,41 @@ export function VideoManagement({ className }: VideoManagementProps) {}
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem>
                           <Play className="w-4 h-4 mr-2" />
-                          Preview
+                          Preview;
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                           <Edit className="w-4 h-4 mr-2" />
-                          Edit Details
+                          Edit Details;
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                           <Share2 className="w-4 h-4 mr-2" />
-                          Share
+                          Share;
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                           <Download className="w-4 h-4 mr-2" />
-                          Download
+                          Download;
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         {video.status === 'active' ? (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'deactivate')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;deactivate')}>
                             <Pause className="w-4 h-4 mr-2" />
-                            Deactivate
+                            Deactivate;
                           </DropdownMenuItem>
                         ) : (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'activate')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;activate')}>
                             <Play className="w-4 h-4 mr-2" />
-                            Activate
+                            Activate;
                           </DropdownMenuItem>
                         )}
                         {video.isPublished ? (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'unpublish')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;unpublish')}>
                             <EyeOff className="w-4 h-4 mr-2" />
-                            Unpublish
+                            Unpublish;
                           </DropdownMenuItem>
                         ) : (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'publish')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;publish')}>
                             <Eye className="w-4 h-4 mr-2" />
-                            Publish
+                            Publish;
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuSeparator />
@@ -609,7 +604,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
                           <AlertDialogTrigger asChild>
                             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                               <Trash2 className="w-4 h-4 mr-2" />
-                              Delete
+                              Delete;
                             </DropdownMenuItem>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
@@ -621,8 +616,8 @@ export function VideoManagement({ className }: VideoManagementProps) {}
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleVideoAction(video.id, 'delete')}>
-                                Delete
+                              <AlertDialogAction onClick={() => handleVideoAction(video.id, &apos;delete')}>
+                                Delete;
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
@@ -650,21 +645,21 @@ export function VideoManagement({ className }: VideoManagementProps) {}
                 Page {currentPage} of {totalPages}
               </div>
               <div className="flex gap-2">
-                <Button
+                <Button;
                   variant="outline"
                   size="sm"
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
                 >
-                  Previous
+                  Previous;
                 </Button>
-                <Button
+                <Button;
                   variant="outline"
                   size="sm"
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
                 >
-                  Next
+                  Next;
                 </Button>
               </div>
             </div>

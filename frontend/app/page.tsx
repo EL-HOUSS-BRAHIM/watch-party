@@ -1,13 +1,14 @@
-"use client"
-
 import { useMemo } from "react"
-
 import { CtaBanner } from "@/components/marketing/cta-banner"
 import { FeatureGrid } from "@/components/marketing/feature-grid"
 import { HeroSection } from "@/components/marketing/hero-section"
 import { Testimonials } from "@/components/marketing/testimonials"
 import { useAuth } from "@/contexts/auth-context"
 import { Play } from "lucide-react"
+
+"use client"
+
+
 
 
 
@@ -16,10 +17,10 @@ import { Play } from "lucide-react"
   marketingTestimonials,
 } from "@/app/(marketing)/data/home-content"
 
-export default function HomePage() {
+export default function HomePage() {}
   const { user, isLoading } = useAuth()
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">

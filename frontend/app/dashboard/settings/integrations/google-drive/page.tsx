@@ -1,8 +1,9 @@
-'use client'
-
+import { Cloud } from "lucide-react"
 import { GoogleDriveWorkspace } from '@/components/integrations/google-drive-workspace'
 import { CloudIcon } from '@heroicons/react/24/outline'
-export default function GoogleDriveIntegrationPage() {
+
+'use client'
+export default function GoogleDriveIntegrationPage() {}
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="max-w-5xl mx-auto px-4 py-12 space-y-8">

@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect , useCallback } from "react"
 import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,63 +8,64 @@ import { Clock, Filter, Grid, Heart, List, Play, Search } from "lucide-react"
 import { useApi } from "@/hooks/use-api"
 import { formatDistanceToNow } from "date-fns"
 
+"use client"
 
 interface FavoriteVideo {}
-  id: string
+  id: string;
   video: {}
-    id: string
-    title: string
-    description: string
-    thumbnail_url?: string
-    duration: number
-    views: number
-    genre?: string
+    id: string;
+    title: string;
+    description: string;
+    thumbnail_url?: string;
+    duration: number;
+    views: number;
+    genre?: string;
     tags: string[]
   }
-  added_at: string
+  added_at: string;
 }
 
 interface UserFavoritesProps {}
-  userId: string
+  userId: string;
 }
 
 export function UserFavorites({ userId }: UserFavoritesProps) {}
   const [favorites, setFavorites] = useState<FavoriteVideo[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [genreFilter, setGenreFilter] = useState<string>("all")
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
+  const [genreFilter, setGenreFilter] = useState<string>(&quot;all")
   const api = useApi()
 
-  useEffect(() => {
+  useEffect(() => {}
     fetchFavorites()
   }, [userId])
 
-  const fetchFavorites = async () => {
-    try {
+  const fetchFavorites = async () => {}
+    try {}
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/favorites/`)
       setFavorites((response.data as Record<string, unknown>).favorites || [])
-    } catch (err) {
+    } catch {}
       console.error("Failed to load favorites:", err)
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
   const removeFavorite = async (videoId: string) => {}
-    try {
+    try {}
       await api.delete(`/users/${userId}/favorites/${videoId}/`)
       setFavorites(favorites.filter(fav => fav.video.id !== videoId))
-    } catch (err) {
+    } catch {}
       console.error("Failed to remove favorite:", err)
     }
   }
 
   const filteredFavorites = favorites.filter(favorite => {}
     const matchesSearch = favorite.video.title.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesGenre = genreFilter === "all" || favorite.video.genre === genreFilter
-    return matchesSearch && matchesGenre
+    const matchesGenre = genreFilter === "all" || favorite.video.genre === genreFilter;
+    return matchesSearch && matchesGenre;
   })
 
   const genres = Array.from(new Set(favorites.map(fav => fav.video.genre).filter(Boolean)))
@@ -74,13 +73,13 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
   const formatDuration = (seconds: number) => {}
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    if (hours > 0) {
+    if (hours > 0) {}
       return `${hours}:${minutes.toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`
     }
     return `${minutes}:${(seconds % 60).toString().padStart(2, '0')}`
   }
 
-  if (isLoading) {
+  if (isLoading) {}
     return (
       <Card>
         <CardContent className="flex items-center justify-center p-8">
@@ -99,7 +98,7 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold">Favorite Videos</h1>
         <p className="text-muted-foreground">
-          Your collection of liked videos • {favorites.length} total
+          Your collection of liked videos • {favorites.length} total;
         </p>
       </div>
 
@@ -116,7 +115,7 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input
+                <Input;
                   placeholder="Search favorites..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -125,7 +124,7 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
               </div>
             </div>
             <div className="flex space-x-2">
-              <select
+              <select;
                 value={genreFilter}
                 onChange={(e) => setGenreFilter(e.target.value)}
                 className="px-3 py-2 border rounded-md text-sm"
@@ -135,17 +134,17 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
                   <option key={genre} value={genre}>{genre}</option>
                 ))}
               </select>
-              <Button
+              <Button;
                 variant={viewMode === "grid" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setViewMode("grid")}
+                onClick={() => setViewMode(&quot;grid")}
               >
                 <Grid className="w-4 h-4" />
               </Button>
-              <Button
+              <Button;
                 variant={viewMode === "list" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setViewMode("list")}
+                onClick={() => setViewMode(&quot;list")}
               >
                 <List className="w-4 h-4" />
               </Button>
@@ -162,7 +161,7 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
               <div className="relative">
                 <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
                   {favorite.video.thumbnail_url ? (
-                    <img
+                    <img;
                       src={favorite.video.thumbnail_url}
                       alt={favorite.video.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform"
@@ -173,7 +172,7 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
                     </div>
                   )}
                 </div>
-                <Button
+                <Button;
                   variant="destructive"
                   size="sm"
                   className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -193,7 +192,7 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
                     <span>{favorite.video.views} views</span>
                   </div>
                   <div>
-                    Added {formatDistanceToNow(new Date(favorite.added_at))} ago
+                    Added {formatDistanceToNow(new Date(favorite.added_at))} ago;
                   </div>
                   {favorite.video.genre && (
                     <Badge variant="secondary" className="text-xs">
@@ -204,7 +203,7 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
 
                 <Button size="sm" className="w-full mt-3">
                   <Play className="w-4 h-4 mr-1" />
-                  Watch
+                  Watch;
                 </Button>
               </CardContent>
             </Card>
@@ -218,7 +217,7 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
                 <div className="flex space-x-4">
                   <div className="w-32 h-20 bg-muted rounded-lg overflow-hidden flex-shrink-0">
                     {favorite.video.thumbnail_url ? (
-                      <img
+                      <img;
                         src={favorite.video.thumbnail_url}
                         alt={favorite.video.title}
                         className="w-full h-full object-cover"
@@ -258,9 +257,9 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
                   <div className="flex flex-col space-y-2">
                     <Button size="sm">
                       <Play className="w-4 h-4 mr-1" />
-                      Watch
+                      Watch;
                     </Button>
-                    <Button
+                    <Button;
                       variant="destructive"
                       size="sm"
                       onClick={() => removeFavorite(favorite.video.id)}
