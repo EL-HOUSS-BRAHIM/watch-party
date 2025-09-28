@@ -1,34 +1,33 @@
+import { useState, useEffect , useCallback } from "react"
+
 "use client"
 
-import { useState, useEffect } from "react"
-
-const MOBILE_BREAKPOINT = 768
-
+const MOBILE_BREAKPOINT = 768;
 export function useIsMobile() {
   const [isMobile, setIsMobile] = useState<boolean>(false)
 
   useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
-    const onChange = () => {
+    const onChange = () => {}
       setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
     }
     mql.addEventListener("change", onChange)
     setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
-    return () => mql.removeEventListener("change", onChange)
+    return () => mql.removeEventListener(&quot;change&quot;, onChange)
   }, [])
 
-  return isMobile
+  return isMobile;
 }
 
 export function useScreenSize() {
-  const [screenSize, setScreenSize] = useState({
+  const [screenSize, setScreenSize] = useState({}
     width: typeof window !== "undefined" ? window.innerWidth : 0,
     height: typeof window !== "undefined" ? window.innerHeight : 0,
   })
 
   useEffect(() => {
-    const handleResize = () => {
-      setScreenSize({
+    const handleResize = () => {}
+      setScreenSize({}
         width: window.innerWidth,
         height: window.innerHeight,
       })

@@ -1,13 +1,14 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { Activity, AlertTriangle, Check, CheckCircle, Database, Loader2, PieChart, Server, TrendingUp, User, Users, Video, X } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
-import {
+import {}
+
+"use client"
   XAxis,
   YAxis,
   CartesianGrid,
@@ -19,45 +20,32 @@ import {
   Pie,
   Cell,
 } from "recharts"
-import {
-  Server,
-  Database,
-  Cpu,
-  HardDrive,
-  Users,
-  Video,
-  AlertTriangle,
-  CheckCircle,
-  TrendingUp,
-  Activity,
-  Loader2,
-} from "lucide-react"
 
-interface SystemMetrics {
-  cpu_usage: number
-  memory_usage: number
-  disk_usage: number
-  network_usage: number
+interface SystemMetrics {}
+  cpu_usage: number;
+  memory_usage: number;
+  disk_usage: number;
+  network_usage: number;
 }
 
-interface UserGrowthData {
-  month: string
-  total_users: number
-  active_users: number
+interface UserGrowthData {}
+  month: string;
+  total_users: number;
+  active_users: number;
 }
 
-interface RecentActivity {
-  id: string
-  timestamp: string
-  action: string
-  user_email: string
-  activity_type: string
+interface RecentActivity {}
+  id: string;
+  timestamp: string;
+  action: string;
+  user_email: string;
+  activity_type: string;
 }
 
-interface SubscriptionDistribution {
-  plan_name: string
-  user_count: number
-  color: string
+interface SubscriptionDistribution {}
+  plan_name: string;
+  user_count: number;
+  color: string;
 }
 
 export function AdminDashboard() {
@@ -75,37 +63,33 @@ export function AdminDashboard() {
   const fetchAdminData = async () => {
     try {
       setIsLoading(true)
-      
-      const [dashboardData, healthData, analyticsData] = await Promise.all([
+      const [dashboardData, healthData, analyticsData] = await Promise.all([]
         adminAPI.getDashboard(),
         adminAPI.getSystemHealth(),
         adminAPI.getAnalytics()
       ])
 
       // Extract system metrics from dashboard data (placeholder values if not available)
-      const metrics: SystemMetrics = {
-        cpu_usage: Math.floor(Math.random() * 100), // Placeholder
-        memory_usage: Math.floor(Math.random() * 100), // Placeholder
-        disk_usage: Math.floor(Math.random() * 100), // Placeholder
-        network_usage: Math.floor(Math.random() * 100), // Placeholder
+      const metrics: SystemMetrics = { cpu_usage: Math.floor(Math.random() * 100), // Placeholder;
+        memory_usage: Math.floor(Math.random() * 100), // Placeholder;
+        disk_usage: Math.floor(Math.random() * 100), // Placeholder;
+        network_usage: Math.floor(Math.random() * 100), // Placeholder;
       }
-      
       setSystemMetrics(metrics)
-      // Use the health and analytics data as needed
-      
-    } catch (error) {
+      // Use the health and analytics data as needed;
+    } } catch {
       console.error("Failed to fetch admin data:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load admin dashboard data",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const getActivityIcon = (type: string) => {
+  const getActivityIcon = (type: string) => {}
     switch (type) {
       case "user":
         return <Users className="w-4 h-4 text-blue-500" />
@@ -122,24 +106,21 @@ export function AdminDashboard() {
     }
   }
 
-  const getMetricColor = (value: number) => {
-    if (value >= 80) return "text-red-600"
-    if (value >= 60) return "text-yellow-600"
+  const getMetricColor = (value: number) => {}
+    if (value >= 80) return &quot;text-red-600&quot;
+    if (value >= 60) return &quot;text-yellow-600"
     return "text-green-600"
   }
 
-  const formatTimeAgo = (timestamp: string) => {
+  const formatTimeAgo = (timestamp: string) => {}
     const date = new Date(timestamp)
     const now = new Date()
     const diffMs = now.getTime() - date.getTime()
     const diffMins = Math.floor(diffMs / (1000 * 60))
-    
     if (diffMins < 1) return "Just now"
     if (diffMins < 60) return `${diffMins} min ago`
-    
     const diffHours = Math.floor(diffMins / 60)
     if (diffHours < 24) return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`
-    
     const diffDays = Math.floor(diffHours / 24)
     return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`
   }
@@ -168,7 +149,7 @@ export function AdminDashboard() {
               <div className={`text-2xl font-bold ${getMetricColor(systemMetrics?.cpu_usage || 0)}`}>
                 {systemMetrics?.cpu_usage || 0}%
               </div>
-              {(systemMetrics?.cpu_usage || 0) < 80 ? (
+              {(systemMetrics?.cpu_usage || 0) < 80 ? (}
                 <CheckCircle className="w-4 h-4 text-green-600" />
               ) : (
                 <AlertTriangle className="w-4 h-4 text-red-600" />
@@ -189,7 +170,7 @@ export function AdminDashboard() {
               <div className={`text-2xl font-bold ${getMetricColor(systemMetrics?.memory_usage || 0)}`}>
                 {systemMetrics?.memory_usage || 0}%
               </div>
-              {(systemMetrics?.memory_usage || 0) < 80 ? (
+              {(systemMetrics?.memory_usage || 0) < 80 ? (}
                 <CheckCircle className="w-4 h-4 text-green-600" />
               ) : (
                 <AlertTriangle className="w-4 h-4 text-red-600" />
@@ -264,7 +245,7 @@ export function AdminDashboard() {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
-                <Pie
+                <Pie;
                   data={subscriptionDistribution}
                   cx="50%"
                   cy="50%"
@@ -316,7 +297,7 @@ export function AdminDashboard() {
           </div>
           <div className="pt-4">
             <Button variant="outline" className="w-full bg-transparent">
-              View All Activity
+              View All Activity;
             </Button>
           </div>
         </CardContent>
@@ -332,15 +313,15 @@ export function AdminDashboard() {
           <CardContent className="space-y-2">
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <Server className="w-4 h-4 mr-2" />
-              Restart Services
+              Restart Services;
             </Button>
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <Database className="w-4 h-4 mr-2" />
-              Clear Cache
+              Clear Cache;
             </Button>
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <HardDrive className="w-4 h-4 mr-2" />
-              Cleanup Storage
+              Cleanup Storage;
             </Button>
           </CardContent>
         </Card>
@@ -353,15 +334,15 @@ export function AdminDashboard() {
           <CardContent className="space-y-2">
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <Users className="w-4 h-4 mr-2" />
-              View All Users
+              View All Users;
             </Button>
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <AlertTriangle className="w-4 h-4 mr-2" />
-              Flagged Accounts
+              Flagged Accounts;
             </Button>
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <TrendingUp className="w-4 h-4 mr-2" />
-              Export User Data
+              Export User Data;
             </Button>
           </CardContent>
         </Card>
@@ -374,15 +355,15 @@ export function AdminDashboard() {
           <CardContent className="space-y-2">
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <Video className="w-4 h-4 mr-2" />
-              Review Videos
+              Review Videos;
             </Button>
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <AlertTriangle className="w-4 h-4 mr-2" />
-              Reported Content
+              Reported Content;
             </Button>
             <Button variant="outline" className="w-full justify-start bg-transparent">
               <CheckCircle className="w-4 h-4 mr-2" />
-              Approve Pending
+              Approve Pending;
             </Button>
           </CardContent>
         </Card>

@@ -1,61 +1,60 @@
-"use client"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
-import { Crown, MoreHorizontal, UserMinus, Shield, Volume2, VolumeX } from "lucide-react"
+import { Crown, MoreHorizontal, Shield, User, UserMinus, Volume2, VolumeX } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 
-interface Participant {
-  id: string
-  user: {
-    id: string
-    username: string
-    avatar?: string
+"use client"
+
+interface Participant {}
+  id: string;
+  user: {}
+    id: string;
+    username: string;
+    avatar?: string;
   }
-  is_host: boolean
-  joined_at: string
-  permissions: {
-    can_control_video: boolean
-    can_chat: boolean
-    can_invite: boolean
-    can_kick: boolean
+  is_host: boolean;
+  joined_at: string;
+  permissions: {}
+    can_control_video: boolean;
+    can_chat: boolean;
+    can_invite: boolean;
+    can_kick: boolean;
   }
 }
 
-interface ParticipantListProps {
+interface ParticipantListProps {}
   participants: Participant[]
-  currentUserId?: string
-  isHost: boolean
-  className?: string
+  currentUserId?: string;
+  isHost: boolean;
+  className?: string;
 }
 
-export function ParticipantList({ participants, currentUserId, isHost, className }: ParticipantListProps) {
+export function ParticipantList({ participants, currentUserId, isHost, className }: ParticipantListProps) {}
   const [mutedUsers, setMutedUsers] = useState<Set<string>>(new Set())
 
-  const toggleMute = (userId: string) => {
-    setMutedUsers((prev) => {
+  const toggleMute = (userId: string) => {}
+    setMutedUsers((prev) => {}
       const newSet = new Set(prev)
-      if (newSet.has(userId)) {
+      if (newSet.has(userId)) {}
         newSet.delete(userId)
-      } else {
+      } else {}
         newSet.add(userId)
       }
-      return newSet
+      return newSet;
     })
   }
 
-  const kickUser = (userId: string) => {
-    // Implement kick functionality
+  const kickUser = (userId: string) => {}
+    // Implement kick functionality;
     console.log("Kick user:", userId)
   }
 
-  const promoteUser = (userId: string) => {
-    // Implement promote functionality
+  const promoteUser = (userId: string) => {}
+    // Implement promote functionality;
     console.log("Promote user:", userId)
   }
 
@@ -63,12 +62,12 @@ export function ParticipantList({ participants, currentUserId, isHost, className
     <div className={cn("flex flex-col", className)}>
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-3">
-          {participants.map((participant) => {
-            const isCurrentUser = participant.user.id === currentUserId
+          {participants.map((participant) => {}
+            const isCurrentUser = participant.user.id === currentUserId;
             const isMuted = mutedUsers.has(participant.user.id)
 
             return (
-              <div
+              <div;
                 key={participant.id}
                 className={cn(
                   "flex items-center space-x-3 p-3 rounded-lg transition-colors",
@@ -96,12 +95,12 @@ export function ParticipantList({ participants, currentUserId, isHost, className
                     <p className="text-sm font-medium truncate">{participant.user.username}</p>
                     {isCurrentUser && (
                       <Badge variant="secondary" className="text-xs">
-                        You
+                        You;
                       </Badge>
                     )}
                     {participant.is_host && (
                       <Badge variant="secondary" className="text-xs bg-accent-premium/20 text-accent-premium">
-                        Host
+                        Host;
                       </Badge>
                     )}
                   </div>
@@ -112,13 +111,13 @@ export function ParticipantList({ participants, currentUserId, isHost, className
 
                 {/* Audio Controls */}
                 <div className="flex items-center space-x-1">
-                  <Button
+                  <Button;
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8"
                     onClick={() => toggleMute(participant.user.id)}
                   >
-                    {isMuted ? <VolumeX className="w-4 h-4 text-muted-foreground" /> : <Volume2 className="w-4 h-4" />}
+                    {isMuted ? <VolumeX className="w-4 h-4 text-muted-foreground" /> : <Volume2 className=&quot;w-4 h-4&quot; />}
                   </Button>
 
                   {/* Participant Actions (Host Only) */}
@@ -132,11 +131,11 @@ export function ParticipantList({ participants, currentUserId, isHost, className
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => promoteUser(participant.user.id)}>
                           <Shield className="w-4 h-4 mr-2" />
-                          Make Co-host
+                          Make Co-host;
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => kickUser(participant.user.id)} className="text-destructive">
+                        <DropdownMenuItem onClick={() => kickUser(participant.user.id)} className=&quot;text-destructive&quot;>
                           <UserMinus className="w-4 h-4 mr-2" />
-                          Remove from Party
+                          Remove from Party;
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -152,11 +151,11 @@ export function ParticipantList({ participants, currentUserId, isHost, className
       <div className="p-4 border-t border-border/40">
         <div className="text-center">
           <p className="text-sm text-muted-foreground mb-2">
-            {participants.length} participant{participants.length !== 1 ? "s" : ""} watching
+            {participants.length} participant{participants.length !== 1 ? "s" : ""} watching;
           </p>
           {isHost && (
             <Button variant="outline" size="sm" className="w-full bg-transparent">
-              Invite Friends
+              Invite Friends;
             </Button>
           )}
         </div>

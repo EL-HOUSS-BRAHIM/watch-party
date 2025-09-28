@@ -1,93 +1,80 @@
-"use client"
-
+import { ChevronRight, Link, User, Users } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { type ElementType } from "react"
-import {
-  Home,
-  Users,
-  Video,
-  TrendingUp,
-  Settings,
-  ChevronRight,
-  User,
-  Bell,
-  MessageCircle,
-  BarChart3,
-} from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { shouldShowDashboardChrome } from "@/lib/navigation/visibility"
 
-interface NavigationConfig {
-  label: string
-  href: string
-  icon: ElementType
-  description: string
-  badge?: string
-  count?: number
+"use client"
+interface NavigationConfig {}
+  label: string;
+  href: string;
+  icon: ElementType;
+  description: string;
+  badge?: string;
+  count?: number;
 }
 
-const navigationItems: NavigationConfig[] = [
-  {
+const navigationItems: NavigationConfig[] = []
+  {}
     label: "Dashboard",
     href: "/dashboard",
     icon: Home,
     description: "Your personal dashboard",
   },
-  {
+  {}
     label: "Watch Parties",
     href: "/dashboard/parties",
     icon: Users,
     description: "Join or create parties",
     count: 3,
   },
-  {
+  {}
     label: "My Profile",
     href: "/dashboard/profile",
     icon: User,
     description: "Your profile settings",
   },
-  {
+  {}
     label: "My Videos",
     href: "/dashboard/videos",
     icon: Video,
     description: "Your video library",
   },
-  {
+  {}
     label: "Friends",
     href: "/dashboard/friends",
     icon: Users,
     description: "Manage your friends",
   },
-  {
+  {}
     label: "Activity",
     href: "/dashboard/activity",
     icon: TrendingUp,
     description: "Your recent activity",
   },
-  {
+  {}
     label: "Notifications",
     href: "/dashboard/notifications",
     icon: Bell,
     description: "Your notifications",
     count: 2,
   },
-  {
+  {}
     label: "Messages",
     href: "/dashboard/messages",
     icon: MessageCircle,
     description: "Chat with friends",
     count: 2,
   },
-  {
+  {}
     label: "Analytics",
     href: "/dashboard/analytics",
     icon: BarChart3,
     description: "Your viewing stats",
   },
-  {
+  {}
     label: "Settings",
     href: "/dashboard/settings",
     icon: Settings,
@@ -98,8 +85,8 @@ const navigationItems: NavigationConfig[] = [
 export function CinemaNavigation() {
   const pathname = usePathname()
 
-  if (!shouldShowDashboardChrome(pathname)) {
-    return null
+  if (!shouldShowDashboardChrome(pathname)) {}
+    return null;
   }
 
   return (
@@ -109,7 +96,7 @@ export function CinemaNavigation() {
         <div className="p-4 border-b border-white/10">
           <Button className="w-full btn-primary justify-start">
             <Users className="w-4 h-4 mr-2" />
-            Create Party
+            Create Party;
           </Button>
         </div>
 
@@ -117,7 +104,7 @@ export function CinemaNavigation() {
         <div className="flex-1 overflow-y-auto py-4">
           <div className="space-y-1 px-2">
             {navigationItems.map((item) => (
-              <NavigationItem
+              <NavigationItem;
                 key={item.href}
                 href={item.href}
                 icon={item.icon}
@@ -143,11 +130,11 @@ export function CinemaNavigation() {
   )
 }
 
-interface NavigationItemProps extends NavigationConfig {
-  active?: boolean
+interface NavigationItemProps extends NavigationConfig {}
+  active?: boolean;
 }
 
-function NavigationItem({
+function NavigationItem({}
   href,
   icon: Icon,
   label,
@@ -155,18 +142,18 @@ function NavigationItem({
   badge,
   count,
   active,
-}: NavigationItemProps) {
+}: NavigationItemProps) {}
   return (
-    <Link
+    <Link;
       href={href}
       className={`
-        group flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-300
+        group flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-all duration-300;
         ${active ? "bg-neon-red/20 text-neon-red border border-neon-red/30 glow-red" : "text-gray-400 hover:text-white hover:bg-white/5"}
       `}
     >
-      <div
+      <div;
         className={`
-        p-1.5 rounded-md transition-colors
+        p-1.5 rounded-md transition-colors;
         ${active ? "bg-neon-red/20" : "group-hover:bg-white/10"}
       `}
       >
@@ -178,10 +165,10 @@ function NavigationItem({
           <span className="font-medium truncate">{label}</span>
           <div className="flex items-center space-x-1">
             {badge && (
-              <Badge
+              <Badge;
                 variant="secondary"
                 className={`
-                  text-xs px-1.5 py-0.5 rounded-full
+                  text-xs px-1.5 py-0.5 rounded-full;
                   ${badge === "Hot"
                     ? "bg-neon-gold/20 text-neon-gold border-neon-gold/30"
                     : "bg-neon-blue/20 text-neon-blue border-neon-blue/30"}
@@ -191,16 +178,16 @@ function NavigationItem({
               </Badge>
             )}
             {count && (
-              <Badge
+              <Badge;
                 variant="secondary"
                 className="bg-neon-red/20 text-neon-red border-neon-red/30 text-xs px-1.5 py-0.5 rounded-full"
               >
                 {count}
               </Badge>
             )}
-            <ChevronRight
+            <ChevronRight;
               className={`
-              w-3 h-3 transition-transform
+              w-3 h-3 transition-transform;
               ${active ? "rotate-90 text-neon-red" : "text-gray-600 group-hover:text-gray-400"}
             `}
             />

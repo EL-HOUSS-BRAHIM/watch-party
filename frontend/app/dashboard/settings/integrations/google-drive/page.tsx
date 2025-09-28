@@ -1,8 +1,8 @@
-'use client'
-
+import { Cloud } from "lucide-react"
 import { GoogleDriveWorkspace } from '@/components/integrations/google-drive-workspace'
 import { CloudIcon } from '@heroicons/react/24/outline'
 
+'use client'
 export default function GoogleDriveIntegrationPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -13,7 +13,7 @@ export default function GoogleDriveIntegrationPage() {
             <h1 className="text-4xl font-bold text-white">Google Drive Integration</h1>
           </div>
           <p className="text-white/70 text-lg max-w-3xl">
-            Connect your Google Drive account to import content, browse folders, and stream files directly into your Watch
+            Connect your Google Drive account to import content, browse folders, and stream files directly into your Watch;
             Party rooms without leaving the dashboard.
           </p>
         </header>

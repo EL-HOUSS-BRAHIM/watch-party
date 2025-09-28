@@ -1,33 +1,32 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { Check, Eye, EyeOff, X } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Check, X, AlertCircle, Eye, EyeOff } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-interface ValidationRule {
-  test: (value: string) => boolean
-  message: string
+"use client"
+interface ValidationRule {}
+  test: (value: string) => boolean;
+  message: string;
 }
 
-interface EnhancedInputProps {
-  label: string
-  type?: string
-  placeholder?: string
-  value: string
-  onChange: (value: string) => void
+interface EnhancedInputProps {}
+  label: string;
+  type?: string;
+  placeholder?: string;
+  value: string;
+  onChange: (value: string) => void;
   validationRules?: ValidationRule[]
-  required?: boolean
-  disabled?: boolean
-  className?: string
-  showValidation?: boolean
-  realTimeValidation?: boolean
+  required?: boolean;
+  disabled?: boolean;
+  className?: string;
+  showValidation?: boolean;
+  realTimeValidation?: boolean;
 }
 
-export function EnhancedInput({
+export function EnhancedInput({}
   label,
   type = "text",
   placeholder,
@@ -39,23 +38,23 @@ export function EnhancedInput({
   className,
   showValidation = true,
   realTimeValidation = true,
-}: EnhancedInputProps) {
+}: EnhancedInputProps) {}
   const [touched, setTouched] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [validationResults, setValidationResults] = useState<{
-    isValid: boolean
+  const [validationResults, setValidationResults] = useState<{}
+    isValid: boolean;
     errors: string[]
   }>({ isValid: true, errors: [] })
 
-  const validateInput = (inputValue: string) => {
+  const validateInput = (inputValue: string) => {}
     const errors: string[] = []
 
-    if (required && !inputValue.trim()) {
+    if (required && !inputValue.trim()) {}
       errors.push(`${label} is required`)
     }
 
-    validationRules.forEach((rule) => {
-      if (inputValue && !rule.test(inputValue)) {
+    validationRules.forEach((rule) => {}
+      if (inputValue && !rule.test(inputValue)) {}
         errors.push(rule.message)
       }
     })
@@ -72,15 +71,15 @@ export function EnhancedInput({
     }
   }, [value, touched, realTimeValidation])
 
-  const handleBlur = () => {
+  const handleBlur = () => {}
     setTouched(true)
     if (!realTimeValidation) {
       setValidationResults(validateInput(value))
     }
   }
 
-  const inputType = type === "password" && showPassword ? "text" : type
-  const hasErrors = touched && showValidation && validationResults.errors.length > 0
+  const inputType = type === "password" && showPassword ? "text" : type;
+  const hasErrors = touched && showValidation && validationResults.errors.length > 0;
   const isValid = touched && showValidation && validationResults.isValid && value.trim()
 
   return (
@@ -91,7 +90,7 @@ export function EnhancedInput({
       </Label>
 
       <div className="relative">
-        <Input
+        <Input;
           id={label}
           type={inputType}
           placeholder={placeholder}
@@ -108,14 +107,14 @@ export function EnhancedInput({
 
         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
           {type === "password" && (
-            <Button
+            <Button;
               type="button"
               variant="ghost"
               size="sm"
               className="h-auto p-0 hover:bg-transparent"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <EyeOff className="h-4 w-4 text-gray-500" /> : <Eye className="h-4 w-4 text-gray-500" />}
+              {showPassword ? <EyeOff className="h-4 w-4 text-gray-500" /> : <Eye className=&quot;h-4 w-4 text-gray-500&quot; />}
             </Button>
           )}
 
@@ -142,17 +141,17 @@ export function EnhancedInput({
   )
 }
 
-// Password strength indicator
-export function PasswordStrengthIndicator({ password }: { password: string }) {
-  const getStrength = (pwd: string) => {
-    let score = 0
+// Password strength indicator;
+export function PasswordStrengthIndicator({ password }: { password: string }) {}
+  const getStrength = (pwd: string) => {}
+    let score = 0;
     if (pwd.length >= 8) score++
     if (/[a-z]/.test(pwd)) score++
     if (/[A-Z]/.test(pwd)) score++
     if (/[0-9]/.test(pwd)) score++
     if (/[^A-Za-z0-9]/.test(pwd)) score++
 
-    return score
+    return score;
   }
 
   const strength = getStrength(password)
@@ -163,7 +162,7 @@ export function PasswordStrengthIndicator({ password }: { password: string }) {
     <div className="space-y-2">
       <div className="flex gap-1">
         {Array.from({ length: 5 }).map((_, index) => (
-          <div
+          <div;
             key={index}
             className={cn(
               "h-2 flex-1 rounded-full transition-colors",
@@ -172,7 +171,7 @@ export function PasswordStrengthIndicator({ password }: { password: string }) {
           />
         ))}
       </div>
-      <p className="text-sm text-gray-600">Password strength: {strengthLabels[strength - 1] || "Very Weak"}</p>
+      <p className="text-sm text-gray-600">Password strength: {strengthLabels[strength - 1] || &quot;Very Weak&quot;}</p>
     </div>
   )
 }

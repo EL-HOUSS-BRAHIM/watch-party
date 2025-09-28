@@ -1,12 +1,13 @@
-'use client'
-
+import { Activity, BarChart, Download, Eye, Heart, PieChart, Play, Share, TrendingUp, User, Users, X } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { 
+import {}
+
+'use client'
   BarChart, 
   Bar, 
   XAxis, 
@@ -20,75 +21,61 @@ import {
   Pie,
   Cell,
   Area,
-  AreaChart
+  AreaChart;
 } from 'recharts'
-import { 
-  Users, 
-  Clock, 
-  Activity, 
-  TrendingUp, 
-  Eye, 
-  MessageSquare,
-  Heart,
-  Share2,
-  Play,
-  Pause,
-  Calendar,
-  Download
-} from 'lucide-react'
 
-interface PartyAnalyticsData {
-  id: string
-  title: string
-  host: {
-    id: string
-    displayName: string
-    avatar: string | null
+interface PartyAnalyticsData {}
+  id: string;
+  title: string;
+  host: {}
+    id: string;
+    displayName: string;
+    avatar: string | null;
   }
-  createdAt: string
-  endedAt: string | null
+  createdAt: string;
+  endedAt: string | null;
   status: 'active' | 'ended' | 'paused'
-  totalParticipants: number
-  peakParticipants: number
-  currentParticipants: number
-  duration: number
-  video: {
-    title: string
-    duration: number
-    platform: string
+  totalParticipants: number;
+  peakParticipants: number;
+  currentParticipants: number;
+  duration: number;
+  video: {}
+    title: string;
+    duration: number;
+    platform: string;
   }
-  engagement: {
-    totalMessages: number
-    totalReactions: number
-    totalShares: number
-    averageViewTime: number
-    participantRetention: number
+  engagement: {}
+    totalMessages: number;
+    totalReactions: number;
+    totalShares: number;
+    averageViewTime: number;
+    participantRetention: number;
   }
-  timeline: {
-    timestamp: string
-    participants: number
-    messages: number
-    reactions: number
+  timeline: {}
+    timestamp: string;
+    participants: number;
+    messages: number;
+    reactions: number;
   }[]
-  demographics: {
+  demographics: {}
     ageGroups: { range: string; count: number }[]
     locations: { country: string; count: number }[]
     devices: { type: string; count: number }[]
   }
-  interactions: {
+  interactions: {}
     chatActivity: { hour: number; messages: number }[]
     reactionTypes: { type: string; count: number }[]
     joinLeavePattern: { time: string; joins: number; leaves: number }[]
   }
 }
 
-interface PartyAnalyticsProps {
-  partyId: string
+interface PartyAnalyticsProps {}
+  partyId: string;
 }
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8']
 
-export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {
+export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
   const [analytics, setAnalytics] = useState<PartyAnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [timeRange, setTimeRange] = useState('24h')
@@ -97,37 +84,35 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {
     loadAnalytics()
   }, [partyId, timeRange])
 
-  const loadAnalytics = async () => {
+  const loadAnalytics = useCallback(async () => {
     try {
       const response = await fetch(`/api/analytics/party/${partyId}?range=${timeRange}`)
       if (response.ok) {
         const data = await response.json()
         setAnalytics(data)
       }
-    } catch (error) {
+    } } catch {
       console.error('Failed to load party analytics:', error)
-    } finally {
+    } finally {}
       setLoading(false)
     }
-  }
+  }, [])
 
-  const formatDuration = (seconds: number) => {
+  const formatDuration = (seconds: number) => {}
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     return `${hours}h ${minutes}m`
   }
 
-  const formatNumber = (num: number) => {
+  const formatNumber = (num: number) => {}
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
     if (num >= 1000) return `${(num / 1000).toFixed(1)}K`
     return num.toString()
   }
 
-  const exportData = () => {
-    if (!analytics) return
-    
-    const data = {
-      party: analytics.title,
+  const exportData = () => {}
+    if (!analytics) return;
+    const data = { party: analytics.title,
       host: analytics.host.displayName,
       duration: formatDuration(analytics.duration),
       participants: analytics.totalParticipants,
@@ -137,11 +122,10 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {
       retention: `${analytics.engagement.participantRetention}%`,
       exportedAt: new Date().toISOString()
     }
-    
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
-    a.href = url
+    a.href = url;
     a.download = `party-analytics-${partyId}.json`
     a.click()
     URL.revokeObjectURL(url)
@@ -171,7 +155,7 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {
     )
   }
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string) => {}
     switch (status) {
       case 'active': return 'bg-green-500'
       case 'paused': return 'bg-yellow-500'
@@ -204,7 +188,7 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {
           </Select>
           <Button variant="outline" size="sm" onClick={exportData}>
             <Download className="h-4 w-4 mr-2" />
-            Export
+            Export;
           </Button>
         </div>
       </div>
@@ -320,15 +304,15 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={analytics.timeline}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis 
+                    <XAxis;
                       dataKey="timestamp" 
                       tickFormatter={(value) => new Date(value).toLocaleTimeString()}
                     />
                     <YAxis />
-                    <Tooltip 
+                    <Tooltip;
                       labelFormatter={(value) => new Date(value).toLocaleString()}
                     />
-                    <Area 
+                    <Area;
                       type="monotone" 
                       dataKey="participants" 
                       stroke="#8884d8" 
@@ -371,7 +355,7 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie
+                      <Pie;
                         data={analytics.interactions.reactionTypes}
                         cx="50%"
                         cy="50%"
@@ -423,7 +407,7 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie
+                      <Pie;
                         data={analytics.demographics.devices}
                         cx="50%"
                         cy="50%"
@@ -459,14 +443,14 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {
                     <XAxis dataKey="time" />
                     <YAxis />
                     <Tooltip />
-                    <Line 
+                    <Line;
                       type="monotone" 
                       dataKey="joins" 
                       stroke="#00C49F" 
                       strokeWidth={2}
                       name="Joins"
                     />
-                    <Line 
+                    <Line;
                       type="monotone" 
                       dataKey="leaves" 
                       stroke="#FF8042" 

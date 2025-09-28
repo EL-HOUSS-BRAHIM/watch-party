@@ -1,17 +1,17 @@
-"use client"
-
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { cva, type VariantProps } from "class-variance-authority"
 
-const formVariants = cva("space-y-6", {
-  variants: {
-    variant: {
+"use client"
+
+const formVariants = cva("space-y-6", {}
+  variants: {}
+    variant: {}
       default: "bg-card border border-border rounded-lg p-6",
       ghost: "bg-transparent border-0 p-0",
       elevated: "bg-card border border-border rounded-lg p-6 shadow-lg shadow-primary/10",
     },
-    size: {
+    size: {}
       sm: "max-w-sm",
       md: "max-w-md",
       lg: "max-w-lg",
@@ -19,24 +19,24 @@ const formVariants = cva("space-y-6", {
       full: "w-full",
     },
   },
-  defaultVariants: {
+  defaultVariants: {}
     variant: "default",
     size: "md",
   },
 })
 
-interface WatchPartyFormProps extends React.FormHTMLAttributes<HTMLFormElement>, VariantProps<typeof formVariants> {
-  title?: string
-  description?: string
-  footer?: React.ReactNode
-  isLoading?: boolean
+interface WatchPartyFormProps extends React.FormHTMLAttributes<HTMLFormElement>, VariantProps<typeof formVariants> {}
+  title?: string;
+  description?: string;
+  footer?: React.ReactNode;
+  isLoading?: boolean;
   errors?: Record<string, string[]>
-  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void
+  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
 const WatchPartyForm = React.forwardRef<HTMLFormElement, WatchPartyFormProps>(
   (
-    {
+    {}
       className,
       variant,
       size,
@@ -47,11 +47,11 @@ const WatchPartyForm = React.forwardRef<HTMLFormElement, WatchPartyFormProps>(
       errors = {},
       children,
       onSubmit,
-      ...props
+      ...props;
     },
     ref,
-  ) => {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  ) => {}
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {}
       event.preventDefault()
       if (!isLoading && onSubmit) {
         onSubmit(event)
@@ -93,15 +93,15 @@ const WatchPartyForm = React.forwardRef<HTMLFormElement, WatchPartyFormProps>(
 )
 WatchPartyForm.displayName = "WatchPartyForm"
 
-interface FormFieldProps extends React.HTMLAttributes<HTMLDivElement> {
-  label?: string
-  description?: string
-  error?: string
-  required?: boolean
+interface FormFieldProps extends React.HTMLAttributes<HTMLDivElement> {}
+  label?: string;
+  description?: string;
+  error?: string;
+  required?: boolean;
 }
 
 const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
-  ({ className, label, description, error, required, children, ...props }, ref) => {
+  ({ className, label, description, error, required, children, ...props }, ref) => {}
     return (
       <div ref={ref} className={cn("space-y-2", className)} {...props}>
         {label && (
@@ -119,18 +119,18 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
 )
 FormField.displayName = "FormField"
 
-interface FormActionsProps extends React.HTMLAttributes<HTMLDivElement> {
+interface FormActionsProps extends React.HTMLAttributes<HTMLDivElement> {}
   align?: "left" | "center" | "right"
 }
 
 const FormActions = React.forwardRef<HTMLDivElement, FormActionsProps>(
-  ({ className, align = "right", children, ...props }, ref) => {
+  ({ className, align = "right", children, ...props }, ref) => {}
     return (
-      <div
+      <div;
         ref={ref}
         className={cn(
           "flex gap-3",
-          {
+          {}
             "justify-start": align === "left",
             "justify-center": align === "center",
             "justify-end": align === "right",

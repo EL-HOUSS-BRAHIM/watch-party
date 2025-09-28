@@ -1,5 +1,4 @@
-'use client'
-
+import { BarChart, Download, Eye, Heart, PieChart, Play, Share, TrendingUp, Video } from "lucide-react"
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -9,51 +8,38 @@ import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
 import { analyticsAPI } from '@/lib/api'
-import { 
-  Play, 
-  Pause, 
-  Users, 
-  Eye, 
-  Heart, 
-  Share2, 
-  MessageSquare, 
-  TrendingUp, 
-  Download,
-  BarChart3,
-  PieChart,
-  Activity
-} from 'lucide-react'
 
-interface VideoAnalyticsProps {
-  videoId: string
+'use client'
+interface VideoAnalyticsProps {}
+  videoId: string;
 }
 
-interface VideoStats {
-  views: number
-  likes: number
-  dislikes: number
-  shares: number
-  comments: number
-  watchTime: number
-  avgWatchTime: number
-  retentionRate: number
-  completionRate: number
+interface VideoStats {}
+  views: number;
+  likes: number;
+  dislikes: number;
+  shares: number;
+  comments: number;
+  watchTime: number;
+  avgWatchTime: number;
+  retentionRate: number;
+  completionRate: number;
 }
 
-interface ViewerData {
-  timestamp: string
-  viewers: number
-  country?: string
-  device?: string
-  age?: string
-  gender?: string
+interface ViewerData {}
+  timestamp: string;
+  viewers: number;
+  country?: string;
+  device?: string;
+  age?: string;
+  gender?: string;
 }
 
-const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
+const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
   const { toast } = useToast()
   const [loading, setLoading] = useState(true)
   const [dateRange, setDateRange] = useState('7d')
-  const [stats, setStats] = useState<VideoStats>({
+  const [stats, setStats] = useState<VideoStats>({}
     views: 0,
     likes: 0,
     dislikes: 0,
@@ -62,7 +48,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
     watchTime: 0,
     avgWatchTime: 0,
     retentionRate: 0,
-    completionRate: 0
+    completionRate: 0;
   })
   const [viewerData, setViewerData] = useState<ViewerData[]>([])
 
@@ -74,22 +60,20 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
     try {
       setLoading(true)
       const response = await analyticsAPI.getVideoAnalytics(videoId)
-      
       if (response) {
-        setStats({
+        setStats({}
           views: response.video?.views || 0,
           likes: response.engagement?.likes || 0,
-          dislikes: 0, // Not provided by API
+          dislikes: 0, // Not provided by API;
           shares: response.engagement?.shares || 0,
           comments: response.engagement?.comments || 0,
-          watchTime: 0, // Not provided by API
-          avgWatchTime: 0, // Not provided by API
+          watchTime: 0, // Not provided by API;
+          avgWatchTime: 0, // Not provided by API;
           retentionRate: response.video?.completion_rate || 0,
-          completionRate: response.video?.completion_rate || 0
+          completionRate: response.video?.completion_rate || 0;
         })
-        
-        // Transform view chart data to match expected format
-        const transformedViewerData = response.view_chart?.map((item: any) => ({
+        // Transform view chart data to match expected format;
+        const transformedViewerData = response.view_chart?.map((item: unknown) => ({}
           timestamp: item.date,
           viewers: item.views,
           country: 'Unknown',
@@ -97,61 +81,57 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
           age: 'Unknown',
           gender: 'Unknown'
         })) || []
-        
         setViewerData(transformedViewerData)
       }
-    } catch (error) {
+    } } catch {
       console.error('Failed to fetch video analytics:', error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load video analytics. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
-  const formatNumber = (num: number) => {
+  const formatNumber = (num: number) => {}
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
     if (num >= 1000) return `${(num / 1000).toFixed(1)}K`
     return num.toString()
   }
 
-  const formatDuration = (seconds: number) => {
+  const formatDuration = (seconds: number) => {}
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = Math.floor(seconds % 60)
-    
     if (hours > 0) {
       return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
     }
     return `${minutes}:${secs.toString().padStart(2, '0')}`
   }
 
-  const exportData = async (format: 'csv' | 'json') => {
+  const exportData = async (format: 'csv' | 'json') => {}
     try {
-      const response = await analyticsAPI.exportAnalytics({
+      const response = await analyticsAPI.exportAnalytics({}
         format,
         metrics: ['video_analytics'],
-        date_range: dateRange
+        date_range: dateRange;
       })
-      
-      // Create download link
+      // Create download link;
       const link = document.createElement('a')
-      link.href = response.download_url
+      link.href = response.download_url;
       link.download = `video-${videoId}-analytics.${format}`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-      
-      toast({
+      toast({}
         title: "Export Successful",
         description: `Video analytics exported as ${format.toUpperCase()}`
       })
-    } catch (error) {
+    } } catch {
       console.error('Export failed:', error)
-      toast({
+      toast({}
         title: "Export Failed",
         description: "Failed to export video analytics. Please try again.",
         variant: "destructive",
@@ -179,13 +159,13 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
               <SelectItem value="90d">Last 90 days</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" onClick={() => exportData('csv')}>
+          <Button variant="outline" onClick={() => exportData(&apos;csv&apos;)}>
             <Download className="h-4 w-4 mr-2" />
-            Export CSV
+            Export CSV;
           </Button>
-          <Button variant="outline" onClick={() => exportData('json')}>
+          <Button variant="outline" onClick={() => exportData(&apos;json&apos;)}>
             <Download className="h-4 w-4 mr-2" />
-            Export JSON
+            Export JSON;
           </Button>
         </div>
       </div>
@@ -213,7 +193,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
                 <CardContent>
                   <div className="text-2xl font-bold">{formatNumber(stats.views)}</div>
                   <p className="text-xs text-muted-foreground">
-                    +12% from last period
+                    +12% from last period;
                   </p>
                 </CardContent>
               </Card>
@@ -226,7 +206,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
                 <CardContent>
                   <div className="text-2xl font-bold">{formatNumber(stats.likes)}</div>
                   <p className="text-xs text-muted-foreground">
-                    Likes & interactions
+                    Likes & interactions;
                   </p>
                 </CardContent>
               </Card>
@@ -239,7 +219,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
                 <CardContent>
                   <div className="text-2xl font-bold">{formatDuration(stats.watchTime)}</div>
                   <p className="text-xs text-muted-foreground">
-                    Total across all viewers
+                    Total across all viewers;
                   </p>
                 </CardContent>
               </Card>
@@ -252,7 +232,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
                 <CardContent>
                   <div className="text-2xl font-bold">{stats.completionRate.toFixed(1)}%</div>
                   <p className="text-xs text-muted-foreground">
-                    Average view completion
+                    Average view completion;
                   </p>
                 </CardContent>
               </Card>
@@ -263,7 +243,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
               <CardHeader>
                 <CardTitle>Performance Metrics</CardTitle>
                 <CardDescription>
-                  Key performance indicators for your video
+                  Key performance indicators for your video;
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -285,7 +265,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
                         {((stats.likes + stats.comments + stats.shares) / stats.views * 100).toFixed(1)}%
                       </span>
                     </div>
-                    <Progress 
+                    <Progress;
                       value={(stats.likes + stats.comments + stats.shares) / stats.views * 100} 
                       className="h-2" 
                     />
@@ -315,7 +295,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
               <CardHeader>
                 <CardTitle>Engagement Metrics</CardTitle>
                 <CardDescription>
-                  How viewers interact with your video
+                  How viewers interact with your video;
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -327,7 +307,6 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
                       <div className="text-sm text-muted-foreground">Likes</div>
                     </div>
                   </div>
-                  
                   <div className="flex items-center space-x-2">
                     <MessageSquare className="h-5 w-5 text-blue-500" />
                     <div>
@@ -335,7 +314,6 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
                       <div className="text-sm text-muted-foreground">Comments</div>
                     </div>
                   </div>
-                  
                   <div className="flex items-center space-x-2">
                     <Share2 className="h-5 w-5 text-green-500" />
                     <div>
@@ -343,7 +321,6 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
                       <div className="text-sm text-muted-foreground">Shares</div>
                     </div>
                   </div>
-                  
                   <div className="flex items-center space-x-2">
                     <TrendingUp className="h-5 w-5 text-purple-500" />
                     <div>
@@ -361,7 +338,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
               <CardHeader>
                 <CardTitle>Viewer Demographics</CardTitle>
                 <CardDescription>
-                  Understand your audience better
+                  Understand your audience better;
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -381,4 +358,4 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
   )
 }
 
-export default VideoAnalyticsView
+export default VideoAnalyticsView;

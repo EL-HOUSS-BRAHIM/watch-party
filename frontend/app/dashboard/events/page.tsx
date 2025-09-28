@@ -1,6 +1,6 @@
-"use client"
-
 import EventSchedulingSystem from "@/components/events/event-scheduling-system"
+
+"use client"
 
 export default function EventsPage() {
   return (

@@ -1,5 +1,5 @@
-"use client"
-import { useState, useEffect } from "react"
+import { Activity, AlertTriangle, Check, CheckCircle, Clock, Shield, Target, TrendingUp, X, XCircle } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -9,72 +9,55 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI, analyticsAPI } from "@/lib/api"
-import {
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  Clock,
-  Target,
-  Bug,
-  TestTube,
-  Users,
-  Zap,
-  TrendingUp,
-  TrendingDown,
-  Activity,
-  Eye,
-  Shield,
-  Globe,
-  Search,
-} from "lucide-react"
 
-interface QualityMetric {
-  id: string
-  name: string
+"use client"
+interface QualityMetric {}
+  id: string;
+  name: string;
   category: "functionality" | "performance" | "usability" | "security" | "compatibility"
-  score: number
-  target: number
+  score: number;
+  target: number;
   trend: "up" | "down" | "stable"
-  lastTested: Date
+  lastTested: Date;
   tests: QualityTest[]
 }
 
-interface QualityTest {
-  id: string
-  name: string
+interface QualityTest {}
+  id: string;
+  name: string;
   type: "manual" | "automated" | "user-testing"
   status: "passed" | "failed" | "pending" | "skipped"
   priority: "low" | "medium" | "high" | "critical"
-  environment: string
-  tester: string
-  duration: number
+  environment: string;
+  tester: string;
+  duration: number;
   issues: Issue[]
 }
 
-interface Issue {
-  id: string
-  title: string
-  description: string
+interface Issue {}
+  id: string;
+  title: string;
+  description: string;
   severity: "low" | "medium" | "high" | "critical"
   status: "open" | "in-progress" | "resolved"
-  assignee?: string
-  createdAt: Date
+  assignee?: string;
+  createdAt: Date;
 }
 
-interface QAReport {
-  id: string
-  title: string
-  version: string
-  releaseDate: Date
-  testCoverage: number
-  passRate: number
-  criticalIssues: number
-  blockerIssues: number
+interface QAReport {}
+  id: string;
+  title: string;
+  version: string;
+  releaseDate: Date;
+  testCoverage: number;
+  passRate: number;
+  criticalIssues: number;
+  blockerIssues: number;
   status: "draft" | "review" | "approved" | "rejected"
-  approver?: string
+  approver?: string;
 }
 
-const QualityPage = () => {
+const QualityPage = () => {}
   const { toast } = useToast()
   const [selectedTab, setSelectedTab] = useState("overview")
   const [searchTerm, setSearchTerm] = useState("")
@@ -94,18 +77,17 @@ const QualityPage = () => {
   const fetchQualityData = async () => {
     try {
       setLoading(true)
-      
-      // Fetch quality data from APIs
-      const [systemHealth, performanceData, systemLogs] = await Promise.all([
+      // Fetch quality data from APIs;
+      const [systemHealth, performanceData, systemLogs] = await Promise.all([]
         adminAPI.getSystemHealth(),
         analyticsAPI.getPerformanceAnalytics(),
         adminAPI.getLogs({ component: 'testing', level: 'info' })
       ])
 
-      // Transform system health to quality metrics
+      // Transform system health to quality metrics;
       if (systemHealth && performanceData) {
-        const transformedMetrics: QualityMetric[] = [
-          {
+        const transformedMetrics: QualityMetric[] = []
+          {}
             id: "functionality",
             name: "Functionality",
             category: "functionality",
@@ -115,17 +97,17 @@ const QualityPage = () => {
             lastTested: new Date(),
             tests: []
           },
-          {
+          {}
             id: "performance",
             name: "Performance",
             category: "performance", 
             score: performanceData.performance_score || 85,
             target: 90,
-            trend: (performanceData.performance_score || 85) > 85 ? "up" : "down",
+            trend: (performanceData.performance_score || 85) > 85 ? &quot;up&quot; : &quot;down",
             lastTested: new Date(),
             tests: []
           },
-          {
+          {}
             id: "security",
             name: "Security",
             category: "security",
@@ -139,9 +121,9 @@ const QualityPage = () => {
         setQualityMetrics(transformedMetrics)
       }
 
-      // Transform logs to quality tests and issues
+      // Transform logs to quality tests and issues;
       if (systemLogs.results) {
-        const tests: QualityTest[] = systemLogs.results.slice(0, 10).map((log: any, index: number) => ({
+        const tests: QualityTest[] = systemLogs.results.slice(0, 10).map((log: unknown, index: number) => ({}
           id: log.id || `test-${index}`,
           name: log.message?.substring(0, 50) || `Quality Test ${index + 1}`,
           type: "automated" as const,
@@ -154,9 +136,9 @@ const QualityPage = () => {
         }))
         setQualityTests(tests)
 
-        // Transform error logs to issues
-        const errorLogs = systemLogs.results.filter((log: any) => log.level === 'error')
-        const transformedIssues: Issue[] = errorLogs.slice(0, 5).map((log: any, index: number) => ({
+        // Transform error logs to issues;
+        const errorLogs = systemLogs.results.filter((log: unknown) => log.level === &apos;error&apos;)
+        const transformedIssues: Issue[] = errorLogs.slice(0, 5).map((log: unknown, index: number) => ({}
           id: log.id || `issue-${index}`,
           title: log.message?.substring(0, 60) || `Quality Issue ${index + 1}`,
           description: log.message || 'No description available',
@@ -167,47 +149,47 @@ const QualityPage = () => {
         setIssues(transformedIssues)
       }
 
-      // Create QA reports based on current data
-      const reports: QAReport[] = [
-        {
+      // Create QA reports based on current data;
+      const reports: QAReport[] = []
+        {}
           id: "report-1",
           title: "Monthly Quality Report",
           version: "v2.1.0",
           releaseDate: new Date(),
           testCoverage: 85,
           passRate: systemHealth.overall_status === 'healthy' ? 95 : 75,
-          criticalIssues: issues.filter(i => i.severity === 'critical').length,
+          criticalIssues: issues.filter(i => i.severity === &apos;critical').length,
           blockerIssues: issues.filter(i => i.severity === 'high').length,
           status: "approved"
         }
       ]
       setQaReports(reports)
 
-    } catch (error) {
+    } } catch {
       console.error('Failed to fetch quality data:', error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load quality data. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
-  const getScoreColor = (score: number, target: number) => {
+  const getScoreColor = (score: number, target: number) => {}
     if (score >= target) return "text-green-600"
     if (score >= target * 0.8) return "text-yellow-600"
     return "text-red-600"
   }
 
-  const getScoreBgColor = (score: number, target: number) => {
+  const getScoreBgColor = (score: number, target: number) => {}
     if (score >= target) return "bg-green-100 dark:bg-green-900"
     if (score >= target * 0.8) return "bg-yellow-100 dark:bg-yellow-900"
     return "bg-red-100 dark:bg-red-900"
   }
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: string) => {}
     switch (status) {
       case "passed":
         return <CheckCircle className="h-4 w-4 text-green-600" />
@@ -222,36 +204,34 @@ const QualityPage = () => {
     }
   }
 
-  const getStatusBadge = (status: string) => {
-    const variants = {
-      passed: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+  const getStatusBadge = (status: string) => {}
+    const variants = { passed: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
       failed: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
       pending: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
       skipped: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200",
     }
-    return variants[status as keyof typeof variants] || variants.skipped
+    return variants[status as keyof typeof variants] || variants.skipped;
   }
 
-  const getPriorityBadge = (priority: string) => {
-    const variants = {
-      low: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+  const getPriorityBadge = (priority: string) => {}
+    const variants = { low: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
       medium: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
       high: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
       critical: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
     }
-    return variants[priority as keyof typeof variants] || variants.low
+    return variants[priority as keyof typeof variants] || variants.low;
   }
 
-  const filteredMetrics = qualityMetrics.filter((metric) => {
+  const filteredMetrics = qualityMetrics.filter((metric) => {}
     const matchesSearch = metric.name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesCategory = filterCategory === "all" || metric.category === filterCategory
-    return matchesSearch && matchesCategory
+    const matchesCategory = filterCategory === "all" || metric.category === filterCategory;
+    return matchesSearch && matchesCategory;
   })
 
-  const filteredTests = qualityTests.filter((test) => {
+  const filteredTests = qualityTests.filter((test) => {}
     const matchesSearch = test.name.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = filterStatus === "all" || test.status === filterStatus
-    return matchesSearch && matchesStatus
+    const matchesStatus = filterStatus === "all" || test.status === filterStatus;
+    return matchesSearch && matchesStatus;
   })
 
   if (loading) {
@@ -274,11 +254,11 @@ const QualityPage = () => {
         <div className="flex gap-2">
           <Button onClick={fetchQualityData} variant="outline">
             <Activity className="mr-2 h-4 w-4" />
-            Refresh
+            Refresh;
           </Button>
           <Button>
             <TestTube className="mr-2 h-4 w-4" />
-            Run Tests
+            Run Tests;
           </Button>
         </div>
       </div>
@@ -292,7 +272,7 @@ const QualityPage = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {qualityMetrics.length > 0 
+              {qualityMetrics.length > 0;
                 ? Math.round(qualityMetrics.reduce((sum, m) => sum + m.score, 0) / qualityMetrics.length)
                 : 0}
             </div>
@@ -310,10 +290,10 @@ const QualityPage = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {qualityTests.filter(t => t.status === 'passed').length}
+              {qualityTests.filter(t => t.status === &apos;passed&apos;).length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
-              of {qualityTests.length} total tests
+              of {qualityTests.length} total tests;
             </div>
           </CardContent>
         </Card>
@@ -325,10 +305,10 @@ const QualityPage = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
-              {issues.filter(i => i.status === 'open').length}
+              {issues.filter(i => i.status === &apos;open&apos;).length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
-              {issues.filter(i => i.severity === 'critical').length} critical
+              {issues.filter(i => i.severity === &apos;critical&apos;).length} critical;
             </div>
           </CardContent>
         </Card>
@@ -342,7 +322,7 @@ const QualityPage = () => {
             <div className="text-2xl font-bold">85%</div>
             <div className="flex items-center text-xs text-muted-foreground">
               <TrendingUp className="mr-1 h-3 w-3" />
-              +2% from last week
+              +2% from last week;
             </div>
           </CardContent>
         </Card>
@@ -411,7 +391,7 @@ const QualityPage = () => {
         <TabsContent value="tests" className="space-y-6">
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
-              <Input
+              <Input;
                 placeholder="Search tests..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -503,7 +483,7 @@ const QualityPage = () => {
                           </div>
                         </div>
                         <Button size="sm" variant="outline">
-                          View Details
+                          View Details;
                         </Button>
                       </div>
                     </div>
@@ -550,7 +530,7 @@ const QualityPage = () => {
                       <div className="flex flex-col gap-2">
                         <Badge className={getStatusBadge(report.status)}>{report.status}</Badge>
                         <Button size="sm" variant="outline">
-                          Download
+                          Download;
                         </Button>
                       </div>
                     </div>
@@ -565,4 +545,4 @@ const QualityPage = () => {
   )
 }
 
-export default QualityPage
+export default QualityPage;

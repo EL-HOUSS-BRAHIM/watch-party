@@ -1,55 +1,43 @@
-"use client"
-
+import { MessageCircle, Play, Settings, Share, User, Users, Volume2 } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import {
+import {}
+import { useSocket } from "@/contexts/socket-context"
+
+"use client"
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useSocket } from "@/contexts/socket-context"
-import {
-  Settings,
-  Pause,
-  Play,
-  SkipForward,
-  SkipBack,
-  Volume2,
-  Users,
-  MessageCircle,
-  Share,
-  StopCircle,
-} from "lucide-react"
-
-interface PartyControlsProps {
-  partyId: string
+interface PartyControlsProps {}
+  partyId: string;
 }
 
-export function PartyControls({ partyId }: PartyControlsProps) {
+export function PartyControls({ partyId }: PartyControlsProps) {}
   const { sendMessage } = useSocket()
   const [isPlaying, setIsPlaying] = useState(false)
 
-  const emitControl = (action: string, data?: any) => {
-    sendMessage("party:control", { 
+  const emitControl = (action: string, data?: unknown) => {}
+    sendMessage("party:control", {}
       party_id: partyId,
       action, 
-      ...data 
+      ...data;
     })
   }
 
-  const handlePlayPause = () => {
+  const handlePlayPause = () => {}
     const action = isPlaying ? "pause" : "play"
     emitControl(action)
     setIsPlaying(!isPlaying)
   }
 
-  const handleSkip = (seconds: number) => {
+  const handleSkip = (seconds: number) => {}
     emitControl("skip", { seconds })
   }
 
-  const handleEndParty = () => {
+  const handleEndParty = () => {}
     emitControl("end_party")
   }
 
@@ -61,7 +49,7 @@ export function PartyControls({ partyId }: PartyControlsProps) {
       </Button>
 
       <Button variant="outline" size="sm" onClick={handlePlayPause}>
-        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className=&quot;w-4 h-4&quot; />}
       </Button>
 
       <Button variant="outline" size="sm" onClick={() => handleSkip(10)}>
@@ -73,30 +61,30 @@ export function PartyControls({ partyId }: PartyControlsProps) {
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="sm">
             <Settings className="w-4 h-4 mr-2" />
-            Host Controls
+            Host Controls;
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem>
             <Users className="w-4 h-4 mr-2" />
-            Manage Participants
+            Manage Participants;
           </DropdownMenuItem>
           <DropdownMenuItem>
             <MessageCircle className="w-4 h-4 mr-2" />
-            Chat Settings
+            Chat Settings;
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Volume2 className="w-4 h-4 mr-2" />
-            Audio Settings
+            Audio Settings;
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Share className="w-4 h-4 mr-2" />
-            Share Party
+            Share Party;
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleEndParty} className="text-destructive">
             <StopCircle className="w-4 h-4 mr-2" />
-            End Party
+            End Party;
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

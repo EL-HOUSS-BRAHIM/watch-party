@@ -1,16 +1,18 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { BarChart, Calendar, DollarSign, Download, Eye, PieChart, Play, TrendingUp, User, Users, X } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { CalendarIcon, Download, TrendingUp, Users, Play, DollarSign, Eye } from "lucide-react"
-import {
+import {}
+import { format } from "date-fns"
+import { useToast } from "@/hooks/use-toast"
+import { analyticsAPI } from "@/lib/api"
+
+"use client"
   LineChart,
   Line,
   AreaChart,
@@ -27,37 +29,33 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts"
-import { format } from "date-fns"
-import { useToast } from "@/hooks/use-toast"
-import { analyticsAPI } from "@/lib/api"
-
-interface AnalyticsData {
-  overview: {
-    totalUsers: number
-    activeUsers: number
-    totalParties: number
-    totalRevenue: number
-    userGrowth: number
-    revenueGrowth: number
-    engagementRate: number
-    retentionRate: number
+interface AnalyticsData {}
+  overview: {}
+    totalUsers: number;
+    activeUsers: number;
+    totalParties: number;
+    totalRevenue: number;
+    userGrowth: number;
+    revenueGrowth: number;
+    engagementRate: number;
+    retentionRate: number;
   }
-  userMetrics: {
+  userMetrics: {}
     daily: Array<{ date: string; users: number; newUsers: number }>
     retention: Array<{ cohort: string; day1: number; day7: number; day30: number }>
     engagement: Array<{ segment: string; sessions: number; duration: number }>
   }
-  contentMetrics: {
+  contentMetrics: {}
     topVideos: Array<{ title: string; views: number; engagement: number; revenue: number }>
     categoryPerformance: Array<{ category: string; views: number; engagement: number }>
     uploadTrends: Array<{ date: string; uploads: number; totalSize: number }>
   }
-  revenueMetrics: {
+  revenueMetrics: {}
     monthly: Array<{ month: string; revenue: number; subscriptions: number }>
     plans: Array<{ plan: string; subscribers: number; revenue: number }>
     churn: Array<{ month: string; churnRate: number; newSubscribers: number }>
   }
-  platformMetrics: {
+  platformMetrics: {}
     performance: Array<{ metric: string; value: number; target: number }>
     errors: Array<{ date: string; errors: number; type: string }>
     usage: Array<{ feature: string; usage: number; growth: number }>
@@ -70,7 +68,7 @@ export function AdvancedAnalyticsDashboard() {
   const { toast } = useToast()
   const [data, setData] = useState<AnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
+  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({}
     from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     to: new Date(),
   })
@@ -83,12 +81,11 @@ export function AdvancedAnalyticsDashboard() {
   const fetchAnalytics = async () => {
     setLoading(true)
     try {
-      // Fetch advanced analytics data from API
+      // Fetch advanced analytics data from API;
       const response = await analyticsAPI.getAdminAnalytics()
 
-      // Transform API response to component format
-      const transformedData: AnalyticsData = {
-        overview: {
+      // Transform API response to component format;
+      const transformedData: AnalyticsData = { overview: {}
           totalUsers: response.overview?.total_users || 0,
           activeUsers: response.overview?.active_users || 0,
           totalParties: response.overview?.total_parties || 0,
@@ -98,22 +95,22 @@ export function AdvancedAnalyticsDashboard() {
           engagementRate: response.overview?.engagement_rate || 0,
           retentionRate: response.overview?.retention_rate || 0,
         },
-        userMetrics: {
+        userMetrics: {}
           daily: response.user_metrics?.daily || [],
           retention: response.user_metrics?.retention || [],
           engagement: response.user_metrics?.engagement || [],
         },
-        contentMetrics: {
+        contentMetrics: {}
           topVideos: response.content_metrics?.top_videos || [],
           categoryPerformance: response.content_metrics?.category_performance || [],
           uploadTrends: response.content_metrics?.upload_trends || [],
         },
-        revenueMetrics: {
+        revenueMetrics: {}
           monthly: response.revenue_metrics?.monthly || [],
           plans: response.revenue_metrics?.plans || [],
           churn: response.revenue_metrics?.churn || [],
         },
-        platformMetrics: {
+        platformMetrics: {}
           performance: response.platform_metrics?.performance || [],
           errors: response.platform_metrics?.errors || [],
           usage: response.platform_metrics?.usage || [],
@@ -121,16 +118,16 @@ export function AdvancedAnalyticsDashboard() {
       }
 
       setData(transformedData)
-    } catch (error) {
+    } } catch {
       console.error("Failed to fetch analytics:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load analytics data. Please try again.",
         variant: "destructive",
       })
-      // Set empty data structure on error
-      setData({
-        overview: {
+      // Set empty data structure on error;
+      setData({}
+        overview: {}
           totalUsers: 0,
           activeUsers: 0,
           totalParties: 0,
@@ -145,30 +142,28 @@ export function AdvancedAnalyticsDashboard() {
         revenueMetrics: { monthly: [], plans: [], churn: [] },
         platformMetrics: { performance: [], errors: [], usage: [] },
       })
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
-  const exportData = async (format: "csv" | "excel") => {
+  const exportData = async (format: "csv" | "excel") => {}
     try {
       const exportResponse = await analyticsAPI.exportAnalytics({ format })
-      
-      // Create download link
+      // Create download link;
       const link = document.createElement('a')
-      link.href = exportResponse.download_url
+      link.href = exportResponse.download_url;
       link.download = `analytics-${format}-${Date.now()}`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-      
-      toast({
+      toast({}
         title: "Export Successful",
         description: `Analytics data exported as ${format.toUpperCase()}`,
       })
-    } catch (error) {
+    } } catch {
       console.error("Export failed:", error)
-      toast({
+      toast({}
         title: "Export Failed",
         description: "Failed to export analytics data. Please try again.",
         variant: "destructive",
@@ -184,8 +179,7 @@ export function AdvancedAnalyticsDashboard() {
     )
   }
 
-  if (!data) return null
-
+  if (!data) return null;
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -214,8 +208,8 @@ export function AdvancedAnalyticsDashboard() {
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                initialFocus
+              <Calendar;
+                initialFocus;
                 mode="range"
                 defaultMonth={dateRange?.from}
                 selected={dateRange}
@@ -237,13 +231,13 @@ export function AdvancedAnalyticsDashboard() {
             </SelectContent>
           </Select>
 
-          <Button onClick={() => exportData("csv")} variant="outline">
+          <Button onClick={() => exportData(&quot;csv&quot;)} variant=&quot;outline">
             <Download className="mr-2 h-4 w-4" />
-            Export CSV
+            Export CSV;
           </Button>
-          <Button onClick={() => exportData("excel")} variant="outline">
+          <Button onClick={() => exportData(&quot;excel&quot;)} variant=&quot;outline">
             <Download className="mr-2 h-4 w-4" />
-            Export PDF
+            Export PDF;
           </Button>
         </div>
       </div>
@@ -259,7 +253,7 @@ export function AdvancedAnalyticsDashboard() {
             <div className="text-2xl font-bold">{data.overview.totalUsers.toLocaleString()}</div>
             <div className="flex items-center text-xs text-muted-foreground">
               <TrendingUp className="mr-1 h-3 w-3" />
-              +{data.overview.userGrowth}% from last month
+              +{data.overview.userGrowth}% from last month;
             </div>
           </CardContent>
         </Card>
@@ -299,7 +293,7 @@ export function AdvancedAnalyticsDashboard() {
             <div className="text-2xl font-bold">${data.overview.totalRevenue.toLocaleString()}</div>
             <div className="flex items-center text-xs text-muted-foreground">
               <TrendingUp className="mr-1 h-3 w-3" />
-              +{data.overview.revenueGrowth}% from last month
+              +{data.overview.revenueGrowth}% from last month;
             </div>
           </CardContent>
         </Card>
@@ -418,7 +412,7 @@ export function AdvancedAnalyticsDashboard() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
-                    <Pie
+                    <Pie;
                       data={data.contentMetrics.categoryPerformance}
                       cx="50%"
                       cy="50%"
@@ -499,7 +493,7 @@ export function AdvancedAnalyticsDashboard() {
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold text-green-600">${plan.revenue}</div>
-                        <Progress value={(plan.revenue / data.revenueMetrics.plans.reduce((sum, p) => sum + p.revenue, 0)) * 100} className="w-20" />
+                        <Progress value={(plan.revenue / data.revenueMetrics.plans.reduce((sum, p) => sum + p.revenue, 0)) * 100} className=&quot;w-20&quot; />
                       </div>
                     </div>
                   ))}
@@ -666,7 +660,7 @@ export function AdvancedAnalyticsDashboard() {
                   <div className="flex-1">
                     <h4 className="font-medium">Optimize Peak Hours</h4>
                     <p className="text-sm text-muted-foreground">
-                      Consider scheduling maintenance during 3-5 AM when usage is lowest
+                      Consider scheduling maintenance during 3-5 AM when usage is lowest;
                     </p>
                     <Badge className="mt-2">High Impact</Badge>
                   </div>
@@ -679,7 +673,7 @@ export function AdvancedAnalyticsDashboard() {
                   <div className="flex-1">
                     <h4 className="font-medium">Target Inactive Users</h4>
                     <p className="text-sm text-muted-foreground">
-                      Launch re-engagement campaign for users inactive 30+ days
+                      Launch re-engagement campaign for users inactive 30+ days;
                     </p>
                     <Badge className="mt-2">Medium Impact</Badge>
                   </div>
@@ -692,7 +686,7 @@ export function AdvancedAnalyticsDashboard() {
                   <div className="flex-1">
                     <h4 className="font-medium">Content Strategy</h4>
                     <p className="text-sm text-muted-foreground">
-                      Focus on comedy and short-form content based on engagement data
+                      Focus on comedy and short-form content based on engagement data;
                     </p>
                     <Badge className="mt-2">High Impact</Badge>
                   </div>

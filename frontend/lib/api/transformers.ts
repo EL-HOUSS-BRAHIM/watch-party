@@ -1,4 +1,5 @@
-import type {
+import type {}
+
   AnalyticsRealtimeSnapshot,
   AuthResponse,
   Conversation,
@@ -15,23 +16,22 @@ import type {
   Video,
 } from "./types"
 
-const toDateString = (value?: string | null): string | undefined => {
-  if (!value) return undefined
+const toDateString = (value?: string | null): string | undefined => {}
+  if (!value) return undefined;
   return new Date(value).toISOString()
 }
 
-const ensureString = (value: number | string | undefined | null): string | undefined => {
-  if (value === undefined || value === null) return undefined
+const ensureString = (value: number | string | undefined | null): string | undefined => {}
+  if (value === undefined || value === null) return undefined;
   return String(value)
 }
 
-export const transformUser = (raw: RawUser | User): User => {
-  if ((raw as User).firstName !== undefined || (raw as User).displayName !== undefined) {
-    return raw as User
+export const transformUser = (raw: RawUser | User): User => {}
+  if ((raw as User).firstName !== undefined || (raw as User).displayName !== undefined) {}
+    return raw as User;
   }
 
-  const user = raw as RawUser
-
+  const user = raw as RawUser;
   return {
     id: String(user.id),
     email: user.email,
@@ -75,12 +75,12 @@ export const transformUser = (raw: RawUser | User): User => {
   }
 }
 
-export const transformMessage = (raw: RawMessage | Message): Message => {
-  if ((raw as Message).type !== undefined && (raw as Message).createdAt !== undefined) {
-    return raw as Message
+export const transformMessage = (raw: RawMessage | Message): Message => {}
+  if ((raw as Message).type !== undefined && (raw as Message).createdAt !== undefined) {}
+    return raw as Message;
   }
 
-  const message = raw as RawMessage
+  const message = raw as RawMessage;
   const sender = transformUser(message.sender)
 
   return {
@@ -97,15 +97,14 @@ export const transformMessage = (raw: RawMessage | Message): Message => {
   }
 }
 
-export const transformConversation = (raw: RawConversation | Conversation): Conversation => {
-  if ((raw as Conversation).unreadCount !== undefined) {
-    return raw as Conversation
+export const transformConversation = (raw: RawConversation | Conversation): Conversation => {}
+  if ((raw as Conversation).unreadCount !== undefined) {}
+    return raw as Conversation;
   }
 
-  const conversation = raw as RawConversation
+  const conversation = raw as RawConversation;
   const participants = (conversation.participants ?? []).map(transformUser)
-  const lastMessage = conversation.last_message ? transformMessage(conversation.last_message) : undefined
-
+  const lastMessage = conversation.last_message ? transformMessage(conversation.last_message) : undefined;
   return {
     id: ensureString(conversation.id) ?? String(Date.now()),
     type: (conversation.type ?? "direct") as Conversation["type"],
@@ -118,14 +117,13 @@ export const transformConversation = (raw: RawConversation | Conversation): Conv
   }
 }
 
-export const transformVideo = (raw: RawVideo | Video): Video => {
-  if ((raw as Video).views !== undefined || (raw as Video).likes !== undefined) {
-    return raw as Video
+export const transformVideo = (raw: RawVideo | Video): Video => {}
+  if ((raw as Video).views !== undefined || (raw as Video).likes !== undefined) {}
+    return raw as Video;
   }
 
-  const video = raw as RawVideo
-  const uploaderRaw: RawUser = {
-    id: video.uploader?.id ?? "",
+  const video = raw as RawVideo;
+  const uploaderRaw: RawUser = { id: video.uploader?.id ?? "",
     username: video.uploader?.username ?? video.uploader?.display_name ?? "",
     email: "",
     first_name: video.uploader?.first_name,
@@ -170,14 +168,14 @@ export const transformVideo = (raw: RawVideo | Video): Video => {
   }
 }
 
-export const transformAuthResponse = (raw: RawAuthResponse): AuthResponse => ({
+export const transformAuthResponse = (raw: RawAuthResponse): AuthResponse => ({}
   ...raw,
   user: transformUser(raw.user),
 })
 
 export const transformTwoFactorVerifyResponse = (
   raw: RawTwoFactorVerifyResponse,
-): TwoFactorVerifyResponse => ({
+): TwoFactorVerifyResponse => ({}
   ...raw,
   user: raw.user ? transformUser(raw.user) : undefined,
 })
@@ -185,8 +183,8 @@ export const transformTwoFactorVerifyResponse = (
 export const transformPaginatedResponse = <T, R>(
   payload: PaginatedResponse<T> | (PaginatedResponse<T> & Record<string, unknown>),
   mapper: (value: T) => R,
-): PaginatedResponse<R> => {
-  const candidates = [
+): PaginatedResponse<R> => {}
+  const candidates = []
     (payload as PaginatedResponse<T>).results,
     (payload as { items?: T[] }).items,
     (payload as { data?: T[] }).data,
@@ -208,7 +206,7 @@ export const transformPaginatedResponse = <T, R>(
 
 export const normalizeRealtimeSnapshot = (
   snapshot: AnalyticsRealtimeSnapshot,
-): AnalyticsRealtimeSnapshot => ({
+): AnalyticsRealtimeSnapshot => ({}
   active_users: snapshot.active_users ?? 0,
   concurrent_streams: snapshot.concurrent_streams ?? snapshot.active_parties ?? 0,
   messages_per_minute: snapshot.messages_per_minute ?? 0,

@@ -1,29 +1,20 @@
-'use client'
-
+import { Calendar, MapPin, Shield, Trash } from "lucide-react"
 import { useState } from 'react'
-import { 
-  ComputerDesktopIcon,
-  DevicePhoneMobileIcon,
-  GlobeAltIcon,
-  MapPinIcon,
-  CalendarIcon,
-  TrashIcon,
-  ShieldCheckIcon
-} from '@heroicons/react/24/outline'
 
-interface Session {
-  id: string
-  deviceName: string
+'use client'
+interface Session {}
+  id: string;
+  deviceName: string;
   deviceType: 'desktop' | 'mobile' | 'tablet'
-  browser: string
-  location: string
-  ipAddress: string
-  lastActive: string
-  isCurrent: boolean
+  browser: string;
+  location: string;
+  ipAddress: string;
+  lastActive: string;
+  isCurrent: boolean;
 }
 
-const sessions: Session[] = [
-  {
+const sessions: Session[] = []
+  {}
     id: '1',
     deviceName: 'MacBook Pro',
     deviceType: 'desktop',
@@ -31,9 +22,9 @@ const sessions: Session[] = [
     location: 'San Francisco, CA',
     ipAddress: '192.168.1.100',
     lastActive: '2024-03-21T10:30:00Z',
-    isCurrent: true
+    isCurrent: true;
   },
-  {
+  {}
     id: '2',
     deviceName: 'iPhone 15 Pro',
     deviceType: 'mobile',
@@ -41,9 +32,9 @@ const sessions: Session[] = [
     location: 'San Francisco, CA',
     ipAddress: '192.168.1.101',
     lastActive: '2024-03-21T08:15:00Z',
-    isCurrent: false
+    isCurrent: false;
   },
-  {
+  {}
     id: '3',
     deviceName: 'Windows Desktop',
     deviceType: 'desktop',
@@ -51,9 +42,9 @@ const sessions: Session[] = [
     location: 'Los Angeles, CA',
     ipAddress: '10.0.0.50',
     lastActive: '2024-03-20T22:45:00Z',
-    isCurrent: false
+    isCurrent: false;
   },
-  {
+  {}
     id: '4',
     deviceName: 'iPad Air',
     deviceType: 'tablet',
@@ -61,11 +52,11 @@ const sessions: Session[] = [
     location: 'New York, NY',
     ipAddress: '172.16.0.25',
     lastActive: '2024-03-19T14:20:00Z',
-    isCurrent: false
+    isCurrent: false;
   }
 ]
 
-const getDeviceIcon = (type: string) => {
+const getDeviceIcon = (type: string) => {}
   switch (type) {
     case 'mobile':
       return <DevicePhoneMobileIcon className="w-6 h-6" />
@@ -76,17 +67,14 @@ const getDeviceIcon = (type: string) => {
   }
 }
 
-const getRelativeTime = (dateString: string) => {
+const getRelativeTime = (dateString: string) => {}
   const date = new Date(dateString)
   const now = new Date()
   const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60))
-  
   if (diffInMinutes < 1) return 'Just now'
   if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`
-  
   const diffInHours = Math.floor(diffInMinutes / 60)
   if (diffInHours < 24) return `${diffInHours} hours ago`
-  
   const diffInDays = Math.floor(diffInHours / 24)
   return `${diffInDays} days ago`
 }
@@ -94,13 +82,13 @@ const getRelativeTime = (dateString: string) => {
 export default function SessionsPage() {
   const [showRevokeAll, setShowRevokeAll] = useState(false)
 
-  const handleRevokeSession = (sessionId: string) => {
-    // In real app, call API to revoke session
+  const handleRevokeSession = (sessionId: string) => {}
+    // In real app, call API to revoke session;
     console.log('Revoking session:', sessionId)
   }
 
-  const handleRevokeAllOther = () => {
-    // In real app, call API to revoke all other sessions
+  const handleRevokeAllOther = () => {}
+    // In real app, call API to revoke all other sessions;
     console.log('Revoking all other sessions')
     setShowRevokeAll(false)
   }
@@ -117,7 +105,7 @@ export default function SessionsPage() {
             <h1 className="text-4xl font-bold text-white">Active Sessions</h1>
           </div>
           <p className="text-white/70 text-lg">
-            Manage your active login sessions across all devices
+            Manage your active login sessions across all devices;
           </p>
         </div>
 
@@ -176,18 +164,18 @@ export default function SessionsPage() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-white">Other Sessions</h2>
             {activeSessions.length > 0 && (
-              <button
+              <button;
                 onClick={() => setShowRevokeAll(true)}
                 className="text-red-400 hover:text-red-300 text-sm font-medium"
               >
-                Revoke All Other Sessions
+                Revoke All Other Sessions;
               </button>
             )}
           </div>
 
           <div className="space-y-4">
             {activeSessions.map(session => (
-              <div
+              <div;
                 key={session.id}
                 className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6"
               >
@@ -218,12 +206,12 @@ export default function SessionsPage() {
                     </div>
                   </div>
 
-                  <button
+                  <button;
                     onClick={() => handleRevokeSession(session.id)}
                     className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
                   >
                     <TrashIcon className="w-4 h-4" />
-                    Revoke
+                    Revoke;
                   </button>
                 </div>
               </div>
@@ -251,17 +239,15 @@ export default function SessionsPage() {
             </div>
             <div className="text-white/70">Total Sessions</div>
           </div>
-          
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-green-400 mb-2">
-              {sessions.filter(s => s.deviceType === 'desktop').length}
+              {sessions.filter(s => s.deviceType === &apos;desktop&apos;).length}
             </div>
             <div className="text-white/70">Desktop Sessions</div>
           </div>
-          
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-purple-400 mb-2">
-              {sessions.filter(s => s.deviceType === 'mobile' || s.deviceType === 'tablet').length}
+              {sessions.filter(s => s.deviceType === &apos;mobile&apos; || s.deviceType === &apos;tablet').length}
             </div>
             <div className="text-white/70">Mobile Sessions</div>
           </div>
@@ -276,17 +262,17 @@ export default function SessionsPage() {
                 This will sign you out of all other devices. You'll need to sign in again on those devices.
               </p>
               <div className="flex gap-4">
-                <button
+                <button;
                   onClick={() => setShowRevokeAll(false)}
                   className="flex-1 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors"
                 >
-                  Cancel
+                  Cancel;
                 </button>
-                <button
+                <button;
                   onClick={handleRevokeAllOther}
                   className="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"
                 >
-                  Revoke All
+                  Revoke All;
                 </button>
               </div>
             </div>

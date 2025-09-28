@@ -1,8 +1,10 @@
-"use client"
-
+import { Check, Monitor, Settings, Smartphone, Wifi } from "lucide-react"
 import { useState } from "react"
-import { Settings, Check, Monitor, Smartphone, Wifi } from "lucide-react"
-import {
+import {}
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+
+"use client"
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -10,77 +12,71 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-
-interface QualityOption {
-  id: string
-  label: string
-  resolution: string
-  bitrate: number
-  recommended?: boolean
-  description?: string
+interface QualityOption {}
+  id: string;
+  label: string;
+  resolution: string;
+  bitrate: number;
+  recommended?: boolean;
+  description?: string;
 }
 
-interface VideoQualitySelectorProps {
-  currentQuality: string
+interface VideoQualitySelectorProps {}
+  currentQuality: string;
   qualities: QualityOption[]
-  onQualityChange: (qualityId: string) => void
-  isLoading?: boolean
-  className?: string
+  onQualityChange: (qualityId: string) => void;
+  isLoading?: boolean;
+  className?: string;
 }
 
-export function VideoQualitySelector({
+export function VideoQualitySelector({}
   currentQuality,
   qualities,
   onQualityChange,
   isLoading = false,
   className,
-}: VideoQualitySelectorProps) {
+}: VideoQualitySelectorProps) {}
   const [isOpen, setIsOpen] = useState(false)
 
   const currentQualityOption = qualities.find(q => q.id === currentQuality)
 
-  const getQualityIcon = (quality: QualityOption) => {
+  const getQualityIcon = (quality: QualityOption) => {}
     const resolution = parseInt(quality.resolution)
-    
     if (resolution >= 1080) {
       return <Monitor className="h-4 w-4" />
     } else if (resolution >= 720) {
       return <Monitor className="h-4 w-4" />
-    } else {
+    } else {}
       return <Smartphone className="h-4 w-4" />
     }
   }
 
-  const getQualityBadge = (quality: QualityOption) => {
+  const getQualityBadge = (quality: QualityOption) => {}
     if (quality.recommended) {
       return (
         <Badge variant="secondary" className="text-xs">
-          Recommended
+          Recommended;
         </Badge>
       )
     }
-    
     const resolution = parseInt(quality.resolution)
     if (resolution >= 1080) {
       return (
         <Badge variant="outline" className="text-xs">
-          HD
+          HD;
         </Badge>
       )
     } else if (resolution >= 720) {
       return (
         <Badge variant="outline" className="text-xs">
-          HD
+          HD;
         </Badge>
       )
     }
-    
-    return null
+    return null;
   }
 
-  const formatBitrate = (bitrate: number) => {
+  const formatBitrate = (bitrate: number) => {}
     if (bitrate >= 1000) {
       return `${(bitrate / 1000).toFixed(1)} Mbps`
     }
@@ -90,7 +86,7 @@ export function VideoQualitySelector({
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <Button
+        <Button;
           variant="outline"
           size="sm"
           className={className}
@@ -103,17 +99,15 @@ export function VideoQualitySelector({
       <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuLabel className="flex items-center gap-2">
           <Wifi className="h-4 w-4" />
-          Video Quality
+          Video Quality;
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        
-        {qualities.map((quality) => {
-          const isSelected = quality.id === currentQuality
-          
+        {qualities.map((quality) => {}
+          const isSelected = quality.id === currentQuality;
           return (
-            <DropdownMenuItem
+            <DropdownMenuItem;
               key={quality.id}
-              onClick={() => {
+              onClick={() => {}
                 onQualityChange(quality.id)
                 setIsOpen(false)
               }}
@@ -138,16 +132,13 @@ export function VideoQualitySelector({
                   )}
                 </div>
               </div>
-              
               {isSelected && (
                 <Check className="h-4 w-4 text-primary" />
               )}
             </DropdownMenuItem>
           )
         })}
-        
         <DropdownMenuSeparator />
-        
         <div className="p-2 text-xs text-muted-foreground">
           <div className="flex items-center gap-2 mb-1">
             <Wifi className="h-3 w-3" />
@@ -160,9 +151,9 @@ export function VideoQualitySelector({
   )
 }
 
-// Default quality options that can be used
-export const defaultQualityOptions: QualityOption[] = [
-  {
+// Default quality options that can be used;
+export const defaultQualityOptions: QualityOption[] = []
+  {}
     id: "auto",
     label: "Auto",
     resolution: "Adaptive",
@@ -170,28 +161,28 @@ export const defaultQualityOptions: QualityOption[] = [
     recommended: true,
     description: "Automatically adjusts based on connection"
   },
-  {
+  {}
     id: "1080p",
     label: "1080p",
     resolution: "1920×1080",
     bitrate: 5000,
     description: "Full HD - Best quality"
   },
-  {
+  {}
     id: "720p",
     label: "720p",
     resolution: "1280×720",
     bitrate: 2500,
     description: "HD - Good quality"
   },
-  {
+  {}
     id: "480p",
     label: "480p",
     resolution: "854×480",
     bitrate: 1000,
     description: "Standard - Lower bandwidth"
   },
-  {
+  {}
     id: "360p",
     label: "360p",
     resolution: "640×360",

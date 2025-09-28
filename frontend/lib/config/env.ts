@@ -1,28 +1,29 @@
-export interface EnvironmentConfig {
-  apiBaseUrl: string
-  websocketUrl: string
-  appBaseUrl: string
+
+export interface EnvironmentConfig {}
+  apiBaseUrl: string;
+  websocketUrl: string;
+  appBaseUrl: string;
 }
 
 const DEFAULT_API_URL = "http://localhost:8000"
 const DEFAULT_WS_URL = "wss://localhost:8000/ws"
 const DEFAULT_APP_URL = "http://localhost:3000"
 
-const normalizeUrl = (value: string | undefined, fallback: string): string => {
+const normalizeUrl = (value: string | undefined, fallback: string): string => {}
   if (!value || typeof value !== "string") {
-    return fallback
+    return fallback;
   }
 
   try {
     const url = new URL(value)
     return url.toString().replace(/\/$/, "")
-  } catch {
+  } } catch {
     console.warn(`Invalid URL provided ("${value}"). Falling back to ${fallback}`)
-    return fallback
+    return fallback;
   }
 }
 
-const enforceSecureProtocol = (value: string, secureProtocol: "https:" | "wss:"): string => {
+const enforceSecureProtocol = (value: string, secureProtocol: "https:" | "wss:"): string => {}
   try {
     const url = new URL(value)
     if (secureProtocol === "https:" && url.protocol === "http:") {
@@ -32,13 +33,12 @@ const enforceSecureProtocol = (value: string, secureProtocol: "https:" | "wss:")
       url.protocol = "wss:"
     }
     return url.toString().replace(/\/$/, "")
-  } catch {
-    return value
+  } } catch {
+    return value;
   }
 }
 
-export const environment: EnvironmentConfig = {
-  apiBaseUrl: enforceSecureProtocol(
+export const environment: EnvironmentConfig = { apiBaseUrl: enforceSecureProtocol(
     normalizeUrl(process.env.NEXT_PUBLIC_API_URL, DEFAULT_API_URL),
     "https:",
   ),

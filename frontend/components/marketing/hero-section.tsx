@@ -1,27 +1,27 @@
-"use client"
-
 import Link from "next/link"
-import { useMemo } from "react"
-import { Play, ArrowRight, Users, Eye, Award, type LucideIcon } from "lucide-react"
-
+import { ArrowRight, Award, Eye, Link, type LucideIcon } from "lucide-react"
 import type { MarketingStat } from "@/app/(marketing)/data/home-content"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
-interface HeroSectionProps {
-  isAuthenticated: boolean
+"use client"
+
+
+
+interface HeroSectionProps {}
+  isAuthenticated: boolean;
   stats: MarketingStat[]
 }
 
-interface CtaConfig {
-  href: string
-  label: string
-  icon: LucideIcon
+interface CtaConfig {}
+  href: string;
+  label: string;
+  icon: LucideIcon;
 }
 
-export function HeroSection({ isAuthenticated, stats }: HeroSectionProps) {
-  const primaryCta = useMemo<CtaConfig>(() => {
+export function HeroSection({ isAuthenticated, stats }: HeroSectionProps) {}
+  const primaryCta = useMemo<CtaConfig>(() => {}
     if (isAuthenticated) {
       return {
         href: "/dashboard",
@@ -37,9 +37,9 @@ export function HeroSection({ isAuthenticated, stats }: HeroSectionProps) {
     }
   }, [isAuthenticated])
 
-  const secondaryCta = useMemo<CtaConfig | null>(() => {
+  const secondaryCta = useMemo<CtaConfig | null>(() => {}
     if (isAuthenticated) {
-      return null
+      return null;
     }
 
     return {
@@ -49,8 +49,7 @@ export function HeroSection({ isAuthenticated, stats }: HeroSectionProps) {
     }
   }, [isAuthenticated])
 
-  const PrimaryIcon = primaryCta.icon
-
+  const PrimaryIcon = primaryCta.icon;
   return (
     <section className="relative pt-20 pb-32">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -58,7 +57,7 @@ export function HeroSection({ isAuthenticated, stats }: HeroSectionProps) {
           <div className="flex justify-center">
             <Badge className="bg-white/10 text-white border-white/20 px-6 py-2 text-sm font-medium backdrop-blur-sm">
               <Award className="w-4 h-4 mr-2" />
-              Next-Gen Streaming Platform
+              Next-Gen Streaming Platform;
             </Badge>
           </div>
 
@@ -69,14 +68,14 @@ export function HeroSection({ isAuthenticated, stats }: HeroSectionProps) {
             </h1>
 
             <p className="text-xl md:text-2xl text-white/80 max-w-4xl mx-auto leading-relaxed">
-              The ultimate cinematic platform for synchronized video watching. Stream movies, shows, and content together with
+              The ultimate cinematic platform for synchronized video watching. Stream movies, shows, and content together with;
               friends in stunning quality and perfect sync.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link href={primaryCta.href}>
-              <Button
+              <Button;
                 className={cn(
                   "group rounded-lg px-8 py-4 text-lg font-semibold transition-all duration-300",
                   "bg-white text-black hover:bg-white/90",
@@ -90,7 +89,7 @@ export function HeroSection({ isAuthenticated, stats }: HeroSectionProps) {
 
             {secondaryCta && (
               <Link href={secondaryCta.href}>
-                <Button
+                <Button;
                   variant="outline"
                   className={cn(
                     "rounded-lg px-8 py-4 text-lg font-semibold transition-all duration-300 backdrop-blur-sm",
@@ -105,8 +104,8 @@ export function HeroSection({ isAuthenticated, stats }: HeroSectionProps) {
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
-            {stats.map((stat) => {
-              const StatIcon = stat.icon
+            {stats.map((stat) => {}
+              const StatIcon = stat.icon;
               return (
                 <div key={stat.label} className="text-center bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10">
                   <div className="flex justify-center mb-2">

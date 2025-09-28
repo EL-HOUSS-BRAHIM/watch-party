@@ -1,12 +1,13 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { AlertTriangle, BarChart, Check, CheckCircle, Loader2, PieChart, TrendingUp, User, Users, Video, Wifi, X } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { billingAPI } from "@/lib/api"
-import {
+import {}
+
+"use client"
   BarChart,
   Bar,
   XAxis,
@@ -20,31 +21,30 @@ import {
   Pie,
   Cell,
 } from "recharts"
-import { HardDrive, Wifi, Users, Video, TrendingUp, AlertTriangle, CheckCircle, Loader2 } from "lucide-react"
 
-interface UsageData {
+interface UsageData {}
   storage: { used: number; limit: number; unit: string }
   bandwidth: { used: number; limit: number; unit: string }
   parties: { used: number; limit: number; unit: string }
   participants: { used: number; limit: number; unit: string }
 }
 
-interface UsageStats {
-  current_usage: UsageData
-  monthly_trends: Array<{
-    month: string
-    storage: number
-    bandwidth: number
-    parties: number
+interface UsageStats {}
+  current_usage: UsageData;
+  monthly_trends: Array<{}
+    month: string;
+    storage: number;
+    bandwidth: number;
+    parties: number;
   }>
-  daily_activity: Array<{
-    day: string
-    participants: number
+  daily_activity: Array<{}
+    day: string;
+    participants: number;
   }>
-  quality_distribution: Array<{
-    name: string
-    value: number
-    color: string
+  quality_distribution: Array<{}
+    name: string;
+    value: number;
+    color: string;
   }>
 }
 
@@ -60,83 +60,77 @@ export function UsageStats() {
   const fetchUsageStats = async () => {
     try {
       setIsLoading(true)
-      
-      // Fetch usage data from billing API
+      // Fetch usage data from billing API;
       const subscriptionData = await billingAPI.getSubscription()
-      
-      // Note: Analytics endpoints would need to be implemented in analyticsAPI
-      // For now, we'll use direct fetch for analytics data
+      // Note: Analytics endpoints would need to be implemented in analyticsAPI;
+      // For now, we'll use direct fetch for analytics data;
       const token = localStorage.getItem("accessToken")
-      const [analyticsResponse, trendsResponse] = await Promise.all([
-        fetch("/api/analytics/user/", {
+      const [analyticsResponse, trendsResponse] = await Promise.all([]
+        fetch("/api/analytics/user/", {}
           headers: { Authorization: `Bearer ${token}` }
         }),
-        fetch("/api/analytics/usage-trends/", {
+        fetch("/api/analytics/usage-trends/", {}
           headers: { Authorization: `Bearer ${token}` }
         })
       ])
 
-      const [analyticsData, trendsData] = await Promise.all([
+      const [analyticsData, trendsData] = await Promise.all([]
         analyticsResponse.ok ? analyticsResponse.json() : {},
         trendsResponse.ok ? trendsResponse.json() : { monthly_trends: [], daily_activity: [], quality_distribution: [] }
       ])
-      
-      // Transform real data to match our interface
+      // Transform real data to match our interface;
       const currentUsage = subscriptionData.usage || {}
       const analytics = analyticsData || {}
-      
-      const stats: UsageStats = {
-        current_usage: {
-          storage: { 
+      const stats: UsageStats = { current_usage: {}
+          storage: {}
             used: parseFloat(currentUsage.storage_used) || 0, 
             limit: parseFloat(currentUsage.storage_limit) || 10, 
             unit: "GB" 
           },
-          bandwidth: { 
-            used: parseFloat((analytics as any).bandwidth_used_gb) || 0, 
-            limit: parseFloat((currentUsage as any).bandwidth_limit) || 500, 
+          bandwidth: {}
+            used: parseFloat((analytics as Record<string, unknown>).bandwidth_used_gb) || 0, 
+            limit: parseFloat((currentUsage as Record<string, unknown>).bandwidth_limit) || 500, 
             unit: "GB" 
           },
-          parties: { 
+          parties: {}
             used: currentUsage.parties_hosted_this_month || 0, 
-            limit: parseInt((currentUsage as any).parties_limit) || 25, 
+            limit: parseInt((currentUsage as Record<string, unknown>).parties_limit) || 25, 
             unit: "parties" 
           },
-          participants: { 
-            used: (analytics as any).total_participants_this_month || 0, 
-            limit: parseInt((currentUsage as any).participants_limit) || 500, 
+          participants: {}
+            used: (analytics as Record<string, unknown>).total_participants_this_month || 0, 
+            limit: parseInt((currentUsage as Record<string, unknown>).participants_limit) || 500, 
             unit: "total participants" 
           },
         },
         monthly_trends: trendsData.monthly_trends || [],
         daily_activity: trendsData.daily_activity || [],
-        quality_distribution: trendsData.quality_distribution || [
+        quality_distribution: trendsData.quality_distribution || []
           { name: "720p", value: 40, color: "#8884d8" },
           { name: "1080p", value: 50, color: "#82ca9d" },
           { name: "4K", value: 10, color: "#ffc658" },
         ],
       }
-      
       setUsageStats(stats)
-    } catch (error) {
+    } } catch {
       console.error("Failed to fetch usage stats:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load usage statistics.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const getUsageColor = (percentage: number) => {
-    if (percentage >= 90) return "text-destructive"
-    if (percentage >= 75) return "text-yellow-600"
+  const getUsageColor = (percentage: number) => {}
+    if (percentage >= 90) return &quot;text-destructive&quot;
+    if (percentage >= 75) return &quot;text-yellow-600"
     return "text-green-600"
   }
 
-  const getUsageIcon = (percentage: number) => {
+  const getUsageIcon = (percentage: number) => {}
     if (percentage >= 90) return <AlertTriangle className="w-4 h-4 text-destructive" />
     return <CheckCircle className="w-4 h-4 text-green-600" />
   }
@@ -161,8 +155,7 @@ export function UsageStats() {
     )
   }
 
-  const { current_usage, monthly_trends, daily_activity, quality_distribution } = usageStats
-
+  const { current_usage, monthly_trends, daily_activity, quality_distribution } = usageStats;
   return (
     <div className="space-y-6">
       {/* Current Usage Overview */}
@@ -182,7 +175,7 @@ export function UsageStats() {
             </div>
             <Progress value={(current_usage.storage.used / current_usage.storage.limit) * 100} className="mb-2" />
             <p className="text-xs text-muted-foreground">
-              {current_usage.storage.used} of {current_usage.storage.limit} {current_usage.storage.unit} used
+              {current_usage.storage.used} of {current_usage.storage.limit} {current_usage.storage.unit} used;
             </p>
           </CardContent>
         </Card>
@@ -202,7 +195,7 @@ export function UsageStats() {
             </div>
             <Progress value={(current_usage.bandwidth.used / current_usage.bandwidth.limit) * 100} className="mb-2" />
             <p className="text-xs text-muted-foreground">
-              {current_usage.bandwidth.used} of {current_usage.bandwidth.limit} {current_usage.bandwidth.unit} used
+              {current_usage.bandwidth.used} of {current_usage.bandwidth.limit} {current_usage.bandwidth.unit} used;
             </p>
           </CardContent>
         </Card>
@@ -234,7 +227,7 @@ export function UsageStats() {
               <div className="text-2xl font-bold">{current_usage.participants.used}</div>
               {getUsageIcon((current_usage.participants.used / current_usage.participants.limit) * 100)}
             </div>
-            <Progress
+            <Progress;
               value={(current_usage.participants.used / current_usage.participants.limit) * 100}
               className="mb-2"
             />
@@ -295,7 +288,7 @@ export function UsageStats() {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
-                <Pie
+                <Pie;
                   data={quality_distribution}
                   cx="50%"
                   cy="50%"
@@ -360,14 +353,14 @@ export function UsageStats() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {Object.entries(current_usage).map(([key, usage]) => {
-              const percentage = (usage.used / usage.limit) * 100
+            {Object.entries(current_usage).map(([key, usage]) => {}
+              const percentage = (usage.used / usage.limit) * 100;
               return (
                 <div key={key} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <span className="font-medium capitalize">{key.replace("_", " ")}</span>
-                      <Badge variant={percentage >= 90 ? "destructive" : percentage >= 75 ? "secondary" : "outline"}>
+                      <span className="font-medium capitalize">{key.replace(&quot;_&quot;, &quot; ")}</span>"
+                      <Badge variant={percentage >= 90 ? &quot;destructive&quot; : percentage >= 75 ? &quot;secondary" : "outline"}>
                         {percentage.toFixed(1)}%
                       </Badge>
                     </div>

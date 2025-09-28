@@ -1,6 +1,4 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -9,7 +7,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {
+import {}
+import { useAuth } from "@/contexts/auth-context"
+import { useToast } from "@/hooks/use-toast"
+import { cn } from "@/lib/utils"
+import { formatDistanceToNow } from "date-fns"
+
+} from "lucide-react"
+"use client"
+
   FileText,
   Search,
   Download,
@@ -25,38 +31,32 @@ import {
   Activity,
   Loader2,
   RefreshCw,
-} from "lucide-react"
-import { useAuth } from "@/contexts/auth-context"
-import { useToast } from "@/hooks/use-toast"
-import { cn } from "@/lib/utils"
-import { formatDistanceToNow } from "date-fns"
-
 interface LogEntry {
-  id: string
-  timestamp: string
+  id: string;
+  timestamp: string;
   level: "debug" | "info" | "warning" | "error" | "critical"
   category: "auth" | "api" | "database" | "websocket" | "payment" | "system" | "security"
-  message: string
-  details?: {
-    userId?: string
-    ip?: string
-    userAgent?: string
-    endpoint?: string
-    method?: string
-    statusCode?: number
-    duration?: number
-    error?: string
-    stackTrace?: string
+  message: string;
+  details?: {}
+    userId?: string;
+    ip?: string;
+    userAgent?: string;
+    endpoint?: string;
+    method?: string;
+    statusCode?: number;
+    duration?: number;
+    error?: string;
+    stackTrace?: string;
     metadata?: Record<string, any>
   }
-  source: string
-  correlationId?: string
+  source: string;
+  correlationId?: string;
 }
 
-interface LogStats {
-  totalLogs: number
-  errorCount: number
-  warningCount: number
+interface LogStats {}
+  totalLogs: number;
+  errorCount: number;
+  warningCount: number;
   logsByLevel: Record<string, number>
   logsByCategory: Record<string, number>
   recentErrors: LogEntry[]
@@ -85,27 +85,27 @@ export default function SystemLogs() {
   }, [searchQuery, levelFilter, categoryFilter, timeRange, currentPage])
 
   useEffect(() => {
-    let interval: NodeJS.Timeout
+    let interval: NodeJS.Timeout;
     if (autoRefresh) {
-      interval = setInterval(() => {
+      interval = setInterval(() => {}
         loadLogs(true)
-      }, 30000) // Refresh every 30 seconds
+      }, 30000) // Refresh every 30 seconds;
     }
-    return () => {
+    return () => {}
       if (interval) clearInterval(interval)
     }
   }, [autoRefresh])
 
-  const loadLogs = async (isRefresh = false) => {
+  const loadLogs = async (isRefresh = false) => {}
     if (isRefresh) {
       setIsRefreshing(true)
-    } else {
+    } else {}
       setIsLoading(true)
     }
 
     try {
       const token = localStorage.getItem("accessToken")
-      const params = new URLSearchParams({
+      const params = new URLSearchParams({}
         page: currentPage.toString(),
         search: searchQuery,
         level: levelFilter,
@@ -113,8 +113,8 @@ export default function SystemLogs() {
         time_range: timeRange,
       })
 
-      const response = await fetch(`/api/admin/system-logs/?${params}`, {
-        headers: {
+      const response = await fetch(`/api/admin/system-logs/?${params}`, {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -123,18 +123,18 @@ export default function SystemLogs() {
         const data = await response.json()
         const results = Array.isArray(data.results) ? data.results : data.logs ?? []
         setLogs(results)
-        const totalItems = data.pagination?.total ?? data.count ?? results.length
-        const pageSize = data.pagination?.page_size ?? 50
+        const totalItems = data.pagination?.total ?? data.count ?? results.length;
+        const pageSize = data.pagination?.page_size ?? 50;
         setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to load logs:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load system logs. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
       setIsRefreshing(false)
     }
@@ -143,8 +143,8 @@ export default function SystemLogs() {
   const loadLogStats = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/system-logs/stats/?time_range=${timeRange}`, {
-        headers: {
+      const response = await fetch(`/api/admin/system-logs/stats/?time_range=${timeRange}`, {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -153,7 +153,7 @@ export default function SystemLogs() {
         const data = await response.json()
         setStats(data)
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to load log stats:", error)
     }
   }
@@ -161,15 +161,15 @@ export default function SystemLogs() {
   const exportLogs = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const params = new URLSearchParams({
+      const params = new URLSearchParams({}
         level: levelFilter,
         category: categoryFilter,
         time_range: timeRange,
         search: searchQuery,
       })
 
-      const response = await fetch(`/api/admin/system-logs/export/?${params}`, {
-        headers: {
+      const response = await fetch(`/api/admin/system-logs/export/?${params}`, {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -178,20 +178,20 @@ export default function SystemLogs() {
         const blob = await response.blob()
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
-        a.href = url
+        a.href = url;
         a.download = `system-logs-${new Date().toISOString().split("T")[0]}.json`
         document.body.appendChild(a)
         a.click()
         window.URL.revokeObjectURL(url)
         document.body.removeChild(a)
-        toast({
+        toast({}
           title: "Export Complete",
           description: "System logs have been exported successfully.",
         })
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to export logs:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to export logs. Please try again.",
         variant: "destructive",
@@ -199,23 +199,19 @@ export default function SystemLogs() {
     }
   }
 
-  const getLevelBadge = (level: string) => {
-    const variants = {
-      debug: "outline",
+  const getLevelBadge = (level: string) => {}
+    const variants = { debug: "outline",
       info: "secondary",
       warning: "default",
       error: "destructive",
       critical: "destructive",
-    } as const
-
-    const colors = {
-      debug: "text-gray-600",
+    } as const;
+    const colors = { debug: "text-gray-600",
       info: "text-blue-600",
       warning: "text-yellow-600",
       error: "text-red-600",
       critical: "text-red-800",
-    } as const
-
+    } as const;
     return (
       <Badge variant={variants[level as keyof typeof variants]} className={colors[level as keyof typeof colors]}>
         {level.toUpperCase()}
@@ -223,7 +219,7 @@ export default function SystemLogs() {
     )
   }
 
-  const getLevelIcon = (level: string) => {
+  const getLevelIcon = (level: string) => {}
     switch (level) {
       case "debug":
         return <Info className="h-4 w-4 text-gray-500" />
@@ -239,7 +235,7 @@ export default function SystemLogs() {
     }
   }
 
-  const getCategoryIcon = (category: string) => {
+  const getCategoryIcon = (category: string) => {}
     switch (category) {
       case "auth":
         return <Shield className="h-4 w-4" />
@@ -333,7 +329,7 @@ export default function SystemLogs() {
                   {log.details?.statusCode && (
                     <div className="flex justify-between">
                       <span className="text-gray-600">Status:</span>
-                      <Badge variant={log.details.statusCode >= 400 ? "destructive" : "default"}>
+                      <Badge variant={log.details.statusCode >= 400 ? &quot;destructive&quot; : &quot;default"}>
                         {log.details.statusCode}
                       </Badge>
                     </div>
@@ -412,10 +408,10 @@ export default function SystemLogs() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => loadLogs(true)} disabled={isRefreshing}>
-            {isRefreshing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
-            Refresh
+            {isRefreshing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className=&quot;mr-2 h-4 w-4&quot; />}
+            Refresh;
           </Button>
-          <Button
+          <Button;
             variant="outline"
             size="sm"
             onClick={() => setAutoRefresh(!autoRefresh)}
@@ -426,7 +422,7 @@ export default function SystemLogs() {
           </Button>
           <Button variant="outline" size="sm" onClick={exportLogs}>
             <Download className="mr-2 h-4 w-4" />
-            Export
+            Export;
           </Button>
         </div>
       </div>
@@ -490,7 +486,7 @@ export default function SystemLogs() {
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input
+          <Input;
             placeholder="Search logs..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -563,7 +559,7 @@ export default function SystemLogs() {
               </TableHeader>
               <TableBody>
                 {logs.map((log) => (
-                  <TableRow
+                  <TableRow;
                     key={log.id}
                     className={cn(
                       log.level === "error" || log.level === "critical"
@@ -623,24 +619,24 @@ export default function SystemLogs() {
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-600">Showing {logs.length} logs</p>
         <div className="flex items-center gap-2">
-          <Button
+          <Button;
             variant="outline"
             size="sm"
             onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
           >
-            Previous
+            Previous;
           </Button>
           <span className="text-sm">
             Page {currentPage} of {totalPages}
           </span>
-          <Button
+          <Button;
             variant="outline"
             size="sm"
             onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
             disabled={currentPage === totalPages}
           >
-            Next
+            Next;
           </Button>
         </div>
       </div>

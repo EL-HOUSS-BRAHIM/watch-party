@@ -1,5 +1,4 @@
-'use client'
-
+import { Calendar, Check, CheckCircle, Clock, Gift, Heart, Lock, Play, Star, Target, Trophy, User, Users } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -7,74 +6,56 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useApiToast } from "@/hooks/use-toast"
-import { 
-  Gift,
-  Star,
-  Trophy,
-  Crown,
-  Zap,
-  Target,
-  Calendar,
-  Users,
-  Play,
-  MessageSquare,
-  Heart,
-  Clock,
-  Coins,
-  CheckCircle,
-  Lock,
-  Sparkles,
-  Award
-} from 'lucide-react'
 
-interface Reward {
-  id: string
-  name: string
-  description: string
+'use client'
+interface Reward {}
+  id: string;
+  name: string;
+  description: string;
   type: 'item' | 'currency' | 'badge' | 'title' | 'feature'
   category: 'daily' | 'weekly' | 'monthly' | 'achievement' | 'milestone' | 'seasonal'
-  value: {
-    coins?: number
-    premium?: number
-    itemId?: string
-    badgeId?: string
-    title?: string
-    feature?: string
+  value: {}
+    coins?: number;
+    premium?: number;
+    itemId?: string;
+    badgeId?: string;
+    title?: string;
+    feature?: string;
   }
-  requirements: {
+  requirements: {}
     type: 'login_streak' | 'parties_hosted' | 'parties_joined' | 'messages_sent' | 'friends_added' | 'watch_time' | 'level' | 'achievement'
-    target: number
-    current: number
-    description: string
+    target: number;
+    current: number;
+    description: string;
   }[]
   rarity: 'common' | 'rare' | 'epic' | 'legendary'
-  isClaimable: boolean
-  isClaimed: boolean
-  expiresAt?: string
-  unlockedAt?: string
-  preview?: string
-  icon: string
+  isClaimable: boolean;
+  isClaimed: boolean;
+  expiresAt?: string;
+  unlockedAt?: string;
+  preview?: string;
+  icon: string;
 }
 
-interface DailyReward {
-  day: number
-  reward: {
+interface DailyReward {}
+  day: number;
+  reward: {}
     type: 'coins' | 'premium' | 'item'
-    amount?: number
-    itemId?: string
-    itemName?: string
-    itemIcon?: string
+    amount?: number;
+    itemId?: string;
+    itemName?: string;
+    itemIcon?: string;
   }
-  isClaimed: boolean
-  isToday: boolean
-  isPast: boolean
+  isClaimed: boolean;
+  isToday: boolean;
+  isPast: boolean;
 }
 
-interface LoginStreak {
-  currentStreak: number
-  longestStreak: number
-  nextRewardAt: number
-  bonusMultiplier: number
+interface LoginStreak {}
+  currentStreak: number;
+  longestStreak: number;
+  nextRewardAt: number;
+  bonusMultiplier: number;
 }
 
 export function StoreRewards() {
@@ -92,22 +73,22 @@ export function StoreRewards() {
 
   const loadRewards = async () => {
     try {
-      const response = await apiRequest(() => fetch('/api/store/rewards'))
+      const response = await apiRequest(() => fetch(&apos;/api/store/rewards&apos;))
       if (response) {
         setRewards(response)
       }
-    } catch (error) {
+    } } catch {
       toastError(error, 'Failed to load rewards')
     }
   }
 
   const loadDailyRewards = async () => {
     try {
-      const response = await apiRequest(() => fetch('/api/store/rewards/daily'))
+      const response = await apiRequest(() => fetch(&apos;/api/store/rewards/daily'))
       if (response) {
         setDailyRewards(response)
       }
-    } catch (error) {
+    } } catch {
       toastError(error, 'Failed to load daily rewards')
     }
   }
@@ -118,14 +99,14 @@ export function StoreRewards() {
       if (response) {
         setLoginStreak(response)
       }
-    } catch (error) {
+    } } catch {
       toastError(error, 'Failed to load login streak')
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
-  const handleClaimReward = async (rewardId: string) => {
+  const handleClaimReward = async (rewardId: string) => {}
     const success = await apiRequest(
       () => fetch(`/api/store/rewards/${rewardId}/claim`, { method: 'POST' }),
       { successMessage: 'Reward claimed!', showSuccess: true }
@@ -136,7 +117,7 @@ export function StoreRewards() {
     }
   }
 
-  const handleClaimDailyReward = async (day: number) => {
+  const handleClaimDailyReward = async (day: number) => {}
     const success = await apiRequest(
       () => fetch(`/api/store/rewards/daily/${day}/claim`, { method: 'POST' }),
       { successMessage: 'Daily reward claimed!', showSuccess: true }
@@ -148,9 +129,8 @@ export function StoreRewards() {
     }
   }
 
-  const getRewardIcon = (type: string, icon: string) => {
-    if (icon) return icon
-    
+  const getRewardIcon = (type: string, icon: string) => {}
+    if (icon) return icon;
     switch (type) {
       case 'item': return '📦'
       case 'currency': return '💰'
@@ -161,7 +141,7 @@ export function StoreRewards() {
     }
   }
 
-  const getRarityColor = (rarity: string) => {
+  const getRarityColor = (rarity: string) => {}
     switch (rarity) {
       case 'common': return 'bg-gray-500'
       case 'rare': return 'bg-blue-500'
@@ -171,7 +151,7 @@ export function StoreRewards() {
     }
   }
 
-  const getRequirementIcon = (type: string) => {
+  const getRequirementIcon = (type: string) => {}
     switch (type) {
       case 'login_streak': return <Calendar className="h-4 w-4" />
       case 'parties_hosted': return <Play className="h-4 w-4" />
@@ -185,10 +165,10 @@ export function StoreRewards() {
     }
   }
 
-  const groupedRewards = rewards.reduce((acc, reward) => {
+  const groupedRewards = rewards.reduce((acc, reward) => {}
     if (!acc[reward.category]) acc[reward.category] = []
     acc[reward.category].push(reward)
-    return acc
+    return acc;
   }, {} as Record<string, Reward[]>)
 
   if (loading) {
@@ -232,7 +212,7 @@ export function StoreRewards() {
                 <span>Next reward in {loginStreak.nextRewardAt - loginStreak.currentStreak} days</span>
                 <span>{loginStreak.currentStreak}/{loginStreak.nextRewardAt}</span>
               </div>
-              <Progress 
+              <Progress;
                 value={(loginStreak.currentStreak / loginStreak.nextRewardAt) * 100} 
                 className="h-2"
               />
@@ -252,7 +232,7 @@ export function StoreRewards() {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
             {dailyRewards.map((dailyReward) => (
-              <DailyRewardCard
+              <DailyRewardCard;
                 key={dailyReward.day}
                 dailyReward={dailyReward}
                 onClaim={handleClaimDailyReward}
@@ -283,7 +263,7 @@ export function StoreRewards() {
         </TabsList>
 
         <TabsContent value="all" className="space-y-4">
-          <RewardsList 
+          <RewardsList;
             rewards={rewards}
             onClaim={handleClaimReward}
             getRarityColor={getRarityColor}
@@ -293,7 +273,7 @@ export function StoreRewards() {
         </TabsContent>
 
         <TabsContent value="claimable" className="space-y-4">
-          <RewardsList 
+          <RewardsList;
             rewards={rewards.filter(r => r.isClaimable && !r.isClaimed)}
             onClaim={handleClaimReward}
             getRarityColor={getRarityColor}
@@ -303,7 +283,7 @@ export function StoreRewards() {
         </TabsContent>
 
         <TabsContent value="achievement" className="space-y-4">
-          <RewardsList 
+          <RewardsList;
             rewards={groupedRewards.achievement || []}
             onClaim={handleClaimReward}
             getRarityColor={getRarityColor}
@@ -313,7 +293,7 @@ export function StoreRewards() {
         </TabsContent>
 
         <TabsContent value="milestone" className="space-y-4">
-          <RewardsList 
+          <RewardsList;
             rewards={groupedRewards.milestone || []}
             onClaim={handleClaimReward}
             getRarityColor={getRarityColor}
@@ -323,7 +303,7 @@ export function StoreRewards() {
         </TabsContent>
 
         <TabsContent value="seasonal" className="space-y-4">
-          <RewardsList 
+          <RewardsList;
             rewards={groupedRewards.seasonal || []}
             onClaim={handleClaimReward}
             getRarityColor={getRarityColor}
@@ -336,14 +316,14 @@ export function StoreRewards() {
   )
 }
 
-function DailyRewardCard({
+function DailyRewardCard({}
   dailyReward,
-  onClaim
-}: {
-  dailyReward: DailyReward
-  onClaim: (day: number) => void
-}) {
-  const getRewardDisplay = () => {
+  onClaim;
+}: {}
+  dailyReward: DailyReward;
+  onClaim: (day: number) => void;
+}) {}
+  const getRewardDisplay = () => {}
     switch (dailyReward.reward.type) {
       case 'coins':
         return (
@@ -362,7 +342,7 @@ function DailyRewardCard({
       case 'item':
         return (
           <div className="text-center">
-            <div className="text-2xl mb-1">{dailyReward.reward.itemIcon || '📦'}</div>
+            <div className="text-2xl mb-1">{dailyReward.reward.itemIcon || &apos;📦&apos;}</div>
             <div className="text-xs">{dailyReward.reward.itemName}</div>
           </div>
         )
@@ -375,23 +355,21 @@ function DailyRewardCard({
     <Card className={`relative ${dailyReward.isToday ? 'ring-2 ring-primary' : ''} ${dailyReward.isClaimed ? 'opacity-50' : ''}`}>
       <CardContent className="p-3 text-center">
         <div className="text-sm font-semibold mb-2">Day {dailyReward.day}</div>
-        
         <div className="flex justify-center mb-3">
           {getRewardDisplay()}
         </div>
-        
         {dailyReward.isClaimed ? (
           <div className="flex items-center justify-center space-x-1 text-green-500">
             <CheckCircle className="h-4 w-4" />
             <span className="text-xs">Claimed</span>
           </div>
         ) : dailyReward.isToday ? (
-          <Button 
+          <Button;
             size="sm" 
             onClick={() => onClaim(dailyReward.day)}
             className="w-full"
           >
-            Claim
+            Claim;
           </Button>
         ) : dailyReward.isPast ? (
           <div className="flex items-center justify-center space-x-1 text-muted-foreground">
@@ -409,19 +387,19 @@ function DailyRewardCard({
   )
 }
 
-function RewardsList({
+function RewardsList({}
   rewards,
   onClaim,
   getRarityColor,
   getRewardIcon,
-  getRequirementIcon
-}: {
+  getRequirementIcon;
+}: {}
   rewards: Reward[]
-  onClaim: (rewardId: string) => void
-  getRarityColor: (rarity: string) => string
-  getRewardIcon: (type: string, icon: string) => string
-  getRequirementIcon: (type: string) => React.ReactNode
-}) {
+  onClaim: (rewardId: string) => void;
+  getRarityColor: (rarity: string) => string;
+  getRewardIcon: (type: string, icon: string) => string;
+  getRequirementIcon: (type: string) => React.ReactNode;
+}) {}
   if (rewards.length === 0) {
     return (
       <Card>
@@ -439,7 +417,7 @@ function RewardsList({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {rewards.map((reward) => (
-        <RewardCard
+        <RewardCard;
           key={reward.id}
           reward={reward}
           onClaim={onClaim}
@@ -452,20 +430,20 @@ function RewardsList({
   )
 }
 
-function RewardCard({
+function RewardCard({}
   reward,
   onClaim,
   getRarityColor,
   getRewardIcon,
-  getRequirementIcon
-}: {
-  reward: Reward
-  onClaim: (rewardId: string) => void
-  getRarityColor: (rarity: string) => string
-  getRewardIcon: (type: string, icon: string) => string
-  getRequirementIcon: (type: string) => React.ReactNode
-}) {
-  const getRewardValue = () => {
+  getRequirementIcon;
+}: {}
+  reward: Reward;
+  onClaim: (rewardId: string) => void;
+  getRarityColor: (rarity: string) => string;
+  getRewardIcon: (type: string, icon: string) => string;
+  getRequirementIcon: (type: string) => React.ReactNode;
+}) {}
+  const getRewardValue = () => {}
     if (reward.value.coins) {
       return (
         <div className="flex items-center space-x-1">
@@ -474,7 +452,6 @@ function RewardCard({
         </div>
       )
     }
-    
     if (reward.value.premium) {
       return (
         <div className="flex items-center space-x-1">
@@ -483,16 +460,14 @@ function RewardCard({
         </div>
       )
     }
-    
     if (reward.value.title) {
       return (
         <div className="flex items-center space-x-1">
           <Crown className="h-4 w-4 text-purple-500" />
-          <span>"{reward.value.title}"</span>
+          <span>&quot;{reward.value.title}&quot;</span>
         </div>
       )
     }
-    
     return <span className="text-sm">Special Reward</span>
   }
 
@@ -500,22 +475,20 @@ function RewardCard({
     <Card className={`relative overflow-hidden ${reward.isClaimed ? 'opacity-50' : ''}`}>
       {/* Rarity Border */}
       <div className={`absolute top-0 left-0 right-0 h-1 ${getRarityColor(reward.rarity)}`} />
-      
       {/* Status Badge */}
       {reward.isClaimed && (
         <div className="absolute top-2 right-2">
           <Badge className="bg-green-500 text-white">
             <CheckCircle className="h-3 w-3 mr-1" />
-            Claimed
+            Claimed;
           </Badge>
         </div>
       )}
-      
       {reward.isClaimable && !reward.isClaimed && (
         <div className="absolute top-2 right-2">
           <Badge className="bg-primary text-white">
             <Sparkles className="h-3 w-3 mr-1" />
-            Ready
+            Ready;
           </Badge>
         </div>
       )}
@@ -534,7 +507,6 @@ function RewardCard({
 
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">{reward.description}</p>
-        
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Reward:</span>
           {getRewardValue()}
@@ -550,11 +522,11 @@ function RewardCard({
                   {getRequirementIcon(req.type)}
                   <span>{req.description}</span>
                 </div>
-                <span className={req.current >= req.target ? 'text-green-500' : ''}>
+                <span className={req.current >= req.target ? &apos;text-green-500&apos; : &apos;'}>
                   {req.current}/{req.target}
                 </span>
               </div>
-              <Progress 
+              <Progress;
                 value={(req.current / req.target) * 100} 
                 className="h-1"
               />
@@ -572,17 +544,17 @@ function RewardCard({
           {reward.isClaimed ? (
             <Button variant="outline" disabled className="w-full">
               <CheckCircle className="h-4 w-4 mr-2" />
-              Claimed
+              Claimed;
             </Button>
           ) : reward.isClaimable ? (
-            <Button onClick={() => onClaim(reward.id)} className="w-full">
+            <Button onClick={() => onClaim(reward.id)} className=&quot;w-full&quot;>
               <Gift className="h-4 w-4 mr-2" />
-              Claim Reward
+              Claim Reward;
             </Button>
           ) : (
             <Button variant="outline" disabled className="w-full">
               <Lock className="h-4 w-4 mr-2" />
-              Requirements Not Met
+              Requirements Not Met;
             </Button>
           )}
         </div>

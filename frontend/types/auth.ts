@@ -1,4 +1,6 @@
-import type {
+import { User } from "lucide-react"
+import type {}
+
   AuthResponse,
   ChangePasswordRequest,
   ForgotPasswordRequest,
@@ -9,8 +11,8 @@ import type {
   UserProfile,
 } from "@/lib/api/types"
 
-// Re-export auth types for convenience
-export type {
+// Re-export auth types for convenience;
+export type {}
   User,
   AuthResponse,
   LoginCredentials,
@@ -21,13 +23,13 @@ export type {
   UserProfile,
 } from "@/lib/api/types"
 
-export interface AuthContextType {
-  user: User | null
-  isLoading: boolean
-  isAuthenticated: boolean
-  isAdmin: boolean
-  accessToken: string | null
-  refreshToken: string | null
+export interface AuthContextType {}
+  user: User | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  isAdmin: boolean;
+  accessToken: string | null;
+  refreshToken: string | null;
   login: (email: string, password: string) => Promise<void>
   register: (userData: RegisterData) => Promise<void>
   logout: () => Promise<void>
@@ -38,6 +40,6 @@ export interface AuthContextType {
   socialLogin: (provider: "google" | "github") => Promise<void>
   refreshTokens: () => Promise<void>
   updateProfile: (data: Partial<User>) => Promise<void>
-  updateUser: (data: Partial<User>) => void
+  updateUser: (data: Partial<User>) => void;
   refreshUser: () => Promise<void>
 }

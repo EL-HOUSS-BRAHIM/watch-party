@@ -1,16 +1,16 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import { Shield, ShieldAlert, RotateCcw, Search, Trash2, AlertTriangle, UserX, Calendar, Loader2, Users } from "lucide-react"
+import { AlertTriangle, Calendar, Loader2, Search, Shield } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
-import {
+import {}
+import { formatDistanceToNow } from "date-fns"
+
+"use client"
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -18,34 +18,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { formatDistanceToNow } from "date-fns"
-
-interface BlockedUser {
-  id: string
-  blockedUser: {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    email: string
-    avatar?: string
-    bio?: string
+interface BlockedUser {}
+  id: string;
+  blockedUser: {}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    avatar?: string;
+    bio?: string;
   }
-  blockedAt: string
-  reason?: string
-  blockedBy: {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
+  blockedAt: string;
+  reason?: string;
+  blockedBy: {}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
   }
 }
 
-interface BlockListManagementProps {
-  className?: string
+interface BlockListManagementProps {}
+  className?: string;
 }
 
-export default function BlockListManagement({ className }: BlockListManagementProps) {
+export default function BlockListManagement({ className }: BlockListManagementProps) {}
   const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([])
   const [filteredUsers, setFilteredUsers] = useState<BlockedUser[]>([])
   const [searchQuery, setSearchQuery] = useState("")
@@ -60,12 +58,12 @@ export default function BlockListManagement({ className }: BlockListManagementPr
   }, [])
 
   useEffect(() => {
-    // Filter users based on search query
+    // Filter users based on search query;
     if (!searchQuery) {
       setFilteredUsers(blockedUsers)
-    } else {
-      const filtered = blockedUsers.filter(block => {
-        const user = block.blockedUser
+    } else {}
+      const filtered = blockedUsers.filter(block => {}
+        const user = block.blockedUser;
         const query = searchQuery.toLowerCase()
         return (
           user.username.toLowerCase().includes(query) ||
@@ -81,8 +79,8 @@ export default function BlockListManagement({ className }: BlockListManagementPr
   const loadBlockedUsers = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/blocks/", {
-        headers: {
+      const response = await fetch("/api/users/blocks/", {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -91,62 +89,62 @@ export default function BlockListManagement({ className }: BlockListManagementPr
         const data = await response.json()
         setBlockedUsers(data.blocks || [])
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to load blocked users:", error)
-      toast({
+      toast({}
         title: "Failed to load blocked users",
         description: "Please try refreshing the page",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const unblockUser = async (blockId: string, username: string) => {
+  const unblockUser = async (blockId: string, username: string) => {}
     setProcessingUsers(prev => new Set(prev).add(blockId))
 
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/blocks/${blockId}/`, {
+      const response = await fetch(`/api/users/blocks/${blockId}/`, {}
         method: "DELETE",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
         setBlockedUsers(prev => prev.filter(block => block.id !== blockId))
-        toast({
+        toast({}
           title: "User unblocked",
           description: `${username} has been unblocked successfully`,
         })
-      } else {
+      } else {}
         throw new Error("Failed to unblock user")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to unblock user:", error)
-      toast({
+      toast({}
         title: "Failed to unblock user",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {
-      setProcessingUsers(prev => {
+    } finally {}
+      setProcessingUsers(prev => {}
         const newSet = new Set(prev)
         newSet.delete(blockId)
-        return newSet
+        return newSet;
       })
       setUserToUnblock(null)
     }
   }
 
-  const blockUser = async (userId: string, reason?: string) => {
+  const blockUser = async (userId: string, reason?: string) => {}
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/${userId}/block/`, {
+      const response = await fetch(`/api/users/${userId}/block/`, {}
         method: "POST",
-        headers: {
+        headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
@@ -154,17 +152,17 @@ export default function BlockListManagement({ className }: BlockListManagementPr
       })
 
       if (response.ok) {
-        await loadBlockedUsers() // Refresh the list
-        toast({
+        await loadBlockedUsers() // Refresh the list;
+        toast({}
           title: "User blocked",
           description: "The user has been blocked successfully",
         })
-      } else {
+      } else {}
         throw new Error("Failed to block user")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to block user:", error)
-      toast({
+      toast({}
         title: "Failed to block user",
         description: "Please try again",
         variant: "destructive",
@@ -172,15 +170,13 @@ export default function BlockListManagement({ className }: BlockListManagementPr
     }
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {
+  const getUserInitials = (firstName: string, lastName: string) => {}
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase()
   }
 
-  const getReasonDisplay = (reason?: string) => {
+  const getReasonDisplay = (reason?: string) => {}
     if (!reason) return { label: "No reason provided", color: "secondary" }
-    
-    const reasonMap: Record<string, { label: string; color: string }> = {
-      harassment: { label: "Harassment", color: "destructive" },
+    const reasonMap: Record<string, { label: string; color: string }> = { harassment: { label: "Harassment", color: "destructive" },
       spam: { label: "Spam", color: "warning" },
       inappropriate: { label: "Inappropriate Content", color: "warning" },
       abuse: { label: "Abuse", color: "destructive" },
@@ -190,9 +186,9 @@ export default function BlockListManagement({ className }: BlockListManagementPr
     return reasonMap[reason] || { label: reason, color: "secondary" }
   }
 
-  const BlockedUserCard = ({ block }: { block: BlockedUser }) => {
+  const BlockedUserCard = ({ block }: { block: BlockedUser }) => {}
     const isProcessing = processingUsers.has(block.id)
-    const { blockedUser } = block
+    const { blockedUser } = block;
     const reasonDisplay = getReasonDisplay(block.reason)
 
     return (
@@ -221,18 +217,18 @@ export default function BlockListManagement({ className }: BlockListManagementPr
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm">
-                        Actions
+                        Actions;
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Block Actions</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem
+                      <DropdownMenuItem;
                         onClick={() => setUserToUnblock(block.id)}
                         className="text-green-600 dark:text-green-400"
                       >
                         <RotateCcw className="h-4 w-4 mr-2" />
-                        Unblock User
+                        Unblock User;
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -246,7 +242,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
               )}
 
               <div className="flex items-center gap-2 mb-2">
-                <Badge variant={reasonDisplay.color as any} className="text-xs">
+                <Badge variant={reasonDisplay.color as Record<string, unknown>} className=&quot;text-xs&quot;>
                   <ShieldAlert className="h-3 w-3 mr-1" />
                   {reasonDisplay.label}
                 </Badge>
@@ -289,7 +285,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            Blocked Users
+            Blocked Users;
             {blockedUsers.length > 0 && (
               <Badge variant="secondary">
                 {blockedUsers.length}
@@ -305,7 +301,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
           {blockedUsers.length > 0 && (
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
+              <Input;
                 placeholder="Search blocked users..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -320,12 +316,12 @@ export default function BlockListManagement({ className }: BlockListManagementPr
               {searchQuery ? (
                 <>
                   <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>No blocked users found matching "{searchQuery}"</p>
+                  <p>No blocked users found matching &quot;{searchQuery}&quot;</p>
                 </>
               ) : (
                 <>
                   <Shield className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>You haven't blocked any users</p>
+                  <p>You haven&apos;t blocked any users</p>
                   <p className="text-sm">Blocked users will appear here when you block someone</p>
                 </>
               )}
@@ -339,7 +335,6 @@ export default function BlockListManagement({ className }: BlockListManagementPr
                   `${blockedUsers.length} blocked user${blockedUsers.length === 1 ? '' : 's'}`
                 )}
               </div>
-              
               {filteredUsers.map((block) => (
                 <BlockedUserCard key={block.id} block={block} />
               ))}
@@ -357,8 +352,8 @@ export default function BlockListManagement({ className }: BlockListManagementPr
                     <p className="font-medium">About blocking users:</p>
                     <ul className="space-y-1 text-muted-foreground">
                       <li>• Blocked users cannot send you messages or friend requests</li>
-                      <li>• They won't be able to see your profile or join your parties</li>
-                      <li>• You won't see their content in shared spaces</li>
+                      <li>• They won&apos;t be able to see your profile or join your parties</li>
+                      <li>• You won&apos;t see their content in shared spaces</li>
                       <li>• You can unblock them at any time</li>
                     </ul>
                   </div>
@@ -380,8 +375,8 @@ export default function BlockListManagement({ className }: BlockListManagementPr
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={() => {
+            <AlertDialogAction;
+              onClick={() => {}
                 if (userToUnblock) {
                   const block = blockedUsers.find(b => b.id === userToUnblock)
                   if (block) {
@@ -392,7 +387,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
               className="bg-green-600 text-white hover:bg-green-700"
             >
               <RotateCcw className="h-4 w-4 mr-2" />
-              Unblock User
+              Unblock User;
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

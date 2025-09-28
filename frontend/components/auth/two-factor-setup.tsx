@@ -1,6 +1,5 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { Check, CheckCircle, Copy, Shield } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,13 +7,13 @@ import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
 import { QRCodeSVG } from "qrcode.react"
-import { Copy, CheckCircle, AlertCircle, Shield } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { authAPI } from "@/lib/api"
 
-interface TwoFactorSetupData {
-  qr_code: string
-  secret_key: string
+"use client"
+interface TwoFactorSetupData {}
+  qr_code: string;
+  secret_key: string;
   backup_codes: string[]
 }
 
@@ -25,7 +24,6 @@ export function TwoFactorSetup() {
   const [isSetupComplete, setIsSetupComplete] = useState(false)
   const [error, setError] = useState("")
   const [copiedBackupCodes, setCopiedBackupCodes] = useState(false)
-  
   const { toast } = useToast()
 
   useEffect(() => {
@@ -40,30 +38,30 @@ export function TwoFactorSetup() {
       }
 
       const qrValue = response.qr_code || `otpauth://totp/WatchParty?secret=${response.secret}`
-      setSetupData({
+      setSetupData({}
         qr_code: qrValue,
         secret_key: response.secret,
         backup_codes: response.backup_codes || [],
       })
-    } catch (err) {
+    } } catch {
       setError("Failed to generate 2FA setup data")
     }
   }
 
-  const copyToClipboard = (text: string, type: string) => {
+  const copyToClipboard = (text: string, type: string) => {}
     navigator.clipboard.writeText(text)
-    toast({
+    toast({}
       title: "Copied!",
       description: `${type} copied to clipboard`,
     })
   }
 
-  const copyBackupCodes = () => {
+  const copyBackupCodes = () => {}
     if (setupData) {
       const codes = setupData.backup_codes.join("\n")
       navigator.clipboard.writeText(codes)
       setCopiedBackupCodes(true)
-      toast({
+      toast({}
         title: "Backup codes copied!",
         description: "Store these codes in a safe place",
       })
@@ -73,7 +71,7 @@ export function TwoFactorSetup() {
   const verifyAndEnable = async () => {
     if (!verificationCode) {
       setError("Please enter the verification code")
-      return
+      return;
     }
 
     setIsVerifying(true)
@@ -90,13 +88,13 @@ export function TwoFactorSetup() {
       }
 
       setIsSetupComplete(true)
-      toast({
+      toast({}
         title: "2FA Enabled!",
         description: "Two-factor authentication has been successfully enabled",
       })
-    } catch (err: any) {
+    } } catch {
       setError(err?.message || "Invalid verification code. Please try again.")
-    } finally {
+    } finally {}
       setIsVerifying(false)
     }
   }
@@ -110,15 +108,15 @@ export function TwoFactorSetup() {
           </div>
           <CardTitle className="text-green-600 dark:text-green-400">2FA Enabled Successfully!</CardTitle>
           <CardDescription>
-            Your account is now protected with two-factor authentication
+            Your account is now protected with two-factor authentication;
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Button 
-            onClick={() => window.location.href = "/dashboard"}
+          <Button;
+            onClick={() => window.location.href = &quot;/dashboard&quot;}
             className="w-full"
           >
-            Continue to Dashboard
+            Continue to Dashboard;
           </Button>
         </CardContent>
       </Card>
@@ -147,7 +145,7 @@ export function TwoFactorSetup() {
           </div>
           <CardTitle>Enable Two-Factor Authentication</CardTitle>
           <CardDescription>
-            Add an extra layer of security to your account
+            Add an extra layer of security to your account;
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -172,23 +170,23 @@ export function TwoFactorSetup() {
             <div className="space-y-2">
               <Label htmlFor="secret-key">Secret Key</Label>
               <div className="flex gap-2">
-                <Input
+                <Input;
                   id="secret-key"
                   value={setupData.secret_key}
-                  readOnly
+                  readOnly;
                   className="font-mono text-xs"
                 />
-                <Button
+                <Button;
                   type="button"
                   variant="outline"
                   size="icon"
-                  onClick={() => copyToClipboard(setupData.secret_key, "Secret key")}
+                  onClick={() => copyToClipboard(setupData.secret_key, &quot;Secret key&quot;)}
                 >
                   <Copy className="w-4 h-4" />
                 </Button>
               </div>
               <p className="text-xs text-muted-foreground">
-                If you can't scan the QR code, manually enter this secret key in your authenticator app
+                If you can't scan the QR code, manually enter this secret key in your authenticator app;
               </p>
             </div>
           </div>
@@ -201,7 +199,7 @@ export function TwoFactorSetup() {
             <div className="space-y-4">
               <div>
                 <Label htmlFor="verification-code">Enter 6-digit code from your app</Label>
-                <Input
+                <Input;
                   id="verification-code"
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value)}
@@ -218,7 +216,7 @@ export function TwoFactorSetup() {
                 </Alert>
               )}
 
-              <Button
+              <Button;
                 onClick={verifyAndEnable}
                 disabled={isVerifying || verificationCode.length !== 6}
                 className="w-full"
@@ -234,10 +232,10 @@ export function TwoFactorSetup() {
       <Card>
         <CardHeader>
           <CardTitle className="text-orange-600 dark:text-orange-400">
-            Important: Save Your Backup Codes
+            Important: Save Your Backup Codes;
           </CardTitle>
           <CardDescription>
-            These codes can be used to access your account if you lose your authenticator device
+            These codes can be used to access your account if you lose your authenticator device;
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -252,7 +250,7 @@ export function TwoFactorSetup() {
               </div>
             </div>
 
-            <Button
+            <Button;
               onClick={copyBackupCodes}
               variant="outline"
               className="w-full"
@@ -261,12 +259,12 @@ export function TwoFactorSetup() {
               {copiedBackupCodes ? (
                 <>
                   <CheckCircle className="w-4 h-4 mr-2" />
-                  Backup Codes Copied
+                  Backup Codes Copied;
                 </>
               ) : (
                 <>
                   <Copy className="w-4 h-4 mr-2" />
-                  Copy Backup Codes
+                  Copy Backup Codes;
                 </>
               )}
             </Button>

@@ -1,56 +1,43 @@
-'use client'
-
+import { Image, Search, TrendingUp } from "lucide-react"
 import { useState } from 'react'
+import Image from "next/image"
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-  Smile, 
-  Image, 
-  Gift, 
-  TrendingUp,
-  Search,
-  Heart,
-  Laugh,
-  ThumbsUp,
-  Flame
-} from 'lucide-react'
 
-interface EmojiGifPickerProps {
-  onEmojiSelect: (emoji: string) => void
-  onGifSelect: (gifUrl: string) => void
-  isOpen: boolean
-  onClose: () => void
+'use client'
+interface EmojiGifPickerProps {}
+  onEmojiSelect: (emoji: string) => void;
+  onGifSelect: (gifUrl: string) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const EMOJI_CATEGORIES = {
-  recent: {
+const EMOJI_CATEGORIES = { recent: {}
     name: 'Recently Used',
     emojis: ['😂', '❤️', '👍', '🔥', '😍', '😊', '👏', '🎉']
   },
-  smileys: {
+  smileys: {}
     name: 'Smileys & People',
-    emojis: [
+    emojis: []
       '😀', '😃', '😄', '😁', '😆', '😅', '😂', '🤣',
       '😊', '😇', '🙂', '😉', '😍', '🥰', '😘', '😗',
       '☺️', '😚', '😙', '😋', '😛', '😜', '🤪', '😝',
       '🤑', '🤗', '🤭', '🤫', '🤔', '🤐', '🤨', '😐'
     ]
   },
-  hearts: {
+  hearts: {}
     name: 'Hearts',
-    emojis: [
+    emojis: []
       '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍',
       '🤎', '💔', '❣️', '💕', '💞', '💓', '💗', '💖',
       '💘', '💝', '💟', '♥️', '💯'
     ]
   },
-  activities: {
+  activities: {}
     name: 'Activities',
-    emojis: [
+    emojis: []
       '🎉', '🎊', '🎈', '🎁', '🎀', '🎂', '🎄', '🎃',
       '🎆', '🎇', '🧨', '✨', '🎋', '🎍', '🎎', '🎏',
       '🎐', '🎑', '🧧', '🎗️', '🎟️', '🎫', '🎖️', '🏆'
@@ -58,26 +45,26 @@ const EMOJI_CATEGORIES = {
   }
 }
 
-const TRENDING_GIFS = [
-  {
+const TRENDING_GIFS = []
+  {}
     id: '1',
     url: 'https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif',
     title: 'Excited',
     tags: ['excited', 'happy', 'celebration']
   },
-  {
+  {}
     id: '2', 
     url: 'https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif',
     title: 'Laughing',
     tags: ['laugh', 'funny', 'lol']
   },
-  {
+  {}
     id: '3',
     url: 'https://media.giphy.com/media/26BROrSHlmyzzHf3i/giphy.gif',
     title: 'Applause',
     tags: ['clap', 'applause', 'good job']
   },
-  {
+  {}
     id: '4',
     url: 'https://media.giphy.com/media/l0HlvtIPzPdt2usKs/giphy.gif',
     title: 'Mind Blown',
@@ -85,25 +72,23 @@ const TRENDING_GIFS = [
   }
 ]
 
-export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: EmojiGifPickerProps) {
+export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: EmojiGifPickerProps) {}
   const [searchTerm, setSearchTerm] = useState('')
   const [activeTab, setActiveTab] = useState('emojis')
   const [selectedCategory, setSelectedCategory] = useState('recent')
 
-  if (!isOpen) return null
-
-  const filteredEmojis = searchTerm 
+  if (!isOpen) return null;
+  const filteredEmojis = searchTerm;
     ? Object.values(EMOJI_CATEGORIES).flatMap(cat => cat.emojis)
         .filter(emoji => emoji.includes(searchTerm))
     : EMOJI_CATEGORIES[selectedCategory as keyof typeof EMOJI_CATEGORIES]?.emojis || []
 
-  const filteredGifs = searchTerm
+  const filteredGifs = searchTerm;
     ? TRENDING_GIFS.filter(gif => 
         gif.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         gif.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
       )
-    : TRENDING_GIFS
-
+    : TRENDING_GIFS;
   return (
     <div className="absolute bottom-12 left-0 z-50">
       <Card className="w-80 shadow-lg border-2">
@@ -114,10 +99,9 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
               ×
             </Button>
           </div>
-          
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            <Input
+            <Input;
               placeholder="Search emojis or GIFs..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -131,11 +115,11 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
             <TabsList className="grid w-full grid-cols-2 mx-4 mb-4">
               <TabsTrigger value="emojis" className="flex items-center gap-2">
                 <Smile className="w-4 h-4" />
-                Emojis
+                Emojis;
               </TabsTrigger>
               <TabsTrigger value="gifs" className="flex items-center gap-2">
-                <Image className="w-4 h-4" />
-                GIFs
+                <Image className="w-4 h-4" alt="" />
+                GIFs;
               </TabsTrigger>
             </TabsList>
 
@@ -143,7 +127,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
               {!searchTerm && (
                 <div className="flex gap-1 px-4 mb-3 overflow-x-auto">
                   {Object.entries(EMOJI_CATEGORIES).map(([key, category]) => (
-                    <Button
+                    <Button;
                       key={key}
                       variant={selectedCategory === key ? "default" : "ghost"}
                       size="sm"
@@ -158,11 +142,11 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
 
               <div className="grid grid-cols-8 gap-1 p-4 max-h-64 overflow-y-auto">
                 {filteredEmojis.map((emoji, index) => (
-                  <Button
+                  <Button;
                     key={index}
                     variant="ghost"
                     size="sm"
-                    onClick={() => {
+                    onClick={() => {}
                       onEmojiSelect(emoji)
                       onClose()
                     }}
@@ -184,19 +168,22 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
 
               <div className="grid grid-cols-2 gap-2 p-4 max-h-64 overflow-y-auto">
                 {filteredGifs.map((gif) => (
-                  <div
+                  <div;
                     key={gif.id}
                     className="relative cursor-pointer rounded-lg overflow-hidden hover:opacity-80 transition-opacity"
-                    onClick={() => {
+                    onClick={() => {}
                       onGifSelect(gif.url)
                       onClose()
                     }}
                   >
-                    <img
-                      src={gif.url}
-                      alt={gif.title}
-                      className="w-full h-24 object-cover"
-                    />
+                    <div className="relative w-full h-24">
+                      <Image;
+                        src={gif.url}
+                        alt={gif.title || "GIF"}
+                        fill;
+                        className="object-cover"
+                      />
+                    </div>
                     <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-xs p-1">
                       {gif.title}
                     </div>
@@ -206,7 +193,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
 
               {filteredGifs.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
-                  <Image className="w-8 h-8 mx-auto mb-2" />
+                  <Image className="w-8 h-8 mx-auto mb-2" alt="" />
                   <p>No GIFs found</p>
                 </div>
               )}

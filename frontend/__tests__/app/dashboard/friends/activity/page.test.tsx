@@ -8,25 +8,24 @@ type Mock = ReturnType<typeof jest.fn>
 const useToastMock: Mock = jest.fn()
 const getActivityMock: Mock = jest.fn()
 
-// Mock the API modules
-jest.mock('@/lib/api', () => ({
-  usersAPI: {
+// Mock the API modules;
+jest.mock('@/lib/api', () => ({}
+  usersAPI: {}
     getActivity: (...args: unknown[]) => getActivityMock(...args),
   },
 }))
 
-// Mock the toast hook
-jest.mock('@/hooks/use-toast', () => ({
+// Mock the toast hook;
+jest.mock('@/hooks/use-toast', () => ({}
   useToast: (...args: unknown[]) => useToastMock(...args),
 }))
 
 const mockToast: Mock = jest.fn()
 
-const mockActivityResponse = {
-  results: [
-    {
+const mockActivityResponse = { results: []
+    {}
       id: '1',
-      user: {
+      user: {}
         id: '1',
         username: 'testuser1',
         displayName: 'Test User 1',
@@ -38,7 +37,7 @@ const mockActivityResponse = {
       },
       activityType: 'video_watch',
       activity_type: 'video_watch',
-      metadata: {
+      metadata: {}
         title: 'Test Video',
         description: 'A great test video',
         thumbnail: '/test-thumb.jpg',
@@ -49,9 +48,9 @@ const mockActivityResponse = {
       created_at: '2025-01-01T12:00:00Z',
       privacy: 'public',
     },
-    {
+    {}
       id: '2',
-      user: {
+      user: {}
         id: '2',
         username: 'testuser2',
         displayName: 'Test User 2',
@@ -63,7 +62,7 @@ const mockActivityResponse = {
       },
       activityType: 'party_join',
       activity_type: 'party_join',
-      metadata: {
+      metadata: {}
         title: 'Test Party',
         partyId: 'party456',
         party_id: 'party456',
@@ -72,9 +71,9 @@ const mockActivityResponse = {
       created_at: '2025-01-01T11:30:00Z',
       privacy: 'friends',
     },
-    {
+    {}
       id: '3',
-      user: {
+      user: {}
         id: '3',
         username: 'testuser3',
         displayName: 'Test User 3',
@@ -84,7 +83,7 @@ const mockActivityResponse = {
       },
       activityType: 'achievement_unlock',
       activity_type: 'achievement_unlock',
-      metadata: {
+      metadata: {}
         title: 'First Watch',
         achievementId: 'ach789',
         achievement_id: 'ach789',
@@ -96,8 +95,8 @@ const mockActivityResponse = {
   ],
 }
 
-describe('FriendsActivityFeed', () => {
-  beforeEach(() => {
+describe('FriendsActivityFeed', () => {}
+  beforeEach(() => {}
     jest.clearAllMocks()
     useToastMock.mockReset()
     mockToast.mockReset()
@@ -110,7 +109,7 @@ describe('FriendsActivityFeed', () => {
   it('fetches activities on mount', async () => {
     render(<FriendsActivityFeed />)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(usersAPI.getActivity).toHaveBeenCalledWith({ page: 1 })
     })
 
@@ -122,15 +121,15 @@ describe('FriendsActivityFeed', () => {
   it('applies activity type filter', async () => {
     render(<FriendsActivityFeed />)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(screen.getByText('Test Video')).toBeInTheDocument()
     })
 
     const videosTab = screen.getByRole('tab', { name: /videos/i })
     fireEvent.click(videosTab)
 
-    await waitFor(() => {
-      expect(usersAPI.getActivity).toHaveBeenCalledWith({
+    await waitFor(() => {}
+      expect(usersAPI.getActivity).toHaveBeenCalledWith({}
         page: 1,
         type: 'video_watch'
       })
@@ -140,7 +139,7 @@ describe('FriendsActivityFeed', () => {
   it('applies timeframe filter', async () => {
     render(<FriendsActivityFeed />)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(screen.getByText('Test Video')).toBeInTheDocument()
     })
 
@@ -150,8 +149,8 @@ describe('FriendsActivityFeed', () => {
     const weekOption = screen.getByRole('option', { name: /this week/i })
     fireEvent.click(weekOption)
 
-    await waitFor(() => {
-      expect(usersAPI.getActivity).toHaveBeenCalledWith({
+    await waitFor(() => {}
+      expect(usersAPI.getActivity).toHaveBeenCalledWith({}
         page: 1,
         timeframe: 'week'
       })
@@ -163,8 +162,8 @@ describe('FriendsActivityFeed', () => {
 
     render(<FriendsActivityFeed />)
 
-    await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith({
+    await waitFor(() => {}
+      expect(mockToast).toHaveBeenCalledWith({}
         title: 'Could not load friend activity',
         description: 'Please try again later.',
         variant: 'destructive',
@@ -177,20 +176,19 @@ describe('FriendsActivityFeed', () => {
 
     render(<FriendsActivityFeed />)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(screen.getByText(/no recent activity/i)).toBeInTheDocument()
     })
   })
 
-  it('displays loading state initially', () => {
+  it('displays loading state initially', () => {}
     render(<FriendsActivityFeed />)
     expect(screen.getByTestId('activity-loading')).toBeInTheDocument()
   })
 
   it('normalizes malformed activity data', async () => {
-    const malformedResponse = {
-      results: [
-        {
+    const malformedResponse = { results: []
+        {}
           id: '1',
           activity_type: null,
           user: null,
@@ -204,7 +202,7 @@ describe('FriendsActivityFeed', () => {
 
     render(<FriendsActivityFeed />)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(usersAPI.getActivity).toHaveBeenCalled()
     })
 
@@ -215,7 +213,7 @@ describe('FriendsActivityFeed', () => {
   it('filters activities locally based on selected type', async () => {
     render(<FriendsActivityFeed />)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(screen.getByText('Test Video')).toBeInTheDocument()
       expect(screen.getByText('Test Party')).toBeInTheDocument()
       expect(screen.getByText('First Watch')).toBeInTheDocument()
@@ -234,7 +232,7 @@ describe('FriendsActivityFeed', () => {
   it('refreshes data when filters change', async () => {
     render(<FriendsActivityFeed />)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(usersAPI.getActivity).toHaveBeenCalledTimes(1)
     })
 
@@ -243,7 +241,7 @@ describe('FriendsActivityFeed', () => {
     const weekOption = screen.getByRole('option', { name: /this week/i })
     fireEvent.click(weekOption)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(usersAPI.getActivity).toHaveBeenCalledTimes(2)
     })
   })

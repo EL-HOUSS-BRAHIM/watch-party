@@ -1,18 +1,19 @@
-"use client"
-
 import { useMemo } from "react"
-
-import {
-  marketingFeatures,
-  marketingStats,
-  marketingTestimonials,
-} from "@/app/(marketing)/data/home-content"
+import {}
 import { CtaBanner } from "@/components/marketing/cta-banner"
 import { FeatureGrid } from "@/components/marketing/feature-grid"
 import { HeroSection } from "@/components/marketing/hero-section"
 import { Testimonials } from "@/components/marketing/testimonials"
 import { useAuth } from "@/contexts/auth-context"
 import { Play } from "lucide-react"
+
+"use client"
+
+
+  marketingFeatures,
+  marketingStats,
+  marketingTestimonials,
+} from "@/app/(marketing)/data/home-content"
 
 export default function HomePage() {
   const { user, isLoading } = useAuth()
@@ -36,7 +37,7 @@ export default function HomePage() {
   }
 
   const content = useMemo(
-    () => ({
+    () => ({}
       features: marketingFeatures,
       stats: marketingStats,
       testimonials: marketingTestimonials,

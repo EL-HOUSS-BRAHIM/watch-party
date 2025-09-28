@@ -1,17 +1,18 @@
+import { User } from "lucide-react"
 import { UserStats } from "@/components/profile/user-stats"
 
-interface PageProps {
-  params: Promise<{
-    userId: string
+interface PageProps {}
+  params: Promise<{}
+    userId: string;
   }>
 }
 
-const StatsPage = async ({ params }: PageProps) => {
-  const { userId } = await params
+const StatsPage = async ({ params }: PageProps) => {}
+  const { userId } = await params;
   return <StatsPageClient userId={userId} />
 }
 
-function StatsPageClient({ userId }: { userId: string }) {
+function StatsPageClient({ userId }: { userId: string }) {}
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-4">Statistics</h1>
@@ -24,4 +25,4 @@ function StatsPageClient({ userId }: { userId: string }) {
   )
 }
 
-export default StatsPage
+export default StatsPage;

@@ -1,6 +1,5 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { Activity, Award, Calendar, Clock, Edit, Eye, EyeOff, Heart, Image, Link, Mail, MapPin, Play, Settings, Share, Star, Target, TrendingUp, Trophy, User, Users, Zap } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -8,80 +7,56 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
-import {
-  User,
-  Mail,
-  MapPin,
-  Calendar,
-  Globe,
-  Edit,
-  Settings,
-  Trophy,
-  Play,
-  Users,
-  Clock,
-  Star,
-  Heart,
-  Share2,
-  Eye,
-  EyeOff,
-  Award,
-  Zap,
-  Target,
-  TrendingUp,
-  Activity,
-  Film,
-  Sparkles,
-} from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
-interface UserProfile {
-  id: string
-  username: string
-  email: string
-  displayName: string
-  bio: string
-  avatar: string
-  coverImage: string
-  location: string
-  website: string
-  birthDate: string
-  joinDate: string
-  isPublic: boolean
-  showEmail: boolean
-  showLocation: boolean
-  showBirthDate: boolean
-  stats: {
-    watchParties: number
-    hoursWatched: number
-    friendsCount: number
-    achievementsCount: number
-    favoriteMovies: number
-    totalRatings: number
-    averageRating: number
-    streakDays: number
+"use client"
+interface UserProfile {}
+  id: string;
+  username: string;
+  email: string;
+  displayName: string;
+  bio: string;
+  avatar: string;
+  coverImage: string;
+  location: string;
+  website: string;
+  birthDate: string;
+  joinDate: string;
+  isPublic: boolean;
+  showEmail: boolean;
+  showLocation: boolean;
+  showBirthDate: boolean;
+  stats: {}
+    watchParties: number;
+    hoursWatched: number;
+    friendsCount: number;
+    achievementsCount: number;
+    favoriteMovies: number;
+    totalRatings: number;
+    averageRating: number;
+    streakDays: number;
   }
-  recentActivity: Array<{
-    id: string
+  recentActivity: Array<{}
+    id: string;
     type: "party" | "rating" | "friend" | "achievement"
-    title: string
-    description: string
-    timestamp: string
-    icon: string
+    title: string;
+    description: string;
+    timestamp: string;
+    icon: string;
   }>
-  achievements: Array<{
-    id: string
-    name: string
-    description: string
-    icon: string
-    unlockedAt: string
+  achievements: Array<{}
+    id: string;
+    name: string;
+    description: string;
+    icon: string;
+    unlockedAt: string;
     rarity: "common" | "rare" | "epic" | "legendary"
   }>
-  favoriteGenres: Array<{
-    name: string
-    count: number
-    percentage: number
+  favoriteGenres: Array<{}
+    name: string;
+    count: number;
+    percentage: number;
   }>
 }
 
@@ -102,8 +77,8 @@ export default function ProfilePage() {
   const fetchProfile = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/profile/", {
-        headers: {
+      const response = await fetch("/api/users/profile/", {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -111,30 +86,30 @@ export default function ProfilePage() {
       if (response.ok) {
         const data = await response.json()
         setProfile(data)
-      } else {
+      } else {}
         throw new Error("Failed to fetch profile")
       }
-    } catch (error) {
+    } } catch {
       console.error("Profile fetch error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load profile data.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const formatDate = (dateString: string): string => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+  const formatDate = (dateString: string): string => {}
+    return new Date(dateString).toLocaleDateString("en-US", {}
       year: "numeric",
       month: "long",
       day: "numeric",
     })
   }
 
-  const getRarityColor = (rarity: string): string => {
+  const getRarityColor = (rarity: string): string => {}
     switch (rarity) {
       case "common":
         return "text-gray-400 border-gray-400/30"
@@ -149,18 +124,18 @@ export default function ProfilePage() {
     }
   }
 
-  const getActivityIcon = (type: string) => {
+  const getActivityIcon = (type: string) => {}
     switch (type) {
       case "party":
-        return Play
+        return Play;
       case "rating":
-        return Star
+        return Star;
       case "friend":
-        return Users
+        return Users;
       case "achievement":
-        return Trophy
+        return Trophy;
       default:
-        return Activity
+        return Activity;
     }
   }
 
@@ -214,7 +189,7 @@ export default function ProfilePage() {
               <Link href="/dashboard/profile/edit">
                 <Button size="sm" className="bg-black/50 hover:bg-black/70 text-white">
                   <Edit className="w-4 h-4 mr-2" />
-                  Edit Profile
+                  Edit Profile;
                 </Button>
               </Link>
             </div>
@@ -228,7 +203,7 @@ export default function ProfilePage() {
                 <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 p-1">
                   <div className="w-full h-full rounded-full overflow-hidden bg-slate-800">
                     {profile.avatar ? (
-                      <Image
+                      <Image;
                         src={profile.avatar || "/placeholder.svg"}
                         alt={profile.displayName}
                         width={128}
@@ -245,12 +220,12 @@ export default function ProfilePage() {
                 {profile.isPublic ? (
                   <Badge className="absolute -bottom-2 -right-2 bg-green-500/20 text-green-300 border-green-500/30">
                     <Eye className="w-3 h-3 mr-1" />
-                    Public
+                    Public;
                   </Badge>
                 ) : (
                   <Badge className="absolute -bottom-2 -right-2 bg-orange-500/20 text-orange-300 border-orange-500/30">
                     <EyeOff className="w-3 h-3 mr-1" />
-                    Private
+                    Private;
                   </Badge>
                 )}
               </div>
@@ -280,13 +255,13 @@ export default function ProfilePage() {
                   {profile.website && (
                     <div className="flex items-center">
                       <Globe className="w-4 h-4 mr-2" />
-                      <a
+                      <a;
                         href={profile.website}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-purple-300 hover:text-purple-200 transition-colors"
                       >
-                        Website
+                        Website;
                       </a>
                     </div>
                   )}
@@ -321,15 +296,15 @@ export default function ProfilePage() {
               <div className="flex flex-col space-y-2">
                 <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
                   <Share2 className="w-4 h-4 mr-2" />
-                  Share Profile
+                  Share Profile;
                 </Button>
                 <Link href="/dashboard/settings">
-                  <Button
+                  <Button;
                     variant="outline"
                     className="glass-card border-white/20 hover:border-purple-500/50 text-white bg-transparent"
                   >
                     <Settings className="w-4 h-4 mr-2" />
-                    Settings
+                    Settings;
                   </Button>
                 </Link>
               </div>
@@ -340,33 +315,33 @@ export default function ProfilePage() {
         {/* Profile Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="glass-card border border-white/20 bg-white/5 p-1">
-            <TabsTrigger
+            <TabsTrigger;
               value="overview"
               className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300"
             >
               <Activity className="w-4 h-4 mr-2" />
-              Overview
+              Overview;
             </TabsTrigger>
-            <TabsTrigger
+            <TabsTrigger;
               value="stats"
               className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300"
             >
               <TrendingUp className="w-4 h-4 mr-2" />
-              Statistics
+              Statistics;
             </TabsTrigger>
-            <TabsTrigger
+            <TabsTrigger;
               value="achievements"
               className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300"
             >
               <Trophy className="w-4 h-4 mr-2" />
-              Achievements
+              Achievements;
             </TabsTrigger>
-            <TabsTrigger
+            <TabsTrigger;
               value="activity"
               className="data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-300"
             >
               <Clock className="w-4 h-4 mr-2" />
-              Activity
+              Activity;
             </TabsTrigger>
           </TabsList>
 
@@ -422,7 +397,7 @@ export default function ProfilePage() {
                   <CardHeader>
                     <CardTitle className="text-white flex items-center">
                       <Film className="w-5 h-5 mr-2" />
-                      Favorite Genres
+                      Favorite Genres;
                     </CardTitle>
                     <CardDescription className="text-gray-400">Your most watched content categories</CardDescription>
                   </CardHeader>
@@ -446,7 +421,7 @@ export default function ProfilePage() {
                   <CardHeader>
                     <CardTitle className="text-white flex items-center">
                       <Trophy className="w-5 h-5 mr-2" />
-                      Recent Achievements
+                      Recent Achievements;
                     </CardTitle>
                     <CardDescription className="text-gray-400">Your latest unlocked achievements</CardDescription>
                   </CardHeader>
@@ -471,32 +446,32 @@ export default function ProfilePage() {
                   <CardHeader>
                     <CardTitle className="text-white flex items-center">
                       <Target className="w-5 h-5 mr-2" />
-                      Quick Actions
+                      Quick Actions;
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
                     <Link href="/dashboard/parties/create">
                       <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white">
                         <Play className="w-4 h-4 mr-2" />
-                        Create Watch Party
+                        Create Watch Party;
                       </Button>
                     </Link>
                     <Link href="/dashboard/friends">
-                      <Button
+                      <Button;
                         variant="outline"
                         className="w-full glass-card border-white/20 hover:border-blue-500/50 text-white bg-transparent"
                       >
                         <Users className="w-4 h-4 mr-2" />
-                        Find Friends
+                        Find Friends;
                       </Button>
                     </Link>
                     <Link href="/discover">
-                      <Button
+                      <Button;
                         variant="outline"
                         className="w-full glass-card border-white/20 hover:border-green-500/50 text-white bg-transparent"
                       >
                         <Sparkles className="w-4 h-4 mr-2" />
-                        Discover Content
+                        Discover Content;
                       </Button>
                     </Link>
                   </CardContent>
@@ -512,7 +487,7 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="text-white flex items-center">
                     <Star className="w-5 h-5 mr-2" />
-                    Rating Stats
+                    Rating Stats;
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -531,7 +506,7 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="text-white flex items-center">
                     <Heart className="w-5 h-5 mr-2" />
-                    Favorites
+                    Favorites;
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -546,7 +521,7 @@ export default function ProfilePage() {
                 <CardHeader>
                   <CardTitle className="text-white flex items-center">
                     <Zap className="w-5 h-5 mr-2" />
-                    Activity Streak
+                    Activity Streak;
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -592,15 +567,15 @@ export default function ProfilePage() {
               <CardHeader>
                 <CardTitle className="text-white flex items-center">
                   <Activity className="w-5 h-5 mr-2" />
-                  Recent Activity
+                  Recent Activity;
                 </CardTitle>
                 <CardDescription className="text-gray-400">Your latest actions and interactions</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {profile.recentActivity.map((activity) => {
+                {profile.recentActivity.map((activity) => {}
                   const IconComponent = getActivityIcon(activity.type)
                   return (
-                    <div
+                    <div;
                       key={activity.id}
                       className="flex items-start space-x-3 p-3 glass-card rounded-lg border border-white/10"
                     >

@@ -1,5 +1,3 @@
-'use client'
-
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -8,27 +6,29 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
-import { MapPin, CreditCard, Shield, AlertCircle } from 'lucide-react'
+import { CreditCard, MapPin, Shield } from "lucide-react"
 import { useApi } from '@/hooks/use-api'
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
 
-interface BillingAddress {
-  id?: string
-  full_name: string
-  company?: string
-  address_line_1: string
-  address_line_2?: string
-  city: string
-  state: string
-  postal_code: string
-  country: string
-  is_default: boolean
-  is_business_address: boolean
-  tax_id?: string
+'use client'
+
+interface BillingAddress {}
+  id?: string;
+  full_name: string;
+  company?: string;
+  address_line_1: string;
+  address_line_2?: string;
+  city: string;
+  state: string;
+  postal_code: string;
+  country: string;
+  is_default: boolean;
+  is_business_address: boolean;
+  tax_id?: string;
 }
 
-const COUNTRIES = [
+const COUNTRIES = []
   { code: 'US', name: 'United States' },
   { code: 'CA', name: 'Canada' },
   { code: 'GB', name: 'United Kingdom' },
@@ -41,7 +41,7 @@ const COUNTRIES = [
   { code: 'BR', name: 'Brazil' }
 ]
 
-const US_STATES = [
+const US_STATES = []
   'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut',
   'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa',
   'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan',
@@ -61,7 +61,7 @@ export function BillingAddressView() {
   const { get, post, put, delete: deleteApi } = useApi()
   const { toast } = useToast()
 
-  const [formData, setFormData] = useState<BillingAddress>({
+  const [formData, setFormData] = useState<BillingAddress>({}
     full_name: '',
     company: '',
     address_line_1: '',
@@ -79,45 +79,44 @@ export function BillingAddressView() {
     fetchAddresses()
   }, [])
 
-  const fetchAddresses = async () => {
+  const fetchAddresses = useCallback(async () => {
     try {
       setIsLoading(true)
       const response = await get('/billing/addresses/')
       setAddresses((response.data as BillingAddress[]) || [])
-    } catch (error: any) {
-      toast({
+    } } catch {
+      toast({}
         title: 'Error',
         description: 'Failed to load billing addresses',
         variant: 'destructive'
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
-  }
+  }, [])
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     try {
       setIsSaving(true)
-      
-      // Basic validation
+      // Basic validation;
       if (!formData.full_name || !formData.address_line_1 || !formData.city || !formData.state || !formData.postal_code) {
-        toast({
+        toast({}
           title: 'Validation Error',
           description: 'Please fill in all required fields',
           variant: 'destructive'
         })
-        return
+        return;
       }
 
       if (editingAddress?.id) {
         await put(`/billing/addresses/${editingAddress.id}/`, formData)
-        toast({
+        toast({}
           title: 'Success',
           description: 'Billing address updated successfully'
         })
-      } else {
+      } else {}
         await post('/billing/addresses/', formData)
-        toast({
+        toast({}
           title: 'Success',
           description: 'Billing address added successfully'
         })
@@ -127,29 +126,28 @@ export function BillingAddressView() {
       setEditingAddress(null)
       setIsAddingNew(false)
       resetForm()
-    } catch (error: any) {
-      toast({
+    } } catch {
+      toast({}
         title: 'Error',
         description: error.response?.data?.message || 'Failed to save billing address',
         variant: 'destructive'
       })
-    } finally {
+    } finally {}
       setIsSaving(false)
     }
-  }
+  }, [])
 
-  const handleDelete = async (addressId: string) => {
-    if (!confirm('Are you sure you want to delete this billing address?')) return
-
+  const handleDelete = async (addressId: string) => {}
+    if (!confirm('Are you sure you want to delete this billing address?')) return;
     try {
       await deleteApi(`/billing/addresses/${addressId}/`)
-      toast({
+      toast({}
         title: 'Success',
         description: 'Billing address deleted successfully'
       })
       await fetchAddresses()
-    } catch (error: any) {
-      toast({
+    } } catch {
+      toast({}
         title: 'Error',
         description: 'Failed to delete billing address',
         variant: 'destructive'
@@ -157,16 +155,16 @@ export function BillingAddressView() {
     }
   }
 
-  const handleSetDefault = async (addressId: string) => {
+  const handleSetDefault = async (addressId: string) => {}
     try {
       await put(`/billing/addresses/${addressId}/set-default/`)
-      toast({
+      toast({}
         title: 'Success',
         description: 'Default billing address updated'
       })
       await fetchAddresses()
-    } catch (error: any) {
-      toast({
+    } } catch {
+      toast({}
         title: 'Error',
         description: 'Failed to update default address',
         variant: 'destructive'
@@ -174,8 +172,8 @@ export function BillingAddressView() {
     }
   }
 
-  const resetForm = () => {
-    setFormData({
+  const resetForm = () => {}
+    setFormData({}
       full_name: '',
       company: '',
       address_line_1: '',
@@ -190,19 +188,19 @@ export function BillingAddressView() {
     })
   }
 
-  const startEdit = (address: BillingAddress) => {
+  const startEdit = (address: BillingAddress) => {}
     setEditingAddress(address)
     setFormData({ ...address })
     setIsAddingNew(false)
   }
 
-  const startAddNew = () => {
+  const startAddNew = () => {}
     setIsAddingNew(true)
     setEditingAddress(null)
     resetForm()
   }
 
-  const cancelEdit = () => {
+  const cancelEdit = () => {}
     setEditingAddress(null)
     setIsAddingNew(false)
     resetForm()
@@ -222,14 +220,13 @@ export function BillingAddressView() {
         <div>
           <h1 className="text-3xl font-bold">Billing Addresses</h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Manage your billing addresses for payments and invoices
+            Manage your billing addresses for payments and invoices;
           </p>
         </div>
-        
         {!isAddingNew && !editingAddress && (
           <Button onClick={startAddNew}>
             <MapPin className="w-4 h-4 mr-2" />
-            Add Address
+            Add Address;
           </Button>
         )}
       </div>
@@ -243,14 +240,14 @@ export function BillingAddressView() {
               {editingAddress ? 'Edit Address' : 'Add New Address'}
             </CardTitle>
             <CardDescription>
-              Enter your billing address information
+              Enter your billing address information;
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="full_name">Full Name *</Label>
-                <Input
+                <Input;
                   id="full_name"
                   value={formData.full_name}
                   onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
@@ -260,7 +257,7 @@ export function BillingAddressView() {
 
               <div className="space-y-2">
                 <Label htmlFor="company">Company (Optional)</Label>
-                <Input
+                <Input;
                   id="company"
                   value={formData.company}
                   onChange={(e) => setFormData({ ...formData, company: e.target.value })}
@@ -271,7 +268,7 @@ export function BillingAddressView() {
 
             <div className="space-y-2">
               <Label htmlFor="address_line_1">Address Line 1 *</Label>
-              <Input
+              <Input;
                 id="address_line_1"
                 value={formData.address_line_1}
                 onChange={(e) => setFormData({ ...formData, address_line_1: e.target.value })}
@@ -281,7 +278,7 @@ export function BillingAddressView() {
 
             <div className="space-y-2">
               <Label htmlFor="address_line_2">Address Line 2 (Optional)</Label>
-              <Input
+              <Input;
                 id="address_line_2"
                 value={formData.address_line_2}
                 onChange={(e) => setFormData({ ...formData, address_line_2: e.target.value })}
@@ -292,7 +289,7 @@ export function BillingAddressView() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="city">City *</Label>
-                <Input
+                <Input;
                   id="city"
                   value={formData.city}
                   onChange={(e) => setFormData({ ...formData, city: e.target.value })}
@@ -316,7 +313,7 @@ export function BillingAddressView() {
                     </SelectContent>
                   </Select>
                 ) : (
-                  <Input
+                  <Input;
                     id="state"
                     value={formData.state}
                     onChange={(e) => setFormData({ ...formData, state: e.target.value })}
@@ -327,7 +324,7 @@ export function BillingAddressView() {
 
               <div className="space-y-2">
                 <Label htmlFor="postal_code">ZIP/Postal Code *</Label>
-                <Input
+                <Input;
                   id="postal_code"
                   value={formData.postal_code}
                   onChange={(e) => setFormData({ ...formData, postal_code: e.target.value })}
@@ -355,7 +352,7 @@ export function BillingAddressView() {
             {/* Business Address Section */}
             <div className="space-y-4 pt-4 border-t">
               <div className="flex items-center space-x-2">
-                <Switch
+                <Switch;
                   id="is_business_address"
                   checked={formData.is_business_address}
                   onCheckedChange={(checked) => setFormData({ ...formData, is_business_address: checked })}
@@ -366,7 +363,7 @@ export function BillingAddressView() {
               {formData.is_business_address && (
                 <div className="space-y-2">
                   <Label htmlFor="tax_id">Tax ID/VAT Number</Label>
-                  <Input
+                  <Input;
                     id="tax_id"
                     value={formData.tax_id}
                     onChange={(e) => setFormData({ ...formData, tax_id: e.target.value })}
@@ -376,7 +373,7 @@ export function BillingAddressView() {
               )}
 
               <div className="flex items-center space-x-2">
-                <Switch
+                <Switch;
                   id="is_default"
                   checked={formData.is_default}
                   onCheckedChange={(checked) => setFormData({ ...formData, is_default: checked })}
@@ -397,7 +394,7 @@ export function BillingAddressView() {
                 )}
               </Button>
               <Button variant="outline" onClick={cancelEdit}>
-                Cancel
+                Cancel;
               </Button>
             </div>
           </CardContent>
@@ -413,10 +410,10 @@ export function BillingAddressView() {
                 <MapPin className="w-12 h-12 mx-auto text-gray-400 mb-4" />
                 <h3 className="text-lg font-medium mb-2">No billing addresses</h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  Add a billing address to complete your setup
+                  Add a billing address to complete your setup;
                 </p>
                 <Button onClick={startAddNew}>
-                  Add Your First Address
+                  Add Your First Address;
                 </Button>
               </CardContent>
             </Card>
@@ -435,13 +432,11 @@ export function BillingAddressView() {
                           <Badge variant="outline">Business</Badge>
                         )}
                       </div>
-                      
                       {address.company && (
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                           {address.company}
                         </p>
                       )}
-                      
                       <div className="text-sm space-y-1">
                         <p>{address.address_line_1}</p>
                         {address.address_line_2 && <p>{address.address_line_2}</p>}
@@ -460,28 +455,28 @@ export function BillingAddressView() {
 
                     <div className="flex gap-2">
                       {!address.is_default && (
-                        <Button
+                        <Button;
                           variant="outline"
                           size="sm"
                           onClick={() => handleSetDefault(address.id!)}
                         >
-                          Set Default
+                          Set Default;
                         </Button>
                       )}
-                      <Button
+                      <Button;
                         variant="outline"
                         size="sm"
                         onClick={() => startEdit(address)}
                       >
-                        Edit
+                        Edit;
                       </Button>
-                      <Button
+                      <Button;
                         variant="outline"
                         size="sm"
                         onClick={() => handleDelete(address.id!)}
                         className="text-red-600 hover:text-red-700"
                       >
-                        Delete
+                        Delete;
                       </Button>
                     </div>
                   </div>

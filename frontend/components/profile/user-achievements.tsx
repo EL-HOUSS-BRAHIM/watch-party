@@ -1,59 +1,55 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { Calendar, Lock, Target, Trophy } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Trophy, Award, Star, Lock, Calendar, Target } from "lucide-react"
 import { useApi } from "@/hooks/use-api"
 import { formatDistanceToNow } from "date-fns"
 
-interface Achievement {
-  id: string
-  name: string
-  description: string
-  icon: string
-  category: string
-  points: number
+"use client"
+interface Achievement {}
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: string;
+  points: number;
   rarity: "common" | "rare" | "epic" | "legendary"
-  earned_at?: string
-  progress?: {
-    current: number
-    required: number
+  earned_at?: string;
+  progress?: {}
+    current: number;
+    required: number;
   }
 }
 
-interface AchievementCategory {
-  name: string
+interface AchievementCategory {}
+  name: string;
   achievements: Achievement[]
-  total_points: number
-  earned_points: number
+  total_points: number;
+  earned_points: number;
 }
 
-const rarityColors = {
-  common: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200",
+const rarityColors = { common: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200",
   rare: "bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-200",
   epic: "bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-200",
   legendary: "bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200",
 }
 
-const rarityIcons = {
-  common: Star,
+const rarityIcons = { common: Star,
   rare: Award,
   epic: Trophy,
   legendary: Trophy,
 }
 
-interface UserAchievementsProps {
-  userId: string
+interface UserAchievementsProps {}
+  userId: string;
 }
 
-export function UserAchievements({ userId }: UserAchievementsProps) {
+export function UserAchievements({ userId }: UserAchievementsProps) {}
   const [categories, setCategories] = useState<AchievementCategory[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState("all")
-  
   const api = useApi()
 
   useEffect(() => {
@@ -64,10 +60,10 @@ export function UserAchievements({ userId }: UserAchievementsProps) {
     try {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/achievements/`)
-      setCategories((response.data as any).categories || [])
-    } catch (err) {
+      setCategories((response.data as Record<string, unknown>).categories || [])
+    } } catch {
       console.error("Failed to load achievements:", err)
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
@@ -91,7 +87,7 @@ export function UserAchievements({ userId }: UserAchievementsProps) {
   }
 
   const filteredAchievements = selectedCategory === "all" 
-    ? allAchievements 
+    ? allAchievements;
     : categories.find(cat => cat.name === selectedCategory)?.achievements || []
 
   return (
@@ -132,19 +128,18 @@ export function UserAchievements({ userId }: UserAchievementsProps) {
                 <span>Achievement Progress</span>
                 <span>{earnedAchievements.length} / {allAchievements.length}</span>
               </div>
-              <Progress 
+              <Progress;
                 value={allAchievements.length > 0 ? (earnedAchievements.length / allAchievements.length) * 100 : 0} 
                 className="h-2"
               />
             </div>
-            
             {categories.map((category) => (
               <div key={category.name}>
                 <div className="flex justify-between text-sm mb-2">
                   <span>{category.name}</span>
                   <span>{category.earned_points} / {category.total_points} pts</span>
                 </div>
-                <Progress 
+                <Progress;
                   value={category.total_points > 0 ? (category.earned_points / category.total_points) * 100 : 0} 
                   className="h-1"
                 />
@@ -167,12 +162,11 @@ export function UserAchievements({ userId }: UserAchievementsProps) {
 
         <TabsContent value={selectedCategory} className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredAchievements.map((achievement) => {
-              const isEarned = !!achievement.earned_at
+            {filteredAchievements.map((achievement) => {}
+              const isEarned = !!achievement.earned_at;
               const RarityIcon = rarityIcons[achievement.rarity]
-              
               return (
-                <Card 
+                <Card;
                   key={achievement.id} 
                   className={`relative ${isEarned ? "ring-2 ring-primary" : "opacity-60"}`}
                 >
@@ -196,27 +190,24 @@ export function UserAchievements({ userId }: UserAchievementsProps) {
                       </CardDescription>
                     </div>
                   </CardHeader>
-                  
                   <CardContent>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between text-sm">
                         <span className="text-muted-foreground">Points</span>
                         <span className="font-semibold">{achievement.points}</span>
                       </div>
-                      
                       {achievement.progress && !isEarned && (
                         <div>
                           <div className="flex justify-between text-sm mb-1">
                             <span>Progress</span>
                             <span>{achievement.progress.current} / {achievement.progress.required}</span>
                           </div>
-                          <Progress 
+                          <Progress;
                             value={(achievement.progress.current / achievement.progress.required) * 100} 
                             className="h-1"
                           />
                         </div>
                       )}
-                      
                       {isEarned && achievement.earned_at && (
                         <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                           <Calendar className="w-3 h-3" />
@@ -229,7 +220,6 @@ export function UserAchievements({ userId }: UserAchievementsProps) {
               )
             })}
           </div>
-          
           {filteredAchievements.length === 0 && (
             <Card>
               <CardContent className="text-center p-8">

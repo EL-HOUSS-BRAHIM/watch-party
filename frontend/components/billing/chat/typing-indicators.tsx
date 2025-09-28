@@ -1,66 +1,61 @@
-'use client'
-
 import { useEffect, useRef, useState } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { chatAPI } from '@/lib/api'
 import { useToast } from '@/hooks/use-toast'
 
-interface TypingUser {
-  id: string
-  username: string
-  displayName: string
-  avatarUrl: string | null
+'use client'
+
+interface TypingUser {}
+  id: string;
+  username: string;
+  displayName: string;
+  avatarUrl: string | null;
 }
 
-interface TypingIndicatorsProps {
-  partyId: string
-  currentUserId: string
-  onUserTyping: (isTyping: boolean) => void
-  className?: string
+interface TypingIndicatorsProps {}
+  partyId: string;
+  currentUserId: string;
+  onUserTyping: (isTyping: boolean) => void;
+  className?: string;
 }
 
-const POLL_INTERVAL_MS = 5000
-const TYPING_RECENCY_MS = 7000
-
-export function TypingIndicators({
+const POLL_INTERVAL_MS = 5000;
+const TYPING_RECENCY_MS = 7000;
+export function TypingIndicators({}
   partyId,
   currentUserId,
   onUserTyping,
   className = ''
-}: TypingIndicatorsProps) {
+}: TypingIndicatorsProps) {}
   const [typingUsers, setTypingUsers] = useState<TypingUser[]>([])
   const errorNotifiedRef = useRef(false)
   const { toast } = useToast()
 
   useEffect(() => {
-    let isMounted = true
-    let pollTimeout: ReturnType<typeof setTimeout> | undefined
-
+    let isMounted = true;
+    let pollTimeout: ReturnType<typeof setTimeout> | undefined;
     const pollTypingUsers = async () => {
       if (!partyId || typeof chatAPI?.getActiveUsers !== 'function') {
         if (isMounted) {
           setTypingUsers([])
         }
-        return
+        return;
       }
 
       try {
         const response = await chatAPI.getActiveUsers(partyId)
-        if (!isMounted) return
-
+        if (!isMounted) return;
         const activeUsers = Array.isArray(response.active_users) ? response.active_users : []
         const now = Date.now()
 
-        const normalizedUsers = activeUsers
-          .map(user => {
+        const normalizedUsers = activeUsers;
+          .map(user => {}
             const id = String(user?.id ?? '')
-            if (!id) return null
-
-            const lastSeen = user?.last_seen ? new Date(user.last_seen).getTime() : undefined
+            if (!id) return null;
+            const lastSeen = user?.last_seen ? new Date(user.last_seen).getTime() : undefined;
             const isTyping = user?.is_typing ?? (typeof lastSeen === 'number' ? now - lastSeen <= TYPING_RECENCY_MS : false)
 
             if (!isTyping) {
-              return null
+              return null;
             }
 
             return {
@@ -75,23 +70,23 @@ export function TypingIndicators({
         setTypingUsers(normalizedUsers)
 
         if (errorNotifiedRef.current) {
-          errorNotifiedRef.current = false
+          errorNotifiedRef.current = false;
         }
-      } catch (error) {
+      } } catch {
         if (!errorNotifiedRef.current) {
           console.error('Failed to load typing indicators:', error)
-          toast({
+          toast({}
             title: 'Typing indicators unavailable',
             description: 'Unable to load live typing activity. Please try again later.',
             variant: 'destructive'
           })
-          errorNotifiedRef.current = true
+          errorNotifiedRef.current = true;
         }
 
         if (isMounted) {
           setTypingUsers([])
         }
-      } finally {
+      } finally {}
         if (isMounted) {
           pollTimeout = setTimeout(pollTypingUsers, POLL_INTERVAL_MS)
         }
@@ -100,8 +95,8 @@ export function TypingIndicators({
 
     pollTypingUsers()
 
-    return () => {
-      isMounted = false
+    return () => {}
+      isMounted = false;
       if (pollTimeout) {
         clearTimeout(pollTimeout)
       }
@@ -113,7 +108,7 @@ export function TypingIndicators({
   }, [typingUsers, onUserTyping])
 
   if (typingUsers.length === 0) {
-    return null
+    return null;
   }
 
   return (

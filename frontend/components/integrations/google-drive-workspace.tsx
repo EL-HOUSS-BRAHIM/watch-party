@@ -1,5 +1,4 @@
-'use client'
-
+import { Link } from "lucide-react"
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -13,11 +12,12 @@ import { toast } from '@/hooks/use-toast'
 import { formatDistanceToNow } from 'date-fns'
 import { ArrowPathIcon, ArrowUpTrayIcon, LinkIcon } from '@heroicons/react/24/outline'
 
-interface GoogleDriveWorkspaceProps {
-  className?: string
+'use client'
+interface GoogleDriveWorkspaceProps {}
+  className?: string;
 }
 
-function formatBytes(size: number) {
+function formatBytes(size: number) {}
   if (!size) return '0 B'
   const units = ['B', 'KB', 'MB', 'GB', 'TB']
   const index = Math.min(Math.floor(Math.log(size) / Math.log(1024)), units.length - 1)
@@ -25,7 +25,7 @@ function formatBytes(size: number) {
   return `${scaled.toFixed(scaled >= 10 || index === 0 ? 0 : 1)} ${units[index]}`
 }
 
-export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
+export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {}
   const [connection, setConnection] = useState<IntegrationConnection | null>(null)
   const [isLoadingConnection, setIsLoadingConnection] = useState(true)
   const [isLoadingFiles, setIsLoadingFiles] = useState(false)
@@ -41,26 +41,26 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
     setIsLoadingConnection(true)
     try {
       const { connections } = await integrationsAPI.getConnections()
-      const driveConnection = connections.find(conn => conn.provider === 'google_drive') || null
+      const driveConnection = connections.find(conn => conn.provider === &apos;google_drive&apos;) || null;
       setConnection(driveConnection)
-    } catch (error) {
+    } } catch {
       console.error('Failed to load Google Drive connection', error)
-      toast({
+      toast({}
         title: 'Unable to load Google Drive status',
         description: 'We could not retrieve the current Google Drive connection.',
         variant: 'destructive',
       })
       setConnection(null)
-    } finally {
+    } finally {}
       setIsLoadingConnection(false)
     }
   }, [])
 
   const loadFiles = useCallback(
-    async (reset = false) => {
+    async (reset = false) => {}
       if (!connection) {
         setFiles([])
-        return
+        return;
       }
 
       setIsLoadingFiles(true)
@@ -70,14 +70,14 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
         )
         setFiles(response.files || [])
         setNextPageToken(response.next_page_token)
-      } catch (error) {
+      } } catch {
         console.error('Failed to load Google Drive files', error)
-        toast({
+        toast({}
           title: 'Unable to load Drive files',
           description: 'Verify your Google Drive connection and try again.',
           variant: 'destructive',
         })
-      } finally {
+      } finally {}
         setIsLoadingFiles(false)
       }
     },
@@ -94,9 +94,9 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
     }
   }, [connection, loadFiles])
 
-  const filteredFiles = useMemo(() => {
+  const filteredFiles = useMemo(() => {}
     if (!search) {
-      return files
+      return files;
     }
 
     const lower = search.toLowerCase()
@@ -107,9 +107,9 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
     try {
       const { auth_url } = await integrationsAPI.getGoogleDriveAuthUrl()
       window.location.assign(auth_url)
-    } catch (error) {
+    } } catch {
       console.error('Failed to start Google Drive OAuth', error)
-      toast({
+      toast({}
         title: 'Connection error',
         description: 'We could not open the Google Drive authorization flow.',
         variant: 'destructive',
@@ -118,19 +118,18 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
   }
 
   const handleDisconnect = async () => {
-    if (!connection) return
-
+    if (!connection) return;
     try {
       await integrationsAPI.disconnectConnection(connection.id)
-      toast({
+      toast({}
         title: 'Google Drive disconnected',
         description: 'Drive is no longer connected to your Watch Party account.',
       })
       setConnection(null)
       setFiles([])
-    } catch (error) {
+    } } catch {
       console.error('Failed to disconnect Google Drive', error)
-      toast({
+      toast({}
         title: 'Unable to disconnect',
         description: 'We could not remove the Google Drive connection. Try again later.',
         variant: 'destructive',
@@ -138,23 +137,23 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
     }
   }
 
-  const handleStreamingUrl = async (fileId: string) => {
+  const handleStreamingUrl = async (fileId: string) => {}
     try {
       setStreamingFileId(fileId)
       const { streaming_url } = await integrationsAPI.getGoogleDriveStreamingUrl(fileId)
       setStreamingUrl(streaming_url)
-      toast({
+      toast({}
         title: 'Streaming link ready',
         description: 'Use this link to play the file inside your watch party.',
       })
-    } catch (error) {
+    } } catch {
       console.error('Failed to fetch streaming URL', error)
-      toast({
+      toast({}
         title: 'Could not fetch streaming link',
         description: 'We were unable to fetch a streaming URL for this file.',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setStreamingFileId(null)
     }
   }
@@ -162,7 +161,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
   const handleRefresh = async () => {
     if (!connection) {
       await loadConnection()
-      return
+      return;
     }
 
     setRefreshing(true)
@@ -182,7 +181,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
           <div>
             <CardTitle className="flex items-center gap-2 text-xl">
               <ArrowUpTrayIcon className="h-5 w-5 text-blue-500" />
-              Google Drive Connection
+              Google Drive Connection;
             </CardTitle>
             <CardDescription>
               Link your Google Drive account to browse, import, and stream videos directly in Watch Party.
@@ -191,11 +190,11 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
           <div className="flex items-center gap-2">
             {connection ? (
               <Badge variant="outline" className="border-green-500 text-green-500">
-                Connected
+                Connected;
               </Badge>
             ) : (
               <Badge variant="outline" className="border-yellow-500 text-yellow-500">
-                Not connected
+                Not connected;
               </Badge>
             )}
           </div>
@@ -217,7 +216,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
               <div>
                 <p className="text-xs uppercase text-muted-foreground">Connected</p>
                 <p className="font-medium">
-                  {connection.connected_at
+                  {connection.connected_at;
                     ? formatDistanceToNow(new Date(connection.connected_at), { addSuffix: true })
                     : 'Just now'}
                 </p>
@@ -225,7 +224,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
               <div>
                 <p className="text-xs uppercase text-muted-foreground">Permissions</p>
                 <p className="font-medium">
-                  {connection.permissions?.length
+                  {connection.permissions?.length;
                     ? connection.permissions.join(', ')
                     : 'Drive file access'}
                 </p>
@@ -239,10 +238,10 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
         </CardContent>
         <CardFooter className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-sm text-muted-foreground">
-            {files.length > 0 ? `${files.length} files • ${formatBytes(totalSize)}` : 'No files loaded yet'}
+            {files.length > 0 ? `${files.length} files • ${formatBytes(totalSize)}` : &apos;No files loaded yet&apos;}
           </div>
           <div className="flex items-center gap-2">
-            <Button
+            <Button;
               variant="outline"
               size="sm"
               onClick={handleRefresh}
@@ -251,26 +250,26 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
             >
               {refreshing ? (
                 <>
-                  <ArrowPathIcon className="mr-2 h-4 w-4 animate-spin" /> Refreshing
+                  <ArrowPathIcon className="mr-2 h-4 w-4 animate-spin" /> Refreshing;
                 </>
               ) : (
                 <>
-                  <ArrowPathIcon className="mr-2 h-4 w-4" /> Refresh
+                  <ArrowPathIcon className="mr-2 h-4 w-4" /> Refresh;
                 </>
               )}
             </Button>
             {connection ? (
-              <Button
+              <Button;
                 variant="secondary"
                 size="sm"
                 onClick={handleDisconnect}
                 data-testid="disconnect-google-drive"
               >
-                Disconnect
+                Disconnect;
               </Button>
             ) : (
               <Button size="sm" onClick={handleConnect} data-testid="connect-google-drive">
-                Connect Google Drive
+                Connect Google Drive;
               </Button>
             )}
           </div>
@@ -286,7 +285,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
             </CardDescription>
           </div>
           <div className="flex items-center gap-2">
-            <Input
+            <Input;
               placeholder="Search files"
               value={search}
               onChange={event => setSearch(event.target.value)}
@@ -326,7 +325,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
                         <Badge variant="outline">Ready</Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button
+                        <Button;
                           variant="ghost"
                           size="sm"
                           onClick={() => handleStreamingUrl(file.id)}
@@ -338,7 +337,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
                           ) : (
                             <LinkIcon className="mr-2 h-4 w-4" />
                           )}
-                          Get stream link
+                          Get stream link;
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -356,15 +355,15 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
         </CardContent>
         {nextPageToken && (
           <CardFooter className="justify-end">
-            <Button
+            <Button;
               variant="outline"
               size="sm"
-              onClick={() => {
+              onClick={() => {}
                 setPageToken(nextPageToken)
                 loadFiles()
               }}
             >
-              Load more
+              Load more;
             </Button>
           </CardFooter>
         )}

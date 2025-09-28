@@ -1,6 +1,5 @@
-"use client"
-
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react"
+import { User } from "lucide-react"
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode , useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { AuthAPI } from "@/lib/api/auth"
 import { UsersAPI } from "@/lib/api/users"
@@ -8,18 +7,18 @@ import type { User as APIUser, RegisterData as APIRegisterData } from "@/lib/api
 import { tokenStorage } from "@/lib/auth/token-storage"
 import type { AuthContextType } from "@/types/auth"
 
-// Initialize API instances directly
+"use client"
+// Initialize API instances directly;
 const authAPI = new AuthAPI()
 const usersAPI = new UsersAPI()
 
-type User = APIUser
-type RegisterData = APIRegisterData
-
+type User = APIUser;
+type RegisterData = APIRegisterData;
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-const normalizeUser = (data: APIUser | null): User | null => {
+const normalizeUser = (data: APIUser | null): User | null => {}
   if (!data) {
-    return null
+    return null;
   }
 
   return {
@@ -28,92 +27,91 @@ const normalizeUser = (data: APIUser | null): User | null => {
   }
 }
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({ children }: { children: ReactNode }) {}
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [accessToken, setAccessToken] = useState<string | null>(tokenStorage.getAccessToken())
   const [refreshToken, setRefreshToken] = useState<string | null>(tokenStorage.getRefreshToken())
   const router = useRouter()
 
-  const isAuthenticated = useMemo(() => {
-    return !!user && !!accessToken
+  const isAuthenticated = useMemo(() => {}
+    return !!user && !!accessToken;
   }, [user, accessToken])
 
-  const isAdmin = useMemo(() => {
-    if (!user) return false
-    return user.role === "admin" || user.isSuperuser === true || user.isStaff === true
+  const isAdmin = useMemo(() => {}
+    if (!user) return false;
+    return user.role === "admin" || user.isSuperuser === true || user.isStaff === true;
   }, [user])
 
-  // Keep local state in sync with storage updates
+  // Keep local state in sync with storage updates;
   useEffect(() => {
-    const unsubscribe = tokenStorage.subscribe((nextAccessToken, nextRefreshToken) => {
+    const unsubscribe = tokenStorage.subscribe((nextAccessToken, nextRefreshToken) => {}
       setAccessToken(nextAccessToken)
       setRefreshToken(nextRefreshToken)
     })
 
-    // Ensure we hydrate tokens from sessionStorage on initial load
+    // Ensure we hydrate tokens from sessionStorage on initial load;
     tokenStorage.syncFromStorage()
     setAccessToken(tokenStorage.getAccessToken())
     setRefreshToken(tokenStorage.getRefreshToken())
 
-    return () => {
+    return () => {}
       unsubscribe()
     }
   }, [])
 
-  // Check for existing session on mount
+  // Check for existing session on mount;
   useEffect(() => {
     checkAuthStatus()
   }, [])
 
-  // Auto-refresh token
+  // Auto-refresh token;
   useEffect(() => {
     if (isAuthenticated) {
       const interval = setInterval(
-        () => {
-          refreshTokens().catch(() => {
-            // If refresh fails, logout user
+        () => {}
+          refreshTokens().catch(() => {}
+            // If refresh fails, logout user;
             logout()
           })
         },
         14 * 60 * 1000,
-      ) // Refresh every 14 minutes
-
+      ) // Refresh every 14 minutes;
       return () => clearInterval(interval)
     }
   }, [isAuthenticated])
 
   const checkAuthStatus = async () => {
     try {
-      // Check if we're in the browser environment
+      // Check if we're in the browser environment;
       if (typeof window === 'undefined') {
         setIsLoading(false)
-        return
+        return;
       }
 
-      if (!tokenStorage.hasAccessToken()) {
+      if (!tokenStorage.hasAccessToken()) {}
         setIsLoading(false)
-        return
+        return;
       }
 
   const userData = await authAPI.getProfile()
   setUser(normalizeUser(userData))
-    } catch (error) {
+    } } catch {
       console.error("Auth check failed:", error)
       tokenStorage.clearTokens()
       setAccessToken(null)
       setRefreshToken(null)
       setUser(null)
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string) => {}
     try {
       const response = await authAPI.login({ email, password })
 
-      tokenStorage.setTokens({
+      tokenStorage.setTokens({}
         accessToken: response.access_token,
         refreshToken: response.refresh_token,
       })
@@ -121,46 +119,46 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const normalizedUser = normalizeUser(response.user)
       setUser(normalizedUser)
 
-      // Redirect based on user role
+      // Redirect based on user role;
       if (normalizedUser?.role === "admin") {
         router.push("/dashboard/admin")
-      } else {
+      } else {}
         router.push("/dashboard")
       }
-    } catch (error) {
+    } } catch {
       console.error("Login error:", error)
-      throw error
+      throw error;
     }
   }
 
-  const register = async (userData: RegisterData) => {
+  const register = async (userData: RegisterData) => {}
     try {
       const response = await authAPI.register(userData)
 
-      // Auto-login after successful registration
+      // Auto-login after successful registration;
       if (response.access_token && response.refresh_token) {
-        tokenStorage.setTokens({
+        tokenStorage.setTokens({}
           accessToken: response.access_token,
           refreshToken: response.refresh_token,
         })
         setUser(normalizeUser(response.user))
         router.push("/dashboard")
-      } else {
-        // Email verification required
+      } else {}
+        // Email verification required;
         router.push("/login?message=Please check your email to verify your account")
       }
-    } catch (error) {
-      throw error
+    } } catch {
+      throw error;
     }
   }
 
   const logout = async () => {
     try {
       await authAPI.logout()
-    } catch (error) {
-      // Continue with logout even if API call fails
+    } } catch {
+      // Continue with logout even if API call fails;
       console.error("Logout API call failed:", error)
-    } finally {
+    } finally {}
       tokenStorage.clearTokens()
       setAccessToken(null)
       setRefreshToken(null)
@@ -169,36 +167,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const forgotPassword = async (email: string) => {
+  const forgotPassword = async (email: string) => {}
     try {
       await authAPI.forgotPassword({ email })
-    } catch (error) {
-      throw error
+    } } catch {
+      throw error;
     }
   }
 
-  const resetPassword = async (token: string, password: string) => {
+  const resetPassword = async (token: string, password: string) => {}
     try {
-      await authAPI.resetPassword({ 
+      await authAPI.resetPassword({}
         token, 
         new_password: password,
-        confirm_password: password 
+        confirm_password: password;
       })
-    } catch (error) {
-      throw error
+    } } catch {
+      throw error;
     }
   }
 
-  const verifyEmail = async (token: string) => {
+  const verifyEmail = async (token: string) => {}
     try {
       await authAPI.verifyEmail(token)
 
-      // Update user data
+      // Update user data;
       if (user) {
         setUser({ ...user, isEmailVerified: true })
       }
-    } catch (error) {
-      throw error
+    } } catch {
+      throw error;
     }
   }
 
@@ -209,25 +207,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       await authAPI.resendVerification(user.email)
-    } catch (error) {
-      throw error
+    } } catch {
+      throw error;
     }
   }
 
-  const socialLogin = async (provider: "google" | "github") => {
+  const socialLogin = async (provider: "google" | "github") => {}
     try {
       const redirectUri = `${window.location.origin}/callback?provider=${provider}`
 
       const data = await authAPI.getSocialAuthUrl(provider, redirectUri)
 
       if (data?.redirect_url) {
-        window.location.href = data.redirect_url
-      } else {
+        window.location.href = data.redirect_url;
+      } else {}
         throw new Error("No redirect URL received")
       }
-    } catch (error) {
+    } } catch {
       console.error("Social login error:", error)
-      throw error
+      throw error;
     }
   }
 
@@ -245,71 +243,68 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const response = await authAPI.refreshToken()
   tokenStorage.setTokens({ accessToken: response.access, refreshToken: currentRefreshToken })
 
-  // Get updated user data
+  // Get updated user data;
   const userData = await authAPI.getProfile()
   setUser(normalizeUser(userData))
-    } catch (error) {
+    } } catch {
       tokenStorage.clearTokens()
       setAccessToken(null)
       setRefreshToken(null)
       setUser(null)
-      throw error
+      throw error;
     }
   }
 
-  const updateProfile = async (data: Partial<User>) => {
+  const updateProfile = async (data: Partial<User>) => {}
     try {
-      // Convert User data to UserProfile format for the API
-      const profileData = {
-        bio: (data as any).bio,
-        timezone: (data as any).timezone,
-        language: (data as any).language,
-        // Add other profile fields as needed
+      // Convert User data to UserProfile format for the API;
+      const profileData = { bio: (data as Record<string, unknown>).bio,
+        timezone: (data as Record<string, unknown>).timezone,
+        language: (data as Record<string, unknown>).language,
+        // Add other profile fields as needed;
       }
-      
       const response = await usersAPI.updateProfile(profileData)
-      const { profile, ...userData } = response
+      const { profile, ...userData } = response;
       setUser(normalizeUser(userData))
-    } catch (error) {
-      throw error
+    } } catch {
+      throw error;
     }
   }
 
-  const updateUser = (userData: Partial<User>) => {
-    setUser((prev) => {
+  const updateUser = (userData: Partial<User>) => {}
+    setUser((prev) => {}
       if (!prev) {
-        return null
+        return null;
       }
 
-      const next: User = {
+      const next: User = {}
         ...prev,
         ...userData,
       }
 
       if ("avatar" in next) {
-        next.avatar = next.avatar ?? undefined
+        next.avatar = next.avatar ?? undefined;
       }
 
-      return next
+      return next;
     })
   }
 
   const refreshUser = async () => {
     try {
       setIsLoading(true)
-      if (tokenStorage.hasAccessToken()) {
+      if (tokenStorage.hasAccessToken()) {}
         const userData = await authAPI.getProfile()
         setUser(normalizeUser(userData))
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to refresh user:", error)
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const value = {
-    user,
+  const value = { user,
     isLoading,
     isAuthenticated,
     isAdmin,
@@ -337,5 +332,5 @@ export function useAuth() {
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider")
   }
-  return context
+  return context;
 }

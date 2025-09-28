@@ -1,46 +1,35 @@
-'use client'
-
+import { Calendar, Link, MapPin, MessageCircle, User, Users } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { 
-  User, 
-  MessageCircle, 
-  UserPlus, 
-  Users, 
-  Calendar,
-  MapPin,
-  Link as LinkIcon,
-  Globe
-} from 'lucide-react'
 
-interface UserProfile {
-  id: string
-  username: string
-  displayName: string
-  avatar: string | null
-  bio?: string
-  location?: string
-  website?: string
-  joinedDate: string
+'use client'
+interface UserProfile {}
+  id: string;
+  username: string;
+  displayName: string;
+  avatar: string | null;
+  bio?: string;
+  location?: string;
+  website?: string;
+  joinedDate: string;
   status: 'online' | 'offline' | 'away' | 'busy'
-  friendsCount: number
-  partiesCount: number
-  isCurrentUser: boolean
-  isFriend: boolean
-  hasPendingRequest: boolean
+  friendsCount: number;
+  partiesCount: number;
+  isCurrentUser: boolean;
+  isFriend: boolean;
+  hasPendingRequest: boolean;
 }
 
-interface ProfilePreviewProps {
-  userId: string
-  children: React.ReactNode
-  disabled?: boolean
+interface ProfilePreviewProps {}
+  userId: string;
+  children: React.ReactNode;
+  disabled?: boolean;
 }
 
-export function ProfilePreview({ userId, children, disabled = false }: ProfilePreviewProps) {
+export function ProfilePreview({ userId, children, disabled = false }: ProfilePreviewProps) {}
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -55,46 +44,43 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
   const loadProfile = async () => {
     setLoading(true)
     setError(null)
-    
     try {
       const response = await fetch(`/api/users/${userId}/profile`)
       if (!response.ok) {
         throw new Error('Failed to load profile')
       }
-      
       const data = await response.json()
       setProfile(data)
-    } catch (err) {
+    } } catch {
       setError(err instanceof Error ? err.message : 'Failed to load profile')
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
   const handleSendFriendRequest = async () => {
     try {
-      const response = await fetch('/api/social/friend-requests', {
+      const response = await fetch('/api/social/friend-requests', {}
         method: 'POST',
-        headers: {
+        headers: {}
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ userId }),
       })
-      
       if (response.ok) {
         setProfile(prev => prev ? { ...prev, hasPendingRequest: true } : null)
       }
-    } catch (err) {
+    } } catch {
       console.error('Failed to send friend request:', err)
     }
   }
 
-  const handleSendMessage = () => {
-    // Navigate to messages with this user
+  const handleSendMessage = () => {}
+    // Navigate to messages with this user;
     window.location.href = `/messages?user=${userId}`
   }
 
-  const getStatusColor = (status: UserProfile['status']) => {
+  const getStatusColor = (status: UserProfile['status']) => {}
     switch (status) {
       case 'online': return 'bg-green-500'
       case 'away': return 'bg-yellow-500'
@@ -103,7 +89,7 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
     }
   }
 
-  const getStatusText = (status: UserProfile['status']) => {
+  const getStatusText = (status: UserProfile['status']) => {}
     switch (status) {
       case 'online': return 'Online'
       case 'away': return 'Away'
@@ -116,7 +102,7 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
     return <>{children}</>
   }
 
-  const profileContent = () => {
+  const profileContent = () => {}
     if (loading) {
       return (
         <Card className="w-80">
@@ -153,7 +139,6 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
               </Avatar>
               <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-background ${getStatusColor(profile.status)}`} />
             </div>
-            
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-lg truncate">{profile.displayName}</h3>
               <p className="text-sm text-muted-foreground">@{profile.username}</p>
@@ -163,12 +148,10 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
             </div>
           </div>
         </CardHeader>
-        
         <CardContent className="space-y-4">
           {profile.bio && (
             <p className="text-sm">{profile.bio}</p>
           )}
-          
           <div className="space-y-2">
             {profile.location && (
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
@@ -176,11 +159,10 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
                 <span>{profile.location}</span>
               </div>
             )}
-            
             {profile.website && (
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <LinkIcon className="h-4 w-4" />
-                <a 
+                <a;
                   href={profile.website} 
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -190,13 +172,11 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
                 </a>
               </div>
             )}
-            
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <Calendar className="h-4 w-4" />
               <span>Joined {new Date(profile.joinedDate).toLocaleDateString()}</span>
             </div>
           </div>
-          
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center space-x-1">
               <Users className="h-4 w-4 text-muted-foreground" />
@@ -207,38 +187,35 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
               <span>{profile.partiesCount} parties</span>
             </div>
           </div>
-          
           {!profile.isCurrentUser && (
             <div className="flex space-x-2 pt-2">
-              <Button 
+              <Button;
                 variant="outline" 
                 size="sm" 
                 onClick={handleSendMessage}
                 className="flex-1"
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
-                Message
+                Message;
               </Button>
-              
               {!profile.isFriend && !profile.hasPendingRequest && (
-                <Button 
+                <Button;
                   size="sm" 
                   onClick={handleSendFriendRequest}
                   className="flex-1"
                 >
                   <UserPlus className="h-4 w-4 mr-2" />
-                  Add Friend
+                  Add Friend;
                 </Button>
               )}
-              
               {profile.hasPendingRequest && (
-                <Button 
+                <Button;
                   variant="outline" 
                   size="sm" 
-                  disabled
+                  disabled;
                   className="flex-1"
                 >
-                  Request Sent
+                  Request Sent;
                 </Button>
               )}
             </div>

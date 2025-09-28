@@ -1,5 +1,4 @@
-'use client'
-
+import { Eye, Plus, Trash } from "lucide-react"
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -9,7 +8,13 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import {
+import {}
+import {}
+import { useToast } from '@/hooks/use-toast'
+import { supportAPI } from '@/lib/api'
+import {}
+
+'use client'
   Dialog,
   DialogContent,
   DialogDescription,
@@ -18,7 +23,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -29,9 +33,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { useToast } from '@/hooks/use-toast'
-import { supportAPI } from '@/lib/api'
-import {
   QuestionMarkCircleIcon,
   PlusIcon,
   PencilIcon,
@@ -44,38 +45,37 @@ import {
   ArrowDownIcon,
 } from '@heroicons/react/24/outline'
 
-interface FAQ {
-  id: string
-  question: string
-  answer: string
-  category: string
-  isPublished: boolean
-  order: number
+interface FAQ {}
+  id: string;
+  question: string;
+  answer: string;
+  category: string;
+  isPublished: boolean;
+  order: number;
   tags: string[]
-  createdAt: string
-  updatedAt: string
-  views: number
-  helpful: number
-  notHelpful: number
+  createdAt: string;
+  updatedAt: string;
+  views: number;
+  helpful: number;
+  notHelpful: number;
 }
 
-interface CategoryOption {
-  id: string
-  name: string
-  description?: string
-  color: string
+interface CategoryOption {}
+  id: string;
+  name: string;
+  description?: string;
+  color: string;
 }
 
-const CATEGORY_COLORS = [
+const CATEGORY_COLORS = []
   'bg-blue-500',
   'bg-green-500',
   'bg-purple-500',
   'bg-yellow-500',
   'bg-red-500',
   'bg-indigo-500',
-] as const
-
-const DEFAULT_CATEGORY_OPTIONS: CategoryOption[] = [
+] as const;
+const DEFAULT_CATEGORY_OPTIONS: CategoryOption[] = []
   { id: 'general', name: 'General', description: 'Basic questions about WatchParty', color: CATEGORY_COLORS[0] },
   { id: 'account', name: 'Account', description: 'Account management and settings', color: CATEGORY_COLORS[1] },
   { id: 'parties', name: 'Watch Parties', description: 'Creating and joining watch parties', color: CATEGORY_COLORS[2] },
@@ -85,12 +85,12 @@ const DEFAULT_CATEGORY_OPTIONS: CategoryOption[] = [
 ]
 
 const parseTags = (value: string): string[] =>
-  value
+  value;
     .split(',')
     .map((tag) => tag.trim())
     .filter(Boolean)
 
-const normalizeFaq = (faq: any, fallback?: Partial<FAQ>, index?: number): FAQ => {
+const normalizeFaq = (faq: unknown, fallback?: Partial<FAQ>, index?: number): FAQ => {}
   const resolvedId =
     faq?.id ??
     faq?.faq_id ??
@@ -99,24 +99,23 @@ const normalizeFaq = (faq: any, fallback?: Partial<FAQ>, index?: number): FAQ =>
 
   const resolvedCategory =
     (typeof faq?.category === 'string'
-      ? faq.category
+      ? faq.category;
       : faq?.category?.id) ??
     fallback?.category ??
     'general'
 
   const tagList = Array.isArray(faq?.tags)
-    ? faq.tags.map((tag: any) => String(tag).trim()).filter(Boolean)
+    ? faq.tags.map((tag: unknown) => String(tag).trim()).filter(Boolean)
     : typeof faq?.tags === 'string'
       ? faq.tags.split(',').map((tag: string) => tag.trim()).filter(Boolean)
       : fallback?.tags ?? []
 
-  const baseOrder = typeof index === 'number' ? index + 1 : fallback?.order ?? 0
+  const baseOrder = typeof index === 'number' ? index + 1 : fallback?.order ?? 0;
   const orderValue = Number(
     faq?.order ?? faq?.position ?? faq?.display_order ?? baseOrder,
   )
   const resolvedOrder =
-    Number.isFinite(orderValue) && orderValue > 0 ? orderValue : baseOrder || 1
-
+    Number.isFinite(orderValue) && orderValue > 0 ? orderValue : baseOrder || 1;
   return {
     id: String(resolvedId),
     question: faq?.question ?? fallback?.question ?? '',
@@ -124,9 +123,9 @@ const normalizeFaq = (faq: any, fallback?: Partial<FAQ>, index?: number): FAQ =>
     category: String(resolvedCategory),
     isPublished:
       typeof faq?.is_published === 'boolean'
-        ? faq.is_published
+        ? faq.is_published;
         : typeof faq?.published === 'boolean'
-          ? faq.published
+          ? faq.published;
           : fallback?.isPublished ?? true,
     order: resolvedOrder,
     tags: tagList,
@@ -150,12 +149,12 @@ export default function FAQManagement() {
   const [faqs, setFaqs] = useState<FAQ[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const [selectedCategory, setSelectedCategory] = useState<string>(&apos;all&apos;)
   const [showPublishedOnly, setShowPublishedOnly] = useState(false)
   const [editingFAQ, setEditingFAQ] = useState<FAQ | null>(null)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({}
     question: '',
     answer: '',
     category: DEFAULT_CATEGORY_OPTIONS[0]?.id ?? 'general',
@@ -165,13 +164,13 @@ export default function FAQManagement() {
 
   const loadCategories = useCallback(async () => {
     if (typeof supportAPI.getFAQCategories !== 'function') {
-      return
+      return;
     }
 
     try {
       const data = await supportAPI.getFAQCategories()
       if (Array.isArray(data) && data.length > 0) {
-        const mapped = data.map((category, index) => ({
+        const mapped = data.map((category, index) => ({}
           id: String(category.id ?? category.slug ?? `category-${index}`),
           name: category.name ?? `Category ${index + 1}`,
           description: category.description ?? undefined,
@@ -179,9 +178,9 @@ export default function FAQManagement() {
         }))
         setCategories(mapped)
       }
-    } catch (error) {
+    } } catch {
       console.error('Failed to load FAQ categories:', error)
-      toast({
+      toast({}
         title: 'Error',
         description: 'Failed to load FAQ categories. Using defaults instead.',
         variant: 'destructive',
@@ -192,32 +191,32 @@ export default function FAQManagement() {
   const fetchFAQs = useCallback(async () => {
     if (typeof supportAPI.getFAQs !== 'function') {
       setLoading(false)
-      return
+      return;
     }
 
     setLoading(true)
     try {
       const response = await supportAPI.getFAQs({ page: 1 })
-      const results = Array.isArray((response as any)?.results)
-        ? (response as any).results
+      const results = Array.isArray((response as Record<string, unknown>)?.results)
+        ? (response as Record<string, unknown>).results;
         : Array.isArray(response)
-          ? response
+          ? response;
           : []
 
-      const normalized = results
-        .map((faq: any, index: number) => normalizeFaq(faq, undefined, index))
+      const normalized = results;
+        .map((faq: unknown, index: number) => normalizeFaq(faq, undefined, index))
         .sort((a: FAQ, b: FAQ) => a.order - b.order)
 
       setFaqs(normalized)
-    } catch (error) {
+    } } catch {
       console.error('Failed to fetch FAQs:', error)
-      toast({
+      toast({}
         title: 'Error',
         description: 'Failed to load FAQs',
         variant: 'destructive',
       })
       setFaqs([])
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }, [toast])
@@ -232,60 +231,59 @@ export default function FAQManagement() {
 
   useEffect(() => {
     if (editingFAQ || categories.length === 0) {
-      return
+      return;
     }
 
-    setFormData((prev) => {
-      if (categories.some((category) => category.id === prev.category)) {
-        return prev
+    setFormData((prev) => {}
+      if (categories.some((category) => category.id === prev.category)) {}
+        return prev;
       }
 
       return { ...prev, category: categories[0].id }
     })
   }, [categories, editingFAQ])
 
-  const filteredFAQs = useMemo(() => {
+  const filteredFAQs = useMemo(() => {}
     const query = searchQuery.trim().toLowerCase()
 
-    return faqs
-      .filter((faq) => {
+    return faqs;
+      .filter((faq) => {}
         const matchesSearch =
           !query ||
           faq.question.toLowerCase().includes(query) ||
           faq.answer.toLowerCase().includes(query) ||
           faq.tags.some((tag) => tag.toLowerCase().includes(query))
-        const matchesCategory = selectedCategory === 'all' || faq.category === selectedCategory
-        const matchesPublished = !showPublishedOnly || faq.isPublished
-
-        return matchesSearch && matchesCategory && matchesPublished
+        const matchesCategory = selectedCategory === 'all' || faq.category === selectedCategory;
+        const matchesPublished = !showPublishedOnly || faq.isPublished;
+        return matchesSearch && matchesCategory && matchesPublished;
       })
       .sort((a, b) => a.order - b.order)
   }, [faqs, searchQuery, selectedCategory, showPublishedOnly])
 
   const handleCreateFAQ = async () => {
-    if (!formData.question.trim() || !formData.answer.trim()) {
-      toast({
+    if (!formData.question.trim() || !formData.answer.trim()) {}
+      toast({}
         title: 'Validation Error',
         description: 'Question and answer are required',
         variant: 'destructive',
       })
-      return
+      return;
     }
 
     if (typeof supportAPI.createFAQ !== 'function') {
-      toast({
+      toast({}
         title: 'Error',
         description: 'FAQ service is not available',
         variant: 'destructive',
       })
-      return
+      return;
     }
 
     const tags = parseTags(formData.tags)
 
     setIsProcessing(true)
     try {
-      const created = await supportAPI.createFAQ({
+      const created = await supportAPI.createFAQ({}
         question: formData.question,
         answer: formData.answer,
         category: formData.category,
@@ -295,50 +293,50 @@ export default function FAQManagement() {
       })
 
       const normalized = normalizeFaq(created, { order: faqs.length + 1, tags })
-      setFaqs((prev) => {
+      setFaqs((prev) => {}
         const next = [...prev, normalized]
         next.sort((a, b) => a.order - b.order)
-        return next
+        return next;
       })
 
       setIsCreateDialogOpen(false)
       resetForm()
 
-      toast({
+      toast({}
         title: 'FAQ Created',
         description: 'New FAQ has been created successfully',
       })
-    } catch (error) {
+    } } catch {
       console.error('Failed to create FAQ:', error)
-      toast({
+      toast({}
         title: 'Error',
         description: 'Failed to create FAQ',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setIsProcessing(false)
     }
   }
 
   const handleEditFAQ = async () => {
-    if (!editingFAQ || !formData.question.trim() || !formData.answer.trim()) {
-      return
+    if (!editingFAQ || !formData.question.trim() || !formData.answer.trim()) {}
+      return;
     }
 
     if (typeof supportAPI.updateFAQ !== 'function') {
-      toast({
+      toast({}
         title: 'Error',
         description: 'FAQ service is not available',
         variant: 'destructive',
       })
-      return
+      return;
     }
 
     const tags = parseTags(formData.tags)
 
     setIsProcessing(true)
     try {
-      const updated = await supportAPI.updateFAQ(editingFAQ.id, {
+      const updated = await supportAPI.updateFAQ(editingFAQ.id, {}
         question: formData.question,
         answer: formData.answer,
         category: formData.category,
@@ -347,45 +345,45 @@ export default function FAQManagement() {
         order: editingFAQ.order,
       })
 
-      const normalized = normalizeFaq(updated, {
+      const normalized = normalizeFaq(updated, {}
         ...editingFAQ,
         tags,
         isPublished: formData.isPublished,
       })
 
-      setFaqs((prev) => {
+      setFaqs((prev) => {}
         const next = prev.map((faq) => (faq.id === editingFAQ.id ? normalized : faq))
         next.sort((a, b) => a.order - b.order)
-        return next
+        return next;
       })
 
       setEditingFAQ(null)
       resetForm()
 
-      toast({
+      toast({}
         title: 'FAQ Updated',
         description: 'FAQ has been updated successfully',
       })
-    } catch (error) {
+    } } catch {
       console.error('Failed to update FAQ:', error)
-      toast({
+      toast({}
         title: 'Error',
         description: 'Failed to update FAQ',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setIsProcessing(false)
     }
   }
 
-  const handleDeleteFAQ = async (faqId: string) => {
+  const handleDeleteFAQ = async (faqId: string) => {}
     if (typeof supportAPI.deleteFAQ !== 'function') {
-      toast({
+      toast({}
         title: 'Error',
         description: 'FAQ service is not available',
         variant: 'destructive',
       })
-      return
+      return;
     }
 
     setIsProcessing(true)
@@ -393,84 +391,83 @@ export default function FAQManagement() {
       await supportAPI.deleteFAQ(faqId)
       setFaqs((prev) => prev.filter((faq) => faq.id !== faqId))
 
-      toast({
+      toast({}
         title: 'FAQ Deleted',
         description: 'FAQ has been deleted successfully',
       })
-    } catch (error) {
+    } } catch {
       console.error('Failed to delete FAQ:', error)
-      toast({
+      toast({}
         title: 'Error',
         description: 'Failed to delete FAQ',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setIsProcessing(false)
     }
   }
 
-  const handleTogglePublished = async (faqId: string) => {
+  const handleTogglePublished = async (faqId: string) => {}
     if (typeof supportAPI.updateFAQ !== 'function') {
-      toast({
+      toast({}
         title: 'Error',
         description: 'FAQ service is not available',
         variant: 'destructive',
       })
-      return
+      return;
     }
 
     const target = faqs.find((faq) => faq.id === faqId)
     if (!target) {
-      return
+      return;
     }
 
-    const nextPublished = !target.isPublished
-
+    const nextPublished = !target.isPublished;
     setIsProcessing(true)
     try {
-      const updated = await supportAPI.updateFAQ(faqId, {
+      const updated = await supportAPI.updateFAQ(faqId, {}
         is_published: nextPublished,
       })
 
       const normalized = normalizeFaq(updated, { ...target, isPublished: nextPublished })
       setFaqs((prev) => prev.map((faq) => (faq.id === faqId ? normalized : faq)))
 
-      toast({
+      toast({}
         title: nextPublished ? 'FAQ Published' : 'FAQ Unpublished',
-        description: nextPublished
+        description: nextPublished;
           ? 'FAQ is now visible to users'
           : 'FAQ is now hidden from public view',
       })
-    } catch (error) {
+    } } catch {
       console.error('Failed to update FAQ status:', error)
-      toast({
+      toast({}
         title: 'Error',
         description: 'Failed to update FAQ status',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setIsProcessing(false)
     }
   }
 
-  const handleReorderFAQ = async (faqId: string, direction: 'up' | 'down') => {
+  const handleReorderFAQ = async (faqId: string, direction: 'up' | 'down') => {}
     if (typeof supportAPI.reorderFAQs !== 'function') {
-      toast({
+      toast({}
         title: 'Error',
         description: 'FAQ service is not available',
         variant: 'destructive',
       })
-      return
+      return;
     }
 
     const index = faqs.findIndex((faq) => faq.id === faqId)
     if (index === -1) {
-      return
+      return;
     }
 
-    const newIndex = direction === 'up' ? index - 1 : index + 1
+    const newIndex = direction === 'up' ? index - 1 : index + 1;
     if (newIndex < 0 || newIndex >= faqs.length) {
-      return
+      return;
     }
 
     const previous = faqs.map((faq) => ({ ...faq }))
@@ -485,25 +482,25 @@ export default function FAQManagement() {
 
     try {
       await supportAPI.reorderFAQs(withOrder.map((faq) => ({ id: faq.id, order: faq.order })))
-      toast({
+      toast({}
         title: 'Order Updated',
         description: 'FAQ order has been updated',
       })
-    } catch (error) {
+    } } catch {
       console.error('Failed to update FAQ order:', error)
-      toast({
+      toast({}
         title: 'Error',
         description: 'Failed to update FAQ order',
         variant: 'destructive',
       })
       setFaqs(previous)
-    } finally {
+    } finally {}
       setIsProcessing(false)
     }
   }
 
-  const resetForm = () => {
-    setFormData({
+  const resetForm = () => {}
+    setFormData({}
       question: '',
       answer: '',
       category: categories[0]?.id ?? 'general',
@@ -512,9 +509,9 @@ export default function FAQManagement() {
     })
   }
 
-  const startEdit = (faq: FAQ) => {
+  const startEdit = (faq: FAQ) => {}
     setEditingFAQ(faq)
-    setFormData({
+    setFormData({}
       question: faq.question,
       answer: faq.answer,
       category: faq.category,
@@ -524,10 +521,9 @@ export default function FAQManagement() {
   }
 
   const getCategoryName = (categoryId: string) =>
-    categories.find((category) => category.id === categoryId)?.name ?? categoryId
-
+    categories.find((category) => category.id === categoryId)?.name ?? categoryId;
   const getCategoryColor = (categoryId: string) =>
-    categories.find((category) => category.id === categoryId)?.color ?? 'bg-gray-500'
+    categories.find((category) => category.id === categoryId)?.color ?? &apos;bg-gray-500&apos;
 
   if (loading) {
     return (
@@ -535,7 +531,7 @@ export default function FAQManagement() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <QuestionMarkCircleIcon className="w-5 h-5" />
-            FAQ Management
+            FAQ Management;
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -560,14 +556,14 @@ export default function FAQManagement() {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <QuestionMarkCircleIcon className="w-5 h-5" />
-                FAQ Management
+                FAQ Management;
               </CardTitle>
               <CardDescription>Manage frequently asked questions and help content</CardDescription>
             </div>
 
-            <Dialog
+            <Dialog;
               open={isCreateDialogOpen || editingFAQ !== null}
-              onOpenChange={(open) => {
+              onOpenChange={(open) => {}
                 if (!open) {
                   setIsCreateDialogOpen(false)
                   setEditingFAQ(null)
@@ -578,12 +574,12 @@ export default function FAQManagement() {
               <DialogTrigger asChild>
                 <Button onClick={() => setIsCreateDialogOpen(true)} disabled={isProcessing}>
                   <PlusIcon className="w-4 h-4 mr-2" />
-                  Create FAQ
+                  Create FAQ;
                 </Button>
               </DialogTrigger>
               <DialogContent className="bg-black/90 border-white/20 max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle>{editingFAQ ? 'Edit FAQ' : 'Create New FAQ'}</DialogTitle>
+                  <DialogTitle>{editingFAQ ? &apos;Edit FAQ&apos; : &apos;Create New FAQ'}</DialogTitle>
                   <DialogDescription>
                     {editingFAQ ? 'Update the FAQ details below' : 'Add a new frequently asked question'}
                   </DialogDescription>
@@ -592,7 +588,7 @@ export default function FAQManagement() {
                 <div className="grid gap-4 py-4">
                   <div className="grid gap-2">
                     <Label htmlFor="question">Question</Label>
-                    <Input
+                    <Input;
                       id="question"
                       value={formData.question}
                       onChange={(event) =>
@@ -605,7 +601,7 @@ export default function FAQManagement() {
 
                   <div className="grid gap-2">
                     <Label htmlFor="answer">Answer</Label>
-                    <Textarea
+                    <Textarea;
                       id="answer"
                       value={formData.answer}
                       onChange={(event) =>
@@ -620,7 +616,7 @@ export default function FAQManagement() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
                       <Label htmlFor="category">Category</Label>
-                      <Select
+                      <Select;
                         value={formData.category}
                         onValueChange={(value) =>
                           setFormData((prev) => ({ ...prev, category: value }))
@@ -641,7 +637,7 @@ export default function FAQManagement() {
 
                     <div className="grid gap-2">
                       <Label htmlFor="tags">Tags (comma-separated)</Label>
-                      <Input
+                      <Input;
                         id="tags"
                         value={formData.tags}
                         onChange={(event) =>
@@ -654,7 +650,7 @@ export default function FAQManagement() {
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <Switch
+                    <Switch;
                       id="published"
                       checked={formData.isPublished}
                       onCheckedChange={(checked) =>
@@ -666,16 +662,16 @@ export default function FAQManagement() {
                 </div>
 
                 <DialogFooter>
-                  <Button
+                  <Button;
                     variant="outline"
-                    onClick={() => {
+                    onClick={() => {}
                       setIsCreateDialogOpen(false)
                       setEditingFAQ(null)
                       resetForm()
                     }}
                     disabled={isProcessing}
                   >
-                    Cancel
+                    Cancel;
                   </Button>
                   <Button onClick={editingFAQ ? handleEditFAQ : handleCreateFAQ} disabled={isProcessing}>
                     {editingFAQ ? 'Update FAQ' : 'Create FAQ'}
@@ -693,7 +689,7 @@ export default function FAQManagement() {
             <div className="flex-1">
               <div className="relative">
                 <MagnifyingGlassIcon className="w-4 h-4 absolute left-3 top-3 text-white/50" />
-                <Input
+                <Input;
                   placeholder="Search FAQs..."
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.target.value)}
@@ -718,13 +714,13 @@ export default function FAQManagement() {
             </Select>
 
             <div className="flex items-center space-x-2">
-              <Switch
+              <Switch;
                 id="published-only"
                 checked={showPublishedOnly}
                 onCheckedChange={setShowPublishedOnly}
               />
               <Label htmlFor="published-only" className="whitespace-nowrap">
-                Published only
+                Published only;
               </Label>
             </div>
           </div>
@@ -738,7 +734,7 @@ export default function FAQManagement() {
               <QuestionMarkCircleIcon className="w-16 h-16 text-white/20 mx-auto mb-4" />
               <h3 className="text-lg font-semibold mb-2">No FAQs Found</h3>
               <p className="text-white/70">
-                {searchQuery || selectedCategory !== 'all' || showPublishedOnly
+                {searchQuery || selectedCategory !== 'all' || showPublishedOnly;
                   ? 'Try adjusting your filters or search terms'
                   : 'Create your first FAQ to get started'}
               </p>
@@ -757,12 +753,12 @@ export default function FAQManagement() {
                       {faq.isPublished ? (
                         <Badge className="bg-green-500/20 text-green-400 text-xs">
                           <EyeIcon className="w-3 h-3 mr-1" />
-                          Published
+                          Published;
                         </Badge>
                       ) : (
                         <Badge className="bg-gray-500/20 text-gray-400 text-xs">
                           <EyeSlashIcon className="w-3 h-3 mr-1" />
-                          Draft
+                          Draft;
                         </Badge>
                       )}
                       <span className="text-white/50 text-xs">#{faq.order}</span>
@@ -793,18 +789,18 @@ export default function FAQManagement() {
 
                   <div className="flex flex-col gap-2">
                     <div className="flex items-center gap-1">
-                      <Button
+                      <Button;
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleReorderFAQ(faq.id, 'up')}
+                        onClick={() => handleReorderFAQ(faq.id, &apos;up&apos;)}
                         disabled={index === 0 || isProcessing}
                       >
                         <ArrowUpIcon className="w-4 h-4" />
                       </Button>
-                      <Button
+                      <Button;
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleReorderFAQ(faq.id, 'down')}
+                        onClick={() => handleReorderFAQ(faq.id, &apos;down&apos;)}
                         disabled={index === filteredFAQs.length - 1 || isProcessing}
                       >
                         <ArrowDownIcon className="w-4 h-4" />
@@ -812,7 +808,7 @@ export default function FAQManagement() {
                     </div>
 
                     <div className="flex items-center gap-1">
-                      <Button
+                      <Button;
                         variant="ghost"
                         size="sm"
                         onClick={() => handleTogglePublished(faq.id)}
@@ -825,7 +821,7 @@ export default function FAQManagement() {
                         )}
                       </Button>
 
-                      <Button
+                      <Button;
                         variant="ghost"
                         size="sm"
                         onClick={() => startEdit(faq)}
@@ -849,12 +845,12 @@ export default function FAQManagement() {
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel disabled={isProcessing}>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
+                            <AlertDialogAction;
                               onClick={() => handleDeleteFAQ(faq.id)}
                               className="bg-red-600 hover:bg-red-700"
                               disabled={isProcessing}
                             >
-                              Delete
+                              Delete;
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>

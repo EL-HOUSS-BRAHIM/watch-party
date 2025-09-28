@@ -7,7 +7,7 @@ export default function BillingPlansPage() {
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold">Choose Your Plan</h1>
           <p className="text-muted-foreground mt-2">
-            Unlock premium features and enhance your watch party experience
+            Unlock premium features and enhance your watch party experience;
           </p>
         </div>
         <BillingPlans />

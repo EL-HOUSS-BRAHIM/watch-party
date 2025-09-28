@@ -1,29 +1,31 @@
-'use client'
-
+import { Check, CheckCircle, Clock, Download, Edit, Eye, EyeOff, File, FileText, MoreHorizontal, Play, Search, Share, Trash, Video, X, XCircle } from "lucide-react"
 import { useState, useEffect } from 'react'
+import Image from "next/image"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Progress } from '@/components/ui/progress'
 import { useToast } from '@/hooks/use-toast'
-import {
+import {}
+import {}
+import {}
+import {}
+import {}
+
+'use client'
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -34,7 +36,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -43,7 +44,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import {
   Table,
   TableBody,
   TableCell,
@@ -51,70 +51,49 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  Video,
-  Search,
-  Filter,
-  MoreHorizontal,
-  Play,
-  Pause,
-  Eye,
-  EyeOff,
-  Edit,
-  Trash2,
-  Download,
-  Share2,
-  Calendar,
-  Clock,
-  FileText,
-  Upload,
-  CheckCircle,
-  XCircle,
-  AlertCircle
-} from 'lucide-react'
 
-interface VideoManagementProps {
-  className?: string
+interface VideoManagementProps {}
+  className?: string;
 }
 
-interface VideoItem {
-  id: string
-  title: string
-  description: string
-  thumbnailUrl: string
-  duration: number
-  fileSize: string
-  quality: string
+interface VideoItem {}
+  id: string;
+  title: string;
+  description: string;
+  thumbnailUrl: string;
+  duration: number;
+  fileSize: string;
+  quality: string;
   status: 'active' | 'inactive' | 'processing' | 'failed'
   visibility: 'public' | 'private' | 'unlisted'
-  uploadedBy: {
-    id: string
-    username: string
-    avatar: string
+  uploadedBy: {}
+    id: string;
+    username: string;
+    avatar: string;
   }
-  uploadedAt: string
-  views: number
-  likes: number
-  comments: number
+  uploadedAt: string;
+  views: number;
+  likes: number;
+  comments: number;
   tags: string[]
   genre: string[]
-  isPublished: boolean
-  publishedAt?: string
-  scheduledAt?: string
+  isPublished: boolean;
+  publishedAt?: string;
+  scheduledAt?: string;
 }
 
-interface VideoStats {
-  totalVideos: number
-  activeVideos: number
-  totalViews: number
-  totalDuration: number
-  storageUsed: string
-  bandwidth: string
+interface VideoStats {}
+  totalVideos: number;
+  activeVideos: number;
+  totalViews: number;
+  totalDuration: number;
+  storageUsed: string;
+  bandwidth: string;
 }
 
-export function VideoManagement({ className }: VideoManagementProps) {
+export function VideoManagement({ className }: VideoManagementProps) {}
   const [videos, setVideos] = useState<VideoItem[]>([])
-  const [stats, setStats] = useState<VideoStats>({
+  const [stats, setStats] = useState<VideoStats>({}
     totalVideos: 0,
     activeVideos: 0,
     totalViews: 0,
@@ -143,17 +122,17 @@ export function VideoManagement({ className }: VideoManagementProps) {
     setIsLoading(true)
     try {
       const token = localStorage.getItem('accessToken')
-      const params = new URLSearchParams({
+      const params = new URLSearchParams({}
         page: currentPage.toString(),
         search: searchQuery,
         status: statusFilter !== 'all' ? statusFilter : '',
         visibility: visibilityFilter !== 'all' ? visibilityFilter : '',
         sort: sortBy,
-        tab: activeTab
+        tab: activeTab;
       })
 
-      const response = await fetch(`/api/admin/videos/?${params}`, {
-        headers: {
+      const response = await fetch(`/api/admin/videos/?${params}`, {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -162,18 +141,18 @@ export function VideoManagement({ className }: VideoManagementProps) {
         const data = await response.json()
         const results = data.results ?? []
         setVideos(results)
-        const totalItems = data.pagination?.total ?? data.count ?? results.length
-        const pageSize = data.pagination?.page_size ?? 20
+        const totalItems = data.pagination?.total ?? data.count ?? results.length;
+        const pageSize = data.pagination?.page_size ?? 20;
         setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
       }
-    } catch (error) {
+    } } catch {
       console.error('Failed to load videos:', error)
-      toast({
+      toast({}
         title: 'Error',
         description: 'Failed to load videos.',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
@@ -181,8 +160,8 @@ export function VideoManagement({ className }: VideoManagementProps) {
   const loadStats = async () => {
     try {
       const token = localStorage.getItem('accessToken')
-      const response = await fetch('/api/admin/videos/stats/', {
-        headers: {
+      const response = await fetch('/api/admin/videos/stats/', {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -191,40 +170,37 @@ export function VideoManagement({ className }: VideoManagementProps) {
         const data = await response.json()
         setStats(data)
       }
-    } catch (error) {
+    } } catch {
       console.error('Failed to load video stats:', error)
     }
   }
 
-  const handleVideoAction = async (videoId: string, action: string) => {
+  const handleVideoAction = async (videoId: string, action: string) => {}
     try {
       const token = localStorage.getItem('accessToken')
-      const response = await fetch(`/api/admin/videos/${videoId}/${action}/`, {
+      const response = await fetch(`/api/admin/videos/${videoId}/${action}/`, {}
         method: 'POST',
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
         await loadVideos()
-        
-        const actionMessages = {
-          publish: 'Video published successfully',
+        const actionMessages = { publish: 'Video published successfully',
           unpublish: 'Video unpublished successfully',
           activate: 'Video activated successfully',
           deactivate: 'Video deactivated successfully',
           delete: 'Video deleted successfully'
         }
-        
-        toast({
+        toast({}
           title: 'Success',
           description: actionMessages[action as keyof typeof actionMessages] || 'Action completed successfully',
         })
       }
-    } catch (error) {
+    } } catch {
       console.error(`Failed to ${action} video:`, error)
-      toast({
+      toast({}
         title: 'Error',
         description: `Failed to ${action} video.`,
         variant: 'destructive',
@@ -233,17 +209,16 @@ export function VideoManagement({ className }: VideoManagementProps) {
   }
 
   const handleBulkAction = async () => {
-    if (!bulkAction || selectedVideos.length === 0) return
-
+    if (!bulkAction || selectedVideos.length === 0) return;
     try {
       const token = localStorage.getItem('accessToken')
-      const response = await fetch('/api/admin/videos/bulk/', {
+      const response = await fetch('/api/admin/videos/bulk/', {}
         method: 'POST',
-        headers: {
+        headers: {}
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
+        body: JSON.stringify({}
           action: bulkAction,
           videoIds: selectedVideos,
         }),
@@ -253,15 +228,14 @@ export function VideoManagement({ className }: VideoManagementProps) {
         await loadVideos()
         setSelectedVideos([])
         setBulkAction('')
-        
-        toast({
+        toast({}
           title: 'Success',
           description: `Bulk ${bulkAction} completed successfully`,
         })
       }
-    } catch (error) {
+    } } catch {
       console.error('Failed to perform bulk action:', error)
-      toast({
+      toast({}
         title: 'Error',
         description: 'Failed to perform bulk action.',
         variant: 'destructive',
@@ -269,7 +243,7 @@ export function VideoManagement({ className }: VideoManagementProps) {
     }
   }
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: string) => {}
     switch (status) {
       case 'active':
         return <CheckCircle className="w-4 h-4 text-green-500" />
@@ -284,14 +258,12 @@ export function VideoManagement({ className }: VideoManagementProps) {
     }
   }
 
-  const getStatusBadge = (status: string) => {
-    const variants: Record<string, "default" | "destructive" | "outline" | "secondary"> = {
-      active: 'default',
+  const getStatusBadge = (status: string) => {}
+    const variants: Record<string, "default" | "destructive" | "outline" | "secondary"> = { active: 'default',
       inactive: 'secondary',
       processing: 'outline',
       failed: 'destructive'
     }
-    
     return (
       <Badge variant={variants[status] || 'secondary'}>
         {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -299,13 +271,11 @@ export function VideoManagement({ className }: VideoManagementProps) {
     )
   }
 
-  const getVisibilityBadge = (visibility: string) => {
-    const variants: Record<string, "default" | "destructive" | "outline" | "secondary"> = {
-      public: 'default',
+  const getVisibilityBadge = (visibility: string) => {}
+    const variants: Record<string, "default" | "destructive" | "outline" | "secondary"> = { public: 'default',
       private: 'secondary',
       unlisted: 'outline'
     }
-    
     return (
       <Badge variant={variants[visibility] || 'secondary'}>
         {visibility.charAt(0).toUpperCase() + visibility.slice(1)}
@@ -313,18 +283,17 @@ export function VideoManagement({ className }: VideoManagementProps) {
     )
   }
 
-  const formatDuration = (seconds: number) => {
+  const formatDuration = (seconds: number) => {}
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60
-    
+    const secs = seconds % 60;
     if (hours > 0) {
       return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
     }
     return `${minutes}:${secs.toString().padStart(2, '0')}`
   }
 
-  const formatFileSize = (sizeStr: string) => {
+  const formatFileSize = (sizeStr: string) => {}
     const size = parseFloat(sizeStr)
     if (size >= 1024) {
       return `${(size / 1024).toFixed(1)} GB`
@@ -332,18 +301,18 @@ export function VideoManagement({ className }: VideoManagementProps) {
     return `${size.toFixed(1)} MB`
   }
 
-  const handleSelectVideo = (videoId: string, checked: boolean) => {
+  const handleSelectVideo = (videoId: string, checked: boolean) => {}
     if (checked) {
       setSelectedVideos(prev => [...prev, videoId])
-    } else {
+    } else {}
       setSelectedVideos(prev => prev.filter(id => id !== videoId))
     }
   }
 
-  const handleSelectAll = (checked: boolean) => {
+  const handleSelectAll = (checked: boolean) => {}
     if (checked) {
       setSelectedVideos(videos.map(video => video.id))
-    } else {
+    } else {}
       setSelectedVideos([])
     }
   }
@@ -416,7 +385,7 @@ export function VideoManagement({ className }: VideoManagementProps) {
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
+                <Input;
                   placeholder="Search videos..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -424,7 +393,6 @@ export function VideoManagement({ className }: VideoManagementProps) {
                 />
               </div>
             </div>
-            
             <div className="flex gap-2">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-32">
@@ -471,9 +439,8 @@ export function VideoManagement({ className }: VideoManagementProps) {
           {selectedVideos.length > 0 && (
             <div className="flex items-center gap-4 mt-4 p-4 bg-muted rounded-lg">
               <span className="text-sm font-medium">
-                {selectedVideos.length} video{selectedVideos.length > 1 ? 's' : ''} selected
+                {selectedVideos.length} video{selectedVideos.length > 1 ? &apos;s&apos; : &apos;'} selected;
               </span>
-              
               <Select value={bulkAction} onValueChange={setBulkAction}>
                 <SelectTrigger className="w-40">
                   <SelectValue placeholder="Bulk action" />
@@ -488,11 +455,10 @@ export function VideoManagement({ className }: VideoManagementProps) {
               </Select>
 
               <Button onClick={handleBulkAction} disabled={!bulkAction}>
-                Apply
+                Apply;
               </Button>
-              
               <Button variant="outline" onClick={() => setSelectedVideos([])}>
-                Clear Selection
+                Clear Selection;
               </Button>
             </div>
           )}
@@ -504,7 +470,7 @@ export function VideoManagement({ className }: VideoManagementProps) {
         <CardHeader>
           <CardTitle>Video Management</CardTitle>
           <CardDescription>
-            Manage all videos in the platform
+            Manage all videos in the platform;
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -512,7 +478,7 @@ export function VideoManagement({ className }: VideoManagementProps) {
             <TableHeader>
               <TableRow>
                 <TableHead className="w-12">
-                  <input
+                  <input;
                     type="checkbox"
                     checked={selectedVideos.length === videos.length && videos.length > 0}
                     onChange={(e) => handleSelectAll(e.target.checked)}
@@ -532,17 +498,16 @@ export function VideoManagement({ className }: VideoManagementProps) {
               {videos.map((video) => (
                 <TableRow key={video.id}>
                   <TableCell>
-                    <input
+                    <input;
                       type="checkbox"
                       checked={selectedVideos.includes(video.id)}
                       onChange={(e) => handleSelectVideo(video.id, e.target.checked)}
                     />
                   </TableCell>
-                  
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <div className="relative w-16 h-10 rounded overflow-hidden bg-gray-200">
-                        <img
+                        <img;
                           src={video.thumbnailUrl}
                           alt={video.title}
                           className="w-full h-full object-cover"
@@ -564,38 +529,32 @@ export function VideoManagement({ className }: VideoManagementProps) {
                       </div>
                     </div>
                   </TableCell>
-                  
                   <TableCell>
                     <div className="flex items-center gap-2">
                       {getStatusIcon(video.status)}
                       {getStatusBadge(video.status)}
                     </div>
                   </TableCell>
-                  
                   <TableCell>
                     {getVisibilityBadge(video.visibility)}
                   </TableCell>
-                  
                   <TableCell>
                     <div className="text-sm">
                       <div>{video.views.toLocaleString()} views</div>
                       <div className="text-muted-foreground">
-                        {video.likes} likes • {video.comments} comments
+                        {video.likes} likes • {video.comments} comments;
                       </div>
                     </div>
                   </TableCell>
-                  
                   <TableCell>
                     <div className="flex items-center gap-1">
                       <Clock className="w-3 h-3" />
                       {formatDuration(video.duration)}
                     </div>
                   </TableCell>
-                  
                   <TableCell>
                     {formatFileSize(video.fileSize)}
                   </TableCell>
-                  
                   <TableCell>
                     <div className="text-sm">
                       <div>{new Date(video.uploadedAt).toLocaleDateString()}</div>
@@ -604,7 +563,6 @@ export function VideoManagement({ className }: VideoManagementProps) {
                       </div>
                     </div>
                   </TableCell>
-                  
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -615,53 +573,49 @@ export function VideoManagement({ className }: VideoManagementProps) {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem>
                           <Play className="w-4 h-4 mr-2" />
-                          Preview
+                          Preview;
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                           <Edit className="w-4 h-4 mr-2" />
-                          Edit Details
+                          Edit Details;
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                           <Share2 className="w-4 h-4 mr-2" />
-                          Share
+                          Share;
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                           <Download className="w-4 h-4 mr-2" />
-                          Download
+                          Download;
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        
                         {video.status === 'active' ? (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'deactivate')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;deactivate&apos;)}>
                             <Pause className="w-4 h-4 mr-2" />
-                            Deactivate
+                            Deactivate;
                           </DropdownMenuItem>
                         ) : (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'activate')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;activate&apos;)}>
                             <Play className="w-4 h-4 mr-2" />
-                            Activate
+                            Activate;
                           </DropdownMenuItem>
                         )}
-                        
                         {video.isPublished ? (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'unpublish')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;unpublish&apos;)}>
                             <EyeOff className="w-4 h-4 mr-2" />
-                            Unpublish
+                            Unpublish;
                           </DropdownMenuItem>
                         ) : (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'publish')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;publish&apos;)}>
                             <Eye className="w-4 h-4 mr-2" />
-                            Publish
+                            Publish;
                           </DropdownMenuItem>
                         )}
-                        
                         <DropdownMenuSeparator />
-                        
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                               <Trash2 className="w-4 h-4 mr-2" />
-                              Delete
+                              Delete;
                             </DropdownMenuItem>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
@@ -673,8 +627,8 @@ export function VideoManagement({ className }: VideoManagementProps) {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleVideoAction(video.id, 'delete')}>
-                                Delete
+                              <AlertDialogAction onClick={() => handleVideoAction(video.id, &apos;delete&apos;)}>
+                                Delete;
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
@@ -702,21 +656,21 @@ export function VideoManagement({ className }: VideoManagementProps) {
                 Page {currentPage} of {totalPages}
               </div>
               <div className="flex gap-2">
-                <Button
+                <Button;
                   variant="outline"
                   size="sm"
                   onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                   disabled={currentPage === 1}
                 >
-                  Previous
+                  Previous;
                 </Button>
-                <Button
+                <Button;
                   variant="outline"
                   size="sm"
                   onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                   disabled={currentPage === totalPages}
                 >
-                  Next
+                  Next;
                 </Button>
               </div>
             </div>

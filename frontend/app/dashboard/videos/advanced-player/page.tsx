@@ -1,23 +1,23 @@
-"use client"
-
 import { useState } from "react"
 import AdvancedVideoPlayer from "@/components/video/advanced-video-player"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
+"use client"
+
 export default function AdvancedVideoPlayerPage() {
-  const [currentVideo] = useState({
+  const [currentVideo] = useState({}
     id: "video-1",
     title: "Sample Video - Advanced Features Demo",
     src: "/placeholder.svg?height=720&width=1280&text=Video+Player+Demo",
-    duration: 300, // 5 minutes
-    qualities: [
+    duration: 300, // 5 minutes;
+    qualities: []
       { label: "4K", value: "2160p", resolution: "3840x2160", bitrate: 15000 },
       { label: "1080p", value: "1080p", resolution: "1920x1080", bitrate: 8000 },
       { label: "720p", value: "720p", resolution: "1280x720", bitrate: 5000 },
       { label: "480p", value: "480p", resolution: "854x480", bitrate: 2500 },
       { label: "360p", value: "360p", resolution: "640x360", bitrate: 1000 },
     ],
-    subtitles: [
+    subtitles: []
       { id: "en", language: "en", label: "English", url: "/subtitles/en.vtt", default: true },
       { id: "es", language: "es", label: "Spanish", url: "/subtitles/es.vtt" },
       { id: "fr", language: "fr", label: "French", url: "/subtitles/fr.vtt" },
@@ -25,15 +25,15 @@ export default function AdvancedVideoPlayerPage() {
     ],
   })
 
-  const handleProgress = (currentTime: number, duration: number) => {
+  const handleProgress = (currentTime: number, duration: number) => {}
     console.log(`Progress: ${currentTime}/${duration}`)
   }
 
-  const handleQualityChange = (quality: string) => {
+  const handleQualityChange = (quality: string) => {}
     console.log(`Quality changed to: ${quality}`)
   }
 
-  const handleSubtitleChange = (subtitleId: string | null) => {
+  const handleSubtitleChange = (subtitleId: string | null) => {}
     console.log(`Subtitle changed to: ${subtitleId}`)
   }
 
@@ -47,7 +47,7 @@ export default function AdvancedVideoPlayerPage() {
           </p>
         </div>
 
-        <AdvancedVideoPlayer
+        <AdvancedVideoPlayer;
           videoId={currentVideo.id}
           src={currentVideo.src}
           title={currentVideo.title}
@@ -89,28 +89,28 @@ export default function AdvancedVideoPlayerPage() {
             <CardContent>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">Space</kbd> - Play/Pause
+                  <kbd className="px-2 py-1 bg-muted rounded">Space</kbd> - Play/Pause;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">←</kbd> - Skip backward 10s
+                  <kbd className="px-2 py-1 bg-muted rounded">←</kbd> - Skip backward 10s;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">→</kbd> - Skip forward 10s
+                  <kbd className="px-2 py-1 bg-muted rounded">→</kbd> - Skip forward 10s;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">↑</kbd> - Volume up
+                  <kbd className="px-2 py-1 bg-muted rounded">↑</kbd> - Volume up;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">↓</kbd> - Volume down
+                  <kbd className="px-2 py-1 bg-muted rounded">↓</kbd> - Volume down;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">M</kbd> - Toggle mute
+                  <kbd className="px-2 py-1 bg-muted rounded">M</kbd> - Toggle mute;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">F</kbd> - Toggle fullscreen
+                  <kbd className="px-2 py-1 bg-muted rounded">F</kbd> - Toggle fullscreen;
                 </li>
                 <li>
-                  <kbd className="px-2 py-1 bg-muted rounded">L</kbd> - Toggle loop
+                  <kbd className="px-2 py-1 bg-muted rounded">L</kbd> - Toggle loop;
                 </li>
               </ul>
             </CardContent>

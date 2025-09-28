@@ -1,10 +1,12 @@
-"use client"
-
+import { Link, Play, Plus, Video } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import {
+import {}
+import { useAuth } from "@/contexts/auth-context"
+
+"use client"
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -17,86 +19,68 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import {
-  Home,
-  Video,
-  Users,
-  Settings,
-  CreditCard,
-  Play,
-  Plus,
-  Shield,
-  BarChart3,
-  UserCheck,
-  AlertTriangle,
-  Activity,
-  Database,
-  Crown,
-} from "lucide-react"
-import { useAuth } from "@/contexts/auth-context"
-
-const navigationItems = [
-  {
+const navigationItems = []
+  {}
     title: "Dashboard",
     href: "/dashboard",
     icon: Home,
   },
-  {
+  {}
     title: "Watch Parties",
     href: "/dashboard/parties",
     icon: Play,
     badge: "Live",
   },
-  {
+  {}
     title: "Videos",
     href: "/dashboard/videos",
     icon: Video,
   },
-  {
+  {}
     title: "Friends",
     href: "/dashboard/friends",
     icon: Users,
     badge: "3",
   },
-  {
+  {}
     title: "Settings",
     href: "/dashboard/settings",
     icon: Settings,
   },
-  {
+  {}
     title: "Billing",
     href: "/dashboard/billing",
     icon: CreditCard,
   },
 ]
 
-const adminItems = [
-  {
+const adminItems = []
+  {}
     title: "Admin Panel",
     href: "/dashboard/admin",
     icon: Shield,
   },
-  {
+  {}
     title: "User Management",
     href: "/dashboard/admin/users",
     icon: UserCheck,
   },
-  {
+  {}
     title: "Analytics",
     href: "/dashboard/admin/analytics",
     icon: BarChart3,
   },
-  {
+  {}
     title: "Content Moderation",
     href: "/dashboard/admin/moderation",
     icon: AlertTriangle,
   },
-  {
+  {}
     title: "System Logs",
     href: "/dashboard/admin/logs",
     icon: Database,
   },
-  {
+  {}
     title: "System Settings",
     href: "/dashboard/admin/settings",
     icon: Activity,

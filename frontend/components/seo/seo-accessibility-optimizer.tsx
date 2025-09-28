@@ -1,6 +1,6 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { AlertTriangle, Check, CheckCircle, External, Eye, File, FileText, Image, Link, Refresh, Search, Settings, TrendingUp, X, XCircle } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
+import Image from "next/image"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI, analyticsAPI } from "@/lib/api"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,7 +12,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
-import {
+import {}
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
+
+"use client"
   Dialog,
   DialogContent,
   DialogDescription,
@@ -20,60 +24,42 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {
-  Search,
-  Eye,
-  Accessibility,
-  TrendingUp,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  Settings,
-  RefreshCw,
-  ExternalLink,
-  FileText,
-  ImageIcon,
-  Link,
-} from "lucide-react"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
-
-interface SEOMetric {
-  name: string
-  score: number
+interface SEOMetric {}
+  name: string;
+  score: number;
   status: "good" | "needs-improvement" | "poor"
-  description: string
+  description: string;
   recommendations: string[]
 }
 
-interface AccessibilityIssue {
-  id: string
+interface AccessibilityIssue {}
+  id: string;
   type: "error" | "warning" | "notice"
-  rule: string
-  description: string
-  element: string
+  rule: string;
+  description: string;
+  element: string;
   impact: "critical" | "serious" | "moderate" | "minor"
-  page: string
-  fixed: boolean
+  page: string;
+  fixed: boolean;
 }
 
-interface SEOPage {
-  url: string
-  title: string
-  metaDescription: string
-  h1Count: number
-  imagesMissingAlt: number
-  internalLinks: number
-  externalLinks: number
-  wordCount: number
-  loadTime: number
-  mobileScore: number
-  desktopScore: number
+interface SEOPage {}
+  url: string;
+  title: string;
+  metaDescription: string;
+  h1Count: number;
+  imagesMissingAlt: number;
+  internalLinks: number;
+  externalLinks: number;
+  wordCount: number;
+  loadTime: number;
+  mobileScore: number;
+  desktopScore: number;
 }
 
 const mockSEOMetrics: SEOMetric[] = []
 
-interface SEOTrend {
+interface SEOTrend {}
   date: string;
   seoScore: number;
   accessibilityScore: number;
@@ -104,37 +90,36 @@ export function SEOAccessibilityOptimizer() {
   const fetchSEOData = async () => {
     try {
       setLoading(true)
-      
-      // Fetch SEO analytics from analytics API
-      const [analyticsData, systemHealth] = await Promise.all([
+      // Fetch SEO analytics from analytics API;
+      const [analyticsData, systemHealth] = await Promise.all([]
         analyticsAPI.getSystemAnalytics(),
         adminAPI.getSystemHealth()
       ])
 
-      // Transform analytics data to SEO metrics
+      // Transform analytics data to SEO metrics;
       if (analyticsData) {
-        const metrics: SEOMetric[] = [
-          {
+        const metrics: SEOMetric[] = []
+          {}
             name: "Page Speed",
             score: analyticsData.performance?.page_speed || 85,
-            status: (analyticsData.performance?.page_speed || 85) >= 90 ? "good" : 
-                   (analyticsData.performance?.page_speed || 85) >= 70 ? "needs-improvement" : "poor",
+            status: (analyticsData.performance?.page_speed || 85) >= 90 ? &quot;good&quot; : 
+                   (analyticsData.performance?.page_speed || 85) >= 70 ? &quot;needs-improvement" : "poor",
             description: "How fast your pages load",
             recommendations: ["Optimize images for web", "Enable compression", "Minimize JavaScript"],
           },
-          {
+          {}
             name: "Mobile Usability",
             score: analyticsData.mobile_score || 72,
             status: (analyticsData.mobile_score || 72) >= 90 ? "good" : 
                    (analyticsData.mobile_score || 72) >= 70 ? "needs-improvement" : "poor",
             description: "How well your site works on mobile devices",
-            recommendations: [
+            recommendations: []
               "Fix clickable elements too close together",
               "Use legible font sizes",
               "Size content to viewport",
             ],
           },
-          {
+          {}
             name: "SEO Score",
             score: analyticsData.seo_score || 78,
             status: (analyticsData.seo_score || 78) >= 90 ? "good" : 
@@ -146,15 +131,15 @@ export function SEOAccessibilityOptimizer() {
         setSEOMetrics(metrics)
       }
 
-      // Fetch system logs for accessibility issues
-      const logsData = await adminAPI.getLogs({
+      // Fetch system logs for accessibility issues;
+      const logsData = await adminAPI.getLogs({}
         component: 'accessibility',
         level: 'warning',
-        page: 1
+        page: 1;
       })
 
       if (logsData.results) {
-        const issues: AccessibilityIssue[] = logsData.results.map((log: any, index: number) => ({
+        const issues: AccessibilityIssue[] = logsData.results.map((log: unknown, index: number) => ({}
           id: log.id || index.toString(),
           type: log.level === 'error' ? 'error' : 'warning',
           rule: log.component || 'accessibility-rule',
@@ -167,14 +152,14 @@ export function SEOAccessibilityOptimizer() {
         setAccessibilityIssues(issues)
       }
 
-    } catch (error) {
+    } } catch {
       console.error('Failed to fetch SEO data:', error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load SEO data. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
@@ -182,41 +167,41 @@ export function SEOAccessibilityOptimizer() {
   const runSEOScan = async () => {
     setIsScanning(true)
     try {
-      // Refresh SEO data from API
+      // Refresh SEO data from API;
       await fetchSEOData()
-      toast({
+      toast({}
         title: "SEO Scan Complete",
         description: "Your SEO and accessibility data has been updated.",
       })
-    } catch (error) {
+    } } catch {
       console.error('SEO scan failed:', error)
-      toast({
+      toast({}
         title: "Scan Failed",
         description: "Failed to complete SEO scan. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsScanning(false)
     }
   }
 
-  const fixAccessibilityIssue = (issueId: string) => {
+  const fixAccessibilityIssue = (issueId: string) => {}
     setAccessibilityIssues((prev) => prev.map((issue) => (issue.id === issueId ? { ...issue, fixed: true } : issue)))
   }
 
-  const getScoreColor = (score: number) => {
+  const getScoreColor = (score: number) => {}
     if (score >= 90) return "text-green-600"
     if (score >= 70) return "text-yellow-600"
     return "text-red-600"
   }
 
-  const getScoreBackground = (score: number) => {
+  const getScoreBackground = (score: number) => {}
     if (score >= 90) return "bg-green-100 dark:bg-green-900"
     if (score >= 70) return "bg-yellow-100 dark:bg-yellow-900"
     return "bg-red-100 dark:bg-red-900"
   }
 
-  const getIssueTypeColor = (type: string) => {
+  const getIssueTypeColor = (type: string) => {}
     switch (type) {
       case "error":
         return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
@@ -229,7 +214,7 @@ export function SEOAccessibilityOptimizer() {
     }
   }
 
-  const getImpactColor = (impact: string) => {
+  const getImpactColor = (impact: string) => {}
     switch (impact) {
       case "critical":
         return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
@@ -244,10 +229,9 @@ export function SEOAccessibilityOptimizer() {
     }
   }
 
-  const totalIssues = accessibilityIssues.length
-  const fixedIssues = accessibilityIssues.filter((issue) => issue.fixed).length
-  const criticalIssues = accessibilityIssues.filter((issue) => issue.impact === "critical" && !issue.fixed).length
-
+  const totalIssues = accessibilityIssues.length;
+  const fixedIssues = accessibilityIssues.filter((issue) => issue.fixed).length;
+  const criticalIssues = accessibilityIssues.filter((issue) => issue.impact === "critical" && !issue.fixed).length;
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -258,9 +242,9 @@ export function SEOAccessibilityOptimizer() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant="outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
             <Settings className="mr-2 h-4 w-4" />
-            Settings
+            Settings;
           </Button>
           <Button onClick={runSEOScan} disabled={isScanning}>
             <RefreshCw className={`mr-2 h-4 w-4 ${isScanning ? "animate-spin" : ""}`} />
@@ -280,7 +264,7 @@ export function SEOAccessibilityOptimizer() {
             <div className={`text-2xl font-bold ${getScoreColor(78)}`}>78</div>
             <div className="flex items-center text-xs text-muted-foreground">
               <TrendingUp className="mr-1 h-3 w-3" />
-              +5 from last week
+              +5 from last week;
             </div>
           </CardContent>
         </Card>
@@ -293,7 +277,7 @@ export function SEOAccessibilityOptimizer() {
           <CardContent>
             <div className={`text-2xl font-bold ${getScoreColor(85)}`}>85</div>
             <div className="flex items-center text-xs text-muted-foreground">
-              {fixedIssues}/{totalIssues} issues fixed
+              {fixedIssues}/{totalIssues} issues fixed;
             </div>
           </CardContent>
         </Card>
@@ -315,7 +299,7 @@ export function SEOAccessibilityOptimizer() {
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${criticalIssues > 0 ? "text-red-600" : "text-green-600"}`}>
+            <div className={`text-2xl font-bold ${criticalIssues > 0 ? &quot;text-red-600&quot; : &quot;text-green-600"}`}>"
               {criticalIssues}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">Require immediate attention</div>
@@ -345,14 +329,14 @@ export function SEOAccessibilityOptimizer() {
                 <div className="flex items-center justify-center">
                   <div className="relative w-32 h-32">
                     <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
-                      <path
+                      <path;
                         className="text-gray-300"
                         stroke="currentColor"
                         strokeWidth="3"
                         fill="none"
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                       />
-                      <path
+                      <path;
                         className="text-yellow-500"
                         stroke="currentColor"
                         strokeWidth="3"
@@ -383,14 +367,14 @@ export function SEOAccessibilityOptimizer() {
                 <div className="flex items-center justify-center">
                   <div className="relative w-32 h-32">
                     <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 36 36">
-                      <path
+                      <path;
                         className="text-gray-300"
                         stroke="currentColor"
                         strokeWidth="3"
                         fill="none"
                         d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                       />
-                      <path
+                      <path;
                         className="text-green-500"
                         stroke="currentColor"
                         strokeWidth="3"
@@ -578,7 +562,7 @@ export function SEOAccessibilityOptimizer() {
                         <div className="flex gap-1">
                           {!issue.fixed && (
                             <Button size="sm" onClick={() => fixAccessibilityIssue(issue.id)}>
-                              Fix
+                              Fix;
                             </Button>
                           )}
                           <Button size="sm" variant="outline">
@@ -668,21 +652,21 @@ export function SEOAccessibilityOptimizer() {
                         <div className="flex gap-1">
                           {page.imagesMissingAlt > 0 && (
                             <Badge variant="destructive" className="text-xs">
-                              {page.imagesMissingAlt} alt
+                              {page.imagesMissingAlt} alt;
                             </Badge>
                           )}
                           {!page.metaDescription && (
                             <Badge variant="destructive" className="text-xs">
-                              meta
+                              meta;
                             </Badge>
                           )}
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Button
+                        <Button;
                           size="sm"
                           variant="outline"
-                          onClick={() => {
+                          onClick={() => {}
                             setSelectedPage(page)
                             setPageDetailsOpen(true)
                           }}
@@ -792,7 +776,7 @@ export function SEOAccessibilityOptimizer() {
 
               <div>
                 <Label>Meta Description</Label>
-                <Textarea
+                <Textarea;
                   value={selectedPage.metaDescription}
                   placeholder="Add a meta description..."
                   className="mt-1"
@@ -815,7 +799,7 @@ export function SEOAccessibilityOptimizer() {
                   <div className="flex items-center gap-2">
                     <AlertTriangle className="h-4 w-4 text-red-600" />
                     <span className="text-sm text-red-700 dark:text-red-400">
-                      {selectedPage.imagesMissingAlt} images missing alt text
+                      {selectedPage.imagesMissingAlt} images missing alt text;
                     </span>
                   </div>
                 </div>
@@ -825,7 +809,7 @@ export function SEOAccessibilityOptimizer() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setPageDetailsOpen(false)}>
-              Close
+              Close;
             </Button>
             <Button onClick={() => setPageDetailsOpen(false)}>Save Changes</Button>
           </DialogFooter>
@@ -888,7 +872,7 @@ export function SEOAccessibilityOptimizer() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setSettingsDialogOpen(false)}>
-              Cancel
+              Cancel;
             </Button>
             <Button onClick={() => setSettingsDialogOpen(false)}>Save Settings</Button>
           </DialogFooter>

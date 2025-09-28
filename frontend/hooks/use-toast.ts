@@ -1,72 +1,66 @@
+import * as React from "react"
+import type {}
+
 "use client"
 
-// Inspired by react-hot-toast library
-import * as React from "react"
-import { CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react'
-
-import type {
+// Inspired by react-hot-toast library;
   ToastActionElement,
   ToastProps,
 } from "@/components/ui/toast"
 
-const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
-
-type ToasterToast = ToastProps & {
-  id: string
-  title?: React.ReactNode
-  description?: React.ReactNode
-  action?: ToastActionElement
+const TOAST_LIMIT = 1;
+const TOAST_REMOVE_DELAY = 1000000;
+type ToasterToast = ToastProps & {}
+  id: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  action?: ToastActionElement;
 }
 
-const actionTypes = {
-  ADD_TOAST: "ADD_TOAST",
+const actionTypes = { ADD_TOAST: "ADD_TOAST",
   UPDATE_TOAST: "UPDATE_TOAST",
   DISMISS_TOAST: "DISMISS_TOAST",
   REMOVE_TOAST: "REMOVE_TOAST",
-} as const
-
-let count = 0
-
+} as const;
+let count = 0;
 function genId() {
-  count = (count + 1) % Number.MAX_SAFE_INTEGER
+  count = (count + 1) % Number.MAX_SAFE_INTEGER;
   return count.toString()
 }
 
-type ActionType = typeof actionTypes
-
+type ActionType = typeof actionTypes;
 type Action =
-  | {
+  | {}
       type: ActionType["ADD_TOAST"]
-      toast: ToasterToast
+      toast: ToasterToast;
     }
-  | {
+  | {}
       type: ActionType["UPDATE_TOAST"]
       toast: Partial<ToasterToast>
     }
-  | {
+  | {}
       type: ActionType["DISMISS_TOAST"]
       toastId?: ToasterToast["id"]
     }
-  | {
+  | {}
       type: ActionType["REMOVE_TOAST"]
       toastId?: ToasterToast["id"]
     }
 
-interface State {
+interface State {}
   toasts: ToasterToast[]
 }
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
-const addToRemoveQueue = (toastId: string) => {
-  if (toastTimeouts.has(toastId)) {
-    return
+const addToRemoveQueue = (toastId: string) => {}
+  if (toastTimeouts.has(toastId)) {}
+    return;
   }
 
-  const timeout = setTimeout(() => {
+  const timeout = setTimeout(() => {}
     toastTimeouts.delete(toastId)
-    dispatch({
+    dispatch({}
       type: "REMOVE_TOAST",
       toastId: toastId,
     })
@@ -75,7 +69,7 @@ const addToRemoveQueue = (toastId: string) => {
   toastTimeouts.set(toastId, timeout)
 }
 
-export const reducer = (state: State, action: Action): State => {
+export const reducer = (state: State, action: Action): State => {}
   switch (action.type) {
     case "ADD_TOAST":
       return {
@@ -87,19 +81,18 @@ export const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         toasts: state.toasts.map((t) =>
-          t.id === action.toast.id ? { ...t, ...action.toast } : t
+          t.id === action.toast.id ? { ...t, ...action.toast } : t;
         ),
       }
 
-    case "DISMISS_TOAST": {
-      const { toastId } = action
-
+    case "DISMISS_TOAST": {}
+      const { toastId } = action;
       // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity
+      // but I'll keep it here for simplicity;
       if (toastId) {
         addToRemoveQueue(toastId)
-      } else {
-        state.toasts.forEach((toast) => {
+      } else {}
+        state.toasts.forEach((toast) => {}
           addToRemoveQueue(toast.id)
         })
       }
@@ -107,12 +100,12 @@ export const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         toasts: state.toasts.map((t) =>
-          t.id === toastId || toastId === undefined
-            ? {
+          t.id === toastId || toastId === undefined;
+            ? {}
                 ...t,
                 open: false,
               }
-            : t
+            : t;
         ),
       }
     }
@@ -134,32 +127,32 @@ const listeners: Array<(state: State) => void> = []
 
 let memoryState: State = { toasts: [] }
 
-function dispatch(action: Action) {
+function dispatch(action: Action) {}
   memoryState = reducer(memoryState, action)
-  listeners.forEach((listener) => {
+  listeners.forEach((listener) => {}
     listener(memoryState)
   })
 }
 
 type Toast = Omit<ToasterToast, "id">
 
-function toast({ ...props }: Toast) {
+function toast({ ...props }: Toast) {}
   const id = genId()
 
   const update = (props: ToasterToast) =>
-    dispatch({
+    dispatch({}
       type: "UPDATE_TOAST",
       toast: { ...props, id },
     })
-  const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
+  const dismiss = () => dispatch({ type: &quot;DISMISS_TOAST&quot;, toastId: id })
 
-  dispatch({
+  dispatch({}
     type: "ADD_TOAST",
-    toast: {
+    toast: {}
       ...props,
       id,
       open: true,
-      onOpenChange: (open) => {
+      onOpenChange: (open) => {}
         if (!open) dismiss()
       },
     },
@@ -177,7 +170,7 @@ function useToast() {
 
   React.useEffect(() => {
     listeners.push(setState)
-    return () => {
+    return () => {}
       const index = listeners.indexOf(setState)
       if (index > -1) {
         listeners.splice(index, 1)
@@ -188,26 +181,26 @@ function useToast() {
   return {
     ...state,
     toast,
-    dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+    dismiss: (toastId?: string) => dispatch({ type: &quot;DISMISS_TOAST&quot;, toastId }),
   }
 }
 
-// Enhanced hook for API requests with automatic error toasting
+// Enhanced hook for API requests with automatic error toasting;
 export function useApiToast() {
   const { toast } = useToast()
 
-  const toastError = React.useCallback((error: any, title?: string) => {
+  const toastError = React.useCallback((error: unknown, title?: string) => {}
     const errorMessage = error?.message || error?.error || 'An unexpected error occurred'
-    toast({
+    toast({}
       variant: 'destructive',
       title: title || 'Error',
       description: errorMessage,
-      duration: 6000
+      duration: 6000;
     })
   }, [toast])
 
-  const toastSuccess = React.useCallback((message: string, title?: string) => {
-    toast({
+  const toastSuccess = React.useCallback((message: string, title?: string) => {}
+    toast({}
       title: title || 'Success',
       description: message,
       duration: 4000,
@@ -215,8 +208,8 @@ export function useApiToast() {
     })
   }, [toast])
 
-  const toastWarning = React.useCallback((message: string, title?: string) => {
-    toast({
+  const toastWarning = React.useCallback((message: string, title?: string) => {}
+    toast({}
       title: title || 'Warning', 
       description: message,
       duration: 5000,
@@ -224,8 +217,8 @@ export function useApiToast() {
     })
   }, [toast])
 
-  const toastInfo = React.useCallback((message: string, title?: string) => {
-    toast({
+  const toastInfo = React.useCallback((message: string, title?: string) => {}
+    toast({}
       title: title || 'Info',
       description: message,
       duration: 4000,
@@ -233,32 +226,32 @@ export function useApiToast() {
     })
   }, [toast])
 
-  // API request wrapper with automatic error handling
+  // API request wrapper with automatic error handling;
   const apiRequest = React.useCallback(async <T = any>(
     request: () => Promise<Response>,
-    options?: {
-      successMessage?: string
-      errorTitle?: string
-      showSuccess?: boolean
+    options?: {}
+      successMessage?: string;
+      errorTitle?: string;
+      showSuccess?: boolean;
     }
-  ): Promise<T | null> => {
+  ): Promise<T | null> => {}
     try {
       const response = await request()
       const data = await response.json()
 
       if (!response.ok) {
         toastError(data, options?.errorTitle)
-        return null
+        return null;
       }
 
       if (options?.showSuccess && options?.successMessage) {
         toastSuccess(options.successMessage)
       }
 
-      return data
-    } catch (error) {
+      return data;
+    } } catch {
       toastError(error, options?.errorTitle)
-      return null
+      return null;
     }
   }, [toastError, toastSuccess])
 
@@ -268,7 +261,7 @@ export function useApiToast() {
     toastSuccess,
     toastWarning,
     toastInfo,
-    apiRequest
+    apiRequest;
   }
 }
 

@@ -1,6 +1,6 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { Calendar, Clock, Copy, Edit, Eye, Filter, Grid, Link, List, Loader2, Lock, MoreVertical, Play, Plus, Search, Share, Trash, TrendingUp, User, Users, Video } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -8,79 +8,57 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
-import {
-  Plus,
-  Search,
-  Calendar,
-  Users,
-  Play,
-  Clock,
-  Share2,
-  MoreVertical,
-  Edit,
-  Trash2,
-  Copy,
-  Eye,
-  Grid3X3,
-  List,
-  Loader2,
-  Video,
-  Globe,
-  Lock,
-  TrendingUp,
-  UserPlus,
-} from "lucide-react"
 import { format, formatDistanceToNow, isToday, isTomorrow, isYesterday } from "date-fns"
 
-interface Party {
-  id: string
-  name: string
-  description: string
-  roomCode: string
-  thumbnail?: string
-  host: {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
-    isVerified: boolean
+"use client"
+interface Party {}
+  id: string;
+  name: string;
+  description: string;
+  roomCode: string;
+  thumbnail?: string;
+  host: {}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+    isVerified: boolean;
   }
-  participants: Array<{
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
+  participants: Array<{}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
   }>
-  maxParticipants: number
-  isPrivate: boolean
-  requiresApproval: boolean
+  maxParticipants: number;
+  isPrivate: boolean;
+  requiresApproval: boolean;
   status: "scheduled" | "active" | "ended" | "cancelled"
-  scheduledFor?: string
-  startedAt?: string
-  endedAt?: string
-  createdAt: string
-  updatedAt: string
+  scheduledFor?: string;
+  startedAt?: string;
+  endedAt?: string;
+  createdAt: string;
+  updatedAt: string;
   tags: string[]
-  videoTitle?: string
-  videoThumbnail?: string
-  videoDuration?: number
-  analytics?: {
-    totalViews: number
-    peakViewers: number
-    averageWatchTime: number
-    chatMessages: number
+  videoTitle?: string;
+  videoThumbnail?: string;
+  videoDuration?: number;
+  analytics?: {}
+    totalViews: number;
+    peakViewers: number;
+    averageWatchTime: number;
+    chatMessages: number;
   }
 }
 
-interface FilterOptions {
+interface FilterOptions {}
   status: "all" | "scheduled" | "active" | "ended"
   privacy: "all" | "public" | "private"
   role: "all" | "hosted" | "joined"
@@ -94,8 +72,8 @@ export default function PartiesPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [filters, setFilters] = useState<FilterOptions>({
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid&quot;)
+  const [filters, setFilters] = useState<FilterOptions>({}
     status: "all",
     privacy: "all",
     role: "all",
@@ -120,7 +98,7 @@ export default function PartiesPage() {
       const token = localStorage.getItem("accessToken")
       let endpoint = "/api/parties/"
 
-      // Add query parameters based on active tab
+      // Add query parameters based on active tab;
       const params = new URLSearchParams()
       if (activeTab === "hosted") {
         params.append("hosted", "true")
@@ -132,12 +110,12 @@ export default function PartiesPage() {
         params.append("status", "active")
       }
 
-      if (params.toString()) {
+      if (params.toString()) {}
         endpoint += `?${params.toString()}`
       }
 
-      const response = await fetch(endpoint, {
-        headers: {
+      const response = await fetch(endpoint, {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -145,26 +123,26 @@ export default function PartiesPage() {
       if (response.ok) {
         const data = await response.json()
         setParties(data.results || data)
-      } else {
+      } else {}
         throw new Error("Failed to load parties")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to load parties:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load parties. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const filterAndSortParties = () => {
+  const filterAndSortParties = () => {}
     let filtered = [...parties]
 
-    // Search filter
-    if (searchQuery.trim()) {
+    // Search filter;
+    if (searchQuery.trim()) {}
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(
         (party) =>
@@ -175,68 +153,67 @@ export default function PartiesPage() {
       )
     }
 
-    // Status filter
+    // Status filter;
     if (filters.status !== "all") {
       filtered = filtered.filter((party) => party.status === filters.status)
     }
 
-    // Privacy filter
+    // Privacy filter;
     if (filters.privacy !== "all") {
-      filtered = filtered.filter((party) => (filters.privacy === "private" ? party.isPrivate : !party.isPrivate))
+      filtered = filtered.filter((party) => (filters.privacy === &quot;private&quot; ? party.isPrivate : !party.isPrivate))
     }
 
-    // Role filter
+    // Role filter;
     if (filters.role !== "all") {
-      filtered = filtered.filter((party) => {
+      filtered = filtered.filter((party) => {}
         if (filters.role === "hosted") {
-          return party.host.id === user?.id
+          return party.host.id === user?.id;
         } else if (filters.role === "joined") {
-          return party.participants.some((p) => p.id === user?.id) && party.host.id !== user?.id
+          return party.participants.some((p) => p.id === user?.id) && party.host.id !== user?.id;
         }
-        return true
+        return true;
       })
     }
 
-    // Sort
-    filtered.sort((a, b) => {
-      let aValue: any, bValue: any
-
+    // Sort;
+    filtered.sort((a, b) => {}
+      let aValue: unknown, bValue: unknown;
       switch (filters.sortBy) {
         case "name":
           aValue = a.name.toLowerCase()
           bValue = b.name.toLowerCase()
-          break
+          break;
         case "scheduled":
-          aValue = a.scheduledFor ? new Date(a.scheduledFor).getTime() : 0
-          bValue = b.scheduledFor ? new Date(b.scheduledFor).getTime() : 0
-          break
+          aValue = a.scheduledFor ? new Date(a.scheduledFor).getTime() : 0;
+          bValue = b.scheduledFor ? new Date(b.scheduledFor).getTime() : 0;
+          break;
         case "participants":
-          aValue = a.participants.length
-          bValue = b.participants.length
-          break
+          aValue = a.participants.length;
+          bValue = b.participants.length;
+          break;
         case "created":
         default:
           aValue = new Date(a.createdAt).getTime()
           bValue = new Date(b.createdAt).getTime()
-          break
+          break;
       }
 
       if (filters.sortOrder === "asc") {
-        return aValue > bValue ? 1 : -1
-      } else {
-        return aValue < bValue ? 1 : -1
+        return aValue > bValue ? 1 : -1;
+      } else {}
+        return aValue < bValue ? 1 : -1;
       }
     })
 
     setFilteredParties(filtered)
   }
 
-  const joinParty = async (roomCode: string) => {
+  const joinParty = async (roomCode: string) => {}
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/parties/join-by-code/", {
+      const response = await fetch("/api/parties/join-by-code/", {}
         method: "POST",
-        headers: {
+        headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
@@ -245,17 +222,17 @@ export default function PartiesPage() {
 
       if (response.ok) {
         router.push(`/watch/${roomCode}`)
-      } else {
+      } else {}
         const errorData = await response.json()
-        toast({
+        toast({}
           title: "Failed to Join",
           description: errorData.message || "Unable to join the party.",
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to join party:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
@@ -263,32 +240,32 @@ export default function PartiesPage() {
     }
   }
 
-  const deleteParty = async (partyId: string) => {
-    if (!confirm("Are you sure you want to delete this party? This action cannot be undone.")) {
-      return
+  const deleteParty = async (partyId: string) => {}
+    if (!confirm("Are you sure you want to delete this party? This action cannot be undone.")) {}
+      return;
     }
 
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/`, {
+      const response = await fetch(`/api/parties/${partyId}/`, {}
         method: "DELETE",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
         setParties((prev) => prev.filter((p) => p.id !== partyId))
-        toast({
+        toast({}
           title: "Party Deleted",
           description: "The party has been successfully deleted.",
         })
-      } else {
+      } else {}
         throw new Error("Failed to delete party")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to delete party:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to delete party. Please try again.",
         variant: "destructive",
@@ -296,37 +273,37 @@ export default function PartiesPage() {
     }
   }
 
-  const copyRoomCode = (roomCode: string) => {
+  const copyRoomCode = (roomCode: string) => {}
     navigator.clipboard.writeText(roomCode)
-    toast({
+    toast({}
       title: "Copied!",
       description: "Room code copied to clipboard.",
     })
   }
 
-  const shareParty = async (party: Party) => {
+  const shareParty = async (party: Party) => {}
     const shareUrl = `${window.location.origin}/watch/${party.roomCode}`
 
     if (navigator.share) {
       try {
-        await navigator.share({
+        await navigator.share({}
           title: party.name,
           text: party.description,
           url: shareUrl,
         })
-      } catch (error) {
+      } } catch {
         console.log("Share cancelled")
       }
-    } else {
+    } else {}
       navigator.clipboard.writeText(shareUrl)
-      toast({
+      toast({}
         title: "Link Copied",
         description: "Party link copied to clipboard.",
       })
     }
   }
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string) => {}
     switch (status) {
       case "active":
         return "bg-green-500 text-white"
@@ -341,7 +318,7 @@ export default function PartiesPage() {
     }
   }
 
-  const getStatusText = (status: string) => {
+  const getStatusText = (status: string) => {}
     switch (status) {
       case "active":
         return "Live"
@@ -352,25 +329,25 @@ export default function PartiesPage() {
       case "cancelled":
         return "Cancelled"
       default:
-        return status
+        return status;
     }
   }
 
-  const formatScheduledTime = (scheduledFor: string) => {
+  const formatScheduledTime = (scheduledFor: string) => {}
     const date = new Date(scheduledFor)
 
-    if (isToday(date)) {
+    if (isToday(date)) {}
       return `Today at ${format(date, "h:mm a")}`
-    } else if (isTomorrow(date)) {
+    } else if (isTomorrow(date)) {}
       return `Tomorrow at ${format(date, "h:mm a")}`
-    } else if (isYesterday(date)) {
+    } else if (isYesterday(date)) {}
       return `Yesterday at ${format(date, "h:mm a")}`
-    } else {
+    } else {}
       return format(date, "MMM d 'at' h:mm a")
     }
   }
 
-  const isHost = (party: Party) => party.host.id === user?.id
+  const isHost = (party: Party) => party.host.id === user?.id;
   const isParticipant = (party: Party) => party.participants.some((p) => p.id === user?.id)
 
   const PartyCard = ({ party }: { party: Party }) => (
@@ -379,7 +356,7 @@ export default function PartiesPage() {
         {/* Thumbnail */}
         <div className="relative aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg overflow-hidden">
           {party.videoThumbnail ? (
-            <img
+            <img;
               src={party.videoThumbnail || "/placeholder.svg"}
               alt={party.videoTitle || party.name}
               className="w-full h-full object-cover"
@@ -404,12 +381,12 @@ export default function PartiesPage() {
               {party.isPrivate ? (
                 <>
                   <Lock className="w-3 h-3 mr-1" />
-                  Private
+                  Private;
                 </>
               ) : (
                 <>
                   <Globe className="w-3 h-3 mr-1" />
-                  Public
+                  Public;
                 </>
               )}
             </Badge>
@@ -441,26 +418,26 @@ export default function PartiesPage() {
                   <>
                     <DropdownMenuItem onClick={() => router.push(`/dashboard/parties/${party.id}/edit`)}>
                       <Edit className="h-4 w-4 mr-2" />
-                      Edit Party
+                      Edit Party;
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => router.push(`/dashboard/parties/${party.id}/analytics`)}>
                       <TrendingUp className="h-4 w-4 mr-2" />
-                      Analytics
+                      Analytics;
                     </DropdownMenuItem>
                   </>
                 )}
                 <DropdownMenuItem onClick={() => copyRoomCode(party.roomCode)}>
                   <Copy className="h-4 w-4 mr-2" />
-                  Copy Room Code
+                  Copy Room Code;
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => shareParty(party)}>
                   <Share2 className="h-4 w-4 mr-2" />
-                  Share Party
+                  Share Party;
                 </DropdownMenuItem>
                 {isHost(party) && (
-                  <DropdownMenuItem onClick={() => deleteParty(party.id)} className="text-destructive">
+                  <DropdownMenuItem onClick={() => deleteParty(party.id)} className=&quot;text-destructive&quot;>
                     <Trash2 className="h-4 w-4 mr-2" />
-                    Delete Party
+                    Delete Party;
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
@@ -483,7 +460,7 @@ export default function PartiesPage() {
             </span>
             {party.host.isVerified && (
               <Badge variant="secondary" className="text-xs">
-                Verified
+                Verified;
               </Badge>
             )}
           </div>
@@ -523,11 +500,11 @@ export default function PartiesPage() {
             <div className="grid grid-cols-2 gap-2 mb-3 text-xs text-muted-foreground">
               <div className="flex items-center gap-1">
                 <Eye className="h-3 w-3" />
-                {party.analytics.totalViews} views
+                {party.analytics.totalViews} views;
               </div>
               <div className="flex items-center gap-1">
                 <Users className="h-3 w-3" />
-                {party.analytics.peakViewers} peak
+                {party.analytics.peakViewers} peak;
               </div>
             </div>
           )}
@@ -535,29 +512,29 @@ export default function PartiesPage() {
           {/* Action Buttons */}
           <div className="flex gap-2">
             {party.status === "active" ? (
-              <Button onClick={() => router.push(`/watch/${party.roomCode}`)} className="flex-1" size="sm">
+              <Button onClick={() => router.push(`/watch/${party.roomCode}`)} className=&quot;flex-1&quot; size=&quot;sm">"
                 <Play className="h-4 w-4 mr-2" />
-                Join Live
+                Join Live;
               </Button>
             ) : party.status === "scheduled" ? (
               <Button variant="outline" className="flex-1 bg-transparent" size="sm" disabled>
                 <Clock className="h-4 w-4 mr-2" />
-                Scheduled
+                Scheduled;
               </Button>
             ) : (
-              <Button
+              <Button;
                 onClick={() => router.push(`/watch/${party.roomCode}`)}
                 variant="outline"
                 className="flex-1"
                 size="sm"
               >
                 <Eye className="h-4 w-4 mr-2" />
-                View
+                View;
               </Button>
             )}
 
             {!isParticipant(party) && !isHost(party) && party.status !== "ended" && (
-              <Button onClick={() => joinParty(party.roomCode)} variant="outline" size="sm">
+              <Button onClick={() => joinParty(party.roomCode)} variant=&quot;outline&quot; size=&quot;sm">
                 <UserPlus className="h-4 w-4" />
               </Button>
             )}
@@ -574,7 +551,7 @@ export default function PartiesPage() {
           {/* Thumbnail */}
           <div className="relative w-24 h-16 bg-gradient-to-br from-primary/20 to-secondary/20 rounded overflow-hidden flex-shrink-0">
             {party.videoThumbnail ? (
-              <img
+              <img;
                 src={party.videoThumbnail || "/placeholder.svg"}
                 alt={party.videoTitle || party.name}
                 className="w-full h-full object-cover"
@@ -595,7 +572,7 @@ export default function PartiesPage() {
               <h3 className="font-semibold truncate pr-2">{party.name}</h3>
               <div className="flex items-center gap-2 flex-shrink-0">
                 <Badge variant="outline" className="text-xs">
-                  {party.isPrivate ? <Lock className="w-3 h-3" /> : <Globe className="w-3 h-3" />}
+                  {party.isPrivate ? <Lock className="w-3 h-3" /> : <Globe className=&quot;w-3 h-3&quot; />}
                 </Badge>
                 <Badge variant="outline" className="text-xs">
                   <Users className="w-3 h-3 mr-1" />
@@ -625,14 +602,14 @@ export default function PartiesPage() {
 
               <div className="flex items-center gap-2">
                 {party.status === "active" ? (
-                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} size="sm">
+                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} size=&quot;sm&quot;>
                     <Play className="h-4 w-4 mr-1" />
-                    Join
+                    Join;
                   </Button>
                 ) : (
-                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} variant="outline" size="sm">
+                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} variant=&quot;outline&quot; size=&quot;sm">
                     <Eye className="h-4 w-4 mr-1" />
-                    View
+                    View;
                   </Button>
                 )}
 
@@ -646,16 +623,16 @@ export default function PartiesPage() {
                     {isHost(party) && (
                       <DropdownMenuItem onClick={() => router.push(`/dashboard/parties/${party.id}/edit`)}>
                         <Edit className="h-4 w-4 mr-2" />
-                        Edit
+                        Edit;
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuItem onClick={() => copyRoomCode(party.roomCode)}>
                       <Copy className="h-4 w-4 mr-2" />
-                      Copy Code
+                      Copy Code;
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => shareParty(party)}>
                       <Share2 className="h-4 w-4 mr-2" />
-                      Share
+                      Share;
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -675,14 +652,14 @@ export default function PartiesPage() {
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <Users className="h-8 w-8" />
-              Watch Parties
+              Watch Parties;
             </h1>
             <p className="text-muted-foreground mt-2">Manage and join watch parties with friends</p>
           </div>
           <Link href="/dashboard/parties/create">
             <Button size="lg" className="shadow-lg">
               <Plus className="h-5 w-5 mr-2" />
-              Create Party
+              Create Party;
             </Button>
           </Link>
         </div>
@@ -692,7 +669,7 @@ export default function PartiesPage() {
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
+              <Input;
                 placeholder="Search parties by name, description, or tags..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -702,9 +679,9 @@ export default function PartiesPage() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Select
+            <Select;
               value={filters.status}
-              onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value as any }))}
+              onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value as Record<string, unknown> }))}
             >
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -717,9 +694,9 @@ export default function PartiesPage() {
               </SelectContent>
             </Select>
 
-            <Select
+            <Select;
               value={filters.privacy}
-              onValueChange={(value) => setFilters((prev) => ({ ...prev, privacy: value as any }))}
+              onValueChange={(value) => setFilters((prev) => ({ ...prev, privacy: value as Record<string, unknown> }))}
             >
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -731,9 +708,9 @@ export default function PartiesPage() {
               </SelectContent>
             </Select>
 
-            <Select
+            <Select;
               value={filters.sortBy}
-              onValueChange={(value) => setFilters((prev) => ({ ...prev, sortBy: value as any }))}
+              onValueChange={(value) => setFilters((prev) => ({ ...prev, sortBy: value as Record<string, unknown> }))}
             >
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -747,18 +724,18 @@ export default function PartiesPage() {
             </Select>
 
             <div className="flex items-center border rounded-md">
-              <Button
+              <Button;
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode("grid")}
+                onClick={() => setViewMode(&quot;grid&quot;)}
                 className="rounded-r-none"
               >
                 <Grid3X3 className="h-4 w-4" />
               </Button>
-              <Button
+              <Button;
                 variant={viewMode === "list" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode("list")}
+                onClick={() => setViewMode(&quot;list&quot;)}
                 className="rounded-l-none"
               >
                 <List className="h-4 w-4" />
@@ -788,7 +765,7 @@ export default function PartiesPage() {
                 <Users className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-lg font-medium mb-2">No parties found</h3>
                 <p className="text-muted-foreground mb-4">
-                  {searchQuery
+                  {searchQuery;
                     ? "No parties match your search criteria."
                     : activeTab === "hosted"
                       ? "You haven't created any parties yet."
@@ -804,13 +781,13 @@ export default function PartiesPage() {
                   <Link href="/dashboard/parties/create">
                     <Button>
                       <Plus className="h-4 w-4 mr-2" />
-                      Create Your First Party
+                      Create Your First Party;
                     </Button>
                   </Link>
                 )}
               </div>
             ) : (
-              <div
+              <div;
                 className={cn(
                   viewMode === "grid"
                     ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
@@ -835,7 +812,7 @@ export default function PartiesPage() {
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-green-600">
-                  {filteredParties.filter((p) => p.status === "active").length}
+                  {filteredParties.filter((p) => p.status === &quot;active&quot;).length}
                 </div>
                 <div className="text-sm text-muted-foreground">Live Now</div>
               </CardContent>
@@ -843,7 +820,7 @@ export default function PartiesPage() {
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-blue-600">
-                  {filteredParties.filter((p) => p.status === "scheduled").length}
+                  {filteredParties.filter((p) => p.status === &quot;scheduled&quot;).length}
                 </div>
                 <div className="text-sm text-muted-foreground">Scheduled</div>
               </CardContent>
@@ -859,9 +836,9 @@ export default function PartiesPage() {
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-orange-600">
-                  {
+                  {}
                     filteredParties.filter((p) => p.participants.some((participant) => participant.id === user?.id))
-                      .length
+                      .length;
                   }
                 </div>
                 <div className="text-sm text-muted-foreground">Joined</div>

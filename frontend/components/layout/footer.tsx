@@ -1,29 +1,28 @@
-"use client"
-
 import Link from "next/link"
-import { Github, Twitter, DiscIcon as Discord, Youtube, Mail, Heart } from "lucide-react"
+import { DiscIcon as Discord, Github, Heart, Link, Mail, Twitter, Youtube } from "lucide-react"
 import { WatchPartyButton } from "@/components/ui/watch-party-button"
 
-const footerLinks = {
-  product: [
+"use client"
+
+const footerLinks = { product: []
     { name: "Features", href: "/features" },
     { name: "Pricing", href: "/pricing" },
     { name: "API", href: "/api" },
     { name: "Changelog", href: "/changelog" },
   ],
-  company: [
+  company: []
     { name: "About", href: "/about" },
     { name: "Blog", href: "/blog" },
     { name: "Careers", href: "/careers" },
     { name: "Contact", href: "/contact" },
   ],
-  resources: [
+  resources: []
     { name: "Documentation", href: "/docs" },
     { name: "Help Center", href: "/help" },
     { name: "Community", href: "/community" },
     { name: "Status", href: "/status" },
   ],
-  legal: [
+  legal: []
     { name: "Privacy Policy", href: "/privacy" },
     { name: "Terms of Service", href: "/terms" },
     { name: "Cookie Policy", href: "/cookies" },
@@ -31,23 +30,23 @@ const footerLinks = {
   ],
 }
 
-const socialLinks = [
-  {
+const socialLinks = []
+  {}
     name: "GitHub",
     href: "https://github.com/watchparty",
     icon: Github,
   },
-  {
+  {}
     name: "Twitter",
     href: "https://twitter.com/watchparty",
     icon: Twitter,
   },
-  {
+  {}
     name: "Discord",
     href: "https://discord.gg/watchparty",
     icon: Discord,
   },
-  {
+  {}
     name: "YouTube",
     href: "https://youtube.com/@watchparty",
     icon: Youtube,
@@ -67,11 +66,11 @@ export function Footer() {
                 <span className="text-white font-bold text-sm">WP</span>
               </div>
               <span className="font-bold text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                WatchParty
+                WatchParty;
               </span>
             </div>
             <p className="text-muted-foreground text-sm mb-4 max-w-sm">
-              The ultimate platform for watching videos together. Create parties, invite friends, and enjoy synchronized
+              The ultimate platform for watching videos together. Create parties, invite friends, and enjoy synchronized;
               viewing experiences.
             </p>
 
@@ -79,7 +78,7 @@ export function Footer() {
             <div className="space-y-2">
               <p className="text-sm font-medium">Stay updated</p>
               <div className="flex space-x-2">
-                <input
+                <input;
                   type="email"
                   placeholder="Enter your email"
                   className="flex-1 h-9 px-3 rounded-md border border-border bg-background text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
@@ -97,7 +96,7 @@ export function Footer() {
             <ul className="space-y-2">
               {footerLinks.product.map((link) => (
                 <li key={link.name}>
-                  <Link
+                  <Link;
                     href={link.href}
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
@@ -113,7 +112,7 @@ export function Footer() {
             <ul className="space-y-2">
               {footerLinks.company.map((link) => (
                 <li key={link.name}>
-                  <Link
+                  <Link;
                     href={link.href}
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
@@ -129,7 +128,7 @@ export function Footer() {
             <ul className="space-y-2">
               {footerLinks.resources.map((link) => (
                 <li key={link.name}>
-                  <Link
+                  <Link;
                     href={link.href}
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
@@ -145,7 +144,7 @@ export function Footer() {
             <ul className="space-y-2">
               {footerLinks.legal.map((link) => (
                 <li key={link.name}>
-                  <Link
+                  <Link;
                     href={link.href}
                     className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                   >
@@ -163,10 +162,10 @@ export function Footer() {
             {/* Social Links */}
             <div className="flex items-center space-x-4">
               <span className="text-sm text-muted-foreground">Follow us:</span>
-              {socialLinks.map((social) => {
-                const Icon = social.icon
+              {socialLinks.map((social) => {}
+                const Icon = social.icon;
                 return (
-                  <Link
+                  <Link;
                     key={social.name}
                     href={social.href}
                     className="text-muted-foreground hover:text-foreground transition-colors"

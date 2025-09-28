@@ -1,89 +1,64 @@
-"use client"
-
-import { useState, useEffect, Suspense } from "react"
+import { AlertTriangle, ArrowRight, Calendar, Check, CheckCircle, Clock, Heart, Loader2, Lock, MessageCircle, Play, Share, Shield, User, Users } from "lucide-react"
+import { useState, useEffect, Suspense , useCallback } from "react"
+import Image from "next/image"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { partiesAPI } from "@/lib/api"
-import {
-  Users,
-  Calendar,
-  Clock,
-  Lock,
-  Globe,
-  Film,
-  Tv,
-  Play,
-  UserPlus,
-  AlertCircle,
-  CheckCircle,
-  ExternalLink,
-  Share2,
-  MessageCircle,
-  Star,
-  Timer,
-  Eye,
-  Heart,
-  Loader2,
-  ArrowRight,
-  PartyPopper,
-  Shield,
-  AlertTriangle
-} from "lucide-react"
 import { formatDistanceToNow, format, parseISO } from "date-fns"
 
-interface PartyInvite {
-  id: string
-  title: string
-  description?: string
-  scheduled_for?: string
-  is_public: boolean
-  max_participants?: number
-  current_participants: number
+"use client"
+interface PartyInvite {}
+  id: string;
+  title: string;
+  description?: string;
+  scheduled_for?: string;
+  is_public: boolean;
+  max_participants?: number;
+  current_participants: number;
   status: "scheduled" | "active" | "completed" | "cancelled"
-  video: {
-    id: string
-    title: string
-    thumbnail?: string
-    duration_minutes: number
+  video: {}
+    id: string;
+    title: string;
+    thumbnail?: string;
+    duration_minutes: number;
     type: "movie" | "series" | "youtube"
-    description?: string
-    release_year?: number
+    description?: string;
+    release_year?: number;
     genre?: string[]
   }
-  host: {
-    id: string
-    username: string
-    first_name: string
-    last_name: string
-    avatar?: string
-    is_verified?: boolean
+  host: {}
+    id: string;
+    username: string;
+    first_name: string;
+    last_name: string;
+    avatar?: string;
+    is_verified?: boolean;
   }
-  participants: Array<{
-    id: string
-    user: {
-      id: string
-      username: string
-      first_name: string
-      last_name: string
-      avatar?: string
+  participants: Array<{}
+    id: string;
+    user: {}
+      id: string;
+      username: string;
+      first_name: string;
+      last_name: string;
+      avatar?: string;
     }
-    joined_at: string
+    joined_at: string;
   }>
-  invite_code: string
-  requires_approval: boolean
-  allow_chat: boolean
-  allow_reactions: boolean
-  created_at: string
-  user_can_join: boolean
-  user_is_participant: boolean
-  user_is_host: boolean
-  join_deadline?: string
+  invite_code: string;
+  requires_approval: boolean;
+  allow_chat: boolean;
+  allow_reactions: boolean;
+  created_at: string;
+  user_can_join: boolean;
+  user_is_participant: boolean;
+  user_is_host: boolean;
+  join_deadline?: string;
 }
 
 function QuickInviteContent() {
@@ -103,7 +78,7 @@ function QuickInviteContent() {
   useEffect(() => {
     if (inviteCode) {
       loadPartyInvite()
-    } else {
+    } else {}
       setError("No invite code provided")
       setIsLoading(false)
     }
@@ -112,21 +87,18 @@ function QuickInviteContent() {
   const loadPartyInvite = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const headers: Record<string, string> = {}
-      
-      if (token) {
+      const headers: Record<string, string> = { if (token) {
         headers.Authorization = `Bearer ${token}`
       }
 
-      const response = await fetch(`/api/parties/invite/${inviteCode}/`, {
-        headers
+      const response = await fetch(`/api/parties/invite/${inviteCode}/`, {}
+        headers;
       })
 
       if (response.ok) {
         const partyData = await response.json()
         setParty(partyData)
-        
-        // Check if user needs to log in
+        // Check if user needs to log in;
         if (!isAuthenticated && !partyData.is_public) {
           setRequiresLogin(true)
         }
@@ -134,13 +106,13 @@ function QuickInviteContent() {
         setError("This invite link is invalid or has expired")
       } else if (response.status === 403) {
         setError("You don't have permission to view this party")
-      } else {
+      } else {}
         setError("Failed to load party details")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to load party invite:", error)
       setError("Something went wrong while loading the invite")
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
@@ -148,17 +120,16 @@ function QuickInviteContent() {
   const joinParty = async () => {
     if (!isAuthenticated) {
       setRequiresLogin(true)
-      return
+      return;
     }
 
-    if (!party) return
-
+    if (!party) return;
     setIsJoining(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${party.id}/join/`, {
+      const response = await fetch(`/api/parties/${party.id}/join/`, {}
         method: "POST",
-        headers: {
+        headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
@@ -166,17 +137,15 @@ function QuickInviteContent() {
       })
 
       if (response.ok) {
-        toast({
+        toast({}
           title: "Successfully Joined! 🎉",
           description: "You've joined the watch party. Redirecting...",
         })
-        
-        // Redirect to party room
+        // Redirect to party room;
         router.push(`/watch/${party.id}`)
-      } else {
+      } else {}
         const errorData = await response.json()
         let errorMessage = "Failed to join the party"
-        
         if (response.status === 409) {
           errorMessage = "You're already a member of this party"
         } else if (response.status === 403) {
@@ -184,48 +153,46 @@ function QuickInviteContent() {
         } else if (response.status === 400) {
           errorMessage = errorData.message || "Party is full or no longer accepting participants"
         }
-        
-        toast({
+        toast({}
           title: "Cannot Join Party",
           description: errorMessage,
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } } catch {
       console.error("Join party error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsJoining(false)
     }
   }
 
   const shareInvite = async () => {
-    const shareUrl = window.location.href
-    
+    const shareUrl = window.location.href;
     if (navigator.share) {
       try {
-        await navigator.share({
+        await navigator.share({}
           title: `Join "${party?.title}" on Watch Party`,
           text: `Watch ${party?.video.title} together!`,
           url: shareUrl,
         })
-      } catch (error) {
-        // User cancelled sharing or share failed
+      } } catch {
+        // User cancelled sharing or share failed;
       }
-    } else {
-      // Fallback to copying to clipboard
+    } else {}
+      // Fallback to copying to clipboard;
       try {
         await navigator.clipboard.writeText(shareUrl)
-        toast({
+        toast({}
           title: "Link Copied",
           description: "Invite link copied to clipboard!",
         })
-      } catch (error) {
-        toast({
+      } } catch {
+        toast({}
           title: "Share Failed",
           description: "Unable to copy link to clipboard.",
           variant: "destructive",
@@ -234,7 +201,7 @@ function QuickInviteContent() {
     }
   }
 
-  const getVideoTypeIcon = (type: string) => {
+  const getVideoTypeIcon = (type: string) => {}
     switch (type) {
       case "movie":
         return <Film className="h-5 w-5" />
@@ -247,7 +214,7 @@ function QuickInviteContent() {
     }
   }
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string) => {}
     switch (status) {
       case "active":
         return "bg-green-100 text-green-800"
@@ -262,25 +229,25 @@ function QuickInviteContent() {
     }
   }
 
-  const formatDuration = (minutes: number) => {
+  const formatDuration = (minutes: number) => {}
     const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60
+    const mins = minutes % 60;
     if (hours > 0) {
       return `${hours}h ${mins}m`
     }
     return `${mins}m`
   }
 
-  const canJoinParty = () => {
-    if (!party) return false
-    if (party.user_is_participant) return false
-    if (party.status === "completed" || party.status === "cancelled") return false
-    if (party.max_participants && party.current_participants >= party.max_participants) return false
-    if (party.join_deadline && new Date() > parseISO(party.join_deadline)) return false
-    return party.user_can_join
+  const canJoinParty = () => {}
+    if (!party) return false;
+    if (party.user_is_participant) return false;
+    if (party.status === "completed" || party.status === "cancelled") return false;
+    if (party.max_participants && party.current_participants >= party.max_participants) return false;
+    if (party.join_deadline && new Date() > parseISO(party.join_deadline)) return false;
+    return party.user_can_join;
   }
 
-  const getJoinButtonText = () => {
+  const getJoinButtonText = () => {}
     if (!isAuthenticated) return "Sign In to Join"
     if (party?.user_is_participant) return "Already Joined"
     if (party?.user_is_host) return "You're the Host"
@@ -311,8 +278,8 @@ function QuickInviteContent() {
               <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
               <h2 className="text-xl font-semibold mb-2">Invite Not Found</h2>
               <p className="text-gray-600 mb-4">{error}</p>
-              <Button onClick={() => router.push("/discover")}>
-                Browse Public Parties
+              <Button onClick={() => router.push(&quot;/discover&quot;)}>
+                Browse Public Parties;
               </Button>
             </CardContent>
           </Card>
@@ -329,10 +296,10 @@ function QuickInviteContent() {
             <CardHeader className="text-center">
               <CardTitle className="flex items-center justify-center gap-2">
                 <Shield className="h-6 w-6" />
-                Sign In Required
+                Sign In Required;
               </CardTitle>
               <CardDescription>
-                You need to sign in to join this private watch party
+                You need to sign in to join this private watch party;
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -344,10 +311,10 @@ function QuickInviteContent() {
               </div>
               <div className="flex gap-2">
                 <Button className="flex-1" onClick={() => router.push(`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`)}>
-                  Sign In
+                  Sign In;
                 </Button>
-                <Button variant="outline" onClick={() => router.push("/register")}>
-                  Sign Up
+                <Button variant="outline" onClick={() => router.push(&quot;/register&quot;)}>
+                  Sign Up;
                 </Button>
               </div>
             </CardContent>
@@ -357,8 +324,7 @@ function QuickInviteContent() {
     )
   }
 
-  if (!party) return null
-
+  if (!party) return null;
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white py-8">
       <div className="container mx-auto px-4">
@@ -366,7 +332,7 @@ function QuickInviteContent() {
           {/* Invite Header */}
           <div className="text-center mb-8">
             <PartyPopper className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">You're Invited!</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">You&apos;re Invited!</h1>
             <p className="text-gray-600">Join this awesome watch party</p>
           </div>
 
@@ -395,7 +361,7 @@ function QuickInviteContent() {
               <div className="flex items-start gap-4">
                 <div className="w-24 h-36 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0">
                   {party.video.thumbnail ? (
-                    <img
+                    <img;
                       src={party.video.thumbnail}
                       alt={party.video.title}
                       className="w-full h-full object-cover rounded-lg"
@@ -404,13 +370,11 @@ function QuickInviteContent() {
                     getVideoTypeIcon(party.video.type)
                   )}
                 </div>
-                
                 <div className="flex-1">
                   <h3 className="font-semibold text-lg mb-1">{party.video.title}</h3>
                   {party.video.description && (
                     <p className="text-gray-600 text-sm mb-2 line-clamp-2">{party.video.description}</p>
                   )}
-                  
                   <div className="flex flex-wrap gap-2 text-sm text-gray-500">
                     <span className="flex items-center gap-1">
                       <Timer className="h-4 w-4" />
@@ -420,7 +384,7 @@ function QuickInviteContent() {
                       <span>{party.video.release_year}</span>
                     )}
                     {party.video.genre && party.video.genre.length > 0 && (
-                      <span>{party.video.genre.slice(0, 2).join(", ")}</span>
+                      <span>{party.video.genre.slice(0, 2).join(&quot;, &quot;)}</span>
                     )}
                   </div>
                 </div>
@@ -431,7 +395,7 @@ function QuickInviteContent() {
                 <div className="flex items-center justify-between text-sm">
                   <span className="flex items-center gap-2 text-gray-600">
                     <Users className="h-4 w-4" />
-                    Participants
+                    Participants;
                   </span>
                   <span>
                     {party.current_participants}
@@ -443,16 +407,16 @@ function QuickInviteContent() {
                   <div className="flex items-center justify-between text-sm">
                     <span className="flex items-center gap-2 text-gray-600">
                       <Calendar className="h-4 w-4" />
-                      Scheduled
+                      Scheduled;
                     </span>
-                    <span>{format(parseISO(party.scheduled_for), "MMM d, yyyy 'at' h:mm a")}</span>
+                    <span>{format(parseISO(party.scheduled_for), &quot;MMM d, yyyy &apos;at&apos; h:mm a&quot;)}</span>
                   </div>
                 )}
 
                 <div className="flex items-center justify-between text-sm">
                   <span className="flex items-center gap-2 text-gray-600">
                     <Clock className="h-4 w-4" />
-                    Created
+                    Created;
                   </span>
                   <span>{formatDistanceToNow(parseISO(party.created_at), { addSuffix: true })}</span>
                 </div>
@@ -461,7 +425,7 @@ function QuickInviteContent() {
                   <div className="flex items-center justify-between text-sm">
                     <span className="flex items-center gap-2 text-gray-600">
                       <AlertTriangle className="h-4 w-4" />
-                      Join Deadline
+                      Join Deadline;
                     </span>
                     <span className="text-orange-600">
                       {format(parseISO(party.join_deadline), "MMM d 'at' h:mm a")}
@@ -495,19 +459,19 @@ function QuickInviteContent() {
                   {party.allow_chat && (
                     <Badge variant="outline" className="text-xs">
                       <MessageCircle className="h-3 w-3 mr-1" />
-                      Chat Enabled
+                      Chat Enabled;
                     </Badge>
                   )}
                   {party.allow_reactions && (
                     <Badge variant="outline" className="text-xs">
                       <Heart className="h-3 w-3 mr-1" />
-                      Reactions Enabled
+                      Reactions Enabled;
                     </Badge>
                   )}
                   {party.requires_approval && (
                     <Badge variant="outline" className="text-xs">
                       <Shield className="h-3 w-3 mr-1" />
-                      Requires Approval
+                      Requires Approval;
                     </Badge>
                   )}
                 </div>
@@ -530,7 +494,7 @@ function QuickInviteContent() {
                     </div>
                     {party.participants.length > 5 && (
                       <span className="text-sm text-gray-500">
-                        +{party.participants.length - 5} more
+                        +{party.participants.length - 5} more;
                       </span>
                     )}
                   </div>
@@ -569,7 +533,7 @@ function QuickInviteContent() {
 
           {/* Action Buttons */}
           <div className="flex gap-3">
-            <Button
+            <Button;
               onClick={joinParty}
               disabled={!canJoinParty() || isJoining || party.user_is_participant || party.user_is_host}
               className="flex-1"
@@ -589,7 +553,6 @@ function QuickInviteContent() {
                 </>
               )}
             </Button>
-            
             <Button variant="outline" onClick={shareInvite} size="lg">
               <Share2 className="h-4 w-4" />
             </Button>
@@ -599,8 +562,8 @@ function QuickInviteContent() {
           <div className="text-center mt-6">
             <p className="text-sm text-gray-500">
               New to Watch Party?{" "}
-              <Button variant="link" className="p-0 h-auto" onClick={() => router.push("/register")}>
-                Create your free account
+              <Button variant="link" className="p-0 h-auto" onClick={() => router.push(&quot;/register&quot;)}>
+                Create your free account;
               </Button>
             </p>
           </div>
@@ -612,7 +575,7 @@ function QuickInviteContent() {
 
 export default function QuickInvitePage() {
   return (
-    <Suspense fallback={
+    <Suspense fallback={} />
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />

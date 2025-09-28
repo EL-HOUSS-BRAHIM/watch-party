@@ -1,7 +1,10 @@
-'use client'
-
+import { Check, CheckCircle, Clock, Cloud, Server, Shield, X, XCircle } from "lucide-react"
 import { useState, useEffect, useCallback } from 'react'
-import { 
+import {}
+import { adminAPI } from '@/lib/api'
+import { useToast } from '@/hooks/use-toast'
+
+'use client'
   CpuChipIcon,
   ServerIcon,
   ClockIcon,
@@ -11,29 +14,26 @@ import {
   ChartBarIcon,
   BoltIcon,
   CloudIcon,
-  ShieldCheckIcon
+  ShieldCheckIcon;
 } from '@heroicons/react/24/outline'
-import { adminAPI } from '@/lib/api'
-import { useToast } from '@/hooks/use-toast'
-
-interface ServerMetric {
-  id: string
-  name: string
-  value: string | number
+interface ServerMetric {}
+  id: string;
+  name: string;
+  value: string | number;
   status: 'healthy' | 'warning' | 'critical'
-  unit?: string
-  description: string
+  unit?: string;
+  description: string;
 }
 
-interface SystemComponent {
-  id: string
-  name: string
+interface SystemComponent {}
+  id: string;
+  name: string;
   type: 'service' | 'database' | 'cache' | 'cdn'
   status: 'online' | 'degraded' | 'offline'
-  uptime: string
-  responseTime: number
-  lastCheck: Date
-  version?: string
+  uptime: string;
+  responseTime: number;
+  lastCheck: Date;
+  version?: string;
 }
 
 export default function SystemHealthPage() {
@@ -47,8 +47,7 @@ export default function SystemHealthPage() {
 
   useEffect(() => {
     fetchSystemHealth()
-    
-    // Set up auto-refresh every 30 seconds
+    // Set up auto-refresh every 30 seconds;
     const interval = setInterval(fetchSystemHealth, 30000)
     return () => clearInterval(interval)
   }, [fetchSystemHealth])
@@ -63,26 +62,25 @@ export default function SystemHealthPage() {
   const fetchSystemHealth = useCallback(async () => {
     try {
       setLoading(true)
-      
-      // Fetch system health data from admin API
-      const [healthData, healthMetrics] = await Promise.all([
+      // Fetch system health data from admin API;
+      const [healthData, healthMetrics] = await Promise.all([]
         adminAPI.getSystemHealth(),
         adminAPI.getHealthMetrics()
       ])
 
-      // Transform health data to metrics
+      // Transform health data to metrics;
       if (healthMetrics) {
-        const transformedMetrics: ServerMetric[] = [
-          {
+        const transformedMetrics: ServerMetric[] = []
+          {}
             id: 'cpu',
             name: 'CPU Usage',
             value: healthMetrics.cpu_usage || 0,
-            status: (healthMetrics.cpu_usage || 0) > 80 ? 'critical' : 
-                   (healthMetrics.cpu_usage || 0) > 60 ? 'warning' : 'healthy',
+            status: (healthMetrics.cpu_usage || 0) > 80 ? &apos;critical&apos; : 
+                   (healthMetrics.cpu_usage || 0) > 60 ? &apos;warning' : 'healthy',
             unit: '%',
             description: 'Current CPU utilization across all cores'
           },
-          {
+          {}
             id: 'memory',
             name: 'Memory Usage',
             value: healthMetrics.memory_usage || 0,
@@ -91,7 +89,7 @@ export default function SystemHealthPage() {
             unit: '%',
             description: 'RAM usage including buffers and cache'
           },
-          {
+          {}
             id: 'disk',
             name: 'Disk Usage',
             value: healthMetrics.disk_usage || 0,
@@ -100,7 +98,7 @@ export default function SystemHealthPage() {
             unit: '%',
             description: 'Primary disk partition usage'
           },
-          {
+          {}
             id: 'connections',
             name: 'Active Connections',
             value: healthMetrics.active_connections || 0,
@@ -111,9 +109,9 @@ export default function SystemHealthPage() {
         setMetrics(transformedMetrics)
       }
 
-      // Transform system components
+      // Transform system components;
       if (healthData.services) {
-        const transformedComponents: SystemComponent[] = Object.entries(healthData.services).map(([name, service]) => ({
+        const transformedComponents: SystemComponent[] = Object.entries(healthData.services).map(([name, service]) => ({}
           id: name,
           name: name.charAt(0).toUpperCase() + name.slice(1),
           type: name.includes('db') ? 'database' : 
@@ -121,28 +119,28 @@ export default function SystemHealthPage() {
                 name.includes('cdn') ? 'cdn' : 'service',
           status: service.status === 'up' ? 'online' : 
                  service.status === 'degraded' ? 'degraded' : 'offline',
-          uptime: '99.9%', // Would come from service data
+          uptime: '99.9%', // Would come from service data;
           responseTime: service.response_time || 0,
           lastCheck: new Date(service.last_check || Date.now()),
-          version: service.version
+          version: service.version;
         }))
         setComponents(transformedComponents)
       }
 
       setLastUpdated(new Date())
-    } catch (error) {
+    } } catch {
       console.error('Failed to fetch system health:', error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load system health data. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }, [toast])
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string) => {}
     switch (status) {
       case 'healthy':
       case 'online':
@@ -158,7 +156,7 @@ export default function SystemHealthPage() {
     }
   }
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: string) => {}
     switch (status) {
       case 'healthy':
       case 'online':
@@ -174,7 +172,7 @@ export default function SystemHealthPage() {
     }
   }
 
-  const getComponentIcon = (type: string) => {
+  const getComponentIcon = (type: string) => {}
     switch (type) {
       case 'service':
         return <ServerIcon className="w-6 h-6" />
@@ -189,13 +187,11 @@ export default function SystemHealthPage() {
     }
   }
 
-  const healthyCount = components.filter(c => c.status === 'online').length
-  const degradedCount = components.filter(c => c.status === 'degraded').length
-  const offlineCount = components.filter(c => c.status === 'offline').length
-
-  const criticalMetrics = metrics.filter(m => m.status === 'critical').length
-  const warningMetrics = metrics.filter(m => m.status === 'warning').length
-
+  const healthyCount = components.filter(c => c.status === &apos;online&apos;).length;
+  const degradedCount = components.filter(c => c.status === &apos;degraded').length;
+  const offlineCount = components.filter(c => c.status === 'offline').length;
+  const criticalMetrics = metrics.filter(m => m.status === 'critical').length;
+  const warningMetrics = metrics.filter(m => m.status === 'warning').length;
   const overallStatus = offlineCount > 0 ? 'critical' : 
                        (degradedCount > 0 || criticalMetrics > 0 || warningMetrics > 0) ? 'warning' : 'healthy'
 
@@ -215,12 +211,11 @@ export default function SystemHealthPage() {
               <h1 className="text-4xl font-bold text-white">System Health</h1>
             </div>
             <p className="text-white/70 text-lg">
-              Real-time monitoring of system components and performance metrics
+              Real-time monitoring of system components and performance metrics;
             </p>
           </div>
-          
           <div className="flex items-center gap-4">
-            <div className={`flex items-center gap-2 px-4 py-2 rounded-lg ${
+            <div className={`flex items-center gap-2 px-4 py-2 rounded-lg ${}}
               overallStatus === 'healthy' ? 'bg-green-500/20 border border-green-500/50' :
               overallStatus === 'warning' ? 'bg-yellow-500/20 border border-yellow-500/50' :
               'bg-red-500/20 border border-red-500/50'
@@ -247,7 +242,6 @@ export default function SystemHealthPage() {
             <div className="text-2xl font-bold text-green-400">{healthyCount}</div>
             <div className="text-sm text-white/60">components</div>
           </div>
-          
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
             <div className="flex items-center gap-3 mb-2">
               <ExclamationTriangleIcon className="w-6 h-6 text-yellow-400" />
@@ -256,7 +250,6 @@ export default function SystemHealthPage() {
             <div className="text-2xl font-bold text-yellow-400">{degradedCount}</div>
             <div className="text-sm text-white/60">components</div>
           </div>
-          
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
             <div className="flex items-center gap-3 mb-2">
               <XCircleIcon className="w-6 h-6 text-red-400" />
@@ -265,7 +258,6 @@ export default function SystemHealthPage() {
             <div className="text-2xl font-bold text-red-400">{offlineCount}</div>
             <div className="text-sm text-white/60">components</div>
           </div>
-          
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
             <div className="flex items-center gap-3 mb-2">
               <ChartBarIcon className="w-6 h-6 text-blue-400" />
@@ -281,7 +273,6 @@ export default function SystemHealthPage() {
           <div className="p-6 border-b border-white/10">
             <h3 className="text-lg font-bold text-white">Key Metrics</h3>
           </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
             {metrics.map(metric => (
               <div key={metric.id} className="bg-white/5 rounded-lg p-4">
@@ -291,18 +282,16 @@ export default function SystemHealthPage() {
                     {getStatusIcon(metric.status)}
                   </div>
                 </div>
-                
                 <div className="flex items-baseline gap-1 mb-2">
                   <span className="text-2xl font-bold text-white">{metric.value}</span>
                   {metric.unit && (
                     <span className="text-white/60">{metric.unit}</span>
                   )}
                 </div>
-                
                 {typeof metric.value === 'number' && metric.unit === '%' && (
                   <div className="w-full bg-white/20 rounded-full h-2 mb-2">
-                    <div
-                      className={`h-2 rounded-full ${
+                    <div;
+                      className={`h-2 rounded-full ${}
                         metric.status === 'healthy' ? 'bg-green-400' :
                         metric.status === 'warning' ? 'bg-yellow-400' : 'bg-red-400'
                       }`}
@@ -310,7 +299,6 @@ export default function SystemHealthPage() {
                     ></div>
                   </div>
                 )}
-                
                 <p className="text-sm text-white/60">{metric.description}</p>
               </div>
             ))}
@@ -322,10 +310,9 @@ export default function SystemHealthPage() {
           <div className="p-6 border-b border-white/10">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-bold text-white">System Components</h3>
-              
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <input
+                  <input;
                     type="checkbox"
                     id="autoRefresh"
                     checked={autoRefresh}
@@ -333,11 +320,10 @@ export default function SystemHealthPage() {
                     className="rounded"
                   />
                   <label htmlFor="autoRefresh" className="text-sm text-white/70">
-                    Auto-refresh
+                    Auto-refresh;
                   </label>
                 </div>
-                
-                <select
+                <select;
                   value={refreshInterval}
                   onChange={(e) => setRefreshInterval(Number(e.target.value))}
                   className="px-3 py-1 bg-white/10 rounded border border-white/20 text-white text-sm focus:outline-none focus:border-blue-400"
@@ -350,10 +336,9 @@ export default function SystemHealthPage() {
               </div>
             </div>
           </div>
-          
           <div className="divide-y divide-white/10">
             {components.map(component => (
-              <div
+              <div;
                 key={component.id}
                 className="p-4 hover:bg-white/5 transition-colors cursor-pointer"
                 onClick={() => setSelectedComponent(selectedComponent === component.id ? null : component.id)}
@@ -363,7 +348,6 @@ export default function SystemHealthPage() {
                     <div className="p-2 bg-white/10 rounded">
                       {getComponentIcon(component.type)}
                     </div>
-                    
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <h4 className="font-medium text-white">{component.name}</h4>
@@ -374,7 +358,6 @@ export default function SystemHealthPage() {
                           <span className="text-xs text-white/60">{component.version}</span>
                         )}
                       </div>
-                      
                       <div className="flex items-center gap-4 text-sm text-white/60">
                         <span>Uptime: {component.uptime}</span>
                         <span>Response: {component.responseTime}ms</span>
@@ -435,7 +418,7 @@ export default function SystemHealthPage() {
 
         {/* Actions */}
         <div className="flex gap-4">
-          <button 
+          <button;
             onClick={refreshSystemHealth}
             disabled={loading}
             className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 text-white px-6 py-3 rounded-lg font-medium transition-colors"
@@ -443,10 +426,10 @@ export default function SystemHealthPage() {
             {loading ? 'Refreshing...' : 'Refresh All'}
           </button>
           <button className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-            View Logs
+            View Logs;
           </button>
           <button className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-            Export Report
+            Export Report;
           </button>
         </div>
       </div>

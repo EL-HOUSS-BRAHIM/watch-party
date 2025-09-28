@@ -1,25 +1,24 @@
-'use client';
-
+import { Bell, Check, CheckCircle, Info, Smartphone } from "lucide-react"
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
-import { Bell, BellOff, Smartphone, AlertCircle, CheckCircle, Info } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
-interface PushSubscription {
+'use client';
+interface PushSubscription {}
   endpoint: string;
-  keys: {
+  keys: {}
     p256dh: string;
     auth: string;
   };
 }
 
-interface NotificationSettings {
+interface NotificationSettings {}
   enabled: boolean;
-  categories: {
+  categories: {}
     friendRequests: boolean;
     partyInvites: boolean;
     messages: boolean;
@@ -31,11 +30,11 @@ interface NotificationSettings {
 }
 
 export default function PushPermissionRegistration() {
-  const [permission, setPermission] = useState<NotificationPermission>('default');
+  const [permission, setPermission] = useState<NotificationPermission>(&apos;default&apos;);
   const [subscription, setSubscription] = useState<PushSubscription | null>(null);
-  const [settings, setSettings] = useState<NotificationSettings>({
+  const [settings, setSettings] = useState<NotificationSettings>({}
     enabled: false,
-    categories: {
+    categories: {}
       friendRequests: true,
       partyInvites: true,
       messages: true,
@@ -47,7 +46,7 @@ export default function PushPermissionRegistration() {
   });
   const [loading, setLoading] = useState(false);
   const [isSupported, setIsSupported] = useState(true);
-  const [registrationDetails, setRegistrationDetails] = useState<{
+  const [registrationDetails, setRegistrationDetails] = useState<{}
     userAgent: string;
     endpoint: string;
     registeredAt: string;
@@ -60,26 +59,23 @@ export default function PushPermissionRegistration() {
     loadSettings();
   }, []);
 
-  const checkNotificationSupport = () => {
-    if (!('Notification' in window)) {
+  const checkNotificationSupport = () => {}
+    if (!('Notification' in window)) {}
       setIsSupported(false);
       return;
     }
-    
-    if (!('serviceWorker' in navigator)) {
+    if (!('serviceWorker' in navigator)) {}
       setIsSupported(false);
       return;
     }
-    
-    if (!('PushManager' in window)) {
+    if (!('PushManager' in window)) {}
       setIsSupported(false);
       return;
     }
-    
     setIsSupported(true);
   };
 
-  const checkPermissionStatus = () => {
+  const checkPermissionStatus = () => {}
     if ('Notification' in window) {
       setPermission(Notification.permission);
     }
@@ -88,44 +84,42 @@ export default function PushPermissionRegistration() {
   const loadExistingSubscription = async () => {
     try {
       if (!('serviceWorker' in navigator)) return;
-      
       const registration = await navigator.serviceWorker.ready;
       const existingSubscription = await registration.pushManager.getSubscription();
-      
       if (existingSubscription) {
-        setSubscription({
+        setSubscription({}
           endpoint: existingSubscription.endpoint,
-          keys: {
+          keys: {}
             p256dh: arrayBufferToBase64(existingSubscription.getKey('p256dh')!),
             auth: arrayBufferToBase64(existingSubscription.getKey('auth')!),
           },
         });
 
-        setRegistrationDetails({
+        setRegistrationDetails({}
           userAgent: navigator.userAgent,
           endpoint: existingSubscription.endpoint,
-          registeredAt: new Date().toISOString(), // This should come from your backend
+          registeredAt: new Date().toISOString(), // This should come from your backend;
         });
       }
-    } catch (error) {
+    } } catch {
       console.error('Failed to check existing subscription:', error);
     }
   };
 
   const loadSettings = async () => {
     try {
-      // Load settings from API
+      // Load settings from API;
       // const response = await fetch('/api/user/notification-settings');
       // const data = await response.json();
       // setSettings(data);
-    } catch (error) {
+    } } catch {
       console.error('Failed to load notification settings:', error);
     }
   };
 
   const requestPermission = async () => {
     if (!isSupported) {
-      toast({
+      toast({}
         title: "Not supported",
         description: "Push notifications are not supported in your browser.",
         variant: "destructive",
@@ -134,32 +128,30 @@ export default function PushPermissionRegistration() {
     }
 
     setLoading(true);
-    
     try {
       const permission = await Notification.requestPermission();
       setPermission(permission);
-      
       if (permission === 'granted') {
         await subscribeToPush();
-        toast({
+        toast({}
           title: "Notifications enabled",
           description: "You'll now receive push notifications for important updates.",
         });
       } else if (permission === 'denied') {
-        toast({
+        toast({}
           title: "Notifications blocked",
           description: "You can enable notifications in your browser settings.",
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } } catch {
       console.error('Failed to request permission:', error);
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to request notification permission.",
         variant: "destructive",
       });
-    } finally {
+    } finally {}
       setLoading(false);
     }
   };
@@ -167,20 +159,16 @@ export default function PushPermissionRegistration() {
   const subscribeToPush = async () => {
     try {
       if (!('serviceWorker' in navigator)) return;
-      
       const registration = await navigator.serviceWorker.ready;
-      
-      // You'll need to get your VAPID public key from your backend
-      const vapidPublicKey = 'YOUR_VAPID_PUBLIC_KEY'; // Replace with actual key
-      
-      const subscription = await registration.pushManager.subscribe({
+      // You'll need to get your VAPID public key from your backend;
+      const vapidPublicKey = 'YOUR_VAPID_PUBLIC_KEY'; // Replace with actual key;
+      const subscription = await registration.pushManager.subscribe({}
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(vapidPublicKey) as BufferSource,
       });
 
-      const subscriptionData: PushSubscription = {
-        endpoint: subscription.endpoint,
-        keys: {
+      const subscriptionData: PushSubscription = { endpoint: subscription.endpoint,
+        keys: {}
           p256dh: arrayBufferToBase64(subscription.getKey('p256dh')!),
           auth: arrayBufferToBase64(subscription.getKey('auth')!),
         },
@@ -188,32 +176,32 @@ export default function PushPermissionRegistration() {
 
       setSubscription(subscriptionData);
 
-      // Send subscription to your backend
+      // Send subscription to your backend;
       await saveSubscriptionToServer(subscriptionData);
 
-      setRegistrationDetails({
+      setRegistrationDetails({}
         userAgent: navigator.userAgent,
         endpoint: subscription.endpoint,
         registeredAt: new Date().toISOString(),
       });
 
       setSettings({ ...settings, enabled: true });
-    } catch (error) {
+    } } catch {
       console.error('Failed to subscribe to push:', error);
       throw error;
     }
   };
 
-  const saveSubscriptionToServer = async (subscriptionData: PushSubscription) => {
+  const saveSubscriptionToServer = async (subscriptionData: PushSubscription) => {}
     try {
-      // Save to your backend
-      // await fetch('/api/user/push-subscription', {
+      // Save to your backend;
+      // await fetch('/api/user/push-subscription', {}
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify(subscriptionData),
       // });
       console.log('Subscription saved:', subscriptionData);
-    } catch (error) {
+    } } catch {
       console.error('Failed to save subscription:', error);
       throw error;
     }
@@ -221,36 +209,30 @@ export default function PushPermissionRegistration() {
 
   const unsubscribeFromPush = async () => {
     setLoading(true);
-    
     try {
       if (!('serviceWorker' in navigator)) return;
-      
       const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
-      
       if (subscription) {
         await subscription.unsubscribe();
-        
-        // Remove subscription from server
+        // Remove subscription from server;
         // await fetch('/api/user/push-subscription', { method: 'DELETE' });
       }
-      
       setSubscription(null);
       setRegistrationDetails(null);
       setSettings({ ...settings, enabled: false });
-      
-      toast({
+      toast({}
         title: "Notifications disabled",
         description: "You will no longer receive push notifications.",
       });
-    } catch (error) {
+    } } catch {
       console.error('Failed to unsubscribe:', error);
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to disable notifications.",
         variant: "destructive",
       });
-    } finally {
+    } finally {}
       setLoading(false);
     }
   };
@@ -258,30 +240,28 @@ export default function PushPermissionRegistration() {
   const testNotification = async () => {
     try {
       if (!subscription) return;
-      
-      // Send test notification request to your backend
-      // await fetch('/api/notifications/test', {
+      // Send test notification request to your backend;
+      // await fetch('/api/notifications/test', {}
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify({ subscription }),
       // });
 
-      // For demo purposes, show a local notification
+      // For demo purposes, show a local notification;
       if (permission === 'granted') {
-        new Notification('Test Notification', {
+        new Notification('Test Notification', {}
           body: 'This is a test notification from Watch Party!',
           icon: '/icons/icon-192x192.png',
           badge: '/icons/badge-72x72.png',
         });
       }
-      
-      toast({
+      toast({}
         title: "Test notification sent",
         description: "Check if you received the notification.",
       });
-    } catch (error) {
+    } } catch {
       console.error('Failed to send test notification:', error);
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to send test notification.",
         variant: "destructive",
@@ -289,37 +269,35 @@ export default function PushPermissionRegistration() {
     }
   };
 
-  const updateCategorySettings = async (category: keyof NotificationSettings['categories'], enabled: boolean) => {
-    const newSettings = {
+  const updateCategorySettings = async (category: keyof NotificationSettings['categories'], enabled: boolean) => {}
+    const newSettings = {}
       ...settings,
-      categories: {
+      categories: {}
         ...settings.categories,
         [category]: enabled,
       },
     };
-    
     setSettings(newSettings);
-    
     try {
-      // Save to backend
-      // await fetch('/api/user/notification-settings', {
+      // Save to backend;
+      // await fetch('/api/user/notification-settings', {}
       //   method: 'PUT',
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify(newSettings),
       // });
-    } catch (error) {
+    } } catch {
       console.error('Failed to update settings:', error);
     }
   };
 
-  // Helper functions
-  const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
+  // Helper functions;
+  const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {}
     const bytes = new Uint8Array(buffer);
-    const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
+    const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join(&apos;&apos;);
     return btoa(binary);
   };
 
-  const urlBase64ToUint8Array = (base64String: string): ArrayBufferLike => {
+  const urlBase64ToUint8Array = (base64String: string): ArrayBufferLike => {}
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
     const rawData = atob(base64);
@@ -330,25 +308,25 @@ export default function PushPermissionRegistration() {
     return outputArray.buffer;
   };
 
-  const getPermissionStatus = () => {
+  const getPermissionStatus = () => {}
     switch (permission) {
       case 'granted':
-        return { 
+        return {
           icon: <CheckCircle className="h-5 w-5 text-green-500" />, 
           text: 'Notifications Allowed', 
-          variant: 'default' as const 
+          variant: 'default' as const;
         };
       case 'denied':
-        return { 
+        return {
           icon: <BellOff className="h-5 w-5 text-red-500" />, 
           text: 'Notifications Blocked', 
-          variant: 'destructive' as const 
+          variant: 'destructive' as const;
         };
       default:
-        return { 
+        return {
           icon: <Bell className="h-5 w-5 text-yellow-500" />, 
           text: 'Permission Not Requested', 
-          variant: 'secondary' as const 
+          variant: 'secondary' as const;
         };
     }
   };
@@ -360,7 +338,7 @@ export default function PushPermissionRegistration() {
           <Alert>
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              Push notifications are not supported in your browser. Please use a modern browser 
+              Push notifications are not supported in your browser. Please use a modern browser;
               that supports web push notifications.
             </AlertDescription>
           </Alert>
@@ -377,7 +355,7 @@ export default function PushPermissionRegistration() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Smartphone className="h-5 w-5" />
-            Push Notifications
+            Push Notifications;
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -405,23 +383,21 @@ export default function PushPermissionRegistration() {
                 {loading ? 'Requesting...' : 'Enable Notifications'}
               </Button>
             )}
-            
             {permission === 'granted' && subscription && (
               <>
                 <Button variant="outline" onClick={testNotification}>
-                  Test Notification
+                  Test Notification;
                 </Button>
                 <Button variant="destructive" onClick={unsubscribeFromPush} disabled={loading}>
                   {loading ? 'Disabling...' : 'Disable Notifications'}
                 </Button>
               </>
             )}
-            
             {permission === 'denied' && (
               <Alert>
                 <Info className="h-4 w-4" />
                 <AlertDescription>
-                  To enable notifications, click the bell icon in your browser's address bar 
+                  To enable notifications, click the bell icon in your browser's address bar;
                   or check your browser settings.
                 </AlertDescription>
               </Alert>
@@ -446,7 +422,7 @@ export default function PushPermissionRegistration() {
                     {getCategoryDescription(category)}
                   </p>
                 </div>
-                <Switch
+                <Switch;
                   checked={enabled}
                   onCheckedChange={(checked) => 
                     updateCategorySettings(category as keyof NotificationSettings['categories'], checked)
@@ -491,9 +467,8 @@ export default function PushPermissionRegistration() {
   );
 }
 
-function getCategoryDescription(category: string): string {
-  const descriptions: Record<string, string> = {
-    friendRequests: 'When someone wants to be your friend',
+function getCategoryDescription(category: string): string {}
+  const descriptions: Record<string, string> = { friendRequests: 'When someone wants to be your friend',
     partyInvites: 'When you\'re invited to watch parties',
     messages: 'New chat messages and replies',
     likes: 'When someone likes your content',
@@ -501,6 +476,5 @@ function getCategoryDescription(category: string): string {
     achievements: 'When you unlock new badges',
     systemUpdates: 'Important app updates and announcements',
   };
-  
   return descriptions[category] || 'Notification category';
 }

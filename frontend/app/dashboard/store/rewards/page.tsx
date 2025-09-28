@@ -7,7 +7,7 @@ export default function StoreRewardsPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold">Rewards</h1>
           <p className="text-muted-foreground mt-2">
-            Claim exclusive rewards based on your achievements
+            Claim exclusive rewards based on your achievements;
           </p>
         </div>
         <StoreRewards />

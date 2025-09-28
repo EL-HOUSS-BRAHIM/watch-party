@@ -1,8 +1,7 @@
 import type { Metadata } from "next"
 import { SEOAccessibilityOptimizer } from "@/components/seo/seo-accessibility-optimizer"
 
-export const metadata: Metadata = {
-  title: "SEO & Accessibility Optimizer - Admin Dashboard",
+export const metadata: Metadata = { title: "SEO & Accessibility Optimizer - Admin Dashboard",
   description: "Optimize your site for search engines and accessibility compliance",
 }
 

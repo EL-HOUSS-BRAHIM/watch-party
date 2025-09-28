@@ -1,49 +1,36 @@
-"use client"
-
+import { Loader2, Play, Settings, Volume2, Wifi, WifiOff } from "lucide-react"
 import { useRef, useEffect, useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
-import {
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
-  Maximize,
-  Settings,
-  SkipBack,
-  SkipForward,
-  Loader2,
-  Wifi,
-  WifiOff,
-} from "lucide-react"
 import { useSocket } from "@/contexts/socket-context"
 import { cn } from "@/lib/utils"
 
-interface VideoPlayerProps {
-  src?: string
-  videoId?: string
-  roomId?: string
-  isHost?: boolean
-  className?: string
-  onTimeUpdate?: (currentTime: number) => void
-  onDurationChange?: (duration: number) => void
+"use client"
+interface VideoPlayerProps {}
+  src?: string;
+  videoId?: string;
+  roomId?: string;
+  isHost?: boolean;
+  className?: string;
+  onTimeUpdate?: (currentTime: number) => void;
+  onDurationChange?: (duration: number) => void;
 }
 
-interface VideoSyncData {
+interface VideoSyncData {}
   action: "play" | "pause" | "seek"
-  currentTime: number
-  timestamp: number
+  currentTime: number;
+  timestamp: number;
 }
 
-export default function VideoPlayer({
+export default function VideoPlayer({}
   src,
   roomId,
   isHost = false,
   className,
   onTimeUpdate,
   onDurationChange,
-}: VideoPlayerProps) {
+}: VideoPlayerProps) {}
   const videoRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -58,22 +45,20 @@ export default function VideoPlayer({
   const [quality, setQuality] = useState("auto")
   const [playbackRate, setPlaybackRate] = useState(1)
   const [isBuffering, setIsBuffering] = useState(false)
-  const [syncTolerance] = useState(0.5) // 500ms tolerance for sync
-
+  const [syncTolerance] = useState(0.5) // 500ms tolerance for sync;
   const { sendMessage, onMessage, isConnected } = useSocket()
 
-  // Hide controls after inactivity
+  // Hide controls after inactivity;
   useEffect(() => {
-    let timeout: NodeJS.Timeout
-
-    const resetTimeout = () => {
+    let timeout: NodeJS.Timeout;
+    const resetTimeout = () => {}
       setShowControls(true)
       clearTimeout(timeout)
       timeout = setTimeout(() => setShowControls(false), 3000)
     }
 
     const handleMouseMove = () => resetTimeout()
-    const handleMouseLeave = () => {
+    const handleMouseLeave = () => {}
       clearTimeout(timeout)
       setShowControls(false)
     }
@@ -83,7 +68,7 @@ export default function VideoPlayer({
       containerRef.current.addEventListener("mouseleave", handleMouseLeave)
     }
 
-    return () => {
+    return () => {}
       clearTimeout(timeout)
       if (containerRef.current) {
         containerRef.current.removeEventListener("mousemove", handleMouseMove)
@@ -92,29 +77,28 @@ export default function VideoPlayer({
     }
   }, [])
 
-  // Video event handlers
+  // Video event handlers;
   useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-
-    const handleLoadedMetadata = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    const handleLoadedMetadata = () => {}
       setDuration(video.duration)
       setIsLoading(false)
       onDurationChange?.(video.duration)
     }
 
-    const handleTimeUpdate = () => {
+    const handleTimeUpdate = () => {}
       setCurrentTime(video.currentTime)
       onTimeUpdate?.(video.currentTime)
 
-      // Update buffered progress
+      // Update buffered progress;
       if (video.buffered.length > 0) {
         const bufferedEnd = video.buffered.end(video.buffered.length - 1)
         setBuffered((bufferedEnd / video.duration) * 100)
       }
     }
 
-    const handlePlay = () => {
+    const handlePlay = () => {}
       setIsPlaying(true)
       setIsBuffering(false)
 
@@ -123,7 +107,7 @@ export default function VideoPlayer({
       }
     }
 
-    const handlePause = () => {
+    const handlePause = () => {}
       setIsPlaying(false)
 
       if (isHost && roomId) {
@@ -131,7 +115,7 @@ export default function VideoPlayer({
       }
     }
 
-    const handleSeeked = () => {
+    const handleSeeked = () => {}
       if (isHost && roomId) {
         sendVideoSync("seek", video.currentTime)
       }
@@ -148,7 +132,7 @@ export default function VideoPlayer({
     video.addEventListener("waiting", handleWaiting)
     video.addEventListener("canplay", handleCanPlay)
 
-    return () => {
+    return () => {}
       video.removeEventListener("loadedmetadata", handleLoadedMetadata)
       video.removeEventListener("timeupdate", handleTimeUpdate)
       video.removeEventListener("play", handlePlay)
@@ -159,23 +143,22 @@ export default function VideoPlayer({
     }
   }, [isHost, roomId, onTimeUpdate, onDurationChange])
 
-  // WebSocket message handler for video sync
+  // WebSocket message handler for video sync;
   useEffect(() => {
-    if (!roomId) return
-
-    const unsubscribe = onMessage((message) => {
+    if (!roomId) return;
+    const unsubscribe = onMessage((message) => {}
       if (message.type === "video_sync" && !isHost) {
         handleVideoSync(message.data)
       }
     })
 
-    return unsubscribe
+    return unsubscribe;
   }, [roomId, isHost, onMessage])
 
   const sendVideoSync = useCallback(
-    (action: "play" | "pause" | "seek", currentTime: number) => {
+    (action: "play" | "pause" | "seek", currentTime: number) => {}
       if (roomId) {
-        sendMessage("video_sync", {
+        sendMessage("video_sync", {}
           room_id: roomId,
           action,
           current_time: currentTime,
@@ -187,104 +170,96 @@ export default function VideoPlayer({
   )
 
   const handleVideoSync = useCallback(
-    (data: VideoSyncData) => {
-      const video = videoRef.current
-      if (!video) return
-
+    (data: VideoSyncData) => {}
+      const video = videoRef.current;
+      if (!video) return;
       const timeDiff = Math.abs(video.currentTime - data.currentTime)
 
       switch (data.action) {
         case "play":
           if (timeDiff > syncTolerance) {
-            video.currentTime = data.currentTime
+            video.currentTime = data.currentTime;
           }
           video.play()
-          break
+          break;
         case "pause":
           if (timeDiff > syncTolerance) {
-            video.currentTime = data.currentTime
+            video.currentTime = data.currentTime;
           }
           video.pause()
-          break
+          break;
         case "seek":
-          video.currentTime = data.currentTime
-          break
+          video.currentTime = data.currentTime;
+          break;
       }
     },
     [syncTolerance],
   )
 
-  const togglePlay = () => {
-    const video = videoRef.current
-    if (!video) return
-
+  const togglePlay = () => {}
+    const video = videoRef.current;
+    if (!video) return;
     if (isPlaying) {
       video.pause()
-    } else {
+    } else {}
       video.play()
     }
   }
 
-  const handleSeek = (value: number[]) => {
-    const video = videoRef.current
-    if (!video) return
-
-    const newTime = (value[0] / 100) * duration
-    video.currentTime = newTime
+  const handleSeek = (value: number[]) => {}
+    const video = videoRef.current;
+    if (!video) return;
+    const newTime = (value[0] / 100) * duration;
+    video.currentTime = newTime;
     setCurrentTime(newTime)
   }
 
-  const handleVolumeChange = (value: number[]) => {
-    const video = videoRef.current
-    if (!video) return
-
-    const newVolume = value[0] / 100
-    video.volume = newVolume
+  const handleVolumeChange = (value: number[]) => {}
+    const video = videoRef.current;
+    if (!video) return;
+    const newVolume = value[0] / 100;
+    video.volume = newVolume;
     setVolume(newVolume)
     setIsMuted(newVolume === 0)
   }
 
-  const toggleMute = () => {
-    const video = videoRef.current
-    if (!video) return
-
+  const toggleMute = () => {}
+    const video = videoRef.current;
+    if (!video) return;
     if (isMuted) {
-      video.volume = volume
+      video.volume = volume;
       setIsMuted(false)
-    } else {
-      video.volume = 0
+    } else {}
+      video.volume = 0;
       setIsMuted(true)
     }
   }
 
-  const toggleFullscreen = () => {
-    if (!containerRef.current) return
-
+  const toggleFullscreen = () => {}
+    if (!containerRef.current) return;
     if (!isFullscreen) {
       containerRef.current.requestFullscreen()
       setIsFullscreen(true)
-    } else {
+    } else {}
       document.exitFullscreen()
       setIsFullscreen(false)
     }
   }
 
-  const skip = (seconds: number) => {
-    const video = videoRef.current
-    if (!video) return
-
+  const skip = (seconds: number) => {}
+    const video = videoRef.current;
+    if (!video) return;
     const newTime = Math.max(0, Math.min(duration, video.currentTime + seconds))
-    video.currentTime = newTime
+    video.currentTime = newTime;
   }
 
-  const formatTime = (time: number) => {
+  const formatTime = (time: number) => {}
     const minutes = Math.floor(time / 60)
     const seconds = Math.floor(time % 60)
     return `${minutes}:${seconds.toString().padStart(2, "0")}`
   }
 
-  const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0
-
+  const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
   return (
     <div ref={containerRef} className={cn("relative bg-black rounded-lg overflow-hidden group", className)}>
       <video ref={videoRef} src={src} className="w-full h-full object-contain" playsInline preload="metadata" />
@@ -300,7 +275,7 @@ export default function VideoPlayer({
       {roomId && (
         <div className="absolute top-4 right-4">
           <Badge variant={isConnected ? "default" : "destructive"} className="flex items-center gap-1">
-            {isConnected ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
+            {isConnected ? <Wifi className="h-3 w-3" /> : <WifiOff className=&quot;h-3 w-3&quot; />}
             {isConnected ? "Connected" : "Disconnected"}
           </Badge>
         </div>
@@ -314,7 +289,7 @@ export default function VideoPlayer({
       )}
 
       {/* Controls overlay */}
-      <div
+      <div;
         className={cn(
           "absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent transition-opacity duration-300",
           showControls ? "opacity-100" : "opacity-0",
@@ -322,14 +297,14 @@ export default function VideoPlayer({
       >
         {/* Center play button */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <Button
+          <Button;
             variant="ghost"
             size="lg"
             onClick={togglePlay}
             className="h-16 w-16 rounded-full bg-black/50 hover:bg-black/70 text-white"
             disabled={!isHost && !!roomId}
           >
-            {isPlaying ? <Pause className="h-8 w-8" /> : <Play className="h-8 w-8 ml-1" />}
+            {isPlaying ? <Pause className="h-8 w-8" /> : <Play className=&quot;h-8 w-8 ml-1&quot; />}
           </Button>
         </div>
 
@@ -340,12 +315,12 @@ export default function VideoPlayer({
             <div className="relative">
               <div className="h-1 bg-white/20 rounded-full">
                 <div className="h-full bg-white/40 rounded-full" style={{ width: `${buffered}%` }} />
-                <div
+                <div;
                   className="h-full bg-white rounded-full absolute top-0"
                   style={{ width: `${progressPercentage}%` }}
                 />
               </div>
-              <Slider
+              <Slider;
                 value={[progressPercentage]}
                 onValueChange={handleSeek}
                 max={100}
@@ -359,17 +334,17 @@ export default function VideoPlayer({
           {/* Control buttons */}
           <div className="flex items-center justify-between text-white">
             <div className="flex items-center gap-2">
-              <Button
+              <Button;
                 variant="ghost"
                 size="sm"
                 onClick={togglePlay}
                 disabled={!isHost && !!roomId}
                 className="text-white hover:bg-white/20"
               >
-                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className=&quot;h-4 w-4&quot; />}
               </Button>
 
-              <Button
+              <Button;
                 variant="ghost"
                 size="sm"
                 onClick={() => skip(-10)}
@@ -379,7 +354,7 @@ export default function VideoPlayer({
                 <SkipBack className="h-4 w-4" />
               </Button>
 
-              <Button
+              <Button;
                 variant="ghost"
                 size="sm"
                 onClick={() => skip(10)}
@@ -391,10 +366,10 @@ export default function VideoPlayer({
 
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="sm" onClick={toggleMute} className="text-white hover:bg-white/20">
-                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                  {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4&quot; />}
                 </Button>
                 <div className="w-20">
-                  <Slider
+                  <Slider;
                     value={[isMuted ? 0 : volume * 100]}
                     onValueChange={handleVolumeChange}
                     max={100}

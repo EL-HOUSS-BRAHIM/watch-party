@@ -1,51 +1,47 @@
-"use client"
-
+import { Link } from "lucide-react"
 import type React from "react"
-
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
-export interface NavigationLink {
-  name: string
-  href: string
+"use client"
+export interface NavigationLink {}
+  name: string;
+  href: string;
   icon?: React.ComponentType<{ className?: string }>
-  badge?: string | number
-  external?: boolean
+  badge?: string | number;
+  external?: boolean;
 }
 
-interface NavigationLinksProps {
+interface NavigationLinksProps {}
   links: NavigationLink[]
-  className?: string
-  itemClassName?: string
-  activeClassName?: string
+  className?: string;
+  itemClassName?: string;
+  activeClassName?: string;
   variant?: "default" | "sidebar" | "header"
 }
 
-export function NavigationLinks({
+export function NavigationLinks({}
   links,
   className,
   itemClassName,
   activeClassName,
   variant = "default",
-}: NavigationLinksProps) {
+}: NavigationLinksProps) {}
   const pathname = usePathname()
 
-  const baseStyles = {
-    default: "flex items-center space-x-4",
+  const baseStyles = { default: "flex items-center space-x-4",
     sidebar: "flex flex-col space-y-1",
     header: "flex items-center space-x-6",
   }
 
-  const itemStyles = {
-    default: "text-sm font-medium transition-colors hover:text-primary",
+  const itemStyles = { default: "text-sm font-medium transition-colors hover:text-primary",
     sidebar:
       "flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-accent hover:text-accent-foreground",
     header: "text-sm font-medium transition-colors hover:text-primary relative",
   }
 
-  const activeStyles = {
-    default: "text-primary",
+  const activeStyles = { default: "text-primary",
     sidebar: "bg-accent text-accent-foreground",
     header:
       "text-primary after:absolute after:bottom-[-4px] after:left-0 after:right-0 after:h-0.5 after:bg-primary after:rounded-full",
@@ -53,16 +49,16 @@ export function NavigationLinks({
 
   return (
     <nav className={cn(baseStyles[variant], className)}>
-      {links.map((link) => {
+      {links.map((link) => {}
         const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href))
 
-        const LinkComponent = link.external ? "a" : Link
-        const linkProps = link.external
+        const LinkComponent = link.external ? "a" : Link;
+        const linkProps = link.external;
           ? { href: link.href, target: "_blank", rel: "noopener noreferrer" }
           : { href: link.href }
 
         return (
-          <LinkComponent
+          <LinkComponent;
             key={link.href}
             {...linkProps}
             className={cn(itemStyles[variant], isActive && (activeClassName || activeStyles[variant]), itemClassName)}
@@ -81,15 +77,15 @@ export function NavigationLinks({
   )
 }
 
-// Predefined navigation configurations
-export const mainNavLinks: NavigationLink[] = [
+// Predefined navigation configurations;
+export const mainNavLinks: NavigationLink[] = []
   { name: "Home", href: "/" },
   { name: "Discover", href: "/discover" },
   { name: "About", href: "/about" },
   { name: "Help", href: "/help" },
 ]
 
-export const dashboardNavLinks: NavigationLink[] = [
+export const dashboardNavLinks: NavigationLink[] = []
   { name: "Dashboard", href: "/dashboard" },
   { name: "Videos", href: "/dashboard/videos" },
   { name: "Parties", href: "/dashboard/parties" },
@@ -98,7 +94,7 @@ export const dashboardNavLinks: NavigationLink[] = [
   { name: "Settings", href: "/dashboard/settings" },
 ]
 
-export const authNavLinks: NavigationLink[] = [
+export const authNavLinks: NavigationLink[] = []
   { name: "Login", href: "/login" },
   { name: "Register", href: "/register" },
 ]

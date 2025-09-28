@@ -1,20 +1,20 @@
-'use client'
-
 import { useState } from 'react'
-import { AlertTriangle, Wifi, WifiOff } from 'lucide-react'
+import { AlertTriangle, Wifi, WifiOff } from "lucide-react"
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
-interface SocialLoginErrorProps {
+'use client'
+
+interface SocialLoginErrorProps {}
   error: 'cancelled' | 'failed' | 'network' | 'denied' | 'invalid_state'
   provider: 'google' | 'discord' | 'github'
-  onRetry: () => void
-  onDismiss: () => void
+  onRetry: () => void;
+  onDismiss: () => void;
 }
 
-export function SocialLoginError({ error, provider, onRetry, onDismiss }: SocialLoginErrorProps) {
-  const getErrorConfig = () => {
+export function SocialLoginError({ error, provider, onRetry, onDismiss }: SocialLoginErrorProps) {}
+  const getErrorConfig = () => {}
     switch (error) {
       case 'cancelled':
         return {
@@ -82,14 +82,14 @@ export function SocialLoginError({ error, provider, onRetry, onDismiss }: Social
       </CardHeader>
       <CardContent>
         <div className="flex gap-2">
-          <Button 
+          <Button;
             variant="outline" 
             onClick={onDismiss}
             className="flex-1"
           >
-            Cancel
+            Cancel;
           </Button>
-          <Button 
+          <Button;
             variant={config.variant}
             onClick={onRetry}
             className="flex-1"

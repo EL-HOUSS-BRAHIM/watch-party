@@ -1,22 +1,23 @@
-'use client'
-
+import { User } from "lucide-react"
 import { useParams } from 'next/navigation'
+import Image from "next/image"
 import { useState } from 'react'
 import { UserGroupIcon, UserPlusIcon, ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
 
-interface MutualFriend {
-  id: string
-  username: string
-  displayName: string
-  avatar: string
-  isOnline: boolean
-  mutualCount: number
-  lastSeen: string
+'use client'
+interface MutualFriend {}
+  id: string;
+  username: string;
+  displayName: string;
+  avatar: string;
+  isOnline: boolean;
+  mutualCount: number;
+  lastSeen: string;
   commonFriends: string[]
 }
 
-const mutualFriends: MutualFriend[] = [
-  {
+const mutualFriends: MutualFriend[] = []
+  {}
     id: '1',
     username: 'movie_buff_alex',
     displayName: 'Alex Johnson',
@@ -26,7 +27,7 @@ const mutualFriends: MutualFriend[] = [
     lastSeen: '',
     commonFriends: ['sarah_films', 'mike_cinema', 'john_watches']
   },
-  {
+  {}
     id: '2',
     username: 'cinema_sarah',
     displayName: 'Sarah Chen',
@@ -36,7 +37,7 @@ const mutualFriends: MutualFriend[] = [
     lastSeen: '2 hours ago',
     commonFriends: ['alex_movies', 'emma_shows']
   },
-  {
+  {}
     id: '3',
     username: 'film_enthusiast_mike',
     displayName: 'Mike Rodriguez',
@@ -46,7 +47,7 @@ const mutualFriends: MutualFriend[] = [
     lastSeen: '',
     commonFriends: ['alex_movies', 'sarah_films', 'david_streams', 'lisa_watches']
   },
-  {
+  {}
     id: '4',
     username: 'tv_show_emma',
     displayName: 'Emma Wilson',
@@ -60,20 +61,20 @@ const mutualFriends: MutualFriend[] = [
 
 export default function MutualFriendsPage() {
   const params = useParams()
-  const [sortBy, setSortBy] = useState<'mutualCount' | 'name' | 'online'>('mutualCount')
+  const [sortBy, setSortBy] = useState<'mutualCount' | 'name' | 'online'>(&apos;mutualCount&apos;)
 
-  const sortedFriends = [...mutualFriends].sort((a, b) => {
+  const sortedFriends = [...mutualFriends].sort((a, b) => {}
     switch (sortBy) {
       case 'mutualCount':
-        return b.mutualCount - a.mutualCount
+        return b.mutualCount - a.mutualCount;
       case 'name':
         return a.displayName.localeCompare(b.displayName)
       case 'online':
-        if (a.isOnline && !b.isOnline) return -1
-        if (!a.isOnline && b.isOnline) return 1
-        return b.mutualCount - a.mutualCount
+        if (a.isOnline && !b.isOnline) return -1;
+        if (!a.isOnline && b.isOnline) return 1;
+        return b.mutualCount - a.mutualCount;
       default:
-        return 0
+        return 0;
     }
   })
 
@@ -97,9 +98,9 @@ export default function MutualFriendsPage() {
             <span className="text-white/70">Found {mutualFriends.length} mutual friends</span>
           </div>
 
-          <select
+          <select;
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e) => setSortBy(e.target.value as Record<string, unknown>)}
             className="px-4 py-2 bg-white/10 rounded-lg border border-white/20 text-white focus:outline-none focus:border-blue-400"
           >
             <option value="mutualCount">Most Mutual Friends</option>
@@ -111,7 +112,7 @@ export default function MutualFriendsPage() {
         {/* Friends List */}
         <div className="space-y-4">
           {sortedFriends.map(friend => (
-            <div
+            <div;
               key={friend.id}
               className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6 hover:border-blue-400/50 transition-all"
             >
@@ -119,13 +120,13 @@ export default function MutualFriendsPage() {
                 <div className="flex items-center gap-4">
                   {/* Avatar */}
                   <div className="relative">
-                    <img
+                    <img;
                       src={friend.avatar}
                       alt={friend.displayName}
                       className="w-16 h-16 rounded-full object-cover"
                     />
                     {/* Online Status */}
-                    <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-black ${
+                    <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-black ${}}
                       friend.isOnline ? 'bg-green-500' : 'bg-gray-500'
                     }`}></div>
                   </div>
@@ -136,7 +137,7 @@ export default function MutualFriendsPage() {
                     <p className="text-white/70">@{friend.username}</p>
                     <div className="flex items-center gap-4 mt-1">
                       <span className="text-blue-400 text-sm font-medium">
-                        {friend.mutualCount} mutual friends
+                        {friend.mutualCount} mutual friends;
                       </span>
                       {!friend.isOnline && (
                         <span className="text-white/50 text-sm">
@@ -151,7 +152,7 @@ export default function MutualFriendsPage() {
                 <div className="flex items-center gap-2">
                   <button className="flex items-center gap-2 px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-lg font-medium transition-colors">
                     <UserPlusIcon className="w-4 h-4" />
-                    Add Friend
+                    Add Friend;
                   </button>
                   <button className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors">
                     <ChatBubbleLeftIcon className="w-5 h-5" />
@@ -164,7 +165,7 @@ export default function MutualFriendsPage() {
                 <p className="text-white/60 text-sm mb-2">Common friends:</p>
                 <div className="flex flex-wrap gap-2">
                   {friend.commonFriends.slice(0, 4).map((commonFriend, index) => (
-                    <span
+                    <span;
                       key={index}
                       className="px-2 py-1 bg-white/10 rounded-full text-xs text-white/70"
                     >
@@ -173,7 +174,7 @@ export default function MutualFriendsPage() {
                   ))}
                   {friend.commonFriends.length > 4 && (
                     <span className="px-2 py-1 bg-white/10 rounded-full text-xs text-white/70">
-                      +{friend.commonFriends.length - 4} more
+                      +{friend.commonFriends.length - 4} more;
                     </span>
                   )}
                 </div>
@@ -203,14 +204,12 @@ export default function MutualFriendsPage() {
             </div>
             <div className="text-white/70">Mutual Friends</div>
           </div>
-          
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-green-400 mb-2">
               {mutualFriends.filter(f => f.isOnline).length}
             </div>
             <div className="text-white/70">Online Now</div>
           </div>
-          
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-purple-400 mb-2">
               {Math.round(mutualFriends.reduce((acc, f) => acc + f.mutualCount, 0) / mutualFriends.length || 0)}

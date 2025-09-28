@@ -1,5 +1,4 @@
-'use client'
-
+import { AlertTriangle, Bell, ChevronRight, Link, Search, Shield } from "lucide-react"
 import React from 'react'
 import { useAuth } from '@/contexts/auth-context'
 import { useRouter } from 'next/navigation'
@@ -8,65 +7,51 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
-import { 
-  LayoutDashboard,
-  Users,
-  Settings,
-  BarChart3,
-  Shield,
-  AlertTriangle,
-  FileText,
-  MessageSquare,
-  Activity,
-  Database,
-  ChevronRight,
-  Bell,
-  Search
-} from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-interface AdminLayoutProps {
-  children: React.ReactNode
+'use client'
+interface AdminLayoutProps {}
+  children: React.ReactNode;
 }
 
-const navigation = [
-  {
+const navigation = []
+  {}
     name: 'Dashboard',
     href: '/admin',
     icon: LayoutDashboard,
     description: 'Overview and key metrics'
   },
-  {
+  {}
     name: 'User Management',
     href: '/admin/users',
     icon: Users,
     description: 'Manage users and permissions'
   },
-  {
+  {}
     name: 'Content Moderation',
     href: '/admin/moderation',
     icon: Shield,
     description: 'Review reported content',
-    children: [
+    children: []
       { name: 'Reports', href: '/admin/moderation/reports' },
       { name: 'Banned Users', href: '/admin/moderation/banned' },
       { name: 'Content Review', href: '/admin/moderation/content' }
     ]
   },
-  {
+  {}
     name: 'Analytics',
     href: '/admin/analytics',
     icon: BarChart3,
     description: 'Platform insights and metrics'
   },
-  {
+  {}
     name: 'System Logs',
     href: '/admin/logs',
     icon: FileText,
     description: 'System activity and errors'
   },
-  {
+  {}
     name: 'Settings',
     href: '/admin/settings',
     icon: Settings,
@@ -74,13 +59,13 @@ const navigation = [
   }
 ]
 
-export function AdminLayout({ children }: AdminLayoutProps) {
+export function AdminLayout({ children }: AdminLayoutProps) {}
   const { user, isLoading } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
 
   useEffect(() => {
-    if (!isLoading && (!user || user.role !== 'admin')) {
+    if (!isLoading && (!user || user.role !== 'admin')) {}
       router.push('/dashboard')
     }
   }, [user, isLoading, router])
@@ -128,7 +113,6 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             </Link>
             <Badge variant="secondary">Administrator</Badge>
           </div>
-          
           <div className="ml-auto flex items-center space-x-4">
             <Button variant="ghost" size="sm">
               <Search className="h-4 w-4" />
@@ -147,17 +131,16 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         {/* Sidebar */}
         <aside className="w-64 border-r bg-card min-h-[calc(100vh-4rem)]">
           <nav className="p-4 space-y-2">
-            {navigation.map((item) => {
+            {navigation.map((item) => {}
               const isActive = pathname === item.href || 
                 (item.children && item.children.some(child => pathname === child.href))
-              
               return (
                 <div key={item.name}>
-                  <Link
+                  <Link;
                     href={item.href}
                     className={`
-                      flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                      ${isActive
+                      flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors;
+                      ${isActive;
                         ? 'bg-primary text-primary-foreground'
                         : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                       }
@@ -169,16 +152,15 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                       <ChevronRight className={`h-4 w-4 transition-transform ${isActive ? 'rotate-90' : ''}`} />
                     )}
                   </Link>
-                  
                   {item.children && isActive && (
                     <div className="ml-7 mt-1 space-y-1">
                       {item.children.map((child) => (
-                        <Link
+                        <Link;
                           key={child.name}
                           href={child.href}
                           className={`
-                            block px-3 py-1 text-xs rounded transition-colors
-                            ${pathname === child.href
+                            block px-3 py-1 text-xs rounded transition-colors;
+                            ${pathname === child.href;
                               ? 'text-primary font-medium'
                               : 'text-muted-foreground hover:text-foreground'
                             }
@@ -193,9 +175,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
               )
             })}
           </nav>
-          
           <Separator className="my-4" />
-          
           {/* Quick Stats */}
           <div className="p-4">
             <h3 className="text-sm font-semibold mb-3">Quick Stats</h3>

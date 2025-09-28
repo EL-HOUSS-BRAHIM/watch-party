@@ -1,45 +1,43 @@
-"use client"
-
 import { useState, useEffect, useCallback } from "react"
 
-interface CacheOptions {
-  ttl?: number // Time to live in milliseconds
-  maxSize?: number
+"use client"
+
+interface CacheOptions {}
+  ttl?: number // Time to live in milliseconds;
+  maxSize?: number;
 }
 
-class MemoryCache {
+class MemoryCache {}
   private cache = new Map<string, { data: unknown; timestamp: number; ttl: number }>()
-  private maxSize: number
-
+  private maxSize: number;
   constructor(maxSize = 100) {
-    this.maxSize = maxSize
+    this.maxSize = maxSize;
   }
 
-  set(key: string, data: unknown, ttl = 5 * 60 * 1000) {
+  set(key: string, data: unknown, ttl = 5 * 60 * 1000) {}
     if (this.cache.size >= this.maxSize) {
-      const firstKey = this.cache.keys().next().value
+      const firstKey = this.cache.keys().next().value;
       if (firstKey) {
         this.cache.delete(firstKey)
       }
     }
 
-    this.cache.set(key, {
+    this.cache.set(key, {}
       data,
       timestamp: Date.now(),
       ttl,
     })
   }
 
-  get(key: string) {
+  get(key: string) {}
     const item = this.cache.get(key)
-    if (!item) return null
-
-    if (Date.now() - item.timestamp > item.ttl) {
+    if (!item) return null;
+    if (Date.now() - item.timestamp > item.ttl) {}
       this.cache.delete(key)
-      return null
+      return null;
     }
 
-    return item.data
+    return item.data;
   }
 
   delete(key: string) {
@@ -53,8 +51,8 @@ class MemoryCache {
 
 const globalCache = new MemoryCache()
 
-export function useCache<T>(key: string, fetcher: () => Promise<T>, options: CacheOptions = {}) {
-  const { ttl = 5 * 60 * 1000 } = options
+export function useCache<T>(key: string, fetcher: () => Promise<T>, options: CacheOptions = {}) {}
+  const { ttl = 5 * 60 * 1000 } = options;
   const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
@@ -63,7 +61,7 @@ export function useCache<T>(key: string, fetcher: () => Promise<T>, options: Cac
     const cached = globalCache.get(key)
     if (cached) {
       setData(cached as T)
-      return cached
+      return cached;
     }
 
     setLoading(true)
@@ -73,12 +71,12 @@ export function useCache<T>(key: string, fetcher: () => Promise<T>, options: Cac
       const result = await fetcher()
       globalCache.set(key, result, ttl)
       setData(result)
-      return result
-    } catch (err) {
+      return result;
+    } } catch {
       const error = err instanceof Error ? err : new Error("Unknown error")
       setError(error)
-      throw error
-    } finally {
+      throw error;
+    } finally {}
       setLoading(false)
     }
   }, [key, fetcher, ttl])
@@ -87,7 +85,7 @@ export function useCache<T>(key: string, fetcher: () => Promise<T>, options: Cac
     fetchData()
   }, [fetchData])
 
-  const invalidate = useCallback(() => {
+  const invalidate = useCallback(() => {}
     globalCache.delete(key)
     fetchData()
   }, [key, fetchData])

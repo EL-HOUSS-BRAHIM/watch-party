@@ -1,6 +1,6 @@
-'use client'
-
+import { Eye, Filter, Gift, Search, ShoppingCart, Star, User } from "lucide-react"
 import React, { useState, useEffect } from 'react'
+import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -9,65 +9,48 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { useApiToast } from "@/hooks/use-toast"
-import { 
-  Search,
-  Filter,
-  ShoppingCart,
-  Star,
-  Crown,
-  Palette,
-  Zap,
-  Gift,
-  Coins,
-  Eye,
-  Download,
-  Heart,
-  Sparkles,
-  Image as ImageIcon,
-  Music,
-  Video
-} from 'lucide-react'
 
-interface StoreItem {
-  id: string
-  name: string
-  description: string
+'use client'
+interface StoreItem {}
+  id: string;
+  name: string;
+  description: string;
   category: 'themes' | 'avatars' | 'frames' | 'emotes' | 'effects' | 'backgrounds' | 'sounds'
-  subcategory?: string
-  price: number
+  subcategory?: string;
+  price: number;
   currency: 'coins' | 'premium'
   rarity: 'common' | 'rare' | 'epic' | 'legendary'
-  preview: string
+  preview: string;
   images: string[]
-  isOwned: boolean
-  isPurchased: boolean
-  isEquipped?: boolean
-  isLimited: boolean
-  isNew: boolean
-  isFeatured: boolean
-  discount?: number
-  originalPrice?: number
+  isOwned: boolean;
+  isPurchased: boolean;
+  isEquipped?: boolean;
+  isLimited: boolean;
+  isNew: boolean;
+  isFeatured: boolean;
+  discount?: number;
+  originalPrice?: number;
   tags: string[]
-  requirements?: {
-    level?: number
+  requirements?: {}
+    level?: number;
     achievements?: string[]
     items?: string[]
   }
-  stats?: {
-    purchases: number
-    rating: number
-    reviews: number
+  stats?: {}
+    purchases: number;
+    rating: number;
+    reviews: number;
   }
-  releaseDate: string
-  expiryDate?: string
+  releaseDate: string;
+  expiryDate?: string;
 }
 
-interface UserCurrency {
-  coins: number
-  premium: number
+interface UserCurrency {}
+  coins: number;
+  premium: number;
 }
 
-const CATEGORIES = [
+const CATEGORIES = []
   { id: 'themes', name: 'Themes', icon: Palette },
   { id: 'avatars', name: 'Avatars', icon: Crown },
   { id: 'frames', name: 'Frames', icon: ImageIcon },
@@ -77,7 +60,7 @@ const CATEGORIES = [
   { id: 'sounds', name: 'Sounds', icon: Music }
 ]
 
-const RARITIES = [
+const RARITIES = []
   { id: 'common', name: 'Common', color: 'bg-gray-500' },
   { id: 'rare', name: 'Rare', color: 'bg-blue-500' },
   { id: 'epic', name: 'Epic', color: 'bg-purple-500' },
@@ -89,9 +72,9 @@ export function StoreItems() {
   const [userCurrency, setUserCurrency] = useState<UserCurrency>({ coins: 0, premium: 0 })
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState<string>('all')
-  const [rarityFilter, setRarityFilter] = useState<string>('all')
-  const [sortBy, setSortBy] = useState<string>('featured')
+  const [categoryFilter, setCategoryFilter] = useState<string>(&apos;all&apos;)
+  const [rarityFilter, setRarityFilter] = useState<string>(&apos;all&apos;)
+  const [sortBy, setSortBy] = useState<string>(&apos;featured&apos;)
   const [showOwned, setShowOwned] = useState(false)
   const [selectedItem, setSelectedItem] = useState<StoreItem | null>(null)
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false)
@@ -104,29 +87,29 @@ export function StoreItems() {
 
   const loadStoreItems = async () => {
     try {
-      const response = await apiRequest(() => fetch('/api/store/items'))
+      const response = await apiRequest(() => fetch(&apos;/api/store/items&apos;))
       if (response) {
         setItems(response)
       }
-    } catch (error) {
+    } } catch {
       toastError(error, 'Failed to load store items')
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
   const loadUserCurrency = async () => {
     try {
-      const response = await apiRequest(() => fetch('/api/store/currency'))
+      const response = await apiRequest(() => fetch(&apos;/api/store/currency'))
       if (response) {
         setUserCurrency(response)
       }
-    } catch (error) {
+    } } catch {
       console.error('Failed to load user currency:', error)
     }
   }
 
-  const handlePurchase = async (itemId: string) => {
+  const handlePurchase = async (itemId: string) => {}
     const success = await apiRequest(
       () => fetch(`/api/store/items/${itemId}/purchase`, { method: 'POST' }),
       { successMessage: 'Item purchased successfully!', showSuccess: true }
@@ -139,7 +122,7 @@ export function StoreItems() {
     }
   }
 
-  const handleEquip = async (itemId: string) => {
+  const handleEquip = async (itemId: string) => {}
     const success = await apiRequest(
       () => fetch(`/api/store/items/${itemId}/equip`, { method: 'POST' }),
       { successMessage: 'Item equipped!', showSuccess: true }
@@ -150,44 +133,42 @@ export function StoreItems() {
     }
   }
 
-  const filteredItems = items.filter(item => {
+  const filteredItems = items.filter(item => {}
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-    
-    const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter
-    const matchesRarity = rarityFilter === 'all' || item.rarity === rarityFilter
-    const matchesOwned = !showOwned || item.isOwned
-
-    return matchesSearch && matchesCategory && matchesRarity && matchesOwned
-  }).sort((a, b) => {
+    const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
+    const matchesRarity = rarityFilter === 'all' || item.rarity === rarityFilter;
+    const matchesOwned = !showOwned || item.isOwned;
+    return matchesSearch && matchesCategory && matchesRarity && matchesOwned;
+  }).sort((a, b) => {}
     switch (sortBy) {
       case 'name': return a.name.localeCompare(b.name)
-      case 'price-low': return a.price - b.price
-      case 'price-high': return b.price - a.price
+      case 'price-low': return a.price - b.price;
+      case 'price-high': return b.price - a.price;
       case 'rarity': return RARITIES.findIndex(r => r.id === b.rarity) - RARITIES.findIndex(r => r.id === a.rarity)
       case 'newest': return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime()
       case 'popular': return (b.stats?.purchases || 0) - (a.stats?.purchases || 0)
-      default: // featured
+      default: // featured;
         return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0) || 
                (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)
     }
   })
 
-  const getRarityColor = (rarity: string) => {
+  const getRarityColor = (rarity: string) => {}
     const rarityObj = RARITIES.find(r => r.id === rarity)
     return rarityObj?.color || 'bg-gray-500'
   }
 
-  const canAfford = (item: StoreItem) => {
-    if (item.isOwned) return true
+  const canAfford = (item: StoreItem) => {}
+    if (item.isOwned) return true;
     return item.currency === 'coins' 
-      ? userCurrency.coins >= item.price
-      : userCurrency.premium >= item.price
+      ? userCurrency.coins >= item.price;
+      : userCurrency.premium >= item.price;
   }
 
-  const getDiscountedPrice = (item: StoreItem) => {
-    if (!item.discount) return item.price
+  const getDiscountedPrice = (item: StoreItem) => {}
+    if (!item.discount) return item.price;
     return Math.floor(item.price * (1 - item.discount / 100))
   }
 
@@ -219,7 +200,7 @@ export function StoreItems() {
         </div>
         <Button variant="outline">
           <Gift className="h-4 w-4 mr-2" />
-          Get More
+          Get More;
         </Button>
       </div>
 
@@ -235,14 +216,13 @@ export function StoreItems() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
+              <Input;
                 placeholder="Search items..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
               />
             </div>
-            
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="All Categories" />
@@ -256,7 +236,6 @@ export function StoreItems() {
                 ))}
               </SelectContent>
             </Select>
-            
             <Select value={rarityFilter} onValueChange={setRarityFilter}>
               <SelectTrigger>
                 <SelectValue placeholder="All Rarities" />
@@ -270,7 +249,6 @@ export function StoreItems() {
                 ))}
               </SelectContent>
             </Select>
-            
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger>
                 <SelectValue placeholder="Sort by" />
@@ -310,9 +288,9 @@ export function StoreItems() {
         </TabsList>
 
         <TabsContent value="all" className="space-y-4">
-          <ItemGrid 
+          <ItemGrid;
             items={filteredItems} 
-            onPreview={(item) => {
+            onPreview={(item) => {}
               setSelectedItem(item)
               setPreviewDialogOpen(true)
             }}
@@ -325,9 +303,9 @@ export function StoreItems() {
         </TabsContent>
 
         <TabsContent value="featured" className="space-y-4">
-          <ItemGrid 
+          <ItemGrid;
             items={filteredItems.filter(i => i.isFeatured)}
-            onPreview={(item) => {
+            onPreview={(item) => {}
               setSelectedItem(item)
               setPreviewDialogOpen(true)
             }}
@@ -340,9 +318,9 @@ export function StoreItems() {
         </TabsContent>
 
         <TabsContent value="new" className="space-y-4">
-          <ItemGrid 
+          <ItemGrid;
             items={filteredItems.filter(i => i.isNew)}
-            onPreview={(item) => {
+            onPreview={(item) => {}
               setSelectedItem(item)
               setPreviewDialogOpen(true)
             }}
@@ -355,9 +333,9 @@ export function StoreItems() {
         </TabsContent>
 
         <TabsContent value="limited" className="space-y-4">
-          <ItemGrid 
+          <ItemGrid;
             items={filteredItems.filter(i => i.isLimited)}
-            onPreview={(item) => {
+            onPreview={(item) => {}
               setSelectedItem(item)
               setPreviewDialogOpen(true)
             }}
@@ -370,9 +348,9 @@ export function StoreItems() {
         </TabsContent>
 
         <TabsContent value="owned" className="space-y-4">
-          <ItemGrid 
+          <ItemGrid;
             items={filteredItems.filter(i => i.isOwned)}
-            onPreview={(item) => {
+            onPreview={(item) => {}
               setSelectedItem(item)
               setPreviewDialogOpen(true)
             }}
@@ -389,7 +367,7 @@ export function StoreItems() {
       <Dialog open={previewDialogOpen} onOpenChange={setPreviewDialogOpen}>
         <DialogContent className="max-w-2xl">
           {selectedItem && (
-            <ItemPreview
+            <ItemPreview;
               item={selectedItem}
               onPurchase={handlePurchase}
               onEquip={handleEquip}
@@ -404,23 +382,23 @@ export function StoreItems() {
   )
 }
 
-function ItemGrid({
+function ItemGrid({}
   items,
   onPreview,
   onPurchase,
   onEquip,
   canAfford,
   getDiscountedPrice,
-  getRarityColor
-}: {
+  getRarityColor;
+}: {}
   items: StoreItem[]
-  onPreview: (item: StoreItem) => void
-  onPurchase: (itemId: string) => void
-  onEquip: (itemId: string) => void
-  canAfford: (item: StoreItem) => boolean
-  getDiscountedPrice: (item: StoreItem) => number
-  getRarityColor: (rarity: string) => string
-}) {
+  onPreview: (item: StoreItem) => void;
+  onPurchase: (itemId: string) => void;
+  onEquip: (itemId: string) => void;
+  canAfford: (item: StoreItem) => boolean;
+  getDiscountedPrice: (item: StoreItem) => number;
+  getRarityColor: (rarity: string) => string;
+}) {}
   if (items.length === 0) {
     return (
       <Card>
@@ -438,7 +416,7 @@ function ItemGrid({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {items.map((item) => (
-        <ItemCard
+        <ItemCard;
           key={item.id}
           item={item}
           onPreview={onPreview}
@@ -453,28 +431,27 @@ function ItemGrid({
   )
 }
 
-function ItemCard({
+function ItemCard({}
   item,
   onPreview,
   onPurchase,
   onEquip,
   canAfford,
   discountedPrice,
-  getRarityColor
-}: {
-  item: StoreItem
-  onPreview: (item: StoreItem) => void
-  onPurchase: (itemId: string) => void
-  onEquip: (itemId: string) => void
-  canAfford: boolean
-  discountedPrice: number
-  getRarityColor: (rarity: string) => string
-}) {
+  getRarityColor;
+}: {}
+  item: StoreItem;
+  onPreview: (item: StoreItem) => void;
+  onPurchase: (itemId: string) => void;
+  onEquip: (itemId: string) => void;
+  canAfford: boolean;
+  discountedPrice: number;
+  getRarityColor: (rarity: string) => string;
+}) {}
   return (
     <Card className="relative overflow-hidden group hover:shadow-lg transition-all">
       {/* Rarity Border */}
       <div className={`absolute top-0 left-0 right-0 h-1 ${getRarityColor(item.rarity)}`} />
-      
       {/* Badges */}
       <div className="absolute top-2 right-2 flex flex-col space-y-1">
         {item.isNew && (
@@ -493,24 +470,23 @@ function ItemCard({
 
       <CardHeader className="pb-2">
         <div className="aspect-square bg-muted rounded-lg mb-3 relative overflow-hidden">
-          <img 
+          <img;
             src={item.preview} 
             alt={item.name}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
-            <Button
+            <Button;
               variant="secondary"
               size="sm"
               onClick={() => onPreview(item)}
               className="opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <Eye className="h-4 w-4 mr-2" />
-              Preview
+              Preview;
             </Button>
           </div>
         </div>
-        
         <div>
           <h3 className="font-semibold truncate">{item.name}</h3>
           <p className="text-sm text-muted-foreground line-clamp-2">
@@ -558,7 +534,7 @@ function ItemCard({
         <div className="space-y-2">
           {item.isOwned ? (
             <div className="flex space-x-2">
-              <Button
+              <Button;
                 size="sm"
                 variant={item.isEquipped ? "default" : "outline"}
                 onClick={() => onEquip(item.id)}
@@ -567,7 +543,7 @@ function ItemCard({
               >
                 {item.isEquipped ? 'Equipped' : 'Equip'}
               </Button>
-              <Button
+              <Button;
                 size="sm"
                 variant="outline"
                 onClick={() => onPreview(item)}
@@ -576,7 +552,7 @@ function ItemCard({
               </Button>
             </div>
           ) : (
-            <Button
+            <Button;
               size="sm"
               onClick={() => onPurchase(item.id)}
               disabled={!canAfford}
@@ -592,21 +568,21 @@ function ItemCard({
   )
 }
 
-function ItemPreview({
+function ItemPreview({}
   item,
   onPurchase,
   onEquip,
   canAfford,
   discountedPrice,
-  getRarityColor
-}: {
-  item: StoreItem
-  onPurchase: (itemId: string) => void
-  onEquip: (itemId: string) => void
-  canAfford: boolean
-  discountedPrice: number
-  getRarityColor: (rarity: string) => string
-}) {
+  getRarityColor;
+}: {}
+  item: StoreItem;
+  onPurchase: (itemId: string) => void;
+  onEquip: (itemId: string) => void;
+  canAfford: boolean;
+  discountedPrice: number;
+  getRarityColor: (rarity: string) => string;
+}) {}
   return (
     <div className="space-y-6">
       <DialogHeader>
@@ -621,18 +597,17 @@ function ItemPreview({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <div className="aspect-square bg-muted rounded-lg overflow-hidden">
-            <img 
+            <img;
               src={item.preview} 
               alt={item.name}
               className="w-full h-full object-cover"
             />
           </div>
-          
           {item.images.length > 1 && (
             <div className="flex space-x-2 overflow-x-auto">
               {item.images.slice(1, 4).map((image, index) => (
                 <div key={index} className="flex-shrink-0 w-16 h-16 bg-muted rounded overflow-hidden">
-                  <img src={image} alt="" className="w-full h-full object-cover" />
+                  <Image src="/placeholder.png" alt="" fill className="w-full h-full object-cover" />
                 </div>
               ))}
             </div>
@@ -704,7 +679,7 @@ function ItemPreview({
           <div className="space-y-2 pt-4">
             {item.isOwned ? (
               <div className="flex space-x-2">
-                <Button
+                <Button;
                   onClick={() => onEquip(item.id)}
                   disabled={item.isEquipped}
                   className="flex-1"
@@ -713,7 +688,7 @@ function ItemPreview({
                 </Button>
               </div>
             ) : (
-              <Button
+              <Button;
                 onClick={() => onPurchase(item.id)}
                 disabled={!canAfford}
                 className="w-full"

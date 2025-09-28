@@ -1,21 +1,15 @@
-"use client"
-
+import { Play, Settings, User, Volume2 } from "lucide-react"
 import { useState, useEffect } from "react"
-import { 
-  Play, 
-  Pause, 
-  SkipForward, 
-  SkipBack, 
-  Volume2, 
-  Users, 
-  Settings, 
-  UserX, 
-  Crown,
-  MessageSquare,
-  Eye,
-  EyeOff
-} from "lucide-react"
-import {
+import {}
+import { Button } from "@/components/ui/button"
+import { Slider } from "@/components/ui/slider"
+import { Badge } from "@/components/ui/badge"
+import { Separator } from "@/components/ui/separator"
+import { useToast } from "@/hooks/use-toast"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+
+"use client"
   Sheet,
   SheetContent,
   SheetDescription,
@@ -23,42 +17,33 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
-import { Slider } from "@/components/ui/slider"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { useToast } from "@/hooks/use-toast"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-
-interface Participant {
-  id: string
-  username: string
-  firstName: string
-  lastName: string
-  avatar?: string
-  isHost: boolean
-  isOnline: boolean
-  joinedAt: string
+interface Participant {}
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  avatar?: string;
+  isHost: boolean;
+  isOnline: boolean;
+  joinedAt: string;
   role: "host" | "moderator" | "participant"
 }
 
-interface PartyHostControlsProps {
-  partyId: string
+interface PartyHostControlsProps {}
+  partyId: string;
   participants: Participant[]
-  currentTime: number
-  duration: number
-  isPlaying: boolean
-  volume: number
-  onSeek: (time: number) => void
-  onPlayPause: () => void
-  onVolumeChange: (volume: number) => void
-  onSkip: (seconds: number) => void
-  onParticipantAction: (participantId: string, action: "kick" | "promote" | "mute") => void
+  currentTime: number;
+  duration: number;
+  isPlaying: boolean;
+  volume: number;
+  onSeek: (time: number) => void;
+  onPlayPause: () => void;
+  onVolumeChange: (volume: number) => void;
+  onSkip: (seconds: number) => void;
+  onParticipantAction: (participantId: string, action: "kick" | "promote" | "mute") => void;
 }
 
-export function PartyHostControls({
+export function PartyHostControls({}
   partyId,
   participants,
   currentTime,
@@ -70,31 +55,31 @@ export function PartyHostControls({
   onVolumeChange,
   onSkip,
   onParticipantAction,
-}: PartyHostControlsProps) {
+}: PartyHostControlsProps) {}
   const { toast } = useToast()
-  const [settings, setSettings] = useState({
+  const [settings, setSettings] = useState({}
     allowParticipantControls: true,
     allowChat: true,
     allowReactions: true,
     requireApproval: false,
   })
 
-  const formatTime = (seconds: number) => {
+  const formatTime = (seconds: number) => {}
     const mins = Math.floor(seconds / 60)
     const secs = Math.floor(seconds % 60)
     return `${mins}:${secs.toString().padStart(2, "0")}`
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {
+  const getUserInitials = (firstName: string, lastName: string) => {}
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase()
   }
 
-  const updatePartySettings = async (newSettings: Partial<typeof settings>) => {
+  const updatePartySettings = async (newSettings: Partial<typeof settings>) => {}
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/settings/`, {
+      const response = await fetch(`/api/parties/${partyId}/settings/`, {}
         method: "PATCH",
-        headers: {
+        headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
@@ -103,16 +88,16 @@ export function PartyHostControls({
 
       if (response.ok) {
         setSettings(prev => ({ ...prev, ...newSettings }))
-        toast({
+        toast({}
           title: "Settings updated",
           description: "Party settings have been updated successfully",
         })
-      } else {
+      } else {}
         throw new Error("Failed to update settings")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to update party settings:", error)
-      toast({
+      toast({}
         title: "Update failed",
         description: "Failed to update party settings",
         variant: "destructive",
@@ -128,17 +113,17 @@ export function PartyHostControls({
       <SheetTrigger asChild>
         <Button variant="outline" size="sm">
           <Settings className="h-4 w-4 mr-2" />
-          Host Controls
+          Host Controls;
         </Button>
       </SheetTrigger>
       <SheetContent className="w-[400px] sm:w-[540px]">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <Crown className="h-5 w-5 text-yellow-500" />
-            Host Controls
+            Host Controls;
           </SheetTitle>
           <SheetDescription>
-            Manage your watch party and participants
+            Manage your watch party and participants;
           </SheetDescription>
         </SheetHeader>
 
@@ -146,19 +131,17 @@ export function PartyHostControls({
           {/* Video Controls */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Video Controls</h3>
-            
             {/* Playback Controls */}
             <div className="flex items-center gap-2">
-              <Button
+              <Button;
                 variant="outline"
                 size="sm"
                 onClick={() => onSkip(-10)}
               >
                 <SkipBack className="h-4 w-4" />
-                10s
+                10s;
               </Button>
-              
-              <Button
+              <Button;
                 variant="outline"
                 onClick={onPlayPause}
                 className="flex-1"
@@ -170,14 +153,13 @@ export function PartyHostControls({
                 )}
                 {isPlaying ? "Pause" : "Play"}
               </Button>
-              
-              <Button
+              <Button;
                 variant="outline"
                 size="sm"
                 onClick={() => onSkip(10)}
               >
                 <SkipForward className="h-4 w-4" />
-                10s
+                10s;
               </Button>
             </div>
 
@@ -187,7 +169,7 @@ export function PartyHostControls({
                 <span>{formatTime(currentTime)}</span>
                 <span>{formatTime(duration)}</span>
               </div>
-              <Slider
+              <Slider;
                 value={[currentTime]}
                 max={duration}
                 step={1}
@@ -200,9 +182,9 @@ export function PartyHostControls({
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
                 <Volume2 className="h-4 w-4" />
-                Volume
+                Volume;
               </Label>
-              <Slider
+              <Slider;
                 value={[volume]}
                 max={100}
                 step={1}
@@ -217,11 +199,10 @@ export function PartyHostControls({
           {/* Party Settings */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Party Settings</h3>
-            
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <Label htmlFor="participant-controls">Allow participant controls</Label>
-                <Switch
+                <Switch;
                   id="participant-controls"
                   checked={settings.allowParticipantControls}
                   onCheckedChange={(checked) => 
@@ -229,10 +210,9 @@ export function PartyHostControls({
                   }
                 />
               </div>
-              
               <div className="flex items-center justify-between">
                 <Label htmlFor="chat-enabled">Enable chat</Label>
-                <Switch
+                <Switch;
                   id="chat-enabled"
                   checked={settings.allowChat}
                   onCheckedChange={(checked) => 
@@ -240,10 +220,9 @@ export function PartyHostControls({
                   }
                 />
               </div>
-              
               <div className="flex items-center justify-between">
                 <Label htmlFor="reactions-enabled">Enable reactions</Label>
-                <Switch
+                <Switch;
                   id="reactions-enabled"
                   checked={settings.allowReactions}
                   onCheckedChange={(checked) => 
@@ -251,10 +230,9 @@ export function PartyHostControls({
                   }
                 />
               </div>
-              
               <div className="flex items-center justify-between">
                 <Label htmlFor="require-approval">Require approval to join</Label>
-                <Switch
+                <Switch;
                   id="require-approval"
                   checked={settings.requireApproval}
                   onCheckedChange={(checked) => 
@@ -272,7 +250,7 @@ export function PartyHostControls({
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Participants</h3>
               <Badge variant="secondary">
-                {participants.length} total
+                {participants.length} total;
               </Badge>
             </div>
 
@@ -285,7 +263,7 @@ export function PartyHostControls({
                 </div>
                 <div className="space-y-2">
                   {onlineParticipants.map((participant) => (
-                    <div
+                    <div;
                       key={participant.id}
                       className="flex items-center justify-between p-2 rounded-lg bg-muted/50"
                     >
@@ -309,33 +287,33 @@ export function PartyHostControls({
                         )}
                         {participant.role === "moderator" && (
                           <Badge variant="outline" className="text-xs">
-                            Mod
+                            Mod;
                           </Badge>
                         )}
                       </div>
 
                       {!participant.isHost && (
                         <div className="flex items-center gap-1">
-                          <Button
+                          <Button;
                             variant="ghost"
                             size="sm"
-                            onClick={() => onParticipantAction(participant.id, "promote")}
+                            onClick={() => onParticipantAction(participant.id, &quot;promote&quot;)}
                             title="Promote to moderator"
                           >
                             <Crown className="h-3 w-3" />
                           </Button>
-                          <Button
+                          <Button;
                             variant="ghost"
                             size="sm"
-                            onClick={() => onParticipantAction(participant.id, "mute")}
+                            onClick={() => onParticipantAction(participant.id, &quot;mute&quot;)}
                             title="Mute participant"
                           >
                             <MessageSquare className="h-3 w-3" />
                           </Button>
-                          <Button
+                          <Button;
                             variant="ghost"
                             size="sm"
-                            onClick={() => onParticipantAction(participant.id, "kick")}
+                            onClick={() => onParticipantAction(participant.id, &quot;kick&quot;)}
                             title="Remove participant"
                             className="text-destructive hover:text-destructive"
                           >
@@ -360,7 +338,7 @@ export function PartyHostControls({
                 </div>
                 <div className="space-y-1">
                   {offlineParticipants.map((participant) => (
-                    <div
+                    <div;
                       key={participant.id}
                       className="flex items-center gap-3 p-2 rounded-lg opacity-60"
                     >

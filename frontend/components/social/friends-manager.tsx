@@ -1,15 +1,16 @@
-'use client'
-
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ProfilePreview } from "@/components/ui/profile-preview"
 import { useApiToast } from "@/hooks/use-toast"
-import { 
+import {}
+
+} from 'lucide-react'
+'use client'
+
   Search, 
   UserPlus, 
   MessageCircle, 
@@ -19,42 +20,41 @@ import {
   Users,
   Clock,
   GamepadIcon,
-  User
-} from 'lucide-react'
+  User;
 
-interface Friend {
-  id: string
-  username: string
-  displayName: string
-  avatar: string | null
+interface Friend {}
+  id: string;
+  username: string;
+  displayName: string;
+  avatar: string | null;
   status: 'online' | 'offline' | 'away' | 'busy'
-  isInParty: boolean
-  currentParty?: {
-    id: string
-    title: string
-    participantCount: number
+  isInParty: boolean;
+  currentParty?: {}
+    id: string;
+    title: string;
+    participantCount: number;
   }
-  lastSeen: string
-  mutualFriends: number
-  friendSince: string
+  lastSeen: string;
+  mutualFriends: number;
+  friendSince: string;
 }
 
-interface FriendRequest {
-  id: string
-  fromUser: {
-    id: string
-    username: string
-    displayName: string
-    avatar: string | null
+interface FriendRequest {}
+  id: string;
+  fromUser: {}
+    id: string;
+    username: string;
+    displayName: string;
+    avatar: string | null;
   }
-  toUser: {
-    id: string
-    username: string
-    displayName: string
-    avatar: string | null
+  toUser: {}
+    id: string;
+    username: string;
+    displayName: string;
+    avatar: string | null;
   }
-  createdAt: string
-  message?: string
+  createdAt: string;
+  message?: string;
 }
 
 export function FriendsManager() {
@@ -71,62 +71,58 @@ export function FriendsManager() {
 
   const loadFriendsData = async () => {
     try {
-      const [friendsData, incomingData, outgoingData] = await Promise.all([
-        apiRequest(() => fetch('/api/social/friends')),
-        apiRequest(() => fetch('/api/social/friend-requests/incoming')),
+      const [friendsData, incomingData, outgoingData] = await Promise.all([]
+        apiRequest(() => fetch(&apos;/api/social/friends&apos;)),
+        apiRequest(() => fetch(&apos;/api/social/friend-requests/incoming')),
         apiRequest(() => fetch('/api/social/friend-requests/outgoing'))
       ])
 
       if (friendsData) setFriends(friendsData)
       if (incomingData) setIncomingRequests(incomingData)
       if (outgoingData) setOutgoingRequests(outgoingData)
-    } catch (error) {
+    } } catch {
       toastError(error, 'Failed to load friends data')
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
-  const handleAcceptRequest = async (requestId: string) => {
+  const handleAcceptRequest = async (requestId: string) => {}
     const success = await apiRequest(
       () => fetch(`/api/social/friend-requests/${requestId}/accept`, { method: 'POST' }),
       { successMessage: 'Friend request accepted!', showSuccess: true }
     )
-    
     if (success) {
       setIncomingRequests(prev => prev.filter(req => req.id !== requestId))
       loadFriendsData()
     }
   }
 
-  const handleDeclineRequest = async (requestId: string) => {
+  const handleDeclineRequest = async (requestId: string) => {}
     const success = await apiRequest(
       () => fetch(`/api/social/friend-requests/${requestId}/decline`, { method: 'POST' }),
       { successMessage: 'Friend request declined', showSuccess: true }
     )
-    
     if (success) {
       setIncomingRequests(prev => prev.filter(req => req.id !== requestId))
     }
   }
 
-  const handleCancelRequest = async (requestId: string) => {
+  const handleCancelRequest = async (requestId: string) => {}
     const success = await apiRequest(
       () => fetch(`/api/social/friend-requests/${requestId}/cancel`, { method: 'DELETE' }),
       { successMessage: 'Friend request cancelled', showSuccess: true }
     )
-    
     if (success) {
       setOutgoingRequests(prev => prev.filter(req => req.id !== requestId))
     }
   }
 
-  const handleRemoveFriend = async (friendId: string) => {
+  const handleRemoveFriend = async (friendId: string) => {}
     const success = await apiRequest(
       () => fetch(`/api/social/friends/${friendId}`, { method: 'DELETE' }),
       { successMessage: 'Friend removed', showSuccess: true }
     )
-    
     if (success) {
       setFriends(prev => prev.filter(friend => friend.id !== friendId))
     }
@@ -137,7 +133,7 @@ export function FriendsManager() {
     friend.username.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  const getStatusColor = (status: Friend['status']) => {
+  const getStatusColor = (status: Friend['status']) => {}
     switch (status) {
       case 'online': return 'bg-green-500'
       case 'away': return 'bg-yellow-500'
@@ -146,7 +142,7 @@ export function FriendsManager() {
     }
   }
 
-  const getStatusText = (status: Friend['status']) => {
+  const getStatusText = (status: Friend['status']) => {}
     switch (status) {
       case 'online': return 'Online'
       case 'away': return 'Away'
@@ -170,7 +166,7 @@ export function FriendsManager() {
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-        <Input
+        <Input;
           placeholder="Search friends..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -184,7 +180,7 @@ export function FriendsManager() {
             All Friends ({friends.length})
           </TabsTrigger>
           <TabsTrigger value="online">
-            Online ({friends.filter(f => f.status === 'online').length})
+            Online ({friends.filter(f => f.status === &apos;online&apos;).length})
           </TabsTrigger>
           <TabsTrigger value="requests">
             Requests ({incomingRequests.length + outgoingRequests.length})
@@ -220,7 +216,6 @@ export function FriendsManager() {
                           </ProfilePreview>
                           <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-background ${getStatusColor(friend.status)}`} />
                         </div>
-                        
                         <div className="flex-1">
                           <div className="flex items-center space-x-2">
                             <ProfilePreview userId={friend.id}>
@@ -233,7 +228,6 @@ export function FriendsManager() {
                             </Badge>
                           </div>
                           <p className="text-sm text-muted-foreground">@{friend.username}</p>
-                          
                           {friend.isInParty && friend.currentParty && (
                             <div className="flex items-center space-x-1 mt-1">
                               <GamepadIcon className="h-3 w-3 text-primary" />
@@ -242,7 +236,6 @@ export function FriendsManager() {
                               </span>
                             </div>
                           )}
-                          
                           <div className="flex items-center space-x-4 mt-2 text-xs text-muted-foreground">
                             <span>Friends since {new Date(friend.friendSince).toLocaleDateString()}</span>
                             <span>{friend.mutualFriends} mutual friends</span>
@@ -252,7 +245,6 @@ export function FriendsManager() {
                           </div>
                         </div>
                       </div>
-                      
                       <div className="flex items-center space-x-2">
                         <Button variant="outline" size="sm">
                           <MessageCircle className="h-4 w-4" />
@@ -267,7 +259,7 @@ export function FriendsManager() {
                             </Button>
                           </>
                         )}
-                        <Button
+                        <Button;
                           variant="outline"
                           size="sm"
                           onClick={() => handleRemoveFriend(friend.id)}
@@ -284,7 +276,7 @@ export function FriendsManager() {
         </TabsContent>
 
         <TabsContent value="online" className="space-y-4">
-          {filteredFriends.filter(f => f.status === 'online').map((friend) => (
+          {filteredFriends.filter(f => f.status === &apos;online&apos;).map((friend) => (
             <Card key={friend.id}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
@@ -300,7 +292,6 @@ export function FriendsManager() {
                       </ProfilePreview>
                       <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background" />
                     </div>
-                    
                     <div className="flex-1">
                       <ProfilePreview userId={friend.id}>
                         <h3 className="font-semibold cursor-pointer hover:underline">
@@ -308,7 +299,6 @@ export function FriendsManager() {
                         </h3>
                       </ProfilePreview>
                       <p className="text-sm text-muted-foreground">@{friend.username}</p>
-                      
                       {friend.isInParty && friend.currentParty && (
                         <div className="flex items-center space-x-1 mt-1">
                           <GamepadIcon className="h-3 w-3 text-primary" />
@@ -319,7 +309,6 @@ export function FriendsManager() {
                       )}
                     </div>
                   </div>
-                  
                   <div className="flex items-center space-x-2">
                     <Button variant="outline" size="sm">
                       <MessageCircle className="h-4 w-4" />
@@ -356,7 +345,6 @@ export function FriendsManager() {
                               </AvatarFallback>
                             </Avatar>
                           </ProfilePreview>
-                          
                           <div className="flex-1">
                             <ProfilePreview userId={request.fromUser.id}>
                               <h3 className="font-semibold cursor-pointer hover:underline">
@@ -365,7 +353,7 @@ export function FriendsManager() {
                             </ProfilePreview>
                             <p className="text-sm text-muted-foreground">@{request.fromUser.username}</p>
                             {request.message && (
-                              <p className="text-sm mt-1 italic">"{request.message}"</p>
+                              <p className="text-sm mt-1 italic">&quot;{request.message}&quot;</p>
                             )}
                             <div className="flex items-center space-x-1 mt-1">
                               <Clock className="h-3 w-3 text-muted-foreground" />
@@ -375,21 +363,20 @@ export function FriendsManager() {
                             </div>
                           </div>
                         </div>
-                        
                         <div className="flex items-center space-x-2">
-                          <Button
+                          <Button;
                             variant="default"
                             size="sm"
                             onClick={() => handleAcceptRequest(request.id)}
                           >
-                            Accept
+                            Accept;
                           </Button>
-                          <Button
+                          <Button;
                             variant="outline"
                             size="sm"
                             onClick={() => handleDeclineRequest(request.id)}
                           >
-                            Decline
+                            Decline;
                           </Button>
                         </div>
                       </div>
@@ -418,7 +405,6 @@ export function FriendsManager() {
                               </AvatarFallback>
                             </Avatar>
                           </ProfilePreview>
-                          
                           <div className="flex-1">
                             <ProfilePreview userId={request.toUser.id}>
                               <h3 className="font-semibold cursor-pointer hover:underline">
@@ -434,13 +420,12 @@ export function FriendsManager() {
                             </div>
                           </div>
                         </div>
-                        
-                        <Button
+                        <Button;
                           variant="outline"
                           size="sm"
                           onClick={() => handleCancelRequest(request.id)}
                         >
-                          Cancel
+                          Cancel;
                         </Button>
                       </div>
                     </CardContent>

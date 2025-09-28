@@ -1,94 +1,71 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { Calendar, Clock, Download, Edit, Eye, Flag, Heart, Loader2, MessageCircle, MoreVertical, Settings, Share, Star, ThumbsDown, ThumbsUp, Trash, User, Users, Video } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
-import {
-  Heart,
-  Share2,
-  Download,
-  Edit,
-  Trash2,
-  MoreVertical,
-  Eye,
-  Clock,
-  Calendar,
-  User,
-  MessageCircle,
-  ThumbsUp,
-  ThumbsDown,
-  Flag,
-  ArrowLeft,
-  Settings,
-  Loader2,
-  Star,
-  Users,
-  Film,
-} from "lucide-react"
 import { formatDistanceToNow, format } from "date-fns"
 
-interface Video {
-  id: string
-  title: string
-  description: string
-  url: string
-  thumbnail: string
-  duration: number
-  views: number
-  likes: number
-  dislikes: number
-  uploadedAt: string
-  updatedAt: string
+"use client"
+interface Video {}
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  thumbnail: string;
+  duration: number;
+  views: number;
+  likes: number;
+  dislikes: number;
+  uploadedAt: string;
+  updatedAt: string;
   status: "processing" | "ready" | "failed"
   visibility: "public" | "private" | "unlisted"
   tags: string[]
-  uploader: {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
-    isVerified: boolean
+  uploader: {}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+    isVerified: boolean;
   }
-  metadata: {
-    resolution: string
-    fileSize: number
-    format: string
-    bitrate: number
+  metadata: {}
+    resolution: string;
+    fileSize: number;
+    format: string;
+    bitrate: number;
   }
-  analytics: {
-    watchTime: number
-    averageWatchTime: number
-    retentionRate: number
+  analytics: {}
+    watchTime: number;
+    averageWatchTime: number;
+    retentionRate: number;
     topCountries: Array<{ country: string; views: number }>
   }
 }
 
-interface Comment {
-  id: string
-  content: string
-  createdAt: string
-  updatedAt: string
-  likes: number
-  dislikes: number
-  author: {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
+interface Comment {}
+  id: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  likes: number;
+  dislikes: number;
+  author: {}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
   }
   replies: Comment[]
-  isLiked: boolean
-  isDisliked: boolean
+  isLiked: boolean;
+  isDisliked: boolean;
 }
 
 export default function VideoDetailsPage() {
@@ -96,8 +73,7 @@ export default function VideoDetailsPage() {
   const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
-  const videoId = params.videoId as string
-
+  const videoId = params.videoId as string;
   const [video, setVideo] = useState<Video | null>(null)
   const [comments, setComments] = useState<Comment[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -119,8 +95,8 @@ export default function VideoDetailsPage() {
   const loadVideo = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/`, {
-        headers: {
+      const response = await fetch(`/api/videos/${videoId}/`, {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -131,21 +107,21 @@ export default function VideoDetailsPage() {
         setIsLiked(videoData.isLiked || false)
         setIsDisliked(videoData.isDisliked || false)
       } else if (response.status === 404) {
-        toast({
+        toast({}
           title: "Video Not Found",
           description: "The video you're looking for doesn't exist.",
           variant: "destructive",
         })
         router.push("/dashboard/videos")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to load video:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load video details.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
@@ -153,8 +129,8 @@ export default function VideoDetailsPage() {
   const loadComments = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/comments/`, {
-        headers: {
+      const response = await fetch(`/api/videos/${videoId}/comments/`, {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -163,7 +139,7 @@ export default function VideoDetailsPage() {
         const commentsData = await response.json()
         setComments(commentsData.results || [])
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to load comments:", error)
     }
   }
@@ -171,9 +147,9 @@ export default function VideoDetailsPage() {
   const handleLike = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/like/`, {
+      const response = await fetch(`/api/videos/${videoId}/like/`, {}
         method: "POST",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -183,8 +159,8 @@ export default function VideoDetailsPage() {
         if (isDisliked) setIsDisliked(false)
 
         setVideo((prev) =>
-          prev
-            ? {
+          prev;
+            ? {}
                 ...prev,
                 likes: isLiked ? prev.likes - 1 : prev.likes + 1,
                 dislikes: isDisliked ? prev.dislikes - 1 : prev.dislikes,
@@ -192,7 +168,7 @@ export default function VideoDetailsPage() {
             : null,
         )
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to like video:", error)
     }
   }
@@ -200,9 +176,9 @@ export default function VideoDetailsPage() {
   const handleDislike = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/dislike/`, {
+      const response = await fetch(`/api/videos/${videoId}/dislike/`, {}
         method: "POST",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -212,8 +188,8 @@ export default function VideoDetailsPage() {
         if (isLiked) setIsLiked(false)
 
         setVideo((prev) =>
-          prev
-            ? {
+          prev;
+            ? {}
                 ...prev,
                 dislikes: isDisliked ? prev.dislikes - 1 : prev.dislikes + 1,
                 likes: isLiked ? prev.likes - 1 : prev.likes,
@@ -221,7 +197,7 @@ export default function VideoDetailsPage() {
             : null,
         )
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to dislike video:", error)
     }
   }
@@ -231,17 +207,17 @@ export default function VideoDetailsPage() {
 
     if (navigator.share) {
       try {
-        await navigator.share({
+        await navigator.share({}
           title: video?.title,
           text: video?.description,
           url: shareUrl,
         })
-      } catch (error) {
+      } } catch {
         console.log("Share cancelled")
       }
-    } else {
+    } else {}
       navigator.clipboard.writeText(shareUrl)
-      toast({
+      toast({}
         title: "Link Copied",
         description: "Video link copied to clipboard.",
       })
@@ -249,14 +225,13 @@ export default function VideoDetailsPage() {
   }
 
   const submitComment = async () => {
-    if (!newComment.trim()) return
-
+    if (!newComment.trim()) return;
     setIsSubmittingComment(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/comments/`, {
+      const response = await fetch(`/api/videos/${videoId}/comments/`, {}
         method: "POST",
-        headers: {
+        headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
@@ -267,47 +242,47 @@ export default function VideoDetailsPage() {
         const comment = await response.json()
         setComments((prev) => [comment, ...prev])
         setNewComment("")
-        toast({
+        toast({}
           title: "Comment Added",
           description: "Your comment has been posted.",
         })
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to submit comment:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to post comment.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsSubmittingComment(false)
     }
   }
 
   const deleteVideo = async () => {
-    if (!confirm("Are you sure you want to delete this video? This action cannot be undone.")) {
-      return
+    if (!confirm("Are you sure you want to delete this video? This action cannot be undone.")) {}
+      return;
     }
 
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/`, {
+      const response = await fetch(`/api/videos/${videoId}/`, {}
         method: "DELETE",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
-        toast({
+        toast({}
           title: "Video Deleted",
           description: "The video has been permanently deleted.",
         })
         router.push("/dashboard/videos")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to delete video:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to delete video.",
         variant: "destructive",
@@ -315,18 +290,17 @@ export default function VideoDetailsPage() {
     }
   }
 
-  const formatFileSize = (bytes: number) => {
+  const formatFileSize = (bytes: number) => {}
     const sizes = ["Bytes", "KB", "MB", "GB"]
     if (bytes === 0) return "0 Bytes"
     const i = Math.floor(Math.log(bytes) / Math.log(1024))
     return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i]
   }
 
-  const formatDuration = (seconds: number) => {
+  const formatDuration = (seconds: number) => {}
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60
-
+    const secs = seconds % 60;
     if (hours > 0) {
       return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
     }
@@ -351,21 +325,20 @@ export default function VideoDetailsPage() {
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-2xl font-bold mb-4">Video Not Found</h1>
-          <p className="text-gray-600 mb-4">The video you're looking for doesn't exist.</p>
-          <Button onClick={() => router.push("/dashboard/videos")}>Back to Videos</Button>
+          <p className="text-gray-600 mb-4">The video you&apos;re looking for doesn&apos;t exist.</p>
+          <Button onClick={() => router.push(&quot;/dashboard/videos&quot;)}>Back to Videos</Button>
         </div>
       </div>
     )
   }
 
-  const isOwner = video.uploader.id === user?.id
-
+  const isOwner = video.uploader.id === user?.id;
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" onClick={() => router.back()} className="p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -373,7 +346,7 @@ export default function VideoDetailsPage() {
             <div className="flex items-center gap-4 text-sm text-muted-foreground mt-1">
               <span className="flex items-center gap-1">
                 <Eye className="h-4 w-4" />
-                {video.views.toLocaleString()} views
+                {video.views.toLocaleString()} views;
               </span>
               <span className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
@@ -392,15 +365,15 @@ export default function VideoDetailsPage() {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => router.push(`/dashboard/videos/${videoId}/edit`)}>
                   <Edit className="h-4 w-4 mr-2" />
-                  Edit Video
+                  Edit Video;
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push(`/dashboard/videos/${videoId}/analytics`)}>
                   <Settings className="h-4 w-4 mr-2" />
-                  Analytics
+                  Analytics;
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={deleteVideo} className="text-destructive">
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Delete Video
+                  Delete Video;
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -416,10 +389,10 @@ export default function VideoDetailsPage() {
                 <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
                   {video.status === "ready" ? (
                     <>
-                      <video
+                      <video;
                         className="w-full h-full object-contain"
                         poster={video.thumbnail}
-                        controls
+                        controls;
                         preload="metadata"
                       >
                         <source src={video.url} type="video/mp4" />
@@ -452,7 +425,7 @@ export default function VideoDetailsPage() {
             {/* Video Actions */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Button
+                <Button;
                   variant={isLiked ? "default" : "outline"}
                   size="sm"
                   onClick={handleLike}
@@ -461,7 +434,7 @@ export default function VideoDetailsPage() {
                   <ThumbsUp className="h-4 w-4" />
                   {video.likes.toLocaleString()}
                 </Button>
-                <Button
+                <Button;
                   variant={isDisliked ? "default" : "outline"}
                   size="sm"
                   onClick={handleDislike}
@@ -472,17 +445,17 @@ export default function VideoDetailsPage() {
                 </Button>
                 <Button variant="outline" size="sm" onClick={handleShare}>
                   <Share2 className="h-4 w-4 mr-2" />
-                  Share
+                  Share;
                 </Button>
               </div>
               <div className="flex items-center gap-2">
                 <Button variant="outline" size="sm">
                   <Download className="h-4 w-4 mr-2" />
-                  Download
+                  Download;
                 </Button>
                 <Button variant="outline" size="sm">
                   <Flag className="h-4 w-4 mr-2" />
-                  Report
+                  Report;
                 </Button>
               </div>
             </div>
@@ -501,7 +474,7 @@ export default function VideoDetailsPage() {
                     <CardTitle>Description</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="whitespace-pre-wrap">{video.description || "No description provided."}</p>
+                    <p className="whitespace-pre-wrap">{video.description || &quot;No description provided.&quot;}</p>
 
                     {video.tags.length > 0 && (
                       <div className="mt-4">
@@ -566,22 +539,22 @@ export default function VideoDetailsPage() {
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1 space-y-2">
-                        <Textarea
+                        <Textarea;
                           placeholder="Add a comment..."
                           value={newComment}
                           onChange={(e) => setNewComment(e.target.value)}
                           className="min-h-[80px]"
                         />
                         <div className="flex justify-end gap-2">
-                          <Button
+                          <Button;
                             variant="outline"
                             size="sm"
-                            onClick={() => setNewComment("")}
+                            onClick={() => setNewComment(&quot;&quot;)}
                             disabled={!newComment.trim()}
                           >
-                            Cancel
+                            Cancel;
                           </Button>
-                          <Button
+                          <Button;
                             size="sm"
                             onClick={submitComment}
                             disabled={!newComment.trim() || isSubmittingComment}
@@ -591,7 +564,7 @@ export default function VideoDetailsPage() {
                             ) : (
                               <MessageCircle className="h-4 w-4 mr-2" />
                             )}
-                            Comment
+                            Comment;
                           </Button>
                         </div>
                       </div>
@@ -632,7 +605,7 @@ export default function VideoDetailsPage() {
                               </div>
                               <p className="text-sm mb-2">{comment.content}</p>
                               <div className="flex items-center gap-4">
-                                <Button
+                                <Button;
                                   variant="ghost"
                                   size="sm"
                                   className={`h-6 px-2 ${comment.isLiked ? "text-blue-600" : ""}`}
@@ -640,7 +613,7 @@ export default function VideoDetailsPage() {
                                   <ThumbsUp className="h-3 w-3 mr-1" />
                                   {comment.likes}
                                 </Button>
-                                <Button
+                                <Button;
                                   variant="ghost"
                                   size="sm"
                                   className={`h-6 px-2 ${comment.isDisliked ? "text-red-600" : ""}`}
@@ -649,7 +622,7 @@ export default function VideoDetailsPage() {
                                   {comment.dislikes}
                                 </Button>
                                 <Button variant="ghost" size="sm" className="h-6 px-2">
-                                  Reply
+                                  Reply;
                                 </Button>
                               </div>
                             </div>
@@ -751,7 +724,7 @@ export default function VideoDetailsPage() {
                       </h3>
                       {video.uploader.isVerified && (
                         <Badge variant="secondary" className="text-xs">
-                          Verified
+                          Verified;
                         </Badge>
                       )}
                     </div>
@@ -761,7 +734,7 @@ export default function VideoDetailsPage() {
                 {!isOwner && (
                   <Button className="w-full">
                     <User className="h-4 w-4 mr-2" />
-                    Follow
+                    Follow;
                   </Button>
                 )}
               </CardContent>
@@ -806,15 +779,15 @@ export default function VideoDetailsPage() {
               <CardContent className="space-y-2">
                 <Button variant="outline" className="w-full justify-start bg-transparent">
                   <Users className="h-4 w-4 mr-2" />
-                  Create Watch Party
+                  Create Watch Party;
                 </Button>
                 <Button variant="outline" className="w-full justify-start bg-transparent">
                   <Heart className="h-4 w-4 mr-2" />
-                  Add to Favorites
+                  Add to Favorites;
                 </Button>
                 <Button variant="outline" className="w-full justify-start bg-transparent">
                   <Download className="h-4 w-4 mr-2" />
-                  Download Video
+                  Download Video;
                 </Button>
               </CardContent>
             </Card>

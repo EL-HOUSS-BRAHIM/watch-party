@@ -1,28 +1,17 @@
-'use client';
-
-import { useState, useEffect } from 'react';
+import { Activity, BarChart, DollarSign, Download, PieChart, Refresh, TrendingUp, User, Users, X } from "lucide-react"
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
-import { 
-  Users, 
-  DollarSign, 
-  Video, 
-  TrendingUp, 
-  TrendingDown, 
-  Activity,
-  Calendar,
-  Download,
-  RefreshCw
-} from 'lucide-react';
 import { analyticsAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
-interface AdminMetrics {
-  overview: {
+'use client';
+interface AdminMetrics {}
+  overview: {}
     totalUsers: number;
     activeUsers: number;
     totalRevenue: number;
@@ -32,24 +21,24 @@ interface AdminMetrics {
     churnRate: number;
     avgSessionDuration: number;
   };
-  trends: {
+  trends: {}
     userGrowth: Array<{ date: string; users: number; active: number }>;
     revenueGrowth: Array<{ date: string; revenue: number; subscriptions: number }>;
     contentMetrics: Array<{ date: string; videos: number; watchTime: number }>;
     partyMetrics: Array<{ date: string; parties: number; participants: number }>;
   };
-  demographics: {
+  demographics: {}
     ageGroups: Array<{ range: string; count: number; percentage: number }>;
     locations: Array<{ country: string; count: number; percentage: number }>;
     devices: Array<{ type: string; count: number; percentage: number }>;
     subscriptionTiers: Array<{ tier: string; count: number; revenue: number; color: string }>;
   };
-  performance: {
+  performance: {}
     serverMetrics: Array<{ time: string; cpu: number; memory: number; requests: number }>;
     errorRates: Array<{ date: string; errors: number; total: number }>;
     loadTimes: Array<{ page: string; averageTime: number; p95Time: number }>;
   };
-  retention: {
+  retention: {}
     cohorts: Array<{ cohort: string; week0: number; week1: number; week2: number; week4: number; week8: number }>;
     engagement: Array<{ date: string; dau: number; wau: number; mau: number }>;
   };
@@ -66,17 +55,17 @@ export default function AdminAnalyticsDashboard() {
 
   useEffect(() => {
     fetchMetrics();
-  }, [timeframe]);
+  }, [fetchMetrics]);
 
-  const fetchMetrics = async () => {
+  const fetchMetrics = useCallback(async () => {
     setLoading(true);
     try {
-      // Fetch real data from analytics API
-      const [dashboardData, advancedData, realtimeData] = await Promise.all([
+      // Fetch real data from analytics API;
+      const [dashboardData, advancedData] = await Promise.all([]
         analyticsAPI.getDashboard(timeframe),
-        analyticsAPI.executeAdvancedQuery({
+        analyticsAPI.executeAdvancedQuery({}
           metrics: ['users', 'revenue', 'videos', 'parties'],
-          date_range: {
+          date_range: {}
             start: new Date(Date.now() - (timeframe === '7d' ? 7 : timeframe === '30d' ? 30 : timeframe === '90d' ? 90 : 365) * 24 * 60 * 60 * 1000).toISOString(),
             end: new Date().toISOString()
           },
@@ -85,55 +74,54 @@ export default function AdminAnalyticsDashboard() {
         analyticsAPI.getRealtimeAnalytics()
       ]);
 
-      // Transform API data to component format
-  const performanceSource = (advancedData as any).performance || (dashboardData as any).performance || {}
+      // Transform API data to component format;
+  const performanceSource = (advancedData as Record<string, unknown>).performance || (dashboardData as Record<string, unknown>).performance || {}
 
-  const transformedMetrics: AdminMetrics = {
-        overview: {
+  const transformedMetrics: AdminMetrics = { overview: {}
           totalUsers: dashboardData.overview?.total_users || 0,
           activeUsers: dashboardData.overview?.active_users_today || 0,
-          totalRevenue: (dashboardData.overview as any)?.total_revenue || 0,
-          totalVideos: (dashboardData.overview as any)?.total_videos || 0,
+          totalRevenue: (dashboardData.overview as Record<string, unknown>)?.total_revenue as number || 0,
+          totalVideos: (dashboardData.overview as Record<string, unknown>)?.total_videos as number || 0,
           totalParties: dashboardData.overview?.total_parties || 0,
-          conversionRate: (dashboardData.overview as any)?.conversion_rate || 0,
-          churnRate: (dashboardData.overview as any)?.churn_rate || 0,
-          avgSessionDuration: (dashboardData.overview as any)?.avg_session_duration || dashboardData.overview?.total_watch_time_hours || 0,
+          conversionRate: (dashboardData.overview as Record<string, unknown>)?.conversion_rate as number || 0,
+          churnRate: (dashboardData.overview as Record<string, unknown>)?.churn_rate as number || 0,
+          avgSessionDuration: (dashboardData.overview as Record<string, unknown>)?.avg_session_duration as number || dashboardData.overview?.total_watch_time_hours || 0,
         },
-        trends: {
-          userGrowth: (advancedData as any).trends?.user_growth || [],
-          revenueGrowth: (advancedData as any).trends?.revenue_growth || [],
-          contentMetrics: (advancedData as any).trends?.content_metrics || [],
-          partyMetrics: (advancedData as any).trends?.party_metrics || [],
+        trends: {}
+          userGrowth: (advancedData as Record<string, unknown>).trends?.user_growth as Array<{ date: string; users: number; active: number }> || [],
+          revenueGrowth: (advancedData as Record<string, unknown>).trends?.revenue_growth as Array<{ date: string; revenue: number; subscriptions: number }> || [],
+          contentMetrics: (advancedData as Record<string, unknown>).trends?.content_metrics as Array<{ date: string; videos: number; watchTime: number }> || [],
+          partyMetrics: (advancedData as Record<string, unknown>).trends?.party_metrics as Array<{ date: string; parties: number; participants: number }> || [],
         },
-        demographics: {
-          ageGroups: (dashboardData as any).demographics?.age_groups || (advancedData as any).demographics?.age_groups || [],
-          locations: (dashboardData as any).demographics?.locations || (advancedData as any).demographics?.locations || [],
-          devices: (dashboardData as any).demographics?.devices || (advancedData as any).demographics?.devices || [],
-          subscriptionTiers: (dashboardData as any).demographics?.subscription_tiers || (advancedData as any).demographics?.subscription_tiers || [],
+        demographics: {}
+          ageGroups: (dashboardData as Record<string, unknown>).demographics?.age_groups as Array<{ range: string; count: number; percentage: number }> || (advancedData as Record<string, unknown>).demographics?.age_groups as Array<{ range: string; count: number; percentage: number }> || [],
+          locations: (dashboardData as Record<string, unknown>).demographics?.locations as Array<{ country: string; count: number; percentage: number }> || (advancedData as Record<string, unknown>).demographics?.locations as Array<{ country: string; count: number; percentage: number }> || [],
+          devices: (dashboardData as Record<string, unknown>).demographics?.devices as Array<{ type: string; count: number; percentage: number }> || (advancedData as Record<string, unknown>).demographics?.devices as Array<{ type: string; count: number; percentage: number }> || [],
+          subscriptionTiers: (dashboardData as Record<string, unknown>).demographics?.subscription_tiers as Array<{ tier: string; count: number; revenue: number; color: string }> || (advancedData as Record<string, unknown>).demographics?.subscription_tiers as Array<{ tier: string; count: number; revenue: number; color: string }> || [],
         },
-        performance: {
-          serverMetrics: performanceSource.server_metrics || [],
-          errorRates: performanceSource.error_rates || [],
-          loadTimes: performanceSource.load_times || [],
+        performance: {}
+          serverMetrics: (performanceSource as Record<string, unknown>).server_metrics as Array<{ time: string; cpu: number; memory: number; requests: number }> || [],
+          errorRates: (performanceSource as Record<string, unknown>).error_rates as Array<{ date: string; errors: number; total: number }> || [],
+          loadTimes: (performanceSource as Record<string, unknown>).load_times as Array<{ page: string; averageTime: number; p95Time: number }> || [],
         },
-        retention: {
-          cohorts: (dashboardData as any).retention?.cohorts || (advancedData as any).retention?.cohorts || [],
-          engagement: (advancedData as any).retention?.engagement || (dashboardData as any).retention?.engagement || [],
+        retention: {}
+          cohorts: (dashboardData as Record<string, unknown>).retention?.cohorts as Array<{ cohort: string; week0: number; week1: number; week2: number; week4: number; week8: number }> || (advancedData as Record<string, unknown>).retention?.cohorts as Array<{ cohort: string; week0: number; week1: number; week2: number; week4: number; week8: number }> || [],
+          engagement: (advancedData as Record<string, unknown>).retention?.engagement as Array<{ date: string; dau: number; wau: number; mau: number }> || (dashboardData as Record<string, unknown>).retention?.engagement as Array<{ date: string; dau: number; wau: number; mau: number }> || [],
         },
       };
 
       setMetrics(transformedMetrics);
-    } catch (error) {
+    } } catch {
       console.error('Failed to fetch admin metrics:', error);
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load analytics data. Please try again.",
         variant: "destructive",
       });
-    } finally {
+    } finally {}
       setLoading(false);
     }
-  };
+  }, [timeframe, toast]);
 
   const refreshData = async () => {
     setRefreshing(true);
@@ -143,27 +131,25 @@ export default function AdminAnalyticsDashboard() {
 
   const exportData = async () => {
     try {
-      const exportResult = await analyticsAPI.exportAnalytics({
+      const exportResult = await analyticsAPI.exportAnalytics({}
         format: 'json',
         date_range: timeframe,
         metrics: ['users', 'revenue', 'videos', 'parties', 'demographics', 'performance']
       });
-      
-      // Create download link from API response
+      // Create download link from API response;
       const link = document.createElement('a');
       link.href = exportResult.download_url;
       link.download = `admin-analytics-${timeframe}-${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      
-      toast({
+      toast({}
         title: "Success",
         description: "Analytics data exported successfully.",
       });
-    } catch (error) {
+    } } catch {
       console.error('Failed to export analytics:', error);
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to export analytics data. Please try again.",
         variant: "destructive",
@@ -211,11 +197,11 @@ export default function AdminAnalyticsDashboard() {
           </Select>
           <Button variant="outline" onClick={refreshData} disabled={refreshing}>
             <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-            Refresh
+            Refresh;
           </Button>
           <Button variant="outline" onClick={exportData}>
             <Download className="h-4 w-4 mr-2" />
-            Export
+            Export;
           </Button>
         </div>
       </div>
@@ -230,7 +216,7 @@ export default function AdminAnalyticsDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{metrics.overview.totalUsers.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+{((metrics.overview.activeUsers / metrics.overview.totalUsers) * 100).toFixed(1)}%</span> active
+              <span className="text-green-600">+{((metrics.overview.activeUsers / metrics.overview.totalUsers) * 100).toFixed(1)}%</span> active;
             </p>
           </CardContent>
         </Card>
@@ -243,7 +229,7 @@ export default function AdminAnalyticsDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">${metrics.overview.totalRevenue.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+12.5%</span> from last period
+              <span className="text-green-600">+12.5%</span> from last period;
             </p>
           </CardContent>
         </Card>
@@ -256,7 +242,7 @@ export default function AdminAnalyticsDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{metrics.overview.conversionRate}%</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+0.8%</span> from last period
+              <span className="text-green-600">+0.8%</span> from last period;
             </p>
           </CardContent>
         </Card>
@@ -269,7 +255,7 @@ export default function AdminAnalyticsDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{metrics.overview.avgSessionDuration}m</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-red-600">-2.1%</span> from last period
+              <span className="text-red-600">-2.1%</span> from last period;
             </p>
           </CardContent>
         </Card>
@@ -352,7 +338,7 @@ export default function AdminAnalyticsDashboard() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
-                    <Pie
+                    <Pie;
                       data={metrics.demographics.subscriptionTiers}
                       cx="50%"
                       cy="50%"
@@ -381,21 +367,21 @@ export default function AdminAnalyticsDashboard() {
                 {metrics.demographics.subscriptionTiers.map((tier) => (
                   <div key={tier.tier} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div 
+                      <div;
                         className="w-4 h-4 rounded-full" 
                         style={{ backgroundColor: tier.color }}
                       />
                       <div>
                         <div className="font-medium">{tier.tier}</div>
                         <div className="text-sm text-muted-foreground">
-                          {tier.count.toLocaleString()} users
+                          {tier.count.toLocaleString()} users;
                         </div>
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="font-medium">${tier.revenue.toLocaleString()}</div>
                       <div className="text-sm text-muted-foreground">
-                        ${(tier.revenue / tier.count || 0).toFixed(2)} per user
+                        ${(tier.revenue / tier.count || 0).toFixed(2)} per user;
                       </div>
                     </div>
                   </div>
@@ -431,7 +417,7 @@ export default function AdminAnalyticsDashboard() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
-                    <Pie
+                    <Pie;
                       data={metrics.demographics.devices}
                       cx="50%"
                       cy="50%"
@@ -464,14 +450,14 @@ export default function AdminAnalyticsDashboard() {
                       <div>
                         <div className="font-medium">{location.country}</div>
                         <div className="text-sm text-muted-foreground">
-                          {location.percentage}% of total users
+                          {location.percentage}% of total users;
                         </div>
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="font-medium">{location.count.toLocaleString()}</div>
                       <div className="w-24 bg-gray-200 rounded-full h-2">
-                        <div
+                        <div;
                           className="bg-blue-600 h-2 rounded-full"
                           style={{ width: `${location.percentage}%` }}
                         />
@@ -533,11 +519,11 @@ export default function AdminAnalyticsDashboard() {
                     <div className="flex justify-between">
                       <span className="font-medium">{page.page}</span>
                       <div className="text-sm text-muted-foreground">
-                        Avg: {page.averageTime}s | P95: {page.p95Time}s
+                        Avg: {page.averageTime}s | P95: {page.p95Time}s;
                       </div>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div
+                      <div;
                         className="bg-blue-600 h-2 rounded-full"
                         style={{ width: `${(page.averageTime / 5) * 100}%` }}
                       />
@@ -572,7 +558,7 @@ export default function AdminAnalyticsDashboard() {
                       <tr key={cohort.cohort} className="border-b">
                         <td className="p-2 font-medium">{cohort.cohort}</td>
                         <td className="text-center p-2">
-                          <div
+                          <div;
                             className="inline-block px-2 py-1 rounded text-white text-sm"
                             style={{ backgroundColor: `hsl(${cohort.week0 * 1.2}, 70%, 50%)` }}
                           >
@@ -580,7 +566,7 @@ export default function AdminAnalyticsDashboard() {
                           </div>
                         </td>
                         <td className="text-center p-2">
-                          <div
+                          <div;
                             className="inline-block px-2 py-1 rounded text-white text-sm"
                             style={{ backgroundColor: `hsl(${cohort.week1 * 1.2}, 70%, 50%)` }}
                           >
@@ -588,7 +574,7 @@ export default function AdminAnalyticsDashboard() {
                           </div>
                         </td>
                         <td className="text-center p-2">
-                          <div
+                          <div;
                             className="inline-block px-2 py-1 rounded text-white text-sm"
                             style={{ backgroundColor: `hsl(${cohort.week2 * 1.2}, 70%, 50%)` }}
                           >
@@ -596,7 +582,7 @@ export default function AdminAnalyticsDashboard() {
                           </div>
                         </td>
                         <td className="text-center p-2">
-                          <div
+                          <div;
                             className="inline-block px-2 py-1 rounded text-white text-sm"
                             style={{ backgroundColor: `hsl(${cohort.week4 * 1.2}, 70%, 50%)` }}
                           >
@@ -604,7 +590,7 @@ export default function AdminAnalyticsDashboard() {
                           </div>
                         </td>
                         <td className="text-center p-2">
-                          <div
+                          <div;
                             className="inline-block px-2 py-1 rounded text-white text-sm"
                             style={{ backgroundColor: `hsl(${cohort.week8 * 1.2}, 70%, 50%)` }}
                           >

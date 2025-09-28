@@ -1,29 +1,29 @@
-'use client'
-
+import { Heart, Share, ShoppingCart, Star } from "lucide-react"
 import { useParams } from 'next/navigation'
+import Image from "next/image"
 import { useState } from 'react'
 import { StarIcon, ShoppingCartIcon, HeartIcon, ShareIcon } from '@heroicons/react/24/outline'
 import { StarIcon as StarSolidIcon, HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
 
-interface StoreItemDetail {
-  id: string
-  name: string
-  description: string
-  longDescription: string
-  price: number
-  category: string
-  rating: number
-  reviews: number
+'use client'
+interface StoreItemDetail {}
+  id: string;
+  name: string;
+  description: string;
+  longDescription: string;
+  price: number;
+  category: string;
+  rating: number;
+  reviews: number;
   images: string[]
-  isPremium: boolean
-  isOwned: boolean
+  isPremium: boolean;
+  isOwned: boolean;
   features: string[]
   compatibility: string[]
 }
 
-// Mock data - in real app, fetch based on params.itemId
-const itemDetail: StoreItemDetail = {
-  id: '1',
+// Mock data - in real app, fetch based on params.itemId;
+const itemDetail: StoreItemDetail = { id: '1',
   name: 'Premium Avatar Frames',
   description: 'Exclusive animated frames for your profile avatar',
   longDescription: 'Transform your profile with these stunning animated avatar frames. Each frame features smooth animations, premium effects, and exclusive designs that make your profile stand out in watch parties and across the platform.',
@@ -34,7 +34,7 @@ const itemDetail: StoreItemDetail = {
   images: ['/placeholder.jpg', '/placeholder.jpg', '/placeholder.jpg'],
   isPremium: true,
   isOwned: false,
-  features: [
+  features: []
     'Smooth 60fps animations',
     'Multiple color variants',
     'Works in all party rooms',
@@ -50,7 +50,7 @@ export default function StoreItemPage() {
   const [isFavorited, setIsFavorited] = useState(false)
   const [showFullDescription, setShowFullDescription] = useState(false)
 
-  const renderStars = (rating: number) => {
+  const renderStars = (rating: number) => {}
     return Array.from({ length: 5 }, (_, i) => (
       i < Math.floor(rating) ? (
         <StarSolidIcon key={i} className="w-5 h-5 text-yellow-400" />
@@ -77,7 +77,7 @@ export default function StoreItemPage() {
           <div className="space-y-4">
             {/* Main Image */}
             <div className="aspect-square bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-lg overflow-hidden">
-              <img
+              <img;
                 src={itemDetail.images[selectedImage]}
                 alt={itemDetail.name}
                 className="w-full h-full object-cover"
@@ -87,16 +87,16 @@ export default function StoreItemPage() {
             {/* Image Thumbnails */}
             <div className="flex gap-2">
               {itemDetail.images.map((image, index) => (
-                <button
+                <button;
                   key={index}
                   onClick={() => setSelectedImage(index)}
-                  className={`aspect-square w-20 rounded-lg overflow-hidden border-2 transition-all ${
-                    selectedImage === index
+                  className={`aspect-square w-20 rounded-lg overflow-hidden border-2 transition-all ${}
+                    selectedImage === index;
                       ? 'border-yellow-400'
                       : 'border-white/20 hover:border-white/40'
                   }`}
                 >
-                  <img
+                  <img;
                     src={image}
                     alt={`${itemDetail.name} ${index + 1}`}
                     className="w-full h-full object-cover"
@@ -114,12 +114,12 @@ export default function StoreItemPage() {
                 <h1 className="text-3xl font-bold">{itemDetail.name}</h1>
                 {itemDetail.isPremium && (
                   <span className="bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-3 py-1 rounded-full text-sm font-bold">
-                    PREMIUM
+                    PREMIUM;
                   </span>
                 )}
                 {itemDetail.isOwned && (
                   <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                    OWNED
+                    OWNED;
                   </span>
                 )}
               </div>
@@ -141,15 +141,15 @@ export default function StoreItemPage() {
 
             {/* Price */}
             <div className="text-3xl font-bold text-yellow-400">
-              {itemDetail.price} coins
+              {itemDetail.price} coins;
             </div>
 
             {/* Action Buttons */}
             <div className="flex gap-4">
-              <button
+              <button;
                 disabled={itemDetail.isOwned}
-                className={`flex-1 flex items-center justify-center gap-2 py-4 px-6 rounded-lg font-bold text-lg transition-all ${
-                  itemDetail.isOwned
+                className={`flex-1 flex items-center justify-center gap-2 py-4 px-6 rounded-lg font-bold text-lg transition-all ${}
+                  itemDetail.isOwned;
                     ? 'bg-green-500/20 text-green-400 cursor-not-allowed'
                     : 'bg-gradient-to-r from-yellow-400 to-orange-500 text-black hover:scale-105'
                 }`}
@@ -159,12 +159,11 @@ export default function StoreItemPage() {
                 ) : (
                   <>
                     <ShoppingCartIcon className="w-5 h-5" />
-                    Purchase Now
+                    Purchase Now;
                   </>
                 )}
               </button>
-              
-              <button
+              <button;
                 onClick={() => setIsFavorited(!isFavorited)}
                 className="p-4 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
               >
@@ -174,7 +173,6 @@ export default function StoreItemPage() {
                   <HeartIcon className="w-6 h-6" />
                 )}
               </button>
-              
               <button className="p-4 bg-white/10 hover:bg-white/20 rounded-lg transition-colors">
                 <ShareIcon className="w-6 h-6" />
               </button>
@@ -198,7 +196,7 @@ export default function StoreItemPage() {
               <h3 className="text-xl font-bold mb-4">Compatibility</h3>
               <div className="flex flex-wrap gap-2">
                 {itemDetail.compatibility.map((platform, index) => (
-                  <span
+                  <span;
                     key={index}
                     className="px-3 py-1 bg-white/10 rounded-full text-sm"
                   >
@@ -217,7 +215,7 @@ export default function StoreItemPage() {
             <p className="text-white/80 leading-relaxed">
               {showFullDescription ? itemDetail.longDescription : itemDetail.longDescription.substring(0, 200) + '...'}
             </p>
-            <button
+            <button;
               onClick={() => setShowFullDescription(!showFullDescription)}
               className="text-yellow-400 hover:text-yellow-300 mt-4 font-medium"
             >

@@ -1,15 +1,17 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import { User, MapPin, Calendar, Star, Trophy, Users, MessageCircle, UserPlus, UserMinus, MoreHorizontal, Flag, Shield, Activity, Clock, Heart, Play, Award, Gift } from "lucide-react"
+import { Activity, Calendar, Clock, Flag, MapPin, MessageCircle, MoreHorizontal, Play, Shield, Star, Trophy, User, Users } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
 import { Progress } from "@/components/ui/progress"
-import {
+import {}
+import {}
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { formatDistanceToNow, format } from "date-fns"
+
+"use client"
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -17,84 +19,77 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { formatDistanceToNow, format } from "date-fns"
-
-interface Achievement {
-  id: string
-  name: string
-  description: string
-  icon: string
+interface Achievement {}
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
   rarity: "common" | "rare" | "epic" | "legendary"
-  unlockedAt: string
-  progress: number
-  maxProgress: number
+  unlockedAt: string;
+  progress: number;
+  maxProgress: number;
 }
 
-interface WatchHistory {
-  id: string
-  videoTitle: string
-  watchedAt: string
-  duration: number
-  completionRate: number
+interface WatchHistory {}
+  id: string;
+  videoTitle: string;
+  watchedAt: string;
+  duration: number;
+  completionRate: number;
 }
 
-interface FriendProfile {
-  id: string
-  username: string
-  firstName: string
-  lastName: string
-  email: string
-  avatar?: string
-  bio?: string
-  location?: string
-  isOnline: boolean
-  lastActive: string
-  joinedDate: string
+interface FriendProfile {}
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatar?: string;
+  bio?: string;
+  location?: string;
+  isOnline: boolean;
+  lastActive: string;
+  joinedDate: string;
   friendshipStatus: "none" | "friends" | "pending_sent" | "pending_received" | "blocked"
-  
-  stats: {
-    partiesHosted: number
-    partiesJoined: number
-    friendsCount: number
-    totalWatchTime: number
+  stats: {}
+    partiesHosted: number;
+    partiesJoined: number;
+    friendsCount: number;
+    totalWatchTime: number;
     favoriteGenres: string[]
-    averageRating: number
-    reviewsCount: number
+    averageRating: number;
+    reviewsCount: number;
   }
-  
   achievements: Achievement[]
   recentActivity: WatchHistory[]
-  mutualFriends: {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
+  mutualFriends: {}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
   }[]
-  
-  preferences: {
+  preferences: {}
     profileVisibility: "public" | "friends" | "private"
-    showActivity: boolean
-    showWatchHistory: boolean
+    showActivity: boolean;
+    showWatchHistory: boolean;
   }
 }
 
-interface FriendProfilePreviewProps {
-  userId: string
-  isOpen: boolean
-  onClose: () => void
-  className?: string
+interface FriendProfilePreviewProps {}
+  userId: string;
+  isOpen: boolean;
+  onClose: () => void;
+  className?: string;
 }
 
-export default function FriendProfilePreview({ userId, isOpen, onClose, className }: FriendProfilePreviewProps) {
+export default function FriendProfilePreview({ userId, isOpen, onClose, className }: FriendProfilePreviewProps) {}
   const [profile, setProfile] = useState<FriendProfile | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [isActioning, setIsActioning] = useState(false)
@@ -111,8 +106,8 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
     setIsLoading(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/${userId}/profile/`, {
-        headers: {
+      const response = await fetch(`/api/users/${userId}/profile/`, {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -120,144 +115,139 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
       if (response.ok) {
         const data = await response.json()
         setProfile(data.profile)
-      } else {
+      } else {}
         throw new Error("Failed to load profile")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to load profile:", error)
-      toast({
+      toast({}
         title: "Failed to load profile",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
   const sendFriendRequest = async () => {
-    if (!profile) return
-    
+    if (!profile) return;
     setIsActioning(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/${profile.id}/friend-request/`, {
+      const response = await fetch(`/api/users/${profile.id}/friend-request/`, {}
         method: "POST",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
-        setProfile(prev => prev ? { ...prev, friendshipStatus: "pending_sent" } : null)
-        toast({
+        setProfile(prev => prev ? { ...prev, friendshipStatus: &quot;pending_sent&quot; } : null)
+        toast({}
           title: "Friend request sent",
           description: `Friend request sent to ${profile.firstName}`,
         })
-      } else {
+      } else {}
         throw new Error("Failed to send friend request")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to send friend request:", error)
-      toast({
+      toast({}
         title: "Failed to send request",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsActioning(false)
     }
   }
 
   const removeFriend = async () => {
-    if (!profile) return
-    
+    if (!profile) return;
     setIsActioning(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/${profile.id}/unfriend/`, {
+      const response = await fetch(`/api/users/${profile.id}/unfriend/`, {}
         method: "DELETE",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
-        setProfile(prev => prev ? { ...prev, friendshipStatus: "none" } : null)
-        toast({
+        setProfile(prev => prev ? { ...prev, friendshipStatus: &quot;none" } : null)
+        toast({}
           title: "Friend removed",
           description: `Removed ${profile.firstName} from your friends`,
         })
-      } else {
+      } else {}
         throw new Error("Failed to remove friend")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to remove friend:", error)
-      toast({
+      toast({}
         title: "Failed to remove friend",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsActioning(false)
     }
   }
 
   const blockUser = async () => {
-    if (!profile) return
-    
+    if (!profile) return;
     setIsActioning(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/${profile.id}/block/`, {
+      const response = await fetch(`/api/users/${profile.id}/block/`, {}
         method: "POST",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
         setProfile(prev => prev ? { ...prev, friendshipStatus: "blocked" } : null)
-        toast({
+        toast({}
           title: "User blocked",
           description: `${profile.firstName} has been blocked`,
         })
         onClose()
-      } else {
+      } else {}
         throw new Error("Failed to block user")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to block user:", error)
-      toast({
+      toast({}
         title: "Failed to block user",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsActioning(false)
     }
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {
+  const getUserInitials = (firstName: string, lastName: string) => {}
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase()
   }
 
-  const getAchievementIcon = (achievement: Achievement) => {
-    // Map achievement icons to components
-    const iconMap: Record<string, any> = {
-      trophy: Trophy,
+  const getAchievementIcon = (achievement: Achievement) => {}
+    // Map achievement icons to components;
+    const iconMap: Record<string, any> = { trophy: Trophy,
       star: Star,
       award: Award,
       gift: Gift,
       heart: Heart,
       play: Play,
     }
-    
-    const IconComponent = iconMap[achievement.icon] || Trophy
+    const IconComponent = iconMap[achievement.icon] || Trophy;
     return <IconComponent className="h-4 w-4" />
   }
 
-  const getRarityColor = (rarity: string) => {
+  const getRarityColor = (rarity: string) => {}
     switch (rarity) {
       case "legendary": return "text-yellow-500"
       case "epic": return "text-purple-500"
@@ -266,9 +256,8 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
     }
   }
 
-  const getFriendshipButton = () => {
-    if (!profile) return null
-
+  const getFriendshipButton = () => {}
+    if (!profile) return null;
     switch (profile.friendshipStatus) {
       case "friends":
         return (
@@ -276,13 +265,13 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
             <DropdownMenuTrigger asChild>
               <Button variant="outline" disabled={isActioning}>
                 <Users className="h-4 w-4 mr-2" />
-                Friends
+                Friends;
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem onClick={removeFriend}>
                 <UserMinus className="h-4 w-4 mr-2" />
-                Remove Friend
+                Remove Friend;
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -291,35 +280,34 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
         return (
           <Button variant="outline" disabled>
             <Clock className="h-4 w-4 mr-2" />
-            Request Sent
+            Request Sent;
           </Button>
         )
       case "pending_received":
         return (
           <Button onClick={sendFriendRequest} disabled={isActioning}>
             <UserPlus className="h-4 w-4 mr-2" />
-            Accept Request
+            Accept Request;
           </Button>
         )
       case "blocked":
         return (
           <Badge variant="destructive">
             <Shield className="h-4 w-4 mr-1" />
-            Blocked
+            Blocked;
           </Badge>
         )
       default:
         return (
           <Button onClick={sendFriendRequest} disabled={isActioning}>
             <UserPlus className="h-4 w-4 mr-2" />
-            Add Friend
+            Add Friend;
           </Button>
         )
     }
   }
 
-  if (!isOpen) return null
-
+  if (!isOpen) return null;
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -377,7 +365,6 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
 
                 <div className="flex items-center gap-2">
                   {getFriendshipButton()}
-                  
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="icon">
@@ -389,16 +376,16 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
                       <DropdownMenuSeparator />
                       <DropdownMenuItem>
                         <MessageCircle className="h-4 w-4 mr-2" />
-                        Send Message
+                        Send Message;
                       </DropdownMenuItem>
                       <DropdownMenuItem>
                         <Flag className="h-4 w-4 mr-2" />
-                        Report User
+                        Report User;
                       </DropdownMenuItem>
                       {profile.friendshipStatus !== "blocked" && (
                         <DropdownMenuItem onClick={blockUser} className="text-red-600">
                           <Shield className="h-4 w-4 mr-2" />
-                          Block User
+                          Block User;
                         </DropdownMenuItem>
                       )}
                     </DropdownMenuContent>
@@ -473,7 +460,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
                         <span className="text-xl font-bold">{profile.stats.averageRating.toFixed(1)}</span>
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        {profile.stats.reviewsCount} reviews
+                        {profile.stats.reviewsCount} reviews;
                       </div>
                     </div>
                   </CardContent>
@@ -500,13 +487,13 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
                               <p className="text-sm text-muted-foreground mb-2">
                                 {achievement.description}
                               </p>
-                              {achievement.progress < achievement.maxProgress && (
+                              {achievement.progress < achievement.maxProgress && (}
                                 <div className="space-y-1">
                                   <div className="flex justify-between text-xs">
                                     <span>Progress</span>
                                     <span>{achievement.progress}/{achievement.maxProgress}</span>
                                   </div>
-                                  <Progress 
+                                  <Progress;
                                     value={(achievement.progress / achievement.maxProgress) * 100} 
                                     className="h-2"
                                   />

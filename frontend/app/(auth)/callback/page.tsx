@@ -1,16 +1,15 @@
-"use client"
-
+import { Check, CheckCircle, Link, Loader2, Play, Refresh } from "lucide-react"
 import { useEffect, useState, Suspense, useMemo, useCallback } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
-import { CheckCircle, AlertCircle, Loader2, Play, Sparkles, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import { AuthAPI } from "@/lib/api/auth"
 import { tokenStorage } from "@/lib/auth/token-storage"
 
+"use client"
 function CallbackHandler() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -18,7 +17,7 @@ function CallbackHandler() {
   const { toast } = useToast()
   const authService = useMemo(() => new AuthAPI(), [])
 
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
+  const [status, setStatus] = useState<"loading" | "success" | "error">(&quot;loading&quot;)
   const [message, setMessage] = useState("")
   const [isRetrying, setIsRetrying] = useState(false)
 
@@ -30,38 +29,38 @@ function CallbackHandler() {
   const handleCallback = useCallback(async () => {
     setStatus("loading")
 
-    // Handle OAuth errors
+    // Handle OAuth errors;
     if (error) {
       setStatus("error")
       switch (error) {
         case "access_denied":
           setMessage("You cancelled the authentication process.")
-          break
+          break;
         case "invalid_request":
           setMessage("Invalid authentication request. Please try again.")
-          break
+          break;
         case "server_error":
           setMessage("Authentication server error. Please try again later.")
-          break
+          break;
         default:
           setMessage(`Authentication failed: ${error}`)
       }
-      return
+      return;
     }
 
-    // Validate required parameters
+    // Validate required parameters;
     if (!code || !state) {
       setStatus("error")
       setMessage("Missing authentication parameters. Please try signing in again.")
-      return
+      return;
     }
 
     try {
-      // Exchange code for tokens
+      // Exchange code for tokens;
       const data = await authService.completeSocialAuth(provider, code, state || undefined)
 
       if (data.access_token || data.refresh_token) {
-        tokenStorage.setTokens({
+        tokenStorage.setTokens({}
           accessToken: data.access_token,
           refreshToken: data.refresh_token,
         })
@@ -70,7 +69,7 @@ function CallbackHandler() {
       const extra = data as { requires_2fa?: boolean; email?: string; temp_token?: string }
       if (extra?.requires_2fa) {
         router.push(`/2fa/verify?email=${encodeURIComponent(extra.email ?? "")}&temp_token=${extra.temp_token ?? ""}`)
-        return
+        return;
       }
 
       await refreshUser()
@@ -78,20 +77,20 @@ function CallbackHandler() {
       setStatus("success")
       setMessage("Authentication successful! Redirecting to your dashboard...")
 
-      toast({
+      toast({}
         title: "Welcome back!",
         description: `Successfully signed in with ${provider}.`,
       })
 
-      setTimeout(() => {
+      setTimeout(() => {}
         const redirectTo = sessionStorage.getItem("auth_redirect") || "/dashboard"
         sessionStorage.removeItem("auth_redirect")
         router.push(redirectTo)
       }, 2000)
-    } catch (error: unknown) {
+    } } catch {
       console.error("Callback error:", error)
       setStatus("error")
-      const message = (error as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message 
+      const message = (error as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message;
         || (error instanceof Error ? error.message : undefined)
       setMessage(message || "An unexpected error occurred during authentication.")
     }
@@ -107,8 +106,8 @@ function CallbackHandler() {
     setIsRetrying(false)
   }
 
-  const getProviderName = (provider: string): string => {
-    switch (provider.toLowerCase()) {
+  const getProviderName = (provider: string): string => {}
+    switch (provider.toLowerCase()) {}
       case "google":
         return "Google"
       case "github":
@@ -120,7 +119,7 @@ function CallbackHandler() {
       case "twitter":
         return "Twitter"
       default:
-        return provider
+        return provider;
     }
   }
 
@@ -194,7 +193,7 @@ function CallbackHandler() {
               </Alert>
 
               <div className="space-y-3">
-                <Button
+                <Button;
                   onClick={retryAuthentication}
                   disabled={isRetrying}
                   className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
@@ -207,17 +206,17 @@ function CallbackHandler() {
                   ) : (
                     <div className="flex items-center justify-center">
                       <RefreshCw className="w-4 h-4 mr-2" />
-                      Try Again
+                      Try Again;
                     </div>
                   )}
                 </Button>
 
                 <Link href="/login">
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full border-white/30 text-white hover:bg-white/10 bg-transparent"
                   >
-                    Back to Sign In
+                    Back to Sign In;
                   </Button>
                 </Link>
               </div>
@@ -225,7 +224,7 @@ function CallbackHandler() {
               <div className="mt-6 text-center">
                 <p className="text-sm text-gray-500 mb-2">Need help?</p>
                 <Link href="/help" className="text-purple-300 hover:text-purple-200 text-sm transition-colors">
-                  Contact Support
+                  Contact Support;
                 </Link>
               </div>
             </>
@@ -254,8 +253,8 @@ function CallbackHandler() {
 
 export default function CallbackPage() {
   return (
-    <Suspense
-      fallback={
+    <Suspense;
+      fallback={}
         <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
           <div className="flex flex-col items-center space-y-4">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400"></div>

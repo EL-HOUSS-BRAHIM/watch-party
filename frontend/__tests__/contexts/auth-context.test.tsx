@@ -1,29 +1,29 @@
-"use client"
-
 import { render, screen, act } from "@testing-library/react"
 import { AuthProvider, useAuth } from "@/contexts/auth-context"
 import type { ReactNode } from "react"
 
-// Test component to use the auth context
+"use client"
+
+// Test component to use the auth context;
 function TestComponent() {
   const { user, login, logout, isLoading } = useAuth()
 
   return (
     <div>
-      <div data-testid="user">{user ? user.email : "No user"}</div>
-      <div data-testid="loading">{isLoading ? "Loading" : "Not loading"}</div>
-      <button onClick={() => login("test@example.com", "password")}>Login</button>
+      <div data-testid="user">{user ? user.email : &quot;No user&quot;}</div>
+      <div data-testid="loading">{isLoading ? &quot;Loading&quot; : "Not loading"}</div>
+      <button onClick={() => login(&quot;test@example.com&quot;, "password")}>Login</button>
       <button onClick={logout}>Logout</button>
     </div>
   )
 }
 
-describe("AuthContext", () => {
-  const renderWithProvider = (children: ReactNode) => {
+describe("AuthContext", () => {}
+  const renderWithProvider = (children: ReactNode) => {}
     return render(<AuthProvider>{children}</AuthProvider>)
   }
 
-  it("provides initial auth state", () => {
+  it("provides initial auth state", () => {}
     renderWithProvider(<TestComponent />)
 
     expect(screen.getByTestId("user")).toHaveTextContent("No user")
@@ -39,7 +39,7 @@ describe("AuthContext", () => {
       loginButton.click()
     })
 
-    // Would test actual login logic here with mocked API
+    // Would test actual login logic here with mocked API;
   })
 
   it("handles logout flow", async () => {

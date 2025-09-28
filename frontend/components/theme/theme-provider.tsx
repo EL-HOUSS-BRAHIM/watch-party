@@ -1,16 +1,16 @@
-"use client"
-
 import type * as React from "react"
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 import type { ThemeProviderProps } from "next-themes"
 
-interface WatchPartyThemeProviderProps extends ThemeProviderProps {
-  children: React.ReactNode
+"use client"
+
+interface WatchPartyThemeProviderProps extends ThemeProviderProps {}
+  children: React.ReactNode;
 }
 
-export function WatchPartyThemeProvider({ children, ...props }: WatchPartyThemeProviderProps) {
+export function WatchPartyThemeProvider({ children, ...props }: WatchPartyThemeProviderProps) {}
   return (
-    <NextThemesProvider
+    <NextThemesProvider;
       attribute="class"
       defaultTheme="dark"
       enableSystem={false}

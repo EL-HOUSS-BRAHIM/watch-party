@@ -1,22 +1,21 @@
-"use client"
-
 import { createContext, useContext, type ReactNode } from "react"
 
-interface FeatureFlags {
-  enableVoiceChat: boolean
-  enableScreenSharing: boolean
-  enableAdvancedAnalytics: boolean
-  enableBetaFeatures: boolean
-  enableMobileApp: boolean
+"use client"
+
+interface FeatureFlags {}
+  enableVoiceChat: boolean;
+  enableScreenSharing: boolean;
+  enableAdvancedAnalytics: boolean;
+  enableBetaFeatures: boolean;
+  enableMobileApp: boolean;
 }
 
-interface FeatureFlagContextType {
-  flags: FeatureFlags
-  isEnabled: (flag: keyof FeatureFlags) => boolean
+interface FeatureFlagContextType {}
+  flags: FeatureFlags;
+  isEnabled: (flag: keyof FeatureFlags) => boolean;
 }
 
-const defaultFlags: FeatureFlags = {
-  enableVoiceChat: true,
+const defaultFlags: FeatureFlags = { enableVoiceChat: true,
   enableScreenSharing: false,
   enableAdvancedAnalytics: true,
   enableBetaFeatures: false,
@@ -25,16 +24,14 @@ const defaultFlags: FeatureFlags = {
 
 const FeatureFlagContext = createContext<FeatureFlagContextType | undefined>(undefined)
 
-export function FeatureFlagProvider({ children }: { children: ReactNode }) {
-  // In a real app, these would come from a feature flag service
-  const flags = defaultFlags
-
-  const isEnabled = (flag: keyof FeatureFlags) => {
-    return flags[flag] ?? false
+export function FeatureFlagProvider({ children }: { children: ReactNode }) {}
+  // In a real app, these would come from a feature flag service;
+  const flags = defaultFlags;
+  const isEnabled = (flag: keyof FeatureFlags) => {}
+    return flags[flag] ?? false;
   }
 
-  const value: FeatureFlagContextType = {
-    flags,
+  const value: FeatureFlagContextType = { flags,
     isEnabled,
   }
 
@@ -46,5 +43,5 @@ export function useFeatureFlags() {
   if (context === undefined) {
     throw new Error("useFeatureFlags must be used within a FeatureFlagProvider")
   }
-  return context
+  return context;
 }

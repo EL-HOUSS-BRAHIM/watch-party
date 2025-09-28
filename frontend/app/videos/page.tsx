@@ -1,6 +1,5 @@
-"use client"
-
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -14,7 +13,13 @@ import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { videosAPI } from "@/lib/api"
 import { cn } from "@/lib/utils"
-import {
+import {}
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import type { Video } from "@/lib/api/types"
+
+} from "lucide-react"
+"use client"
+
   Plus,
   Search,
   Play,
@@ -31,56 +36,48 @@ import {
   Edit,
   Share2,
   MoreVertical,
-} from "lucide-react"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import type { Video } from "@/lib/api/types"
-
 export default function VideosPage() {
   const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
-  
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState("all")
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid&quot;)
   const [sortBy, setSortBy] = useState("created")
   const [visibility, setVisibility] = useState("all")
-  
-  const { videos, loading, error, refresh } = useVideos({
+  const { videos, loading, error, refresh } = useVideos({}
     search: searchQuery,
-    visibility: visibility === "all" ? undefined : visibility as any,
+    visibility: visibility === "all" ? undefined : visibility as Record<string, unknown>,
   })
 
-  const deleteVideo = async (videoId: string) => {
-    if (!confirm("Are you sure you want to delete this video? This action cannot be undone.")) {
-      return
+  const deleteVideo = async (videoId: string) => {}
+    if (!confirm("Are you sure you want to delete this video? This action cannot be undone.")) {}
+      return;
     }
 
     try {
       if (!videosAPI) {
         console.error('Videos API not available')
-        return
+        return;
       }
-      
       await videosAPI.deleteVideo(videoId)
-      
-      toast({
+      toast({}
         title: "Video Deleted",
         description: "The video has been successfully deleted.",
       })
       refresh()
-    } catch (error) {
+    } } catch {
       console.error("Failed to delete video:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to delete the video. Please try again.",
         variant: "destructive",
       })
         })
-        return
+        return;
       }
       console.error("Failed to delete video:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to delete video. Please try again.",
         variant: "destructive",
@@ -88,33 +85,32 @@ export default function VideosPage() {
     }
   }
 
-  const shareVideo = async (video: Video) => {
+  const shareVideo = async (video: Video) => {}
     const shareUrl = `${window.location.origin}/videos/${video.id}`
 
     if (navigator.share) {
       try {
-        await navigator.share({
+        await navigator.share({}
           title: video.title,
           text: video.description,
           url: shareUrl,
         })
-      } catch (error) {
+      } } catch {
         console.log("Share cancelled")
       }
-    } else {
+    } else {}
       navigator.clipboard.writeText(shareUrl)
-      toast({
+      toast({}
         title: "Link Copied",
         description: "Video link copied to clipboard.",
       })
     }
   }
 
-  const formatDuration = (seconds: number) => {
+  const formatDuration = (seconds: number) => {}
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60
-
+    const secs = seconds % 60;
     if (hours > 0) {
       return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
     }
@@ -126,7 +122,7 @@ export default function VideosPage() {
       <CardContent className="p-0">
         <div className="relative aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg overflow-hidden">
           {video.thumbnail ? (
-            <img
+            <img;
               src={video.thumbnail || "/placeholder.svg"}
               alt={video.title}
               className="w-full h-full object-cover"
@@ -156,7 +152,6 @@ export default function VideosPage() {
           <h3 className="font-semibold text-lg line-clamp-2 mb-2 group-hover:text-primary transition-colors">
             {video.title}
           </h3>
-          
           {video.description && (
             <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{video.description}</p>
           )}
@@ -181,9 +176,9 @@ export default function VideosPage() {
           {/* Remove tags section since it's not in the Video interface */}
 
           <div className="flex items-center justify-between">
-            <Button onClick={() => router.push(`/videos/${video.id}`)} size="sm" className="flex-1 mr-2">
+            <Button onClick={() => router.push(`/videos/${video.id}`)} size=&quot;sm&quot; className=&quot;flex-1 mr-2">"
               <Play className="h-4 w-4 mr-2" />
-              Watch
+              Watch;
             </Button>
 
             <DropdownMenu>
@@ -195,15 +190,15 @@ export default function VideosPage() {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => router.push(`/videos/${video.id}/edit`)}>
                   <Edit className="h-4 w-4 mr-2" />
-                  Edit
+                  Edit;
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => shareVideo(video)}>
                   <Share2 className="h-4 w-4 mr-2" />
-                  Share
+                  Share;
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className="text-destructive">
+                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-destructive&quot;>
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Delete
+                  Delete;
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -233,14 +228,14 @@ export default function VideosPage() {
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <VideoIcon className="h-8 w-8" />
-              Video Library
+              Video Library;
             </h1>
             <p className="text-muted-foreground mt-2">Manage and organize your video content</p>
           </div>
           <Link href="/dashboard/videos/upload">
             <Button size="lg" className="shadow-lg">
               <Upload className="h-5 w-5 mr-2" />
-              Upload Video
+              Upload Video;
             </Button>
           </Link>
         </div>
@@ -250,7 +245,7 @@ export default function VideosPage() {
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
+              <Input;
                 placeholder="Search videos by title, description, or tags..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -285,18 +280,18 @@ export default function VideosPage() {
             </Select>
 
             <div className="flex items-center border rounded-md">
-              <Button
+              <Button;
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode("grid")}
+                onClick={() => setViewMode(&quot;grid&quot;)}
                 className="rounded-r-none"
               >
                 <Grid3X3 className="h-4 w-4" />
               </Button>
-              <Button
+              <Button;
                 variant={viewMode === "list" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode("list")}
+                onClick={() => setViewMode(&quot;list&quot;)}
                 className="rounded-l-none"
               >
                 <List className="h-4 w-4" />
@@ -323,12 +318,12 @@ export default function VideosPage() {
             <Link href="/dashboard/videos/upload">
               <Button>
                 <Upload className="h-4 w-4 mr-2" />
-                Upload Your First Video
+                Upload Your First Video;
               </Button>
             </Link>
           </div>
         ) : (
-          <div
+          <div;
             className={cn(
               viewMode === "grid"
                 ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
@@ -344,7 +339,7 @@ export default function VideosPage() {
         {/* Pagination would go here if needed */}
         {videos?.results && videos.results.length > 0 && (
           <div className="mt-8 text-center text-muted-foreground">
-            Showing {videos.results.length} of {videos?.count || videos.results.length} videos
+            Showing {videos.results.length} of {videos?.count || videos.results.length} videos;
           </div>
         )}
       </div>

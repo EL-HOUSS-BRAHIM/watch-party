@@ -1,6 +1,6 @@
-export const translations = {
-  en: {
-    common: {
+
+export const translations = { en: {}
+    common: {}
       welcome: "Welcome to WatchParty",
       loading: "Loading...",
       error: "An error occurred",
@@ -15,8 +15,8 @@ export const translations = {
       export: "Export",
       import: "Import",
     },
-    auth: {
-      login: {
+    auth: {}
+      login: {}
         title: "Sign in to your account",
         email: "Email address",
         password: "Password",
@@ -24,7 +24,7 @@ export const translations = {
         forgot: "Forgot password?",
         register: "Don't have an account? Sign up",
       },
-      register: {
+      register: {}
         title: "Create your account",
         name: "Full name",
         email: "Email address",
@@ -34,8 +34,8 @@ export const translations = {
         login: "Already have an account? Sign in",
       },
     },
-    party: {
-      create: {
+    party: {}
+      create: {}
         title: "Create Watch Party",
         button: "Create Watch Party",
         name: "Party name",
@@ -44,24 +44,24 @@ export const translations = {
         privacy: "Privacy settings",
         schedule: "Schedule for later",
       },
-      join: {
+      join: {}
         title: "Join Watch Party",
         button: "Join Party",
         code: "Party code",
         invalid: "Invalid party code",
       },
     },
-    dashboard: {
+    dashboard: {}
       title: "Dashboard",
       welcome: "Welcome back, {{name}}!",
-      stats: {
+      stats: {}
         parties: "Total Parties",
         friends: "Friends",
         videos: "Videos Watched",
         hours: "Hours Watched",
       },
     },
-    language: {
+    language: {}
       title: "Language Settings",
       available: "Available Languages",
       current: "Current Language",
@@ -71,8 +71,8 @@ export const translations = {
       contribute: "Contribute translations",
     },
   },
-  es: {
-    common: {
+  es: {}
+    common: {}
       welcome: "Bienvenido a WatchParty",
       loading: "Cargando...",
       error: "Ocurrió un error",
@@ -87,8 +87,8 @@ export const translations = {
       export: "Exportar",
       import: "Importar",
     },
-    auth: {
-      login: {
+    auth: {}
+      login: {}
         title: "Inicia sesión en tu cuenta",
         email: "Dirección de correo",
         password: "Contraseña",
@@ -96,7 +96,7 @@ export const translations = {
         forgot: "¿Olvidaste tu contraseña?",
         register: "¿No tienes cuenta? Regístrate",
       },
-      register: {
+      register: {}
         title: "Crea tu cuenta",
         name: "Nombre completo",
         email: "Dirección de correo",
@@ -106,8 +106,8 @@ export const translations = {
         login: "¿Ya tienes cuenta? Inicia sesión",
       },
     },
-    party: {
-      create: {
+    party: {}
+      create: {}
         title: "Crear Fiesta de Visualización",
         button: "Crear Fiesta de Visualización",
         name: "Nombre de la fiesta",
@@ -116,24 +116,24 @@ export const translations = {
         privacy: "Configuración de privacidad",
         schedule: "Programar para más tarde",
       },
-      join: {
+      join: {}
         title: "Unirse a Fiesta de Visualización",
         button: "Unirse a la Fiesta",
         code: "Código de la fiesta",
         invalid: "Código de fiesta inválido",
       },
     },
-    dashboard: {
+    dashboard: {}
       title: "Panel de Control",
       welcome: "¡Bienvenido de vuelta, {{name}}!",
-      stats: {
+      stats: {}
         parties: "Fiestas Totales",
         friends: "Amigos",
         videos: "Videos Vistos",
         hours: "Horas Vistas",
       },
     },
-    language: {
+    language: {}
       title: "Configuración de Idioma",
       available: "Idiomas Disponibles",
       current: "Idioma Actual",
@@ -143,8 +143,8 @@ export const translations = {
       contribute: "Contribuir traducciones",
     },
   },
-  fr: {
-    common: {
+  fr: {}
+    common: {}
       welcome: "Bienvenue sur WatchParty",
       loading: "Chargement...",
       error: "Une erreur s'est produite",
@@ -159,8 +159,8 @@ export const translations = {
       export: "Exporter",
       import: "Importer",
     },
-    auth: {
-      login: {
+    auth: {}
+      login: {}
         title: "Connectez-vous à votre compte",
         email: "Adresse e-mail",
         password: "Mot de passe",
@@ -168,7 +168,7 @@ export const translations = {
         forgot: "Mot de passe oublié ?",
         register: "Pas de compte ? Inscrivez-vous",
       },
-      register: {
+      register: {}
         title: "Créez votre compte",
         name: "Nom complet",
         email: "Adresse e-mail",
@@ -178,8 +178,8 @@ export const translations = {
         login: "Déjà un compte ? Connectez-vous",
       },
     },
-    party: {
-      create: {
+    party: {}
+      create: {}
         title: "Créer une Soirée Cinéma",
         button: "Créer une Soirée Cinéma",
         name: "Nom de la soirée",
@@ -188,24 +188,24 @@ export const translations = {
         privacy: "Paramètres de confidentialité",
         schedule: "Programmer pour plus tard",
       },
-      join: {
+      join: {}
         title: "Rejoindre une Soirée Cinéma",
         button: "Rejoindre la Soirée",
         code: "Code de la soirée",
         invalid: "Code de soirée invalide",
       },
     },
-    dashboard: {
+    dashboard: {}
       title: "Tableau de Bord",
       welcome: "Bon retour, {{name}} !",
-      stats: {
+      stats: {}
         parties: "Soirées Totales",
         friends: "Amis",
         videos: "Vidéos Regardées",
         hours: "Heures Regardées",
       },
     },
-    language: {
+    language: {}
       title: "Paramètres de Langue",
       available: "Langues Disponibles",
       current: "Langue Actuelle",
@@ -217,11 +217,10 @@ export const translations = {
   },
 }
 
-export type TranslationKey = keyof typeof translations.en
-export type NestedTranslationKey<T> = T extends object
-  ? {
-      [K in keyof T]: T[K] extends object ? `${string & K}.${NestedTranslationKey<T[K]>}` : string & K
+export type TranslationKey = keyof typeof translations.en;
+export type NestedTranslationKey<T> = T extends object;
+  ? {}
+      [K in keyof T]: T[K] extends object ? `${string & K}.${NestedTranslationKey<T[K]>}` : string & K;
     }[keyof T]
-  : never
-
+  : never;
 export type AllTranslationKeys = NestedTranslationKey<typeof translations.en>

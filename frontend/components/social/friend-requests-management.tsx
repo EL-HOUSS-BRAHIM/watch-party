@@ -1,10 +1,7 @@
-"use client"
-
-import { useState, useEffect } from "react"
-import { UserPlus, UserCheck, UserX, Clock, Mail, Calendar, MapPin, Star, Loader2, Users, ChevronRight } from "lucide-react"
+import { Calendar, ChevronRight, Clock, Loader2, Mail, MapPin, User, Users } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
@@ -12,42 +9,43 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
 import { formatDistanceToNow } from "date-fns"
 
-interface FriendRequest {
-  id: string
-  sender: {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    email: string
-    avatar?: string
-    bio?: string
-    location?: string
-    isOnline: boolean
-    joinedDate: string
-    stats: {
-      partiesHosted: number
-      partiesJoined: number
-      friendsCount: number
+"use client"
+interface FriendRequest {}
+  id: string;
+  sender: {}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    avatar?: string;
+    bio?: string;
+    location?: string;
+    isOnline: boolean;
+    joinedDate: string;
+    stats: {}
+      partiesHosted: number;
+      partiesJoined: number;
+      friendsCount: number;
     }
   }
-  recipient: {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
+  recipient: {}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
   }
-  createdAt: string
-  message?: string
-  mutualFriends: number
+  createdAt: string;
+  message?: string;
+  mutualFriends: number;
   requestType: "received" | "sent"
 }
 
-interface FriendRequestsManagementProps {
-  className?: string
+interface FriendRequestsManagementProps {}
+  className?: string;
 }
 
-export default function FriendRequestsManagement({ className }: FriendRequestsManagementProps) {
+export default function FriendRequestsManagement({ className }: FriendRequestsManagementProps) {}
   const [receivedRequests, setReceivedRequests] = useState<FriendRequest[]>([])
   const [sentRequests, setSentRequests] = useState<FriendRequest[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -63,17 +61,16 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
   const loadRequests = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      
-      // Load received requests
-      const receivedResponse = await fetch("/api/users/friends/requests/received/", {
-        headers: {
+      // Load received requests;
+      const receivedResponse = await fetch("/api/users/friends/requests/received/", {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      // Load sent requests
-      const sentResponse = await fetch("/api/users/friends/requests/sent/", {
-        headers: {
+      // Load sent requests;
+      const sentResponse = await fetch("/api/users/friends/requests/sent/", {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -81,142 +78,140 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
       if (receivedResponse.ok && sentResponse.ok) {
         const receivedData = await receivedResponse.json()
         const sentData = await sentResponse.json()
-        
         setReceivedRequests(receivedData.requests || [])
         setSentRequests(sentData.requests || [])
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to load friend requests:", error)
-      toast({
+      toast({}
         title: "Failed to load requests",
         description: "Please try refreshing the page",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const acceptRequest = async (requestId: string) => {
+  const acceptRequest = async (requestId: string) => {}
     setProcessingRequests(prev => new Set(prev).add(requestId))
 
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/friends/requests/${requestId}/accept/`, {
+      const response = await fetch(`/api/users/friends/requests/${requestId}/accept/`, {}
         method: "POST",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
         setReceivedRequests(prev => prev.filter(req => req.id !== requestId))
-        toast({
+        toast({}
           title: "Friend request accepted",
           description: "You are now friends!",
         })
-      } else {
+      } else {}
         throw new Error("Failed to accept request")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to accept request:", error)
-      toast({
+      toast({}
         title: "Failed to accept request",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {
-      setProcessingRequests(prev => {
+    } finally {}
+      setProcessingRequests(prev => {}
         const newSet = new Set(prev)
         newSet.delete(requestId)
-        return newSet
+        return newSet;
       })
     }
   }
 
-  const rejectRequest = async (requestId: string) => {
+  const rejectRequest = async (requestId: string) => {}
     setProcessingRequests(prev => new Set(prev).add(requestId))
 
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/friends/requests/${requestId}/reject/`, {
+      const response = await fetch(`/api/users/friends/requests/${requestId}/reject/`, {}
         method: "POST",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
         setReceivedRequests(prev => prev.filter(req => req.id !== requestId))
-        toast({
+        toast({}
           title: "Friend request rejected",
           description: "The request has been declined",
         })
-      } else {
+      } else {}
         throw new Error("Failed to reject request")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to reject request:", error)
-      toast({
+      toast({}
         title: "Failed to reject request",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {
-      setProcessingRequests(prev => {
+    } finally {}
+      setProcessingRequests(prev => {}
         const newSet = new Set(prev)
         newSet.delete(requestId)
-        return newSet
+        return newSet;
       })
     }
   }
 
-  const cancelRequest = async (requestId: string) => {
+  const cancelRequest = async (requestId: string) => {}
     setProcessingRequests(prev => new Set(prev).add(requestId))
 
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/friends/requests/${requestId}/cancel/`, {
+      const response = await fetch(`/api/users/friends/requests/${requestId}/cancel/`, {}
         method: "DELETE",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
         setSentRequests(prev => prev.filter(req => req.id !== requestId))
-        toast({
+        toast({}
           title: "Friend request cancelled",
           description: "Your request has been cancelled",
         })
-      } else {
+      } else {}
         throw new Error("Failed to cancel request")
       }
-    } catch (error) {
+    } } catch {
       console.error("Failed to cancel request:", error)
-      toast({
+      toast({}
         title: "Failed to cancel request",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {
-      setProcessingRequests(prev => {
+    } finally {}
+      setProcessingRequests(prev => {}
         const newSet = new Set(prev)
         newSet.delete(requestId)
-        return newSet
+        return newSet;
       })
       setRequestToDelete(null)
     }
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {
+  const getUserInitials = (firstName: string, lastName: string) => {}
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase()
   }
 
-  const ReceivedRequestCard = ({ request }: { request: FriendRequest }) => {
+  const ReceivedRequestCard = ({ request }: { request: FriendRequest }) => {}
     const isProcessing = processingRequests.has(request.id)
-    const { sender } = request
-
+    const { sender } = request;
     return (
       <Card className="hover:shadow-md transition-shadow">
         <CardContent className="p-4">
@@ -240,7 +235,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
                   <p className="text-sm text-muted-foreground">@{sender.username}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button 
+                  <Button;
                     size="sm" 
                     variant="outline"
                     onClick={() => rejectRequest(request.id)}
@@ -251,9 +246,9 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
                     ) : (
                       <UserX className="h-3 w-3 mr-1" />
                     )}
-                    Decline
+                    Decline;
                   </Button>
-                  <Button 
+                  <Button;
                     size="sm"
                     onClick={() => acceptRequest(request.id)}
                     disabled={isProcessing}
@@ -263,7 +258,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
                     ) : (
                       <UserCheck className="h-3 w-3 mr-1" />
                     )}
-                    Accept
+                    Accept;
                   </Button>
                 </div>
               </div>
@@ -274,7 +269,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
 
               {request.message && (
                 <div className="bg-muted/50 rounded-lg p-3 mb-2">
-                  <p className="text-sm italic">"{request.message}"</p>
+                  <p className="text-sm italic">&quot;{request.message}&quot;</p>
                 </div>
               )}
 
@@ -288,7 +283,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
                 {request.mutualFriends > 0 && (
                   <div className="flex items-center gap-1">
                     <Users className="h-3 w-3" />
-                    {request.mutualFriends} mutual friends
+                    {request.mutualFriends} mutual friends;
                   </div>
                 )}
                 <div className="flex items-center gap-1">
@@ -303,7 +298,6 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
                   <span>{sender.stats.partiesJoined} parties joined</span>
                   <span>{sender.stats.friendsCount} friends</span>
                 </div>
-                
                 <div className="flex items-center gap-1 text-xs text-muted-foreground">
                   <Clock className="h-3 w-3" />
                   {formatDistanceToNow(new Date(request.createdAt), { addSuffix: true })}
@@ -316,10 +310,9 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
     )
   }
 
-  const SentRequestCard = ({ request }: { request: FriendRequest }) => {
+  const SentRequestCard = ({ request }: { request: FriendRequest }) => {}
     const isProcessing = processingRequests.has(request.id)
-    const { recipient } = request
-
+    const { recipient } = request;
     return (
       <Card className="hover:shadow-md transition-shadow">
         <CardContent className="p-4">
@@ -339,15 +332,15 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
                 <div className="flex items-center gap-2">
                   <Badge variant="outline" className="text-xs">
                     <Clock className="h-3 w-3 mr-1" />
-                    Pending
+                    Pending;
                   </Badge>
-                  <Button 
+                  <Button;
                     size="sm" 
                     variant="outline"
                     onClick={() => setRequestToDelete(request.id)}
                     disabled={isProcessing}
                   >
-                    Cancel
+                    Cancel;
                   </Button>
                 </div>
               </div>
@@ -384,7 +377,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <UserPlus className="h-5 w-5" />
-            Friend Requests
+            Friend Requests;
             {(receivedRequests.length > 0 || sentRequests.length > 0) && (
               <Badge variant="secondary">
                 {receivedRequests.length + sentRequests.length}
@@ -396,7 +389,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
           <Tabs defaultValue="received" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="received" className="relative">
-                Received
+                Received;
                 {receivedRequests.length > 0 && (
                   <Badge variant="destructive" className="ml-2 text-xs">
                     {receivedRequests.length}
@@ -404,7 +397,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
                 )}
               </TabsTrigger>
               <TabsTrigger value="sent" className="relative">
-                Sent
+                Sent;
                 {sentRequests.length > 0 && (
                   <Badge variant="secondary" className="ml-2 text-xs">
                     {sentRequests.length}
@@ -434,7 +427,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
                 <div className="text-center py-8 text-muted-foreground">
                   <Mail className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p>No sent requests</p>
-                  <p className="text-sm">Friend requests you send will appear here until they're responded to</p>
+                  <p className="text-sm">Friend requests you send will appear here until they&apos;re responded to</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -459,11 +452,11 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Keep Request</AlertDialogCancel>
-            <AlertDialogAction 
+            <AlertDialogAction;
               onClick={() => requestToDelete && cancelRequest(requestToDelete)}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Cancel Request
+              Cancel Request;
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
