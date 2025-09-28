@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -10,11 +10,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { 
   Users, 
   DollarSign, 
-  Video, 
   TrendingUp, 
-  TrendingDown, 
   Activity,
-  Calendar,
   Download,
   RefreshCw
 } from 'lucide-react';
@@ -66,13 +63,13 @@ export default function AdminAnalyticsDashboard() {
 
   useEffect(() => {
     fetchMetrics();
-  }, [timeframe]);
+  }, [fetchMetrics]);
 
-  const fetchMetrics = async () => {
+  const fetchMetrics = useCallback(async () => {
     setLoading(true);
     try {
       // Fetch real data from analytics API
-      const [dashboardData, advancedData, realtimeData] = await Promise.all([
+      const [dashboardData, advancedData] = await Promise.all([
         analyticsAPI.getDashboard(timeframe),
         analyticsAPI.executeAdvancedQuery({
           metrics: ['users', 'revenue', 'videos', 'parties'],
@@ -86,39 +83,39 @@ export default function AdminAnalyticsDashboard() {
       ]);
 
       // Transform API data to component format
-  const performanceSource = (advancedData as any).performance || (dashboardData as any).performance || {}
+  const performanceSource = (advancedData as Record<string, unknown>).performance || (dashboardData as Record<string, unknown>).performance || {}
 
   const transformedMetrics: AdminMetrics = {
         overview: {
           totalUsers: dashboardData.overview?.total_users || 0,
           activeUsers: dashboardData.overview?.active_users_today || 0,
-          totalRevenue: (dashboardData.overview as any)?.total_revenue || 0,
-          totalVideos: (dashboardData.overview as any)?.total_videos || 0,
+          totalRevenue: (dashboardData.overview as Record<string, unknown>)?.total_revenue as number || 0,
+          totalVideos: (dashboardData.overview as Record<string, unknown>)?.total_videos as number || 0,
           totalParties: dashboardData.overview?.total_parties || 0,
-          conversionRate: (dashboardData.overview as any)?.conversion_rate || 0,
-          churnRate: (dashboardData.overview as any)?.churn_rate || 0,
-          avgSessionDuration: (dashboardData.overview as any)?.avg_session_duration || dashboardData.overview?.total_watch_time_hours || 0,
+          conversionRate: (dashboardData.overview as Record<string, unknown>)?.conversion_rate as number || 0,
+          churnRate: (dashboardData.overview as Record<string, unknown>)?.churn_rate as number || 0,
+          avgSessionDuration: (dashboardData.overview as Record<string, unknown>)?.avg_session_duration as number || dashboardData.overview?.total_watch_time_hours || 0,
         },
         trends: {
-          userGrowth: (advancedData as any).trends?.user_growth || [],
-          revenueGrowth: (advancedData as any).trends?.revenue_growth || [],
-          contentMetrics: (advancedData as any).trends?.content_metrics || [],
-          partyMetrics: (advancedData as any).trends?.party_metrics || [],
+          userGrowth: (advancedData as Record<string, unknown>).trends?.user_growth as Array<{ date: string; users: number; active: number }> || [],
+          revenueGrowth: (advancedData as Record<string, unknown>).trends?.revenue_growth as Array<{ date: string; revenue: number; subscriptions: number }> || [],
+          contentMetrics: (advancedData as Record<string, unknown>).trends?.content_metrics as Array<{ date: string; videos: number; watchTime: number }> || [],
+          partyMetrics: (advancedData as Record<string, unknown>).trends?.party_metrics as Array<{ date: string; parties: number; participants: number }> || [],
         },
         demographics: {
-          ageGroups: (dashboardData as any).demographics?.age_groups || (advancedData as any).demographics?.age_groups || [],
-          locations: (dashboardData as any).demographics?.locations || (advancedData as any).demographics?.locations || [],
-          devices: (dashboardData as any).demographics?.devices || (advancedData as any).demographics?.devices || [],
-          subscriptionTiers: (dashboardData as any).demographics?.subscription_tiers || (advancedData as any).demographics?.subscription_tiers || [],
+          ageGroups: (dashboardData as Record<string, unknown>).demographics?.age_groups as Array<{ range: string; count: number; percentage: number }> || (advancedData as Record<string, unknown>).demographics?.age_groups as Array<{ range: string; count: number; percentage: number }> || [],
+          locations: (dashboardData as Record<string, unknown>).demographics?.locations as Array<{ country: string; count: number; percentage: number }> || (advancedData as Record<string, unknown>).demographics?.locations as Array<{ country: string; count: number; percentage: number }> || [],
+          devices: (dashboardData as Record<string, unknown>).demographics?.devices as Array<{ type: string; count: number; percentage: number }> || (advancedData as Record<string, unknown>).demographics?.devices as Array<{ type: string; count: number; percentage: number }> || [],
+          subscriptionTiers: (dashboardData as Record<string, unknown>).demographics?.subscription_tiers as Array<{ tier: string; count: number; revenue: number; color: string }> || (advancedData as Record<string, unknown>).demographics?.subscription_tiers as Array<{ tier: string; count: number; revenue: number; color: string }> || [],
         },
         performance: {
-          serverMetrics: performanceSource.server_metrics || [],
-          errorRates: performanceSource.error_rates || [],
-          loadTimes: performanceSource.load_times || [],
+          serverMetrics: (performanceSource as Record<string, unknown>).server_metrics as Array<{ time: string; cpu: number; memory: number; requests: number }> || [],
+          errorRates: (performanceSource as Record<string, unknown>).error_rates as Array<{ date: string; errors: number; total: number }> || [],
+          loadTimes: (performanceSource as Record<string, unknown>).load_times as Array<{ page: string; averageTime: number; p95Time: number }> || [],
         },
         retention: {
-          cohorts: (dashboardData as any).retention?.cohorts || (advancedData as any).retention?.cohorts || [],
-          engagement: (advancedData as any).retention?.engagement || (dashboardData as any).retention?.engagement || [],
+          cohorts: (dashboardData as Record<string, unknown>).retention?.cohorts as Array<{ cohort: string; week0: number; week1: number; week2: number; week4: number; week8: number }> || (advancedData as Record<string, unknown>).retention?.cohorts as Array<{ cohort: string; week0: number; week1: number; week2: number; week4: number; week8: number }> || [],
+          engagement: (advancedData as Record<string, unknown>).retention?.engagement as Array<{ date: string; dau: number; wau: number; mau: number }> || (dashboardData as Record<string, unknown>).retention?.engagement as Array<{ date: string; dau: number; wau: number; mau: number }> || [],
         },
       };
 
@@ -133,7 +130,7 @@ export default function AdminAnalyticsDashboard() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [timeframe, toast]);
 
   const refreshData = async () => {
     setRefreshing(true);
