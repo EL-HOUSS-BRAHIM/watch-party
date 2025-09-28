@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -228,7 +228,7 @@ export default function BugReports() {
   const getBugStats = () => {
     const stats = {
       total: bugs.length,
-      open: bugs.filter(b => b.status === 'open').length,
+      open: bugs.filter(b => b.status === &apos;open').length,
       inProgress: bugs.filter(b => b.status === 'in-progress').length,
       resolved: bugs.filter(b => b.status === 'resolved').length,
       closed: bugs.filter(b => b.status === 'closed').length,

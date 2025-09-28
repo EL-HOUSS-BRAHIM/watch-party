@@ -31,7 +31,7 @@ interface NotificationSettings {
 }
 
 export default function PushPermissionRegistration() {
-  const [permission, setPermission] = useState<NotificationPermission>('default');
+  const [permission, setPermission] = useState<NotificationPermission>(&apos;default');
   const [subscription, setSubscription] = useState<PushSubscription | null>(null);
   const [settings, setSettings] = useState<NotificationSettings>({
     enabled: false,
@@ -315,7 +315,7 @@ export default function PushPermissionRegistration() {
   // Helper functions
   const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
     const bytes = new Uint8Array(buffer);
-    const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join('');
+    const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join(&apos;');
     return btoa(binary);
   };
 

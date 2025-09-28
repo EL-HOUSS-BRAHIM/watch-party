@@ -36,7 +36,7 @@ interface SubscriptionPlansProps {
 }
 
 export default function SubscriptionPlans({ className }: SubscriptionPlansProps) {
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(&quot;monthly")
   const [isLoading, setIsLoading] = useState<string | null>(null)
   const { user } = useAuth()
   const { toast } = useToast()
@@ -179,7 +179,7 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
           <Switch
             id="billing-toggle"
             checked={billingCycle === "yearly"}
-            onCheckedChange={(checked) => setBillingCycle(checked ? "yearly" : "monthly")}
+            onCheckedChange={(checked) => setBillingCycle(checked ? &quot;yearly" : "monthly")}
           />
           <Label htmlFor="billing-toggle" className={cn(billingCycle === "yearly" && "font-semibold")}>
             Yearly

@@ -115,11 +115,11 @@ export function VideoProcessingPipeline() {
   const [selectedJob, setSelectedJob] = useState<ProcessingJob | null>(null)
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false)
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
-  const [filterStatus, setFilterStatus] = useState<string>("all")
+  const [filterStatus, setFilterStatus] = useState<string>(&quot;all")
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
-  const normalizeProcessingJob = (job: any): ProcessingJob => {
+  const normalizeProcessingJob = (job: unknown): ProcessingJob => {
     return {
       id: String(job.id ?? job.job_id ?? Math.random().toString(36).substr(2, 9)),
       filename: job.filename ?? job.original_filename ?? job.name ?? "Unknown File",
@@ -153,7 +153,7 @@ export function VideoProcessingPipeline() {
     return statusMap[status?.toLowerCase()] ?? 'queued'
   }
 
-  const normalizeTask = (task: any): ProcessingTask => {
+  const normalizeTask = (task: unknown): ProcessingTask => {
     return {
       id: String(task.id ?? task.task_id ?? Math.random().toString(36).substr(2, 9)),
       name: task.name ?? task.task_name ?? task.type ?? "Processing Task",
@@ -180,7 +180,7 @@ export function VideoProcessingPipeline() {
     return statusMap[status?.toLowerCase()] ?? 'pending'
   }
 
-  const normalizeOutputFile = (file: any): OutputFile => {
+  const normalizeOutputFile = (file: unknown): OutputFile => {
     return {
       id: String(file.id ?? file.file_id ?? Math.random().toString(36).substr(2, 9)),
       type: normalizeFileType(file.type ?? file.file_type),
@@ -207,7 +207,7 @@ export function VideoProcessingPipeline() {
     return typeMap[type?.toLowerCase()] ?? 'video'
   }
 
-  const normalizeMetadata = (metadata: any): VideoMetadata => {
+  const normalizeMetadata = (metadata: unknown): VideoMetadata => {
     return {
       duration: metadata.duration ?? 0,
       resolution: metadata.resolution ?? metadata.dimensions ?? "Unknown",
@@ -245,7 +245,7 @@ export function VideoProcessingPipeline() {
     
     // Set up polling for active jobs
     const interval = setInterval(() => {
-      const hasActiveJobs = jobs.some(job => job.status === 'processing' || job.status === 'queued')
+      const hasActiveJobs = jobs.some(job => job.status === &apos;processing' || job.status === 'queued')
       if (hasActiveJobs) {
         fetchProcessingJobs()
       }
@@ -254,7 +254,7 @@ export function VideoProcessingPipeline() {
     return () => clearInterval(interval)
   }, [fetchProcessingJobs, jobs])
 
-  const filteredJobs = jobs.filter((job) => filterStatus === "all" || job.status === filterStatus)
+  const filteredJobs = jobs.filter((job) => filterStatus === &quot;all" || job.status === filterStatus)
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -322,7 +322,7 @@ export function VideoProcessingPipeline() {
 
   const stats = {
     total: jobs.length,
-    processing: jobs.filter((j) => j.status === "processing").length,
+    processing: jobs.filter((j) => j.status === &quot;processing").length,
     completed: jobs.filter((j) => j.status === "completed").length,
     failed: jobs.filter((j) => j.status === "failed").length,
     queued: jobs.filter((j) => j.status === "queued").length,
@@ -338,7 +338,7 @@ export function VideoProcessingPipeline() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant="outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
@@ -462,7 +462,7 @@ export function VideoProcessingPipeline() {
                       <span className="text-sm">{job.progress}%</span>
                     </div>
                   </TableCell>
-                  <TableCell>{job.duration ? formatDuration(job.duration) : "-"}</TableCell>
+                  <TableCell>{job.duration ? formatDuration(job.duration) : &quot;-"}</TableCell>
                   <TableCell>
                     <span className="text-sm text-muted-foreground">{new Date(job.startedAt).toLocaleString()}</span>
                   </TableCell>
@@ -479,17 +479,17 @@ export function VideoProcessingPipeline() {
                         <Eye className="h-4 w-4" />
                       </Button>
                       {job.status === "processing" && (
-                        <Button size="sm" variant="outline" onClick={() => handleJobAction(job.id, "pause")}>
+                        <Button size="sm" variant="outline" onClick={() => handleJobAction(job.id, &quot;pause")}>
                           <Pause className="h-4 w-4" />
                         </Button>
                       )}
                       {job.status === "failed" && (
-                        <Button size="sm" variant="outline" onClick={() => handleJobAction(job.id, "retry")}>
+                        <Button size="sm" variant="outline" onClick={() => handleJobAction(job.id, &quot;retry")}>
                           <RotateCcw className="h-4 w-4" />
                         </Button>
                       )}
                       {(job.status === "processing" || job.status === "queued") && (
-                        <Button size="sm" variant="outline" onClick={() => handleJobAction(job.id, "cancel")}>
+                        <Button size="sm" variant="outline" onClick={() => handleJobAction(job.id, &quot;cancel")}>
                           <XCircle className="h-4 w-4" />
                         </Button>
                       )}

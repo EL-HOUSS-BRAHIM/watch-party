@@ -351,8 +351,8 @@ export default function VideoDetailsPage() {
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-2xl font-bold mb-4">Video Not Found</h1>
-          <p className="text-gray-600 mb-4">The video you're looking for doesn't exist.</p>
-          <Button onClick={() => router.push("/dashboard/videos")}>Back to Videos</Button>
+          <p className="text-gray-600 mb-4">The video you&apos;re looking for doesn't exist.</p>
+          <Button onClick={() => router.push(&quot;/dashboard/videos")}>Back to Videos</Button>
         </div>
       </div>
     )
@@ -365,7 +365,7 @@ export default function VideoDetailsPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" onClick={() => router.back()} className="p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -501,7 +501,7 @@ export default function VideoDetailsPage() {
                     <CardTitle>Description</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="whitespace-pre-wrap">{video.description || "No description provided."}</p>
+                    <p className="whitespace-pre-wrap">{video.description || &quot;No description provided."}</p>
 
                     {video.tags.length > 0 && (
                       <div className="mt-4">
@@ -576,7 +576,7 @@ export default function VideoDetailsPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => setNewComment("")}
+                            onClick={() => setNewComment(&quot;")}
                             disabled={!newComment.trim()}
                           >
                             Cancel

@@ -44,7 +44,7 @@ import {
   LineChart as LineChartIcon,
   TrendingDown
 } from "lucide-react"
-import { format, subDays, startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns"
+import { format } from "date-fns"
 
 interface AnalyticsData {
   party_analytics: {
@@ -130,7 +130,7 @@ export default function PartyAnalyticsPage() {
       setAnalytics(data)
     } catch (error) {
       console.error("Failed to load analytics:", error)
-      if ((error as any)?.response?.status === 403) {
+      if ((error as Record<string, unknown>)?.response?.status === 403) {
         toast({
           title: "Access Denied",
           description: "You don't have permission to access this page.",
@@ -198,13 +198,13 @@ export default function PartyAnalyticsPage() {
   }
 
   const getGrowthColor = (rate: number) => {
-    if (rate > 0) return "text-green-600"
+    if (rate > 0) return &quot;text-green-600"
     if (rate < 0) return "text-red-600"
     return "text-gray-600"
   }
 
   const getGrowthIcon = (rate: number) => {
-    if (rate > 0) return <TrendingUp className="h-4 w-4" />
+    if (rate > 0) return <TrendingUp className=&quot;h-4 w-4" />
     if (rate < 0) return <TrendingDown className="h-4 w-4" />
     return <Activity className="h-4 w-4" />
   }
@@ -366,11 +366,11 @@ export default function PartyAnalyticsPage() {
                     <XAxis 
                       dataKey="date" 
                       tick={{ fontSize: 12 }}
-                      tickFormatter={(date) => format(new Date(date), "MMM d")}
+                      tickFormatter={(date) => format(new Date(date), &quot;MMM d")}
                     />
                     <YAxis tick={{ fontSize: 12 }} />
                     <Tooltip 
-                      labelFormatter={(date) => format(new Date(date), "MMM d, yyyy")}
+                      labelFormatter={(date) => format(new Date(date), &quot;MMM d, yyyy")}
                       formatter={(value, name) => [value, name === "parties" ? "Parties" : "Participants"]}
                     />
                     <Line 
@@ -456,7 +456,7 @@ export default function PartyAnalyticsPage() {
                     <YAxis tick={{ fontSize: 12 }} />
                     <Tooltip 
                       labelFormatter={(hour) => `${hour}:00 - ${(hour + 1) % 24}:00`}
-                      formatter={(value) => [value, "Parties Created"]}
+                      formatter={(value) => [value, &quot;Parties Created"]}
                     />
                     <Bar dataKey="party_count" fill="#8884d8" radius={[4, 4, 0, 0]} />
                   </BarChart>

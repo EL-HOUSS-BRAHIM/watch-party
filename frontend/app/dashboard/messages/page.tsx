@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -434,9 +434,9 @@ export default function MessagesPage() {
                       <div className="w-8">
                         {showAvatar && (
                           <Avatar className="w-8 h-8">
-                            <AvatarImage src={selectedConversation.participants.find(p => p.id === message.senderId)?.avatar || "/placeholder-user.jpg"} />
+                            <AvatarImage src={selectedConversation.participants.find(p => p.id === message.senderId)?.avatar || &quot;/placeholder-user.jpg"} />
                             <AvatarFallback className="text-xs">
-                              {selectedConversation.participants.find(p => p.id === message.senderId)?.firstName?.[0] || "U"}
+                              {selectedConversation.participants.find(p => p.id === message.senderId)?.firstName?.[0] || &quot;U"}
                             </AvatarFallback>
                           </Avatar>
                         )}

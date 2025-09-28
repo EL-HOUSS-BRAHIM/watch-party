@@ -596,7 +596,7 @@ export default function FeedbackPage() {
                     <MessageCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No feedback found</h3>
                     <p className="text-gray-600">
-                      {filters.search || Object.values(filters).some(f => f !== "all" && f !== "recent" && f !== false)
+                      {filters.search || Object.values(filters).some(f => f !== &quot;all" && f !== "recent" && f !== false)
                         ? "Try adjusting your search or filters"
                         : "Be the first to share your feedback!"
                       }
@@ -705,7 +705,7 @@ export default function FeedbackPage() {
                       <label className="text-sm font-medium mb-2 block">Category *</label>
                       <Select
                         value={submitForm.watch("category")}
-                        onValueChange={(value: string) => submitForm.setValue("category", value as "bug" | "feature" | "improvement" | "question" | "complaint" | "compliment" | "other")}
+                        onValueChange={(value: string) => submitForm.setValue(&quot;category", value as "bug" | "feature" | "improvement" | "question" | "complaint" | "compliment" | "other")}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -761,7 +761,7 @@ export default function FeedbackPage() {
                       <label className="text-sm font-medium mb-2 block">Priority *</label>
                       <Select
                         value={submitForm.watch("priority")}
-                        onValueChange={(value: string) => submitForm.setValue("priority", value as "low" | "medium" | "high" | "urgent")}
+                        onValueChange={(value: string) => submitForm.setValue(&quot;priority", value as "low" | "medium" | "high" | "urgent")}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -827,7 +827,7 @@ export default function FeedbackPage() {
                         <Button
                           type="button"
                           variant="outline"
-                          onClick={() => document.getElementById("file-upload")?.click()}
+                          onClick={() => document.getElementById(&quot;file-upload")?.click()}
                         >
                           <Paperclip className="h-4 w-4 mr-2" />
                           Choose Files

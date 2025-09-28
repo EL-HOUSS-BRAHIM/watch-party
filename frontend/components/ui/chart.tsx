@@ -28,7 +28,7 @@ function useChart() {
   const context = React.useContext(ChartContext)
 
   if (!context) {
-    throw new Error("useChart must be used within a <ChartContainer />")
+    throw new Error("useChart must be used within a <ChartContainer />&quot;)
   }
 
   return context
@@ -40,7 +40,7 @@ const ChartContainer = React.forwardRef<
     config: ChartConfig
     children: React.ComponentProps<
       typeof RechartsPrimitive.ResponsiveContainer
-    >["children"]
+    >[&quot;children"]
   }
 >(({ id, className, children, config, ...props }, ref) => {
   const uniqueId = React.useId()
@@ -107,22 +107,22 @@ const ChartTooltipContent = React.forwardRef<
   {
     active?: boolean
     payload?: Array<{
-      value: any
+      value: unknown
       name: string
       dataKey: string
       color?: string
-      payload: any
+      payload: unknown
     }>
-    label?: any
+    label?: unknown
     hideLabel?: boolean
     hideIndicator?: boolean
     indicator?: "line" | "dot" | "dashed"
     nameKey?: string
     labelKey?: string
     className?: string
-    labelFormatter?: (label: any, payload: any[]) => React.ReactNode
+    labelFormatter?: (label: unknown, payload: unknown[]) => React.ReactNode
     labelClassName?: string
-    formatter?: (value: any, name: string, item: any, index: number) => React.ReactNode
+    formatter?: (value: unknown, name: string, item: unknown, index: number) => React.ReactNode
     color?: string
   } & React.ComponentProps<"div">
 >(
@@ -198,7 +198,7 @@ const ChartTooltipContent = React.forwardRef<
       >
         {!nestLabel ? tooltipLabel : null}
         <div className="grid gap-1.5">
-          {payload.map((item: any, index: number) => {
+          {payload.map((item: unknown, index: number) => {
             const key = `${nameKey || item.name || item.dataKey || "value"}`
             const itemConfig = getPayloadConfigFromPayload(config, item, key)
             const indicatorColor = color || item.payload.fill || item.color
@@ -207,7 +207,7 @@ const ChartTooltipContent = React.forwardRef<
               <div
                 key={item.dataKey}
                 className={cn(
-                  "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
+                  "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground&quot;,
                   indicator === "dot" && "items-center"
                 )}
               >
@@ -279,7 +279,7 @@ const ChartLegendContent = React.forwardRef<
       dataKey: string
       value: string
       color?: string
-      payload?: any
+      payload?: unknown
       type?: string
     }>
     verticalAlign?: "top" | "bottom" | "middle"
@@ -306,7 +306,7 @@ const ChartLegendContent = React.forwardRef<
           className
         )}
       >
-        {payload.map((item: any) => {
+        {payload.map((item: unknown) => {
           const key = `${nameKey || item.dataKey || "value"}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
 
@@ -314,7 +314,7 @@ const ChartLegendContent = React.forwardRef<
             <div
               key={item.value}
               className={cn(
-                "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground"
+                "flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3 [&>svg]:text-muted-foreground&quot;
               )}
             >
               {itemConfig?.icon && !hideIcon ? (

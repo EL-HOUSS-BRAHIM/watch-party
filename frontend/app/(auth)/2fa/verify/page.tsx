@@ -82,7 +82,7 @@ function TwoFactorVerifyForm() {
 
     // Clear errors when user starts typing
     if (errors.code) {
-      setErrors((prev) => ({ ...prev, code: "" }))
+      setErrors((prev) => ({ ...prev, code: &quot;" }))
     }
 
     // Auto-focus next input
@@ -316,7 +316,7 @@ function TwoFactorVerifyForm() {
                     value={backupCode}
                     onChange={(e) => {
                       setBackupCode(e.target.value.toUpperCase())
-                      if (errors.backup) setErrors((prev) => ({ ...prev, backup: "" }))
+                      if (errors.backup) setErrors((prev) => ({ ...prev, backup: &quot;" }))
                     }}
                     className="text-center text-lg font-mono bg-white/5 border-white/20 text-white placeholder-gray-400 focus:border-orange-500/50"
                     placeholder="XXXXXXXX"

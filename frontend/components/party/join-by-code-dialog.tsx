@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Loader2, Users, Lock } from "lucide-react"
+import { Loader2, Users } from "lucide-react"
 import {
   Dialog,
   DialogContent,

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -73,13 +74,13 @@ export default function CreatePartyPage() {
   const { toast } = useToast()
 
   const [isLoading, setIsLoading] = useState(false)
-  const [videos, setVideos] = useState<any[]>([])
+  const [videos, setVideos] = useState<unknown[]>([])
   const [loadingVideos, setLoadingVideos] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedVideo, setSelectedVideo] = useState<any | null>(null)
   const [newTag, setNewTag] = useState("")
   const [newEmail, setNewEmail] = useState("")
-  const [suggestedUsers, setSuggestedUsers] = useState<any[]>([])
+  const [suggestedUsers, setSuggestedUsers] = useState<unknown[]>([])
   const [activeStep, setActiveStep] = useState(1)
 
   const {
@@ -249,7 +250,7 @@ export default function CreatePartyPage() {
     )
   }
 
-  const addUserEmail = (user: any) => {
+  const addUserEmail = (user: unknown) => {
     if (!watchedValues.inviteEmails.includes(user.email) && watchedValues.inviteEmails.length < 50) {
       setValue("inviteEmails", [...watchedValues.inviteEmails, user.email])
     }
@@ -296,7 +297,7 @@ export default function CreatePartyPage() {
     <div className="container mx-auto py-8 px-4 max-w-4xl">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
-        <Button variant="ghost" onClick={() => router.back()} className="p-2">
+        <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
@@ -324,7 +325,7 @@ export default function CreatePartyPage() {
                         : "bg-muted text-muted-foreground",
                   )}
                 >
-                  {activeStep > step.id ? <Check className="h-4 w-4" /> : step.id}
+                  {activeStep > step.id ? <Check className=&quot;h-4 w-4" /> : step.id}
                 </div>
                 <div className="mt-2 text-center">
                   <div className="text-sm font-medium">{step.title}</div>
@@ -335,7 +336,7 @@ export default function CreatePartyPage() {
                 <div
                   className={cn(
                     "flex-1 h-0.5 mx-4 transition-colors",
-                    activeStep > step.id ? "bg-green-500" : "bg-muted",
+                    activeStep > step.id ? &quot;bg-green-500" : "bg-muted",
                   )}
                 />
               )}
@@ -444,7 +445,7 @@ export default function CreatePartyPage() {
                   <Label htmlFor="maxParticipants">Maximum Participants *</Label>
                   <Select
                     value={watchedValues.maxParticipants.toString()}
-                    onValueChange={(value) => setValue("maxParticipants", Number.parseInt(value))}
+                    onValueChange={(value) => setValue(&quot;maxParticipants", Number.parseInt(value))}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -485,7 +486,7 @@ export default function CreatePartyPage() {
                     <Film className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                     <h3 className="text-lg font-medium mb-2">No videos available</h3>
                     <p className="text-muted-foreground mb-4">You need to upload videos before creating a party.</p>
-                    <Button onClick={() => router.push("/dashboard/videos/upload")}>
+                    <Button onClick={() => router.push(&quot;/dashboard/videos/upload")}>
                       <Upload className="h-4 w-4 mr-2" />
                       Upload Video
                     </Button>
@@ -514,7 +515,7 @@ export default function CreatePartyPage() {
                               ? "border-primary bg-primary/5"
                               : "border-border hover:border-primary/50",
                           )}
-                          onClick={() => setValue("videoId", video.id)}
+                          onClick={() => setValue(&quot;videoId", video.id)}
                         >
                           <div className="flex gap-3">
                             <div className="relative w-20 h-12 bg-muted rounded overflow-hidden flex-shrink-0">
@@ -573,7 +574,7 @@ export default function CreatePartyPage() {
               <CardContent className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    {watchedValues.isPrivate ? <Lock className="h-4 w-4" /> : <Globe className="h-4 w-4" />}
+                    {watchedValues.isPrivate ? <Lock className="h-4 w-4" /> : <Globe className=&quot;h-4 w-4" />}
                     <div>
                       <Label htmlFor="isPrivate">Private Party</Label>
                       <p className="text-sm text-muted-foreground">
@@ -584,7 +585,7 @@ export default function CreatePartyPage() {
                   <Switch
                     id="isPrivate"
                     checked={watchedValues.isPrivate}
-                    onCheckedChange={(checked) => setValue("isPrivate", checked)}
+                    onCheckedChange={(checked) => setValue(&quot;isPrivate", checked)}
                   />
                 </div>
 
@@ -598,7 +599,7 @@ export default function CreatePartyPage() {
                   <Switch
                     id="requiresApproval"
                     checked={watchedValues.requiresApproval}
-                    onCheckedChange={(checked) => setValue("requiresApproval", checked)}
+                    onCheckedChange={(checked) => setValue(&quot;requiresApproval", checked)}
                   />
                 </div>
 
@@ -638,7 +639,7 @@ export default function CreatePartyPage() {
                   <Switch
                     id="allowChat"
                     checked={watchedValues.allowChat}
-                    onCheckedChange={(checked) => setValue("allowChat", checked)}
+                    onCheckedChange={(checked) => setValue(&quot;allowChat", checked)}
                   />
                 </div>
 
@@ -650,7 +651,7 @@ export default function CreatePartyPage() {
                   <Switch
                     id="allowReactions"
                     checked={watchedValues.allowReactions}
-                    onCheckedChange={(checked) => setValue("allowReactions", checked)}
+                    onCheckedChange={(checked) => setValue(&quot;allowReactions", checked)}
                   />
                 </div>
 
@@ -658,7 +659,7 @@ export default function CreatePartyPage() {
                   <Label>Video Control Permissions</Label>
                   <Select
                     value={watchedValues.allowVideoControl}
-                    onValueChange={(value: "host" | "all" | "moderators") => setValue("allowVideoControl", value)}
+                    onValueChange={(value: "host" | "all" | "moderators") => setValue(&quot;allowVideoControl", value)}
                   >
                     <SelectTrigger className="mt-1">
                       <SelectValue />
@@ -684,7 +685,7 @@ export default function CreatePartyPage() {
                     placeholder="Add a tag"
                     value={newTag}
                     onChange={(e) => setNewTag(e.target.value)}
-                    onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
+                    onKeyPress={(e) => e.key === &quot;Enter" && (e.preventDefault(), addTag())}
                     disabled={watchedValues.tags.length >= 10}
                   />
                   <Button type="button" onClick={addTag} variant="outline" disabled={watchedValues.tags.length >= 10}>
@@ -696,7 +697,7 @@ export default function CreatePartyPage() {
                     {watchedValues.tags.map((tag) => (
                       <Badge key={tag} variant="secondary" className="flex items-center gap-1">
                         #{tag}
-                        <button type="button" onClick={() => removeTag(tag)} className="ml-1 hover:text-destructive">
+                        <button type="button" onClick={() => removeTag(tag)} className=&quot;ml-1 hover:text-destructive">
                           <X className="h-3 w-3" />
                         </button>
                       </Badge>
@@ -776,7 +777,7 @@ export default function CreatePartyPage() {
                       placeholder="friend@example.com"
                       value={newEmail}
                       onChange={(e) => setNewEmail(e.target.value)}
-                      onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addEmail())}
+                      onKeyPress={(e) => e.key === &quot;Enter" && (e.preventDefault(), addEmail())}
                       disabled={watchedValues.inviteEmails.length >= 50}
                     />
                     <Button
@@ -827,7 +828,7 @@ export default function CreatePartyPage() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Start Time:</span>
-                        <span className="font-medium">{format(watchedValues.scheduledFor, "PPP 'at' p")}</span>
+                        <span className="font-medium">{format(watchedValues.scheduledFor, &quot;PPP &apos;at' p")}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Max Participants:</span>
@@ -835,7 +836,7 @@ export default function CreatePartyPage() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Privacy:</span>
-                        <span className="font-medium">{watchedValues.isPrivate ? "Private" : "Public"}</span>
+                        <span className="font-medium">{watchedValues.isPrivate ? &quot;Private" : "Public"}</span>
                       </div>
                     </div>
                   </div>
@@ -845,11 +846,11 @@ export default function CreatePartyPage() {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Chat:</span>
-                        <span className="font-medium">{watchedValues.allowChat ? "Enabled" : "Disabled"}</span>
+                        <span className="font-medium">{watchedValues.allowChat ? &quot;Enabled" : "Disabled"}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Reactions:</span>
-                        <span className="font-medium">{watchedValues.allowReactions ? "Enabled" : "Disabled"}</span>
+                        <span className="font-medium">{watchedValues.allowReactions ? &quot;Enabled" : "Disabled"}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Video Control:</span>
@@ -857,7 +858,7 @@ export default function CreatePartyPage() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Approval Required:</span>
-                        <span className="font-medium">{watchedValues.requiresApproval ? "Yes" : "No"}</span>
+                        <span className="font-medium">{watchedValues.requiresApproval ? &quot;Yes" : "No"}</span>
                       </div>
                     </div>
                   </div>

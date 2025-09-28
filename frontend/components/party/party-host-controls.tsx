@@ -319,7 +319,7 @@ export function PartyHostControls({
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => onParticipantAction(participant.id, "promote")}
+                            onClick={() => onParticipantAction(participant.id, &quot;promote")}
                             title="Promote to moderator"
                           >
                             <Crown className="h-3 w-3" />
@@ -327,7 +327,7 @@ export function PartyHostControls({
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => onParticipantAction(participant.id, "mute")}
+                            onClick={() => onParticipantAction(participant.id, &quot;mute")}
                             title="Mute participant"
                           >
                             <MessageSquare className="h-3 w-3" />
@@ -335,7 +335,7 @@ export function PartyHostControls({
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => onParticipantAction(participant.id, "kick")}
+                            onClick={() => onParticipantAction(participant.id, &quot;kick")}
                             title="Remove participant"
                             className="text-destructive hover:text-destructive"
                           >

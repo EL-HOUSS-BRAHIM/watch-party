@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
-import { ThumbsUp, ThumbsDown, Reply, MoreHorizontal, Flag, Heart, MessageCircle, Send, Search, Filter } from 'lucide-react'
+import { ThumbsUp, ThumbsDown, Reply, MoreHorizontal, Flag, MessageCircle, Send, Search, Filter } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -94,7 +95,7 @@ export default function PartiesPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
   const [filters, setFilters] = useState<FilterOptions>({
     status: "all",
     privacy: "all",
@@ -182,7 +183,7 @@ export default function PartiesPage() {
 
     // Privacy filter
     if (filters.privacy !== "all") {
-      filtered = filtered.filter((party) => (filters.privacy === "private" ? party.isPrivate : !party.isPrivate))
+      filtered = filtered.filter((party) => (filters.privacy === &quot;private" ? party.isPrivate : !party.isPrivate))
     }
 
     // Role filter
@@ -199,7 +200,7 @@ export default function PartiesPage() {
 
     // Sort
     filtered.sort((a, b) => {
-      let aValue: any, bValue: any
+      let aValue: unknown, bValue: unknown
 
       switch (filters.sortBy) {
         case "name":
@@ -458,7 +459,7 @@ export default function PartiesPage() {
                   Share Party
                 </DropdownMenuItem>
                 {isHost(party) && (
-                  <DropdownMenuItem onClick={() => deleteParty(party.id)} className="text-destructive">
+                  <DropdownMenuItem onClick={() => deleteParty(party.id)} className=&quot;text-destructive">
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete Party
                   </DropdownMenuItem>
@@ -535,7 +536,7 @@ export default function PartiesPage() {
           {/* Action Buttons */}
           <div className="flex gap-2">
             {party.status === "active" ? (
-              <Button onClick={() => router.push(`/watch/${party.roomCode}`)} className="flex-1" size="sm">
+              <Button onClick={() => router.push(`/watch/${party.roomCode}`)} className=&quot;flex-1" size="sm">
                 <Play className="h-4 w-4 mr-2" />
                 Join Live
               </Button>
@@ -557,7 +558,7 @@ export default function PartiesPage() {
             )}
 
             {!isParticipant(party) && !isHost(party) && party.status !== "ended" && (
-              <Button onClick={() => joinParty(party.roomCode)} variant="outline" size="sm">
+              <Button onClick={() => joinParty(party.roomCode)} variant=&quot;outline" size="sm">
                 <UserPlus className="h-4 w-4" />
               </Button>
             )}
@@ -595,7 +596,7 @@ export default function PartiesPage() {
               <h3 className="font-semibold truncate pr-2">{party.name}</h3>
               <div className="flex items-center gap-2 flex-shrink-0">
                 <Badge variant="outline" className="text-xs">
-                  {party.isPrivate ? <Lock className="w-3 h-3" /> : <Globe className="w-3 h-3" />}
+                  {party.isPrivate ? <Lock className="w-3 h-3" /> : <Globe className=&quot;w-3 h-3" />}
                 </Badge>
                 <Badge variant="outline" className="text-xs">
                   <Users className="w-3 h-3 mr-1" />
@@ -625,12 +626,12 @@ export default function PartiesPage() {
 
               <div className="flex items-center gap-2">
                 {party.status === "active" ? (
-                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} size="sm">
+                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} size=&quot;sm">
                     <Play className="h-4 w-4 mr-1" />
                     Join
                   </Button>
                 ) : (
-                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} variant="outline" size="sm">
+                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} variant=&quot;outline" size="sm">
                     <Eye className="h-4 w-4 mr-1" />
                     View
                   </Button>
@@ -704,7 +705,7 @@ export default function PartiesPage() {
           <div className="flex items-center gap-2">
             <Select
               value={filters.status}
-              onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value as any }))}
+              onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value as Record<string, unknown> }))}
             >
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -719,7 +720,7 @@ export default function PartiesPage() {
 
             <Select
               value={filters.privacy}
-              onValueChange={(value) => setFilters((prev) => ({ ...prev, privacy: value as any }))}
+              onValueChange={(value) => setFilters((prev) => ({ ...prev, privacy: value as Record<string, unknown> }))}
             >
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -733,7 +734,7 @@ export default function PartiesPage() {
 
             <Select
               value={filters.sortBy}
-              onValueChange={(value) => setFilters((prev) => ({ ...prev, sortBy: value as any }))}
+              onValueChange={(value) => setFilters((prev) => ({ ...prev, sortBy: value as Record<string, unknown> }))}
             >
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -750,7 +751,7 @@ export default function PartiesPage() {
               <Button
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode("grid")}
+                onClick={() => setViewMode(&quot;grid")}
                 className="rounded-r-none"
               >
                 <Grid3X3 className="h-4 w-4" />
@@ -758,7 +759,7 @@ export default function PartiesPage() {
               <Button
                 variant={viewMode === "list" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode("list")}
+                onClick={() => setViewMode(&quot;list")}
                 className="rounded-l-none"
               >
                 <List className="h-4 w-4" />
@@ -835,7 +836,7 @@ export default function PartiesPage() {
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-green-600">
-                  {filteredParties.filter((p) => p.status === "active").length}
+                  {filteredParties.filter((p) => p.status === &quot;active").length}
                 </div>
                 <div className="text-sm text-muted-foreground">Live Now</div>
               </CardContent>
@@ -843,7 +844,7 @@ export default function PartiesPage() {
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-blue-600">
-                  {filteredParties.filter((p) => p.status === "scheduled").length}
+                  {filteredParties.filter((p) => p.status === &quot;scheduled").length}
                 </div>
                 <div className="text-sm text-muted-foreground">Scheduled</div>
               </CardContent>

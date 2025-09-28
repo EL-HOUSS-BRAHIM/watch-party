@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { BarChart3, Clock, Users, Play, TrendingUp, Calendar } from "lucide-react"
+import { BarChart3, Clock, Users, TrendingUp } from "lucide-react"
 import { useApi } from "@/hooks/use-api"
 
 interface UserStats {
@@ -98,21 +98,21 @@ export function UserStats({ userId }: UserStatsProps) {
         <div className="flex justify-center space-x-2">
           <Button
             variant={timeframe === "week" ? "default" : "outline"}
-            onClick={() => setTimeframe("week")}
+            onClick={() => setTimeframe(&quot;week")}
             size="sm"
           >
             This Week
           </Button>
           <Button
             variant={timeframe === "month" ? "default" : "outline"}
-            onClick={() => setTimeframe("month")}
+            onClick={() => setTimeframe(&quot;month")}
             size="sm"
           >
             This Month
           </Button>
           <Button
             variant={timeframe === "year" ? "default" : "outline"}
-            onClick={() => setTimeframe("year")}
+            onClick={() => setTimeframe(&quot;year")}
             size="sm"
           >
             This Year

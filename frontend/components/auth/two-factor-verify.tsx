@@ -63,7 +63,7 @@ export function TwoFactorVerify() {
 
       // Redirect to the intended page
       router.push(redirectUrl)
-    } catch (err: any) {
+    } catch (err: unknown) {
       const errorData = err?.response?.data
       const message = errorData?.message || err?.message || "Invalid verification code"
       setError(message)
@@ -115,7 +115,7 @@ export function TwoFactorVerify() {
               <Input
                 id="verification-code"
                 value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, &quot;"))}
                 onKeyPress={handleKeyPress}
                 placeholder="123456"
                 maxLength={6}
@@ -133,7 +133,7 @@ export function TwoFactorVerify() {
               <Input
                 id="backup-code"
                 value={backupCode}
-                onChange={(e) => setBackupCode(e.target.value.replace(/[^a-zA-Z0-9]/g, ""))}
+                onChange={(e) => setBackupCode(e.target.value.replace(/[^a-zA-Z0-9]/g, &quot;"))}
                 onKeyPress={handleKeyPress}
                 placeholder="Enter backup code"
                 className="text-center text-lg tracking-widest font-mono"
@@ -200,7 +200,7 @@ export function TwoFactorVerify() {
 
           {/* Help text */}
           <div className="text-center text-xs text-muted-foreground space-y-1">
-            <p>Can't access your authenticator app?</p>
+            <p>Can&apos;t access your authenticator app?</p>
             <Button variant="link" className="text-xs p-0 h-auto">
               Contact support
             </Button>

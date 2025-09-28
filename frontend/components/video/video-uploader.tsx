@@ -42,7 +42,7 @@ export function VideoUploader({
 }: VideoUploaderProps) {
   const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([])
   const [isDragOver, setIsDragOver] = useState(false)
-  const [uploadSource, setUploadSource] = useState<"local" | "cloud">("local")
+  const [uploadSource, setUploadSource] = useState<"local" | "cloud">(&quot;local")
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { user } = useAuth()
   const { toast } = useToast()
@@ -252,7 +252,7 @@ export function VideoUploader({
   }
 
   const uploadAllFiles = async () => {
-    const pendingFiles = uploadFiles.filter((f) => f.status === "pending")
+    const pendingFiles = uploadFiles.filter((f) => f.status === &quot;pending")
 
     for (const file of pendingFiles) {
       await uploadFile(file)
@@ -333,7 +333,7 @@ export function VideoUploader({
           <div className="grid grid-cols-2 gap-4">
             <Button
               variant={uploadSource === "local" ? "default" : "outline"}
-              onClick={() => setUploadSource("local")}
+              onClick={() => setUploadSource(&quot;local")}
               className="h-20 flex-col"
             >
               <HardDrive className="w-6 h-6 mb-2" />
@@ -341,7 +341,7 @@ export function VideoUploader({
             </Button>
             <Button
               variant={uploadSource === "cloud" ? "default" : "outline"}
-              onClick={() => setUploadSource("cloud")}
+              onClick={() => setUploadSource(&quot;cloud")}
               className="h-20 flex-col"
             >
               <Cloud className="w-6 h-6 mb-2" />
@@ -400,7 +400,7 @@ export function VideoUploader({
                     <Button
                       variant="outline"
                       onClick={() => setUploadFiles([])}
-                      disabled={uploadFiles.some((f) => f.status === "uploading" || f.status === "processing")}
+                      disabled={uploadFiles.some((f) => f.status === &quot;uploading" || f.status === "processing")}
                     >
                       Clear All
                     </Button>
@@ -408,7 +408,7 @@ export function VideoUploader({
                       onClick={uploadAllFiles}
                       disabled={
                         uploadFiles.length === 0 ||
-                        uploadFiles.every((f) => f.status !== "pending") ||
+                        uploadFiles.every((f) => f.status !== &quot;pending") ||
                         uploadFiles.some((f) => f.status === "uploading" || f.status === "processing")
                       }
                     >
@@ -462,7 +462,7 @@ export function VideoUploader({
                           <Label htmlFor={`privacy-${file.id}`}>Privacy</Label>
                           <Select
                             value={file.privacy}
-                            onValueChange={(value) => updateFile(file.id, { privacy: value as any })}
+                            onValueChange={(value) => updateFile(file.id, { privacy: value as Record<string, unknown> })}
                           >
                             <SelectTrigger>
                               <SelectValue />

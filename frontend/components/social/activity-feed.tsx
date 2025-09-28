@@ -217,7 +217,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
                   {activity.reactions && (
                     <div className="flex items-center gap-3">
                       <button
-                        onClick={() => reactToActivity(activity.id, "like")}
+                        onClick={() => reactToActivity(activity.id, &quot;like")}
                         className={cn(
                           "flex items-center gap-1 hover:text-blue-600 transition-colors",
                           activity.reactions.userReacted === "like" && "text-blue-600",
@@ -228,7 +228,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
                       </button>
 
                       <button
-                        onClick={() => reactToActivity(activity.id, "heart")}
+                        onClick={() => reactToActivity(activity.id, &quot;heart")}
                         className={cn(
                           "flex items-center gap-1 hover:text-red-600 transition-colors",
                           activity.reactions.userReacted === "heart" && "text-red-600",

@@ -1,6 +1,7 @@
 "use client"
 
 import { Input } from "@/components/ui/input"
+import Image from "next/image"
 
 import { Label } from "@/components/ui/label"
 
@@ -430,8 +431,8 @@ export default function PartyDetailsPage() {
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-2xl font-bold mb-4">Party Not Found</h1>
-          <p className="text-muted-foreground mb-4">The party you're looking for doesn't exist.</p>
-          <Button onClick={() => router.push("/dashboard/parties")}>Back to Parties</Button>
+          <p className="text-muted-foreground mb-4">The party you&apos;re looking for doesn't exist.</p>
+          <Button onClick={() => router.push(&quot;/dashboard/parties")}>Back to Parties</Button>
         </div>
       </div>
     )
@@ -449,7 +450,7 @@ export default function PartyDetailsPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" onClick={() => router.back()} className="p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -492,7 +493,7 @@ export default function PartyDetailsPage() {
           <div className="flex items-center gap-2">
             {/* Join/Leave Button */}
             {isActive && (isHost || isParticipant) && (
-              <Button onClick={() => router.push(`/watch/${party.roomCode}`)} size="lg" className="shadow-lg">
+              <Button onClick={() => router.push(`/watch/${party.roomCode}`)} size=&quot;lg" className="shadow-lg">
                 <Play className="h-5 w-5 mr-2" />
                 {isHost ? "Start Party" : "Join Live"}
               </Button>
@@ -500,7 +501,7 @@ export default function PartyDetailsPage() {
 
             {!isParticipant && !isHost && canJoin && (
               <Button onClick={joinParty} disabled={isJoining} size="lg" className="shadow-lg">
-                {isJoining ? <Loader2 className="h-5 w-5 mr-2 animate-spin" /> : <UserPlus className="h-5 w-5 mr-2" />}
+                {isJoining ? <Loader2 className="h-5 w-5 mr-2 animate-spin" /> : <UserPlus className=&quot;h-5 w-5 mr-2" />}
                 {party.requiresApproval ? "Request to Join" : "Join Party"}
               </Button>
             )}
@@ -604,7 +605,7 @@ export default function PartyDetailsPage() {
                 <TabsTrigger value="participants">Participants ({party.participants.length})</TabsTrigger>
                 {isHost && party.joinRequests.length > 0 && (
                   <TabsTrigger value="requests">
-                    Requests ({party.joinRequests.filter((r) => r.status === "pending").length})
+                    Requests ({party.joinRequests.filter((r) => r.status === &quot;pending").length})
                   </TabsTrigger>
                 )}
                 {(isHost || party.analytics) && <TabsTrigger value="analytics">Analytics</TabsTrigger>}
@@ -616,7 +617,7 @@ export default function PartyDetailsPage() {
                     <CardTitle>About This Party</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="whitespace-pre-wrap mb-4">{party.description || "No description provided."}</p>
+                    <p className="whitespace-pre-wrap mb-4">{party.description || &quot;No description provided."}</p>
 
                     {party.tags.length > 0 && (
                       <div className="mb-4">
@@ -707,7 +708,7 @@ export default function PartyDetailsPage() {
                         </div>
                         <div className="flex items-center justify-between">
                           <span>Privacy:</span>
-                          <Badge variant="outline">{party.isPrivate ? "Private" : "Public"}</Badge>
+                          <Badge variant="outline">{party.isPrivate ? &quot;Private" : "Public"}</Badge>
                         </div>
                         <div className="flex items-center justify-between">
                           <span>Max Participants:</span>
@@ -804,7 +805,7 @@ export default function PartyDetailsPage() {
                 <TabsContent value="requests" className="space-y-4">
                   <div className="grid gap-4">
                     {party.joinRequests
-                      .filter((r) => r.status === "pending")
+                      .filter((r) => r.status === &quot;pending")
                       .map((request) => (
                         <Card key={request.id}>
                           <CardContent className="p-4">
@@ -826,20 +827,20 @@ export default function PartyDetailsPage() {
                                     {formatDistanceToNow(new Date(request.requestedAt), { addSuffix: true })}
                                   </p>
                                   {request.message && (
-                                    <p className="text-sm mt-1 p-2 bg-muted rounded">"{request.message}"</p>
+                                    <p className="text-sm mt-1 p-2 bg-muted rounded">&quot;{request.message}"</p>
                                   )}
                                 </div>
                               </div>
 
                               <div className="flex items-center gap-2">
-                                <Button size="sm" onClick={() => handleJoinRequest(request.id, "approve")}>
+                                <Button size="sm" onClick={() => handleJoinRequest(request.id, &quot;approve")}>
                                   <CheckCircle className="h-4 w-4 mr-1" />
                                   Approve
                                 </Button>
                                 <Button
                                   size="sm"
                                   variant="outline"
-                                  onClick={() => handleJoinRequest(request.id, "reject")}
+                                  onClick={() => handleJoinRequest(request.id, &quot;reject")}
                                 >
                                   <XCircle className="h-4 w-4 mr-1" />
                                   Reject
@@ -993,7 +994,7 @@ export default function PartyDetailsPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Pending Requests</span>
-                  <span className="font-medium">{party.joinRequests.filter((r) => r.status === "pending").length}</span>
+                  <span className="font-medium">{party.joinRequests.filter((r) => r.status === &quot;pending").length}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Created</span>

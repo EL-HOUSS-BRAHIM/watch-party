@@ -26,7 +26,7 @@ export function VideoUpload() {
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadComplete, setUploadComplete] = useState(false)
-  const [uploadMethod, setUploadMethod] = useState<"local" | "drive">("local")
+  const [uploadMethod, setUploadMethod] = useState<"local" | "drive">(&quot;local")
   const [videoDetails, setVideoDetails] = useState({
     title: "",
     description: "",
@@ -77,7 +77,7 @@ export function VideoUpload() {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
-        onUploadProgress: (progressEvent: any) => {
+        onUploadProgress: (progressEvent: unknown) => {
           if (progressEvent.total) {
             const loaded = progressEvent.loaded
             const total = progressEvent.total
@@ -92,7 +92,7 @@ export function VideoUpload() {
         title: "Upload successful!",
         description: "Your video has been uploaded and is being processed",
       })
-    } catch (err: any) {
+    } catch (err: unknown) {
       toast({
         title: "Upload failed",
         description: err.response?.data?.message || "Failed to upload video",
@@ -144,7 +144,7 @@ export function VideoUpload() {
             <Button onClick={() => window.location.reload()}>
               Upload Another Video
             </Button>
-            <Button variant="outline" onClick={() => window.location.href = "/videos/manage"}>
+            <Button variant="outline" onClick={() => window.location.href = &quot;/videos/manage"}>
               Manage Videos
             </Button>
           </div>
@@ -155,7 +155,7 @@ export function VideoUpload() {
 
   return (
     <div className="space-y-6">
-      <Tabs value={uploadMethod} onValueChange={(value: any) => setUploadMethod(value)}>
+      <Tabs value={uploadMethod} onValueChange={(value: unknown) => setUploadMethod(value)}>
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="local" className="flex items-center space-x-2">
             <HardDrive className="w-4 h-4" />

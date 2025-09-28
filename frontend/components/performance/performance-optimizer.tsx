@@ -155,7 +155,7 @@ export function PerformanceOptimizer() {
   const [metrics, setMetrics] = useState<PerformanceMetric[]>([])
   const [suggestions, setSuggestions] = useState<OptimizationSuggestion[]>([])
   const [bundleAnalysis, setBundleAnalysis] = useState<BundleAnalysis | null>(null)
-  const [historicalData, setHistoricalData] = useState<any[]>([])
+  const [historicalData, setHistoricalData] = useState<unknown[]>([])
   const [loading, setLoading] = useState(true)
   const [isLoading, setIsLoading] = useState(true)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
@@ -172,7 +172,7 @@ export function PerformanceOptimizer() {
   })
   const { toast } = useToast()
 
-  const normalizeMetric = (metric: any): PerformanceMetric => {
+  const normalizeMetric = (metric: unknown): PerformanceMetric => {
     const status = getMetricStatus(metric.value, metric.target || metric.threshold)
     return {
       name: metric.name ?? metric.label ?? metric.key ?? 'Performance Metric',
@@ -193,20 +193,20 @@ export function PerformanceOptimizer() {
     return 'poor'
   }
 
-  const normalizeTrend = (trend: any): PerformanceMetric['trend'] => {
+  const normalizeTrend = (trend: unknown): PerformanceMetric['trend'] => {
     if (typeof trend === 'string') {
       const trendLower = trend.toLowerCase()
       if (trendLower.includes('up') || trendLower.includes('increase')) return 'up'
       if (trendLower.includes('down') || trendLower.includes('decrease')) return 'down'
     }
     if (typeof trend === 'number') {
-      if (trend > 0.05) return 'up'
+      if (trend > 0.05) return &apos;up'
       if (trend < -0.05) return 'down'
     }
     return 'stable'
   }
 
-  const normalizeSuggestion = (suggestion: any): OptimizationSuggestion => {
+  const normalizeSuggestion = (suggestion: unknown): OptimizationSuggestion => {
     return {
       id: String(suggestion.id ?? suggestion.suggestion_id ?? Math.random().toString(36).substr(2, 9)),
       category: normalizeCategory(suggestion.category ?? suggestion.type),
@@ -219,7 +219,7 @@ export function PerformanceOptimizer() {
     }
   }
 
-  const normalizeCategory = (category: any): OptimizationSuggestion['category'] => {
+  const normalizeCategory = (category: unknown): OptimizationSuggestion['category'] => {
     const categoryStr = String(category).toLowerCase()
     if (categoryStr.includes('image') || categoryStr.includes('media')) return 'images'
     if (categoryStr.includes('code') || categoryStr.includes('bundle') || categoryStr.includes('js')) return 'code'
@@ -229,30 +229,30 @@ export function PerformanceOptimizer() {
     return 'code'
   }
 
-  const normalizeImpact = (impact: any): OptimizationSuggestion['impact'] => {
+  const normalizeImpact = (impact: unknown): OptimizationSuggestion['impact'] => {
     const impactStr = String(impact).toLowerCase()
     if (impactStr.includes('high') || impactStr.includes('critical')) return 'high'
     if (impactStr.includes('low') || impactStr.includes('minor')) return 'low'
     return 'medium'
   }
 
-  const normalizeEffort = (effort: any): OptimizationSuggestion['effort'] => {
+  const normalizeEffort = (effort: unknown): OptimizationSuggestion['effort'] => {
     const effortStr = String(effort).toLowerCase()
     if (effortStr.includes('high') || effortStr.includes('difficult') || effortStr.includes('hard')) return 'high'
     if (effortStr.includes('low') || effortStr.includes('easy') || effortStr.includes('simple')) return 'low'
     return 'medium'
   }
 
-  const normalizeBundleAnalysis = (analysis: any): BundleAnalysis => {
+  const normalizeBundleAnalysis = (analysis: unknown): BundleAnalysis => {
     return {
       totalSize: Number(analysis.total_size ?? analysis.bundle_size ?? 0),
       gzippedSize: Number(analysis.gzipped_size ?? analysis.compressed_size ?? 0),
-      chunks: Array.isArray(analysis.chunks) ? analysis.chunks.map((chunk: any) => ({
+      chunks: Array.isArray(analysis.chunks) ? analysis.chunks.map((chunk: unknown) => ({
         name: chunk.name ?? chunk.filename ?? 'Unknown Chunk',
         size: Number(chunk.size ?? chunk.file_size ?? 0),
         modules: Number(chunk.modules ?? chunk.module_count ?? 0)
       })) : [],
-      duplicates: Array.isArray(analysis.duplicates) ? analysis.duplicates.map((dup: any) => ({
+      duplicates: Array.isArray(analysis.duplicates) ? analysis.duplicates.map((dup: unknown) => ({
         module: dup.module ?? dup.name ?? 'Unknown Module',
         instances: Number(dup.instances ?? dup.count ?? 0),
         totalSize: Number(dup.total_size ?? dup.size ?? 0)
@@ -321,7 +321,7 @@ export function PerformanceOptimizer() {
 
         // Handle historical data
         if (Array.isArray(perfData.historical_data)) {
-          setHistoricalData(perfData.historical_data.map((point: any) => ({
+          setHistoricalData(perfData.historical_data.map((point: unknown) => ({
             time: point.time ?? point.timestamp ?? new Date().toLocaleTimeString(),
             performance: Number(point.performance_score ?? point.score ?? 0),
             responseTime: Number(point.response_time ?? 0),
@@ -458,7 +458,7 @@ export function PerformanceOptimizer() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant="outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>

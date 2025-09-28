@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import Image from "next/image"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -89,9 +90,9 @@ export function StoreItems() {
   const [userCurrency, setUserCurrency] = useState<UserCurrency>({ coins: 0, premium: 0 })
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState<string>('all')
-  const [rarityFilter, setRarityFilter] = useState<string>('all')
-  const [sortBy, setSortBy] = useState<string>('featured')
+  const [categoryFilter, setCategoryFilter] = useState<string>(&apos;all')
+  const [rarityFilter, setRarityFilter] = useState<string>(&apos;all')
+  const [sortBy, setSortBy] = useState<string>(&apos;featured')
   const [showOwned, setShowOwned] = useState(false)
   const [selectedItem, setSelectedItem] = useState<StoreItem | null>(null)
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false)
@@ -104,7 +105,7 @@ export function StoreItems() {
 
   const loadStoreItems = async () => {
     try {
-      const response = await apiRequest(() => fetch('/api/store/items'))
+      const response = await apiRequest(() => fetch(&apos;/api/store/items'))
       if (response) {
         setItems(response)
       }

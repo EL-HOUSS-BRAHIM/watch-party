@@ -158,7 +158,7 @@ export function UserAnalytics() {
   }
 
   const getAchievementIcon = (icon: string) => {
-    const iconMap: { [key: string]: React.ComponentType<any> } = {
+    const iconMap: { [key: string]: React.ComponentType<Record<string, unknown>> } = {
       trophy: Trophy,
       star: Star,
       target: Target,
@@ -451,7 +451,7 @@ export function UserAnalytics() {
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(value) => [formatDuration(value as number), 'Watch Time']} />
+                      <Tooltip formatter={(value) => [formatDuration(value as number), &apos;Watch Time']} />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>

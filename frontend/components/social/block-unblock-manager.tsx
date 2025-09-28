@@ -58,12 +58,12 @@ export function BlockUnblockManager() {
   const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filter, setFilter] = useState<'all' | 'full' | 'messages' | 'parties' | 'profile'>('all')
+  const [filter, setFilter] = useState<'all' | 'full' | 'messages' | 'parties' | 'profile'>(&apos;all')
   const [showBlockDialog, setShowBlockDialog] = useState(false)
   const [newBlockUser, setNewBlockUser] = useState('')
-  const [blockReason, setBlockReason] = useState<BlockReason['type']>('other')
+  const [blockReason, setBlockReason] = useState<BlockReason['type']>(&apos;other')
   const [customReason, setCustomReason] = useState('')
-  const [blockType, setBlockType] = useState<BlockedUser['blockType']>('full')
+  const [blockType, setBlockType] = useState<BlockedUser['blockType']>(&apos;full')
 
   useEffect(() => {
     fetchBlockedUsers()
@@ -236,7 +236,7 @@ export function BlockUnblockManager() {
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-2 mb-1">
                 <h3 className="font-medium truncate">{user.displayName}</h3>
-                <Badge variant={getBlockTypeColor(user.blockType) as any}>
+                <Badge variant={getBlockTypeColor(user.blockType) as Record<string, unknown>}>
                   {getBlockTypeIcon(user.blockType)}
                   <span className="ml-1 capitalize">{user.blockType}</span>
                 </Badge>
@@ -446,7 +446,7 @@ export function BlockUnblockManager() {
           />
         </div>
         
-        <Select value={filter} onValueChange={(value: any) => setFilter(value)}>
+        <Select value={filter} onValueChange={(value: unknown) => setFilter(value)}>
           <SelectTrigger className="w-full sm:w-48">
             <Filter className="h-4 w-4 mr-2" />
             <SelectValue />
@@ -468,11 +468,11 @@ export function BlockUnblockManager() {
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <Badge variant="outline">
                 <Ban className="h-3 w-3 mr-1" />
-                Full: {blockedUsers.filter(u => u.blockType === 'full').length}
+                Full: {blockedUsers.filter(u => u.blockType === &apos;full').length}
               </Badge>
               <Badge variant="outline">
                 <MessageCircle className="h-3 w-3 mr-1" />
-                Messages: {blockedUsers.filter(u => u.blockType === 'messages').length}
+                Messages: {blockedUsers.filter(u => u.blockType === &apos;messages').length}
               </Badge>
             </div>
           </CardTitle>

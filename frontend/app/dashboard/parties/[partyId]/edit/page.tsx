@@ -36,7 +36,7 @@ import {
   Copy,
   Share
 } from "lucide-react"
-import { format, parseISO } from "date-fns"
+import { parseISO } from "date-fns"
 
 // Validation schema
 const partyFormSchema = z.object({
@@ -375,8 +375,8 @@ export default function EditPartyPage() {
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-2xl font-bold mb-4">Party Not Found</h1>
-          <p className="text-gray-600 mb-4">The party you're looking for doesn't exist.</p>
-          <Button onClick={() => router.push("/dashboard/parties")}>
+          <p className="text-gray-600 mb-4">The party you&apos;re looking for doesn't exist.</p>
+          <Button onClick={() => router.push(&quot;/dashboard/parties")}>
             Back to Parties
           </Button>
         </div>
@@ -512,7 +512,7 @@ export default function EditPartyPage() {
             <CardContent className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  {watchedValues.isPublic ? <Globe className="h-4 w-4" /> : <Lock className="h-4 w-4" />}
+                  {watchedValues.isPublic ? <Globe className="h-4 w-4" /> : <Lock className=&quot;h-4 w-4" />}
                   <div>
                     <Label htmlFor="isPublic">Public Party</Label>
                     <p className="text-sm text-gray-600">
@@ -611,7 +611,7 @@ export default function EditPartyPage() {
                 <Users className="h-5 w-5" />
                 Participants ({party.participants.length})
               </CardTitle>
-              <CardDescription>Manage who's in your party</CardDescription>
+              <CardDescription>Manage who&apos;s in your party</CardDescription>
             </CardHeader>
             <CardContent>
               {party.participants.length > 0 ? (

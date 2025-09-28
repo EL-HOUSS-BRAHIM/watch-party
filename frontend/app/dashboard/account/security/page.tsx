@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -141,7 +142,7 @@ export default function SecuritySettingsPage() {
     setIsLoading(true)
     try {
       const sessionsData = await authService.getSessions()
-      const mappedSessions: LoginSession[] = (sessionsData || []).map((session: any) => ({
+      const mappedSessions: LoginSession[] = (sessionsData || []).map((session: unknown) => ({
         id: session.id,
         deviceName: session.device || session.device_name || "Unknown device",
         deviceType: (session.device_type || "desktop") as LoginSession["deviceType"],
@@ -417,7 +418,7 @@ export default function SecuritySettingsPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className="p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -456,7 +457,7 @@ export default function SecuritySettingsPage() {
                       className="absolute right-2 top-1/2 transform -translate-y-1/2"
                       onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                     >
-                      {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4" />}
                     </Button>
                   </div>
                   {errors.currentPassword && (
@@ -480,7 +481,7 @@ export default function SecuritySettingsPage() {
                       className="absolute right-2 top-1/2 transform -translate-y-1/2"
                       onClick={() => setShowNewPassword(!showNewPassword)}
                     >
-                      {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4" />}
                     </Button>
                   </div>
                   {errors.newPassword && <p className="text-sm text-destructive mt-1">{errors.newPassword.message}</p>}
@@ -502,7 +503,7 @@ export default function SecuritySettingsPage() {
                       className="absolute right-2 top-1/2 transform -translate-y-1/2"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
-                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4" />}
                     </Button>
                   </div>
                   {errors.confirmPassword && (
@@ -791,7 +792,7 @@ export default function SecuritySettingsPage() {
                 </Button>
               </div>
 
-              <Button onClick={() => setShowBackupCodes(false)} className="w-full">
+              <Button onClick={() => setShowBackupCodes(false)} className=&quot;w-full">
                 I've Saved My Backup Codes
               </Button>
             </div>

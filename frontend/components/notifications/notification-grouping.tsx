@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Bell, BellOff, Filter, Search, Trash2, Mail, CheckCheck, Clock, Star, Users, MessageSquare, Calendar, Zap, Settings, ChevronDown, Archive, X } from "lucide-react"
+import { Bell, BellOff, Filter, Search, Trash2, Mail, CheckCheck, Star, Users, MessageSquare, Calendar, Zap, Settings, ChevronDown, Archive } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -36,7 +36,7 @@ interface Notification {
   createdAt: string
   readAt?: string
   actionUrl?: string
-  actionData?: any
+  actionData?: unknown
   priority: "low" | "normal" | "high"
   
   sender?: {
@@ -93,13 +93,13 @@ export default function NotificationGrouping({ className }: NotificationGrouping
   const loadNotifications = async () => {
     try {
       const data = await notificationsAPI.getNotifications()
-      const items = Array.isArray((data as any)?.results)
-        ? (data as any).results
-        : Array.isArray((data as any)?.notifications)
-          ? (data as any).notifications
+      const items = Array.isArray((data as Record<string, unknown>)?.results)
+        ? (data as Record<string, unknown>).results
+        : Array.isArray((data as Record<string, unknown>)?.notifications)
+          ? (data as Record<string, unknown>).notifications
           : []
 
-      const mapped = items.map((item: any) => ({
+      const mapped = items.map((item: unknown) => ({
         id: item.id,
         type: item.type || "system",
         title: item.title || item.message || "Notification",
@@ -419,7 +419,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
     return (
       <div className="space-y-2">
         <Collapsible open={group.isExpanded} onOpenChange={() => toggleGroupExpansion(group.key)}>
-          <Card className={`transition-all ${group.unreadCount > 0 ? 'border-l-4 border-l-primary' : ''}`}>
+          <Card className={`transition-all ${group.unreadCount > 0 ? &apos;border-l-4 border-l-primary' : ''}`}>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <Checkbox

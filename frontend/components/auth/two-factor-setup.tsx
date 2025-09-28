@@ -94,7 +94,7 @@ export function TwoFactorSetup() {
         title: "2FA Enabled!",
         description: "Two-factor authentication has been successfully enabled",
       })
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err?.message || "Invalid verification code. Please try again.")
     } finally {
       setIsVerifying(false)
@@ -115,7 +115,7 @@ export function TwoFactorSetup() {
         </CardHeader>
         <CardContent>
           <Button 
-            onClick={() => window.location.href = "/dashboard"}
+            onClick={() => window.location.href = &quot;/dashboard"}
             className="w-full"
           >
             Continue to Dashboard
@@ -182,7 +182,7 @@ export function TwoFactorSetup() {
                   type="button"
                   variant="outline"
                   size="icon"
-                  onClick={() => copyToClipboard(setupData.secret_key, "Secret key")}
+                  onClick={() => copyToClipboard(setupData.secret_key, &quot;Secret key")}
                 >
                   <Copy className="w-4 h-4" />
                 </Button>

@@ -74,7 +74,7 @@ const rarityBorders = {
 
 export default function UserAchievementsPage() {
   const params = useParams()
-  const [filter, setFilter] = useState<'all' | 'completed' | 'in-progress'>('all')
+  const [filter, setFilter] = useState<'all' | 'completed' | 'in-progress'>(&apos;all')
   
   const filteredAchievements = achievements.filter(achievement => {
     switch (filter) {
@@ -133,7 +133,7 @@ export default function UserAchievementsPage() {
             ].map(({ key, label }) => (
               <button
                 key={key}
-                onClick={() => setFilter(key as any)}
+                onClick={() => setFilter(key as Record<string, unknown>)}
                 className={`px-6 py-2 rounded-md font-medium transition-all ${
                   filter === key
                     ? 'bg-yellow-400 text-black'

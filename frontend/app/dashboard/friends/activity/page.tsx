@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Image from "next/image"
+import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -59,7 +60,7 @@ const fallbackId = (prefix: string) =>
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
-const resolveActivityType = (rawType: any): ActivityItem['type'] => {
+const resolveActivityType = (rawType: unknown): ActivityItem['type'] => {
   const type = typeof rawType === 'string' ? rawType.toLowerCase() : '';
 
   if (type.includes('friend')) return 'friend_added';
@@ -70,7 +71,7 @@ const resolveActivityType = (rawType: any): ActivityItem['type'] => {
   return 'watch_video';
 };
 
-const normalizePrivacy = (privacy: any): ActivityItem['privacy'] => {
+const normalizePrivacy = (privacy: unknown): ActivityItem['privacy'] => {
   const value = typeof privacy === 'string' ? privacy.toLowerCase() : '';
   if (value === 'friends' || value === 'friends_only') return 'friends_only';
   if (value === 'private') return 'private';
@@ -85,7 +86,7 @@ const formatTimestamp = (timestamp: string) => {
   return date.toLocaleString();
 };
 
-const normalizeActivity = (activity: any): ActivityItem => {
+const normalizeActivity = (activity: unknown): ActivityItem => {
   const activityType = resolveActivityType(activity?.activity_type ?? activity?.type);
   const user = activity?.user ?? {};
   const metadata = activity?.metadata ?? activity?.content ?? {};
@@ -128,7 +129,7 @@ const normalizeActivity = (activity: any): ActivityItem => {
 export default function FriendsActivityFeed() {
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | ActivityItem['type']>('all');
+  const [filter, setFilter] = useState<'all' | ActivityItem['type']>(&apos;all');
   const [timeframe, setTimeframe] = useState('today');
   const { toast } = useToast();
 
@@ -145,7 +146,7 @@ export default function FriendsActivityFeed() {
 
       const response = await usersAPI.getActivity(params);
       const results = Array.isArray(response?.results) ? response.results : [];
-      setActivities(results.map((item: any) => normalizeActivity(item)));
+      setActivities(results.map((item: unknown) => normalizeActivity(item)));
     } catch (error) {
       console.error('Failed to fetch activities:', error);
       toast({
@@ -244,7 +245,7 @@ export default function FriendsActivityFeed() {
               <CardContent className="p-12 text-center">
                 <Clock className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-medium mb-2">No activity yet</h3>
-                <p className="text-muted-foreground">Your friends haven't been active recently.</p>
+                <p className="text-muted-foreground">Your friends haven&apos;t been active recently.</p>
               </CardContent>
             </Card>
           ) : (
@@ -256,7 +257,7 @@ export default function FriendsActivityFeed() {
                       <Avatar className="h-12 w-12">
                         <AvatarImage src={activity.user.avatar} alt={activity.user.displayName} />
                         <AvatarFallback>
-                          {activity.user.displayName.split(' ').map(n => n[0]).join('')}
+                          {activity.user.displayName.split(' ').map(n => n[0]).join(&apos;')}
                         </AvatarFallback>
                       </Avatar>
                       {activity.user.isOnline && (

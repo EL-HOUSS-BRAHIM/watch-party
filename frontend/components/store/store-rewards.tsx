@@ -92,7 +92,7 @@ export function StoreRewards() {
 
   const loadRewards = async () => {
     try {
-      const response = await apiRequest(() => fetch('/api/store/rewards'))
+      const response = await apiRequest(() => fetch(&apos;/api/store/rewards'))
       if (response) {
         setRewards(response)
       }
@@ -362,7 +362,7 @@ function DailyRewardCard({
       case 'item':
         return (
           <div className="text-center">
-            <div className="text-2xl mb-1">{dailyReward.reward.itemIcon || '📦'}</div>
+            <div className="text-2xl mb-1">{dailyReward.reward.itemIcon || &apos;📦'}</div>
             <div className="text-xs">{dailyReward.reward.itemName}</div>
           </div>
         )
@@ -488,7 +488,7 @@ function RewardCard({
       return (
         <div className="flex items-center space-x-1">
           <Crown className="h-4 w-4 text-purple-500" />
-          <span>"{reward.value.title}"</span>
+          <span>&quot;{reward.value.title}"</span>
         </div>
       )
     }
@@ -550,7 +550,7 @@ function RewardCard({
                   {getRequirementIcon(req.type)}
                   <span>{req.description}</span>
                 </div>
-                <span className={req.current >= req.target ? 'text-green-500' : ''}>
+                <span className={req.current >= req.target ? &apos;text-green-500' : ''}>
                   {req.current}/{req.target}
                 </span>
               </div>
@@ -575,7 +575,7 @@ function RewardCard({
               Claimed
             </Button>
           ) : reward.isClaimable ? (
-            <Button onClick={() => onClaim(reward.id)} className="w-full">
+            <Button onClick={() => onClaim(reward.id)} className=&quot;w-full">
               <Gift className="h-4 w-4 mr-2" />
               Claim Reward
             </Button>

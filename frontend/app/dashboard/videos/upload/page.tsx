@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import { useState, useCallback } from "react"
 import { Upload, X, Globe, Lock, Users, AlertCircle, CheckCircle, FileVideo, ImageIcon } from "lucide-react"
 import { WatchPartyButton } from "@/components/ui/watch-party-button"
@@ -274,7 +275,7 @@ export default function VideoUploadPage() {
   const router = useRouter()
   const [files, setFiles] = useState<UploadFile[]>([])
   const [uploading, setUploading] = useState(false)
-  const [currentStep, setCurrentStep] = useState<"upload" | "details">("upload")
+  const [currentStep, setCurrentStep] = useState<"upload" | "details">(&quot;upload")
   const [metadata, setMetadata] = useState<VideoMetadata>({
     title: "",
     description: "",
@@ -306,7 +307,7 @@ export default function VideoUploadPage() {
     setUploading(true)
 
     // Update status to uploading
-    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: "uploading" as const } : f)))
+    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: &quot;uploading" as const } : f)))
 
     // Simulate upload progress
     for (let progress = 0; progress <= 100; progress += 10) {
@@ -315,7 +316,7 @@ export default function VideoUploadPage() {
     }
 
     // Switch to processing
-    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: "processing" as const, progress: 0 } : f)))
+    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: &quot;processing" as const, progress: 0 } : f)))
 
     // Simulate processing
     for (let progress = 0; progress <= 100; progress += 20) {
@@ -354,7 +355,7 @@ export default function VideoUploadPage() {
     router.push("/dashboard/videos")
   }
 
-  const completedFiles = files.filter((f) => f.status === "completed")
+  const completedFiles = files.filter((f) => f.status === &quot;completed")
   const canProceed = completedFiles.length > 0
 
   return (
@@ -364,7 +365,7 @@ export default function VideoUploadPage() {
         <p className="text-muted-foreground">Share your content with the WatchParty community</p>
       </div>
 
-      <Tabs value={currentStep} onValueChange={(value) => setCurrentStep(value as any)}>
+      <Tabs value={currentStep} onValueChange={(value) => setCurrentStep(value as Record<string, unknown>)}>
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="upload">Upload Files</TabsTrigger>
           <TabsTrigger value="details" disabled={!canProceed}>
@@ -386,7 +387,7 @@ export default function VideoUploadPage() {
 
           {canProceed && (
             <div className="flex justify-end">
-              <WatchPartyButton onClick={() => setCurrentStep("details")}>Continue to Details</WatchPartyButton>
+              <WatchPartyButton onClick={() => setCurrentStep(&quot;details")}>Continue to Details</WatchPartyButton>
             </div>
           )}
         </TabsContent>
@@ -445,7 +446,7 @@ export default function VideoUploadPage() {
                   <WatchPartySelect
                     options={visibilityOptions}
                     value={metadata.visibility}
-                    onValueChange={(value) => setMetadata((prev) => ({ ...prev, visibility: value as any }))}
+                    onValueChange={(value) => setMetadata((prev) => ({ ...prev, visibility: value as Record<string, unknown> }))}
                   />
                 </FormField>
 
@@ -487,7 +488,7 @@ export default function VideoUploadPage() {
             </div>
 
             <FormActions>
-              <WatchPartyButton variant="outline" onClick={() => setCurrentStep("upload")}>
+              <WatchPartyButton variant="outline" onClick={() => setCurrentStep(&quot;upload")}>
                 Back
               </WatchPartyButton>
               <WatchPartyButton type="submit">Publish Videos</WatchPartyButton>

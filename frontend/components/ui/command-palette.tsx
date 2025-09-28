@@ -39,7 +39,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "Go to Dashboard",
         description: "Navigate to the main dashboard",
         icon: <Home className="h-4 w-4" />,
-        action: () => router.push("/dashboard"),
+        action: () => router.push(&quot;/dashboard"),
         keywords: ["dashboard", "home", "main"],
         category: "Navigation",
       },
@@ -48,7 +48,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "Create New Party",
         description: "Start a new watch party",
         icon: <Plus className="h-4 w-4" />,
-        action: () => router.push("/dashboard/parties/create"),
+        action: () => router.push(&quot;/dashboard/parties/create"),
         keywords: ["create", "new", "party", "watch"],
         category: "Actions",
       },
@@ -57,7 +57,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "View Parties",
         description: "See all your parties",
         icon: <Users className="h-4 w-4" />,
-        action: () => router.push("/dashboard/parties"),
+        action: () => router.push(&quot;/dashboard/parties"),
         keywords: ["parties", "watch", "rooms"],
         category: "Navigation",
       },
@@ -66,7 +66,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "Video Library",
         description: "Manage your video library",
         icon: <Video className="h-4 w-4" />,
-        action: () => router.push("/dashboard/videos"),
+        action: () => router.push(&quot;/dashboard/videos"),
         keywords: ["videos", "library", "media"],
         category: "Navigation",
       },
@@ -75,7 +75,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "Friends",
         description: "Manage your friends list",
         icon: <Users className="h-4 w-4" />,
-        action: () => router.push("/dashboard/friends"),
+        action: () => router.push(&quot;/dashboard/friends"),
         keywords: ["friends", "social", "contacts"],
         category: "Navigation",
       },
@@ -99,7 +99,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "Settings",
         description: "Manage your account settings",
         icon: <Settings className="h-4 w-4" />,
-        action: () => router.push("/dashboard/settings"),
+        action: () => router.push(&quot;/dashboard/settings"),
         keywords: ["settings", "preferences", "account"],
         category: "Navigation",
       },
@@ -108,7 +108,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "Billing",
         description: "Manage your subscription",
         icon: <CreditCard className="h-4 w-4" />,
-        action: () => router.push("/dashboard/billing"),
+        action: () => router.push(&quot;/dashboard/billing"),
         keywords: ["billing", "subscription", "payment"],
         category: "Navigation",
       },
@@ -173,7 +173,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
     }
 
     document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener("keydown", handleKeyDown)
+    return () => document.removeEventListener(&quot;keydown", handleKeyDown)
   }, [open, selectedIndex, filteredCommands, onOpenChange])
 
   const handleCommandSelect = (command: Command) => {
@@ -229,7 +229,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
           ))}
 
           {filteredCommands.length === 0 && (
-            <div className="p-8 text-center text-gray-500">No commands found for "{query}"</div>
+            <div className="p-8 text-center text-gray-500">No commands found for &quot;{query}"</div>
           )}
         </ScrollArea>
 

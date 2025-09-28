@@ -346,7 +346,7 @@ export default function NotificationsPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className="p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -372,7 +372,7 @@ export default function NotificationsPage() {
                 Mark All Read
               </Button>
             )}
-            <Button variant="outline" onClick={() => router.push("/dashboard/settings")}>
+            <Button variant="outline" onClick={() => router.push(&quot;/dashboard/settings")}>
               <Settings className="h-4 w-4 mr-2" />
               Settings
             </Button>
@@ -590,13 +590,13 @@ export default function NotificationsPage() {
                               <div className="flex items-center gap-2">
                                 {notification.type === "friend_request" && (
                                   <>
-                                    <Button size="sm" onClick={() => handleNotificationAction(notification, "accept")}>
+                                    <Button size="sm" onClick={() => handleNotificationAction(notification, &quot;accept")}>
                                       Accept
                                     </Button>
                                     <Button
                                       variant="outline"
                                       size="sm"
-                                      onClick={() => handleNotificationAction(notification, "decline")}
+                                      onClick={() => handleNotificationAction(notification, &quot;decline")}
                                     >
                                       Decline
                                     </Button>
@@ -606,7 +606,7 @@ export default function NotificationsPage() {
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => handleNotificationAction(notification, "view")}
+                                    onClick={() => handleNotificationAction(notification, &quot;view")}
                                   >
                                     View
                                   </Button>

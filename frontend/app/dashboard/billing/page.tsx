@@ -129,7 +129,7 @@ export default function BillingPage() {
   })
 
   // Helper functions to map API types to local types
-  const mapAPISubscriptionToLocal = (apiSub: any): LocalSubscription => ({
+  const mapAPISubscriptionToLocal = (apiSub: unknown): LocalSubscription => ({
     id: apiSub.subscription?.id || apiSub.id,
     plan: {
       id: apiSub.subscription?.plan?.id || apiSub.plan?.id,
@@ -171,7 +171,7 @@ export default function BillingPage() {
     number: apiHistory.id,
     amount: apiHistory.amount,
     currency: apiHistory.currency,
-    status: apiHistory.status as any,
+    status: apiHistory.status as Record<string, unknown>,
     date: apiHistory.created_at,
     dueDate: apiHistory.created_at,
     description: apiHistory.description,
@@ -322,7 +322,7 @@ export default function BillingPage() {
     try {
       const response = await billingAPI.subscribe({
         plan_id: planId,
-        payment_method_id: paymentMethods.find(pm => pm.isDefault)?.id || "",
+        payment_method_id: paymentMethods.find(pm => pm.isDefault)?.id || &quot;",
       })
 
       if (response.success) {
@@ -450,7 +450,7 @@ export default function BillingPage() {
       id: "number",
       header: "Invoice",
       accessorKey: "number" as keyof Invoice,
-      cell: ({ row }: { row: Invoice }) => <div className="font-medium">#{row.number}</div>,
+      cell: ({ row }: { row: Invoice }) => <div className=&quot;font-medium">#{row.number}</div>,
     },
     {
       id: "description",
@@ -460,12 +460,12 @@ export default function BillingPage() {
     {
       id: "amount",
       header: "Amount",
-      cell: ({ row }: { row: Invoice }) => <div className="font-medium">${row.amount.toFixed(2)}</div>,
+      cell: ({ row }: { row: Invoice }) => <div className=&quot;font-medium">${row.amount.toFixed(2)}</div>,
     },
     {
       id: "date",
       header: "Date",
-      cell: ({ row }: { row: Invoice }) => <div>{format(new Date(row.date), "MMM dd, yyyy")}</div>,
+      cell: ({ row }: { row: Invoice }) => <div>{format(new Date(row.date), &quot;MMM dd, yyyy")}</div>,
     },
     {
       id: "status",
@@ -501,7 +501,7 @@ export default function BillingPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className="p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -549,7 +549,7 @@ export default function BillingPage() {
                       {subscription.trialEnd && (
                         <div className="flex items-center justify-between text-sm">
                           <span>Trial ends:</span>
-                          <span>{format(new Date(subscription.trialEnd), "MMM dd, yyyy")}</span>
+                          <span>{format(new Date(subscription.trialEnd), &quot;MMM dd, yyyy")}</span>
                         </div>
                       )}
                     </div>
@@ -760,7 +760,7 @@ export default function BillingPage() {
                               ))}
                             </div>
 
-                            <Button onClick={() => changePlan(plan.id)} disabled={isProcessing} className="w-full">
+                            <Button onClick={() => changePlan(plan.id)} disabled={isProcessing} className=&quot;w-full">
                               Select Plan
                             </Button>
                           </CardContent>
@@ -794,7 +794,7 @@ export default function BillingPage() {
                         <Label>Payment Type</Label>
                         <Select
                           value={newPaymentMethod.type}
-                          onValueChange={(value) => setNewPaymentMethod((prev) => ({ ...prev, type: value as any }))}
+                          onValueChange={(value) => setNewPaymentMethod((prev) => ({ ...prev, type: value as Record<string, unknown> }))}
                         >
                           <SelectTrigger>
                             <SelectValue />

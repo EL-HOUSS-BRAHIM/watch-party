@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -310,7 +310,7 @@ export default function FriendSuggestionsPage() {
   }
 
   const getCompatibilityColor = (score: number) => {
-    if (score >= 80) return "text-green-600 bg-green-50"
+    if (score >= 80) return &quot;text-green-600 bg-green-50"
     if (score >= 60) return "text-yellow-600 bg-yellow-50"
     return "text-gray-600 bg-gray-50"
   }
@@ -395,7 +395,7 @@ export default function FriendSuggestionsPage() {
               <div className="flex gap-2">
                 <Select
                   value={filters.location}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, location: value as any }))}
+                  onValueChange={(value) => setFilters(prev => ({ ...prev, location: value as Record<string, unknown> }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -409,7 +409,7 @@ export default function FriendSuggestionsPage() {
 
                 <Select
                   value={filters.activity}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, activity: value as any }))}
+                  onValueChange={(value) => setFilters(prev => ({ ...prev, activity: value as Record<string, unknown> }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -423,7 +423,7 @@ export default function FriendSuggestionsPage() {
 
                 <Select
                   value={filters.compatibility}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, compatibility: value as any }))}
+                  onValueChange={(value) => setFilters(prev => ({ ...prev, compatibility: value as Record<string, unknown> }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -448,7 +448,7 @@ export default function FriendSuggestionsPage() {
                   <UserPlus className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No suggestions found</h3>
                   <p className="text-gray-600">
-                    {searchQuery || Object.values(filters).some(f => f !== "all" && f !== false)
+                    {searchQuery || Object.values(filters).some(f => f !== &quot;all" && f !== false)
                       ? "Try adjusting your search or filters"
                       : "Check back later for new friend suggestions"
                     }

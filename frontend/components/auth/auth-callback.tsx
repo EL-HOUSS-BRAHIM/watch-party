@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { useAuth } from "@/contexts/auth-context"
+
 import { useToast } from "@/hooks/use-toast"
 import { tokenStorage } from "@/lib/auth/token-storage"
 import { Loader2, AlertCircle } from "lucide-react"
@@ -121,7 +121,7 @@ export function AuthCallback() {
             <p className="text-sm text-muted-foreground">{error}</p>
             <div className="flex space-x-2">
               <Button 
-                onClick={() => router.push("/login")}
+                onClick={() => router.push(&quot;/login")}
                 className="flex-1"
               >
                 Back to Login

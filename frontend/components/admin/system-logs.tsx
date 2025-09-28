@@ -333,7 +333,7 @@ export default function SystemLogs() {
                   {log.details?.statusCode && (
                     <div className="flex justify-between">
                       <span className="text-gray-600">Status:</span>
-                      <Badge variant={log.details.statusCode >= 400 ? "destructive" : "default"}>
+                      <Badge variant={log.details.statusCode >= 400 ? &quot;destructive" : "default"}>
                         {log.details.statusCode}
                       </Badge>
                     </div>
@@ -412,7 +412,7 @@ export default function SystemLogs() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => loadLogs(true)} disabled={isRefreshing}>
-            {isRefreshing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+            {isRefreshing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className=&quot;mr-2 h-4 w-4" />}
             Refresh
           </Button>
           <Button

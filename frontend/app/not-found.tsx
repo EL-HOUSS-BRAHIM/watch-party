@@ -14,7 +14,7 @@ export default function NotFound() {
             <AlertTriangle className="w-8 h-8 text-white" />
           </div>
           <CardTitle className="text-2xl text-white">Page Not Found</CardTitle>
-          <CardDescription className="text-white/70">The page you're looking for doesn't exist or has been moved.</CardDescription>
+          <CardDescription className="text-white/70">The page you&apos;re looking for doesn't exist or has been moved.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">

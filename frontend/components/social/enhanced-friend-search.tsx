@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { Search, UserPlus, Users, Filter, MapPin, Activity, Star, Loader2, UserCheck, Clock, X } from "lucide-react"
+import { Search, UserPlus, Users, MapPin, Activity, Star, Loader2, UserCheck, Clock, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -73,7 +73,7 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
   // Native debounce function
   const debounce = (func: Function, wait: number) => {
     let timeout: NodeJS.Timeout
-    return function executedFunction(...args: any[]) {
+    return function executedFunction(...args: unknown[]) {
       const later = () => {
         clearTimeout(timeout)
         func(...args)

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from "next/image"
 import { 
   EyeIcon, 
   HeartIcon, 
@@ -103,8 +104,8 @@ const formatDuration = (seconds: number) => {
 }
 
 export default function VideoAnalyticsPage() {
-  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d')
-  const [sortBy, setSortBy] = useState<'views' | 'likes' | 'engagement' | 'revenue'>('views')
+  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>(&apos;30d')
+  const [sortBy, setSortBy] = useState<'views' | 'likes' | 'engagement' | 'revenue'>(&apos;views')
 
   const sortedVideos = [...videoAnalytics].sort((a, b) => {
     switch (sortBy) {
@@ -151,7 +152,7 @@ export default function VideoAnalyticsPage() {
             ].map(({ key, label }) => (
               <button
                 key={key}
-                onClick={() => setTimeRange(key as any)}
+                onClick={() => setTimeRange(key as Record<string, unknown>)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                   timeRange === key
                     ? 'bg-blue-500 text-white'
@@ -166,7 +167,7 @@ export default function VideoAnalyticsPage() {
           {/* Sort Options */}
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e) => setSortBy(e.target.value as Record<string, unknown>)}
             className="px-4 py-2 bg-white/10 rounded-lg border border-white/20 text-white focus:outline-none focus:border-blue-400"
           >
             <option value="views">Sort by Views</option>
@@ -284,7 +285,7 @@ export default function VideoAnalyticsPage() {
                     <td className="p-4">
                       <div className="text-white font-medium">{formatNumber(video.views)}</div>
                       <div className={`flex items-center gap-1 text-sm ${
-                        video.viewsChange >= 0 ? 'text-green-400' : 'text-red-400'
+                        video.viewsChange >= 0 ? &apos;text-green-400' : 'text-red-400'
                       }`}>
                         {video.viewsChange >= 0 ? (
                           <ArrowTrendingUpIcon className="w-3 h-3" />
@@ -297,7 +298,7 @@ export default function VideoAnalyticsPage() {
                     <td className="p-4">
                       <div className="text-white font-medium">{formatNumber(video.likes)}</div>
                       <div className={`flex items-center gap-1 text-sm ${
-                        video.likesChange >= 0 ? 'text-green-400' : 'text-red-400'
+                        video.likesChange >= 0 ? &apos;text-green-400' : 'text-red-400'
                       }`}>
                         {video.likesChange >= 0 ? (
                           <ArrowTrendingUpIcon className="w-3 h-3" />
@@ -310,7 +311,7 @@ export default function VideoAnalyticsPage() {
                     <td className="p-4">
                       <div className="text-white font-medium">{video.comments}</div>
                       <div className={`flex items-center gap-1 text-sm ${
-                        video.commentsChange >= 0 ? 'text-green-400' : 'text-red-400'
+                        video.commentsChange >= 0 ? &apos;text-green-400' : 'text-red-400'
                       }`}>
                         {video.commentsChange >= 0 ? (
                           <ArrowTrendingUpIcon className="w-3 h-3" />

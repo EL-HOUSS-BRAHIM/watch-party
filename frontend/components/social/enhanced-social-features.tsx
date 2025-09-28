@@ -87,7 +87,7 @@ interface ActivityFeedItem {
   likes: number
   comments: number
   isLiked: boolean
-  metadata?: any
+  metadata?: unknown
 }
 
 interface Achievement {
@@ -111,7 +111,7 @@ const fallbackId = (prefix: string) =>
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 10)}`
 
-const normalizeStats = (stats?: any, source?: any) => ({
+const normalizeStats = (stats?: unknown, source?: unknown) => ({
   partiesHosted:
     stats?.parties_hosted ?? stats?.hosted ?? stats?.partiesHosted ?? source?.parties_hosted ?? source?.hosted ?? 0,
   partiesJoined:
@@ -121,7 +121,7 @@ const normalizeStats = (stats?: any, source?: any) => ({
   watchTime: stats?.watch_time ?? stats?.watchTime ?? source?.watch_time ?? source?.watchTime ?? 0,
 })
 
-const normalizeUser = (friend: any): User => ({
+const normalizeUser = (friend: unknown): User => ({
   id: String(friend?.id ?? friend?.user_id ?? friend?.username ?? fallbackId("user")),
   username: friend?.username ?? friend?.handle ?? friend?.user?.username ?? "user",
   displayName:
@@ -153,7 +153,7 @@ const normalizeUser = (friend: any): User => ({
   stats: normalizeStats(friend?.stats, friend),
 })
 
-const normalizeCommunity = (group: any): Community => {
+const normalizeCommunity = (group: unknown): Community => {
   const tags = Array.isArray(group?.tags)
     ? group.tags
     : Array.isArray(group?.topics)
@@ -193,7 +193,7 @@ const normalizeCommunity = (group: any): Community => {
   }
 }
 
-const formatActivityContent = (activity: any): string => {
+const formatActivityContent = (activity: unknown): string => {
   if (!activity) {
     return "New activity"
   }
@@ -237,7 +237,7 @@ const formatActivityContent = (activity: any): string => {
   return "Shared an update"
 }
 
-const normalizeActivity = (activity: any): ActivityFeedItem => ({
+const normalizeActivity = (activity: unknown): ActivityFeedItem => ({
   id: String(activity?.id ?? activity?.activity_id ?? fallbackId("activity")),
   type:
     (activity?.activity_type ??
@@ -252,7 +252,7 @@ const normalizeActivity = (activity: any): ActivityFeedItem => ({
   metadata: activity?.metadata ?? {},
 })
 
-const normalizeAchievement = (achievement: any): Achievement => ({
+const normalizeAchievement = (achievement: unknown): Achievement => ({
   id: String(achievement?.id ?? achievement?.slug ?? fallbackId("achievement")),
   name: achievement?.name ?? achievement?.title ?? "Achievement",
   description: achievement?.description ?? achievement?.summary ?? "",
@@ -301,7 +301,7 @@ export function EnhancedSocialFeatures() {
 
       if (friendsResult.status === "fulfilled") {
         const friendResults = friendsResult.value?.results ?? []
-        friendResults.forEach((friend: any) => {
+        friendResults.forEach((friend: unknown) => {
           const normalized = normalizeUser(friend)
           combinedUsers.set(normalized.id, normalized)
         })
@@ -309,7 +309,7 @@ export function EnhancedSocialFeatures() {
 
       if (suggestionsResult.status === "fulfilled") {
         const suggestions = suggestionsResult.value ?? []
-        suggestions.forEach((friend: any) => {
+        suggestions.forEach((friend: unknown) => {
           const normalized = normalizeUser(friend)
           if (!combinedUsers.has(normalized.id)) {
             combinedUsers.set(normalized.id, normalized)
@@ -321,21 +321,21 @@ export function EnhancedSocialFeatures() {
 
       if (communitiesResult.status === "fulfilled") {
         const communityResults = communitiesResult.value?.results ?? []
-        setCommunities(communityResults.map((community: any) => normalizeCommunity(community)))
+        setCommunities(communityResults.map((community: unknown) => normalizeCommunity(community)))
       } else {
         setCommunities([])
       }
 
       if (activityResult.status === "fulfilled") {
         const activityResults = activityResult.value?.results ?? []
-        setActivityFeed(activityResults.map((activity: any) => normalizeActivity(activity)))
+        setActivityFeed(activityResults.map((activity: unknown) => normalizeActivity(activity)))
       } else {
         setActivityFeed([])
       }
 
       if (achievementsResult.status === "fulfilled") {
         const achievementResults = achievementsResult.value ?? []
-        setAchievements(achievementResults.map((achievement: any) => normalizeAchievement(achievement)))
+        setAchievements(achievementResults.map((achievement: unknown) => normalizeAchievement(achievement)))
       } else {
         setAchievements([])
       }
@@ -879,7 +879,7 @@ export function EnhancedSocialFeatures() {
                       {index === 0 && <Crown className="h-4 w-4 text-yellow-500" />}
                       {index === 1 && <Trophy className="h-4 w-4 text-gray-400" />}
                       {index === 2 && <Trophy className="h-4 w-4 text-orange-500" />}
-                      {index > 2 && <span className="text-sm font-medium">#{index + 1}</span>}
+                      {index > 2 && <span className=&quot;text-sm font-medium">#{index + 1}</span>}
                     </div>
 
                     <Avatar>

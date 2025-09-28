@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Textarea } from '@/components/ui/textarea'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -143,13 +143,13 @@ export default function ContentReportingTools({
   onClose,
   onSubmit
 }: ContentReportingProps) {
-  const [selectedReason, setSelectedReason] = useState<string>('')
+  const [selectedReason, setSelectedReason] = useState<string>(&apos;')
   const [description, setDescription] = useState('')
   const [evidence, setEvidence] = useState<File[]>([])
   const [anonymous, setAnonymous] = useState(false)
   const [blockUser, setBlockUser] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [step, setStep] = useState<'reason' | 'details' | 'confirmation'>('reason')
+  const [step, setStep] = useState<'reason' | 'details' | 'confirmation'>(&apos;reason')
 
   if (!isOpen) return null
 
@@ -257,7 +257,7 @@ export default function ContentReportingTools({
                 Cancel
               </Button>
               <Button 
-                onClick={() => setStep('details')}
+                onClick={() => setStep(&apos;details')}
                 disabled={!selectedReason}
               >
                 Next
@@ -387,10 +387,10 @@ export default function ContentReportingTools({
             </div>
 
             <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={() => setStep('reason')}>
+              <Button variant="outline" onClick={() => setStep(&apos;reason')}>
                 Back
               </Button>
-              <Button onClick={() => setStep('confirmation')}>
+              <Button onClick={() => setStep(&apos;confirmation')}>
                 Review Report
               </Button>
             </div>
@@ -478,7 +478,7 @@ export default function ContentReportingTools({
             </Card>
 
             <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={() => setStep('details')}>
+              <Button variant="outline" onClick={() => setStep(&apos;details')}>
                 Back
               </Button>
               <Button 

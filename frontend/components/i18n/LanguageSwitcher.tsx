@@ -156,7 +156,7 @@ export default function LanguageSwitcher({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
             <Languages className="w-5 h-5 text-muted-foreground" />
-            <h3 className="font-medium">{t('language.title')}</h3>
+            <h3 className="font-medium">{t(&apos;language.title')}</h3>
           </div>
           <Badge variant="outline" className="text-xs">
             {languages.length} {t('language.available')}

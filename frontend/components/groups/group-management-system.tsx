@@ -89,7 +89,7 @@ const DEFAULT_CATEGORIES = ["Entertainment", "Education", "Sports", "Gaming", "M
 
 const fallbackId = (prefix: string) => `${prefix}-${Math.random().toString(36).slice(2, 10)}`
 
-const extractCollection = (value: any): any[] => {
+const extractCollection = (value: unknown): unknown[] => {
   if (!value) return []
   if (Array.isArray(value)) return value
   if (Array.isArray(value?.results)) return value.results
@@ -97,7 +97,7 @@ const extractCollection = (value: any): any[] => {
   return []
 }
 
-const mapMemberStatus = (member: any): GroupMember["status"] => {
+const mapMemberStatus = (member: unknown): GroupMember["status"] => {
   const rawStatus = member?.status ?? (member?.is_banned ? "banned" : member?.is_active === false ? "inactive" : undefined)
 
   switch (rawStatus) {
@@ -110,7 +110,7 @@ const mapMemberStatus = (member: any): GroupMember["status"] => {
   }
 }
 
-const normalizeGroupMember = (member: any): GroupMember => {
+const normalizeGroupMember = (member: unknown): GroupMember => {
   const memberUser = member?.user ?? member
   const firstName = memberUser?.first_name ?? memberUser?.firstName
   const lastName = memberUser?.last_name ?? memberUser?.lastName
@@ -132,7 +132,7 @@ const normalizeGroupMember = (member: any): GroupMember => {
   }
 }
 
-const derivePrivacy = (group: any): Group["privacy"] => {
+const derivePrivacy = (group: unknown): Group["privacy"] => {
   if (group?.privacy === "invite-only" || group?.privacy === "private" || group?.privacy === "public") {
     return group.privacy
   }
@@ -144,7 +144,7 @@ const derivePrivacy = (group: any): Group["privacy"] => {
   return "public"
 }
 
-const normalizeGroup = (group: any): Group => {
+const normalizeGroup = (group: unknown): Group => {
   const backendId = typeof group?.id === "number" ? group.id : Number.parseInt(String(group?.id ?? ""), 10)
   const owner = group?.owner ?? group?.created_by ?? {}
   const firstName = owner?.first_name ?? owner?.firstName
@@ -152,9 +152,9 @@ const normalizeGroup = (group: any): Group => {
   const ownerName = (owner?.name ?? owner?.full_name ?? owner?.username ?? [firstName, lastName].filter(Boolean).join(" ")) || "Group Owner"
   const membership = group?.membership ?? {}
   const tags = Array.isArray(group?.tags)
-    ? group.tags.map((tag: any) => String(tag))
+    ? group.tags.map((tag: unknown) => String(tag))
     : Array.isArray(group?.topics)
-    ? group.topics.map((topic: any) => String(topic))
+    ? group.topics.map((topic: unknown) => String(topic))
     : []
   const memberCount =
     group?.member_count ??
@@ -385,7 +385,7 @@ export default function GroupManagementSystem() {
 
       if (result && selectedGroup?.id === result.normalized.id) {
         setSelectedGroup(result.normalized)
-        const members = extractCollection((result.detail as any)?.members).map((member) => normalizeGroupMember(member))
+        const members = extractCollection((result.detail as Record<string, unknown>)?.members).map((member) => normalizeGroupMember(member))
         setGroupMembers(members)
       }
 
@@ -423,7 +423,7 @@ export default function GroupManagementSystem() {
 
       if (result && selectedGroup?.id === result.normalized.id) {
         setSelectedGroup(result.normalized)
-        const members = extractCollection((result.detail as any)?.members).map((member) => normalizeGroupMember(member))
+        const members = extractCollection((result.detail as Record<string, unknown>)?.members).map((member) => normalizeGroupMember(member))
         setGroupMembers(members)
       }
 
@@ -445,7 +445,7 @@ export default function GroupManagementSystem() {
   const handleRoleChange = async (_memberId: string, _newRole: string) => {
     toast({
       title: "Action unavailable",
-      description: "Updating member roles requires a backend endpoint (\"/api/social/groups/<group_id>/members/<member_id>/\").",
+      description: "Updating member roles requires a backend endpoint (\"/api/social/groups/<group_id>/members/<member_id>/\&quot;).",
     })
   }
 
@@ -474,7 +474,7 @@ export default function GroupManagementSystem() {
       const result = await refreshGroup(group.id, group.backendId)
       if (result) {
         setSelectedGroup(result.normalized)
-        const members = extractCollection((result.detail as any)?.members).map((member) => normalizeGroupMember(member))
+        const members = extractCollection((result.detail as Record<string, unknown>)?.members).map((member) => normalizeGroupMember(member))
         setGroupMembers(members)
       }
     } catch (error) {
@@ -806,7 +806,7 @@ export default function GroupManagementSystem() {
                         <div className="flex items-center gap-3">
                           <Avatar>
                             <AvatarImage src={member.user.avatar || "/placeholder.svg"} />
-                            <AvatarFallback>{member.user.name?.charAt(0) ?? "?"}</AvatarFallback>
+                            <AvatarFallback>{member.user.name?.charAt(0) ?? &quot;?"}</AvatarFallback>
                           </Avatar>
                           <div>
                             <div className="flex items-center gap-2">

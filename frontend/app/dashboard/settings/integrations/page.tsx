@@ -154,7 +154,7 @@ export default function IntegrationsPage() {
   }, [definitions, connectionFor, status])
 
   const connectedCount = useMemo(
-    () => connections.filter(connection => connection.status === 'connected').length,
+    () => connections.filter(connection => connection.status === &apos;connected').length,
     [connections]
   )
 
@@ -215,7 +215,7 @@ export default function IntegrationsPage() {
                       key={service.name}
                       className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3"
                     >
-                      <span className="font-medium capitalize">{service.name.replace(/_/g, ' ')}</span>
+                      <span className="font-medium capitalize">{service.name.replace(/_/g, &apos; ')}</span>
                       <span className={service.status === 'up' ? 'text-green-300' : 'text-red-300'}>
                         {service.status === 'up' ? 'Operational' : 'Unavailable'}
                       </span>

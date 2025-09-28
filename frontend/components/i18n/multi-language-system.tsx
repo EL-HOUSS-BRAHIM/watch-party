@@ -317,7 +317,7 @@ export default function MultiLanguageSystem() {
         prev.map((lang) => {
           if (lang.code === languageCode) {
             const translatedCount =
-              translations.filter((t) => t.translations[languageCode] && t.translations[languageCode].trim() !== "")
+              translations.filter((t) => t.translations[languageCode] && t.translations[languageCode].trim() !== &quot;")
                 .length + 1
             return {
               ...lang,
@@ -733,7 +733,7 @@ export default function MultiLanguageSystem() {
 
                       <div className="grid gap-3">
                         {languages
-                          .filter((lang) => lang.code !== "en")
+                          .filter((lang) => lang.code !== &quot;en")
                           .map((language) => (
                             <div key={language.code}>
                               <Label className="text-sm font-medium flex items-center gap-2">
@@ -886,7 +886,7 @@ export default function MultiLanguageSystem() {
 
                 <div className="space-y-3">
                   {languages
-                    .filter((lang) => lang.code !== "en")
+                    .filter((lang) => lang.code !== &quot;en")
                     .map((language) => (
                       <div key={language.code}>
                         <Label className="text-sm font-medium flex items-center gap-2">

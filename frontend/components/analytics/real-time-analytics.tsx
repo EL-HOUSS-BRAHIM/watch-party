@@ -79,8 +79,8 @@ const mockLiveUsers: LiveUser[] = Array.from({ length: 25 }, (_, i) => ({
   id: `user-${i}`,
   username: `User${i + 1}`,
   location: ['US', 'UK', 'DE', 'FR', 'JP', 'CA', 'AU'][Math.floor(Math.random() * 7)],
-  device: ['desktop', 'mobile', 'tablet'][Math.floor(Math.random() * 3)] as any,
-  activity: ['watching', 'chatting', 'browsing', 'idle'][Math.floor(Math.random() * 4)] as any,
+  device: ['desktop', 'mobile', 'tablet'][Math.floor(Math.random() * 3)] as Record<string, unknown>,
+  activity: ['watching', 'chatting', 'browsing', 'idle'][Math.floor(Math.random() * 4)] as Record<string, unknown>,
   roomId: Math.random() > 0.3 ? `room-${Math.floor(Math.random() * 10)}` : undefined,
   joinedAt: new Date(Date.now() - Math.random() * 3600000),
 }));
@@ -154,7 +154,7 @@ export default function RealTimeAnalytics() {
           name: 'Active Users',
           value: realtimeData.active_users || dashboardData.active_users || 0,
           change: realtimeData.user_growth_rate || 0,
-          trend: (realtimeData.user_growth_rate || 0) > 0 ? 'up' : (realtimeData.user_growth_rate || 0) < 0 ? 'down' : 'stable',
+          trend: (realtimeData.user_growth_rate || 0) > 0 ? &apos;up' : (realtimeData.user_growth_rate || 0) < 0 ? 'down' : 'stable',
           unit: '',
           color: '#3b82f6',
         },
@@ -163,7 +163,7 @@ export default function RealTimeAnalytics() {
           name: 'Concurrent Streams',
           value: realtimeData.concurrent_streams || dashboardData.active_parties || 0,
           change: realtimeData.stream_growth_rate || 0,
-          trend: (realtimeData.stream_growth_rate || 0) > 0 ? 'up' : (realtimeData.stream_growth_rate || 0) < 0 ? 'down' : 'stable',
+          trend: (realtimeData.stream_growth_rate || 0) > 0 ? &apos;up' : (realtimeData.stream_growth_rate || 0) < 0 ? 'down' : 'stable',
           unit: '',
           color: '#10b981',
         },
@@ -172,7 +172,7 @@ export default function RealTimeAnalytics() {
           name: 'Messages/Min',
           value: realtimeData.messages_per_minute || 0,
           change: realtimeData.chat_activity_rate || 0,
-          trend: (realtimeData.chat_activity_rate || 0) > 0 ? 'up' : (realtimeData.chat_activity_rate || 0) < 0 ? 'down' : 'stable',
+          trend: (realtimeData.chat_activity_rate || 0) > 0 ? &apos;up' : (realtimeData.chat_activity_rate || 0) < 0 ? 'down' : 'stable',
           unit: '/min',
           color: '#f59e0b',
         },
@@ -181,14 +181,14 @@ export default function RealTimeAnalytics() {
           name: 'Bandwidth Usage',
           value: realtimeData.bandwidth_usage || 0,
           change: realtimeData.bandwidth_growth_rate || 0,
-          trend: (realtimeData.bandwidth_growth_rate || 0) > 0 ? 'up' : (realtimeData.bandwidth_growth_rate || 0) < 0 ? 'down' : 'stable',
+          trend: (realtimeData.bandwidth_growth_rate || 0) > 0 ? &apos;up' : (realtimeData.bandwidth_growth_rate || 0) < 0 ? 'down' : 'stable',
           unit: 'TB/h',
           color: '#ef4444',
         },
       ];
 
       // Transform live users data
-      const transformedLiveUsers: LiveUser[] = (realtimeData.live_users || []).map((user: any) => ({
+      const transformedLiveUsers: LiveUser[] = (realtimeData.live_users || []).map((user: unknown) => ({
         id: user.id,
         username: user.username,
         location: user.location || 'Unknown',
@@ -199,7 +199,7 @@ export default function RealTimeAnalytics() {
       })).slice(0, 25);
 
       // Transform active rooms data
-      const transformedActiveRooms: ActiveRoom[] = (realtimeData.active_rooms || []).map((room: any) => ({
+      const transformedActiveRooms: ActiveRoom[] = (realtimeData.active_rooms || []).map((room: unknown) => ({
         id: room.id,
         name: room.name,
         viewers: room.viewer_count,
@@ -248,7 +248,7 @@ export default function RealTimeAnalytics() {
           ...metric,
           value: Math.max(0, metric.value + (Math.random() - 0.5) * metric.value * 0.02),
           change: (Math.random() - 0.5) * 20,
-          trend: Math.random() > 0.5 ? 'up' : Math.random() > 0.25 ? 'down' : 'stable',
+          trend: Math.random() > 0.5 ? &apos;up' : Math.random() > 0.25 ? 'down' : 'stable',
         })));
 
         // Add new data point to time series
@@ -284,8 +284,8 @@ export default function RealTimeAnalytics() {
                 id: `user-${Date.now()}`,
                 username: `User${prev.length + 1}`,
                 location: ['US', 'UK', 'DE', 'FR', 'JP', 'CA', 'AU'][Math.floor(Math.random() * 7)],
-                device: ['desktop', 'mobile', 'tablet'][Math.floor(Math.random() * 3)] as any,
-                activity: ['watching', 'chatting', 'browsing'][Math.floor(Math.random() * 3)] as any,
+                device: ['desktop', 'mobile', 'tablet'][Math.floor(Math.random() * 3)] as Record<string, unknown>,
+                activity: ['watching', 'chatting', 'browsing'][Math.floor(Math.random() * 3)] as Record<string, unknown>,
                 roomId: Math.random() > 0.3 ? `room-${Math.floor(Math.random() * 10)}` : undefined,
                 joinedAt: new Date(),
               };
@@ -328,7 +328,7 @@ export default function RealTimeAnalytics() {
   };
 
   const formatNumber = (num: number) => {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + &apos;M';
     if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
     return num.toString();
   };
@@ -391,7 +391,7 @@ export default function RealTimeAnalytics() {
                 <span className="text-2xl font-bold">{formatNumber(metric.value)}</span>
                 <span className="text-sm text-muted-foreground">{metric.unit}</span>
               </div>
-              <div className={`text-xs mt-1 ${metric.change >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+              <div className={`text-xs mt-1 ${metric.change >= 0 ? &apos;text-green-600' : 'text-red-600'}`}>
                 {metric.change >= 0 ? '+' : ''}{metric.change.toFixed(1)}% from last hour
               </div>
             </CardContent>
@@ -428,7 +428,7 @@ export default function RealTimeAnalytics() {
                 <Area
                   type="monotone"
                   dataKey={selectedMetric}
-                  stroke={metrics.find(m => m.id.includes(selectedMetric))?.color || '#3b82f6'}
+                  stroke={metrics.find(m => m.id.includes(selectedMetric))?.color || &apos;#3b82f6'}
                   fill={metrics.find(m => m.id.includes(selectedMetric))?.color || '#3b82f6'}
                   fillOpacity={0.3}
                 />

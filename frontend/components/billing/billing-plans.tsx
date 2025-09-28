@@ -35,7 +35,7 @@ export function BillingPlans() {
     try {
       setIsLoading(true)
       const response = await api.get("/billing/plans/")
-      setPlans((response.data as any).plans || [])
+      setPlans((response.data as Record<string, unknown>).plans || [])
     } catch (err) {
       console.error("Failed to load plans:", err)
     } finally {
@@ -53,7 +53,7 @@ export function BillingPlans() {
         description: "Redirecting to payment...",
       })
       // Redirect to payment processor
-      window.location.href = (response.data as any).checkout_url
+      window.location.href = (response.data as Record<string, unknown>).checkout_url
     } catch (err) {
       toast({
         title: "Error",

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   ChartBarIcon,
   UsersIcon,
@@ -56,7 +56,7 @@ interface HeatmapCell {
   label: string
 }
 
-const extractNumber = (...values: any[]): number | undefined => {
+const extractNumber = (...values: unknown[]): number | undefined => {
   for (const value of values) {
     if (value === undefined || value === null) continue
     const numberValue = Number(value)
@@ -68,15 +68,15 @@ const extractNumber = (...values: any[]): number | undefined => {
 }
 
 const determineTrend = (change: number): 'up' | 'down' | 'stable' => {
-  if (change > 0) return 'up'
+  if (change > 0) return &apos;up'
   if (change < 0) return 'down'
   return 'stable'
 }
 
 const buildMetrics = (
-  dashboard: any,
-  realtime: any,
-  adminAnalytics: any,
+  dashboard: unknown,
+  realtime: unknown,
+  adminAnalytics: unknown,
 ): AnalyticsMetric[] => {
   const metrics: AnalyticsMetric[] = []
   const overview = dashboard?.overview ?? {}
@@ -85,8 +85,8 @@ const buildMetrics = (
   const addMetric = (
     id: string,
     name: string,
-    valueCandidates: any[],
-    changeCandidates: any[],
+    valueCandidates: unknown[],
+    changeCandidates: unknown[],
     period: 'day' | 'week' | 'month',
     format?: 'currency' | 'minutes',
   ) => {
@@ -170,7 +170,7 @@ const buildMetrics = (
   return metrics
 }
 
-const buildSegments = (adminAnalytics: any, dashboard: any): UserSegment[] => {
+const buildSegments = (adminAnalytics: unknown, dashboard: unknown): UserSegment[] => {
   const source =
     (Array.isArray(adminAnalytics?.segments) && adminAnalytics.segments) ||
     (Array.isArray(adminAnalytics?.user_segments) && adminAnalytics.user_segments) ||
@@ -179,7 +179,7 @@ const buildSegments = (adminAnalytics: any, dashboard: any): UserSegment[] => {
     []
 
   return source
-    .map((segment: any, index: number) => ({
+    .map((segment: unknown, index: number) => ({
       id: String(segment.id ?? segment.key ?? segment.segment ?? index),
       name: segment.name ?? segment.label ?? segment.segment ?? `Segment ${index + 1}`,
       count: extractNumber(segment.count, segment.users, segment.total) ?? 0,
@@ -189,14 +189,14 @@ const buildSegments = (adminAnalytics: any, dashboard: any): UserSegment[] => {
     .filter((segment: UserSegment) => segment.count > 0 || segment.percentage > 0)
 }
 
-const buildRegions = (systemAnalytics: any, realtime: any): RegionData[] => {
+const buildRegions = (systemAnalytics: unknown, realtime: unknown): RegionData[] => {
   const source =
     (Array.isArray(systemAnalytics?.regions) && systemAnalytics.regions) ||
     (Array.isArray(systemAnalytics?.geo_distribution) && systemAnalytics.geo_distribution) ||
     (Array.isArray(realtime?.geo_distribution) && realtime.geo_distribution) ||
     []
 
-  return source.map((region: any, index: number) => ({
+  return source.map((region: unknown, index: number) => ({
     id: String(region.id ?? region.country ?? region.name ?? index),
     country: region.country ?? region.name ?? region.region ?? `Region ${index + 1}`,
     users: extractNumber(region.users, region.count, region.total_users) ?? 0,
@@ -205,14 +205,14 @@ const buildRegions = (systemAnalytics: any, realtime: any): RegionData[] => {
   }))
 }
 
-const buildDevices = (systemAnalytics: any, realtime: any): DeviceData[] => {
+const buildDevices = (systemAnalytics: unknown, realtime: unknown): DeviceData[] => {
   const source =
     (Array.isArray(realtime?.device_breakdown) && realtime.device_breakdown) ||
     (Array.isArray(systemAnalytics?.device_breakdown) && systemAnalytics.device_breakdown) ||
     (Array.isArray(systemAnalytics?.devices) && systemAnalytics.devices) ||
     []
 
-  return source.map((device: any, index: number) => {
+  return source.map((device: unknown, index: number) => {
     const typeValue = String(device.device ?? device.type ?? 'desktop').toLowerCase()
     const type: DeviceData['type'] = typeValue.includes('mobile')
       ? 'mobile'
@@ -236,9 +236,9 @@ const buildDevices = (systemAnalytics: any, realtime: any): DeviceData[] => {
 }
 
 const buildActivitySeries = (
-  realtime: any,
-  adminAnalytics: any,
-  dashboard: any,
+  realtime: unknown,
+  adminAnalytics: unknown,
+  dashboard: unknown,
 ): Array<{ timestamp: string; value: number }> => {
   const source =
     (Array.isArray(realtime?.time_series) && realtime.time_series) ||
@@ -246,7 +246,7 @@ const buildActivitySeries = (
     (Array.isArray(dashboard?.trends?.usage) && dashboard.trends.usage) ||
     []
 
-  const series = source.map((point: any, index: number) => ({
+  const series = source.map((point: unknown, index: number) => ({
     timestamp: point.timestamp ?? point.time ?? point.date ?? `point-${index}`,
     value:
       extractNumber(
@@ -283,7 +283,7 @@ const getDeviceIcon = (type: string) => {
 export default function AdvancedAnalyticsPage() {
   const { toast } = useToast()
   const [dateRange, setDateRange] = useState('30d')
-  const [viewType, setViewType] = useState<'overview' | 'users' | 'content' | 'revenue'>('overview')
+  const [viewType, setViewType] = useState<'overview' | 'users' | 'content' | 'revenue'>(&apos;overview')
   const [metrics, setMetrics] = useState<AnalyticsMetric[]>([])
   const [userSegments, setUserSegments] = useState<UserSegment[]>([])
   const [regions, setRegions] = useState<RegionData[]>([])
@@ -571,7 +571,7 @@ export default function AdvancedAnalyticsPage() {
                           </div>
                           <div className="flex items-center justify-between mt-1 text-sm">
                             <span className="text-white/60">{segment.percentage.toFixed(1)}%</span>
-                            <span className={segment.growth >= 0 ? 'text-green-400' : 'text-red-400'}>
+                            <span className={segment.growth >= 0 ? &apos;text-green-400' : 'text-red-400'}>
                               {segment.growth >= 0 ? '+' : ''}{segment.growth.toFixed(1)}%
                             </span>
                           </div>

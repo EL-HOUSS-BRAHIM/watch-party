@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import Image from "next/image"
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -219,7 +220,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
     socket?.emit('screen-share-offer', { offer, partyId })
   }
 
-  const handleScreenShareStarted = (data: { userId: string; username: string; options: any }) => {
+  const handleScreenShareStarted = (data: { userId: string; username: string; options: unknown }) => {
     setActiveSharer(data.userId)
     setIsReceiving(true)
   }
@@ -409,7 +410,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                 ) : (
                   <Cast className="h-4 w-4" />
                 )}
-                <span>{loading ? 'Starting...' : 'Share Screen'}</span>
+                <span>{loading ? &apos;Starting...' : 'Share Screen'}</span>
               </Button>
             )}
             
@@ -479,7 +480,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
               </div>
               <div className="absolute bottom-2 left-2">
                 <Badge>
-                  {participants.find(p => p.id === activeSharer)?.username || 'Unknown'}'s Screen
+                  {participants.find(p => p.id === activeSharer)?.username || &apos;Unknown'}'s Screen
                 </Badge>
               </div>
             </div>

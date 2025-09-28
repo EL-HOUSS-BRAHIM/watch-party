@@ -122,7 +122,7 @@ const dataCategories: DataCategory[] = [
 ]
 
 export default function DataExportImport({ userId }: DataManagementProps) {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(['profile'])
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([&apos;profile'])
   const [exportRequests, setExportRequests] = useState<ExportRequest[]>([
     {
       id: 'export-1',

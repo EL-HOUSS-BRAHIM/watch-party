@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -42,13 +43,13 @@ export default function VideosPage() {
   
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState("all")
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
   const [sortBy, setSortBy] = useState("created")
   const [visibility, setVisibility] = useState("all")
   
   const { videos, loading, error, refresh } = useVideos({
     search: searchQuery,
-    visibility: visibility === "all" ? undefined : visibility as any,
+    visibility: visibility === "all" ? undefined : visibility as Record<string, unknown>,
   })
 
   const deleteVideo = async (videoId: string) => {
@@ -181,7 +182,7 @@ export default function VideosPage() {
           {/* Remove tags section since it's not in the Video interface */}
 
           <div className="flex items-center justify-between">
-            <Button onClick={() => router.push(`/videos/${video.id}`)} size="sm" className="flex-1 mr-2">
+            <Button onClick={() => router.push(`/videos/${video.id}`)} size=&quot;sm" className="flex-1 mr-2">
               <Play className="h-4 w-4 mr-2" />
               Watch
             </Button>
@@ -201,7 +202,7 @@ export default function VideosPage() {
                   <Share2 className="h-4 w-4 mr-2" />
                   Share
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className="text-destructive">
+                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-destructive">
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete
                 </DropdownMenuItem>
@@ -288,7 +289,7 @@ export default function VideosPage() {
               <Button
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode("grid")}
+                onClick={() => setViewMode(&quot;grid")}
                 className="rounded-r-none"
               >
                 <Grid3X3 className="h-4 w-4" />
@@ -296,7 +297,7 @@ export default function VideosPage() {
               <Button
                 variant={viewMode === "list" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode("list")}
+                onClick={() => setViewMode(&quot;list")}
                 className="rounded-l-none"
               >
                 <List className="h-4 w-4" />

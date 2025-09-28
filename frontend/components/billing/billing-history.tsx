@@ -157,7 +157,7 @@ export function BillingHistory() {
           <CardContent>
             <div className="text-2xl font-bold">${totalAmount.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">
-              Across {filteredHistory.filter((i) => i.status === "paid").length} payments
+              Across {filteredHistory.filter((i) => i.status === &quot;paid").length} payments
             </p>
           </CardContent>
         </Card>
@@ -168,7 +168,7 @@ export function BillingHistory() {
             <AlertTriangle className="w-4 h-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{filteredHistory.filter((i) => i.status === "failed").length}</div>
+            <div className="text-2xl font-bold">{filteredHistory.filter((i) => i.status === &quot;failed").length}</div>
             <p className="text-xs text-muted-foreground">Requires attention</p>
           </CardContent>
         </Card>

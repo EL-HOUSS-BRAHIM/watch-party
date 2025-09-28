@@ -77,7 +77,7 @@ const guessOsFromUserAgent = (userAgent: string) => {
   return 'Unknown OS'
 }
 
-const determineDeviceType = (session: any, userAgent: string): SessionData['deviceType'] => {
+const determineDeviceType = (session: unknown, userAgent: string): SessionData['deviceType'] => {
   const candidate = `${session?.device_type ?? ''} ${session?.device ?? ''} ${userAgent}`.toLowerCase()
   if (candidate.includes('mobile') || candidate.includes('iphone') || candidate.includes('android')) {
     return 'mobile'
@@ -94,7 +94,7 @@ const determineDeviceType = (session: any, userAgent: string): SessionData['devi
   return 'desktop'
 }
 
-const parseLocation = (session: any): SessionData['location'] => {
+const parseLocation = (session: unknown): SessionData['location'] => {
   const locationData = session?.location ?? session?.geo ?? session?.ip_location ?? session?.metadata?.location
 
   const base: SessionData['location'] = {
@@ -149,7 +149,7 @@ const parseLocation = (session: any): SessionData['location'] => {
   return base
 }
 
-const resolveBrowser = (session: any, userAgent: string) => {
+const resolveBrowser = (session: unknown, userAgent: string) => {
   if (typeof session?.browser === 'string' && session.browser.trim().length > 0) {
     return session.browser
   }
@@ -165,7 +165,7 @@ const resolveBrowser = (session: any, userAgent: string) => {
   return guessBrowserFromUserAgent(userAgent)
 }
 
-const resolveOperatingSystem = (session: any, userAgent: string) => {
+const resolveOperatingSystem = (session: unknown, userAgent: string) => {
   if (typeof session?.operating_system === 'string' && session.operating_system.trim().length > 0) {
     return session.operating_system
   }
@@ -184,7 +184,7 @@ const resolveOperatingSystem = (session: any, userAgent: string) => {
   return guessOsFromUserAgent(userAgent)
 }
 
-const determineSecurityState = (session: any) => {
+const determineSecurityState = (session: unknown) => {
   if (typeof session?.is_secure === 'boolean') {
     return session.is_secure
   }
@@ -198,7 +198,7 @@ const determineSecurityState = (session: any) => {
   return true
 }
 
-const normalizeSession = (session: any): SessionData => {
+const normalizeSession = (session: unknown): SessionData => {
   const userAgent: string = session?.user_agent ?? session?.userAgent ?? ''
   const loginTime = session?.login_time ?? session?.created_at ?? session?.logged_in_at ?? new Date().toISOString()
   const lastActivity = session?.last_activity ?? session?.last_active_at ?? session?.updated_at ?? loginTime
@@ -407,7 +407,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
         
         <Card className="bg-white/5 border-white/10">
           <CardContent className="p-4 text-center">
-            <div className={`text-2xl font-bold mb-1 ${suspiciousSessions > 0 ? 'text-red-400' : 'text-green-400'}`}>
+            <div className={`text-2xl font-bold mb-1 ${suspiciousSessions > 0 ? &apos;text-red-400' : 'text-green-400'}`}>
               {suspiciousSessions}
             </div>
             <div className="text-white/70 text-sm">Suspicious Sessions</div>

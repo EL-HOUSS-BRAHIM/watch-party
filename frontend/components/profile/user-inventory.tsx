@@ -1,11 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Package, Shirt, Palette, Crown, Gift, Calendar } from "lucide-react"
+import { Package, Shirt, Palette, Crown, Calendar } from "lucide-react"
 import { useApi } from "@/hooks/use-api"
 import { formatDistanceToNow } from "date-fns"
 
@@ -56,7 +57,7 @@ export function UserInventory({ userId }: UserInventoryProps) {
     try {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/inventory/`)
-      setItems((response.data as any).items || [])
+      setItems((response.data as Record<string, unknown>).items || [])
     } catch (err) {
       console.error("Failed to load inventory:", err)
     } finally {
@@ -129,7 +130,7 @@ export function UserInventory({ userId }: UserInventoryProps) {
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-primary">
-              {items.filter(item => item.rarity === "legendary").length}
+              {items.filter(item => item.rarity === &quot;legendary").length}
             </div>
             <div className="text-sm text-muted-foreground">Legendary</div>
           </div>

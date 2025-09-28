@@ -63,7 +63,7 @@ export function SessionsManager() {
     try {
       setIsLoading(true)
       const response = await api.get("/auth/sessions/")
-      setSessions((response.data as any).sessions || [])
+      setSessions((response.data as Record<string, unknown>).sessions || [])
     } catch (err) {
       toast({
         title: "Error",
@@ -117,7 +117,7 @@ export function SessionsManager() {
 
   const getLocationString = (location: Session["location"]) => {
     const parts = [location.city, location.region, location.country].filter(Boolean)
-    return parts.length > 0 ? parts.join(", ") : "Unknown location"
+    return parts.length > 0 ? parts.join(&quot;, ") : "Unknown location"
   }
 
   const getDeviceString = (session: Session) => {
@@ -311,7 +311,7 @@ export function SessionsManager() {
           <ul className="list-disc list-inside space-y-1 text-muted-foreground">
             <li>Always sign out from shared or public computers</li>
             <li>Regularly review your active sessions</li>
-            <li>Revoke any sessions you don't recognize immediately</li>
+            <li>Revoke any sessions you don&apos;t recognize immediately</li>
             <li>Enable two-factor authentication for extra security</li>
             <li>Use strong, unique passwords</li>
           </ul>

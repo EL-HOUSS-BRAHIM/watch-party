@@ -22,7 +22,7 @@ export default function FriendsPage() {
   const loadPendingRequestsCount = async () => {
     try {
       const requests = await usersAPI.getFriendRequests()
-      const pendingCount = requests.filter((req: any) => req.status === 'pending').length
+      const pendingCount = requests.filter((req: unknown) => req.status === &apos;pending').length
       setPendingRequestsCount(pendingCount)
     } catch (error) {
       console.error("Failed to load pending requests count:", error)

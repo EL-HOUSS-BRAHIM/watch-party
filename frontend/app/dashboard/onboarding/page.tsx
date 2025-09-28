@@ -138,7 +138,7 @@ export default function OnboardingPage() {
   })
 
   const socialForm = useForm({
-    resolver: zodResolver(socialSchema) as any,
+    resolver: zodResolver(socialSchema) as Record<string, unknown>,
     defaultValues: {
       allowFriendRequests: true,
       allowPartyInvites: true,
@@ -528,7 +528,7 @@ export default function OnboardingPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={socialForm.handleSubmit(onSocialSubmit as any)} className="space-y-6">
+              <form onSubmit={socialForm.handleSubmit(onSocialSubmit as Record<string, unknown>)} className=&quot;space-y-6">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div>
@@ -559,7 +559,7 @@ export default function OnboardingPage() {
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div>
                       <Label htmlFor="shareWatchHistory" className="font-medium">Share Watch History</Label>
-                      <p className="text-sm text-gray-600">Let friends see what you've been watching</p>
+                      <p className="text-sm text-gray-600">Let friends see what you&apos;ve been watching</p>
                     </div>
                     <input
                       id="shareWatchHistory"
@@ -757,7 +757,7 @@ export default function OnboardingPage() {
           {/* Header */}
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome to Watch Party!</h1>
-            <p className="text-gray-600">Let's set up your account in just a few steps</p>
+            <p className="text-gray-600">Let&apos;s set up your account in just a few steps</p>
           </div>
 
           {/* Progress */}

@@ -93,7 +93,7 @@ export default function TermsOfServicePage() {
               <li>Upload, share, or stream copyrighted content without proper authorization</li>
               <li>Engage in harassment, bullying, or abusive behavior toward other users</li>
               <li>Share inappropriate, offensive, or harmful content</li>
-              <li>Attempt to hack, disrupt, or compromise the platform's security</li>
+              <li>Attempt to hack, disrupt, or compromise the platform&apos;s security</li>
               <li>Create multiple accounts to evade bans or restrictions</li>
               <li>Use automated tools or bots to access the service</li>
               <li>Violate any applicable laws or regulations</li>

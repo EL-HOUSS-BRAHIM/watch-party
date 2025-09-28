@@ -29,7 +29,7 @@ export interface Column<T = any> {
   id: string
   header: string | React.ReactNode
   accessorKey?: keyof T
-  cell?: (props: { row: T; value: any; index: number }) => React.ReactNode
+  cell?: (props: { row: T; value: unknown; index: number }) => React.ReactNode
   sortable?: boolean
   filterable?: boolean
   width?: string | number
@@ -65,7 +65,7 @@ export interface SortConfig {
 }
 
 export interface FilterConfig {
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export interface PaginationConfig {
@@ -298,7 +298,7 @@ export function WatchPartyTable<T = any>({
     }
   }
 
-  const handleColumnFilterChange = (columnId: string, value: any) => {
+  const handleColumnFilterChange = (columnId: string, value: unknown) => {
     const newFilters = { ...currentColumnFilters, [columnId]: value }
 
     if (onColumnFiltersChange) {
@@ -340,7 +340,7 @@ export function WatchPartyTable<T = any>({
       return <ChevronsUpDown className="h-4 w-4 opacity-50" />
     }
 
-    return currentSort.direction === "asc" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />
+    return currentSort.direction === "asc" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className=&quot;h-4 w-4" />
   }
 
   // Get table size classes

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from "next/image"
 import { GiftIcon, StarIcon, TrophyIcon, ShoppingCartIcon } from '@heroicons/react/24/outline'
 
 interface InventoryItem {
@@ -85,8 +86,8 @@ const rarityBorders = {
 }
 
 export default function InventoryPage() {
-  const [filter, setFilter] = useState<'all' | 'equipped' | 'avatar_frame' | 'emoji_pack' | 'theme' | 'achievement'>('all')
-  const [sortBy, setSortBy] = useState<'acquired' | 'rarity' | 'name'>('acquired')
+  const [filter, setFilter] = useState<'all' | 'equipped' | 'avatar_frame' | 'emoji_pack' | 'theme' | 'achievement'>(&apos;all')
+  const [sortBy, setSortBy] = useState<'acquired' | 'rarity' | 'name'>(&apos;acquired')
 
   const filteredItems = inventoryItems
     .filter(item => {
@@ -139,7 +140,7 @@ export default function InventoryPage() {
             ].map(({ key, label }) => (
               <button
                 key={key}
-                onClick={() => setFilter(key as any)}
+                onClick={() => setFilter(key as Record<string, unknown>)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                   filter === key
                     ? 'bg-purple-500 text-white'
@@ -154,7 +155,7 @@ export default function InventoryPage() {
           {/* Sort Options */}
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e) => setSortBy(e.target.value as Record<string, unknown>)}
             className="px-4 py-2 bg-white/10 rounded-lg border border-white/20 text-white focus:outline-none focus:border-purple-400"
           >
             <option value="acquired">Recently Acquired</option>
@@ -271,14 +272,14 @@ export default function InventoryPage() {
           
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-yellow-400 mb-2">
-              {inventoryItems.filter(i => i.rarity === 'legendary' || i.rarity === 'epic').length}
+              {inventoryItems.filter(i => i.rarity === &apos;legendary' || i.rarity === 'epic').length}
             </div>
             <div className="text-white/70">Rare Items</div>
           </div>
           
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-blue-400 mb-2">
-              {inventoryItems.filter(i => i.type === 'achievement').length}
+              {inventoryItems.filter(i => i.type === &apos;achievement').length}
             </div>
             <div className="text-white/70">Achievements</div>
           </div>

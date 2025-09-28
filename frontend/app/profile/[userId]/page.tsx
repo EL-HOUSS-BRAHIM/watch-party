@@ -124,7 +124,7 @@ export default function PublicProfilePage() {
       console.error("Profile fetch error:", error)
       
       // Handle API errors
-      const apiError = error as any
+      const apiError = error as Record<string, unknown>
       if (apiError?.status === 404) {
         router.push("/not-found")
         return
@@ -283,7 +283,7 @@ export default function PublicProfilePage() {
       })
 
       if (response.ok) {
-        setProfile((prev) => (prev ? { ...prev, friendshipStatus: "blocked" } : null))
+        setProfile((prev) => (prev ? { ...prev, friendshipStatus: &quot;blocked" } : null))
         toast({
           title: "User Blocked",
           description: "This user has been blocked and can no longer interact with you.",

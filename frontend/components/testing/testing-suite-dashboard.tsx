@@ -86,8 +86,8 @@ export function TestingSuiteDashboard() {
   const [selectedSuite, setSelectedSuite] = useState<TestSuite | null>(null)
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false)
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
-  const [filterType, setFilterType] = useState<string>("all")
-  const [filterStatus, setFilterStatus] = useState<string>("all")
+  const [filterType, setFilterType] = useState<string>(&quot;all")
+  const [filterStatus, setFilterStatus] = useState<string>(&quot;all")
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -391,7 +391,7 @@ export function TestingSuiteDashboard() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant="outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
@@ -541,8 +541,8 @@ export function TestingSuiteDashboard() {
                     </div>
 
                     <div className="flex gap-2">
-                      <Button size="sm" onClick={() => runTestSuite(suite.id)} disabled={suite.status === "running"}>
-                        {suite.status === "running" ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+                      <Button size="sm" onClick={() => runTestSuite(suite.id)} disabled={suite.status === &quot;running"}>
+                        {suite.status === "running" ? <Pause className="h-4 w-4" /> : <Play className=&quot;h-4 w-4" />}
                       </Button>
                       <Button
                         size="sm"
@@ -621,7 +621,7 @@ export function TestingSuiteDashboard() {
             <CardContent>
               <div className="space-y-4">
                 {testResults
-                  .filter((result) => result.status === "failed")
+                  .filter((result) => result.status === &quot;failed")
                   .map((result) => (
                     <div key={result.id} className="p-4 border rounded-lg bg-red-50 dark:bg-red-900/20">
                       <div className="flex items-start gap-3">

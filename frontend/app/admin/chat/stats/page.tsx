@@ -119,11 +119,11 @@ export default function ChatStatsPage() {
 
       // Process users data
       if (usersResponse.status === 'fulfilled' && usersResponse.value) {
-        const usersData = usersResponse.value as { active_users?: any[]; total_active?: number; total_users?: number; total?: number }
+        const usersData = usersResponse.value as { active_users?: unknown[]; total_active?: number; total_users?: number; total?: number }
         const activeList = Array.isArray(usersData.active_users)
           ? usersData.active_users
           : Array.isArray(usersResponse.value)
-            ? (usersResponse.value as any[])
+            ? (usersResponse.value as Record<string, unknown>[])
             : []
 
         chatStats.totalUsers = Number(usersData.total_users ?? usersData.total ?? activeList.length ?? 0)

@@ -1,8 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { useMemo } from "react"
-import { Play, ArrowRight, Users, Eye, Award, type LucideIcon } from "lucide-react"
+
+import { ArrowRight, Eye, Award, type LucideIcon } from "lucide-react"
 
 import type { MarketingStat } from "@/app/(marketing)/data/home-content"
 import { Button } from "@/components/ui/button"

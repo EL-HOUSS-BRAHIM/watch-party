@@ -88,9 +88,9 @@ export default function StorePage() {
   const [cart, setCart] = useState<CartItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState<string>("all")
-  const [sortBy, setSortBy] = useState<string>("featured")
-  const [priceFilter, setPriceFilter] = useState<string>("all")
+  const [selectedCategory, setSelectedCategory] = useState<string>(&quot;all")
+  const [sortBy, setSortBy] = useState<string>(&quot;featured")
+  const [priceFilter, setPriceFilter] = useState<string>(&quot;all")
   const [showCart, setShowCart] = useState(false)
   const [processingPurchase, setProcessingPurchase] = useState(false)
 

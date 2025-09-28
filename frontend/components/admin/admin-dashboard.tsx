@@ -123,7 +123,7 @@ export function AdminDashboard() {
   }
 
   const getMetricColor = (value: number) => {
-    if (value >= 80) return "text-red-600"
+    if (value >= 80) return &quot;text-red-600"
     if (value >= 60) return "text-yellow-600"
     return "text-green-600"
   }

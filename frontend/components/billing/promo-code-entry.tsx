@@ -102,7 +102,7 @@ export function PromoCodeEntry({
     setPromoCode('')
     setError(null)
     setSuccess(null)
-    onCodeApplied?.(null as any)
+    onCodeApplied?.(null as Record<string, unknown>)
   }
 
   const calculateDiscount = (code: PromoCode, amount: number) => {
@@ -221,7 +221,7 @@ export function PromoCodeEntry({
                 placeholder="Enter promo code"
                 value={promoCode}
                 onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                onKeyPress={(e) => e.key === 'Enter' && validatePromoCode()}
+                onKeyPress={(e) => e.key === &apos;Enter' && validatePromoCode()}
                 disabled={loading}
               />
               <Button 

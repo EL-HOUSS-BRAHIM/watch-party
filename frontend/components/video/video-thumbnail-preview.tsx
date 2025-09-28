@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Image from "next/image"
 import { Card } from '@/components/ui/card'
 
 interface VideoThumbnailPreviewProps {

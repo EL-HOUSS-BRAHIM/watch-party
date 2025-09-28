@@ -6,6 +6,8 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
+    "lint:fix": "python3 scripts/fix-lint-batch.py",
+    "lint:fix-js": "node scripts/fix-lint-batch.js",
     "start": "next start",
     "test": "jest"
   },

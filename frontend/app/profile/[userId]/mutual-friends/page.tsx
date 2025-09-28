@@ -1,6 +1,7 @@
 'use client'
 
 import { useParams } from 'next/navigation'
+import Image from "next/image"
 import { useState } from 'react'
 import { UserGroupIcon, UserPlusIcon, ChatBubbleLeftIcon } from '@heroicons/react/24/outline'
 
@@ -60,7 +61,7 @@ const mutualFriends: MutualFriend[] = [
 
 export default function MutualFriendsPage() {
   const params = useParams()
-  const [sortBy, setSortBy] = useState<'mutualCount' | 'name' | 'online'>('mutualCount')
+  const [sortBy, setSortBy] = useState<'mutualCount' | 'name' | 'online'>(&apos;mutualCount')
 
   const sortedFriends = [...mutualFriends].sort((a, b) => {
     switch (sortBy) {
@@ -99,7 +100,7 @@ export default function MutualFriendsPage() {
 
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e) => setSortBy(e.target.value as Record<string, unknown>)}
             className="px-4 py-2 bg-white/10 rounded-lg border border-white/20 text-white focus:outline-none focus:border-blue-400"
           >
             <option value="mutualCount">Most Mutual Friends</option>

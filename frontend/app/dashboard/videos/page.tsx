@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
 import { useState, useEffect } from "react"
 import { Search, Grid, List, Upload, Play, MoreHorizontal, Eye, Heart, MessageCircle, Calendar } from "lucide-react"
 import { WatchPartyButton } from "@/components/ui/watch-party-button"
@@ -256,7 +257,7 @@ function VideoListItem({ video }: { video: APIVideo }) {
 export default function VideosPage() {
   const [videos, setVideos] = useState<APIVideo[]>([])
   const [loading, setLoading] = useState(true)
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState("newest")
   const [filterBy, setFilterBy] = useState("all")
@@ -402,7 +403,7 @@ export default function VideosPage() {
           <WatchPartyButton
             variant={viewMode === "grid" ? "default" : "ghost"}
             size="sm"
-            onClick={() => setViewMode("grid")}
+            onClick={() => setViewMode(&quot;grid")}
             className="rounded-r-none"
           >
             <Grid className="h-4 w-4" />
@@ -410,7 +411,7 @@ export default function VideosPage() {
           <WatchPartyButton
             variant={viewMode === "list" ? "default" : "ghost"}
             size="sm"
-            onClick={() => setViewMode("list")}
+            onClick={() => setViewMode(&quot;list")}
             className="rounded-l-none"
           >
             <List className="h-4 w-4" />
@@ -428,13 +429,13 @@ export default function VideosPage() {
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{videos.filter((v) => v.status === "ready").length}</div>
+            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;ready").length}</div>
             <p className="text-xs text-muted-foreground">Ready</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{videos.filter((v) => v.status === "processing").length}</div>
+            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;processing").length}</div>
             <p className="text-xs text-muted-foreground">Processing</p>
           </CardContent>
         </Card>

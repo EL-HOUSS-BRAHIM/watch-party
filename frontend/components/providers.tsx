@@ -18,14 +18,14 @@ export function Providers({ children }: { children: React.ReactNode }) {
           queries: {
             staleTime: 5 * 60 * 1000, // 5 minutes
             gcTime: 10 * 60 * 1000, // 10 minutes
-            retry: (failureCount, error: any) => {
+            retry: (failureCount, error: unknown) => {
               if (error?.status === 401) return false
               return failureCount < 3
             },
             refetchOnWindowFocus: false,
           },
           mutations: {
-            onError: (error: any) => {
+            onError: (error: unknown) => {
               console.error("Mutation error:", error)
               // Handle global mutation errors
             },

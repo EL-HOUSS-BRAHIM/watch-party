@@ -44,7 +44,7 @@ interface Notification {
     partyId?: string
     messageId?: string
     achievementId?: string
-    [key: string]: any
+    [key: string]: unknown
   }
   sender?: {
     id: string
@@ -98,7 +98,7 @@ export function NotificationsCenter() {
 
   const loadNotifications = async () => {
     try {
-      const response = await apiRequest(() => fetch('/api/notifications'))
+      const response = await apiRequest(() => fetch(&apos;/api/notifications'))
       if (response) {
         setNotifications(response)
       }
@@ -535,7 +535,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.categories.friend_requests}
-                  onCheckedChange={() => handleToggleCategory('friend_requests')}
+                  onCheckedChange={() => handleToggleCategory(&apos;friend_requests')}
                 />
               </div>
 
@@ -549,7 +549,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.categories.party_invites}
-                  onCheckedChange={() => handleToggleCategory('party_invites')}
+                  onCheckedChange={() => handleToggleCategory(&apos;party_invites')}
                 />
               </div>
 
@@ -563,7 +563,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.categories.party_updates}
-                  onCheckedChange={() => handleToggleCategory('party_updates')}
+                  onCheckedChange={() => handleToggleCategory(&apos;party_updates')}
                 />
               </div>
 
@@ -577,7 +577,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.categories.messages}
-                  onCheckedChange={() => handleToggleCategory('messages')}
+                  onCheckedChange={() => handleToggleCategory(&apos;messages')}
                 />
               </div>
 
@@ -591,7 +591,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.categories.reactions}
-                  onCheckedChange={() => handleToggleCategory('reactions')}
+                  onCheckedChange={() => handleToggleCategory(&apos;reactions')}
                 />
               </div>
 
@@ -605,7 +605,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.categories.achievements}
-                  onCheckedChange={() => handleToggleCategory('achievements')}
+                  onCheckedChange={() => handleToggleCategory(&apos;achievements')}
                 />
               </div>
             </div>
@@ -627,7 +627,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.delivery.push}
-                  onCheckedChange={() => handleToggleDelivery('push')}
+                  onCheckedChange={() => handleToggleDelivery(&apos;push')}
                 />
               </div>
 
@@ -641,7 +641,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.delivery.email}
-                  onCheckedChange={() => handleToggleDelivery('email')}
+                  onCheckedChange={() => handleToggleDelivery(&apos;email')}
                 />
               </div>
 
@@ -655,7 +655,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.delivery.inApp}
-                  onCheckedChange={() => handleToggleDelivery('inApp')}
+                  onCheckedChange={() => handleToggleDelivery(&apos;inApp')}
                 />
               </div>
             </div>

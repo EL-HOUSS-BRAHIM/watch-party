@@ -66,9 +66,9 @@ export function ContentModerationSystem() {
   const [items, setItems] = useState<ModerationItem[]>([])
   const [stats, setStats] = useState<ModerationStats | null>(null)
   const [selectedItems, setSelectedItems] = useState<string[]>([])
-  const [filterStatus, setFilterStatus] = useState<string>("all")
-  const [filterType, setFilterType] = useState<string>("all")
-  const [filterPriority, setFilterPriority] = useState<string>("all")
+  const [filterStatus, setFilterStatus] = useState<string>(&quot;all")
+  const [filterType, setFilterType] = useState<string>(&quot;all")
+  const [filterPriority, setFilterPriority] = useState<string>(&quot;all")
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedItem, setSelectedItem] = useState<ModerationItem | null>(null)
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false)
@@ -90,13 +90,13 @@ export function ContentModerationSystem() {
       ])
 
       // Transform reports data
-      const transformedReports = (reportsData.results || []).map((report: any) => ({
+      const transformedReports = (reportsData.results || []).map((report: unknown) => ({
         id: report.id,
         type: report.content_type,
         title: report.title || `${report.content_type} Report`,
         content: report.description || report.content_preview,
         author: report.reported_content?.author || report.reported_user?.username || 'Unknown',
-        reportedBy: report.reporters?.map((r: any) => r.username) || [],
+        reportedBy: report.reporters?.map((r: unknown) => r.username) || [],
         reportReason: [report.report_type],
         status: report.status,
         priority: report.priority || 'medium',
@@ -252,7 +252,7 @@ export function ContentModerationSystem() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant="outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
@@ -382,15 +382,15 @@ export function ContentModerationSystem() {
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{selectedItems.length} item(s) selected</span>
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => handleBulkAction("approve")}>
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction(&quot;approve")}>
                   <CheckCircle className="mr-2 h-4 w-4" />
                   Approve
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => handleBulkAction("reject")}>
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction(&quot;reject")}>
                   <XCircle className="mr-2 h-4 w-4" />
                   Reject
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => handleBulkAction("flag")}>
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction(&quot;flag")}>
                   <Flag className="mr-2 h-4 w-4" />
                   Flag
                 </Button>
@@ -507,10 +507,10 @@ export function ContentModerationSystem() {
                       </Button>
                       {item.status === "pending" && (
                         <>
-                          <Button size="sm" variant="outline" onClick={() => handleItemAction(item.id, "approve")}>
+                          <Button size="sm" variant="outline" onClick={() => handleItemAction(item.id, &quot;approve")}>
                             <CheckCircle className="h-4 w-4 text-green-600" />
                           </Button>
-                          <Button size="sm" variant="outline" onClick={() => handleItemAction(item.id, "reject")}>
+                          <Button size="sm" variant="outline" onClick={() => handleItemAction(item.id, &quot;reject")}>
                             <XCircle className="h-4 w-4 text-red-600" />
                           </Button>
                         </>
@@ -582,7 +582,7 @@ export function ContentModerationSystem() {
 
               <div>
                 <Label>Reported By</Label>
-                <p>{selectedItem.reportedBy.join(", ")}</p>
+                <p>{selectedItem.reportedBy.join(&quot;, ")}</p>
               </div>
             </div>
           )}

@@ -93,18 +93,18 @@ export function UsageStats() {
             unit: "GB" 
           },
           bandwidth: { 
-            used: parseFloat((analytics as any).bandwidth_used_gb) || 0, 
-            limit: parseFloat((currentUsage as any).bandwidth_limit) || 500, 
+            used: parseFloat((analytics as Record<string, unknown>).bandwidth_used_gb) || 0, 
+            limit: parseFloat((currentUsage as Record<string, unknown>).bandwidth_limit) || 500, 
             unit: "GB" 
           },
           parties: { 
             used: currentUsage.parties_hosted_this_month || 0, 
-            limit: parseInt((currentUsage as any).parties_limit) || 25, 
+            limit: parseInt((currentUsage as Record<string, unknown>).parties_limit) || 25, 
             unit: "parties" 
           },
           participants: { 
-            used: (analytics as any).total_participants_this_month || 0, 
-            limit: parseInt((currentUsage as any).participants_limit) || 500, 
+            used: (analytics as Record<string, unknown>).total_participants_this_month || 0, 
+            limit: parseInt((currentUsage as Record<string, unknown>).participants_limit) || 500, 
             unit: "total participants" 
           },
         },
@@ -131,7 +131,7 @@ export function UsageStats() {
   }
 
   const getUsageColor = (percentage: number) => {
-    if (percentage >= 90) return "text-destructive"
+    if (percentage >= 90) return &quot;text-destructive"
     if (percentage >= 75) return "text-yellow-600"
     return "text-green-600"
   }
@@ -366,8 +366,8 @@ export function UsageStats() {
                 <div key={key} className="space-y-2">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <span className="font-medium capitalize">{key.replace("_", " ")}</span>
-                      <Badge variant={percentage >= 90 ? "destructive" : percentage >= 75 ? "secondary" : "outline"}>
+                      <span className="font-medium capitalize">{key.replace(&quot;_", " ")}</span>
+                      <Badge variant={percentage >= 90 ? &quot;destructive" : percentage >= 75 ? "secondary" : "outline"}>
                         {percentage.toFixed(1)}%
                       </Badge>
                     </div>

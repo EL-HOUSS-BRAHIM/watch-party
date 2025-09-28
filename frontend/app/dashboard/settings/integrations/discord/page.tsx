@@ -36,7 +36,7 @@ export default function DiscordIntegrationPage() {
         integrationsAPI.getHealth().catch(() => null),
       ])
       const discordConnection = connectionsResponse.connections?.find(
-        (item) => item.provider === 'discord'
+        (item) => item.provider === &apos;discord'
       )
       setConnection(discordConnection ?? null)
       setHealth(healthResponse)

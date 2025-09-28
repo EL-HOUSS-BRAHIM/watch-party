@@ -468,14 +468,14 @@ export default function ActivityFeedPage() {
                     <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No activities found</h3>
                     <p className="text-gray-600">
-                      {searchQuery || Object.values(filters).some(f => f !== "all" && f !== false)
+                      {searchQuery || Object.values(filters).some(f => f !== &quot;all" && f !== false)
                         ? "Try adjusting your search or filters"
                         : "Follow friends to see their watch party activities here"
                       }
                     </p>
                     <Button 
                       className="mt-4" 
-                      onClick={() => router.push("/dashboard/social/discover")}
+                      onClick={() => router.push(&quot;/dashboard/social/discover")}
                     >
                       Discover Friends
                     </Button>
@@ -541,7 +541,7 @@ export default function ActivityFeedPage() {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => engageWithActivity(activity.id, "like")}
+                                onClick={() => engageWithActivity(activity.id, &quot;like")}
                                 disabled={engagingWith.has(activity.id)}
                                 className="text-gray-600 hover:text-red-600"
                               >
@@ -552,7 +552,7 @@ export default function ActivityFeedPage() {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => engageWithActivity(activity.id, "comment")}
+                                onClick={() => engageWithActivity(activity.id, &quot;comment")}
                                 disabled={engagingWith.has(activity.id)}
                                 className="text-gray-600 hover:text-blue-600"
                               >
@@ -563,7 +563,7 @@ export default function ActivityFeedPage() {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => engageWithActivity(activity.id, "share")}
+                                onClick={() => engageWithActivity(activity.id, &quot;share")}
                                 disabled={engagingWith.has(activity.id)}
                                 className="text-gray-600 hover:text-green-600"
                               >
@@ -625,7 +625,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ new_friends: !notificationSettings.new_friends })}
                     >
-                      {notificationSettings.new_friends ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                      {notificationSettings.new_friends ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}
                     </Button>
                   </div>
 
@@ -639,7 +639,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ friend_parties: !notificationSettings.friend_parties })}
                     >
-                      {notificationSettings.friend_parties ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                      {notificationSettings.friend_parties ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}
                     </Button>
                   </div>
 
@@ -653,7 +653,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ trending_content: !notificationSettings.trending_content })}
                     >
-                      {notificationSettings.trending_content ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                      {notificationSettings.trending_content ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}
                     </Button>
                   </div>
 
@@ -667,7 +667,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ achievements: !notificationSettings.achievements })}
                     >
-                      {notificationSettings.achievements ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                      {notificationSettings.achievements ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}
                     </Button>
                   </div>
 
@@ -681,7 +681,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ recommendations: !notificationSettings.recommendations })}
                     >
-                      {notificationSettings.recommendations ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                      {notificationSettings.recommendations ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}
                     </Button>
                   </div>
 
@@ -695,7 +695,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ weekly_digest: !notificationSettings.weekly_digest })}
                     >
-                      {notificationSettings.weekly_digest ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                      {notificationSettings.weekly_digest ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}
                     </Button>
                   </div>
                 </div>

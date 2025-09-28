@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
@@ -72,7 +72,7 @@ export function FriendsManager() {
   const loadFriendsData = async () => {
     try {
       const [friendsData, incomingData, outgoingData] = await Promise.all([
-        apiRequest(() => fetch('/api/social/friends')),
+        apiRequest(() => fetch(&apos;/api/social/friends')),
         apiRequest(() => fetch('/api/social/friend-requests/incoming')),
         apiRequest(() => fetch('/api/social/friend-requests/outgoing'))
       ])
@@ -184,7 +184,7 @@ export function FriendsManager() {
             All Friends ({friends.length})
           </TabsTrigger>
           <TabsTrigger value="online">
-            Online ({friends.filter(f => f.status === 'online').length})
+            Online ({friends.filter(f => f.status === &apos;online').length})
           </TabsTrigger>
           <TabsTrigger value="requests">
             Requests ({incomingRequests.length + outgoingRequests.length})
@@ -284,7 +284,7 @@ export function FriendsManager() {
         </TabsContent>
 
         <TabsContent value="online" className="space-y-4">
-          {filteredFriends.filter(f => f.status === 'online').map((friend) => (
+          {filteredFriends.filter(f => f.status === &apos;online').map((friend) => (
             <Card key={friend.id}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
@@ -365,7 +365,7 @@ export function FriendsManager() {
                             </ProfilePreview>
                             <p className="text-sm text-muted-foreground">@{request.fromUser.username}</p>
                             {request.message && (
-                              <p className="text-sm mt-1 italic">"{request.message}"</p>
+                              <p className="text-sm mt-1 italic">&quot;{request.message}"</p>
                             )}
                             <div className="flex items-center space-x-1 mt-1">
                               <Clock className="h-3 w-3 text-muted-foreground" />

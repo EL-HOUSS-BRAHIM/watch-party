@@ -14,7 +14,7 @@ function EmailVerificationHandler() {
   const searchParams = useSearchParams()
   const { toast } = useToast()
 
-  const [status, setStatus] = useState<"loading" | "success" | "error" | "expired">("loading")
+  const [status, setStatus] = useState<"loading" | "success" | "error" | "expired">(&quot;loading")
   const [message, setMessage] = useState("")
   const [isResending, setIsResending] = useState(false)
   const [canResend, setCanResend] = useState(false)

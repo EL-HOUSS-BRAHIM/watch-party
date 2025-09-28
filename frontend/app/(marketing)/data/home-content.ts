@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react"
-import { Play, Users, Zap, Shield, Smartphone, Globe, Eye } from "lucide-react"
+import { Smartphone } from "lucide-react"
 
 export interface MarketingFeature {
   icon: LucideIcon

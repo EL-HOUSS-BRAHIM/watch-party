@@ -1,8 +1,9 @@
 "use client"
 
 import { useState, useEffect, useCallback, Suspense } from "react"
+import Image from "next/image"
 import { useSearchParams, useRouter } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -178,7 +179,7 @@ function SearchContent() {
           Object.entries(filters.videoFilters).filter(([_, v]) => v !== undefined)
         ),
         ...Object.fromEntries(
-          Object.entries(filters.partyFilters).filter(([_, v]) => v !== undefined && v !== "all")
+          Object.entries(filters.partyFilters).filter(([_, v]) => v !== undefined && v !== &quot;all")
         ),
       })
 
@@ -309,7 +310,7 @@ function SearchContent() {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  onClick={() => setQuery("")}
+                  onClick={() => setQuery(&quot;")}
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
                 >
                   <X className="h-4 w-4" />
@@ -386,7 +387,7 @@ function SearchContent() {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Sort By</label>
                   <Select value={filters.sortBy} onValueChange={(value) => 
-                    setFilters(prev => ({ ...prev, sortBy: value as any }))
+                    setFilters(prev => ({ ...prev, sortBy: value as Record<string, unknown> }))
                   }>
                     <SelectTrigger>
                       <SelectValue />
@@ -402,7 +403,7 @@ function SearchContent() {
                 <div>
                   <label className="text-sm font-medium mb-2 block">Date Range</label>
                   <Select value={filters.dateRange} onValueChange={(value) => 
-                    setFilters(prev => ({ ...prev, dateRange: value as any }))
+                    setFilters(prev => ({ ...prev, dateRange: value as Record<string, unknown> }))
                   }>
                     <SelectTrigger>
                       <SelectValue />
@@ -423,7 +424,7 @@ function SearchContent() {
                     <Select value={filters.partyFilters.status} onValueChange={(value) => 
                       setFilters(prev => ({ 
                         ...prev, 
-                        partyFilters: { ...prev.partyFilters, status: value as any }
+                        partyFilters: { ...prev.partyFilters, status: value as Record<string, unknown> }
                       }))
                     }>
                       <SelectTrigger>
@@ -445,7 +446,7 @@ function SearchContent() {
 
       {/* Results */}
       {query && (
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as SearchFilters["type"])}>
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as SearchFilters[&quot;type"])}>
           <TabsList className="grid w-full grid-cols-4 mb-6">
             <TabsTrigger value="all">All Results</TabsTrigger>
             <TabsTrigger value="users">Users ({users.length})</TabsTrigger>
@@ -466,7 +467,7 @@ function SearchContent() {
                 <p className="text-gray-600 mb-4">
                   No results found for "{query}". Try adjusting your search terms or filters.
                 </p>
-                <Button variant="outline" onClick={() => setQuery("")}>
+                <Button variant="outline" onClick={() => setQuery(&quot;")}>
                   Clear Search
                 </Button>
               </CardContent>

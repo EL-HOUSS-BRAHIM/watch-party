@@ -107,7 +107,7 @@ export default function AdminBroadcastSystem() {
       });
       
       // Transform API response to BroadcastMessage format
-      const broadcastMessages: BroadcastMessage[] = response.results?.map((log: any) => ({
+      const broadcastMessages: BroadcastMessage[] = response.results?.map((log: unknown) => ({
         id: log.id || Date.now().toString(),
         title: log.message?.split(':')[0] || 'Broadcast Message',
         content: log.message || 'No content available',
@@ -382,7 +382,7 @@ export default function AdminBroadcastSystem() {
                   <Label>Message Type</Label>
                   <Select 
                     value={newMessage.type} 
-                    onValueChange={(value) => setNewMessage({...newMessage, type: value as any})}
+                    onValueChange={(value) => setNewMessage({...newMessage, type: value as Record<string, unknown>})}
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -417,11 +417,11 @@ export default function AdminBroadcastSystem() {
                       <input
                         type="checkbox"
                         id={channel.id}
-                        checked={newMessage.channels?.includes(channel.id as any) || false}
+                        checked={newMessage.channels?.includes(channel.id as Record<string, unknown>) || false}
                         onChange={(e) => {
                           const channels = newMessage.channels || [];
                           if (e.target.checked) {
-                            setNewMessage({...newMessage, channels: [...channels, channel.id as any]});
+                            setNewMessage({...newMessage, channels: [...channels, channel.id as Record<string, unknown>]});
                           } else {
                             setNewMessage({...newMessage, channels: channels.filter(c => c !== channel.id)});
                           }
@@ -446,7 +446,7 @@ export default function AdminBroadcastSystem() {
                   value={newMessage.targetAudience?.type} 
                   onValueChange={(value) => setNewMessage({
                     ...newMessage, 
-                    targetAudience: { type: value as any }
+                    targetAudience: { type: value as Record<string, unknown> }
                   })}
                 >
                   <SelectTrigger>

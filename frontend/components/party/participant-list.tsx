@@ -118,7 +118,7 @@ export function ParticipantList({ participants, currentUserId, isHost, className
                     className="h-8 w-8"
                     onClick={() => toggleMute(participant.user.id)}
                   >
-                    {isMuted ? <VolumeX className="w-4 h-4 text-muted-foreground" /> : <Volume2 className="w-4 h-4" />}
+                    {isMuted ? <VolumeX className="w-4 h-4 text-muted-foreground" /> : <Volume2 className=&quot;w-4 h-4" />}
                   </Button>
 
                   {/* Participant Actions (Host Only) */}
@@ -134,7 +134,7 @@ export function ParticipantList({ participants, currentUserId, isHost, className
                           <Shield className="w-4 h-4 mr-2" />
                           Make Co-host
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => kickUser(participant.user.id)} className="text-destructive">
+                        <DropdownMenuItem onClick={() => kickUser(participant.user.id)} className=&quot;text-destructive">
                           <UserMinus className="w-4 h-4 mr-2" />
                           Remove from Party
                         </DropdownMenuItem>

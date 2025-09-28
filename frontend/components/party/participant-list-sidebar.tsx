@@ -89,7 +89,7 @@ export function ParticipantListSidebar({
   }
 
   const formatPing = (ping: number) => {
-    if (ping > 1000) return '1000+ ms'
+    if (ping > 1000) return &apos;1000+ ms'
     return `${ping} ms`
   }
 
@@ -178,7 +178,7 @@ export function ParticipantListSidebar({
                         <span>
                           {participant.connection_status === 'connected' 
                             ? (isOutOfSync 
-                                ? `${timeDiff > 0 ? '+' : ''}${timeDiff.toFixed(1)}s` 
+                                ? `${timeDiff > 0 ? &apos;+' : ''}${timeDiff.toFixed(1)}s` 
                                 : 'Synced'
                               )
                             : participant.connection_status

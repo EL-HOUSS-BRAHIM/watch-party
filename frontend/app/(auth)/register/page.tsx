@@ -148,7 +148,7 @@ export default function RegisterPage() {
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }))
+      setErrors((prev) => ({ ...prev, [field]: &quot;" }))
     }
   }
 
@@ -217,7 +217,7 @@ export default function RegisterPage() {
         <div className="grid grid-cols-2 gap-3">
           <Button
             variant="outline"
-            onClick={() => handleSocialLogin("google")}
+            onClick={() => handleSocialLogin(&quot;google")}
             disabled={isSubmitting}
             className="glass-card border-white/20 hover:border-neon-blue/50 hover:bg-neon-blue/10 text-white transition-all duration-300"
           >
@@ -226,7 +226,7 @@ export default function RegisterPage() {
           </Button>
           <Button
             variant="outline"
-            onClick={() => handleSocialLogin("github")}
+            onClick={() => handleSocialLogin(&quot;github")}
             disabled={isSubmitting}
             className="glass-card border-white/20 hover:border-neon-purple/50 hover:bg-neon-purple/10 text-white transition-all duration-300"
           >
@@ -261,7 +261,7 @@ export default function RegisterPage() {
                   type="text"
                   placeholder="First name"
                   value={formData.firstName}
-                  onChange={(e) => handleInputChange("firstName", e.target.value)}
+                  onChange={(e) => handleInputChange(&quot;firstName", e.target.value)}
                   className={`pl-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${
                     errors.firstName ? "border-red-500/50 focus:border-red-500" : ""
                   }`}
@@ -287,7 +287,7 @@ export default function RegisterPage() {
                 type="text"
                 placeholder="Last name"
                 value={formData.lastName}
-                onChange={(e) => handleInputChange("lastName", e.target.value)}
+                onChange={(e) => handleInputChange(&quot;lastName", e.target.value)}
                 className={`pl-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${
                   errors.lastName ? "border-red-500/50 focus:border-red-500" : ""
                 }`}
@@ -316,7 +316,7 @@ export default function RegisterPage() {
                 type="email"
                 placeholder="Enter your email"
                 value={formData.email}
-                onChange={(e) => handleInputChange("email", e.target.value)}
+                onChange={(e) => handleInputChange(&quot;email", e.target.value)}
                 className={`pl-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${
                   errors.email ? "border-red-500/50 focus:border-red-500" : ""
                 }`}
@@ -345,7 +345,7 @@ export default function RegisterPage() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Create a strong password"
                 value={formData.password}
-                onChange={(e) => handleInputChange("password", e.target.value)}
+                onChange={(e) => handleInputChange(&quot;password", e.target.value)}
                 className={`pl-10 pr-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${
                   errors.password ? "border-red-500/50 focus:border-red-500" : ""
                 }`}
@@ -359,7 +359,7 @@ export default function RegisterPage() {
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                 disabled={isSubmitting}
               >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4" />}
               </button>
             </div>
 
@@ -411,7 +411,7 @@ export default function RegisterPage() {
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
-                onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                onChange={(e) => handleInputChange(&quot;confirmPassword", e.target.value)}
                 className={`pl-10 pr-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${
                   errors.confirmPassword ? "border-red-500/50 focus:border-red-500" : ""
                 } ${
@@ -429,7 +429,7 @@ export default function RegisterPage() {
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                 disabled={isSubmitting}
               >
-                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4" />}
               </button>
               {formData.confirmPassword && formData.password === formData.confirmPassword && (
                 <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
@@ -455,7 +455,7 @@ export default function RegisterPage() {
               onCheckedChange={(checked) => {
                 setAgreedToTerms(checked as boolean)
                 if (errors.terms) {
-                  setErrors((prev) => ({ ...prev, terms: "" }))
+                  setErrors((prev) => ({ ...prev, terms: &quot;" }))
                 }
               }}
               className="mt-1 border-white/20 data-[state=checked]:bg-neon-blue data-[state=checked]:border-neon-blue"
@@ -465,7 +465,7 @@ export default function RegisterPage() {
               I agree to the{" "}
               <Link href="/terms" className="text-neon-blue hover:text-neon-purple transition-colors">
                 Terms of Service
-              </Link>{" "}
+              </Link>{&quot; "}
               and{" "}
               <Link href="/privacy" className="text-neon-blue hover:text-neon-purple transition-colors">
                 Privacy Policy

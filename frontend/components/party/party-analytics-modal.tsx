@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from "next/image"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,7 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts'
-import { Users, Clock, Eye, ThumbsUp, MessageCircle, Download, TrendingUp, UserCheck } from 'lucide-react'
+import { Users, Clock, ThumbsUp, MessageCircle, Download, TrendingUp, UserCheck } from 'lucide-react'
 
 interface PartyAnalyticsModalProps {
   isOpen: boolean

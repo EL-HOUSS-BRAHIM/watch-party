@@ -141,13 +141,13 @@ export default function ReportsManagementPage() {
   const loadReports = async () => {
     try {
       const data = await adminAPI.getReports({
-        status: filters.status !== "all" ? filters.status as any : undefined,
+        status: filters.status !== "all" ? filters.status as Record<string, unknown> : undefined,
         page: 1, // You can add pagination later
       })
       setReports(data.results || [])
     } catch (error) {
       console.error("Failed to load reports:", error)
-      if ((error as any)?.response?.status === 403) {
+      if ((error as Record<string, unknown>)?.response?.status === 403) {
         toast({
           title: "Access Denied",
           description: "You don't have permission to access this page.",
@@ -234,7 +234,7 @@ export default function ReportsManagementPage() {
 
     try {
       await adminAPI.resolveReport(reportId, {
-        action: status === "resolved" ? "dismiss" : status as any,
+        action: status === "resolved" ? "dismiss" : status as Record<string, unknown>,
         reason: resolution || adminNotes,
       })
 
@@ -402,10 +402,10 @@ export default function ReportsManagementPage() {
           
           <div className="flex items-center gap-2">
             <Badge variant="outline">
-              {filteredReports.filter(r => r.status === "pending").length} Pending
+              {filteredReports.filter(r => r.status === &quot;pending").length} Pending
             </Badge>
             <Badge variant="outline">
-              {filteredReports.filter(r => r.severity === "critical" || r.severity === "high").length} High Priority
+              {filteredReports.filter(r => r.severity === &quot;critical" || r.severity === "high").length} High Priority
             </Badge>
           </div>
         </div>
@@ -508,7 +508,7 @@ export default function ReportsManagementPage() {
                     <Shield className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No reports found</h3>
                     <p className="text-gray-600">
-                      {searchQuery || Object.values(filters).some(f => f !== "all" && f !== false)
+                      {searchQuery || Object.values(filters).some(f => f !== &quot;all" && f !== false)
                         ? "Try adjusting your search or filters"
                         : "All caught up! No pending reports to review"
                       }
@@ -627,7 +627,7 @@ export default function ReportsManagementPage() {
                       </div>
                       <div className="flex justify-between">
                         <span>Created:</span>
-                        <span>{format(parseISO(selectedReport.created_at), "MMM d, yyyy")}</span>
+                        <span>{format(parseISO(selectedReport.created_at), &quot;MMM d, yyyy")}</span>
                       </div>
                     </div>
                   </div>
@@ -681,7 +681,7 @@ export default function ReportsManagementPage() {
                         </div>
                         <div className="flex justify-between">
                           <span>Status:</span>
-                          <span>{selectedReport.reported_user.is_banned ? "Banned" : "Active"}</span>
+                          <span>{selectedReport.reported_user.is_banned ? &quot;Banned" : "Active"}</span>
                         </div>
                       </div>
                     </div>
@@ -698,7 +698,7 @@ export default function ReportsManagementPage() {
                             variant="outline"
                             size="sm"
                             className="w-full justify-start"
-                            onClick={() => window.open(url, "_blank")}
+                            onClick={() => window.open(url, &quot;_blank")}
                           >
                             <ExternalLink className="h-4 w-4 mr-2" />
                             Evidence {index + 1}
@@ -743,7 +743,7 @@ export default function ReportsManagementPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => updateReportStatus(selectedReport.id, "under_review")}
+                          onClick={() => updateReportStatus(selectedReport.id, &quot;under_review")}
                           disabled={processingActions.has(selectedReport.id)}
                         >
                           <Eye className="h-4 w-4 mr-1" />
@@ -753,7 +753,7 @@ export default function ReportsManagementPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => updateReportStatus(selectedReport.id, "dismissed", "No violation found")}
+                          onClick={() => updateReportStatus(selectedReport.id, &quot;dismissed", "No violation found")}
                           disabled={processingActions.has(selectedReport.id)}
                         >
                           <XCircle className="h-4 w-4 mr-1" />
@@ -767,7 +767,7 @@ export default function ReportsManagementPage() {
                             variant="destructive"
                             size="sm"
                             className="w-full"
-                            onClick={() => takeAction(selectedReport.id, "ban_user", "Violation of community guidelines")}
+                            onClick={() => takeAction(selectedReport.id, &quot;ban_user", "Violation of community guidelines")}
                             disabled={processingActions.has(selectedReport.id)}
                           >
                             <Ban className="h-4 w-4 mr-1" />
@@ -778,7 +778,7 @@ export default function ReportsManagementPage() {
                             variant="outline"
                             size="sm"
                             className="w-full"
-                            onClick={() => takeAction(selectedReport.id, "warn_user", "Warning for reported behavior")}
+                            onClick={() => takeAction(selectedReport.id, &quot;warn_user", "Warning for reported behavior")}
                             disabled={processingActions.has(selectedReport.id)}
                           >
                             <AlertTriangle className="h-4 w-4 mr-1" />
@@ -790,7 +790,7 @@ export default function ReportsManagementPage() {
                       <Button
                         size="sm"
                         className="w-full"
-                        onClick={() => updateReportStatus(selectedReport.id, "resolved", "Issue has been addressed")}
+                        onClick={() => updateReportStatus(selectedReport.id, &quot;resolved", "Issue has been addressed")}
                         disabled={processingActions.has(selectedReport.id)}
                       >
                         {processingActions.has(selectedReport.id) ? (

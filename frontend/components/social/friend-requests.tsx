@@ -163,7 +163,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
   }
 
-  const receivedRequests = requests.filter((req) => req.type === "received" && req.status === "pending")
+  const receivedRequests = requests.filter((req) => req.type === &quot;received" && req.status === "pending")
   const sentRequests = requests.filter((req) => req.type === "sent")
   const processedRequests = requests.filter((req) => req.status !== "pending")
 
@@ -188,15 +188,15 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
                   </h3>
                   <p className="text-sm text-gray-600">@{otherUser.username}</p>
 
-                  {isReceived && (otherUser as any).mutualFriends > 0 && (
+                  {isReceived && (otherUser as Record<string, unknown>).mutualFriends > 0 && (
                     <p className="text-sm text-gray-500 mt-1">
-                      {(otherUser as any).mutualFriends} mutual friend{(otherUser as any).mutualFriends !== 1 ? "s" : ""}
+                      {(otherUser as Record<string, unknown>).mutualFriends} mutual friend{(otherUser as Record<string, unknown>).mutualFriends !== 1 ? &quot;s" : ""}
                     </p>
                   )}
 
                   {request.message && (
                     <div className="mt-2 p-2 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-700">"{request.message}"</p>
+                      <p className="text-sm text-gray-700">&quot;{request.message}"</p>
                     </div>
                   )}
 
@@ -214,14 +214,14 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
               <div className="flex gap-2 mt-4">
                 {isReceived && request.status === "pending" ? (
                   <>
-                    <Button size="sm" onClick={() => handleFriendRequest(request.id, "accept")} className="flex-1">
+                    <Button size="sm" onClick={() => handleFriendRequest(request.id, &quot;accept")} className="flex-1">
                       <Check className="mr-2 h-4 w-4" />
                       Accept
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => handleFriendRequest(request.id, "decline")}
+                      onClick={() => handleFriendRequest(request.id, &quot;decline")}
                       className="flex-1"
                     >
                       <X className="mr-2 h-4 w-4" />
@@ -290,7 +290,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
             <div className="text-center py-8">
               <UserPlus className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium mb-2">No pending friend requests</h3>
-              <p className="text-gray-600">You don't have any pending friend requests at the moment.</p>
+              <p className="text-gray-600">You don&apos;t have any pending friend requests at the moment.</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -311,7 +311,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
             <div className="text-center py-8">
               <Send className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium mb-2">No sent requests</h3>
-              <p className="text-gray-600">You haven't sent any friend requests yet.</p>
+              <p className="text-gray-600">You haven&apos;t sent any friend requests yet.</p>
             </div>
           ) : (
             <div className="space-y-4">

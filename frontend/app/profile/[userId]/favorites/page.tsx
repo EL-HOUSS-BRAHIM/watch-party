@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from "next/image"
 import { HeartIcon, PlayIcon, StarIcon, CalendarIcon, ClockIcon } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
 
@@ -81,8 +82,8 @@ const typeLabels = {
 }
 
 export default function FavoritesPage() {
-  const [filter, setFilter] = useState<'all' | 'movie' | 'show' | 'video'>('all')
-  const [sortBy, setSortBy] = useState<'added' | 'rating' | 'title'>('added')
+  const [filter, setFilter] = useState<'all' | 'movie' | 'show' | 'video'>(&apos;all')
+  const [sortBy, setSortBy] = useState<'added' | 'rating' | 'title'>(&apos;added')
 
   const filteredFavorites = favorites
     .filter(item => filter === 'all' || item.type === filter)
@@ -128,7 +129,7 @@ export default function FavoritesPage() {
             ].map(({ key, label }) => (
               <button
                 key={key}
-                onClick={() => setFilter(key as any)}
+                onClick={() => setFilter(key as Record<string, unknown>)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                   filter === key
                     ? 'bg-red-500 text-white'
@@ -143,7 +144,7 @@ export default function FavoritesPage() {
           {/* Sort Options */}
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={(e) => setSortBy(e.target.value as Record<string, unknown>)}
             className="px-4 py-2 bg-white/10 rounded-lg border border-white/20 text-white focus:outline-none focus:border-red-500"
           >
             <option value="added">Recently Added</option>
@@ -251,14 +252,14 @@ export default function FavoritesPage() {
           
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-blue-400 mb-2">
-              {favorites.filter(f => f.type === 'movie').length}
+              {favorites.filter(f => f.type === &apos;movie').length}
             </div>
             <div className="text-white/70">Movies</div>
           </div>
           
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-purple-400 mb-2">
-              {favorites.filter(f => f.type === 'show').length}
+              {favorites.filter(f => f.type === &apos;show').length}
             </div>
             <div className="text-white/70">TV Shows</div>
           </div>

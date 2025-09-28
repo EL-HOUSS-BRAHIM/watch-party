@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from "next/image"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -67,7 +68,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
       setIsLoading(true)
       const response = await get(`/users/${userId}/public-profile/`)
       setProfile(response.data as PublicProfile)
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(err.response?.data?.message || 'Failed to load profile')
     } finally {
       setIsLoading(false)
@@ -78,7 +79,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
     try {
       await post('/friends/requests/', { recipient_id: userId })
       // Show success toast
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Show error toast
     }
   }

@@ -283,7 +283,7 @@ const buildVideoCard = (video: Record<string, unknown>): TrendingVideoCard => {
   }
 }
 
-const buildPartyCard = (party: Record<string, unknown>, highlight?: "trending" | "recommended"): FeaturedPartyCard => {
+const buildPartyCard = (party: Record<string, unknown>, highlight?: &quot;trending" | "recommended"): FeaturedPartyCard => {
   const host = party?.host ?? party?.owner ?? party?.organizer ?? {}
   const id = party?.id ?? party?.room_code ?? fallbackId("party")
 
@@ -372,7 +372,7 @@ const buildSuggestedUserCard = (
 
   const nameParts = fullName.trim().split(/\s+/)
   const firstName = nameParts[0] ?? username
-  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : firstName
+  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(&quot; ") : firstName
 
   const mutualFriends = safeNumber(
     raw?.mutual_friends_count ?? raw?.mutual_friends ?? raw?.mutualFriends,
@@ -589,7 +589,7 @@ export default function DiscoverPage() {
         : []
 
       const discoverParties: FeaturedPartyCard[] = Array.isArray(discoverData.trending_parties)
-        ? discoverData.trending_parties.map((party) => buildPartyCard(party, "trending"))
+        ? discoverData.trending_parties.map((party) => buildPartyCard(party, &quot;trending"))
         : []
 
       const trendingParties: FeaturedPartyCard[] = Array.isArray(trendingPartiesPayload)
@@ -725,7 +725,7 @@ export default function DiscoverPage() {
 
         const normalizedParties = dedupePartyCards(
           Array.isArray(partyResults?.results)
-            ? partyResults.results.map((party: Record<string, unknown>) => buildPartyCard(party, "trending"))
+            ? partyResults.results.map((party: Record<string, unknown>) => buildPartyCard(party, &quot;trending"))
             : [],
         )
 

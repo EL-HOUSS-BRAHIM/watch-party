@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import Image from "next/image"
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -50,8 +51,8 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {
   const [masterVolume, setMasterVolume] = useState([50])
   const [microphoneVolume, setMicrophoneVolume] = useState([50])
   const [audioDevices, setAudioDevices] = useState<AudioDevice[]>([])
-  const [selectedMicrophone, setSelectedMicrophone] = useState<string>('')
-  const [selectedSpeaker, setSelectedSpeaker] = useState<string>('')
+  const [selectedMicrophone, setSelectedMicrophone] = useState<string>(&apos;')
+  const [selectedSpeaker, setSelectedSpeaker] = useState<string>(&apos;')
   const [showSettings, setShowSettings] = useState(false)
   const [voiceActivity, setVoiceActivity] = useState<Record<string, boolean>>({})
   const [error, setError] = useState<string | null>(null)
@@ -99,7 +100,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {
       setAudioDevices(audioDevices)
       
       // Set default devices
-      const defaultMic = audioDevices.find(d => d.kind === 'audioinput')
+      const defaultMic = audioDevices.find(d => d.kind === &apos;audioinput')
       const defaultSpeaker = audioDevices.find(d => d.kind === 'audiooutput')
       if (defaultMic) setSelectedMicrophone(defaultMic.deviceId)
       if (defaultSpeaker) setSelectedSpeaker(defaultSpeaker.deviceId)
@@ -349,14 +350,14 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {
                 size="sm"
                 onClick={toggleMute}
               >
-                {isMuted ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                {isMuted ? <MicOff className="h-4 w-4" /> : <Mic className=&quot;h-4 w-4" />}
               </Button>
               <Button
                 variant={isDeafened ? "destructive" : "outline"}
                 size="sm"
                 onClick={toggleDeafen}
               >
-                {isDeafened ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+                {isDeafened ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4" />}
               </Button>
             </div>
 
@@ -400,7 +401,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {
                       className="w-full p-2 border rounded-md"
                     >
                       {audioDevices
-                        .filter(device => device.kind === 'audioinput')
+                        .filter(device => device.kind === &apos;audioinput')
                         .map(device => (
                           <option key={device.deviceId} value={device.deviceId}>
                             {device.label || `Microphone ${device.deviceId.slice(0, 8)}`}
@@ -417,7 +418,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {
                       className="w-full p-2 border rounded-md"
                     >
                       {audioDevices
-                        .filter(device => device.kind === 'audiooutput')
+                        .filter(device => device.kind === &apos;audiooutput')
                         .map(device => (
                           <option key={device.deviceId} value={device.deviceId}>
                             {device.label || `Speaker ${device.deviceId.slice(0, 8)}`}

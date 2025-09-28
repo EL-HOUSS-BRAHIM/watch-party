@@ -113,7 +113,7 @@ export default function GroupedNotifications() {
   const [notifications, setNotifications] = useState<NotificationWithMeta[]>([]);
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'unread' | 'actionable'>('all');
+  const [filter, setFilter] = useState<'all' | 'unread' | 'actionable'>(&apos;all');
   const [pagination, setPagination] = useState<PaginationState>({ currentPage: 1, next: null, count: 0 });
 
   const fetchNotifications = useCallback(
@@ -440,7 +440,7 @@ export default function GroupedNotifications() {
         <div>
           <h1 className="text-2xl font-bold">Notifications</h1>
           <p className="text-muted-foreground">
-            {unreadCount > 0 ? `${unreadCount} unread notifications` : "You're all caught up!"}
+            {unreadCount > 0 ? `${unreadCount} unread notifications` : &quot;You&apos;re all caught up!"}
           </p>
         </div>
         <div className="flex gap-2">
@@ -587,14 +587,14 @@ export default function GroupedNotifications() {
                                   <>
                                     <Button
                                       size="sm"
-                                      onClick={() => void handleFriendRequest(notification, 'accept')}
+                                      onClick={() => void handleFriendRequest(notification, &apos;accept')}
                                     >
                                       Accept
                                     </Button>
                                     <Button
                                       variant="outline"
                                       size="sm"
-                                      onClick={() => void handleFriendRequest(notification, 'decline')}
+                                      onClick={() => void handleFriendRequest(notification, &apos;decline')}
                                     >
                                       Decline
                                     </Button>
@@ -604,14 +604,14 @@ export default function GroupedNotifications() {
                                   <>
                                     <Button
                                       size="sm"
-                                      onClick={() => void handlePartyInvite(notification, 'accept')}
+                                      onClick={() => void handlePartyInvite(notification, &apos;accept')}
                                     >
                                       Join Party
                                     </Button>
                                     <Button
                                       variant="outline"
                                       size="sm"
-                                      onClick={() => void handlePartyInvite(notification, 'decline')}
+                                      onClick={() => void handlePartyInvite(notification, &apos;decline')}
                                     >
                                       Decline
                                     </Button>

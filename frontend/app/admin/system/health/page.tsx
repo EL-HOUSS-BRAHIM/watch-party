@@ -77,7 +77,7 @@ export default function SystemHealthPage() {
             id: 'cpu',
             name: 'CPU Usage',
             value: healthMetrics.cpu_usage || 0,
-            status: (healthMetrics.cpu_usage || 0) > 80 ? 'critical' : 
+            status: (healthMetrics.cpu_usage || 0) > 80 ? &apos;critical' : 
                    (healthMetrics.cpu_usage || 0) > 60 ? 'warning' : 'healthy',
             unit: '%',
             description: 'Current CPU utilization across all cores'
@@ -189,7 +189,7 @@ export default function SystemHealthPage() {
     }
   }
 
-  const healthyCount = components.filter(c => c.status === 'online').length
+  const healthyCount = components.filter(c => c.status === &apos;online').length
   const degradedCount = components.filter(c => c.status === 'degraded').length
   const offlineCount = components.filter(c => c.status === 'offline').length
 

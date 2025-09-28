@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import Image from "next/image"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -91,7 +92,7 @@ export function GoogleDriveVideoBrowser({
       })) as DriveFile[]
 
       setFiles(mappedFiles)
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error',
         description: 'Failed to load Google Drive files',
@@ -198,11 +199,12 @@ export function GoogleDriveVideoBrowser({
         <CardHeader className="pb-4">
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
-              <img 
-                src="https://developers.google.com/drive/images/drive_icon.png" 
-                alt="Google Drive" 
-                className="w-6 h-6"
-              />
+              <Image
+              src="https://developers.google.com/drive/images/drive_icon.png"
+              alt="Google Drive"
+              fill
+              className="w-6 h-6"
+            />
               Select from Google Drive
             </CardTitle>
             <Button variant="outline" onClick={onClose}>
@@ -214,7 +216,7 @@ export function GoogleDriveVideoBrowser({
           <div className="flex items-center gap-2 text-sm">
             {folderPath.map((folder, index) => (
               <div key={folder.id} className="flex items-center gap-2">
-                {index > 0 && <span className="text-gray-400">/</span>}
+                {index > 0 && <span className=&quot;text-gray-400">/</span>}
                 <button
                   onClick={() => handleBreadcrumbClick(index)}
                   className="hover:text-blue-600 transition-colors"

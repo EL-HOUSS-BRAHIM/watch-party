@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { User, MapPin, Calendar, Star, Trophy, Users, MessageCircle, UserPlus, UserMinus, MoreHorizontal, Flag, Shield, Activity, Clock, Heart, Play, Award, Gift } from "lucide-react"
+import { User, MapPin, Calendar, Star, Trophy, Users, MessageCircle, UserPlus, UserMinus, MoreHorizontal, Flag, Shield, Activity, Clock, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -149,7 +149,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
       })
 
       if (response.ok) {
-        setProfile(prev => prev ? { ...prev, friendshipStatus: "pending_sent" } : null)
+        setProfile(prev => prev ? { ...prev, friendshipStatus: &quot;pending_sent" } : null)
         toast({
           title: "Friend request sent",
           description: `Friend request sent to ${profile.firstName}`,

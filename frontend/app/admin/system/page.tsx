@@ -370,15 +370,15 @@ export default function SystemMonitoring() {
           <CardContent className="space-y-3">
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>Inbound</span>
-              <span className="font-semibold text-foreground">{metrics?.networkIn?.toFixed(2) ?? '—'} Mbps</span>
+              <span className="font-semibold text-foreground">{metrics?.networkIn?.toFixed(2) ?? &apos;—'} Mbps</span>
             </div>
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>Outbound</span>
-              <span className="font-semibold text-foreground">{metrics?.networkOut?.toFixed(2) ?? '—'} Mbps</span>
+              <span className="font-semibold text-foreground">{metrics?.networkOut?.toFixed(2) ?? &apos;—'} Mbps</span>
             </div>
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>Active connections</span>
-              <span className="font-semibold text-foreground">{metrics?.activeConnections ?? '—'}</span>
+              <span className="font-semibold text-foreground">{metrics?.activeConnections ?? &apos;—'}</span>
             </div>
           </CardContent>
         </Card>

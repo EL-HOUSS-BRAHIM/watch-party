@@ -37,7 +37,7 @@ function TestimonialsComponent({ testimonials }: TestimonialsProps) {
                   <Star key={`${testimonial.username}-${index}`} className="w-4 h-4 text-white fill-white" />
                 ))}
               </div>
-              <p className="text-white/80 mb-6 leading-relaxed">"{testimonial.content}"</p>
+              <p className="text-white/80 mb-6 leading-relaxed">&quot;{testimonial.content}"</p>
               <div className="flex items-center space-x-3">
                 <Avatar className="w-10 h-10">
                   <AvatarImage src={undefined} alt={testimonial.name} />

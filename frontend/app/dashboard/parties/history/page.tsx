@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -311,8 +312,8 @@ export default function PartyHistoryPage() {
       accessorKey: "scheduledFor" as keyof PartyHistoryItem,
       cell: ({ row }: { row: PartyHistoryItem }) => (
         <div className="text-sm">
-          <div>{format(parseISO(row.scheduledFor), "MMM dd, yyyy")}</div>
-          <div className="text-muted-foreground">{format(parseISO(row.scheduledFor), "h:mm a")}</div>
+          <div>{format(parseISO(row.scheduledFor), &quot;MMM dd, yyyy")}</div>
+          <div className="text-muted-foreground">{format(parseISO(row.scheduledFor), &quot;h:mm a")}</div>
         </div>
       ),
     },
@@ -395,7 +396,7 @@ export default function PartyHistoryPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className="p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -451,7 +452,7 @@ export default function PartyHistoryPage() {
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-red-600">{stats.mostWatchedGenre || "N/A"}</div>
+              <div className="text-2xl font-bold text-red-600">{stats.mostWatchedGenre || &quot;N/A"}</div>
               <div className="text-sm text-muted-foreground">Top Genre</div>
             </CardContent>
           </Card>
@@ -566,7 +567,7 @@ export default function PartyHistoryPage() {
                   <History className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-lg font-medium mb-2">No parties found</h3>
                   <p className="text-muted-foreground">
-                    {filters.search || Object.values(filters).some((f) => f !== "all")
+                    {filters.search || Object.values(filters).some((f) => f !== &quot;all")
                       ? "Try adjusting your search or filters"
                       : activeTab === "hosted"
                         ? "You haven't hosted any parties yet"
@@ -574,7 +575,7 @@ export default function PartyHistoryPage() {
                           ? "You haven't joined any parties yet"
                           : "No party history available"}
                   </p>
-                  <Button className="mt-4" onClick={() => router.push("/dashboard/parties/create")}>
+                  <Button className="mt-4" onClick={() => router.push(&quot;/dashboard/parties/create")}>
                     <Play className="h-4 w-4 mr-2" />
                     Create Your First Party
                   </Button>

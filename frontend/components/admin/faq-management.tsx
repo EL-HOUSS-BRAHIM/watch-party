@@ -90,7 +90,7 @@ const parseTags = (value: string): string[] =>
     .map((tag) => tag.trim())
     .filter(Boolean)
 
-const normalizeFaq = (faq: any, fallback?: Partial<FAQ>, index?: number): FAQ => {
+const normalizeFaq = (faq: unknown, fallback?: Partial<FAQ>, index?: number): FAQ => {
   const resolvedId =
     faq?.id ??
     faq?.faq_id ??
@@ -105,7 +105,7 @@ const normalizeFaq = (faq: any, fallback?: Partial<FAQ>, index?: number): FAQ =>
     'general'
 
   const tagList = Array.isArray(faq?.tags)
-    ? faq.tags.map((tag: any) => String(tag).trim()).filter(Boolean)
+    ? faq.tags.map((tag: unknown) => String(tag).trim()).filter(Boolean)
     : typeof faq?.tags === 'string'
       ? faq.tags.split(',').map((tag: string) => tag.trim()).filter(Boolean)
       : fallback?.tags ?? []
@@ -150,7 +150,7 @@ export default function FAQManagement() {
   const [faqs, setFaqs] = useState<FAQ[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const [selectedCategory, setSelectedCategory] = useState<string>(&apos;all')
   const [showPublishedOnly, setShowPublishedOnly] = useState(false)
   const [editingFAQ, setEditingFAQ] = useState<FAQ | null>(null)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -198,14 +198,14 @@ export default function FAQManagement() {
     setLoading(true)
     try {
       const response = await supportAPI.getFAQs({ page: 1 })
-      const results = Array.isArray((response as any)?.results)
-        ? (response as any).results
+      const results = Array.isArray((response as Record<string, unknown>)?.results)
+        ? (response as Record<string, unknown>).results
         : Array.isArray(response)
           ? response
           : []
 
       const normalized = results
-        .map((faq: any, index: number) => normalizeFaq(faq, undefined, index))
+        .map((faq: unknown, index: number) => normalizeFaq(faq, undefined, index))
         .sort((a: FAQ, b: FAQ) => a.order - b.order)
 
       setFaqs(normalized)
@@ -527,7 +527,7 @@ export default function FAQManagement() {
     categories.find((category) => category.id === categoryId)?.name ?? categoryId
 
   const getCategoryColor = (categoryId: string) =>
-    categories.find((category) => category.id === categoryId)?.color ?? 'bg-gray-500'
+    categories.find((category) => category.id === categoryId)?.color ?? &apos;bg-gray-500'
 
   if (loading) {
     return (
@@ -583,7 +583,7 @@ export default function FAQManagement() {
               </DialogTrigger>
               <DialogContent className="bg-black/90 border-white/20 max-w-2xl">
                 <DialogHeader>
-                  <DialogTitle>{editingFAQ ? 'Edit FAQ' : 'Create New FAQ'}</DialogTitle>
+                  <DialogTitle>{editingFAQ ? &apos;Edit FAQ' : 'Create New FAQ'}</DialogTitle>
                   <DialogDescription>
                     {editingFAQ ? 'Update the FAQ details below' : 'Add a new frequently asked question'}
                   </DialogDescription>
@@ -796,7 +796,7 @@ export default function FAQManagement() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleReorderFAQ(faq.id, 'up')}
+                        onClick={() => handleReorderFAQ(faq.id, &apos;up')}
                         disabled={index === 0 || isProcessing}
                       >
                         <ArrowUpIcon className="w-4 h-4" />
@@ -804,7 +804,7 @@ export default function FAQManagement() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleReorderFAQ(faq.id, 'down')}
+                        onClick={() => handleReorderFAQ(faq.id, &apos;down')}
                         disabled={index === filteredFAQs.length - 1 || isProcessing}
                       >
                         <ArrowDownIcon className="w-4 h-4" />

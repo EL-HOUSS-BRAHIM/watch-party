@@ -66,7 +66,7 @@ export function DashboardHeader() {
 
         {/* Theme Toggle */}
         <Button variant="ghost" size="icon" onClick={toggleTheme}>
-          {ui.theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          {ui.theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className=&quot;w-5 h-5" />}
         </Button>
 
         {/* User Menu */}

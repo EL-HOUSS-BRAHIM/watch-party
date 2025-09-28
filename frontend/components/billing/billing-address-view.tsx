@@ -84,7 +84,7 @@ export function BillingAddressView() {
       setIsLoading(true)
       const response = await get('/billing/addresses/')
       setAddresses((response.data as BillingAddress[]) || [])
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error',
         description: 'Failed to load billing addresses',
@@ -127,7 +127,7 @@ export function BillingAddressView() {
       setEditingAddress(null)
       setIsAddingNew(false)
       resetForm()
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error',
         description: error.response?.data?.message || 'Failed to save billing address',
@@ -148,7 +148,7 @@ export function BillingAddressView() {
         description: 'Billing address deleted successfully'
       })
       await fetchAddresses()
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error',
         description: 'Failed to delete billing address',
@@ -165,7 +165,7 @@ export function BillingAddressView() {
         description: 'Default billing address updated'
       })
       await fetchAddresses()
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Error',
         description: 'Failed to update default address',

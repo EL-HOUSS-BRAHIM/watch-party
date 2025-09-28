@@ -49,7 +49,7 @@ const fallbackId = (prefix: string) =>
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
-const normalizeSearchUser = (user: any): User => ({
+const normalizeSearchUser = (user: unknown): User => ({
   id: String(user?.id ?? user?.user_id ?? user?.username ?? fallbackId('user')),
   username: user?.username ?? user?.handle ?? 'user',
   displayName:
@@ -97,7 +97,7 @@ const buildSearchParams = (searchTerm: string, filters: SearchFilters) => {
     q: searchTerm || '',
     limit: 20,
     sort: filters.sortBy,
-  } as any;
+  } as Record<string, unknown>;
 
   if (filters.location !== 'any') {
     result.location = filters.location;
@@ -152,7 +152,7 @@ export default function SmartFriendSearch() {
     setLoadingSuggestions(true);
     try {
       const response = await usersAPI.getFriendSuggestions({ limit: 12 });
-      const normalized = (response ?? []).map((item: any) => normalizeSearchUser(item));
+      const normalized = (response ?? []).map((item: unknown) => normalizeSearchUser(item));
       setSuggestions(normalized);
     } catch (error) {
       console.error('Failed to load friend suggestions:', error);
@@ -184,7 +184,7 @@ export default function SmartFriendSearch() {
       const params = buildSearchParams(searchTerm, filters);
       const response = await usersAPI.searchUsers(params);
       const results = response?.results ?? [];
-      setUsers(results.map((result: any) => normalizeSearchUser(result)));
+      setUsers(results.map((result: unknown) => normalizeSearchUser(result)));
     } catch (error) {
       console.error('Failed to search users:', error);
       toast({

@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { MessageCircle, Phone, Video, MoreHorizontal } from 'lucide-react';
+import { MessageCircle, Video } from 'lucide-react';
 import { usersAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
@@ -30,7 +30,7 @@ const fallbackId = (prefix: string) =>
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
-const resolveStatus = (status: any, isOnlineFallback?: boolean): OnlineFriend['status'] => {
+const resolveStatus = (status: unknown, isOnlineFallback?: boolean): OnlineFriend['status'] => {
   const normalized = typeof status === 'string' ? status.toLowerCase() : undefined;
 
   switch (normalized) {
@@ -51,10 +51,10 @@ const resolveStatus = (status: any, isOnlineFallback?: boolean): OnlineFriend['s
   }
 };
 
-const normalizeActivity = (activity: any): OnlineFriend['activity'] | undefined => {
+const normalizeActivity = (activity: unknown): OnlineFriend['activity'] | undefined => {
   if (!activity) return undefined;
 
-  let type: NonNullable<OnlineFriend['activity']>['type'] = 'watching';
+  let type: NonNullable<OnlineFriend['activity']>[&apos;type'] = 'watching';
 
   const rawType = (activity.type ?? activity.activity_type ?? '').toString().toLowerCase();
   
@@ -79,7 +79,7 @@ const normalizeActivity = (activity: any): OnlineFriend['activity'] | undefined 
   };
 };
 
-const normalizeOnlineFriend = (friend: any): OnlineFriend => ({
+const normalizeOnlineFriend = (friend: unknown): OnlineFriend => ({
   id: String(friend?.id ?? friend?.user_id ?? fallbackId('friend')),
   username: friend?.username ?? friend?.handle ?? friend?.name ?? 'user',
   displayName: friend?.display_name ?? friend?.name ?? friend?.username ?? 'Friend',
@@ -143,7 +143,7 @@ export default function OnlineStatusIndicators() {
     try {
       const response = await usersAPI.getOnlineStatus();
       const results = Array.isArray(response?.online_friends) ? response.online_friends : [];
-      setFriends(results.map((friend: any) => normalizeOnlineFriend(friend)));
+      setFriends(results.map((friend: unknown) => normalizeOnlineFriend(friend)));
       setTotalOnline(typeof response?.total_online === 'number' ? response.total_online : results.length);
       errorNotifiedRef.current = false;
     } catch (error) {
@@ -170,7 +170,7 @@ export default function OnlineStatusIndicators() {
     return () => clearInterval(interval);
   }, [fetchOnlineFriends]);
 
-  const onlineFriends = friends.filter(friend => friend.status !== 'offline');
+  const onlineFriends = friends.filter(friend => friend.status !== &apos;offline');
   const offlineFriends = friends.filter(friend => friend.status === 'offline');
 
   const handleStartChat = (friendId: string) => {
@@ -229,7 +229,7 @@ export default function OnlineStatusIndicators() {
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={friend.avatar} alt={friend.displayName} />
                     <AvatarFallback>
-                      {friend.displayName.split(' ').map(n => n[0]).join('')}
+                      {friend.displayName.split(' ').map(n => n[0]).join(&apos;')}
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute -bottom-1 -right-1">
@@ -306,7 +306,7 @@ export default function OnlineStatusIndicators() {
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={friend.avatar} alt={friend.displayName} />
                     <AvatarFallback>
-                      {friend.displayName.split(' ').map(n => n[0]).join('')}
+                      {friend.displayName.split(' ').map(n => n[0]).join(&apos;')}
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute -bottom-1 -right-1">

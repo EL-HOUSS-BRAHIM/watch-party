@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Bell, BellOff, Settings, Smartphone, Mail, MessageSquare, Users, Calendar, Star, Volume2, VolumeX, Monitor, Moon, Sun, Zap, Filter, Clock, AlertTriangle } from "lucide-react"
+import { Bell, BellOff, Settings, Smartphone, Mail, MessageSquare, Users, Calendar, Star, Volume2, VolumeX, Monitor, Moon, Sun, Zap, Filter, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
@@ -369,7 +369,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                 <div className="grid gap-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      {settings.soundEnabled ? <Volume2 className="h-5 w-5 text-primary" /> : <VolumeX className="h-5 w-5 text-muted-foreground" />}
+                      {settings.soundEnabled ? <Volume2 className="h-5 w-5 text-primary" /> : <VolumeX className=&quot;h-5 w-5 text-muted-foreground" />}
                       <div>
                         <Label className="text-base">Sound</Label>
                         <p className="text-sm text-muted-foreground">Play sounds for notifications</p>
@@ -424,7 +424,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                             </div>
                             <Switch
                               checked={categorySettings.enabled}
-                              onCheckedChange={(checked) => updateCategorySettings(category as any, { enabled: checked })}
+                              onCheckedChange={(checked) => updateCategorySettings(category as Record<string, unknown>, { enabled: checked })}
                             />
                           </div>
 
@@ -436,7 +436,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                                   <Switch
                                     checked={categorySettings.pushEnabled && settings.pushEnabled}
                                     disabled={!settings.pushEnabled}
-                                    onCheckedChange={(checked) => updateCategorySettings(category as any, { pushEnabled: checked })}
+                                    onCheckedChange={(checked) => updateCategorySettings(category as Record<string, unknown>, { pushEnabled: checked })}
                                   />
                                 </div>
                                 <div className="flex items-center justify-between">
@@ -444,7 +444,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                                   <Switch
                                     checked={categorySettings.emailEnabled && settings.emailEnabled}
                                     disabled={!settings.emailEnabled}
-                                    onCheckedChange={(checked) => updateCategorySettings(category as any, { emailEnabled: checked })}
+                                    onCheckedChange={(checked) => updateCategorySettings(category as Record<string, unknown>, { emailEnabled: checked })}
                                   />
                                 </div>
                               </div>
@@ -453,7 +453,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                                 <Label className="text-sm">Priority Level</Label>
                                 <Select
                                   value={categorySettings.priority}
-                                  onValueChange={(value: any) => updateCategorySettings(category as any, { priority: value })}
+                                  onValueChange={(value: unknown) => updateCategorySettings(category as Record<string, unknown>, { priority: value })}
                                 >
                                   <SelectTrigger>
                                     <SelectValue />
@@ -642,7 +642,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                     <Label>Notification Theme</Label>
                     <RadioGroup
                       value={settings.theme}
-                      onValueChange={(value: any) => updateSettings({ theme: value })}
+                      onValueChange={(value: unknown) => updateSettings({ theme: value })}
                     >
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="system" id="system" />

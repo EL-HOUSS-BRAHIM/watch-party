@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { useParams, useRouter } from "next/navigation"
 import { apiClient } from "@/lib/api"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -70,7 +71,7 @@ interface UserProfile {
     type: "video_upload" | "party_host" | "party_join" | "achievement"
     description: string
     createdAt: string
-    metadata?: any
+    metadata?: unknown
   }>
 }
 
@@ -226,7 +227,7 @@ export default function UserProfilePage() {
     switch (profile.friendshipStatus) {
       case "none":
         return (
-          <Button onClick={() => handleFriendAction("send_request")} className="flex items-center gap-2">
+          <Button onClick={() => handleFriendAction(&quot;send_request")} className="flex items-center gap-2">
             <UserPlus className="w-4 h-4" />
             Add Friend
           </Button>
@@ -240,17 +241,17 @@ export default function UserProfilePage() {
       case "pending_received":
         return (
           <div className="flex gap-2">
-            <Button onClick={() => handleFriendAction("accept")} size="sm">
+            <Button onClick={() => handleFriendAction(&quot;accept")} size="sm">
               Accept
             </Button>
-            <Button onClick={() => handleFriendAction("decline")} variant="outline" size="sm">
+            <Button onClick={() => handleFriendAction(&quot;decline")} variant="outline" size="sm">
               Decline
             </Button>
           </div>
         )
       case "friends":
         return (
-          <Button onClick={() => handleFriendAction("remove")} variant="outline" className="flex items-center gap-2">
+          <Button onClick={() => handleFriendAction(&quot;remove")} variant="outline" className="flex items-center gap-2">
             <UserMinus className="w-4 h-4" />
             Remove Friend
           </Button>
@@ -284,8 +285,8 @@ export default function UserProfilePage() {
     return (
       <div className="container mx-auto py-8 px-4 text-center">
         <h1 className="text-2xl font-bold mb-4">Profile Not Found</h1>
-        <p className="text-gray-600 mb-4">The user profile you're looking for doesn't exist.</p>
-        <Button onClick={() => router.push("/dashboard")}>Return to Dashboard</Button>
+        <p className="text-gray-600 mb-4">The user profile you&apos;re looking for doesn't exist.</p>
+        <Button onClick={() => router.push(&quot;/dashboard")}>Return to Dashboard</Button>
       </div>
     )
   }
@@ -337,7 +338,7 @@ export default function UserProfilePage() {
                 <div className="flex gap-2">
                   {getFriendshipButton()}
                   {isOwnProfile ? (
-                    <Button onClick={() => router.push("/dashboard/settings")} variant="outline">
+                    <Button onClick={() => router.push(&quot;/dashboard/settings")} variant="outline">
                       <Settings className="w-4 h-4 mr-2" />
                       Edit Profile
                     </Button>
@@ -559,7 +560,7 @@ export default function UserProfilePage() {
               <CardContent className="p-8 text-center">
                 <Users className="w-12 h-12 mx-auto mb-4 text-gray-400" />
                 <h3 className="text-lg font-semibold mb-2">Friends List Private</h3>
-                <p className="text-gray-600">This user's friends list is private.</p>
+                <p className="text-gray-600">This user&apos;s friends list is private.</p>
               </CardContent>
             </Card>
           )}

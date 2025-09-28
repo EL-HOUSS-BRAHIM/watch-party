@@ -121,7 +121,7 @@ const QualityPage = () => {
             category: "performance", 
             score: performanceData.performance_score || 85,
             target: 90,
-            trend: (performanceData.performance_score || 85) > 85 ? "up" : "down",
+            trend: (performanceData.performance_score || 85) > 85 ? &quot;up" : "down",
             lastTested: new Date(),
             tests: []
           },
@@ -141,7 +141,7 @@ const QualityPage = () => {
 
       // Transform logs to quality tests and issues
       if (systemLogs.results) {
-        const tests: QualityTest[] = systemLogs.results.slice(0, 10).map((log: any, index: number) => ({
+        const tests: QualityTest[] = systemLogs.results.slice(0, 10).map((log: unknown, index: number) => ({
           id: log.id || `test-${index}`,
           name: log.message?.substring(0, 50) || `Quality Test ${index + 1}`,
           type: "automated" as const,
@@ -155,8 +155,8 @@ const QualityPage = () => {
         setQualityTests(tests)
 
         // Transform error logs to issues
-        const errorLogs = systemLogs.results.filter((log: any) => log.level === 'error')
-        const transformedIssues: Issue[] = errorLogs.slice(0, 5).map((log: any, index: number) => ({
+        const errorLogs = systemLogs.results.filter((log: unknown) => log.level === &apos;error')
+        const transformedIssues: Issue[] = errorLogs.slice(0, 5).map((log: unknown, index: number) => ({
           id: log.id || `issue-${index}`,
           title: log.message?.substring(0, 60) || `Quality Issue ${index + 1}`,
           description: log.message || 'No description available',
@@ -310,7 +310,7 @@ const QualityPage = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {qualityTests.filter(t => t.status === 'passed').length}
+              {qualityTests.filter(t => t.status === &apos;passed').length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
               of {qualityTests.length} total tests
@@ -325,10 +325,10 @@ const QualityPage = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
-              {issues.filter(i => i.status === 'open').length}
+              {issues.filter(i => i.status === &apos;open').length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
-              {issues.filter(i => i.severity === 'critical').length} critical
+              {issues.filter(i => i.severity === &apos;critical').length} critical
             </div>
           </CardContent>
         </Card>

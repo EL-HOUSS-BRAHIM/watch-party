@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -101,7 +102,7 @@ export default function ContentModeration() {
   const loadReports = async () => {
     try {
       const data = await adminAPI.getReports({
-        status: statusFilter !== "all" ? statusFilter as any : undefined,
+        status: statusFilter !== "all" ? statusFilter as Record<string, unknown> : undefined,
         type: typeFilter !== "all" ? typeFilter : undefined,
         page: currentPage,
       })
@@ -145,7 +146,7 @@ export default function ContentModeration() {
   const updateReportStatus = async (reportId: string, status: string, resolution?: string) => {
     try {
       await adminAPI.resolveReport(reportId, {
-        action: status === "resolved" ? "dismiss" : status as any,
+        action: status === "resolved" ? "dismiss" : status as Record<string, unknown>,
         reason: resolution,
       })
 
@@ -168,7 +169,7 @@ export default function ContentModeration() {
   const takeContentAction = async (reportId: string, action: string, reason: string) => {
     try {
       await adminAPI.resolveReport(reportId, {
-        action: action as any,
+        action: action as Record<string, unknown>,
         reason,
       })
 
@@ -282,7 +283,7 @@ export default function ContentModeration() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600">Category:</span>
-                      <span className="capitalize">{report.category.replace("_", " ")}</span>
+                      <span className="capitalize">{report.category.replace(&quot;_", " ")}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600">Status:</span>
@@ -418,7 +419,7 @@ export default function ContentModeration() {
                   </div>
 
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => updateReportStatus(report.id, "dismissed", resolution)}>
+                    <Button variant="outline" onClick={() => updateReportStatus(report.id, &quot;dismissed", resolution)}>
                       Dismiss
                     </Button>
                     <Button onClick={handleResolve} disabled={!resolution}>
@@ -585,7 +586,7 @@ export default function ContentModeration() {
                     <TableCell>
                       <div>
                         <p className="font-medium text-sm">#{report.id.slice(-8)}</p>
-                        <p className="text-xs text-gray-500 capitalize">{report.category.replace("_", " ")}</p>
+                        <p className="text-xs text-gray-500 capitalize">{report.category.replace(&quot;_", " ")}</p>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -624,18 +625,18 @@ export default function ContentModeration() {
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => updateReportStatus(report.id, "reviewing")}>
+                          <DropdownMenuItem onClick={() => updateReportStatus(report.id, &quot;reviewing")}>
                             <Shield className="mr-2 h-4 w-4" />
                             Start Review
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => updateReportStatus(report.id, "resolved", "Quick resolution")}
+                            onClick={() => updateReportStatus(report.id, &quot;resolved", "Quick resolution")}
                           >
                             <Check className="mr-2 h-4 w-4" />
                             Quick Resolve
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => updateReportStatus(report.id, "dismissed", "Not actionable")}
+                            onClick={() => updateReportStatus(report.id, &quot;dismissed", "Not actionable")}
                           >
                             <X className="mr-2 h-4 w-4" />
                             Dismiss

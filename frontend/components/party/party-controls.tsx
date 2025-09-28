@@ -31,7 +31,7 @@ export function PartyControls({ partyId }: PartyControlsProps) {
   const { sendMessage } = useSocket()
   const [isPlaying, setIsPlaying] = useState(false)
 
-  const emitControl = (action: string, data?: any) => {
+  const emitControl = (action: string, data?: unknown) => {
     sendMessage("party:control", { 
       party_id: partyId,
       action, 
@@ -61,7 +61,7 @@ export function PartyControls({ partyId }: PartyControlsProps) {
       </Button>
 
       <Button variant="outline" size="sm" onClick={handlePlayPause}>
-        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className=&quot;w-4 h-4" />}
       </Button>
 
       <Button variant="outline" size="sm" onClick={() => handleSkip(10)}>

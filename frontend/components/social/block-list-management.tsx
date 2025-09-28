@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Shield, ShieldAlert, RotateCcw, Search, Trash2, AlertTriangle, UserX, Calendar, Loader2, Users } from "lucide-react"
+import { Shield, ShieldAlert, RotateCcw, Search, AlertTriangle, UserX, Calendar, Loader2, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -246,7 +246,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
               )}
 
               <div className="flex items-center gap-2 mb-2">
-                <Badge variant={reasonDisplay.color as any} className="text-xs">
+                <Badge variant={reasonDisplay.color as Record<string, unknown>} className=&quot;text-xs">
                   <ShieldAlert className="h-3 w-3 mr-1" />
                   {reasonDisplay.label}
                 </Badge>
@@ -320,12 +320,12 @@ export default function BlockListManagement({ className }: BlockListManagementPr
               {searchQuery ? (
                 <>
                   <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>No blocked users found matching "{searchQuery}"</p>
+                  <p>No blocked users found matching &quot;{searchQuery}"</p>
                 </>
               ) : (
                 <>
                   <Shield className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>You haven't blocked any users</p>
+                  <p>You haven&apos;t blocked any users</p>
                   <p className="text-sm">Blocked users will appear here when you block someone</p>
                 </>
               )}
@@ -357,8 +357,8 @@ export default function BlockListManagement({ className }: BlockListManagementPr
                     <p className="font-medium">About blocking users:</p>
                     <ul className="space-y-1 text-muted-foreground">
                       <li>• Blocked users cannot send you messages or friend requests</li>
-                      <li>• They won't be able to see your profile or join your parties</li>
-                      <li>• You won't see their content in shared spaces</li>
+                      <li>• They won&apos;t be able to see your profile or join your parties</li>
+                      <li>• You won&apos;t see their content in shared spaces</li>
                       <li>• You can unblock them at any time</li>
                     </ul>
                   </div>

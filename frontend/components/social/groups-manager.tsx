@@ -103,8 +103,8 @@ export function GroupsManager() {
   const [myGroups, setMyGroups] = useState<Group[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState<string>('all')
-  const [privacyFilter, setPrivacyFilter] = useState<string>('all')
+  const [categoryFilter, setCategoryFilter] = useState<string>(&apos;all')
+  const [privacyFilter, setPrivacyFilter] = useState<string>(&apos;all')
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [createFormData, setCreateFormData] = useState<CreateGroupData>({
     name: '',
@@ -122,7 +122,7 @@ export function GroupsManager() {
   const loadGroups = async () => {
     try {
       const [allGroupsData, myGroupsData] = await Promise.all([
-        apiRequest(() => fetch('/api/social/groups/discover')),
+        apiRequest(() => fetch(&apos;/api/social/groups/discover')),
         apiRequest(() => fetch('/api/social/groups/my-groups'))
       ])
 
@@ -276,7 +276,7 @@ export function GroupsManager() {
                     <label className="text-sm font-medium">Privacy</label>
                     <Select 
                       value={createFormData.privacy} 
-                      onValueChange={(value: any) => setCreateFormData(prev => ({ ...prev, privacy: value }))}
+                      onValueChange={(value: unknown) => setCreateFormData(prev => ({ ...prev, privacy: value }))}
                     >
                       <SelectTrigger>
                         <SelectValue />

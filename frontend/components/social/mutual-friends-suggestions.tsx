@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -54,8 +54,8 @@ export function MutualFriendsSuggestions() {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filter, setFilter] = useState<'all' | 'mutual_friends' | 'location' | 'interests'>('all')
-  const [sortBy, setSortBy] = useState<'confidence' | 'mutual_friends' | 'recent'>('confidence')
+  const [filter, setFilter] = useState<'all' | 'mutual_friends' | 'location' | 'interests'>(&apos;all')
+  const [sortBy, setSortBy] = useState<'confidence' | 'mutual_friends' | 'recent'>(&apos;confidence')
 
   useEffect(() => {
     fetchSuggestions()
@@ -367,7 +367,7 @@ export function MutualFriendsSuggestions() {
           />
         </div>
         
-        <Select value={filter} onValueChange={(value: any) => setFilter(value)}>
+        <Select value={filter} onValueChange={(value: unknown) => setFilter(value)}>
           <SelectTrigger className="w-full sm:w-48">
             <Filter className="h-4 w-4 mr-2" />
             <SelectValue />
@@ -380,7 +380,7 @@ export function MutualFriendsSuggestions() {
           </SelectContent>
         </Select>
         
-        <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
+        <Select value={sortBy} onValueChange={(value: unknown) => setSortBy(value)}>
           <SelectTrigger className="w-full sm:w-48">
             <SelectValue />
           </SelectTrigger>

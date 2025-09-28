@@ -1,13 +1,14 @@
 'use client'
 
 import { useState } from 'react'
+import Image from "next/image"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
-import { ShoppingCart, CreditCard, Coins, Gift, Minus, Plus, Star } from 'lucide-react'
+import { ShoppingCart, CreditCard, Coins, Minus, Plus, Star } from 'lucide-react'
 import { useApi } from '@/hooks/use-api'
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
@@ -130,7 +131,7 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
 
       onPurchaseComplete(item, quantity)
       onClose()
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast({
         title: 'Purchase failed',
         description: error.response?.data?.message || 'Failed to complete purchase',

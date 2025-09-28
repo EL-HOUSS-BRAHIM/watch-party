@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from "next/image"
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -337,7 +338,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => deleteMessage(message.id, 'Reported content')}
+                        onClick={() => deleteMessage(message.id, &apos;Reported content')}
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>
@@ -543,7 +544,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                           placeholder="Add banned word..."
                           value={newBannedWord}
                           onChange={(e) => setNewBannedWord(e.target.value)}
-                          onKeyPress={(e) => e.key === 'Enter' && addBannedWord()}
+                          onKeyPress={(e) => e.key === &apos;Enter' && addBannedWord()}
                         />
                         <Button onClick={addBannedWord}>Add</Button>
                       </div>
@@ -615,7 +616,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
               {actions.map((action) => (
                 <div key={action.id} className="flex items-center justify-between p-3 rounded-md border">
                   <div className="flex items-center space-x-3">
-                    <Badge variant={getActionColor(action.type) as any}>
+                    <Badge variant={getActionColor(action.type) as Record<string, unknown>}>
                       {action.type}
                     </Badge>
                     <div>

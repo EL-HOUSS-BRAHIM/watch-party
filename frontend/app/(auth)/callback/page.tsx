@@ -18,7 +18,7 @@ function CallbackHandler() {
   const { toast } = useToast()
   const authService = useMemo(() => new AuthAPI(), [])
 
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading")
+  const [status, setStatus] = useState<"loading" | "success" | "error">(&quot;loading")
   const [message, setMessage] = useState("")
   const [isRetrying, setIsRetrying] = useState(false)
 

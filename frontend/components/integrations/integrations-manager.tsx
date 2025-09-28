@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
@@ -46,7 +46,7 @@ interface Integration {
     enabled: boolean
   }[]
   config?: {
-    [key: string]: any
+    [key: string]: unknown
   }
   stats?: {
     totalSyncs: number
@@ -170,7 +170,7 @@ export function IntegrationsManager() {
 
   const loadIntegrations = async () => {
     try {
-      const response = await apiRequest(() => fetch('/api/integrations'))
+      const response = await apiRequest(() => fetch(&apos;/api/integrations'))
       if (response) {
         // Merge with available integrations to show all possible integrations
         const mergedIntegrations = AVAILABLE_INTEGRATIONS.map(available => {
@@ -408,7 +408,7 @@ export function IntegrationsManager() {
         <TabsContent value="streaming" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {integrations
-              .filter(i => i.category === 'streaming')
+              .filter(i => i.category === &apos;streaming')
               .map((integration) => (
                 <IntegrationCard
                   key={integration.id}
@@ -429,7 +429,7 @@ export function IntegrationsManager() {
         <TabsContent value="social" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {integrations
-              .filter(i => i.category === 'social')
+              .filter(i => i.category === &apos;social')
               .map((integration) => (
                 <IntegrationCard
                   key={integration.id}
@@ -450,7 +450,7 @@ export function IntegrationsManager() {
         <TabsContent value="entertainment" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {integrations
-              .filter(i => i.category === 'entertainment')
+              .filter(i => i.category === &apos;entertainment')
               .map((integration) => (
                 <IntegrationCard
                   key={integration.id}

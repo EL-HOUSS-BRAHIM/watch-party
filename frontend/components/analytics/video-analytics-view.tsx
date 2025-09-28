@@ -89,7 +89,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
         })
         
         // Transform view chart data to match expected format
-        const transformedViewerData = response.view_chart?.map((item: any) => ({
+        const transformedViewerData = response.view_chart?.map((item: unknown) => ({
           timestamp: item.date,
           viewers: item.views,
           country: 'Unknown',
@@ -179,11 +179,11 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
               <SelectItem value="90d">Last 90 days</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" onClick={() => exportData('csv')}>
+          <Button variant="outline" onClick={() => exportData(&apos;csv')}>
             <Download className="h-4 w-4 mr-2" />
             Export CSV
           </Button>
-          <Button variant="outline" onClick={() => exportData('json')}>
+          <Button variant="outline" onClick={() => exportData(&apos;json')}>
             <Download className="h-4 w-4 mr-2" />
             Export JSON
           </Button>

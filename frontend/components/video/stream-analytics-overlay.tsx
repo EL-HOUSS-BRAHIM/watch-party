@@ -56,27 +56,27 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
       const response = await videosAPI.getAnalytics(videoId)
       
       if (response) {
-        const extendedResponse = response as any // Type assertion to handle API mismatch
+        const extendedResponse = response as Record<string, unknown> // Type assertion to handle API mismatch
         const normalizedData: StreamAnalyticsData = {
           current_viewers: isLive ? (extendedResponse.current_viewers ?? 0) : 0,
           peak_viewers: extendedResponse.peak_viewers ?? 0,
           total_views: extendedResponse.total_views ?? response.view_count ?? 0,
           average_watch_time: extendedResponse.average_watch_time ?? response.average_view_duration ?? 0,
           watch_time_data: Array.isArray(extendedResponse.hourly_stats) 
-            ? extendedResponse.hourly_stats.map((stat: any) => ({
+            ? extendedResponse.hourly_stats.map((stat: unknown) => ({
                 time: stat.hour ?? stat.time ?? '0:00',
                 viewers: stat.viewers ?? stat.view_count ?? 0,
                 retention: stat.retention_percentage ?? stat.retention ?? 0
               }))
             : [],
           retention_curve: Array.isArray(extendedResponse.retention_data)
-            ? extendedResponse.retention_data.map((point: any) => ({
+            ? extendedResponse.retention_data.map((point: unknown) => ({
                 timestamp: point.timestamp ?? point.time ?? 0,
                 percentage: point.percentage ?? point.retention ?? 0
               }))
             : [],
           viewer_locations: Array.isArray(extendedResponse.geographic_data)
-            ? extendedResponse.geographic_data.map((geo: any) => ({
+            ? extendedResponse.geographic_data.map((geo: unknown) => ({
                 country: geo.country ?? geo.location ?? 'Unknown',
                 viewers: geo.viewers ?? geo.view_count ?? 0
               }))
@@ -232,7 +232,7 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
                   <XAxis dataKey="timestamp" />
                   <YAxis domain={[0, 100]} />
                   <Tooltip 
-                    formatter={(value) => [`${value}%`, 'Retention']}
+                    formatter={(value) => [`${value}%`, &apos;Retention']}
                     labelFormatter={(label) => `Time: ${label}%`}
                   />
                   <Area 

@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Image from "next/image"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Progress } from '@/components/ui/progress'
+
 import { useToast } from '@/hooks/use-toast'
 import {
   Select,
@@ -471,7 +472,7 @@ export function VideoManagement({ className }: VideoManagementProps) {
           {selectedVideos.length > 0 && (
             <div className="flex items-center gap-4 mt-4 p-4 bg-muted rounded-lg">
               <span className="text-sm font-medium">
-                {selectedVideos.length} video{selectedVideos.length > 1 ? 's' : ''} selected
+                {selectedVideos.length} video{selectedVideos.length > 1 ? &apos;s' : ''} selected
               </span>
               
               <Select value={bulkAction} onValueChange={setBulkAction}>
@@ -632,24 +633,24 @@ export function VideoManagement({ className }: VideoManagementProps) {
                         <DropdownMenuSeparator />
                         
                         {video.status === 'active' ? (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'deactivate')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;deactivate')}>
                             <Pause className="w-4 h-4 mr-2" />
                             Deactivate
                           </DropdownMenuItem>
                         ) : (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'activate')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;activate')}>
                             <Play className="w-4 h-4 mr-2" />
                             Activate
                           </DropdownMenuItem>
                         )}
                         
                         {video.isPublished ? (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'unpublish')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;unpublish')}>
                             <EyeOff className="w-4 h-4 mr-2" />
                             Unpublish
                           </DropdownMenuItem>
                         ) : (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, 'publish')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;publish')}>
                             <Eye className="w-4 h-4 mr-2" />
                             Publish
                           </DropdownMenuItem>
@@ -673,7 +674,7 @@ export function VideoManagement({ className }: VideoManagementProps) {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleVideoAction(video.id, 'delete')}>
+                              <AlertDialogAction onClick={() => handleVideoAction(video.id, &apos;delete')}>
                                 Delete
                               </AlertDialogAction>
                             </AlertDialogFooter>

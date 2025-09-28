@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, Suspense } from "react"
+import Image from "next/image"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -311,7 +312,7 @@ function QuickInviteContent() {
               <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
               <h2 className="text-xl font-semibold mb-2">Invite Not Found</h2>
               <p className="text-gray-600 mb-4">{error}</p>
-              <Button onClick={() => router.push("/discover")}>
+              <Button onClick={() => router.push(&quot;/discover")}>
                 Browse Public Parties
               </Button>
             </CardContent>
@@ -346,7 +347,7 @@ function QuickInviteContent() {
                 <Button className="flex-1" onClick={() => router.push(`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`)}>
                   Sign In
                 </Button>
-                <Button variant="outline" onClick={() => router.push("/register")}>
+                <Button variant="outline" onClick={() => router.push(&quot;/register")}>
                   Sign Up
                 </Button>
               </div>
@@ -366,7 +367,7 @@ function QuickInviteContent() {
           {/* Invite Header */}
           <div className="text-center mb-8">
             <PartyPopper className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">You're Invited!</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">You&apos;re Invited!</h1>
             <p className="text-gray-600">Join this awesome watch party</p>
           </div>
 
@@ -420,7 +421,7 @@ function QuickInviteContent() {
                       <span>{party.video.release_year}</span>
                     )}
                     {party.video.genre && party.video.genre.length > 0 && (
-                      <span>{party.video.genre.slice(0, 2).join(", ")}</span>
+                      <span>{party.video.genre.slice(0, 2).join(&quot;, ")}</span>
                     )}
                   </div>
                 </div>
@@ -445,7 +446,7 @@ function QuickInviteContent() {
                       <Calendar className="h-4 w-4" />
                       Scheduled
                     </span>
-                    <span>{format(parseISO(party.scheduled_for), "MMM d, yyyy 'at' h:mm a")}</span>
+                    <span>{format(parseISO(party.scheduled_for), &quot;MMM d, yyyy &apos;at' h:mm a")}</span>
                   </div>
                 )}
 
@@ -599,7 +600,7 @@ function QuickInviteContent() {
           <div className="text-center mt-6">
             <p className="text-sm text-gray-500">
               New to Watch Party?{" "}
-              <Button variant="link" className="p-0 h-auto" onClick={() => router.push("/register")}>
+              <Button variant="link" className="p-0 h-auto" onClick={() => router.push(&quot;/register")}>
                 Create your free account
               </Button>
             </p>

@@ -227,12 +227,12 @@ export default function TwoFactorSetupPage() {
                         : "bg-white/10 text-gray-400"
                     }`}
                   >
-                    {step > stepNumber ? <CheckCircle className="w-4 h-4" /> : stepNumber}
+                    {step > stepNumber ? <CheckCircle className=&quot;w-4 h-4" /> : stepNumber}
                   </div>
                   {stepNumber < 3 && (
                     <div
                       className={`w-8 h-0.5 mx-2 transition-all duration-300 ${
-                        step > stepNumber ? "bg-gradient-to-r from-green-500 to-blue-500" : "bg-white/20"
+                        step > stepNumber ? &quot;bg-gradient-to-r from-green-500 to-blue-500" : "bg-white/20"
                       }`}
                     />
                   )}

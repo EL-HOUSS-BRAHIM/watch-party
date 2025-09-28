@@ -41,7 +41,7 @@ export default function ClientLayout({
     }
 
     document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener("keydown", handleKeyDown)
+    return () => document.removeEventListener(&quot;keydown", handleKeyDown)
   }, [])
 
   return (
