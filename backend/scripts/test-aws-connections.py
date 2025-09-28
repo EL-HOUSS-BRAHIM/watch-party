@@ -185,7 +185,7 @@ def test_django_configuration():
     
     try:
         # Set Django settings
-        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'watchparty.settings.production')
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
         
         import django
         django.setup()

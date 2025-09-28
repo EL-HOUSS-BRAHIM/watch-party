@@ -211,7 +211,7 @@ create_development_env() {
 # =============================================================================
 DEBUG=True
 SECRET_KEY=$(generate_django_secret)
-DJANGO_SETTINGS_MODULE=watchparty.settings.development
+DJANGO_SETTINGS_MODULE=config.settings.development
 ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,$backend_domain
 
 # =============================================================================
@@ -408,7 +408,7 @@ create_production_env() {
 # =============================================================================
 DEBUG=False
 SECRET_KEY=$(generate_django_secret)
-DJANGO_SETTINGS_MODULE=watchparty.settings.production
+DJANGO_SETTINGS_MODULE=config.settings.production
 ALLOWED_HOSTS=$backend_domain,www.$backend_domain
 
 # =============================================================================

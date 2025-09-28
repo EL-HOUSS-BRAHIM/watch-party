@@ -1,0 +1,129 @@
+name: Destroy Lightsail Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "destroy" to confirm tearing down the Lightsail environment'
+        required: true
+        default: 'no'
+
+jobs:
+  destroy:
+    if: ${{ github.event.inputs.confirm == 'destroy' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Tear down Lightsail deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: deploy
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          script: |
+            set -euo pipefail
+
+            APP_NAME="watch-party"
+            APP_DIR="/srv/$APP_NAME"
+            TIMESTAMP="$(date -u +"%Y%m%d%H%M%S")"
+            WORK_DIR="/tmp/${APP_NAME}-destroy-${TIMESTAMP}"
+            BACKUP_ARCHIVE="/tmp/${APP_NAME}-destroy-${TIMESTAMP}.tar.gz"
+            LATEST_ARCHIVE="/tmp/${APP_NAME}-destroy-latest.tar.gz"
+            INFO_FILE="/tmp/${APP_NAME}-destroy-latest.txt"
+
+            echo "Preparing destroy workflow (${TIMESTAMP})"
+
+            rm -f /tmp/${APP_NAME}-destroy-*.tar.gz "$INFO_FILE"
+            mkdir -p "$WORK_DIR"
+
+            if [ -d "$APP_DIR" ]; then
+              echo "Backing up application directory..."
+              tar -czf "$WORK_DIR/app-directory.tar.gz" -C /srv "$APP_NAME"
+            else
+              echo "No application directory found at $APP_DIR"
+            fi
+
+            if command -v docker >/dev/null 2>&1; then
+              echo "Checking Docker volumes for backup..."
+              VOLUMES=(static_volume media_volume postgres_data redis_data valkey_data)
+              for volume in "${VOLUMES[@]}"; do
+                if docker volume inspect "$volume" >/dev/null 2>&1; then
+                  echo "Backing up volume: $volume"
+                  docker run --rm -v "$volume":/volume -v "$WORK_DIR":/backup alpine:3.18 \
+                    tar -czf "/backup/${volume}.tar.gz" -C /volume .
+                fi
+              done
+            else
+              echo "Docker is not installed; skipping volume backups"
+            fi
+
+            if [ -z "$(ls -A "$WORK_DIR")" ]; then
+              echo "No files were captured for backup; creating placeholder"
+              echo "No application directory or Docker volumes were present during destroy." > "$WORK_DIR/EMPTY.txt"
+            fi
+
+            echo "Packaging backup archive..."
+            tar -czf "$BACKUP_ARCHIVE" -C "$WORK_DIR" .
+            rm -rf "$WORK_DIR"
+            ln -sf "$BACKUP_ARCHIVE" "$LATEST_ARCHIVE"
+            echo "$BACKUP_ARCHIVE" > "$INFO_FILE"
+
+            if [ -d "$APP_DIR" ]; then
+              if command -v docker-compose >/dev/null 2>&1; then
+                echo "Stopping Docker services..."
+                (cd "$APP_DIR" && docker-compose down --volumes --remove-orphans) || true
+              elif command -v docker >/dev/null 2>&1; then
+                echo "docker-compose not found; attempting docker compose"
+                (cd "$APP_DIR" && docker compose down --volumes --remove-orphans) || true
+              fi
+            fi
+
+            if command -v docker >/dev/null 2>&1; then
+              echo "Pruning Docker resources..."
+              docker system prune -af || true
+              docker volume prune -f || true
+              docker network prune -f || true
+            fi
+
+            if [ -d "$APP_DIR" ]; then
+              echo "Removing application directory..."
+              rm -rf "$APP_DIR"
+            fi
+
+            if command -v systemctl >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
+              echo "Attempting to clean nginx configuration..."
+              sudo rm -f /etc/nginx/conf.d/watch-party.conf /etc/nginx/sites-enabled/watch-party.conf
+              sudo systemctl reload nginx || sudo systemctl restart nginx || true
+            else
+              echo "Skipping nginx cleanup (sudo without password not available)"
+            fi
+
+            echo "Destroy workflow complete. Backup stored at $BACKUP_ARCHIVE"
+
+      - name: Fetch backup archive
+        id: fetch-backup
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/.ssh"
+          echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > "$HOME/.ssh/lightsail_key"
+          chmod 600 "$HOME/.ssh/lightsail_key"
+          ssh-keyscan -H "${{ secrets.LIGHTSAIL_HOST }}" >> "$HOME/.ssh/known_hosts"
+          mkdir -p destroy-artifacts
+          if scp -i "$HOME/.ssh/lightsail_key" deploy@${{ secrets.LIGHTSAIL_HOST }}:/tmp/watch-party-destroy-*.tar.gz destroy-artifacts/; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            ssh -i "$HOME/.ssh/lightsail_key" deploy@${{ secrets.LIGHTSAIL_HOST }} 'rm -f /tmp/watch-party-destroy-*.tar.gz /tmp/watch-party-destroy-latest.txt' || true
+          else
+            echo "No backup archive found to download"
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+          rm -f "$HOME/.ssh/lightsail_key"
+
+      - name: Upload destroy backup
+        if: steps.fetch-backup.outputs.found == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: lightsail-destroy-backup
+          path: destroy-artifacts/*.tar.gz
+          if-no-files-found: error

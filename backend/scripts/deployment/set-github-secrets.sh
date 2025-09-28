@@ -47,7 +47,7 @@ declare -A DEPLOYMENT_SECRETS=(
     # Core Django secrets
     ["SECRET_KEY"]="your-very-secure-secret-key-here"
     ["DEBUG"]="False"
-    ["DJANGO_SETTINGS_MODULE"]="watchparty.settings.production"
+    ["DJANGO_SETTINGS_MODULE"]="config.settings.production"
     ["ALLOWED_HOSTS"]="be-watch-party.brahim-elhouss.me,127.0.0.1,localhost"
     ["CSRF_TRUSTED_ORIGINS"]="https://be-watch-party.brahim-elhouss.me,https://watch-party.brahim-elhouss.me"
     # CORS
