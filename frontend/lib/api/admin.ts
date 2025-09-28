@@ -11,6 +11,15 @@ import type {
   User,
   PaginatedResponse,
   APIResponse,
+  WatchParty,
+  Video,
+  ModerationReport,
+  AdminUserAction,
+  AdminSystemLog,
+  AdminAlert,
+  AdminPerformanceMetric,
+  AdminSettings,
+  AdminExportResponse,
 } from "./types"
 
 export class AdminAPI {
@@ -45,8 +54,8 @@ export class AdminAPI {
   /**
    * Get admin analytics
    */
-  async getAnalytics(): Promise<any> {
-    return apiClient.get(API_ENDPOINTS.admin.analytics)
+  async getAnalytics(): Promise<AdminDashboard> {
+    return apiClient.get<AdminDashboard>(API_ENDPOINTS.admin.analytics)
   }
 
   // === USER MANAGEMENT ===
@@ -83,16 +92,16 @@ export class AdminAPI {
    */
   async exportUsers(params?: {
     format?: 'csv' | 'excel'
-    filters?: Record<string, any>
-  }): Promise<{ download_url: string; expires_at: string }> {
-    return apiClient.post(API_ENDPOINTS.admin.exportUsers, params)
+    filters?: Record<string, unknown>
+  }): Promise<AdminExportResponse> {
+    return apiClient.post<AdminExportResponse>(API_ENDPOINTS.admin.exportUsers, params)
   }
 
   /**
    * Get user actions history
    */
-  async getUserActions(userId: string): Promise<any[]> {
-    return apiClient.get(API_ENDPOINTS.admin.userActions(userId))
+  async getUserActions(userId: string): Promise<AdminUserAction[]> {
+    return apiClient.get<AdminUserAction[]>(API_ENDPOINTS.admin.userActions(userId))
   }
 
   // === PARTY MANAGEMENT ===
@@ -104,8 +113,8 @@ export class AdminAPI {
     search?: string
     status?: 'active' | 'ended'
     page?: number
-  }): Promise<PaginatedResponse<any>> {
-    return apiClient.get<PaginatedResponse<any>>(API_ENDPOINTS.admin.parties, { params })
+  }): Promise<PaginatedResponse<WatchParty>> {
+    return apiClient.get<PaginatedResponse<WatchParty>>(API_ENDPOINTS.admin.parties, { params })
   }
 
   /**
@@ -124,8 +133,8 @@ export class AdminAPI {
     search?: string
     status?: 'active' | 'processing' | 'failed'
     page?: number
-  }): Promise<PaginatedResponse<any>> {
-    return apiClient.get<PaginatedResponse<any>>(API_ENDPOINTS.admin.videos, { params })
+  }): Promise<PaginatedResponse<Video>> {
+    return apiClient.get<PaginatedResponse<Video>>(API_ENDPOINTS.admin.videos, { params })
   }
 
   /**
@@ -144,8 +153,8 @@ export class AdminAPI {
     status?: 'pending' | 'resolved' | 'dismissed'
     type?: string
     page?: number
-  }): Promise<PaginatedResponse<any>> {
-    return apiClient.get<PaginatedResponse<any>>(API_ENDPOINTS.admin.reports, { params })
+  }): Promise<PaginatedResponse<ModerationReport>> {
+    return apiClient.get<PaginatedResponse<ModerationReport>>(API_ENDPOINTS.admin.reports, { params })
   }
 
   /**
@@ -171,8 +180,8 @@ export class AdminAPI {
       end: string
     }
     page?: number
-  }): Promise<PaginatedResponse<any>> {
-    return apiClient.get<PaginatedResponse<any>>(API_ENDPOINTS.admin.logs, { params })
+  }): Promise<PaginatedResponse<AdminSystemLog>> {
+    return apiClient.get<PaginatedResponse<AdminSystemLog>>(API_ENDPOINTS.admin.logs, { params })
   }
 
   /**
@@ -232,14 +241,14 @@ export class AdminAPI {
   /**
    * Get admin settings
    */
-  async getSettings(): Promise<Record<string, any>> {
-    return apiClient.get(API_ENDPOINTS.admin.settings)
+  async getSettings(): Promise<AdminSettings> {
+    return apiClient.get<AdminSettings>(API_ENDPOINTS.admin.settings)
   }
 
   /**
    * Update admin settings
    */
-  async updateSettings(data: Record<string, any>): Promise<APIResponse> {
+  async updateSettings(data: Partial<AdminSettings>): Promise<APIResponse> {
     return apiClient.put<APIResponse>(API_ENDPOINTS.admin.updateSettings, data)
   }
 
@@ -285,17 +294,17 @@ export class AdminAPI {
   /**
    * Get recent system activity
    */
-  async getActivity(): Promise<any[]> {
+  async getActivity(): Promise<AdminSystemLog[]> {
     // Using logs endpoint as a placeholder for activity
-    return apiClient.get(API_ENDPOINTS.admin.logs)
+    return apiClient.get<AdminSystemLog[]>(API_ENDPOINTS.admin.logs)
   }
 
   /**
    * Get system alerts
    */
-  async getAlerts(): Promise<any[]> {
+  async getAlerts(): Promise<AdminAlert[]> {
     // This would need to be implemented in backend
-    return apiClient.get('/api/admin/alerts/')
+    return apiClient.get<AdminAlert[]>('/api/admin/alerts/')
   }
 
   /**
@@ -308,9 +317,9 @@ export class AdminAPI {
   /**
    * Get performance metrics
    */
-  async getPerformanceMetrics(): Promise<any[]> {
+  async getPerformanceMetrics(): Promise<AdminPerformanceMetric[]> {
     // This would need to be implemented in backend
-    return apiClient.get('/api/admin/performance/')
+    return apiClient.get<AdminPerformanceMetric[]>('/api/admin/performance/')
   }
 
   // === ADDITIONAL USER MANAGEMENT ===
@@ -341,15 +350,15 @@ export class AdminAPI {
     date_from?: string
     date_to?: string
     page?: number
-  }): Promise<PaginatedResponse<any>> {
-    return apiClient.get<PaginatedResponse<any>>('/api/admin/system-logs/', { params })
+  }): Promise<PaginatedResponse<AdminSystemLog>> {
+    return apiClient.get<PaginatedResponse<AdminSystemLog>>('/api/admin/system-logs/', { params })
   }
 
   /**
    * Get system logs statistics
    */
-  async getSystemLogsStats(timeRange?: string): Promise<any> {
-    return apiClient.get(`/api/admin/system-logs/stats/`, { 
+  async getSystemLogsStats(timeRange?: string): Promise<Record<string, number>> {
+    return apiClient.get<Record<string, number>>(`/api/admin/system-logs/stats/`, { 
       params: timeRange ? { time_range: timeRange } : undefined 
     })
   }
@@ -357,8 +366,8 @@ export class AdminAPI {
   /**
    * Export system logs
    */
-  async exportSystemLogs(params?: Record<string, any>): Promise<any> {
-    return apiClient.get('/api/admin/system-logs/export/', { params })
+  async exportSystemLogs(params?: Record<string, unknown>): Promise<AdminExportResponse> {
+    return apiClient.get<AdminExportResponse>('/api/admin/system-logs/export/', { params })
   }
 
   // === MODERATION ===
@@ -366,8 +375,8 @@ export class AdminAPI {
   /**
    * Get moderation statistics
    */
-  async getModerationStats(): Promise<any> {
-    return apiClient.get('/api/admin/moderation/stats/')
+  async getModerationStats(): Promise<Record<string, number>> {
+    return apiClient.get<Record<string, number>>('/api/admin/moderation/stats/')
   }
 
   // === SETTINGS MANAGEMENT ===
@@ -391,8 +400,8 @@ export class AdminAPI {
   /**
    * Export analytics data
    */
-  async exportAnalytics(params?: { time_range?: string; format?: string }): Promise<any> {
-    return apiClient.get('/api/admin/analytics/export/', { params })
+  async exportAnalytics(params?: { time_range?: string; format?: string }): Promise<AdminExportResponse> {
+    return apiClient.get<AdminExportResponse>('/api/admin/analytics/export/', { params })
   }
 }
 

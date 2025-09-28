@@ -20,7 +20,8 @@ import {
   AlertTriangle,
   Info,
   Settings,
-  Zap
+  Zap,
+  Download
 } from 'lucide-react';
 
 interface SystemSetting {
@@ -29,7 +30,7 @@ interface SystemSetting {
   name: string;
   description: string;
   type: 'boolean' | 'string' | 'number' | 'select';
-  value: any;
+  value: string | number | boolean;
   options?: string[];
   min?: number;
   max?: number;
@@ -37,9 +38,11 @@ interface SystemSetting {
   restart_required?: boolean;
 }
 
+import type { LucideIcon } from 'lucide-react';
+
 interface ConfigSection {
   title: string;
-  icon: any;
+  icon: LucideIcon;
   settings: SystemSetting[];
 }
 
@@ -353,7 +356,7 @@ export default function SystemConfiguration() {
     }
   ]);
 
-  const updateSetting = (settingId: string, newValue: any) => {
+  const updateSetting = (settingId: string, newValue: string | number | boolean) => {
     setConfigSections(prev => prev.map(section => ({
       ...section,
       settings: section.settings.map(setting => 
@@ -384,7 +387,7 @@ export default function SystemConfiguration() {
   };
 
   const exportConfiguration = () => {
-    const config: Record<string, any> = {};
+    const config: Record<string, string | number | boolean> = {};
     configSections.forEach(section => {
       section.settings.forEach(setting => {
         config[setting.id] = setting.value;
@@ -511,7 +514,7 @@ export default function SystemConfiguration() {
           <CardContent className="p-4">
             <div className="flex items-center space-x-2 text-yellow-800 dark:text-yellow-200">
               <AlertTriangle className="w-4 h-4" />
-              <span>You have unsaved changes. Don't forget to save your configuration.</span>
+              <span>You have unsaved changes. Don&apos;t forget to save your configuration.</span>
             </div>
           </CardContent>
         </Card>

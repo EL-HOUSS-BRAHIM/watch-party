@@ -4,7 +4,7 @@ import { lazy, type ComponentType, type ComponentProps, Suspense } from "react"
 import { useState, useCallback, useEffect, useRef } from "react"
 
 // Lazy loading utility with error boundary
-export function createLazyComponent<T extends ComponentType<any>>(
+export function createLazyComponent<T extends ComponentType<Record<string, unknown>>>(
   importFunc: () => Promise<{ default: T }>,
   fallback?: ComponentType,
 ) {
@@ -14,7 +14,7 @@ export function createLazyComponent<T extends ComponentType<any>>(
     const FallbackComponent = fallback
     return (
       <Suspense fallback={FallbackComponent ? <FallbackComponent /> : <div>Loading...</div>}>
-        <LazyComponent {...(props as any)} />
+        <LazyComponent {...props} />
       </Suspense>
     )
   }

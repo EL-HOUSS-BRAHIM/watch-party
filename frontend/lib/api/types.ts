@@ -1368,6 +1368,69 @@ export interface SystemHealth {
   }
 }
 
+// Additional Admin types for fixing TypeScript any types
+export interface AdminUserAction {
+  id: string
+  action: string
+  timestamp: string
+  admin_id: string
+  admin_name: string
+  details: Record<string, unknown>
+  ip_address?: string
+}
+
+export interface AdminSystemLog {
+  id: string
+  level: 'debug' | 'info' | 'warning' | 'error'
+  component: string
+  message: string
+  timestamp: string
+  metadata?: Record<string, unknown>
+  user_id?: string
+  ip_address?: string
+}
+
+export interface AdminAlert {
+  id: string
+  type: 'system' | 'security' | 'performance'
+  priority: 'low' | 'medium' | 'high' | 'critical'
+  title: string
+  message: string
+  status: 'active' | 'acknowledged' | 'resolved'
+  created_at: string
+  resolved_at?: string
+  metadata?: Record<string, unknown>
+}
+
+export interface AdminPerformanceMetric {
+  timestamp: string
+  cpu_usage: number
+  memory_usage: number
+  disk_io: number
+  network_io: number
+  response_time: number
+  active_connections: number
+}
+
+export interface AdminSettings {
+  maintenance_mode: boolean
+  maintenance_message?: string
+  registration_enabled: boolean
+  email_verification_required: boolean
+  max_concurrent_streams: number
+  max_party_size: number
+  file_upload_max_size: number
+  allowed_video_formats: string[]
+  [key: string]: unknown
+}
+
+export interface AdminExportResponse {
+  download_url: string
+  expires_at: string
+  file_size?: number
+  format: string
+}
+
 // Upload progress callback type
 export type UploadProgressCallback = (progress: number) => void
 

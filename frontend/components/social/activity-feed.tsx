@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Activity, Users, Video, Crown, Heart, ThumbsUp, Trophy, Star, Play, UserPlus, Loader2 } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
+import { usersAPI } from "@/lib/api"
 import { cn } from "@/lib/utils"
 import { formatDistanceToNow } from "date-fns"
 
@@ -61,32 +62,29 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
 
   const loadActivities = async (pageNum = 1) => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const params = new URLSearchParams({
-        page: pageNum.toString(),
+      if (!usersAPI) {
+        console.error('Users API not available')
+        return
+      }
+
+      const params: Record<string, string | number> = {
+        page: pageNum,
         filter: activeTab,
-      })
+      }
 
       if (userId) {
-        params.append("user_id", userId)
+        params.user_id = userId
       }
 
-      const response = await fetch(`/api/users/activity-feed/?${params}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        if (pageNum === 1) {
-          setActivities(data.results || data)
-        } else {
-          setActivities((prev) => [...prev, ...(data.results || data)])
-        }
-        setHasMore(!!data.next)
-        setPage(pageNum)
+      const response = await usersAPI.getActivity(params)
+      
+      if (pageNum === 1) {
+        setActivities(response.results || [])
+      } else {
+        setActivities((prev) => [...prev, ...(response.results || [])])
       }
+      setHasMore(!!response.next)
+      setPage(pageNum)
     } catch (error) {
       console.error("Failed to load activity feed:", error)
     } finally {

@@ -5,7 +5,7 @@ import { tokenStorage } from "@/lib/auth/token-storage"
 import { logger } from "@/lib/observability/logger"
 
 declare module "axios" {
-  interface InternalAxiosRequestConfig<D = unknown> {
+  interface InternalAxiosRequestConfig {
     metadata?: { startTime?: number }
     _retry?: boolean
   }
@@ -402,8 +402,8 @@ export default apiClient
 // Error handling utilities
 export const isApiError = (error: unknown): error is ApiError => {
   return error && typeof error === 'object' && error !== null && 
-    'message' in error && typeof (error as any).message === "string" && 
-    'status' in error && typeof (error as any).status === "number"
+    'message' in error && typeof (error as Record<string, unknown>).message === "string" && 
+    'status' in error && typeof (error as Record<string, unknown>).status === "number"
 }
 
 export const getErrorMessage = (error: unknown): string => {

@@ -21,13 +21,10 @@ import {
   RefreshCw,
   Download,
   Search,
-  Filter,
   Clock,
   User,
 } from 'lucide-react'
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -43,7 +40,7 @@ interface LogEntry {
   level: string
   service: string
   message: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
   userId?: string
   requestId?: string
 }
@@ -66,7 +63,7 @@ interface HistoricalPoint {
   disk: number
 }
 
-const extractNumber = (...values: any[]): number | undefined => {
+const extractNumber = (...values: unknown[]): number | undefined => {
   for (const value of values) {
     if (value === undefined || value === null) continue
     const numberValue = Number(value)
@@ -79,38 +76,41 @@ const extractNumber = (...values: any[]): number | undefined => {
 
 const normalizeMetrics = (
   health: SystemHealth | null,
-  metrics: any,
+  metrics: unknown,
 ): HealthMetricsSnapshot => ({
-  cpuUsage: extractNumber(metrics?.cpu_usage, health?.metrics?.cpu_usage) ?? 0,
-  memoryUsage: extractNumber(metrics?.memory_usage, health?.metrics?.memory_usage) ?? 0,
-  diskUsage: extractNumber(metrics?.disk_usage, health?.metrics?.disk_usage) ?? 0,
-  networkIn: extractNumber(metrics?.network_in, metrics?.network?.inbound, metrics?.network_io?.inbound),
-  networkOut: extractNumber(metrics?.network_out, metrics?.network?.outbound, metrics?.network_io?.outbound),
-  activeConnections: extractNumber(metrics?.active_connections),
-  responseTimes: metrics?.response_times ?? {},
-  errorRates: metrics?.error_rates ?? {},
+  cpuUsage: extractNumber((metrics as Record<string, unknown>)?.cpu_usage, health?.metrics?.cpu_usage) ?? 0,
+  memoryUsage: extractNumber((metrics as Record<string, unknown>)?.memory_usage, health?.metrics?.memory_usage) ?? 0,
+  diskUsage: extractNumber((metrics as Record<string, unknown>)?.disk_usage, health?.metrics?.disk_usage) ?? 0,
+  networkIn: extractNumber((metrics as Record<string, unknown>)?.network_in, (metrics as Record<string, Record<string, unknown>>)?.network?.inbound, (metrics as Record<string, Record<string, unknown>>)?.network_io?.inbound),
+  networkOut: extractNumber((metrics as Record<string, unknown>)?.network_out, (metrics as Record<string, Record<string, unknown>>)?.network?.outbound, (metrics as Record<string, Record<string, unknown>>)?.network_io?.outbound),
+  activeConnections: extractNumber((metrics as Record<string, unknown>)?.active_connections),
+  responseTimes: (metrics as Record<string, unknown>)?.response_times as Record<string, number> ?? {},
+  errorRates: (metrics as Record<string, unknown>)?.error_rates as Record<string, number> ?? {},
 })
 
 const buildHistoricalData = (
-  systemAnalytics: any,
-  logStats: any,
+  systemAnalytics: unknown,
+  logStats: unknown,
   metrics: HealthMetricsSnapshot | null,
 ): HistoricalPoint[] => {
   const source =
-    (Array.isArray(systemAnalytics?.timeline) && systemAnalytics.timeline) ||
-    (Array.isArray(systemAnalytics?.performance) && systemAnalytics.performance) ||
-    (Array.isArray(logStats?.timeline) && logStats.timeline) ||
+    (Array.isArray((systemAnalytics as Record<string, unknown>)?.timeline) && (systemAnalytics as Record<string, unknown[]>).timeline) ||
+    (Array.isArray((systemAnalytics as Record<string, unknown>)?.performance) && (systemAnalytics as Record<string, unknown[]>).performance) ||
+    (Array.isArray((logStats as Record<string, unknown>)?.timeline) && (logStats as Record<string, unknown[]>).timeline) ||
     []
 
   if (source.length > 0) {
-    return source.map((point: any, index: number) => ({
-      time: point.timestamp
-        ? new Date(point.timestamp).toLocaleTimeString()
-        : point.time ?? point.label ?? `T+${index}`,
-      cpu: extractNumber(point.cpu_usage, point.cpu) ?? metrics?.cpuUsage ?? 0,
-      memory: extractNumber(point.memory_usage, point.memory) ?? metrics?.memoryUsage ?? 0,
-      disk: extractNumber(point.disk_usage, point.disk) ?? metrics?.diskUsage ?? 0,
-    }))
+    return source.map((point: unknown, index: number) => {
+      const p = point as Record<string, unknown>
+      return {
+        time: p.timestamp
+          ? new Date(p.timestamp as string).toLocaleTimeString()
+          : (p.time as string) ?? (p.label as string) ?? `T+${index}`,
+        cpu: extractNumber(p.cpu_usage, p.cpu) ?? metrics?.cpuUsage ?? 0,
+        memory: extractNumber(p.memory_usage, p.memory) ?? metrics?.memoryUsage ?? 0,
+        disk: extractNumber(p.disk_usage, p.disk) ?? metrics?.diskUsage ?? 0,
+      }
+    })
   }
 
   if (metrics) {
@@ -132,23 +132,27 @@ const randomId = () => {
   return Math.random().toString(36).slice(2)
 }
 
-const normalizeLogs = (logsResponse: any): LogEntry[] => {
-  const results = Array.isArray(logsResponse?.results)
-    ? logsResponse.results
+const normalizeLogs = (logsResponse: unknown): LogEntry[] => {
+  const response = logsResponse as Record<string, unknown>
+  const results = Array.isArray(response?.results)
+    ? response.results
     : Array.isArray(logsResponse)
-      ? logsResponse
+      ? logsResponse as unknown[]
       : []
 
-  return results.map((log: any) => ({
-    id: String(log.id ?? log.log_id ?? randomId()),
-    timestamp: new Date(log.timestamp ?? log.created_at ?? Date.now()),
-    level: (log.level ?? 'info').toLowerCase(),
-    service: log.component ?? log.service ?? 'system',
-    message: log.message ?? 'System log entry',
-    metadata: log.metadata ?? undefined,
-    userId: log.user_id ?? log.actor ?? undefined,
-    requestId: log.request_id ?? undefined,
-  }))
+  return results.map((log: unknown) => {
+    const l = log as Record<string, unknown>
+    return {
+      id: String(l.id ?? l.log_id ?? randomId()),
+      timestamp: new Date((l.timestamp ?? l.created_at ?? Date.now()) as string | number),
+      level: String(l.level ?? 'info').toLowerCase(),
+      service: String(l.component ?? l.service ?? 'system'),
+      message: String(l.message ?? 'System log entry'),
+      metadata: l.metadata as Record<string, unknown> | undefined,
+      userId: l.user_id as string | undefined ?? l.actor as string | undefined,
+      requestId: l.request_id as string | undefined,
+    }
+  })
 }
 
 export default function SystemMonitoring() {

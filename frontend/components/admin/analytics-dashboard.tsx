@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
+import { adminAPI } from "@/lib/api"
 import {
   XAxis,
   YAxis,
@@ -89,20 +90,14 @@ export function AnalyticsDashboard() {
   const fetchAnalyticsData = async () => {
     try {
       setIsLoading(true)
-      const token = localStorage.getItem("accessToken")
       
-      const response = await fetch(`/api/admin/analytics/?time_range=${timeRange}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setAnalyticsData(data)
-      } else {
-        throw new Error("Failed to fetch analytics data")
+      if (!adminAPI) {
+        console.error('Admin API not available')
+        return
       }
+      
+      const data = await adminAPI.getAnalytics()
+      setAnalyticsData(data)
     } catch (error) {
       console.error("Failed to fetch analytics data:", error)
       toast({
@@ -129,24 +124,20 @@ export function AnalyticsDashboard() {
 
   const exportData = async () => {
     try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/analytics/export/?time_range=${timeRange}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      if (response.ok) {
-        const blob = await response.blob()
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement("a")
-        a.href = url
-        a.download = `analytics-${timeRange}-${new Date().toISOString().split("T")[0]}.csv`
-        document.body.appendChild(a)
-        a.click()
-        window.URL.revokeObjectURL(url)
-        document.body.removeChild(a)
+      if (!adminAPI) {
+        console.error('Admin API not available')
+        return
       }
+      
+      const response = await adminAPI.exportAnalytics({ time_range: timeRange })
+      
+      // Handle export file download
+      const link = document.createElement("a")
+      link.href = response.download_url
+      link.download = `analytics-export-${timeRange}-${new Date().toISOString().split("T")[0]}.csv`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
     } catch (error) {
       console.error("Failed to export data:", error)
       toast({
