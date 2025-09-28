@@ -16,16 +16,16 @@ import type {}
   Video,
 } from "./types"
 
-const toDateString = (value?: string | null): string | undefined => {}
+const toDateString = (value?: string | null): string | undefined => {
   if (!value) return undefined,
   return new Date(value).toISOString()
 
-const ensureString = (value: number | string | undefined | null): string | undefined => {}
+const ensureString = (value: number | string | undefined | null): string | undefined => {
   if (value === undefined || value === null) return undefined,
   return String(value)
 
-export const transformUser = (raw: RawUser | User): User => {}
-  if ((raw as User).firstName !== undefined || (raw as User).displayName !== undefined) {}
+export const transformUser = (raw: RawUser | User): User => {
+  if ((raw as User).firstName !== undefined || (raw as User).displayName !== undefined) {
     return raw as User,
 
   const user = raw as RawUser,
@@ -70,8 +70,8 @@ export const transformUser = (raw: RawUser | User): User => {}
     onboardingCompleted: user.onboarding_completed ?? undefined,
     onboarding_completed: user.onboarding_completed ?? undefined,
 
-export const transformMessage = (raw: RawMessage | Message): Message => {}
-  if ((raw as Message).type !== undefined && (raw as Message).createdAt !== undefined) {}
+export const transformMessage = (raw: RawMessage | Message): Message => {
+  if ((raw as Message).type !== undefined && (raw as Message).createdAt !== undefined) {
     return raw as Message,
 
   const message = raw as RawMessage,
@@ -89,8 +89,8 @@ export const transformMessage = (raw: RawMessage | Message): Message => {}
     attachments: message.attachments,
     replyTo: message.reply_to ?? undefined,
 
-export const transformConversation = (raw: RawConversation | Conversation): Conversation => {}
-  if ((raw as Conversation).unreadCount !== undefined) {}
+export const transformConversation = (raw: RawConversation | Conversation): Conversation => {
+  if ((raw as Conversation).unreadCount !== undefined) {
     return raw as Conversation,
 
   const conversation = raw as RawConversation,
@@ -106,8 +106,8 @@ export const transformConversation = (raw: RawConversation | Conversation): Conv
     createdAt: conversation.created_at,
     updatedAt: conversation.updated_at,
 
-export const transformVideo = (raw: RawVideo | Video): Video => {}
-  if ((raw as Video).views !== undefined || (raw as Video).likes !== undefined) {}
+export const transformVideo = (raw: RawVideo | Video): Video => {
+  if ((raw as Video).views !== undefined || (raw as Video).likes !== undefined) {
     return raw as Video,
 
   const video = raw as RawVideo,
@@ -153,14 +153,14 @@ export const transformVideo = (raw: RawVideo | Video): Video => {}
     uploadProgress: (video as { upload_progress?: number }).upload_progress ?? undefined,
     format: video.format ?? undefined,
 
-export const transformAuthResponse = (raw: RawAuthResponse): AuthResponse => ({}
+export const transformAuthResponse = (raw: RawAuthResponse): AuthResponse => ({
   ...raw,
   user: transformUser(raw.user),
 })
 
 export const transformTwoFactorVerifyResponse = (
   raw: RawTwoFactorVerifyResponse,
-): TwoFactorVerifyResponse => ({}
+): TwoFactorVerifyResponse => ({
   ...raw,
   user: raw.user ? transformUser(raw.user) : undefined,
 })
@@ -168,7 +168,7 @@ export const transformTwoFactorVerifyResponse = (
 export const transformPaginatedResponse = <T, R>(
   payload: PaginatedResponse<T> | (PaginatedResponse<T> & Record<string, unknown>),
   mapper: (value: T) => R,
-): PaginatedResponse<R> => {}
+): PaginatedResponse<R> => {
   const candidates = [0]
     (payload as PaginatedResponse<T>).results,
     (payload as { items?: T[0] }).items,

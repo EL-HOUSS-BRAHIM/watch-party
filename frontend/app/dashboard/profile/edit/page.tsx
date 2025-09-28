@@ -17,36 +17,35 @@ import Image from "next/image"
 
 "use client"
 
-interface UserProfile {}
-  id: string;
-  username: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  displayName: string;
-  bio: string;
-  avatar: string;
-  coverImage: string;
-  location: string;
-  website: string;
-  birthDate: string;
-  phone: string;
-  timezone: string;
-  language: string;
-  theme: string;
-  isPublic: boolean;
-  showEmail: boolean;
-  showLocation: boolean;
-  showBirthDate: boolean;
-  emailNotifications: boolean;
-  pushNotifications: boolean;
-  marketingEmails: boolean;
-  friendRequests: boolean;
-  partyInvites: boolean;
+interface id {: string;,
+  username: string;,
+  email: string;,
+  firstName: string;,
+  lastName: string;,
+  displayName: string;,
+  bio: string;,
+  avatar: string;,
+  coverImage: string;,
+  location: string;,
+  website: string;,
+  birthDate: string;,
+  phone: string;,
+  timezone: string;,
+  language: string;,
+  theme: string;,
+  isPublic: boolean;,
+  showEmail: boolean;,
+  showLocation: boolean;,
+  showBirthDate: boolean;,
+  emailNotifications: boolean;,
+  pushNotifications: boolean;,
+  marketingEmails: boolean;,
+  friendRequests: boolean;,
+  partyInvites: boolean;,
   achievements: boolean;
 }
 
-export default function ProfileEditPage() {}
+export default function ProfileEditPage() {
   const { user } = useAuth()
   const router = useRouter()
   const { toast } = useToast()
@@ -62,41 +61,41 @@ export default function ProfileEditPage() {}
   const [avatarPreview, setAvatarPreview] = useState<string>(&quot;")
   const [coverPreview, setCoverPreview] = useState<string>(&quot;")
 
-  useEffect(() => {}
-    if (!user) {}
+  useEffect(() => {
+    if (!user) {
       router.push("/login")
       return;
     }
     fetchProfile()
   }, [user, router])
 
-  const fetchProfile = async () => {}
-    try {}
+  const fetchProfile = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/profile/", {}
+      const response = await fetch("/api/users/profile/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setProfile(data)
       } else {}
         throw new Error("Failed to fetch profile")
       }
-    } catch {}
+    } catch (error) {
       console.error("Profile fetch error:", error)
       toast({title: "Error",
         description: "Failed to load profile data.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const handleInputChange = (field: keyof UserProfile, value: unknown) => {}
+  const handleInputChange = (field: keyof UserProfile, value: unknown) => {
     if (!profile) return;
     setProfile((prev) => ({}
       ...prev!,
@@ -105,15 +104,15 @@ export default function ProfileEditPage() {}
     setHasChanges(true)
 
     // Clear field error;
-    if (errors[field]) {}
-      setErrors((prev) => ({ ...prev, [field]: "" }))
+    if (errors[field]) {
+      setErrors((prev) => (...prev, [field]: "" }))
     }
   }
 
-  const handleFileChange = (type: "avatar" | "cover", file: File | null) => {}
+  const handleFileChange = (type: "avatar" | "cover", file: File | null) => {
     if (!file) return;
     // Validate file size (5MB max)
-    if (file.size > 5 * 1024 * 1024) {}
+    if (file.size > 5 * 1024 * 1024) {
       toast({title: "File Too Large",
         description: "Please select an image smaller than 5MB.",
         variant: "destructive",
@@ -122,7 +121,7 @@ export default function ProfileEditPage() {}
     }
 
     // Validate file type;
-    if (!file.type.startsWith("image/")) {}
+    if (!file.type.startsWith("image/")) {
       toast({title: "Invalid File Type",
         description: "Please select an image file.",
         variant: "destructive",
@@ -130,7 +129,7 @@ export default function ProfileEditPage() {}
       return;
     }
 
-    if (type === "avatar") {}
+    if (type === "avatar") {
       setAvatarFile(file)
       setAvatarPreview(URL.createObjectURL(file))
     } else {}
@@ -140,30 +139,30 @@ export default function ProfileEditPage() {}
     setHasChanges(true)
   }
 
-  const validateProfile = (): boolean => {}
-    const newErrors: Record<string, string> = { if (!profile?.username?.trim()) {}
+  const validateProfile = (): boolean => {
+    const newErrors: Record<string, string> = { if (!profile?.username?.trim()) {
       newErrors.username = "Username is required"
-    } else if (profile.username.length < 3) {}
+    } else if (profile.username.length < 3) {
       newErrors.username = "Username must be at least 3 characters"
-    } else if (!/^[a-zA-Z0-9_]+$/.test(profile.username)) {}
+    } else if (!/^[a-zA-Z0-9_]+$/.test(profile.username)) {
       newErrors.username = "Username can only contain letters, numbers, and underscores"
     }
 
-    if (!profile?.email?.trim()) {}
+    if (!profile?.email?.trim()) {
       newErrors.email = "Email is required"
-    } else if (!/\S+@\S+\.\S+/.test(profile.email)) {}
+    } else if (!/\S+@\S+\.\S+/.test(profile.email)) {
       newErrors.email = "Please enter a valid email address"
     }
 
-    if (!profile?.displayName?.trim()) {}
+    if (!profile?.displayName?.trim()) {
       newErrors.displayName = "Display name is required"
     }
 
-    if (profile?.bio && profile.bio.length > 500) {}
+    if (profile?.bio && profile.bio.length > 500) {
       newErrors.bio = "Bio must be less than 500 characters"
     }
 
-    if (profile?.website && !/^https?:\/\/.+/.test(profile.website)) {}
+    if (profile?.website && !/^https?:\/\/.+/.test(profile.website)) {
       newErrors.website = "Website must be a valid URL (include http:// or https://)"
     }
 
@@ -171,13 +170,13 @@ export default function ProfileEditPage() {}
     return Object.keys(newErrors).length === 0;
   }
 
-  const uploadFile = async (file: File, type: "avatar" | "cover"): Promise<string> => {}
+  const uploadFile = async (file: File, type: "avatar" | "cover"): Promise<string> => {
     const formData = new FormData()
     formData.append("file", file)
     formData.append("type", type)
 
     const token = localStorage.getItem("accessToken")
-    const response = await fetch("/api/users/upload-image/", {}
+    const response = await fetch("/api/users/upload-image/", {
       method: "POST",
       headers: {}
         Authorization: `Bearer ${token}`,
@@ -185,7 +184,7 @@ export default function ProfileEditPage() {}
       body: formData,
     })
 
-    if (!response.ok) {}
+    if (!response.ok) {
       throw new Error(`Failed to upload ${type}`)
     }
 
@@ -193,23 +192,23 @@ export default function ProfileEditPage() {}
     return data.url;
   }
 
-  const handleSave = async () => {}
+  const handleSave = async () => {
     if (!profile || !validateProfile()) return;
     setIsSaving(true)
 
-    try {}
-      const updatedProfile = { ...profile }
+    try {
+      const updatedProfile = ...profile }
 
       // Upload files if changed;
-      if (avatarFile) {}
+      if (avatarFile) {
         updatedProfile.avatar = await uploadFile(avatarFile, "avatar")
       }
-      if (coverFile) {}
+      if (coverFile) {
         updatedProfile.coverImage = await uploadFile(coverFile, "cover")
       }
 
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/profile/", {}
+      const response = await fetch("/api/users/profile/", {
         method: "PUT",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -218,7 +217,7 @@ export default function ProfileEditPage() {}
         body: JSON.stringify(updatedProfile),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setProfile(data)
         setHasChanges(false)
@@ -234,20 +233,20 @@ export default function ProfileEditPage() {}
         const errorData = await response.json()
         throw new Error(errorData.message || "Failed to update profile")
       }
-    } catch {}
+    } catch (error) {
       console.error("Profile update error:", error)
       toast({title: "Update Failed",
         description: error instanceof Error ? error.message : "Failed to update profile.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSaving(false)
     }
   }
 
-  const handleCancel = () => {}
-    if (hasChanges) {}
-      if (confirm("You have unsaved changes. Are you sure you want to cancel?")) {}
+  const handleCancel = () => {
+    if (hasChanges) {
+      if (confirm("You have unsaved changes. Are you sure you want to cancel?")) {
         fetchProfile()
         setHasChanges(false)
         setAvatarFile(null)
@@ -261,7 +260,7 @@ export default function ProfileEditPage() {}
     }
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
         <div className="max-w-4xl mx-auto">
@@ -280,7 +279,7 @@ export default function ProfileEditPage() {}
     )
   }
 
-  if (!profile) {}
+  if (!profile) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
         <div className="max-w-4xl mx-auto">
@@ -422,7 +421,7 @@ export default function ProfileEditPage() {}
                       <Button;
                         size="sm"
                         variant="destructive"
-                        onClick={() => {}
+                        onClick={() => {
                           setCoverFile(null)
                           setCoverPreview("")
                           handleInputChange("coverImage", "")

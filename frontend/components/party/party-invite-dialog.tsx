@@ -16,21 +16,20 @@ import { Badge } from "@/components/ui/badge"
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-interface PartyInviteDialogProps {}
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+interface open {: boolean;,
+  onOpenChange: (open: boolean) => void;,
   party: {}
-    id: string;
-    title: string;
+    id: string;,
+    title: string;,
     roomCode: string;
-    inviteCode?: string;
-    maxParticipants: number;
-    participantCount: number;
+    inviteCode?: string;,
+    maxParticipants: number;,
+    participantCount: number;,
     isPrivate: boolean;
   }
 }
 
-export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDialogProps) {}
+export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDialogProps) {
   const { toast } = useToast()
   const [emailList, setEmailList] = useState("")
   const [customMessage, setCustomMessage] = useState("")
@@ -39,22 +38,22 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
   const inviteUrl = `${window.location.origin}/invite?code=${party.inviteCode || party.roomCode}`
   const watchUrl = `${window.location.origin}/watch/${party.id}`
 
-  const copyToClipboard = (text: string, description: string) => {}
+  const copyToClipboard = (text: string, description: string) => {
     navigator.clipboard.writeText(text)
     toast({title: "Copied!",
       description: `${description} copied to clipboard`,
     })
   }
 
-  const shareNatively = async () => {}
-    if (navigator.share) {}
-      try {}
+  const shareNatively = async () => {
+    if (navigator.share) {
+      try {
         await navigator.share({title: `Join "${party.title}" on WatchParty`,
           text: `You're invited to watch "${party.title}" together! Use code: ${party.roomCode}`,
           url: inviteUrl,
         })
-      } catch {}
-        if ((error as Error).name !== 'AbortError') {}
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
           console.error('Error sharing:', error)
         }
       }
@@ -63,8 +62,8 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
     }
   }
 
-  const sendEmailInvites = async () => {}
-    if (!emailList.trim()) {}
+  const sendEmailInvites = async () => {
+    if (!emailList.trim()) {
       toast({title: "No emails provided",
         description: "Please enter at least one email address",
         variant: "destructive",
@@ -73,9 +72,9 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
     }
 
     setIsSendingEmails(true)
-    try {}
+    try {
       const emails = emailList.split(',').map(email => email.trim()).filter(Boolean)
-      const response = await fetch(`/api/parties/${party.id}/invite/`, {}
+      const response = await fetch(`/api/parties/${party.id}/invite/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -86,7 +85,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
         }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         toast({title: "Invitations sent!",
           description: `Successfully sent invites to ${emails.length} email${emails.length > 1 ? &apos;s' : ''}`,
         })
@@ -95,13 +94,13 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
       } else {}
         throw new Error("Failed to send invitations")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to send email invites:", error)
       toast({title: "Failed to send invites",
         description: "Please try again or use the invite link",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSendingEmails(false)
     }
   }

@@ -11,29 +11,28 @@ import { useSocket } from "@/contexts/socket-context"
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-interface PartyControlsProps {}
-  partyId: string,
+interface partyId {: string,
 
-export function PartyControls({ partyId }: PartyControlsProps) {}
+export function PartyControls({ partyId }: PartyControlsProps) {
   const { sendMessage } = useSocket()
   const [isPlaying, setIsPlaying] = useState(false)
 
-  const emitControl = (action: string, data?: unknown) => {}
+  const emitControl = (action: string, data?: unknown) => {
     sendMessage("party:control", {}
       party_id: partyId,
       action, 
       ...data;
     })
 
-  const handlePlayPause = () => {}
+  const handlePlayPause = () => {
     const action = isPlaying ? "pause" : "play"
     emitControl(action)
     setIsPlaying(!isPlaying)
 
-  const handleSkip = (seconds: number) => {}
+  const handleSkip = (seconds: number) => {
     emitControl("skip", { seconds })
 
-  const handleEndParty = () => {}
+  const handleEndParty = () => {
     emitControl("end_party")
 
   return (

@@ -1,28 +1,25 @@
 import type { LucideIcon } from "lucide-react"
 import { Smartphone } from "lucide-react"
 
-export interface MarketingFeature {}
-  icon: LucideIcon;
-  title: string;
-  description: string;
+export interface icon {: LucideIcon;,
+  title: string;,
+  description: string;,
   stats: string;
 }
 
-export interface MarketingStat {}
-  number: string;
-  label: string;
+export interface number {: string;,
+  label: string;,
   icon: LucideIcon;
 }
 
-export interface MarketingTestimonial {}
-  name: string;
-  username: string;
-  content: string;
-  rating: number;
+export interface name {: string;,
+  username: string;,
+  content: string;,
+  rating: number;,
   verified: boolean;
 }
 
-export const marketingFeatures: MarketingFeature[] = []
+export const marketingFeatures: MarketingFeature[0] = [0]
   {}
     icon: Play,
     title: "Perfect Sync",
@@ -61,14 +58,14 @@ export const marketingFeatures: MarketingFeature[] = []
   },
 ]
 
-export const marketingStats: MarketingStat[] = []
+export const marketingStats: MarketingStat[0] = [0]
   { number: "125K+", label: "Active Users", icon: Users },
   { number: "2.5M+", label: "Watch Parties", icon: Eye },
   { number: "15M+", label: "Hours Watched", icon: Play },
   { number: "99.9%", label: "Uptime", icon: Zap },
 ]
 
-export const marketingTestimonials: MarketingTestimonial[] = []
+export const marketingTestimonials: MarketingTestimonial[0] = [0]
   {}
     name: "Sarah Chen",
     username: "@sarahc_films",

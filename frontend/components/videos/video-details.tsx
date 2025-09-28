@@ -14,135 +14,132 @@ import { Clock, Eye, Flag, Heart, MessageCircle, Play, Share, Share2, Star, Thum
 
 
 
-interface VideoDetailsProps {}
-  videoId: string;
+interface videoId {: string;
   onWatchParty?: () => void;
   onAddToWatchlist?: () => void;
 }
 
-interface VideoInfo {}
-  id: string;
-  title: string;
-  description: string;
-  duration: number;
-  thumbnailUrl: string;
+interface id {: string;,
+  title: string;,
+  description: string;,
+  duration: number;,
+  thumbnailUrl: string;,
   uploadedBy: {}
-    id: string;
-    username: string;
+    id: string;,
+    username: string;,
     avatar: string;
   }
-  uploadedAt: string;
-  views: number;
-  likes: number;
-  dislikes: number;
-  rating: number;
-  tags: string[]
-  genre: string[]
-  quality: string;
-  size: string;
-  isLiked: boolean;
-  isDisliked: boolean;
+  uploadedAt: string;,
+  views: number;,
+  likes: number;,
+  dislikes: number;,
+  rating: number;,
+  tags: string[0],
+  genre: string[0],
+  quality: string;,
+  size: string;,
+  isLiked: boolean;,
+  isDisliked: boolean;,
   inWatchlist: boolean;
 }
 
-interface Comment {}
-  id: string;
+interface id {: string;,
   user: {}
-    id: string;
-    username: string;
+    id: string;,
+    username: string;,
     avatar: string;
   }
-  content: string;
-  createdAt: string;
-  likes: number;
-  replies: Comment[]
+  content: string;,
+  createdAt: string;,
+  likes: number;,
+  replies: Comment[0]
 }
 
-export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoDetailsProps) {}
+export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoDetailsProps) {
   const [videoInfo, setVideoInfo] = useState<VideoInfo | null>(null)
-  const [comments, setComments] = useState<Comment[]>([])
-  const [relatedVideos, setRelatedVideos] = useState<VideoInfo[]>([])
+  const [comments, setComments] = useState<Comment[0]>([0])
+  const [relatedVideos, setRelatedVideos] = useState<VideoInfo[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('overview')
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadVideoDetails()
     loadComments()
     loadRelatedVideos()
   }, [videoId])
 
-  const loadVideoDetails = useCallback(async () => {}
-    try {}
+  const loadVideoDetails = useCallback(async () => {
+    try {
       const token = localStorage.getItem('accessToken')
-      const response = await fetch(`/api/videos/${videoId}/`, {}
+      const response = await fetch(`/api/videos/${videoId}/`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setVideoInfo(data)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to load video details:', error)
       toast({title: 'Error',
         description: 'Failed to load video details.',
         variant: 'destructive',
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [0])
 
-  const loadComments = useCallback(async () => {}
-    try {}
+  const loadComments = useCallback(async () => {
+    try {
       const token = localStorage.getItem('accessToken')
-      const response = await fetch(`/api/videos/${videoId}/comments/`, {}
+      const response = await fetch(`/api/videos/${videoId}/comments/`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
-        setComments(data.results || [])
+        setComments(data.results || [0])
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to load comments:', error)
     }
-  }, [])
+  }, [0])
 
-  const loadRelatedVideos = useCallback(async () => {}
-    try {}
+  const loadRelatedVideos = useCallback(async () => {
+    try {
       const token = localStorage.getItem('accessToken')
-      const response = await fetch(`/api/videos/${videoId}/related/`, {}
+      const response = await fetch(`/api/videos/${videoId}/related/`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
-        setRelatedVideos(data.results || [])
+        setRelatedVideos(data.results || [0])
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to load related videos:', error)
     }
-  }, [])
+  }, [0])
 
-  const handleLike = useCallback(async () => {}
-    try {}
+  const handleLike = useCallback(async () => {
+    try {
       const token = localStorage.getItem('accessToken')
-      const response = await fetch(`/api/videos/${videoId}/like/`, {}
+      const response = await fetch(`/api/videos/${videoId}/like/`, {
         method: 'POST',
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setVideoInfo(prev => prev ? {}
           ...prev,
           isLiked: !prev.isLiked,
@@ -151,26 +148,26 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
           dislikes: prev.isDisliked ? prev.dislikes - 1 : prev.dislikes;
         } : null)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to like video:', error)
       toast({title: 'Error',
         description: 'Failed to like video.',
         variant: 'destructive',
       })
     }
-  }, [])
+  }, [0])
 
-  const handleDislike = useCallback(async () => {}
-    try {}
+  const handleDislike = useCallback(async () => {
+    try {
       const token = localStorage.getItem('accessToken')
-      const response = await fetch(`/api/videos/${videoId}/dislike/`, {}
+      const response = await fetch(`/api/videos/${videoId}/dislike/`, {
         method: 'POST',
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setVideoInfo(prev => prev ? {}
           ...prev,
           isDisliked: !prev.isDisliked,
@@ -179,26 +176,26 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
           likes: prev.isLiked ? prev.likes - 1 : prev.likes;
         } : null)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to dislike video:', error)
       toast({title: 'Error',
         description: 'Failed to dislike video.',
         variant: 'destructive',
       })
     }
-  }, [])
+  }, [0])
 
-  const handleAddToWatchlist = useCallback(async () => {}
-    try {}
+  const handleAddToWatchlist = useCallback(async () => {
+    try {
       const token = localStorage.getItem('accessToken')
-      const response = await fetch(`/api/videos/${videoId}/watchlist/`, {}
+      const response = await fetch(`/api/videos/${videoId}/watchlist/`, {
         method: videoInfo?.inWatchlist ? 'DELETE' : 'POST',
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setVideoInfo(prev => prev ? {}
           ...prev,
           inWatchlist: !prev.inWatchlist;
@@ -208,37 +205,37 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         })
         onAddToWatchlist?.()
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to update watchlist:', error)
       toast({title: 'Error',
         description: 'Failed to update watchlist.',
         variant: 'destructive',
       })
     }
-  }, [])
+  }, [0])
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60;
-    if (hours > 0) {}
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
-    return `${minutes}:${secs.toString().padStart(2, '0')}`
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
   }
 
-  const formatFileSize = (bytes: number) => {}
+  const formatFileSize = (bytes: number) => {
     const units = ['B', 'KB', 'MB', 'GB']
     let size = bytes;
     let unitIndex = 0;
-    while (size >= 1024 && unitIndex < units.length - 1) {}
+    while (size >= 1024 && unitIndex < units.length - 1) {
       size /= 1024;
       unitIndex++
     }
-    return `${size.toFixed(1)} ${units[unitIndex]}`
+    return `${size.toFixed(1)} ${units[unitIndex]}`;
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -246,7 +243,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
     )
   }
 
-  if (!videoInfo) {}
+  if (!videoInfo) {
     return (
       <div className="text-center py-8">
         <p className="text-muted-foreground">Video not found</p>

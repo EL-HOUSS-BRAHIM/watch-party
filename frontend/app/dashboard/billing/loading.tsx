@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
-export default function BillingLoading() {}
+export default function BillingLoading() {
   return (
     <div className="space-y-6">
       {/* Header Skeleton */}

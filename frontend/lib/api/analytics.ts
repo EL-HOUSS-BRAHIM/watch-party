@@ -38,28 +38,28 @@ export class AnalyticsAPI {}
    */
   async getVideoAnalytics(videoId: string): Promise<{}
     video: {}
-      id: string;
-      title: string;
-      views: number;
+      id: string;,
+      title: string;,
+      views: number;,
       completion_rate: number;
     }
     engagement: {}
-      likes: number;
-      comments: number;
-      shares: number;
+      likes: number;,
+      comments: number;,
+      shares: number;,
       average_rating: number;
     }
     view_chart: Array<{}
-      date: string;
+      date: string;,
       views: number;
     }>
     audience: {}
       age_groups: Array<{}
-        range: string;
+        range: string;,
         percentage: number;
       }>
       countries: Array<{}
-        country: string;
+        country: string;,
         percentage: number;
       }>
     }
@@ -103,7 +103,7 @@ export class AnalyticsAPI {}
   async exportAnalytics(params?: {}
     format?: 'csv' | 'json' | 'excel'
     date_range?: string;
-    metrics?: string[]
+    metrics?: string[0]
   }): Promise<{ download_url: string; expires_at: string }> {}
     return apiClient.post(API_ENDPOINTS.analytics.export, params)
   }
@@ -127,7 +127,7 @@ export class AnalyticsAPI {}
   /**
    * Get performance analytics;
    */
-  async getPerformanceAnalytics(): Promise<Record<string, unknown>> {}
+  async getPerformanceAnalytics(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.performance)
   }
 
@@ -195,7 +195,7 @@ export class AnalyticsAPI {}
   /**
    * Get platform overview analytics;
    */
-  async getPlatformOverview(): Promise<Record<string, unknown>> {}
+  async getPlatformOverview(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.platformOverview)
   }
 
@@ -209,7 +209,7 @@ export class AnalyticsAPI {}
   /**
    * Get content performance analytics;
    */
-  async getContentPerformance(): Promise<Record<string, unknown>> {}
+  async getContentPerformance(): Promise<Record<string, unknown>> {
     return apiClient.get(API_ENDPOINTS.analytics.contentPerformance)
   }
 

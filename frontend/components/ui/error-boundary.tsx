@@ -8,13 +8,11 @@ import { AlertTriangle, Refresh, RefreshCw } from "lucide-react"
 
 
 
-interface Props {}
-  children: ReactNode;
+interface children {: ReactNode;
   fallback?: ReactNode;
 }
 
-interface State {}
-  hasError: boolean;
+interface hasError {: boolean;
   error?: Error;
 }
 
@@ -30,19 +28,19 @@ export class ErrorBoundary extends Component<Props, State> {}
     console.error("ErrorBoundary caught an error:", error, errorInfo)
 
     // Log error to monitoring service;
-    if (process.env.NODE_ENV === "production") {}
+    if (process.env.NODE_ENV === "production") {
       // Send to error tracking service (e.g., Sentry)
       console.error("Production error:", { error, errorInfo })
     }
   }
 
-  private handleReset = () => {}
+  private handleReset = () => {
     this.setState({ hasError: false, error: undefined })
   }
 
   public render() {}
-    if (this.state.hasError) {}
-      if (this.props.fallback) {}
+    if (this.state.hasError) {
+      if (this.props.fallback) {
         return this.props.fallback;
       }
 

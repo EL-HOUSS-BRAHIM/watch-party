@@ -59,7 +59,7 @@ export class PartiesAPI {}
   /**
    * Delete party;
    */
-  async deleteParty(partyId: string): Promise<APIResponse> {}
+  async deleteParty(partyId: string): Promise<APIResponse> {
     return apiClient.delete<APIResponse>(API_ENDPOINTS.parties.detail(partyId))
 
   /**

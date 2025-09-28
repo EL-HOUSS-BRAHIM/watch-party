@@ -25,31 +25,29 @@ import { toast } from '@/hooks/use-toast';
   AlertTriangle,
   Globe,
   Filter;
-interface Translation {}
-  key: string;
+interface key {: string;,
   category: string;
-  context?: string;
-  source: string; // English text;
+  context?: string;,
+  source: string; // English text;,
   translations: Record<string, {}
-    text: string;
-    status: 'approved' | 'pending' | 'needs_review';
-    lastModified: Date;
+    text: string;,
+    status: 'approved' | 'pending' | 'needs_review';,
+    lastModified: Date;,
     translator: string;
   }>;
 }
 
-interface Language {}
-  code: string;
-  name: string;
-  nativeName: string;
-  flag: string;
-  completion: number;
-  totalStrings: number;
-  translatedStrings: number;
+interface code {: string;,
+  name: string;,
+  nativeName: string;,
+  flag: string;,
+  completion: number;,
+  totalStrings: number;,
+  translatedStrings: number;,
   pendingStrings: number;
 }
 
-const mockLanguages: Language[] = []
+const mockLanguages: Language[0] = [0]
   {}
     code: 'es',
     name: 'Spanish',
@@ -82,7 +80,7 @@ const mockLanguages: Language[] = []
   }
 ];
 
-const mockTranslations: Translation[] = []
+const mockTranslations: Translation[0] = [0]
   {}
     key: 'common.welcome',
     category: 'Common',
@@ -157,9 +155,9 @@ const mockTranslations: Translation[] = []
   }
 ];
 
-export default function TranslationManagement() {}
-  const [languages] = useState<Language[]>(mockLanguages);
-  const [translations, setTranslations] = useState<Translation[]>(mockTranslations);
+export default function TranslationManagement() {
+  const [languages] = useState<Language[0]>(mockLanguages);
+  const [translations, setTranslations] = useState<Translation[0]>(mockTranslations);
   const [selectedLanguage, setSelectedLanguage] = useState('es');
   const [filter, setFilter] = useState({category: 'all',
     status: 'all',
@@ -169,7 +167,7 @@ export default function TranslationManagement() {}
   const [editingText, setEditingText] = useState('');
 
   const selectedLang = languages.find(lang => lang.code === selectedLanguage);
-  const filteredTranslations = translations.filter(translation => {}
+  const filteredTranslations = translations.filter(translation => {
     const matchesCategory = filter.category === 'all' || translation.category === filter.category;
     const matchesSearch = !filter.search || 
       translation.key.toLowerCase().includes(filter.search.toLowerCase()) ||
@@ -182,23 +180,23 @@ export default function TranslationManagement() {}
     return matchesCategory && matchesSearch && matchesStatus;
   });
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
       case 'approved': return 'bg-green-100 text-green-800 border-green-200';
       case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'needs_review': return 'bg-red-100 text-red-800 border-red-200';
+      case 'needs_review': return 'bg-red-100 text-red-800 border-red-200';,
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
-  const handleEditTranslation = (key: string, currentText: string) => {}
+  const handleEditTranslation = (key: string, currentText: string) => {
     setEditingKey(key);
     setEditingText(currentText);
   };
 
-  const handleSaveTranslation = (key: string) => {}
-    setTranslations(prev => prev.map(translation => {}
-      if (translation.key === key) {}
+  const handleSaveTranslation = (key: string) => {
+    setTranslations(prev => prev.map(translation => {
+      if (translation.key === key) {
         return {}
           ...translation,
           translations: {}
@@ -222,9 +220,9 @@ export default function TranslationManagement() {}
     });
   };
 
-  const handleApproveTranslation = (key: string) => {}
-    setTranslations(prev => prev.map(translation => {}
-      if (translation.key === key && translation.translations[selectedLanguage]) {}
+  const handleApproveTranslation = (key: string) => {
+    setTranslations(prev => prev.map(translation => {
+      if (translation.key === key && translation.translations[selectedLanguage]) {
         return {}
           ...translation,
           translations: {}
@@ -245,8 +243,8 @@ export default function TranslationManagement() {}
     });
   };
 
-  const exportTranslations = () => {}
-    const exportData = translations.reduce((acc, translation) => {}
+  const exportTranslations = () => {
+    const exportData = translations.reduce((acc, translation) => {
       acc[translation.key] = translation.translations[selectedLanguage]?.text || '';
       return acc;
     }, {} as Record<string, string>);
@@ -398,14 +396,14 @@ export default function TranslationManagement() {}
                   <Input;
                     placeholder="Search translations..."
                     value={filter.search}
-                    onChange={(e) => setFilter(prev => ({ ...prev, search: e.target.value }))}
+                    onChange={(e) => setFilter(prev => (...prev, search: e.target.value }))}
                     className="w-64"
                   />
                 </div>
 
                 <Select;
                   value={filter.category} 
-                  onValueChange={(value) => setFilter(prev => ({ ...prev, category: value }))}
+                  onValueChange={(value) => setFilter(prev => (...prev, category: value }))}
                 >
                   <SelectTrigger className="w-40">
                     <SelectValue />
@@ -420,7 +418,7 @@ export default function TranslationManagement() {}
 
                 <Select;
                   value={filter.status} 
-                  onValueChange={(value) => setFilter(prev => ({ ...prev, status: value }))}
+                  onValueChange={(value) => setFilter(prev => (...prev, status: value }))}
                 >
                   <SelectTrigger className="w-40">
                     <SelectValue />
@@ -464,7 +462,7 @@ export default function TranslationManagement() {}
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {filteredTranslations.map((translation) => {}
+                {filteredTranslations.map((translation) => {
                   const translationForLang = translation.translations[selectedLanguage];
                   const isEditing = editingKey === translation.key;
                   return (
@@ -595,7 +593,7 @@ export default function TranslationManagement() {}
                       <div className="space-y-2">
                         {Object.entries(translation.translations)
                           .filter(([, trans]) => trans.status === &apos;pending' || trans.status === 'needs_review')
-                          .map(([langCode, trans]) => {}
+                          .map(([langCode, trans]) => {
                             const lang = languages.find(l => l.code === langCode);
                             return (
                               <div key={langCode} className="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded">

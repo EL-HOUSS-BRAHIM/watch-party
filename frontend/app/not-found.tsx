@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertTriangle, Home, Link, Refresh, RefreshCw } from "lucide-react"
+import { AlertTriangle, Home, Link,RefreshCw } from "lucide-react"
 import Link from "next/link"
 
 "use client"
 
-export default function NotFound() {}
+export default function NotFound() {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <Card className="w-full max-w-md text-center bg-white/10 border-white/20">

@@ -10,82 +10,80 @@ import { LoadingSpinner } from '@/components/ui/loading'
 
 "use client"
 
-interface PublicProfile {}
-  id: string;
-  username: string;
-  display_name: string;
-  bio: string;
-  avatar_url: string | null;
-  banner_url: string | null;
-  location: string | null;
-  website: string | null;
-  joined_date: string;
-  is_verified: boolean;
+interface id {: string;,
+  username: string;,
+  display_name: string;,
+  bio: string;,
+  avatar_url: string | null;,
+  banner_url: string | null;,
+  location: string | null;,
+  website: string | null;,
+  joined_date: string;,
+  is_verified: boolean;,
   privacy_settings: {}
-    show_email: boolean;
-    show_stats: boolean;
-    show_activity: boolean;
+    show_email: boolean;,
+    show_stats: boolean;,
+    show_activity: boolean;,
     show_friends: boolean;
   }
   stats: {}
-    total_watch_time: number;
-    parties_hosted: number;
-    friends_count: number;
+    total_watch_time: number;,
+    parties_hosted: number;,
+    friends_count: number;,
     videos_uploaded: number;
   }
   badges: Array<{}
-    id: string;
-    name: string;
-    description: string;
-    icon_url: string;
+    id: string;,
+    name: string;,
+    description: string;,
+    icon_url: string;,
     earned_at: string;
   }>
   recent_activity: Array<{}
-    id: string;
-    type: 'party_hosted' | 'video_uploaded' | 'achievement_earned'
-    description: string;
+    id: string;,
+    type: 'party_hosted' | 'video_uploaded' | 'achievement_earned',
+    description: string;,
     created_at: string;
   }>
 }
 
-interface PublicProfileViewProps {}
-  userId: string;
+interface userId {: string;
 }
 
-export function PublicProfileView({ userId }: PublicProfileViewProps) {}
+export function PublicProfileView({ userId }: PublicProfileViewProps) {
   const [profile, setProfile] = useState<PublicProfile | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const { get, post } = useApi()
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchProfile()
   }, [userId])
 
-  const fetchProfile = useCallback(async () => {}
-    try {}
+  const fetchProfile = useCallback(async () => {
+    try {
       setIsLoading(true)
       const response = await get(`/users/${userId}/public-profile/`)
       setProfile(response.data as PublicProfile)
-    } catch {}
+    } catch (error) {
       setError(err.response?.data?.message || 'Failed to load profile')
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [0])
 
-  const handleSendFriendRequest = useCallback(async () => {}
-    try {}
+  const handleSendFriendRequest = useCallback(async () => {
+    try {
       await post('/friends/requests/', { recipient_id: userId })
       // Show success toast;
-    } catch {}
+    } catch (error) {
       // Show error toast;
     }
-  }, [])
+  }, [0])
 
-  const handleShare = useCallback(async () => {}
+  const handleShare = useCallback(async () => {
     const url = `${window.location.origin}/profile/${userId}/public`
-    if (navigator.share) {}
+    if (navigator.share) {
       await navigator.share({title: `${profile?.display_name}'s Profile`,
         url;
       })
@@ -93,16 +91,16 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {}
       await navigator.clipboard.writeText(url)
       // Show copied toast;
     }
-  }, [])
+  }, [0])
 
-  const formatWatchTime = (minutes: number) => {}
+  const formatWatchTime = (minutes: number) => {
     if (minutes < 60) return `${minutes}m`
     const hours = Math.floor(minutes / 60)
     const remainingMinutes = minutes % 60;
-    return `${hours}h ${remainingMinutes}m`
+    return `${hours}h ${remainingMinutes}m`;
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <LoadingSpinner size="lg" />
@@ -110,7 +108,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {}
     )
   }
 
-  if (error || !profile) {}
+  if (error || !profile) {
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">

@@ -14,35 +14,33 @@ import { cn } from "@/lib/utils"
 
 "use client"
 
-interface Video {}
-  id: string;
-  title: string;
-  description: string;
-  filename: string;
-  fileSize: number;
+interface id {: string;,
+  title: string;,
+  description: string;,
+  filename: string;,
+  fileSize: number;,
   duration: number;
-  thumbnail?: string;
-  uploadedAt: string;
+  thumbnail?: string;,
+  uploadedAt: string;,
   status: "processing" | "ready" | "failed"
-  processingProgress?: number;
-  views: number;
-  isPublic: boolean;
-  tags: string[]
+  processingProgress?: number;,
+  views: number;,
+  isPublic: boolean;,
+  tags: string[0],
   qualityVariants: Array<{}
-    quality: string;
-    url: string;
+    quality: string;,
+    url: string;,
     fileSize: number;
   }>
 }
 
-interface VideoLibraryProps {}
-  onVideoSelect?: (video: Video) => void;
+interface onVideoSelect {?: (video: Video) => void;
   selectionMode?: boolean;
   className?: string;
 }
 
-export default function VideoLibrary({ onVideoSelect, selectionMode = false, className }: VideoLibraryProps) {}
-  const [videos, setVideos] = useState<Video[]>([])
+export default function VideoLibrary({ onVideoSelect, selectionMode = false, className }: VideoLibraryProps) {
+  const [videos, setVideos] = useState<Video[0]>([0])
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState("uploadedAt")
   const [filterBy, setFilterBy] = useState("all")
@@ -51,55 +49,55 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null)
   const { user } = useAuth()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadVideos()
   }, [sortBy, filterBy])
 
-  const loadVideos = async () => {}
-    try {}
+  const loadVideos = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
       const params = new URLSearchParams({sort: sortBy,
         filter: filterBy,
       })
 
-      const response = await fetch(`/api/videos/?${params}`, {}
+      const response = await fetch(`/api/videos/?${params}`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setVideos(data.results || data)
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load videos:", error)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const deleteVideo = async (videoId: string) => {}
+  const deleteVideo = async (videoId: string) => {
     if (!confirm("Are you sure you want to delete this video?")) return;
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/`, {}
+      const response = await fetch(`/api/videos/${videoId}/`, {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setVideos((prev) => prev.filter((v) => v.id !== videoId))
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to delete video:", error)
     }
   }
 
-  const regenerateThumbnail = async (videoId: string) => {}
-    try {}
+  const regenerateThumbnail = async (videoId: string) => {
+    try {
       const token = localStorage.getItem("accessToken")
       await fetch(`/api/videos/${videoId}/regenerate-thumbnail/`, {}
         method: "POST",
@@ -110,43 +108,43 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
 
       // Reload videos to get updated thumbnail;
       loadVideos()
-    } catch {}
+    } catch (error) {
       console.error("Failed to regenerate thumbnail:", error)
     }
   }
 
-  const formatFileSize = (bytes: number) => {}
+  const formatFileSize = (bytes: number) => {
     const sizes = ["Bytes", "KB", "MB", "GB"]
     if (bytes === 0) return "0 Bytes"
     const i = Math.floor(Math.log(bytes) / Math.log(1024))
-    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i]
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i];
   }
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = Math.floor(seconds % 60)
 
-    if (hours > 0) {}
-      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
     }
-    return `${minutes}:${secs.toString().padStart(2, "0")}`
+    return `${minutes}:${secs.toString().padStart(2, "0")}`;
   }
 
-  const getStatusIcon = (status: string) => {}
+  const getStatusIcon = (status: string) => {
     switch (status) {}
       case "processing":
-        return <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+        return <Loader2 className="h-4 w-4 animate-spin text-blue-500" />;
       case "ready":
-        return <CheckCircle className="h-4 w-4 text-green-500" />
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
       case "failed":
-        return <AlertCircle className="h-4 w-4 text-red-500" />
+        return <AlertCircle className="h-4 w-4 text-red-500" />;
       default:
         return null;
     }
   }
 
-  const filteredVideos = videos.filter((video) => {}
+  const filteredVideos = videos.filter((video) => {
     const matchesSearch =
       video.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       video.description.toLowerCase().includes(searchQuery.toLowerCase()) ||

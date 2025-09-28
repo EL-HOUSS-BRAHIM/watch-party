@@ -24,12 +24,12 @@ import type { WatchEvent, EventAttendee, CreateEventRequest } from "@/lib/api/ty
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-export default function EventSchedulingSystem() {}
+export default function EventSchedulingSystem() {
   const { toast } = useToast()
-  const [events, setEvents] = useState<WatchEvent[]>([])
+  const [events, setEvents] = useState<WatchEvent[0]>([0])
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [selectedEvent, setSelectedEvent] = useState<WatchEvent | null>(null)
-  const [eventAttendees, setEventAttendees] = useState<EventAttendee[]>([])
+  const [eventAttendees, setEventAttendees] = useState<EventAttendee[0]>([0])
   const [showCreateDialog, setShowCreateDialog] = useState(false)
   const [viewMode, setViewMode] = useState<"calendar" | "list">(&quot;calendar")
   const [filterStatus, setFilterStatus] = useState("all")
@@ -37,39 +37,39 @@ export default function EventSchedulingSystem() {}
   const [isLoadingEvents, setIsLoadingEvents] = useState(true)
 
   // Load events from API;
-  useEffect(() => {}
+  useEffect(() => {
     loadEvents()
-  }, [])
+  }, [0])
 
-  const loadEvents = async () => {}
-    try {}
+  const loadEvents = async () => {
+    try {
       setIsLoadingEvents(true)
       const response = await eventsAPI.getEvents({page: 1,
         limit: 100,
         status: filterStatus === "all" ? undefined : filterStatus as Record<string, unknown>,
       })
       setEvents(response.results)
-    } catch {}
+    } catch (error) {
       console.error("Failed to load events:", error)
       toast({title: "Error",
         description: "Failed to load events. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoadingEvents(false)
     }
   }
 
   // Reload events when filter changes;
-  useEffect(() => {}
+  useEffect(() => {
     loadEvents()
   }, [filterStatus])
 
-  const loadEventAttendees = async (eventId: string) => {}
-    try {}
+  const loadEventAttendees = async (eventId: string) => {
+    try {
       const attendees = await eventsAPI.getEventAttendees(eventId)
       setEventAttendees(attendees.results)
-    } catch {}
+    } catch (error) {
       console.error("Failed to load attendees:", error)
       toast({title: "Error",
         description: "Failed to load event attendees.",
@@ -79,15 +79,15 @@ export default function EventSchedulingSystem() {}
   }
 
   // Load attendees when event is selected;
-  useEffect(() => {}
-    if (selectedEvent) {}
+  useEffect(() => {
+    if (selectedEvent) {
       loadEventAttendees(selectedEvent.id)
     }
   }, [selectedEvent])
 
-  const handleCreateEvent = async (formData: FormData) => {}
+  const handleCreateEvent = async (formData: FormData) => {
     setIsLoading(true)
-    try {}
+    try {
       const eventData: CreateEventRequest = { title: formData.get("title") as string,
         description: formData.get("description") as string,
         start_time: new Date(formData.get("startTime") as string).toISOString(),
@@ -112,27 +112,27 @@ export default function EventSchedulingSystem() {}
       toast({title: "Event Created",
         description: "Your watch party event has been scheduled!",
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to create event:", error)
       toast({title: "Error",
         description: "Failed to create event. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const handleRSVP = async (eventId: string, status: "going" | "maybe" | "not-going") => {}
-    try {}
+  const handleRSVP = async (eventId: string, status: "going" | "maybe" | "not-going") => {
+    try {
       await eventsAPI.rsvpToEvent(eventId, { status })
       // Update local state;
-      setEvents((prev) => prev.map((event) => (event.id === eventId ? { ...event, rsvp_status: status } : event)))
+      setEvents((prev) => prev.map((event) => (event.id === eventId ? ...event, rsvp_status: status } : event)))
 
       toast({title: "RSVP Updated",
         description: `You have marked yourself as ${status} for this event.`,
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to update RSVP:", error)
       toast({title: "Error",
         description: "Failed to update RSVP. Please try again.",
@@ -141,22 +141,22 @@ export default function EventSchedulingSystem() {}
     }
   }
 
-  const handleJoinEvent = async (eventId: string) => {}
-    try {}
+  const handleJoinEvent = async (eventId: string) => {
+    try {
       const event = events.find((e) => e.id === eventId)
       if (!event) return;
       // Join the live event via API;
       await eventsAPI.joinEvent(eventId)
 
       // Open the meeting link;
-      if (event.meeting_link) {}
+      if (event.meeting_link) {
         window.open(event.meeting_link, "_blank")
       }
 
       toast({title: "Joining Event",
         description: "Opening watch party room...",
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to join event:", error)
       toast({title: "Error",
         description: "Failed to join event. Please try again.",
@@ -165,16 +165,16 @@ export default function EventSchedulingSystem() {}
     }
   }
 
-  const handleCancelEvent = async (eventId: string) => {}
-    try {}
+  const handleCancelEvent = async (eventId: string) => {
+    try {
       await eventsAPI.cancelEvent(eventId)
       // Update local state;
-      setEvents((prev) => prev.map((event) => (event.id === eventId ? { ...event, status: &quot;cancelled" } : event)))
+      setEvents((prev) => prev.map((event) => (event.id === eventId ? ...event, status: &quot;cancelled" } : event)))
 
       toast({title: "Event Cancelled",
         description: "The event has been cancelled and attendees will be notified.",
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to cancel event:", error)
       toast({title: "Error",
         description: "Failed to cancel event. Please try again.",
@@ -183,50 +183,50 @@ export default function EventSchedulingSystem() {}
     }
   }
 
-  const getStatusIcon = (status: string) => {}
+  const getStatusIcon = (status: string) => {
     switch (status) {}
       case "scheduled":
-        return <Clock className="h-4 w-4 text-blue-500" />
+        return <Clock className="h-4 w-4 text-blue-500" />;
       case "live":
-        return <Play className="h-4 w-4 text-green-500" />
+        return <Play className="h-4 w-4 text-green-500" />;
       case "completed":
-        return <CheckCircle className="h-4 w-4 text-gray-500" />
+        return <CheckCircle className="h-4 w-4 text-gray-500" />;
       case "cancelled":
-        return <XCircle className="h-4 w-4 text-red-500" />
+        return <XCircle className="h-4 w-4 text-red-500" />;
       default:
-        return <AlertCircle className="h-4 w-4 text-yellow-500" />
+        return <AlertCircle className="h-4 w-4 text-yellow-500" />;
     }
   }
 
-  const getPrivacyIcon = (privacy: string) => {}
+  const getPrivacyIcon = (privacy: string) => {
     switch (privacy) {}
       case "public":
-        return <Globe className="h-4 w-4 text-green-500" />
+        return <Globe className="h-4 w-4 text-green-500" />;
       case "private":
-        return <Lock className="h-4 w-4 text-red-500" />
+        return <Lock className="h-4 w-4 text-red-500" />;
       case "invite-only":
-        return <Eye className="h-4 w-4 text-blue-500" />
+        return <Eye className="h-4 w-4 text-blue-500" />;
       default:
-        return <Globe className="h-4 w-4" />
+        return <Globe className="h-4 w-4" />;
     }
   }
 
-  const getRSVPStatusColor = (status: string) => {}
+  const getRSVPStatusColor = (status: string) => {
     switch (status) {}
       case "going":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       case "maybe":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-100 text-yellow-800";
       case "not-going":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       case "pending":
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
   }
 
-  const filteredEvents = events.filter((event) => {}
+  const filteredEvents = events.filter((event) => {
     if (filterStatus === "all") return true;
     return event.status === filterStatus;
   })
@@ -267,7 +267,7 @@ export default function EventSchedulingSystem() {}
               </DialogHeader>
 
               <form;
-                onSubmit={(e) => {}
+                onSubmit={(e) => {
                   e.preventDefault()
                   const formData = new FormData(e.currentTarget)
                   handleCreateEvent(formData)
@@ -678,7 +678,7 @@ export default function EventSchedulingSystem() {}
                           className="w-16 h-12 object-cover rounded"
                         />
                         <div>
-                          <p className="font-medium">{selectedEvent.video?.title || &quot;No video"}</p>"
+                          <p className="font-medium">{selectedEvent.video?.title || &quot;No video"}</p>&quot;
                           <p className="text-sm text-muted-foreground">
                             {selectedEvent.video?.duration ? Math.floor(selectedEvent.video.duration / 60) : 0} minutes;
                           </p>

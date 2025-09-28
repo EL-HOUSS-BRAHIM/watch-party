@@ -2,22 +2,21 @@ import { useState, useEffect, useCallback } from "react"
 
 "use client"
 
-interface CacheOptions {}
-  ttl?: number // Time to live in milliseconds;
+interface ttl {?: number // Time to live in milliseconds;
   maxSize?: number;
 }
 
 class MemoryCache {}
   private cache = new Map<string, { data: unknown; timestamp: number; ttl: number }>()
   private maxSize: number;
-  constructor(maxSize = 100) {}
+  constructor(maxSize = 100) {
     this.maxSize = maxSize;
   }
 
   set(key: string, data: unknown, ttl = 5 * 60 * 1000) {}
-    if (this.cache.size >= this.maxSize) {}
+    if (this.cache.size >= this.maxSize) {
       const firstKey = this.cache.keys().next().value;
-      if (firstKey) {}
+      if (firstKey) {
         this.cache.delete(firstKey)
       }
     }
@@ -32,7 +31,7 @@ class MemoryCache {}
   get(key: string) {}
     const item = this.cache.get(key)
     if (!item) return null;
-    if (Date.now() - item.timestamp > item.ttl) {}
+    if (Date.now() - item.timestamp > item.ttl) {
       this.cache.delete(key)
       return null;
     }
@@ -40,7 +39,7 @@ class MemoryCache {}
     return item.data;
   }
 
-  delete(key: string) {}
+  delete(key: string) {
     this.cache.delete(key)
   }
 
@@ -51,15 +50,15 @@ class MemoryCache {}
 
 const globalCache = new MemoryCache()
 
-export function useCache<T>(key: string, fetcher: () => Promise<T>, options: CacheOptions = {}) {}
+export function useCache<T>(key: string, fetcher: () => Promise<T>, options: CacheOptions = {) {
   const { ttl = 5 * 60 * 1000 } = options;
   const [data, setData] = useState<T | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
-  const fetchData = useCallback(async () => {}
+  const fetchData = useCallback(async () => {
     const cached = globalCache.get(key)
-    if (cached) {}
+    if (cached) {
       setData(cached as T)
       return cached;
     }
@@ -67,25 +66,25 @@ export function useCache<T>(key: string, fetcher: () => Promise<T>, options: Cac
     setLoading(true)
     setError(null)
 
-    try {}
+    try {
       const result = await fetcher()
       globalCache.set(key, result, ttl)
       setData(result)
       return result;
-    } catch {}
+    } catch (error) {
       const error = err instanceof Error ? err : new Error("Unknown error")
       setError(error)
       throw error;
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }, [key, fetcher, ttl])
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchData()
   }, [fetchData])
 
-  const invalidate = useCallback(() => {}
+  const invalidate = useCallback(() => {
     globalCache.delete(key)
     fetchData()
   }, [key, fetchData])

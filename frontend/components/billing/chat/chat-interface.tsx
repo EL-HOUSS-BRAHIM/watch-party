@@ -10,31 +10,29 @@ import { cn } from "@/lib/utils"
 
 "use client"
 
-interface Message {}
-  id: string;
+interface id {: string;,
   user: {}
-    id: string;
+    id: string;,
     username: string;
-    avatar?: string;
+    avatar?: string;,
     role: "user" | "admin" | "moderator"
   }
-  content: string;
-  timestamp: string;
+  content: string;,
+  timestamp: string;,
   type: "text" | "image" | "file"
-  reactions?: { [emoji: string]: string[] }
+  reactions?: { [emoji: string]: string[0] }
   isEdited?: boolean;
   replyTo?: string;
 }
 
-interface ChatInterfaceProps {}
-  roomId: string;
+interface roomId {: string;
   className?: string;
 }
 
-export default function ChatInterface({ roomId, className }: ChatInterfaceProps) {}
-  const [messages, setMessages] = useState<Message[]>([])
+export default function ChatInterface({ roomId, className }: ChatInterfaceProps) {
+  const [messages, setMessages] = useState<Message[0]>([0])
   const [newMessage, setNewMessage] = useState("")
-  const [isTyping, setIsTyping] = useState<string[]>([])
+  const [isTyping, setIsTyping] = useState<string[0]>([0])
   const [searchQuery, setSearchQuery] = useState("")
   const [showSearch, setShowSearch] = useState(false)
   const [editingMessage, setEditingMessage] = useState<string | null>(null)
@@ -51,13 +49,13 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
   const { user } = useAuth()
 
   // Load chat history;
-  useEffect(() => {}
+  useEffect(() => {
     loadChatHistory()
   }, [roomId])
 
   // WebSocket message handler;
-  useEffect(() => {}
-    const unsubscribe = onMessage((message) => {}
+  useEffect(() => {
+    const unsubscribe = onMessage((message) => {
       switch (message.type) {}
         case "chat_message":
           handleNewMessage(message.data)
@@ -81,86 +79,86 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
   }, [onMessage])
 
   // Auto-scroll to bottom;
-  useEffect(() => {}
+  useEffect(() => {
     scrollToBottom()
   }, [messages])
 
-  const loadChatHistory = async () => {}
-    try {}
+  const loadChatHistory = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/chat/${roomId}/messages/?page=${page}`, {}
+      const response = await fetch(`/api/chat/${roomId}/messages/?page=${page}`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
-        setMessages((prev) => (page === 1 ? data.results : [...data.results, ...prev]))
+        setMessages((prev) => (page === 1 ? data.results : ...data.results, ...prev]))
         setHasMore(!!data.next)
         setIsLoading(false)
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load chat history:", error)
       setIsLoading(false)
     }
   }
 
-  const handleNewMessage = (messageData: Message) => {}
-    setMessages((prev) => [...prev, messageData])
+  const handleNewMessage = (messageData: Message) => {
+    setMessages((prev) => ...prev, messageData])
   }
 
-  const handleTypingIndicator = (data: { user_id: string; username: string; is_typing: boolean }) => {}
-    setIsTyping((prev) => {}
-      if (data.is_typing) {}
-        return prev.includes(data.username) ? prev : [...prev, data.username]
+  const handleTypingIndicator = (data: { user_id: string; username: string; is_typing: boolean }) => {
+    setIsTyping((prev) => {
+      if (data.is_typing) {
+        return prev.includes(data.username) ? prev : ...prev, data.username];
       } else {}
         return prev.filter((username) => username !== data.username)
       }
     })
   }
 
-  const handleMessageReaction = (data: {}
-    message_id: string;
-    emoji: string;
-    user_id: string;
+  const handleMessageReaction = (data: {
+    message_id: string;,
+    emoji: string;,
+    user_id: string;,
     action: "add" | "remove"
-  }) => {}
+  }) => {
     setMessages((prev) =>
-      prev.map((msg) => {}
-        if (msg.id === data.message_id) {}
-          const reactions = { ...msg.reactions }
-          if (!reactions[data.emoji]) reactions[data.emoji] = []
+      prev.map((msg) => {
+        if (msg.id === data.message_id) {
+          const reactions = ...msg.reactions }
+          if (!reactions[data.emoji]) reactions[data.emoji] = [0]
 
-          if (data.action === "add") {}
-            if (!reactions[data.emoji].includes(data.user_id)) {}
+          if (data.action === "add") {
+            if (!reactions[data.emoji].includes(data.user_id)) {
               reactions[data.emoji].push(data.user_id)
             }
           } else {}
             reactions[data.emoji] = reactions[data.emoji].filter((id) => id !== data.user_id)
-            if (reactions[data.emoji].length === 0) {}
+            if (reactions[data.emoji].length === 0) {
               delete reactions[data.emoji]
             }
           }
 
-          return { ...msg, reactions }
+          return ...msg, reactions }
         }
         return msg;
       }),
     )
   }
 
-  const handleMessageEdit = (data: { message_id: string; content: string }) => {}
+  const handleMessageEdit = (data: { message_id: string; content: string }) => {
     setMessages((prev) =>
-      prev.map((msg) => (msg.id === data.message_id ? { ...msg, content: data.content, isEdited: true } : msg)),
+      prev.map((msg) => (msg.id === data.message_id ? ...msg, content: data.content, isEdited: true } : msg)),
     )
   }
 
-  const handleMessageDelete = (data: { message_id: string }) => {}
+  const handleMessageDelete = (data: { message_id: string }) => {
     setMessages((prev) => prev.filter((msg) => msg.id !== data.message_id))
   }
 
-  const sendChatMessage = async () => {}
+  const sendChatMessage = async () => {
     if (!newMessage.trim() || !user) return;
     const messageData = { room_id: roomId,
       content: newMessage.trim(),
@@ -168,7 +166,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
       reply_to: replyingTo?.id,
     }
 
-    if (editingMessage) {}
+    if (editingMessage) {
       // Edit existing message;
       sendMessage("edit_message", {}
         message_id: editingMessage,
@@ -185,17 +183,17 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
     inputRef.current?.focus()
   }
 
-  const handleTyping = useCallback(() => {}
+  const handleTyping = useCallback(() => {
     sendMessage("typing", {}
       room_id: roomId,
       is_typing: true,
     })
 
-    if (typingTimeoutRef.current) {}
+    if (typingTimeoutRef.current) {
       clearTimeout(typingTimeoutRef.current)
     }
 
-    typingTimeoutRef.current = setTimeout(() => {}
+    typingTimeoutRef.current = setTimeout(() => {
       sendMessage("typing", {}
         room_id: roomId,
         is_typing: false,
@@ -203,7 +201,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
     }, 1000)
   }, [roomId, sendMessage])
 
-  const addReaction = (messageId: string, emoji: string) => {}
+  const addReaction = (messageId: string, emoji: string) => {
     sendMessage("message_reaction", {}
       message_id: messageId,
       emoji,
@@ -211,7 +209,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
     })
   }
 
-  const removeReaction = (messageId: string, emoji: string) => {}
+  const removeReaction = (messageId: string, emoji: string) => {
     sendMessage("message_reaction", {}
       message_id: messageId,
       emoji,
@@ -219,22 +217,22 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
     })
   }
 
-  const deleteMessage = (messageId: string) => {}
+  const deleteMessage = (messageId: string) => {
     sendMessage("delete_message", { message_id: messageId })
   }
 
-  const startEdit = (message: Message) => {}
+  const startEdit = (message: Message) => {
     setEditingMessage(message.id)
     setNewMessage(message.content)
     inputRef.current?.focus()
   }
 
-  const startReply = (message: Message) => {}
+  const startReply = (message: Message) => {
     setReplyingTo(message)
     inputRef.current?.focus()
   }
 
-  const scrollToBottom = () => {}
+  const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
@@ -306,7 +304,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                       {message.isEdited && <span className="text-xs text-gray-400">(edited)</span>}
                     </div>
 
-                    <div className="text-sm break-words">{message.content}</div>
+                    <div className="text-sm break-words">{message.content}</div>;
 
                     {/* Reactions */}
                     {message.reactions && Object.keys(message.reactions).length > 0 && (
@@ -317,8 +315,8 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                             variant="ghost"
                             size="sm"
                             className="h-6 px-2 text-xs"
-                            onClick={() => {}
-                              if (userIds.includes(user?.id || "")) {}
+                            onClick={() => {
+                              if (userIds.includes(user?.id || "")) {
                                 removeReaction(message.id, emoji)
                               } else {}
                                 addReaction(message.id, emoji)
@@ -417,12 +415,12 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
               ref={inputRef}
               placeholder={editingMessage ? "Edit message..." : "Type a message..."}
               value={newMessage}
-              onChange={(e) => {}
+              onChange={(e) => {
                 setNewMessage(e.target.value)
                 handleTyping()
               }}
-              onKeyPress={(e) => {}
-                if (e.key === "Enter" && !e.shiftKey) {}
+              onKeyPress={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault()
                   sendChatMessage()
                 }
@@ -433,7 +431,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                 variant="ghost"
                 size="sm"
                 className="absolute right-2 top-1/2 -translate-y-1/2"
-                onClick={() => {}
+                onClick={() => {
                   setEditingMessage(null)
                   setNewMessage("")
                 }}

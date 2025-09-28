@@ -13,7 +13,7 @@ import { tokenStorage } from "@/lib/auth/token-storage"
 
 "use client"
 
-export function TwoFactorVerify() {}
+export function TwoFactorVerify() {
   const [code, setCode] = useState("")
   const [backupCode, setBackupCode] = useState("")
   const [useBackupCode, setUseBackupCode] = useState(false)
@@ -27,24 +27,24 @@ export function TwoFactorVerify() {}
   const redirectUrl = searchParams.get("redirect") || "/dashboard"
   const context = searchParams.get("context") || "login" // login, sensitive_action, etc.
 
-  const verify2FA = async () => {}
+  const verify2FA = async () => {
     const verificationCode = useBackupCode ? backupCode : code,
-    if (!verificationCode) {}
+    if (!verificationCode) {
       setError("Please enter a verification code")
 
     setIsVerifying(true)
     setError("")
 
-    try {}
-      const response = await authAPI.verify2FA(verificationCode, {}
+    try {
+      const response = await authAPI.verify2FA(verificationCode, {
         is_backup_code: useBackupCode,
         context: context || undefined,
       })
 
-      if (!response?.success) {}
+      if (!response?.success) {
         throw new Error(response?.message || "Invalid verification code")
 
-      if (response.access_token || response.refresh_token) {}
+      if (response.access_token || response.refresh_token) {
         tokenStorage.setTokens({accessToken: response.access_token,
           refreshToken: response.refresh_token,
         })
@@ -55,24 +55,24 @@ export function TwoFactorVerify() {}
 
       // Redirect to the intended page,
       router.push(redirectUrl)
-    } catch {}
+    } catch (error) {
       const errorData = err?.response?.data,
       const message = errorData?.message || err?.message || "Invalid verification code"
       setError(message)
 
-      if (typeof errorData?.attempts_left === "number") {}
+      if (typeof errorData?.attempts_left === "number") {
         setAttemptsLeft(errorData.attempts_left)
 
-      if (errorData?.account_locked) {}
+      if (errorData?.account_locked) {
         setError("Account temporarily locked due to too many failed attempts")
-    } finally {}
+    } finally {
       setIsVerifying(false)
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {}
-    if (e.key === "Enter") {}
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
       verify2FA()
 
-  const resendCode = () => {}
+  const resendCode = () => {
     toast({title: "Need a new code?",
       description: "Open your authenticator app to view the latest verification code.",
     })
@@ -87,7 +87,7 @@ export function TwoFactorVerify() {}
           <CardTitle>Two-Factor Authentication</CardTitle>
           <CardDescription>
             {context === "login" 
-              ? "Enter the 6-digit code from your authenticator app to continue"
+              ? "Enter the 6-digit code from your authenticator app to continue";
               : "Verify your identity to perform this action"
           </CardDescription>
         </CardHeader>

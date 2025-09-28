@@ -6,19 +6,19 @@ interface LogContext {}
 
 type LogLevel = "debug" | "info" | "warn" | "error"
 
-const emit = (level: LogLevel, message: string, context?: LogContext) => {}
+const emit = (level: LogLevel, message: string, context?: LogContext) => {
   const payload = { level,
     message,
     timestamp: new Date().toISOString(),
     ...context,
   }
 
-  if (level === "error") {}
+  if (level === "error") {
     console.error(payload)
-  } else if (level === "warn") {}
+  } else if (level === "warn") {
     console.warn(payload)
-  } else if (level === "debug") {}
-    if (process.env.NODE_ENV === "development") {}
+  } else if (level === "debug") {
+    if (process.env.NODE_ENV === "development") {
       console.debug(payload)
     }
   } else {}
@@ -26,7 +26,7 @@ const emit = (level: LogLevel, message: string, context?: LogContext) => {}
   }
 }
 
-export const logger = { debug(message: string, context?: LogContext) {}
+export const logger = { debug(message: string, context?: LogContext) {
     emit("debug", message, context)
   },
   info(message: string, context?: LogContext) {}

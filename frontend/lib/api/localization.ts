@@ -17,13 +17,13 @@ import type {}
 } from "./types"
 
 export class LocalizationAPI {}
-  constructor(private readonly client: ApiClient = apiClient) {}
+  constructor(private readonly client: ApiClient = apiClient) {
 
   /**
    * List supported languages with high-level completion metrics.
    */
-  async getLanguages(): Promise<LocalizationLanguage[]> {}
-    return this.client.get<LocalizationLanguage[]>(API_ENDPOINTS.localization.languages)
+  async getLanguages(): Promise<LocalizationLanguage[0]> {}
+    return this.client.get<LocalizationLanguage[0]>(API_ENDPOINTS.localization.languages)
   }
 
   /**
@@ -36,8 +36,8 @@ export class LocalizationAPI {}
   /**
    * List active localization projects (e.g., product, marketing, support docs).
    */
-  async getProjects(): Promise<LocalizationProject[]> {}
-    return this.client.get<LocalizationProject[]>(API_ENDPOINTS.localization.projects)
+  async getProjects(): Promise<LocalizationProject[0]> {}
+    return this.client.get<LocalizationProject[0]>(API_ENDPOINTS.localization.projects)
   }
 
   /**
@@ -88,8 +88,8 @@ export class LocalizationAPI {}
   /**
    * Fetch approval tasks assigned to reviewers for the project.
    */
-  async getApprovals(projectId: string): Promise<LocalizationApproval[]> {}
-    return this.client.get<LocalizationApproval[]>(API_ENDPOINTS.localization.approvals(projectId))
+  async getApprovals(projectId: string): Promise<LocalizationApproval[0]> {}
+    return this.client.get<LocalizationApproval[0]>(API_ENDPOINTS.localization.approvals(projectId))
   }
 }
 

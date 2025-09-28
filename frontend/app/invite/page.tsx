@@ -13,56 +13,55 @@ import { formatDistanceToNow, format, parseISO } from "date-fns"
 
 "use client"
 
-interface PartyInvite {}
-  id: string;
+interface id {: string;,
   title: string;
   description?: string;
-  scheduled_for?: string;
+  scheduled_for?: string;,
   is_public: boolean;
-  max_participants?: number;
-  current_participants: number;
-  status: "scheduled" | "active" | "completed" | "cancelled"
+  max_participants?: number;,
+  current_participants: number;,
+  status: "scheduled" | "active" | "completed" | "cancelled",
   video: {}
-    id: string;
+    id: string;,
     title: string;
-    thumbnail?: string;
-    duration_minutes: number;
+    thumbnail?: string;,
+    duration_minutes: number;,
     type: "movie" | "series" | "youtube"
     description?: string;
     release_year?: number;
-    genre?: string[]
+    genre?: string[0]
   }
   host: {}
-    id: string;
-    username: string;
-    first_name: string;
+    id: string;,
+    username: string;,
+    first_name: string;,
     last_name: string;
     avatar?: string;
     is_verified?: boolean;
   }
   participants: Array<{}
-    id: string;
+    id: string;,
     user: {}
-      id: string;
-      username: string;
-      first_name: string;
+      id: string;,
+      username: string;,
+      first_name: string;,
       last_name: string;
       avatar?: string;
     }
     joined_at: string;
   }>
-  invite_code: string;
-  requires_approval: boolean;
-  allow_chat: boolean;
-  allow_reactions: boolean;
-  created_at: string;
-  user_can_join: boolean;
-  user_is_participant: boolean;
+  invite_code: string;,
+  requires_approval: boolean;,
+  allow_chat: boolean;,
+  allow_reactions: boolean;,
+  created_at: string;,
+  user_can_join: boolean;,
+  user_is_participant: boolean;,
   user_is_host: boolean;
   join_deadline?: string;
 }
 
-function QuickInviteContent() {}
+function QuickInviteContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { user, isAuthenticated } = useAuth()
@@ -76,8 +75,8 @@ function QuickInviteContent() {}
 
   const inviteCode = searchParams.get("code")
 
-  useEffect(() => {}
-    if (inviteCode) {}
+  useEffect(() => {
+    if (inviteCode) {
       loadPartyInvite()
     } else {}
       setError("No invite code provided")
@@ -85,50 +84,50 @@ function QuickInviteContent() {}
     }
   }, [inviteCode])
 
-  const loadPartyInvite = async () => {}
-    try {}
+  const loadPartyInvite = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const headers: Record<string, string> = { if (token) {}}
+      const headers: Record<string, string> = { if (token) {
         headers.Authorization = `Bearer ${token}`
       }
 
-      const response = await fetch(`/api/parties/invite/${inviteCode}/`, {}
+      const response = await fetch(`/api/parties/invite/${inviteCode}/`, {
         headers;
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const partyData = await response.json()
         setParty(partyData)
         // Check if user needs to log in;
-        if (!isAuthenticated && !partyData.is_public) {}
+        if (!isAuthenticated && !partyData.is_public) {
           setRequiresLogin(true)
         }
-      } else if (response.status === 404) {}
+      } else if (response.status === 404) {
         setError("This invite link is invalid or has expired")
-      } else if (response.status === 403) {}
+      } else if (response.status === 403) {
         setError("You don't have permission to view this party")
       } else {}
         setError("Failed to load party details")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load party invite:", error)
       setError("Something went wrong while loading the invite")
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const joinParty = async () => {}
-    if (!isAuthenticated) {}
+  const joinParty = async () => {
+    if (!isAuthenticated) {
       setRequiresLogin(true)
       return;
     }
 
     if (!party) return;
     setIsJoining(true)
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${party.id}/join/`, {}
+      const response = await fetch(`/api/parties/${party.id}/join/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -137,7 +136,7 @@ function QuickInviteContent() {}
         body: JSON.stringify({ invite_code: inviteCode }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         toast({title: "Successfully Joined! 🎉",
           description: "You've joined the watch party. Redirecting...",
         })
@@ -146,11 +145,11 @@ function QuickInviteContent() {}
       } else {}
         const errorData = await response.json()
         let errorMessage = "Failed to join the party"
-        if (response.status === 409) {}
+        if (response.status === 409) {
           errorMessage = "You're already a member of this party"
-        } else if (response.status === 403) {}
+        } else if (response.status === 403) {
           errorMessage = "This party requires approval from the host"
-        } else if (response.status === 400) {}
+        } else if (response.status === 400) {
           errorMessage = errorData.message || "Party is full or no longer accepting participants"
         }
         toast({title: "Cannot Join Party",
@@ -158,36 +157,36 @@ function QuickInviteContent() {}
           variant: "destructive",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Join party error:", error)
       toast({title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsJoining(false)
     }
   }
 
-  const shareInvite = async () => {}
+  const shareInvite = async () => {
     const shareUrl = window.location.href;
-    if (navigator.share) {}
-      try {}
+    if (navigator.share) {
+      try {
         await navigator.share({title: `Join "${party?.title}" on Watch Party`,
           text: `Watch ${party?.video.title} together!`,
           url: shareUrl,
         })
-      } catch {}
+      } catch (error) {
         // User cancelled sharing or share failed;
       }
     } else {}
       // Fallback to copying to clipboard;
-      try {}
+      try {
         await navigator.clipboard.writeText(shareUrl)
         toast({title: "Link Copied",
           description: "Invite link copied to clipboard!",
         })
-      } catch {}
+      } catch (error) {
         toast({title: "Share Failed",
           description: "Unable to copy link to clipboard.",
           variant: "destructive",
@@ -196,44 +195,44 @@ function QuickInviteContent() {}
     }
   }
 
-  const getVideoTypeIcon = (type: string) => {}
+  const getVideoTypeIcon = (type: string) => {
     switch (type) {}
       case "movie":
-        return <Film className="h-5 w-5" />
+        return <Film className="h-5 w-5" />;
       case "series":
-        return <Tv className="h-5 w-5" />
+        return <Tv className="h-5 w-5" />;
       case "youtube":
-        return <Play className="h-5 w-5" />
+        return <Play className="h-5 w-5" />;
       default:
-        return <Film className="h-5 w-5" />
+        return <Film className="h-5 w-5" />;
     }
   }
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
       case "active":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       case "scheduled":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-100 text-blue-800";
       case "completed":
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
       case "cancelled":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
   }
 
-  const formatDuration = (minutes: number) => {}
+  const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60)
     const mins = minutes % 60;
-    if (hours > 0) {}
-      return `${hours}h ${mins}m`
+    if (hours > 0) {
+      return `${hours}h ${mins}m`;
     }
-    return `${mins}m`
+    return `${mins}m`;
   }
 
-  const canJoinParty = () => {}
+  const canJoinParty = () => {
     if (!party) return false;
     if (party.user_is_participant) return false;
     if (party.status === "completed" || party.status === "cancelled") return false;
@@ -242,7 +241,7 @@ function QuickInviteContent() {}
     return party.user_can_join;
   }
 
-  const getJoinButtonText = () => {}
+  const getJoinButtonText = () => {
     if (!isAuthenticated) return "Sign In to Join"
     if (party?.user_is_participant) return "Already Joined"
     if (party?.user_is_host) return "You're the Host"
@@ -250,10 +249,10 @@ function QuickInviteContent() {}
     if (party?.status === "scheduled") return "Join Party"
     if (party?.status === "completed") return "Party Ended"
     if (party?.status === "cancelled") return "Party Cancelled"
-    return "Join Party"
+    return "Join Party";
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
         <div className="text-center">
@@ -264,7 +263,7 @@ function QuickInviteContent() {}
     )
   }
 
-  if (error) {}
+  if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
         <div className="max-w-md mx-auto text-center">
@@ -283,7 +282,7 @@ function QuickInviteContent() {}
     )
   }
 
-  if (requiresLogin && !isAuthenticated) {}
+  if (requiresLogin && !isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">
         <div className="max-w-md mx-auto">
@@ -568,7 +567,7 @@ function QuickInviteContent() {}
   )
 }
 
-export default function QuickInvitePage() {}
+export default function QuickInvitePage() {
   return (
     <Suspense fallback={} />
       <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center">

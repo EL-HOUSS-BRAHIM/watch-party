@@ -9,53 +9,51 @@ import { useApi } from "@/hooks/use-api"
 
 "use client"
 
-interface UserStats {}
-  total_watch_time: number;
-  videos_watched: number;
-  parties_hosted: number;
-  parties_joined: number;
-  friends_count: number;
-  achievements_earned: number;
-  favorite_genres: string[]
+interface total_watch_time {: number;,
+  videos_watched: number;,
+  parties_hosted: number;,
+  parties_joined: number;,
+  friends_count: number;,
+  achievements_earned: number;,
+  favorite_genres: string[0],
   recent_activity: Array<{}
-    type: string;
-    description: string;
+    type: string;,
+    description: string;,
     timestamp: string;
   }>
   weekly_stats: Array<{}
-    week: string;
-    watch_time: number;
+    week: string;,
+    watch_time: number;,
     parties: number;
   }>
 }
 
-interface UserStatsProps {}
-  userId: string;
+interface userId {: string;
 }
 
-export function UserStats({ userId }: UserStatsProps) {}
+export function UserStats({ userId }: UserStatsProps) {
   const [stats, setStats] = useState<UserStats | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [timeframe, setTimeframe] = useState("month")
   const api = useApi()
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchStats()
   }, [userId, timeframe])
 
-  const fetchStats = async () => {}
-    try {}
+  const fetchStats = async () => {
+    try {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/stats/?timeframe=${timeframe}`)
       setStats(response.data as UserStats)
-    } catch {}
+    } catch (error) {
       console.error("Failed to load user stats:", err)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center p-8">
@@ -68,7 +66,7 @@ export function UserStats({ userId }: UserStatsProps) {}
     )
   }
 
-  if (!stats) {}
+  if (!stats) {
     return (
       <Card>
         <CardContent className="text-center p-8">
@@ -80,13 +78,13 @@ export function UserStats({ userId }: UserStatsProps) {}
     )
   }
 
-  const formatWatchTime = (seconds: number) => {}
+  const formatWatchTime = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    if (hours > 0) {}
-      return `${hours}h ${minutes}m`
+    if (hours > 0) {
+      return `${hours}h ${minutes}m`;
     }
-    return `${minutes}m`
+    return `${minutes}m`;
   }
 
   return (

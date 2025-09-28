@@ -6,15 +6,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 "use client"
 
-interface SocialLoginErrorProps {}
-  error: 'cancelled' | 'failed' | 'network' | 'denied' | 'invalid_state'
-  provider: 'google' | 'discord' | 'github'
-  onRetry: () => void;
+interface error {: 'cancelled' | 'failed' | 'network' | 'denied' | 'invalid_state',
+  provider: 'google' | 'discord' | 'github',
+  onRetry: () => void;,
   onDismiss: () => void;
 }
 
-export function SocialLoginError({ error, provider, onRetry, onDismiss }: SocialLoginErrorProps) {}
-  const getErrorConfig = () => {}
+export function SocialLoginError({ error, provider, onRetry, onDismiss }: SocialLoginErrorProps) {
+  const getErrorConfig = () => {
     switch (error) {}
       case 'cancelled':
         return {}

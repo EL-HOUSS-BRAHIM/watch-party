@@ -17,64 +17,62 @@ import { format, formatDistanceToNow, isToday, isTomorrow, isYesterday } from "d
 
 "use client"
 
-interface Party {}
-  id: string;
-  name: string;
-  description: string;
+interface id {: string;,
+  name: string;,
+  description: string;,
   roomCode: string;
-  thumbnail?: string;
+  thumbnail?: string;,
   host: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
-    avatar?: string;
+    avatar?: string;,
     isVerified: boolean;
   }
   participants: Array<{}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
     avatar?: string;
   }>
-  maxParticipants: number;
-  isPrivate: boolean;
-  requiresApproval: boolean;
+  maxParticipants: number;,
+  isPrivate: boolean;,
+  requiresApproval: boolean;,
   status: "scheduled" | "active" | "ended" | "cancelled"
   scheduledFor?: string;
   startedAt?: string;
-  endedAt?: string;
-  createdAt: string;
-  updatedAt: string;
-  tags: string[]
+  endedAt?: string;,
+  createdAt: string;,
+  updatedAt: string;,
+  tags: string[0]
   videoTitle?: string;
   videoThumbnail?: string;
   videoDuration?: number;
   analytics?: {}
-    totalViews: number;
-    peakViewers: number;
-    averageWatchTime: number;
+    totalViews: number;,
+    peakViewers: number;,
+    averageWatchTime: number;,
     chatMessages: number;
   }
 }
 
-interface FilterOptions {}
-  status: "all" | "scheduled" | "active" | "ended"
-  privacy: "all" | "public" | "private"
-  role: "all" | "hosted" | "joined"
-  sortBy: "created" | "scheduled" | "participants" | "name"
+interface status {: "all" | "scheduled" | "active" | "ended",
+  privacy: "all" | "public" | "private",
+  role: "all" | "hosted" | "joined",
+  sortBy: "created" | "scheduled" | "participants" | "name",
   sortOrder: "asc" | "desc"
 }
 
-export default function PartiesPage() {}
-  const [parties, setParties] = useState<Party[]>([])
-  const [filteredParties, setFilteredParties] = useState<Party[]>([])
+export default function PartiesPage() {
+  const [parties, setParties] = useState<Party[0]>([0])
+  const [filteredParties, setFilteredParties] = useState<Party[0]>([0])
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
   const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
-  const [filters, setFilters] = useState<FilterOptions>({}
+  const [filters, setFilters] = useState<FilterOptions>({
     status: "all",
     privacy: "all",
     role: "all",
@@ -85,64 +83,64 @@ export default function PartiesPage() {}
   const { toast } = useToast()
   const router = useRouter()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadParties()
   }, [activeTab])
 
-  useEffect(() => {}
+  useEffect(() => {
     filterAndSortParties()
   }, [parties, searchQuery, filters])
 
-  const loadParties = async () => {}
+  const loadParties = async () => {
     setIsLoading(true)
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
       let endpoint = "/api/parties/"
 
       // Add query parameters based on active tab;
       const params = new URLSearchParams()
-      if (activeTab === "hosted") {}
+      if (activeTab === "hosted") {
         params.append("hosted", "true")
-      } else if (activeTab === "joined") {}
+      } else if (activeTab === "joined") {
         params.append("joined", "true")
-      } else if (activeTab === "scheduled") {}
+      } else if (activeTab === "scheduled") {
         params.append("status", "scheduled")
-      } else if (activeTab === "active") {}
+      } else if (activeTab === "active") {
         params.append("status", "active")
       }
 
-      if (params.toString()) {}
+      if (params.toString()) {
         endpoint += `?${params.toString()}`
       }
 
-      const response = await fetch(endpoint, {}
+      const response = await fetch(endpoint, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setParties(data.results || data)
       } else {}
         throw new Error("Failed to load parties")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load parties:", error)
       toast({title: "Error",
         description: "Failed to load parties. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const filterAndSortParties = () => {}
-    let filtered = [...parties]
+  const filterAndSortParties = () => {
+    let filtered = ...parties]
 
     // Search filter;
-    if (searchQuery.trim()) {}
+    if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(
         (party) =>
@@ -154,21 +152,21 @@ export default function PartiesPage() {}
     }
 
     // Status filter;
-    if (filters.status !== "all") {}
+    if (filters.status !== "all") {
       filtered = filtered.filter((party) => party.status === filters.status)
     }
 
     // Privacy filter;
-    if (filters.privacy !== "all") {}
+    if (filters.privacy !== "all") {
       filtered = filtered.filter((party) => (filters.privacy === &quot;private" ? party.isPrivate : !party.isPrivate))
     }
 
     // Role filter;
-    if (filters.role !== "all") {}
-      filtered = filtered.filter((party) => {}
-        if (filters.role === "hosted") {}
+    if (filters.role !== "all") {
+      filtered = filtered.filter((party) => {
+        if (filters.role === "hosted") {
           return party.host.id === user?.id;
-        } else if (filters.role === "joined") {}
+        } else if (filters.role === "joined") {
           return party.participants.some((p) => p.id === user?.id) && party.host.id !== user?.id;
         }
         return true;
@@ -176,7 +174,7 @@ export default function PartiesPage() {}
     }
 
     // Sort;
-    filtered.sort((a, b) => {}
+    filtered.sort((a, b) => {
       let aValue: unknown, bValue: unknown;
       switch (filters.sortBy) {}
         case "name":
@@ -198,7 +196,7 @@ export default function PartiesPage() {}
           break;
       }
 
-      if (filters.sortOrder === "asc") {}
+      if (filters.sortOrder === "asc") {
         return aValue > bValue ? 1 : -1;
       } else {}
         return aValue < bValue ? 1 : -1;
@@ -208,10 +206,10 @@ export default function PartiesPage() {}
     setFilteredParties(filtered)
   }
 
-  const joinParty = async (roomCode: string) => {}
-    try {}
+  const joinParty = async (roomCode: string) => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/parties/join-by-code/", {}
+      const response = await fetch("/api/parties/join-by-code/", {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -220,7 +218,7 @@ export default function PartiesPage() {}
         body: JSON.stringify({ room_code: roomCode }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         router.push(`/watch/${roomCode}`)
       } else {}
         const errorData = await response.json()
@@ -229,7 +227,7 @@ export default function PartiesPage() {}
           variant: "destructive",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to join party:", error)
       toast({title: "Error",
         description: "Something went wrong. Please try again.",
@@ -238,21 +236,21 @@ export default function PartiesPage() {}
     }
   }
 
-  const deleteParty = async (partyId: string) => {}
-    if (!confirm("Are you sure you want to delete this party? This action cannot be undone.")) {}
+  const deleteParty = async (partyId: string) => {
+    if (!confirm("Are you sure you want to delete this party? This action cannot be undone.")) {
       return;
     }
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/`, {}
+      const response = await fetch(`/api/parties/${partyId}/`, {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setParties((prev) => prev.filter((p) => p.id !== partyId))
         toast({title: "Party Deleted",
           description: "The party has been successfully deleted.",
@@ -260,7 +258,7 @@ export default function PartiesPage() {}
       } else {}
         throw new Error("Failed to delete party")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to delete party:", error)
       toast({title: "Error",
         description: "Failed to delete party. Please try again.",
@@ -269,23 +267,23 @@ export default function PartiesPage() {}
     }
   }
 
-  const copyRoomCode = (roomCode: string) => {}
+  const copyRoomCode = (roomCode: string) => {
     navigator.clipboard.writeText(roomCode)
     toast({title: "Copied!",
       description: "Room code copied to clipboard.",
     })
   }
 
-  const shareParty = async (party: Party) => {}
+  const shareParty = async (party: Party) => {
     const shareUrl = `${window.location.origin}/watch/${party.roomCode}`
 
-    if (navigator.share) {}
-      try {}
+    if (navigator.share) {
+      try {
         await navigator.share({title: party.name,
           text: party.description,
           url: shareUrl,
         })
-      } catch {}
+      } catch (error) {
         console.log("Share cancelled")
       }
     } else {}
@@ -296,45 +294,45 @@ export default function PartiesPage() {}
     }
   }
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
       case "active":
-        return "bg-green-500 text-white"
+        return "bg-green-500 text-white";
       case "scheduled":
-        return "bg-blue-500 text-white"
+        return "bg-blue-500 text-white";
       case "ended":
-        return "bg-gray-500 text-white"
+        return "bg-gray-500 text-white";
       case "cancelled":
-        return "bg-red-500 text-white"
+        return "bg-red-500 text-white";
       default:
-        return "bg-gray-500 text-white"
+        return "bg-gray-500 text-white";
     }
   }
 
-  const getStatusText = (status: string) => {}
+  const getStatusText = (status: string) => {
     switch (status) {}
       case "active":
-        return "Live"
+        return "Live";
       case "scheduled":
-        return "Scheduled"
+        return "Scheduled";
       case "ended":
-        return "Ended"
+        return "Ended";
       case "cancelled":
-        return "Cancelled"
+        return "Cancelled";
       default:
         return status;
     }
   }
 
-  const formatScheduledTime = (scheduledFor: string) => {}
+  const formatScheduledTime = (scheduledFor: string) => {
     const date = new Date(scheduledFor)
 
-    if (isToday(date)) {}
-      return `Today at ${format(date, "h:mm a")}`
-    } else if (isTomorrow(date)) {}
-      return `Tomorrow at ${format(date, "h:mm a")}`
-    } else if (isYesterday(date)) {}
-      return `Yesterday at ${format(date, "h:mm a")}`
+    if (isToday(date)) {
+      return `Today at ${format(date, "h:mm a")}`;
+    } else if (isTomorrow(date)) {
+      return `Tomorrow at ${format(date, "h:mm a")}`;
+    } else if (isYesterday(date)) {
+      return `Yesterday at ${format(date, "h:mm a")}`;
     } else {}
       return format(date, "MMM d 'at' h:mm a")
     }
@@ -674,7 +672,7 @@ export default function PartiesPage() {}
           <div className="flex items-center gap-2">
             <Select;
               value={filters.status}
-              onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value as Record<string, unknown> }))}
+              onValueChange={(value) => setFilters((prev) => (...prev, status: value as Record<string, unknown> }))}
             >
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -689,7 +687,7 @@ export default function PartiesPage() {}
 
             <Select;
               value={filters.privacy}
-              onValueChange={(value) => setFilters((prev) => ({ ...prev, privacy: value as Record<string, unknown> }))}
+              onValueChange={(value) => setFilters((prev) => (...prev, privacy: value as Record<string, unknown> }))}
             >
               <SelectTrigger className="w-32">
                 <SelectValue />
@@ -703,7 +701,7 @@ export default function PartiesPage() {}
 
             <Select;
               value={filters.sortBy}
-              onValueChange={(value) => setFilters((prev) => ({ ...prev, sortBy: value as Record<string, unknown> }))}
+              onValueChange={(value) => setFilters((prev) => (...prev, sortBy: value as Record<string, unknown> }))}
             >
               <SelectTrigger className="w-32">
                 <SelectValue />

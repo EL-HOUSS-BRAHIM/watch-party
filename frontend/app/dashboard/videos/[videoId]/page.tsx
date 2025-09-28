@@ -13,70 +13,68 @@ import { formatDistanceToNow, format } from "date-fns"
 
 "use client"
 
-interface Video {}
-  id: string;
-  title: string;
-  description: string;
-  url: string;
-  thumbnail: string;
-  duration: number;
-  views: number;
-  likes: number;
-  dislikes: number;
-  uploadedAt: string;
-  updatedAt: string;
-  status: "processing" | "ready" | "failed"
-  visibility: "public" | "private" | "unlisted"
-  tags: string[]
+interface id {: string;,
+  title: string;,
+  description: string;,
+  url: string;,
+  thumbnail: string;,
+  duration: number;,
+  views: number;,
+  likes: number;,
+  dislikes: number;,
+  uploadedAt: string;,
+  updatedAt: string;,
+  status: "processing" | "ready" | "failed",
+  visibility: "public" | "private" | "unlisted",
+  tags: string[0],
   uploader: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
-    avatar?: string;
+    avatar?: string;,
     isVerified: boolean;
   }
   metadata: {}
-    resolution: string;
-    fileSize: number;
-    format: string;
+    resolution: string;,
+    fileSize: number;,
+    format: string;,
     bitrate: number;
   }
   analytics: {}
-    watchTime: number;
-    averageWatchTime: number;
-    retentionRate: number;
+    watchTime: number;,
+    averageWatchTime: number;,
+    retentionRate: number;,
     topCountries: Array<{ country: string; views: number }>
   }
 }
 
-interface Comment {}
-  id: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  likes: number;
-  dislikes: number;
+interface id {: string;,
+  content: string;,
+  createdAt: string;,
+  updatedAt: string;,
+  likes: number;,
+  dislikes: number;,
   author: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
     avatar?: string;
   }
-  replies: Comment[]
-  isLiked: boolean;
+  replies: Comment[0],
+  isLiked: boolean;,
   isDisliked: boolean;
 }
 
-export default function VideoDetailsPage() {}
+export default function VideoDetailsPage() {
   const params = useParams()
   const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
   const videoId = params.videoId as string;
   const [video, setVideo] = useState<Video | null>(null)
-  const [comments, setComments] = useState<Comment[]>([])
+  const [comments, setComments] = useState<Comment[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
@@ -86,74 +84,74 @@ export default function VideoDetailsPage() {}
   const [isSubmittingComment, setIsSubmittingComment] = useState(false)
   const [activeTab, setActiveTab] = useState("overview")
 
-  useEffect(() => {}
-    if (videoId) {}
+  useEffect(() => {
+    if (videoId) {
       loadVideo()
       loadComments()
     }
   }, [videoId])
 
-  const loadVideo = async () => {}
-    try {}
+  const loadVideo = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/`, {}
+      const response = await fetch(`/api/videos/${videoId}/`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const videoData = await response.json()
         setVideo(videoData)
         setIsLiked(videoData.isLiked || false)
         setIsDisliked(videoData.isDisliked || false)
-      } else if (response.status === 404) {}
+      } else if (response.status === 404) {
         toast({title: "Video Not Found",
           description: "The video you're looking for doesn't exist.",
           variant: "destructive",
         })
         router.push("/dashboard/videos")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load video:", error)
       toast({title: "Error",
         description: "Failed to load video details.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const loadComments = async () => {}
-    try {}
+  const loadComments = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/comments/`, {}
+      const response = await fetch(`/api/videos/${videoId}/comments/`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const commentsData = await response.json()
-        setComments(commentsData.results || [])
+        setComments(commentsData.results || [0])
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load comments:", error)
     }
   }
 
-  const handleLike = async () => {}
-    try {}
+  const handleLike = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/like/`, {}
+      const response = await fetch(`/api/videos/${videoId}/like/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setIsLiked(!isLiked)
         if (isDisliked) setIsDisliked(false)
 
@@ -167,22 +165,22 @@ export default function VideoDetailsPage() {}
             : null,
         )
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to like video:", error)
     }
   }
 
-  const handleDislike = async () => {}
-    try {}
+  const handleDislike = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/dislike/`, {}
+      const response = await fetch(`/api/videos/${videoId}/dislike/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setIsDisliked(!isDisliked)
         if (isLiked) setIsLiked(false)
 
@@ -196,21 +194,21 @@ export default function VideoDetailsPage() {}
             : null,
         )
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to dislike video:", error)
     }
   }
 
-  const handleShare = async () => {}
+  const handleShare = async () => {
     const shareUrl = `${window.location.origin}/videos/${videoId}`
 
-    if (navigator.share) {}
-      try {}
+    if (navigator.share) {
+      try {
         await navigator.share({title: video?.title,
           text: video?.description,
           url: shareUrl,
         })
-      } catch {}
+      } catch (error) {
         console.log("Share cancelled")
       }
     } else {}
@@ -221,12 +219,12 @@ export default function VideoDetailsPage() {}
     }
   }
 
-  const submitComment = async () => {}
+  const submitComment = async () => {
     if (!newComment.trim()) return;
     setIsSubmittingComment(true)
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/comments/`, {}
+      const response = await fetch(`/api/videos/${videoId}/comments/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -235,7 +233,7 @@ export default function VideoDetailsPage() {}
         body: JSON.stringify({ content: newComment }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const comment = await response.json()
         setComments((prev) => [comment, ...prev])
         setNewComment("")
@@ -243,38 +241,38 @@ export default function VideoDetailsPage() {}
           description: "Your comment has been posted.",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to submit comment:", error)
       toast({title: "Error",
         description: "Failed to post comment.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSubmittingComment(false)
     }
   }
 
-  const deleteVideo = async () => {}
-    if (!confirm("Are you sure you want to delete this video? This action cannot be undone.")) {}
+  const deleteVideo = async () => {
+    if (!confirm("Are you sure you want to delete this video? This action cannot be undone.")) {
       return;
     }
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/videos/${videoId}/`, {}
+      const response = await fetch(`/api/videos/${videoId}/`, {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         toast({title: "Video Deleted",
           description: "The video has been permanently deleted.",
         })
         router.push("/dashboard/videos")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to delete video:", error)
       toast({title: "Error",
         description: "Failed to delete video.",
@@ -283,24 +281,24 @@ export default function VideoDetailsPage() {}
     }
   }
 
-  const formatFileSize = (bytes: number) => {}
+  const formatFileSize = (bytes: number) => {
     const sizes = ["Bytes", "KB", "MB", "GB"]
     if (bytes === 0) return "0 Bytes"
     const i = Math.floor(Math.log(bytes) / Math.log(1024))
-    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i]
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i];
   }
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60;
-    if (hours > 0) {}
-      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
     }
-    return `${minutes}:${secs.toString().padStart(2, "0")}`
+    return `${minutes}:${secs.toString().padStart(2, "0")}`;
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto">
@@ -313,7 +311,7 @@ export default function VideoDetailsPage() {}
     )
   }
 
-  if (!video) {}
+  if (!video) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
@@ -467,7 +465,7 @@ export default function VideoDetailsPage() {}
                     <CardTitle>Description</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="whitespace-pre-wrap">{video.description || &quot;No description provided."}</p>"
+                    <p className="whitespace-pre-wrap">{video.description || &quot;No description provided."}</p>&quot;
 
                     {video.tags.length > 0 && (
                       <div className="mt-4">

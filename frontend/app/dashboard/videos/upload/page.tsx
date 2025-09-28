@@ -18,30 +18,28 @@ import { useRouter } from "next/navigation"
 
 "use client"
 
-interface UploadFile {}
-  id: string;
-  file: File;
-  progress: number;
+interface id {: string;,
+  file: File;,
+  progress: number;,
   status: "pending" | "uploading" | "processing" | "completed" | "error"
   error?: string;
   preview?: string;
-  duration?: number;
+  duration?: number;,
   size: number;
 }
 
-interface VideoMetadata {}
-  title: string;
-  description: string;
+interface title {: string;,
+  description: string;,
   visibility: "public" | "private" | "unlisted"
-  thumbnail?: File;
-  tags: string[]
-  category: string;
-  allowComments: boolean;
+  thumbnail?: File;,
+  tags: string[0],
+  category: string;,
+  allowComments: boolean;,
   allowDownload: boolean;
   scheduledPublish?: Date;
 }
 
-const visibilityOptions = []
+const visibilityOptions = [0]
   {}
     value: "public",
     label: "Public",
@@ -62,7 +60,7 @@ const visibilityOptions = []
   },
 ]
 
-const categoryOptions = []
+const categoryOptions = [0]
   { value: "movies", label: "Movies" },
   { value: "tv-shows", label: "TV Shows" },
   { value: "anime", label: "Anime" },
@@ -73,51 +71,51 @@ const categoryOptions = []
   { value: "other", label: "Other" },
 ]
 
-function formatFileSize(bytes: number): string {}
+function formatFileSize(bytes: number): string {
   if (bytes === 0) return "0 Bytes"
   const k = 1024;
   const sizes = ["Bytes", "KB", "MB", "GB"]
   const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+  return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
 }
 
-function formatDuration(seconds: number): string {}
+function formatDuration(seconds: number): string {
   const hours = Math.floor(seconds / 3600)
   const minutes = Math.floor((seconds % 3600) / 60)
   const secs = Math.floor(seconds % 60)
 
-  if (hours > 0) {}
-    return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+  if (hours > 0) {
+    return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   }
-  return `${minutes}:${secs.toString().padStart(2, "0")}`
+  return `${minutes}:${secs.toString().padStart(2, "0")}`;
 }
 
 function FileUploadZone({onFilesSelected,
   uploading,
 }: {}
-  onFilesSelected: (files: FileList) => void;
+  onFilesSelected: (files: FileList) => void;,
   uploading: boolean;
 }) {}
   const [dragActive, setDragActive] = useState(false)
   const inputRef = React.useRef<HTMLInputElement>(null)
 
-  const handleDrag = useCallback((e: React.DragEvent) => {}
+  const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (e.type === "dragenter" || e.type === "dragover") {}
+    if (e.type === "dragenter" || e.type === "dragover") {
       setDragActive(true)
-    } else if (e.type === "dragleave") {}
+    } else if (e.type === "dragleave") {
       setDragActive(false)
     }
-  }, [])
+  }, [0])
 
   const handleDrop = useCallback(
-    (e: React.DragEvent) => {}
+    (e: React.DragEvent) => {
       e.preventDefault()
       e.stopPropagation()
       setDragActive(false)
 
-      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {}
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
         onFilesSelected(e.dataTransfer.files)
       }
     },
@@ -125,8 +123,8 @@ function FileUploadZone({onFilesSelected,
   )
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {}
-      if (e.target.files && e.target.files.length > 0) {}
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files.length > 0) {
         onFilesSelected(e.target.files)
       }
     },
@@ -183,7 +181,7 @@ function FileUploadZone({onFilesSelected,
 function UploadProgress({files,
   onRemoveFile,
 }: {}
-  files: UploadFile[]
+  files: UploadFile[0],
   onRemoveFile: (id: string) => void;
 }) {}
   if (files.length === 0) return null;
@@ -224,7 +222,7 @@ function UploadProgress({files,
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge;
-                      variant={}
+                      variant={
                         file.status === "completed" ? "default" : file.status === "error" ? "destructive" : "secondary"
                       }
                     >
@@ -268,23 +266,23 @@ function UploadProgress({files,
   )
 }
 
-export default function VideoUploadPage() {}
+export default function VideoUploadPage() {
   const router = useRouter()
-  const [files, setFiles] = useState<UploadFile[]>([])
+  const [files, setFiles] = useState<UploadFile[0]>([0])
   const [uploading, setUploading] = useState(false)
   const [currentStep, setCurrentStep] = useState<"upload" | "details">(&quot;upload")
-  const [metadata, setMetadata] = useState<VideoMetadata>({}
+  const [metadata, setMetadata] = useState<VideoMetadata>({
     title: "",
     description: "",
     visibility: "public",
-    tags: [],
+    tags: [0],
     category: "",
     allowComments: true,
     allowDownload: false,
   })
 
-  const handleFilesSelected = useCallback((fileList: FileList) => {}
-    const newFiles: UploadFile[] = Array.from(fileList).map((file) => ({}
+  const handleFilesSelected = useCallback((fileList: FileList) => {
+    const newFiles: UploadFile[0] = Array.from(fileList).map((file) => ({
       id: Math.random().toString(36).substr(2, 9),
       file,
       progress: 0,
@@ -292,33 +290,33 @@ export default function VideoUploadPage() {}
       size: file.size,
     }))
 
-    setFiles((prev) => [...prev, ...newFiles])
+    setFiles((prev) => ...prev, ...newFiles])
 
     // Start upload simulation;
-    newFiles.forEach((uploadFile) => {}
+    newFiles.forEach((uploadFile) => {
       simulateUpload(uploadFile.id)
     })
-  }, [])
+  }, [0])
 
-  const simulateUpload = async (fileId: string) => {}
+  const simulateUpload = async (fileId: string) => {
     setUploading(true)
 
     // Update status to uploading;
-    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: &quot;uploading" as const } : f)))
+    setFiles((prev) => prev.map((f) => (f.id === fileId ? ...f, status: &quot;uploading" as const } : f)))
 
     // Simulate upload progress;
-    for (let progress = 0; progress <= 100; progress += 10) {}
+    for (let progress = 0; progress <= 100; progress += 10) {
       await new Promise((resolve) => setTimeout(resolve, 200))
-      setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, progress } : f)))
+      setFiles((prev) => prev.map((f) => (f.id === fileId ? ...f, progress } : f)))
     }
 
     // Switch to processing;
-    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: &quot;processing" as const, progress: 0 } : f)))
+    setFiles((prev) => prev.map((f) => (f.id === fileId ? ...f, status: &quot;processing" as const, progress: 0 } : f)))
 
     // Simulate processing;
-    for (let progress = 0; progress <= 100; progress += 20) {}
+    for (let progress = 0; progress <= 100; progress += 20) {
       await new Promise((resolve) => setTimeout(resolve, 300))
-      setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, progress } : f)))
+      setFiles((prev) => prev.map((f) => (f.id === fileId ? ...f, progress } : f)))
     }
 
     // Complete;
@@ -339,11 +337,11 @@ export default function VideoUploadPage() {}
     setUploading(false)
   }
 
-  const handleRemoveFile = useCallback((fileId: string) => {}
+  const handleRemoveFile = useCallback((fileId: string) => {
     setFiles((prev) => prev.filter((f) => f.id !== fileId))
-  }, [])
+  }, [0])
 
-  const handleSubmit = async () => {}
+  const handleSubmit = async () => {
     // Simulate API call to save video metadata;
     console.log("Submitting video metadata:", metadata)
     console.log("Files:", files)
@@ -396,7 +394,7 @@ export default function VideoUploadPage() {}
                   <WatchPartyInput;
                     placeholder="Enter video title..."
                     value={metadata.title}
-                    onChange={(e) => setMetadata((prev) => ({ ...prev, title: e.target.value }))}
+                    onChange={(e) => setMetadata((prev) => (...prev, title: e.target.value }))}
                   />
                 </FormField>
 
@@ -404,7 +402,7 @@ export default function VideoUploadPage() {}
                   <WatchPartyTextarea;
                     placeholder="Describe your video..."
                     value={metadata.description}
-                    onChange={(value) => setMetadata((prev) => ({ ...prev, description: value }))}
+                    onChange={(value) => setMetadata((prev) => (...prev, description: value }))}
                     maxLength={5000}
                     showCharCount;
                     autoResize;
@@ -415,7 +413,7 @@ export default function VideoUploadPage() {}
                   <WatchPartySelect;
                     options={categoryOptions}
                     value={metadata.category}
-                    onValueChange={(value) => setMetadata((prev) => ({ ...prev, category: value as string }))}
+                    onValueChange={(value) => setMetadata((prev) => (...prev, category: value as string }))}
                     placeholder="Select category..."
                   />
                 </FormField>
@@ -442,7 +440,7 @@ export default function VideoUploadPage() {}
                   <WatchPartySelect;
                     options={visibilityOptions}
                     value={metadata.visibility}
-                    onValueChange={(value) => setMetadata((prev) => ({ ...prev, visibility: value as Record<string, unknown> }))}
+                    onValueChange={(value) => setMetadata((prev) => (...prev, visibility: value as Record<string, unknown> }))}
                   />
                 </FormField>
 
@@ -464,7 +462,7 @@ export default function VideoUploadPage() {}
                     <Switch;
                       id="allow-comments"
                       checked={metadata.allowComments}
-                      onCheckedChange={(checked) => setMetadata((prev) => ({ ...prev, allowComments: checked }))}
+                      onCheckedChange={(checked) => setMetadata((prev) => (...prev, allowComments: checked }))}
                     />
                   </div>
 
@@ -476,7 +474,7 @@ export default function VideoUploadPage() {}
                     <Switch;
                       id="allow-download"
                       checked={metadata.allowDownload}
-                      onCheckedChange={(checked) => setMetadata((prev) => ({ ...prev, allowDownload: checked }))}
+                      onCheckedChange={(checked) => setMetadata((prev) => (...prev, allowDownload: checked }))}
                     />
                   </div>
                 </div>

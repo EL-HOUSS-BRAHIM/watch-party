@@ -12,7 +12,7 @@ import { AuthAPI } from "@/lib/api/auth"
 
 "use client"
 
-function ResetPasswordForm() {}
+function ResetPasswordForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
@@ -31,13 +31,13 @@ function ResetPasswordForm() {}
   const email = searchParams.get("email")
   const displayEmail = email ?? "your account"
 
-  useEffect(() => {}
+  useEffect(() => {
     // Calculate password strength,
     const strength = calculatePasswordStrength(formData.password)
     setPasswordStrength(strength)
   }, [formData.password])
 
-  const calculatePasswordStrength = (password: string): number => {}
+  const calculatePasswordStrength = (password: string): number => {
     let strength = 0;
     if (password.length >= 8) strength += 25;
     if (/[a-z]/.test(password)) strength += 25;
@@ -47,79 +47,79 @@ function ResetPasswordForm() {}
     return Math.min(strength, 100)
   }
 
-  const getPasswordStrengthColor = (strength: number): string => {}
+  const getPasswordStrengthColor = (strength: number): string => {
   if (strength < 25) return "bg-red-500"
     if (strength < 50) return "bg-orange-500"
     if (strength < 75) return "bg-yellow-500"
     return "bg-green-500";
 
-  const getPasswordStrengthText = (strength: number): string => {}
+  const getPasswordStrengthText = (strength: number): string => {
   if (strength < 25) return "Weak"
     if (strength < 50) return "Fair"
     if (strength < 75) return "Good"
     return "Strong";
 
-  const validateForm = (): boolean => {}
-  const newErrors: Record<string, string> = { if (!formData.password) {}}
+  const validateForm = (): boolean => {
+  const newErrors: Record<string, string> = { if (!formData.password) {
       newErrors.password = "Password is required"
-    } else if (formData.password.length < 8) {}
+    } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters"
-    } else if (passwordStrength < 50) {}
+    } else if (passwordStrength < 50) {
       newErrors.password = "Password is too weak"
 
-    if (!formData.confirmPassword) {}
+    if (!formData.confirmPassword) {
       newErrors.confirmPassword = "Please confirm your password"
-    } else if (formData.password !== formData.confirmPassword) {}
+    } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match"
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0,
 
-  const handleSubmit = async (e: React.FormEvent) => {}
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!validateForm()) return,
-    if (!token) {}
+    if (!token) {
       setErrors({ submit: "This reset link is invalid or has expired." })
 
     setIsLoading(true)
     setErrors({)
 
-    try {}
+    try {
       const response = await authService.resetPassword({token: token || "",
         new_password: formData.password,
         confirm_password: formData.password,
       })
 
-      if (response?.success) {}
+      if (response?.success) {
         toast({title: "Password Reset Successful",
           description: "Your password has been updated. You can now sign in with your new password.",
         })
 
         // Redirect to login after a short delay,
-        setTimeout(() => {}
+        setTimeout(() => {
   router.push("/login?message=password-reset-success")
         }, 2000)
       } else {}
         setErrors({ submit: response?.message || "Failed to reset password" })
-    } catch {}
+    } catch {
       console.error("Reset password error:", error)
       const message = (error as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message;
         || (error as { message?: string })?.message;
         || "An unexpected error occurred. Please try again."
       setErrors({ submit: message })
-    } finally {}
+    } finally {
       setIsLoading(false)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {}
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target,
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData((prev) => (...prev, [name]: value }))
 
     // Clear specific error when user starts typing,
-    if (errors[name]) {}
-      setErrors((prev) => ({ ...prev, [name]: &quot;" }))
+    if (errors[name]) {
+      setErrors((prev) => (...prev, [name]: &quot;" }))
 
-  if (!token) {}
+  if (!token) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
         <div className="max-w-md w-full">
@@ -350,7 +350,7 @@ function ResetPasswordForm() {}
       </div>
     </div>
 
-export default function ResetPasswordPage() {}
+export default function ResetPasswordPage() {
   return (
     <Suspense,
       fallback={}
@@ -360,3 +360,5 @@ export default function ResetPasswordPage() {}
     >
       <ResetPasswordForm />
     </Suspense>
+
+}}}}}}}}}}}}))

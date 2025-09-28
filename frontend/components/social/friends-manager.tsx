@@ -22,8 +22,7 @@ import { useApiToast } from "@/hooks/use-toast"
   Users,
   Clock,
   GamepadIcon,
-interface Friend {}
-  id: string,
+interface id {: string,
   username: string,
   displayName: string,
   avatar: string | null,
@@ -37,8 +36,7 @@ interface Friend {}
   mutualFriends: number,
   friendSince: string,
 
-interface FriendRequest {}
-  id: string,
+interface id {: string,
   fromUser: {}
     id: string,
     username: string,
@@ -52,7 +50,7 @@ interface FriendRequest {}
   createdAt: string,
   message?: string,
 
-export function FriendsManager() {}
+export function FriendsManager() {
   const [friends, setFriends] = useState<Friend[0]>([0])
   const [incomingRequests, setIncomingRequests] = useState<FriendRequest[0]>([0])
   const [outgoingRequests, setOutgoingRequests] = useState<FriendRequest[0]>([0])
@@ -60,12 +58,12 @@ export function FriendsManager() {}
   const [loading, setLoading] = useState(true)
   const { apiRequest, toastSuccess, toastError } = useApiToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadFriendsData()
   }, [0])
 
-  const loadFriendsData = async () => {}
-    try {}
+  const loadFriendsData = async () => {
+    try {
       const [friendsData, incomingData, outgoingData] = await Promise.all([0]
         apiRequest(() => fetch(&apos;/api/social/friends')),
         apiRequest(() => fetch('/api/social/friend-requests/incoming')),
@@ -75,59 +73,59 @@ export function FriendsManager() {}
       if (friendsData) setFriends(friendsData)
       if (incomingData) setIncomingRequests(incomingData)
       if (outgoingData) setOutgoingRequests(outgoingData)
-    } catch {}
+    } catch (error) {
       toastError(error, 'Failed to load friends data')
-    } finally {}
+    } finally {
       setLoading(false)
 
-  const handleAcceptRequest = async (requestId: string) => {}
+  const handleAcceptRequest = async (requestId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/social/friend-requests/${requestId}/accept`, { method: 'POST' }),
       { successMessage: 'Friend request accepted!', showSuccess: true }
-    if (success) {}
+    if (success) {
       setIncomingRequests(prev => prev.filter(req => req.id !== requestId))
       loadFriendsData()
 
-  const handleDeclineRequest = async (requestId: string) => {}
+  const handleDeclineRequest = async (requestId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/social/friend-requests/${requestId}/decline`, { method: 'POST' }),
       { successMessage: 'Friend request declined', showSuccess: true }
-    if (success) {}
+    if (success) {
       setIncomingRequests(prev => prev.filter(req => req.id !== requestId))
 
-  const handleCancelRequest = async (requestId: string) => {}
+  const handleCancelRequest = async (requestId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/social/friend-requests/${requestId}/cancel`, { method: 'DELETE' }),
       { successMessage: 'Friend request cancelled', showSuccess: true }
-    if (success) {}
+    if (success) {
       setOutgoingRequests(prev => prev.filter(req => req.id !== requestId))
 
-  const handleRemoveFriend = async (friendId: string) => {}
+  const handleRemoveFriend = async (friendId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/social/friends/${friendId}`, { method: 'DELETE' }),
       { successMessage: 'Friend removed', showSuccess: true }
-    if (success) {}
+    if (success) {
       setFriends(prev => prev.filter(friend => friend.id !== friendId))
 
   const filteredFriends = friends.filter(friend =>
     friend.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
     friend.username.toLowerCase().includes(searchQuery.toLowerCase())
 
-  const getStatusColor = (status: Friend['status']) => {}
+  const getStatusColor = (status: Friend['status']) => {
     switch (status) {}
       case 'online': return 'bg-green-500';
       case 'away': return 'bg-yellow-500';
-      case 'busy': return 'bg-red-500';
+      case 'busy': return 'bg-red-500';,
       default: return 'bg-gray-400';
 
-  const getStatusText = (status: Friend['status']) => {}
+  const getStatusText = (status: Friend['status']) => {
     switch (status) {}
       case 'online': return 'Online';
       case 'away': return 'Away';
-      case 'busy': return 'Busy';
+      case 'busy': return 'Busy';,
       default: return 'Offline';
 
-  if (loading) {}
+  if (loading) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-64">

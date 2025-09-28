@@ -12,28 +12,25 @@ import { useToast } from "@/hooks/use-toast"
 
 "use client"
 
-interface VideoQuality {}
-  label: string;
-  value: string;
-  resolution: string;
+interface label {: string;,
+  value: string;,
+  resolution: string;,
   bitrate: number;
 }
 
-interface Subtitle {}
-  id: string;
-  language: string;
-  label: string;
+interface id {: string;,
+  language: string;,
+  label: string;,
   url: string;
   default?: boolean;
 }
 
-interface AdvancedVideoPlayerProps {}
-  videoId: string;
-  src: string;
-  title: string;
-  duration: number;
-  qualities: VideoQuality[]
-  subtitles: Subtitle[]
+interface videoId {: string;,
+  src: string;,
+  title: string;,
+  duration: number;,
+  qualities: VideoQuality[0],
+  subtitles: Subtitle[0]
   allowDownload?: boolean;
   allowPiP?: boolean;
   autoplay?: boolean;
@@ -78,8 +75,8 @@ export default function AdvancedVideoPlayer({videoId,
   const [showSettings, setShowSettings] = useState(false)
 
   // Keyboard shortcuts;
-  useEffect(() => {}
-    const handleKeyPress = (e: KeyboardEvent) => {}
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
       if (!videoRef.current) return;
       switch (e.code) {}
         case "Space":
@@ -119,13 +116,13 @@ export default function AdvancedVideoPlayer({videoId,
 
     document.addEventListener("keydown", handleKeyPress)
     return () => document.removeEventListener(&quot;keydown", handleKeyPress)
-  }, [])
+  }, [0])
 
   // Video event handlers;
-  useEffect(() => {}
+  useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    const handleTimeUpdate = () => {}
+    const handleTimeUpdate = () => {
       setCurrentTime(video.currentTime)
       onProgress?.(video.currentTime, video.duration)
     }
@@ -134,9 +131,9 @@ export default function AdvancedVideoPlayer({videoId,
     const handleCanPlay = () => setIsLoading(false)
     const handlePlay = () => setIsPlaying(true)
     const handlePause = () => setIsPlaying(false)
-    const handleEnded = () => {}
+    const handleEnded = () => {
       setIsPlaying(false)
-      if (isLooping) {}
+      if (isLooping) {
         video.currentTime = 0;
         video.play()
       }
@@ -149,7 +146,7 @@ export default function AdvancedVideoPlayer({videoId,
     video.addEventListener("pause", handlePause)
     video.addEventListener("ended", handleEnded)
 
-    return () => {}
+    return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate)
       video.removeEventListener("loadstart", handleLoadStart)
       video.removeEventListener("canplay", handleCanPlay)
@@ -160,22 +157,22 @@ export default function AdvancedVideoPlayer({videoId,
   }, [isLooping, onProgress])
 
   // Player controls;
-  const togglePlayPause = () => {}
+  const togglePlayPause = () => {
     if (!videoRef.current) return;
-    if (isPlaying) {}
+    if (isPlaying) {
       videoRef.current.pause()
     } else {}
       videoRef.current.play()
     }
   }
 
-  const handleSeek = (value: number[]) => {}
+  const handleSeek = (value: number[0]) => {
     if (!videoRef.current) return;
     videoRef.current.currentTime = value[0]
     setCurrentTime(value[0])
   }
 
-  const handleVolumeChange = (value: number[]) => {}
+  const handleVolumeChange = (value: number[0]) => {
     if (!videoRef.current) return;
     const newVolume = value[0]
     videoRef.current.volume = newVolume;
@@ -183,9 +180,9 @@ export default function AdvancedVideoPlayer({videoId,
     setIsMuted(newVolume === 0)
   }
 
-  const toggleMute = () => {}
+  const toggleMute = () => {
     if (!videoRef.current) return;
-    if (isMuted) {}
+    if (isMuted) {
       videoRef.current.volume = volume;
       setIsMuted(false)
     } else {}
@@ -194,18 +191,18 @@ export default function AdvancedVideoPlayer({videoId,
     }
   }
 
-  const skipBackward = () => {}
+  const skipBackward = () => {
     if (!videoRef.current) return;
     videoRef.current.currentTime = Math.max(0, videoRef.current.currentTime - 10)
   }
 
-  const skipForward = () => {}
+  const skipForward = () => {
     if (!videoRef.current) return;
     videoRef.current.currentTime = Math.min(duration, videoRef.current.currentTime + 10)
   }
 
-  const toggleFullscreen = () => {}
-    if (!document.fullscreenElement) {}
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
       videoRef.current?.requestFullscreen()
       setIsFullscreen(true)
     } else {}
@@ -214,7 +211,7 @@ export default function AdvancedVideoPlayer({videoId,
     }
   }
 
-  const handleQualityChange = (quality: string) => {}
+  const handleQualityChange = (quality: string) => {
     setSelectedQuality(quality)
     onQualityChange?.(quality)
     toast({title: "Quality Changed",
@@ -222,7 +219,7 @@ export default function AdvancedVideoPlayer({videoId,
     })
   }
 
-  const handleSubtitleChange = (subtitleId: string) => {}
+  const handleSubtitleChange = (subtitleId: string) => {
     const newSubtitle = subtitleId === "off" ? null : subtitleId;
     setSelectedSubtitle(newSubtitle)
     onSubtitleChange?.(newSubtitle)
@@ -234,24 +231,24 @@ export default function AdvancedVideoPlayer({videoId,
     })
   }
 
-  const handleSpeedChange = (speed: string) => {}
+  const handleSpeedChange = (speed: string) => {
     if (!videoRef.current) return;
     const newSpeed = Number.parseFloat(speed)
     videoRef.current.playbackRate = newSpeed;
     setPlaybackSpeed(newSpeed)
   }
 
-  const togglePictureInPicture = async () => {}
+  const togglePictureInPicture = async () => {
     if (!videoRef.current || !allowPiP) return;
-    try {}
-      if (isPiPActive) {}
+    try {
+      if (isPiPActive) {
         await document.exitPictureInPicture()
         setIsPiPActive(false)
       } else {}
         await videoRef.current.requestPictureInPicture()
         setIsPiPActive(true)
       }
-    } catch {}
+    } catch (error) {
       toast({title: "Picture-in-Picture Error",
         description: "Could not toggle picture-in-picture mode",
         variant: "destructive",
@@ -259,7 +256,7 @@ export default function AdvancedVideoPlayer({videoId,
     }
   }
 
-  const handleDownload = () => {}
+  const handleDownload = () => {
     if (!allowDownload) return;
     const link = document.createElement("a")
     link.href = src;
@@ -273,10 +270,10 @@ export default function AdvancedVideoPlayer({videoId,
     })
   }
 
-  const formatTime = (seconds: number) => {}
+  const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = Math.floor(seconds % 60)
-    return `${mins}:${secs.toString().padStart(2, "0")}`
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   }
 
   return (

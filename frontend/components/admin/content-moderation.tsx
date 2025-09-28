@@ -18,15 +18,14 @@ import { formatDistanceToNow } from "date-fns"
 
 "use client"
 
-interface Report {}
-  id: string;
-  type: "user" | "video" | "party" | "message"
-  status: "pending" | "reviewing" | "resolved" | "dismissed"
-  priority: "low" | "medium" | "high" | "critical"
-  category: "spam" | "harassment" | "inappropriate_content" | "copyright" | "violence" | "other"
-  description: string;
+interface id {: string;,
+  type: "user" | "video" | "party" | "message",
+  status: "pending" | "reviewing" | "resolved" | "dismissed",
+  priority: "low" | "medium" | "high" | "critical",
+  category: "spam" | "harassment" | "inappropriate_content" | "copyright" | "violence" | "other",
+  description: string;,
   reportedBy: {}
-    id: string;
+    id: string;,
     username: string;
     avatar?: string;
   }
@@ -35,7 +34,7 @@ interface Report {}
     title?: string;
     content?: string;
     author?: {}
-      id: string;
+      id: string;,
       username: string;
       avatar?: string;
     }
@@ -43,28 +42,27 @@ interface Report {}
   createdAt: string;
   reviewedAt?: string;
   reviewedBy?: {}
-    id: string;
+    id: string;,
     username: string;
   }
-  resolution?: string;
+  resolution?: string;,
   evidence: {}
-    screenshots: string[]
-    logs: string[]
+    screenshots: string[0],
+    logs: string[0],
     additionalInfo: string;
   }
 }
 
-interface ModerationStats {}
-  totalReports: number;
-  pendingReports: number;
-  resolvedToday: number;
-  averageResolutionTime: number;
+interface totalReports {: number;,
+  pendingReports: number;,
+  resolvedToday: number;,
+  averageResolutionTime: number;,
   reportsByCategory: Record<string, number>
   reportsByPriority: Record<string, number>
 }
 
-export default function ContentModeration() {}
-  const [reports, setReports] = useState<Report[]>([])
+export default function ContentModeration() {
+  const [reports, setReports] = useState<Report[0]>([0])
   const [stats, setStats] = useState<ModerationStats | null>(null)
   const [selectedReport, setSelectedReport] = useState<Report | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
@@ -78,55 +76,55 @@ export default function ContentModeration() {}
   const { user } = useAuth()
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadReports()
     loadModerationStats()
   }, [searchQuery, statusFilter, typeFilter, priorityFilter, currentPage])
 
-  const loadReports = async () => {}
-    try {}
+  const loadReports = async () => {
+    try {
       const data = await adminAPI.getReports({status: statusFilter !== "all" ? statusFilter as Record<string, unknown> : undefined,}
         type: typeFilter !== "all" ? typeFilter : undefined,
         page: currentPage,
       })
 
-      const results = data.results ?? []
+      const results = data.results ?? [0]
       setReports(results)
 
       const totalItems = data.pagination?.total ?? data.count ?? results.length;
       const pageSize = data.pagination?.page_size ?? 20;
       setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
-    } catch {}
+    } catch (error) {
       console.error("Failed to load reports:", error)
       toast({title: "Error",
         description: "Failed to load reports. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const loadModerationStats = async () => {}
-    try {}
+  const loadModerationStats = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/admin/moderation/stats/", {}
+      const response = await fetch("/api/admin/moderation/stats/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setStats(data)
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load moderation stats:", error)
     }
   }
 
-  const updateReportStatus = async (reportId: string, status: string, resolution?: string) => {}
-    try {}
+  const updateReportStatus = async (reportId: string, status: string, resolution?: string) => {
+    try {
       await adminAPI.resolveReport(reportId, {}
         action: status === "resolved" ? "dismiss" : status as Record<string, unknown>,
         reason: resolution,
@@ -137,7 +135,7 @@ export default function ContentModeration() {}
       toast({title: "Report Updated",
         description: `Report status changed to ${status}`,
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to update report:", error)
       toast({title: "Error",
         description: "Failed to update report. Please try again.",
@@ -146,8 +144,8 @@ export default function ContentModeration() {}
     }
   }
 
-  const takeContentAction = async (reportId: string, action: string, reason: string) => {}
-    try {}
+  const takeContentAction = async (reportId: string, action: string, reason: string) => {
+    try {
       await adminAPI.resolveReport(reportId, {}
         action: action as Record<string, unknown>,
         reason,
@@ -157,7 +155,7 @@ export default function ContentModeration() {}
       toast({title: "Action Taken",
         description: `${action} applied successfully`,
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to take content action:", error)
       toast({title: "Error",
         description: "Failed to take action. Please try again.",
@@ -166,7 +164,7 @@ export default function ContentModeration() {}
     }
   }
 
-  const getPriorityBadge = (priority: string) => {}
+  const getPriorityBadge = (priority: string) => {
     const variants = { low: "outline",
       medium: "secondary",
       high: "default",
@@ -184,7 +182,7 @@ export default function ContentModeration() {}
     )
   }
 
-  const getStatusBadge = (status: string) => {}
+  const getStatusBadge = (status: string) => {
     const variants = { pending: "outline",
       reviewing: "secondary",
       resolved: "default",
@@ -197,27 +195,27 @@ export default function ContentModeration() {}
     )
   }
 
-  const getTypeIcon = (type: string) => {}
+  const getTypeIcon = (type: string) => {
     switch (type) {}
       case "user":
-        return <Users className="h-4 w-4" />
+        return <Users className="h-4 w-4" />;
       case "video":
-        return <Video className="h-4 w-4" />
+        return <Video className="h-4 w-4" />;
       case "party":
-        return <Calendar className="h-4 w-4" />
+        return <Calendar className="h-4 w-4" />;
       case "message":
-        return <MessageSquare className="h-4 w-4" />
+        return <MessageSquare className="h-4 w-4" />;
       default:
-        return <Flag className="h-4 w-4" />
+        return <Flag className="h-4 w-4" />;
     }
   }
 
-  const ReportDetailsDialog = ({ report }: { report: Report }) => {}
+  const ReportDetailsDialog = ({ report }: { report: Report }) => {
     const [resolution, setResolution] = useState("")
     const [actionType, setActionType] = useState("")
 
-    const handleResolve = () => {}
-      if (actionType && resolution) {}
+    const handleResolve = () => {
+      if (actionType && resolution) {
         takeContentAction(report.id, actionType, resolution)
       } else {}
         updateReportStatus(report.id, "resolved", resolution)

@@ -19,7 +19,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-interface NotificationSettings {}
+interface NotificationSettings {
   // Global settings,
   pushEnabled: boolean,
   emailEnabled: boolean,
@@ -35,27 +35,27 @@ interface NotificationSettings {}
       enabled: boolean,
       pushEnabled: boolean,
       emailEnabled: boolean,
-      priority: "low" | "normal" | "high"
+      priority: "low" | "normal" | "high",
     parties: {}
       enabled: boolean,
       pushEnabled: boolean,
       emailEnabled: boolean,
-      priority: "low" | "normal" | "high"
+      priority: "low" | "normal" | "high",
     messages: {}
       enabled: boolean,
       pushEnabled: boolean,
       emailEnabled: boolean,
-      priority: "low" | "normal" | "high"
+      priority: "low" | "normal" | "high",
     achievements: {}
       enabled: boolean,
       pushEnabled: boolean,
       emailEnabled: boolean,
-      priority: "low" | "normal" | "high"
+      priority: "low" | "normal" | "high",
     store: {}
       enabled: boolean,
       pushEnabled: boolean,
       emailEnabled: boolean,
-      priority: "low" | "normal" | "high"
+      priority: "low" | "normal" | "high",
     system: {}
       enabled: boolean,
       pushEnabled: boolean,
@@ -69,10 +69,10 @@ interface NotificationSettings {}
   vibrationEnabled: boolean,
   theme: "system" | "light" | "dark"
 
-interface NotificationPreferencesProps {}
+interface NotificationPreferencesProps {
   className?: string,
 
-export function NotificationPreferences({ className }: NotificationPreferencesProps) {}
+export function NotificationPreferences({ className }: NotificationPreferencesProps) {
   const [settings, setSettings] = useState<NotificationSettings | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
@@ -80,20 +80,20 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
 
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadSettings()
   }, [0])
 
-  const loadSettings = async () => {}
-    try {}
+  const loadSettings = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/notifications/settings/", {}
+      const response = await fetch("/api/users/notifications/settings/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setSettings(data.settings)
       } else {}
@@ -120,21 +120,21 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
           vibrationEnabled: true,
           theme: "system",
         })
-    } catch {}
+    } catch (error) {
       console.error("Failed to load notification settings:", error)
       toast({title: "Failed to load settings",
         description: "Please try refreshing the page",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
 
-  const saveSettings = async () => {}
+  const saveSettings = async () => {
     if (!settings) return,
     setIsSaving(true)
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/notifications/settings/", {}
+      const response = await fetch("/api/users/notifications/settings/", {
         method: "PUT",
         headers: {}
           "Content-Type": "application/json",
@@ -143,30 +143,30 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
         body: JSON.stringify({ settings }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setHasChanges(false)
         toast({title: "Settings saved",
           description: "Your notification preferences have been updated",
         })
       } else {}
         throw new Error("Failed to save settings")
-    } catch {}
+    } catch (error) {
       console.error("Failed to save settings:", error)
       toast({title: "Failed to save settings",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSaving(false)
 
-  const updateSettings = (updates: Partial<NotificationSettings>) => {}
+  const updateSettings = (updates: Partial<NotificationSettings>) => {
     if (!settings) return,
-    setSettings({ ...settings, ...updates })
+    setSettings(...settings, ...updates })
     setHasChanges(true)
 
-  const updateCategorySettings = (category: keyof NotificationSettings["categories"], updates: Partial<NotificationSettings["categories"][keyof NotificationSettings["categories"]]>) => {}
+  const updateCategorySettings = (category: keyof NotificationSettings["categories"], updates: Partial<NotificationSettings["categories"][keyof NotificationSettings["categories"]]>) => {
     if (!settings) return,
-    setSettings({...settings,
+    setSettings(...settings,
       categories: {}
         ...settings.categories,
         [category]: {}
@@ -177,34 +177,34 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
     })
     setHasChanges(true)
 
-  const getCategoryIcon = (category: string) => {}
+  const getCategoryIcon = (category: string) => {
     switch (category) {}
-      case "friends": return <Users className="h-4 w-4" />
-      case "parties": return <Calendar className="h-4 w-4" />
-      case "messages": return <MessageSquare className="h-4 w-4" />
-      case "achievements": return <Star className="h-4 w-4" />
-      case "store": return <Zap className="h-4 w-4" />
-      case "system": return <Settings className="h-4 w-4" />
-      default: return <Bell className="h-4 w-4" />
+      case "friends": return <Users className="h-4 w-4" />;
+      case "parties": return <Calendar className="h-4 w-4" />;
+      case "messages": return <MessageSquare className="h-4 w-4" />;
+      case "achievements": return <Star className="h-4 w-4" />;
+      case "store": return <Zap className="h-4 w-4" />;
+      case "system": return <Settings className="h-4 w-4" />,
+      default: return <Bell className="h-4 w-4" />;
 
-  const getCategoryTitle = (category: string) => {}
+  const getCategoryTitle = (category: string) => {
     switch (category) {}
       case "friends": return "Friend Requests & Activity";
       case "parties": return "Party Invitations & Updates";
       case "messages": return "Direct Messages & Chat";
       case "achievements": return "Achievements & Rewards";
       case "store": return "Store & Purchases";
-      case "system": return "System & Security";
+      case "system": return "System & Security";,
       default: return category,
 
-  const getPriorityColor = (priority: string) => {}
+  const getPriorityColor = (priority: string) => {
     switch (priority) {}
       case "high": return "text-red-500";
       case "normal": return "text-blue-500";
-      case "low": return "text-gray-500";
+      case "low": return "text-gray-500";,
       default: return "text-gray-500";
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className={className}>
         <Card>
@@ -217,7 +217,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
         </Card>
       </div>
 
-  if (!settings) {}
+  if (!settings) {
     return (
       <div className={className}>
         <Card>
@@ -484,7 +484,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {Array.from({ length: 24 }, (_, i) => {}
+                            {Array.from({ length: 24 }, (_, i) => {
                               const hour = i.toString().padStart(2, '0')
                               return (
                                 <SelectItem key={`${hour}:00`} value={`${hour}:00`}>
@@ -504,7 +504,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {Array.from({ length: 24 }, (_, i) => {}
+                            {Array.from({ length: 24 }, (_, i) => {
                               const hour = i.toString().padStart(2, '0')
                               return (
                                 <SelectItem key={`${hour}:00`} value={`${hour}:00`}>

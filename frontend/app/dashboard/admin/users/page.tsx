@@ -41,50 +41,48 @@ import { format, formatDistanceToNow } from "date-fns"
   Video,
   ArrowLeft,
   Loader2,
-interface AdminUser {}
-  id: string;
-  username: string;
-  email: string;
-  firstName: string;
+interface id {: string;,
+  username: string;,
+  email: string;,
+  firstName: string;,
   lastName: string;
-  avatar?: string;
-  isVerified: boolean;
-  isPremium: boolean;
-  isActive: boolean;
-  isBanned: boolean;
-  role: "user" | "moderator" | "admin"
+  avatar?: string;,
+  isVerified: boolean;,
+  isPremium: boolean;,
+  isActive: boolean;,
+  isBanned: boolean;,
+  role: "user" | "moderator" | "admin",
   joinedAt: string;
-  lastActive?: string;
+  lastActive?: string;,
   stats: {}
-    partiesHosted: number;
-    partiesJoined: number;
-    videosUploaded: number;
-    friendsCount: number;
+    partiesHosted: number;,
+    partiesJoined: number;,
+    videosUploaded: number;,
+    friendsCount: number;,
     totalWatchTime: number;
   }
   subscription?: {}
-    plan: string;
-    status: string;
+    plan: string;,
+    status: string;,
     expiresAt: string;
   }
 }
 
-interface UserAction {}
-  id: string;
+interface id {: string;,
   type: "ban" | "unban" | "suspend" | "unsuspend" | "delete" | "verify"
   reason?: string;
   duration?: number // in days;
   notifyUser?: boolean;
 }
 
-export default function UserManagementPage() {}
+export default function UserManagementPage() {
   const { user } = useAuth()
   const { toast } = useToast()
   const router = useRouter()
 
-  const [users, setUsers] = useState<AdminUser[]>([])
-  const [filteredUsers, setFilteredUsers] = useState<AdminUser[]>([])
-  const [selectedUsers, setSelectedUsers] = useState<AdminUser[]>([])
+  const [users, setUsers] = useState<AdminUser[0]>([0])
+  const [filteredUsers, setFilteredUsers] = useState<AdminUser[0]>([0])
+  const [selectedUsers, setSelectedUsers] = useState<AdminUser[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
@@ -105,23 +103,23 @@ export default function UserManagementPage() {}
   })
 
   // Check if user is admin;
-  useEffect(() => {}
-    if (user && !user.is_staff && !user.is_superuser) {}
+  useEffect(() => {
+    if (user && !user.is_staff && !user.is_superuser) {
       router.push("/dashboard")
       return;
     }
   }, [user, router])
 
-  const loadUsers = useCallback(async () => {}
+  const loadUsers = useCallback(async () => {
     if (!user?.is_staff && !user?.is_superuser) return;
     setIsLoading(true)
-    try {}
+    try {
       const data = await adminAPI.getUsers({search: searchQuery || undefined,
         status: statusFilter !== "all" ? (statusFilter as "active" | "suspended" | "banned") : undefined,
         page: 1, // You can add pagination later;
       })
       // Transform User data to AdminUser format;
-      const transformedUsers: AdminUser[] = (data.results ?? []).map((user) => {}
+      const transformedUsers: AdminUser[0] = (data.results ?? [0]).map((user) => {
         const rawUser = user as User & Partial<RawUser>
         const email = rawUser.email ?? ""
         const firstName = rawUser.firstName ?? rawUser.first_name ?? rawUser.displayName ?? rawUser.display_name ?? rawUser.username;
@@ -153,22 +151,22 @@ export default function UserManagementPage() {}
       })
       setUsers(transformedUsers)
       // setStats would need to be extracted from the response or fetched separately;
-    } catch {}
+    } catch (error) {
       console.error("Failed to load users:", error)
       toast({title: "Error",
         description: "Failed to load users. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }, [user?.is_staff, user?.is_superuser, searchQuery, statusFilter, toast])
 
-  const filterUsers = useCallback(() => {}
-    let filtered = [...users]
+  const filterUsers = useCallback(() => {
+    let filtered = ...users]
 
     // Search filter;
-    if (searchQuery.trim()) {}
+    if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(
         (user) =>
@@ -180,7 +178,7 @@ export default function UserManagementPage() {}
     }
 
     // Status filter;
-    if (statusFilter !== "all") {}
+    if (statusFilter !== "all") {
       switch (statusFilter) {}
         case "active":
           filtered = filtered.filter((user) => user.isActive && !user.isBanned)
@@ -198,12 +196,12 @@ export default function UserManagementPage() {}
     }
 
     // Role filter;
-    if (roleFilter !== "all") {}
+    if (roleFilter !== "all") {
       filtered = filtered.filter((user) => user.role === roleFilter)
     }
 
     // Subscription filter;
-    if (subscriptionFilter !== "all") {}
+    if (subscriptionFilter !== "all") {
       switch (subscriptionFilter) {}
         case "premium":
           filtered = filtered.filter((user) => user.isPremium)
@@ -220,17 +218,17 @@ export default function UserManagementPage() {}
     setFilteredUsers(filtered)
   }, [users, searchQuery, statusFilter, roleFilter, subscriptionFilter])
 
-  useEffect(() => {}
+  useEffect(() => {
     loadUsers()
   }, [loadUsers])
 
-  useEffect(() => {}
+  useEffect(() => {
     filterUsers()
   }, [filterUsers])
 
-  const executeUserAction = async (action: UserAction, userIds: string[]) => {}
-    try {}
-      if (action.type === 'verify') {}
+  const executeUserAction = async (action: UserAction, userIds: string[0]) => {
+    try {
+      if (action.type === 'verify') {
         // Handle verify action separately since it's not supported by bulkUserAction;
         // You might want to implement a separate API call or update the user verification directly;
         console.log('Verify action not implemented in bulk API')
@@ -246,7 +244,7 @@ export default function UserManagementPage() {}
       })
 
       await loadUsers()
-      setSelectedUsers([])
+      setSelectedUsers([0])
       setShowActionDialog(false)
       setCurrentAction(null)
       setActionReason("")
@@ -254,7 +252,7 @@ export default function UserManagementPage() {}
       toast({title: "Action Completed",
         description: `Successfully ${action.type}ed ${userIds.length} user(s).`,
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to execute user action:", error)
       toast({title: "Action Failed",
         description: error instanceof Error ? error.message : "Failed to execute action.",
@@ -263,8 +261,8 @@ export default function UserManagementPage() {}
     }
   }
 
-  const handleBulkAction = (actionType: UserAction["type"]) => {}
-    if (selectedUsers.length === 0) {}
+  const handleBulkAction = (actionType: UserAction["type"]) => {
+    if (selectedUsers.length === 0) {
       toast({title: "No Users Selected",
         description: "Please select users to perform this action.",
         variant: "destructive",
@@ -281,10 +279,10 @@ export default function UserManagementPage() {}
     setShowActionDialog(true)
   }
 
-  const exportUsers = async () => {}
-    try {}
+  const exportUsers = async () => {
+    try {
       const downloadData = await adminAPI.exportUsers({ format: 'csv' })
-      if (downloadData?.download_url) {}
+      if (downloadData?.download_url) {
         const a = document.createElement("a")
         a.href = downloadData.download_url;
         a.download = `users-export-${format(new Date(), "yyyy-MM-dd")}.csv`
@@ -296,7 +294,7 @@ export default function UserManagementPage() {}
           description: "User data has been exported successfully.",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to export users:", error)
       toast({title: "Export Failed",
         description: "Failed to export user data.",
@@ -305,17 +303,17 @@ export default function UserManagementPage() {}
     }
   }
 
-  const getStatusBadge = (user: AdminUser) => {}
-    if (user.isBanned) {}
-      return <Badge variant="destructive">Banned</Badge>
+  const getStatusBadge = (user: AdminUser) => {
+    if (user.isBanned) {
+      return <Badge variant="destructive">Banned</Badge>;
     }
-    if (!user.isActive) {}
-      return <Badge variant="outline">Inactive</Badge>
+    if (!user.isActive) {
+      return <Badge variant="outline">Inactive</Badge>;
     }
-    return <Badge className="bg-green-100 text-green-800">Active</Badge>
+    return <Badge className="bg-green-100 text-green-800">Active</Badge>;
   }
 
-  const getRoleBadge = (role: string) => {}
+  const getRoleBadge = (role: string) => {
     switch (role) {}
       case "admin":
         return (
@@ -341,7 +339,7 @@ export default function UserManagementPage() {}
     }
   }
 
-  const tableColumns = []
+  const tableColumns = [0]
     {}
       id: "user",
       header: "User",
@@ -430,7 +428,7 @@ export default function UserManagementPage() {}
     },
   ]
 
-  const tableActions = []
+  const tableActions = [0]
     {}
       id: "view",
       label: "View Profile",
@@ -441,7 +439,7 @@ export default function UserManagementPage() {}
       id: "edit",
       label: "Edit User",
       icon: <Edit className="w-4 h-4" />,
-      onClick: (user: AdminUser) => {}
+      onClick: (user: AdminUser) => {
         // Open edit dialog or navigate to edit page;
         console.log("Edit user:", user.id)
       },
@@ -450,7 +448,7 @@ export default function UserManagementPage() {}
       id: "ban",
       label: "Ban User",
       icon: <Ban className="w-4 h-4" />,
-      onClick: (user: AdminUser) => {}
+      onClick: (user: AdminUser) => {
         setSelectedUsers([user])
         handleBulkAction("ban")
       },
@@ -460,7 +458,7 @@ export default function UserManagementPage() {}
       id: "unban",
       label: "Unban User",
       icon: <Unlock className="w-4 h-4" />,
-      onClick: (user: AdminUser) => {}
+      onClick: (user: AdminUser) => {
         setSelectedUsers([user])
         handleBulkAction("unban")
       },
@@ -468,7 +466,7 @@ export default function UserManagementPage() {}
     },
   ]
 
-  if (!user?.is_staff && !user?.is_superuser) {}
+  if (!user?.is_staff && !user?.is_superuser) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-2xl mx-auto text-center">
@@ -481,7 +479,7 @@ export default function UserManagementPage() {}
     )
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto">
@@ -640,7 +638,7 @@ export default function UserManagementPage() {}
                     <Unlock className="h-4 w-4 mr-2" />
                     Unban;
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => setSelectedUsers([])}>
+                  <Button variant="outline" size="sm" onClick={() => setSelectedUsers([0])}>
                     Clear Selection;
                   </Button>
                 </div>
@@ -740,9 +738,9 @@ export default function UserManagementPage() {}
 
               <div className="flex gap-2">
                 <Button;
-                  onClick={() => {}
-                    if (currentAction) {}
-                      executeUserAction({...currentAction,
+                  onClick={() => {
+                    if (currentAction) {
+                      executeUserAction(...currentAction,
                           reason: actionReason,
                           duration: actionDuration,
                           notifyUser,

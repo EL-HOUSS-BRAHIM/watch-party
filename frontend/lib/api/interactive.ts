@@ -43,8 +43,8 @@ export class InteractiveAPI {}
    * Create poll;
    */
   async createPoll(partyId: string, data: {}
-    question: string;
-    options: string[]
+    question: string;,
+    options: string[0]
     duration?: number;
     anonymous?: boolean;
   }): Promise<Poll> {}
@@ -71,8 +71,8 @@ export class InteractiveAPI {}
   /**
    * Get screen shares;
    */
-  async getScreenShares(partyId: string): Promise<ScreenShare[]> {}
-    return apiClient.get<ScreenShare[]>(API_ENDPOINTS.interactive.screenShares(partyId))
+  async getScreenShares(partyId: string): Promise<ScreenShare[0]> {}
+    return apiClient.get<ScreenShare[0]>(API_ENDPOINTS.interactive.screenShares(partyId))
   }
 
   /**
@@ -90,8 +90,8 @@ export class InteractiveAPI {}
    * Add screen share annotation;
    */
   async addScreenShareAnnotation(shareId: string, data: {}
-    x: number;
-    y: number;
+    x: number;,
+    y: number;,
     type: 'cursor' | 'highlight' | 'text'
     content?: string;
   }): Promise<APIResponse> {}
@@ -118,10 +118,10 @@ export class InteractiveAPI {}
    * Get interactive analytics;
    */
   async getAnalytics(partyId: string): Promise<{}
-    reactions_count: number;
-    polls_count: number;
-    voice_chat_duration: number;
-    screen_share_duration: number;
+    reactions_count: number;,
+    polls_count: number;,
+    voice_chat_duration: number;,
+    screen_share_duration: number;,
     participation_rate: number;
   }> {}
     return apiClient.get(API_ENDPOINTS.interactive.analytics(partyId))

@@ -25,49 +25,47 @@ import { formatDistanceToNow } from "date-fns"
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-interface User {}
-  id: string;
-  username: string;
-  email: string;
-  firstName: string;
+interface id {: string;,
+  username: string;,
+  email: string;,
+  firstName: string;,
   lastName: string;
-  avatar?: string;
-  role: "user" | "admin" | "moderator"
-  status: "active" | "suspended" | "banned" | "pending"
-  isEmailVerified: boolean;
+  avatar?: string;,
+  role: "user" | "admin" | "moderator",
+  status: "active" | "suspended" | "banned" | "pending",
+  isEmailVerified: boolean;,
   createdAt: string;
   lastLoginAt?: string;
   subscription?: {}
-    plan: string;
-    status: string;
+    plan: string;,
+    status: string;,
     expiresAt: string;
   }
   stats: {}
-    partiesCreated: number;
-    partiesJoined: number;
-    videosUploaded: number;
+    partiesCreated: number;,
+    partiesJoined: number;,
+    videosUploaded: number;,
     friends: number;
   }
   flags: {}
-    isReported: boolean;
-    reportCount: number;
+    isReported: boolean;,
+    reportCount: number;,
     isTrusted: boolean;
   }
 }
 
-interface UserAction {}
-  id: string;
-  type: "ban" | "suspend" | "warn" | "promote" | "demote" | "verify"
+interface id {: string;,
+  type: "ban" | "suspend" | "warn" | "promote" | "demote" | "verify",
   reason: string;
-  duration?: number;
-  adminId: string;
-  adminName: string;
+  duration?: number;,
+  adminId: string;,
+  adminName: string;,
   timestamp: string;
 }
 
-export function UserManagement() {}
-  const [users, setUsers] = useState<User[]>([])
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([])
+export function UserManagement() {
+  const [users, setUsers] = useState<User[0]>([0])
+  const [selectedUsers, setSelectedUsers] = useState<string[0]>([0])
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [roleFilter, setRoleFilter] = useState("all")
@@ -75,7 +73,7 @@ export function UserManagement() {}
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">(&quot;desc")
   const [isLoading, setIsLoading] = useState(true)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
-  const [userActions, setUserActions] = useState<UserAction[]>([])
+  const [userActions, setUserActions] = useState<UserAction[0]>([0])
   const [showBulkActions, setShowBulkActions] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
@@ -83,55 +81,55 @@ export function UserManagement() {}
   const { user: currentUser } = useAuth()
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadUsers()
   }, [searchQuery, statusFilter, roleFilter, sortBy, sortOrder, currentPage])
 
-  const loadUsers = async () => {}
-    try {}
+  const loadUsers = async () => {
+    try {
       const data = await adminAPI.getUsers({search: searchQuery || undefined,
         status: statusFilter !== "all" ? statusFilter as Record<string, unknown> : undefined,
         page: currentPage,
       })
-      const results = data.results ?? []
-      setUsers(results as unknown as User[])
+      const results = data.results ?? [0]
+      setUsers(results as unknown as User[0])
 
       const totalItems = data.pagination?.total ?? data.count ?? results.length;
       const pageSize = data.pagination?.page_size ?? 20;
       setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
-    } catch {}
+    } catch (error) {
       console.error("Failed to load users:", error)
       toast({title: "Error",
         description: "Failed to load users. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const loadUserActions = async (userId: string) => {}
-    try {}
+  const loadUserActions = async (userId: string) => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/users/${userId}/actions/`, {}
+      const response = await fetch(`/api/admin/users/${userId}/actions/`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setUserActions(data.results || data)
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load user actions:", error)
     }
   }
 
-  const updateUserStatus = async (userId: string, status: string, reason?: string, duration?: number) => {}
-    try {}
+  const updateUserStatus = async (userId: string, status: string, reason?: string, duration?: number) => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/users/${userId}/status/`, {}
+      const response = await fetch(`/api/admin/users/${userId}/status/`, {
         method: "PUT",
         headers: {}
           "Content-Type": "application/json",
@@ -143,14 +141,14 @@ export function UserManagement() {}
         }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const updatedUser = await response.json()
-        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, status: updatedUser.status } : u)))
+        setUsers((prev) => prev.map((u) => (u.id === userId ? ...u, status: updatedUser.status } : u)))
         toast({title: "User Updated",
           description: `User status changed to ${status}`,
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to update user status:", error)
       toast({title: "Error",
         description: "Failed to update user status. Please try again.",
@@ -159,10 +157,10 @@ export function UserManagement() {}
     }
   }
 
-  const updateUserRole = async (userId: string, role: string) => {}
-    try {}
+  const updateUserRole = async (userId: string, role: string) => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/users/${userId}/role/`, {}
+      const response = await fetch(`/api/admin/users/${userId}/role/`, {
         method: "PUT",
         headers: {}
           "Content-Type": "application/json",
@@ -171,14 +169,14 @@ export function UserManagement() {}
         body: JSON.stringify({ role }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const updatedUser = await response.json()
-        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, role: updatedUser.role } : u)))
+        setUsers((prev) => prev.map((u) => (u.id === userId ? ...u, role: updatedUser.role } : u)))
         toast({title: "Role Updated",
           description: `User role changed to ${role}`,
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to update user role:", error)
       toast({title: "Error",
         description: "Failed to update user role. Please try again.",
@@ -187,10 +185,10 @@ export function UserManagement() {}
     }
   }
 
-  const bulkUpdateUsers = async (action: string, userIds: string[], reason?: string) => {}
-    try {}
+  const bulkUpdateUsers = async (action: string, userIds: string[0], reason?: string) => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/admin/users/bulk-action/", {}
+      const response = await fetch("/api/admin/users/bulk-action/", {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -202,14 +200,14 @@ export function UserManagement() {}
         }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         await loadUsers()
-        setSelectedUsers([])
+        setSelectedUsers([0])
         toast({title: "Bulk Action Completed",
           description: `${action} applied to ${userIds.length} users`,
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to perform bulk action:", error)
       toast({title: "Error",
         description: "Failed to perform bulk action. Please try again.",
@@ -218,10 +216,10 @@ export function UserManagement() {}
     }
   }
 
-  const exportUsers = async () => {}
-    try {}
+  const exportUsers = async () => {
+    try {
       const downloadData = await adminAPI.exportUsers({ format: 'csv' })
-      if (downloadData?.download_url) {}
+      if (downloadData?.download_url) {
         const a = document.createElement("a")
         a.href = downloadData.download_url;
         a.download = `users-export-${new Date().toISOString().split("T")[0]}.csv`
@@ -229,7 +227,7 @@ export function UserManagement() {}
         a.click()
         document.body.removeChild(a)
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to export users:", error)
       toast({title: "Error",
         description: "Failed to export users. Please try again.",
@@ -238,7 +236,7 @@ export function UserManagement() {}
     }
   }
 
-  const getStatusBadge = (status: string) => {}
+  const getStatusBadge = (status: string) => {
     const variants = { active: "default",
       suspended: "secondary",
       banned: "destructive",
@@ -256,18 +254,18 @@ export function UserManagement() {}
     )
   }
 
-  const getRoleIcon = (role: string) => {}
+  const getRoleIcon = (role: string) => {
     switch (role) {}
       case "admin":
-        return <Crown className="h-4 w-4 text-yellow-500" />
+        return <Crown className="h-4 w-4 text-yellow-500" />;
       case "moderator":
-        return <Shield className="h-4 w-4 text-blue-500" />
+        return <Shield className="h-4 w-4 text-blue-500" />;
       default:
-        return <Users className="h-4 w-4 text-gray-500" />
+        return <Users className="h-4 w-4 text-gray-500" />;
     }
   }
 
-  const filteredUsers = users.filter((user) => {}
+  const filteredUsers = users.filter((user) => {
     const matchesSearch =
       user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -278,24 +276,24 @@ export function UserManagement() {}
     return matchesSearch && matchesStatus && matchesRole;
   })
 
-  const UserActionDialog = ({ user }: { user: User }) => {}
+  const UserActionDialog = ({ user }: { user: User }) => {
     const [actionType, setActionType] = useState("")
     const [reason, setReason] = useState("")
     const [duration, setDuration] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
 
-    const handleSubmit = async () => {}
+    const handleSubmit = async () => {
       if (!actionType || !reason) return;
       setIsSubmitting(true)
-      try {}
-        if (actionType === "ban" || actionType === "suspend") {}
+      try {
+        if (actionType === "ban" || actionType === "suspend") {
           await updateUserStatus(user.id, actionType, reason, duration ? Number.parseInt(duration) : undefined)
-        } else if (actionType === "promote" || actionType === "demote") {}
+        } else if (actionType === "promote" || actionType === "demote") {
           const newRole = actionType === "promote" ? "moderator" : "user"
           await updateUserRole(user.id, newRole)
         }
         setSelectedUser(null)
-      } finally {}
+      } finally {
         setIsSubmitting(false)
       }
     }
@@ -569,11 +567,11 @@ export function UserManagement() {}
                     <input;
                       type="checkbox"
                       checked={selectedUsers.length === filteredUsers.length}
-                      onChange={(e) => {}
-                        if (e.target.checked) {}
+                      onChange={(e) => {
+                        if (e.target.checked) {
                           setSelectedUsers(filteredUsers.map((u) => u.id))
                         } else {}
-                          setSelectedUsers([])
+                          setSelectedUsers([0])
                         }
                       }}
                     />
@@ -593,9 +591,9 @@ export function UserManagement() {}
                       <input;
                         type="checkbox"
                         checked={selectedUsers.includes(user.id)}
-                        onChange={(e) => {}
-                          if (e.target.checked) {}
-                            setSelectedUsers((prev) => [...prev, user.id])
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedUsers((prev) => ...prev, user.id])
                           } else {}
                             setSelectedUsers((prev) => prev.filter((id) => id !== user.id))
                           }
@@ -663,7 +661,7 @@ export function UserManagement() {}
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuItem;
-                            onClick={() => {}
+                            onClick={() => {
                               setSelectedUser(user)
                               loadUserActions(user.id)
                             }}

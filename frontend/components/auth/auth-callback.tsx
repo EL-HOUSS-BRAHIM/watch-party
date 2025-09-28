@@ -8,35 +8,35 @@ import { Button } from "@/components/ui/button"
 
 "use client"
 
-export function AuthCallback() {}
+export function AuthCallback() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {}
-    const handleCallback = async () => {}
-      try {}
+  useEffect(() => {
+    const handleCallback = async () => {
+      try {
         const code = searchParams.get("code")
         const state = searchParams.get("state")
         const error = searchParams.get("error")
         const provider = searchParams.get("provider")
 
-        if (error) {}
+        if (error) {
           throw new Error(`OAuth error: ${error}`)
         }
 
-        if (!code) {}
+        if (!code) {
           throw new Error("No authorization code received")
         }
 
-        if (!provider) {}
+        if (!provider) {
           throw new Error("No provider specified")
         }
 
         // Send the code to our backend to complete OAuth flow;
-        const response = await fetch(`/api/auth/social/${provider}/`, {}
+        const response = await fetch(`/api/auth/social/${provider}/`, {
           method: "POST",
           headers: {}
             "Content-Type": "application/json",
@@ -49,12 +49,12 @@ export function AuthCallback() {}
 
         const data = await response.json()
 
-        if (!response.ok) {}
+        if (!response.ok) {
           throw new Error(data.message || "Social authentication failed")
         }
 
         // Store tokens;
-        if (data.access_token || data.refresh_token) {}
+        if (data.access_token || data.refresh_token) {
           tokenStorage.setTokens({accessToken: data.access_token,
             refreshToken: data.refresh_token,
           })
@@ -66,14 +66,14 @@ export function AuthCallback() {}
 
         // Redirect to dashboard;
         router.push("/dashboard")
-      } catch {}
+      } catch (error) {
         console.error("Social auth callback error:", error)
         setError(error instanceof Error ? error.message : "Authentication failed")
         toast({title: "Authentication Failed",
           description: error instanceof Error ? error.message : "Something went wrong",
           variant: "destructive",
         })
-      } finally {}
+      } finally {
         setIsLoading(false)
       }
     }
@@ -81,7 +81,7 @@ export function AuthCallback() {}
     handleCallback()
   }, [searchParams, router, toast])
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="w-full max-w-md">
@@ -101,7 +101,7 @@ export function AuthCallback() {}
     )
   }
 
-  if (error) {}
+  if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="w-full max-w-md">

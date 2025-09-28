@@ -1,7 +1,7 @@
 import  from "lucide-react"
 import { UserAnalytics } from "@/components/analytics/user-analytics"
 
-export default function UserAnalyticsPage() {}
+export default function UserAnalyticsPage() {
   return (
     <div className="container mx-auto py-8">
       <div className="max-w-6xl mx-auto">

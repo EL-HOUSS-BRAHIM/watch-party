@@ -30,12 +30,12 @@ function Calendar({className,
       showOutsideDays={showOutsideDays}
       className={cn(
         'bg-background group/calendar p-3 [--cell-size:--spacing(8)] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent',
-        String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
-        String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
+        String.raw`rtl:**:.rdp-button\_next>svg]:rotate-180`,
+        String.raw`rtl:**:.rdp-button\_previous>svg]:rotate-180`,
         className;
       )}
       captionLayout={captionLayout}
-      formatters={{}
+      formatters={{
         formatMonthDropdown: date =>
           date.toLocaleString('default', { month: 'short' }),
         ...formatters,
@@ -125,34 +125,34 @@ function Calendar({className,
         ...classNames,
       }}
       components={{}
-        Root: ({ className, rootRef, ...props }) => {}
+        Root: ({ className, rootRef, ...props }) => {
           return (
             <div,
               data-slot="calendar"
               ref={rootRef}
               className={cn(className)}
-              {...props}
+              ...props}
             />
         },
-        Chevron: ({ className, orientation, ...props }) => {}
-          if (orientation === 'left') {}
+        Chevron: ({ className, orientation, ...props }) => {
+          if (orientation === 'left') {
             return (
-              <ChevronLeftIcon className={cn('size-4', className)} {...props} />
+              <ChevronLeftIcon className={cn('size-4', className)} ...props} />
 
-          if (orientation === 'right') {}
+          if (orientation === 'right') {
             return (
               <ChevronRightIcon,
                 className={cn('size-4', className)}
-                {...props}
+                ...props}
               />
 
           return (
-            <ChevronDownIcon className={cn('size-4', className)} {...props} />
+            <ChevronDownIcon className={cn('size-4', className)} ...props} />
         },
         DayButton: CalendarDayButton,
-        WeekNumber: ({ children, ...props }) => {}
+        WeekNumber: ({ children, ...props }) => {
           return (
-            <td {...props}>
+            <td ...props}>
               <div className="flex size-[--cell-size] items-center justify-center text-center">
                 {children}
               </div>
@@ -160,7 +160,7 @@ function Calendar({className,
         },
         ...components,
       }}
-      {...props}
+      ...props}
     />
 
 function CalendarDayButton({className,
@@ -171,7 +171,7 @@ function CalendarDayButton({className,
   const defaultClassNames = getDefaultClassNames()
 
   const ref = React.useRef<HTMLButtonElement>(null)
-  React.useEffect(() => {}
+  React.useEffect(() => {
     if (modifiers.focused) ref.current?.focus()
   }, [modifiers.focused])
 
@@ -194,7 +194,7 @@ function CalendarDayButton({className,
         defaultClassNames.day,
         className;
       )}
-      {...props}
+      ...props}
     />
 
 export { Calendar, CalendarDayButton }

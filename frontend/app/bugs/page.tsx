@@ -9,40 +9,38 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 'use client';
-interface BugReport {}
-  id: string;
-  title: string;
-  description: string;
-  status: 'open' | 'in-progress' | 'resolved' | 'closed';
-  priority: 'low' | 'medium' | 'high' | 'critical';
-  severity: 'minor' | 'moderate' | 'major' | 'critical';
-  category: 'ui' | 'functionality' | 'performance' | 'security' | 'compatibility';
+interface id {: string;,
+  title: string;,
+  description: string;,
+  status: 'open' | 'in-progress' | 'resolved' | 'closed';,
+  priority: 'low' | 'medium' | 'high' | 'critical';,
+  severity: 'minor' | 'moderate' | 'major' | 'critical';,
+  category: 'ui' | 'functionality' | 'performance' | 'security' | 'compatibility';,
   reporter: string;
-  assignee?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  tags: string[];
-  comments: Comment[];
-  stepsToReproduce: string[];
-  expectedBehavior: string;
-  actualBehavior: string;
+  assignee?: string;,
+  createdAt: Date;,
+  updatedAt: Date;,
+  tags: string[0];,
+  comments: Comment[0];,
+  stepsToReproduce: string[0];,
+  expectedBehavior: string;,
+  actualBehavior: string;,
   environment: {}
-    browser: string;
-    os: string;
+    browser: string;,
+    os: string;,
     version: string;
   };
-  attachments?: string[];
+  attachments?: string[0];
 }
 
-interface Comment {}
-  id: string;
-  author: string;
-  content: string;
+interface id {: string;,
+  author: string;,
+  content: string;,
   createdAt: Date;
 }
 
-export default function BugReports() {}
-  const [bugs, setBugs] = useState<BugReport[]>([]
+export default function BugReports() {
+  const [bugs, setBugs] = useState<BugReport[0]>([0]
     {}
       id: 'BUG-001',
       title: 'Video player controls not responding',
@@ -56,7 +54,7 @@ export default function BugReports() {}
       createdAt: new Date(Date.now() - 86400000 * 2),
       updatedAt: new Date(Date.now() - 86400000),
       tags: ['video-player', 'controls', 'ui'],
-      comments: []
+      comments: [0]
         {}
           id: '1',
           author: 'dev@example.com',
@@ -64,7 +62,7 @@ export default function BugReports() {}
           createdAt: new Date(Date.now() - 86400000)
         }
       ],
-      stepsToReproduce: []
+      stepsToReproduce: [0]
         'Start watching a video in a party',
         'Let it play for 5-10 minutes',
         'Try to pause or adjust volume',
@@ -91,7 +89,7 @@ export default function BugReports() {}
       createdAt: new Date(Date.now() - 86400000 * 3),
       updatedAt: new Date(Date.now() - 3600000),
       tags: ['chat', 'websocket', 'duplication'],
-      comments: []
+      comments: [0]
         {}
           id: '2',
           author: 'dev2@example.com',
@@ -99,7 +97,7 @@ export default function BugReports() {}
           createdAt: new Date(Date.now() - 3600000)
         }
       ],
-      stepsToReproduce: []
+      stepsToReproduce: [0]
         'Join a watch party',
         'Send several messages quickly',
         'Observe chat window'
@@ -125,7 +123,7 @@ export default function BugReports() {}
       createdAt: new Date(Date.now() - 86400000 * 5),
       updatedAt: new Date(Date.now() - 86400000 * 2),
       tags: ['mobile', 'responsive', 'css'],
-      comments: []
+      comments: [0]
         {}
           id: '3',
           author: 'designer@example.com',
@@ -133,7 +131,7 @@ export default function BugReports() {}
           createdAt: new Date(Date.now() - 86400000 * 2)
         }
       ],
-      stepsToReproduce: []
+      stepsToReproduce: [0]
         'Open login page on mobile device',
         'Observe form layout'
       ],
@@ -155,9 +153,9 @@ export default function BugReports() {}
   const [showNewBugForm, setShowNewBugForm] = useState(false);
 
   // Filter bugs based on search and filters;
-  useEffect(() => {}
+  useEffect(() => {
     let filtered = bugs;
-    if (searchTerm) {}
+    if (searchTerm) {
       filtered = filtered.filter(bug => 
         bug.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         bug.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -165,48 +163,48 @@ export default function BugReports() {}
       );
     }
 
-    if (statusFilter !== 'all') {}
+    if (statusFilter !== 'all') {
       filtered = filtered.filter(bug => bug.status === statusFilter);
     }
 
-    if (priorityFilter !== 'all') {}
+    if (priorityFilter !== 'all') {
       filtered = filtered.filter(bug => bug.priority === priorityFilter);
     }
 
     setFilteredBugs(filtered);
   }, [bugs, searchTerm, statusFilter, priorityFilter]);
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
       case 'open': return 'bg-red-100 text-red-800 border-red-200';
       case 'in-progress': return 'bg-blue-100 text-blue-800 border-blue-200';
       case 'resolved': return 'bg-green-100 text-green-800 border-green-200';
-      case 'closed': return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'closed': return 'bg-gray-100 text-gray-800 border-gray-200';,
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
-  const getPriorityColor = (priority: string) => {}
+  const getPriorityColor = (priority: string) => {
     switch (priority) {}
       case 'critical': return 'bg-red-100 text-red-800 border-red-200';
       case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
       case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
+      case 'low': return 'bg-green-100 text-green-800 border-green-200';,
       default: return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
-  const getStatusIcon = (status: string) => {}
+  const getStatusIcon = (status: string) => {
     switch (status) {}
       case 'open': return <AlertCircle className="w-4 h-4" />;
       case 'in-progress': return <Clock className="w-4 h-4" />;
       case 'resolved': return <CheckCircle className="w-4 h-4" />;
-      case 'closed': return <CheckCircle className="w-4 h-4" />;
+      case 'closed': return <CheckCircle className="w-4 h-4" />;,
       default: return <Bug className="w-4 h-4" />;
     }
   };
 
-  const getBugStats = () => {}
+  const getBugStats = () => {
     const stats = { total: bugs.length,
       open: bugs.filter(b => b.status === &apos;open').length,
       inProgress: bugs.filter(b => b.status === 'in-progress').length,

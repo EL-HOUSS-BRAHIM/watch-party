@@ -11,9 +11,8 @@ import { formatDistanceToNow, parseISO } from "date-fns"
 
 "use client"
 
-interface ActivityItem {}
-  id: string,
-  type: "party_created" | "party_joined" | "party_completed" | "friend_added" | "achievement_earned" | "content_liked" | "milestone_reached" | "party_shared" | "review_posted" | "badge_earned"
+interface id {: string,
+  type: "party_created" | "party_joined" | "party_completed" | "friend_added" | "achievement_earned" | "content_liked" | "milestone_reached" | "party_shared" | "review_posted" | "badge_earned",
   user: {}
     id: string,
     username: string,
@@ -31,14 +30,13 @@ interface ActivityItem {}
     shares: number,
   location?: string,
 
-interface FilterOptions {}
-  type: string,
+interface type {: string,
   timeRange: string,
   privacy: string,
   friends: boolean,
   trending: boolean,
 
-interface NotificationSettings {}
+interface NotificationSettings {
   new_friends: boolean,
   friend_parties: boolean,
   trending_content: boolean,
@@ -46,7 +44,7 @@ interface NotificationSettings {}
   recommendations: boolean,
   weekly_digest: boolean,
 
-export default function ActivityFeedPage() {}
+export default function ActivityFeedPage() {
   const { toast } = useToast()
 
   const [activities, setActivities] = useState<ActivityItem[0]>([0])
@@ -56,14 +54,14 @@ export default function ActivityFeedPage() {}
   const [hasMore, setHasMore] = useState(true)
   const [page, setPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
-  const [filters, setFilters] = useState<FilterOptions>({}
+  const [filters, setFilters] = useState<FilterOptions>({
     type: "all",
     timeRange: "week",
     privacy: "all",
     friends: false,
     trending: false;
   })
-  const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>({}
+  const [notificationSettings, setNotificationSettings] = useState<NotificationSettings>({
     new_friends: true,
     friend_parties: true,
     trending_content: true,
@@ -73,22 +71,22 @@ export default function ActivityFeedPage() {}
   })
   const [engagingWith, setEngagingWith] = useState<Set<string>>(new Set())
 
-  useEffect(() => {}
+  useEffect(() => {
     loadActivities(true)
   }, [loadActivities])
 
-  useEffect(() => {}
+  useEffect(() => {
     filterActivities()
   }, [filterActivities])
 
-  const loadActivities = useCallback(async (reset = false) => {}
-    if (reset) {}
+  const loadActivities = useCallback(async (reset = false) => {
+    if (reset) {
       setIsLoading(true)
       setPage(1)
     } else {}
       setIsLoadingMore(true)
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
       const params = new URLSearchParams({page: reset ? "1" : page.toString(),
         limit: "20",
@@ -99,36 +97,36 @@ export default function ActivityFeedPage() {}
         trending_only: filters.trending.toString()
       })
 
-      const response = await fetch(`/api/social/activity/?${params}`, {}
+      const response = await fetch(`/api/social/activity/?${params}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         const newActivities = data.results || data.activities || [0]
-        if (reset) {}
+        if (reset) {
           setActivities(newActivities)
         } else {}
-          setActivities(prev => [...prev, ...newActivities])
+          setActivities(prev => ...prev, ...newActivities])
         setHasMore(data.has_next || newActivities.length === 20)
         if (!reset) setPage(prev => prev + 1)
       } else {}
         throw new Error("Failed to load activities")
-    } catch {}
+    } catch (error) {
       console.error("Failed to load activities:", error)
       toast({title: "Error",
         description: "Failed to load activity feed.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
       setIsLoadingMore(false)
   }, [filters, page, toast])
 
-  const filterActivities = useCallback(() => {}
-    let filtered = [...activities]
+  const filterActivities = useCallback(() => {
+    let filtered = ...activities]
 
-    if (searchQuery.trim()) {}
+    if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(activity =>
         activity.user.username.toLowerCase().includes(query) ||
@@ -138,11 +136,11 @@ export default function ActivityFeedPage() {}
     setFilteredActivities(filtered)
   }, [activities, searchQuery])
 
-  const updateNotificationSettings = async (settings: Partial<NotificationSettings>) => {}
-    try {}
+  const updateNotificationSettings = async (settings: Partial<NotificationSettings>) => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const newSettings = { ...notificationSettings, ...settings }
-      const response = await fetch("/api/users/notification-settings/", {}
+      const newSettings = ...notificationSettings, ...settings }
+      const response = await fetch("/api/users/notification-settings/", {
         method: "PUT",
         headers: {}
           "Content-Type": "application/json",
@@ -151,24 +149,24 @@ export default function ActivityFeedPage() {}
         body: JSON.stringify(newSettings),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setNotificationSettings(newSettings)
         toast({title: "Settings Updated",
           description: "Your notification preferences have been saved.",
         })
-    } catch {}
+    } catch (error) {
       console.error("Failed to update settings:", error)
       toast({title: "Error",
         description: "Failed to update notification settings.",
         variant: "destructive",
       })
 
-  const engageWithActivity = async (activityId: string, action: "like" | "comment" | "share") => {}
+  const engageWithActivity = async (activityId: string, action: "like" | "comment" | "share") => {
     setEngagingWith(prev => new Set(prev).add(activityId))
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/social/activity/${activityId}/engage/`, {}
+      const response = await fetch(`/api/social/activity/${activityId}/engage/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -177,64 +175,64 @@ export default function ActivityFeedPage() {}
         body: JSON.stringify({ action }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setActivities(prev => 
           prev.map(activity => 
             activity.id === activityId;
-              ? { ...activity, engagement: data.engagement }
+              ? ...activity, engagement: data.engagement }
               : activity,
-        if (action === "like") {}
+        if (action === "like") {
           toast({title: "Liked!",
             description: "You liked this activity.",
           })
-    } catch {}
+    } catch (error) {
       console.error("Engagement error:", error)
       toast({title: "Error",
         description: "Failed to engage with activity.",
         variant: "destructive",
       })
-    } finally {}
-      setEngagingWith(prev => {}
+    } finally {
+      setEngagingWith(prev => {
         const newSet = new Set(prev)
         newSet.delete(activityId)
         return newSet;
       })
 
-  const getActivityIcon = (type: string) => {}
+  const getActivityIcon = (type: string) => {
     switch (type) {}
       case "party_created":
-        return <Play className="h-4 w-4 text-blue-600" />
+        return <Play className="h-4 w-4 text-blue-600" />;
       case "party_joined":
-        return <Users className="h-4 w-4 text-green-600" />
+        return <Users className="h-4 w-4 text-green-600" />;
       case "party_completed":
-        return <Trophy className="h-4 w-4 text-yellow-600" />
+        return <Trophy className="h-4 w-4 text-yellow-600" />;
       case "friend_added":
-        return <UserPlus className="h-4 w-4 text-purple-600" />
+        return <UserPlus className="h-4 w-4 text-purple-600" />;
       case "achievement_earned":
-        return <Award className="h-4 w-4 text-orange-600" />
+        return <Award className="h-4 w-4 text-orange-600" />;
       case "content_liked":
-        return <Heart className="h-4 w-4 text-red-600" />
+        return <Heart className="h-4 w-4 text-red-600" />;
       case "milestone_reached":
-        return <Target className="h-4 w-4 text-indigo-600" />
+        return <Target className="h-4 w-4 text-indigo-600" />;
       case "party_shared":
-        return <Share2 className="h-4 w-4 text-cyan-600" />
+        return <Share2 className="h-4 w-4 text-cyan-600" />;
       case "review_posted":
-        return <Star className="h-4 w-4 text-yellow-500" />
+        return <Star className="h-4 w-4 text-yellow-500" />;
       case "badge_earned":
-        return <Sparkles className="h-4 w-4 text-pink-600" />
+        return <Sparkles className="h-4 w-4 text-pink-600" />;
       default:
-        return <Activity className="h-4 w-4 text-gray-600" />
+        return <Activity className="h-4 w-4 text-gray-600" />;
 
-  const getActivityMessage = (activity: ActivityItem) => {}
+  const getActivityMessage = (activity: ActivityItem) => {
     const { type, data } = activity,
     switch (type) {}
       case "party_created":
-        return `created a watch party for "${data.title}"`
+        return `created a watch party for "${data.title}"`;
       case "party_joined":
         return `joined ${data.host_name}'s watch party`;
       case "party_completed":
-        return `completed watching "${data.title}" with ${data.participants} friends`
+        return `completed watching "${data.title}" with ${data.participants} friends`;
       case "friend_added":
         return `became friends with ${data.friend_name}`;
       case "achievement_earned":
@@ -244,15 +242,15 @@ export default function ActivityFeedPage() {}
       case "milestone_reached":
         return `reached ${data.milestone_name}!`;
       case "party_shared":
-        return `shared a watch party for "${data.title}"`
+        return `shared a watch party for "${data.title}"`;
       case "review_posted":
-        return `posted a ${data.rating}-star review for "${data.title}"`
+        return `posted a ${data.rating}-star review for "${data.title}"`;
       case "badge_earned":
         return `earned the "${data.badge_name}" badge`;
       default:
         return "had some activity";
 
-  const getActivityColor = (type: string) => {}
+  const getActivityColor = (type: string) => {
     switch (type) {}
       case "party_created":
         return "border-l-blue-500";
@@ -277,7 +275,7 @@ export default function ActivityFeedPage() {}
       default:
         return "border-l-gray-500";
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -344,7 +342,7 @@ export default function ActivityFeedPage() {}
                   <div className="flex gap-2">
                     <Select,
                       value={filters.type}
-                      onValueChange={(value) => setFilters(prev => ({ ...prev, type: value }))}
+                      onValueChange={(value) => setFilters(prev => (...prev, type: value }))}
                     >
                       <SelectTrigger className="w-40">
                         <SelectValue />
@@ -361,7 +359,7 @@ export default function ActivityFeedPage() {}
 
                     <Select,
                       value={filters.timeRange}
-                      onValueChange={(value) => setFilters(prev => ({ ...prev, timeRange: value }))}
+                      onValueChange={(value) => setFilters(prev => (...prev, timeRange: value }))}
                     >
                       <SelectTrigger className="w-32">
                         <SelectValue />
@@ -377,7 +375,7 @@ export default function ActivityFeedPage() {}
                     <Button,
                       variant={filters.friends ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setFilters(prev => ({ ...prev, friends: !prev.friends }))}
+                      onClick={() => setFilters(prev => (...prev, friends: !prev.friends }))}
                     >
                       <Users className="h-4 w-4 mr-2" />
                     </Button>
@@ -385,7 +383,7 @@ export default function ActivityFeedPage() {}
                     <Button,
                       variant={filters.trending ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setFilters(prev => ({ ...prev, trending: !prev.trending }))}
+                      onClick={() => setFilters(prev => (...prev, trending: !prev.trending }))}
                     >
                       <TrendingUp className="h-4 w-4 mr-2" />
                     </Button>

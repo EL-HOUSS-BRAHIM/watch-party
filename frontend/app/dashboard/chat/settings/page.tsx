@@ -12,8 +12,7 @@ import { Badge } from '@/components/ui/badge'
 
 "use client"
 
-interface ChatSettingsProps {}
-  partyId?: string,
+interface partyId {?: string,
   isGlobal?: boolean,
 
 interface ChatPreferences {}
@@ -27,13 +26,13 @@ interface ChatPreferences {}
   showTimestamps: boolean,
   showAvatars: boolean,
   compactMode: boolean,
-  fontSize: 'small' | 'medium' | 'large'
+  fontSize: 'small' | 'medium' | 'large',
   theme: 'auto' | 'light' | 'dark'
   // Privacy & Filtering,
   hideFromStrangers: boolean,
   muteAll: boolean,
   blockedUsers: string[0],
-  filteredWords: string[0]
+  filteredWords: string[0],
   showEmojis: boolean,
   showImages: boolean,
   showLinks: boolean;
@@ -47,11 +46,11 @@ interface ChatPreferences {}
   showTypingIndicators: boolean,
   showOnlineStatus: boolean,
 
-export default function ChatSettingsPage() {}
-  return <ChatSettings isGlobal={true} />
+export default function ChatSettingsPage() {
+  return <ChatSettings isGlobal={true} />;
 
-function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
-  const [preferences, setPreferences] = useState<ChatPreferences>({}
+function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {
+  const [preferences, setPreferences] = useState<ChatPreferences>({
     messageNotifications: true,
     mentionNotifications: true,
     soundNotifications: true,
@@ -81,57 +80,57 @@ function ChatSettings({ partyId, isGlobal = false }: ChatSettingsProps) {}
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
 
-  useEffect(() => {}
+  useEffect(() => {
     loadPreferences()
   }, [partyId, isGlobal])
 
-  const loadPreferences = async () => {}
-    try {}
+  const loadPreferences = async () => {
+    try {
       const endpoint = isGlobal;
         ? '/api/chat/preferences' 
         : `/api/parties/${partyId}/chat/preferences`
       const response = await fetch(endpoint)
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
-        setPreferences({ ...preferences, ...data.preferences })
-    } catch {}
+        setPreferences(...preferences, ...data.preferences })
+    } catch (error) {
       console.error('Failed to load chat preferences:', error)
 
-  const savePreferences = async () => {}
-    try {}
+  const savePreferences = async () => {
+    try {
       setLoading(true)
       const endpoint = isGlobal;
         ? '/api/chat/preferences' 
         : `/api/parties/${partyId}/chat/preferences`
-      const response = await fetch(endpoint, {}
+      const response = await fetch(endpoint, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ preferences })
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setSaved(true)
         setTimeout(() => setSaved(false), 2000)
-    } catch {}
+    } catch (error) {
       console.error('Failed to save chat preferences:', error)
-    } finally {}
+    } finally {
       setLoading(false)
 
   const updatePreference = <K extends keyof ChatPreferences>(
     key: K, 
     value: ChatPreferences[K]
-  ) => {}
-    setPreferences(prev => ({ ...prev, [key]: value }))
+  ) => {
+    setPreferences(prev => (...prev, [key]: value }))
 
-  const addFilteredWord = () => {}
-    if (newFilteredWord.trim() && !preferences.filteredWords.includes(newFilteredWord.trim())) {}
-      updatePreference('filteredWords', [...preferences.filteredWords, newFilteredWord.trim()])
+  const addFilteredWord = () => {
+    if (newFilteredWord.trim() && !preferences.filteredWords.includes(newFilteredWord.trim())) {
+      updatePreference('filteredWords', ...preferences.filteredWords, newFilteredWord.trim()])
       setNewFilteredWord('')
 
-  const removeFilteredWord = (word: string) => {}
+  const removeFilteredWord = (word: string) => {
     updatePreference('filteredWords', preferences.filteredWords.filter(w => w !== word))
 
-  const playTestSound = () => {}
+  const playTestSound = () => {
     const audio = new Audio(`/sounds/notifications/${preferences.notificationSound}.mp3`)
     audio.volume = preferences.notificationVolume / 100,
     audio.play()

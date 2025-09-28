@@ -1,6 +1,6 @@
 import { StoreItems } from "@/components/store/store-items"
 
-export default function StoreItemsPage() {}
+export default function StoreItemsPage() {
   return (
     <div className="container mx-auto py-8">
       <div className="max-w-6xl mx-auto">

@@ -4,33 +4,32 @@ import Link from "next/link"
 import { ArrowLeft, Check, CheckCircle, Link, Mail } from "lucide-react"
 import { WatchPartyButton } from "@/components/ui/watch-party-button"
 import { WatchPartyInput } from "@/components/ui/watch-party-input"
-import {WatchPartyCard,WatchPartyCardHeader,WatchPartyCardTitle,WatchPartyCardDescription,WatchPartyCardContent,WatchPartyCardFooter;
-import { authAPI } from "@/lib/api"
+import {WatchPartyCard,WatchPartyCardHeader,WatchPartyCardTitle,WatchPartyCardDescription,WatchPartyCardContent,WatchPartyCardFooter; import { authAPI } from "@/lib/api"
 import { useToast } from "@/hooks/use-toast"
 
 "use client"
 
 } from "@/components/ui/watch-party-card"
-export default function ForgotPasswordPage() {}
+export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState("")
   const { toast } = useToast()
 
-  const handleSubmit = async (e: React.FormEvent) => {}
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     setError("")
 
-    try {}
+    try {
       await authAPI.forgotPassword({ email })
       setIsSubmitted(true)
       toast({}
         title: "Reset link sent!",
         description: "Please check your email for the password reset link.",
       })
-    } catch {}
+    } catch {
       const errorMessage = (err as { response?: { data?: { message?: string; detail?: string } }; message?: string })?.response?.data?.message;
                           || (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail;
                           || (err as { message?: string })?.message;
@@ -41,12 +40,12 @@ export default function ForgotPasswordPage() {}
         description: errorMessage,
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  if (isSubmitted) {}
+  if (isSubmitted) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-muted/20 p-4">
         <WatchPartyCard className="w-full max-w-md">
@@ -57,7 +56,7 @@ export default function ForgotPasswordPage() {}
             <div>
               <WatchPartyCardTitle className="text-2xl">Check your email</WatchPartyCardTitle>
               <WatchPartyCardDescription className="mt-2">
-                We&apos;ve sent a password reset link to <strong>{email}</strong>
+                We've sent a password reset link to <strong>{email}</strong>
               </WatchPartyCardDescription>
             </div>
           </WatchPartyCardHeader>
@@ -132,3 +131,4 @@ export default function ForgotPasswordPage() {}
     </div>
   )
 }
+))))))))))

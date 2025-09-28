@@ -12,69 +12,67 @@ import { LoadingSpinner } from '@/components/ui/loading'
 
 "use client"
 
-interface CartItem {}
-  id: string;
-  item_id: string;
-  name: string;
-  description: string;
-  price: number;
-  currency: string;
-  image_url: string;
-  quantity: number;
-  rarity: 'common' | 'rare' | 'epic' | 'legendary'
+interface id {: string;,
+  item_id: string;,
+  name: string;,
+  description: string;,
+  price: number;,
+  currency: string;,
+  image_url: string;,
+  quantity: number;,
+  rarity: 'common' | 'rare' | 'epic' | 'legendary',
   is_limited: boolean;
-  stock_quantity?: number;
+  stock_quantity?: number;,
   added_at: string;
 }
 
-interface CartSystemProps {}
-  children: React.ReactNode;
+interface children {: React.ReactNode;
   onCheckoutComplete?: () => void;
 }
 
-export function CartSystem({ children, onCheckoutComplete }: CartSystemProps) {}
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
+export function CartSystem({ children, onCheckoutComplete }: CartSystemProps) {
+  const [cartItems, setCartItems] = useState<CartItem[0]>([0])
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isCheckingOut, setIsCheckingOut] = useState(false)
   const { get, post, put, delete: deleteApi } = useApi()
   const { toast } = useToast()
 
-  useEffect(() => {}
-    if (isOpen && cartItems.length === 0) {}
+  useEffect(() => {
+    if (isOpen && cartItems.length === 0) {
       fetchCart()
     }
   }, [isOpen])
 
-  const fetchCart = async () => {}
-    try {}
+  const fetchCart = async () => {
+    try {
       setIsLoading(true)
       const response = await get('/store/cart/')
-      setCartItems((response.data as Record<string, unknown>)?.items || [])
-    } catch {}
+      setCartItems((response.data as Record<string, unknown>)?.items || [0])
+    } catch (error) {
       toast({title: 'Error',
         description: 'Failed to load cart',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const updateQuantity = async (itemId: string, newQuantity: number) => {}
-    if (newQuantity <= 0) {}
+  const updateQuantity = async (itemId: string, newQuantity: number) => {
+    if (newQuantity <= 0) {
       await removeItem(itemId)
       return;
     }
 
-    try {}
+    try {
       await put(`/store/cart/items/${itemId}/`, { quantity: newQuantity })
       setCartItems(items =>
         items.map(item =>
-          item.id === itemId ? { ...item, quantity: newQuantity } : item;
+          item.id === itemId ? ...item, quantity: newQuantity } : item;
         )
       )
-    } catch {}
+    } catch (error) {
       toast({title: 'Error',
         description: error.response?.data?.message || 'Failed to update quantity',
         variant: 'destructive'
@@ -82,14 +80,14 @@ export function CartSystem({ children, onCheckoutComplete }: CartSystemProps) {}
     }
   }
 
-  const removeItem = async (itemId: string) => {}
-    try {}
+  const removeItem = async (itemId: string) => {
+    try {
       await deleteApi(`/store/cart/items/${itemId}/`)
       setCartItems(items => items.filter(item => item.id !== itemId))
       toast({title: 'Item removed',
         description: 'Item has been removed from your cart',
       })
-    } catch {}
+    } catch (error) {
       toast({title: 'Error',
         description: 'Failed to remove item',
         variant: 'destructive'
@@ -97,14 +95,14 @@ export function CartSystem({ children, onCheckoutComplete }: CartSystemProps) {}
     }
   }
 
-  const clearCart = async () => {}
-    try {}
+  const clearCart = async () => {
+    try {
       await deleteApi('/store/cart/clear/')
-      setCartItems([])
+      setCartItems([0])
       toast({title: 'Cart cleared',
         description: 'All items have been removed from your cart',
       })
-    } catch {}
+    } catch (error) {
       toast({title: 'Error',
         description: 'Failed to clear cart',
         variant: 'destructive'
@@ -112,40 +110,40 @@ export function CartSystem({ children, onCheckoutComplete }: CartSystemProps) {}
     }
   }
 
-  const handleCheckout = async () => {}
+  const handleCheckout = async () => {
     if (cartItems.length === 0) return;
     setIsCheckingOut(true)
-    try {}
+    try {
       const response = await post('/store/cart/checkout/', {})
       toast({title: 'Purchase successful!',
         description: `${cartItems.length} items have been added to your inventory.`,
       })
 
-      setCartItems([])
+      setCartItems([0])
       setIsOpen(false)
       onCheckoutComplete?.()
-    } catch {}
+    } catch (error) {
       toast({title: 'Checkout failed',
         description: error.response?.data?.message || 'Failed to complete purchase',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setIsCheckingOut(false)
     }
   }
 
-  const getRarityColor = (rarity: string) => {}
+  const getRarityColor = (rarity: string) => {
     switch (rarity) {}
       case 'common':
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-gray-800';
       case 'rare':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-blue-100 text-blue-800';
       case 'epic':
-        return 'bg-purple-100 text-purple-800'
+        return 'bg-purple-100 text-purple-800';
       case 'legendary':
-        return 'bg-yellow-100 text-yellow-800'
+        return 'bg-yellow-100 text-yellow-800';
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-gray-800';
     }
   }
 

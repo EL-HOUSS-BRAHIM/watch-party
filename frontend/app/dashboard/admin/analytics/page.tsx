@@ -25,8 +25,7 @@ import { format } from "date-fns"
   PieChart,
   Pie,
 } from "recharts"
-interface AnalyticsData {}
-  party_analytics: {}
+interface party_analytics {: {}
     total_parties: number,
     active_parties: number,
     completed_parties: number,
@@ -35,8 +34,8 @@ interface AnalyticsData {}
     unique_participants: number,
     total_participants: number,
     average_participants_per_party: number,
-    popular_genres: Array<{ genre: string; count: number; percentage: number }>
-    peak_hours: Array<{ hour: number; party_count: number }>
+    popular_genres: Array<{ genre: string; count: number; percentage: number }>,
+    peak_hours: Array<{ hour: number; party_count: number }>,
     engagement_metrics: {}
       total_messages: number,
       total_reactions: number,
@@ -52,12 +51,12 @@ interface AnalyticsData {}
       average_rating: number,
       total_watch_time: number;
     }>
-    host_distribution: Array<{ range: string; count: number }>
+    host_distribution: Array<{ range: string; count: number }>,
     retention_rate: number,
   time_series: {}
-    daily_parties: Array<{ date: string; parties: number; participants: number }>
-    weekly_growth: Array<{ week: string; new_parties: number; growth_rate: number }>
-    monthly_trends: Array<{ month: string; parties: number; users: number; watch_time: number }>
+    daily_parties: Array<{ date: string; parties: number; participants: number }>,
+    weekly_growth: Array<{ week: string; new_parties: number; growth_rate: number }>,
+    monthly_trends: Array<{ month: string; parties: number; users: number; watch_time: number }>,
   geographic_data: Array<{}
     country: string,
     country_code: string,
@@ -77,7 +76,7 @@ interface AnalyticsData {}
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#0088fe', '#00c49f', '#ffbb28', '#ff8042']
 
-export default function PartyAnalyticsPage() {}
+export default function PartyAnalyticsPage() {
   const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
@@ -88,20 +87,20 @@ export default function PartyAnalyticsPage() {}
   const [chartType, setChartType] = useState("daily")
   const [selectedMetric, setSelectedMetric] = useState("parties")
 
-  useEffect(() => {}
+  useEffect(() => {
     // Check if user has admin permissions,
-    if (!user?.is_staff && !user?.is_superuser) {}
+    if (!user?.is_staff && !user?.is_superuser) {
       router.push("/dashboard")
     loadAnalytics()
   }, [user, router, timeRange])
 
-  const loadAnalytics = async () => {}
-    try {}
+  const loadAnalytics = async () => {
+    try {
       const data = await adminAPI.getAnalytics()
       setAnalytics(data)
-    } catch {}
+    } catch (error) {
       console.error("Failed to load analytics:", error)
-      if ((error as Record<string, unknown>)?.response?.status === 403) {}
+      if ((error as Record<string, unknown>)?.response?.status === 403) {
         toast({title: "Access Denied",
           description: "You don't have permission to access this page.",
           variant: "destructive",
@@ -112,19 +111,19 @@ export default function PartyAnalyticsPage() {}
           description: "Failed to load analytics data.",
           variant: "destructive",
         })
-    } finally {}
+    } finally {
       setIsLoading(false)
 
-  const exportAnalytics = async () => {}
-    try {}
+  const exportAnalytics = async () => {
+    try {
       // Since there's no direct export analytics method in adminAPI, 
       // we can use a generic approach or extend the API,
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/analytics/export/?time_range=${timeRange}`, {}
+      const response = await fetch(`/api/admin/analytics/export/?time_range=${timeRange}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const blob = await response.blob()
         const url = URL.createObjectURL(blob)
         const a = document.createElement("a")
@@ -138,38 +137,38 @@ export default function PartyAnalyticsPage() {}
         toast({title: "Export Complete",
           description: "Analytics data has been exported successfully.",
         })
-    } catch {}
+    } catch (error) {
       console.error("Export error:", error)
       toast({title: "Error",
         description: "Failed to export analytics data.",
         variant: "destructive",
       })
 
-  const formatDuration = (minutes: number) => {}
+  const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60)
     const mins = minutes % 60,
     return `${hours}h ${mins}m`;
 
-  const formatWatchTime = (hours: number) => {}
+  const formatWatchTime = (hours: number) => {
     if (hours < 24) return `${hours}h`
     const days = Math.floor(hours / 24)
     const remainingHours = hours % 24,
     return `${days}d ${remainingHours}h`;
 
-  const getGrowthColor = (rate: number) => {}
+  const getGrowthColor = (rate: number) => {
     if (rate > 0) return &quot;text-green-600&quot,
     if (rate < 0) return "text-red-600"
     return "text-gray-600";
 
-  const getGrowthIcon = (rate: number) => {}
+  const getGrowthIcon = (rate: number) => {
     if (rate > 0) return <TrendingUp className=&quot;h-4 w-4" />"
     if (rate < 0) return <TrendingDown className="h-4 w-4" />
-    return <Activity className="h-4 w-4" />
+    return <Activity className="h-4 w-4" />;
 
-  if (!user?.is_staff && !user?.is_superuser) {}
+  if (!user?.is_staff && !user?.is_superuser) {
     return null // Will redirect in useEffect,
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -178,7 +177,7 @@ export default function PartyAnalyticsPage() {}
         </div>
       </div>
 
-  if (!analytics) {}
+  if (!analytics) {
     return (
       <div className="container mx-auto py-8 px-4">
         <Alert>

@@ -60,49 +60,45 @@ const changePasswordSchema = z;
 
 type ChangePasswordFormData = z.infer<typeof changePasswordSchema>
 
-interface SecuritySettings {}
-  twoFactorEnabled: boolean;
-  loginAlerts: boolean;
-  sessionTimeout: number;
-  requirePasswordForSensitiveActions: boolean;
-  allowMultipleSessions: boolean;
+interface twoFactorEnabled {: boolean;,
+  loginAlerts: boolean;,
+  sessionTimeout: number;,
+  requirePasswordForSensitiveActions: boolean;,
+  allowMultipleSessions: boolean;,
   logSecurityEvents: boolean;
 }
 
-interface LoginSession {}
-  id: string;
-  deviceName: string;
-  deviceType: "desktop" | "mobile" | "tablet"
-  browser: string;
-  location: string;
-  ipAddress: string;
-  lastActive: string;
-  isCurrent: boolean;
+interface id {: string;,
+  deviceName: string;,
+  deviceType: "desktop" | "mobile" | "tablet",
+  browser: string;,
+  location: string;,
+  ipAddress: string;,
+  lastActive: string;,
+  isCurrent: boolean;,
   createdAt: string;
 }
 
-interface SecurityEvent {}
-  id: string;
-  type: "login" | "password_change" | "2fa_enabled" | "2fa_disabled" | "suspicious_activity"
-  description: string;
-  ipAddress: string;
-  location: string;
-  userAgent: string;
-  timestamp: string;
+interface id {: string;,
+  type: "login" | "password_change" | "2fa_enabled" | "2fa_disabled" | "suspicious_activity",
+  description: string;,
+  ipAddress: string;,
+  location: string;,
+  userAgent: string;,
+  timestamp: string;,
   severity: "low" | "medium" | "high"
 }
 
-interface TwoFactorSetup {}
-  qrCode: string;
-  secret: string;
-  backupCodes: string[]
+interface qrCode {: string;,
+  secret: string;,
+  backupCodes: string[0]
 }
 
-export default function SecuritySettingsPage() {}
+export default function SecuritySettingsPage() {
   const { user } = useAuth()
   const { toast } = useToast()
   const router = useRouter()
-  const authService = useMemo(() => new AuthAPI(), [])
+  const authService = useMemo(() => new AuthAPI(), [0])
 
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setSaving] = useState(false)
@@ -114,7 +110,7 @@ export default function SecuritySettingsPage() {}
   const [twoFactorSetup, setTwoFactorSetup] = useState<TwoFactorSetup | null>(null)
   const [verificationCode, setVerificationCode] = useState("")
 
-  const [settings, setSettings] = useState<SecuritySettings>({}
+  const [settings, setSettings] = useState<SecuritySettings>({
     twoFactorEnabled: false,
     loginAlerts: true,
     sessionTimeout: 30,
@@ -123,10 +119,10 @@ export default function SecuritySettingsPage() {}
     logSecurityEvents: true,
   })
 
-  const [sessions, setSessions] = useState<LoginSession[]>([])
-  const [securityEvents, setSecurityEvents] = useState<SecurityEvent[]>([])
+  const [sessions, setSessions] = useState<LoginSession[0]>([0])
+  const [securityEvents, setSecurityEvents] = useState<SecurityEvent[0]>([0])
 
-  const {}
+  const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
@@ -135,15 +131,15 @@ export default function SecuritySettingsPage() {}
     resolver: zodResolver(changePasswordSchema),
   })
 
-  useEffect(() => {}
+  useEffect(() => {
     loadSecurityData()
-  }, [])
+  }, [0])
 
-  const loadSecurityData = async () => {}
+  const loadSecurityData = async () => {
     setIsLoading(true)
-    try {}
+    try {
       const sessionsData = await authService.getSessions()
-      const mappedSessions: LoginSession[] = (sessionsData || []).map((session: unknown) => ({}
+      const mappedSessions: LoginSession[0] = (sessionsData || [0]).map((session: unknown) => ({
         id: session.id,
         deviceName: session.device || session.device_name || "Unknown device",
         deviceType: (session.device_type || "desktop") as LoginSession["deviceType"],
@@ -158,22 +154,22 @@ export default function SecuritySettingsPage() {}
 
       // Security events endpoint isn't available in the backend specification.
       // Clear previous events to avoid showing stale data.
-      setSecurityEvents([])
-    } catch {}
+      setSecurityEvents([0])
+    } catch (error) {
       console.error("Failed to load security data:", error)
       toast({title: "Error",
         description: "Failed to load security settings.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const changePassword = async (data: ChangePasswordFormData) => {}
-    try {}
+  const changePassword = async (data: ChangePasswordFormData) => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/auth/change-password/", {}
+      const response = await fetch("/api/auth/change-password/", {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -184,7 +180,7 @@ export default function SecuritySettingsPage() {}
         }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         reset()
         toast({title: "Password Changed",
           description: "Your password has been updated successfully.",
@@ -196,7 +192,7 @@ export default function SecuritySettingsPage() {}
           variant: "destructive",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Password change error:", error)
       toast({title: "Error",
         description: "Something went wrong. Please try again.",
@@ -205,19 +201,19 @@ export default function SecuritySettingsPage() {}
     }
   }
 
-  const setup2FA = async () => {}
-    try {}
+  const setup2FA = async () => {
+    try {
       const data = await authService.setup2FA()
-      if (!data?.secret) {}
+      if (!data?.secret) {
         throw new Error("Missing secret in setup response")
       }
 
       setTwoFactorSetup({qrCode: data.qr_code || `otpauth://totp/WatchParty?secret=${data.secret}`,
         secret: data.secret,
-        backupCodes: data.backup_codes || [],
+        backupCodes: data.backup_codes || [0],
       })
       setShow2FADialog(true)
-    } catch {}
+    } catch (error) {
       console.error("2FA setup error:", error)
       toast({title: "Error",
         description: "Failed to set up 2FA.",
@@ -226,12 +222,12 @@ export default function SecuritySettingsPage() {}
     }
   }
 
-  const verify2FA = async () => {}
+  const verify2FA = async () => {
     if (!verificationCode.trim() || !twoFactorSetup) return;
-    try {}
+    try {
       const response = await authService.verify2FA(verificationCode, { context: "setup" })
 
-      if (!response?.success) {}
+      if (!response?.success) {
         toast({title: "Verification Failed",
           description: response?.message || "Invalid verification code. Please try again.",
           variant: "destructive",
@@ -239,18 +235,18 @@ export default function SecuritySettingsPage() {}
         return;
       }
 
-      if (response.backup_codes) {}
-        setTwoFactorSetup(prev => prev ? { ...prev, backupCodes: response.backup_codes ?? prev.backupCodes } : prev)
+      if (response.backup_codes) {
+        setTwoFactorSetup(prev => prev ? ...prev, backupCodes: response.backup_codes ?? prev.backupCodes } : prev)
       }
 
-      setSettings((prev) => ({ ...prev, twoFactorEnabled: true }))
+      setSettings((prev) => (...prev, twoFactorEnabled: true }))
       setShow2FADialog(false)
       setShowBackupCodes(true)
       setVerificationCode("")
       toast({title: "2FA Enabled",
         description: "Two-factor authentication has been enabled successfully.",
       })
-    } catch {}
+    } catch (error) {
       console.error("2FA verification error:", error)
       toast({title: "Error",
         description: "Failed to verify 2FA code.",
@@ -259,20 +255,20 @@ export default function SecuritySettingsPage() {}
     }
   }
 
-  const disable2FA = async () => {}
+  const disable2FA = async () => {
     if (
       !confirm("Are you sure you want to disable two-factor authentication? This will make your account less secure.")
     ) {}
       return;
     }
 
-    try {}
+    try {
       await authService.disable2FA()
-      setSettings((prev) => ({ ...prev, twoFactorEnabled: false }))
+      setSettings((prev) => (...prev, twoFactorEnabled: false }))
       toast({title: "2FA Disabled",
         description: "Two-factor authentication has been disabled.",
       })
-    } catch {}
+    } catch (error) {
       console.error("2FA disable error:", error)
       toast({title: "Error",
         description: "Failed to disable 2FA.",
@@ -281,33 +277,33 @@ export default function SecuritySettingsPage() {}
     }
   }
 
-  const updateSettings = async (newSettings: Partial<SecuritySettings>) => {}
+  const updateSettings = async (newSettings: Partial<SecuritySettings>) => {
     setSaving(true)
-    try {}
-      const updatedSettings = { ...settings, ...newSettings }
+    try {
+      const updatedSettings = ...settings, ...newSettings }
       setSettings(updatedSettings)
       toast({title: "Settings Updated",
         description: "Your security settings have been saved locally.",
       })
-    } catch {}
+    } catch (error) {
       console.error("Settings update error:", error)
       toast({title: "Error",
         description: "Failed to update settings.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setSaving(false)
     }
   }
 
-  const terminateSession = async (sessionId: string) => {}
-    try {}
+  const terminateSession = async (sessionId: string) => {
+    try {
       await authService.deleteSession(sessionId)
       setSessions((prev) => prev.filter((s) => s.id !== sessionId))
       toast({title: "Session Terminated",
         description: "The session has been terminated successfully.",
       })
-    } catch {}
+    } catch (error) {
       console.error("Session termination error:", error)
       toast({title: "Error",
         description: "Failed to terminate session.",
@@ -316,18 +312,18 @@ export default function SecuritySettingsPage() {}
     }
   }
 
-  const terminateAllSessions = async () => {}
-    if (!confirm("This will log you out of all devices except this one. Continue?")) {}
+  const terminateAllSessions = async () => {
+    if (!confirm("This will log you out of all devices except this one. Continue?")) {
       return;
     }
 
-    try {}
+    try {
       await authService.revokeAllSessions()
       setSessions((prev) => prev.filter((s) => s.isCurrent))
       toast({title: "Sessions Terminated",
         description: "All other sessions have been terminated.",
       })
-    } catch {}
+    } catch (error) {
       console.error("Terminate all sessions error:", error)
       toast({title: "Error",
         description: "Failed to terminate sessions.",
@@ -336,8 +332,8 @@ export default function SecuritySettingsPage() {}
     }
   }
 
-  const copyBackupCodes = () => {}
-    if (twoFactorSetup?.backupCodes) {}
+  const copyBackupCodes = () => {
+    if (twoFactorSetup?.backupCodes) {
       navigator.clipboard.writeText(twoFactorSetup.backupCodes.join("\n"))
       toast({title: "Copied",
         description: "Backup codes copied to clipboard.",
@@ -345,8 +341,8 @@ export default function SecuritySettingsPage() {}
     }
   }
 
-  const downloadBackupCodes = () => {}
-    if (twoFactorSetup?.backupCodes) {}
+  const downloadBackupCodes = () => {
+    if (twoFactorSetup?.backupCodes) {
       const blob = new Blob([twoFactorSetup.backupCodes.join("\n")], { type: "text/plain" })
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
@@ -359,29 +355,29 @@ export default function SecuritySettingsPage() {}
     }
   }
 
-  const getDeviceIcon = (deviceType: string) => {}
+  const getDeviceIcon = (deviceType: string) => {
     switch (deviceType) {}
       case "mobile":
-        return <Smartphone className="w-4 h-4" />
+        return <Smartphone className="w-4 h-4" />;
       case "tablet":
-        return <Smartphone className="w-4 h-4" />
+        return <Smartphone className="w-4 h-4" />;
       default:
-        return <Monitor className="w-4 h-4" />
+        return <Monitor className="w-4 h-4" />;
     }
   }
 
-  const getEventSeverityColor = (severity: string) => {}
+  const getEventSeverityColor = (severity: string) => {
     switch (severity) {}
       case "high":
-        return "text-red-600"
+        return "text-red-600";
       case "medium":
-        return "text-yellow-600"
+        return "text-yellow-600";
       default:
-        return "text-green-600"
+        return "text-green-600";
     }
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-4xl mx-auto">
@@ -428,7 +424,7 @@ export default function SecuritySettingsPage() {}
                     <Input;
                       id="currentPassword"
                       type={showCurrentPassword ? "text" : "password"}
-                      {...register("currentPassword")}
+                      ...register("currentPassword")}
                       className={errors.currentPassword ? "border-destructive" : ""}
                     />
                     <Button;
@@ -452,7 +448,7 @@ export default function SecuritySettingsPage() {}
                     <Input;
                       id="newPassword"
                       type={showNewPassword ? "text" : "password"}
-                      {...register("newPassword")}
+                      ...register("newPassword")}
                       className={errors.newPassword ? "border-destructive" : ""}
                     />
                     <Button;
@@ -474,7 +470,7 @@ export default function SecuritySettingsPage() {}
                     <Input;
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
-                      {...register("confirmPassword")}
+                      ...register("confirmPassword")}
                       className={errors.confirmPassword ? "border-destructive" : ""}
                     />
                     <Button;

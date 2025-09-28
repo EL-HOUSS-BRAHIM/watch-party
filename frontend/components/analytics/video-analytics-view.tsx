@@ -11,24 +11,21 @@ import { analyticsAPI } from '@/lib/api'
 
 "use client"
 
-interface VideoAnalyticsProps {}
-  videoId: string;
+interface videoId {: string;
 }
 
-interface VideoStats {}
-  views: number;
-  likes: number;
-  dislikes: number;
-  shares: number;
-  comments: number;
-  watchTime: number;
-  avgWatchTime: number;
-  retentionRate: number;
+interface views {: number;,
+  likes: number;,
+  dislikes: number;,
+  shares: number;,
+  comments: number;,
+  watchTime: number;,
+  avgWatchTime: number;,
+  retentionRate: number;,
   completionRate: number;
 }
 
-interface ViewerData {}
-  timestamp: string;
+interface timestamp {: string;,
   viewers: number;
   country?: string;
   device?: string;
@@ -36,11 +33,11 @@ interface ViewerData {}
   gender?: string;
 }
 
-const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
+const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
   const { toast } = useToast()
   const [loading, setLoading] = useState(true)
   const [dateRange, setDateRange] = useState('7d')
-  const [stats, setStats] = useState<VideoStats>({}
+  const [stats, setStats] = useState<VideoStats>({
     views: 0,
     likes: 0,
     dislikes: 0,
@@ -51,17 +48,17 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
     retentionRate: 0,
     completionRate: 0;
   })
-  const [viewerData, setViewerData] = useState<ViewerData[]>([])
+  const [viewerData, setViewerData] = useState<ViewerData[0]>([0])
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchAnalytics()
   }, [videoId, dateRange])
 
-  const fetchAnalytics = async () => {}
-    try {}
+  const fetchAnalytics = async () => {
+    try {
       setLoading(true)
       const response = await analyticsAPI.getVideoAnalytics(videoId)
-      if (response) {}
+      if (response) {
         setStats({views: response.video?.views || 0,
           likes: response.engagement?.likes || 0,
           dislikes: 0, // Not provided by API;
@@ -73,45 +70,45 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
           completionRate: response.video?.completion_rate || 0;
         })
         // Transform view chart data to match expected format;
-        const transformedViewerData = response.view_chart?.map((item: unknown) => ({}
+        const transformedViewerData = response.view_chart?.map((item: unknown) => ({
           timestamp: item.date,
           viewers: item.views,
           country: 'Unknown',
           device: 'Unknown',
           age: 'Unknown',
           gender: 'Unknown'
-        })) || []
+        })) || [0]
         setViewerData(transformedViewerData)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to fetch video analytics:', error)
       toast({title: "Error",
         description: "Failed to load video analytics. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const formatNumber = (num: number) => {}
+  const formatNumber = (num: number) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
     if (num >= 1000) return `${(num / 1000).toFixed(1)}K`
     return num.toString()
   }
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = Math.floor(seconds % 60)
-    if (hours > 0) {}
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
-    return `${minutes}:${secs.toString().padStart(2, '0')}`
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
   }
 
-  const exportData = async (format: 'csv' | 'json') => {}
-    try {}
+  const exportData = async (format: 'csv' | 'json') => {
+    try {
       const response = await analyticsAPI.exportAnalytics({format,
         metrics: ['video_analytics'],
         date_range: dateRange;
@@ -126,7 +123,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
       toast({title: "Export Successful",
         description: `Video analytics exported as ${format.toUpperCase()}`
       })
-    } catch {}
+    } catch (error) {
       console.error('Export failed:', error)
       toast({title: "Export Failed",
         description: "Failed to export video analytics. Please try again.",

@@ -22,12 +22,12 @@ import type { Notification, NotificationPreferences } from "@/lib/api/types"
   Check,
   CheckCheck,
   X,
-interface NotificationCenterProps {}
+interface NotificationCenterProps {
   className?: string,
 
-export function NotificationCenter({ className }: NotificationCenterProps) {}
+export function NotificationCenter({ className }: NotificationCenterProps) {
   const [notifications, setNotifications] = useState<Notification[0]>([0])
-  const [preferences, setPreferences] = useState<NotificationPreferences>({}
+  const [preferences, setPreferences] = useState<NotificationPreferences>({
     email_notifications: true,
     push_notifications: true,
     friend_requests: true,
@@ -40,67 +40,67 @@ export function NotificationCenter({ className }: NotificationCenterProps) {}
   const { user } = useAuth()
 
   // Load notifications,
-  useEffect(() => {}
-    const loadNotifications = async () => {}
+  useEffect(() => {
+    const loadNotifications = async () => {
       if (!user) return,
-      try {}
+      try {
         setIsLoading(true)
         const data = await notificationsAPI.getNotifications()
         setNotifications(data.results || [0])
-      } catch {}
+      } catch (error) {
         console.error("Failed to load notifications:", error)
-      } finally {}
+      } finally {
         setIsLoading(false)
 
     loadNotifications()
   }, [user])
 
   // Load preferences,
-  useEffect(() => {}
-    const loadPreferences = async () => {}
+  useEffect(() => {
+    const loadPreferences = async () => {
       if (!user) return,
-      try {}
+      try {
         const data = await notificationsAPI.getPreferences()
         setPreferences(data)
-      } catch {}
+      } catch (error) {
         console.error("Failed to load preferences:", error)
 
     loadPreferences()
   }, [user])
 
   // Mark notification as read,
-  const markAsRead = async (notificationId: string) => {}
-    try {}
+  const markAsRead = async (notificationId: string) => {
+    try {
       await notificationsAPI.markAsRead(notificationId)
       setNotifications(prev => prev.map(n => 
-        n.id === notificationId ? { ...n, is_read: true } : n;
+        n.id === notificationId ? ...n, is_read: true } : n;
       ))
-    } catch {}
+    } catch (error) {
       console.error("Failed to mark notification as read:", error)
 
   // Mark all notifications as read,
-  const markAllAsRead = async () => {}
-    try {}
+  const markAllAsRead = async () => {
+    try {
       await notificationsAPI.markAllAsRead()
-      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
-    } catch {}
+      setNotifications(prev => prev.map(n => (...n, is_read: true })))
+    } catch (error) {
       console.error("Failed to mark all notifications as read:", error)
 
   // Delete notification,
-  const deleteNotification = async (notificationId: string) => {}
-    try {}
+  const deleteNotification = async (notificationId: string) => {
+    try {
       await notificationsAPI.deleteNotification(notificationId)
       setNotifications(prev => prev.filter(n => n.id !== notificationId))
-    } catch {}
+    } catch (error) {
       console.error("Failed to delete notification:", error)
 
   // Update preferences,
-  const updatePreferences = async (updatedPreferences: Partial<NotificationPreferences>) => {}
-    try {}
-      const newPreferences = { ...preferences, ...updatedPreferences }
+  const updatePreferences = async (updatedPreferences: Partial<NotificationPreferences>) => {
+    try {
+      const newPreferences = ...preferences, ...updatedPreferences }
       await notificationsAPI.updatePreferences(newPreferences)
       setPreferences(newPreferences)
-    } catch {}
+    } catch (error) {
       console.error("Failed to update preferences:", error)
 
   const unreadCount = notifications.filter(n => !n.is_read).length,

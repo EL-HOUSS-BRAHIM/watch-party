@@ -19,7 +19,7 @@ export function AnimatedButton({children,
 }: AnimatedButtonProps) {}
   const [isAnimating, setIsAnimating] = useState(false)
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {}
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setIsAnimating(true)
     setTimeout(() => setIsAnimating(false), duration)
     onClick?.(e)
@@ -36,7 +36,7 @@ export function AnimatedButton({children,
     <Button;
       className={cn("transition-all duration-200", isAnimating && animationClasses[animation], className)}
       onClick={handleClick}
-      {...props}
+      ...props}
     >
       {children}
     </Button>

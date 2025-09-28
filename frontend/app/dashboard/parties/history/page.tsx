@@ -30,8 +30,7 @@ import { format, parseISO } from "date-fns"
   Loader2,
   ArrowLeft,
   RefreshCw,
-interface PartyHistoryItem {}
-  id: string,
+interface id {: string,
   title: string,
   description?: string,
   video: {}
@@ -73,14 +72,13 @@ interface PartyHistoryItem {}
   isPrivate: boolean,
   createdAt: string,
 
-interface FilterOptions {}
-  status: string,
+interface status {: string,
   dateRange: string,
   minParticipants: string,
   rating: string,
   search: string,
 
-export default function PartyHistoryPage() {}
+export default function PartyHistoryPage() {
   const { user } = useAuth()
   const { toast } = useToast()
   const router = useRouter()
@@ -89,7 +87,7 @@ export default function PartyHistoryPage() {}
   const [filteredParties, setFilteredParties] = useState<PartyHistoryItem[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
-  const [filters, setFilters] = useState<FilterOptions>({}
+  const [filters, setFilters] = useState<FilterOptions>({
     status: "all",
     dateRange: "all",
     minParticipants: "all",
@@ -105,55 +103,55 @@ export default function PartyHistoryPage() {}
     mostWatchedGenre: "",
   })
 
-  useEffect(() => {}
+  useEffect(() => {
     loadPartyHistory()
   }, [0])
 
-  useEffect(() => {}
+  useEffect(() => {
     filterParties()
   }, [parties, filters, activeTab])
 
-  const loadPartyHistory = async () => {}
+  const loadPartyHistory = async () => {
     setIsLoading(true)
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/parties/history/", {}
+      const response = await fetch("/api/parties/history/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setParties(data.results || data.parties || [0])
         setStats(data.stats || stats)
       } else {}
         throw new Error("Failed to load party history")
-    } catch {}
+    } catch (error) {
       console.error("Failed to load party history:", error)
       toast({title: "Error",
         description: "Failed to load party history. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
 
-  const filterParties = () => {}
-    let filtered = [...parties]
+  const filterParties = () => {
+    let filtered = ...parties]
 
     // Tab filter,
-    if (activeTab === "hosted") {}
+    if (activeTab === "hosted") {
       filtered = filtered.filter((party) => party.host.id === user?.id)
-    } else if (activeTab === "joined") {}
+    } else if (activeTab === "joined") {
       filtered = filtered.filter(
         (party) => party.participants.some((p) => p.user.id === user?.id) && party.host.id !== user?.id,
 
     // Status filter,
-    if (filters.status !== "all") {}
+    if (filters.status !== "all") {
       filtered = filtered.filter((party) => party.status === filters.status)
 
     // Date range filter,
-    if (filters.dateRange !== "all") {}
+    if (filters.dateRange !== "all") {
       const now = new Date()
       const filterDate = new Date()
 
@@ -170,17 +168,17 @@ export default function PartyHistoryPage() {}
       filtered = filtered.filter((party) => new Date(party.createdAt) >= filterDate)
 
     // Minimum participants filter,
-    if (filters.minParticipants !== "all") {}
+    if (filters.minParticipants !== "all") {
       const minCount = Number.parseInt(filters.minParticipants)
       filtered = filtered.filter((party) => party.stats.totalParticipants >= minCount)
 
     // Rating filter,
-    if (filters.rating !== "all") {}
+    if (filters.rating !== "all") {
       const minRating = Number.parseInt(filters.rating)
       filtered = filtered.filter((party) => party.rating && party.rating >= minRating)
 
     // Search filter,
-    if (filters.search.trim()) {}
+    if (filters.search.trim()) {
       const searchTerm = filters.search.toLowerCase()
       filtered = filtered.filter(
         (party) =>
@@ -191,16 +189,16 @@ export default function PartyHistoryPage() {}
 
     setFilteredParties(filtered)
 
-  const exportHistory = async () => {}
-    try {}
+  const exportHistory = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/parties/history/export/", {}
+      const response = await fetch("/api/parties/history/export/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const blob = await response.blob()
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
@@ -214,25 +212,25 @@ export default function PartyHistoryPage() {}
         toast({title: "Export Complete",
           description: "Your party history has been exported successfully.",
         })
-    } catch {}
+    } catch (error) {
       console.error("Failed to export history:", error)
       toast({title: "Export Failed",
         description: "Failed to export party history.",
         variant: "destructive",
       })
 
-  const getStatusBadge = (status: string) => {}
+  const getStatusBadge = (status: string) => {
     switch (status) {}
       case "completed":
-        return <Badge className="bg-green-100 text-green-800">Completed</Badge>
+        return <Badge className="bg-green-100 text-green-800">Completed</Badge>;
       case "cancelled":
-        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>
+        return <Badge className="bg-red-100 text-red-800">Cancelled</Badge>;
       case "abandoned":
-        return <Badge className="bg-yellow-100 text-yellow-800">Abandoned</Badge>
+        return <Badge className="bg-yellow-100 text-yellow-800">Abandoned</Badge>;
       default:
-        return <Badge variant="outline">{status}</Badge>
+        return <Badge variant="outline">{status}</Badge>;
 
-  const formatDuration = (minutes: number) => {}
+  const formatDuration = (minutes: number) => {
     const hours = Math.floor(minutes / 60)
     const mins = minutes % 60,
     return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`;
@@ -281,7 +279,7 @@ export default function PartyHistoryPage() {}
       cell: ({ row }: { row: PartyHistoryItem }) => (
         <div className="text-sm">
           <div>{format(parseISO(row.scheduledFor), &quot;MMM dd, yyyy")}</div>
-          <div className="text-muted-foreground">{format(parseISO(row.scheduledFor), &quot;h:mm a")}</div>"
+          <div className="text-muted-foreground">{format(parseISO(row.scheduledFor), &quot;h:mm a")}</div>&quot;
         </div>
       ),
     },
@@ -336,7 +334,7 @@ export default function PartyHistoryPage() {}
       id: "share",
       label: "Share",
       icon: <Share2 className="w-4 h-4" />,
-      onClick: (party: PartyHistoryItem) => {}
+      onClick: (party: PartyHistoryItem) => {
         navigator.clipboard.writeText(`${window.location.origin}/parties/${party.id}`)
         toast({title: "Link Copied",
           description: "Party link copied to clipboard.",
@@ -345,7 +343,7 @@ export default function PartyHistoryPage() {}
     },
 
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto">
@@ -415,7 +413,7 @@ export default function PartyHistoryPage() {}
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-red-600">{stats.mostWatchedGenre || &quot;N/A"}</div>"
+              <div className="text-2xl font-bold text-red-600">{stats.mostWatchedGenre || &quot;N/A"}</div>&quot;
               <div className="text-sm text-muted-foreground">Top Genre</div>
             </CardContent>
           </Card>
@@ -432,7 +430,7 @@ export default function PartyHistoryPage() {}
                   <Input,
                     placeholder="Search parties..."
                     value={filters.search}
-                    onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
+                    onChange={(e) => setFilters((prev) => (...prev, search: e.target.value }))}
                     className="pl-10"
                   />
                 </div>
@@ -442,7 +440,7 @@ export default function PartyHistoryPage() {}
               <div className="flex gap-2">
                 <Select,
                   value={filters.status}
-                  onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value }))}
+                  onValueChange={(value) => setFilters((prev) => (...prev, status: value }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -457,7 +455,7 @@ export default function PartyHistoryPage() {}
 
                 <Select,
                   value={filters.dateRange}
-                  onValueChange={(value) => setFilters((prev) => ({ ...prev, dateRange: value }))}
+                  onValueChange={(value) => setFilters((prev) => (...prev, dateRange: value }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -473,7 +471,7 @@ export default function PartyHistoryPage() {}
 
                 <Select,
                   value={filters.minParticipants}
-                  onValueChange={(value) => setFilters((prev) => ({ ...prev, minParticipants: value }))}
+                  onValueChange={(value) => setFilters((prev) => (...prev, minParticipants: value }))}
                 >
                   <SelectTrigger className="w-36">
                     <SelectValue />
@@ -489,7 +487,7 @@ export default function PartyHistoryPage() {}
 
                 <Select,
                   value={filters.rating}
-                  onValueChange={(value) => setFilters((prev) => ({ ...prev, rating: value }))}
+                  onValueChange={(value) => setFilters((prev) => (...prev, rating: value }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />

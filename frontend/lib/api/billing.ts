@@ -89,7 +89,7 @@ export class BillingAPI {}
   /**
    * Delete payment method;
    */
-  async deletePaymentMethod(methodId: string): Promise<APIResponse> {}
+  async deletePaymentMethod(methodId: string): Promise<APIResponse> {
     return apiClient.delete<APIResponse>(
       API_ENDPOINTS.billing.paymentMethods + `${methodId}/`
 

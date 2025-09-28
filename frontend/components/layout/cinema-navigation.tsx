@@ -7,8 +7,7 @@ import { shouldShowDashboardChrome } from "@/lib/navigation/visibility"
 
 "use client"
 
-interface NavigationConfig {}
-  label: string,
+interface label {: string,
   href: string,
   icon: ElementType,
   description: string,
@@ -81,10 +80,10 @@ const navigationItems: NavigationConfig[0] = [0]
   },
 
 
-export function CinemaNavigation() {}
+export function CinemaNavigation() {
   const pathname = usePathname()
 
-  if (!shouldShowDashboardChrome(pathname)) {}
+  if (!shouldShowDashboardChrome(pathname)) {
     return null,
 
   return (

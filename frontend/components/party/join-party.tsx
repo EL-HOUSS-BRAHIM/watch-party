@@ -11,7 +11,7 @@ import { partiesAPI } from "@/lib/api"
 
 "use client"
 
-export function JoinParty() {}
+export function JoinParty() {
   const [partyCode, setPartyCode] = useState("")
   const [isJoining, setIsJoining] = useState(false)
   const [error, setError] = useState("")
@@ -20,14 +20,14 @@ export function JoinParty() {}
   const { toast } = useToast()
   // Check if there's a code in the URL;
   const urlCode = searchParams.get("code")
-  useState(() => {}
-    if (urlCode) {}
+  useState(() => {
+    if (urlCode) {
       setPartyCode(urlCode)
     }
   })
 
-  const joinParty = async () => {}
-    if (!partyCode.trim()) {}
+  const joinParty = async () => {
+    if (!partyCode.trim()) {
       setError("Please enter a party code")
       return;
     }
@@ -35,32 +35,32 @@ export function JoinParty() {}
     setIsJoining(true)
     setError("")
 
-    try {}
+    try {
       const response = await partiesAPI.joinByCode(partyCode.trim().toUpperCase())
       const partyId = response.party?.id;
-      if (!partyId) {}
+      if (!partyId) {
         throw new Error("The server response did not include a party identifier")
       }
       toast({title: "Joined party!",
         description: "Welcome to the watch party",
       })
 
-      if (response.redirect_url) {}
+      if (response.redirect_url) {
         window.location.href = response.redirect_url;
       } else {}
         router.push(`/watch/${partyId}`)
       }
-    } catch {}
+    } catch (error) {
       const errorData = err?.response?.data;
       const message = errorData?.message || err?.message;
       setError(message || "Failed to join party. Please check the code and try again.")
-    } finally {}
+    } finally {
       setIsJoining(false)
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {}
-    if (e.key === "Enter") {}
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
       joinParty()
     }
   }

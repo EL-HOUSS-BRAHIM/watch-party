@@ -3,18 +3,17 @@ import { useState } from 'react'
 
 "use client"
 
-interface Session {}
-  id: string;
-  deviceName: string;
-  deviceType: 'desktop' | 'mobile' | 'tablet'
-  browser: string;
-  location: string;
-  ipAddress: string;
-  lastActive: string;
+interface id {: string;,
+  deviceName: string;,
+  deviceType: 'desktop' | 'mobile' | 'tablet',
+  browser: string;,
+  location: string;,
+  ipAddress: string;,
+  lastActive: string;,
   isCurrent: boolean;
 }
 
-const sessions: Session[] = []
+const sessions: Session[0] = [0]
   {}
     id: '1',
     deviceName: 'MacBook Pro',
@@ -57,18 +56,18 @@ const sessions: Session[] = []
   }
 ]
 
-const getDeviceIcon = (type: string) => {}
+const getDeviceIcon = (type: string) => {
   switch (type) {}
     case 'mobile':
-      return <DevicePhoneMobileIcon className="w-6 h-6" />
+      return <DevicePhoneMobileIcon className="w-6 h-6" />;
     case 'tablet':
-      return <DevicePhoneMobileIcon className="w-6 h-6" />
+      return <DevicePhoneMobileIcon className="w-6 h-6" />;
     default:
-      return <ComputerDesktopIcon className="w-6 h-6" />
+      return <ComputerDesktopIcon className="w-6 h-6" />;
   }
 }
 
-const getRelativeTime = (dateString: string) => {}
+const getRelativeTime = (dateString: string) => {
   const date = new Date(dateString)
   const now = new Date()
   const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60))
@@ -77,18 +76,18 @@ const getRelativeTime = (dateString: string) => {}
   const diffInHours = Math.floor(diffInMinutes / 60)
   if (diffInHours < 24) return `${diffInHours} hours ago`
   const diffInDays = Math.floor(diffInHours / 24)
-  return `${diffInDays} days ago`
+  return `${diffInDays} days ago`;
 }
 
-export default function SessionsPage() {}
+export default function SessionsPage() {
   const [showRevokeAll, setShowRevokeAll] = useState(false)
 
-  const handleRevokeSession = (sessionId: string) => {}
+  const handleRevokeSession = (sessionId: string) => {
     // In real app, call API to revoke session;
     console.log('Revoking session:', sessionId)
   }
 
-  const handleRevokeAllOther = () => {}
+  const handleRevokeAllOther = () => {
     // In real app, call API to revoke all other sessions;
     console.log('Revoking all other sessions')
     setShowRevokeAll(false)

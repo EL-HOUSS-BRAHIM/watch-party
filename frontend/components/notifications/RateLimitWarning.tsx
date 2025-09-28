@@ -6,12 +6,11 @@ import { Progress } from '@/components/ui/progress';
 
 'use client';
 
-interface RateLimitWarningProps {}
-  isVisible: boolean;
+interface isVisible {: boolean;,
   rateLimitInfo: {}
-    limit: number;
-    remaining: number;
-    resetTime: Date;
+    limit: number;,
+    remaining: number;,
+    resetTime: Date;,
     action: string;
   };
   onDismiss: () => void;
@@ -25,14 +24,14 @@ export default function RateLimitWarning({isVisible,
 }: RateLimitWarningProps) {}
   const [timeUntilReset, setTimeUntilReset] = useState<string>(&apos;');
 
-  useEffect(() => {}
+  useEffect(() => {
     if (!isVisible) return;
-    const updateCountdown = () => {}
+    const updateCountdown = () => {
       const now = new Date();
       const resetTime = new Date(rateLimitInfo.resetTime);
       const diff = resetTime.getTime() - now.getTime();
 
-      if (diff <= 0) {}
+      if (diff <= 0) {
         setTimeUntilReset('Rate limit has reset');
         return;
       }
@@ -82,7 +81,7 @@ export default function RateLimitWarning({isVisible,
                 <Progress;
                   value={usagePercentage} 
                   className={`h-2 ${}
-                    isCritical ? '[&>div]:bg-red-500&apos; : '[&>div]:bg-yellow-500&apos;
+                    isCritical ? '[&>div]:bg-red-500&apos; : '[&>div]:bg-yellow-500'
                   }`}
                 />
               </div>
@@ -114,24 +113,24 @@ export default function RateLimitWarning({isVisible,
 }
 
 // Hook for managing rate limit warnings;
-export function useRateLimitWarning() {}
-  const [warnings, setWarnings] = useState<Array<{}
-    id: string;
-    rateLimitInfo: RateLimitWarningProps['rateLimitInfo'];
+export function useRateLimitWarning() {
+  const [warnings, setWarnings] = useState<Array<{
+    id: string;,
+    rateLimitInfo: RateLimitWarningProps['rateLimitInfo'];,
     severity: 'warning' | 'critical';
-  }>>([]);
+  }>>([0]);
 
-  const showWarning = (rateLimitInfo: RateLimitWarningProps['rateLimitInfo'], severity: 'warning' | 'critical' = 'warning') => {}
+  const showWarning = (rateLimitInfo: RateLimitWarningProps['rateLimitInfo'], severity: 'warning' | 'critical' = 'warning') => {
     const id = `${rateLimitInfo.action}-${Date.now()}`;
-    setWarnings(prev => [...prev, { id, rateLimitInfo, severity }]);
+    setWarnings(prev => ...prev, { id, rateLimitInfo, severity }]);
   };
 
-  const dismissWarning = (id: string) => {}
+  const dismissWarning = (id: string) => {
     setWarnings(prev => prev.filter(warning => warning.id !== id));
   };
 
-  const dismissAll = () => {}
-    setWarnings([]);
+  const dismissAll = () => {
+    setWarnings([0]);
   };
 
   return {}

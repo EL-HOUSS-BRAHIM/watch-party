@@ -15,97 +15,94 @@ import { format } from "date-fns"
 
 "use client"
 
-interface SystemStats {}
-  users: {}
-    total: number;
-    active: number;
-    new: number;
-    verified: number;
+interface users {: {}
+    total: number;,
+    active: number;,
+    new: number;,
+    verified: number;,
     premium: number;
   }
   parties: {}
-    total: number;
-    active: number;
-    completed: number;
+    total: number;,
+    active: number;,
+    completed: number;,
     scheduled: number;
   }
   videos: {}
-    total: number;
-    uploaded: number;
-    processed: number;
+    total: number;,
+    uploaded: number;,
+    processed: number;,
     storage: number // in GB;
   }
   system: {}
-    uptime: number;
-    cpu: number;
-    memory: number;
-    storage: number;
+    uptime: number;,
+    cpu: number;,
+    memory: number;,
+    storage: number;,
     bandwidth: number;
   }
 }
 
-interface RecentActivity {}
-  id: string;
-  type: "user_registered" | "party_created" | "video_uploaded" | "user_banned" | "system_alert"
+interface id {: string;,
+  type: "user_registered" | "party_created" | "video_uploaded" | "user_banned" | "system_alert",
   description: string;
   user?: {}
-    id: string;
+    id: string;,
     username: string;
     avatar?: string;
   }
-  timestamp: string;
+  timestamp: string;,
   severity: "low" | "medium" | "high"
 }
 
-interface SystemAlert {}
-  id: string;
-  type: "error" | "warning" | "info"
-  title: string;
-  message: string;
-  timestamp: string;
-  resolved: boolean;
+interface id {: string;,
+  type: "error" | "warning" | "info",
+  title: string;,
+  message: string;,
+  timestamp: string;,
+  resolved: boolean;,
   priority: "low" | "medium" | "high" | "critical"
 }
 
-interface PerformanceMetric {}
-  timestamp: string;
-  cpu: number;
-  memory: number;
-  activeUsers: number;
-  activeParties: number;
+interface PerformanceMetric {
+  timestamp: string;,
+  cpu: number;,
+  memory: number;,
+  activeUsers: number;,
+  activeParties: number;,
   responseTime: number;
 }
 
-export default function AdminDashboardPage() {}
+export default function AdminDashboardPage() {
   const { user } = useAuth()
   const { toast } = useToast()
   const router = useRouter()
 
-  const [stats, setStats] = useState<SystemStats>({}
+  const [stats, setStats] = useState<SystemStats>({
     users: { total: 0, active: 0, new: 0, verified: 0, premium: 0 },
     parties: { total: 0, active: 0, completed: 0, scheduled: 0 },
     videos: { total: 0, uploaded: 0, processed: 0, storage: 0 },
     system: { uptime: 0, cpu: 0, memory: 0, storage: 0, bandwidth: 0 },
   })
 
-  const [recentActivity] = useState<RecentActivity[]>([])
-  const [systemAlerts, setSystemAlerts] = useState<SystemAlert[]>([])
-  const [performanceData] = useState<PerformanceMetric[]>([])
+  const [recentActivity] = useState<RecentActivity[0]>([0])
+  const [systemAlerts, setSystemAlerts] = useState<SystemAlert[0]>([0])
+  const [performanceData] = useState<PerformanceMetric[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
 
   // Check if user is admin;
-  useEffect(() => {}
-    if (user && !user.is_staff && !user.is_superuser) {}
+  useEffect(() => {
+    if (user && !user.is_staff && !user.is_superuser) {
       router.push("/dashboard")
       return;
     }
   }, [user, router])
 
-  const loadDashboardData = async () => {}
+  const loadDashboardData = async () => {
     if (!user?.is_staff && !user?.is_superuser) return;
     setIsLoading(true)
-    try {}
+    try {
       // Load system stats;
       const statsData = await adminAPI.getDashboard()
       // We need to transform the AdminDashboard type to fit SystemStats;
@@ -121,18 +118,18 @@ export default function AdminDashboardPage() {}
       await adminAPI.getSystemHealth()
       // Update stats with health data if needed;
       setLastUpdated(new Date())
-    } catch {}
+    } catch (error) {
       console.error("Failed to load admin dashboard data:", error)
       toast({title: "Error",
         description: "Failed to load dashboard data.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  useEffect(() => {}
+  useEffect(() => {
     loadDashboardData()
 
     // Set up auto-refresh every 30 seconds;
@@ -140,21 +137,21 @@ export default function AdminDashboardPage() {}
     return () => clearInterval(interval)
   }, [loadDashboardData])
 
-  const resolveAlert = async (alertId: string) => {}
-    try {}
+  const resolveAlert = async (alertId: string) => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/alerts/${alertId}/resolve/`, {}
+      const response = await fetch(`/api/admin/alerts/${alertId}/resolve/`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       })
 
-      if (response.ok) {}
-        setSystemAlerts((prev) => prev.map((alert) => (alert.id === alertId ? { ...alert, resolved: true } : alert)))
+      if (response.ok) {
+        setSystemAlerts((prev) => prev.map((alert) => (alert.id === alertId ? ...alert, resolved: true } : alert)))
         toast({title: "Alert Resolved",
           description: "The alert has been marked as resolved.",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to resolve alert:", error)
       toast({title: "Error",
         description: "Failed to resolve alert.",
@@ -163,8 +160,8 @@ export default function AdminDashboardPage() {}
     }
   }
 
-  const exportData = async (type: "users" | "parties" | "videos" | "analytics") => {}
-    try {}
+  const exportData = async (type: "users" | "parties" | "videos" | "analytics") => {
+    try {
       let downloadData;
       switch (type) {}
         case "users":
@@ -173,11 +170,11 @@ export default function AdminDashboardPage() {}
         default:
           // For other types, we can extend the adminAPI or use a generic export;
           const token = localStorage.getItem("accessToken")
-          const response = await fetch(`/api/admin/export/${type}/`, {}
+          const response = await fetch(`/api/admin/export/${type}/`, {
             headers: { Authorization: `Bearer ${token}` },
           })
 
-          if (response.ok) {}
+          if (response.ok) {
             const blob = await response.blob()
             const url = window.URL.createObjectURL(blob)
             const a = document.createElement("a")
@@ -196,7 +193,7 @@ export default function AdminDashboardPage() {}
           break;
       }
 
-      if (downloadData?.download_url) {}
+      if (downloadData?.download_url) {
         // Handle the download URL from the API;
         const a = document.createElement("a")
         a.href = downloadData.download_url;
@@ -209,7 +206,7 @@ export default function AdminDashboardPage() {}
           description: `${type} data has been exported successfully.`,
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to export data:", error)
       toast({title: "Export Failed",
         description: "Failed to export data.",
@@ -218,53 +215,53 @@ export default function AdminDashboardPage() {}
     }
   }
 
-  const getActivityIcon = (type: string) => {}
+  const getActivityIcon = (type: string) => {
     switch (type) {}
       case "user_registered":
-        return <UserCheck className="h-4 w-4 text-green-500" />
+        return <UserCheck className="h-4 w-4 text-green-500" />;
       case "party_created":
-        return <PlayCircle className="h-4 w-4 text-blue-500" />
+        return <PlayCircle className="h-4 w-4 text-blue-500" />;
       case "video_uploaded":
-        return <Video className="h-4 w-4 text-purple-500" />
+        return <Video className="h-4 w-4 text-purple-500" />;
       case "user_banned":
-        return <UserX className="h-4 w-4 text-red-500" />
+        return <UserX className="h-4 w-4 text-red-500" />;
       case "system_alert":
-        return <AlertTriangle className="h-4 w-4 text-yellow-500" />
+        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
       default:
-        return <Activity className="h-4 w-4 text-gray-500" />
+        return <Activity className="h-4 w-4 text-gray-500" />;
     }
   }
 
-  const getAlertIcon = (type: string) => {}
+  const getAlertIcon = (type: string) => {
     switch (type) {}
       case "error":
-        return <XCircle className="h-5 w-5 text-red-500" />
+        return <XCircle className="h-5 w-5 text-red-500" />;
       case "warning":
-        return <AlertTriangle className="h-5 w-5 text-yellow-500" />
+        return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
       case "info":
-        return <CheckCircle className="h-5 w-5 text-blue-500" />
+        return <CheckCircle className="h-5 w-5 text-blue-500" />;
       default:
-        return <AlertTriangle className="h-5 w-5 text-gray-500" />
+        return <AlertTriangle className="h-5 w-5 text-gray-500" />;
     }
   }
 
-  const formatUptime = (seconds: number) => {}
+  const formatUptime = (seconds: number) => {
     const days = Math.floor(seconds / 86400)
     const hours = Math.floor((seconds % 86400) / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    return `${days}d ${hours}h ${minutes}m`
+    return `${days}d ${hours}h ${minutes}m`;
   }
 
-  const formatBytes = (bytes: number) => {}
+  const formatBytes = (bytes: number) => {
     const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
     if (bytes === 0) return "0 Bytes"
     const i = Math.floor(Math.log(bytes) / Math.log(1024))
-    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i]
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i];
   }
 
 
 
-  if (!user?.is_staff && !user?.is_superuser) {}
+  if (!user?.is_staff && !user?.is_superuser) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-2xl mx-auto text-center">
@@ -277,7 +274,7 @@ export default function AdminDashboardPage() {}
     )
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto">
@@ -303,7 +300,7 @@ export default function AdminDashboardPage() {}
             <p className="text-muted-foreground mt-2">System overview and management tools</p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Last updated: {format(lastUpdated, &quot;HH:mm:ss")}</span>"
+            <span className="text-sm text-muted-foreground">Last updated: {format(lastUpdated, &quot;HH:mm:ss")}</span>&quot;
             <Button variant="outline" onClick={loadDashboardData}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Refresh;
@@ -339,7 +336,7 @@ export default function AdminDashboardPage() {}
                         <h4 className="font-medium">{alert.title}</h4>
                         <div className="flex items-center gap-2">
                           <Badge;
-                            variant={}
+                            variant={
                               alert.priority === "critical"
                                 ? "destructive"
                                 : alert.priority === "high"
@@ -571,7 +568,7 @@ export default function AdminDashboardPage() {}
                             {format(new Date(activity.timestamp), "MMM dd, HH:mm")}
                           </span>
                           <Badge;
-                            variant={}
+                            variant={
                               activity.severity === "high"
                                 ? "destructive"
                                 : activity.severity === "medium"

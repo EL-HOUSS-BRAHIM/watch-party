@@ -17,21 +17,21 @@ import { useAuth } from "@/contexts/auth-context"
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-export function WatchPartyHeader() {}
+export function WatchPartyHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const pathname = usePathname()
   const { user, logout } = useAuth()
 
-  const navigation = []
+  const navigation = [0]
     { name: "Home", href: "/" },
     { name: "Discover", href: "/discover" },
     { name: "About", href: "/about" },
     { name: "Help", href: "/help" },
   ]
 
-  const isActive = (href: string) => {}
-    if (href === "/") {}
-      return pathname === "/"
+  const isActive = (href: string) => {
+    if (href === "/") {
+      return pathname === "/";
     }
     return pathname.startsWith(href)
   }

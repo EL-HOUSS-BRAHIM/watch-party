@@ -54,11 +54,11 @@ export class AuthAPI {}
    * Refresh access token;
    */
   async refreshToken(): Promise<{ access: string }> {}
-    if (!isBrowser) {}
+    if (!isBrowser) {
       throw new Error("Cannot refresh token on server side")
 
     const refreshToken = tokenStorage.getRefreshToken()
-    if (!refreshToken) {}
+    if (!refreshToken) {
       throw new Error("No refresh token available")
 
     return apiClient.post<{ access: string }>(API_ENDPOINTS.auth.refresh, {}
@@ -68,7 +68,7 @@ export class AuthAPI {}
   /**
    * Request password reset;
    */
-  async forgotPassword(data: ForgotPasswordRequest): Promise<APIResponse> {}
+  async forgotPassword(data: ForgotPasswordRequest): Promise<APIResponse> {
     return apiClient.post<APIResponse>(API_ENDPOINTS.auth.forgotPassword, data)
 
   /**
@@ -86,7 +86,7 @@ export class AuthAPI {}
   /**
    * Verify email with token;
    */
-  async verifyEmail(token: string): Promise<APIResponse> {}
+  async verifyEmail(token: string): Promise<APIResponse> {
     return apiClient.post<APIResponse>(API_ENDPOINTS.auth.verifyEmail, { token })
 
   /**
@@ -113,7 +113,7 @@ export class AuthAPI {}
       temp_token?: string,
       email?: string;
     },
-  ): Promise<TwoFactorVerifyResponse> {}
+  ): Promise<TwoFactorVerifyResponse> {
     const response = await apiClient.post<RawTwoFactorVerifyResponse>(
       API_ENDPOINTS.auth.twoFactorVerify,
       {}
@@ -126,14 +126,14 @@ export class AuthAPI {}
   /**
    * Resend email verification;
    */
-  async resendVerification(email: string): Promise<APIResponse> {}
+  async resendVerification(email: string): Promise<APIResponse> {
     return apiClient.post<APIResponse>(API_ENDPOINTS.auth.resendVerification, { email })
 
   /**
    * Disable two-factor authentication;
    */
   async disable2FA(password?: string): Promise<APIResponse> {}
-    return apiClient.delete<APIResponse>(API_ENDPOINTS.auth.twoFactorDisable, {}
+    return apiClient.delete<APIResponse>(API_ENDPOINTS.auth.twoFactorDisable, {
       data: password ? { password } : undefined,
     })
 
@@ -152,7 +152,7 @@ export class AuthAPI {}
   /**
    * Delete specific session;
    */
-  async deleteSession(sessionId: string): Promise<APIResponse> {}
+  async deleteSession(sessionId: string): Promise<APIResponse> {
     return apiClient.delete<APIResponse>(API_ENDPOINTS.auth.sessionDelete(sessionId))
 
   /**
@@ -168,7 +168,7 @@ export class AuthAPI {}
     const baseURL = environment.apiBaseUrl,
     const defaultRedirectUri = `${window.location.origin}/callback?provider=${provider}`
 
-    const response = await fetch(`${baseURL}/api/auth/social/${provider}/redirect/`, {}
+    const response = await fetch(`${baseURL}/api/auth/social/${provider}/redirect/`, {
       method: "POST",
       headers: {}
         "Content-Type": "application/json",
@@ -177,7 +177,7 @@ export class AuthAPI {}
       }),
     })
 
-    if (!response.ok) {}
+    if (!response.ok) {
       throw new Error("Failed to get social auth URL")
 
     return response.json()
@@ -185,10 +185,10 @@ export class AuthAPI {}
   /**
    * Complete social authentication;
    */
-  async completeSocialAuth(provider: string, code: string, state?: string): Promise<AuthResponse> {}
+  async completeSocialAuth(provider: string, code: string, state?: string): Promise<AuthResponse> {
     const redirectUri = `${window.location.origin}/callback?provider=${provider}`
 
-    const response = await apiClient.post<RawAuthResponse>(API_ENDPOINTS.auth.socialAuth(provider), {}
+    const response = await apiClient.post<RawAuthResponse>(API_ENDPOINTS.auth.socialAuth(provider), {
       code,
       state,
       redirect_uri: redirectUri,

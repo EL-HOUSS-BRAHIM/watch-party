@@ -17,29 +17,27 @@ import { Label } from "@/components/ui/label"
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-interface Participant {}
-  id: string;
-  username: string;
-  firstName: string;
+interface id {: string;,
+  username: string;,
+  firstName: string;,
   lastName: string;
-  avatar?: string;
-  isHost: boolean;
-  isOnline: boolean;
-  joinedAt: string;
+  avatar?: string;,
+  isHost: boolean;,
+  isOnline: boolean;,
+  joinedAt: string;,
   role: "host" | "moderator" | "participant"
 }
 
-interface PartyHostControlsProps {}
-  partyId: string;
-  participants: Participant[]
-  currentTime: number;
-  duration: number;
-  isPlaying: boolean;
-  volume: number;
-  onSeek: (time: number) => void;
-  onPlayPause: () => void;
-  onVolumeChange: (volume: number) => void;
-  onSkip: (seconds: number) => void;
+interface partyId {: string;,
+  participants: Participant[0],
+  currentTime: number;,
+  duration: number;,
+  isPlaying: boolean;,
+  volume: number;,
+  onSeek: (time: number) => void;,
+  onPlayPause: () => void;,
+  onVolumeChange: (volume: number) => void;,
+  onSkip: (seconds: number) => void;,
   onParticipantAction: (participantId: string, action: "kick" | "promote" | "mute") => void;
 }
 
@@ -62,20 +60,20 @@ export function PartyHostControls({partyId,
     requireApproval: false,
   })
 
-  const formatTime = (seconds: number) => {}
+  const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
     const secs = Math.floor(seconds % 60)
-    return `${mins}:${secs.toString().padStart(2, "0")}`
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {}
+  const getUserInitials = (firstName: string, lastName: string) => {
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase()
   }
 
-  const updatePartySettings = async (newSettings: Partial<typeof settings>) => {}
-    try {}
+  const updatePartySettings = async (newSettings: Partial<typeof settings>) => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/settings/`, {}
+      const response = await fetch(`/api/parties/${partyId}/settings/`, {
         method: "PATCH",
         headers: {}
           "Content-Type": "application/json",
@@ -84,15 +82,15 @@ export function PartyHostControls({partyId,
         body: JSON.stringify(newSettings),
       })
 
-      if (response.ok) {}
-        setSettings(prev => ({ ...prev, ...newSettings }))
+      if (response.ok) {
+        setSettings(prev => (...prev, ...newSettings }))
         toast({title: "Settings updated",
           description: "Party settings have been updated successfully",
         })
       } else {}
         throw new Error("Failed to update settings")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to update party settings:", error)
       toast({title: "Update failed",
         description: "Failed to update party settings",

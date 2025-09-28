@@ -22,20 +22,18 @@ import { toast } from '@/hooks/use-toast'
   DocumentTextIcon;
 } from '@heroicons/react/24/outline'
 
-interface DataCategory {}
-  id: string;
-  name: string;
-  description: string;
-  size: string;
-  count: number;
-  required: boolean;
+interface id {: string;,
+  name: string;,
+  description: string;,
+  size: string;,
+  count: number;,
+  required: boolean;,
   sensitive: boolean;
 }
 
-interface ExportRequest {}
-  id: string;
-  categories: string[]
-  status: 'pending' | 'processing' | 'completed' | 'failed'
+interface id {: string;,
+  categories: string[0],
+  status: 'pending' | 'processing' | 'completed' | 'failed',
   requestedAt: string;
   completedAt?: string;
   downloadUrl?: string;
@@ -43,11 +41,10 @@ interface ExportRequest {}
   fileSize?: string;
 }
 
-interface DataManagementProps {}
-  userId?: string;
+interface userId {?: string;
 }
 
-const dataCategories: DataCategory[] = []
+const dataCategories: DataCategory[0] = [0]
   {}
     id: 'profile',
     name: 'Profile Information',
@@ -122,9 +119,9 @@ const dataCategories: DataCategory[] = []
   }
 ]
 
-export default function DataExportImport({ userId }: DataManagementProps) {}
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([&apos;profile'])
-  const [exportRequests, setExportRequests] = useState<ExportRequest[]>([]
+export default function DataExportImport({ userId }: DataManagementProps) {
+  const [selectedCategories, setSelectedCategories] = useState<string[0]>([&apos;profile'])
+  const [exportRequests, setExportRequests] = useState<ExportRequest[0]>([0]
     {}
       id: 'export-1',
       categories: ['profile', 'watch_history'],
@@ -147,19 +144,19 @@ export default function DataExportImport({ userId }: DataManagementProps) {}
   const [importProgress, setImportProgress] = useState(0)
   const [importing, setImporting] = useState(false)
 
-  const handleCategoryToggle = (categoryId: string) => {}
+  const handleCategoryToggle = (categoryId: string) => {
     const category = dataCategories.find(c => c.id === categoryId)
     if (category?.required) return;
     setSelectedCategories(prev => 
       prev.includes(categoryId)
         ? prev.filter(id => id !== categoryId)
-        : [...prev, categoryId]
+        : ...prev, categoryId]
     )
   }
 
-  const calculateTotalSize = () => {}
+  const calculateTotalSize = () => {
     const selected = dataCategories.filter(c => selectedCategories.includes(c.id))
-    const totalBytes = selected.reduce((acc, category) => {}
+    const totalBytes = selected.reduce((acc, category) => {
       const sizeStr = category.size;
       const value = parseFloat(sizeStr)
       const unit = sizeStr.split(' ')[1]
@@ -173,11 +170,11 @@ export default function DataExportImport({ userId }: DataManagementProps) {}
     if (totalBytes < 1024) return `${totalBytes.toFixed(0)} B`
     if (totalBytes < 1024 * 1024) return `${(totalBytes / 1024).toFixed(1)} KB`
     if (totalBytes < 1024 * 1024 * 1024) return `${(totalBytes / (1024 * 1024)).toFixed(1)} MB`
-    return `${(totalBytes / (1024 * 1024 * 1024)).toFixed(1)} GB`
+    return `${(totalBytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
   }
 
-  const requestExport = async () => {}
-    if (selectedCategories.length === 0) {}
+  const requestExport = async () => {
+    if (selectedCategories.length === 0) {
       toast({title: 'No Categories Selected',
         description: 'Please select at least one data category to export.',
         variant: 'destructive'
@@ -186,12 +183,12 @@ export default function DataExportImport({ userId }: DataManagementProps) {}
     }
 
     setRequesting(true)
-    try {}
+    try {
       // Mock API call - replace with actual implementation;
       await new Promise(resolve => setTimeout(resolve, 2000))
 
       const newExport: ExportRequest = { id: `export-${Date.now()}`,
-        categories: [...selectedCategories],
+        categories: ...selectedCategories],
         status: 'pending',
         requestedAt: new Date().toISOString()
       }
@@ -203,27 +200,27 @@ export default function DataExportImport({ userId }: DataManagementProps) {}
       })
 
       // Simulate processing;
-      setTimeout(() => {}
+      setTimeout(() => {
         setExportRequests(prev => prev.map(req => 
           req.id === newExport.id;
-            ? { ...req, status: 'processing' }
+            ? ...req, status: 'processing' }
             : req;
         ))
       }, 3000)
 
-    } catch {}
+    } catch (error) {
       toast({title: 'Export Failed',
         description: 'Failed to request data export. Please try again.',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setRequesting(false)
     }
   }
 
-  const downloadExport = async (exportRequest: ExportRequest) => {}
+  const downloadExport = async (exportRequest: ExportRequest) => {
     if (!exportRequest.downloadUrl) return;
-    try {}
+    try {
       // Mock download - replace with actual implementation;
       const link = document.createElement('a')
       link.href = exportRequest.downloadUrl;
@@ -235,7 +232,7 @@ export default function DataExportImport({ userId }: DataManagementProps) {}
       toast({title: 'Download Started',
         description: 'Your data export is being downloaded.',
       })
-    } catch {}
+    } catch (error) {
       toast({title: 'Download Failed',
         description: 'Failed to download export. Please try again.',
         variant: 'destructive'
@@ -243,9 +240,9 @@ export default function DataExportImport({ userId }: DataManagementProps) {}
     }
   }
 
-  const deleteAllData = async () => {}
+  const deleteAllData = async () => {
     setDeleting(true)
-    try {}
+    try {
       // Mock API call - replace with actual implementation;
       await new Promise(resolve => setTimeout(resolve, 3000))
 
@@ -256,27 +253,27 @@ export default function DataExportImport({ userId }: DataManagementProps) {}
 
       // In real implementation, this would redirect to a confirmation page;
       // or log the user out after successful deletion;
-    } catch {}
+    } catch (error) {
       toast({title: 'Deletion Failed',
         description: 'Failed to delete account data. Please contact support.',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setDeleting(false)
     }
   }
 
-  const handleFileImport = async (event: React.ChangeEvent<HTMLInputElement>) => {}
+  const handleFileImport = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return;
     setImporting(true)
     setImportProgress(0)
 
-    try {}
+    try {
       // Mock import process with progress updates;
-      const progressInterval = setInterval(() => {}
-        setImportProgress(prev => {}
-          if (prev >= 100) {}
+      const progressInterval = setInterval(() => {
+        setImportProgress(prev => {
+          if (prev >= 100) {
             clearInterval(progressInterval)
             return 100;
           }
@@ -294,20 +291,20 @@ export default function DataExportImport({ userId }: DataManagementProps) {}
         description: 'Your data has been successfully imported.',
       })
 
-    } catch {}
+    } catch (error) {
       toast({title: 'Import Failed',
         description: 'Failed to import data. Please check the file format.',
         variant: 'destructive'
       })
-    } finally {}
-      setTimeout(() => {}
+    } finally {
+      setTimeout(() => {
         setImporting(false)
         setImportProgress(0)
       }, 2000)
     }
   }
 
-  const formatDate = (dateString: string) => {}
+  const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString('en-US', {}
       year: 'numeric',
       month: 'short',
@@ -317,22 +314,22 @@ export default function DataExportImport({ userId }: DataManagementProps) {}
     })
   }
 
-  const getStatusColor = (status: ExportRequest['status']) => {}
+  const getStatusColor = (status: ExportRequest['status']) => {
     switch (status) {}
-      case 'completed': return 'text-green-400'
-      case 'processing': return 'text-blue-400'
-      case 'pending': return 'text-yellow-400'
-      case 'failed': return 'text-red-400'
-      default: return 'text-white/70'
+      case 'completed': return 'text-green-400';
+      case 'processing': return 'text-blue-400';
+      case 'pending': return 'text-yellow-400';
+      case 'failed': return 'text-red-400',
+      default: return 'text-white/70';
     }
   }
 
-  const getStatusIcon = (status: ExportRequest['status']) => {}
+  const getStatusIcon = (status: ExportRequest['status']) => {
     switch (status) {}
       case 'completed': return CheckCircleIcon;
       case 'processing': return ClockIcon;
       case 'pending': return ClockIcon;
-      case 'failed': return ExclamationTriangleIcon;
+      case 'failed': return ExclamationTriangleIcon;,
       default: return ClockIcon;
     }
   }
@@ -433,7 +430,7 @@ export default function DataExportImport({ userId }: DataManagementProps) {}
             </div>
           ) : (
             <div className="space-y-4">
-              {exportRequests.map(request => {}
+              {exportRequests.map(request => {
                 const StatusIcon = getStatusIcon(request.status)
                 return (
                   <Card key={request.id} className="bg-white/5 border-white/10">

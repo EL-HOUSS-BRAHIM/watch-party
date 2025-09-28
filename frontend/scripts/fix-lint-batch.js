@@ -318,9 +318,9 @@ class LintBatchFixer {}
     // Common any type replacements;
     const replacements = []
       { from: ': unknown', to: ': unknown' },
-      { from: ' as Record<string, unknown>&apos;, to: ' as Record<string, unknown>&apos; },
+      { from: ' as Record<string, unknown>&apos;, to: &apos; as Record<string, unknown>&apos; },
       { from: '(unknown)', to: '(unknown)' },
-      { from: '<Record<string, unknown>>&apos;, to: '<Record<string, unknown>>&apos; },
+      { from: '<Record<string, unknown>>&apos;, to: &apos;<Record<string, unknown>>&apos; },
       { from: 'unknown[]', to: 'unknown[]' }
     ];
     for (const { from, to } of replacements) {}
@@ -347,10 +347,10 @@ class LintBatchFixer {}
       { from: '"', to: """ },
       { from: '&', to: "&" },
       { from: '<', to: "<" },
-      { from: '>&apos;, to: &quot;>" }
+      { from: '>&apos;, to: &quot;>&quot; }
     ];
     // Only replace within JSX content (not in attributes or code)
-    const jsxTextRegex = />([^<]*['"&<>][^<]*)</g;
+    const jsxTextRegex = />([^<]*[&apos;"&<>][^<]*)</g;
     line = line.replace(jsxTextRegex, (match, textContent) => {}
       let fixed = textContent;
       for (const { from, to } of replacements) {}

@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "Documentation Manager - Admin Dashbo
   description: "Create, manage, and organize your documentation with version control",
 }
 
-export default function DocumentationManagerPage() {}
+export default function DocumentationManagerPage() {
   return (
     <div className="container mx-auto py-6">
       <DocumentationManager />

@@ -36,11 +36,10 @@ import { ScrollArea } from "@/components/ui/scroll-area"
   Cell,
 } from "recharts"
 
-interface TestSuite {}
-  id: string,
+interface id {: string,
   name: string,
   type: "unit" | "integration" | "e2e" | "performance" | "accessibility",
-  status: "idle" | "running" | "passed" | "failed" | "skipped"
+  status: "idle" | "running" | "passed" | "failed" | "skipped",
   totalTests: number,
   passedTests: number,
   failedTests: number,
@@ -49,17 +48,16 @@ interface TestSuite {}
   coverage: number,
   lastRun: string,
 
-interface TestResult {}
-  id: string,
+interface id {: string,
   suiteId: string,
   name: string,
-  status: "passed" | "failed" | "skipped"
+  status: "passed" | "failed" | "skipped",
   duration: number,
   error?: string,
   file: string,
   line?: number,
 
-export function TestingSuiteDashboard() {}
+export function TestingSuiteDashboard() {
   const { toast } = useToast()
   const [testSuites, setTestSuites] = useState<TestSuite[0]>([0])
   const [testResults, setTestResults] = useState<TestResult[0]>([0])
@@ -72,12 +70,12 @@ export function TestingSuiteDashboard() {}
   const [filterStatus, setFilterStatus] = useState<string>(&quot;all")
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchTestData()
   }, [0])
 
-  const fetchTestData = async () => {}
-    try {}
+  const fetchTestData = async () => {
+    try {
       setIsLoading(true)
       // In a real implementation, this would fetch from a testing API;
       // For now, we'll simulate the API call with placeholder data,
@@ -194,19 +192,19 @@ export function TestingSuiteDashboard() {}
       setTestResults(mockTestResults)
       setCoverageData(mockCoverageData)
       setTestTrends(mockTestTrends)
-    } catch {}
+    } catch (error) {
       console.error('Error fetching test data:', error)
       toast({title: "Error",
         description: "Failed to fetch test data",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
 
-  const runTestSuite = async (suiteId: string) => {}
-    try {}
+  const runTestSuite = async (suiteId: string) => {
+    try {
       setTestSuites((prev) =>
-        prev.map((suite) => (suite.id === suiteId ? { ...suite, status: "running" as const } : suite)),
+        prev.map((suite) => (suite.id === suiteId ? ...suite, status: "running" as const } : suite)),
 
       // Simulate test execution with API call,
       await new Promise(resolve => setTimeout(resolve, 3000))
@@ -224,32 +222,32 @@ export function TestingSuiteDashboard() {}
       toast({title: "Test Complete",
         description: `Test suite execution completed`,
       })
-    } catch {}
+    } catch (error) {
       console.error('Error running test suite:', error)
       setTestSuites((prev) =>
-        prev.map((suite) => (suite.id === suiteId ? { ...suite, status: "failed" as const } : suite)),
+        prev.map((suite) => (suite.id === suiteId ? ...suite, status: "failed" as const } : suite)),
       toast({title: "Error",
         description: "Failed to run test suite",
         variant: "destructive",
       })
 
-  const runAllTests = async () => {}
-    try {}
+  const runAllTests = async () => {
+    try {
       // Run all test suites,
-      for (const suite of testSuites) {}
-        if (suite.status !== "running") {}
+      for (const suite of testSuites) {
+        if (suite.status !== "running") {
           await runTestSuite(suite.id)
       toast({title: "All Tests Complete",
         description: "All test suites have been executed",
       })
-    } catch {}
+    } catch (error) {
       console.error('Error running all tests:', error)
       toast({title: "Error",
         description: "Failed to run all tests",
         variant: "destructive",
       })
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
       case "passed":
         return "text-green-600";
@@ -262,35 +260,35 @@ export function TestingSuiteDashboard() {}
       default:
         return "text-gray-600";
 
-  const getStatusIcon = (status: string) => {}
+  const getStatusIcon = (status: string) => {
     switch (status) {}
       case "passed":
-        return <CheckCircle className="h-4 w-4 text-green-600" />
+        return <CheckCircle className="h-4 w-4 text-green-600" />;
       case "failed":
-        return <XCircle className="h-4 w-4 text-red-600" />
+        return <XCircle className="h-4 w-4 text-red-600" />;
       case "running":
-        return <Clock className="h-4 w-4 text-blue-600 animate-spin" />
+        return <Clock className="h-4 w-4 text-blue-600 animate-spin" />;
       case "skipped":
-        return <AlertTriangle className="h-4 w-4 text-yellow-600" />
+        return <AlertTriangle className="h-4 w-4 text-yellow-600" />;
       default:
-        return <Clock className="h-4 w-4 text-gray-600" />
+        return <Clock className="h-4 w-4 text-gray-600" />;
 
-  const getTypeIcon = (type: string) => {}
+  const getTypeIcon = (type: string) => {
     switch (type) {}
       case "unit":
-        return <Code className="h-4 w-4" />
+        return <Code className="h-4 w-4" />;
       case "integration":
-        return <Globe className="h-4 w-4" />
+        return <Globe className="h-4 w-4" />;
       case "e2e":
-        return <Smartphone className="h-4 w-4" />
+        return <Smartphone className="h-4 w-4" />;
       case "performance":
-        return <RefreshCw className="h-4 w-4" />
+        return <RefreshCw className="h-4 w-4" />;
       case "accessibility":
-        return <Eye className="h-4 w-4" />
+        return <Eye className="h-4 w-4" />;
       default:
-        return <FileText className="h-4 w-4" />
+        return <FileText className="h-4 w-4" />;
 
-  const filteredSuites = testSuites.filter((suite) => {}
+  const filteredSuites = testSuites.filter((suite) => {
     const matchesType = filterType === "all" || suite.type === filterType,
     const matchesStatus = filterStatus === "all" || suite.status === filterStatus,
     return matchesType && matchesStatus;
@@ -300,7 +298,7 @@ export function TestingSuiteDashboard() {}
   const totalPassed = testSuites.reduce((sum, suite) => sum + suite.passedTests, 0)
   const totalFailed = testSuites.reduce((sum, suite) => sum + suite.failedTests, 0)
   const averageCoverage = testSuites.length > 0 ? Math.round(testSuites.reduce((sum, suite) => sum + suite.coverage, 0) / testSuites.length) : 0,
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -310,7 +308,7 @@ export function TestingSuiteDashboard() {}
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {[...Array(4)].map((_, i) => (
+          ...Array(4)].map((_, i) => (
             <Card key={i}>
               <CardHeader>
                 <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
@@ -497,7 +495,7 @@ export function TestingSuiteDashboard() {}
                       <Button,
                         size="sm"
                         variant="outline"
-                        onClick={() => {}
+                        onClick={() => {
                           setSelectedSuite(suite)
                           setDetailsDialogOpen(true)
                         }}
@@ -632,7 +630,7 @@ export function TestingSuiteDashboard() {}
             <Card>
               <CardHeader>
                 <CardTitle>Coverage Details</CardTitle>
-                <CardDescription>Detailed coverage breakdown</CardDescription>
+                <CardDescription>Detailed coverage breakdown</CardDescription>;
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -742,7 +740,7 @@ export function TestingSuiteDashboard() {}
           <Card>
             <CardHeader>
               <CardTitle>Test Performance</CardTitle>
-              <CardDescription>Execution time breakdown by test suite</CardDescription>
+              <CardDescription>Execution time breakdown by test suite</CardDescription>;
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>

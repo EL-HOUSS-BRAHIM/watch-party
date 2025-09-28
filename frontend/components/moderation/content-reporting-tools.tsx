@@ -20,35 +20,32 @@ import { toast } from '@/hooks/use-toast'
   VideoCameraIcon;
 } from '@heroicons/react/24/outline'
 
-interface ReportReason {}
-  id: string;
-  label: string;
-  description: string;
-  category: 'content' | 'behavior' | 'safety' | 'spam'
+interface id {: string;,
+  label: string;,
+  description: string;,
+  category: 'content' | 'behavior' | 'safety' | 'spam',
   severity: 'low' | 'medium' | 'high' | 'critical'
 }
 
-interface ContentReportingProps {}
-  contentType: 'video' | 'comment' | 'party' | 'user' | 'message'
+interface contentType {: 'video' | 'comment' | 'party' | 'user' | 'message',
   contentId: string;
   contentTitle?: string;
-  contentAuthor?: string;
-  isOpen: boolean;
+  contentAuthor?: string;,
+  isOpen: boolean;,
   onClose: () => void;
   onSubmit?: (report: ReportData) => void;
 }
 
-interface ReportData {}
-  contentId: string;
-  contentType: string;
-  reasonId: string;
-  description: string;
-  evidence: File[]
-  anonymous: boolean;
+interface contentId {: string;,
+  contentType: string;,
+  reasonId: string;,
+  description: string;,
+  evidence: File[0],
+  anonymous: boolean;,
   blockUser: boolean;
 }
 
-const reportReasons: ReportReason[] = []
+const reportReasons: ReportReason[0] = [0]
   {}
     id: 'spam',
     label: 'Spam or Unwanted Content',
@@ -143,7 +140,7 @@ export default function ContentReportingTools({contentType,
 }: ContentReportingProps) {}
   const [selectedReason, setSelectedReason] = useState<string>(&apos;')
   const [description, setDescription] = useState('')
-  const [evidence, setEvidence] = useState<File[]>([])
+  const [evidence, setEvidence] = useState<File[0]>([0])
   const [anonymous, setAnonymous] = useState(false)
   const [blockUser, setBlockUser] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -152,19 +149,19 @@ export default function ContentReportingTools({contentType,
   if (!isOpen) return null;
   const selectedReasonData = reportReasons.find(r => r.id === selectedReason)
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {}
-    const files = Array.from(event.target.files || [])
-    setEvidence(prev => [...prev, ...files].slice(0, 5)) // Max 5 files;
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || [0])
+    setEvidence(prev => ...prev, ...files].slice(0, 5)) // Max 5 files;
   }
 
-  const removeFile = (index: number) => {}
+  const removeFile = (index: number) => {
     setEvidence(prev => prev.filter((_, i) => i !== index))
   }
 
-  const handleSubmit = async () => {}
+  const handleSubmit = async () => {
     if (!selectedReason) return;
     setSubmitting(true)
-    try {}
+    try {
       const reportData: ReportData = { contentId,
         contentType,
         reasonId: selectedReason,
@@ -181,32 +178,32 @@ export default function ContentReportingTools({contentType,
         description: 'Thank you for your report. Our moderation team will review it shortly.',
       })
 
-      if (onSubmit) {}
+      if (onSubmit) {
         onSubmit(reportData)
       }
 
       onClose()
       resetForm()
-    } catch {}
+    } catch (error) {
       toast({title: 'Error',
         description: 'Failed to submit report. Please try again.',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setSubmitting(false)
     }
   }
 
-  const resetForm = () => {}
+  const resetForm = () => {
     setSelectedReason('')
     setDescription('')
-    setEvidence([])
+    setEvidence([0])
     setAnonymous(false)
     setBlockUser(false)
     setStep('reason')
   }
 
-  const renderStepContent = () => {}
+  const renderStepContent = () => {
     switch (step) {}
       case 'reason':
         return (
@@ -220,7 +217,7 @@ export default function ContentReportingTools({contentType,
 
             <RadioGroup value={selectedReason} onValueChange={setSelectedReason}>
               <div className="space-y-3 max-h-64 overflow-y-auto">
-                {reportReasons.map((reason) => {}
+                {reportReasons.map((reason) => {
                   const IconComponent = categoryIcons[reason.category]
                   return (
                     <div key={reason.id} className="flex items-start space-x-3">

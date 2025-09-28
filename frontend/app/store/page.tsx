@@ -6,20 +6,19 @@ import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid'
 
 "use client"
 
-interface StoreItem {}
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: string;
-  rating: number;
-  reviews: number;
-  image: string;
-  isPremium: boolean;
+interface id {: string;,
+  name: string;,
+  description: string;,
+  price: number;,
+  category: string;,
+  rating: number;,
+  reviews: number;,
+  image: string;,
+  isPremium: boolean;,
   isOwned: boolean;
 }
 
-const storeItems: StoreItem[] = []
+const storeItems: StoreItem[0] = [0]
   {}
     id: '1',
     name: 'Premium Avatar Frames',
@@ -72,16 +71,16 @@ const storeItems: StoreItem[] = []
 
 const categories = ['All', 'Avatar', 'Emojis', 'Themes', 'Badges', 'Premium']
 
-export default function StorePage() {}
+export default function StorePage() {
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [sortBy, setSortBy] = useState('popular')
   const [showFilters, setShowFilters] = useState(false)
 
-  const filteredItems = storeItems.filter(item => {}
+  const filteredItems = storeItems.filter(item => {
     if (selectedCategory === 'All') return true;
     if (selectedCategory === 'Premium') return item.isPremium;
     return item.category === selectedCategory;
-  }).sort((a, b) => {}
+  }).sort((a, b) => {
     switch (sortBy) {}
       case 'price-low':
         return a.price - b.price;
@@ -94,7 +93,7 @@ export default function StorePage() {}
     }
   })
 
-  const renderStars = (rating: number) => {}
+  const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       i < Math.floor(rating) ? (
         <StarSolidIcon key={i} className="w-4 h-4 text-yellow-400" />

@@ -13,7 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 
 "use client"
 
-export default function RegisterPage() {}
+export default function RegisterPage() {
   const { register, socialLogin, isLoading } = useAuth()
   const { toast } = useToast()
 
@@ -30,7 +30,7 @@ export default function RegisterPage() {}
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [passwordStrength, setPasswordStrength] = useState(0)
 
-  const validatePassword = (password: string) => {}
+  const validatePassword = (password: string) => {
     let strength = 0;
     if (password.length >= 8) strength++
     if (/[A-Z]/.test(password)) strength++
@@ -40,40 +40,40 @@ export default function RegisterPage() {}
     return strength;
   }
 
-  useEffect(() => {}
+  useEffect(() => {
     setPasswordStrength(validatePassword(formData.password))
   }, [formData.password])
 
-  const validateForm = () => {}
-    const newErrors: Record<string, string> = { if (!formData.firstName.trim()) {}
+  const validateForm = () => {
+    const newErrors: Record<string, string> = { if (!formData.firstName.trim()) {
       newErrors.firstName = "First name is required"
     }
 
-    if (!formData.lastName.trim()) {}
+    if (!formData.lastName.trim()) {
       newErrors.lastName = "Last name is required"
     }
 
-    if (!formData.email) {}
+    if (!formData.email) {
       newErrors.email = "Email is required"
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {}
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Please enter a valid email address"
     }
 
-    if (!formData.password) {}
+    if (!formData.password) {
       newErrors.password = "Password is required"
-    } else if (formData.password.length < 8) {}
+    } else if (formData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters"
-    } else if (passwordStrength < 3) {}
+    } else if (passwordStrength < 3) {
       newErrors.password = "Password is too weak. Include uppercase, lowercase, numbers, and symbols."
     }
 
-    if (!formData.confirmPassword) {}
+    if (!formData.confirmPassword) {
       newErrors.confirmPassword = "Please confirm your password"
-    } else if (formData.password !== formData.confirmPassword) {}
+    } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match"
     }
 
-    if (!agreedToTerms) {}
+    if (!agreedToTerms) {
       newErrors.terms = "You must agree to the Terms of Service and Privacy Policy"
     }
 
@@ -81,14 +81,14 @@ export default function RegisterPage() {}
     return Object.keys(newErrors).length === 0;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {}
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!validateForm()) return;
     setIsSubmitting(true)
     setErrors({)
 
-    try {}
+    try {
       await register({first_name: formData.firstName,
         last_name: formData.lastName,
         email: formData.email,
@@ -100,22 +100,22 @@ export default function RegisterPage() {}
         description: "Welcome to WatchParty! Your account has been created successfully.",
         duration: 5000,
       })
-    } catch {}
+    } catch {
       const errorMessage = (error as { message?: string })?.message || "Registration failed. Please try again."
       setErrors({ general: errorMessage })
       toast({title: "Registration Failed",
         description: errorMessage,
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSubmitting(false)
     }
   }
 
-  const handleSocialLogin = async (provider: "google" | "github") => {}
-    try {}
+  const handleSocialLogin = async (provider: "google" | "github") => {
+    try {
       await socialLogin(provider)
-    } catch {}
+    } catch {
       toast({title: "Social Registration Failed",
         description: (error as { message?: string })?.message || `Failed to register with ${provider}`,
         variant: "destructive",
@@ -123,28 +123,28 @@ export default function RegisterPage() {}
     }
   }
 
-  const handleInputChange = (field: string, value: string) => {}
-    setFormData((prev) => ({ ...prev, [field]: value }))
-    if (errors[field]) {}
-      setErrors((prev) => ({ ...prev, [field]: &quot;" }))
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => (...prev, [field]: value }))
+    if (errors[field]) {
+      setErrors((prev) => (...prev, [field]: &quot;" }))
     }
   }
 
-  const getPasswordStrengthColor = () => {}
+  const getPasswordStrengthColor = () => {
     if (passwordStrength <= 1) return "bg-red-500"
     if (passwordStrength <= 2) return "bg-yellow-500"
     if (passwordStrength <= 3) return "bg-blue-500"
-    return "bg-green-500"
+    return "bg-green-500";
   }
 
-  const getPasswordStrengthText = () => {}
+  const getPasswordStrengthText = () => {
     if (passwordStrength <= 1) return "Weak"
     if (passwordStrength <= 2) return "Fair"
     if (passwordStrength <= 3) return "Good"
-    return "Strong"
+    return "Strong";
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
@@ -430,10 +430,10 @@ export default function RegisterPage() {}
             <Checkbox;
               id="terms"
               checked={agreedToTerms}
-              onCheckedChange={(checked) => {}
+              onCheckedChange={(checked) => {
   setAgreedToTerms(checked as boolean)
-                if (errors.terms) {}
-                  setErrors((prev) => ({ ...prev, terms: &quot;" }))
+                if (errors.terms) {
+                  setErrors((prev) => (...prev, terms: &quot;" }))
                 }
               }}
               className="mt-1 border-white/20 data-[state=checked]:bg-neon-blue data-[state=checked]:border-neon-blue"

@@ -1,12 +1,12 @@
 
 "use client"
 
-const InventoryPage = () => {}
+const InventoryPage = () => {
   // Mock data for user's inventory items;
-  const inventoryItems = []
+  const inventoryItems = [0]
     {}
       id: 1,
-      name: "Exclusive Avatar",
+      name: "Exclusive Avatar",;
       description: "A unique avatar only available to premium members.",
       type: "Avatar",
     },

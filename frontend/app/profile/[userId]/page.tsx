@@ -14,59 +14,58 @@ import Link from "next/link"
 
 "use client"
 
-interface PublicProfile {}
-  id: string;
-  username: string;
-  displayName: string;
-  bio: string;
-  avatar: string;
-  coverImage: string;
-  location: string;
-  website: string;
-  joinDate: string;
-  isPublic: boolean;
-  showEmail: boolean;
-  showLocation: boolean;
+interface id {: string;,
+  username: string;,
+  displayName: string;,
+  bio: string;,
+  avatar: string;,
+  coverImage: string;,
+  location: string;,
+  website: string;,
+  joinDate: string;,
+  isPublic: boolean;,
+  showEmail: boolean;,
+  showLocation: boolean;,
   showBirthDate: boolean;
   email?: string;
-  birthDate?: string;
-  friendshipStatus: "none" | "pending" | "friends" | "blocked" | "self"
-  mutualFriends: number;
+  birthDate?: string;,
+  friendshipStatus: "none" | "pending" | "friends" | "blocked" | "self",
+  mutualFriends: number;,
   stats: {}
-    watchParties: number;
-    hoursWatched: number;
-    friendsCount: number;
-    achievementsCount: number;
-    favoriteMovies: number;
-    totalRatings: number;
-    averageRating: number;
+    watchParties: number;,
+    hoursWatched: number;,
+    friendsCount: number;,
+    achievementsCount: number;,
+    favoriteMovies: number;,
+    totalRatings: number;,
+    averageRating: number;,
     streakDays: number;
   }
   recentActivity: Array<{}
-    id: string;
-    type: "party" | "rating" | "friend" | "achievement"
-    title: string;
-    description: string;
-    timestamp: string;
+    id: string;,
+    type: "party" | "rating" | "friend" | "achievement",
+    title: string;,
+    description: string;,
+    timestamp: string;,
     isPublic: boolean;
   }>
   achievements: Array<{}
-    id: string;
-    name: string;
-    description: string;
-    icon: string;
-    unlockedAt: string;
-    rarity: "common" | "rare" | "epic" | "legendary"
+    id: string;,
+    name: string;,
+    description: string;,
+    icon: string;,
+    unlockedAt: string;,
+    rarity: "common" | "rare" | "epic" | "legendary",
     isPublic: boolean;
   }>
   favoriteGenres: Array<{}
-    name: string;
-    count: number;
+    name: string;,
+    count: number;,
     percentage: number;
   }>
 }
 
-export default function PublicProfilePage() {}
+export default function PublicProfilePage() {
   const params = useParams()
   const router = useRouter()
   const { user } = useAuth()
@@ -78,29 +77,29 @@ export default function PublicProfilePage() {}
   const [activeTab, setActiveTab] = useState("overview")
 
   const userId = params.userId as string;
-  useEffect(() => {}
-    if (userId) {}
+  useEffect(() => {
+    if (userId) {
       fetchProfile()
     }
   }, [userId])
 
-  const fetchProfile = async () => {}
-    try {}
-      if (!usersAPI) {}
+  const fetchProfile = async () => {
+    try {
+      if (!usersAPI) {
         console.error('Users API not available')
         return;
       }
       const data = await usersAPI.getUserProfile(userId)
       setProfile(data as PublicProfile)
-    } catch {}
+    } catch (error) {
       console.error("Profile fetch error:", error)
       // Handle API errors;
       const apiError = error as Record<string, unknown>
-      if (apiError?.status === 404) {}
+      if (apiError?.status === 404) {
         router.push("/not-found")
         return;
-      } else if (apiError?.status === 403) {}
-        setProfile({...({} as PublicProfile),
+      } else if (apiError?.status === 403) {
+        setProfile(...({} as PublicProfile),
           isPublic: false,
           friendshipStatus: "blocked",
         })
@@ -132,7 +131,7 @@ export default function PublicProfilePage() {}
           averageRating: 4.2,
           streakDays: 12,
         },
-        recentActivity: []
+        recentActivity: [0]
           {}
             id: "1",
             type: "party",
@@ -150,7 +149,7 @@ export default function PublicProfilePage() {}
             isPublic: true,
           },
         ],
-        achievements: []
+        achievements: [0]
           {}
             id: "1",
             name: "Movie Marathon Master",
@@ -170,7 +169,7 @@ export default function PublicProfilePage() {}
             isPublic: true,
           },
         ],
-        favoriteGenres: []
+        favoriteGenres: [0]
           { name: "Action", count: 25, percentage: 28 },
           { name: "Comedy", count: 20, percentage: 22 },
           { name: "Drama", count: 18, percentage: 20 },
@@ -178,22 +177,22 @@ export default function PublicProfilePage() {}
           { name: "Horror", count: 11, percentage: 13 },
         ],
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const handleFriendAction = async (action: "add" | "remove" | "accept" | "decline" | "cancel") => {}
-    if (!user) {}
+  const handleFriendAction = async (action: "add" | "remove" | "accept" | "decline" | "cancel") => {
+    if (!user) {
       router.push("/login")
       return;
     }
 
     setIsActionLoading(true)
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/${userId}/friendship/`, {}
+      const response = await fetch(`/api/users/${userId}/friendship/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -202,10 +201,10 @@ export default function PublicProfilePage() {}
         body: JSON.stringify({ action }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setProfile((prev) =>
-          prev ? { ...prev, friendshipStatus: data.status, mutualFriends: data.mutualFriends } : null,
+          prev ? ...prev, friendshipStatus: data.status, mutualFriends: data.mutualFriends } : null,
         )
 
         const messages = { add: "Friend request sent!",
@@ -222,51 +221,51 @@ export default function PublicProfilePage() {}
         const errorData = await response.json()
         throw new Error(errorData.message || "Action failed")
       }
-    } catch {}
+    } catch (error) {
       console.error("Friend action error:", error)
       toast({title: "Error",
         description: error instanceof Error ? error.message : "Action failed.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsActionLoading(false)
     }
   }
 
-  const handleBlock = async () => {}
+  const handleBlock = async () => {
     if (!user || !confirm("Are you sure you want to block this user?")) return;
     setIsActionLoading(true)
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/${userId}/block/`, {}
+      const response = await fetch(`/api/users/${userId}/block/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
-        setProfile((prev) => (prev ? { ...prev, friendshipStatus: &quot;blocked" } : null))
+      if (response.ok) {
+        setProfile((prev) => (prev ? ...prev, friendshipStatus: &quot;blocked" } : null))
         toast({title: "User Blocked",
           description: "This user has been blocked and can no longer interact with you.",
         })
       } else {}
         throw new Error("Failed to block user")
       }
-    } catch {}
+    } catch (error) {
       console.error("Block error:", error)
       toast({title: "Error",
         description: "Failed to block user.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsActionLoading(false)
     }
   }
 
-  const handleReport = async () => {}
-    if (!user) {}
+  const handleReport = async () => {
+    if (!user) {
       router.push("/login")
       return;
     }
@@ -276,7 +275,7 @@ export default function PublicProfilePage() {}
     })
   }
 
-  const formatDate = (dateString: string): string => {}
+  const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleDateString("en-US", {}
       year: "numeric",
       month: "long",
@@ -284,22 +283,22 @@ export default function PublicProfilePage() {}
     })
   }
 
-  const getRarityColor = (rarity: string): string => {}
+  const getRarityColor = (rarity: string): string => {
     switch (rarity) {}
       case "common":
-        return "bg-white/20 text-white border-white/30"
+        return "bg-white/20 text-white border-white/30";
       case "rare":
-        return "bg-white/30 text-white border-white/40"
+        return "bg-white/30 text-white border-white/40";
       case "epic":
-        return "bg-white/40 text-white border-white/50"
+        return "bg-white/40 text-white border-white/50";
       case "legendary":
-        return "bg-white/50 text-white border-white/60"
+        return "bg-white/50 text-white border-white/60";
       default:
-        return "bg-white/20 text-white border-white/30"
+        return "bg-white/20 text-white border-white/30";
     }
   }
 
-  const getActivityIcon = (type: string) => {}
+  const getActivityIcon = (type: string) => {
     switch (type) {}
       case "party":
         return Play;
@@ -314,7 +313,7 @@ export default function PublicProfilePage() {}
     }
   }
 
-  const getFriendButtonConfig = () => {}
+  const getFriendButtonConfig = () => {
     switch (profile?.friendshipStatus) {}
       case "none":
         return {}
@@ -345,7 +344,7 @@ export default function PublicProfilePage() {}
     }
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-black p-6">
         <div className="max-w-6xl mx-auto">
@@ -368,7 +367,7 @@ export default function PublicProfilePage() {}
     )
   }
 
-  if (!profile) {}
+  if (!profile) {
     return (
       <div className="min-h-screen bg-black p-6">
         <div className="max-w-6xl mx-auto">
@@ -442,7 +441,7 @@ export default function PublicProfilePage() {}
               </Button>
               <Button;
                 size="sm"
-                onClick={() => {}
+                onClick={() => {
                   navigator.share?.({}
                     title: `${profile.displayName}'s Profile`,
                     url: window.location.href,
@@ -773,7 +772,7 @@ export default function PublicProfilePage() {}
               <CardContent className="space-y-4">
                 {profile.recentActivity;
                   .filter((a) => a.isPublic)
-                  .map((activity) => {}
+                  .map((activity) => {
                     const IconComponent = getActivityIcon(activity.type)
                     return (
                       <div;
@@ -806,54 +805,53 @@ export default function PublicProfilePage() {}
   )
 }
 
-interface PublicProfile {}
-  id: string;
-  username: string;
-  displayName: string;
-  bio: string;
-  avatar: string;
-  coverImage: string;
-  location: string;
-  website: string;
-  joinDate: string;
-  isPublic: boolean;
-  showEmail: boolean;
-  showLocation: boolean;
+interface id {: string;,
+  username: string;,
+  displayName: string;,
+  bio: string;,
+  avatar: string;,
+  coverImage: string;,
+  location: string;,
+  website: string;,
+  joinDate: string;,
+  isPublic: boolean;,
+  showEmail: boolean;,
+  showLocation: boolean;,
   showBirthDate: boolean;
   email?: string;
-  birthDate?: string;
-  friendshipStatus: "none" | "pending" | "friends" | "blocked" | "self"
-  mutualFriends: number;
+  birthDate?: string;,
+  friendshipStatus: "none" | "pending" | "friends" | "blocked" | "self",
+  mutualFriends: number;,
   stats: {}
-    watchParties: number;
-    hoursWatched: number;
-    friendsCount: number;
-    achievementsCount: number;
-    favoriteMovies: number;
-    totalRatings: number;
-    averageRating: number;
+    watchParties: number;,
+    hoursWatched: number;,
+    friendsCount: number;,
+    achievementsCount: number;,
+    favoriteMovies: number;,
+    totalRatings: number;,
+    averageRating: number;,
     streakDays: number;
   }
   recentActivity: Array<{}
-    id: string;
-    type: "party" | "rating" | "friend" | "achievement"
-    title: string;
-    description: string;
-    timestamp: string;
+    id: string;,
+    type: "party" | "rating" | "friend" | "achievement",
+    title: string;,
+    description: string;,
+    timestamp: string;,
     isPublic: boolean;
   }>
   achievements: Array<{}
-    id: string;
-    name: string;
-    description: string;
-    icon: string;
-    unlockedAt: string;
-    rarity: "common" | "rare" | "epic" | "legendary"
+    id: string;,
+    name: string;,
+    description: string;,
+    icon: string;,
+    unlockedAt: string;,
+    rarity: "common" | "rare" | "epic" | "legendary",
     isPublic: boolean;
   }>
   favoriteGenres: Array<{}
-    name: string;
-    count: number;
+    name: string;,
+    count: number;,
     percentage: number;
   }>
 }

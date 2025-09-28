@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "SEO & Accessibility Optimizer - Admi
   description: "Optimize your site for search engines and accessibility compliance",
 }
 
-export default function SEOAccessibilityPage() {}
+export default function SEOAccessibilityPage() {
   return (
     <div className="container mx-auto py-6">
       <SEOAccessibilityOptimizer />

@@ -11,28 +11,27 @@ import { cn } from "@/lib/utils"
 
 "use client"
 
-interface Command {}
-  id: string;
+interface id {: string;,
   title: string;
-  description?: string;
-  icon: React.ReactNode;
-  action: () => void;
-  keywords: string[]
+  description?: string;,
+  icon: React.ReactNode;,
+  action: () => void;,
+  keywords: string[0],
   category: string;
 }
 
-interface CommandPaletteProps {}
-  open: boolean;
+interface CommandPaletteProps {
+  open: boolean;,
   onOpenChange: (open: boolean) => void;
 }
 
-export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
+export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
   const [query, setQuery] = useState("")
   const [selectedIndex, setSelectedIndex] = useState(0)
   const router = useRouter()
 
-  const commands: Command[] = useMemo(
-    () => []
+  const commands: Command[0] = useMemo(
+    () => [0]
       {}
         id: "dashboard",
         title: "Go to Dashboard",
@@ -83,10 +82,10 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
         title: "Notifications",
         description: "View your notifications",
         icon: <Bell className="h-4 w-4" />,
-        action: () => {}
+        action: () => {
           // Open notifications panel;
           const notificationButton = document.querySelector("[data-notifications-trigger]") as HTMLButtonElement;
-          if (notificationButton) {}
+          if (notificationButton) {
             notificationButton.click()
           }
         },
@@ -115,9 +114,9 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
     [router],
   )
 
-  const filteredCommands = useMemo(() => {}
+  const filteredCommands = useMemo(() => {
     if (!query) return commands;
-    return commands.filter((command) => {}
+    return commands.filter((command) => {
       const searchText = query.toLowerCase()
       return (
         command.title.toLowerCase().includes(searchText) ||
@@ -127,22 +126,22 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
     })
   }, [commands, query])
 
-  const groupedCommands = useMemo(() => {}
-    const groups: Record<string, Command[]> = { filteredCommands.forEach((command) => {}
-      if (!groups[command.category]) {}
-        groups[command.category] = []
+  const groupedCommands = useMemo(() => {
+    const groups: Record<string, Command[0]> = { filteredCommands.forEach((command) => {
+      if (!groups[command.category]) {
+        groups[command.category] = [0]
       }
       groups[command.category].push(command)
     })
     return groups;
   }, [filteredCommands])
 
-  useEffect(() => {}
+  useEffect(() => {
     setSelectedIndex(0)
   }, [query])
 
-  useEffect(() => {}
-    const handleKeyDown = (e: KeyboardEvent) => {}
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (!open) return;
       switch (e.key) {}
         case "ArrowDown":
@@ -155,7 +154,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
           break;
         case "Enter":
           e.preventDefault()
-          if (filteredCommands[selectedIndex]) {}
+          if (filteredCommands[selectedIndex]) {
             filteredCommands[selectedIndex].action()
             onOpenChange(false)
             setQuery("")
@@ -172,7 +171,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
     return () => document.removeEventListener(&quot;keydown", handleKeyDown)
   }, [open, selectedIndex, filteredCommands, onOpenChange])
 
-  const handleCommandSelect = (command: Command) => {}
+  const handleCommandSelect = (command: Command) => {
     command.action()
     onOpenChange(false)
     setQuery("")
@@ -199,7 +198,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {}
           {Object.entries(groupedCommands).map(([category, commands]) => (
             <div key={category} className="p-2">
               <div className="px-2 py-1 text-xs font-medium text-gray-500 uppercase tracking-wider">{category}</div>
-              {commands.map((command, index) => {}
+              {commands.map((command, index) => {
                 const globalIndex = filteredCommands.indexOf(command)
                 return (
                   <Button;

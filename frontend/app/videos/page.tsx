@@ -38,7 +38,7 @@ import type { Video } from "@/lib/api/types"
   Edit,
   Share2,
   MoreVertical,
-export default function VideosPage() {}
+export default function VideosPage() {
   const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
@@ -51,13 +51,13 @@ export default function VideosPage() {}
     visibility: visibility === "all" ? undefined : visibility as Record<string, unknown>,
   })
 
-  const deleteVideo = async (videoId: string) => {}
-    if (!confirm("Are you sure you want to delete this video? This action cannot be undone.")) {}
+  const deleteVideo = async (videoId: string) => {
+    if (!confirm("Are you sure you want to delete this video? This action cannot be undone.")) {
       return;
     }
 
-    try {}
-      if (!videosAPI) {}
+    try {
+      if (!videosAPI) {
         console.error('Videos API not available')
         return;
       }
@@ -66,7 +66,7 @@ export default function VideosPage() {}
         description: "The video has been successfully deleted.",
       })
       refresh()
-    } catch {}
+    } catch (error) {
       console.error("Failed to delete video:", error)
       toast({title: "Error",
         description: "Failed to delete the video. Please try again.",
@@ -83,16 +83,16 @@ export default function VideosPage() {}
     }
   }
 
-  const shareVideo = async (video: Video) => {}
+  const shareVideo = async (video: Video) => {
     const shareUrl = `${window.location.origin}/videos/${video.id}`
 
-    if (navigator.share) {}
-      try {}
+    if (navigator.share) {
+      try {
         await navigator.share({title: video.title,
           text: video.description,
           url: shareUrl,
         })
-      } catch {}
+      } catch (error) {
         console.log("Share cancelled")
       }
     } else {}
@@ -103,14 +103,14 @@ export default function VideosPage() {}
     }
   }
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60;
-    if (hours > 0) {}
-      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
     }
-    return `${minutes}:${secs.toString().padStart(2, "0")}`
+    return `${minutes}:${secs.toString().padStart(2, "0")}`;
   }
 
   const VideoCard = ({ video }: { video: Video }) => (
@@ -204,7 +204,7 @@ export default function VideosPage() {}
     </Card>
   )
 
-  if (loading) {}
+  if (loading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">

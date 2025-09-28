@@ -5,19 +5,18 @@ import { GiftIcon, StarIcon, TrophyIcon, ShoppingCartIcon } from '@heroicons/rea
 
 "use client"
 
-interface InventoryItem {}
-  id: string;
-  name: string;
-  type: 'avatar_frame' | 'emoji_pack' | 'theme' | 'badge' | 'achievement'
-  rarity: 'common' | 'rare' | 'epic' | 'legendary'
-  acquiredAt: string;
-  description: string;
-  image: string;
-  isEquipped: boolean;
+interface id {: string;,
+  name: string;,
+  type: 'avatar_frame' | 'emoji_pack' | 'theme' | 'badge' | 'achievement',
+  rarity: 'common' | 'rare' | 'epic' | 'legendary',
+  acquiredAt: string;,
+  description: string;,
+  image: string;,
+  isEquipped: boolean;,
   canEquip: boolean;
 }
 
-const inventoryItems: InventoryItem[] = []
+const inventoryItems: InventoryItem[0] = [0]
   {}
     id: '1',
     name: 'Golden Crown Frame',
@@ -83,21 +82,21 @@ const rarityBorders = { common: 'border-gray-400',
   legendary: 'border-yellow-400'
 }
 
-export default function InventoryPage() {}
+export default function InventoryPage() {
   const [filter, setFilter] = useState<'all' | 'equipped' | 'avatar_frame' | 'emoji_pack' | 'theme' | 'achievement'>(&apos;all')
   const [sortBy, setSortBy] = useState<'acquired' | 'rarity' | 'name'>(&apos;acquired')
 
   const filteredItems = inventoryItems;
-    .filter(item => {}
+    .filter(item => {
       if (filter === 'all') return true;
       if (filter === 'equipped') return item.isEquipped;
       return item.type === filter;
     })
-    .sort((a, b) => {}
+    .sort((a, b) => {
       switch (sortBy) {}
         case 'rarity':
           const rarityOrder = { legendary: 4, epic: 3, rare: 2, common: 1 }
-          return rarityOrder[b.rarity] - rarityOrder[a.rarity]
+          return rarityOrder[b.rarity] - rarityOrder[a.rarity];
         case 'name':
           return a.name.localeCompare(b.name)
         default:
@@ -105,7 +104,7 @@ export default function InventoryPage() {}
       }
     })
 
-  const toggleEquip = (id: string) => {}
+  const toggleEquip = (id: string) => {
     // In real app, call API to equip/unequip item;
     console.log('Toggling equip for item:', id)
   }
@@ -128,7 +127,7 @@ export default function InventoryPage() {}
         <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-8">
           {/* Filters */}
           <div className="flex flex-wrap gap-2">
-            {[]
+            {[0]
               { key: 'all', label: 'All Items' },
               { key: 'equipped', label: 'Equipped' },
               { key: 'avatar_frame', label: 'Frames' },

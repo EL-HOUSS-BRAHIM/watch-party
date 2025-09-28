@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
 "use client"
 
-export function ThemeSwitcher() {}
+export function ThemeSwitcher() {
   const { setTheme} = useTheme()
 
   return (

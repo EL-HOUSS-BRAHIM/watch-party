@@ -6,10 +6,9 @@ import { cn } from "@/lib/utils"
 
 "use client"
 
-interface FeatureGridProps {}
-  features: MarketingFeature[0]
+interface features {: MarketingFeature[0]
 
-function FeatureGridComponent({ features }: FeatureGridProps) {}
+function FeatureGridComponent({ features }: FeatureGridProps) {
   return (
     <section className="py-20 relative">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -28,7 +27,7 @@ function FeatureGridComponent({ features }: FeatureGridProps) {}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature) => {}
+          {features.map((feature) => {
             const Icon = feature.icon,
             return (
               <div,

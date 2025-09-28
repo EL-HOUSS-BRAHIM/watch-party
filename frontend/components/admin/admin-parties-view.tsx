@@ -30,39 +30,38 @@ import { LoadingSpinner } from '@/components/ui/loading'
   Search,
   Filter,
   AlertTriangle;
-interface WatchParty {}
-  id: string;
-  name: string;
-  description: string;
+interface id {: string;,
+  name: string;,
+  description: string;,
   host: {}
-    id: string;
-    username: string;
-    display_name: string;
+    id: string;,
+    username: string;,
+    display_name: string;,
     avatar_url: string | null;
   }
-  status: 'active' | 'paused' | 'ended' | 'suspended'
-  privacy: 'public' | 'private' | 'friends_only'
+  status: 'active' | 'paused' | 'ended' | 'suspended',
+  privacy: 'public' | 'private' | 'friends_only',
   participant_count: number;
-  max_participants?: number;
+  max_participants?: number;,
   created_at: string;
   started_at?: string;
   ended_at?: string;
   current_video?: {}
-    id: string;
-    title: string;
+    id: string;,
+    title: string;,
     duration: number;
   }
   flags: Array<{}
-    id: string;
-    reason: string;
-    reporter: string;
+    id: string;,
+    reason: string;,
+    reporter: string;,
     created_at: string;
   }>
 }
 
-export function AdminPartiesView() {}
-  const [parties, setParties] = useState<WatchParty[]>([])
-  const [filteredParties, setFilteredParties] = useState<WatchParty[]>([])
+export function AdminPartiesView() {
+  const [parties, setParties] = useState<WatchParty[0]>([0])
+  const [filteredParties, setFilteredParties] = useState<WatchParty[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>(&apos;all')
@@ -70,47 +69,47 @@ export function AdminPartiesView() {}
   const { get, post, put } = useApi()
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchParties()
-  }, [])
+  }, [0])
 
-  useEffect(() => {}
+  useEffect(() => {
     filterParties()
   }, [parties, searchTerm, statusFilter, activeTab])
 
-  const fetchParties = async () => {}
-    try {}
+  const fetchParties = async () => {
+    try {
       setIsLoading(true)
       const response = await get('/admin/parties/')
-      setParties((response.data as WatchParty[]) || [])
-    } catch {}
+      setParties((response.data as WatchParty[0]) || [0])
+    } catch (error) {
       toast({title: 'Error',
         description: 'Failed to load parties',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const filterParties = () => {}
+  const filterParties = () => {
     let filtered = parties;
     // Filter by tab;
-    if (activeTab === 'flagged') {}
+    if (activeTab === 'flagged') {
       filtered = filtered.filter(party => party.flags.length > 0)
-    } else if (activeTab === 'active') {}
+    } else if (activeTab === 'active') {
       filtered = filtered.filter(party => party.status === 'active')
-    } else if (activeTab === 'suspended') {}
+    } else if (activeTab === 'suspended') {
       filtered = filtered.filter(party => party.status === 'suspended')
     }
 
     // Filter by status;
-    if (statusFilter !== 'all') {}
+    if (statusFilter !== 'all') {
       filtered = filtered.filter(party => party.status === statusFilter)
     }
 
     // Filter by search term;
-    if (searchTerm) {}
+    if (searchTerm) {
       filtered = filtered.filter(party =>
         party.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         party.host.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -121,18 +120,18 @@ export function AdminPartiesView() {}
     setFilteredParties(filtered)
   }
 
-  const handleSuspendParty = async (partyId: string) => {}
-    if (!confirm('Are you sure you want to suspend this party? This will end the party and notify all participants.')) {}
+  const handleSuspendParty = async (partyId: string) => {
+    if (!confirm('Are you sure you want to suspend this party? This will end the party and notify all participants.')) {
       return;
     }
 
-    try {}
+    try {
       await put(`/admin/parties/${partyId}/suspend/`)
       toast({title: 'Party suspended',
         description: 'The party has been suspended successfully.',
       })
       await fetchParties()
-    } catch {}
+    } catch (error) {
       toast({title: 'Error',
         description: 'Failed to suspend party',
         variant: 'destructive'
@@ -140,14 +139,14 @@ export function AdminPartiesView() {}
     }
   }
 
-  const handleUnsuspendParty = async (partyId: string) => {}
-    try {}
+  const handleUnsuspendParty = async (partyId: string) => {
+    try {
       await put(`/admin/parties/${partyId}/unsuspend/`)
       toast({title: 'Party unsuspended',
         description: 'The party has been unsuspended successfully.',
       })
       await fetchParties()
-    } catch {}
+    } catch (error) {
       toast({title: 'Error',
         description: 'Failed to unsuspend party',
         variant: 'destructive'
@@ -155,39 +154,39 @@ export function AdminPartiesView() {}
     }
   }
 
-  const handleViewParty = (partyId: string) => {}
+  const handleViewParty = (partyId: string) => {
     window.open(`/watch/${partyId}`, '_blank')
   }
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
       case 'active':
-        return 'bg-green-100 text-green-800'
+        return 'bg-green-100 text-green-800';
       case 'paused':
-        return 'bg-yellow-100 text-yellow-800'
+        return 'bg-yellow-100 text-yellow-800';
       case 'ended':
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-gray-800';
       case 'suspended':
-        return 'bg-red-100 text-red-800'
+        return 'bg-red-100 text-red-800';
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-gray-800';
     }
   }
 
-  const getPrivacyColor = (privacy: string) => {}
+  const getPrivacyColor = (privacy: string) => {
     switch (privacy) {}
       case 'public':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-blue-100 text-blue-800';
       case 'private':
-        return 'bg-purple-100 text-purple-800'
+        return 'bg-purple-100 text-purple-800';
       case 'friends_only':
-        return 'bg-orange-100 text-orange-800'
+        return 'bg-orange-100 text-orange-800';
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-gray-100 text-gray-800';
     }
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <LoadingSpinner size="lg" />

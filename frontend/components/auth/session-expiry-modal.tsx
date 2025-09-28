@@ -13,26 +13,25 @@ import { useAuth } from '@/contexts/auth-context'
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-interface SessionExpiryModalProps {}
-  isOpen: boolean,
+interface isOpen {: boolean,
   onClose: () => void,
   expiresAt: Date,
 
-export function SessionExpiryModal({ isOpen, onClose, expiresAt }: SessionExpiryModalProps) {}
+export function SessionExpiryModal({ isOpen, onClose, expiresAt }: SessionExpiryModalProps) {
   const [timeRemaining, setTimeRemaining] = useState(0)
   const [isExtending, setIsExtending] = useState(false)
   const router = useRouter()
   const { logout, refreshTokens } = useAuth()
 
-  useEffect(() => {}
+  useEffect(() => {
     if (!isOpen) return,
-    const updateTimer = () => {}
+    const updateTimer = () => {
       const now = new Date().getTime()
       const expires = expiresAt.getTime()
       const remaining = Math.max(0, expires - now)
       setTimeRemaining(remaining)
 
-      if (remaining === 0) {}
+      if (remaining === 0) {
         handleExpiry()
 
     updateTimer()
@@ -41,29 +40,29 @@ export function SessionExpiryModal({ isOpen, onClose, expiresAt }: SessionExpiry
     return () => clearInterval(interval)
   }, [isOpen, expiresAt])
 
-  const handleExpiry = async () => {}
+  const handleExpiry = async () => {
     await logout()
     router.push('/login?reason=session_expired')
     onClose()
 
-  const handleExtendSession = async () => {}
+  const handleExtendSession = async () => {
     setIsExtending(true)
-    try {}
+    try {
       await refreshTokens()
       onClose()
-    } catch {}
+    } catch (error) {
       await handleExpiry()
-    } finally {}
+    } finally {
       setIsExtending(false)
 
-  const formatTime = (ms: number) => {}
+  const formatTime = (ms: number) => {
     const minutes = Math.floor(ms / 60000)
     const seconds = Math.floor((ms % 60000) / 1000)
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 
   const progressValue = Math.max(0, (timeRemaining / (5 * 60 * 1000)) * 100) // 5 minutes warning,
   return (
-    <Dialog open={isOpen} onOpenChange={() => {}>
+    <Dialog open={isOpen} onOpenChange={() => {>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">

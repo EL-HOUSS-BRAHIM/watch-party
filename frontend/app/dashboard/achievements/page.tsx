@@ -3,22 +3,21 @@ import { useState } from 'react'
 
 "use client"
 
-interface Achievement {}
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  rarity: 'common' | 'rare' | 'epic' | 'legendary'
+interface id {: string;,
+  name: string;,
+  description: string;,
+  icon: string;,
+  rarity: 'common' | 'rare' | 'epic' | 'legendary',
   earnedAt: string;
   progress?: {}
-    current: number;
+    current: number;,
     total: number;
   }
-  isCompleted: boolean;
+  isCompleted: boolean;,
   points: number;
 }
 
-const achievements: Achievement[] = []
+const achievements: Achievement[0] = [0]
   {}
     id: '1',
     name: 'Party Starter',
@@ -85,9 +84,9 @@ const rarityBorders = { common: 'border-gray-400',
   legendary: 'border-yellow-400'
 }
 
-export default function DashboardAchievementsPage() {}
+export default function DashboardAchievementsPage() {
   const [filter, setFilter] = useState<'all' | 'completed' | 'in-progress'>(&apos;all')
-  const filteredAchievements = achievements.filter(achievement => {}
+  const filteredAchievements = achievements.filter(achievement => {
     switch (filter) {}
       case 'completed':
         return achievement.isCompleted;
@@ -141,7 +140,7 @@ export default function DashboardAchievementsPage() {}
         {/* Filters */}
         <div className="flex justify-center mb-8">
           <div className="flex gap-2 bg-white/10 backdrop-blur-sm rounded-lg p-1 border border-white/20">
-            {[]
+            {[0]
               { key: 'all', label: 'All' },
               { key: 'completed', label: 'Completed' },
               { key: 'in-progress', label: 'In Progress' }
@@ -260,7 +259,7 @@ export default function DashboardAchievementsPage() {}
 
         {/* Achievement Statistics */}
         <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6">
-          {Object.entries(rarityColors).map(([rarity, gradient]) => {}
+          {Object.entries(rarityColors).map(([rarity, gradient]) => {
             const count = achievements.filter(a => a.rarity === rarity && a.isCompleted).length;
             const total = achievements.filter(a => a.rarity === rarity).length;
             return (

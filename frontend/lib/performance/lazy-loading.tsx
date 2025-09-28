@@ -10,11 +10,11 @@ export function createLazyComponent<T extends ComponentType<Record<string, unkno
 ) {}
   const LazyComponent = lazy(importFunc)
 
-  const WrappedComponent = (props: ComponentProps<T>) => {}
+  const WrappedComponent = (props: ComponentProps<T>) => {
     const FallbackComponent = fallback;
     return (
       <Suspense fallback={FallbackComponent ? <FallbackComponent /> : <div>Loading...</div>}>
-        <LazyComponent {...props} />
+        <LazyComponent ...props} />
       </Suspense>
     )
   }
@@ -23,17 +23,17 @@ export function createLazyComponent<T extends ComponentType<Record<string, unkno
 }
 
 // Image lazy loading hook;
-export function useImageLazyLoading() {}
+export function useImageLazyLoading() {
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set())
 
   const loadImage = useCallback(
-    (src: string) => {}
+    (src: string) => {
       if (loadedImages.has(src)) return Promise.resolve()
 
-      return new Promise<void>((resolve, reject) => {}
+      return new Promise<void>((resolve, reject) => {
         const img = new Image()
-        img.onload = () => {}
-          setLoadedImages((prev) => new Set([...prev, src]))
+        img.onload = () => {
+          setLoadedImages((prev) => new Set(...prev, src]))
           resolve()
         }
         img.onerror = reject;
@@ -47,17 +47,17 @@ export function useImageLazyLoading() {}
 }
 
 // Intersection Observer hook for lazy loading;
-export function useIntersectionObserver(options: IntersectionObserverInit = {}) {}
+export function useIntersectionObserver(options: IntersectionObserverInit = {) {
   const [isIntersecting, setIsIntersecting] = useState(false)
   const [hasIntersected, setHasIntersected] = useState(false)
   const targetRef = useRef<HTMLElement>(null)
 
-  useEffect(() => {}
+  useEffect(() => {
     const target = targetRef.current;
     if (!target) return;
-    const observer = new IntersectionObserver(([entry]) => {}
+    const observer = new IntersectionObserver(([entry]) => {
       setIsIntersecting(entry.isIntersecting)
-      if (entry.isIntersecting && !hasIntersected) {}
+      if (entry.isIntersecting && !hasIntersected) {
         setHasIntersected(true)
       }
     }, options)

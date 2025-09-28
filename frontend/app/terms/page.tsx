@@ -4,7 +4,7 @@ export const metadata: Metadata = { title: 'Terms of Service | WatchParty',
   description: 'Terms of Service and User Agreement for WatchParty platform',
 }
 
-export default function TermsOfServicePage() {}
+export default function TermsOfServicePage() {
   return (
     <div className="container mx-auto py-12 px-4">
       <div className="max-w-4xl mx-auto">

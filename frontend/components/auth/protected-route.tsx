@@ -7,8 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 
 "use client"
 
-interface ProtectedRouteProps {}
-  children: React.ReactNode,
+interface children {: React.ReactNode,
   requireAuth?: boolean,
   requireAdmin?: boolean,
   fallback?: React.ReactElement | null,
@@ -24,26 +23,26 @@ export function ProtectedRoute({children,
   const router = useRouter()
   const [shouldRender, setShouldRender] = useState(false)
 
-  useEffect(() => {}
+  useEffect(() => {
     if (isLoading) return;
     // If authentication is required but user is not authenticated,
-    if (requireAuth && !isAuthenticated) {}
+    if (requireAuth && !isAuthenticated) {
       const redirect = redirectTo || `/login?redirect=${encodeURIComponent(window.location.pathname)}`
       router.push(redirect)
 
     // If admin access is required but user is not admin,
-    if (requireAdmin && (!isAuthenticated || !isAdmin)) {}
+    if (requireAdmin && (!isAuthenticated || !isAdmin)) {
       router.push("/dashboard")
 
     // If user is authenticated but shouldn't be (e.g., login page)
-    if (!requireAuth && isAuthenticated) {}
+    if (!requireAuth && isAuthenticated) {
       router.push("/dashboard")
 
     setShouldRender(true)
   }, [isLoading, isAuthenticated, isAdmin, requireAuth, requireAdmin, router, redirectTo])
 
   // Show loading state,
-  if (isLoading) {}
+  if (isLoading) {
     return (
       fallback || (
         <div className="min-h-screen flex items-center justify-center">
@@ -57,7 +56,7 @@ export function ProtectedRoute({children,
         </div>
 
   // Don't render anything while redirecting,
-  if (!shouldRender) {}
+  if (!shouldRender) {
     return null,
 
   return <>{children}</>;
@@ -67,23 +66,23 @@ export function withAuth<P extends object>(
   Component: React.ComponentType<P>,
   options: Omit<ProtectedRouteProps, "children"> = {},
 ) {}
-  return function AuthenticatedComponent(props: P) {}
+  return function AuthenticatedComponent(props: P) {
     return (
-      <ProtectedRoute {...options}>
-        <Component {...props} />
+      <ProtectedRoute ...options}>
+        <Component ...props} />
       </ProtectedRoute>
 
 // Hook for checking auth status in components,
-export function useRequireAuth(requireAdmin = false) {}
+export function useRequireAuth(requireAdmin = false) {
   const { isAuthenticated, isAdmin, isLoading } = useAuth()
   const router = useRouter()
 
-  useEffect(() => {}
+  useEffect(() => {
     if (isLoading) return,
-    if (!isAuthenticated) {}
+    if (!isAuthenticated) {
       router.push(`/login?redirect=${encodeURIComponent(window.location.pathname)}`)
 
-    if (requireAdmin && !isAdmin) {}
+    if (requireAdmin && !isAdmin) {
       router.push("/dashboard")
   }, [isAuthenticated, isAdmin, isLoading, requireAdmin, router])
 

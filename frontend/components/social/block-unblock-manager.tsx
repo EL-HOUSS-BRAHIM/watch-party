@@ -30,24 +30,22 @@ import { Label } from '@/components/ui/label'
   Filter,
   MoreHorizontal,
   Flag;
-interface BlockedUser {}
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string;
-  blockedAt: string;
-  reason: string;
-  blockType: 'full' | 'messages' | 'parties' | 'profile'
-  reportCount: number;
+interface id {: string;,
+  username: string;,
+  displayName: string;,
+  avatar: string;,
+  blockedAt: string;,
+  reason: string;,
+  blockType: 'full' | 'messages' | 'parties' | 'profile',
+  reportCount: number;,
   lastSeen: string;
 }
 
-interface BlockReason {}
-  type: 'harassment' | 'spam' | 'inappropriate' | 'privacy' | 'other'
+interface type {: 'harassment' | 'spam' | 'inappropriate' | 'privacy' | 'other',
   description: string;
 }
 
-const BLOCK_REASONS: BlockReason[] = []
+const BLOCK_REASONS: BlockReason[0] = [0]
   { type: 'harassment', description: 'Harassment or bullying' },
   { type: 'spam', description: 'Spam or unwanted messages' },
   { type: 'inappropriate', description: 'Inappropriate content' },
@@ -55,8 +53,8 @@ const BLOCK_REASONS: BlockReason[] = []
   { type: 'other', description: 'Other reason' }
 ]
 
-export function BlockUnblockManager() {}
-  const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([])
+export function BlockUnblockManager() {
+  const [blockedUsers, setBlockedUsers] = useState<BlockedUser[0]>([0])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
   const [filter, setFilter] = useState<'all' | 'full' | 'messages' | 'parties' | 'profile'>(&apos;all')
@@ -66,30 +64,30 @@ export function BlockUnblockManager() {}
   const [customReason, setCustomReason] = useState('')
   const [blockType, setBlockType] = useState<BlockedUser['blockType']>(&apos;full')
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchBlockedUsers()
-  }, [])
+  }, [0])
 
-  const fetchBlockedUsers = async () => {}
-    try {}
+  const fetchBlockedUsers = async () => {
+    try {
       setLoading(true)
       const response = await fetch('/api/users/blocked')
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setBlockedUsers(data.blockedUsers)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to fetch blocked users:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const blockUser = async () => {}
+  const blockUser = async () => {
     if (!newBlockUser.trim()) return;
-    try {}
+    try {
       const reason = blockReason === 'other' ? customReason : BLOCK_REASONS.find(r => r.type === blockReason)?.description || ''
-      const response = await fetch('/api/users/block', {}
+      const response = await fetch('/api/users/block', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({username: newBlockUser,
@@ -98,7 +96,7 @@ export function BlockUnblockManager() {}
         })
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const newBlockedUser = await response.json()
         setBlockedUsers(prev => [newBlockedUser, ...prev])
         setShowBlockDialog(false)
@@ -107,119 +105,119 @@ export function BlockUnblockManager() {}
         setBlockReason('other')
         setBlockType('full')
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to block user:', error)
     }
   }
 
-  const unblockUser = async (userId: string) => {}
-    try {}
-      const response = await fetch(`/api/users/unblock/${userId}`, {}
+  const unblockUser = async (userId: string) => {
+    try {
+      const response = await fetch(`/api/users/unblock/${userId}`, {
         method: 'POST'
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setBlockedUsers(prev => prev.filter(user => user.id !== userId))
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to unblock user:', error)
     }
   }
 
-  const updateBlockType = async (userId: string, newBlockType: BlockedUser['blockType']) => {}
-    try {}
-      const response = await fetch(`/api/users/block/${userId}`, {}
+  const updateBlockType = async (userId: string, newBlockType: BlockedUser['blockType']) => {
+    try {
+      const response = await fetch(`/api/users/block/${userId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ blockType: newBlockType })
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setBlockedUsers(prev => 
           prev.map(user => 
-            user.id === userId ? { ...user, blockType: newBlockType } : user;
+            user.id === userId ? ...user, blockType: newBlockType } : user;
           )
         )
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to update block type:', error)
     }
   }
 
-  const reportUser = async (userId: string, reason: string) => {}
-    try {}
-      const response = await fetch('/api/users/report', {}
+  const reportUser = async (userId: string, reason: string) => {
+    try {
+      const response = await fetch('/api/users/report', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, reason })
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         // Update report count;
         setBlockedUsers(prev => 
           prev.map(user => 
-            user.id === userId ? { ...user, reportCount: user.reportCount + 1 } : user;
+            user.id === userId ? ...user, reportCount: user.reportCount + 1 } : user;
           )
         )
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to report user:', error)
     }
   }
 
-  const filteredUsers = blockedUsers.filter(user => {}
+  const filteredUsers = blockedUsers.filter(user => {
     const matchesSearch = user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesFilter = filter === 'all' || user.blockType === filter;
     return matchesSearch && matchesFilter;
   })
 
-  const getBlockTypeIcon = (type: BlockedUser['blockType']) => {}
+  const getBlockTypeIcon = (type: BlockedUser['blockType']) => {
     switch (type) {}
       case 'full':
-        return <Ban className="h-4 w-4" />
+        return <Ban className="h-4 w-4" />;
       case 'messages':
-        return <MessageCircle className="h-4 w-4" />
+        return <MessageCircle className="h-4 w-4" />;
       case 'parties':
-        return <Eye className="h-4 w-4" />
+        return <Eye className="h-4 w-4" />;
       case 'profile':
-        return <EyeOff className="h-4 w-4" />
+        return <EyeOff className="h-4 w-4" />;
       default:
-        return <Shield className="h-4 w-4" />
+        return <Shield className="h-4 w-4" />;
     }
   }
 
-  const getBlockTypeColor = (type: BlockedUser['blockType']) => {}
+  const getBlockTypeColor = (type: BlockedUser['blockType']) => {
     switch (type) {}
       case 'full':
-        return 'destructive'
+        return 'destructive';
       case 'messages':
-        return 'secondary'
+        return 'secondary';
       case 'parties':
-        return 'outline'
+        return 'outline';
       case 'profile':
-        return 'outline'
+        return 'outline';
       default:
-        return 'secondary'
+        return 'secondary';
     }
   }
 
-  const getBlockTypeDescription = (type: BlockedUser['blockType']) => {}
+  const getBlockTypeDescription = (type: BlockedUser['blockType']) => {
     switch (type) {}
       case 'full':
-        return 'Complete block - no interaction possible'
+        return 'Complete block - no interaction possible';
       case 'messages':
-        return 'Cannot send messages'
+        return 'Cannot send messages';
       case 'parties':
-        return 'Cannot join your parties'
+        return 'Cannot join your parties';
       case 'profile':
-        return 'Cannot view your profile'
+        return 'Cannot view your profile';
       default:
-        return 'Blocked'
+        return 'Blocked';
     }
   }
 
-  const BlockedUserCard = ({ user }: { user: BlockedUser }) => {}
+  const BlockedUserCard = ({ user }: { user: BlockedUser }) => {
     const [showOptions, setShowOptions] = useState(false)
 
     return (

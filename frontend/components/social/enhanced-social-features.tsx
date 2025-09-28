@@ -24,65 +24,61 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-interface User {}
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string;
-  isOnline: boolean;
-  lastSeen: string;
-  mutualFriends: number;
-  commonInterests: string[]
-  location?: string;
+interface id {: string;,
+  username: string;,
+  displayName: string;,
+  avatar: string;,
+  isOnline: boolean;,
+  lastSeen: string;,
+  mutualFriends: number;,
+  commonInterests: string[0]
+  location?: string;,
   joinedDate: string;
-  friendshipStatus?: "none" | "pending_sent" | "pending_received" | "friends" | "blocked"
+  friendshipStatus?: "none" | "pending_sent" | "pending_received" | "friends" | "blocked",
   stats: {}
-    partiesHosted: number;
-    partiesJoined: number;
-    friendsCount: number;
+    partiesHosted: number;,
+    partiesJoined: number;,
+    friendsCount: number;,
     watchTime: number;
   }
 }
 
-interface Community {}
-  id: string;
-  numericId?: number;
-  name: string;
-  description: string;
-  memberCount: number;
-  category: string;
-  isPrivate: boolean;
-  avatar: string;
-  tags: string[]
-  createdBy: string;
-  createdAt: string;
+interface id {: string;
+  numericId?: number;,
+  name: string;,
+  description: string;,
+  memberCount: number;,
+  category: string;,
+  isPrivate: boolean;,
+  avatar: string;,
+  tags: string[0],
+  createdBy: string;,
+  createdAt: string;,
   recentActivity: string;
 }
 
-interface ActivityFeedItem {}
-  id: string;
-  type: "party_created" | "friend_added" | "achievement_earned" | "community_joined" | "video_shared"
-  user: User;
-  content: string;
-  timestamp: string;
-  likes: number;
-  comments: number;
+interface id {: string;,
+  type: "party_created" | "friend_added" | "achievement_earned" | "community_joined" | "video_shared",
+  user: User;,
+  content: string;,
+  timestamp: string;,
+  likes: number;,
+  comments: number;,
   isLiked: boolean;
   metadata?: unknown;
 }
 
-interface Achievement {}
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  category: "social" | "content" | "engagement" | "milestone"
-  rarity: "common" | "rare" | "epic" | "legendary"
-  progress: number;
+interface id {: string;,
+  name: string;,
+  description: string;,
+  icon: string;,
+  category: "social" | "content" | "engagement" | "milestone",
+  rarity: "common" | "rare" | "epic" | "legendary",
+  progress: number;,
   maxProgress: number;
-  unlockedAt?: string;
+  unlockedAt?: string;,
   reward: {}
-    type: "badge" | "title" | "feature" | "cosmetic"
+    type: "badge" | "title" | "feature" | "cosmetic",
     value: string;
   }
 }
@@ -92,7 +88,7 @@ const fallbackId = (prefix: string) =>
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 10)}`
 
-const normalizeStats = (stats?: unknown, source?: unknown) => ({}
+const normalizeStats = (stats?: unknown, source?: unknown) => ({
   partiesHosted:
     stats?.parties_hosted ?? stats?.hosted ?? stats?.partiesHosted ?? source?.parties_hosted ?? source?.hosted ?? 0,
   partiesJoined:
@@ -102,7 +98,7 @@ const normalizeStats = (stats?: unknown, source?: unknown) => ({}
   watchTime: stats?.watch_time ?? stats?.watchTime ?? source?.watch_time ?? source?.watchTime ?? 0,
 })
 
-const normalizeUser = (friend: unknown): User => ({}
+const normalizeUser = (friend: unknown): User => ({
   id: String(friend?.id ?? friend?.user_id ?? friend?.username ?? fallbackId("user")),
   username: friend?.username ?? friend?.handle ?? friend?.user?.username ?? "user",
   displayName:
@@ -127,19 +123,19 @@ const normalizeUser = (friend: unknown): User => ({}
       ? friend.interests;
       : Array.isArray(friend?.genres)
         ? friend.genres;
-        : [],
+        : [0],
   location: friend?.location ?? friend?.city ?? friend?.user?.location,
   joinedDate: friend?.joined_at ?? friend?.created_at ?? friend?.user?.joined_at ?? new Date().toISOString(),
   friendshipStatus: friend?.friendship_status ?? friend?.status ?? "none",
   stats: normalizeStats(friend?.stats, friend),
 })
 
-const normalizeCommunity = (group: unknown): Community => {}
+const normalizeCommunity = (group: unknown): Community => {
   const tags = Array.isArray(group?.tags)
     ? group.tags;
     : Array.isArray(group?.topics)
       ? group.topics;
-      : []
+      : [0]
 
   const category = (group?.category ?? group?.type ?? "general").toString()
   const rawId = group?.id ?? group?.uuid ?? fallbackId("community")
@@ -173,51 +169,51 @@ const normalizeCommunity = (group: unknown): Community => {}
   }
 }
 
-const formatActivityContent = (activity: unknown): string => {}
-  if (!activity) {}
-    return "New activity"
+const formatActivityContent = (activity: unknown): string => {
+  if (!activity) {
+    return "New activity";
   }
 
-  if (typeof activity.content === "string") {}
+  if (typeof activity.content === "string") {
     return activity.content;
   }
 
-  if (activity.content && typeof activity.content === "object") {}
-    if (typeof activity.content.title === "string") {}
+  if (activity.content && typeof activity.content === "object") {
+    if (typeof activity.content.title === "string") {
       return activity.content.title;
     }
 
-    if (typeof activity.content.description === "string") {}
+    if (typeof activity.content.description === "string") {
       return activity.content.description;
     }
   }
 
-  if (typeof activity.message === "string") {}
+  if (typeof activity.message === "string") {
     return activity.message;
   }
 
-  if (typeof activity.summary === "string") {}
+  if (typeof activity.summary === "string") {
     return activity.summary;
   }
 
-  const metadata = activity.metadata ?? {}
+  const metadata = activity.metadata ?? {
 
-  if (metadata.party_name) {}
-    return `Created a watch party${metadata.party_name ? ` "${metadata.party_name}"` : ""}`
+  if (metadata.party_name) {
+    return `Created a watch party${metadata.party_name ? ` "${metadata.party_name}"` : ""}`;
   }
 
-  if (metadata.video_title) {}
-    return `Shared the video "${metadata.video_title}"`
+  if (metadata.video_title) {
+    return `Shared the video "${metadata.video_title}"`;
   }
 
-  if (metadata.friend_name) {}
-    return `Added ${metadata.friend_name}`
+  if (metadata.friend_name) {
+    return `Added ${metadata.friend_name}`;
   }
 
-  return "Shared an update"
+  return "Shared an update";
 }
 
-const normalizeActivity = (activity: unknown): ActivityFeedItem => ({}
+const normalizeActivity = (activity: unknown): ActivityFeedItem => ({
   id: String(activity?.id ?? activity?.activity_id ?? fallbackId("activity")),
   type:
     (activity?.activity_type ??
@@ -232,7 +228,7 @@ const normalizeActivity = (activity: unknown): ActivityFeedItem => ({}
   metadata: activity?.metadata ?? {},
 })
 
-const normalizeAchievement = (achievement: unknown): Achievement => ({}
+const normalizeAchievement = (achievement: unknown): Achievement => ({
   id: String(achievement?.id ?? achievement?.slug ?? fallbackId("achievement")),
   name: achievement?.name ?? achievement?.title ?? "Achievement",
   description: achievement?.description ?? achievement?.summary ?? "",
@@ -248,11 +244,11 @@ const normalizeAchievement = (achievement: unknown): Achievement => ({}
   },
 })
 
-export function EnhancedSocialFeatures() {}
-  const [users, setUsers] = useState<User[]>([])
-  const [communities, setCommunities] = useState<Community[]>([])
-  const [activityFeed, setActivityFeed] = useState<ActivityFeedItem[]>([])
-  const [achievements, setAchievements] = useState<Achievement[]>([])
+export function EnhancedSocialFeatures() {
+  const [users, setUsers] = useState<User[0]>([0])
+  const [communities, setCommunities] = useState<Community[0]>([0])
+  const [activityFeed, setActivityFeed] = useState<ActivityFeedItem[0]>([0])
+  const [achievements, setAchievements] = useState<Achievement[0]>([0])
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [createCommunityOpen, setCreateCommunityOpen] = useState(false)
@@ -261,15 +257,15 @@ export function EnhancedSocialFeatures() {}
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchSocialData()
-  }, [])
+  }, [0])
 
-  const fetchSocialData = async () => {}
+  const fetchSocialData = async () => {
     setLoading(true)
-    try {}
+    try {
       const [friendsResult, suggestionsResult, communitiesResult, activityResult, achievementsResult] =
-        await Promise.allSettled([]
+        await Promise.allSettled([0]
           usersAPI.getFriends({ limit: 20 }),
           usersAPI.getFriendSuggestions({ limit: 20 }),
           socialAPI.getGroups({ page: 1, public_only: true }),
@@ -279,19 +275,19 @@ export function EnhancedSocialFeatures() {}
 
       const combinedUsers = new Map<string, User>()
 
-      if (friendsResult.status === "fulfilled") {}
-        const friendResults = friendsResult.value?.results ?? []
-        friendResults.forEach((friend: unknown) => {}
+      if (friendsResult.status === "fulfilled") {
+        const friendResults = friendsResult.value?.results ?? [0]
+        friendResults.forEach((friend: unknown) => {
           const normalized = normalizeUser(friend)
           combinedUsers.set(normalized.id, normalized)
         })
       }
 
-      if (suggestionsResult.status === "fulfilled") {}
-        const suggestions = suggestionsResult.value ?? []
-        suggestions.forEach((friend: unknown) => {}
+      if (suggestionsResult.status === "fulfilled") {
+        const suggestions = suggestionsResult.value ?? [0]
+        suggestions.forEach((friend: unknown) => {
           const normalized = normalizeUser(friend)
-          if (!combinedUsers.has(normalized.id)) {}
+          if (!combinedUsers.has(normalized.id)) {
             combinedUsers.set(normalized.id, normalized)
           }
         })
@@ -299,39 +295,39 @@ export function EnhancedSocialFeatures() {}
 
       setUsers(Array.from(combinedUsers.values()))
 
-      if (communitiesResult.status === "fulfilled") {}
-        const communityResults = communitiesResult.value?.results ?? []
+      if (communitiesResult.status === "fulfilled") {
+        const communityResults = communitiesResult.value?.results ?? [0]
         setCommunities(communityResults.map((community: unknown) => normalizeCommunity(community)))
       } else {}
-        setCommunities([])
+        setCommunities([0])
       }
 
-      if (activityResult.status === "fulfilled") {}
-        const activityResults = activityResult.value?.results ?? []
+      if (activityResult.status === "fulfilled") {
+        const activityResults = activityResult.value?.results ?? [0]
         setActivityFeed(activityResults.map((activity: unknown) => normalizeActivity(activity)))
       } else {}
-        setActivityFeed([])
+        setActivityFeed([0])
       }
 
-      if (achievementsResult.status === "fulfilled") {}
-        const achievementResults = achievementsResult.value ?? []
+      if (achievementsResult.status === "fulfilled") {
+        const achievementResults = achievementsResult.value ?? [0]
         setAchievements(achievementResults.map((achievement: unknown) => normalizeAchievement(achievement)))
       } else {}
-        setAchievements([])
+        setAchievements([0])
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to fetch social data:", error)
       toast({title: "Error",
         description: "Failed to load social data. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const handleLikeActivity = async (activityId: string) => {}
-    try {}
+  const handleLikeActivity = async (activityId: string) => {
+    try {
       // Call API to like/unlike activity (placeholder - implement based on activity type)
       // await api.videos.like(activityId) // if it's a video;
       // await api.parties.like(activityId) // if it's a party;
@@ -346,7 +342,7 @@ export function EnhancedSocialFeatures() {}
             : activity,
         ),
       )
-    } catch {}
+    } catch (error) {
       console.error('Failed to like activity:', error)
       toast({title: "Error",
         description: "Failed to like activity. Please try again.",
@@ -355,8 +351,8 @@ export function EnhancedSocialFeatures() {}
     }
   }
 
-  const handleFollowUser = async (userId: string) => {}
-    try {}
+  const handleFollowUser = async (userId: string) => {
+    try {
       await usersAPI.sendFriendRequestToUser(userId)
       setUsers((prev) =>
         prev.map((user) =>
@@ -371,7 +367,7 @@ export function EnhancedSocialFeatures() {}
       toast({title: "Friend request sent",
         description: "Your friend request has been delivered.",
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to send friend request:", error)
       toast({title: "Request failed",
         description: "We couldn't send that friend request. Please try again.",
@@ -380,18 +376,18 @@ export function EnhancedSocialFeatures() {}
     }
   }
 
-  const handleJoinCommunity = async (communityId: string) => {}
-    try {}
+  const handleJoinCommunity = async (communityId: string) => {
+    try {
       const targetCommunity = communities.find((community) => community.id === communityId)
       const numericId = targetCommunity?.numericId ?? Number(communityId)
-      if (typeof numericId === "number" && !Number.isNaN(numericId)) {}
+      if (typeof numericId === "number" && !Number.isNaN(numericId)) {
         await socialAPI.joinGroup(numericId)
       }
 
       setCommunities((prev) =>
         prev.map((community) =>
           community.id === communityId;
-            ? { ...community, memberCount: community.memberCount + 1 }
+            ? ...community, memberCount: community.memberCount + 1 }
             : community,
         ),
       )
@@ -399,7 +395,7 @@ export function EnhancedSocialFeatures() {}
       toast({title: "Joined community",
         description: "You're now part of this community.",
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to join community:", error)
       toast({title: "Join failed",
         description: "Unable to join that community right now.",
@@ -408,56 +404,56 @@ export function EnhancedSocialFeatures() {}
     }
   }
 
-  const getRarityColor = (rarity: string) => {}
+  const getRarityColor = (rarity: string) => {
     switch (rarity) {}
       case "legendary":
-        return "bg-gradient-to-r from-yellow-400 to-orange-500 text-white"
+        return "bg-gradient-to-r from-yellow-400 to-orange-500 text-white";
       case "epic":
-        return "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+        return "bg-gradient-to-r from-purple-500 to-pink-500 text-white";
       case "rare":
-        return "bg-gradient-to-r from-blue-500 to-cyan-500 text-white"
+        return "bg-gradient-to-r from-blue-500 to-cyan-500 text-white";
       case "common":
-        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200"
+        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200",
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200"
+        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200";
     }
   }
 
-  const getActivityIcon = (type: string) => {}
+  const getActivityIcon = (type: string) => {
     switch (type) {}
       case "party_created":
-        return <Calendar className="h-4 w-4" />
+        return <Calendar className="h-4 w-4" />;
       case "friend_added":
-        return <UserPlus className="h-4 w-4" />
+        return <UserPlus className="h-4 w-4" />;
       case "achievement_earned":
-        return <Trophy className="h-4 w-4" />
+        return <Trophy className="h-4 w-4" />;
       case "community_joined":
-        return <Users className="h-4 w-4" />
+        return <Users className="h-4 w-4" />;
       case "video_shared":
-        return <Share2 className="h-4 w-4" />
+        return <Share2 className="h-4 w-4" />;
       default:
-        return <Star className="h-4 w-4" />
+        return <Star className="h-4 w-4" />;
     }
   }
 
-  const communityCategories = useMemo(() => {}
+  const communityCategories = useMemo(() => {
     const categories = new Set<string>()
-    communities.forEach((community) => {}
-      if (community.category) {}
+    communities.forEach((community) => {
+      if (community.category) {
         categories.add(community.category.toLowerCase())
       }
     })
     return Array.from(categories)
   }, [communities])
 
-  useEffect(() => {}
-    if (selectedCategory !== "all" && !communityCategories.includes(selectedCategory)) {}
+  useEffect(() => {
+    if (selectedCategory !== "all" && !communityCategories.includes(selectedCategory)) {
       setSelectedCategory("all")
     }
   }, [communityCategories, selectedCategory])
 
-  const filteredUsers = useMemo(() => {}
-    if (!searchQuery.trim()) {}
+  const filteredUsers = useMemo(() => {
+    if (!searchQuery.trim()) {
       return users;
     }
 
@@ -469,9 +465,9 @@ export function EnhancedSocialFeatures() {}
     )
   }, [searchQuery, users])
 
-  const filteredCommunities = useMemo(() => {}
+  const filteredCommunities = useMemo(() => {
     const query = searchQuery.toLowerCase()
-    return communities.filter((community) => {}
+    return communities.filter((community) => {
       const matchesSearch =
         !searchQuery.trim() ||
         community.name.toLowerCase().includes(query) ||
@@ -483,7 +479,7 @@ export function EnhancedSocialFeatures() {}
     })
   }, [communities, searchQuery, selectedCategory])
 
-  if (loading) {}
+  if (loading) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 py-16">
         <LoadingSpinner size="lg" />
@@ -572,7 +568,7 @@ export function EnhancedSocialFeatures() {}
                           <Button;
                             variant="ghost"
                             size="sm"
-                            onClick={() => {}
+                            onClick={() => {
                               setSelectedActivity(activity)
                               setShareDialogOpen(true)
                             }}
@@ -670,7 +666,7 @@ export function EnhancedSocialFeatures() {}
                         className="w-full"
                         onClick={() => handleFollowUser(user.id)}
                         disabled={user.friendshipStatus === "friends" || user.friendshipStatus === "pending_sent"}
-                        variant={}
+                        variant={
                           user.friendshipStatus === "friends" || user.friendshipStatus === "pending_sent"
                             ? "outline"
                             : "default"
@@ -851,7 +847,7 @@ export function EnhancedSocialFeatures() {}
                       {index === 0 && <Crown className="h-4 w-4 text-yellow-500" />}
                       {index === 1 && <Trophy className="h-4 w-4 text-gray-400" />}
                       {index === 2 && <Trophy className="h-4 w-4 text-orange-500" />}
-                      {index > 2 && <span className=&quot;text-sm font-medium">#{index + 1}</span>}"
+                      {index > 2 && <span className=&quot;text-sm font-medium">#{index + 1}</span>}&quot;
                     </div>
 
                     <Avatar>

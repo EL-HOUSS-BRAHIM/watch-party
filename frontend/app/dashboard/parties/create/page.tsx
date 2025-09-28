@@ -40,31 +40,30 @@ const partyFormSchema = z.object({name: z.string().min(1, "Party name is require
 
 type PartyFormData = z.infer<typeof partyFormSchema>
 
-interface InviteUser {}
-  id: string;
-  username: string;
-  firstName: string;
+interface id {: string;,
+  username: string;,
+  firstName: string;,
   lastName: string;
-  avatar?: string;
+  avatar?: string;,
   email: string;
 }
 
-export default function CreatePartyPage() {}
+export default function CreatePartyPage() {
   const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
 
   const [isLoading, setIsLoading] = useState(false)
-  const [videos, setVideos] = useState<unknown[]>([])
+  const [videos, setVideos] = useState<unknown[0]>([0])
   const [loadingVideos, setLoadingVideos] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedVideo, setSelectedVideo] = useState<any | null>(null)
   const [newTag, setNewTag] = useState("")
   const [newEmail, setNewEmail] = useState("")
-  const [suggestedUsers, setSuggestedUsers] = useState<unknown[]>([])
+  const [suggestedUsers, setSuggestedUsers] = useState<unknown[0]>([0])
   const [activeStep, setActiveStep] = useState(1)
 
-  const {}
+  const {
     register,
     handleSubmit,
     watch,
@@ -85,79 +84,79 @@ export default function CreatePartyPage() {}
       allowReactions: true,
       allowVideoControl: "host",
       password: "",
-      tags: [],
-      inviteEmails: [],
+      tags: [0],
+      inviteEmails: [0],
     },
     mode: "onChange",
   })
 
   const watchedValues = watch()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadVideos()
     loadSuggestedUsers()
-  }, [])
+  }, [0])
 
-  useEffect(() => {}
-    if (watchedValues.videoId) {}
+  useEffect(() => {
+    if (watchedValues.videoId) {
       const video = videos.find((v) => v.id === watchedValues.videoId)
       setSelectedVideo(video || null)
     }
   }, [watchedValues.videoId, videos])
 
-  const loadVideos = async () => {}
-    try {}
+  const loadVideos = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/videos/?status=ready", {}
+      const response = await fetch("/api/videos/?status=ready", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
-        setVideos(data.results || [])
+        setVideos(data.results || [0])
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load videos:", error)
       toast({title: "Error",
         description: "Failed to load your videos.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setLoadingVideos(false)
     }
   }
 
-  const loadSuggestedUsers = async () => {}
-    try {}
+  const loadSuggestedUsers = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/friends/?limit=10", {}
+      const response = await fetch("/api/users/friends/?limit=10", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
-        setSuggestedUsers(data.results || [])
+        setSuggestedUsers(data.results || [0])
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load suggested users:", error)
     }
   }
 
-  const onSubmit = async (data: PartyFormData) => {}
+  const onSubmit = async (data: PartyFormData) => {
     setIsLoading(true)
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/parties/", {}
+      const response = await fetch("/api/parties/", {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({...data,
+        body: JSON.stringify(...data,
           scheduled_for: data.scheduledFor.toISOString(),
           video_id: data.videoId,
           max_participants: data.maxParticipants,
@@ -170,7 +169,7 @@ export default function CreatePartyPage() {}
         }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const party = await response.json()
         toast({title: "Party Created!",
           description: "Your watch party has been created successfully.",
@@ -183,52 +182,52 @@ export default function CreatePartyPage() {}
           variant: "destructive",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Party creation error:", error)
       toast({title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const addTag = () => {}
-    if (newTag.trim() && !watchedValues.tags.includes(newTag.trim()) && watchedValues.tags.length < 10) {}
-      setValue("tags", [...watchedValues.tags, newTag.trim()])
+  const addTag = () => {
+    if (newTag.trim() && !watchedValues.tags.includes(newTag.trim()) && watchedValues.tags.length < 10) {
+      setValue("tags", ...watchedValues.tags, newTag.trim()])
       setNewTag("")
     }
   }
 
-  const removeTag = (tag: string) => {}
+  const removeTag = (tag: string) => {
     setValue(
       "tags",
       watchedValues.tags.filter((t) => t !== tag),
     )
   }
 
-  const addEmail = () => {}
+  const addEmail = () => {
     if (
       newEmail.trim() &&
       !watchedValues.inviteEmails.includes(newEmail.trim()) &&
       watchedValues.inviteEmails.length < 50;
     ) {}
-      setValue("inviteEmails", [...watchedValues.inviteEmails, newEmail.trim()])
+      setValue("inviteEmails", ...watchedValues.inviteEmails, newEmail.trim()])
       setNewEmail("")
     }
   }
 
-  const removeEmail = (email: string) => {}
+  const removeEmail = (email: string) => {
     setValue(
       "inviteEmails",
       watchedValues.inviteEmails.filter((e) => e !== email),
     )
   }
 
-  const addUserEmail = (user: unknown) => {}
-    if (!watchedValues.inviteEmails.includes(user.email) && watchedValues.inviteEmails.length < 50) {}
-      setValue("inviteEmails", [...watchedValues.inviteEmails, user.email])
+  const addUserEmail = (user: unknown) => {
+    if (!watchedValues.inviteEmails.includes(user.email) && watchedValues.inviteEmails.length < 50) {
+      setValue("inviteEmails", ...watchedValues.inviteEmails, user.email])
     }
   }
 
@@ -238,24 +237,24 @@ export default function CreatePartyPage() {}
       video.description.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60;
-    if (hours > 0) {}
-      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
     }
-    return `${minutes}:${secs.toString().padStart(2, "0")}`
+    return `${minutes}:${secs.toString().padStart(2, "0")}`;
   }
 
-  const steps = []
+  const steps = [0]
     { id: 1, title: "Basic Info", description: "Party details and video selection" },
     { id: 2, title: "Settings", description: "Privacy and participation settings" },
     { id: 3, title: "Invites", description: "Invite friends to your party" },
     { id: 4, title: "Review", description: "Review and create your party" },
   ]
 
-  const canProceedToStep = (step: number) => {}
+  const canProceedToStep = (step: number) => {
     switch (step) {}
       case 2:
         return watchedValues.name && watchedValues.videoId;
@@ -338,7 +337,7 @@ export default function CreatePartyPage() {}
                   <Input;
                     id="name"
                     placeholder="Enter a catchy name for your party"
-                    {...register("name")}
+                    ...register("name")}
                     className={errors.name ? "border-destructive" : ""}
                   />
                   {errors.name && <p className="text-sm text-destructive mt-1">{errors.name.message}</p>}
@@ -349,7 +348,7 @@ export default function CreatePartyPage() {}
                   <Textarea;
                     id="description"
                     placeholder="What are you watching? Add some context..."
-                    {...register("description")}
+                    ...register("description")}
                     className={`min-h-[100px] ${errors.description ? "border-destructive" : ""}`}
                   />
                   {errors.description && <p className="text-sm text-destructive mt-1">{errors.description.message}</p>}
@@ -381,8 +380,8 @@ export default function CreatePartyPage() {}
                       <Calendar;
                         mode="single"
                         selected={watchedValues.scheduledFor}
-                        onSelect={(date) => {}
-                          if (date) {}
+                        onSelect={(date) => {
+                          if (date) {
                             // Preserve the time when selecting a new date;
                             const currentTime = watchedValues.scheduledFor;
                             const newDateTime = new Date(date)
@@ -400,7 +399,7 @@ export default function CreatePartyPage() {}
                           id="time"
                           type="time"
                           value={format(watchedValues.scheduledFor, "HH:mm")}
-                          onChange={(e) => {}
+                          onChange={(e) => {
                             const [hours, minutes] = e.target.value.split(":")
                             const newDateTime = new Date(watchedValues.scheduledFor)
                             newDateTime.setHours(Number.parseInt(hours), Number.parseInt(minutes))
@@ -587,7 +586,7 @@ export default function CreatePartyPage() {}
                         id="password"
                         type="password"
                         placeholder="Set a password for additional security"
-                        {...register("password")}
+                        ...register("password")}
                         className={errors.password ? "border-destructive" : ""}
                       />
                       {errors.password && <p className="text-sm text-destructive mt-1">{errors.password.message}</p>}
@@ -803,7 +802,7 @@ export default function CreatePartyPage() {}
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Start Time:</span>
-                        <span className="font-medium">{format(watchedValues.scheduledFor, &quot;PPP &apos;at' p")}</span>"
+                        <span className="font-medium">{format(watchedValues.scheduledFor, &quot;PPP &apos;at' p")}</span>&quot;
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Max Participants:</span>
@@ -902,8 +901,8 @@ export default function CreatePartyPage() {}
           <Button;
             type="button"
             variant="outline"
-            onClick={() => {}
-              if (activeStep > 1) {}
+            onClick={() => {
+              if (activeStep > 1) {
                 setActiveStep(activeStep - 1)
               } else {}
                 router.back()

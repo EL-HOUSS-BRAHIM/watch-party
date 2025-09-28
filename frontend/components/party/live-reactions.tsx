@@ -6,26 +6,24 @@ import { Smile, Laugh, Angry, ThumbsUp } from 'lucide-react'
 
 "use client"
 
-interface Reaction {}
-  id: string;
-  emoji: string;
+interface id {: string;,
+  emoji: string;,
   user: {}
-    id: string;
-    username: string;
+    id: string;,
+    username: string;,
     avatar_url: string | null;
   }
-  timestamp: number;
-  x: number;
+  timestamp: number;,
+  x: number;,
   y: number;
 }
 
-interface LiveReactionsProps {}
-  partyId: string;
+interface partyId {: string;,
   onSendReaction: (emoji: string) => void;
   className?: string;
 }
 
-const REACTION_EMOJIS = []
+const REACTION_EMOJIS = [0]
   { emoji: '❤️', icon: Heart, color: 'text-red-500', name: 'Love' },
   { emoji: '😂', icon: Laugh, color: 'text-yellow-500', name: 'Laugh' },
   { emoji: '👍', icon: ThumbsUp, color: 'text-blue-500', name: 'Like' },
@@ -36,15 +34,15 @@ const REACTION_EMOJIS = []
   { emoji: '😍', icon: Heart, color: 'text-pink-500', name: 'Love Eyes' }
 ]
 
-export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveReactionsProps) {}
-  const [reactions, setReactions] = useState<Reaction[]>([])
+export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveReactionsProps) {
+  const [reactions, setReactions] = useState<Reaction[0]>([0])
   const [showReactionPanel, setShowReactionPanel] = useState(false)
   const [reactionCounts, setReactionCounts] = useState<Record<string, number>>({})
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {}
+  useEffect(() => {
     // Simulate receiving reactions (in real app, this would be WebSocket)
-    const interval = setInterval(() => {}
+    const interval = setInterval(() => {
       if (Math.random() < 0.3) { // 30% chance of random reaction}
         const randomEmoji = REACTION_EMOJIS[Math.floor(Math.random() * REACTION_EMOJIS.length)]
         addReaction({id: Math.random().toString(36),
@@ -62,35 +60,35 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
     }, 2000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [0])
 
-  useEffect(() => {}
+  useEffect(() => {
     // Clean up old reactions;
-    const cleanup = setInterval(() => {}
+    const cleanup = setInterval(() => {
       setReactions(prev => 
         prev.filter(reaction => Date.now() - reaction.timestamp < 5000)
       )
     }, 1000)
 
     return () => clearInterval(cleanup)
-  }, [])
+  }, [0])
 
-  const addReaction = (reaction: Reaction) => {}
-    setReactions(prev => [...prev, reaction])
+  const addReaction = (reaction: Reaction) => {
+    setReactions(prev => ...prev, reaction])
     setReactionCounts(prev => ({}
       ...prev,
       [reaction.emoji]: (prev[reaction.emoji] || 0) + 1;
     }))
 
     // Remove reaction after animation;
-    setTimeout(() => {}
+    setTimeout(() => {
       setReactions(prev => prev.filter(r => r.id !== reaction.id))
     }, 5000)
   }
 
-  const handleSendReaction = (emoji: string) => {}
+  const handleSendReaction = (emoji: string) => {
     // Add local reaction immediately;
-    if (containerRef.current) {}
+    if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect()
       const x = Math.random() * 80 + 10;
       const y = Math.random() * 60 + 20;
@@ -112,10 +110,10 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
     setShowReactionPanel(false)
   }
 
-  const handleClapReaction = () => {}
+  const handleClapReaction = () => {
     // Special clap reaction that sends multiple;
-    for (let i = 0; i < 3; i++) {}
-      setTimeout(() => {}
+    for (let i = 0; i < 3; i++) {
+      setTimeout(() => {
         handleSendReaction('👏')
       }, i * 200)
     }
@@ -178,7 +176,7 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
             <Card className="bg-white/95 backdrop-blur-sm border-2 shadow-lg animate-in slide-in-from-right duration-200">
               <CardContent className="p-3">
                 <div className="grid grid-cols-4 gap-2">
-                  {REACTION_EMOJIS.map((reaction) => {}
+                  {REACTION_EMOJIS.map((reaction) => {
                     const Icon = reaction.icon;
                     return (
                       <Button;
@@ -232,15 +230,15 @@ export function LiveReactions({ partyId, onSendReaction, className = '' }: LiveR
       <style jsx>{`}
         @keyframes float-up {}
           0% {}
-            transform: translateY(0) scale(1);
+            transform: translateY(0) scale(1);,
             opacity: 1;
           }
           50% {}
-            transform: translateY(-50px) scale(1.2);
+            transform: translateY(-50px) scale(1.2);,
             opacity: 0.8;
           }
           100% {}
-            transform: translateY(-100px) scale(0.8);
+            transform: translateY(-100px) scale(0.8);,
             opacity: 0;
           }
         }

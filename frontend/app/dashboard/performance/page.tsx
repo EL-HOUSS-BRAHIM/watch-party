@@ -14,44 +14,41 @@ import { adminAPI, analyticsAPI } from "@/lib/api"
 
 "use client"
 
-interface PerformanceMetric {}
-  name: string;
-  current: number;
-  previous: number;
-  unit: string;
-  trend: "up" | "down" | "stable"
+interface PerformanceMetric {
+  name: string;,
+  current: number;,
+  previous: number;,
+  unit: string;,
+  trend: "up" | "down" | "stable",
   threshold: {}
-    warning: number;
+    warning: number;,
     critical: number;
   }
 }
 
-interface SystemHealth {}
-  cpu: number;
-  memory: number;
-  disk: number;
-  network: number;
+interface cpu {: number;,
+  memory: number;,
+  disk: number;,
+  network: number;,
   status: "healthy" | "warning" | "critical"
 }
 
-interface EndpointMetric {}
-  endpoint: string;
-  method: string;
-  avgResponseTime: number;
-  requests: number;
-  errors: number;
+interface endpoint {: string;,
+  method: string;,
+  avgResponseTime: number;,
+  requests: number;,
+  errors: number;,
   successRate: number;
 }
 
-interface SystemAlert {}
-  id: number;
-  type: "info" | "warning" | "critical"
-  message: string;
-  timestamp: Date;
+interface id {: number;,
+  type: "info" | "warning" | "critical",
+  message: string;,
+  timestamp: Date;,
   resolved: boolean;
 }
 
-const PerformancePage = () => {}
+const PerformancePage = () => {
   const { toast } = useToast()
   const [timeRange, setTimeRange] = useState("1h")
   const [autoRefresh, setAutoRefresh] = useState(true)
@@ -59,7 +56,7 @@ const PerformancePage = () => {}
   const [lastUpdated, setLastUpdated] = useState(new Date())
   const [loading, setLoading] = useState(true)
 
-  const [metrics, setMetrics] = useState<PerformanceMetric[]>([]
+  const [metrics, setMetrics] = useState<PerformanceMetric[0]>([0]
     {}
       name: "Response Time",
       current: 145.2,
@@ -102,7 +99,7 @@ const PerformancePage = () => {}
     },
   ])
 
-  const [systemHealth, setSystemHealth] = useState<SystemHealth>({}
+  const [systemHealth, setSystemHealth] = useState<SystemHealth>({
     cpu: 34,
     memory: 67,
     disk: 45,
@@ -110,7 +107,7 @@ const PerformancePage = () => {}
     status: "healthy",
   })
 
-  const [endpointMetrics, setEndpointMetrics] = useState<EndpointMetric[]>([]
+  const [endpointMetrics, setEndpointMetrics] = useState<EndpointMetric[0]>([0]
     {}
       endpoint: "/api/auth/login",
       method: "POST",
@@ -153,7 +150,7 @@ const PerformancePage = () => {}
     },
   ])
 
-  const [alerts, setAlerts] = useState<SystemAlert[]>([]
+  const [alerts, setAlerts] = useState<SystemAlert[0]>([0]
     {}
       id: 1,
       type: "warning",
@@ -177,27 +174,27 @@ const PerformancePage = () => {}
     },
   ])
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchPerformanceData()
-    if (autoRefresh) {}
+    if (autoRefresh) {
       const interval = setInterval(fetchPerformanceData, refreshInterval * 1000)
       return () => clearInterval(interval)
     }
   }, [timeRange, autoRefresh, refreshInterval])
 
-  const fetchPerformanceData = async () => {}
-    try {}
+  const fetchPerformanceData = async () => {
+    try {
       setLoading(true)
       // Fetch performance data from APIs;
-      const [performanceData, healthMetrics, systemHealth] = await Promise.all([]
+      const [performanceData, healthMetrics, systemHealth] = await Promise.all([0]
         analyticsAPI.getPerformanceAnalytics(),
         adminAPI.getHealthMetrics(),
         adminAPI.getSystemHealth()
       ])
 
       // Transform performance metrics;
-      if (performanceData) {}
-        const performanceMetrics: PerformanceMetric[] = []
+      if (performanceData) {
+        const performanceMetrics: PerformanceMetric[0] = [0]
           {}
             name: "Response Time",
             current: performanceData.avgResponseTime || 145.2,
@@ -227,7 +224,7 @@ const PerformancePage = () => {}
       }
 
       // Transform system health;
-      if (systemHealth) {}
+      if (systemHealth) {
         setSystemHealth({cpu: systemHealth.metrics?.cpu_usage || 34,
           memory: systemHealth.metrics?.memory_usage || 67,
           disk: systemHealth.metrics?.disk_usage || 45,
@@ -237,8 +234,8 @@ const PerformancePage = () => {}
       }
 
       // Transform endpoint metrics (from system health services)
-      if (systemHealth?.services) {}
-        const endpoints: EndpointMetric[] = Object.entries(systemHealth.services).map(([name, service]: [string, any]) => ({}
+      if (systemHealth?.services) {
+        const endpoints: EndpointMetric[0] = Object.entries(systemHealth.services).map(([name, service]: [string, any]) => ({
           endpoint: `/${name}`,
           method: "GET",
           avgResponseTime: service.response_time || 0,
@@ -250,21 +247,21 @@ const PerformancePage = () => {}
       }
 
       setLastUpdated(new Date())
-    } catch {}
+    } catch (error) {
       console.error('Failed to fetch performance data:', error)
       toast({title: "Error",
         description: "Failed to load performance data. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
   // Simulate real-time updates;
-  useEffect(() => {}
+  useEffect(() => {
     if (!autoRefresh) return;
-    const interval = setInterval(() => {}
+    const interval = setInterval(() => {
       // Update metrics with random variations;
       setMetrics((prev) =>
         prev.map((metric) => ({}
@@ -289,69 +286,69 @@ const PerformancePage = () => {}
     return () => clearInterval(interval)
   }, [autoRefresh, refreshInterval])
 
-  const getMetricStatus = (metric: PerformanceMetric) => {}
+  const getMetricStatus = (metric: PerformanceMetric) => {
     if (metric.current >= metric.threshold.critical) return "critical"
     if (metric.current >= metric.threshold.warning) return "warning"
-    return "healthy"
+    return "healthy";
   }
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
       case "healthy":
-        return "text-green-600"
+        return "text-green-600";
       case "warning":
-        return "text-yellow-600"
+        return "text-yellow-600";
       case "critical":
-        return "text-red-600"
+        return "text-red-600";
       default:
-        return "text-gray-600"
+        return "text-gray-600";
     }
   }
 
-  const getStatusBadgeClass = (status: string) => {}
+  const getStatusBadgeClass = (status: string) => {
     switch (status) {}
       case "healthy":
-        return "bg-green-100 text-green-800 border-green-200"
+        return "bg-green-100 text-green-800 border-green-200";
       case "warning":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200"
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
       case "critical":
-        return "bg-red-100 text-red-800 border-red-200"
+        return "bg-red-100 text-red-800 border-red-200";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
   }
 
-  const getTrendIcon = (trend: string) => {}
+  const getTrendIcon = (trend: string) => {
     switch (trend) {}
       case "up":
-        return <TrendingUp className="w-4 h-4 text-green-600" />
+        return <TrendingUp className="w-4 h-4 text-green-600" />;
       case "down":
-        return <TrendingDown className="w-4 h-4 text-red-600" />
+        return <TrendingDown className="w-4 h-4 text-red-600" />;
       default:
-        return <Activity className="w-4 h-4 text-gray-600" />
+        return <Activity className="w-4 h-4 text-gray-600" />;
     }
   }
 
-  const getSystemHealthStatus = () => {}
+  const getSystemHealthStatus = () => {
     const avgUsage = (systemHealth.cpu + systemHealth.memory + systemHealth.disk) / 3;
-    if (avgUsage > 80) return &quot;critical&quot;
+    if (avgUsage > 80) return &quot;critical"
     if (avgUsage > 60) return "warning"
-    return "healthy"
+    return "healthy";
   }
 
-  const formatNumber = (num: number, decimals = 1) => {}
+  const formatNumber = (num: number, decimals = 1) => {
     if (num >= 1000000) return (num / 1000000).toFixed(decimals) + "M"
     if (num >= 1000) return (num / 1000).toFixed(decimals) + "K"
     return num.toFixed(decimals)
   }
 
-  const formatDuration = (ms: number) => {}
+  const formatDuration = (ms: number) => {
     if (ms < 1000) return `${ms.toFixed(0)}ms`
     if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`
-    return `${(ms / 60000).toFixed(1)}m`
+    return `${(ms / 60000).toFixed(1)}m`;
   }
 
-  const exportData = () => {}
+  const exportData = () => {
     const data = { metrics,
       systemHealth,
       endpointMetrics,
@@ -463,7 +460,7 @@ const PerformancePage = () => {}
           <TabsContent value="overview" className="space-y-6">
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-              {metrics.map((metric) => {}
+              {metrics.map((metric) => {
                 const status = getMetricStatus(metric)
                 return (
                   <Card key={metric.name} className="relative overflow-hidden">

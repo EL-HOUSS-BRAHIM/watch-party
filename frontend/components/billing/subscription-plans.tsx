@@ -12,8 +12,7 @@ import { billingAPI } from "@/lib/api"
 
 "use client"
 
-interface Plan {}
-  id: string,
+interface id {: string,
   name: string,
   description: string,
   price: {}
@@ -28,10 +27,9 @@ interface Plan {}
   popular?: boolean,
   current?: boolean,
 
-interface SubscriptionPlansProps {}
-  className?: string,
+interface className {?: string,
 
-export default function SubscriptionPlans({ className }: SubscriptionPlansProps) {}
+export default function SubscriptionPlans({ className }: SubscriptionPlansProps) {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(&quot;monthly")
   const [isLoading, setIsLoading] = useState<string | null>(null)
   const { user } = useAuth()
@@ -108,43 +106,43 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
     },
 
 
-  const handleSubscribe = async (planId: string) => {}
+  const handleSubscribe = async (planId: string) => {
     if (planId === "free") return,
     setIsLoading(planId)
 
-    try {}
+    try {
       const response = await billingAPI.subscribe({plan_id: planId,
         payment_method_id: "", // This would come from a payment method selector;
         // promo_code: "" // Optional promo code;
       })
 
-      if (response.success) {}
+      if (response.success) {
         toast({title: "Subscription Created",
           description: "Your subscription has been successfully created!",
         })
         // Refresh user data or redirect,
         window.location.reload()
-    } catch {}
+    } catch (error) {
       console.error("Subscription error:", error)
       toast({title: "Subscription Error",
         description: "Failed to start subscription process. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(null)
 
-  const getPlanIcon = (planId: string) => {}
+  const getPlanIcon = (planId: string) => {
     switch (planId) {}
       case "free":
-        return <Users className="h-6 w-6 text-gray-500" />
+        return <Users className="h-6 w-6 text-gray-500" />;
       case "premium":
-        return <Crown className="h-6 w-6 text-yellow-500" />
+        return <Crown className="h-6 w-6 text-yellow-500" />;
       case "pro":
-        return <Star className="h-6 w-6 text-purple-500" />
+        return <Star className="h-6 w-6 text-purple-500" />;
       default:
-        return <Users className="h-6 w-6" />
+        return <Users className="h-6 w-6" />;
 
-  const getYearlySavings = (plan: Plan) => {}
+  const getYearlySavings = (plan: Plan) => {
     const monthlyTotal = plan.price.monthly * 12,
     const yearlySavings = monthlyTotal - plan.price.yearly,
     const savingsPercentage = Math.round((yearlySavings / monthlyTotal) * 100)
@@ -174,7 +172,7 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
       </div>
 
       <div className="grid md:grid-cols-3 gap-8">
-        {plans.map((plan) => {}
+        {plans.map((plan) => {
           const savings = getYearlySavings(plan)
           const price = billingCycle === "monthly" ? plan.price.monthly : plan.price.yearly,
           return (

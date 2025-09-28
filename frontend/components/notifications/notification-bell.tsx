@@ -19,66 +19,66 @@ import { cn } from "@/lib/utils"
 // Initialize API instance directly;
 const notificationsAPI = new NotificationsAPI()
 
-export function NotificationBell() {}
-  const [notifications, setNotifications] = useState<Notification[]>([])
+export function NotificationBell() {
+  const [notifications, setNotifications] = useState<Notification[0]>([0])
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const { user } = useAuth()
 
   // Load notifications;
-  useEffect(() => {}
-    const loadNotifications = async () => {}
+  useEffect(() => {
+    const loadNotifications = async () => {
       if (!user) return;
-      try {}
+      try {
         setIsLoading(true)
         const data = await notificationsAPI.getNotifications()
-        setNotifications(data.results || [])
-      } catch {}
+        setNotifications(data.results || [0])
+      } catch (error) {
         console.error("Failed to load notifications:", error)
-      } finally {}
+      } finally {
         setIsLoading(false)
       }
     }
 
-    if (user) {}
+    if (user) {
       loadNotifications()
     }
   }, [user])
 
   // Mark notification as read;
-  const markAsRead = async (notificationId: string) => {}
-    try {}
+  const markAsRead = async (notificationId: string) => {
+    try {
       await notificationsAPI.markAsRead(notificationId)
       setNotifications(prev => prev.map(n => 
-        n.id === notificationId ? { ...n, is_read: true } : n;
+        n.id === notificationId ? ...n, is_read: true } : n;
       ))
-    } catch {}
+    } catch (error) {
       console.error("Failed to mark notification as read:", error)
     }
   }
 
   // Mark all notifications as read;
-  const markAllAsRead = async () => {}
-    try {}
+  const markAllAsRead = async () => {
+    try {
       await notificationsAPI.markAllAsRead()
-      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
-    } catch {}
+      setNotifications(prev => prev.map(n => (...n, is_read: true })))
+    } catch (error) {
       console.error("Failed to mark all notifications as read:", error)
     }
   }
 
   // Delete notification;
-  const deleteNotification = async (notificationId: string) => {}
-    try {}
+  const deleteNotification = async (notificationId: string) => {
+    try {
       await notificationsAPI.deleteNotification(notificationId)
       setNotifications(prev => prev.filter(n => n.id !== notificationId))
-    } catch {}
+    } catch (error) {
       console.error("Failed to delete notification:", error)
     }
   }
 
   const unreadCount = notifications.filter(n => !n.is_read).length;
-  if (!user) {}
+  if (!user) {
     return null;
   }
 

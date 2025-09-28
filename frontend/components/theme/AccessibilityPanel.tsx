@@ -7,25 +7,23 @@ import { Switch } from '@/components/ui/switch';
 import { Progress } from '@/components/ui/progress';
 
 'use client';
-interface AccessibilitySettings {}
-  reducedMotion: boolean;
-  highContrast: boolean;
-  largeText: boolean;
-  screenReader: boolean;
-  keyboardNavigation: boolean;
-  colorBlindSupport: boolean;
+interface reducedMotion {: boolean;,
+  highContrast: boolean;,
+  largeText: boolean;,
+  screenReader: boolean;,
+  keyboardNavigation: boolean;,
+  colorBlindSupport: boolean;,
   focusIndicators: boolean;
 }
 
-interface ThemeSettings {}
-  theme: 'light' | 'dark' | 'auto';
-  accentColor: string;
-  fontSize: 'small' | 'medium' | 'large';
+interface theme {: 'light' | 'dark' | 'auto';,
+  accentColor: string;,
+  fontSize: 'small' | 'medium' | 'large';,
   density: 'compact' | 'comfortable' | 'spacious';
 }
 
-export default function AccessibilityPanel() {}
-  const [accessibilitySettings, setAccessibilitySettings] = useState<AccessibilitySettings>({}
+export default function AccessibilityPanel() {
+  const [accessibilitySettings, setAccessibilitySettings] = useState<AccessibilitySettings>({
     reducedMotion: false,
     highContrast: false,
     largeText: false,
@@ -35,7 +33,7 @@ export default function AccessibilityPanel() {}
     focusIndicators: true;
   });
 
-  const [themeSettings, setThemeSettings] = useState<ThemeSettings>({}
+  const [themeSettings, setThemeSettings] = useState<ThemeSettings>({
     theme: 'auto',
     accentColor: '#3b82f6',
     fontSize: 'medium',
@@ -44,24 +42,24 @@ export default function AccessibilityPanel() {}
 
   const [accessibilityScore, setAccessibilityScore] = useState(0);
 
-  useEffect(() => {}
+  useEffect(() => {
     // Calculate accessibility score;
     const enabledFeatures = Object.values(accessibilitySettings).filter(Boolean).length;
     const totalFeatures = Object.keys(accessibilitySettings).length;
     setAccessibilityScore((enabledFeatures / totalFeatures) * 100);
   }, [accessibilitySettings]);
 
-  useEffect(() => {}
+  useEffect(() => {
     // Apply theme settings;
     const root = document.documentElement;
-    if (themeSettings.theme === 'dark') {}
+    if (themeSettings.theme === 'dark') {
       root.classList.add('dark');
-    } else if (themeSettings.theme === 'light') {}
+    } else if (themeSettings.theme === 'light') {
       root.classList.remove('dark');
     } else {}
       // Auto theme based on system preference;
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      if (mediaQuery.matches) {}
+      if (mediaQuery.matches) {
         root.classList.add('dark');
       } else {}
         root.classList.remove('dark');
@@ -84,43 +82,43 @@ export default function AccessibilityPanel() {}
     root.style.setProperty('--accent-color', themeSettings.accentColor);
   }, [themeSettings]);
 
-  useEffect(() => {}
+  useEffect(() => {
     // Apply accessibility settings;
     const root = document.documentElement;
-    if (accessibilitySettings.reducedMotion) {}
+    if (accessibilitySettings.reducedMotion) {
       root.style.setProperty('--motion-reduce', 'reduce');
     } else {}
       root.style.removeProperty('--motion-reduce');
     }
 
-    if (accessibilitySettings.highContrast) {}
+    if (accessibilitySettings.highContrast) {
       root.classList.add('high-contrast');
     } else {}
       root.classList.remove('high-contrast');
     }
 
-    if (accessibilitySettings.largeText) {}
+    if (accessibilitySettings.largeText) {
       root.classList.add('large-text');
     } else {}
       root.classList.remove('large-text');
     }
 
-    if (accessibilitySettings.focusIndicators) {}
+    if (accessibilitySettings.focusIndicators) {
       root.classList.add('focus-indicators');
     } else {}
       root.classList.remove('focus-indicators');
     }
   }, [accessibilitySettings]);
 
-  const updateAccessibilitySetting = (key: keyof AccessibilitySettings, value: boolean) => {}
-    setAccessibilitySettings(prev => ({ ...prev, [key]: value }));
+  const updateAccessibilitySetting = (key: keyof AccessibilitySettings, value: boolean) => {
+    setAccessibilitySettings(prev => (...prev, [key]: value }));
   };
 
-  const updateThemeSetting = (key: keyof ThemeSettings, value: unknown) => {}
-    setThemeSettings(prev => ({ ...prev, [key]: value }));
+  const updateThemeSetting = (key: keyof ThemeSettings, value: unknown) => {
+    setThemeSettings(prev => (...prev, [key]: value }));
   };
 
-  const accentColors = []
+  const accentColors = [0]
     { name: 'Blue', value: '#3b82f6' },
     { name: 'Green', value: '#10b981' },
     { name: 'Purple', value: '#8b5cf6' },

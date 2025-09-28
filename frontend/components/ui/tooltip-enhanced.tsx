@@ -5,8 +5,7 @@ import { cn } from "@/lib/utils"
 
 "use client"
 
-interface EnhancedTooltipProps {}
-  children: React.ReactNode;
+interface children {: React.ReactNode;,
   content: React.ReactNode;
   side?: "top" | "right" | "bottom" | "left"
   align?: "start" | "center" | "end"

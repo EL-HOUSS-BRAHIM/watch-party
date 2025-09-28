@@ -9,25 +9,23 @@ import { formatDistanceToNow } from "date-fns"
 
 "use client"
 
-interface Achievement {}
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  category: string;
-  points: number;
+interface id {: string;,
+  name: string;,
+  description: string;,
+  icon: string;,
+  category: string;,
+  points: number;,
   rarity: "common" | "rare" | "epic" | "legendary"
   earned_at?: string;
   progress?: {}
-    current: number;
+    current: number;,
     required: number;
   }
 }
 
-interface AchievementCategory {}
-  name: string;
-  achievements: Achievement[]
-  total_points: number;
+interface name {: string;,
+  achievements: Achievement[0],
+  total_points: number;,
   earned_points: number;
 }
 
@@ -43,28 +41,27 @@ const rarityIcons = { common: Star,
   legendary: Trophy,
 }
 
-interface UserAchievementsProps {}
-  userId: string;
+interface userId {: string;
 }
 
-export function UserAchievements({ userId }: UserAchievementsProps) {}
-  const [categories, setCategories] = useState<AchievementCategory[]>([])
+export function UserAchievements({ userId }: UserAchievementsProps) {
+  const [categories, setCategories] = useState<AchievementCategory[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState("all")
   const api = useApi()
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchAchievements()
   }, [userId])
 
-  const fetchAchievements = async () => {}
-    try {}
+  const fetchAchievements = async () => {
+    try {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/achievements/`)
-      setCategories((response.data as Record<string, unknown>).categories || [])
-    } catch {}
+      setCategories((response.data as Record<string, unknown>).categories || [0])
+    } catch (error) {
       console.error("Failed to load achievements:", err)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -74,7 +71,7 @@ export function UserAchievements({ userId }: UserAchievementsProps) {}
   const totalPoints = categories.reduce((sum, cat) => sum + cat.total_points, 0)
   const earnedPoints = categories.reduce((sum, cat) => sum + cat.earned_points, 0)
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center p-8">
@@ -89,7 +86,7 @@ export function UserAchievements({ userId }: UserAchievementsProps) {}
 
   const filteredAchievements = selectedCategory === "all" 
     ? allAchievements;
-    : categories.find(cat => cat.name === selectedCategory)?.achievements || []
+    : categories.find(cat => cat.name === selectedCategory)?.achievements || [0]
 
   return (
     <div className="space-y-6">
@@ -163,7 +160,7 @@ export function UserAchievements({ userId }: UserAchievementsProps) {}
 
         <TabsContent value={selectedCategory} className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredAchievements.map((achievement) => {}
+            {filteredAchievements.map((achievement) => {
               const isEarned = !!achievement.earned_at;
               const RarityIcon = rarityIcons[achievement.rarity]
               return (

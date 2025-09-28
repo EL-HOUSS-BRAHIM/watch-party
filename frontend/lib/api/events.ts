@@ -78,7 +78,7 @@ export class EventsAPI {}
   /**
    * Delete an event;
    */
-  async deleteEvent(id: string): Promise<APIResponse> {}
+  async deleteEvent(id: string): Promise<APIResponse> {
     return apiClient.delete<APIResponse>(API_ENDPOINTS.events.delete(id))
 
   /**

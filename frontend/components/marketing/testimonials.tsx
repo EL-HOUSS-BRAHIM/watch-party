@@ -5,10 +5,9 @@ import { Badge } from "@/components/ui/badge"
 
 "use client"
 
-interface TestimonialsProps {}
-  testimonials: MarketingTestimonial[0]
+interface testimonials {: MarketingTestimonial[0]
 
-function TestimonialsComponent({ testimonials }: TestimonialsProps) {}
+function TestimonialsComponent({ testimonials }: TestimonialsProps) {
   return (
     <section className="py-20 relative">
       <div className="container mx-auto px-4 max-w-7xl">

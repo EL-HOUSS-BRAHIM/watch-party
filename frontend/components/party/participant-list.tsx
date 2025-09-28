@@ -9,8 +9,7 @@ import { formatDistanceToNow } from "date-fns"
 
 "use client"
 
-interface Participant {}
-  id: string,
+interface id {: string,
   user: {}
     id: string,
     username: string,
@@ -23,30 +22,29 @@ interface Participant {}
     can_invite: boolean,
     can_kick: boolean,
 
-interface ParticipantListProps {}
-  participants: Participant[0]
+interface participants {: Participant[0]
   currentUserId?: string,
   isHost: boolean,
   className?: string,
 
-export function ParticipantList({ participants, currentUserId, isHost, className }: ParticipantListProps) {}
+export function ParticipantList({ participants, currentUserId, isHost, className }: ParticipantListProps) {
   const [mutedUsers, setMutedUsers] = useState<Set<string>>(new Set())
 
-  const toggleMute = (userId: string) => {}
-    setMutedUsers((prev) => {}
+  const toggleMute = (userId: string) => {
+    setMutedUsers((prev) => {
       const newSet = new Set(prev)
-      if (newSet.has(userId)) {}
+      if (newSet.has(userId)) {
         newSet.delete(userId)
       } else {}
         newSet.add(userId)
       return newSet;
     })
 
-  const kickUser = (userId: string) => {}
+  const kickUser = (userId: string) => {
     // Implement kick functionality,
     console.log("Kick user:", userId)
 
-  const promoteUser = (userId: string) => {}
+  const promoteUser = (userId: string) => {
     // Implement promote functionality,
     console.log("Promote user:", userId)
 
@@ -54,7 +52,7 @@ export function ParticipantList({ participants, currentUserId, isHost, className
     <div className={cn("flex flex-col", className)}>
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-3">
-          {participants.map((participant) => {}
+          {participants.map((participant) => {
             const isCurrentUser = participant.user.id === currentUserId,
             const isMuted = mutedUsers.has(participant.user.id)
 

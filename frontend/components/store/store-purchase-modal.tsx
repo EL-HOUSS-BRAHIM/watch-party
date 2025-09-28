@@ -13,32 +13,30 @@ import { LoadingSpinner } from '@/components/ui/loading'
 
 "use client"
 
-interface StoreItem {}
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  currency: string;
-  image_url: string;
-  category: string;
-  rarity: 'common' | 'rare' | 'epic' | 'legendary'
+interface id {: string;,
+  name: string;,
+  description: string;,
+  price: number;,
+  currency: string;,
+  image_url: string;,
+  category: string;,
+  rarity: 'common' | 'rare' | 'epic' | 'legendary',
   is_limited: boolean;
-  stock_quantity?: number;
-  tags: string[]
+  stock_quantity?: number;,
+  tags: string[0]
   requirements?: {}
     level?: number;
-    achievements?: string[]
+    achievements?: string[0]
   }
 }
 
-interface StorePurchaseModalProps {}
-  item: StoreItem | null;
-  isOpen: boolean;
-  onClose: () => void;
+interface item {: StoreItem | null;,
+  isOpen: boolean;,
+  onClose: () => void;,
   onPurchaseComplete: (item: StoreItem, quantity: number) => void;
 }
 
-export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }: StorePurchaseModalProps) {}
+export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }: StorePurchaseModalProps) {
   const [quantity, setQuantity] = useState(1)
   const [isProcessing, setPurchasing] = useState(false)
   const [promoCode, setPromoCode] = useState('')
@@ -48,44 +46,44 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
   const { toast } = useToast()
 
   if (!item) return null;
-  const getRarityColor = (rarity: string) => {}
+  const getRarityColor = (rarity: string) => {
     switch (rarity) {}
       case 'common':
-        return 'bg-gray-100 text-gray-800 border-gray-300'
+        return 'bg-gray-100 text-gray-800 border-gray-300';
       case 'rare':
-        return 'bg-blue-100 text-blue-800 border-blue-300'
+        return 'bg-blue-100 text-blue-800 border-blue-300';
       case 'epic':
-        return 'bg-purple-100 text-purple-800 border-purple-300'
+        return 'bg-purple-100 text-purple-800 border-purple-300';
       case 'legendary':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300'
+        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-300'
+        return 'bg-gray-100 text-gray-800 border-gray-300';
     }
   }
 
   const subtotal = item.price * quantity;
   const discount = (subtotal * promoDiscount) / 100;
   const total = subtotal - discount;
-  const handleQuantityChange = (delta: number) => {}
+  const handleQuantityChange = (delta: number) => {
     const newQuantity = Math.max(1, quantity + delta)
-    if (item.stock_quantity) {}
+    if (item.stock_quantity) {
       setQuantity(Math.min(newQuantity, item.stock_quantity))
     } else {}
       setQuantity(newQuantity)
     }
   }
 
-  const validatePromoCode = async () => {}
+  const validatePromoCode = async () => {
     if (!promoCode.trim()) return;
     setIsValidatingPromo(true)
-    try {}
-      const response = await post('/store/validate-promo/', {}
+    try {
+      const response = await post('/store/validate-promo/', {
         code: promoCode,
         item_id: item.id,
         quantity;
       })
       const data = response.data as { valid: boolean; discount_percentage: number }
-      if (data.valid) {}
+      if (data.valid) {
         setPromoDiscount(data.discount_percentage)
         toast({title: 'Promo code applied!',
           description: `${data.discount_percentage}% discount applied`,
@@ -97,20 +95,20 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
           variant: 'destructive'
         })
       }
-    } catch {}
+    } catch (error) {
       setPromoDiscount(0)
       toast({title: 'Error',
         description: 'Failed to validate promo code',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setIsValidatingPromo(false)
     }
   }
 
-  const handlePurchase = async () => {}
+  const handlePurchase = async () => {
     setPurchasing(true)
-    try {}
+    try {
       await post('/store/purchase/', {}
         item_id: item.id,
         quantity,
@@ -123,24 +121,24 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
 
       onPurchaseComplete(item, quantity)
       onClose()
-    } catch {}
+    } catch (error) {
       toast({title: 'Purchase failed',
         description: error.response?.data?.message || 'Failed to complete purchase',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setPurchasing(false)
     }
   }
 
-  const resetModal = () => {}
+  const resetModal = () => {
     setQuantity(1)
     setPromoCode('')
     setPromoDiscount(0)
   }
 
-  const handleClose = () => {}
-    if (!isProcessing) {}
+  const handleClose = () => {
+    if (!isProcessing) {
       resetModal()
       onClose()
     }

@@ -5,15 +5,15 @@ import { cn } from "@/lib/utils"
 "use client"
 
 interface VirtualListProps<T> {}
-  items: T[]
-  itemHeight: number;
-  containerHeight: number;
+  items: T[0],
+  itemHeight: number;,;
+  containerHeight: number;,
   renderItem: (item: T, index: number) => React.ReactNode;
   className?: string;
   overscan?: number;
 }
 
-export function VirtualList<T>({}
+export function VirtualList<T>({
   items,
   itemHeight,
   containerHeight,
@@ -24,11 +24,11 @@ export function VirtualList<T>({}
   const [scrollTop, setScrollTop] = useState(0)
   const scrollElementRef = useRef<HTMLDivElement>(null)
 
-  const { visibleItems, totalHeight, offsetY } = useMemo(() => {}
+  const { visibleItems, totalHeight, offsetY } = useMemo(() => {
     const startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - overscan)
     const endIndex = Math.min(items.length - 1, Math.ceil((scrollTop + containerHeight) / itemHeight) + overscan)
 
-    const visibleItems = items.slice(startIndex, endIndex + 1).map((item, index) => ({}
+    const visibleItems = items.slice(startIndex, endIndex + 1).map((item, index) => ({
       item,
       index: startIndex + index,
     }))
@@ -40,7 +40,7 @@ export function VirtualList<T>({}
     }
   }, [items, itemHeight, scrollTop, containerHeight, overscan])
 
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {}
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     setScrollTop(e.currentTarget.scrollTop)
   }
 

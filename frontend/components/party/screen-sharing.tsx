@@ -11,33 +11,31 @@ import { useSocket } from '@/contexts/socket-context'
 
 "use client"
 
-interface ScreenSharingProps {}
-  partyId: string;
-  isHost: boolean;
+interface partyId {: string;,
+  isHost: boolean;,
   participants: Array<{}
-    id: string;
-    username: string;
-    avatar: string;
+    id: string;,
+    username: string;,
+    avatar: string;,
     isScreenSharing: boolean;
   }>
 }
 
-interface ScreenShareOptions {}
-  video: boolean;
-  audio: boolean;
-  cursor: boolean;
-  quality: 'low' | 'medium' | 'high'
+interface video {: boolean;,
+  audio: boolean;,
+  cursor: boolean;,
+  quality: 'low' | 'medium' | 'high',
   frameRate: number;
 }
 
-export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingProps) {}
+export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingProps) {
   const [isSharing, setIsSharing] = useState(false)
   const [isReceiving, setIsReceiving] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showSettings, setShowSettings] = useState(false)
   const [activeSharer, setActiveSharer] = useState<string | null>(null)
-  const [options, setOptions] = useState<ScreenShareOptions>({}
+  const [options, setOptions] = useState<ScreenShareOptions>({
     video: true,
     audio: true,
     cursor: true,
@@ -51,14 +49,14 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null)
   const { socket } = useSocket()
 
-  useEffect(() => {}
-    if (socket) {}
+  useEffect(() => {
+    if (socket) {
       socket.on('screen-share-started', handleScreenShareStarted)
       socket.on('screen-share-stopped', handleScreenShareStopped)
       socket.on('screen-share-offer', handleScreenShareOffer)
       socket.on('screen-share-answer', handleScreenShareAnswer)
       socket.on('screen-share-ice-candidate', handleIceCandidate)
-      return () => {}
+      return () => {
         socket.off('screen-share-started')
         socket.off('screen-share-stopped')
         socket.off('screen-share-offer')
@@ -68,14 +66,14 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
     }
   }, [socket])
 
-  useEffect(() => {}
-    return () => {}
+  useEffect(() => {
+    return () => {
       cleanup()
     }
-  }, [])
+  }, [0])
 
-  const getDisplayMedia = async (): Promise<MediaStream> => {}
-    const constraints: MediaStreamConstraints = { video: {}
+  const getDisplayMedia = async (): Promise<MediaStream> => {
+    const constraints: MediaStreamConstraints = { video: {
         width: { ideal: getResolution().width },
         height: { ideal: getResolution().height },
         frameRate: { ideal: options.frameRate }
@@ -86,7 +84,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
     return await navigator.mediaDevices.getDisplayMedia(constraints)
   }
 
-  const getResolution = () => {}
+  const getResolution = () => {
     switch (options.quality) {}
       case 'low':
         return { width: 1280, height: 720 }
@@ -99,17 +97,17 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
     }
   }
 
-  const startScreenShare = async () => {}
-    try {}
+  const startScreenShare = async () => {
+    try {
       setLoading(true)
       setError(null)
       const stream = await getDisplayMedia()
       localStreamRef.current = stream;
-      if (localVideoRef.current) {}
+      if (localVideoRef.current) {
         localVideoRef.current.srcObject = stream;
       }
       // Listen for stream end (user stops sharing via browser UI)
-      stream.getVideoTracks()[0].onended = () => {}
+      stream.getVideoTracks()[0].onended = () => {
         stopScreenShare()
       }
       // Create peer connection for sharing;
@@ -125,57 +123,57 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
           frameRate: options.frameRate;
         }
       })
-    } catch {}
+    } catch (error) {
       console.error('Failed to start screen sharing:', error)
       setError('Failed to start screen sharing. Please check permissions.')
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const stopScreenShare = () => {}
+  const stopScreenShare = () => {
     cleanup()
     setIsSharing(false)
     setActiveSharer(null)
     socket?.emit('screen-share-stop', { partyId })
   }
 
-  const cleanup = () => {}
-    if (localStreamRef.current) {}
+  const cleanup = () => {
+    if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach(track => track.stop())
       localStreamRef.current = null;
     }
-    if (peerConnectionRef.current) {}
+    if (peerConnectionRef.current) {
       peerConnectionRef.current.close()
       peerConnectionRef.current = null;
     }
-    if (localVideoRef.current) {}
+    if (localVideoRef.current) {
       localVideoRef.current.srcObject = null;
     }
-    if (remoteVideoRef.current) {}
+    if (remoteVideoRef.current) {
       remoteVideoRef.current.srcObject = null;
     }
   }
 
-  const createPeerConnection = async () => {}
+  const createPeerConnection = async () => {
     const pc = new RTCPeerConnection({iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
     })
     peerConnectionRef.current = pc;
-    if (localStreamRef.current) {}
-      localStreamRef.current.getTracks().forEach(track => {}
+    if (localStreamRef.current) {
+      localStreamRef.current.getTracks().forEach(track => {
         pc.addTrack(track, localStreamRef.current!)
       })
     }
-    pc.onicecandidate = (event) => {}
-      if (event.candidate) {}
+    pc.onicecandidate = (event) => {
+      if (event.candidate) {
         socket?.emit('screen-share-ice-candidate', {}
           candidate: event.candidate,
           partyId;
         })
       }
     }
-    pc.ontrack = (event) => {}
-      if (remoteVideoRef.current) {}
+    pc.ontrack = (event) => {
+      if (remoteVideoRef.current) {
         remoteVideoRef.current.srcObject = event.streams[0]
         setIsReceiving(true)
       }
@@ -186,31 +184,31 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
     socket?.emit('screen-share-offer', { offer, partyId })
   }
 
-  const handleScreenShareStarted = (data: { userId: string; username: string; options: unknown }) => {}
+  const handleScreenShareStarted = (data: { userId: string; username: string; options: unknown }) => {
     setActiveSharer(data.userId)
     setIsReceiving(true)
   }
 
-  const handleScreenShareStopped = () => {}
+  const handleScreenShareStopped = () => {
     setActiveSharer(null)
     setIsReceiving(false)
-    if (remoteVideoRef.current) {}
+    if (remoteVideoRef.current) {
       remoteVideoRef.current.srcObject = null;
     }
   }
 
-  const handleScreenShareOffer = async (data: { offer: RTCSessionDescriptionInit; from: string }) => {}
-    if (!peerConnectionRef.current) {}
+  const handleScreenShareOffer = async (data: { offer: RTCSessionDescriptionInit; from: string }) => {
+    if (!peerConnectionRef.current) {
       peerConnectionRef.current = new RTCPeerConnection({iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
       })
-      peerConnectionRef.current.ontrack = (event) => {}
-        if (remoteVideoRef.current) {}
+      peerConnectionRef.current.ontrack = (event) => {
+        if (remoteVideoRef.current) {
           remoteVideoRef.current.srcObject = event.streams[0]
           setIsReceiving(true)
         }
       }
-      peerConnectionRef.current.onicecandidate = (event) => {}
-        if (event.candidate) {}
+      peerConnectionRef.current.onicecandidate = (event) => {
+        if (event.candidate) {
           socket?.emit('screen-share-ice-candidate', {}
             candidate: event.candidate,
             partyId;
@@ -224,32 +222,32 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
     socket?.emit('screen-share-answer', { answer, partyId })
   }
 
-  const handleScreenShareAnswer = async (data: { answer: RTCSessionDescriptionInit }) => {}
-    if (peerConnectionRef.current) {}
+  const handleScreenShareAnswer = async (data: { answer: RTCSessionDescriptionInit }) => {
+    if (peerConnectionRef.current) {
       await peerConnectionRef.current.setRemoteDescription(data.answer)
     }
   }
 
-  const handleIceCandidate = async (data: { candidate: RTCIceCandidateInit }) => {}
-    if (peerConnectionRef.current) {}
+  const handleIceCandidate = async (data: { candidate: RTCIceCandidateInit }) => {
+    if (peerConnectionRef.current) {
       await peerConnectionRef.current.addIceCandidate(data.candidate)
     }
   }
 
-  const requestScreenShare = (userId: string) => {}
+  const requestScreenShare = (userId: string) => {
     socket?.emit('screen-share-request', { partyId, userId })
   }
 
-  const stopRemoteScreenShare = (userId: string) => {}
-    if (isHost) {}
+  const stopRemoteScreenShare = (userId: string) => {
+    if (isHost) {
       socket?.emit('screen-share-force-stop', { partyId, userId })
     }
   }
 
-  const toggleFullscreen = () => {}
+  const toggleFullscreen = () => {
     const video = isSharing ? localVideoRef.current : remoteVideoRef.current;
-    if (video) {}
-      if (document.fullscreenElement) {}
+    if (video) {
+      if (document.fullscreenElement) {
         document.exitFullscreen()
       } else {}
         video.requestFullscreen()
@@ -298,7 +296,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                     id="include-audio"
                     checked={options.audio}
                     onCheckedChange={(checked) => 
-                      setOptions(prev => ({ ...prev, audio: checked }))
+                      setOptions(prev => (...prev, audio: checked }))
                     }
                   />
                 </div>
@@ -308,7 +306,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                     id="show-cursor"
                     checked={options.cursor}
                     onCheckedChange={(checked) => 
-                      setOptions(prev => ({ ...prev, cursor: checked }))
+                      setOptions(prev => (...prev, cursor: checked }))
                     }
                   />
                 </div>
@@ -318,7 +316,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                 <Select;
                   value={options.quality}
                   onValueChange={(value: 'low' | 'medium' | 'high') =>
-                    setOptions(prev => ({ ...prev, quality: value }))
+                    setOptions(prev => (...prev, quality: value }))
                   }
                 >
                   <SelectTrigger>
@@ -336,7 +334,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                 <Select;
                   value={options.frameRate.toString()}
                   onValueChange={(value) =>
-                    setOptions(prev => ({ ...prev, frameRate: parseInt(value) }))
+                    setOptions(prev => (...prev, frameRate: parseInt(value) }))
                   }
                 >
                   <SelectTrigger>

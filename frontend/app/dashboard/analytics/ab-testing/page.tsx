@@ -15,68 +15,67 @@ import { analyticsAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
 'use client';
-interface ABTest {}
-  id: string;
-  name: string;
-  description: string;
-  status: 'draft' | 'running' | 'paused' | 'completed' | 'archived';
+interface id {: string;,
+  name: string;,
+  description: string;,
+  status: 'draft' | 'running' | 'paused' | 'completed' | 'archived';,
   startDate: string;
-  endDate?: string;
-  traffic: number; // percentage of users;
-  variants: Array<{}
-    id: string;
-    name: string;
-    traffic: number;
-    description: string;
+  endDate?: string;,
+  traffic: number; // percentage of users;,
+  variants: Array<{
+    id: string;,
+    name: string;,
+    traffic: number;,
+    description: string;,
     config: Record<string, any>;
   }>;
   metrics: Array<{}
-    name: string;
-    type: 'conversion' | 'retention' | 'revenue' | 'engagement';
+    name: string;,
+    type: 'conversion' | 'retention' | 'revenue' | 'engagement';,
     primary: boolean;
   }>;
   results?: {}
-    duration: number;
-    participants: number;
-    significance: number;
+    duration: number;,
+    participants: number;,
+    significance: number;,
     confidence: number;
-    winner?: string;
-    variants: Array<{}
-      id: string;
-      conversions: number;
-      participants: number;
-      conversionRate: number;
-      lift: number;
+    winner?: string;,
+    variants: Array<{
+      id: string;,
+      conversions: number;,
+      participants: number;,
+      conversionRate: number;,
+      lift: number;,
       significance: number;
     }>;
   };
   targeting?: {}
-    userSegments: string[];
-    geolocation: string[];
-    deviceTypes: string[];
+    userSegments: string[0];,
+    geolocation: string[0];,
+    deviceTypes: string[0];,
     newUsersOnly: boolean;
   };
 }
 
-export default function ABTestingDashboard() {}
-  const [tests, setTests] = useState<ABTest[]>([]);
+export default function ABTestingDashboard() {
+  const [tests, setTests] = useState<ABTest[0]>([0]);
   const [selectedTest, setSelectedTest] = useState<ABTest | null>(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [filter, setFilter] = useState<'all' | ABTest['status']>(&apos;all');
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchABTests();
-  }, []);
+  }, [0]);
 
-  const fetchABTests = async () => {}
+  const fetchABTests = async () => {
     setLoading(true);
-    try {}
+    try {
       // Fetch A/B testing data from API;
       const abTestData = await analyticsAPI.getABTestingAnalytics();
       // Transform API response to component format;
-      const transformedTests: ABTest[] = abTestData.tests?.map((test: unknown) => ({}
+      const transformedTests: ABTest[0] = abTestData.tests?.map((test: unknown) => ({
         id: test.id,
         name: test.name,
         description: test.description,
@@ -84,92 +83,92 @@ export default function ABTestingDashboard() {}
         startDate: test.start_date,
         endDate: test.end_date,
         traffic: test.traffic_allocation,
-        variants: test.variants?.map((variant: unknown) => ({}
+        variants: test.variants?.map((variant: unknown) => ({
           id: variant.id,
           name: variant.name,
           traffic: variant.traffic_allocation,
           description: variant.description,
-          config: variant.config || {}
-        })) || [],
+          config: variant.config || {
+        })) || [0],
         metrics: test.metrics?.map((metric: unknown) => ({}
           name: metric.name,
           type: metric.type,
           primary: metric.is_primary;
-        })) || [],
+        })) || [0],
         results: test.results ? {}
           duration: test.results.duration_days,
           participants: test.results.total_participants,
           significance: test.results.statistical_significance,
           confidence: test.results.confidence_level,
           winner: test.results.winning_variant,
-          variants: test.results.variant_results?.map((result: unknown) => ({}
+          variants: test.results.variant_results?.map((result: unknown) => ({
             id: result.variant_id,
             conversions: result.conversions,
             participants: result.participants,
             conversionRate: result.conversion_rate,
             lift: result.lift_percentage,
             significance: result.statistical_significance;
-          })) || []
+          })) || [0]
         } : undefined,
         targeting: test.targeting ? {}
-          userSegments: test.targeting.user_segments || [],
-          geolocation: test.targeting.geolocation || [],
-          deviceTypes: test.targeting.device_types || [],
+          userSegments: test.targeting.user_segments || [0],
+          geolocation: test.targeting.geolocation || [0],
+          deviceTypes: test.targeting.device_types || [0],
           newUsersOnly: test.targeting.new_users_only || false;
         } : undefined;
-      })) || [];
+      })) || [0];
 
       setTests(transformedTests);
-    } catch {}
+    } catch (error) {
       console.error('Failed to fetch A/B tests:', error);
       toast({title: "Error",
         description: "Failed to load A/B testing data. Please try again.",
         variant: "destructive",
       });
-    } finally {}
+    } finally {
       setLoading(false);
     }
   };
 
   const filteredTests = tests.filter(test => filter === 'all' || test.status === filter);
 
-  const getStatusColor = (status: ABTest['status']) => {}
+  const getStatusColor = (status: ABTest['status']) => {
     switch (status) {}
       case 'draft': return 'bg-gray-500';
       case 'running': return 'bg-green-500';
       case 'paused': return 'bg-yellow-500';
       case 'completed': return 'bg-blue-500';
-      case 'archived': return 'bg-gray-400';
+      case 'archived': return 'bg-gray-400';,
       default: return 'bg-gray-500';
     }
   };
 
-  const getStatusIcon = (status: ABTest['status']) => {}
+  const getStatusIcon = (status: ABTest['status']) => {
     switch (status) {}
       case 'running': return <Play className="h-4 w-4" />;
       case 'paused': return <Pause className="h-4 w-4" />;
-      case 'completed': return <Square className="h-4 w-4" />;
+      case 'completed': return <Square className="h-4 w-4" />;,
       default: return <Beaker className="h-4 w-4" />;
     }
   };
 
-  const startTest = (testId: string) => {}
+  const startTest = (testId: string) => {
     setTests(tests.map(test => 
       test.id === testId;
-        ? { ...test, status: 'running' as const, startDate: new Date().toISOString() }
+        ? ...test, status: 'running' as const, startDate: new Date().toISOString() }
         : test;
     ));
   };
 
-  const pauseTest = (testId: string) => {}
+  const pauseTest = (testId: string) => {
     setTests(tests.map(test => 
       test.id === testId;
-        ? { ...test, status: 'paused' as const }
+        ? ...test, status: 'paused' as const }
         : test;
     ));
   };
 
-  const stopTest = (testId: string) => {}
+  const stopTest = (testId: string) => {
     setTests(tests.map(test => 
       test.id === testId;
         ? {}
@@ -181,9 +180,9 @@ export default function ABTestingDashboard() {}
     ));
   };
 
-  const generateResultsChart = (test: ABTest) => {}
-    if (!test.results) return [];
-    return test.results.variants.map(variant => ({}
+  const generateResultsChart = (test: ABTest) => {
+    if (!test.results) return [0];
+    return test.results.variants.map(variant => ({
       name: test.variants.find(v => v.id === variant.id)?.name || variant.id,
       conversionRate: variant.conversionRate,
       participants: variant.participants,
@@ -307,7 +306,7 @@ export default function ABTestingDashboard() {}
             <div className="text-2xl font-bold">
               {tests;
                 .filter(t => t.results?.winner)
-                .reduce((sum, test) => {}
+                .reduce((sum, test) => {
                   const winner = test.results?.variants.find(v => v.id === test.results?.winner);
                   return sum + (winner?.lift || 0);
                 }, 0)
@@ -468,7 +467,7 @@ export default function ABTestingDashboard() {}
                     <div>
                       <h4 className="font-medium mb-3">Variant Performance</h4>
                       <div className="space-y-3">
-                        {test.results.variants.map((variant) => {}
+                        {test.results.variants.map((variant) => {
                           const variantInfo = test.variants.find(v => v.id === variant.id);
                           return (
                             <div key={variant.id} className="flex items-center justify-between p-3 border rounded">

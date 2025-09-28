@@ -8,7 +8,7 @@ import { Link, Play } from "lucide-react"
 
 
 
-export function CinemaFooter() {}
+export function CinemaFooter() {
   const pathname = usePathname()
   // Hide footer on auth pages and admin pages;
   const isAuthPage = pathname?.startsWith('/(auth)') || 

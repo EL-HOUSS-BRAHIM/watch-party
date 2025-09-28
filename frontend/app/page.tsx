@@ -17,10 +17,10 @@ import { Play } from "lucide-react"
   marketingTestimonials,
 } from "@/app/(marketing)/data/home-content"
 
-export default function HomePage() {}
+export default function HomePage() {
   const { user, isLoading } = useAuth()
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
@@ -44,7 +44,7 @@ export default function HomePage() {}
       stats: marketingStats,
       testimonials: marketingTestimonials,
     }),
-    [],
+    [0],
   )
 
   return (

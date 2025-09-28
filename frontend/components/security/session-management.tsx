@@ -20,27 +20,25 @@ import { CheckCircleIcon } from '@heroicons/react/24/solid'
   ExclamationTriangleIcon,
   XMarkIcon;
 } from '@heroicons/react/24/outline'
-interface SessionData {}
-  id: string;
-  deviceType: 'desktop' | 'mobile' | 'tablet' | 'tv' | 'unknown'
-  browser: string;
-  operatingSystem: string;
-  ipAddress: string;
+interface id {: string;,
+  deviceType: 'desktop' | 'mobile' | 'tablet' | 'tv' | 'unknown',
+  browser: string;,
+  operatingSystem: string;,
+  ipAddress: string;,
   location: {}
-    city: string;
-    region: string;
-    country: string;
+    city: string;,
+    region: string;,
+    country: string;,
     countryCode: string;
   }
-  loginTime: string;
-  lastActivity: string;
-  isCurrent: boolean;
-  isSecure: boolean;
+  loginTime: string;,
+  lastActivity: string;,
+  isCurrent: boolean;,
+  isSecure: boolean;,
   userAgent: string;
 }
 
-interface SessionManagementProps {}
-  userId?: string;
+interface userId {?: string;
   showRevealOptions?: boolean;
 }
 
@@ -56,44 +54,44 @@ const generateSessionId = () =>
     ? crypto.randomUUID()
     : `session-${Math.random().toString(36).slice(2, 10)}`
 
-const guessBrowserFromUserAgent = (userAgent: string) => {}
+const guessBrowserFromUserAgent = (userAgent: string) => {
   const ua = userAgent.toLowerCase()
   if (ua.includes('edg')) return 'Microsoft Edge'
   if (ua.includes('chrome') && !ua.includes('chromium')) return 'Chrome'
   if (ua.includes('safari') && !ua.includes('chrome')) return 'Safari'
   if (ua.includes('firefox')) return 'Firefox'
   if (ua.includes('opr') || ua.includes('opera')) return 'Opera'
-  return 'Unknown Browser'
+  return 'Unknown Browser';
 }
 
-const guessOsFromUserAgent = (userAgent: string) => {}
+const guessOsFromUserAgent = (userAgent: string) => {
   const ua = userAgent.toLowerCase()
   if (ua.includes('windows nt')) return 'Windows'
   if (ua.includes('mac os') || ua.includes('macintosh')) return 'macOS'
   if (ua.includes('iphone') || ua.includes('ipad') || ua.includes('ios')) return 'iOS'
   if (ua.includes('android')) return 'Android'
   if (ua.includes('linux')) return 'Linux'
-  return 'Unknown OS'
+  return 'Unknown OS';
 }
 
-const determineDeviceType = (session: unknown, userAgent: string): SessionData['deviceType'] => {}
+const determineDeviceType = (session: unknown, userAgent: string): SessionData['deviceType'] => {
   const candidate = `${session?.device_type ?? ''} ${session?.device ?? ''} ${userAgent}`.toLowerCase()
-  if (candidate.includes('mobile') || candidate.includes('iphone') || candidate.includes('android')) {}
-    return 'mobile'
+  if (candidate.includes('mobile') || candidate.includes('iphone') || candidate.includes('android')) {
+    return 'mobile';
   }
-  if (candidate.includes('tablet') || candidate.includes('ipad')) {}
-    return 'tablet'
+  if (candidate.includes('tablet') || candidate.includes('ipad')) {
+    return 'tablet';
   }
-  if (candidate.includes('tv') || candidate.includes('smart-tv')) {}
-    return 'tv'
+  if (candidate.includes('tv') || candidate.includes('smart-tv')) {
+    return 'tv';
   }
-  if (candidate.trim() === '') {}
-    return 'unknown'
+  if (candidate.trim() === '') {
+    return 'unknown';
   }
-  return 'desktop'
+  return 'desktop';
 }
 
-const parseLocation = (session: unknown): SessionData['location'] => {}
+const parseLocation = (session: unknown): SessionData['location'] => {
   const locationData = session?.location ?? session?.geo ?? session?.ip_location ?? session?.metadata?.location;
   const base: SessionData['location'] = { city: 'Unknown',
     region: '',
@@ -101,13 +99,13 @@ const parseLocation = (session: unknown): SessionData['location'] => {}
     countryCode: ''
   }
 
-  if (!locationData) {}
+  if (!locationData) {
     return base;
   }
 
-  if (typeof locationData === 'string') {}
+  if (typeof locationData === 'string') {
     const parts = locationData.split(',').map(part => part.trim()).filter(Boolean)
-    if (parts.length === 1) {}
+    if (parts.length === 1) {
       return {}
         ...base,
         city: parts[0] || base.city,
@@ -116,7 +114,7 @@ const parseLocation = (session: unknown): SessionData['location'] => {}
       }
     }
 
-    if (parts.length === 2) {}
+    if (parts.length === 2) {
       return {}
         ...base,
         city: parts[0] || base.city,
@@ -133,7 +131,7 @@ const parseLocation = (session: unknown): SessionData['location'] => {}
     }
   }
 
-  if (typeof locationData === 'object' && locationData !== null) {}
+  if (typeof locationData === 'object' && locationData !== null) {
     return {}
       city: locationData.city ?? locationData.town ?? base.city,
       region: locationData.region ?? locationData.state ?? locationData.province ?? base.region,
@@ -146,56 +144,56 @@ const parseLocation = (session: unknown): SessionData['location'] => {}
   return base;
 }
 
-const resolveBrowser = (session: unknown, userAgent: string) => {}
-  if (typeof session?.browser === 'string' && session.browser.trim().length > 0) {}
+const resolveBrowser = (session: unknown, userAgent: string) => {
+  if (typeof session?.browser === 'string' && session.browser.trim().length > 0) {
     return session.browser;
   }
-  if (typeof session?.client === 'string' && session.client.trim().length > 0) {}
+  if (typeof session?.client === 'string' && session.client.trim().length > 0) {
     return session.client;
   }
-  if (typeof session?.device === 'string' && session.device.trim().length > 0) {}
+  if (typeof session?.device === 'string' && session.device.trim().length > 0) {
     const [firstPart] = session.device.split(/ on /i)
-    if (firstPart) {}
+    if (firstPart) {
       return firstPart;
     }
   }
   return guessBrowserFromUserAgent(userAgent)
 }
 
-const resolveOperatingSystem = (session: unknown, userAgent: string) => {}
-  if (typeof session?.operating_system === 'string' && session.operating_system.trim().length > 0) {}
+const resolveOperatingSystem = (session: unknown, userAgent: string) => {
+  if (typeof session?.operating_system === 'string' && session.operating_system.trim().length > 0) {
     return session.operating_system;
   }
-  if (typeof session?.os === 'string' && session.os.trim().length > 0) {}
+  if (typeof session?.os === 'string' && session.os.trim().length > 0) {
     return session.os;
   }
-  if (typeof session?.platform === 'string' && session.platform.trim().length > 0) {}
+  if (typeof session?.platform === 'string' && session.platform.trim().length > 0) {
     return session.platform;
   }
-  if (typeof session?.device === 'string' && session.device.includes(' on ')) {}
+  if (typeof session?.device === 'string' && session.device.includes(' on ')) {
     const [, osPart] = session.device.split(/ on /i)
-    if (osPart) {}
+    if (osPart) {
       return osPart;
     }
   }
   return guessOsFromUserAgent(userAgent)
 }
 
-const determineSecurityState = (session: unknown) => {}
-  if (typeof session?.is_secure === 'boolean') {}
+const determineSecurityState = (session: unknown) => {
+  if (typeof session?.is_secure === 'boolean') {
     return session.is_secure;
   }
-  if (typeof session?.is_suspicious === 'boolean') {}
+  if (typeof session?.is_suspicious === 'boolean') {
     return !session.is_suspicious;
   }
-  if (typeof session?.risk_level === 'string') {}
+  if (typeof session?.risk_level === 'string') {
     const risk = session.risk_level.toLowerCase()
     return !['high', 'critical'].includes(risk)
   }
   return true;
 }
 
-const normalizeSession = (session: unknown): SessionData => {}
+const normalizeSession = (session: unknown): SessionData => {
   const userAgent: string = session?.user_agent ?? session?.userAgent ?? ''
   const loginTime = session?.login_time ?? session?.created_at ?? session?.logged_in_at ?? new Date().toISOString()
   const lastActivity = session?.last_activity ?? session?.last_active_at ?? session?.updated_at ?? loginTime;
@@ -214,42 +212,42 @@ const normalizeSession = (session: unknown): SessionData => {}
   }
 }
 
-export default function SessionManagement({ userId, showRevealOptions = true }: SessionManagementProps) {}
-  const [sessions, setSessions] = useState<SessionData[]>([])
+export default function SessionManagement({ userId, showRevealOptions = true }: SessionManagementProps) {
+  const [sessions, setSessions] = useState<SessionData[0]>([0])
   const [loading, setLoading] = useState(true)
   const [revoking, setRevoking] = useState<string | null>(null)
   const [revokingAll, setRevokingAll] = useState(false)
   const [showDetails, setShowDetails] = useState<{ [key: string]: boolean }>({})
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchSessions()
   }, [userId])
 
-  const fetchSessions = async () => {}
+  const fetchSessions = async () => {
     setLoading(true)
-    try {}
-      if (typeof usersAPI?.getSessions !== 'function') {}
+    try {
+      if (typeof usersAPI?.getSessions !== 'function') {
         throw new Error('Session service unavailable')
       }
 
       const response = await usersAPI.getSessions()
-      const normalized = Array.isArray(response) ? response.map(normalizeSession) : []
+      const normalized = Array.isArray(response) ? response.map(normalizeSession) : [0]
       setSessions(normalized)
-    } catch {}
+    } catch (error) {
       console.error('Failed to fetch sessions:', error)
       toast({title: 'Error',
         description: 'Failed to load session data',
         variant: 'destructive'
       })
-      setSessions([])
-    } finally {}
+      setSessions([0])
+    } finally {
       setLoading(false)
     }
   }
 
-  const revokeSession = async (sessionId: string) => {}
+  const revokeSession = async (sessionId: string) => {
     const targetSession = sessions.find(session => session.id === sessionId)
-    if (targetSession?.isCurrent) {}
+    if (targetSession?.isCurrent) {
       toast({title: 'Cannot Revoke',
         description: 'You cannot revoke your current session',
         variant: 'destructive'
@@ -258,8 +256,8 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
     }
 
     setRevoking(sessionId)
-    try {}
-      if (typeof usersAPI?.deleteSession !== 'function') {}
+    try {
+      if (typeof usersAPI?.deleteSession !== 'function') {
         throw new Error('Session service unavailable')
       }
 
@@ -270,30 +268,30 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
       toast({title: 'Session Revoked',
         description: 'The session has been successfully terminated',
       })
-    } catch {}
+    } catch (error) {
       console.error('Failed to revoke session:', error)
       toast({title: 'Error',
         description: 'Failed to revoke session',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setRevoking(null)
     }
   }
 
-  const revokeAllOtherSessions = async () => {}
+  const revokeAllOtherSessions = async () => {
     const otherSessions = sessions.filter(s => !s.isCurrent)
-    if (otherSessions.length === 0) {}
+    if (otherSessions.length === 0) {
       toast({title: 'No Sessions',
         description: 'No other sessions to revoke',
       })
       return;
     }
 
-    try {}
+    try {
       setRevokingAll(true)
 
-      if (typeof usersAPI?.revokeAllSessions !== 'function') {}
+      if (typeof usersAPI?.revokeAllSessions !== 'function') {
         throw new Error('Session service unavailable')
       }
 
@@ -304,25 +302,25 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
       toast({title: 'Sessions Revoked',
         description: `${otherSessions.length} session(s) have been terminated`,
       })
-    } catch {}
+    } catch (error) {
       console.error('Failed to revoke sessions:', error)
       toast({title: 'Error',
         description: 'Failed to revoke sessions',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setRevokingAll(false)
     }
   }
 
-  const toggleDetails = (sessionId: string) => {}
+  const toggleDetails = (sessionId: string) => {
     setShowDetails(prev => ({}
       ...prev,
       [sessionId]: !prev[sessionId]
     }))
   }
 
-  const formatDate = (dateString: string) => {}
+  const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString('en-US', {}
       year: 'numeric',
       month: 'short',
@@ -333,7 +331,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
     })
   }
 
-  const getTimeAgo = (dateString: string) => {}
+  const getTimeAgo = (dateString: string) => {
     const date = new Date(dateString)
     const now = new Date()
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60))
@@ -343,10 +341,10 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
     if (diffInHours < 24) return `${diffInHours}h ago`
     const diffInDays = Math.floor(diffInHours / 24)
     if (diffInDays < 30) return `${diffInDays}d ago`
-    return formatDate(dateString).split(',')[0]
+    return formatDate(dateString).split(',')[0];
   }
 
-  if (loading) {}
+  if (loading) {
     return (
       <Card className="bg-white/5 border-white/10">
         <CardHeader>
@@ -441,7 +439,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {sessions.map(session => {}
+            {sessions.map(session => {
               const DeviceIcon = deviceIcons[session.deviceType]
               const isExpanded = showDetails[session.id]
               return (

@@ -9,11 +9,10 @@ export interface APIResponse<T = unknown> {}
   success: boolean;
   message?: string;
   data?: T;
-  errors?: Record<string, string[]>
+  errors?: Record<string, string[0]>
 }
 
-export interface PaginationLinks {}
-  next: string | null;
+export interface next {: string | null;,
   previous: string | null;
   total?: number;
   page?: number;
@@ -21,23 +20,21 @@ export interface PaginationLinks {}
 }
 
 export interface PaginatedResponse<T> {}
-  results: T[]
+  results: T[0]
   pagination?: PaginationLinks;
   count?: number;
   next?: string | null;
   previous?: string | null;
 }
 
-export interface APIError {}
-  success: false;
-  errors?: Record<string, string[]>
+export interface success {: false;
+  errors?: Record<string, string[0]>
   detail?: string;
 }
 
 // Authentication types - matching backend responses;
-export interface RawUser {}
-  id: string;
-  email: string;
+export interface id {: string;,
+  email: string;,
   username: string;
   first_name?: string;
   last_name?: string;
@@ -63,9 +60,8 @@ export interface RawUser {}
   [key: string]: unknown;
 }
 
-export interface User {}
-  id: string;
-  email?: string;
+export interface id {: string;
+  email?: string;,
   username: string;
   firstName?: string;
   lastName?: string;
@@ -121,10 +117,9 @@ export interface User {}
   is_superuser?: boolean;
 }
 
-export interface RawAuthResponse {}
-  success: boolean;
-  access_token: string;
-  refresh_token: string;
+export interface success {: boolean;,
+  access_token: string;,
+  refresh_token: string;,
   user: RawUser;
   verification_sent?: boolean;
   requires_2fa?: boolean;
@@ -137,122 +132,109 @@ export interface AuthResponse extends Omit<RawAuthResponse, "user"> {}
   user: User;
 }
 
-export interface TwoFactorSetupResponse {}
-  success?: boolean;
-  qr_code?: string;
+export interface success {?: boolean;
+  qr_code?: string;,
   secret: string;
-  backup_codes?: string[]
+  backup_codes?: string[0]
 }
 
-export interface RawTwoFactorVerifyResponse {}
+export interface RawTwoFactorVerifyResponse {
   success: boolean;
-  backup_codes?: string[]
+  backup_codes?: string[0]
   access_token?: string;
   refresh_token?: string;
   user?: RawUser;
   message?: string;
 }
 
-export interface TwoFactorVerifyResponse extends Omit<RawTwoFactorVerifyResponse, "user"> {}
+export interface TwoFactorVerifyResponse extends Omit<RawTwoFactorVerifyResponse, "user"> {
   user?: User;
 }
 
 // Additional User Types;
-export interface Achievement {}
-  id: string;
-  name: string;
-  description: string;
+export interface id {: string;,
+  name: string;,
+  description: string;,
   icon: string;
   unlocked_at?: string;
   progress?: number;
   total_required?: number;
 }
 
-export interface UserStats {}
-  total_watch_time: number;
-  videos_watched: number;
-  parties_joined: number;
-  friends_count: number;
+export interface total_watch_time {: number;,
+  videos_watched: number;,
+  parties_joined: number;,
+  friends_count: number;,
   achievements_unlocked: number;
 }
 
-export interface UserSession {}
-  id: string;
-  device: string;
-  location: string;
-  last_activity: string;
+export interface id {: string;,
+  device: string;,
+  location: string;,
+  last_activity: string;,
   is_current: boolean;
 }
 
-export interface UserSettings {}
-  notifications_enabled: boolean;
-  email_notifications: boolean;
-  party_invites_enabled: boolean;
-  friend_requests_enabled: boolean;
+export interface notifications_enabled {: boolean;,
+  email_notifications: boolean;,
+  party_invites_enabled: boolean;,
+  friend_requests_enabled: boolean;,
   privacy_level: 'public' | 'friends' | 'private'
 }
 
-export interface WatchHistoryItem {}
-  id: string;
-  video: Video;
-  watched_at: string;
-  progress: number;
+export interface id {: string;,
+  video: Video;,
+  watched_at: string;,
+  progress: number;,
   completed: boolean;
 }
 
-export interface Favorite {}
-  id: string;
-  content_type: string;
-  content_id: string;
+export interface id {: string;,
+  content_type: string;,
+  content_id: string;,
   created_at: string;
 }
 
 // Store Types;
-export interface StoreItem {}
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  category: string;
-  icon: string;
+export interface id {: string;,
+  name: string;,
+  description: string;,
+  price: number;,
+  category: string;,
+  icon: string;,
   rarity: 'common' | 'rare' | 'epic' | 'legendary'
 }
 
-export interface UserInventory {}
-  id: string;
-  item: StoreItem;
-  quantity: number;
+export interface id {: string;,
+  item: StoreItem;,
+  quantity: number;,
   acquired_at: string;
 }
 
-export interface Reward {}
-  id: number;
-  name: string;
-  description: string;
-  requirements: object;
-  items: StoreItem[]
+export interface id {: number;,
+  name: string;,
+  description: string;,
+  requirements: object;,
+  items: StoreItem[0],
   is_claimed: boolean;
   available_until?: string;
 }
 
 // Search Types;
-export interface SearchResult {}
-  id: string;
-  type: 'video' | 'party' | 'user'
+export interface id {: string;,
+  type: 'video' | 'party' | 'user',
   title: string;
   description?: string;
-  thumbnail?: string;
+  thumbnail?: string;,
   relevance_score: number;
 }
 
-export interface DiscoverRecommendation {}
-  type?: string;
+export interface type {?: string;
   metadata?: Record<string, unknown>
   [key: string]: unknown;
 }
 
-export interface DiscoverCategory {}
-  id?: string | number;
+export interface id {?: string | number;,
   name: string;
   description?: string;
   icon?: string;
@@ -264,55 +246,51 @@ export interface DiscoverCategory {}
   [key: string]: unknown;
 }
 
-export interface DiscoverContent {}
-  featured_videos?: Array<Record<string, unknown>>
+export interface featured_videos {?: Array<Record<string, unknown>>
   trending_parties?: Array<Record<string, unknown>>
-  recommended_content?: DiscoverRecommendation[]
-  popular_categories?: DiscoverCategory[]
+  recommended_content?: DiscoverRecommendation[0]
+  popular_categories?: DiscoverCategory[0]
   platform_stats?: Record<string, unknown>
 }
 
 // Dashboard Types;
-export interface DashboardStatsSummary {}
-  user: {}
-    id: string;
-    name: string;
+export interface user {: {}
+    id: string;,
+    name: string;,
     email: string;
   }
   stats: {}
-    total_parties: number;
-    recent_parties: number;
-    total_videos: number;
-    recent_videos: number;
+    total_parties: number;,
+    recent_parties: number;,
+    total_videos: number;,
+    recent_videos: number;,
     watch_time_minutes: number;
   }
   trends?: Record<string, number | Record<string, number>>
   timestamp: string;
 }
 
-export interface DashboardActivity {}
-  id: string;
-  type: string;
+export interface id {: string;,
+  type: string;,
   timestamp: string;
   status?: "unread" | "read" | "dismissed"
   actor?: {}
-    id: string;
+    id: string;,
     name: string;
     avatar?: string | null;
   }
   party?: {}
-    id: string;
+    id: string;,
     title: string;
   }
   video?: {}
-    id: string;
+    id: string;,
     title: string;
   }
   data?: Record<string, unknown>
 }
 
-export interface DashboardActivityAcknowledgePayload {}
-  status: "read" | "dismissed"
+export interface status {: "read" | "dismissed"
   note?: string;
 }
 
@@ -320,162 +298,147 @@ export interface DashboardActivityAcknowledgePayload {}
 export type DocumentationStatus = "draft" | "review" | "published" | "archived"
 export type DocumentationType = "guide" | "api" | "tutorial" | "reference" | "changelog"
 
-export interface DocumentationCategory {}
-  id: string;
-  slug: string;
+export interface id {: string;,
+  slug: string;,
   name: string;
   description?: string;
-  color?: string;
+  color?: string;,
   document_count: number;
 }
 
-export interface DocumentationDocument {}
-  id: string;
-  slug: string;
+export interface id {: string;,
+  slug: string;,
   title: string;
-  summary?: string;
-  type: DocumentationType;
-  status: DocumentationStatus;
-  category: DocumentationCategory;
-  tags: string[]
+  summary?: string;,
+  type: DocumentationType;,
+  status: DocumentationStatus;,
+  category: DocumentationCategory;,
+  tags: string[0],
   author: {}
-    id: string;
+    id: string;,
     name: string;
     avatar?: string | null;
   }
-  content: string;
-  created_at: string;
-  updated_at: string;
+  content: string;,
+  created_at: string;,
+  updated_at: string;,
   version: string;
   view_count?: number;
   metadata?: Record<string, unknown>
 }
 
-export interface DocumentationVersion {}
-  id: string;
-  version: string;
-  status: DocumentationStatus;
-  created_at: string;
+export interface id {: string;,
+  version: string;,
+  status: DocumentationStatus;,
+  created_at: string;,
   created_by: {}
-    id: string;
+    id: string;,
     name: string;
   }
   changelog?: string;
 }
 
-export interface DocumentationUpsertInput {}
-  title: string;
-  content: string;
+export interface title {: string;,
+  content: string;,
   category: string;
   status?: DocumentationStatus;
   summary?: string;
-  tags?: string[]
+  tags?: string[0]
   type?: DocumentationType;
   metadata?: Record<string, unknown>
 }
 
-export interface DocumentationCategoryInput {}
-  name: string;
+export interface name {: string;
   description?: string;
   color?: string;
   slug?: string;
 }
 
-export interface DocumentationListFilters {}
-  search?: string;
+export interface search {?: string;
   status?: DocumentationStatus;
   category?: string;
-  tags?: string[]
+  tags?: string[0]
   author?: string;
   page?: number;
   pageSize?: number;
 }
 
-export interface DocumentationSearchResult {}
-  id: string;
-  title: string;
-  summary: string;
-  path: string;
+export interface id {: string;,
+  title: string;,
+  summary: string;,
+  path: string;,
   relevance: number;
-  highlights?: Record<string, string[]>
+  highlights?: Record<string, string[0]>
 }
 
 // Localization Types;
-export interface LocalizationLanguage {}
-  code: string;
-  name: string;
-  native_name: string;
-  progress: number;
-  strings_total: number;
+export interface code {: string;,
+  name: string;,
+  native_name: string;,
+  progress: number;,
+  strings_total: number;,
   strings_translated: number;
-  reviewers?: Array<{ id: string; name: string }>
+  reviewers?: Array<{ id: string; name: string }>,
   updated_at: string;
 }
 
-export interface LocalizationProjectLanguage {}
-  code: string;
-  status: "draft" | "in_review" | "complete"
-  completion: number;
+export interface code {: string;,
+  status: "draft" | "in_review" | "complete",
+  completion: number;,
   reviewers: Array<{ id: string; name: string }>
 }
 
-export interface LocalizationProject {}
-  id: string;
-  slug: string;
+export interface id {: string;,
+  slug: string;,
   name: string;
-  description?: string;
-  languages: LocalizationProjectLanguage[]
+  description?: string;,
+  languages: LocalizationProjectLanguage[0]
   owner?: { id: string; name: string }
-  updated_at: string;
+  updated_at: string;,
   created_at: string;
 }
 
 export type LocalizationStringStatus = "draft" | "in_review" | "approved" | "rejected"
 
-export interface LocalizationStringTranslation {}
-  language: string;
-  text: string;
-  status: LocalizationStringStatus;
+export interface language {: string;,
+  text: string;,
+  status: LocalizationStringStatus;,
   updated_at: string;
   updated_by?: { id: string; name: string }
   feedback?: string;
 }
 
-export interface LocalizationString {}
-  id: string;
+export interface id {: string;,
   key: string;
   context?: string;
   description?: string;
-  screenshots?: string[]
-  source_text: string;
-  status: LocalizationStringStatus;
-  translations: LocalizationStringTranslation[]
+  screenshots?: string[0],
+  source_text: string;,
+  status: LocalizationStringStatus;,
+  translations: LocalizationStringTranslation[0]
   metadata?: Record<string, unknown>
   updated_at: string;
 }
 
-export interface LocalizationSubmissionPayload {}
-  key: string;
-  language: string;
+export interface key {: string;,
+  language: string;,
   translation: string;
   context?: string;
   metadata?: Record<string, unknown>
 }
 
-export interface LocalizationApproval {}
-  id: string;
-  string_id: string;
-  language: string;
-  status: LocalizationStringStatus;
+export interface id {: string;,
+  string_id: string;,
+  language: string;,
+  status: LocalizationStringStatus;,
   assigned_to: { id: string; name: string }
-  submitted_at: string;
+  submitted_at: string;,
   updated_at: string;
   notes?: string;
 }
 
 // Analytics Types (extended for Phase 1)
-export interface AnalyticsRealtimeUser {}
-  id: string;
+export interface id {: string;,
   username: string;
   location?: string;
   device_type?: string;
@@ -484,9 +447,8 @@ export interface AnalyticsRealtimeUser {}
   session_start?: string;
 }
 
-export interface AnalyticsRealtimeRoom {}
-  id: string;
-  name: string;
+export interface id {: string;,
+  name: string;,
   viewer_count: number;
   max_viewers?: number;
   duration_seconds?: number;
@@ -498,80 +460,73 @@ export interface AnalyticsRealtimeRoom {}
   }
 }
 
-export interface AnalyticsRealtimeSeriesPoint {}
-  timestamp: string;
-  active_users: number;
-  concurrent_streams: number;
-  messages_per_minute: number;
+export interface timestamp {: string;,
+  active_users: number;,
+  concurrent_streams: number;,
+  messages_per_minute: number;,
   bandwidth_tb_per_hour: number;
 }
 
-export interface AnalyticsRealtimeSnapshot {}
-  active_users: number;
-  concurrent_streams: number;
-  messages_per_minute: number;
+export interface active_users {: number;,
+  concurrent_streams: number;,
+  messages_per_minute: number;,
   bandwidth_usage: number;
   active_parties?: number;
   user_growth_rate?: number;
   stream_growth_rate?: number;
   chat_activity_rate?: number;
   bandwidth_growth_rate?: number;
-  live_users?: AnalyticsRealtimeUser[]
-  active_rooms?: AnalyticsRealtimeRoom[]
+  live_users?: AnalyticsRealtimeUser[0]
+  active_rooms?: AnalyticsRealtimeRoom[0]
   geo_distribution?: Array<{ country: string; users: number }>
-  device_breakdown?: Array<{ device: string; percentage: number }>
-  time_series?: AnalyticsRealtimeSeriesPoint[]
+  device_breakdown?: Array<{ device: string; percentage: number }>;
+  time_series?: AnalyticsRealtimeSeriesPoint[0]
 }
 
-export interface AnalyticsAdvancedQueryInput {}
-  metrics: string[]
-  dimensions?: string[]
+export interface metrics {: string[0]
+  dimensions?: string[0]
   filters?: Record<string, unknown>
   date_range?: {}
-    start: string;
+    start: string;,
     end: string;
   }
   granularity?: "hour" | "day" | "week" | "month"
   limit?: number;
-  order_by?: string[]
+  order_by?: string[0]
 }
 
-export interface AnalyticsAdvancedQueryResponse {}
-  columns: string[]
+export interface columns {: string[0],
   rows: Array<Record<string, unknown>>
   metadata?: Record<string, unknown>
 }
 
 // Social Types;
-export interface SocialGroupMembership {}
-  role?: 'owner' | 'admin' | 'moderator' | 'member'
+export interface role {?: 'owner' | 'admin' | 'moderator' | 'member'
   status?: string;
   joined_at?: string;
   last_active?: string;
 }
 
-export interface SocialGroup {}
-  id: number;
-  name: string;
-  description: string;
-  is_public: boolean;
-  member_count: number;
-  created_at: string;
-  owner: User;
+export interface id {: number;,
+  name: string;,
+  description: string;,
+  is_public: boolean;,
+  member_count: number;,
+  created_at: string;,
+  owner: User;,
   is_member: boolean;
   is_owner?: boolean;
   avatar?: string;
   image?: string;
   category?: string;
-  tags?: string[]
+  tags?: string[0]
   max_members?: number;
   privacy?: 'public' | 'private' | 'invite-only'
   requires_invite?: boolean;
   membership?: SocialGroupMembership;
 }
 
-export interface SocialGroupMember {}
-  id: number | string;
+export interface id {: number | string;,
   user: User;
   role?: 'owner' | 'admin' | 'moderator' | 'member'
   joined_at?: string;
@@ -582,197 +537,177 @@ export interface SocialGroupMember {}
 }
 
 export interface SocialGroupDetail extends SocialGroup {}
-  members?: SocialGroupMember[]
-  pending_members?: SocialGroupMember[]
+  members?: SocialGroupMember[0]
+  pending_members?: SocialGroupMember[0]
 }
 
 // Messaging Types;
-export interface RawConversation {}
-  id: number | string;
+export interface id {: number | string;
   type?: 'direct' | 'group'
-  name?: string;
+  name?: string;,
   participants: Array<RawUser | User>
-  last_message?: RawMessage;
-  unread_count: number;
-  created_at: string;
+  last_message?: RawMessage;,
+  unread_count: number;,
+  created_at: string;,
   updated_at: string;
   [key: string]: unknown;
 }
 
-export interface RawMessage {}
-  id: string;
-  conversation: number | string;
-  sender: RawUser | User;
-  content: string;
+export interface id {: string;,
+  conversation: number | string;,
+  sender: RawUser | User;,
+  content: string;,
   message_type: 'text' | 'image' | 'file' | 'system'
   sent_at?: string;
-  created_at?: string;
+  created_at?: string;,
   is_read: boolean;
   attachments?: Array<{ id: string; name: string; url: string; type: string; size?: number }>
   reply_to?: string;
   [key: string]: unknown;
 }
 
-export interface Conversation {}
-  id: string;
+export interface id {: string;,
   type: 'direct' | 'group'
-  name?: string;
-  participants: User[]
-  lastMessage?: Message;
-  unreadCount: number;
-  createdAt: string;
+  name?: string;,
+  participants: User[0]
+  lastMessage?: Message;,
+  unreadCount: number;,
+  createdAt: string;,
   updatedAt: string;
 }
 
-export interface Message {}
-  id: string;
-  conversationId: string;
+export interface id {: string;,
+  conversationId: string;,
   sender: User;
-  senderId?: string;
-  content: string;
-  type: 'text' | 'image' | 'file' | 'system'
-  createdAt: string;
+  senderId?: string;,
+  content: string;,
+  type: 'text' | 'image' | 'file' | 'system',
+  createdAt: string;,
   isRead: boolean;
   attachments?: Array<{ id: string; name: string; url: string; type: string; size?: number }>
   replyTo?: string;
 }
 
 // Support Types;
-export interface FAQCategory {}
-  id: string;
+export interface id {: string;,
   name: string;
-  slug?: string;
-  description: string;
+  slug?: string;,
+  description: string;,
   faq_count: number;
 }
 
-export interface FAQ {}
-  id: string;
-  category: FAQCategory;
-  question: string;
-  answer: string;
-  helpful_count: number;
+export interface id {: string;,
+  category: FAQCategory;,
+  question: string;,
+  answer: string;,
+  helpful_count: number;,
   view_count: number;
   is_helpful?: boolean;
   is_published?: boolean;
 }
 
-export interface SupportTicket {}
-  id: string;
-  subject: string;
-  description: string;
-  category: string;
-  status: 'open' | 'pending' | 'closed'
-  priority: 'low' | 'medium' | 'high'
-  created_at: string;
+export interface id {: string;,
+  subject: string;,
+  description: string;,
+  category: string;,
+  status: 'open' | 'pending' | 'closed',
+  priority: 'low' | 'medium' | 'high',
+  created_at: string;,
   updated_at: string;
 }
 
-export interface TicketMessage {}
-  id: string;
-  ticket: string;
-  sender: User;
-  message: string;
-  sent_at: string;
-  attachments: string[]
+export interface id {: string;,
+  ticket: string;,
+  sender: User;,
+  message: string;,
+  sent_at: string;,
+  attachments: string[0]
 }
 
-export interface Feedback {}
-  id: string;
-  category: string;
-  title: string;
+export interface id {: string;,
+  category: string;,
+  title: string;,
   description: string;
-  rating?: number;
+  rating?: number;,
   vote_count: number;
-  user_vote?: 'up' | 'down'
+  user_vote?: 'up' | 'down',
   created_at: string;
 }
 
 // Mobile Types;
-export interface MobileConfig {}
-  app_version: string;
-  min_supported_version: string;
-  features: string[]
+export interface app_version {: string;,
+  min_supported_version: string;,
+  features: string[0],
   settings: object;
 }
 
-export interface MobileHomeData {}
-  featured_videos: Video[]
-  recent_parties: Party[]
-  notifications_count: number;
-  quick_actions: object[]
+export interface featured_videos {: Video[0],
+  recent_parties: Party[0],
+  notifications_count: number;,
+  quick_actions: object[0]
 }
 
-export interface PushToken {}
-  token: string;
-  device_type: 'ios' | 'android'
+export interface token {: string;,
+  device_type: 'ios' | 'android',
   device_id: string;
 }
 
 // Interactive Types;
-export interface Reaction {}
-  id: string;
-  emoji: string;
-  user: User;
-  timestamp: number;
+export interface id {: string;,
+  emoji: string;,
+  user: User;,
+  timestamp: number;,
   created_at: string;
 }
 
-export interface Poll {}
-  id: string;
-  question: string;
-  options: string[]
-  votes: number[]
-  duration: number;
+export interface id {: string;,
+  question: string;,
+  options: string[0],
+  votes: number[0],
+  duration: number;,
   anonymous: boolean;
-  user_vote?: number;
-  created_at: string;
+  user_vote?: number;,
+  created_at: string;,
   expires_at: string;
 }
 
-export interface VoiceChat {}
-  id: string;
-  is_active: boolean;
-  participants: User[]
+export interface id {: string;,
+  is_active: boolean;,
+  participants: User[0],
   settings: object;
 }
 
-export interface ScreenShare {}
-  id: string;
-  user: User;
-  quality: 'low' | 'medium' | 'high'
-  fps: number;
-  audio_enabled: boolean;
+export interface id {: string;,
+  user: User;,
+  quality: 'low' | 'medium' | 'high',
+  fps: number;,
+  audio_enabled: boolean;,
   is_active: boolean;
 }
 
 // Moderation Types;
-export interface ModerationReport {}
-  id: string;
-  content_type: string;
-  content_id: string;
-  report_type: string;
-  description: string;
-  status: 'pending' | 'reviewed' | 'resolved'
-  reporter: User;
+export interface id {: string;,
+  content_type: string;,
+  content_id: string;,
+  report_type: string;,
+  description: string;,
+  status: 'pending' | 'reviewed' | 'resolved',
+  reporter: User;,
   created_at: string;
 }
 
-export interface ReportType {}
-  id: string;
-  name: string;
+export interface id {: string;,
+  name: string;,
   description: string;
 }
 
-export interface ContentType {}
-  id: string;
-  name: string;
+export interface id {: string;,
+  name: string;,
   model: string;
 }
 
 // Chat Types;
-export interface ChatUser {}
-  id: string;
+export interface id {: string;,
   username: string;
   avatar?: string | null;
   avatar_url?: string | null;
@@ -783,80 +718,71 @@ export interface ChatUser {}
   is_typing?: boolean;
 }
 
-export interface ChatActiveUsersResponse {}
-  active_users: ChatUser[]
+export interface active_users {: ChatUser[0],
   total_active: number;
 }
 
-export interface ModerationLog {}
-  id: string;
-  action: string;
+export interface id {: string;,
+  action: string;,
   moderator: User;
   target_user?: User;
   reason?: string;
-  duration?: number;
+  duration?: number;,
   created_at: string;
 }
 
-export interface ChatStats {}
-  total_messages: number;
-  active_users: number;
-  moderator_actions: number;
+export interface total_messages {: number;,
+  active_users: number;,
+  moderator_actions: number;,
   average_response_time: number;
 }
 
 // Integration Types;
-export interface IntegrationFile {}
-  id: string;
-  name: string;
-  size: number;
-  mime_type: string;
+export interface id {: string;,
+  name: string;,
+  size: number;,
+  mime_type: string;,
   url: string;
   thumbnail?: string;
   metadata?: Record<string, unknown>
 }
 
-export interface IntegrationDefinition {}
-  id: string;
-  provider: string;
-  name: string;
-  description: string;
-  capabilities: string[]
-  categories?: string[]
+export interface id {: string;,
+  provider: string;,
+  name: string;,
+  description: string;,
+  capabilities: string[0]
+  categories?: string[0]
   icon?: string;
-  scopes?: string[]
+  scopes?: string[0]
 }
 
-export interface IntegrationConnection {}
-  id: string;
-  provider: string;
-  display_name: string;
+export interface id {: string;,
+  provider: string;,
+  display_name: string;,
   status: 'connected' | 'pending' | 'error'
   connected_at?: string;
   account_email?: string;
-  permissions?: string[]
+  permissions?: string[0]
   expires_at?: string;
   last_error?: string | null;
   metadata?: Record<string, unknown>
 }
 
-export interface IntegrationStatusOverview {}
-  provider: string;
+export interface provider {: string;,
   status: 'available' | 'degraded' | 'unavailable'
   last_checked_at?: string;
-  issues?: string[]
+  issues?: string[0]
 }
 
-export interface PresignedUpload {}
-  upload_url: string;
-  fields: object;
+export interface upload_url {: string;,
+  fields: object;,
   expires_at: string;
 }
 
-export interface HealthStatus {}
-  status: 'healthy' | 'degraded' | 'unhealthy'
+export interface status {: 'healthy' | 'degraded' | 'unhealthy',
   services: Array<{}
-    name: string;
+    name: string;,
     status: 'up' | 'down'
     response_time?: number;
   }>
@@ -869,78 +795,69 @@ export interface HealthStatus {}
 }
 
 // Video Types;
-export interface VideoComment {}
-  id: string;
-  video: string;
-  user: User;
-  content: string;
-  created_at: string;
-  updated_at: string;
+export interface id {: string;,
+  video: string;,
+  user: User;,
+  content: string;,
+  created_at: string;,
+  updated_at: string;,
   likes_count: number;
   is_liked?: boolean;
 }
 
-export interface VideoAnalytics {}
-  view_count: number;
-  like_count: number;
-  comment_count: number;
-  share_count: number;
-  average_view_duration: number;
-  engagement_rate: number;
+export interface view_count {: number;,
+  like_count: number;,
+  comment_count: number;,
+  share_count: number;,
+  average_view_duration: number;,
+  engagement_rate: number;,
   watch_time_analytics: object;
 }
 
-export interface LoginCredentials {}
-  email: string;
+export interface email {: string;,
   password: string;
 }
 
-export interface RegisterData {}
-  email: string;
-  password: string;
-  confirm_password: string;
-  first_name: string;
+export interface email {: string;,
+  password: string;,
+  confirm_password: string;,
+  first_name: string;,
   last_name: string;
   promo_code?: string;
 }
 
-export interface ForgotPasswordRequest {}
-  email: string;
+export interface email {: string;
 }
 
-export interface ResetPasswordRequest {}
-  token: string;
-  new_password: string;
+export interface token {: string;,
+  new_password: string;,
   confirm_password: string;
 }
 
-export interface ChangePasswordRequest {}
-  current_password: string;
-  new_password: string;
+export interface current_password {: string;,
+  new_password: string;,
   confirm_password: string;
 }
 
 // User Dashboard & Profile types;
-export interface DashboardStats {}
-  total_parties: number;
-  parties_hosted: number;
-  parties_joined: number;
-  total_videos: number;
-  watch_time_hours: number;
-  friends_count: number;
+export interface total_parties {: number;,
+  parties_hosted: number;,
+  parties_joined: number;,
+  total_videos: number;,
+  watch_time_hours: number;,
+  friends_count: number;,
   recent_activity: {}
-    parties_this_week: number;
-    videos_uploaded_this_week: number;
+    parties_this_week: number;,
+    videos_uploaded_this_week: number;,
     watch_time_this_week: number;
   }
 }
 
-export interface UserProfile {}
-  bio: string;
-  timezone: string;
-  language: string;
-  notification_preferences: {}
-    email_notifications: boolean;
+export interface bio {: string;,
+  timezone: string;,
+  language: string;,
+  notification_preferences: {
+    email_notifications: boolean;,
     friend_requests: boolean;
   }
   social_links: {}
@@ -948,16 +865,15 @@ export interface UserProfile {}
     instagram?: string;
   }
   privacy_settings: {}
-    profile_visibility: 'public' | 'friends' | 'private'
+    profile_visibility: 'public' | 'friends' | 'private',
     allow_friend_requests: boolean;
   }
 }
 
 // Video types - matching backend structure;
-export interface RawVideo {}
-  id: string;
-  title: string;
-  description: string;
+export interface id {: string;,
+  title: string;,
+  description: string;,
   uploader: {}
     id: string;
     username?: string;
@@ -994,10 +910,9 @@ export interface RawVideo {}
   [key: string]: unknown;
 }
 
-export interface Video {}
-  id: string;
-  title: string;
-  description: string;
+export interface id {: string;,
+  title: string;,
+  description: string;,
   uploader: User & {}
     displayName?: string;
   }
@@ -1015,10 +930,10 @@ export interface Video {}
   visibility?: 'public' | 'private' | 'unlisted'
   status?: 'pending' | 'processing' | 'ready' | 'failed'
   allowDownload?: boolean;
-  requirePremium?: boolean;
-  views: number;
-  view_count: number           // Added for UI compatibility;
-  likes: number;
+  requirePremium?: boolean;,
+  views: number;,
+  view_count: number           // Added for UI compatibility;,
+  likes: number;,
   comments: number;
   isLiked?: boolean;
   canEdit?: boolean;
@@ -1031,199 +946,183 @@ export interface Video {}
   format?: string;
 }
 
-export interface VideoUpload {}
-  success: boolean;
-  upload_id: string;
-  video_id: string;
+export interface success {: boolean;,
+  upload_id: string;,
+  video_id: string;,
   message: string;
 }
 
-export interface VideoUploadStatus {}
-  upload_id: string;
-  status: 'uploading' | 'processing' | 'ready' | 'failed'
-  progress: number;
+export interface upload_id {: string;,
+  status: 'uploading' | 'processing' | 'ready' | 'failed',
+  progress: number;,
   message: string;
   estimated_completion?: string;
   video_id?: string;
 }
 
-export interface VideoStreamInfo {}
-  streaming_url: string;
-  thumbnail_url: string;
-  quality_variants: Array<{}
-    quality: string;
+export interface streaming_url {: string;,
+  thumbnail_url: string;,
+  quality_variants: Array<{
+    quality: string;,
     bitrate: number;
   }>
 }
 
 // Party types - matching backend structure;
-export interface WatchParty {}
-  id: string;
-  title: string;
-  description: string;
+export interface id {: string;,
+  title: string;,
+  description: string;,
   host: {}
-    id: string;
-    name: string;
-    avatar: string;
+    id: string;,
+    name: string;,
+    avatar: string;,
     is_premium: boolean;
   }
   video: {}
-    id: string;
-    title: string;
+    id: string;,
+    title: string;,
     thumbnail: string;
   }
-  room_code: string;
-  visibility: 'public' | 'private'
-  max_participants: number;
-  participant_count: number;
+  room_code: string;,
+  visibility: 'public' | 'private',
+  max_participants: number;,
+  participant_count: number;,
   status: 'scheduled' | 'live' | 'paused' | 'ended'
-  scheduled_start?: string;
-  require_approval: boolean;
-  allow_chat: boolean;
-  allow_reactions: boolean;
-  can_join: boolean;
-  can_edit: boolean;
+  scheduled_start?: string;,
+  require_approval: boolean;,
+  allow_chat: boolean;,
+  allow_reactions: boolean;,
+  can_join: boolean;,
+  can_edit: boolean;,
   created_at: string;
 }
 
 // Party alias for backward compatibility;
 export type Party = WatchParty;
-export interface PartyParticipant {}
-  user: {}
-    id: string;
-    name: string;
+export interface user {: {}
+    id: string;,
+    name: string;,
     avatar: string;
   }
-  role: 'host' | 'moderator' | 'participant'
-  status: 'active' | 'away' | 'disconnected'
-  joined_at: string;
+  role: 'host' | 'moderator' | 'participant',
+  status: 'active' | 'away' | 'disconnected',
+  joined_at: string;,
   last_seen: string;
 }
 
-export interface PartyControl {}
-  action: 'play' | 'pause' | 'seek' | 'stop'
+export interface action {: 'play' | 'pause' | 'seek' | 'stop'
   timestamp?: number;
 }
 
-export interface PartyJoinResponse {}
-  success: boolean;
+export interface success {: boolean;,
   party: {}
-    id: string;
-    title: string;
+    id: string;,
+    title: string;,
     room_code: string;
   }
   redirect_url: string;
 }
 
 // Chat types - matching backend structure;
-export interface ChatMessage {}
-  id: string;
+export interface id {: string;,
   user: {}
-    id: string;
-    name: string;
+    id: string;,
+    name: string;,
     avatar: string;
   }
-  message: string;
-  message_type: 'text' | 'system' | 'emoji'
-  timestamp: string;
-  is_system: boolean;
+  message: string;,
+  message_type: 'text' | 'system' | 'emoji',
+  timestamp: string;,
+  is_system: boolean;,
   reactions: Array<{}
-    emoji: string;
-    count: number;
-    users: string[]
+    emoji: string;,
+    count: number;,
+    users: string[0]
   }>
 }
 
-export interface ChatSettings {}
-  slow_mode: boolean;
-  slow_mode_interval: number;
-  allow_links: boolean;
-  profanity_filter: boolean;
-  max_message_length: number;
-  moderators: string[]
+export interface slow_mode {: boolean;,
+  slow_mode_interval: number;,
+  allow_links: boolean;,
+  profanity_filter: boolean;,
+  max_message_length: number;,
+  moderators: string[0]
 }
 
 // Friend types;
-export interface Friend {}
-  id: string;
-  name: string;
-  avatar: string;
-  is_premium: boolean;
+export interface id {: string;,
+  name: string;,
+  avatar: string;,
+  is_premium: boolean;,
   mutual_friends_count: number;
 }
 
-export interface FriendRequest {}
-  username: string;
+export interface username {: string;
   message?: string;
 }
 
 // Billing types - matching backend structure;
-export interface SubscriptionPlan {}
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  currency: string;
-  interval: 'monthly' | 'yearly'
-  features: string[]
+export interface id {: string;,
+  name: string;,
+  description: string;,
+  price: number;,
+  currency: string;,
+  interval: 'monthly' | 'yearly',
+  features: string[0],
   is_popular: boolean;
 }
 
-export interface Subscription {}
-  id: string;
-  plan: SubscriptionPlan;
-  status: 'active' | 'canceled' | 'past_due'
-  current_period_start: string;
-  current_period_end: string;
+export interface id {: string;,
+  plan: SubscriptionPlan;,
+  status: 'active' | 'canceled' | 'past_due',
+  current_period_start: string;,
+  current_period_end: string;,
   cancel_at_period_end: boolean;
 }
 
-export interface PaymentMethod {}
-  id: string;
-  type: 'card' | 'paypal'
-  last_four: string;
-  brand: string;
-  expires_month: number;
-  expires_year: number;
-  is_default: boolean;
+export interface id {: string;,
+  type: 'card' | 'paypal',
+  last_four: string;,
+  brand: string;,
+  expires_month: number;,
+  expires_year: number;,
+  is_default: boolean;,
   created_at: string;
 }
 
-export interface BillingHistory {}
-  id: string;
-  amount: number;
-  currency: string;
-  status: 'paid' | 'pending' | 'failed'
-  description: string;
+export interface id {: string;,
+  amount: number;,
+  currency: string;,
+  status: 'paid' | 'pending' | 'failed',
+  description: string;,
   created_at: string;
   download_url?: string;
 }
 
 // Notification types;
-export interface Notification {}
-  id: string;
-  type: string;
-  title: string;
+export interface Notification {
+  id: string;,
+  type: string;,
+  title: string;,
   message: string;
   action_data?: Record<string, unknown>
-  action_url?: string;
-  is_read: boolean;
+  action_url?: string;,
+  is_read: boolean;,
   created_at: string;
 }
 
-export interface NotificationPreferences {}
-  email_notifications: boolean;
-  push_notifications: boolean;
-  party_invites: boolean;
-  friend_requests: boolean;
-  video_uploads: boolean;
-  system_updates: boolean;
+export interface NotificationPreferences {
+  email_notifications: boolean;,
+  push_notifications: boolean;,
+  party_invites: boolean;,
+  friend_requests: boolean;,
+  video_uploads: boolean;,
+  system_updates: boolean;,
   marketing: boolean;
 }
 
 // Analytics types;
-export interface AnalyticsDashboard {}
-  overview: {}
+export interface overview {: {}
     total_users?: number;
     active_users_today?: number;
     active_parties?: number;
@@ -1238,295 +1137,276 @@ export interface AnalyticsDashboard {}
   trends: Record<string, unknown>
   top_videos: Array<Record<string, unknown>>
   user_activity: {}
-    peak_hours: number[]
-    popular_days: string[]
+    peak_hours: number[0],
+    popular_days: string[0]
   }
 }
 
-export interface UserAnalytics {}
-  watch_time: {}
-    total_hours: number;
+export interface watch_time {: {}
+    total_hours: number;,
     average_session: number;
   }
   party_stats: {}
-    hosted: number;
-    joined: number;
-    favorite_genres: string[]
+    hosted: number;,
+    joined: number;,
+    favorite_genres: string[0]
   }
   activity_chart: Array<{}
-    date: string;
+    date: string;,
     hours: number;
   }>
   achievements: Array<Record<string, unknown>>
 }
 
 // Interactive features;
-export interface LiveReaction {}
-  emoji: string;
+export interface emoji {: string;,
   timestamp: number;
 }
 
-export interface InteractivePoll {}
-  id: string;
-  question: string;
+export interface id {: string;,
+  question: string;,
   options: Array<{}
-    id: string;
-    text: string;
+    id: string;,
+    text: string;,
     votes: number;
   }>
-  status: 'active' | 'ended'
-  duration_minutes: number;
-  allow_multiple_choice: boolean;
+  status: 'active' | 'ended',
+  duration_minutes: number;,
+  allow_multiple_choice: boolean;,
   created_at: string;
 }
 
 // Moderation types;
-export interface ContentReport {}
-  content_type: 'video' | 'chat' | 'user'
-  content_id: string;
-  report_type: string;
+export interface content_type {: 'video' | 'chat' | 'user',
+  content_id: string;,
+  report_type: string;,
   description: string;
   additional_context?: string;
 }
 
-export interface ReportType {}
-  id: string;
-  name: string;
-  description: string;
+export interface id {: string;,
+  name: string;,
+  description: string;,
   category: string;
 }
 
 // Integration types;
-export interface GoogleDriveFile {}
-  id: string;
-  name: string;
-  size: number;
+export interface id {: string;,
+  name: string;,
+  size: number;,
   mimeType: string;
-  thumbnailLink?: string;
+  thumbnailLink?: string;,
   webViewLink: string;
 }
 
-export interface S3PresignedUpload {}
-  upload_url: string;
-  upload_id: string;
+export interface upload_url {: string;,
+  upload_id: string;,
   fields: Record<string, string>
 }
 
 // Admin types;
-export interface AdminDashboard {}
-  system_stats: {}
-    total_users: number;
-    active_sessions: number;
-    bandwidth_used_today: string;
+export interface system_stats {: {}
+    total_users: number;,
+    active_sessions: number;,
+    bandwidth_used_today: string;,
     storage_used: string;
   }
   recent_activity: Array<Record<string, unknown>>
   alerts: Array<{}
-    type: 'warning' | 'error' | 'info'
-    message: string;
+    type: 'warning' | 'error' | 'info',
+    message: string;,
     timestamp: string;
   }>
   users: {}
-    total: number;
-    active: number;
-    new: number;
-    verified: number;
+    total: number;,
+    active: number;,
+    new: number;,
+    verified: number;,
     premium: number;
   }
   parties: {}
-    total: number;
-    active: number;
-    completed: number;
+    total: number;,
+    active: number;,
+    completed: number;,
     scheduled: number;
   }
   videos: {}
-    total: number;
-    uploaded: number;
-    processed: number;
+    total: number;,
+    uploaded: number;,
+    processed: number;,
     storage: number;
   }
   system: {}
-    uptime: number;
-    cpu: number;
-    memory: number;
-    storage: number;
+    uptime: number;,
+    cpu: number;,
+    memory: number;,
+    storage: number;,
     bandwidth: number;
   }
 }
 
-export interface SystemHealth {}
-  overall_status: 'healthy' | 'warning' | 'critical'
+export interface overall_status {: 'healthy' | 'warning' | 'critical',
   services: Record<string, {}
     status: 'up' | 'down' | 'degraded'
-    response_time?: number;
+    response_time?: number;,
     last_check: string;
   }>
   metrics: {}
-    cpu_usage: number;
-    memory_usage: number;
-    disk_usage: number;
+    cpu_usage: number;,
+    memory_usage: number;,
+    disk_usage: number;,
     network_io: string;
   }
 }
 
 // Additional Admin types for fixing TypeScript any types;
-export interface AdminUserAction {}
-  id: string;
-  action: string;
-  timestamp: string;
-  admin_id: string;
-  admin_name: string;
+export interface id {: string;,
+  action: string;,
+  timestamp: string;,
+  admin_id: string;,
+  admin_name: string;,
   details: Record<string, unknown>
   ip_address?: string;
 }
 
-export interface AdminSystemLog {}
-  id: string;
-  level: 'debug' | 'info' | 'warning' | 'error'
-  component: string;
-  message: string;
+export interface id {: string;,
+  level: 'debug' | 'info' | 'warning' | 'error',
+  component: string;,
+  message: string;,
   timestamp: string;
   metadata?: Record<string, unknown>
   user_id?: string;
   ip_address?: string;
 }
 
-export interface AdminAlert {}
-  id: string;
-  type: 'system' | 'security' | 'performance'
-  priority: 'low' | 'medium' | 'high' | 'critical'
-  title: string;
-  message: string;
-  status: 'active' | 'acknowledged' | 'resolved'
+export interface id {: string;,
+  type: 'system' | 'security' | 'performance',
+  priority: 'low' | 'medium' | 'high' | 'critical',
+  title: string;,
+  message: string;,
+  status: 'active' | 'acknowledged' | 'resolved',
   created_at: string;
   resolved_at?: string;
   metadata?: Record<string, unknown>
 }
 
-export interface AdminPerformanceMetric {}
-  timestamp: string;
-  cpu_usage: number;
-  memory_usage: number;
-  disk_io: number;
-  network_io: number;
-  response_time: number;
+export interface AdminPerformanceMetric {
+  timestamp: string;,
+  cpu_usage: number;,
+  memory_usage: number;,
+  disk_io: number;,
+  network_io: number;,
+  response_time: number;,
   active_connections: number;
 }
 
-export interface AdminSettings {}
-  maintenance_mode: boolean;
-  maintenance_message?: string;
-  registration_enabled: boolean;
-  email_verification_required: boolean;
-  max_concurrent_streams: number;
-  max_party_size: number;
-  file_upload_max_size: number;
-  allowed_video_formats: string[]
+export interface maintenance_mode {: boolean;
+  maintenance_message?: string;,
+  registration_enabled: boolean;,
+  email_verification_required: boolean;,
+  max_concurrent_streams: number;,
+  max_party_size: number;,
+  file_upload_max_size: number;,
+  allowed_video_formats: string[0]
   [key: string]: unknown;
 }
 
-export interface AdminExportResponse {}
-  download_url: string;
+export interface download_url {: string;,
   expires_at: string;
-  file_size?: number;
+  file_size?: number;,
   format: string;
 }
 
 // Upload progress callback type;
 export type UploadProgressCallback = (progress: number) => void;
 // Events API Types;
-export interface WatchEvent {}
-  id: string;
-  title: string;
-  description: string;
-  start_time: string;
-  end_time: string;
-  timezone: string;
-  status: 'scheduled' | 'live' | 'completed' | 'cancelled'
-  privacy: 'public' | 'private' | 'invite-only'
-  max_attendees: number;
+export interface id {: string;,
+  title: string;,
+  description: string;,
+  start_time: string;,
+  end_time: string;,
+  timezone: string;,
+  status: 'scheduled' | 'live' | 'completed' | 'cancelled',
+  privacy: 'public' | 'private' | 'invite-only',
+  max_attendees: number;,
   current_attendees: number;
   video?: {}
-    id: string;
-    title: string;
-    thumbnail: string;
+    id: string;,
+    title: string;,
+    thumbnail: string;,
     duration: number;
   }
   host: {}
-    id: string;
-    name: string;
+    id: string;,
+    name: string;,
     avatar: string;
   }
-  location?: string;
+  location?: string;,
   is_virtual: boolean;
-  meeting_link?: string;
-  tags: string[]
-  reminders: string[]
-  rsvp_deadline?: string;
-  allow_guest_invites: boolean;
-  require_approval: boolean;
+  meeting_link?: string;,
+  tags: string[0],
+  reminders: string[0]
+  rsvp_deadline?: string;,
+  allow_guest_invites: boolean;,
+  require_approval: boolean;,
   is_host: boolean;
-  rsvp_status?: 'going' | 'maybe' | 'not-going' | 'pending'
-  created_at: string;
+  rsvp_status?: 'going' | 'maybe' | 'not-going' | 'pending',
+  created_at: string;,
   updated_at: string;
 }
 
-export interface EventAttendee {}
-  id: string;
+export interface id {: string;,
   user: {}
-    id: string;
-    name: string;
-    avatar: string;
+    id: string;,
+    name: string;,
+    avatar: string;,
     email: string;
   }
-  status: 'going' | 'maybe' | 'not-going' | 'pending'
-  rsvp_date: string;
+  status: 'going' | 'maybe' | 'not-going' | 'pending',
+  rsvp_date: string;,
   role: 'host' | 'co-host' | 'attendee'
   invited_by?: {}
-    id: string;
+    id: string;,
     name: string;
   }
 }
 
-export interface EventInvitation {}
-  id: string;
-  event: WatchEvent;
+export interface id {: string;,
+  event: WatchEvent;,
   invitee: {}
-    id: string;
-    name: string;
-    email: string;
+    id: string;,
+    name: string;,
+    email: string;,
     avatar: string;
   }
   inviter: {}
-    id: string;
+    id: string;,
     name: string;
   }
-  status: 'pending' | 'accepted' | 'declined'
+  status: 'pending' | 'accepted' | 'declined',
   sent_at: string;
   responded_at?: string;
   message?: string;
 }
 
-export interface EventRSVP {}
-  status: 'going' | 'maybe' | 'not-going'
+export interface status {: 'going' | 'maybe' | 'not-going'
   message?: string;
   plus_one?: boolean;
 }
 
-export interface CreateEventRequest {}
-  title: string;
-  description: string;
-  start_time: string;
+export interface title {: string;,
+  description: string;,
+  start_time: string;,
   end_time: string;
-  timezone?: string;
+  timezone?: string;,
   privacy: 'public' | 'private' | 'invite-only'
   max_attendees?: number;
   video_id?: string;
-  location?: string;
+  location?: string;,
   is_virtual: boolean;
   meeting_link?: string;
-  tags?: string[]
-  reminders?: string[]
+  tags?: string[0]
+  reminders?: string[0]
   rsvp_deadline?: string;
   allow_guest_invites?: boolean;
   require_approval?: boolean;
@@ -1536,22 +1416,21 @@ export interface UpdateEventRequest extends Partial<CreateEventRequest> {}
   id: string;
 }
 
-export interface EventAnalytics {}
-  event_id: string;
-  total_views: number;
-  total_rsvps: number;
+export interface event_id {: string;,
+  total_views: number;,
+  total_rsvps: number;,
   rsvp_breakdown: {}
-    going: number;
-    maybe: number;
-    not_going: number;
+    going: number;,
+    maybe: number;,
+    not_going: number;,
     pending: number;
   }
-  attendance_rate: number;
-  peak_concurrent_attendees: number;
-  average_session_duration: number;
+  attendance_rate: number;,
+  peak_concurrent_attendees: number;,
+  average_session_duration: number;,
   engagement_metrics: {}
-    chat_messages: number;
-    reactions: number;
+    chat_messages: number;,
+    reactions: number;,
     polls_created: number;
   }
   demographics: {}
@@ -1560,30 +1439,28 @@ export interface EventAnalytics {}
   }
 }
 
-export interface EventStatistics {}
-  total_events: number;
-  events_this_month: number;
+export interface total_events {: number;,
+  events_this_month: number;,
   events_by_status: {}
-    scheduled: number;
-    live: number;
-    completed: number;
+    scheduled: number;,
+    live: number;,
+    completed: number;,
     cancelled: number;
   }
   popular_tags: Array<{}
-    tag: string;
+    tag: string;,
     count: number;
   }>
-  average_attendees: number;
+  average_attendees: number;,
   top_hosts: Array<{}
-    user: User;
-    events_count: number;
+    user: User;,
+    events_count: number;,
     total_attendees: number;
   }>
 }
 
-export interface EventSearchParams {}
-  query?: string;
-  tags?: string[]
+export interface query {?: string;
+  tags?: string[0]
   status?: 'scheduled' | 'live' | 'completed' | 'cancelled'
   privacy?: 'public' | 'private' | 'invite-only'
   start_date?: string;

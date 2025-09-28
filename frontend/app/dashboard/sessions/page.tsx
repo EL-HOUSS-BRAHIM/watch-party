@@ -1,6 +1,6 @@
 import { SessionsManager } from "@/components/security/sessions-manager"
 
-export default function SessionsPage() {}
+export default function SessionsPage() {
   return (
     <div className="container mx-auto py-8">
       <div className="max-w-4xl mx-auto">

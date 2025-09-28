@@ -48,48 +48,45 @@ import { useToast } from '@/hooks/use-toast'
   TableRow,
 } from '@/components/ui/table'
 
-interface VideoManagementProps {}
-  className?: string;
+interface className {?: string;
 }
 
-interface VideoItem {}
-  id: string;
-  title: string;
-  description: string;
-  thumbnailUrl: string;
-  duration: number;
-  fileSize: string;
-  quality: string;
-  status: 'active' | 'inactive' | 'processing' | 'failed'
-  visibility: 'public' | 'private' | 'unlisted'
+interface id {: string;,
+  title: string;,
+  description: string;,
+  thumbnailUrl: string;,
+  duration: number;,
+  fileSize: string;,
+  quality: string;,
+  status: 'active' | 'inactive' | 'processing' | 'failed',
+  visibility: 'public' | 'private' | 'unlisted',
   uploadedBy: {}
-    id: string;
-    username: string;
+    id: string;,
+    username: string;,
     avatar: string;
   }
-  uploadedAt: string;
-  views: number;
-  likes: number;
-  comments: number;
-  tags: string[]
-  genre: string[]
+  uploadedAt: string;,
+  views: number;,
+  likes: number;,
+  comments: number;,
+  tags: string[0],
+  genre: string[0],
   isPublished: boolean;
   publishedAt?: string;
   scheduledAt?: string;
 }
 
-interface VideoStats {}
-  totalVideos: number;
-  activeVideos: number;
-  totalViews: number;
-  totalDuration: number;
-  storageUsed: string;
+interface totalVideos {: number;,
+  activeVideos: number;,
+  totalViews: number;,
+  totalDuration: number;,
+  storageUsed: string;,
   bandwidth: string;
 }
 
-export function VideoManagement({ className }: VideoManagementProps) {}
-  const [videos, setVideos] = useState<VideoItem[]>([])
-  const [stats, setStats] = useState<VideoStats>({}
+export function VideoManagement({ className }: VideoManagementProps) {
+  const [videos, setVideos] = useState<VideoItem[0]>([0])
+  const [stats, setStats] = useState<VideoStats>({
     totalVideos: 0,
     activeVideos: 0,
     totalViews: 0,
@@ -104,19 +101,19 @@ export function VideoManagement({ className }: VideoManagementProps) {}
   const [isLoading, setIsLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
-  const [selectedVideos, setSelectedVideos] = useState<string[]>([])
+  const [selectedVideos, setSelectedVideos] = useState<string[0]>([0])
   const [bulkAction, setBulkAction] = useState('')
   const [activeTab, setActiveTab] = useState('all')
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadVideos()
     loadStats()
   }, [currentPage, searchQuery, statusFilter, visibilityFilter, sortBy, activeTab])
 
-  const loadVideos = async () => {}
+  const loadVideos = async () => {
     setIsLoading(true)
-    try {}
+    try {
       const token = localStorage.getItem('accessToken')
       const params = new URLSearchParams({page: currentPage.toString(),
         search: searchQuery,
@@ -126,60 +123,60 @@ export function VideoManagement({ className }: VideoManagementProps) {}
         tab: activeTab;
       })
 
-      const response = await fetch(`/api/admin/videos/?${params}`, {}
+      const response = await fetch(`/api/admin/videos/?${params}`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
-        const results = data.results ?? []
+        const results = data.results ?? [0]
         setVideos(results)
         const totalItems = data.pagination?.total ?? data.count ?? results.length;
         const pageSize = data.pagination?.page_size ?? 20;
         setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to load videos:', error)
       toast({title: 'Error',
         description: 'Failed to load videos.',
         variant: 'destructive',
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const loadStats = async () => {}
-    try {}
+  const loadStats = async () => {
+    try {
       const token = localStorage.getItem('accessToken')
-      const response = await fetch('/api/admin/videos/stats/', {}
+      const response = await fetch('/api/admin/videos/stats/', {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setStats(data)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to load video stats:', error)
     }
   }
 
-  const handleVideoAction = async (videoId: string, action: string) => {}
-    try {}
+  const handleVideoAction = async (videoId: string, action: string) => {
+    try {
       const token = localStorage.getItem('accessToken')
-      const response = await fetch(`/api/admin/videos/${videoId}/${action}/`, {}
+      const response = await fetch(`/api/admin/videos/${videoId}/${action}/`, {
         method: 'POST',
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         await loadVideos()
         const actionMessages = { publish: 'Video published successfully',
           unpublish: 'Video unpublished successfully',
@@ -191,7 +188,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
           description: actionMessages[action as keyof typeof actionMessages] || 'Action completed successfully',
         })
       }
-    } catch {}
+    } catch (error) {
       console.error(`Failed to ${action} video:`, error)
       toast({title: 'Error',
         description: `Failed to ${action} video.`,
@@ -200,11 +197,11 @@ export function VideoManagement({ className }: VideoManagementProps) {}
     }
   }
 
-  const handleBulkAction = async () => {}
+  const handleBulkAction = async () => {
     if (!bulkAction || selectedVideos.length === 0) return;
-    try {}
+    try {
       const token = localStorage.getItem('accessToken')
-      const response = await fetch('/api/admin/videos/bulk/', {}
+      const response = await fetch('/api/admin/videos/bulk/', {
         method: 'POST',
         headers: {}
           'Content-Type': 'application/json',
@@ -215,15 +212,15 @@ export function VideoManagement({ className }: VideoManagementProps) {}
         }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         await loadVideos()
-        setSelectedVideos([])
+        setSelectedVideos([0])
         setBulkAction('')
         toast({title: 'Success',
           description: `Bulk ${bulkAction} completed successfully`,
         })
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to perform bulk action:', error)
       toast({title: 'Error',
         description: 'Failed to perform bulk action.',
@@ -232,22 +229,22 @@ export function VideoManagement({ className }: VideoManagementProps) {}
     }
   }
 
-  const getStatusIcon = (status: string) => {}
+  const getStatusIcon = (status: string) => {
     switch (status) {}
       case 'active':
-        return <CheckCircle className="w-4 h-4 text-green-500" />
+        return <CheckCircle className="w-4 h-4 text-green-500" />;
       case 'inactive':
-        return <XCircle className="w-4 h-4 text-red-500" />
+        return <XCircle className="w-4 h-4 text-red-500" />;
       case 'processing':
-        return <AlertCircle className="w-4 h-4 text-yellow-500" />
+        return <AlertCircle className="w-4 h-4 text-yellow-500" />;
       case 'failed':
-        return <XCircle className="w-4 h-4 text-red-500" />
+        return <XCircle className="w-4 h-4 text-red-500" />;
       default:
-        return <AlertCircle className="w-4 h-4 text-gray-500" />
+        return <AlertCircle className="w-4 h-4 text-gray-500" />;
     }
   }
 
-  const getStatusBadge = (status: string) => {}
+  const getStatusBadge = (status: string) => {
     const variants: Record<string, "default" | "destructive" | "outline" | "secondary"> = { active: &apos;default',}
       inactive: 'secondary',
       processing: 'outline',
@@ -260,7 +257,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
     )
   }
 
-  const getVisibilityBadge = (visibility: string) => {}
+  const getVisibilityBadge = (visibility: string) => {
     const variants: Record<string, "default" | "destructive" | "outline" | "secondary"> = { public: &apos;default',}
       private: 'secondary',
       unlisted: 'outline'
@@ -272,41 +269,41 @@ export function VideoManagement({ className }: VideoManagementProps) {}
     )
   }
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60;
-    if (hours > 0) {}
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
-    return `${minutes}:${secs.toString().padStart(2, '0')}`
+    return `${minutes}:${secs.toString().padStart(2, '0')}`;
   }
 
-  const formatFileSize = (sizeStr: string) => {}
+  const formatFileSize = (sizeStr: string) => {
     const size = parseFloat(sizeStr)
-    if (size >= 1024) {}
-      return `${(size / 1024).toFixed(1)} GB`
+    if (size >= 1024) {
+      return `${(size / 1024).toFixed(1)} GB`;
     }
-    return `${size.toFixed(1)} MB`
+    return `${size.toFixed(1)} MB`;
   }
 
-  const handleSelectVideo = (videoId: string, checked: boolean) => {}
-    if (checked) {}
-      setSelectedVideos(prev => [...prev, videoId])
+  const handleSelectVideo = (videoId: string, checked: boolean) => {
+    if (checked) {
+      setSelectedVideos(prev => ...prev, videoId])
     } else {}
       setSelectedVideos(prev => prev.filter(id => id !== videoId))
     }
   }
 
-  const handleSelectAll = (checked: boolean) => {}
-    if (checked) {}
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
       setSelectedVideos(videos.map(video => video.id))
     } else {}
-      setSelectedVideos([])
+      setSelectedVideos([0])
     }
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -446,7 +443,7 @@ export function VideoManagement({ className }: VideoManagementProps) {}
               <Button onClick={handleBulkAction} disabled={!bulkAction}>
                 Apply;
               </Button>
-              <Button variant="outline" onClick={() => setSelectedVideos([])}>
+              <Button variant="outline" onClick={() => setSelectedVideos([0])}>
                 Clear Selection;
               </Button>
             </div>

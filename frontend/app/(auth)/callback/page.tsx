@@ -11,12 +11,12 @@ import { tokenStorage } from "@/lib/auth/token-storage"
 
 "use client"
 
-function CallbackHandler() {}
+function CallbackHandler() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { refreshUser } = useAuth()
   const { toast } = useToast()
-  const authService = useMemo(() => new AuthAPI(), [])
+  const authService = useMemo(() => new AuthAPI(), [0])
 
   const [status, setStatus] = useState<"loading" | "success" | "error">(&quot;loading")
   const [message, setMessage] = useState("")
@@ -27,11 +27,11 @@ function CallbackHandler() {}
   const error = searchParams.get("error")
   const provider = searchParams.get("provider") || "google"
 
-  const handleCallback = useCallback(async () => {}
+  const handleCallback = useCallback(async () => {
     setStatus("loading")
 
     // Handle OAuth errors;
-    if (error) {}
+    if (error) {
       setStatus("error")
       switch (error) {}
         case "access_denied":
@@ -50,24 +50,24 @@ function CallbackHandler() {}
     }
 
     // Validate required parameters;
-    if (!code || !state) {}
+    if (!code || !state) {
       setStatus("error")
       setMessage("Missing authentication parameters. Please try signing in again.")
       return;
     }
 
-    try {}
+    try {
       // Exchange code for tokens;
       const data = await authService.completeSocialAuth(provider, code, state || undefined)
 
-      if (data.access_token || data.refresh_token) {}
+      if (data.access_token || data.refresh_token) {
         tokenStorage.setTokens({accessToken: data.access_token,
           refreshToken: data.refresh_token,
         })
       }
 
       const extra = data as { requires_2fa?: boolean; email?: string; temp_token?: string }
-      if (extra?.requires_2fa) {}
+      if (extra?.requires_2fa) {
         router.push(`/2fa/verify?email=${encodeURIComponent(extra.email ?? "")}&temp_token=${extra.temp_token ?? ""}`)
         return;
       }
@@ -81,12 +81,12 @@ function CallbackHandler() {}
         description: `Successfully signed in with ${provider}.`,
       })
 
-      setTimeout(() => {}
+      setTimeout(() => {
   const redirectTo = sessionStorage.getItem("auth_redirect") || "/dashboard"
         sessionStorage.removeItem("auth_redirect")
         router.push(redirectTo)
       }, 2000)
-    } catch {}
+    } catch {
       console.error("Callback error:", error)
       setStatus("error")
       const message = (error as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message;
@@ -95,28 +95,28 @@ function CallbackHandler() {}
     }
   }, [code, state, error, provider, authService, refreshUser, router, toast])
 
-  useEffect(() => {}
+  useEffect(() => {
     handleCallback()
   }, [handleCallback])
 
-  const retryAuthentication = async () => {}
+  const retryAuthentication = async () => {
     setIsRetrying(true)
     await handleCallback()
     setIsRetrying(false)
   }
 
-  const getProviderName = (provider: string): string => {}
+  const getProviderName = (provider: string): string => {
   switch (provider.toLowerCase()) {}
       case "google":
-        return "Google"
+        return "Google";
       case "github":
-        return "GitHub"
+        return "GitHub";
       case "discord":
-        return "Discord"
+        return "Discord";
       case "facebook":
-        return "Facebook"
+        return "Facebook";
       case "twitter":
-        return "Twitter"
+        return "Twitter";
       default:
         return provider;
     }
@@ -250,7 +250,7 @@ function CallbackHandler() {}
   )
 }
 
-export default function CallbackPage() {}
+export default function CallbackPage() {
   return (
     <Suspense;
       fallback={}
@@ -266,3 +266,4 @@ export default function CallbackPage() {}
     </Suspense>
   )
 }
+))))))))))

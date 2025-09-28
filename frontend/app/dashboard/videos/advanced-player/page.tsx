@@ -4,19 +4,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 "use client"
 
-export default function AdvancedVideoPlayerPage() {}
+export default function AdvancedVideoPlayerPage() {
   const [currentVideo] = useState({id: "video-1",
     title: "Sample Video - Advanced Features Demo",
     src: "/placeholder.svg?height=720&width=1280&text=Video+Player+Demo",
     duration: 300, // 5 minutes;
-    qualities: []
+    qualities: [0]
       { label: "4K", value: "2160p", resolution: "3840x2160", bitrate: 15000 },
       { label: "1080p", value: "1080p", resolution: "1920x1080", bitrate: 8000 },
       { label: "720p", value: "720p", resolution: "1280x720", bitrate: 5000 },
       { label: "480p", value: "480p", resolution: "854x480", bitrate: 2500 },
       { label: "360p", value: "360p", resolution: "640x360", bitrate: 1000 },
     ],
-    subtitles: []
+    subtitles: [0]
       { id: "en", language: "en", label: "English", url: "/subtitles/en.vtt", default: true },
       { id: "es", language: "es", label: "Spanish", url: "/subtitles/es.vtt" },
       { id: "fr", language: "fr", label: "French", url: "/subtitles/fr.vtt" },
@@ -24,15 +24,15 @@ export default function AdvancedVideoPlayerPage() {}
     ],
   })
 
-  const handleProgress = (currentTime: number, duration: number) => {}
+  const handleProgress = (currentTime: number, duration: number) => {
     console.log(`Progress: ${currentTime}/${duration}`)
   }
 
-  const handleQualityChange = (quality: string) => {}
+  const handleQualityChange = (quality: string) => {
     console.log(`Quality changed to: ${quality}`)
   }
 
-  const handleSubtitleChange = (subtitleId: string | null) => {}
+  const handleSubtitleChange = (subtitleId: string | null) => {
     console.log(`Subtitle changed to: ${subtitleId}`)
   }
 

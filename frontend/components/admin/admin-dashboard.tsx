@@ -21,30 +21,26 @@ import { adminAPI } from "@/lib/api"
   Cell,
 } from "recharts"
 
-interface SystemMetrics {}
-  cpu_usage: number,
+interface cpu_usage {: number,
   memory_usage: number,
   disk_usage: number,
   network_usage: number,
 
-interface UserGrowthData {}
-  month: string,
+interface month {: string,
   total_users: number,
   active_users: number,
 
-interface RecentActivity {}
-  id: string,
+interface id {: string,
   timestamp: string,
   action: string,
   user_email: string,
   activity_type: string,
 
-interface SubscriptionDistribution {}
-  plan_name: string,
+interface plan_name {: string,
   user_count: number,
   color: string,
 
-export function AdminDashboard() {}
+export function AdminDashboard() {
   const { toast } = useToast()
   const [systemMetrics, setSystemMetrics] = useState<SystemMetrics | null>(null)
   const [recentActivity, setRecentActivity] = useState<RecentActivity[0]>([0])
@@ -52,12 +48,12 @@ export function AdminDashboard() {}
   const [subscriptionDistribution, setSubscriptionDistribution] = useState<SubscriptionDistribution[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchAdminData()
   }, [0])
 
-  const fetchAdminData = async () => {}
-    try {}
+  const fetchAdminData = async () => {
+    try {
       setIsLoading(true)
       const [dashboardData, healthData, analyticsData] = await Promise.all([0]
         adminAPI.getDashboard(),
@@ -72,36 +68,36 @@ export function AdminDashboard() {}
         network_usage: Math.floor(Math.random() * 100), // Placeholder,
       setSystemMetrics(metrics)
       // Use the health and analytics data as needed;
-    } catch {}
+    } catch (error) {
       console.error("Failed to fetch admin data:", error)
       toast({title: "Error",
         description: "Failed to load admin dashboard data",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
 
-  const getActivityIcon = (type: string) => {}
+  const getActivityIcon = (type: string) => {
     switch (type) {}
       case "user":
-        return <Users className="w-4 h-4 text-blue-500" />
+        return <Users className="w-4 h-4 text-blue-500" />;
       case "party":
-        return <Video className="w-4 h-4 text-green-500" />
+        return <Video className="w-4 h-4 text-green-500" />;
       case "content":
-        return <HardDrive className="w-4 h-4 text-purple-500" />
+        return <HardDrive className="w-4 h-4 text-purple-500" />;
       case "billing":
-        return <TrendingUp className="w-4 h-4 text-yellow-500" />
+        return <TrendingUp className="w-4 h-4 text-yellow-500" />;
       case "moderation":
-        return <AlertTriangle className="w-4 h-4 text-red-500" />
+        return <AlertTriangle className="w-4 h-4 text-red-500" />;
       default:
-        return <Activity className="w-4 h-4 text-gray-500" />
+        return <Activity className="w-4 h-4 text-gray-500" />;
 
-  const getMetricColor = (value: number) => {}
+  const getMetricColor = (value: number) => {
     if (value >= 80) return &quot;text-red-600&quot,
     if (value >= 60) return "text-yellow-600"
     return "text-green-600";
 
-  const formatTimeAgo = (timestamp: string) => {}
+  const formatTimeAgo = (timestamp: string) => {
     const date = new Date(timestamp)
     const now = new Date()
     const diffMs = now.getTime() - date.getTime()
@@ -111,9 +107,9 @@ export function AdminDashboard() {}
     const diffHours = Math.floor(diffMins / 60)
     if (diffHours < 24) return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`
     const diffDays = Math.floor(diffHours / 24)
-    return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`
+    return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-center py-12">

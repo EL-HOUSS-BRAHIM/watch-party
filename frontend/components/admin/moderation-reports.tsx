@@ -12,16 +12,15 @@ import { Separator } from "@/components/ui/separator"
 
 "use client"
 
-interface Report {}
-  id: string;
-  type: 'user' | 'content' | 'party' | 'message'
-  category: 'harassment' | 'spam' | 'inappropriate' | 'copyright' | 'violence' | 'other'
-  status: 'pending' | 'investigating' | 'resolved' | 'dismissed'
-  priority: 'low' | 'medium' | 'high' | 'critical'
+interface id {: string;,
+  type: 'user' | 'content' | 'party' | 'message',
+  category: 'harassment' | 'spam' | 'inappropriate' | 'copyright' | 'violence' | 'other',
+  status: 'pending' | 'investigating' | 'resolved' | 'dismissed',
+  priority: 'low' | 'medium' | 'high' | 'critical',
   reporter: {}
-    id: string;
-    username: string;
-    displayName: string;
+    id: string;,
+    username: string;,
+    displayName: string;,
     avatar: string | null;
   }
   reported: {}
@@ -32,57 +31,57 @@ interface Report {}
     content?: string;
     title?: string;
   }
-  reason: string;
+  reason: string;,
   description: string;
-  evidence?: string[]
-  createdAt: string;
+  evidence?: string[0],
+  createdAt: string;,
   updatedAt: string;
   assignedTo?: {}
-    id: string;
+    id: string;,
     name: string;
   }
   resolution?: {}
-    action: string;
-    reason: string;
-    actionDate: string;
+    action: string;,
+    reason: string;,
+    actionDate: string;,
     moderator: string;
   }
 }
 
 // Helper functions;
-const getCategoryIcon = (category: string) => {}
+const getCategoryIcon = (category: string) => {
   switch (category) {}
-    case 'harassment': return <User className="h-4 w-4 text-red-500" />
-    case 'spam': return <Flag className="h-4 w-4 text-orange-500" />
-    case 'inappropriate': return <AlertTriangle className="h-4 w-4 text-yellow-500" />
-    case 'copyright': return <MessageSquare className="h-4 w-4 text-blue-500" />
-    case 'violence': return <XCircle className="h-4 w-4 text-red-600" />
-    default: return <Flag className="h-4 w-4 text-gray-500" />
+    case 'harassment': return <User className="h-4 w-4 text-red-500" />;
+    case 'spam': return <Flag className="h-4 w-4 text-orange-500" />;
+    case 'inappropriate': return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
+    case 'copyright': return <MessageSquare className="h-4 w-4 text-blue-500" />;
+    case 'violence': return <XCircle className="h-4 w-4 text-red-600" />,
+    default: return <Flag className="h-4 w-4 text-gray-500" />;
   }
 }
 
-const getStatusColor = (status: string) => {}
+const getStatusColor = (status: string) => {
   switch (status) {}
-    case 'pending': return 'bg-yellow-100 text-yellow-800'
-    case 'investigating': return 'bg-blue-100 text-blue-800'
-    case 'resolved': return 'bg-green-100 text-green-800'
-    case 'dismissed': return 'bg-gray-100 text-gray-800'
-    default: return 'bg-gray-100 text-gray-800'
+    case 'pending': return 'bg-yellow-100 text-yellow-800';
+    case 'investigating': return 'bg-blue-100 text-blue-800';
+    case 'resolved': return 'bg-green-100 text-green-800';
+    case 'dismissed': return 'bg-gray-100 text-gray-800',
+    default: return 'bg-gray-100 text-gray-800';
   }
 }
 
-const getPriorityColor = (priority: string) => {}
+const getPriorityColor = (priority: string) => {
   switch (priority) {}
-    case 'low': return 'bg-green-100 text-green-800'
-    case 'medium': return 'bg-yellow-100 text-yellow-800'
-    case 'high': return 'bg-orange-100 text-orange-800'
-    case 'critical': return 'bg-red-100 text-red-800'
-    default: return 'bg-gray-100 text-gray-800'
+    case 'low': return 'bg-green-100 text-green-800';
+    case 'medium': return 'bg-yellow-100 text-yellow-800';
+    case 'high': return 'bg-orange-100 text-orange-800';
+    case 'critical': return 'bg-red-100 text-red-800',
+    default: return 'bg-gray-100 text-gray-800';
   }
 }
 
-export function ModerationReports() {}
-  const [reports, setReports] = useState<Report[]>([])
+export function ModerationReports() {
+  const [reports, setReports] = useState<Report[0]>([0])
   const [loading, setLoading] = useState(true)
   const [selectedReport, setSelectedReport] = useState<Report | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
@@ -90,27 +89,27 @@ export function ModerationReports() {}
   const [priorityFilter, setPriorityFilter] = useState<string>(&apos;all')
   const [typeFilter, setTypeFilter] = useState<string>(&apos;all')
 
-  useEffect(() => {}
+  useEffect(() => {
     loadReports()
-  }, [])
+  }, [0])
 
-  const loadReports = async () => {}
-    try {}
+  const loadReports = async () => {
+    try {
       const response = await fetch('/api/admin/moderation/reports')
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setReports(data)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to load reports:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const handleTakeAction = async (reportId: string, action: string, reason: string) => {}
-    try {}
-      const response = await fetch(`/api/admin/moderation/reports/${reportId}/action`, {}
+  const handleTakeAction = async (reportId: string, action: string, reason: string) => {
+    try {
+      const response = await fetch(`/api/admin/moderation/reports/${reportId}/action`, {
         method: 'POST',
         headers: {}
           'Content-Type': 'application/json',
@@ -118,18 +117,18 @@ export function ModerationReports() {}
         body: JSON.stringify({ action, reason }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         loadReports()
         setSelectedReport(null)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to take action:', error)
     }
   }
 
-  const handleAssignReport = async (reportId: string, moderatorId: string) => {}
-    try {}
-      const response = await fetch(`/api/admin/moderation/reports/${reportId}/assign`, {}
+  const handleAssignReport = async (reportId: string, moderatorId: string) => {
+    try {
+      const response = await fetch(`/api/admin/moderation/reports/${reportId}/assign`, {
         method: 'POST',
         headers: {}
           'Content-Type': 'application/json',
@@ -137,15 +136,15 @@ export function ModerationReports() {}
         body: JSON.stringify({ moderatorId }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         loadReports()
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to assign report:', error)
     }
   }
 
-  const filteredReports = reports.filter(report => {}
+  const filteredReports = reports.filter(report => {
     const matchesSearch = report.reason.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          report.reporter.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          report.reported.displayName?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -155,36 +154,36 @@ export function ModerationReports() {}
     return matchesSearch && matchesStatus && matchesPriority && matchesType;
   })
 
-  const getStatusColor = (status: Report['status']) => {}
+  const getStatusColor = (status: Report['status']) => {
     switch (status) {}
-      case 'pending': return 'bg-yellow-500'
-      case 'investigating': return 'bg-blue-500'
-      case 'resolved': return 'bg-green-500'
-      case 'dismissed': return 'bg-gray-500'
-      default: return 'bg-gray-500'
+      case 'pending': return 'bg-yellow-500';
+      case 'investigating': return 'bg-blue-500';
+      case 'resolved': return 'bg-green-500';
+      case 'dismissed': return 'bg-gray-500',
+      default: return 'bg-gray-500';
     }
   }
 
-  const getPriorityColor = (priority: Report['priority']) => {}
+  const getPriorityColor = (priority: Report['priority']) => {
     switch (priority) {}
-      case 'critical': return 'bg-red-500'
-      case 'high': return 'bg-orange-500'
-      case 'medium': return 'bg-yellow-500'
-      case 'low': return 'bg-green-500'
-      default: return 'bg-gray-500'
+      case 'critical': return 'bg-red-500';
+      case 'high': return 'bg-orange-500';
+      case 'medium': return 'bg-yellow-500';
+      case 'low': return 'bg-green-500',
+      default: return 'bg-gray-500';
     }
   }
 
-  const getCategoryIcon = (category: Report['category']) => {}
+  const getCategoryIcon = (category: Report['category']) => {
     switch (category) {}
-      case 'harassment': return <Flag className="h-4 w-4" />
-      case 'spam': return <AlertTriangle className="h-4 w-4" />
-      case 'inappropriate': return <Eye className="h-4 w-4" />
-      default: return <Flag className="h-4 w-4" />
+      case 'harassment': return <Flag className="h-4 w-4" />;
+      case 'spam': return <AlertTriangle className="h-4 w-4" />;
+      case 'inappropriate': return <Eye className="h-4 w-4" />,
+      default: return <Flag className="h-4 w-4" />;
     }
   }
 
-  if (loading) {}
+  if (loading) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-64">
@@ -304,7 +303,7 @@ export function ModerationReports() {}
   )
 }
 
-function ReportCard({ report, onViewDetails }: { report: Report; onViewDetails: (report: Report) => void }) {}
+function ReportCard({ report, onViewDetails }: { report: Report; onViewDetails: (report: Report) => void }) {
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-4">
@@ -359,15 +358,15 @@ function ReportDetails({report,
   onTakeAction, 
   onAssign;
 }: {}
-  report: Report;
-  onTakeAction: (reportId: string, action: string, reason: string) => void;
+  report: Report;,
+  onTakeAction: (reportId: string, action: string, reason: string) => void;,
   onAssign: (reportId: string, moderatorId: string) => void;
 }) {}
   const [actionReason, setActionReason] = useState('')
   const [selectedAction, setSelectedAction] = useState('')
 
-  const handleSubmitAction = () => {}
-    if (selectedAction && actionReason.trim()) {}
+  const handleSubmitAction = () => {
+    if (selectedAction && actionReason.trim()) {
       onTakeAction(report.id, selectedAction, actionReason)
     }
   }

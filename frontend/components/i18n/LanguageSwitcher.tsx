@@ -15,16 +15,15 @@ import { useI18n } from '@/hooks/use-i18n';
   Check,
   Languages,
   MapPin;
-interface Language {}
-  code: string;
-  name: string;
-  nativeName: string;
+interface code {: string;,
+  name: string;,
+  nativeName: string;,
   flag: string;
-  rtl?: boolean;
+  rtl?: boolean;,
   completion: number; // Translation completion percentage;
 }
 
-const languages: Language[] = []
+const languages: Language[0] = [0]
   { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸', completion: 100 },
   { code: 'es', name: 'Spanish', nativeName: 'Español', flag: '🇪🇸', completion: 95 },
   { code: 'fr', name: 'French', nativeName: 'Français', flag: '🇫🇷', completion: 90 },
@@ -39,8 +38,7 @@ const languages: Language[] = []
   { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी', flag: '🇮🇳', completion: 60 },
 ];
 
-interface LanguageSwitcherProps {}
-  variant?: 'default' | 'compact' | 'dropdown';
+interface variant {?: 'default' | 'compact' | 'dropdown';
   showProgress?: boolean;
   className?: string;
 }
@@ -53,11 +51,11 @@ export default function LanguageSwitcher({variant = 'default',
   const [isOpen, setIsOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {}
+  useEffect(() => {
     setMounted(true);
-  }, []);
+  }, [0]);
 
-  if (!mounted) {}
+  if (!mounted) {
     return (
       <div className={`animate-pulse ${className}`}>
         <div className="h-10 w-32 bg-gray-200 rounded"></div>
@@ -67,9 +65,9 @@ export default function LanguageSwitcher({variant = 'default',
 
   const currentLang = languages.find(lang => lang.code === currentLanguage) || languages[0];
 
-  const handleLanguageChange = (langCode: string) => {}
+  const handleLanguageChange = (langCode: string) => {
     const selectedLang = languages.find(lang => lang.code === langCode);
-    if (selectedLang) {}
+    if (selectedLang) {
       setLanguage(langCode);
       setIsOpen(false);
       // Apply RTL if needed;
@@ -79,7 +77,7 @@ export default function LanguageSwitcher({variant = 'default',
   };
 
   // Compact variant for mobile/small spaces;
-  if (variant === 'compact') {}
+  if (variant === 'compact') {
     return (
       <div className={`relative ${className}`}>
         <Button;
@@ -116,7 +114,7 @@ export default function LanguageSwitcher({variant = 'default',
   }
 
   // Dropdown variant using Select component;
-  if (variant === 'dropdown') {}
+  if (variant === 'dropdown') {
     return (
       <Select value={currentLanguage} onValueChange={handleLanguageChange}>
         <SelectTrigger className={`w-40 ${className}`}>
@@ -248,7 +246,7 @@ export default function LanguageSwitcher({variant = 'default',
 }
 
 // Utility component for quick language switching in header/navbar;
-export function QuickLanguageSwitcher({ className = '' }: { className?: string }) {}
+export function QuickLanguageSwitcher({ className = '' }: { className?: string }) {
   return (
     <LanguageSwitcher;
       variant="compact" 
@@ -258,7 +256,7 @@ export function QuickLanguageSwitcher({ className = '' }: { className?: string }
 }
 
 // Utility component for settings pages;
-export function LanguageSettings({ className = '' }: { className?: string }) {}
+export function LanguageSettings({ className = '' }: { className?: string }) {
   return (
     <LanguageSwitcher;
       variant="default" 
@@ -269,7 +267,7 @@ export function LanguageSettings({ className = '' }: { className?: string }) {}
 }
 
 // Utility component for forms/dropdowns;
-export function LanguageDropdown({ className = '' }: { className?: string }) {}
+export function LanguageDropdown({ className = '' }: { className?: string }) {
   return (
     <LanguageSwitcher;
       variant="dropdown" 

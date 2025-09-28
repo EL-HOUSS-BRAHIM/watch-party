@@ -5,23 +5,22 @@ import { tokenStorage } from "@/lib/auth/token-storage"
 
 "use client"
 
-interface AuthGuardProps {}
-  children: React.ReactNode;
+interface children {: React.ReactNode;
   requireAuth?: boolean;
 }
 
-export function AuthGuard({ children, requireAuth = true }: AuthGuardProps) {}
+export function AuthGuard({ children, requireAuth = true }: AuthGuardProps) {
   const { user, isLoading } = useAuth()
   const router = useRouter()
 
-  useEffect(() => {}
-    if (!isLoading && requireAuth && !user) {}
+  useEffect(() => {
+    if (!isLoading && requireAuth && !user) {
       router.push("/login")
     }
   }, [user, isLoading, requireAuth, router])
 
   // Show loading while checking auth;
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -30,25 +29,25 @@ export function AuthGuard({ children, requireAuth = true }: AuthGuardProps) {}
   }
 
   // If auth is required and user is not authenticated, don't render children;
-  if (requireAuth && !user) {}
+  if (requireAuth && !user) {
     return null;
   }
 
-  return <>{children}</>
+  return <>{children}</>;
 }
 
 /**
  * Hook to guard API calls with authentication checks;
  * Returns true if user is authenticated, false otherwise;
  */
-export function useAuthGuard() {}
+export function useAuthGuard() {
   const { user, isLoading, accessToken } = useAuth()
 
-  const canMakeApiCall = () => {}
+  const canMakeApiCall = () => {
     return !isLoading && !!user;
   }
 
-  const getAuthToken = () => {}
+  const getAuthToken = () => {
     if (!canMakeApiCall()) return null;
     return accessToken ?? tokenStorage.getAccessToken()
   }
@@ -67,10 +66,10 @@ export function withAuthGuard<P extends object>(
   Component: React.ComponentType<P>,
   requireAuth = true;
 ) {}
-  return function AuthGuardedComponent(props: P) {}
+  return function AuthGuardedComponent(props: P) {
     return (
       <AuthGuard requireAuth={requireAuth}>
-        <Component {...props} />
+        <Component ...props} />
       </AuthGuard>
     )
   }

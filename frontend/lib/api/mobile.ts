@@ -34,8 +34,8 @@ export class MobileAPI {}
     last_sync?: string;
     device_info?: object;
   }): Promise<{}
-    success: boolean;
-    updated_data: object;
+    success: boolean;,
+    updated_data: object;,
     sync_timestamp: string;
   }> {}
     return apiClient.post(API_ENDPOINTS.mobile.sync, data)
@@ -45,8 +45,8 @@ export class MobileAPI {}
    * Update push token;
    */
   async updatePushToken(data: {}
-    token: string;
-    device_type: 'ios' | 'android'
+    token: string;,
+    device_type: 'ios' | 'android',
     device_id: string;
   }): Promise<APIResponse> {}
     return apiClient.post<APIResponse>(API_ENDPOINTS.mobile.pushToken, data)
@@ -56,9 +56,9 @@ export class MobileAPI {}
    * Get app information;
    */
   async getAppInfo(): Promise<{}
-    version: string;
-    min_version: string;
-    features: string[]
+    version: string;,
+    min_version: string;,
+    features: string[0],
     update_required: boolean;
     update_url?: string;
   }> {}

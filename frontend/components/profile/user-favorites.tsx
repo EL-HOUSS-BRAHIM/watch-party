@@ -10,59 +10,57 @@ import { formatDistanceToNow } from "date-fns"
 
 "use client"
 
-interface FavoriteVideo {}
-  id: string;
+interface id {: string;,
   video: {}
-    id: string;
-    title: string;
+    id: string;,
+    title: string;,
     description: string;
-    thumbnail_url?: string;
-    duration: number;
+    thumbnail_url?: string;,
+    duration: number;,
     views: number;
-    genre?: string;
-    tags: string[]
+    genre?: string;,
+    tags: string[0]
   }
   added_at: string;
 }
 
-interface UserFavoritesProps {}
-  userId: string;
+interface userId {: string;
 }
 
-export function UserFavorites({ userId }: UserFavoritesProps) {}
-  const [favorites, setFavorites] = useState<FavoriteVideo[]>([])
+export function UserFavorites({ userId }: UserFavoritesProps) {
+  const [favorites, setFavorites] = useState<FavoriteVideo[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
   const [genreFilter, setGenreFilter] = useState<string>(&quot;all")
   const api = useApi()
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchFavorites()
   }, [userId])
 
-  const fetchFavorites = async () => {}
-    try {}
+  const fetchFavorites = async () => {
+    try {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/favorites/`)
-      setFavorites((response.data as Record<string, unknown>).favorites || [])
-    } catch {}
+      setFavorites((response.data as Record<string, unknown>).favorites || [0])
+    } catch (error) {
       console.error("Failed to load favorites:", err)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const removeFavorite = async (videoId: string) => {}
-    try {}
+  const removeFavorite = async (videoId: string) => {
+    try {
       await api.delete(`/users/${userId}/favorites/${videoId}/`)
       setFavorites(favorites.filter(fav => fav.video.id !== videoId))
-    } catch {}
+    } catch (error) {
       console.error("Failed to remove favorite:", err)
     }
   }
 
-  const filteredFavorites = favorites.filter(favorite => {}
+  const filteredFavorites = favorites.filter(favorite => {
     const matchesSearch = favorite.video.title.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesGenre = genreFilter === "all" || favorite.video.genre === genreFilter;
     return matchesSearch && matchesGenre;
@@ -70,16 +68,16 @@ export function UserFavorites({ userId }: UserFavoritesProps) {}
 
   const genres = Array.from(new Set(favorites.map(fav => fav.video.genre).filter(Boolean)))
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    if (hours > 0) {}
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${(seconds % 60).toString().padStart(2, '0')}`;
     }
-    return `${minutes}:${(seconds % 60).toString().padStart(2, '0')}`
+    return `${minutes}:${(seconds % 60).toString().padStart(2, '0')}`;
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center p-8">

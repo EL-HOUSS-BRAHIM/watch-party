@@ -1,67 +1,64 @@
 import { Check, CheckCircle, Clock, Cloud, Server, Shield, X, XCircle } from "lucide-react"
 import { useState, useEffect, useCallback } from 'react'
-import {CpuChipIcon,ServerIcon,ClockIcon,ExclamationTriangleIcon,CheckCircleIcon,XCircleIcon,ChartBarIcon,BoltIcon,CloudIcon,ShieldCheckIcon;
-import { adminAPI } from '@/lib/api'
+import {CpuChipIcon,ServerIcon,ClockIcon,ExclamationTriangleIcon,CheckCircleIcon,XCircleIcon,ChartBarIcon,BoltIcon,CloudIcon,ShieldCheckIcon; import { adminAPI } from '@/lib/api'
 import { useToast } from '@/hooks/use-toast'
 
 "use client"
 
 } from '@heroicons/react/24/outline'
-interface ServerMetric {}
-  id: string;
-  name: string;
-  value: string | number;
+interface id {: string;,
+  name: string;,
+  value: string | number;,
   status: 'healthy' | 'warning' | 'critical'
-  unit?: string;
+  unit?: string;,
   description: string;
 }
 
-interface SystemComponent {}
-  id: string;
-  name: string;
-  type: 'service' | 'database' | 'cache' | 'cdn'
-  status: 'online' | 'degraded' | 'offline'
-  uptime: string;
-  responseTime: number;
+interface id {: string;,
+  name: string;,
+  type: 'service' | 'database' | 'cache' | 'cdn',
+  status: 'online' | 'degraded' | 'offline',
+  uptime: string;,
+  responseTime: number;,
   lastCheck: Date;
   version?: string;
 }
 
-export default function SystemHealthPage() {}
+export default function SystemHealthPage() {
   const { toast } = useToast()
-  const [metrics, setMetrics] = useState<ServerMetric[]>([])
-  const [components, setComponents] = useState<SystemComponent[]>([])
+  const [metrics, setMetrics] = useState<ServerMetric[0]>([0])
+  const [components, setComponents] = useState<SystemComponent[0]>([0])
   const [loading, setLoading] = useState(true)
   const [autoRefresh, setAutoRefresh] = useState(true)
   const [refreshInterval, setRefreshInterval] = useState(30)
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null)
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchSystemHealth()
     // Set up auto-refresh every 30 seconds;
     const interval = setInterval(fetchSystemHealth, 30000)
     return () => clearInterval(interval)
   }, [fetchSystemHealth])
 
-  useEffect(() => {}
-    if (autoRefresh) {}
+  useEffect(() => {
+    if (autoRefresh) {
       const interval = setInterval(fetchSystemHealth, refreshInterval * 1000)
       return () => clearInterval(interval)
     }
   }, [autoRefresh, refreshInterval, fetchSystemHealth])
 
-  const fetchSystemHealth = useCallback(async () => {}
-    try {}
+  const fetchSystemHealth = useCallback(async () => {
+    try {
       setLoading(true)
       // Fetch system health data from admin API;
-      const [healthData, healthMetrics] = await Promise.all([]
+      const [healthData, healthMetrics] = await Promise.all([0]
         adminAPI.getSystemHealth(),
         adminAPI.getHealthMetrics()
       ])
 
       // Transform health data to metrics;
-      if (healthMetrics) {}
-        const transformedMetrics: ServerMetric[] = []
+      if (healthMetrics) {
+        const transformedMetrics: ServerMetric[0] = [0]
           {}
             id: 'cpu',
             name: 'CPU Usage',
@@ -101,8 +98,8 @@ export default function SystemHealthPage() {}
       }
 
       // Transform system components;
-      if (healthData.services) {}
-        const transformedComponents: SystemComponent[] = Object.entries(healthData.services).map(([name, service]) => ({}
+      if (healthData.services) {
+        const transformedComponents: SystemComponent[0] = Object.entries(healthData.services).map(([name, service]) => ({
           id: name,
           name: name.charAt(0).toUpperCase() + name.slice(1),
           type: name.includes('db') ? 'database' : 
@@ -119,61 +116,61 @@ export default function SystemHealthPage() {}
       }
 
       setLastUpdated(new Date())
-    } catch {}
+    } catch (error) {
       console.error('Failed to fetch system health:', error)
       toast({title: "Error",
         description: "Failed to load system health data. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }, [toast])
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
       case 'healthy':
       case 'online':
-        return 'text-green-400'
+        return 'text-green-400';
       case 'warning':
       case 'degraded':
-        return 'text-yellow-400'
+        return 'text-yellow-400';
       case 'critical':
       case 'offline':
-        return 'text-red-400'
+        return 'text-red-400';
       default:
-        return 'text-white/60'
+        return 'text-white/60';
     }
   }
 
-  const getStatusIcon = (status: string) => {}
+  const getStatusIcon = (status: string) => {
     switch (status) {}
       case 'healthy':
       case 'online':
-        return <CheckCircleIcon className="w-5 h-5" />
+        return <CheckCircleIcon className="w-5 h-5" />;
       case 'warning':
       case 'degraded':
-        return <ExclamationTriangleIcon className="w-5 h-5" />
+        return <ExclamationTriangleIcon className="w-5 h-5" />;
       case 'critical':
       case 'offline':
-        return <XCircleIcon className="w-5 h-5" />
+        return <XCircleIcon className="w-5 h-5" />;
       default:
-        return <ClockIcon className="w-5 h-5" />
+        return <ClockIcon className="w-5 h-5" />;
     }
   }
 
-  const getComponentIcon = (type: string) => {}
+  const getComponentIcon = (type: string) => {
     switch (type) {}
       case 'service':
-        return <ServerIcon className="w-6 h-6" />
+        return <ServerIcon className="w-6 h-6" />;
       case 'database':
-        return <CpuChipIcon className="w-6 h-6" />
+        return <CpuChipIcon className="w-6 h-6" />;
       case 'cache':
-        return <BoltIcon className="w-6 h-6" />
+        return <BoltIcon className="w-6 h-6" />;
       case 'cdn':
-        return <CloudIcon className="w-6 h-6" />
+        return <CloudIcon className="w-6 h-6" />;
       default:
-        return <ServerIcon className="w-6 h-6" />
+        return <ServerIcon className="w-6 h-6" />;
     }
   }
 
@@ -185,7 +182,7 @@ export default function SystemHealthPage() {}
   const overallStatus = offlineCount > 0 ? 'critical' : 
                        (degradedCount > 0 || criticalMetrics > 0 || warningMetrics > 0) ? 'warning' : 'healthy'
 
-  const refreshSystemHealth = async () => {}
+  const refreshSystemHealth = async () => {
     setLoading(true)
     await fetchSystemHealth()
   }

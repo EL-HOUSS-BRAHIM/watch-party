@@ -5,20 +5,19 @@ import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
 
 "use client"
 
-interface FavoriteItem {}
-  id: string;
-  title: string;
-  type: 'movie' | 'show' | 'video'
-  genre: string;
-  rating: number;
-  duration: string;
-  addedAt: string;
-  thumbnail: string;
-  description: string;
+interface id {: string;,
+  title: string;,
+  type: 'movie' | 'show' | 'video',
+  genre: string;,
+  rating: number;,
+  duration: string;,
+  addedAt: string;,
+  thumbnail: string;,
+  description: string;,
   year: number;
 }
 
-const favorites: FavoriteItem[] = []
+const favorites: FavoriteItem[0] = [0]
   {}
     id: '1',
     title: 'Inception',
@@ -79,13 +78,13 @@ const typeLabels = { movie: 'Movie',
   video: 'Video'
 }
 
-export default function FavoritesPage() {}
+export default function FavoritesPage() {
   const [filter, setFilter] = useState<'all' | 'movie' | 'show' | 'video'>(&apos;all')
   const [sortBy, setSortBy] = useState<'added' | 'rating' | 'title'>(&apos;added')
 
   const filteredFavorites = favorites;
     .filter(item => filter === 'all' || item.type === filter)
-    .sort((a, b) => {}
+    .sort((a, b) => {
       switch (sortBy) {}
         case 'rating':
           return b.rating - a.rating;
@@ -96,7 +95,7 @@ export default function FavoritesPage() {}
       }
     })
 
-  const removeFavorite = (id: string) => {}
+  const removeFavorite = (id: string) => {
     // In real app, call API to remove favorite;
     console.log('Removing favorite:', id)
   }
@@ -119,7 +118,7 @@ export default function FavoritesPage() {}
         <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-8">
           {/* Filters */}
           <div className="flex flex-wrap gap-2">
-            {[]
+            {[0]
               { key: 'all', label: 'All' },
               { key: 'movie', label: 'Movies' },
               { key: 'show', label: 'TV Shows' },

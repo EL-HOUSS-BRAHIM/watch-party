@@ -14,95 +14,90 @@ import { dashboardAPI, partiesAPI, videosAPI, usersAPI } from "@/lib/api"
 
 "use client"
 
-interface DashboardStats {}
-  total_parties: number;
-  parties_hosted: number;
-  parties_joined: number;
-  total_videos: number;
-  watch_time_hours: number;
-  friends_count: number;
+interface total_parties {: number;,
+  parties_hosted: number;,
+  parties_joined: number;,
+  total_videos: number;,
+  watch_time_hours: number;,
+  friends_count: number;,
   recent_activity: {}
-    parties_this_week: number;
-    videos_uploaded_this_week: number;
+    parties_this_week: number;,
+    videos_uploaded_this_week: number;,
     watch_time_this_week: number;
   }
 }
 
-interface Party {}
-  id: string;
-  title: string;
-  participant_count: number;
+interface id {: string;,
+  title: string;,
+  participant_count: number;,
   status: string;
-  thumbnail?: string;
+  thumbnail?: string;,
   host: {}
     name: string;
     avatar?: string;
   }
   started_at?: string;
-  scheduled_start?: string;
-  category: string;
+  scheduled_start?: string;,
+  category: string;,
   is_private: boolean;
 }
 
-interface Video {}
-  id: string;
-  title: string;
-  duration_formatted: string;
+interface id {: string;,
+  title: string;,
+  duration_formatted: string;,
   view_count: number;
-  thumbnail?: string;
-  created_at: string;
-  category: string;
+  thumbnail?: string;,
+  created_at: string;,
+  category: string;,
   likes: number;
 }
 
-interface FriendActivity {}
-  id: string;
+interface id {: string;,
   user: {}
     name: string;
     avatar?: string;
   }
-  action: string;
-  content: string;
-  timestamp: string;
+  action: string;,
+  content: string;,
+  timestamp: string;,
   type: "party" | "video" | "friend" | "achievement"
 }
 
-interface Achievement {}
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  progress: number;
-  max_progress: number;
-  unlocked: boolean;
+interface id {: string;,
+  title: string;,
+  description: string;,
+  icon: string;,
+  progress: number;,
+  max_progress: number;,
+  unlocked: boolean;,
   rarity: "common" | "rare" | "epic" | "legendary"
 }
 
-export default function DashboardPage() {}
+export default function DashboardPage() {
   const { user } = useAuth()
   const { toast } = useToast()
 
   const [stats, setStats] = useState<DashboardStats | null>(null)
-  const [recentParties, setRecentParties] = useState<Party[]>([])
-  const [recentVideos, setRecentVideos] = useState<Video[]>([])
-  const [friendActivity, setFriendActivity] = useState<FriendActivity[]>([])
-  const [achievements, setAchievements] = useState<Achievement[]>([])
+  const [recentParties, setRecentParties] = useState<Party[0]>([0])
+  const [recentVideos, setRecentVideos] = useState<Video[0]>([0])
+  const [friendActivity, setFriendActivity] = useState<FriendActivity[0]>([0])
+  const [achievements, setAchievements] = useState<Achievement[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("overview")
 
-  useEffect(() => {}
-    const fetchDashboardData = async () => {}
-      try {}
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
         setIsLoading(true)
 
         // Use proper API services instead of direct fetch calls;
-        const [dashboardStats, partiesData, videosData, activityData, achievementsData] = await Promise.all([]
+        const [dashboardStats, partiesData, videosData, activityData, achievementsData] = await Promise.all([0]
           dashboardAPI && dashboardAPI.getStats ? dashboardAPI.getStats() : Promise.resolve(null),
-          partiesAPI && partiesAPI.getRecent ? partiesAPI.getRecent() : Promise.resolve([]),
-          videosAPI && videosAPI.getVideos ? videosAPI.getVideos({ ordering: '-created_at', limit: 5 }) : Promise.resolve({ results: [] }),
-          usersAPI && usersAPI.getActivity ? usersAPI.getActivity({ visibility: 'friends_only' }) : Promise.resolve({ results: [] }),
+          partiesAPI && partiesAPI.getRecent ? partiesAPI.getRecent() : Promise.resolve([0]),
+          videosAPI && videosAPI.getVideos ? videosAPI.getVideos({ ordering: '-created_at', limit: 5 }) : Promise.resolve({ results: [0] }),
+          usersAPI && usersAPI.getActivity ? usersAPI.getActivity({ visibility: 'friends_only' }) : Promise.resolve({ results: [0] }),
           // For achievements, we'll need to create mock data as there's no clear endpoint yet;
-          Promise.resolve([])
+          Promise.resolve([0])
         ])
 
         // Set stats from API or fallback to defaults;
@@ -121,17 +116,17 @@ export default function DashboardPage() {}
         })
 
         // Set data from API responses - handle paginated responses;
-        setRecentParties(Array.isArray(partiesData) ? partiesData.slice(0, 3) : [])
-        setRecentVideos(Array.isArray(videosData?.results) ? videosData.results.slice(0, 3) : [])
-        setFriendActivity(Array.isArray(activityData?.results) ? activityData.results.slice(0, 4) : [])
-        setAchievements(Array.isArray(achievementsData) ? achievementsData : [])
-      } catch {}
+        setRecentParties(Array.isArray(partiesData) ? partiesData.slice(0, 3) : [0])
+        setRecentVideos(Array.isArray(videosData?.results) ? videosData.results.slice(0, 3) : [0])
+        setFriendActivity(Array.isArray(activityData?.results) ? activityData.results.slice(0, 4) : [0])
+        setAchievements(Array.isArray(achievementsData) ? achievementsData : [0])
+      } catch (error) {
         console.error("Failed to fetch dashboard data:", error)
         toast({title: "Error",
           description: "Failed to load dashboard data. Please try again.",
           variant: "destructive",
         })
-      } finally {}
+      } finally {
         setIsLoading(false)
       }
     }
@@ -139,7 +134,7 @@ export default function DashboardPage() {}
     fetchDashboardData()
   }, [toast])
 
-  const formatTimeAgo = (dateString: string) => {}
+  const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString)
     const now = new Date()
     const diffMs = now.getTime() - date.getTime()
@@ -147,31 +142,31 @@ export default function DashboardPage() {}
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
 
-    if (diffMins < 60) {}
-      return `${diffMins}m ago`
-    } else if (diffHours < 24) {}
-      return `${diffHours}h ago`
+    if (diffMins < 60) {
+      return `${diffMins}m ago`;
+    } else if (diffHours < 24) {
+      return `${diffHours}h ago`;
     } else {}
-      return `${diffDays}d ago`
+      return `${diffDays}d ago`;
     }
   }
 
-  const getRarityColor = (rarity: Achievement["rarity"]) => {}
+  const getRarityColor = (rarity: Achievement["rarity"]) => {
     switch (rarity) {}
       case "common":
-        return "text-gray-500"
+        return "text-gray-500";
       case "rare":
-        return "text-blue-500"
+        return "text-blue-500";
       case "epic":
-        return "text-purple-500"
+        return "text-purple-500";
       case "legendary":
-        return "text-yellow-500"
+        return "text-yellow-500";
       default:
-        return "text-gray-500"
+        return "text-gray-500";
     }
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <div className="flex flex-col items-center space-y-6">

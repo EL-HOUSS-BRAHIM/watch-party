@@ -10,7 +10,7 @@ import { Testimonials } from "@/components/marketing/testimonials"
   MarketingTestimonial,
 } from "@/app/(marketing)/data/home-content"
 describe("Marketing sections", () => {}
-  const MockIcon = ((props: { className?: string }) => <span data-testid=&quot;mock-icon" {...props} />) as unknown as MarketingStat["icon"]
+  const MockIcon = ((props: { className?: string }) => <span data-testid=&quot;mock-icon&quot; {...props} />) as unknown as MarketingStat["icon"]
 
   const mockStats: MarketingStat[] = []
     { number: "100K+", label: "Active Users", icon: MockIcon },

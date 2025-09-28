@@ -8,14 +8,14 @@ interface WatchPartyThemeProviderProps extends ThemeProviderProps {}
   children: React.ReactNode;
 }
 
-export function WatchPartyThemeProvider({ children, ...props }: WatchPartyThemeProviderProps) {}
+export function WatchPartyThemeProvider({ children, ...props }: WatchPartyThemeProviderProps) {
   return (
     <NextThemesProvider;
       attribute="class"
       defaultTheme="dark"
       enableSystem={false}
       themes={["light", "dark"]}
-      {...props}
+      ...props}
     >
       {children}
     </NextThemesProvider>

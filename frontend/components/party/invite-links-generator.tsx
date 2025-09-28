@@ -9,11 +9,10 @@ import { useToast } from '@/hooks/use-toast'
 
 "use client"
 
-interface InviteLinksGeneratorProps {}
-  partyId: string;
-  partyName: string;
-  hostName: string;
-  isPublic: boolean;
+interface partyId {: string;,
+  partyName: string;,
+  hostName: string;,
+  isPublic: boolean;,
   onTogglePublic: () => void;
 }
 
@@ -28,34 +27,34 @@ export function InviteLinksGenerator({partyId,
   const [maxUses, setMaxUses] = useState(0) // 0 = unlimited;
   const { toast } = useToast()
 
-  function generateInviteCode() {}
+  function generateInviteCode() {
     return Math.random().toString(36).substring(2, 8).toUpperCase()
   }
 
   const inviteUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/join/${inviteCode}`
 
-  const handleCopyLink = async () => {}
+  const handleCopyLink = async () => {
     await navigator.clipboard.writeText(inviteUrl)
     toast({title: 'Link copied!',
       description: 'Invite link has been copied to clipboard.',
     })
   }
 
-  const handleCopyCode = async () => {}
+  const handleCopyCode = async () => {
     await navigator.clipboard.writeText(inviteCode)
     toast({title: 'Code copied!',
       description: 'Invite code has been copied to clipboard.',
     })
   }
 
-  const handleShare = async () => {}
-    if (navigator.share) {}
-      try {}
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
         await navigator.share({title: `Join ${partyName}`,
           text: `${hostName} invited you to watch ${partyName} together!`,
           url: inviteUrl;
         })
-      } catch {}
+      } catch (error) {
         // User cancelled sharing;
       }
     } else {}
@@ -63,7 +62,7 @@ export function InviteLinksGenerator({partyId,
     }
   }
 
-  const handleRegenerateCode = () => {}
+  const handleRegenerateCode = () => {
     setInviteCode(generateInviteCode())
     toast({title: 'New code generated',
       description: 'A new invite code has been created.',
@@ -97,7 +96,7 @@ export function InviteLinksGenerator({partyId,
 
           <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
             <p className="text-sm font-medium mb-1">Invite Link</p>
-            <p className="text-xs text-gray-600 dark:text-gray-400 break-all">
+            <p className="text-xs text-gray-600 dark:text-gray-400 break-all">;
               {inviteUrl}
             </p>
           </div>

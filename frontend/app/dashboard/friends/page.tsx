@@ -1,30 +1,30 @@
-import { useState, useCallback } from "react"
+import { useState} from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import FriendsList from "@/components/social/friends-list"
 import FriendRequests from "@/components/social/friend-requests"
 import UserSearch from "@/components/social/user-search"
 import ActivityFeed from "@/components/social/activity-feed"
-import { Activity, Search, User, UserPlus, Users } from "lucide-react"
+import { Activity, Search,UserPlus, Users } from "lucide-react"
 import { usersAPI } from "@/lib/api"
 import { useEffect } from "react"
 
 "use client"
 
-export default function FriendsPage() {}
+export default function FriendsPage() {
   const [activeTab, setActiveTab] = useState("friends")
   const [pendingRequestsCount, setPendingRequestsCount] = useState(0)
 
-  useEffect(() => {}
+  useEffect(() => {
     loadPendingRequestsCount()
-  }, [])
+  }, [0])
 
-  const loadPendingRequestsCount = async () => {}
-    try {}
+  const loadPendingRequestsCount = async () => {
+    try {
       const requests = await usersAPI.getFriendRequests()
       const pendingCount = requests.filter((req: unknown) => req.status === &apos;pending').length;
       setPendingRequestsCount(pendingCount)
-    } catch {}
+    } catch {
       console.error("Failed to load pending requests count:", error)
     }
   }

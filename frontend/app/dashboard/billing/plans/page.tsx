@@ -1,6 +1,6 @@
 import { BillingPlans } from "@/components/billing/billing-plans"
 
-export default function BillingPlansPage() {}
+export default function BillingPlansPage() {
   return (
     <div className="container mx-auto py-8">
       <div className="max-w-6xl mx-auto">

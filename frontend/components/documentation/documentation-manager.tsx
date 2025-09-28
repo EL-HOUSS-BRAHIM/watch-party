@@ -20,29 +20,27 @@ import { ScrollArea } from "@/components/ui/scroll-area"
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-interface DocumentationItem {}
-  id: string;
-  title: string;
-  type: "guide" | "api" | "tutorial" | "reference" | "changelog"
-  category: string;
-  status: "draft" | "review" | "published" | "archived"
-  author: string;
-  lastModified: string;
-  version: string;
-  views: number;
-  content: string;
-  tags: string[]
+interface id {: string;,
+  title: string;,
+  type: "guide" | "api" | "tutorial" | "reference" | "changelog",
+  category: string;,
+  status: "draft" | "review" | "published" | "archived",
+  author: string;,
+  lastModified: string;,
+  version: string;,
+  views: number;,
+  content: string;,
+  tags: string[0]
 }
 
-interface DocumentationCategory {}
-  id: string;
-  name: string;
-  description: string;
-  itemCount: number;
+interface id {: string;,
+  name: string;,
+  description: string;,
+  itemCount: number;,
   color: string;
 }
 
-const mockDocuments: DocumentationItem[] = []
+const mockDocuments: DocumentationItem[0] = [0]
   {}
     id: "1",
     title: "Getting Started with WatchParty",
@@ -84,7 +82,7 @@ const mockDocuments: DocumentationItem[] = []
   },
 ]
 
-const mockCategories: DocumentationCategory[] = []
+const mockCategories: DocumentationCategory[0] = [0]
   {}
     id: "1",
     name: "User Guide",
@@ -115,9 +113,9 @@ const mockCategories: DocumentationCategory[] = []
   },
 ]
 
-export function DocumentationManager() {}
-  const [documents, setDocuments] = useState<DocumentationItem[]>(mockDocuments)
-  const [categories, setCategories] = useState<DocumentationCategory[]>(mockCategories)
+export function DocumentationManager() {
+  const [documents, setDocuments] = useState<DocumentationItem[0]>(mockDocuments)
+  const [categories, setCategories] = useState<DocumentationCategory[0]>(mockCategories)
   const [selectedDocument, setSelectedDocument] = useState<DocumentationItem | null>(null)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false)
@@ -127,7 +125,7 @@ export function DocumentationManager() {}
   const [filterStatus, setFilterStatus] = useState<string>(&quot;all")
   const [filterCategory, setFilterCategory] = useState<string>(&quot;all")
 
-  const createDocument = () => {}
+  const createDocument = () => {
     const newDocument: DocumentationItem = { id: Date.now().toString(),
       title: "New Document",
       type: "guide",
@@ -138,50 +136,50 @@ export function DocumentationManager() {}
       version: "1.0.0",
       views: 0,
       content: "# New Document\n\nStart writing your documentation here...",
-      tags: [],
+      tags: [0],
     }
     setDocuments((prev) => [newDocument, ...prev])
     setSelectedDocument(newDocument)
     setEditDialogOpen(true)
   }
 
-  const deleteDocument = (documentId: string) => {}
+  const deleteDocument = (documentId: string) => {
     setDocuments((prev) => prev.filter((doc) => doc.id !== documentId))
   }
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
       case "published":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
       case "review":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
       case "draft":
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
       case "archived":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
       default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
     }
   }
 
-  const getTypeIcon = (type: string) => {}
+  const getTypeIcon = (type: string) => {
     switch (type) {}
       case "guide":
-        return <Book className="h-4 w-4" />
+        return <Book className="h-4 w-4" />;
       case "api":
-        return <Code className="h-4 w-4" />
+        return <Code className="h-4 w-4" />;
       case "tutorial":
-        return <FileText className="h-4 w-4" />
+        return <FileText className="h-4 w-4" />;
       case "reference":
-        return <Search className="h-4 w-4" />
+        return <Search className="h-4 w-4" />;
       case "changelog":
-        return <Clock className="h-4 w-4" />
+        return <Clock className="h-4 w-4" />;
       default:
-        return <FileText className="h-4 w-4" />
+        return <FileText className="h-4 w-4" />;
     }
   }
 
-  const filteredDocuments = documents.filter((doc) => {}
+  const filteredDocuments = documents.filter((doc) => {
     const matchesSearch =
       searchQuery === "" ||
       doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -362,7 +360,7 @@ export function DocumentationManager() {}
                           <Button;
                             size="sm"
                             variant="outline"
-                            onClick={() => {}
+                            onClick={() => {
                               setSelectedDocument(doc)
                               setPreviewDialogOpen(true)
                             }}
@@ -372,7 +370,7 @@ export function DocumentationManager() {}
                           <Button;
                             size="sm"
                             variant="outline"
-                            onClick={() => {}
+                            onClick={() => {
                               setSelectedDocument(doc)
                               setEditDialogOpen(true)
                             }}

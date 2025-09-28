@@ -7,104 +7,102 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 
 "use client"
 
-interface UserProfile {}
-  id: string;
-  username: string;
-  displayName: string;
+interface id {: string;,
+  username: string;,
+  displayName: string;,
   avatar: string | null;
   bio?: string;
   location?: string;
-  website?: string;
-  joinedDate: string;
-  status: 'online' | 'offline' | 'away' | 'busy'
-  friendsCount: number;
-  partiesCount: number;
-  isCurrentUser: boolean;
-  isFriend: boolean;
+  website?: string;,
+  joinedDate: string;,
+  status: 'online' | 'offline' | 'away' | 'busy',
+  friendsCount: number;,
+  partiesCount: number;,
+  isCurrentUser: boolean;,
+  isFriend: boolean;,
   hasPendingRequest: boolean;
 }
 
-interface ProfilePreviewProps {}
-  userId: string;
+interface userId {: string;,
   children: React.ReactNode;
   disabled?: boolean;
 }
 
-export function ProfilePreview({ userId, children, disabled = false }: ProfilePreviewProps) {}
+export function ProfilePreview({ userId, children, disabled = false }: ProfilePreviewProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isOpen, setIsOpen] = useState(false)
 
-  useEffect(() => {}
-    if (isOpen && !profile && !loading) {}
+  useEffect(() => {
+    if (isOpen && !profile && !loading) {
       loadProfile()
     }
   }, [isOpen, userId])
 
-  const loadProfile = async () => {}
+  const loadProfile = async () => {
     setLoading(true)
     setError(null)
-    try {}
+    try {
       const response = await fetch(`/api/users/${userId}/profile`)
-      if (!response.ok) {}
+      if (!response.ok) {
         throw new Error('Failed to load profile')
       }
       const data = await response.json()
       setProfile(data)
-    } catch {}
+    } catch (error) {
       setError(err instanceof Error ? err.message : 'Failed to load profile')
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const handleSendFriendRequest = async () => {}
-    try {}
-      const response = await fetch('/api/social/friend-requests', {}
+  const handleSendFriendRequest = async () => {
+    try {
+      const response = await fetch('/api/social/friend-requests', {
         method: 'POST',
         headers: {}
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ userId }),
       })
-      if (response.ok) {}
-        setProfile(prev => prev ? { ...prev, hasPendingRequest: true } : null)
+      if (response.ok) {
+        setProfile(prev => prev ? ...prev, hasPendingRequest: true } : null)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to send friend request:', err)
     }
   }
 
-  const handleSendMessage = () => {}
+  const handleSendMessage = () => {
     // Navigate to messages with this user;
     window.location.href = `/messages?user=${userId}`
   }
 
-  const getStatusColor = (status: UserProfile['status']) => {}
+  const getStatusColor = (status: UserProfile['status']) => {
     switch (status) {}
-      case 'online': return 'bg-green-500'
-      case 'away': return 'bg-yellow-500'
-      case 'busy': return 'bg-red-500'
-      default: return 'bg-gray-400'
+      case 'online': return 'bg-green-500';
+      case 'away': return 'bg-yellow-500';
+      case 'busy': return 'bg-red-500',
+      default: return 'bg-gray-400';
     }
   }
 
-  const getStatusText = (status: UserProfile['status']) => {}
+  const getStatusText = (status: UserProfile['status']) => {
     switch (status) {}
-      case 'online': return 'Online'
-      case 'away': return 'Away'
-      case 'busy': return 'Busy'
-      default: return 'Offline'
+      case 'online': return 'Online';
+      case 'away': return 'Away';
+      case 'busy': return 'Busy',
+      default: return 'Offline';
     }
   }
 
-  if (disabled) {}
-    return <>{children}</>
+  if (disabled) {
+    return <>{children}</>;
   }
 
-  const profileContent = () => {}
-    if (loading) {}
+  const profileContent = () => {
+    if (loading) {
       return (
         <Card className="w-80">
           <CardContent className="flex items-center justify-center h-48">
@@ -114,7 +112,7 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
       )
     }
 
-    if (error || !profile) {}
+    if (error || !profile) {
       return (
         <Card className="w-80">
           <CardContent className="flex flex-col items-center justify-center h-48">

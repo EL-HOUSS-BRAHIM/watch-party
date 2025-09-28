@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "Deployment Pipeline - Admin Dashboar
   description: "Manage deployments and monitor environments with automated CI/CD pipeline",
 }
 
-export default function DeploymentPipelinePage() {}
+export default function DeploymentPipelinePage() {
   return (
     <div className="container mx-auto py-6">
       <DeploymentPipeline />

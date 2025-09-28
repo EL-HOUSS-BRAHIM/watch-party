@@ -21,7 +21,7 @@ const customJestConfig = { setupFilesAfterEnv: ["<rootDir>/jest.setup.js&quot;],
     "!**/*.d.ts",
     "!**/node_modules/**",
   ],
-  testPathIgnorePatterns: ["<rootDir>/.next/&quot;, "<rootDir>/node_modules/&quot;, "<rootDir>/e2e/"],
+  testPathIgnorePatterns: ["<rootDir>/.next/&quot;, &quot;<rootDir>/node_modules/&quot;, &quot;<rootDir>/e2e/"],
   transform: {}
     "^.+\\.(js|jsx|ts|tsx)$": ["babel-jest", { presets: ["next/babel"] }],
   },

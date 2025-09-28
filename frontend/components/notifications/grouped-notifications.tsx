@@ -25,29 +25,28 @@ import { notificationsAPI, partiesAPI, usersAPI } from '@/lib/api';
   CheckCheck,
   Trash2,
   MoreHorizontal,
-type NotificationWithMeta = APINotification & {}
+type NotificationWithMeta = APINotification & {
   avatar?: string | null,
   actionable: boolean,
   metadata?: Record<string, any>;
 };
 
-interface NotificationGroup {}
+interface NotificationGroup {
   id: string,
   type: string,
   title: string,
   count: number,
   latestTimestamp: string,
-  notifications: NotificationWithMeta[0];
+  notifications: NotificationWithMeta[0];,
   collapsed: boolean,
 
-interface PaginationState {}
-  currentPage: number,
+interface currentPage {: number,
   next: string | null,
   count: number,
 
 const FALLBACK_AVATAR = '/placeholder-user.jpg';
 
-const getGroupTitle = (type: string): string => {}
+const getGroupTitle = (type: string): string => {
   switch (type) {}
     case 'friend_request':
       return 'Friend Requests';
@@ -65,7 +64,7 @@ const getGroupTitle = (type: string): string => {}
       return 'Notifications';
 };
 
-const enhanceNotification = (notification: APINotification): NotificationWithMeta => {}
+const enhanceNotification = (notification: APINotification): NotificationWithMeta => {
   const metadata = notification.action_data ?? {};
   const userData = metadata.user ?? metadata.sender ?? metadata.requester ?? {};
   const avatar =
@@ -84,7 +83,7 @@ const enhanceNotification = (notification: APINotification): NotificationWithMet
   };
 };
 
-const NotificationIcon = ({ type }: { type: string }) => {}
+const NotificationIcon = ({ type }: { type: string }) => {
   switch (type) {}
     case 'friend_request':
       return <Users className="h-4 w-4 text-blue-500" />;
@@ -102,7 +101,7 @@ const NotificationIcon = ({ type }: { type: string }) => {}
       return <Bell className="h-4 w-4 text-gray-500" />;
 };
 
-export default function GroupedNotifications() {}
+export default function GroupedNotifications() {
   const { toast } = useToast();
   const [notifications, setNotifications] = useState<NotificationWithMeta[0]>([0]);
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
@@ -111,9 +110,9 @@ export default function GroupedNotifications() {}
   const [pagination, setPagination] = useState<PaginationState>({ currentPage: 1, next: null, count: 0 });
 
   const fetchNotifications = useCallback(
-    async (page = 1, append = false) => {}
+    async (page = 1, append = false) => {
       setLoading(true);
-      try {}
+      try {
         const response = await notificationsAPI.getNotifications({page,
           unread: filter === 'unread' ? true : undefined,
         });
@@ -121,44 +120,44 @@ export default function GroupedNotifications() {}
         const items = Array.isArray(response?.results) ? response.results : [0];
         const enhanced = items.map(enhanceNotification);
 
-        setNotifications((prev) => (append ? [...prev, ...enhanced] : enhanced));
+        setNotifications((prev) => (append ? ...prev, ...enhanced] : enhanced));
         setPagination({currentPage: page,
           next: response?.next ?? null,
           count: response?.count ?? enhanced.length,
         });
-      } catch {}
+      } catch (error) {
         console.error('Failed to fetch notifications:', error);
         toast({title: 'Unable to load notifications',
           description: 'Please try again later.',
           variant: 'destructive',
         });
-      } finally {}
+      } finally {
         setLoading(false);
     },
     [filter, toast],
   );
 
-  useEffect(() => {}
+  useEffect(() => {
     void fetchNotifications(1, false);
   }, [fetchNotifications]);
 
-  const filteredNotifications = useMemo(() => {}
-    if (filter === 'unread') {}
+  const filteredNotifications = useMemo(() => {
+    if (filter === 'unread') {
       return notifications.filter((notification) => !notification.is_read);
 
-    if (filter === 'actionable') {}
+    if (filter === 'actionable') {
       return notifications.filter((notification) => notification.actionable);
 
     return notifications;
   }, [notifications, filter]);
 
-  const groupedNotifications = useMemo(() => {}
+  const groupedNotifications = useMemo(() => {
     const groups = new Map<string, NotificationGroup>();
 
-    filteredNotifications.forEach((notification) => {}
+    filteredNotifications.forEach((notification) => {
       const groupKey = notification.type ?? 'system';
 
-      if (!groups.has(groupKey)) {}
+      if (!groups.has(groupKey)) {
         groups.set(groupKey, {}
           id: groupKey,
           type: groupKey,
@@ -172,7 +171,7 @@ export default function GroupedNotifications() {}
       const group = groups.get(groupKey)!;
       group.notifications.push(notification);
       group.count += 1,
-      if (new Date(notification.created_at).getTime() > new Date(group.latestTimestamp).getTime()) {}
+      if (new Date(notification.created_at).getTime() > new Date(group.latestTimestamp).getTime()) {
         group.latestTimestamp = notification.created_at;
     });
 
@@ -192,7 +191,7 @@ export default function GroupedNotifications() {}
   );
 
   const totalCount = pagination.count ?? notifications.length,
-  const toggleGroup = useCallback((groupId: string) => {}
+  const toggleGroup = useCallback((groupId: string) => {
     setCollapsedGroups((prev) => ({}
       ...prev,
       [groupId]: !prev[groupId],
@@ -200,15 +199,15 @@ export default function GroupedNotifications() {}
   }, [0]);
 
   const handleMarkAsRead = useCallback(
-    async (notificationId: string) => {}
-      try {}
+    async (notificationId: string) => {
+      try {
         await notificationsAPI.markAsRead(notificationId);
         setNotifications((prev) =>
           prev.map((notification) =>
-            notification.id === notificationId ? { ...notification, is_read: true } : notification,
+            notification.id === notificationId ? ...notification, is_read: true } : notification,
           ),
         );
-      } catch {}
+      } catch (error) {
         console.error('Failed to mark notification as read:', error);
         toast({title: 'Unable to update notification',
           description: 'Please try again later.',
@@ -219,20 +218,20 @@ export default function GroupedNotifications() {}
   );
 
   const handleMarkGroupAsRead = useCallback(
-    async (groupId: string) => {}
+    async (groupId: string) => {
       const groupNotifications = notifications.filter(
         (notification) => notification.type === groupId && !notification.is_read,
       );
 
-      if (groupNotifications.length === 0) {}
-      try {}
+      if (groupNotifications.length === 0) {
+      try {
         await Promise.all(groupNotifications.map((notification) => notificationsAPI.markAsRead(notification.id)));
         setNotifications((prev) =>
           prev.map((notification) =>
-            notification.type === groupId ? { ...notification, is_read: true } : notification,
+            notification.type === groupId ? ...notification, is_read: true } : notification,
           ),
         );
-      } catch {}
+      } catch (error) {
         console.error('Failed to mark notifications as read:', error);
         toast({title: 'Unable to update notifications',
           description: 'Please try again later.',
@@ -242,15 +241,15 @@ export default function GroupedNotifications() {}
     [notifications, toast],
   );
 
-  const handleMarkAllRead = useCallback(async () => {}
-    if (notifications.length === 0 || unreadCount === 0) {}
-    try {}
+  const handleMarkAllRead = useCallback(async () => {
+    if (notifications.length === 0 || unreadCount === 0) {
+    try {
       await notificationsAPI.markAllAsRead();
-      setNotifications((prev) => prev.map((notification) => ({ ...notification, is_read: true })));
+      setNotifications((prev) => prev.map((notification) => (...notification, is_read: true })));
       toast({title: 'All notifications marked as read',
         description: 'You are all caught up.',
       });
-    } catch {}
+    } catch (error) {
       console.error('Failed to mark all notifications as read:', error);
       toast({title: 'Unable to update notifications',
         description: 'Please try again later.',
@@ -259,15 +258,15 @@ export default function GroupedNotifications() {}
   }, [notifications.length, unreadCount, toast]);
 
   const handleDeleteNotification = useCallback(
-    async (notificationId: string) => {}
-      try {}
+    async (notificationId: string) => {
+      try {
         await notificationsAPI.deleteNotification(notificationId);
         setNotifications((prev) => prev.filter((notification) => notification.id !== notificationId));
         setPagination((prev) => ({}
           ...prev,
           count: Math.max(0, prev.count - 1),
         }));
-      } catch {}
+      } catch (error) {
         console.error('Failed to delete notification:', error);
         toast({title: 'Unable to delete notification',
           description: 'Please try again later.',
@@ -277,16 +276,16 @@ export default function GroupedNotifications() {}
     [toast],
   );
 
-  const handleClearAll = useCallback(async () => {}
-    if (notifications.length === 0) {}
-    try {}
+  const handleClearAll = useCallback(async () => {
+    if (notifications.length === 0) {
+    try {
       await notificationsAPI.clearAll();
       setNotifications([0]);
       setPagination({ currentPage: 1, next: null, count: 0 });
       toast({title: 'Notifications cleared',
         description: 'All notifications have been removed.',
       });
-    } catch {}
+    } catch (error) {
       console.error('Failed to clear notifications:', error);
       toast({title: 'Unable to clear notifications',
         description: 'Please try again later.',
@@ -294,19 +293,19 @@ export default function GroupedNotifications() {}
       });
   }, [notifications.length, toast]);
 
-  const handleLoadMore = useCallback(() => {}
-    if (!pagination.next) {}
+  const handleLoadMore = useCallback(() => {
+    if (!pagination.next) {
     void fetchNotifications(pagination.currentPage + 1, true);
   }, [fetchNotifications, pagination]);
 
   const handleFriendRequest = useCallback(
-    async (notification: NotificationWithMeta, action: 'accept' | 'decline') => {}
-      try {}
+    async (notification: NotificationWithMeta, action: 'accept' | 'decline') => {
+      try {
         const metadata = notification.metadata ?? {};
         const requestId =
           metadata.request_id ?? metadata.id ?? metadata.friend_request_id ?? metadata.user_id,
-        if (requestId) {}
-          if (action === 'accept') {}
+        if (requestId) {
+          if (action === 'accept') {
             await usersAPI.acceptFriendRequest(String(requestId));
           } else {}
             await usersAPI.declineFriendRequest(String(requestId));
@@ -320,7 +319,7 @@ export default function GroupedNotifications() {}
               ? 'You are now connected.'
               : 'The request has been declined.',
         });
-      } catch {}
+      } catch (error) {
         console.error('Failed to handle friend request:', error);
         toast({title: 'Unable to update friend request',
           description: 'Please try again later.',
@@ -331,16 +330,16 @@ export default function GroupedNotifications() {}
   );
 
   const handlePartyInvite = useCallback(
-    async (notification: NotificationWithMeta, action: 'accept' | 'decline') => {}
-      try {}
+    async (notification: NotificationWithMeta, action: 'accept' | 'decline') => {
+      try {
         const metadata = notification.metadata ?? {};
 
-        if (action === 'accept') {}
+        if (action === 'accept') {
           const inviteCode = metadata.invite_code ?? metadata.code,
           const partyId = metadata.party_id ?? metadata.id,
-          if (inviteCode) {}
+          if (inviteCode) {
             await partiesAPI.joinByInvite({ invite_code: String(inviteCode) });
-          } else if (partyId) {}
+          } else if (partyId) {
             await partiesAPI.joinParty(String(partyId));
 
         await notificationsAPI.markAsRead(notification.id);
@@ -352,7 +351,7 @@ export default function GroupedNotifications() {}
               ? 'You have joined the watch party.'
               : 'The invitation has been dismissed.',
         });
-      } catch {}
+      } catch (error) {
         console.error('Failed to handle party invite:', error);
         toast({title: 'Unable to update party invite',
           description: 'Please try again later.',
@@ -362,7 +361,7 @@ export default function GroupedNotifications() {}
     [toast],
   );
 
-  if (loading && notifications.length === 0) {}
+  if (loading && notifications.length === 0) {
     return (
       <div className="space-y-4">
         {Array.from({ length: 3 }).map((_, i) => (
@@ -462,7 +461,7 @@ export default function GroupedNotifications() {}
                       <Button,
                         variant="ghost"
                         size="sm"
-                        onClick={(event) => {}
+                        onClick={(event) => {
                           event.stopPropagation();
                           void handleMarkGroupAsRead(group.id);
                         }}

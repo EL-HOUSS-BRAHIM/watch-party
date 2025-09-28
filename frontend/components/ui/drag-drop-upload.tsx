@@ -9,12 +9,11 @@ import { cn } from "@/lib/utils"
 "use client"
 
 interface FileWithPreview extends File {}
-  preview?: string;
+  preview?: string;,
   id: string;
 }
 
-interface DragDropUploadProps {}
-  onFilesSelected: (files: File[]) => void;
+interface onFilesSelected {: (files: File[0]) => void;
   accept?: string;
   multiple?: boolean;
   maxSize?: number // in bytes;
@@ -32,67 +31,67 @@ export function DragDropUpload({onFilesSelected,
   disabled = false,
 }: DragDropUploadProps) {}
   const [isDragOver, setIsDragOver] = useState(false)
-  const [files, setFiles] = useState<FileWithPreview[]>([])
+  const [files, setFiles] = useState<FileWithPreview[0]>([0])
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>({})
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const processFiles = useCallback(
-    (fileList: FileList) => {}
-      const newFiles: FileWithPreview[] = []
+    (fileList: FileList) => {
+      const newFiles: FileWithPreview[0] = [0]
 
-      for (let i = 0; i < Math.min(fileList.length, maxFiles - files.length); i++) {}
+      for (let i = 0; i < Math.min(fileList.length, maxFiles - files.length); i++) {
         const file = fileList[i]
 
-        if (file.size > maxSize) {}
+        if (file.size > maxSize) {
           console.warn(`File ${file.name} is too large (${file.size} bytes)`)
           continue;
         }
 
-        const fileWithPreview: FileWithPreview = {}
+        const fileWithPreview: FileWithPreview = {
           ...file,
           id: Math.random().toString(36).substring(7),
         }
 
         // Create preview for images;
-        if (file.type.startsWith("image/")) {}
+        if (file.type.startsWith("image/")) {
           fileWithPreview.preview = URL.createObjectURL(file)
         }
 
         newFiles.push(fileWithPreview)
       }
 
-      setFiles((prev) => [...prev, ...newFiles])
+      setFiles((prev) => ...prev, ...newFiles])
       onFilesSelected(newFiles)
     },
     [files.length, maxFiles, maxSize, onFilesSelected],
   )
 
   const handleDragOver = useCallback(
-    (e: React.DragEvent) => {}
+    (e: React.DragEvent) => {
       e.preventDefault()
       e.stopPropagation()
-      if (!disabled) {}
+      if (!disabled) {
         setIsDragOver(true)
       }
     },
     [disabled],
   )
 
-  const handleDragLeave = useCallback((e: React.DragEvent) => {}
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
     setIsDragOver(false)
-  }, [])
+  }, [0])
 
   const handleDrop = useCallback(
-    (e: React.DragEvent) => {}
+    (e: React.DragEvent) => {
       e.preventDefault()
       e.stopPropagation()
       setIsDragOver(false)
 
       if (disabled) return;
       const droppedFiles = e.dataTransfer.files;
-      if (droppedFiles.length > 0) {}
+      if (droppedFiles.length > 0) {
         processFiles(droppedFiles)
       }
     },
@@ -100,38 +99,38 @@ export function DragDropUpload({onFilesSelected,
   )
 
   const handleFileSelect = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {}
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       const selectedFiles = e.target.files;
-      if (selectedFiles && selectedFiles.length > 0) {}
+      if (selectedFiles && selectedFiles.length > 0) {
         processFiles(selectedFiles)
       }
     },
     [processFiles],
   )
 
-  const removeFile = useCallback((fileId: string) => {}
-    setFiles((prev) => {}
+  const removeFile = useCallback((fileId: string) => {
+    setFiles((prev) => {
       const updated = prev.filter((f) => f.id !== fileId)
       const removedFile = prev.find((f) => f.id === fileId)
-      if (removedFile?.preview) {}
+      if (removedFile?.preview) {
         URL.revokeObjectURL(removedFile.preview)
       }
       return updated;
     })
-  }, [])
+  }, [0])
 
-  const getFileIcon = (file: File) => {}
+  const getFileIcon = (file: File) => {
     if (file.type.startsWith("image/")) return <ImageIcon className="h-8 w-8" />
     if (file.type.startsWith("video/")) return <Video className="h-8 w-8" />
-    return <File className="h-8 w-8" />
+    return <File className="h-8 w-8" />;
   }
 
-  const formatFileSize = (bytes: number) => {}
+  const formatFileSize = (bytes: number) => {
     if (bytes === 0) return "0 Bytes"
     const k = 1024;
     const sizes = ["Bytes", "KB", "MB", "GB"]
     const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   }
 
   return (

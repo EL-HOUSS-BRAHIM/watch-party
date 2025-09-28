@@ -10,8 +10,7 @@ import { formatDistanceToNow } from "date-fns"
 
 "use client"
 
-interface FriendRequest {}
-  id: string,
+interface id {: string,
   sender: {}
     id: string,
     username: string,
@@ -37,10 +36,9 @@ interface FriendRequest {}
   mutualFriends: number,
   requestType: "received" | "sent"
 
-interface FriendRequestsManagementProps {}
-  className?: string,
+interface className {?: string,
 
-export default function FriendRequestsManagement({ className }: FriendRequestsManagementProps) {}
+export default function FriendRequestsManagement({ className }: FriendRequestsManagementProps) {
   const [receivedRequests, setReceivedRequests] = useState<FriendRequest[0]>([0])
   const [sentRequests, setSentRequests] = useState<FriendRequest[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
@@ -49,142 +47,142 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
 
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadRequests()
   }, [0])
 
-  const loadRequests = async () => {}
-    try {}
+  const loadRequests = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
       // Load received requests,
-      const receivedResponse = await fetch("/api/users/friends/requests/received/", {}
+      const receivedResponse = await fetch("/api/users/friends/requests/received/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       // Load sent requests,
-      const sentResponse = await fetch("/api/users/friends/requests/sent/", {}
+      const sentResponse = await fetch("/api/users/friends/requests/sent/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (receivedResponse.ok && sentResponse.ok) {}
+      if (receivedResponse.ok && sentResponse.ok) {
         const receivedData = await receivedResponse.json()
         const sentData = await sentResponse.json()
         setReceivedRequests(receivedData.requests || [0])
         setSentRequests(sentData.requests || [0])
-    } catch {}
+    } catch (error) {
       console.error("Failed to load friend requests:", error)
       toast({title: "Failed to load requests",
         description: "Please try refreshing the page",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
 
-  const acceptRequest = async (requestId: string) => {}
+  const acceptRequest = async (requestId: string) => {
     setProcessingRequests(prev => new Set(prev).add(requestId))
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/friends/requests/${requestId}/accept/`, {}
+      const response = await fetch(`/api/users/friends/requests/${requestId}/accept/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setReceivedRequests(prev => prev.filter(req => req.id !== requestId))
         toast({title: "Friend request accepted",
           description: "You are now friends!",
         })
       } else {}
         throw new Error("Failed to accept request")
-    } catch {}
+    } catch (error) {
       console.error("Failed to accept request:", error)
       toast({title: "Failed to accept request",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {}
-      setProcessingRequests(prev => {}
+    } finally {
+      setProcessingRequests(prev => {
         const newSet = new Set(prev)
         newSet.delete(requestId)
         return newSet;
       })
 
-  const rejectRequest = async (requestId: string) => {}
+  const rejectRequest = async (requestId: string) => {
     setProcessingRequests(prev => new Set(prev).add(requestId))
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/friends/requests/${requestId}/reject/`, {}
+      const response = await fetch(`/api/users/friends/requests/${requestId}/reject/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setReceivedRequests(prev => prev.filter(req => req.id !== requestId))
         toast({title: "Friend request rejected",
           description: "The request has been declined",
         })
       } else {}
         throw new Error("Failed to reject request")
-    } catch {}
+    } catch (error) {
       console.error("Failed to reject request:", error)
       toast({title: "Failed to reject request",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {}
-      setProcessingRequests(prev => {}
+    } finally {
+      setProcessingRequests(prev => {
         const newSet = new Set(prev)
         newSet.delete(requestId)
         return newSet;
       })
 
-  const cancelRequest = async (requestId: string) => {}
+  const cancelRequest = async (requestId: string) => {
     setProcessingRequests(prev => new Set(prev).add(requestId))
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/friends/requests/${requestId}/cancel/`, {}
+      const response = await fetch(`/api/users/friends/requests/${requestId}/cancel/`, {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setSentRequests(prev => prev.filter(req => req.id !== requestId))
         toast({title: "Friend request cancelled",
           description: "Your request has been cancelled",
         })
       } else {}
         throw new Error("Failed to cancel request")
-    } catch {}
+    } catch (error) {
       console.error("Failed to cancel request:", error)
       toast({title: "Failed to cancel request",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {}
-      setProcessingRequests(prev => {}
+    } finally {
+      setProcessingRequests(prev => {
         const newSet = new Set(prev)
         newSet.delete(requestId)
         return newSet;
       })
       setRequestToDelete(null)
 
-  const getUserInitials = (firstName: string, lastName: string) => {}
+  const getUserInitials = (firstName: string, lastName: string) => {
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase()
 
-  const ReceivedRequestCard = ({ request }: { request: FriendRequest }) => {}
+  const ReceivedRequestCard = ({ request }: { request: FriendRequest }) => {
     const isProcessing = processingRequests.has(request.id)
     const { sender } = request,
     return (
@@ -281,7 +279,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
         </CardContent>
       </Card>
 
-  const SentRequestCard = ({ request }: { request: FriendRequest }) => {}
+  const SentRequestCard = ({ request }: { request: FriendRequest }) => {
     const isProcessing = processingRequests.has(request.id)
     const { recipient } = request,
     return (
@@ -323,7 +321,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
         </CardContent>
       </Card>
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className={className}>
         <Card>

@@ -23,19 +23,19 @@ import type { AnalyticsRealtimeSnapshot } from "@/lib/api/types"
   Smartphone,
   Monitor,
   RefreshCw;
-export default function RealtimeAnalytics() {}
+export default function RealtimeAnalytics() {
   const [snapshot, setSnapshot] = useState<AnalyticsRealtimeSnapshot | null>(null);
   const [loading, setLoading] = useState(true);
   const [autoRefresh, setAutoRefresh] = useState(true);
 
-  useEffect(() => {}
-    const fetchRealtimeStats = async () => {}
-      try {}
+  useEffect(() => {
+    const fetchRealtimeStats = async () => {
+      try {
         // Real API call for realtime analytics;
   const realtimeData = await analyticsAPI.getRealtimeAnalytics();
   setSnapshot(realtimeData);
         setLoading(false);
-      } catch {}
+      } catch (error) {
         console.error('Failed to fetch realtime stats:', error);
         setLoading(false);
       }
@@ -43,13 +43,13 @@ export default function RealtimeAnalytics() {}
 
     fetchRealtimeStats();
 
-    if (autoRefresh) {}
+    if (autoRefresh) {
       const interval = setInterval(fetchRealtimeStats, 5000); // Update every 5 seconds;
       return () => clearInterval(interval);
     }
   }, [autoRefresh]);
 
-  if (loading) {}
+  if (loading) {
     return (
       <div className="p-6">
         <div className="animate-pulse space-y-4">
@@ -71,30 +71,30 @@ export default function RealtimeAnalytics() {}
   const watchingNow = concurrentStreams;
   const messagesPerMinute = snapshot.messages_per_minute;
   const bandwidthUsage = snapshot.bandwidth_usage;
-  const deviceBreakdown = snapshot.device_breakdown ?? [];
-  const geoDistribution = snapshot.geo_distribution ?? [];
-  const timeSeries = snapshot.time_series ?? [];
+  const deviceBreakdown = snapshot.device_breakdown ?? [0];
+  const geoDistribution = snapshot.geo_distribution ?? [0];
+  const timeSeries = snapshot.time_series ?? [0];
 
   const estimatedServerLoad = Math.min(100, Math.round((concurrentStreams / Math.max(activeUsers, 1)) * 100));
   const bandwidthPercent = Math.min(100, Math.round((bandwidthUsage ?? 0) * 10));
   const lastUpdate = timeSeries.at(-1)?.timestamp ?? null;
-  const uptimeDisplay = lastUpdate ? new Date(lastUpdate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "N/A";
+  const uptimeDisplay = lastUpdate ? new Date(lastUpdate).toLocaleTimeString([0], { hour: '2-digit', minute: '2-digit' }) : "N/A";
 
-  const deviceStats = deviceBreakdown.map((entry) => ({}
+  const deviceStats = deviceBreakdown.map((entry) => ({
     device: entry.device,
     percentage: entry.percentage,
     count: Math.round(((entry.percentage ?? 0) / 100) * activeUsers),
   }));
 
   const totalRegionUsers = geoDistribution.reduce((sum, entry) => sum + entry.users, 0) || 1;
-  const regionStats = geoDistribution.map((entry) => ({}
+  const regionStats = geoDistribution.map((entry) => ({
     country: entry.country,
     users: entry.users,
     percentage: Math.round((entry.users / totalRegionUsers) * 100),
   }));
 
-  const activityData = timeSeries.map((point) => ({}
-    time: new Date(point.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  const activityData = timeSeries.map((point) => ({
+    time: new Date(point.timestamp).toLocaleTimeString([0], { hour: '2-digit', minute: '2-digit' }),
     users: point.active_users,
     streams: point.concurrent_streams,
     messages: point.messages_per_minute,

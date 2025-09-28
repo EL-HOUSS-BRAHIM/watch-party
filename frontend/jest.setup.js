@@ -38,19 +38,19 @@ jest.mock("socket.io-client", () => ({}
 // Mock Recharts;
 jest.mock("recharts", () => ({}
   ResponsiveContainer: ({ children }) => children,
-  LineChart: ({ children }) => <div data-testid=&quot;line-chart">{children}</div>,
-  Line: () => <div data-testid=&quot;line" />,
+  LineChart: ({ children }) => <div data-testid=&quot;line-chart&quot;>{children}</div>,
+  Line: () => <div data-testid=&quot;line&quot; />,
   XAxis: () => <div data-testid="x-axis" />,
-  YAxis: () => <div data-testid=&quot;y-axis" />,
+  YAxis: () => <div data-testid=&quot;y-axis&quot; />,
   CartesianGrid: () => <div data-testid="cartesian-grid" />,
-  Tooltip: () => <div data-testid=&quot;tooltip" />,
+  Tooltip: () => <div data-testid=&quot;tooltip&quot; />,
   BarChart: ({ children }) => <div data-testid="bar-chart">{children}</div>,
-  Bar: () => <div data-testid=&quot;bar" />,
+  Bar: () => <div data-testid=&quot;bar&quot; />,
   PieChart: ({ children }) => <div data-testid="pie-chart">{children}</div>,
-  Pie: () => <div data-testid=&quot;pie" />,
+  Pie: () => <div data-testid=&quot;pie&quot; />,
   Cell: () => <div data-testid="cell" />,
-  AreaChart: ({ children }) => <div data-testid=&quot;area-chart">{children}</div>,
-  Area: () => <div data-testid=&quot;area" />,
+  AreaChart: ({ children }) => <div data-testid=&quot;area-chart&quot;>{children}</div>,
+  Area: () => <div data-testid=&quot;area&quot; />,
   Legend: () => <div data-testid="legend" />,
 }))
 

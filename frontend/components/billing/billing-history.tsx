@@ -15,32 +15,31 @@ import { AlertTriangle, Check, CheckCircle, Clock, Download, Filter, Loader2, Re
 
 
 
-interface Invoice {}
-  id: string;
-  amount: number;
-  currency: string;
-  status: string;
-  description: string;
-  invoice_date: string;
+interface id {: string;,
+  amount: number;,
+  currency: string;,
+  status: string;,
+  description: string;,
+  invoice_date: string;,
   due_date: string;
-  paid_date?: string;
+  paid_date?: string;,
   download_url: string;
 }
 
-export function BillingHistory() {}
+export function BillingHistory() {
   const { toast } = useToast()
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
   const [dateFilter, setDateFilter] = useState("all")
-  const [billingHistory, setBillingHistory] = useState<Invoice[]>([])
+  const [billingHistory, setBillingHistory] = useState<Invoice[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchBillingHistory()
-  }, [])
+  }, [0])
 
   // Helper function to map API billing history to local invoice type;
-  const mapBillingHistoryToInvoice = (history: BillingHistory): Invoice => ({}
+  const mapBillingHistoryToInvoice = (history: BillingHistory): Invoice => ({
     id: history.id,
     amount: history.amount,
     currency: history.currency,
@@ -51,24 +50,24 @@ export function BillingHistory() {}
     download_url: history.download_url || "",
   })
 
-  const fetchBillingHistory = async () => {}
-    try {}
+  const fetchBillingHistory = async () => {
+    try {
       setIsLoading(true)
       const data = await billingAPI.getBillingHistory()
-      const mappedHistory = (data.results || []).map(mapBillingHistoryToInvoice)
+      const mappedHistory = (data.results || [0]).map(mapBillingHistoryToInvoice)
       setBillingHistory(mappedHistory)
-    } catch {}
+    } catch (error) {
       console.error("Failed to fetch billing history:", error)
       toast({title: "Error",
         description: "Failed to load billing history.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const getStatusBadge = (status: string) => {}
+  const getStatusBadge = (status: string) => {
     switch (status) {}
       case "paid":
         return (
@@ -99,11 +98,11 @@ export function BillingHistory() {}
           </Badge>
         )
       default:
-        return <Badge variant="outline">Unknown</Badge>
+        return <Badge variant="outline">Unknown</Badge>;
     }
   }
 
-  const filteredHistory = billingHistory.filter((item) => {}
+  const filteredHistory = billingHistory.filter((item) => {
     const matchesSearch =
       item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.id.toLowerCase().includes(searchTerm.toLowerCase())
@@ -111,12 +110,12 @@ export function BillingHistory() {}
     return matchesSearch && matchesStatus;
   })
 
-  const totalAmount = filteredHistory.reduce((sum, item) => {}
+  const totalAmount = filteredHistory.reduce((sum, item) => {
     return item.status === "paid" ? sum + item.amount : sum;
   }, 0)
 
-  const downloadInvoice = async (invoiceId: string, downloadUrl: string) => {}
-    try {}
+  const downloadInvoice = async (invoiceId: string, downloadUrl: string) => {
+    try {
       const blob = await billingAPI.downloadInvoice(invoiceId)
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
@@ -126,7 +125,7 @@ export function BillingHistory() {}
       a.click()
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
-    } catch {}
+    } catch (error) {
       console.error("Failed to download invoice:", error)
       toast({title: "Error",
         description: "Failed to download invoice.",
@@ -135,7 +134,7 @@ export function BillingHistory() {}
     }
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-center py-12">
@@ -168,7 +167,7 @@ export function BillingHistory() {}
             <AlertTriangle className="w-4 h-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{filteredHistory.filter((i) => i.status === &quot;failed").length}</div>"
+            <div className="text-2xl font-bold">{filteredHistory.filter((i) => i.status === &quot;failed").length}</div>&quot;
             <p className="text-xs text-muted-foreground">Requires attention</p>
           </CardContent>
         </Card>

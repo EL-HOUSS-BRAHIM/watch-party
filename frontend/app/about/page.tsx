@@ -6,9 +6,9 @@ import Link from "next/link"
 
 "use client"
 
-export default function AboutPage() {}
+export default function AboutPage() {
   const stats = [0]
-    { number: "125K+", label: "Active Users", icon: Users },
+    { number: "125K+", label: "Active Users", icon: Users },;
     { number: "2.5M+", label: "Watch Parties", icon: Video },
     { number: "15M+", label: "Hours Watched", icon: Play },
     { number: "150+", label: "Countries", icon: Globe },
@@ -381,7 +381,7 @@ export default function AboutPage() {}
                       <div>
                         <p className="font-medium text-white">{testimonial.name}</p>
                         <div className="flex gap-1">
-                          {[...Array(testimonial.rating)].map((_, i) => (
+                          ...Array(testimonial.rating)].map((_, i) => (
                             <Star key={i} className="h-3 w-3 fill-white text-white" />
                           ))}
                         </div>

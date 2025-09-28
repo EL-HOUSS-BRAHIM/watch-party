@@ -15,63 +15,62 @@ import { adminAPI } from "@/lib/api"
 
 "use client"
 
-interface SystemSettings {}
-  general: {}
-    siteName: string;
-    siteDescription: string;
-    supportEmail: string;
-    maintenanceMode: boolean;
-    registrationEnabled: boolean;
-    inviteOnlyMode: boolean;
-    maxUsersPerParty: number;
-    maxPartyDuration: number;
+interface general {: {}
+    siteName: string;,
+    siteDescription: string;,
+    supportEmail: string;,
+    maintenanceMode: boolean;,
+    registrationEnabled: boolean;,
+    inviteOnlyMode: boolean;,
+    maxUsersPerParty: number;,
+    maxPartyDuration: number;,
     defaultVideoQuality: string;
   }
   security: {}
-    passwordMinLength: number;
-    requireEmailVerification: boolean;
-    enableTwoFactor: boolean;
-    sessionTimeout: number;
-    maxLoginAttempts: number;
-    rateLimitEnabled: boolean;
-    corsOrigins: string[]
+    passwordMinLength: number;,
+    requireEmailVerification: boolean;,
+    enableTwoFactor: boolean;,
+    sessionTimeout: number;,
+    maxLoginAttempts: number;,
+    rateLimitEnabled: boolean;,
+    corsOrigins: string[0]
   }
   email: {}
-    provider: string;
-    smtpHost: string;
-    smtpPort: number;
-    smtpUsername: string;
-    smtpPassword: string;
-    fromEmail: string;
-    fromName: string;
+    provider: string;,
+    smtpHost: string;,
+    smtpPort: number;,
+    smtpUsername: string;,
+    smtpPassword: string;,
+    fromEmail: string;,
+    fromName: string;,
     enableEmailNotifications: boolean;
   }
   storage: {}
-    provider: string;
-    maxFileSize: number;
-    allowedVideoFormats: string[]
-    videoRetentionDays: number;
-    enableCdn: boolean;
+    provider: string;,
+    maxFileSize: number;,
+    allowedVideoFormats: string[0],
+    videoRetentionDays: number;,
+    enableCdn: boolean;,
     cdnUrl: string;
   }
   payment: {}
-    stripePublishableKey: string;
-    stripeSecretKey: string;
-    enableBilling: boolean;
-    currency: string;
+    stripePublishableKey: string;,
+    stripeSecretKey: string;,
+    enableBilling: boolean;,
+    currency: string;,
     taxRate: number;
   }
   features: {}
-    enableChat: boolean;
-    enableVideoUpload: boolean;
-    enableSocialFeatures: boolean;
-    enableNotifications: boolean;
-    enableAnalytics: boolean;
+    enableChat: boolean;,
+    enableVideoUpload: boolean;,
+    enableSocialFeatures: boolean;,
+    enableNotifications: boolean;,
+    enableAnalytics: boolean;,
     enableModeration: boolean;
   }
 }
 
-export default function SystemSettings() {}
+export default function SystemSettings() {
   const [settings, setSettings] = useState<SystemSettings | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
@@ -81,64 +80,64 @@ export default function SystemSettings() {}
   const { user } = useAuth()
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadSettings()
-  }, [])
+  }, [0])
 
-  const loadSettings = async () => {}
-    try {}
+  const loadSettings = async () => {
+    try {
       const data = await adminAPI.getSettings()
       setSettings(data as SystemSettings)
-    } catch {}
+    } catch (error) {
       console.error("Failed to load settings:", error)
       toast({title: "Error",
         description: "Failed to load system settings. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const saveSettings = async () => {}
+  const saveSettings = async () => {
     if (!settings) return;
     setIsSaving(true)
-    try {}
+    try {
       await adminAPI.updateSettings(settings)
       setHasChanges(false)
       toast({title: "Settings Saved",
         description: "System settings have been updated successfully.",
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to save settings:", error)
       toast({title: "Error",
         description: "Failed to save settings. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSaving(false)
     }
   }
 
-  const resetSettings = async () => {}
+  const resetSettings = async () => {
     if (!confirm("Are you sure you want to reset all settings to defaults?")) return;
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/admin/settings/reset/", {}
+      const response = await fetch("/api/admin/settings/reset/", {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         await loadSettings()
         setHasChanges(false)
         toast({title: "Settings Reset",
           description: "All settings have been reset to defaults.",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to reset settings:", error)
       toast({title: "Error",
         description: "Failed to reset settings. Please try again.",
@@ -147,9 +146,9 @@ export default function SystemSettings() {}
     }
   }
 
-  const updateSetting = (category: keyof SystemSettings, key: string, value: unknown) => {}
+  const updateSetting = (category: keyof SystemSettings, key: string, value: unknown) => {
     if (!settings) return;
-    setSettings((prev) => {}
+    setSettings((prev) => {
       if (!prev) return null;
       return {}
         ...prev,
@@ -162,10 +161,10 @@ export default function SystemSettings() {}
     setHasChanges(true)
   }
 
-  const testEmailSettings = async () => {}
-    try {}
+  const testEmailSettings = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/admin/settings/test-email/", {}
+      const response = await fetch("/api/admin/settings/test-email/", {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -177,12 +176,12 @@ export default function SystemSettings() {}
         }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         toast({title: "Test Email Sent",
           description: "Check your inbox for the test email.",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to send test email:", error)
       toast({title: "Error",
         description: "Failed to send test email. Please check your settings.",
@@ -191,7 +190,7 @@ export default function SystemSettings() {}
     }
   }
 
-  if (isLoading || !settings) {}
+  if (isLoading || !settings) {
     return (
       <div className="text-center py-8">
         <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />

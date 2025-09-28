@@ -9,7 +9,7 @@ import Link from "next/link"
 
 "use client"
 
-function EmailVerificationHandler() {}
+function EmailVerificationHandler() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
@@ -23,11 +23,11 @@ function EmailVerificationHandler() {}
   const token = searchParams.get("token")
   const email = searchParams.get("email")
 
-  const verifyEmail = useCallback(async () => {}
+  const verifyEmail = useCallback(async () => {
     setStatus("loading")
 
-    try {}
-      const response = await fetch("/api/auth/verify-email/", {}
+    try {
+      const response = await fetch("/api/auth/verify-email/", {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -39,7 +39,7 @@ function EmailVerificationHandler() {}
 
       const data = await response.json()
 
-      if (response.ok) {}
+      if (response.ok) {
         setStatus("success")
         setMessage("Email verified successfully! You can now log in.")
 
@@ -47,11 +47,11 @@ function EmailVerificationHandler() {}
           description: "Your email has been verified successfully.",
         })
 
-        setTimeout(() => {}
+        setTimeout(() => {
   router.push("/login?verified=true")
         }, 2000)
       } else {}
-        if (data.error === "token_expired") {}
+        if (data.error === "token_expired") {
           setStatus("expired")
           setMessage("This verification link has expired. Please request a new one.")
         } else {}
@@ -59,15 +59,15 @@ function EmailVerificationHandler() {}
           setMessage(data.message || "Email verification failed. Please try again.")
         }
       }
-    } catch {}
+    } catch {
       console.error("Email verification error:", error)
       setStatus("error")
       setMessage("An unexpected error occurred. Please try again.")
     }
   }, [token, email, toast, router])
 
-  useEffect(() => {}
-    if (!token || !email) {}
+  useEffect(() => {
+    if (!token || !email) {
       setStatus("error")
       setMessage("Invalid verification link. Please check your email and try again.")
       return;
@@ -76,9 +76,9 @@ function EmailVerificationHandler() {}
     verifyEmail()
   }, [token, email, verifyEmail])
 
-  useEffect(() => {}
-    if (resendCooldown > 0) {}
-      const timer = setTimeout(() => {}
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(() => {
   setResendCooldown(resendCooldown - 1)
       }, 1000)
       return () => clearTimeout(timer)
@@ -89,12 +89,12 @@ function EmailVerificationHandler() {}
 
 
 
-  const resendVerificationEmail = async () => {}
+  const resendVerificationEmail = async () => {
     setIsResending(true)
     setCanResend(false)
     setResendCooldown(60) // 60 second cooldown;
-    try {}
-      const response = await fetch("/api/auth/resend-verification/", {}
+    try {
+      const response = await fetch("/api/auth/resend-verification/", {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -105,14 +105,14 @@ function EmailVerificationHandler() {}
 
       const data = await response.json()
 
-      if (response.ok) {}
+      if (response.ok) {
         toast({title: "Verification Email Sent",
           description: "A new verification email has been sent to your inbox.",
         })
       } else {}
         throw new Error(data.message || "Failed to resend verification email")
       }
-    } catch {}
+    } catch {
       console.error("Resend verification error:", error)
       toast({title: "Resend Failed",
         description: "Failed to resend verification email. Please try again later.",
@@ -120,7 +120,7 @@ function EmailVerificationHandler() {}
       })
       setCanResend(true)
       setResendCooldown(0)
-    } finally {}
+    } finally {
       setIsResending(false)
     }
   }
@@ -311,7 +311,7 @@ function EmailVerificationHandler() {}
               <li>• Check your spam/junk folder</li>
               <li>• Verification links expire after 24 hours</li>
               <li>• Make sure to click the link from the same device</li>
-              <li>• Contact support if you continue having issues</li>
+              <li>• Contact support if you continue having issues</li>;
             </ul>
           </div>
         </div>
@@ -320,7 +320,7 @@ function EmailVerificationHandler() {}
   )
 }
 
-export default function VerifyEmailPage() {}
+export default function VerifyEmailPage() {
   return (
     <Suspense;
       fallback={}

@@ -22,36 +22,34 @@ import { cn } from "@/lib/utils"
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-interface PaymentMethod {}
-  id: string;
+interface id {: string;,
   type: "card" | "paypal" | "bank"
   brand?: string;
   last4?: string;
   expiryMonth?: number;
-  expiryYear?: number;
+  expiryYear?: number;,
   isDefault: boolean;
   email?: string // for PayPal;
   bankName?: string // for bank transfers;
 }
 
-interface PaymentMethodsProps {}
-  className?: string;
+interface className {?: string;
 }
 
-export default function PaymentMethods({ className }: PaymentMethodsProps) {}
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([])
+export default function PaymentMethods({ className }: PaymentMethodsProps) {
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [showAddDialog, setShowAddDialog] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
   const { user } = useAuth()
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadPaymentMethods()
-  }, [])
+  }, [0])
 
   // Helper function to map API payment method to local type;
-  const mapAPIPaymentMethodToLocal = (apiPM: APIPaymentMethod): PaymentMethod => ({}
+  const mapAPIPaymentMethodToLocal = (apiPM: APIPaymentMethod): PaymentMethod => ({
     id: apiPM.id,
     type: apiPM.type,
     brand: apiPM.brand,
@@ -61,51 +59,51 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {}
     isDefault: apiPM.is_default,
   })
 
-  const loadPaymentMethods = useCallback(async () => {}
-    try {}
+  const loadPaymentMethods = useCallback(async () => {
+    try {
       const data = await billingAPI.getPaymentMethods()
-      const mappedMethods = (data.payment_methods || []).map(mapAPIPaymentMethodToLocal)
+      const mappedMethods = (data.payment_methods || [0]).map(mapAPIPaymentMethodToLocal)
       setPaymentMethods(mappedMethods)
-    } catch {}
+    } catch (error) {
       console.error("Failed to load payment methods:", error)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
-  }, [])
+  }, [0])
 
-  const addPaymentMethod = async (formData: FormData) => {}
+  const addPaymentMethod = async (formData: FormData) => {
     setIsAdding(true)
 
-    try {}
+    try {
       // In a real implementation, you would use Stripe Elements or similar;
       // to securely collect payment information;
       const newPaymentMethod = await billingAPI.addPaymentMethod("stripe_payment_method_id")
       const mappedMethod = mapAPIPaymentMethodToLocal(newPaymentMethod)
-      setPaymentMethods((prev) => [...prev, mappedMethod])
+      setPaymentMethods((prev) => ...prev, mappedMethod])
       setShowAddDialog(false)
       toast({title: "Payment method added",
         description: "Your payment method has been successfully added.",
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to add payment method:", error)
       toast({title: "Error",
         description: "Failed to add payment method. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsAdding(false)
     }
   }
 
-  const removePaymentMethod = async (methodId: string) => {}
+  const removePaymentMethod = async (methodId: string) => {
     if (!confirm("Are you sure you want to remove this payment method?")) return;
-    try {}
+    try {
       await billingAPI.deletePaymentMethod(methodId)
       setPaymentMethods((prev) => prev.filter((method) => method.id !== methodId))
       toast({title: "Payment method removed",
         description: "The payment method has been successfully removed.",
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to remove payment method:", error)
       toast({title: "Error",
         description: "Failed to remove payment method. Please try again.",
@@ -114,8 +112,8 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {}
     }
   }
 
-  const setDefaultPaymentMethod = async (methodId: string) => {}
-    try {}
+  const setDefaultPaymentMethod = async (methodId: string) => {
+    try {
       await billingAPI.setDefaultPaymentMethod(methodId)
       setPaymentMethods((prev) =>
         prev.map((method) => ({}
@@ -126,7 +124,7 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {}
       toast({title: "Default payment method updated",
         description: "Your default payment method has been updated.",
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to set default payment method:", error)
       toast({title: "Error",
         description: "Failed to update default payment method. Please try again.",
@@ -135,9 +133,9 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {}
     }
   }
 
-  const getCardIcon = (brand: string) => {}
+  const getCardIcon = (brand: string) => {
     // In a real implementation, you would have actual card brand icons;
-    return <CreditCard className="h-6 w-6" />
+    return <CreditCard className="h-6 w-6" />;
   }
 
   const PaymentMethodCard = ({ method }: { method: PaymentMethod }) => (
@@ -200,10 +198,10 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {}
     </Card>
   )
 
-  const AddPaymentMethodForm = () => {}
+  const AddPaymentMethodForm = () => {
     const [paymentType, setPaymentType] = useState("card")
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {}
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault()
       const formData = new FormData(e.currentTarget)
       formData.append("type", paymentType)

@@ -10,15 +10,14 @@ import { formatDistanceToNow } from "date-fns"
 
 "use client"
 
-interface InventoryItem {}
-  id: string;
-  name: string;
-  description: string;
-  type: "avatar" | "theme" | "badge" | "emote" | "decoration"
+interface id {: string;,
+  name: string;,
+  description: string;,
+  type: "avatar" | "theme" | "badge" | "emote" | "decoration",
   rarity: "common" | "rare" | "epic" | "legendary"
-  image_url?: string;
-  is_equipped: boolean;
-  acquired_at: string;
+  image_url?: string;,
+  is_equipped: boolean;,
+  acquired_at: string;,
   source: "store" | "achievement" | "gift" | "event"
 }
 
@@ -35,63 +34,62 @@ const rarityColors = { common: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:
   legendary: "bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-200",
 }
 
-interface UserInventoryProps {}
-  userId: string;
+interface userId {: string;
 }
 
-export function UserInventory({ userId }: UserInventoryProps) {}
-  const [items, setItems] = useState<InventoryItem[]>([])
+export function UserInventory({ userId }: UserInventoryProps) {
+  const [items, setItems] = useState<InventoryItem[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedType, setSelectedType] = useState("all")
   const [equippingItem, setEquippingItem] = useState<string | null>(null)
   const api = useApi()
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchInventory()
   }, [userId])
 
-  const fetchInventory = async () => {}
-    try {}
+  const fetchInventory = async () => {
+    try {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/inventory/`)
-      setItems((response.data as Record<string, unknown>).items || [])
-    } catch {}
+      setItems((response.data as Record<string, unknown>).items || [0])
+    } catch (error) {
       console.error("Failed to load inventory:", err)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const equipItem = async (itemId: string) => {}
+  const equipItem = async (itemId: string) => {
     setEquippingItem(itemId)
-    try {}
+    try {
       await api.post(`/users/${userId}/inventory/${itemId}/equip/`)
       setItems(items.map(item => ({}
         ...item,
         is_equipped: item.id === itemId ? true : (item.type === items.find(i => i.id === itemId)?.type ? false : item.is_equipped)
       })))
-    } catch {}
+    } catch (error) {
       console.error("Failed to equip item:", err)
-    } finally {}
+    } finally {
       setEquippingItem(null)
     }
   }
 
-  const unequipItem = async (itemId: string) => {}
+  const unequipItem = async (itemId: string) => {
     setEquippingItem(itemId)
-    try {}
+    try {
       await api.post(`/users/${userId}/inventory/${itemId}/unequip/`)
       setItems(items.map(item => 
-        item.id === itemId ? { ...item, is_equipped: false } : item;
+        item.id === itemId ? ...item, is_equipped: false } : item;
       ))
-    } catch {}
+    } catch (error) {
       console.error("Failed to unequip item:", err)
-    } finally {}
+    } finally {
       setEquippingItem(null)
     }
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center p-8">
@@ -145,7 +143,7 @@ export function UserInventory({ userId }: UserInventoryProps) {}
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {equippedItems.map((item) => {}
+              {equippedItems.map((item) => {
                 const TypeIcon = itemTypeIcons[item.type]
                 return (
                   <div key={item.id} className="flex items-center space-x-3 p-3 bg-primary/5 rounded-lg">
@@ -177,7 +175,7 @@ export function UserInventory({ userId }: UserInventoryProps) {}
 
         <TabsContent value={selectedType} className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filteredItems.map((item) => {}
+            {filteredItems.map((item) => {
               const TypeIcon = itemTypeIcons[item.type]
               return (
                 <Card;

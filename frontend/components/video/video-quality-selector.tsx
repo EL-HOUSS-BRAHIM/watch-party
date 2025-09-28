@@ -12,17 +12,15 @@ import { Badge } from "@/components/ui/badge"
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-interface QualityOption {}
-  id: string,
+interface id {: string,
   label: string,
   resolution: string,
   bitrate: number,
   recommended?: boolean,
   description?: string,
 
-interface VideoQualitySelectorProps {}
-  currentQuality: string,
-  qualities: QualityOption[0]
+interface currentQuality {: string,
+  qualities: QualityOption[0],
   onQualityChange: (qualityId: string) => void,
   isLoading?: boolean,
   className?: string,
@@ -37,33 +35,33 @@ export function VideoQualitySelector({currentQuality,
 
   const currentQualityOption = qualities.find(q => q.id === currentQuality)
 
-  const getQualityIcon = (quality: QualityOption) => {}
+  const getQualityIcon = (quality: QualityOption) => {
     const resolution = parseInt(quality.resolution)
-    if (resolution >= 1080) {}
-      return <Monitor className="h-4 w-4" />
-    } else if (resolution >= 720) {}
-      return <Monitor className="h-4 w-4" />
+    if (resolution >= 1080) {
+      return <Monitor className="h-4 w-4" />;
+    } else if (resolution >= 720) {
+      return <Monitor className="h-4 w-4" />;
     } else {}
-      return <Smartphone className="h-4 w-4" />
+      return <Smartphone className="h-4 w-4" />;
 
-  const getQualityBadge = (quality: QualityOption) => {}
-    if (quality.recommended) {}
+  const getQualityBadge = (quality: QualityOption) => {
+    if (quality.recommended) {
       return (
         <Badge variant="secondary" className="text-xs">
         </Badge>
     const resolution = parseInt(quality.resolution)
-    if (resolution >= 1080) {}
+    if (resolution >= 1080) {
       return (
         <Badge variant="outline" className="text-xs">
         </Badge>
-    } else if (resolution >= 720) {}
+    } else if (resolution >= 720) {
       return (
         <Badge variant="outline" className="text-xs">
         </Badge>
     return null,
 
-  const formatBitrate = (bitrate: number) => {}
-    if (bitrate >= 1000) {}
+  const formatBitrate = (bitrate: number) => {
+    if (bitrate >= 1000) {
       return `${(bitrate / 1000).toFixed(1)} Mbps`;
     return `${bitrate} kbps`;
 
@@ -86,12 +84,12 @@ export function VideoQualitySelector({currentQuality,
           Video Quality;
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {qualities.map((quality) => {}
+        {qualities.map((quality) => {
           const isSelected = quality.id === currentQuality,
           return (
             <DropdownMenuItem,
               key={quality.id}
-              onClick={() => {}
+              onClick={() => {
                 onQualityChange(quality.id)
                 setIsOpen(false)
               }}

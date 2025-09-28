@@ -25,101 +25,100 @@ import { Progress } from "@/components/ui/progress"
   AreaChart;
 } from 'recharts'
 
-interface UserAnalyticsData {}
-  user: {}
-    id: string;
-    displayName: string;
-    avatar: string | null;
+interface user {: {}
+    id: string;,
+    displayName: string;,
+    avatar: string | null;,
     joinDate: string;
   }
   summary: {}
-    totalWatchTime: number;
-    partiesHosted: number;
-    partiesJoined: number;
-    totalMessages: number;
-    totalReactions: number;
-    friendsCount: number;
-    averagePartyDuration: number;
-    favoriteGenres: string[]
+    totalWatchTime: number;,
+    partiesHosted: number;,
+    partiesJoined: number;,
+    totalMessages: number;,
+    totalReactions: number;,
+    friendsCount: number;,
+    averagePartyDuration: number;,
+    favoriteGenres: string[0]
   }
   activity: {}
-    daily: { date: string; watchTime: number; parties: number }[]
-    weekly: { week: string; watchTime: number; parties: number }[]
-    monthly: { month: string; watchTime: number; parties: number }[]
+    daily: { date: string; watchTime: number; parties: number }[0],
+    weekly: { week: string; watchTime: number; parties: number }[0],
+    monthly: { month: string; watchTime: number; parties: number }[0]
   }
   engagement: {}
-    messagesPerParty: number;
-    reactionsPerParty: number;
-    averageStayTime: number;
-    participationRate: number;
+    messagesPerParty: number;,
+    reactionsPerParty: number;,
+    averageStayTime: number;,
+    participationRate: number;,
     hostSuccessRate: number;
   }
   preferences: {}
-    favoriteHours: { hour: number; count: number }[]
-    deviceUsage: { device: string; percentage: number }[]
-    contentTypes: { type: string; hours: number }[]
+    favoriteHours: { hour: number; count: number }[0],
+    deviceUsage: { device: string; percentage: number }[0],
+    contentTypes: { type: string; hours: number }[0]
   }
   achievements: {}
-    id: string;
-    name: string;
-    description: string;
-    icon: string;
+    id: string;,
+    name: string;,
+    description: string;,
+    icon: string;,
     unlockedAt: string;
     progress?: number;
     target?: number;
-  }[]
+  }[0]
   socialStats: {}
-    friendsAdded: number;
-    invitesSent: number;
-    partiesShared: number;
-    avgPartySize: number;
+    friendsAdded: number;,
+    invitesSent: number;,
+    partiesShared: number;,
+    avgPartySize: number;,
     topWatchPartners: {}
       user: { id: string; displayName: string; avatar: string | null }
       watchTime: number;
-    }[]
+    }[0]
   }
 }
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#FF6B6B']
 
-export function UserAnalytics() {}
+export function UserAnalytics() {
   const [analytics, setAnalytics] = useState<UserAnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [timeRange, setTimeRange] = useState('30d')
   const [activityView, setActivityView] = useState('daily')
 
-  useEffect(() => {}
+  useEffect(() => {
     loadAnalytics()
   }, [timeRange])
 
-  const loadAnalytics = async () => {}
-    try {}
+  const loadAnalytics = async () => {
+    try {
       const response = await fetch(`/api/analytics/user?range=${timeRange}`)
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setAnalytics(data)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to load user analytics:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     if (hours > 0) return `${hours}h ${minutes}m`
-    return `${minutes}m`
+    return `${minutes}m`;
   }
 
-  const formatNumber = (num: number) => {}
+  const formatNumber = (num: number) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
     if (num >= 1000) return `${(num / 1000).toFixed(1)}K`
     return num.toString()
   }
 
-  const exportData = () => {}
+  const exportData = () => {
     if (!analytics) return;
     const data = { user: analytics.user.displayName,
       totalWatchTime: formatDuration(analytics.summary.totalWatchTime),
@@ -138,7 +137,7 @@ export function UserAnalytics() {}
     URL.revokeObjectURL(url)
   }
 
-  const getAchievementIcon = (icon: string) => {}
+  const getAchievementIcon = (icon: string) => {
     const iconMap: { [key: string]: React.ComponentType<Record<string, unknown>> } = { trophy: Trophy,
       star: Star,
       target: Target,
@@ -147,10 +146,10 @@ export function UserAnalytics() {}
       users: Users;
     }
     const IconComponent = iconMap[icon] || Trophy;
-    return <IconComponent className="h-6 w-6" />
+    return <IconComponent className="h-6 w-6" />;
   }
 
-  if (loading) {}
+  if (loading) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-64">
@@ -160,7 +159,7 @@ export function UserAnalytics() {}
     )
   }
 
-  if (!analytics) {}
+  if (!analytics) {
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center h-64">
@@ -174,10 +173,10 @@ export function UserAnalytics() {}
     )
   }
 
-  const getActivityData = () => {}
+  const getActivityData = () => {
     switch (activityView) {}
       case 'weekly': return analytics.activity.weekly;
-      case 'monthly': return analytics.activity.monthly;
+      case 'monthly': return analytics.activity.monthly;,
       default: return analytics.activity.daily;
     }
   }
@@ -344,7 +343,7 @@ export function UserAnalytics() {}
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis;
                       dataKey={activityView === 'daily' ? 'date' : activityView === 'weekly' ? 'week' : 'month'}
-                      tickFormatter={(value) => {}
+                      tickFormatter={(value) => {
                         if (activityView === 'daily') return new Date(value).toLocaleDateString()
                         return value;
                       }}
@@ -352,13 +351,13 @@ export function UserAnalytics() {}
                     <YAxis yAxisId="time" orientation="left" />
                     <YAxis yAxisId="parties" orientation="right" />
                     <Tooltip;
-                      labelFormatter={(value) => {}
+                      labelFormatter={(value) => {
                         if (activityView === 'daily') return new Date(value).toLocaleDateString()
                         return value;
                       }}
-                      formatter={(value, name) => {}
+                      formatter={(value, name) => {
                         if (name === 'watchTime') return [formatDuration(value as number), 'Watch Time']
-                        return [value, 'Parties']
+                        return [value, 'Parties'];
                       }}
                     />
                     <Area;

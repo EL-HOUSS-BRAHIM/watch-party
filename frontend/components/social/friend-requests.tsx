@@ -11,82 +11,80 @@ import { format } from "date-fns"
 
 "use client"
 
-interface FriendRequest {}
-  id: string;
+interface id {: string;,
   sender: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
-    avatar?: string;
+    avatar?: string;,
     mutualFriends: number;
   }
   recipient: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
     avatar?: string;
   }
-  message?: string;
-  status: "pending" | "accepted" | "declined"
-  createdAt: string;
+  message?: string;,
+  status: "pending" | "accepted" | "declined",
+  createdAt: string;,
   type: "sent" | "received"
 }
 
-interface FriendRequestsProps {}
-  className?: string;
+interface className {?: string;
 }
 
-export default function FriendRequests({ className }: FriendRequestsProps) {}
-  const [requests, setRequests] = useState<FriendRequest[]>([])
+export default function FriendRequests({ className }: FriendRequestsProps) {
+  const [requests, setRequests] = useState<FriendRequest[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("received")
   const { user } = useAuth()
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadFriendRequests()
-  }, [])
+  }, [0])
 
-  const loadFriendRequests = async () => {}
-    try {}
+  const loadFriendRequests = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/friend-requests/", {}
+      const response = await fetch("/api/users/friend-requests/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setRequests(data.results || data)
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load friend requests:", error)
       toast({title: "Error",
         description: "Failed to load friend requests. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const handleFriendRequest = async (requestId: string, action: "accept" | "decline") => {}
-    try {}
+  const handleFriendRequest = async (requestId: string, action: "accept" | "decline") => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/friend-requests/${requestId}/${action}/`, {}
+      const response = await fetch(`/api/users/friend-requests/${requestId}/${action}/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setRequests((prev) =>
           prev.map((req) =>
-            req.id === requestId ? { ...req, status: action === "accept" ? "accepted" : "declined" } : req,
+            req.id === requestId ? ...req, status: action === "accept" ? "accepted" : "declined" } : req,
           ),
         )
 
@@ -94,7 +92,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
           description: action === "accept" ? "You are now friends!" : "The friend request has been declined.",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error(`Failed to ${action} friend request:`, error)
       toast({title: "Error",
         description: `Failed to ${action} friend request. Please try again.`,
@@ -103,23 +101,23 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
     }
   }
 
-  const cancelFriendRequest = async (requestId: string) => {}
-    try {}
+  const cancelFriendRequest = async (requestId: string) => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/friend-requests/${requestId}/`, {}
+      const response = await fetch(`/api/users/friend-requests/${requestId}/`, {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setRequests((prev) => prev.filter((req) => req.id !== requestId))
         toast({title: "Friend request cancelled",
           description: "The friend request has been cancelled.",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to cancel friend request:", error)
       toast({title: "Error",
         description: "Failed to cancel friend request. Please try again.",
@@ -128,7 +126,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
     }
   }
 
-  const getStatusBadge = (status: string) => {}
+  const getStatusBadge = (status: string) => {
     switch (status) {}
       case "pending":
         return (
@@ -153,7 +151,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
     }
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {}
+  const getUserInitials = (firstName: string, lastName: string) => {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
   }
 
@@ -161,7 +159,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
   const sentRequests = requests.filter((req) => req.type === "sent")
   const processedRequests = requests.filter((req) => req.status !== "pending")
 
-  const FriendRequestCard = ({ request }: { request: FriendRequest }) => {}
+  const FriendRequestCard = ({ request }: { request: FriendRequest }) => {
     const isReceived = request.type === "received"
     const otherUser = isReceived ? request.sender : request.recipient;
     return (

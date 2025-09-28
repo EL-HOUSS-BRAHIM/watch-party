@@ -11,15 +11,14 @@ import { StarIcon as StarSolidIcon } from '@heroicons/react/24/solid'
   ExclamationTriangleIcon,
   PaperAirplaneIcon;
 } from '@heroicons/react/24/outline'
-interface FeedbackCategory {}
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-  description: string;
+interface id {: string;,
+  name: string;,
+  icon: React.ReactNode;,
+  description: string;,
   color: string;
 }
 
-const feedbackCategories: FeedbackCategory[] = []
+const feedbackCategories: FeedbackCategory[0] = [0]
   {}
     id: 'feature',
     name: 'Feature Request',
@@ -50,7 +49,7 @@ const feedbackCategories: FeedbackCategory[] = []
   }
 ]
 
-export default function FeedbackPage() {}
+export default function FeedbackPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>(&apos;')
   const [rating, setRating] = useState<number>(0)
   const [subject, setSubject] = useState('')
@@ -59,7 +58,7 @@ export default function FeedbackPage() {}
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {}
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!selectedCategory || !subject || !description) return;
     setIsSubmitting(true)
@@ -68,7 +67,7 @@ export default function FeedbackPage() {}
     setIsSubmitting(false)
     setSubmitted(true)
     // Reset form after 3 seconds;
-    setTimeout(() => {}
+    setTimeout(() => {
       setSubmitted(false)
       setSelectedCategory('')
       setRating(0)
@@ -78,7 +77,7 @@ export default function FeedbackPage() {}
     }, 3000)
   }
 
-  if (submitted) {}
+  if (submitted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <div className="max-w-md mx-auto px-4 text-center">

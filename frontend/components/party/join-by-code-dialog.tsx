@@ -15,19 +15,18 @@ import { useRouter } from "next/navigation"
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-interface JoinByCodeDialogProps {}
-  open: boolean;
+interface open {: boolean;,
   onOpenChange: (open: boolean) => void;
 }
 
-export function JoinByCodeDialog({ open, onOpenChange }: JoinByCodeDialogProps) {}
+export function JoinByCodeDialog({ open, onOpenChange }: JoinByCodeDialogProps) {
   const [code, setCode] = useState("")
   const [isJoining, setIsJoining] = useState(false)
   const { toast } = useToast()
   const router = useRouter()
 
-  const joinParty = async () => {}
-    if (!code.trim()) {}
+  const joinParty = async () => {
+    if (!code.trim()) {
       toast({title: "Code required",
         description: "Please enter a party code",
         variant: "destructive",
@@ -37,9 +36,9 @@ export function JoinByCodeDialog({ open, onOpenChange }: JoinByCodeDialogProps) 
 
     setIsJoining(true)
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/parties/join-by-code/", {}
+      const response = await fetch("/api/parties/join-by-code/", {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -51,7 +50,7 @@ export function JoinByCodeDialog({ open, onOpenChange }: JoinByCodeDialogProps) 
 
       const data = await response.json()
 
-      if (response.ok) {}
+      if (response.ok) {
         toast({title: "Joined successfully! 🎉",
           description: "Redirecting to the party...",
         })
@@ -59,23 +58,23 @@ export function JoinByCodeDialog({ open, onOpenChange }: JoinByCodeDialogProps) 
         onOpenChange(false)
         setCode("")
         // Redirect to party room;
-        if (data.party_id) {}
+        if (data.party_id) {
           router.push(`/watch/${data.party_id}`)
         } else {}
           router.push("/dashboard/parties")
         }
       } else {}
         let errorMessage = "Failed to join party"
-        if (response.status === 404) {}
+        if (response.status === 404) {
           errorMessage = "Party not found. Please check the code."
-        } else if (response.status === 403) {}
+        } else if (response.status === 403) {
           errorMessage = "This party requires approval from the host"
-        } else if (response.status === 409) {}
+        } else if (response.status === 409) {
           errorMessage = "You're already a member of this party"
-        } else if (response.status === 400) {}
-          if (data.message?.includes("full")) {}
+        } else if (response.status === 400) {
+          if (data.message?.includes("full")) {
             errorMessage = "This party is full"
-          } else if (data.message?.includes("ended")) {}
+          } else if (data.message?.includes("ended")) {
             errorMessage = "This party has ended"
           } else {}
             errorMessage = data.message || errorMessage;
@@ -87,31 +86,31 @@ export function JoinByCodeDialog({ open, onOpenChange }: JoinByCodeDialogProps) 
           variant: "destructive",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to join party:", error)
       toast({title: "Connection error",
         description: "Please check your internet connection and try again",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsJoining(false)
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {}
-    if (e.key === "Enter" && !isJoining) {}
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !isJoining) {
       joinParty()
     }
   }
 
-  const formatCode = (value: string) => {}
+  const formatCode = (value: string) => {
     // Remove non-alphanumeric characters and convert to uppercase;
     const cleaned = value.replace(/[^a-zA-Z0-9]/g, "").toUpperCase()
     // Limit to reasonable length (most room codes are 6-8 characters)
     return cleaned.slice(0, 8)
   }
 
-  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {}
+  const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatCode(e.target.value)
     setCode(formatted)
   }
@@ -179,7 +178,7 @@ export function JoinByCodeDialog({ open, onOpenChange }: JoinByCodeDialogProps) 
             <p className="text-xs text-muted-foreground">
               Don't have a code?{" "}
               <button;
-                onClick={() => {}
+                onClick={() => {
                   onOpenChange(false)
                   router.push("/discover")
                 }}

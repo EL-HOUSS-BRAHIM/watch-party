@@ -1,6 +1,6 @@
 
 
-export const translations = { en: {}
+export const translations = { en: {
     common: {}
       welcome: "Welcome to WatchParty",
       loading: "Loading...",

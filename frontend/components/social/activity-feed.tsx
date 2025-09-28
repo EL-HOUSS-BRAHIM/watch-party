@@ -11,18 +11,17 @@ import { formatDistanceToNow } from "date-fns"
 
 "use client"
 
-interface ActivityItem {}
-  id: string;
-  type: "friend_added" | "party_joined" | "party_created" | "video_watched" | "achievement_unlocked" | "party_completed"
+interface id {: string;,
+  type: "friend_added" | "party_joined" | "party_created" | "video_watched" | "achievement_unlocked" | "party_completed",
   user: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
-    avatar?: string;
+    avatar?: string;,
     isPremium: boolean;
   }
-  timestamp: string;
+  timestamp: string;,
   data: {}
     friendName?: string;
     partyName?: string;
@@ -36,32 +35,31 @@ interface ActivityItem {}
   }
   isPublic: boolean;
   reactions?: {}
-    likes: number;
+    likes: number;,
     hearts: number;
     userReacted?: "like" | "heart" | null;
   }
 }
 
-interface ActivityFeedProps {}
-  userId?: string // If provided, show activities for specific user;
+interface userId {?: string // If provided, show activities for specific user;
   className?: string;
 }
 
-export default function ActivityFeed({ userId, className }: ActivityFeedProps) {}
-  const [activities, setActivities] = useState<ActivityItem[]>([])
+export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
+  const [activities, setActivities] = useState<ActivityItem[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const { user } = useAuth()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadActivities()
   }, [activeTab, userId])
 
-  const loadActivities = async (pageNum = 1) => {}
-    try {}
-      if (!usersAPI) {}
+  const loadActivities = async (pageNum = 1) => {
+    try {
+      if (!usersAPI) {
         console.error('Users API not available')
         return;
       }
@@ -70,35 +68,35 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
         filter: activeTab,
       }
 
-      if (userId) {}
+      if (userId) {
         params.user_id = userId;
       }
 
       const response = await usersAPI.getActivity(params)
-      if (pageNum === 1) {}
-        setActivities(response.results || [])
+      if (pageNum === 1) {
+        setActivities(response.results || [0])
       } else {}
-        setActivities((prev) => [...prev, ...(response.results || [])])
+        setActivities((prev) => ...prev, ...(response.results || [0])])
       }
       setHasMore(!!response.next)
       setPage(pageNum)
-    } catch {}
+    } catch (error) {
       console.error("Failed to load activity feed:", error)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const loadMore = () => {}
-    if (hasMore && !isLoading) {}
+  const loadMore = () => {
+    if (hasMore && !isLoading) {
       loadActivities(page + 1)
     }
   }
 
-  const reactToActivity = async (activityId: string, reactionType: "like" | "heart") => {}
-    try {}
+  const reactToActivity = async (activityId: string, reactionType: "like" | "heart") => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/activity/${activityId}/react/`, {}
+      const response = await fetch(`/api/users/activity/${activityId}/react/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -107,58 +105,58 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
         body: JSON.stringify({ reaction: reactionType }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setActivities((prev) =>
-          prev.map((activity) => (activity.id === activityId ? { ...activity, reactions: data.reactions } : activity)),
+          prev.map((activity) => (activity.id === activityId ? ...activity, reactions: data.reactions } : activity)),
         )
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to react to activity:", error)
     }
   }
 
-  const getActivityIcon = (type: string) => {}
+  const getActivityIcon = (type: string) => {
     switch (type) {}
       case "friend_added":
-        return <UserPlus className="h-5 w-5 text-blue-500" />
+        return <UserPlus className="h-5 w-5 text-blue-500" />;
       case "party_joined":
-        return <Users className="h-5 w-5 text-green-500" />
+        return <Users className="h-5 w-5 text-green-500" />;
       case "party_created":
-        return <Video className="h-5 w-5 text-purple-500" />
+        return <Video className="h-5 w-5 text-purple-500" />;
       case "video_watched":
-        return <Play className="h-5 w-5 text-red-500" />
+        return <Play className="h-5 w-5 text-red-500" />;
       case "achievement_unlocked":
-        return <Trophy className="h-5 w-5 text-yellow-500" />
+        return <Trophy className="h-5 w-5 text-yellow-500" />;
       case "party_completed":
-        return <Star className="h-5 w-5 text-indigo-500" />
+        return <Star className="h-5 w-5 text-indigo-500" />;
       default:
-        return <Activity className="h-5 w-5 text-gray-500" />
+        return <Activity className="h-5 w-5 text-gray-500" />;
     }
   }
 
-  const getActivityText = (activity: ActivityItem) => {}
+  const getActivityText = (activity: ActivityItem) => {
     const userName = `${activity.user.firstName} ${activity.user.lastName}`
 
     switch (activity.type) {}
       case "friend_added":
-        return `${userName} became friends with ${activity.data.friendName}`
+        return `${userName} became friends with ${activity.data.friendName}`;
       case "party_joined":
-        return `${userName} joined "${activity.data.partyName}"`
+        return `${userName} joined "${activity.data.partyName}"`;
       case "party_created":
-        return `${userName} created a new watch party "${activity.data.partyName}"`
+        return `${userName} created a new watch party "${activity.data.partyName}"`;
       case "video_watched":
-        return `${userName} watched "${activity.data.videoTitle}"`
+        return `${userName} watched "${activity.data.videoTitle}"`;
       case "achievement_unlocked":
-        return `${userName} unlocked the "${activity.data.achievementName}" achievement`
+        return `${userName} unlocked the "${activity.data.achievementName}" achievement`;
       case "party_completed":
-        return `${userName} completed a watch party with ${activity.data.participantCount} participants`
+        return `${userName} completed a watch party with ${activity.data.participantCount} participants`;
       default:
-        return `${userName} had some activity`
+        return `${userName} had some activity`;
     }
   }
 
-  const getActivitySubtext = (activity: ActivityItem) => {}
+  const getActivitySubtext = (activity: ActivityItem) => {
     switch (activity.type) {}
       case "party_joined":
       case "party_created":
@@ -168,13 +166,13 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
       case "video_watched":
         return activity.data.duration ? `${Math.floor(activity.data.duration / 60)} minutes` : null;
       case "party_completed":
-        return activity.data.duration ? `Watched for ${Math.floor(activity.data.duration / 60)} minutes` : null;
+        return activity.data.duration ? `Watched for ${Math.floor(activity.data.duration / 60)} minutes` : null;,
       default:
         return null;
     }
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {}
+  const getUserInitials = (firstName: string, lastName: string) => {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
   }
 

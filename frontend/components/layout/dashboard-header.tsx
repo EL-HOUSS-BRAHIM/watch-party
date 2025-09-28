@@ -16,19 +16,19 @@ import Link from "next/link"
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-export function DashboardHeader() {}
+export function DashboardHeader() {
   const { user, logout } = useAuth()
   const { ui, actions } = useAppStore()
 
-  const handleLogout = async () => {}
-    try {}
+  const handleLogout = async () => {
+    try {
       await logout()
-    } catch {}
+    } catch (error) {
       console.error("Logout error:", error)
     }
   }
 
-  const toggleTheme = () => {}
+  const toggleTheme = () => {
     const newTheme = ui.theme === "dark" ? "light" : "dark"
     actions.setTheme(newTheme)
   }

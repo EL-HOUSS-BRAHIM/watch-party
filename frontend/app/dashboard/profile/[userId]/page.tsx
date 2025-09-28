@@ -14,118 +14,116 @@ import { formatDistanceToNow } from "date-fns"
 
 "use client"
 
-interface UserProfile {}
-  id: string;
-  username: string;
-  email: string;
-  firstName: string;
+interface id {: string;,
+  username: string;,
+  email: string;,
+  firstName: string;,
   lastName: string;
   avatar?: string;
   bio?: string;
-  location?: string;
-  joinedDate: string;
+  location?: string;,
+  joinedDate: string;,
   isOnline: boolean;
-  lastSeen?: string;
-  isVerified: boolean;
+  lastSeen?: string;,
+  isVerified: boolean;,
   stats: {}
-    videosUploaded: number;
-    partiesHosted: number;
-    partiesAttended: number;
-    friendsCount: number;
-    totalWatchTime: number;
-    favoriteGenres: string[]
+    videosUploaded: number;,
+    partiesHosted: number;,
+    partiesAttended: number;,
+    friendsCount: number;,
+    totalWatchTime: number;,
+    favoriteGenres: string[0]
   }
   privacy: {}
-    showEmail: boolean;
-    showActivity: boolean;
-    showFriends: boolean;
+    showEmail: boolean;,
+    showActivity: boolean;,
+    showFriends: boolean;,
     allowFriendRequests: boolean;
   }
-  friendshipStatus: "none" | "pending_sent" | "pending_received" | "friends" | "blocked"
+  friendshipStatus: "none" | "pending_sent" | "pending_received" | "friends" | "blocked",
   mutualFriends: Array<{}
-    id: string;
+    id: string;,
     username: string;
     avatar?: string;
   }>
   recentActivity: Array<{}
-    id: string;
-    type: "video_upload" | "party_host" | "party_join" | "achievement"
-    description: string;
+    id: string;,
+    type: "video_upload" | "party_host" | "party_join" | "achievement",
+    description: string;,
     createdAt: string;
     metadata?: unknown;
   }>
 }
 
-interface UserVideo {}
-  id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  duration: number;
-  views: number;
-  likes: number;
-  createdAt: string;
+interface id {: string;,
+  title: string;,
+  description: string;,
+  thumbnail: string;,
+  duration: number;,
+  views: number;,
+  likes: number;,
+  createdAt: string;,
   privacy: "public" | "friends" | "private"
 }
 
-export default function UserProfilePage() {}
+export default function UserProfilePage() {
   const params = useParams()
   const router = useRouter()
   const { user: currentUser } = useAuth()
   const { toast } = useToast()
   const userId = params.userId as string;
   const [profile, setProfile] = useState<UserProfile | null>(null)
-  const [videos, setVideos] = useState<UserVideo[]>([])
+  const [videos, setVideos] = useState<UserVideo[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("overview")
 
-  useEffect(() => {}
-    if (userId) {}
+  useEffect(() => {
+    if (userId) {
       loadUserProfile()
       loadUserVideos()
     }
   }, [userId])
 
-  const loadUserProfile = async () => {}
-    try {}
+  const loadUserProfile = async () => {
+    try {
       const response = await apiClient.get(`/api/users/${userId}/profile/`)
 
-      if (response.status === 200) {}
+      if (response.status === 200) {
         const data = response.data;
         setProfile(data)
-      } else if (response.status === 404) {}
+      } else if (response.status === 404) {
         toast({title: "User not found",
           description: "The user profile you're looking for doesn't exist.",
           variant: "destructive",
         })
         router.push("/dashboard")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load user profile:", error)
       toast({title: "Error",
         description: "Failed to load user profile. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const loadUserVideos = async () => {}
-    try {}
+  const loadUserVideos = async () => {
+    try {
       const response = await apiClient.get(`/api/users/${userId}/videos/`)
 
-      if (response.status === 200) {}
+      if (response.status === 200) {
         const data = response.data;
-        setVideos(data.results || data.videos || [])
+        setVideos(data.results || data.videos || [0])
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load user videos:", error)
     }
   }
 
-  const handleFriendAction = async (action: "send_request" | "accept" | "decline" | "remove" | "block") => {}
-    try {}
+  const handleFriendAction = async (action: "send_request" | "accept" | "decline" | "remove" | "block") => {
+    try {
       let endpoint = ""
 
       switch (action) {}
@@ -151,19 +149,19 @@ export default function UserProfilePage() {}
         user_id: profile?.id,
       }
 
-      if (action === "remove") {}
+      if (action === "remove") {
         response = await apiClient.delete(endpoint, { data })
       } else {}
         response = await apiClient.post(endpoint, data)
       }
 
-      if (response.status === 200) {}
+      if (response.status === 200) {
         await loadUserProfile() // Refresh profile to update friendship status;
         toast({title: "Success",
           description: `Friend ${action.replace("_", " ")} successful.`,
         })
       }
-    } catch {}
+    } catch (error) {
       console.error(`Failed to ${action}:`, error)
       toast({title: "Error",
         description: `Failed to ${action.replace("_", " ")}. Please try again.`,
@@ -172,20 +170,20 @@ export default function UserProfilePage() {}
     }
   }
 
-  const handleReportUser = async () => {}
-    try {}
-      const response = await apiClient.post("/api/users/report/", {}
+  const handleReportUser = async () => {
+    try {
+      const response = await apiClient.post("/api/users/report/", {
         reported_user: profile?.id,
         reason: "inappropriate_behavior",
         description: "Reported from profile page",
       })
 
-      if (response.status === 200) {}
+      if (response.status === 200) {
         toast({title: "Report Submitted",
           description: "Thank you for reporting. We'll review this user.",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to report user:", error)
       toast({title: "Error",
         description: "Failed to submit report. Please try again.",
@@ -194,7 +192,7 @@ export default function UserProfilePage() {}
     }
   }
 
-  const getFriendshipButton = () => {}
+  const getFriendshipButton = () => {
     if (!profile || profile.id === currentUser?.id) return null;
     switch (profile.friendshipStatus) {}
       case "none":
@@ -241,7 +239,7 @@ export default function UserProfilePage() {}
   }
 
   const isOwnProfile = profile?.id === currentUser?.id;
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -252,7 +250,7 @@ export default function UserProfilePage() {}
     )
   }
 
-  if (!profile) {}
+  if (!profile) {
     return (
       <div className="container mx-auto py-8 px-4 text-center">
         <h1 className="text-2xl font-bold mb-4">Profile Not Found</h1>

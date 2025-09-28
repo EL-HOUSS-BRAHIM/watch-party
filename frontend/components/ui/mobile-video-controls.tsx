@@ -7,17 +7,16 @@ import { useIsMobile } from "@/hooks/use-mobile"
 
 "use client"
 
-interface MobileVideoControlsProps {}
-  isPlaying: boolean;
-  currentTime: number;
-  duration: number;
-  volume: number;
-  isMuted: boolean;
-  onPlayPause: () => void;
-  onSeek: (time: number) => void;
-  onVolumeChange: (volume: number) => void;
-  onMute: () => void;
-  onFullscreen: () => void;
+interface isPlaying {: boolean;,
+  currentTime: number;,
+  duration: number;,
+  volume: number;,
+  isMuted: boolean;,
+  onPlayPause: () => void;,
+  onSeek: (time: number) => void;,
+  onVolumeChange: (volume: number) => void;,
+  onMute: () => void;,
+  onFullscreen: () => void;,
   onSkip: (seconds: number) => void;
   className?: string;
 }
@@ -40,31 +39,31 @@ export function MobileVideoControls({isPlaying,
   const isMobile = useIsMobile()
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  useEffect(() => {}
-    if (showControls) {}
-      if (timeoutRef.current) {}
+  useEffect(() => {
+    if (showControls) {
+      if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
-      timeoutRef.current = setTimeout(() => {}
+      timeoutRef.current = setTimeout(() => {
         setShowControls(false)
       }, 3000)
     }
 
-    return () => {}
-      if (timeoutRef.current) {}
+    return () => {
+      if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
     }
   }, [showControls])
 
-  const handleTouchStart = () => {}
+  const handleTouchStart = () => {
     setShowControls(true)
   }
 
-  const formatTime = (time: number) => {}
+  const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60)
     const seconds = Math.floor(time % 60)
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
 
   const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;

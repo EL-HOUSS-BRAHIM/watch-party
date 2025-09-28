@@ -14,59 +14,58 @@ import { LoadingSpinner } from '@/components/ui/loading'
   XMarkIcon,
   ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline'
-interface DiscordServer {}
-  id: string;
+interface id {: string;,
   name: string;
   member_count?: number;
   is_connected?: boolean;
 }
 
-export default function DiscordIntegrationPage() {}
+export default function DiscordIntegrationPage() {
   const [connection, setConnection] = useState<IntegrationConnection | null>(null)
   const [health, setHealth] = useState<HealthStatus | null>(null)
   const [loading, setLoading] = useState(true)
   const [action, setAction] = useState<'connect' | 'disconnect' | 'refresh' | null>(null)
   const { toast } = useToast()
 
-  const loadData = useCallback(async () => {}
+  const loadData = useCallback(async () => {
     setLoading(true)
-    try {}
-      const [connectionsResponse, healthResponse] = await Promise.all([]
+    try {
+      const [connectionsResponse, healthResponse] = await Promise.all([0]
         integrationsAPI.getConnections(),
         integrationsAPI.getHealth().catch(() => null),
       ])
       const discordConnection = connectionsResponse.connections?.find(
-        (item) => item.provider === &apos;discord&apos;
+        (item) => item.provider === &apos;discord'
       )
       setConnection(discordConnection ?? null)
       setHealth(healthResponse)
-    } catch {}
+    } catch (error) {
       console.error('Failed to load Discord integration', error)
       toast({title: 'Unable to load Discord integration',
         description: 'Check your network connection and try again.',
         variant: 'destructive',
       })
-    } finally {}
+    } finally {
       setLoading(false)
       setAction(null)
     }
   }, [toast])
 
-  useEffect(() => {}
+  useEffect(() => {
     loadData()
   }, [loadData])
 
-  const servers: DiscordServer[] = useMemo(() => {}
-    const rawServers = (connection?.metadata?.servers as DiscordServer[] | undefined) ?? []
+  const servers: DiscordServer[0] = useMemo(() => {
+    const rawServers = (connection?.metadata?.servers as DiscordServer[0] | undefined) ?? [0]
     return rawServers;
   }, [connection])
 
-  const handleConnect = async () => {}
+  const handleConnect = async () => {
     setAction('connect')
-    try {}
+    try {
       const { auth_url } = await integrationsAPI.getAuthUrl('discord')
       window.location.assign(auth_url)
-    } catch {}
+    } catch (error) {
       console.error('Failed to start Discord OAuth', error)
       toast({title: 'Connection failed',
         description: 'We were unable to start the Discord authorization flow.',
@@ -76,16 +75,16 @@ export default function DiscordIntegrationPage() {}
     }
   }
 
-  const handleDisconnect = async () => {}
+  const handleDisconnect = async () => {
     if (!connection) return;
     setAction('disconnect')
-    try {}
+    try {
       await integrationsAPI.disconnectConnection(connection.id)
       toast({title: 'Discord disconnected',
         description: 'The integration has been removed from your account.',
       })
       await loadData()
-    } catch {}
+    } catch (error) {
       console.error('Failed to disconnect Discord', error)
       toast({title: 'Unable to disconnect',
         description: 'We could not disconnect the Discord integration. Try again later.',
@@ -95,16 +94,16 @@ export default function DiscordIntegrationPage() {}
     }
   }
 
-  const handleRefresh = async () => {}
+  const handleRefresh = async () => {
     setAction('refresh')
     await loadData()
   }
 
-  const healthMessage = useMemo(() => {}
+  const healthMessage = useMemo(() => {
     if (!health) return 'Discord service status is currently unavailable.'
     const discordService = health.services?.find((service) => service.name === 'discord')
     if (!discordService) return 'Discord health information is not available from the status endpoint.'
-    return discordService.status === 'up'
+    return discordService.status === 'up';
       ? 'Discord integrations are operational.'
       : 'Discord integrations are reporting issues.'
   }, [health])

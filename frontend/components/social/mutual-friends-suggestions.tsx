@@ -9,81 +9,80 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 "use client"
 
-interface User {}
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string;
-  isOnline: boolean;
+interface id {: string;,
+  username: string;,
+  displayName: string;,
+  avatar: string;,
+  isOnline: boolean;,
   mutualFriends: Array<{}
-    id: string;
-    username: string;
+    id: string;,
+    username: string;,
     avatar: string;
   }>
-  commonInterests: string[]
-  location?: string;
-  joinedDate: string;
-  friendsCount: number;
+  commonInterests: string[0]
+  location?: string;,
+  joinedDate: string;,
+  friendsCount: number;,
   isVerified: boolean;
   bio?: string;
 }
 
 interface FriendSuggestion extends User {}
-  suggestionReason: 'mutual_friends' | 'location' | 'interests' | 'recent_activity' | 'similar_groups'
+  suggestionReason: 'mutual_friends' | 'location' | 'interests' | 'recent_activity' | 'similar_groups',
   confidence: number;
 }
 
-export function MutualFriendsSuggestions() {}
-  const [suggestions, setSuggestions] = useState<FriendSuggestion[]>([])
-  const [filteredSuggestions, setFilteredSuggestions] = useState<FriendSuggestion[]>([])
+export function MutualFriendsSuggestions() {
+  const [suggestions, setSuggestions] = useState<FriendSuggestion[0]>([0])
+  const [filteredSuggestions, setFilteredSuggestions] = useState<FriendSuggestion[0]>([0])
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const [filter, setFilter] = useState<'all' | 'mutual_friends' | 'location' | 'interests'>(&apos;all')
   const [sortBy, setSortBy] = useState<'confidence' | 'mutual_friends' | 'recent'>(&apos;confidence')
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchSuggestions()
-  }, [])
+  }, [0])
 
-  useEffect(() => {}
+  useEffect(() => {
     filterAndSortSuggestions()
   }, [suggestions, searchQuery, filter, sortBy])
 
-  const fetchSuggestions = async () => {}
-    try {}
+  const fetchSuggestions = async () => {
+    try {
       setLoading(true)
       const response = await fetch('/api/friends/suggestions')
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setSuggestions(data.suggestions)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to fetch friend suggestions:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const refreshSuggestions = async () => {}
-    try {}
+  const refreshSuggestions = async () => {
+    try {
       setRefreshing(true)
       const response = await fetch('/api/friends/suggestions/refresh', { method: 'POST' })
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setSuggestions(data.suggestions)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to refresh suggestions:', error)
-    } finally {}
+    } finally {
       setRefreshing(false)
     }
   }
 
-  const filterAndSortSuggestions = () => {}
+  const filterAndSortSuggestions = () => {
     let filtered = suggestions;
     // Apply search filter;
-    if (searchQuery) {}
+    if (searchQuery) {
       filtered = filtered.filter(user => 
         user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
@@ -91,12 +90,12 @@ export function MutualFriendsSuggestions() {}
     }
 
     // Apply category filter;
-    if (filter !== 'all') {}
+    if (filter !== 'all') {
       filtered = filtered.filter(user => user.suggestionReason === filter)
     }
 
     // Apply sorting;
-    filtered.sort((a, b) => {}
+    filtered.sort((a, b) => {
       switch (sortBy) {}
         case 'confidence':
           return b.confidence - a.confidence;
@@ -112,81 +111,81 @@ export function MutualFriendsSuggestions() {}
     setFilteredSuggestions(filtered)
   }
 
-  const sendFriendRequest = async (userId: string) => {}
-    try {}
-      const response = await fetch('/api/friends/requests', {}
+  const sendFriendRequest = async (userId: string) => {
+    try {
+      const response = await fetch('/api/friends/requests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ recipientId: userId })
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         // Remove from suggestions;
         setSuggestions(prev => prev.filter(s => s.id !== userId))
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to send friend request:', error)
     }
   }
 
-  const dismissSuggestion = async (userId: string) => {}
-    try {}
-      const response = await fetch(`/api/friends/suggestions/${userId}/dismiss`, {}
+  const dismissSuggestion = async (userId: string) => {
+    try {
+      const response = await fetch(`/api/friends/suggestions/${userId}/dismiss`, {
         method: 'POST'
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setSuggestions(prev => prev.filter(s => s.id !== userId))
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to dismiss suggestion:', error)
     }
   }
 
-  const getSuggestionReasonText = (reason: string) => {}
+  const getSuggestionReasonText = (reason: string) => {
     switch (reason) {}
       case 'mutual_friends':
-        return 'Mutual friends'
+        return 'Mutual friends';
       case 'location':
-        return 'Same location'
+        return 'Same location';
       case 'interests':
-        return 'Similar interests'
+        return 'Similar interests';
       case 'recent_activity':
-        return 'Recent activity'
+        return 'Recent activity';
       case 'similar_groups':
-        return 'Similar groups'
+        return 'Similar groups';
       default:
-        return 'Suggested'
+        return 'Suggested';
     }
   }
 
-  const getSuggestionReasonColor = (reason: string) => {}
+  const getSuggestionReasonColor = (reason: string) => {
     switch (reason) {}
       case 'mutual_friends':
-        return 'bg-blue-500'
+        return 'bg-blue-500';
       case 'location':
-        return 'bg-green-500'
+        return 'bg-green-500';
       case 'interests':
-        return 'bg-purple-500'
+        return 'bg-purple-500';
       case 'recent_activity':
-        return 'bg-orange-500'
+        return 'bg-orange-500';
       case 'similar_groups':
-        return 'bg-pink-500'
+        return 'bg-pink-500';
       default:
-        return 'bg-gray-500'
+        return 'bg-gray-500';
     }
   }
 
-  const SuggestionCard = ({ user }: { user: FriendSuggestion }) => {}
+  const SuggestionCard = ({ user }: { user: FriendSuggestion }) => {
     const [requestSent, setRequestSent] = useState(false)
     const [dismissed, setDismissed] = useState(false)
 
-    const handleSendRequest = async () => {}
+    const handleSendRequest = async () => {
       await sendFriendRequest(user.id)
       setRequestSent(true)
     }
 
-    const handleDismiss = async () => {}
+    const handleDismiss = async () => {
       await dismissSuggestion(user.id)
       setDismissed(true)
     }
@@ -301,7 +300,7 @@ export function MutualFriendsSuggestions() {}
     )
   }
 
-  if (loading) {}
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin" />

@@ -17,90 +17,87 @@ import { format, formatDistanceToNow } from "date-fns"
 
 "use client"
 
-interface Participant {}
-  id: string;
+interface id {: string;,
   user: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
-    avatar?: string;
+    avatar?: string;,
     isVerified: boolean;
   }
-  role: "host" | "moderator" | "participant"
-  joinedAt: string;
-  isOnline: boolean;
+  role: "host" | "moderator" | "participant",
+  joinedAt: string;,
+  isOnline: boolean;,
   permissions: {}
-    canControlVideo: boolean;
-    canChat: boolean;
-    canInvite: boolean;
+    canControlVideo: boolean;,
+    canChat: boolean;,
+    canInvite: boolean;,
     canKick: boolean;
   }
 }
 
-interface JoinRequest {}
-  id: string;
+interface id {: string;,
   user: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
     avatar?: string;
   }
-  message?: string;
-  requestedAt: string;
+  message?: string;,
+  requestedAt: string;,
   status: "pending" | "approved" | "rejected"
 }
 
-interface WatchParty {}
-  id: string;
-  name: string;
-  description: string;
-  roomCode: string;
+interface id {: string;,
+  name: string;,
+  description: string;,
+  roomCode: string;,
   host: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
-    avatar?: string;
+    avatar?: string;,
     isVerified: boolean;
   }
   video: {}
-    id: string;
-    title: string;
-    description: string;
-    thumbnail: string;
-    duration: number;
+    id: string;,
+    title: string;,
+    description: string;,
+    thumbnail: string;,
+    duration: number;,
     url: string;
   }
-  participants: Participant[]
-  joinRequests: JoinRequest[]
-  maxParticipants: number;
-  isPrivate: boolean;
-  requiresApproval: boolean;
-  allowChat: boolean;
-  allowReactions: boolean;
+  participants: Participant[0],
+  joinRequests: JoinRequest[0],
+  maxParticipants: number;,
+  isPrivate: boolean;,
+  requiresApproval: boolean;,
+  allowChat: boolean;,
+  allowReactions: boolean;,
   allowVideoControl: "host" | "all" | "moderators"
-  password?: string;
-  status: "scheduled" | "active" | "ended" | "cancelled"
+  password?: string;,
+  status: "scheduled" | "active" | "ended" | "cancelled",
   scheduledFor: string;
   startedAt?: string;
-  endedAt?: string;
-  createdAt: string;
-  updatedAt: string;
-  tags: string[]
+  endedAt?: string;,
+  createdAt: string;,
+  updatedAt: string;,
+  tags: string[0]
   analytics?: {}
-    totalViews: number;
-    peakViewers: number;
-    averageWatchTime: number;
-    chatMessages: number;
-    reactions: number;
+    totalViews: number;,
+    peakViewers: number;,
+    averageWatchTime: number;,
+    chatMessages: number;,
+    reactions: number;,
     joinRequests: number;
   }
   inviteCode: string;
 }
 
-export default function PartyDetailsPage() {}
+export default function PartyDetailsPage() {
   const params = useParams()
   const router = useRouter()
   const { user } = useAuth()
@@ -111,56 +108,56 @@ export default function PartyDetailsPage() {}
   const [activeTab, setActiveTab] = useState("overview")
   const [isJoining, setIsJoining] = useState(false)
 
-  useEffect(() => {}
-    if (partyId) {}
+  useEffect(() => {
+    if (partyId) {
       loadParty()
     }
   }, [partyId])
 
-  const loadParty = async () => {}
-    try {}
+  const loadParty = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/`, {}
+      const response = await fetch(`/api/parties/${partyId}/`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const partyData = await response.json()
         setParty(partyData)
-      } else if (response.status === 404) {}
+      } else if (response.status === 404) {
         toast({title: "Party Not Found",
           description: "The party you're looking for doesn't exist.",
           variant: "destructive",
         })
         router.push("/dashboard/parties")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load party:", error)
       toast({title: "Error",
         description: "Failed to load party details.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const joinParty = async () => {}
+  const joinParty = async () => {
     if (!party) return;
     setIsJoining(true)
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/join/`, {}
+      const response = await fetch(`/api/parties/${partyId}/join/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
-        if (party.status === "active") {}
+      if (response.ok) {
+        if (party.status === "active") {
           router.push(`/watch/${party.roomCode}`)
         } else {}
           await loadParty() // Refresh party data;
@@ -175,35 +172,35 @@ export default function PartyDetailsPage() {}
           variant: "destructive",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to join party:", error)
       toast({title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsJoining(false)
     }
   }
 
-  const leaveParty = async () => {}
+  const leaveParty = async () => {
     if (!party || !confirm("Are you sure you want to leave this party?")) return;
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/leave/`, {}
+      const response = await fetch(`/api/parties/${partyId}/leave/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         await loadParty()
         toast({title: "Left Party",
           description: "You've left the party.",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to leave party:", error)
       toast({title: "Error",
         description: "Failed to leave party.",
@@ -212,23 +209,23 @@ export default function PartyDetailsPage() {}
     }
   }
 
-  const handleJoinRequest = async (requestId: string, action: "approve" | "reject") => {}
-    try {}
+  const handleJoinRequest = async (requestId: string, action: "approve" | "reject") => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/join-requests/${requestId}/${action}/`, {}
+      const response = await fetch(`/api/parties/${partyId}/join-requests/${requestId}/${action}/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         await loadParty()
         toast({title: `Request ${action === "approve" ? "Approved" : "Rejected"}`,
           description: `The join request has been ${action}d.`,
         })
       }
-    } catch {}
+    } catch (error) {
       console.error(`Failed to ${action} request:`, error)
       toast({title: "Error",
         description: `Failed to ${action} request.`,
@@ -237,24 +234,24 @@ export default function PartyDetailsPage() {}
     }
   }
 
-  const removeParticipant = async (participantId: string) => {}
+  const removeParticipant = async (participantId: string) => {
     if (!confirm("Are you sure you want to remove this participant?")) return;
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/participants/${participantId}/`, {}
+      const response = await fetch(`/api/parties/${partyId}/participants/${participantId}/`, {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         await loadParty()
         toast({title: "Participant Removed",
           description: "The participant has been removed from the party.",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to remove participant:", error)
       toast({title: "Error",
         description: "Failed to remove participant.",
@@ -263,7 +260,7 @@ export default function PartyDetailsPage() {}
     }
   }
 
-  const copyInviteLink = () => {}
+  const copyInviteLink = () => {
     if (!party) return;
     const inviteLink = `${window.location.origin}/invite/${party.inviteCode}`
     navigator.clipboard.writeText(inviteLink)
@@ -272,17 +269,17 @@ export default function PartyDetailsPage() {}
     })
   }
 
-  const shareParty = async () => {}
+  const shareParty = async () => {
     if (!party) return;
     const inviteLink = `${window.location.origin}/invite/${party.inviteCode}`
 
-    if (navigator.share) {}
-      try {}
+    if (navigator.share) {
+      try {
         await navigator.share({title: party.name,
           text: `Join my watch party: ${party.name}`,
           url: inviteLink,
         })
-      } catch {}
+      } catch (error) {
         console.log("Share cancelled")
       }
     } else {}
@@ -290,27 +287,27 @@ export default function PartyDetailsPage() {}
     }
   }
 
-  const deleteParty = async () => {}
-    if (!party || !confirm("Are you sure you want to delete this party? This action cannot be undone.")) {}
+  const deleteParty = async () => {
+    if (!party || !confirm("Are you sure you want to delete this party? This action cannot be undone.")) {
       return;
     }
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/`, {}
+      const response = await fetch(`/api/parties/${partyId}/`, {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         toast({title: "Party Deleted",
           description: "The party has been deleted.",
         })
         router.push("/dashboard/parties")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to delete party:", error)
       toast({title: "Error",
         description: "Failed to delete party.",
@@ -319,47 +316,47 @@ export default function PartyDetailsPage() {}
     }
   }
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60;
-    if (hours > 0) {}
-      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
     }
-    return `${minutes}:${secs.toString().padStart(2, "0")}`
+    return `${minutes}:${secs.toString().padStart(2, "0")}`;
   }
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
       case "active":
-        return "bg-green-500 text-white"
+        return "bg-green-500 text-white";
       case "scheduled":
-        return "bg-blue-500 text-white"
+        return "bg-blue-500 text-white";
       case "ended":
-        return "bg-gray-500 text-white"
+        return "bg-gray-500 text-white";
       case "cancelled":
-        return "bg-red-500 text-white"
+        return "bg-red-500 text-white";
       default:
-        return "bg-gray-500 text-white"
+        return "bg-gray-500 text-white";
     }
   }
 
-  const getStatusText = (status: string) => {}
+  const getStatusText = (status: string) => {
     switch (status) {}
       case "active":
-        return "Live"
+        return "Live";
       case "scheduled":
-        return "Scheduled"
+        return "Scheduled";
       case "ended":
-        return "Ended"
+        return "Ended";
       case "cancelled":
-        return "Cancelled"
+        return "Cancelled";
       default:
         return status;
     }
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto">
@@ -372,7 +369,7 @@ export default function PartyDetailsPage() {}
     )
   }
 
-  if (!party) {}
+  if (!party) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
@@ -563,7 +560,7 @@ export default function PartyDetailsPage() {}
                     <CardTitle>About This Party</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="whitespace-pre-wrap mb-4">{party.description || &quot;No description provided."}</p>"
+                    <p className="whitespace-pre-wrap mb-4">{party.description || &quot;No description provided."}</p>&quot;
 
                     {party.tags.length > 0 && (
                       <div className="mb-4">
@@ -606,7 +603,7 @@ export default function PartyDetailsPage() {}
                           <Button;
                             variant="ghost"
                             size="sm"
-                            onClick={() => {}
+                            onClick={() => {
                               navigator.clipboard.writeText(party.roomCode)
                               toast({ title: "Copied!", description: "Room code copied to clipboard." })
                             }}
@@ -940,7 +937,7 @@ export default function PartyDetailsPage() {}
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Pending Requests</span>
-                  <span className="font-medium">{party.joinRequests.filter((r) => r.status === &quot;pending").length}</span>"
+                  <span className="font-medium">{party.joinRequests.filter((r) => r.status === &quot;pending").length}</span>&quot;
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Created</span>
@@ -986,7 +983,7 @@ export default function PartyDetailsPage() {}
                       <Button;
                         variant="outline"
                         size="sm"
-                        onClick={() => {}
+                        onClick={() => {
                           navigator.clipboard.writeText(party.roomCode)
                           toast({ title: "Copied!", description: "Room code copied to clipboard." })
                         }}

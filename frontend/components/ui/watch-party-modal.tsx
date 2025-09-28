@@ -19,7 +19,7 @@ const WatchPartyModalOverlay = React.forwardRef<
       "fixed inset-0 z-50 bg-black/80 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0",
       className,
     )}
-    {...props}
+    ...props}
   />
 ))
 WatchPartyModalOverlay.displayName = DialogPrimitive.Overlay.displayName;
@@ -29,7 +29,7 @@ const WatchPartyModalContent = React.forwardRef<
     size?: "sm" | "md" | "lg" | "xl" | "full"
     showCloseButton?: boolean;
   }
->(({ className, children, size = &quot;md", showCloseButton = true, ...props }, ref) => {}
+>(({ className, children, size = &quot;md", showCloseButton = true, ...props }, ref) => {
   const sizeClasses = { sm: "max-w-sm",
     md: "max-w-md",
     lg: "max-w-lg",
@@ -49,7 +49,7 @@ const WatchPartyModalContent = React.forwardRef<
           "bg-gradient-to-br from-background to-background/95",
           className,
         )}
-        {...props}
+        ...props}
       >
         {children}
         {showCloseButton && (
@@ -64,12 +64,12 @@ const WatchPartyModalContent = React.forwardRef<
 })
 WatchPartyModalContent.displayName = DialogPrimitive.Content.displayName;
 const WatchPartyModalHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)} {...props} />
+  <div className={cn("flex flex-col space-y-1.5 text-center sm:text-left", className)} ...props} />
 )
 WatchPartyModalHeader.displayName = "WatchPartyModalHeader"
 
 const WatchPartyModalFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)} {...props} />
+  <div className={cn("flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2", className)} ...props} />
 )
 WatchPartyModalFooter.displayName = "WatchPartyModalFooter"
 
@@ -84,7 +84,7 @@ const WatchPartyModalTitle = React.forwardRef<
       "bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent",
       className,
     )}
-    {...props}
+    ...props}
   />
 ))
 WatchPartyModalTitle.displayName = DialogPrimitive.Title.displayName;
@@ -92,7 +92,7 @@ const WatchPartyModalDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
 >(({ className, ...props }, ref) => (
-  <DialogPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+  <DialogPrimitive.Description ref={ref} className={cn("text-sm text-muted-foreground", className)} ...props} />
 ))
 WatchPartyModalDescription.displayName = DialogPrimitive.Description.displayName;
 export {}

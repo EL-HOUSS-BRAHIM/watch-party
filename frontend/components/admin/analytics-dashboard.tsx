@@ -25,34 +25,33 @@ import { adminAPI } from "@/lib/api"
   Area,
 } from "recharts"
 
-interface AnalyticsData {}
-  user_growth: Array<{}
-    date: string;
-    total_users: number;
-    active_users: number;
+interface user_growth {: Array<{}
+    date: string;,
+    total_users: number;,
+    active_users: number;,
     new_users: number;
   }>
   revenue_data: Array<{}
-    month: string;
-    revenue: number;
-    subscriptions: number;
+    month: string;,
+    revenue: number;,
+    subscriptions: number;,
     avg_revenue: number;
   }>
   engagement_data: Array<{}
-    hour: string;
-    parties: number;
-    viewers: number;
+    hour: string;,
+    parties: number;,
+    viewers: number;,
     messages: number;
   }>
   device_data: Array<{}
-    name: string;
-    value: number;
+    name: string;,
+    value: number;,
     color: string;
   }>
   content_data: Array<{}
-    category: string;
-    uploads: number;
-    views: number;
+    category: string;,
+    uploads: number;,
+    views: number;,
     duration: number;
   }>
   kpi_data: {}
@@ -65,37 +64,37 @@ interface AnalyticsData {}
   }
 }
 
-export function AnalyticsDashboard() {}
+export function AnalyticsDashboard() {
   const { toast } = useToast()
   const [timeRange, setTimeRange] = useState("7d")
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchAnalyticsData()
   }, [timeRange])
 
-  const fetchAnalyticsData = async () => {}
-    try {}
+  const fetchAnalyticsData = async () => {
+    try {
       setIsLoading(true)
-      if (!adminAPI) {}
+      if (!adminAPI) {
         console.error('Admin API not available')
         return;
       }
       const data = await adminAPI.getAnalytics()
       setAnalyticsData(data)
-    } catch {}
+    } catch (error) {
       console.error("Failed to fetch analytics data:", error)
       toast({title: "Error",
         description: "Failed to load analytics data.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const getTrendIcon = (trend: string) => {}
+  const getTrendIcon = (trend: string) => {
     return trend === "up" ? (
       <TrendingUp className="w-4 h-4 text-green-600" />
     ) : (
@@ -103,13 +102,13 @@ export function AnalyticsDashboard() {}
     )
   }
 
-  const getTrendColor = (trend: string) => {}
-    return trend === "up" ? "text-green-600" : "text-red-600"
+  const getTrendColor = (trend: string) => {
+    return trend === "up" ? "text-green-600" : "text-red-600";
   }
 
-  const exportData = async () => {}
-    try {}
-      if (!adminAPI) {}
+  const exportData = async () => {
+    try {
+      if (!adminAPI) {
         console.error('Admin API not available')
         return;
       }
@@ -121,7 +120,7 @@ export function AnalyticsDashboard() {}
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-    } catch {}
+    } catch (error) {
       console.error("Failed to export data:", error)
       toast({title: "Error",
         description: "Failed to export analytics data.",
@@ -130,7 +129,7 @@ export function AnalyticsDashboard() {}
     }
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-center py-12">
@@ -140,7 +139,7 @@ export function AnalyticsDashboard() {}
     )
   }
 
-  if (!analyticsData) {}
+  if (!analyticsData) {
     return (
       <div className="space-y-6">
         <div className="text-center py-12">
@@ -454,7 +453,7 @@ export function AnalyticsDashboard() {}
             <Card>
               <CardHeader>
                 <CardTitle>Device Statistics</CardTitle>
-                <CardDescription>Detailed breakdown by device type</CardDescription>
+                <CardDescription>Detailed breakdown by device type</CardDescription>;
               </CardHeader>
               <CardContent className="space-y-4">
                 {deviceData.map((device, index) => (

@@ -8,42 +8,41 @@ import { useToast } from "@/hooks/use-toast"
 
 "use client"
 
-interface Plan {}
-  id: string;
-  name: string;
-  price: number;
-  interval: "month" | "year"
-  features: string[]
+interface id {: string;,
+  name: string;,
+  price: number;,
+  interval: "month" | "year",
+  features: string[0]
   popular?: boolean;
   current?: boolean;
 }
 
-export function BillingPlans() {}
-  const [plans, setPlans] = useState<Plan[]>([])
+export function BillingPlans() {
+  const [plans, setPlans] = useState<Plan[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [subscribing, setSubscribing] = useState<string | null>(null)
   const api = useApi()
   const { toast } = useToast()
 
-  const fetchPlans = useCallback(async () => {}
-    try {}
+  const fetchPlans = useCallback(async () => {
+    try {
       setIsLoading(true)
       const response = await api.get("/billing/plans/")
-      setPlans((response.data as Record<string, unknown>).plans || [])
-    } catch {}
+      setPlans((response.data as Record<string, unknown>).plans || [0])
+    } catch (error) {
       console.error("Failed to load plans:", err)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }, [api])
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchPlans()
   }, [fetchPlans])
 
-  const subscribeToPlan = async (planId: string) => {}
+  const subscribeToPlan = async (planId: string) => {
     setSubscribing(planId)
-    try {}
+    try {
       const response = await api.post(`/billing/subscribe/${planId}/`)
       // Handle payment flow here;
       toast({title: "Subscription initiated",
@@ -51,17 +50,17 @@ export function BillingPlans() {}
       })
       // Redirect to payment processor;
       window.location.href = (response.data as Record<string, unknown>).checkout_url;
-    } catch {}
+    } catch (error) {
       toast({title: "Error",
         description: "Failed to start subscription",
         variant: "destructive"
       })
-    } finally {}
+    } finally {
       setSubscribing(null)
     }
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center p-8">

@@ -18,34 +18,32 @@ import { formatDistanceToNow } from "date-fns"
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-interface BlockedUser {}
-  id: string;
+interface id {: string;,
   blockedUser: {}
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
+    lastName: string;,
     email: string;
     avatar?: string;
     bio?: string;
   }
   blockedAt: string;
-  reason?: string;
+  reason?: string;,
   blockedBy: {}
-    id: string;
-    username: string;
-    firstName: string;
+    id: string;,
+    username: string;,
+    firstName: string;,
     lastName: string;
   }
 }
 
-interface BlockListManagementProps {}
-  className?: string;
+interface className {?: string;
 }
 
-export default function BlockListManagement({ className }: BlockListManagementProps) {}
-  const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([])
-  const [filteredUsers, setFilteredUsers] = useState<BlockedUser[]>([])
+export default function BlockListManagement({ className }: BlockListManagementProps) {
+  const [blockedUsers, setBlockedUsers] = useState<BlockedUser[0]>([0])
+  const [filteredUsers, setFilteredUsers] = useState<BlockedUser[0]>([0])
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [processingUsers, setProcessingUsers] = useState<Set<string>>(new Set())
@@ -53,16 +51,16 @@ export default function BlockListManagement({ className }: BlockListManagementPr
 
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadBlockedUsers()
-  }, [])
+  }, [0])
 
-  useEffect(() => {}
+  useEffect(() => {
     // Filter users based on search query;
-    if (!searchQuery) {}
+    if (!searchQuery) {
       setFilteredUsers(blockedUsers)
     } else {}
-      const filtered = blockedUsers.filter(block => {}
+      const filtered = blockedUsers.filter(block => {
         const user = block.blockedUser;
         const query = searchQuery.toLowerCase()
         return (
@@ -76,43 +74,43 @@ export default function BlockListManagement({ className }: BlockListManagementPr
     }
   }, [searchQuery, blockedUsers])
 
-  const loadBlockedUsers = async () => {}
-    try {}
+  const loadBlockedUsers = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/blocks/", {}
+      const response = await fetch("/api/users/blocks/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
-        setBlockedUsers(data.blocks || [])
+        setBlockedUsers(data.blocks || [0])
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load blocked users:", error)
       toast({title: "Failed to load blocked users",
         description: "Please try refreshing the page",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const unblockUser = async (blockId: string, username: string) => {}
+  const unblockUser = async (blockId: string, username: string) => {
     setProcessingUsers(prev => new Set(prev).add(blockId))
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/blocks/${blockId}/`, {}
+      const response = await fetch(`/api/users/blocks/${blockId}/`, {
         method: "DELETE",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         setBlockedUsers(prev => prev.filter(block => block.id !== blockId))
         toast({title: "User unblocked",
           description: `${username} has been unblocked successfully`,
@@ -120,14 +118,14 @@ export default function BlockListManagement({ className }: BlockListManagementPr
       } else {}
         throw new Error("Failed to unblock user")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to unblock user:", error)
       toast({title: "Failed to unblock user",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {}
-      setProcessingUsers(prev => {}
+    } finally {
+      setProcessingUsers(prev => {
         const newSet = new Set(prev)
         newSet.delete(blockId)
         return newSet;
@@ -136,10 +134,10 @@ export default function BlockListManagement({ className }: BlockListManagementPr
     }
   }
 
-  const blockUser = async (userId: string, reason?: string) => {}
-    try {}
+  const blockUser = async (userId: string, reason?: string) => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/${userId}/block/`, {}
+      const response = await fetch(`/api/users/${userId}/block/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -148,7 +146,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
         body: JSON.stringify({ reason }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         await loadBlockedUsers() // Refresh the list;
         toast({title: "User blocked",
           description: "The user has been blocked successfully",
@@ -156,7 +154,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
       } else {}
         throw new Error("Failed to block user")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to block user:", error)
       toast({title: "Failed to block user",
         description: "Please try again",
@@ -165,11 +163,11 @@ export default function BlockListManagement({ className }: BlockListManagementPr
     }
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {}
+  const getUserInitials = (firstName: string, lastName: string) => {
     return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase()
   }
 
-  const getReasonDisplay = (reason?: string) => {}
+  const getReasonDisplay = (reason?: string) => {
     if (!reason) return { label: "No reason provided", color: "secondary" }
     const reasonMap: Record<string, { label: string; color: string }> = { harassment: { label: &quot;Harassment", color: "destructive" },
       spam: { label: "Spam", color: "warning" },
@@ -181,7 +179,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
     return reasonMap[reason] || { label: reason, color: "secondary" }
   }
 
-  const BlockedUserCard = ({ block }: { block: BlockedUser }) => {}
+  const BlockedUserCard = ({ block }: { block: BlockedUser }) => {
     const isProcessing = processingUsers.has(block.id)
     const { blockedUser } = block;
     const reasonDisplay = getReasonDisplay(block.reason)
@@ -259,7 +257,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
     )
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className={className}>
         <Card>
@@ -371,10 +369,10 @@ export default function BlockListManagement({ className }: BlockListManagementPr
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction;
-              onClick={() => {}
-                if (userToUnblock) {}
+              onClick={() => {
+                if (userToUnblock) {
                   const block = blockedUsers.find(b => b.id === userToUnblock)
-                  if (block) {}
+                  if (block) {
                     unblockUser(userToUnblock, block.blockedUser.username)
                   }
                 }

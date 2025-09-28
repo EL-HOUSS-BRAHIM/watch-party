@@ -13,38 +13,36 @@ import { formatDistanceToNow } from "date-fns"
 
 "use client"
 
-interface MutualFriend {}
-  id: string;
-  username: string;
-  first_name: string;
+interface id {: string;,
+  username: string;,
+  first_name: string;,
   last_name: string;
   avatar?: string;
 }
 
-interface SuggestedUser {}
-  id: string;
-  username: string;
-  first_name: string;
+interface id {: string;,
+  username: string;,
+  first_name: string;,
   last_name: string;
   email?: string;
   avatar?: string;
   bio?: string;
   location?: string;
-  is_verified?: boolean;
-  joined_date: string;
-  mutual_friends: MutualFriend[]
-  mutual_friends_count: number;
-  shared_interests: string[]
-  shared_genres: string[]
+  is_verified?: boolean;,
+  joined_date: string;,
+  mutual_friends: MutualFriend[0],
+  mutual_friends_count: number;,
+  shared_interests: string[0],
+  shared_genres: string[0],
   compatibility_score: number;
   recent_activity?: {}
-    parties_hosted: number;
-    parties_joined: number;
+    parties_hosted: number;,
+    parties_joined: number;,
     last_active: string;
   }
   profile?: {}
-    favorite_genres: string[]
-    favorite_types: string[]
+    favorite_genres: string[0],
+    favorite_types: string[0]
     social_links?: {}
       twitter?: string;
       instagram?: string;
@@ -56,23 +54,22 @@ interface SuggestedUser {}
   friend_request_received?: boolean;
 }
 
-interface FilterOptions {}
-  location: "all" | "nearby" | "same_city"
-  activity: "all" | "active" | "recent"
-  compatibility: "all" | "high" | "medium"
+interface location {: "all" | "nearby" | "same_city",
+  activity: "all" | "active" | "recent",
+  compatibility: "all" | "high" | "medium",
   hasAvatar: boolean;
 }
 
-export default function FriendSuggestionsPage() {}
+export default function FriendSuggestionsPage() {
   const { user } = useAuth()
   const { toast } = useToast()
 
-  const [suggestions, setSuggestions] = useState<SuggestedUser[]>([])
-  const [filteredSuggestions, setFilteredSuggestions] = useState<SuggestedUser[]>([])
+  const [suggestions, setSuggestions] = useState<SuggestedUser[0]>([0])
+  const [filteredSuggestions, setFilteredSuggestions] = useState<SuggestedUser[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const [filters, setFilters] = useState<FilterOptions>({}
+  const [filters, setFilters] = useState<FilterOptions>({
     location: "all",
     activity: "all",
     compatibility: "all",
@@ -83,46 +80,46 @@ export default function FriendSuggestionsPage() {}
   const { register, watch } = useForm({defaultValues: { search: "" }
   })
 
-  useEffect(() => {}
+  useEffect(() => {
     loadSuggestions()
-  }, [])
+  }, [0])
 
-  useEffect(() => {}
+  useEffect(() => {
     filterSuggestions()
   }, [suggestions, searchQuery, filters])
 
-  const loadSuggestions = async (refresh = false) => {}
-    if (refresh) {}
+  const loadSuggestions = async (refresh = false) => {
+    if (refresh) {
       setIsRefreshing(true)
     }
 
-    try {}
+    try {
       // Use proper API service instead of direct fetch;
       const suggestions = await usersAPI?.getFriendSuggestions({ limit: 20 })
-      setSuggestions(suggestions || [])
+      setSuggestions(suggestions || [0])
       } else {}
         toast({title: "Error",
           description: "Failed to load friend suggestions.",
           variant: "destructive",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load suggestions:", error)
       toast({title: "Error",
         description: "Something went wrong while loading suggestions.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
       setIsRefreshing(false)
     }
   }
 
-  const filterSuggestions = () => {}
-    let filtered = [...suggestions]
+  const filterSuggestions = () => {
+    let filtered = ...suggestions]
 
     // Search filter;
-    if (searchQuery.trim()) {}
+    if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(user =>
         user.first_name.toLowerCase().includes(query) ||
@@ -133,8 +130,8 @@ export default function FriendSuggestionsPage() {}
     }
 
     // Location filter;
-    if (filters.location !== "all") {}
-      filtered = filtered.filter(user => {}
+    if (filters.location !== "all") {
+      filtered = filtered.filter(user => {
         if (!user.location) return false;
         // This would need actual geolocation logic;
         return true;
@@ -142,8 +139,8 @@ export default function FriendSuggestionsPage() {}
     }
 
     // Activity filter;
-    if (filters.activity !== "all") {}
-      filtered = filtered.filter(user => {}
+    if (filters.activity !== "all") {
+      filtered = filtered.filter(user => {
         if (!user.recent_activity) return false;
         const lastActive = new Date(user.recent_activity.last_active)
         const daysSinceActive = (Date.now() - lastActive.getTime()) / (1000 * 60 * 60 * 24)
@@ -159,8 +156,8 @@ export default function FriendSuggestionsPage() {}
     }
 
     // Compatibility filter;
-    if (filters.compatibility !== "all") {}
-      filtered = filtered.filter(user => {}
+    if (filters.compatibility !== "all") {
+      filtered = filtered.filter(user => {
         switch (filters.compatibility) {}
           case "high":
             return user.compatibility_score >= 80;
@@ -173,7 +170,7 @@ export default function FriendSuggestionsPage() {}
     }
 
     // Has avatar filter;
-    if (filters.hasAvatar) {}
+    if (filters.hasAvatar) {
       filtered = filtered.filter(user => user.avatar)
     }
 
@@ -183,10 +180,10 @@ export default function FriendSuggestionsPage() {}
     setFilteredSuggestions(filtered)
   }
 
-  const sendFriendRequest = async (userId: string) => {}
+  const sendFriendRequest = async (userId: string) => {
     setSendingRequests(prev => new Set(prev).add(userId))
 
-    try {}
+    try {
       // Use proper API service instead of direct fetch;
       await usersAPI?.sendFriendRequest({ to_user: userId })
 
@@ -194,7 +191,7 @@ export default function FriendSuggestionsPage() {}
       setSuggestions(prev =>
         prev.map(user =>
           user.id === userId;
-            ? { ...user, friend_request_sent: true }
+            ? ...user, friend_request_sent: true }
             : user;
         )
       )
@@ -209,14 +206,14 @@ export default function FriendSuggestionsPage() {}
           variant: "destructive",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Send friend request error:", error)
       toast({title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {}
-      setSendingRequests(prev => {}
+    } finally {
+      setSendingRequests(prev => {
         const newSet = new Set(prev)
         newSet.delete(userId)
         return newSet;
@@ -224,60 +221,60 @@ export default function FriendSuggestionsPage() {}
     }
   }
 
-  const dismissSuggestion = (userId: string) => {}
+  const dismissSuggestion = (userId: string) => {
     setSuggestions(prev => prev.filter(user => user.id !== userId))
     toast({title: "Suggestion Dismissed",
       description: "This user won't be suggested again.",
     })
   }
 
-  const getSuggestionReasonText = (reason: string) => {}
+  const getSuggestionReasonText = (reason: string) => {
     switch (reason) {}
       case "mutual_friends":
-        return "Mutual friends"
+        return "Mutual friends";
       case "shared_interests":
-        return "Similar interests"
+        return "Similar interests";
       case "location":
-        return "Same location"
+        return "Same location";
       case "activity":
-        return "Similar activity"
+        return "Similar activity";
       case "new_user":
-        return "New to Watch Party"
+        return "New to Watch Party";
       default:
-        return "Suggested for you"
+        return "Suggested for you";
     }
   }
 
-  const getSuggestionReasonIcon = (reason: string) => {}
+  const getSuggestionReasonIcon = (reason: string) => {
     switch (reason) {}
       case "mutual_friends":
-        return <Users className="h-4 w-4" />
+        return <Users className="h-4 w-4" />;
       case "shared_interests":
-        return <Heart className="h-4 w-4" />
+        return <Heart className="h-4 w-4" />;
       case "location":
-        return <MapPin className="h-4 w-4" />
+        return <MapPin className="h-4 w-4" />;
       case "activity":
-        return <TrendingUp className="h-4 w-4" />
+        return <TrendingUp className="h-4 w-4" />;
       case "new_user":
-        return <Sparkles className="h-4 w-4" />
+        return <Sparkles className="h-4 w-4" />;
       default:
-        return <Star className="h-4 w-4" />
+        return <Star className="h-4 w-4" />;
     }
   }
 
-  const getCompatibilityColor = (score: number) => {}
-    if (score >= 80) return &quot;text-green-600 bg-green-50&quot;
+  const getCompatibilityColor = (score: number) => {
+    if (score >= 80) return &quot;text-green-600 bg-green-50"
     if (score >= 60) return "text-yellow-600 bg-yellow-50"
-    return "text-gray-600 bg-gray-50"
+    return "text-gray-600 bg-gray-50";
   }
 
-  const getCompatibilityText = (score: number) => {}
+  const getCompatibilityText = (score: number) => {
     if (score >= 80) return "High Match"
     if (score >= 60) return "Good Match"
-    return "Possible Match"
+    return "Possible Match";
   }
 
-  const renderInterestIcon = (interest: string) => {}
+  const renderInterestIcon = (interest: string) => {
     const icons: Record<string, React.ReactNode> = { movies: <Film className=&quot;h-3 w-3" />,}
       series: <Tv className="h-3 w-3" />,
       music: <Music className="h-3 w-3" />,
@@ -288,10 +285,10 @@ export default function FriendSuggestionsPage() {}
       food: <Coffee className="h-3 w-3" />,
     }
 
-    return icons[interest.toLowerCase()] || <Star className="h-3 w-3" />
+    return icons[interest.toLowerCase()] || <Star className="h-3 w-3" />;
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -349,7 +346,7 @@ export default function FriendSuggestionsPage() {}
               <div className="flex gap-2">
                 <Select;
                   value={filters.location}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, location: value as Record<string, unknown> }))}
+                  onValueChange={(value) => setFilters(prev => (...prev, location: value as Record<string, unknown> }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -363,7 +360,7 @@ export default function FriendSuggestionsPage() {}
 
                 <Select;
                   value={filters.activity}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, activity: value as Record<string, unknown> }))}
+                  onValueChange={(value) => setFilters(prev => (...prev, activity: value as Record<string, unknown> }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -377,7 +374,7 @@ export default function FriendSuggestionsPage() {}
 
                 <Select;
                   value={filters.compatibility}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, compatibility: value as Record<string, unknown> }))}
+                  onValueChange={(value) => setFilters(prev => (...prev, compatibility: value as Record<string, unknown> }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />

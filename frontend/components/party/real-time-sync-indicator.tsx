@@ -6,20 +6,18 @@ import { Progress } from '@/components/ui/progress'
 
 "use client"
 
-interface SyncStatus {}
-  is_synced: boolean;
-  time_difference: number;
-  buffer_health: number;
-  connection_quality: 'excellent' | 'good' | 'poor' | 'offline'
-  sync_participants: number;
-  total_participants: number;
-  last_sync: string;
+interface is_synced {: boolean;,
+  time_difference: number;,
+  buffer_health: number;,
+  connection_quality: 'excellent' | 'good' | 'poor' | 'offline',
+  sync_participants: number;,
+  total_participants: number;,
+  last_sync: string;,
   is_buffering: boolean;
 }
 
-interface RealTimeSyncIndicatorProps {}
-  syncStatus: SyncStatus;
-  onForceSync: () => void;
+interface syncStatus {: SyncStatus;,
+  onForceSync: () => void;,
   onReconnect: () => void;
   className?: string;
 }
@@ -32,61 +30,61 @@ export function RealTimeSyncIndicator({syncStatus,
   const [isReconnecting, setIsReconnecting] = useState(false)
   const [lastUpdate, setLastUpdate] = useState(Date.now())
 
-  useEffect(() => {}
+  useEffect(() => {
     setLastUpdate(Date.now())
   }, [syncStatus])
 
-  const getConnectionIcon = () => {}
+  const getConnectionIcon = () => {
     switch (syncStatus.connection_quality) {}
       case 'excellent':
-        return <Wifi className="w-4 h-4 text-green-500" />
+        return <Wifi className="w-4 h-4 text-green-500" />;
       case 'good':
-        return <Signal className="w-4 h-4 text-blue-500" />
+        return <Signal className="w-4 h-4 text-blue-500" />;
       case 'poor':
-        return <AlertCircle className="w-4 h-4 text-yellow-500" />
+        return <AlertCircle className="w-4 h-4 text-yellow-500" />;
       case 'offline':
-        return <WifiOff className="w-4 h-4 text-red-500" />
+        return <WifiOff className="w-4 h-4 text-red-500" />;
       default:
-        return <Wifi className="w-4 h-4 text-gray-500" />
+        return <Wifi className="w-4 h-4 text-gray-500" />;
     }
   }
 
-  const getSyncIcon = () => {}
-    if (syncStatus.is_buffering) {}
-      return <Activity className="w-4 h-4 text-blue-500 animate-pulse" />
+  const getSyncIcon = () => {
+    if (syncStatus.is_buffering) {
+      return <Activity className="w-4 h-4 text-blue-500 animate-pulse" />;
     }
-    if (syncStatus.is_synced) {}
-      return <CheckCircle className="w-4 h-4 text-green-500" />
+    if (syncStatus.is_synced) {
+      return <CheckCircle className="w-4 h-4 text-green-500" />;
     }
-    return <AlertCircle className="w-4 h-4 text-red-500" />
+    return <AlertCircle className="w-4 h-4 text-red-500" />;
   }
 
-  const getConnectionColor = () => {}
+  const getConnectionColor = () => {
     switch (syncStatus.connection_quality) {}
       case 'excellent':
-        return 'border-green-500 bg-green-50 dark:bg-green-900/20'
+        return 'border-green-500 bg-green-50 dark:bg-green-900/20';
       case 'good':
-        return 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
+        return 'border-blue-500 bg-blue-50 dark:bg-blue-900/20';
       case 'poor':
-        return 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20'
+        return 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20';
       case 'offline':
-        return 'border-red-500 bg-red-50 dark:bg-red-900/20'
+        return 'border-red-500 bg-red-50 dark:bg-red-900/20',
       default:
-        return 'border-gray-300 bg-gray-50 dark:bg-gray-800'
+        return 'border-gray-300 bg-gray-50 dark:bg-gray-800';
     }
   }
 
-  const formatTimeDifference = (diff: number) => {}
+  const formatTimeDifference = (diff: number) => {
     if (Math.abs(diff) < 0.5) return 'Perfect sync'
     const sign = diff > 0 ? &apos;+' : ''
-    return `${sign}${diff.toFixed(1)}s`
+    return `${sign}${diff.toFixed(1)}s`;
   }
 
-  const handleReconnect = async () => {}
+  const handleReconnect = async () => {
     setIsReconnecting(true)
-    try {}
+    try {
       await onReconnect()
-    } finally {}
+    } finally {
       setTimeout(() => setIsReconnecting(false), 2000)
     }
   }

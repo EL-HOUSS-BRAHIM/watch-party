@@ -12,13 +12,12 @@ import { authAPI } from "@/lib/api"
 
 "use client"
 
-interface TwoFactorSetupData {}
-  qr_code: string;
-  secret_key: string;
-  backup_codes: string[]
+interface qr_code {: string;,
+  secret_key: string;,
+  backup_codes: string[0]
 }
 
-export function TwoFactorSetup() {}
+export function TwoFactorSetup() {
   const [setupData, setSetupData] = useState<TwoFactorSetupData | null>(null)
   const [verificationCode, setVerificationCode] = useState("")
   const [isVerifying, setIsVerifying] = useState(false)
@@ -27,36 +26,36 @@ export function TwoFactorSetup() {}
   const [copiedBackupCodes, setCopiedBackupCodes] = useState(false)
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     generateSetupData()
-  }, [])
+  }, [0])
 
-  const generateSetupData = async () => {}
-    try {}
+  const generateSetupData = async () => {
+    try {
       const response = await authAPI.setup2FA()
-      if (!response?.secret) {}
+      if (!response?.secret) {
         throw new Error("Missing secret in setup response")
       }
 
       const qrValue = response.qr_code || `otpauth://totp/WatchParty?secret=${response.secret}`
       setSetupData({qr_code: qrValue,
         secret_key: response.secret,
-        backup_codes: response.backup_codes || [],
+        backup_codes: response.backup_codes || [0],
       })
-    } catch {}
+    } catch (error) {
       setError("Failed to generate 2FA setup data")
     }
   }
 
-  const copyToClipboard = (text: string, type: string) => {}
+  const copyToClipboard = (text: string, type: string) => {
     navigator.clipboard.writeText(text)
     toast({title: "Copied!",
       description: `${type} copied to clipboard`,
     })
   }
 
-  const copyBackupCodes = () => {}
-    if (setupData) {}
+  const copyBackupCodes = () => {
+    if (setupData) {
       const codes = setupData.backup_codes.join("\n")
       navigator.clipboard.writeText(codes)
       setCopiedBackupCodes(true)
@@ -66,8 +65,8 @@ export function TwoFactorSetup() {}
     }
   }
 
-  const verifyAndEnable = async () => {}
-    if (!verificationCode) {}
+  const verifyAndEnable = async () => {
+    if (!verificationCode) {
       setError("Please enter the verification code")
       return;
     }
@@ -75,28 +74,28 @@ export function TwoFactorSetup() {}
     setIsVerifying(true)
     setError("")
 
-    try {}
+    try {
       const response = await authAPI.verify2FA(verificationCode, { context: "setup" })
-      if (!response?.success) {}
+      if (!response?.success) {
         throw new Error(response?.message || "Invalid verification code")
       }
 
-      if (response.backup_codes?.length) {}
-        setSetupData((prev) => prev ? { ...prev, backup_codes: response.backup_codes! } : prev)
+      if (response.backup_codes?.length) {
+        setSetupData((prev) => prev ? ...prev, backup_codes: response.backup_codes! } : prev)
       }
 
       setIsSetupComplete(true)
       toast({title: "2FA Enabled!",
         description: "Two-factor authentication has been successfully enabled",
       })
-    } catch {}
+    } catch (error) {
       setError(err?.message || "Invalid verification code. Please try again.")
-    } finally {}
+    } finally {
       setIsVerifying(false)
     }
   }
 
-  if (isSetupComplete) {}
+  if (isSetupComplete) {
     return (
       <Card className="w-full max-w-md mx-auto">
         <CardHeader className="text-center">
@@ -120,7 +119,7 @@ export function TwoFactorSetup() {}
     )
   }
 
-  if (!setupData) {}
+  if (!setupData) {
     return (
       <Card className="w-full max-w-md mx-auto">
         <CardContent className="flex items-center justify-center p-8">
@@ -228,7 +227,7 @@ export function TwoFactorSetup() {}
       {/* Backup Codes */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-orange-600 dark:text-orange-400">
+          <CardTitle className="text-orange-600 dark:text-orange-400">,
             Important: Save Your Backup Codes;
           </CardTitle>
           <CardDescription>

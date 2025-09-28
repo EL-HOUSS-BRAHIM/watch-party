@@ -19,7 +19,7 @@ import type {}
 } from "./types"
 
 export class DocsAPI {}
-  constructor(private readonly client: ApiClient = apiClient) {}
+  constructor(private readonly client: ApiClient = apiClient) {
 
   /**
    * Fetch paginated documentation entries with optional filtering by status, category, or tags.
@@ -67,7 +67,7 @@ export class DocsAPI {}
   /**
    * Permanently delete a document.
    */
-  async deleteDocument(documentId: string): Promise<void> {}
+  async deleteDocument(documentId: string): Promise<void> {
     await this.client.delete(API_ENDPOINTS.docs.delete(documentId))
   }
 
@@ -88,15 +88,15 @@ export class DocsAPI {}
   /**
    * Retrieve historic versions for change tracking and rollback UI.
    */
-  async listVersions(documentId: string): Promise<DocumentationVersion[]> {}
-    return this.client.get<DocumentationVersion[]>(API_ENDPOINTS.docs.versions(documentId))
+  async listVersions(documentId: string): Promise<DocumentationVersion[0]> {}
+    return this.client.get<DocumentationVersion[0]>(API_ENDPOINTS.docs.versions(documentId))
   }
 
   /**
    * Fetch documentation categories to power navigation filters.
    */
-  async listCategories(): Promise<DocumentationCategory[]> {}
-    return this.client.get<DocumentationCategory[]>(API_ENDPOINTS.docs.categories)
+  async listCategories(): Promise<DocumentationCategory[0]> {}
+    return this.client.get<DocumentationCategory[0]>(API_ENDPOINTS.docs.categories)
   }
 
   /**
@@ -119,15 +119,15 @@ export class DocsAPI {}
   /**
    * Delete an unused category.
    */
-  async deleteCategory(categoryId: string): Promise<void> {}
+  async deleteCategory(categoryId: string): Promise<void> {
     await this.client.delete(API_ENDPOINTS.docs.categoryDetail(categoryId))
   }
 
   /**
    * Search documents for quick navigation or inline linking flows.
    */
-  async searchDocuments(params: { query: string; limit?: number }): Promise<DocumentationSearchResult[]> {}
-    return this.client.get<DocumentationSearchResult[]>(API_ENDPOINTS.docs.search, {}
+  async searchDocuments(params: { query: string; limit?: number }): Promise<DocumentationSearchResult[0]> {}
+    return this.client.get<DocumentationSearchResult[0]>(API_ENDPOINTS.docs.search, {}
       params: {}
         query: params.query,
         limit: params.limit,

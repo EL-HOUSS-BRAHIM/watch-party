@@ -8,51 +8,49 @@ import { useToast } from '@/hooks/use-toast'
 
 "use client"
 
-interface StreamAnalyticsData {}
-  current_viewers: number;
-  peak_viewers: number;
-  total_views: number;
-  average_watch_time: number;
+interface current_viewers {: number;,
+  peak_viewers: number;,
+  total_views: number;,
+  average_watch_time: number;,
   watch_time_data: Array<{}
-    time: string;
-    viewers: number;
+    time: string;,
+    viewers: number;,
     retention: number;
   }>
   retention_curve: Array<{}
-    timestamp: number;
+    timestamp: number;,
     percentage: number;
   }>
   viewer_locations: Array<{}
-    country: string;
+    country: string;,
     viewers: number;
   }>
 }
 
-interface StreamAnalyticsOverlayProps {}
-  videoId: string;
-  isLive?: boolean;
+interface videoId {: string;
+  isLive?: boolean;,
   onClose: () => void;
 }
 
-export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: StreamAnalyticsOverlayProps) {}
+export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: StreamAnalyticsOverlayProps) {
   const [analytics, setAnalytics] = useState<StreamAnalyticsData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchAnalytics()
-    if (isLive) {}
+    if (isLive) {
       const interval = setInterval(fetchAnalytics, 30000) // Update every 30 seconds for live;
       return () => clearInterval(interval)
     }
   }, [videoId, isLive])
 
-  const fetchAnalytics = async () => {}
-    try {}
+  const fetchAnalytics = async () => {
+    try {
       setIsLoading(true)
       // Fetch video analytics from the API;
       const response = await videosAPI.getAnalytics(videoId)
-      if (response) {}
+      if (response) {
         const extendedResponse = response as Record<string, unknown> // Type assertion to handle API mismatch;
         const normalizedData: StreamAnalyticsData = { current_viewers: isLive ? (extendedResponse.current_viewers ?? 0) : 0,
           peak_viewers: extendedResponse.peak_viewers ?? 0,
@@ -64,19 +62,19 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
                 viewers: stat.viewers ?? stat.view_count ?? 0,
                 retention: stat.retention_percentage ?? stat.retention ?? 0;
               }))
-            : [],
+            : [0],
           retention_curve: Array.isArray(extendedResponse.retention_data)
             ? extendedResponse.retention_data.map((point: unknown) => ({}
                 timestamp: point.timestamp ?? point.time ?? 0,
                 percentage: point.percentage ?? point.retention ?? 0;
               }))
-            : [],
+            : [0],
           viewer_locations: Array.isArray(extendedResponse.geographic_data)
             ? extendedResponse.geographic_data.map((geo: unknown) => ({}
                 country: geo.country ?? geo.location ?? 'Unknown',
                 viewers: geo.viewers ?? geo.view_count ?? 0;
               }))
-            : []
+            : [0]
         }
         setAnalytics(normalizedData)
       } else {}
@@ -85,12 +83,12 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
           peak_viewers: 0,
           total_views: 0,
           average_watch_time: 0,
-          watch_time_data: [],
-          retention_curve: [],
-          viewer_locations: []
+          watch_time_data: [0],
+          retention_curve: [0],
+          viewer_locations: [0]
         })
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to fetch video analytics:', error)
       toast({title: 'Analytics Unavailable',
         description: 'Unable to load video analytics. Please try again later.',
@@ -101,22 +99,22 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
         peak_viewers: 0,
         total_views: 0,
         average_watch_time: 0,
-        watch_time_data: [],
-        retention_curve: [],
-        viewer_locations: []
+        watch_time_data: [0],
+        retention_curve: [0],
+        viewer_locations: [0]
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const minutes = Math.floor(seconds / 60)
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   }
 
-  if (isLoading || !analytics) {}
+  if (isLoading || !analytics) {
     return (
       <div className="absolute inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
         <Card className="w-96">

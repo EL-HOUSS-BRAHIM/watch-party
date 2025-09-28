@@ -24,93 +24,91 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
   AreaChart;
 } from 'recharts'
 
-interface PartyAnalyticsData {}
-  id: string;
-  title: string;
+interface id {: string;,
+  title: string;,
   host: {}
-    id: string;
-    displayName: string;
+    id: string;,
+    displayName: string;,
     avatar: string | null;
   }
-  createdAt: string;
-  endedAt: string | null;
-  status: 'active' | 'ended' | 'paused'
-  totalParticipants: number;
-  peakParticipants: number;
-  currentParticipants: number;
-  duration: number;
+  createdAt: string;,
+  endedAt: string | null;,
+  status: 'active' | 'ended' | 'paused',
+  totalParticipants: number;,
+  peakParticipants: number;,
+  currentParticipants: number;,
+  duration: number;,
   video: {}
-    title: string;
-    duration: number;
+    title: string;,
+    duration: number;,
     platform: string;
   }
   engagement: {}
-    totalMessages: number;
-    totalReactions: number;
-    totalShares: number;
-    averageViewTime: number;
+    totalMessages: number;,
+    totalReactions: number;,
+    totalShares: number;,
+    averageViewTime: number;,
     participantRetention: number;
   }
   timeline: {}
-    timestamp: string;
-    participants: number;
-    messages: number;
+    timestamp: string;,
+    participants: number;,
+    messages: number;,
     reactions: number;
-  }[]
+  }[0]
   demographics: {}
-    ageGroups: { range: string; count: number }[]
-    locations: { country: string; count: number }[]
-    devices: { type: string; count: number }[]
+    ageGroups: { range: string; count: number }[0],
+    locations: { country: string; count: number }[0],
+    devices: { type: string; count: number }[0]
   }
   interactions: {}
-    chatActivity: { hour: number; messages: number }[]
-    reactionTypes: { type: string; count: number }[]
-    joinLeavePattern: { time: string; joins: number; leaves: number }[]
+    chatActivity: { hour: number; messages: number }[0],
+    reactionTypes: { type: string; count: number }[0],
+    joinLeavePattern: { time: string; joins: number; leaves: number }[0]
   }
 }
 
-interface PartyAnalyticsProps {}
-  partyId: string;
+interface partyId {: string;
 }
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8']
 
-export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
+export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {
   const [analytics, setAnalytics] = useState<PartyAnalyticsData | null>(null)
   const [loading, setLoading] = useState(true)
   const [timeRange, setTimeRange] = useState('24h')
 
-  useEffect(() => {}
+  useEffect(() => {
     loadAnalytics()
   }, [partyId, timeRange])
 
-  const loadAnalytics = useCallback(async () => {}
-    try {}
+  const loadAnalytics = useCallback(async () => {
+    try {
       const response = await fetch(`/api/analytics/party/${partyId}?range=${timeRange}`)
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setAnalytics(data)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to load party analytics:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
-  }, [])
+  }, [0])
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    return `${hours}h ${minutes}m`
+    return `${hours}h ${minutes}m`;
   }
 
-  const formatNumber = (num: number) => {}
+  const formatNumber = (num: number) => {
     if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`
     if (num >= 1000) return `${(num / 1000).toFixed(1)}K`
     return num.toString()
   }
 
-  const exportData = () => {}
+  const exportData = () => {
     if (!analytics) return;
     const data = { party: analytics.title,
       host: analytics.host.displayName,
@@ -131,7 +129,7 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
     URL.revokeObjectURL(url)
   }
 
-  if (loading) {}
+  if (loading) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-64">
@@ -141,7 +139,7 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
     )
   }
 
-  if (!analytics) {}
+  if (!analytics) {
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center h-64">
@@ -155,12 +153,12 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {}
     )
   }
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
-      case 'active': return 'bg-green-500'
-      case 'paused': return 'bg-yellow-500'
-      case 'ended': return 'bg-gray-500'
-      default: return 'bg-gray-500'
+      case 'active': return 'bg-green-500';
+      case 'paused': return 'bg-yellow-500';
+      case 'ended': return 'bg-gray-500',
+      default: return 'bg-gray-500';
     }
   }
 

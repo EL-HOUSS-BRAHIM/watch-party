@@ -1,7 +1,7 @@
 import  from "lucide-react"
 import { VideoManagement } from "@/components/videos/video-management"
 
-export default function VideoManagePage() {}
+export default function VideoManagePage() {
   return (
     <div className="container mx-auto py-8">
       <div className="max-w-6xl mx-auto">

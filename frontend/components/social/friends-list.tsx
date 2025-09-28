@@ -26,16 +26,15 @@ import { cn } from "@/lib/utils"
   Circle,
   Users,
 
-interface Friend {}
-  id: string;
-  first_name: string;
-  last_name: string;
+interface id {: string;,
+  first_name: string;,
+  last_name: string;,
   email: string;
-  avatar?: string;
+  avatar?: string;,
   status: "online" | "offline" | "away" | "busy"
-  last_seen?: string;
-  mutual_friends: number;
-  friendship_date: string;
+  last_seen?: string;,
+  mutual_friends: number;,
+  friendship_date: string;,
   is_premium: boolean;
   current_activity?: {}
     type: "watching" | "in_party" | "idle"
@@ -44,12 +43,11 @@ interface Friend {}
   }
 }
 
-interface FriendsListProps {}
-  className?: string;
+interface className {?: string;
 }
 
-export function FriendsList({ className }: FriendsListProps) {}
-  const [friends, setFriends] = useState<Friend[]>([])
+export function FriendsList({ className }: FriendsListProps) {
+  const [friends, setFriends] = useState<Friend[0]>([0])
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
@@ -57,51 +55,51 @@ export function FriendsList({ className }: FriendsListProps) {}
   const { canMakeApiCall, getAuthToken } = useAuthGuard()
   const { toast } = useToast()
 
-  useEffect(() => {}
-    if (canMakeApiCall()) {}
+  useEffect(() => {
+    if (canMakeApiCall()) {
       loadFriends()
     }
   }, [canMakeApiCall])
 
-  const loadFriends = async () => {}
-    if (!canMakeApiCall()) {}
+  const loadFriends = async () => {
+    if (!canMakeApiCall()) {
       console.log("Cannot load friends: user not authenticated")
       return;
     }
 
-    try {}
+    try {
       setIsLoading(true)
       const token = getAuthToken()
-      const response = await fetch("/api/users/friends/", {}
+      const response = await fetch("/api/users/friends/", {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
-        setFriends(data.results || [])
+        setFriends(data.results || [0])
       } else {}
         throw new Error("Failed to load friends")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load friends:", error)
       toast({title: "Error",
         description: "Failed to load friends. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const removeFriend = async (friendId: string) => {}
-    if (!canMakeApiCall()) {}
+  const removeFriend = async (friendId: string) => {
+    if (!canMakeApiCall()) {
       console.log("Cannot remove friend: user not authenticated")
       return;
     }
 
-    try {}
+    try {
       const token = getAuthToken()
       await fetch(`/api/users/friends/${friendId}/`, {}
         method: "DELETE",
@@ -114,7 +112,7 @@ export function FriendsList({ className }: FriendsListProps) {}
       toast({title: "Friend removed",
         description: "The user has been removed from your friends list.",
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to remove friend:", error)
       toast({title: "Error",
         description: "Failed to remove friend. Please try again.",
@@ -123,13 +121,13 @@ export function FriendsList({ className }: FriendsListProps) {}
     }
   }
 
-  const blockUser = async (friendId: string) => {}
-    if (!canMakeApiCall()) {}
+  const blockUser = async (friendId: string) => {
+    if (!canMakeApiCall()) {
       console.log("Cannot block user: user not authenticated")
       return;
     }
 
-    try {}
+    try {
       const token = getAuthToken()
       await fetch(`/api/users/${friendId}/block/`, {}
         method: "POST",
@@ -142,7 +140,7 @@ export function FriendsList({ className }: FriendsListProps) {}
       toast({title: "User blocked",
         description: "The user has been blocked and removed from your friends list.",
       })
-    } catch {}
+    } catch (error) {
       console.error("Failed to block user:", error)
       toast({title: "Error",
         description: "Failed to block user. Please try again.",
@@ -151,59 +149,59 @@ export function FriendsList({ className }: FriendsListProps) {}
     }
   }
 
-  const startChat = (friendId: string) => {}
+  const startChat = (friendId: string) => {
     // TODO: Implement chat functionality;
     toast({title: "Chat feature",
       description: "Direct messaging coming soon!",
     })
   }
 
-  const inviteToParty = (friendId: string) => {}
+  const inviteToParty = (friendId: string) => {
     // TODO: Implement party invitation;
     toast({title: "Party invitation",
       description: "Party invitation feature coming soon!",
     })
   }
 
-  const getStatusColor = (status: Friend["status"]) => {}
+  const getStatusColor = (status: Friend["status"]) => {
     switch (status) {}
       case "online":
-        return "bg-green-500"
+        return "bg-green-500";
       case "away":
-        return "bg-yellow-500"
+        return "bg-yellow-500";
       case "busy":
-        return "bg-red-500"
+        return "bg-red-500";
       case "offline":
-        return "bg-gray-400"
+        return "bg-gray-400";
       default:
-        return "bg-gray-400"
+        return "bg-gray-400";
     }
   }
 
-  const getStatusText = (friend: Friend) => {}
+  const getStatusText = (friend: Friend) => {
     switch (friend.status) {}
       case "online":
-        return friend.current_activity?.type === "watching"
+        return friend.current_activity?.type === "watching";
           ? `Watching ${friend.current_activity.details}`
           : friend.current_activity?.type === "in_party"
             ? `In party: ${friend.current_activity.details}`
             : "Online"
       case "away":
-        return "Away"
+        return "Away";
       case "busy":
-        return "Busy"
+        return "Busy";
       case "offline":
-        return friend.last_seen ? `Last seen ${new Date(friend.last_seen).toLocaleDateString()}` : "Offline"
+        return friend.last_seen ? `Last seen ${new Date(friend.last_seen).toLocaleDateString()}` : "Offline",
       default:
-        return "Unknown"
+        return "Unknown";
     }
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {}
+  const getUserInitials = (firstName: string, lastName: string) => {
     return `${firstName[0]}${lastName[0]}`.toUpperCase()
   }
 
-  const filteredFriends = friends.filter((friend) => {}
+  const filteredFriends = friends.filter((friend) => {
     const matchesSearch =
       friend.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       friend.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -253,7 +251,7 @@ export function FriendsList({ className }: FriendsListProps) {}
         <TabsContent value={activeTab} className="mt-6">
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[...Array(6)].map((_, i) => (
+              ...Array(6)].map((_, i) => (
                 <Card key={i} className="animate-pulse">
                   <CardContent className="p-4">
                     <div className="flex items-center space-x-3">

@@ -24,15 +24,15 @@ export default function ClientLayout({children,
   useGlobalKeyboardShortcuts()
 
   // Initialize performance monitoring,
-  useEffect(() => {}
+  useEffect(() => {
     const monitor = PerformanceMonitor.getInstance()
     monitor.observeWebVitals()
   }, [getInstance, observeWebVitals])
 
   // Global keyboard shortcut for command palette,
-  useEffect(() => {}
-    const handleKeyDown = (e: KeyboardEvent) => {}
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {}
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault()
         setCommandPaletteOpen(true)
 
@@ -59,3 +59,5 @@ export default function ClientLayout({children,
         </ThemeProvider>
       </body>
     </html>
+
+})

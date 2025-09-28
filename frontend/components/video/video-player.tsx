@@ -8,8 +8,7 @@ import { cn } from "@/lib/utils"
 
 "use client"
 
-interface VideoPlayerProps {}
-  src?: string;
+interface src {?: string;
   videoId?: string;
   roomId?: string;
   isHost?: boolean;
@@ -18,9 +17,8 @@ interface VideoPlayerProps {}
   onDurationChange?: (duration: number) => void;
 }
 
-interface VideoSyncData {}
-  action: "play" | "pause" | "seek"
-  currentTime: number;
+interface action {: "play" | "pause" | "seek",
+  currentTime: number;,
   timestamp: number;
 }
 
@@ -49,74 +47,74 @@ export default function VideoPlayer({src,
   const { sendMessage, onMessage, isConnected } = useSocket()
 
   // Hide controls after inactivity;
-  useEffect(() => {}
+  useEffect(() => {
     let timeout: NodeJS.Timeout;
-    const resetTimeout = () => {}
+    const resetTimeout = () => {
       setShowControls(true)
       clearTimeout(timeout)
       timeout = setTimeout(() => setShowControls(false), 3000)
     }
 
     const handleMouseMove = () => resetTimeout()
-    const handleMouseLeave = () => {}
+    const handleMouseLeave = () => {
       clearTimeout(timeout)
       setShowControls(false)
     }
 
-    if (containerRef.current) {}
+    if (containerRef.current) {
       containerRef.current.addEventListener("mousemove", handleMouseMove)
       containerRef.current.addEventListener("mouseleave", handleMouseLeave)
     }
 
-    return () => {}
+    return () => {
       clearTimeout(timeout)
-      if (containerRef.current) {}
+      if (containerRef.current) {
         containerRef.current.removeEventListener("mousemove", handleMouseMove)
         containerRef.current.removeEventListener("mouseleave", handleMouseLeave)
       }
     }
-  }, [])
+  }, [0])
 
   // Video event handlers;
-  useEffect(() => {}
+  useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    const handleLoadedMetadata = () => {}
+    const handleLoadedMetadata = () => {
       setDuration(video.duration)
       setIsLoading(false)
       onDurationChange?.(video.duration)
     }
 
-    const handleTimeUpdate = () => {}
+    const handleTimeUpdate = () => {
       setCurrentTime(video.currentTime)
       onTimeUpdate?.(video.currentTime)
 
       // Update buffered progress;
-      if (video.buffered.length > 0) {}
+      if (video.buffered.length > 0) {
         const bufferedEnd = video.buffered.end(video.buffered.length - 1)
         setBuffered((bufferedEnd / video.duration) * 100)
       }
     }
 
-    const handlePlay = () => {}
+    const handlePlay = () => {
       setIsPlaying(true)
       setIsBuffering(false)
 
-      if (isHost && roomId) {}
+      if (isHost && roomId) {
         sendVideoSync("play", video.currentTime)
       }
     }
 
-    const handlePause = () => {}
+    const handlePause = () => {
       setIsPlaying(false)
 
-      if (isHost && roomId) {}
+      if (isHost && roomId) {
         sendVideoSync("pause", video.currentTime)
       }
     }
 
-    const handleSeeked = () => {}
-      if (isHost && roomId) {}
+    const handleSeeked = () => {
+      if (isHost && roomId) {
         sendVideoSync("seek", video.currentTime)
       }
     }
@@ -132,7 +130,7 @@ export default function VideoPlayer({src,
     video.addEventListener("waiting", handleWaiting)
     video.addEventListener("canplay", handleCanPlay)
 
-    return () => {}
+    return () => {
       video.removeEventListener("loadedmetadata", handleLoadedMetadata)
       video.removeEventListener("timeupdate", handleTimeUpdate)
       video.removeEventListener("play", handlePlay)
@@ -144,10 +142,10 @@ export default function VideoPlayer({src,
   }, [isHost, roomId, onTimeUpdate, onDurationChange])
 
   // WebSocket message handler for video sync;
-  useEffect(() => {}
+  useEffect(() => {
     if (!roomId) return;
-    const unsubscribe = onMessage((message) => {}
-      if (message.type === "video_sync" && !isHost) {}
+    const unsubscribe = onMessage((message) => {
+      if (message.type === "video_sync" && !isHost) {
         handleVideoSync(message.data)
       }
     })
@@ -156,8 +154,8 @@ export default function VideoPlayer({src,
   }, [roomId, isHost, onMessage])
 
   const sendVideoSync = useCallback(
-    (action: "play" | "pause" | "seek", currentTime: number) => {}
-      if (roomId) {}
+    (action: "play" | "pause" | "seek", currentTime: number) => {
+      if (roomId) {
         sendMessage("video_sync", {}
           room_id: roomId,
           action,
@@ -170,20 +168,20 @@ export default function VideoPlayer({src,
   )
 
   const handleVideoSync = useCallback(
-    (data: VideoSyncData) => {}
+    (data: VideoSyncData) => {
       const video = videoRef.current;
       if (!video) return;
       const timeDiff = Math.abs(video.currentTime - data.currentTime)
 
       switch (data.action) {}
         case "play":
-          if (timeDiff > syncTolerance) {}
+          if (timeDiff > syncTolerance) {
             video.currentTime = data.currentTime;
           }
           video.play()
           break;
         case "pause":
-          if (timeDiff > syncTolerance) {}
+          if (timeDiff > syncTolerance) {
             video.currentTime = data.currentTime;
           }
           video.pause()
@@ -196,17 +194,17 @@ export default function VideoPlayer({src,
     [syncTolerance],
   )
 
-  const togglePlay = () => {}
+  const togglePlay = () => {
     const video = videoRef.current;
     if (!video) return;
-    if (isPlaying) {}
+    if (isPlaying) {
       video.pause()
     } else {}
       video.play()
     }
   }
 
-  const handleSeek = (value: number[]) => {}
+  const handleSeek = (value: number[0]) => {
     const video = videoRef.current;
     if (!video) return;
     const newTime = (value[0] / 100) * duration;
@@ -214,7 +212,7 @@ export default function VideoPlayer({src,
     setCurrentTime(newTime)
   }
 
-  const handleVolumeChange = (value: number[]) => {}
+  const handleVolumeChange = (value: number[0]) => {
     const video = videoRef.current;
     if (!video) return;
     const newVolume = value[0] / 100;
@@ -223,10 +221,10 @@ export default function VideoPlayer({src,
     setIsMuted(newVolume === 0)
   }
 
-  const toggleMute = () => {}
+  const toggleMute = () => {
     const video = videoRef.current;
     if (!video) return;
-    if (isMuted) {}
+    if (isMuted) {
       video.volume = volume;
       setIsMuted(false)
     } else {}
@@ -235,9 +233,9 @@ export default function VideoPlayer({src,
     }
   }
 
-  const toggleFullscreen = () => {}
+  const toggleFullscreen = () => {
     if (!containerRef.current) return;
-    if (!isFullscreen) {}
+    if (!isFullscreen) {
       containerRef.current.requestFullscreen()
       setIsFullscreen(true)
     } else {}
@@ -246,17 +244,17 @@ export default function VideoPlayer({src,
     }
   }
 
-  const skip = (seconds: number) => {}
+  const skip = (seconds: number) => {
     const video = videoRef.current;
     if (!video) return;
     const newTime = Math.max(0, Math.min(duration, video.currentTime + seconds))
     video.currentTime = newTime;
   }
 
-  const formatTime = (time: number) => {}
+  const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60)
     const seconds = Math.floor(time % 60)
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
 
   const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;

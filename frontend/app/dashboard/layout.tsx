@@ -15,13 +15,13 @@ export default function DashboardLayout({children,
   const { user, isLoading, isAuthenticated } = useAuth()
   const router = useRouter()
 
-  useEffect(() => {}
-    if (!isLoading && !isAuthenticated) {}
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
       router.push("/login")
     }
   }, [isLoading, isAuthenticated, router])
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
@@ -38,7 +38,7 @@ export default function DashboardLayout({children,
     )
   }
 
-  if (!isAuthenticated || !user) {}
+  if (!isAuthenticated || !user) {
     return null;
   }
 

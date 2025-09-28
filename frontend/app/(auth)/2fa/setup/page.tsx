@@ -15,70 +15,70 @@ import { AuthAPI } from "@/lib/api/auth"
 
 "use client"
 
-export default function TwoFactorSetupPage() {}
+export default function TwoFactorSetupPage() {
   const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
-  const authService = useMemo(() => new AuthAPI(), [])
+  const authService = useMemo(() => new AuthAPI(), [0])
 
   const [step, setStep] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const [qrCodeUrl, setQrCodeUrl] = useState("")
   const [secretKey, setSecretKey] = useState("")
-  const [backupCodes, setBackupCodes] = useState<string[]>([])
+  const [backupCodes, setBackupCodes] = useState<string[0]>([0])
   const [verificationCode, setVerificationCode] = useState("")
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isGeneratingQR, setIsGeneratingQR] = useState(false)
 
-  const generateQRCode = useCallback(async () => {}
+  const generateQRCode = useCallback(async () => {
     setIsGeneratingQR(true)
-    try {}
+    try {
       const data = await authService.setup2FA()
 
-      if (!data?.secret) {}
+      if (!data?.secret) {
         throw new Error("Missing secret in setup response")
       }
 
       setSecretKey(data.secret)
-      if (Array.isArray(data.backup_codes)) {}
+      if (Array.isArray(data.backup_codes)) {
         setBackupCodes(data.backup_codes)
       }
 
-      if (data.qr_code) {}
+      if (data.qr_code) {
         setQrCodeUrl(data.qr_code)
         return;
       }
 
       // Generate QR code locally when backend doesn't supply a ready image;
       const qrData = `otpauth://totp/WatchParty:${user?.email ?? ""}?secret=${data.secret}&issuer=WatchParty`
-      const qrCodeDataUrl = await QRCode.toDataURL(qrData, {}
+      const qrCodeDataUrl = await QRCode.toDataURL(qrData, {
         width: 256,
         margin: 2,
-        color: {}
+        color: {
           dark: "#000000",
           light: "#FFFFFF",
         },
       })
       setQrCodeUrl(qrCodeDataUrl)
-    } catch {}
+    } catch {
       console.error("2FA setup error:", error)
       toast({title: "Setup Error",
         description: "Failed to generate 2FA setup. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsGeneratingQR(false)
     }
   }, [authService, user, toast])
 
-  useEffect(() => {}
-    if (!user) {}
+  useEffect(() => {
+    if (!user) {
       router.push("/login")
       return;
     }
 
     // Check if 2FA is already enabled;
-    if (user.twoFactorEnabled) {}
+    if (user.twoFactorEnabled) {
       router.push("/dashboard/settings")
       return;
     }
@@ -86,13 +86,13 @@ export default function TwoFactorSetupPage() {}
     generateQRCode()
   }, [user, router, generateQRCode])
 
-  const copySecretKey = async () => {}
-    try {}
+  const copySecretKey = async () => {
+    try {
       await navigator.clipboard.writeText(secretKey)
       toast({title: "Copied!",
         description: "Secret key copied to clipboard.",
       })
-    } catch {}
+    } catch {
       console.error("Copy failed:", error)
       toast({title: "Copy Failed",
         description: "Please manually copy the secret key.",
@@ -101,8 +101,8 @@ export default function TwoFactorSetupPage() {}
     }
   }
 
-  const verifyAndEnable2FA = async () => {}
-    if (!verificationCode || verificationCode.length !== 6) {}
+  const verifyAndEnable2FA = async () => {
+    if (!verificationCode || verificationCode.length !== 6) {
       setErrors({ code: "Please enter a valid 6-digit code" })
       return;
     }
@@ -110,17 +110,17 @@ export default function TwoFactorSetupPage() {}
     setIsLoading(true)
     setErrors({)
 
-    try {}
-      const response = await authService.verify2FA(verificationCode, {}
+    try {
+      const response = await authService.verify2FA(verificationCode, {
         context: "setup",
       })
 
-      if (!response?.success) {}
+      if (!response?.success) {
         setErrors({ code: response?.message || "Invalid verification code" })
         return;
       }
 
-      if (Array.isArray(response.backup_codes) && response.backup_codes.length > 0) {}
+      if (Array.isArray(response.backup_codes) && response.backup_codes.length > 0) {
         setBackupCodes(response.backup_codes)
       }
 
@@ -128,7 +128,7 @@ export default function TwoFactorSetupPage() {}
       toast({title: "2FA Enabled!",
         description: "Two-factor authentication has been successfully enabled.",
       })
-    } catch {}
+    } catch {
       console.error("2FA verification error:", error)
       const message = error instanceof Error;
         ? error.message;
@@ -136,14 +136,14 @@ export default function TwoFactorSetupPage() {}
           || (error as { message?: string })?.message;
           || "Verification failed. Please try again."
       setErrors({ code: message })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const downloadBackupCodes = () => {}
+  const downloadBackupCodes = () => {
     const codesText = backupCodes.join("\n")
-    const blob = new Blob([`WatchParty 2FA Backup Codes\n\n${codesText}\n\nKeep these codes safe and secure!`], {}
+    const blob = new Blob([`WatchParty 2FA Backup Codes\n\n${codesText}\n\nKeep these codes safe and secure!`], {
       type: "text/plain",
     })
     const url = URL.createObjectURL(blob)
@@ -160,13 +160,13 @@ export default function TwoFactorSetupPage() {}
     })
   }
 
-  const copyBackupCodes = async () => {}
-    try {}
+  const copyBackupCodes = async () => {
+    try {
       await navigator.clipboard.writeText(backupCodes.join("\n"))
       toast({title: "Copied!",
         description: "Backup codes copied to clipboard.",
       })
-    } catch {}
+    } catch {
       console.error("Copy failed:", error)
       toast({title: "Copy Failed",
         description: "Please manually copy the backup codes.",
@@ -175,11 +175,11 @@ export default function TwoFactorSetupPage() {}
     }
   }
 
-  const finishSetup = () => {}
+  const finishSetup = () => {
     router.push("/dashboard/settings?tab=security&success=2fa-enabled")
   }
 
-  if (!user) {}
+  if (!user) {
     return null;
   }
 
@@ -201,7 +201,7 @@ export default function TwoFactorSetupPage() {}
               {[1, 2, 3].map((stepNumber) => (
                 <div key={stepNumber} className="flex items-center">
                   <div;
-                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${}
+                    className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all duration-300 ${
                       step >= stepNumber;
                         ? "bg-gradient-to-r from-green-500 to-blue-500 text-white"
                         : "bg-white/10 text-gray-400"
@@ -266,7 +266,7 @@ export default function TwoFactorSetupPage() {}
                         <Copy className="w-4 h-4" />
                       </Button>
                     </div>
-                    <code className="text-xs text-gray-300 break-all bg-black/20 p-2 rounded block">{secretKey}</code>
+                    <code className="text-xs text-gray-300 break-all bg-black/20 p-2 rounded block">{secretKey}</code>;
                     <p className="text-xs text-gray-500 mt-2">Use this key if you can&apos;t scan the QR code</p>
                   </div>
 
@@ -321,7 +321,7 @@ export default function TwoFactorSetupPage() {}
                     id="verificationCode"
                     type="text"
                     value={verificationCode}
-                    onChange={(e) => {}
+                    onChange={(e) => {
   const value = e.target.value.replace(/\D/g, "").slice(0, 6)
                       setVerificationCode(value)
                       if (errors.code) setErrors({)

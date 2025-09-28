@@ -1,6 +1,6 @@
 import { PaymentMethods } from "@/components/billing/payment-methods"
 
-export default function PaymentMethodsPage() {}
+export default function PaymentMethodsPage() {
   return (
     <div className="container mx-auto py-8">
       <div className="max-w-4xl mx-auto">

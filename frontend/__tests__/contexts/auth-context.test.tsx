@@ -10,9 +10,9 @@ function TestComponent() {}
 
   return (
     <div>
-      <div data-testid="user">{user ? user.email : &quot;No user"}</div>
-      <div data-testid="loading">{isLoading ? &quot;Loading" : "Not loading"}</div>
-      <button onClick={() => login(&quot;test@example.com", "password")}>Login</button>
+      <div data-testid="user">{user ? user.email : &quot;No user&quot;}</div>
+      <div data-testid="loading">{isLoading ? &quot;Loading&quot; : "Not loading"}</div>
+      <button onClick={() => login(&quot;test@example.com&quot;, "password")}>Login</button>
       <button onClick={logout}>Logout</button>
     </div>
   )

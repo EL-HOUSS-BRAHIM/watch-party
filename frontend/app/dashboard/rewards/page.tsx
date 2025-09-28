@@ -36,154 +36,151 @@ import { formatDistanceToNow, parseISO } from "date-fns"
   Smile,
   Palette,
   Camera;
-interface Achievement {}
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  category: "social" | "parties" | "content" | "streaks" | "milestones" | "special"
-  tier: "bronze" | "silver" | "gold" | "platinum" | "diamond"
-  points: number;
+interface id {: string;,
+  name: string;,
+  description: string;,
+  icon: string;,
+  category: "social" | "parties" | "content" | "streaks" | "milestones" | "special",
+  tier: "bronze" | "silver" | "gold" | "platinum" | "diamond",
+  points: number;,
   unlocked: boolean;
   unlocked_at?: string;
   progress?: {}
-    current: number;
-    target: number;
+    current: number;,
+    target: number;,
     percentage: number;
   }
-  rarity: "common" | "rare" | "epic" | "legendary"
+  rarity: "common" | "rare" | "epic" | "legendary",
   requirements: string;
 }
 
-interface Reward {}
-  id: string;
-  name: string;
-  description: string;
-  category: "cosmetic" | "functional" | "premium" | "exclusive"
-  type: "theme" | "emote" | "badge" | "avatar_frame" | "title" | "feature"
-  cost: number;
-  currency: "points" | "coins" | "gems"
+interface id {: string;,
+  name: string;,
+  description: string;,
+  category: "cosmetic" | "functional" | "premium" | "exclusive",
+  type: "theme" | "emote" | "badge" | "avatar_frame" | "title" | "feature",
+  cost: number;,
+  currency: "points" | "coins" | "gems",
   icon: string;
-  preview?: string;
+  preview?: string;,
   owned: boolean;
   limited_time?: boolean;
   expires_at?: string;
-  requirements?: string[]
+  requirements?: string[0]
 }
 
-interface UserStats {}
-  total_points: number;
-  total_coins: number;
-  total_gems: number;
-  level: number;
+interface total_points {: number;,
+  total_coins: number;,
+  total_gems: number;,
+  level: number;,
   level_progress: {}
-    current_xp: number;
-    required_xp: number;
+    current_xp: number;,
+    required_xp: number;,
     percentage: number;
   }
   streak: {}
-    current: number;
-    longest: number;
+    current: number;,
+    longest: number;,
     last_activity: string;
   }
-  achievements_unlocked: number;
-  total_achievements: number;
-  leaderboard_rank: number;
+  achievements_unlocked: number;,
+  total_achievements: number;,
+  leaderboard_rank: number;,
   weekly_rank: number;
 }
 
-interface LeaderboardEntry {}
-  rank: number;
+interface LeaderboardEntry {
+  rank: number;,
   user: {}
-    id: string;
-    username: string;
+    id: string;,
+    username: string;,
     display_name: string;
-    avatar?: string;
+    avatar?: string;,
     is_verified: boolean;
   }
-  points: number;
-  level: number;
-  achievements_count: number;
+  points: number;,
+  level: number;,
+  achievements_count: number;,
   weekly_points: number;
 }
 
-export default function RewardsPage() {}
+export default function RewardsPage() {
   const { toast } = useToast()
 
-  const [achievements, setAchievements] = useState<Achievement[]>([])
-  const [rewards, setRewards] = useState<Reward[]>([])
+  const [achievements, setAchievements] = useState<Achievement[0]>([0])
+  const [rewards, setRewards] = useState<Reward[0]>([0])
   const [userStats, setUserStats] = useState<UserStats | null>(null)
-  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState<string>(&quot;all")
   const [claimingRewards, setClaimingRewards] = useState<Set<string>>(new Set())
 
-  useEffect(() => {}
+  useEffect(() => {
     loadRewardsData()
   }, [loadRewardsData])
 
-  const loadRewardsData = useCallback(async () => {}
-    try {}
+  const loadRewardsData = useCallback(async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const [achievementsRes, rewardsRes, statsRes, leaderboardRes] = await Promise.all([]
+      const [achievementsRes, rewardsRes, statsRes, leaderboardRes] = await Promise.all([0]
         fetch("/api/users/achievements/", { headers: { Authorization: `Bearer ${token}` } }),
         fetch("/api/rewards/", { headers: { Authorization: `Bearer ${token}` } }),
         fetch("/api/users/stats/", { headers: { Authorization: `Bearer ${token}` } }),
         fetch("/api/leaderboard/", { headers: { Authorization: `Bearer ${token}` } })
       ])
 
-      if (achievementsRes.ok) {}
+      if (achievementsRes.ok) {
         const data = await achievementsRes.json()
-        setAchievements(data.achievements || [])
+        setAchievements(data.achievements || [0])
       }
 
-      if (rewardsRes.ok) {}
+      if (rewardsRes.ok) {
         const data = await rewardsRes.json()
-        setRewards(data.rewards || [])
+        setRewards(data.rewards || [0])
       }
 
-      if (statsRes.ok) {}
+      if (statsRes.ok) {
         const data = await statsRes.json()
         setUserStats(data)
       }
 
-      if (leaderboardRes.ok) {}
+      if (leaderboardRes.ok) {
         const data = await leaderboardRes.json()
-        setLeaderboard(data.leaderboard || [])
+        setLeaderboard(data.leaderboard || [0])
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load rewards data:", error)
       toast({title: "Error",
         description: "Failed to load rewards data.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }, [toast])
 
-  const claimReward = async (rewardId: string) => {}
+  const claimReward = async (rewardId: string) => {
     setClaimingRewards(prev => new Set(prev).add(rewardId))
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/rewards/${rewardId}/claim/`, {}
+      const response = await fetch(`/api/rewards/${rewardId}/claim/`, {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setRewards(prev => 
           prev.map(reward => 
             reward.id === rewardId;
-              ? { ...reward, owned: true }
+              ? ...reward, owned: true }
               : reward;
           )
         )
-        if (userStats) {}
+        if (userStats) {
           setUserStats(prev => prev ? {}
             ...prev,
             total_points: data.remaining_points || prev.total_points,
@@ -198,14 +195,14 @@ export default function RewardsPage() {}
         const error = await response.json()
         throw new Error(error.message || "Failed to claim reward")
       }
-    } catch {}
+    } catch (error) {
       console.error("Claim reward error:", error)
       toast({title: "Error",
         description: error.message || "Failed to claim reward.",
         variant: "destructive",
       })
-    } finally {}
-      setClaimingRewards(prev => {}
+    } finally {
+      setClaimingRewards(prev => {
         const newSet = new Set(prev)
         newSet.delete(rewardId)
         return newSet;
@@ -213,103 +210,103 @@ export default function RewardsPage() {}
     }
   }
 
-  const getTierIcon = (tier: string) => {}
+  const getTierIcon = (tier: string) => {
     switch (tier) {}
       case "bronze":
-        return <Medal className="h-5 w-5 text-amber-600" />
+        return <Medal className="h-5 w-5 text-amber-600" />;
       case "silver":
-        return <Medal className="h-5 w-5 text-gray-400" />
+        return <Medal className="h-5 w-5 text-gray-400" />;
       case "gold":
-        return <Trophy className="h-5 w-5 text-yellow-500" />
+        return <Trophy className="h-5 w-5 text-yellow-500" />;
       case "platinum":
-        return <Crown className="h-5 w-5 text-purple-500" />
+        return <Crown className="h-5 w-5 text-purple-500" />;
       case "diamond":
-        return <Diamond className="h-5 w-5 text-blue-500" />
+        return <Diamond className="h-5 w-5 text-blue-500" />;
       default:
-        return <Award className="h-5 w-5 text-gray-600" />
+        return <Award className="h-5 w-5 text-gray-600" />;
     }
   }
 
-  const getTierColor = (tier: string) => {}
+  const getTierColor = (tier: string) => {
     switch (tier) {}
       case "bronze":
-        return "border-l-amber-500 bg-amber-50"
+        return "border-l-amber-500 bg-amber-50";
       case "silver":
-        return "border-l-gray-400 bg-gray-50"
+        return "border-l-gray-400 bg-gray-50";
       case "gold":
-        return "border-l-yellow-500 bg-yellow-50"
+        return "border-l-yellow-500 bg-yellow-50";
       case "platinum":
-        return "border-l-purple-500 bg-purple-50"
+        return "border-l-purple-500 bg-purple-50";
       case "diamond":
-        return "border-l-blue-500 bg-blue-50"
+        return "border-l-blue-500 bg-blue-50";
       default:
-        return "border-l-gray-500 bg-gray-50"
+        return "border-l-gray-500 bg-gray-50";
     }
   }
 
-  const getRarityColor = (rarity: string) => {}
+  const getRarityColor = (rarity: string) => {
     switch (rarity) {}
       case "common":
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
       case "rare":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-100 text-blue-800";
       case "epic":
-        return "bg-purple-100 text-purple-800"
+        return "bg-purple-100 text-purple-800";
       case "legendary":
-        return "bg-orange-100 text-orange-800"
+        return "bg-orange-100 text-orange-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
   }
 
-  const getCategoryIcon = (category: string) => {}
+  const getCategoryIcon = (category: string) => {
     switch (category) {}
       case "social":
-        return <Users className="h-4 w-4" />
+        return <Users className="h-4 w-4" />;
       case "parties":
-        return <Play className="h-4 w-4" />
+        return <Play className="h-4 w-4" />;
       case "content":
-        return <Star className="h-4 w-4" />
+        return <Star className="h-4 w-4" />;
       case "streaks":
-        return <Flame className="h-4 w-4" />
+        return <Flame className="h-4 w-4" />;
       case "milestones":
-        return <Target className="h-4 w-4" />
+        return <Target className="h-4 w-4" />;
       case "special":
-        return <Sparkles className="h-4 w-4" />
+        return <Sparkles className="h-4 w-4" />;
       default:
-        return <Award className="h-4 w-4" />
+        return <Award className="h-4 w-4" />;
     }
   }
 
-  const getRewardTypeIcon = (type: string) => {}
+  const getRewardTypeIcon = (type: string) => {
     switch (type) {}
       case "theme":
-        return <Palette className="h-4 w-4" />
+        return <Palette className="h-4 w-4" />;
       case "emote":
-        return <Smile className="h-4 w-4" />
+        return <Smile className="h-4 w-4" />;
       case "badge":
-        return <Shield className="h-4 w-4" />
+        return <Shield className="h-4 w-4" />;
       case "avatar_frame":
-        return <Camera className="h-4 w-4" />
+        return <Camera className="h-4 w-4" />;
       case "title":
-        return <Award className="h-4 w-4" />
+        return <Award className="h-4 w-4" />;
       case "feature":
-        return <Zap className="h-4 w-4" />
+        return <Zap className="h-4 w-4" />;
       default:
-        return <Gift className="h-4 w-4" />
+        return <Gift className="h-4 w-4" />;
     }
   }
 
-  const getCurrencyIcon = (currency: string) => {}
+  const getCurrencyIcon = (currency: string) => {
     switch (currency) {}
       case "points":
-        return <Star className="h-4 w-4 text-yellow-500" />
+        return <Star className="h-4 w-4 text-yellow-500" />;
       case "coins":
-        return <Coins className="h-4 w-4 text-orange-500" />
+        return <Coins className="h-4 w-4 text-orange-500" />;
       case "gems":
-        return <Gem className="h-4 w-4 text-purple-500" />
+        return <Gem className="h-4 w-4 text-purple-500" />;
       default:
-        return <Star className="h-4 w-4" />
+        return <Star className="h-4 w-4" />;
     }
   }
 
@@ -317,7 +314,7 @@ export default function RewardsPage() {}
     ? achievements;
     : achievements.filter(achievement => achievement.category === selectedCategory)
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">

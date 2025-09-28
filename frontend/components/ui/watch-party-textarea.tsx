@@ -7,8 +7,8 @@ import { cva, type VariantProps } from "class-variance-authority"
 const textareaVariants = cva(
   "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200",
   {}
-    variants: {}
-      variant: {}
+    variants: {
+      variant: {
         default: "border-input focus-visible:ring-ring",
         error: "border-destructive focus-visible:ring-destructive",
         success: "border-green-500 focus-visible:ring-green-500",
@@ -58,14 +58,14 @@ const WatchPartyTextarea = React.forwardRef<HTMLTextAreaElement, WatchPartyTexta
       ...props;
     },
     ref,
-  ) => {}
+  ) => {
     const textareaRef = React.useRef<HTMLTextAreaElement>(null)
     const [charCount, setCharCount] = React.useState(0)
 
     // Combine refs;
     React.useImperativeHandle(ref, () => textareaRef.current!)
 
-    const adjustHeight = React.useCallback(() => {}
+    const adjustHeight = React.useCallback(() => {
       const textarea = textareaRef.current;
       if (!textarea || !autoResize) return;
       // Reset height to auto to get the correct scrollHeight;
@@ -85,10 +85,10 @@ const WatchPartyTextarea = React.forwardRef<HTMLTextAreaElement, WatchPartyTexta
       textarea.style.height = `${newHeight}px`
     }, [autoResize, minRows, maxRows])
 
-    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {}
+    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       const newValue = event.target.value;
       // Enforce maxLength if specified;
-      if (maxLength && newValue.length > maxLength) {}
+      if (maxLength && newValue.length > maxLength) {
         return;
       }
 
@@ -96,20 +96,20 @@ const WatchPartyTextarea = React.forwardRef<HTMLTextAreaElement, WatchPartyTexta
       onChange?.(newValue, event)
 
       // Adjust height after state update;
-      if (autoResize) {}
+      if (autoResize) {
         setTimeout(adjustHeight, 0)
       }
     }
 
     // Initialize character count;
-    React.useEffect(() => {}
+    React.useEffect(() => {
       const initialValue = value?.toString() || ""
       setCharCount(initialValue.length)
     }, [value])
 
     // Adjust height on mount and when content changes;
-    React.useEffect(() => {}
-      if (autoResize) {}
+    React.useEffect(() => {
+      if (autoResize) {
         adjustHeight()
       }
     }, [adjustHeight, value])
@@ -129,7 +129,7 @@ const WatchPartyTextarea = React.forwardRef<HTMLTextAreaElement, WatchPartyTexta
           onChange={handleChange}
           maxLength={maxLength}
           style={autoResize ? { overflow: "hidden" } : undefined}
-          {...props}
+          ...props}
         />
 
         {(showCharCount || maxLength) && (

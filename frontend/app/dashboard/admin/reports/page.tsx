@@ -14,88 +14,83 @@ import { formatDistanceToNow, format, parseISO } from "date-fns"
 
 "use client"
 
-interface ReportedUser {}
-  id: string;
-  username: string;
-  first_name: string;
-  last_name: string;
+interface id {: string;,
+  username: string;,
+  first_name: string;,
+  last_name: string;,
   email: string;
-  avatar?: string;
-  is_verified: boolean;
-  account_created: string;
-  last_active: string;
-  total_reports: number;
+  avatar?: string;,
+  is_verified: boolean;,
+  account_created: string;,
+  last_active: string;,
+  total_reports: number;,
   is_banned: boolean;
   ban_reason?: string;
 }
 
-interface Reporter {}
-  id: string;
-  username: string;
-  first_name: string;
+interface id {: string;,
+  username: string;,
+  first_name: string;,
   last_name: string;
-  avatar?: string;
+  avatar?: string;,
   is_verified: boolean;
 }
 
-interface ReportContent {}
-  id: string;
+interface id {: string;,
   type: "message" | "party" | "profile" | "video" | "comment"
   content?: string;
   url?: string;
   thumbnail?: string;
-  title?: string;
+  title?: string;,
   created_at: string;
 }
 
-interface Report {}
-  id: string;
-  type: "user" | "content" | "party" | "harassment" | "spam" | "inappropriate_content" | "copyright" | "other"
-  category: string;
+interface id {: string;,
+  type: "user" | "content" | "party" | "harassment" | "spam" | "inappropriate_content" | "copyright" | "other",
+  category: string;,
   reason: string;
-  description?: string;
-  severity: "low" | "medium" | "high" | "critical"
-  status: "pending" | "under_review" | "resolved" | "dismissed" | "escalated"
-  created_at: string;
-  updated_at: string;
+  description?: string;,
+  severity: "low" | "medium" | "high" | "critical",
+  status: "pending" | "under_review" | "resolved" | "dismissed" | "escalated",
+  created_at: string;,
+  updated_at: string;,
   reporter: Reporter;
   reported_user?: ReportedUser;
   reported_content?: ReportContent;
   admin_notes?: string;
   resolution?: string;
   resolved_by?: {}
-    id: string;
-    username: string;
-    first_name: string;
+    id: string;,
+    username: string;,
+    first_name: string;,
     last_name: string;
   }
-  resolved_at?: string;
-  evidence_urls: string[]
-  priority_score: number;
-  is_automated: boolean;
+  resolved_at?: string;,
+  evidence_urls: string[0],
+  priority_score: number;,
+  is_automated: boolean;,
   related_reports_count: number;
 }
 
-interface FilterOptions {}
-  status: string;
-  type: string;
-  severity: string;
-  timeRange: string;
+interface status {: string;,
+  type: string;,
+  severity: string;,
+  timeRange: string;,
   assignedToMe: boolean;
 }
 
-export default function ReportsManagementPage() {}
+export default function ReportsManagementPage() {
   const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
 
-  const [reports, setReports] = useState<Report[]>([])
-  const [filteredReports, setFilteredReports] = useState<Report[]>([])
+  const [reports, setReports] = useState<Report[0]>([0])
+  const [filteredReports, setFilteredReports] = useState<Report[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedReport, setSelectedReport] = useState<Report | null>(null)
   const [processingActions, setProcessingActions] = useState<Set<string>>(new Set())
-  const [filters, setFilters] = useState<FilterOptions>({}
+  const [filters, setFilters] = useState<FilterOptions>({
     status: "all",
     type: "all", 
     severity: "all",
@@ -103,28 +98,28 @@ export default function ReportsManagementPage() {}
     assignedToMe: false;
   })
 
-  useEffect(() => {}
+  useEffect(() => {
     // Check if user has admin permissions;
-    if (!user?.is_staff && !user?.is_superuser) {}
+    if (!user?.is_staff && !user?.is_superuser) {
       router.push("/dashboard")
       return;
     }
     loadReports()
   }, [user, router])
 
-  useEffect(() => {}
+  useEffect(() => {
     filterReports()
   }, [reports, searchQuery, filters])
 
-  const loadReports = async () => {}
-    try {}
+  const loadReports = async () => {
+    try {
       const data = await adminAPI.getReports({status: filters.status !== "all" ? filters.status as Record<string, unknown> : undefined,}
         page: 1, // You can add pagination later;
       })
-      setReports(data.results || [])
-    } catch {}
+      setReports(data.results || [0])
+    } catch (error) {
       console.error("Failed to load reports:", error)
-      if ((error as Record<string, unknown>)?.response?.status === 403) {}
+      if ((error as Record<string, unknown>)?.response?.status === 403) {
         toast({title: "Access Denied",
           description: "You don't have permission to access this page.",
           variant: "destructive",
@@ -136,16 +131,16 @@ export default function ReportsManagementPage() {}
           variant: "destructive",
         })
       }
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
-  const filterReports = () => {}
-    let filtered = [...reports]
+  const filterReports = () => {
+    let filtered = ...reports]
 
     // Search filter;
-    if (searchQuery.trim()) {}
+    if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase()
       filtered = filtered.filter(report =>
         report.reason.toLowerCase().includes(query) ||
@@ -157,24 +152,24 @@ export default function ReportsManagementPage() {}
     }
 
     // Status filter;
-    if (filters.status !== "all") {}
+    if (filters.status !== "all") {
       filtered = filtered.filter(report => report.status === filters.status)
     }
 
     // Type filter;
-    if (filters.type !== "all") {}
+    if (filters.type !== "all") {
       filtered = filtered.filter(report => report.type === filters.type)
     }
 
     // Severity filter;
-    if (filters.severity !== "all") {}
+    if (filters.severity !== "all") {
       filtered = filtered.filter(report => report.severity === filters.severity)
     }
 
     // Time range filter;
-    if (filters.timeRange !== "all") {}
+    if (filters.timeRange !== "all") {
       const now = new Date()
-      filtered = filtered.filter(report => {}
+      filtered = filtered.filter(report => {
         const reportDate = parseISO(report.created_at)
         const daysDiff = (now.getTime() - reportDate.getTime()) / (1000 * 60 * 60 * 24)
         switch (filters.timeRange) {}
@@ -191,9 +186,9 @@ export default function ReportsManagementPage() {}
     }
 
     // Sort by priority and date;
-    filtered.sort((a, b) => {}
+    filtered.sort((a, b) => {
       // First by priority score (high to low)
-      if (a.priority_score !== b.priority_score) {}
+      if (a.priority_score !== b.priority_score) {
         return b.priority_score - a.priority_score;
       }
       // Then by creation date (newest first)
@@ -203,10 +198,10 @@ export default function ReportsManagementPage() {}
     setFilteredReports(filtered)
   }
 
-  const updateReportStatus = async (reportId: string, status: string, resolution?: string, adminNotes?: string) => {}
+  const updateReportStatus = async (reportId: string, status: string, resolution?: string, adminNotes?: string) => {
     setProcessingActions(prev => new Set(prev).add(reportId))
 
-    try {}
+    try {
       await adminAPI.resolveReport(reportId, {}
         action: status === "resolved" ? "dismiss" : status as Record<string, unknown>,
         reason: resolution || adminNotes,
@@ -217,21 +212,21 @@ export default function ReportsManagementPage() {}
         description: `Report has been ${status === "resolved" ? "resolved" : status}.`,
       })
 
-      if (selectedReport?.id === reportId) {}
+      if (selectedReport?.id === reportId) {
         // Update the selected report from the refreshed data;
         const updatedReport = reports.find(r => r.id === reportId)
-        if (updatedReport) {}
+        if (updatedReport) {
           setSelectedReport(updatedReport)
         }
       }
-    } catch {}
+    } catch (error) {
       console.error("Update report error:", error)
       toast({title: "Error",
         description: "Failed to update report status.",
         variant: "destructive",
       })
-    } finally {}
-      setProcessingActions(prev => {}
+    } finally {
+      setProcessingActions(prev => {
         const newSet = new Set(prev)
         newSet.delete(reportId)
         return newSet;
@@ -239,12 +234,12 @@ export default function ReportsManagementPage() {}
     }
   }
 
-  const takeAction = async (reportId: string, action: string, reason?: string) => {}
+  const takeAction = async (reportId: string, action: string, reason?: string) => {
     setProcessingActions(prev => new Set(prev).add(reportId))
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/actions/`, {}
+      const response = await fetch(`/api/admin/actions/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -257,7 +252,7 @@ export default function ReportsManagementPage() {}
         }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         await loadReports() // Reload to get updated data;
         const actionMessages = { ban_user: "User has been banned",
           suspend_user: "User has been suspended", 
@@ -272,14 +267,14 @@ export default function ReportsManagementPage() {}
       } else {}
         throw new Error("Failed to take action")
       }
-    } catch {}
+    } catch (error) {
       console.error("Take action error:", error)
       toast({title: "Error",
         description: "Failed to take action on report.",
         variant: "destructive",
       })
-    } finally {}
-      setProcessingActions(prev => {}
+    } finally {
+      setProcessingActions(prev => {
         const newSet = new Set(prev)
         newSet.delete(reportId)
         return newSet;
@@ -287,62 +282,62 @@ export default function ReportsManagementPage() {}
     }
   }
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
       case "pending":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-100 text-yellow-800";
       case "under_review":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-100 text-blue-800";
       case "resolved":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       case "dismissed":
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
       case "escalated":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
   }
 
-  const getSeverityColor = (severity: string) => {}
+  const getSeverityColor = (severity: string) => {
     switch (severity) {}
       case "critical":
-        return "bg-red-100 text-red-800 border-red-200"
+        return "bg-red-100 text-red-800 border-red-200";
       case "high":
-        return "bg-orange-100 text-orange-800 border-orange-200"
+        return "bg-orange-100 text-orange-800 border-orange-200";
       case "medium":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200"
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
       case "low":
-        return "bg-blue-100 text-blue-800 border-blue-200"
+        return "bg-blue-100 text-blue-800 border-blue-200";
       default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
   }
 
-  const getTypeIcon = (type: string) => {}
+  const getTypeIcon = (type: string) => {
     switch (type) {}
       case "user":
-        return <User className="h-4 w-4" />
+        return <User className="h-4 w-4" />;
       case "content":
-        return <FileText className="h-4 w-4" />
+        return <FileText className="h-4 w-4" />;
       case "party":
-        return <Video className="h-4 w-4" />
+        return <Video className="h-4 w-4" />;
       case "harassment":
-        return <AlertTriangle className="h-4 w-4" />
+        return <AlertTriangle className="h-4 w-4" />;
       case "spam":
-        return <Flag className="h-4 w-4" />
+        return <Flag className="h-4 w-4" />;
       case "inappropriate_content":
-        return <Eye className="h-4 w-4" />
+        return <Eye className="h-4 w-4" />;
       default:
-        return <AlertCircle className="h-4 w-4" />
+        return <AlertCircle className="h-4 w-4" />;
     }
   }
 
-  if (!user?.is_staff && !user?.is_superuser) {}
+  if (!user?.is_staff && !user?.is_superuser) {
     return null // Will redirect in useEffect;
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -396,7 +391,7 @@ export default function ReportsManagementPage() {}
               <div className="flex gap-2">
                 <Select;
                   value={filters.status}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, status: value }))}
+                  onValueChange={(value) => setFilters(prev => (...prev, status: value }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -413,7 +408,7 @@ export default function ReportsManagementPage() {}
 
                 <Select;
                   value={filters.severity}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, severity: value }))}
+                  onValueChange={(value) => setFilters(prev => (...prev, severity: value }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -429,7 +424,7 @@ export default function ReportsManagementPage() {}
 
                 <Select;
                   value={filters.type}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, type: value }))}
+                  onValueChange={(value) => setFilters(prev => (...prev, type: value }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />
@@ -446,7 +441,7 @@ export default function ReportsManagementPage() {}
 
                 <Select;
                   value={filters.timeRange}
-                  onValueChange={(value) => setFilters(prev => ({ ...prev, timeRange: value }))}
+                  onValueChange={(value) => setFilters(prev => (...prev, timeRange: value }))}
                 >
                   <SelectTrigger className="w-32">
                     <SelectValue />

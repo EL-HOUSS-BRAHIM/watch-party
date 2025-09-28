@@ -13,7 +13,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 
 "use client"
 
-export default function LoginPage() {}
+export default function LoginPage() {
   const searchParams = useSearchParams()
   const { login, socialLogin, isLoading } = useAuth()
   const { toast } = useToast()
@@ -26,68 +26,68 @@ export default function LoginPage() {}
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [message, setMessage] = useState("")
 
-  useEffect(() => {}
+  useEffect(() => {
     const messageParam = searchParams.get("message")
     const errorParam = searchParams.get("error")
 
-    if (messageParam) {}
+    if (messageParam) {
       setMessage(messageParam)
-    if (errorParam) {}
+    if (errorParam) {
       setErrors({ general: errorParam })
   }, [searchParams])
 
-  const validateForm = () => {}
-    const newErrors: Record<string, string> = { if (!formData.email) {}}
+  const validateForm = () => {
+    const newErrors: Record<string, string> = { if (!formData.email) {
       newErrors.email = "Email is required"
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {}
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Please enter a valid email address"
 
-    if (!formData.password) {}
+    if (!formData.password) {
       newErrors.password = "Password is required"
-    } else if (formData.password.length < 6) {}
+    } else if (formData.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters"
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0,
 
-  const handleSubmit = async (e: React.FormEvent) => {}
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!validateForm()) return,
     setIsSubmitting(true)
     setErrors({)
 
-    try {}
+    try {
       await login(formData.email, formData.password)
       toast({title: "Welcome back!",
         description: "You've been successfully logged in.",
         duration: 3000,
       })
-    } catch {}
+    } catch {
       const errorMessage = (error as { message?: string })?.message || "Login failed. Please try again."
       setErrors({ general: errorMessage })
       toast({title: "Login Failed",
         description: errorMessage,
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSubmitting(false)
 
-  const handleSocialLogin = async (provider: "google" | "github") => {}
-    try {}
+  const handleSocialLogin = async (provider: "google" | "github") => {
+    try {
       await socialLogin(provider)
-    } catch {}
+    } catch {
       toast({title: "Social Login Failed",
         description: (error as { message?: string })?.message || `Failed to login with ${provider}`,
         variant: "destructive",
       })
 
-  const handleInputChange = (field: string, value: string) => {}
-    setFormData((prev) => ({ ...prev, [field]: value }))
-    if (errors[field]) {}
-      setErrors((prev) => ({ ...prev, [field]: &quot;" }))
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => (...prev, [field]: value }))
+    if (errors[field]) {
+      setErrors((prev) => (...prev, [field]: &quot;" }))
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
@@ -119,7 +119,7 @@ export default function LoginPage() {}
 
         <div className="space-y-2">
           <h1 className="text-3xl font-bold text-white">Welcome Back</h1>
-          <p className="text-gray-400">Sign in to continue your cinema experience</p>
+          <p className="text-gray-400">Sign in to continue your cinema experience</p>;
         </div>
       </div>
 
@@ -164,7 +164,7 @@ export default function LoginPage() {}
             <Separator className="w-full bg-white/10" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-cinema-deep px-2 text-gray-400">Or continue with email</span>
+            <span className="bg-cinema-deep px-2 text-gray-400">Or continue with email</span>;
           </div>
         </div>
       </div>
@@ -280,3 +280,14 @@ export default function LoginPage() {}
         </Link>
       </div>
     </div>
+
+}}}}}}}}}}})
+}}}}}}}}}}})
+}}}}}}}}}}})
+}}}}}}}}}}})
+}}}}}}}}}}})
+}}}}}}}}}}})
+}}}}}}}}}}})
+}}}}}}}}}}})
+}}}}}}}}}}})
+}}}}}}}}}}})

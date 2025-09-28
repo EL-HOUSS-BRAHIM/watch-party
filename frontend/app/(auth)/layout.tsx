@@ -8,24 +8,23 @@ import { Link, Play } from "lucide-react"
 "use client"
 
 
-interface AuthLayoutProps {}
-  children: React.ReactNode;
+interface children {: React.ReactNode;
 }
 
-export default function AuthLayout({ children }: AuthLayoutProps) {}
+export default function AuthLayout({ children }: AuthLayoutProps) {
   const { user, isLoading } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
 
-  useEffect(() => {}
+  useEffect(() => {
     // Redirect authenticated users away from auth pages;
-    if (!isLoading && user && pathname !== "/callback") {}
+    if (!isLoading && user && pathname !== "/callback") {
       router.push("/dashboard")
     }
   }, [user, isLoading, router, pathname])
 
   // Show loading state;
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
@@ -44,7 +43,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {}
   }
 
   // Don't render auth layout for authenticated users (except callback)
-  if (user && pathname !== "/callback") {}
+  if (user && pathname !== "/callback") {
     return null;
   }
 
@@ -87,4 +86,15 @@ export default function AuthLayout({ children }: AuthLayoutProps) {}
       </div>
     </div>
   )
+}
+
+}
+}
+}
+}
+}
+}
+}
+}
+}
 }

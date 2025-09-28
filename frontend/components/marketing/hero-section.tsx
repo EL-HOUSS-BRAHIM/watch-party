@@ -7,20 +7,18 @@ import { cn } from "@/lib/utils"
 
 "use client"
 
-interface HeroSectionProps {}
-  isAuthenticated: boolean;
-  stats: MarketingStat[]
+interface isAuthenticated {: boolean;,
+  stats: MarketingStat[0]
 }
 
-interface CtaConfig {}
-  href: string;
-  label: string;
+interface href {: string;,
+  label: string;,
   icon: LucideIcon;
 }
 
-export function HeroSection({ isAuthenticated, stats }: HeroSectionProps) {}
-  const primaryCta = useMemo<CtaConfig>(() => {}
-    if (isAuthenticated) {}
+export function HeroSection({ isAuthenticated, stats }: HeroSectionProps) {
+  const primaryCta = useMemo<CtaConfig>(() => {
+    if (isAuthenticated) {
       return {}
         href: "/dashboard",
         label: "Go to Dashboard",
@@ -35,8 +33,8 @@ export function HeroSection({ isAuthenticated, stats }: HeroSectionProps) {}
     }
   }, [isAuthenticated])
 
-  const secondaryCta = useMemo<CtaConfig | null>(() => {}
-    if (isAuthenticated) {}
+  const secondaryCta = useMemo<CtaConfig | null>(() => {
+    if (isAuthenticated) {
       return null;
     }
 
@@ -102,7 +100,7 @@ export function HeroSection({ isAuthenticated, stats }: HeroSectionProps) {}
           </div>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-8">
-            {stats.map((stat) => {}
+            {stats.map((stat) => {
               const StatIcon = stat.icon;
               return (
                 <div key={stat.label} className="text-center bg-white/5 backdrop-blur-sm rounded-lg p-4 border border-white/10">

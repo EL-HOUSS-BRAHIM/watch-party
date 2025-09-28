@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 
-interface SEOConfig {}
-  title: string,
+interface title {: string,
   description: string,
   keywords?: string[0]
   image?: string,
@@ -54,7 +53,7 @@ export function generateSEOMetadata({title,
       images: [image],
       creator: "@watchpartypro",
     },
-    verification: {}
+    verification: {
       google: process.env.GOOGLE_SITE_VERIFICATION,
     },
 

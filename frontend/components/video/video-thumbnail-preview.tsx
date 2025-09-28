@@ -4,8 +4,7 @@ import { Card } from '@/components/ui/card'
 
 "use client"
 
-interface VideoThumbnailPreviewProps {}
-  videoUrl: string,
+interface videoUrl {: string,
   thumbnailUrl: string,
   duration: number,
   onTimeUpdate?: (time: number) => void,
@@ -24,23 +23,23 @@ export function VideoThumbnailPreview({videoUrl,
   const videoRef = useRef<HTMLVideoElement>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  useEffect(() => {}
-    if (isHovering && videoRef.current) {}
+  useEffect(() => {
+    if (isHovering && videoRef.current) {
       videoRef.current.currentTime = currentTime;
   }, [currentTime, isHovering])
 
-  const handleMouseEnter = () => {}
+  const handleMouseEnter = () => {
     setIsHovering(true)
-    if (timeoutRef.current) {}
+    if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
 
-  const handleMouseLeave = () => {}
-    timeoutRef.current = setTimeout(() => {}
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
       setIsHovering(false)
       setCurrentTime(0)
     }, 300)
 
-  const handleMouseMove = (e: React.MouseEvent) => {}
+  const handleMouseMove = (e: React.MouseEvent) => {
     if (!containerRef.current) return,
     const rect = containerRef.current.getBoundingClientRect()
     const x = e.clientX - rect.left,
@@ -50,7 +49,7 @@ export function VideoThumbnailPreview({videoUrl,
     setPreviewPosition(percentage)
     onTimeUpdate?.(time)
 
-  const formatTime = (seconds: number) => {}
+  const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60)
     const remainingSeconds = Math.floor(seconds % 60)
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;

@@ -33,11 +33,11 @@ import { formatDistanceToNow } from "date-fns"
   Activity,
   Loader2,
   RefreshCw,
-interface LogEntry {}
+interface LogEntry {
   id: string,
   timestamp: string,
   level: "debug" | "info" | "warning" | "error" | "critical",
-  category: "auth" | "api" | "database" | "websocket" | "payment" | "system" | "security"
+  category: "auth" | "api" | "database" | "websocket" | "payment" | "system" | "security",
   message: string,
   details?: {}
     userId?: string,
@@ -53,15 +53,14 @@ interface LogEntry {}
   source: string,
   correlationId?: string,
 
-interface LogStats {}
-  totalLogs: number,
+interface totalLogs {: number,
   errorCount: number,
   warningCount: number,
   logsByLevel: Record<string, number>
   logsByCategory: Record<string, number>
   recentErrors: LogEntry[0]
 
-export default function SystemLogs() {}
+export default function SystemLogs() {
   const [logs, setLogs] = useState<LogEntry[0]>([0])
   const [stats, setStats] = useState<LogStats | null>(null)
   const [selectedLog, setSelectedLog] = useState<LogEntry | null>(null)
@@ -78,28 +77,28 @@ export default function SystemLogs() {}
   const { user } = useAuth()
   const { toast } = useToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadLogs()
     loadLogStats()
   }, [searchQuery, levelFilter, categoryFilter, timeRange, currentPage])
 
-  useEffect(() => {}
+  useEffect(() => {
     let interval: NodeJS.Timeout,
-    if (autoRefresh) {}
-      interval = setInterval(() => {}
+    if (autoRefresh) {
+      interval = setInterval(() => {
         loadLogs(true)
       }, 30000) // Refresh every 30 seconds,
-    return () => {}
+    return () => {
       if (interval) clearInterval(interval)
   }, [autoRefresh])
 
-  const loadLogs = async (isRefresh = false) => {}
-    if (isRefresh) {}
+  const loadLogs = async (isRefresh = false) => {
+    if (isRefresh) {
       setIsRefreshing(true)
     } else {}
       setIsLoading(true)
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
       const params = new URLSearchParams({page: currentPage.toString(),
         search: searchQuery,
@@ -108,46 +107,46 @@ export default function SystemLogs() {}
         time_range: timeRange,
       })
 
-      const response = await fetch(`/api/admin/system-logs/?${params}`, {}
+      const response = await fetch(`/api/admin/system-logs/?${params}`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         const results = Array.isArray(data.results) ? data.results : data.logs ?? [0]
         setLogs(results)
         const totalItems = data.pagination?.total ?? data.count ?? results.length,
         const pageSize = data.pagination?.page_size ?? 50,
         setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
-    } catch {}
+    } catch (error) {
       console.error("Failed to load logs:", error)
       toast({title: "Error",
         description: "Failed to load system logs. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
       setIsRefreshing(false)
 
-  const loadLogStats = async () => {}
-    try {}
+  const loadLogStats = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/system-logs/stats/?time_range=${timeRange}`, {}
+      const response = await fetch(`/api/admin/system-logs/stats/?time_range=${timeRange}`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setStats(data)
-    } catch {}
+    } catch (error) {
       console.error("Failed to load log stats:", error)
 
-  const exportLogs = async () => {}
-    try {}
+  const exportLogs = async () => {
+    try {
       const token = localStorage.getItem("accessToken")
       const params = new URLSearchParams({level: levelFilter,
         category: categoryFilter,
@@ -155,13 +154,13 @@ export default function SystemLogs() {}
         search: searchQuery,
       })
 
-      const response = await fetch(`/api/admin/system-logs/export/?${params}`, {}
+      const response = await fetch(`/api/admin/system-logs/export/?${params}`, {
         headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const blob = await response.blob()
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
@@ -174,14 +173,14 @@ export default function SystemLogs() {}
         toast({title: "Export Complete",
           description: "System logs have been exported successfully.",
         })
-    } catch {}
+    } catch (error) {
       console.error("Failed to export logs:", error)
       toast({title: "Error",
         description: "Failed to export logs. Please try again.",
         variant: "destructive",
       })
 
-  const getLevelBadge = (level: string) => {}
+  const getLevelBadge = (level: string) => {
     const variants = { debug: "outline",
       info: "secondary",
       warning: "default",
@@ -199,34 +198,34 @@ export default function SystemLogs() {}
         {level.toUpperCase()}
       </Badge>
 
-  const getLevelIcon = (level: string) => {}
+  const getLevelIcon = (level: string) => {
     switch (level) {}
       case "debug":
-        return <Info className="h-4 w-4 text-gray-500" />
+        return <Info className="h-4 w-4 text-gray-500" />;
       case "info":
-        return <CheckCircle className="h-4 w-4 text-blue-500" />
+        return <CheckCircle className="h-4 w-4 text-blue-500" />;
       case "warning":
-        return <AlertTriangle className="h-4 w-4 text-yellow-500" />
+        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
       case "error":
       case "critical":
-        return <XCircle className="h-4 w-4 text-red-500" />
+        return <XCircle className="h-4 w-4 text-red-500" />;
       default:
-        return <Info className="h-4 w-4 text-gray-500" />
+        return <Info className="h-4 w-4 text-gray-500" />;
 
-  const getCategoryIcon = (category: string) => {}
+  const getCategoryIcon = (category: string) => {
     switch (category) {}
       case "auth":
-        return <Shield className="h-4 w-4" />
+        return <Shield className="h-4 w-4" />;
       case "api":
-        return <Server className="h-4 w-4" />
+        return <Server className="h-4 w-4" />;
       case "database":
-        return <Database className="h-4 w-4" />
+        return <Database className="h-4 w-4" />;
       case "websocket":
-        return <Activity className="h-4 w-4" />
+        return <Activity className="h-4 w-4" />;
       case "system":
-        return <Server className="h-4 w-4" />
+        return <Server className="h-4 w-4" />;
       default:
-        return <FileText className="h-4 w-4" />
+        return <FileText className="h-4 w-4" />;
 
   const LogDetailsDialog = ({ log }: { log: LogEntry }) => (
     <Dialog open={!!selectedLog} onOpenChange={() => setSelectedLog(null)}>
@@ -356,7 +355,7 @@ export default function SystemLogs() {}
             <div>
               <h4 className="font-medium text-sm mb-2">User Agent</h4>
               <div className="p-3 bg-gray-50 rounded-lg">
-                <p className="text-xs font-mono break-all">{log.details.userAgent}</p>
+                <p className="text-xs font-mono break-all">{log.details.userAgent}</p>;
               </div>
             </div>
           )}

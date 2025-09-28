@@ -13,8 +13,7 @@ import { LoadingSpinner } from '@/components/ui/loading'
 
 "use client"
 
-interface BillingAddress {}
-  id?: string,
+interface id {?: string,
   full_name: string,
   company?: string,
   address_line_1: string,
@@ -51,7 +50,7 @@ const US_STATES = [0]
   'Wisconsin', 'Wyoming'
 
 
-export function BillingAddressView() {}
+export function BillingAddressView() {
   const [addresses, setAddresses] = useState<BillingAddress[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [editingAddress, setEditingAddress] = useState<BillingAddress | null>(null)
@@ -60,7 +59,7 @@ export function BillingAddressView() {}
   const { get, post, put, delete: deleteApi } = useApi()
   const { toast } = useToast()
 
-  const [formData, setFormData] = useState<BillingAddress>({}
+  const [formData, setFormData] = useState<BillingAddress>({
     full_name: '',
     company: '',
     address_line_1: '',
@@ -74,35 +73,35 @@ export function BillingAddressView() {}
     tax_id: ''
   })
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchAddresses()
   }, [0])
 
-  const fetchAddresses = useCallback(async () => {}
-    try {}
+  const fetchAddresses = useCallback(async () => {
+    try {
       setIsLoading(true)
       const response = await get('/billing/addresses/')
       setAddresses((response.data as BillingAddress[0]) || [0])
-    } catch {}
+    } catch (error) {
       toast({title: 'Error',
         description: 'Failed to load billing addresses',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
   }, [0])
 
-  const handleSave = useCallback(async () => {}
-    try {}
+  const handleSave = useCallback(async () => {
+    try {
       setIsSaving(true)
       // Basic validation,
-      if (!formData.full_name || !formData.address_line_1 || !formData.city || !formData.state || !formData.postal_code) {}
+      if (!formData.full_name || !formData.address_line_1 || !formData.city || !formData.state || !formData.postal_code) {
         toast({title: 'Validation Error',
           description: 'Please fill in all required fields',
           variant: 'destructive'
         })
 
-      if (editingAddress?.id) {}
+      if (editingAddress?.id) {
         await put(`/billing/addresses/${editingAddress.id}/`, formData)
         toast({title: 'Success',
           description: 'Billing address updated successfully'
@@ -117,43 +116,43 @@ export function BillingAddressView() {}
       setEditingAddress(null)
       setIsAddingNew(false)
       resetForm()
-    } catch {}
+    } catch (error) {
       toast({title: 'Error',
         description: error.response?.data?.message || 'Failed to save billing address',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setIsSaving(false)
   }, [0])
 
-  const handleDelete = async (addressId: string) => {}
+  const handleDelete = async (addressId: string) => {
     if (!confirm('Are you sure you want to delete this billing address?')) return,
-    try {}
+    try {
       await deleteApi(`/billing/addresses/${addressId}/`)
       toast({title: 'Success',
         description: 'Billing address deleted successfully'
       })
       await fetchAddresses()
-    } catch {}
+    } catch (error) {
       toast({title: 'Error',
         description: 'Failed to delete billing address',
         variant: 'destructive'
       })
 
-  const handleSetDefault = async (addressId: string) => {}
-    try {}
+  const handleSetDefault = async (addressId: string) => {
+    try {
       await put(`/billing/addresses/${addressId}/set-default/`)
       toast({title: 'Success',
         description: 'Default billing address updated'
       })
       await fetchAddresses()
-    } catch {}
+    } catch (error) {
       toast({title: 'Error',
         description: 'Failed to update default address',
         variant: 'destructive'
       })
 
-  const resetForm = () => {}
+  const resetForm = () => {
     setFormData({full_name: '',
       company: '',
       address_line_1: '',
@@ -167,22 +166,22 @@ export function BillingAddressView() {}
       tax_id: ''
     })
 
-  const startEdit = (address: BillingAddress) => {}
+  const startEdit = (address: BillingAddress) => {
     setEditingAddress(address)
-    setFormData({ ...address })
+    setFormData(...address })
     setIsAddingNew(false)
 
-  const startAddNew = () => {}
+  const startAddNew = () => {
     setIsAddingNew(true)
     setEditingAddress(null)
     resetForm()
 
-  const cancelEdit = () => {}
+  const cancelEdit = () => {
     setEditingAddress(null)
     setIsAddingNew(false)
     resetForm()
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
         <LoadingSpinner size="lg" />
@@ -224,7 +223,7 @@ export function BillingAddressView() {}
                 <Input,
                   id="full_name"
                   value={formData.full_name}
-                  onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                  onChange={(e) => setFormData(...formData, full_name: e.target.value })}
                   placeholder="John Doe"
                 />
               </div>
@@ -234,7 +233,7 @@ export function BillingAddressView() {}
                 <Input,
                   id="company"
                   value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  onChange={(e) => setFormData(...formData, company: e.target.value })}
                   placeholder="Company Inc."
                 />
               </div>
@@ -245,7 +244,7 @@ export function BillingAddressView() {}
               <Input,
                 id="address_line_1"
                 value={formData.address_line_1}
-                onChange={(e) => setFormData({ ...formData, address_line_1: e.target.value })}
+                onChange={(e) => setFormData(...formData, address_line_1: e.target.value })}
                 placeholder="123 Main Street"
               />
             </div>
@@ -255,7 +254,7 @@ export function BillingAddressView() {}
               <Input,
                 id="address_line_2"
                 value={formData.address_line_2}
-                onChange={(e) => setFormData({ ...formData, address_line_2: e.target.value })}
+                onChange={(e) => setFormData(...formData, address_line_2: e.target.value })}
                 placeholder="Apartment, suite, unit, building, floor, etc."
               />
             </div>
@@ -266,7 +265,7 @@ export function BillingAddressView() {}
                 <Input,
                   id="city"
                   value={formData.city}
-                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                  onChange={(e) => setFormData(...formData, city: e.target.value })}
                   placeholder="New York"
                 />
               </div>
@@ -274,7 +273,7 @@ export function BillingAddressView() {}
               <div className="space-y-2">
                 <Label htmlFor="state">State/Province *</Label>
                 {formData.country === 'US' ? (
-                  <Select value={formData.state} onValueChange={(value) => setFormData({ ...formData, state: value })}>
+                  <Select value={formData.state} onValueChange={(value) => setFormData(...formData, state: value })}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select state" />
                     </SelectTrigger>
@@ -290,7 +289,7 @@ export function BillingAddressView() {}
                   <Input,
                     id="state"
                     value={formData.state}
-                    onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                    onChange={(e) => setFormData(...formData, state: e.target.value })}
                     placeholder="State/Province"
                   />
                 )}
@@ -301,7 +300,7 @@ export function BillingAddressView() {}
                 <Input,
                   id="postal_code"
                   value={formData.postal_code}
-                  onChange={(e) => setFormData({ ...formData, postal_code: e.target.value })}
+                  onChange={(e) => setFormData(...formData, postal_code: e.target.value })}
                   placeholder="10001"
                 />
               </div>
@@ -309,7 +308,7 @@ export function BillingAddressView() {}
 
             <div className="space-y-2">
               <Label htmlFor="country">Country *</Label>
-              <Select value={formData.country} onValueChange={(value) => setFormData({ ...formData, country: value })}>
+              <Select value={formData.country} onValueChange={(value) => setFormData(...formData, country: value })}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -329,7 +328,7 @@ export function BillingAddressView() {}
                 <Switch,
                   id="is_business_address"
                   checked={formData.is_business_address}
-                  onCheckedChange={(checked) => setFormData({ ...formData, is_business_address: checked })}
+                  onCheckedChange={(checked) => setFormData(...formData, is_business_address: checked })}
                 />
                 <Label htmlFor="is_business_address">This is a business address</Label>
               </div>
@@ -340,7 +339,7 @@ export function BillingAddressView() {}
                   <Input,
                     id="tax_id"
                     value={formData.tax_id}
-                    onChange={(e) => setFormData({ ...formData, tax_id: e.target.value })}
+                    onChange={(e) => setFormData(...formData, tax_id: e.target.value })}
                     placeholder="123-45-6789"
                   />
                 </div>
@@ -350,7 +349,7 @@ export function BillingAddressView() {}
                 <Switch,
                   id="is_default"
                   checked={formData.is_default}
-                  onCheckedChange={(checked) => setFormData({ ...formData, is_default: checked })}
+                  onCheckedChange={(checked) => setFormData(...formData, is_default: checked })}
                 />
                 <Label htmlFor="is_default">Set as default billing address</Label>
               </div>

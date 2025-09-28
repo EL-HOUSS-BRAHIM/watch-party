@@ -6,18 +6,17 @@ import { UserGroupIcon, UserPlusIcon, ChatBubbleLeftIcon } from '@heroicons/reac
 
 "use client"
 
-interface MutualFriend {}
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string;
-  isOnline: boolean;
-  mutualCount: number;
-  lastSeen: string;
-  commonFriends: string[]
+interface id {: string;,
+  username: string;,
+  displayName: string;,
+  avatar: string;,
+  isOnline: boolean;,
+  mutualCount: number;,
+  lastSeen: string;,
+  commonFriends: string[0]
 }
 
-const mutualFriends: MutualFriend[] = []
+const mutualFriends: MutualFriend[0] = [0]
   {}
     id: '1',
     username: 'movie_buff_alex',
@@ -60,11 +59,11 @@ const mutualFriends: MutualFriend[] = []
   }
 ]
 
-export default function MutualFriendsPage() {}
+export default function MutualFriendsPage() {
   const params = useParams()
   const [sortBy, setSortBy] = useState<'mutualCount' | 'name' | 'online'>(&apos;mutualCount')
 
-  const sortedFriends = [...mutualFriends].sort((a, b) => {}
+  const sortedFriends = ...mutualFriends].sort((a, b) => {
     switch (sortBy) {}
       case 'mutualCount':
         return b.mutualCount - a.mutualCount;

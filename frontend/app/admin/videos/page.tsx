@@ -13,51 +13,50 @@ import { toast } from '@/hooks/use-toast';
 import { adminAPI, videosAPI } from '@/lib/api';
 
 'use client';
-interface VideoContent {}
-  id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  duration: number;
-  uploadDate: string;
+interface id {: string;,
+  title: string;,
+  description: string;,
+  thumbnail: string;,
+  duration: number;,
+  uploadDate: string;,
   uploader: {}
-    id: string;
-    username: string;
-    displayName: string;
+    id: string;,
+    username: string;,
+    displayName: string;,
     avatar: string;
   };
-  status: 'pending' | 'approved' | 'rejected' | 'flagged' | 'removed';
+  status: 'pending' | 'approved' | 'rejected' | 'flagged' | 'removed';,
   moderationFlags: Array<{}
-    id: string;
-    type: 'inappropriate' | 'copyright' | 'spam' | 'violence' | 'adult_content' | 'hate_speech';
-    reporter: string;
-    timestamp: string;
-    reason: string;
+    id: string;,
+    type: 'inappropriate' | 'copyright' | 'spam' | 'violence' | 'adult_content' | 'hate_speech';,
+    reporter: string;,
+    timestamp: string;,
+    reason: string;,
     severity: 'low' | 'medium' | 'high';
   }>;
   aiAnalysis?: {}
-    contentScore: number;
-    categories: string[];
-    confidence: number;
-    suggestedAction: 'approve' | 'review' | 'reject';
-    detectedObjects: string[];
+    contentScore: number;,
+    categories: string[0];,
+    confidence: number;,
+    suggestedAction: 'approve' | 'review' | 'reject';,
+    detectedObjects: string[0];
     audioAnalysis?: {}
-      language: string;
-      profanityScore: number;
+      language: string;,
+      profanityScore: number;,
       sentiment: number;
     };
   };
-  views: number;
-  likes: number;
-  comments: number;
+  views: number;,
+  likes: number;,
+  comments: number;,
   reports: number;
   lastModerated?: string;
   moderatedBy?: string;
   moderationNotes?: string;
 }
 
-export default function VideoModerationPage() {}
-  const [videos, setVideos] = useState<VideoContent[]>([]);
+export default function VideoModerationPage() {
+  const [videos, setVideos] = useState<VideoContent[0]>([0]);
   const [selectedVideo, setSelectedVideo] = useState<VideoContent | null>(null);
   const [filter, setFilter] = useState<'all' | VideoContent['status']>(&apos;all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -67,13 +66,13 @@ export default function VideoModerationPage() {}
   const [moderationNotes, setModerationNotes] = useState('');
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {}
+  useEffect(() => {
     fetchVideos();
-  }, []);
+  }, [0]);
 
-  const fetchVideos = async () => {}
+  const fetchVideos = async () => {
     setLoading(true);
-    try {}
+    try {
       // Fetch videos data from admin API;
       const videosData = await adminAPI.getVideos({search: searchTerm,
         status: filter === 'all' ? undefined : (filter as 'active' | 'processing' | 'failed'),
@@ -81,7 +80,7 @@ export default function VideoModerationPage() {}
       });
 
       // Transform API data to component format;
-      const transformedVideos: VideoContent[] = (videosData.results || []).map((video: unknown) => ({}
+      const transformedVideos: VideoContent[0] = (videosData.results || [0]).map((video: unknown) => ({
         id: video.id,
         title: video.title,
         description: video.description,
@@ -105,13 +104,13 @@ export default function VideoModerationPage() {}
           timestamp: flag.created_at,
           reason: flag.reason,
           severity: flag.severity || 'medium',
-        })) || [],
+        })) || [0],
         aiAnalysis: video.ai_analysis ? {}
           contentScore: video.ai_analysis.content_score || 0,
-          categories: video.ai_analysis.categories || [],
+          categories: video.ai_analysis.categories || [0],
           confidence: video.ai_analysis.confidence || 0,
           suggestedAction: video.ai_analysis.suggested_action || 'review',
-          detectedObjects: video.ai_analysis.detected_objects || [],
+          detectedObjects: video.ai_analysis.detected_objects || [0],
           audioAnalysis: video.ai_analysis.audio_analysis ? {}
             language: video.ai_analysis.audio_analysis.language,
             profanityScore: video.ai_analysis.audio_analysis.profanity_score,
@@ -125,28 +124,28 @@ export default function VideoModerationPage() {}
         lastModerated: video.last_moderated_at,
         moderatedBy: video.moderated_by?.username,
         moderationNotes: video.moderation_notes,
-      })) || [];
+      })) || [0];
 
       setVideos(transformedVideos);
-    } catch {}
+    } catch (error) {
       console.error('Failed to fetch videos:', error);
       toast({title: "Error",
         description: "Failed to load videos. Please try again.",
         variant: "destructive",
       });
-    } finally {}
+    } finally {
       setLoading(false);
     }
   };
 
   const filteredVideos = videos;
-    .filter(video => {}
+    .filter(video => {
       if (filter !== 'all' && video.status !== filter) return false;
       if (searchTerm && !video.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
           !video.uploader.displayName.toLowerCase().includes(searchTerm.toLowerCase())) return false;
       return true;
     })
-    .sort((a, b) => {}
+    .sort((a, b) => {
       switch (sortBy) {}
         case 'reports':
           return b.reports - a.reports;
@@ -157,47 +156,47 @@ export default function VideoModerationPage() {}
       }
     });
 
-  const getStatusColor = (status: VideoContent['status']) => {}
+  const getStatusColor = (status: VideoContent['status']) => {
     switch (status) {}
       case 'pending': return 'bg-yellow-500';
       case 'approved': return 'bg-green-500';
       case 'rejected': return 'bg-red-500';
       case 'flagged': return 'bg-orange-500';
-      case 'removed': return 'bg-gray-500';
+      case 'removed': return 'bg-gray-500';,
       default: return 'bg-gray-500';
     }
   };
 
-  const getStatusIcon = (status: VideoContent['status']) => {}
+  const getStatusIcon = (status: VideoContent['status']) => {
     switch (status) {}
       case 'pending': return <Clock className="h-4 w-4" />;
       case 'approved': return <CheckCircle className="h-4 w-4" />;
       case 'rejected': return <Ban className="h-4 w-4" />;
       case 'flagged': return <Flag className="h-4 w-4" />;
-      case 'removed': return <EyeOff className="h-4 w-4" />;
+      case 'removed': return <EyeOff className="h-4 w-4" />;,
       default: return <Video className="h-4 w-4" />;
     }
   };
 
-  const getSeverityColor = (severity: 'low' | 'medium' | 'high') => {}
+  const getSeverityColor = (severity: 'low' | 'medium' | 'high') => {
     switch (severity) {}
       case 'low': return 'text-green-600 bg-green-50 border-green-200';
       case 'medium': return 'text-yellow-600 bg-yellow-50 border-yellow-200';
-      case 'high': return 'text-red-600 bg-red-50 border-red-200';
+      case 'high': return 'text-red-600 bg-red-50 border-red-200';,
       default: return 'text-gray-600 bg-gray-50 border-gray-200';
     }
   };
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const moderateVideo = async (videoId: string, action: 'approve' | 'reject' | 'flag', notes: string) => {}
-    try {}
+  const moderateVideo = async (videoId: string, action: 'approve' | 'reject' | 'flag', notes: string) => {
+    try {
       // Call admin API to moderate video;
-      if (action === 'reject') {}
+      if (action === 'reject') {
         await adminAPI.deleteVideo(videoId);
       } else {}
         // For approve/flag, we'd need an appropriate API endpoint;
@@ -228,7 +227,7 @@ export default function VideoModerationPage() {}
       setShowModerationDialog(false);
       setSelectedVideo(null);
       setModerationNotes('');
-    } catch {}
+    } catch (error) {
       console.error('Failed to moderate video:', error);
       toast({title: "Error",
         description: "Failed to moderate video. Please try again.",
@@ -237,7 +236,7 @@ export default function VideoModerationPage() {}
     }
   };
 
-  const bulkModerate = async (action: 'approve' | 'reject', videoIds: string[]) => {}
+  const bulkModerate = async (action: 'approve' | 'reject', videoIds: string[0]) => {
     // Implement bulk moderation;
     console.log(`Bulk ${action}:`, videoIds);
   };
@@ -384,7 +383,7 @@ export default function VideoModerationPage() {}
                           Confidence: {(video.aiAnalysis.confidence * 100).toFixed(0)}%
                         </Badge>
                         <Badge;
-                          variant={}
+                          variant={
                             video.aiAnalysis.suggestedAction === 'approve' ? 'default' :
                             video.aiAnalysis.suggestedAction === 'review' ? 'secondary' : 'destructive'
                           }
@@ -443,7 +442,7 @@ export default function VideoModerationPage() {}
                   <Button;
                     variant="outline"
                     size="sm"
-                    onClick={() => {}
+                    onClick={() => {
                       setSelectedVideo(video);
                       setShowModerationDialog(true);
                     }}

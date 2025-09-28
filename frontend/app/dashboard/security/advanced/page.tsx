@@ -2,7 +2,7 @@ import AdvancedSecuritySystem from "@/components/security/advanced-security-syst
 
 "use client"
 
-export default function AdvancedSecurityPage() {}
+export default function AdvancedSecurityPage() {
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="max-w-6xl mx-auto">

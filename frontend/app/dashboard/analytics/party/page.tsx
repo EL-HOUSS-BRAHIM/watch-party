@@ -26,96 +26,95 @@ import { format, parseISO } from "date-fns"
   AreaChart,
   Area;
 } from "recharts"
-interface PartyAnalytics {}
-  party: {}
-    id: string;
-    title: string;
-    description: string;
-    created_at: string;
-    updated_at: string;
-    status: "upcoming" | "live" | "ended"
+interface party {: {}
+    id: string;,
+    title: string;,
+    description: string;,
+    created_at: string;,
+    updated_at: string;,
+    status: "upcoming" | "live" | "ended",
     host: {}
-      id: string;
-      username: string;
-      display_name: string;
+      id: string;,
+      username: string;,
+      display_name: string;,
       avatar_url: string;
     }
     video: {}
-      title: string;
-      url: string;
-      duration: number;
-      thumbnail: string;
+      title: string;,
+      url: string;,
+      duration: number;,
+      thumbnail: string;,
       platform: string;
     }
     settings: {}
-      is_public: boolean;
-      max_participants: number;
-      auto_start: boolean;
+      is_public: boolean;,
+      max_participants: number;,
+      auto_start: boolean;,
       allow_chat: boolean;
     }
   }
   overview: {}
-    total_participants: number;
-    peak_concurrent: number;
-    total_duration: number;
-    total_messages: number;
-    engagement_rate: number;
-    completion_rate: number;
-    average_watch_time: number;
+    total_participants: number;,
+    peak_concurrent: number;,
+    total_duration: number;,
+    total_messages: number;,
+    engagement_rate: number;,
+    completion_rate: number;,
+    average_watch_time: number;,
     unique_viewers: number;
   }
   participants: Array<{}
-    id: string;
+    id: string;,
     user: {}
-      id: string;
-      username: string;
-      display_name: string;
+      id: string;,
+      username: string;,
+      display_name: string;,
       avatar_url: string;
     }
     joined_at: string;
-    left_at?: string;
-    watch_time: number;
-    messages_sent: number;
-    reactions_sent: number;
-    engagement_score: number;
+    left_at?: string;,
+    watch_time: number;,
+    messages_sent: number;,
+    reactions_sent: number;,
+    engagement_score: number;,
     completion_percentage: number;
   }>
   timeline: Array<{}
-    timestamp: string;
+    timestamp: string;,
     event_type: "join" | "leave" | "play" | "pause" | "seek" | "message" | "reaction"
     user_id?: string;
     data?: Record<string, unknown>
   }>
   engagement: {}
     chat_activity: Array<{}
-      time: string;
-      message_count: number;
+      time: string;,
+      message_count: number;,
       active_users: number;
     }>
     viewer_count: Array<{}
-      time: string;
+      time: string;,
       count: number;
     }>
     reactions: Array<{}
-      type: string;
-      count: number;
+      type: string;,
+      count: number;,
       timestamp: string;
     }>
   }
   demographics: {}
-    by_location: Array<{ country: string; count: number }>
-    by_device: Array<{ device_type: string; count: number }>
-    by_timezone: Array<{ timezone: string; count: number }>
+    by_location: Array<{ country: string; count: number }>,
+    by_device: Array<{ device_type: string; count: number }>,
+    by_timezone: Array<{ timezone: string; count: number }>,
     by_join_time: Array<{ hour: number; count: number }>
   }
-  performance: {}
-    loading_times: Array<{ timestamp: string; duration: number }>
-    error_rates: Array<{ timestamp: string; error_count: number }>
+  performance: {
+    loading_times: Array<{ timestamp: string; duration: number }>,
+    error_rates: Array<{ timestamp: string; error_count: number }>,
     sync_quality: Array<{ timestamp: string; sync_offset: number }>
   }
 }
 
-function PartyAnalyticsContent() {}
+function PartyAnalyticsContent() {
   const searchParams = useSearchParams()
   const partyId = searchParams.get('id')
   const { toast } = useToast()
@@ -125,47 +124,47 @@ function PartyAnalyticsContent() {}
   const [timeRange, setTimeRange] = useState<string>(&quot;all")
   const [activeTab, setActiveTab] = useState("overview")
 
-  const loadPartyAnalytics = useCallback(async () => {}
+  const loadPartyAnalytics = useCallback(async () => {
     if (!partyId) return;
-    try {}
+    try {
       setIsLoading(true)
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/analytics/?timeRange=${timeRange}`, {}
+      const response = await fetch(`/api/parties/${partyId}/analytics/?timeRange=${timeRange}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setAnalytics(data)
       } else {}
         throw new Error("Failed to load analytics")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load party analytics:", error)
       toast({title: "Error",
         description: "Failed to load party analytics.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }, [partyId, timeRange, toast])
 
-  useEffect(() => {}
-    if (partyId) {}
+  useEffect(() => {
+    if (partyId) {
       loadPartyAnalytics()
     }
   }, [partyId, loadPartyAnalytics])
 
-  const exportAnalytics = async () => {}
+  const exportAnalytics = async () => {
     if (!partyId) return;
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/analytics/export/`, {}
+      const response = await fetch(`/api/parties/${partyId}/analytics/export/`, {
         headers: { Authorization: `Bearer ${token}` }
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const blob = await response.blob()
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
@@ -179,7 +178,7 @@ function PartyAnalyticsContent() {}
           description: "Analytics data has been downloaded.",
         })
       }
-    } catch {}
+    } catch (error) {
       console.error("Export failed:", error)
       toast({title: "Export Failed",
         description: "Failed to export analytics data.",
@@ -188,40 +187,40 @@ function PartyAnalyticsContent() {}
     }
   }
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
       case "live":
-        return "bg-green-500"
+        return "bg-green-500";
       case "upcoming":
-        return "bg-blue-500"
+        return "bg-blue-500";
       case "ended":
-        return "bg-gray-500"
+        return "bg-gray-500";
       default:
-        return "bg-gray-500"
+        return "bg-gray-500";
     }
   }
 
-  const getEngagementColor = (score: number) => {}
+  const getEngagementColor = (score: number) => {
     if (score >= 80) return "text-green-600"
     if (score >= 60) return "text-yellow-600"
-    return "text-red-600"
+    return "text-red-600";
   }
 
-  const formatDuration = (seconds: number) => {}
+  const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     const secs = seconds % 60;
-    if (hours > 0) {}
-      return `${hours}h ${minutes}m ${secs}s`
+    if (hours > 0) {
+      return `${hours}h ${minutes}m ${secs}s`;
     }
-    return `${minutes}m ${secs}s`
+    return `${minutes}m ${secs}s`;
   }
 
-  const formatPercentage = (value: number) => {}
-    return `${Math.round(value * 100) / 100}%`
+  const formatPercentage = (value: number) => {
+    return `${Math.round(value * 100) / 100}%`;
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -232,7 +231,7 @@ function PartyAnalyticsContent() {}
     )
   }
 
-  if (!analytics) {}
+  if (!analytics) {
     return (
       <div className="container mx-auto py-8 px-4">
         <Card>
@@ -802,7 +801,7 @@ function PartyAnalyticsContent() {}
   )
 }
 
-export default function PartyAnalyticsPage() {}
+export default function PartyAnalyticsPage() {
   return (
     <Suspense fallback={} />
       <div className="container mx-auto py-8 px-4">

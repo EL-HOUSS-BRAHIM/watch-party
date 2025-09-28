@@ -5,8 +5,7 @@ import { useIntersectionObserver } from "@/lib/performance/lazy-loading"
 
 "use client"
 
-interface LazyImageProps {}
-  src: string;
+interface src {: string;,
   alt: string;
   className?: string;
   placeholder?: string;
@@ -30,15 +29,15 @@ export function LazyImage({src,
     rootMargin: "50px",
   })
 
-  useEffect(() => {}
-    if (hasIntersected && !isLoaded && !hasError) {}
+  useEffect(() => {
+    if (hasIntersected && !isLoaded && !hasError) {
       const img = new Image()
-      img.onload = () => {}
+      img.onload = () => {
         setImageSrc(src)
         setIsLoaded(true)
         onLoad?.()
       }
-      img.onerror = () => {}
+      img.onerror = () => {
         setHasError(true)
         onError?.()
       }

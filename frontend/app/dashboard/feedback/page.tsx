@@ -16,46 +16,45 @@ import { formatDistanceToNow, parseISO } from "date-fns"
 
 "use client"
 
-interface FeedbackItem {}
-  id: string;
-  title: string;
-  description: string;
-  category: "bug" | "feature" | "improvement" | "question" | "complaint" | "compliment" | "other"
-  priority: "low" | "medium" | "high" | "urgent"
-  status: "open" | "in_progress" | "resolved" | "closed" | "duplicate"
+interface id {: string;,
+  title: string;,
+  description: string;,
+  category: "bug" | "feature" | "improvement" | "question" | "complaint" | "compliment" | "other",
+  priority: "low" | "medium" | "high" | "urgent",
+  status: "open" | "in_progress" | "resolved" | "closed" | "duplicate",
   user: {}
-    id: string;
-    username: string;
-    email: string;
+    id: string;,
+    username: string;,
+    email: string;,
     display_name: string;
     avatar?: string;
   }
-  created_at: string;
-  updated_at: string;
+  created_at: string;,
+  updated_at: string;,
   attachments: Array<{}
-    id: string;
-    filename: string;
-    url: string;
-    size: number;
+    id: string;,
+    filename: string;,
+    url: string;,
+    size: number;,
     type: string;
   }>
   responses: Array<{}
-    id: string;
-    message: string;
+    id: string;,
+    message: string;,
     author: {}
-      id: string;
-      username: string;
+      id: string;,
+      username: string;,
       is_staff: boolean;
     }
-    created_at: string;
+    created_at: string;,
     is_internal: boolean;
   }>
   votes: {}
-    upvotes: number;
+    upvotes: number;,
     downvotes: number;
     user_vote?: "up" | "down" | null;
   }
-  tags: string[]
+  tags: string[0],
   is_public: boolean;
   admin_notes?: string;
   resolution_notes?: string;
@@ -72,27 +71,26 @@ const feedbackSchema = z.object({title: z.string().min(5, "Title must be at leas
 const responseSchema = z.object({message: z.string().min(10, "Response must be at least 10 characters").max(1000, "Response too long"),
 })
 
-interface FilterOptions {}
-  search: string;
-  category: string;
-  status: string;
-  priority: string;
-  sortBy: string;
+interface search {: string;,
+  category: string;,
+  status: string;,
+  priority: string;,
+  sortBy: string;,
   showMyFeedback: boolean;
 }
 
-export default function FeedbackPage() {}
+export default function FeedbackPage() {
   const { user } = useAuth()
   const { toast } = useToast()
 
-  const [feedback, setFeedback] = useState<FeedbackItem[]>([])
-  const [filteredFeedback, setFilteredFeedback] = useState<FeedbackItem[]>([])
+  const [feedback, setFeedback] = useState<FeedbackItem[0]>([0])
+  const [filteredFeedback, setFilteredFeedback] = useState<FeedbackItem[0]>([0])
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackItem | null>(null)
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+  const [uploadedFiles, setUploadedFiles] = useState<File[0]>([0])
   const [processingVotes, setProcessingVotes] = useState<Set<string>>(new Set())
-  const [filters, setFilters] = useState<FilterOptions>({}
+  const [filters, setFilters] = useState<FilterOptions>({
     search: "",
     category: "all",
     status: "all",
@@ -101,7 +99,7 @@ export default function FeedbackPage() {}
     showMyFeedback: false;
   })
 
-  const submitForm = useForm<z.infer<typeof feedbackSchema>>({}
+  const submitForm = useForm<z.infer<typeof feedbackSchema>>({
     resolver: zodResolver(feedbackSchema),
     defaultValues: {}
       title: "",
@@ -113,42 +111,42 @@ export default function FeedbackPage() {}
     },
   })
 
-  const responseForm = useForm<z.infer<typeof responseSchema>>({}
+  const responseForm = useForm<z.infer<typeof responseSchema>>({
     resolver: zodResolver(responseSchema),
     defaultValues: {}
       message: "",
     },
   })
 
-  const loadFeedback = useCallback(async () => {}
-    try {}
+  const loadFeedback = useCallback(async () => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/feedback/", {}
+      const response = await fetch("/api/feedback/", {
         headers: { Authorization: `Bearer ${token}` }
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
-        setFeedback(data.results || data.feedback || [])
+        setFeedback(data.results || data.feedback || [0])
       } else {}
         throw new Error("Failed to load feedback")
       }
-    } catch {}
+    } catch (error) {
       console.error("Failed to load feedback:", error)
       toast({title: "Error",
         description: "Failed to load feedback.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }, [toast])
 
-  const filterFeedback = useCallback(() => {}
-    let filtered = [...feedback]
+  const filterFeedback = useCallback(() => {
+    let filtered = ...feedback]
 
     // Search filter;
-    if (filters.search.trim()) {}
+    if (filters.search.trim()) {
       const query = filters.search.toLowerCase()
       filtered = filtered.filter(item =>
         item.title.toLowerCase().includes(query) ||
@@ -158,22 +156,22 @@ export default function FeedbackPage() {}
     }
 
     // Category filter;
-    if (filters.category !== "all") {}
+    if (filters.category !== "all") {
       filtered = filtered.filter(item => item.category === filters.category)
     }
 
     // Status filter;
-    if (filters.status !== "all") {}
+    if (filters.status !== "all") {
       filtered = filtered.filter(item => item.status === filters.status)
     }
 
     // Priority filter;
-    if (filters.priority !== "all") {}
+    if (filters.priority !== "all") {
       filtered = filtered.filter(item => item.priority === filters.priority)
     }
 
     // My feedback filter;
-    if (filters.showMyFeedback) {}
+    if (filters.showMyFeedback) {
       filtered = filtered.filter(item => item.user.id === user?.id)
     }
 
@@ -198,24 +196,24 @@ export default function FeedbackPage() {}
     setFilteredFeedback(filtered)
   }, [feedback, filters, user?.id])
 
-  useEffect(() => {}
+  useEffect(() => {
     loadFeedback()
   }, [loadFeedback])
 
-  useEffect(() => {}
+  useEffect(() => {
     filterFeedback()
   }, [filterFeedback])
 
-  const submitFeedback = async (data: z.infer<typeof feedbackSchema>) => {}
+  const submitFeedback = async (data: z.infer<typeof feedbackSchema>) => {
     setIsSubmitting(true)
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
       const formData = new FormData()
       // Add form fields;
-      Object.entries(data).forEach(([key, value]) => {}
-        if (key === "tags") {}
-          const tags = typeof value === "string" ? value.split(",").map((tag: string) => tag.trim()).filter(Boolean) : []
+      Object.entries(data).forEach(([key, value]) => {
+        if (key === "tags") {
+          const tags = typeof value === "string" ? value.split(",").map((tag: string) => tag.trim()).filter(Boolean) : [0]
           formData.append(key, JSON.stringify(tags))
         } else {}
           formData.append(key, String(value))
@@ -223,11 +221,11 @@ export default function FeedbackPage() {}
       })
 
       // Add files;
-      uploadedFiles.forEach((file, index) => {}
+      uploadedFiles.forEach((file, index) => {
         formData.append(`attachment_${index}`, file)
       })
 
-      const response = await fetch("/api/feedback/", {}
+      const response = await fetch("/api/feedback/", {
         method: "POST",
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -235,11 +233,11 @@ export default function FeedbackPage() {}
         body: formData,
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const newFeedback = await response.json()
         setFeedback(prev => [newFeedback, ...prev])
         setShowSubmitForm(false)
-        setUploadedFiles([])
+        setUploadedFiles([0])
         submitForm.reset()
         toast({title: "Feedback Submitted",
           description: "Thank you for your feedback! We'll review it soon.",
@@ -247,21 +245,21 @@ export default function FeedbackPage() {}
       } else {}
         throw new Error("Failed to submit feedback")
       }
-    } catch {}
+    } catch (error) {
       console.error("Submit feedback error:", error)
       toast({title: "Error",
         description: "Failed to submit feedback.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSubmitting(false)
     }
   }
 
-  const submitResponse = async (feedbackId: string, data: z.infer<typeof responseSchema>) => {}
-    try {}
+  const submitResponse = async (feedbackId: string, data: z.infer<typeof responseSchema>) => {
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/feedback/${feedbackId}/responses/`, {}
+      const response = await fetch(`/api/feedback/${feedbackId}/responses/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -270,18 +268,18 @@ export default function FeedbackPage() {}
         body: JSON.stringify(data),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const newResponse = await response.json()
         setFeedback(prev => 
           prev.map(item => 
             item.id === feedbackId;
-              ? { ...item, responses: [...item.responses, newResponse] }
+              ? ...item, responses: ...item.responses, newResponse] }
               : item;
           )
         )
-        if (selectedFeedback?.id === feedbackId) {}
+        if (selectedFeedback?.id === feedbackId) {
           setSelectedFeedback(prev => 
-            prev ? { ...prev, responses: [...prev.responses, newResponse] } : null;
+            prev ? ...prev, responses: ...prev.responses, newResponse] } : null;
           )
         }
         responseForm.reset()
@@ -291,7 +289,7 @@ export default function FeedbackPage() {}
       } else {}
         throw new Error("Failed to submit response")
       }
-    } catch {}
+    } catch (error) {
       console.error("Submit response error:", error)
       toast({title: "Error",
         description: "Failed to submit response.",
@@ -300,12 +298,12 @@ export default function FeedbackPage() {}
     }
   }
 
-  const voteFeedback = async (feedbackId: string, voteType: "up" | "down") => {}
+  const voteFeedback = async (feedbackId: string, voteType: "up" | "down") => {
     setProcessingVotes(prev => new Set(prev).add(feedbackId))
 
-    try {}
+    try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/feedback/${feedbackId}/vote/`, {}
+      const response = await fetch(`/api/feedback/${feedbackId}/vote/`, {
         method: "POST",
         headers: {}
           "Content-Type": "application/json",
@@ -314,31 +312,31 @@ export default function FeedbackPage() {}
         body: JSON.stringify({ vote: voteType }),
       })
 
-      if (response.ok) {}
+      if (response.ok) {
         const data = await response.json()
         setFeedback(prev => 
           prev.map(item => 
             item.id === feedbackId;
-              ? { ...item, votes: data.votes }
+              ? ...item, votes: data.votes }
               : item;
           )
         )
-        if (selectedFeedback?.id === feedbackId) {}
+        if (selectedFeedback?.id === feedbackId) {
           setSelectedFeedback(prev => 
-            prev ? { ...prev, votes: data.votes } : null;
+            prev ? ...prev, votes: data.votes } : null;
           )
         }
       } else {}
         throw new Error("Failed to vote")
       }
-    } catch {}
+    } catch (error) {
       console.error("Vote error:", error)
       toast({title: "Error",
         description: "Failed to submit vote.",
         variant: "destructive",
       })
-    } finally {}
-      setProcessingVotes(prev => {}
+    } finally {
+      setProcessingVotes(prev => {
         const newSet = new Set(prev)
         newSet.delete(feedbackId)
         return newSet;
@@ -346,93 +344,93 @@ export default function FeedbackPage() {}
     }
   }
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {}
-    const files = Array.from(event.target.files || [])
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || [0])
     const validFiles = files.filter(file => file.size <= 10 * 1024 * 1024) // 10MB limit;
-    if (validFiles.length !== files.length) {}
+    if (validFiles.length !== files.length) {
       toast({title: "File Size Limit",
         description: "Some files were skipped. Maximum file size is 10MB.",
         variant: "destructive",
       })
     }
-    setUploadedFiles(prev => [...prev, ...validFiles].slice(0, 5)) // Max 5 files;
+    setUploadedFiles(prev => ...prev, ...validFiles].slice(0, 5)) // Max 5 files;
   }
 
-  const removeFile = (index: number) => {}
+  const removeFile = (index: number) => {
     setUploadedFiles(prev => prev.filter((_, i) => i !== index))
   }
 
-  const getCategoryIcon = (category: string) => {}
+  const getCategoryIcon = (category: string) => {
     switch (category) {}
       case "bug":
-        return <Bug className="h-4 w-4 text-red-600" />
+        return <Bug className="h-4 w-4 text-red-600" />;
       case "feature":
-        return <Lightbulb className="h-4 w-4 text-blue-600" />
+        return <Lightbulb className="h-4 w-4 text-blue-600" />;
       case "improvement":
-        return <TrendingUp className="h-4 w-4 text-green-600" />
+        return <TrendingUp className="h-4 w-4 text-green-600" />;
       case "question":
-        return <MessageCircle className="h-4 w-4 text-purple-600" />
+        return <MessageCircle className="h-4 w-4 text-purple-600" />;
       case "complaint":
-        return <AlertTriangle className="h-4 w-4 text-orange-600" />
+        return <AlertTriangle className="h-4 w-4 text-orange-600" />;
       case "compliment":
-        return <Heart className="h-4 w-4 text-pink-600" />
+        return <Heart className="h-4 w-4 text-pink-600" />;
       default:
-        return <FileText className="h-4 w-4 text-gray-600" />
+        return <FileText className="h-4 w-4 text-gray-600" />;
     }
   }
 
-  const getCategoryColor = (category: string) => {}
+  const getCategoryColor = (category: string) => {
     switch (category) {}
       case "bug":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       case "feature":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-100 text-blue-800";
       case "improvement":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       case "question":
-        return "bg-purple-100 text-purple-800"
+        return "bg-purple-100 text-purple-800";
       case "complaint":
-        return "bg-orange-100 text-orange-800"
+        return "bg-orange-100 text-orange-800";
       case "compliment":
-        return "bg-pink-100 text-pink-800"
+        return "bg-pink-100 text-pink-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
   }
 
-  const getStatusColor = (status: string) => {}
+  const getStatusColor = (status: string) => {
     switch (status) {}
       case "open":
-        return "bg-blue-100 text-blue-800"
+        return "bg-blue-100 text-blue-800";
       case "in_progress":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-100 text-yellow-800";
       case "resolved":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       case "closed":
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
       case "duplicate":
-        return "bg-purple-100 text-purple-800"
+        return "bg-purple-100 text-purple-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
   }
 
-  const getPriorityColor = (priority: string) => {}
+  const getPriorityColor = (priority: string) => {
     switch (priority) {}
       case "urgent":
-        return "bg-red-100 text-red-800"
+        return "bg-red-100 text-red-800";
       case "high":
-        return "bg-orange-100 text-orange-800"
+        return "bg-orange-100 text-orange-800";
       case "medium":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-100 text-yellow-800";
       case "low":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       default:
-        return "bg-gray-100 text-gray-800"
+        return "bg-gray-100 text-gray-800";
     }
   }
 
-  if (isLoading) {}
+  if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
@@ -479,7 +477,7 @@ export default function FeedbackPage() {}
                       <Input;
                         placeholder="Search feedback..."
                         value={filters.search}
-                        onChange={(e) => setFilters(prev => ({ ...prev, search: e.target.value }))}
+                        onChange={(e) => setFilters(prev => (...prev, search: e.target.value }))}
                         className="pl-10"
                       />
                     </div>
@@ -489,7 +487,7 @@ export default function FeedbackPage() {}
                   <div className="flex gap-2">
                     <Select;
                       value={filters.category}
-                      onValueChange={(value) => setFilters(prev => ({ ...prev, category: value }))}
+                      onValueChange={(value) => setFilters(prev => (...prev, category: value }))}
                     >
                       <SelectTrigger className="w-36">
                         <SelectValue />
@@ -508,7 +506,7 @@ export default function FeedbackPage() {}
 
                     <Select;
                       value={filters.status}
-                      onValueChange={(value) => setFilters(prev => ({ ...prev, status: value }))}
+                      onValueChange={(value) => setFilters(prev => (...prev, status: value }))}
                     >
                       <SelectTrigger className="w-32">
                         <SelectValue />
@@ -524,7 +522,7 @@ export default function FeedbackPage() {}
 
                     <Select;
                       value={filters.sortBy}
-                      onValueChange={(value) => setFilters(prev => ({ ...prev, sortBy: value }))}
+                      onValueChange={(value) => setFilters(prev => (...prev, sortBy: value }))}
                     >
                       <SelectTrigger className="w-32">
                         <SelectValue />
@@ -540,7 +538,7 @@ export default function FeedbackPage() {}
                     <Button;
                       variant={filters.showMyFeedback ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setFilters(prev => ({ ...prev, showMyFeedback: !prev.showMyFeedback }))}
+                      onClick={() => setFilters(prev => (...prev, showMyFeedback: !prev.showMyFeedback }))}
                     >
                       <User className="h-4 w-4 mr-2" />
                       My Feedback;
@@ -614,7 +612,7 @@ export default function FeedbackPage() {}
                                 <Button;
                                   variant="ghost"
                                   size="sm"
-                                  onClick={(e) => {}
+                                  onClick={(e) => {
                                     e.stopPropagation()
                                     voteFeedback(item.id, "up")
                                   }}
@@ -627,7 +625,7 @@ export default function FeedbackPage() {}
                                 <Button;
                                   variant="ghost"
                                   size="sm"
-                                  onClick={(e) => {}
+                                  onClick={(e) => {
                                     e.stopPropagation()
                                     voteFeedback(item.id, "down")
                                   }}
@@ -738,7 +736,7 @@ export default function FeedbackPage() {}
                   <div>
                     <label className="text-sm font-medium mb-2 block">Title *</label>
                     <Input;
-                      {...submitForm.register("title")}
+                      ...submitForm.register("title")}
                       placeholder="Brief summary of your feedback..."
                     />
                     {submitForm.formState.errors.title && (
@@ -749,7 +747,7 @@ export default function FeedbackPage() {}
                   <div>
                     <label className="text-sm font-medium mb-2 block">Description *</label>
                     <Textarea;
-                      {...submitForm.register("description")}
+                      ...submitForm.register("description")}
                       placeholder="Provide detailed information about your feedback. For bugs, include steps to reproduce the issue..."
                       rows={6}
                     />
@@ -761,7 +759,7 @@ export default function FeedbackPage() {}
                   <div>
                     <label className="text-sm font-medium mb-2 block">Tags (comma-separated)</label>
                     <Input;
-                      {...submitForm.register("tags")}
+                      ...submitForm.register("tags")}
                       placeholder="ui, mobile, performance, accessibility..."
                     />
                   </div>
@@ -823,7 +821,7 @@ export default function FeedbackPage() {}
                     <input;
                       type="checkbox"
                       id="is_public"
-                      {...submitForm.register("is_public")}
+                      ...submitForm.register("is_public")}
                       className="rounded"
                     />
                     <label htmlFor="is_public" className="text-sm">
@@ -931,7 +929,7 @@ export default function FeedbackPage() {}
                   {/* Add Response Form */}
                   <form onSubmit={responseForm.handleSubmit((data) => submitResponse(selectedFeedback.id, data))}>
                     <Textarea;
-                      {...responseForm.register("message")}
+                      ...responseForm.register("message")}
                       placeholder="Add your response..."
                       rows={3}
                       className="mb-2"

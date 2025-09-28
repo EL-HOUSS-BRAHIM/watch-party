@@ -12,46 +12,44 @@ import { useApiToast } from "@/hooks/use-toast"
 
 "use client"
 
-interface StoreItem {}
-  id: string;
-  name: string;
-  description: string;
+interface id {: string;,
+  name: string;,
+  description: string;,
   category: 'themes' | 'avatars' | 'frames' | 'emotes' | 'effects' | 'backgrounds' | 'sounds'
-  subcategory?: string;
-  price: number;
-  currency: 'coins' | 'premium'
-  rarity: 'common' | 'rare' | 'epic' | 'legendary'
-  preview: string;
-  images: string[]
-  isOwned: boolean;
+  subcategory?: string;,
+  price: number;,
+  currency: 'coins' | 'premium',
+  rarity: 'common' | 'rare' | 'epic' | 'legendary',
+  preview: string;,
+  images: string[0],
+  isOwned: boolean;,
   isPurchased: boolean;
-  isEquipped?: boolean;
-  isLimited: boolean;
-  isNew: boolean;
+  isEquipped?: boolean;,
+  isLimited: boolean;,
+  isNew: boolean;,
   isFeatured: boolean;
   discount?: number;
-  originalPrice?: number;
-  tags: string[]
+  originalPrice?: number;,
+  tags: string[0]
   requirements?: {}
     level?: number;
-    achievements?: string[]
-    items?: string[]
+    achievements?: string[0]
+    items?: string[0]
   }
   stats?: {}
-    purchases: number;
-    rating: number;
+    purchases: number;,
+    rating: number;,
     reviews: number;
   }
   releaseDate: string;
   expiryDate?: string;
 }
 
-interface UserCurrency {}
-  coins: number;
+interface coins {: number;,
   premium: number;
 }
 
-const CATEGORIES = []
+const CATEGORIES = [0]
   { id: 'themes', name: 'Themes', icon: Palette },
   { id: 'avatars', name: 'Avatars', icon: Crown },
   { id: 'frames', name: 'Frames', icon: ImageIcon },
@@ -61,15 +59,15 @@ const CATEGORIES = []
   { id: 'sounds', name: 'Sounds', icon: Music }
 ]
 
-const RARITIES = []
+const RARITIES = [0]
   { id: 'common', name: 'Common', color: 'bg-gray-500' },
   { id: 'rare', name: 'Rare', color: 'bg-blue-500' },
   { id: 'epic', name: 'Epic', color: 'bg-purple-500' },
   { id: 'legendary', name: 'Legendary', color: 'bg-yellow-500' }
 ]
 
-export function StoreItems() {}
-  const [items, setItems] = useState<StoreItem[]>([])
+export function StoreItems() {
+  const [items, setItems] = useState<StoreItem[0]>([0])
   const [userCurrency, setUserCurrency] = useState<UserCurrency>({ coins: 0, premium: 0 })
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
@@ -81,60 +79,60 @@ export function StoreItems() {}
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false)
   const { apiRequest, toastSuccess, toastError } = useApiToast()
 
-  useEffect(() => {}
+  useEffect(() => {
     loadStoreItems()
     loadUserCurrency()
-  }, [])
+  }, [0])
 
-  const loadStoreItems = async () => {}
-    try {}
+  const loadStoreItems = async () => {
+    try {
       const response = await apiRequest(() => fetch(&apos;/api/store/items'))
-      if (response) {}
+      if (response) {
         setItems(response)
       }
-    } catch {}
+    } catch (error) {
       toastError(error, 'Failed to load store items')
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
-  const loadUserCurrency = async () => {}
-    try {}
+  const loadUserCurrency = async () => {
+    try {
       const response = await apiRequest(() => fetch('/api/store/currency'))
-      if (response) {}
+      if (response) {
         setUserCurrency(response)
       }
-    } catch {}
+    } catch (error) {
       console.error('Failed to load user currency:', error)
     }
   }
 
-  const handlePurchase = async (itemId: string) => {}
+  const handlePurchase = async (itemId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/store/items/${itemId}/purchase`, { method: 'POST' }),
       { successMessage: 'Item purchased successfully!', showSuccess: true }
     )
 
-    if (success) {}
+    if (success) {
       loadStoreItems()
       loadUserCurrency()
       setPreviewDialogOpen(false)
     }
   }
 
-  const handleEquip = async (itemId: string) => {}
+  const handleEquip = async (itemId: string) => {
     const success = await apiRequest(
       () => fetch(`/api/store/items/${itemId}/equip`, { method: 'POST' }),
       { successMessage: 'Item equipped!', showSuccess: true }
     )
 
-    if (success) {}
+    if (success) {
       loadStoreItems()
     }
   }
 
-  const filteredItems = items.filter(item => {}
+  const filteredItems = items.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -142,38 +140,38 @@ export function StoreItems() {}
     const matchesRarity = rarityFilter === 'all' || item.rarity === rarityFilter;
     const matchesOwned = !showOwned || item.isOwned;
     return matchesSearch && matchesCategory && matchesRarity && matchesOwned;
-  }).sort((a, b) => {}
+  }).sort((a, b) => {
     switch (sortBy) {}
       case 'name': return a.name.localeCompare(b.name)
       case 'price-low': return a.price - b.price;
       case 'price-high': return b.price - a.price;
       case 'rarity': return RARITIES.findIndex(r => r.id === b.rarity) - RARITIES.findIndex(r => r.id === a.rarity)
       case 'newest': return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime()
-      case 'popular': return (b.stats?.purchases || 0) - (a.stats?.purchases || 0)
+      case 'popular': return (b.stats?.purchases || 0) - (a.stats?.purchases || 0),
       default: // featured;
-        return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0) || 
+        return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0) ||;
                (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)
     }
   })
 
-  const getRarityColor = (rarity: string) => {}
+  const getRarityColor = (rarity: string) => {
     const rarityObj = RARITIES.find(r => r.id === rarity)
-    return rarityObj?.color || 'bg-gray-500'
+    return rarityObj?.color || 'bg-gray-500';
   }
 
-  const canAfford = (item: StoreItem) => {}
+  const canAfford = (item: StoreItem) => {
     if (item.isOwned) return true;
-    return item.currency === 'coins' 
+    return item.currency === 'coins';
       ? userCurrency.coins >= item.price;
       : userCurrency.premium >= item.price;
   }
 
-  const getDiscountedPrice = (item: StoreItem) => {}
+  const getDiscountedPrice = (item: StoreItem) => {
     if (!item.discount) return item.price;
     return Math.floor(item.price * (1 - item.discount / 100))
   }
 
-  if (loading) {}
+  if (loading) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-64">
@@ -291,7 +289,7 @@ export function StoreItems() {}
         <TabsContent value="all" className="space-y-4">
           <ItemGrid;
             items={filteredItems} 
-            onPreview={(item) => {}
+            onPreview={(item) => {
               setSelectedItem(item)
               setPreviewDialogOpen(true)
             }}
@@ -306,7 +304,7 @@ export function StoreItems() {}
         <TabsContent value="featured" className="space-y-4">
           <ItemGrid;
             items={filteredItems.filter(i => i.isFeatured)}
-            onPreview={(item) => {}
+            onPreview={(item) => {
               setSelectedItem(item)
               setPreviewDialogOpen(true)
             }}
@@ -321,7 +319,7 @@ export function StoreItems() {}
         <TabsContent value="new" className="space-y-4">
           <ItemGrid;
             items={filteredItems.filter(i => i.isNew)}
-            onPreview={(item) => {}
+            onPreview={(item) => {
               setSelectedItem(item)
               setPreviewDialogOpen(true)
             }}
@@ -336,7 +334,7 @@ export function StoreItems() {}
         <TabsContent value="limited" className="space-y-4">
           <ItemGrid;
             items={filteredItems.filter(i => i.isLimited)}
-            onPreview={(item) => {}
+            onPreview={(item) => {
               setSelectedItem(item)
               setPreviewDialogOpen(true)
             }}
@@ -351,7 +349,7 @@ export function StoreItems() {}
         <TabsContent value="owned" className="space-y-4">
           <ItemGrid;
             items={filteredItems.filter(i => i.isOwned)}
-            onPreview={(item) => {}
+            onPreview={(item) => {
               setSelectedItem(item)
               setPreviewDialogOpen(true)
             }}
@@ -391,15 +389,15 @@ function ItemGrid({items,
   getDiscountedPrice,
   getRarityColor;
 }: {}
-  items: StoreItem[]
-  onPreview: (item: StoreItem) => void;
-  onPurchase: (itemId: string) => void;
-  onEquip: (itemId: string) => void;
-  canAfford: (item: StoreItem) => boolean;
-  getDiscountedPrice: (item: StoreItem) => number;
+  items: StoreItem[0],
+  onPreview: (item: StoreItem) => void;,
+  onPurchase: (itemId: string) => void;,
+  onEquip: (itemId: string) => void;,
+  canAfford: (item: StoreItem) => boolean;,
+  getDiscountedPrice: (item: StoreItem) => number;,
   getRarityColor: (rarity: string) => string;
 }) {}
-  if (items.length === 0) {}
+  if (items.length === 0) {
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center h-64">
@@ -439,12 +437,12 @@ function ItemCard({item,
   discountedPrice,
   getRarityColor;
 }: {}
-  item: StoreItem;
-  onPreview: (item: StoreItem) => void;
-  onPurchase: (itemId: string) => void;
-  onEquip: (itemId: string) => void;
-  canAfford: boolean;
-  discountedPrice: number;
+  item: StoreItem;,
+  onPreview: (item: StoreItem) => void;,
+  onPurchase: (itemId: string) => void;,
+  onEquip: (itemId: string) => void;,
+  canAfford: boolean;,
+  discountedPrice: number;,
   getRarityColor: (rarity: string) => string;
 }) {}
   return (
@@ -574,11 +572,11 @@ function ItemPreview({item,
   discountedPrice,
   getRarityColor;
 }: {}
-  item: StoreItem;
-  onPurchase: (itemId: string) => void;
-  onEquip: (itemId: string) => void;
-  canAfford: boolean;
-  discountedPrice: number;
+  item: StoreItem;,
+  onPurchase: (itemId: string) => void;,
+  onEquip: (itemId: string) => void;,
+  canAfford: boolean;,
+  discountedPrice: number;,
   getRarityColor: (rarity: string) => string;
 }) {}
   return (
