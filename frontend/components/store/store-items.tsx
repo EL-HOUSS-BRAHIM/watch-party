@@ -1,3 +1,5 @@
+"use client"
+
 import { Eye, Filter, Gift, Search, ShoppingCart, Star, User } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import Image from "next/image"
@@ -10,44 +12,43 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { useApiToast } from "@/hooks/use-toast"
 
-'use client'
 interface StoreItem {}
-  id: string;
-  name: string;
-  description: string;
+  id: string
+  name: string
+  description: string
   category: 'themes' | 'avatars' | 'frames' | 'emotes' | 'effects' | 'backgrounds' | 'sounds'
-  subcategory?: string;
-  price: number;
+  subcategory?: string
+  price: number
   currency: 'coins' | 'premium'
   rarity: 'common' | 'rare' | 'epic' | 'legendary'
-  preview: string;
+  preview: string
   images: string[]
-  isOwned: boolean;
-  isPurchased: boolean;
-  isEquipped?: boolean;
-  isLimited: boolean;
-  isNew: boolean;
-  isFeatured: boolean;
-  discount?: number;
-  originalPrice?: number;
+  isOwned: boolean
+  isPurchased: boolean
+  isEquipped?: boolean
+  isLimited: boolean
+  isNew: boolean
+  isFeatured: boolean
+  discount?: number
+  originalPrice?: number
   tags: string[]
   requirements?: {}
-    level?: number;
+    level?: number
     achievements?: string[]
     items?: string[]
   }
   stats?: {}
-    purchases: number;
-    rating: number;
-    reviews: number;
+    purchases: number
+    rating: number
+    reviews: number
   }
-  releaseDate: string;
-  expiryDate?: string;
+  releaseDate: string
+  expiryDate?: string
 }
 
 interface UserCurrency {}
-  coins: number;
-  premium: number;
+  coins: number
+  premium: number
 }
 
 const CATEGORIES = []
@@ -91,9 +92,9 @@ export function StoreItems() {
       if (response) {
         setItems(response)
       }
-    } } catch {
+    } catch (err) {
       toastError(error, 'Failed to load store items')
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -104,7 +105,7 @@ export function StoreItems() {
       if (response) {
         setUserCurrency(response)
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to load user currency:', error)
     }
   }
@@ -137,19 +138,19 @@ export function StoreItems() {
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-    const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
-    const matchesRarity = rarityFilter === 'all' || item.rarity === rarityFilter;
-    const matchesOwned = !showOwned || item.isOwned;
-    return matchesSearch && matchesCategory && matchesRarity && matchesOwned;
+    const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter
+    const matchesRarity = rarityFilter === 'all' || item.rarity === rarityFilter
+    const matchesOwned = !showOwned || item.isOwned
+    return matchesSearch && matchesCategory && matchesRarity && matchesOwned
   }).sort((a, b) => {}
     switch (sortBy) {
       case 'name': return a.name.localeCompare(b.name)
-      case 'price-low': return a.price - b.price;
-      case 'price-high': return b.price - a.price;
+      case 'price-low': return a.price - b.price
+      case 'price-high': return b.price - a.price
       case 'rarity': return RARITIES.findIndex(r => r.id === b.rarity) - RARITIES.findIndex(r => r.id === a.rarity)
       case 'newest': return new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime()
       case 'popular': return (b.stats?.purchases || 0) - (a.stats?.purchases || 0)
-      default: // featured;
+      default: // featured
         return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0) || 
                (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)
     }
@@ -161,14 +162,14 @@ export function StoreItems() {
   }
 
   const canAfford = (item: StoreItem) => {}
-    if (item.isOwned) return true;
+    if (item.isOwned) return true
     return item.currency === 'coins' 
-      ? userCurrency.coins >= item.price;
-      : userCurrency.premium >= item.price;
+      ? userCurrency.coins >= item.price
+      : userCurrency.premium >= item.price
   }
 
   const getDiscountedPrice = (item: StoreItem) => {}
-    if (!item.discount) return item.price;
+    if (!item.discount) return item.price
     return Math.floor(item.price * (1 - item.discount / 100))
   }
 
@@ -200,7 +201,7 @@ export function StoreItems() {
         </div>
         <Button variant="outline">
           <Gift className="h-4 w-4 mr-2" />
-          Get More;
+          Get More
         </Button>
       </div>
 
@@ -216,7 +217,7 @@ export function StoreItems() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input;
+              <Input
                 placeholder="Search items..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -288,7 +289,7 @@ export function StoreItems() {
         </TabsList>
 
         <TabsContent value="all" className="space-y-4">
-          <ItemGrid;
+          <ItemGrid
             items={filteredItems} 
             onPreview={(item) => {}
               setSelectedItem(item)
@@ -303,7 +304,7 @@ export function StoreItems() {
         </TabsContent>
 
         <TabsContent value="featured" className="space-y-4">
-          <ItemGrid;
+          <ItemGrid
             items={filteredItems.filter(i => i.isFeatured)}
             onPreview={(item) => {}
               setSelectedItem(item)
@@ -318,7 +319,7 @@ export function StoreItems() {
         </TabsContent>
 
         <TabsContent value="new" className="space-y-4">
-          <ItemGrid;
+          <ItemGrid
             items={filteredItems.filter(i => i.isNew)}
             onPreview={(item) => {}
               setSelectedItem(item)
@@ -333,7 +334,7 @@ export function StoreItems() {
         </TabsContent>
 
         <TabsContent value="limited" className="space-y-4">
-          <ItemGrid;
+          <ItemGrid
             items={filteredItems.filter(i => i.isLimited)}
             onPreview={(item) => {}
               setSelectedItem(item)
@@ -348,7 +349,7 @@ export function StoreItems() {
         </TabsContent>
 
         <TabsContent value="owned" className="space-y-4">
-          <ItemGrid;
+          <ItemGrid
             items={filteredItems.filter(i => i.isOwned)}
             onPreview={(item) => {}
               setSelectedItem(item)
@@ -367,7 +368,7 @@ export function StoreItems() {
       <Dialog open={previewDialogOpen} onOpenChange={setPreviewDialogOpen}>
         <DialogContent className="max-w-2xl">
           {selectedItem && (
-            <ItemPreview;
+            <ItemPreview
               item={selectedItem}
               onPurchase={handlePurchase}
               onEquip={handleEquip}
@@ -382,22 +383,21 @@ export function StoreItems() {
   )
 }
 
-function ItemGrid({}
-  items,
+function ItemGrid({items,
   onPreview,
   onPurchase,
   onEquip,
   canAfford,
   getDiscountedPrice,
-  getRarityColor;
+  getRarityColor
 }: {}
   items: StoreItem[]
-  onPreview: (item: StoreItem) => void;
-  onPurchase: (itemId: string) => void;
-  onEquip: (itemId: string) => void;
-  canAfford: (item: StoreItem) => boolean;
-  getDiscountedPrice: (item: StoreItem) => number;
-  getRarityColor: (rarity: string) => string;
+  onPreview: (item: StoreItem) => void
+  onPurchase: (itemId: string) => void
+  onEquip: (itemId: string) => void
+  canAfford: (item: StoreItem) => boolean
+  getDiscountedPrice: (item: StoreItem) => number
+  getRarityColor: (rarity: string) => string
 }) {}
   if (items.length === 0) {
     return (
@@ -416,7 +416,7 @@ function ItemGrid({}
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {items.map((item) => (
-        <ItemCard;
+        <ItemCard
           key={item.id}
           item={item}
           onPreview={onPreview}
@@ -431,22 +431,21 @@ function ItemGrid({}
   )
 }
 
-function ItemCard({}
-  item,
+function ItemCard({item,
   onPreview,
   onPurchase,
   onEquip,
   canAfford,
   discountedPrice,
-  getRarityColor;
+  getRarityColor
 }: {}
-  item: StoreItem;
-  onPreview: (item: StoreItem) => void;
-  onPurchase: (itemId: string) => void;
-  onEquip: (itemId: string) => void;
-  canAfford: boolean;
-  discountedPrice: number;
-  getRarityColor: (rarity: string) => string;
+  item: StoreItem
+  onPreview: (item: StoreItem) => void
+  onPurchase: (itemId: string) => void
+  onEquip: (itemId: string) => void
+  canAfford: boolean
+  discountedPrice: number
+  getRarityColor: (rarity: string) => string
 }) {}
   return (
     <Card className="relative overflow-hidden group hover:shadow-lg transition-all">
@@ -470,20 +469,20 @@ function ItemCard({}
 
       <CardHeader className="pb-2">
         <div className="aspect-square bg-muted rounded-lg mb-3 relative overflow-hidden">
-          <img;
+          <img
             src={item.preview} 
             alt={item.name}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
-            <Button;
+            <Button
               variant="secondary"
               size="sm"
               onClick={() => onPreview(item)}
               className="opacity-0 group-hover:opacity-100 transition-opacity"
             >
               <Eye className="h-4 w-4 mr-2" />
-              Preview;
+              Preview
             </Button>
           </div>
         </div>
@@ -534,7 +533,7 @@ function ItemCard({}
         <div className="space-y-2">
           {item.isOwned ? (
             <div className="flex space-x-2">
-              <Button;
+              <Button
                 size="sm"
                 variant={item.isEquipped ? "default" : "outline"}
                 onClick={() => onEquip(item.id)}
@@ -543,7 +542,7 @@ function ItemCard({}
               >
                 {item.isEquipped ? 'Equipped' : 'Equip'}
               </Button>
-              <Button;
+              <Button
                 size="sm"
                 variant="outline"
                 onClick={() => onPreview(item)}
@@ -552,7 +551,7 @@ function ItemCard({}
               </Button>
             </div>
           ) : (
-            <Button;
+            <Button
               size="sm"
               onClick={() => onPurchase(item.id)}
               disabled={!canAfford}
@@ -568,20 +567,19 @@ function ItemCard({}
   )
 }
 
-function ItemPreview({}
-  item,
+function ItemPreview({item,
   onPurchase,
   onEquip,
   canAfford,
   discountedPrice,
-  getRarityColor;
+  getRarityColor
 }: {}
-  item: StoreItem;
-  onPurchase: (itemId: string) => void;
-  onEquip: (itemId: string) => void;
-  canAfford: boolean;
-  discountedPrice: number;
-  getRarityColor: (rarity: string) => string;
+  item: StoreItem
+  onPurchase: (itemId: string) => void
+  onEquip: (itemId: string) => void
+  canAfford: boolean
+  discountedPrice: number
+  getRarityColor: (rarity: string) => string
 }) {}
   return (
     <div className="space-y-6">
@@ -597,7 +595,7 @@ function ItemPreview({}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-4">
           <div className="aspect-square bg-muted rounded-lg overflow-hidden">
-            <img;
+            <img
               src={item.preview} 
               alt={item.name}
               className="w-full h-full object-cover"
@@ -679,7 +677,7 @@ function ItemPreview({}
           <div className="space-y-2 pt-4">
             {item.isOwned ? (
               <div className="flex space-x-2">
-                <Button;
+                <Button
                   onClick={() => onEquip(item.id)}
                   disabled={item.isEquipped}
                   className="flex-1"
@@ -688,7 +686,7 @@ function ItemPreview({}
                 </Button>
               </div>
             ) : (
-              <Button;
+              <Button
                 onClick={() => onPurchase(item.id)}
                 disabled={!canAfford}
                 className="w-full"

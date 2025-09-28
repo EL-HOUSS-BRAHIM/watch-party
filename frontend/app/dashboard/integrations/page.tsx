@@ -1,6 +1,7 @@
+"use client"
+
 import IntegrationAPISystem from "@/components/integrations/integration-api-system"
 
-"use client"
 
 export default function IntegrationsPage() {
   return (

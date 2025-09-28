@@ -1,7 +1,9 @@
+"use client"
+
 import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import {}
+
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Bell, BellOff, Check, X } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
@@ -10,13 +12,12 @@ import { NotificationsAPI } from "@/lib/api/notifications"
 import type { Notification } from "@/lib/api/types"
 import { cn } from "@/lib/utils"
 
-"use client"
 
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-// Initialize API instance directly;
+// Initialize API instance directly
 const notificationsAPI = new NotificationsAPI()
 
 export function NotificationBell() {
@@ -25,17 +26,17 @@ export function NotificationBell() {
   const [isLoading, setIsLoading] = useState(true)
   const { user } = useAuth()
 
-  // Load notifications;
+  // Load notifications
   useEffect(() => {
     const loadNotifications = async () => {
-      if (!user) return;
+      if (!user) return
       try {
         setIsLoading(true)
         const data = await notificationsAPI.getNotifications()
         setNotifications(data.results || [])
-      } } catch {
+      } catch (err) {
         console.error("Failed to load notifications:", error)
-      } finally {}
+      } finally {
         setIsLoading(false)
       }
     }
@@ -45,41 +46,41 @@ export function NotificationBell() {
     }
   }, [user])
 
-  // Mark notification as read;
+  // Mark notification as read
   const markAsRead = async (notificationId: string) => {}
     try {
       await notificationsAPI.markAsRead(notificationId)
       setNotifications(prev => prev.map(n => 
-        n.id === notificationId ? { ...n, is_read: true } : n;
+        n.id === notificationId ? { ...n, is_read: true } : n
       ))
-    } } catch {
+    } catch (err) {
       console.error("Failed to mark notification as read:", error)
     }
   }
 
-  // Mark all notifications as read;
+  // Mark all notifications as read
   const markAllAsRead = async () => {
     try {
       await notificationsAPI.markAllAsRead()
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
-    } } catch {
+    } catch (err) {
       console.error("Failed to mark all notifications as read:", error)
     }
   }
 
-  // Delete notification;
+  // Delete notification
   const deleteNotification = async (notificationId: string) => {}
     try {
       await notificationsAPI.deleteNotification(notificationId)
       setNotifications(prev => prev.filter(n => n.id !== notificationId))
-    } } catch {
+    } catch (err) {
       console.error("Failed to delete notification:", error)
     }
   }
 
-  const unreadCount = notifications.filter(n => !n.is_read).length;
+  const unreadCount = notifications.filter(n => !n.is_read).length
   if (!user) {
-    return null;
+    return null
   }
 
   return (
@@ -88,7 +89,7 @@ export function NotificationBell() {
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="w-5 h-5" />
           {unreadCount > 0 && (
-            <Badge;
+            <Badge
               variant="destructive" 
               className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center"
             >
@@ -104,7 +105,7 @@ export function NotificationBell() {
             {unreadCount > 0 && (
               <Button variant="ghost" size="sm" onClick={markAllAsRead}>
                 <Check className="w-4 h-4 mr-1" />
-                Mark all read;
+                Mark all read
               </Button>
             )}
           </div>
@@ -122,7 +123,7 @@ export function NotificationBell() {
           ) : (
             <div className="p-2">
               {notifications.slice(0, 10).map((notification) => (
-                <div;
+                <div
                   key={notification.id}
                   className={cn(
                     "p-3 rounded-lg border mb-2 transition-colors",
@@ -146,7 +147,7 @@ export function NotificationBell() {
                     </div>
                     <div className="flex flex-col gap-1">
                       {!notification.is_read && (
-                        <Button;
+                        <Button
                           variant="ghost"
                           size="icon"
                           className="h-6 w-6"
@@ -155,7 +156,7 @@ export function NotificationBell() {
                           <Check className="h-3 w-3" />
                         </Button>
                       )}
-                      <Button;
+                      <Button
                         variant="ghost"
                         size="icon"
                         className="h-6 w-6 text-red-500 hover:text-red-700"

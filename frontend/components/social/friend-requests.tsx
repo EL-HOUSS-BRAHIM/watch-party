@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -9,33 +11,32 @@ import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 
-"use client"
 
 interface FriendRequest {}
-  id: string;
+  id: string
   sender: {}
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    avatar?: string;
-    mutualFriends: number;
+    id: string
+    username: string
+    firstName: string
+    lastName: string
+    avatar?: string
+    mutualFriends: number
   }
   recipient: {}
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    avatar?: string;
+    id: string
+    username: string
+    firstName: string
+    lastName: string
+    avatar?: string
   }
-  message?: string;
+  message?: string
   status: "pending" | "accepted" | "declined"
-  createdAt: string;
+  createdAt: string
   type: "sent" | "received"
 }
 
 interface FriendRequestsProps {}
-  className?: string;
+  className?: string
 }
 
 export default function FriendRequests({ className }: FriendRequestsProps) {}
@@ -62,14 +63,13 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
         const data = await response.json()
         setRequests(data.results || data)
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to load friend requests:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load friend requests. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -91,15 +91,13 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
           ),
         )
 
-        toast({}
-          title: action === "accept" ? "Friend request accepted" : "Friend request declined",
+        toast({title: action === "accept" ? "Friend request accepted" : "Friend request declined",
           description: action === "accept" ? "You are now friends!" : "The friend request has been declined.",
         })
       }
-    } } catch {
+    } catch (err) {
       console.error(`Failed to ${action} friend request:`, error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: `Failed to ${action} friend request. Please try again.`,
         variant: "destructive",
       })
@@ -118,15 +116,13 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
 
       if (response.ok) {
         setRequests((prev) => prev.filter((req) => req.id !== requestId))
-        toast({}
-          title: "Friend request cancelled",
+        toast({title: "Friend request cancelled",
           description: "The friend request has been cancelled.",
         })
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to cancel friend request:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to cancel friend request. Please try again.",
         variant: "destructive",
       })
@@ -138,23 +134,23 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
       case "pending":
         return (
           <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-            Pending;
+            Pending
           </Badge>
         )
       case "accepted":
         return (
           <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-            Accepted;
+            Accepted
           </Badge>
         )
       case "declined":
         return (
           <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
-            Declined;
+            Declined
           </Badge>
         )
       default:
-        return null;
+        return null
     }
   }
 
@@ -168,7 +164,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
 
   const FriendRequestCard = ({ request }: { request: FriendRequest }) => {}
     const isReceived = request.type === "received"
-    const otherUser = isReceived ? request.sender : request.recipient;
+    const otherUser = isReceived ? request.sender : request.recipient
     return (
       <Card className="hover:shadow-md transition-shadow">
         <CardContent className="p-4">
@@ -194,7 +190,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
 
                   {request.message && (
                     <div className="mt-2 p-2 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-700">&quot;{request.message}&quot;</p>
+                      <p className="text-sm text-gray-700">&quot;{request.message}&quot</p>
                     </div>
                   )}
 
@@ -214,27 +210,27 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
                   <>
                     <Button size="sm" onClick={() => handleFriendRequest(request.id, &quot;accept&quot;)} className=&quot;flex-1">"
                       <Check className="mr-2 h-4 w-4" />
-                      Accept;
+                      Accept
                     </Button>
-                    <Button;
+                    <Button
                       size="sm"
                       variant="outline"
                       onClick={() => handleFriendRequest(request.id, &quot;decline&quot;)}
                       className="flex-1"
                     >
                       <X className="mr-2 h-4 w-4" />
-                      Decline;
+                      Decline
                     </Button>
                   </>
                 ) : !isReceived && request.status === "pending" ? (
-                  <Button;
+                  <Button
                     size="sm"
                     variant="outline"
                     onClick={() => cancelFriendRequest(request.id)}
                     className="flex-1"
                   >
                     <X className="mr-2 h-4 w-4" />
-                    Cancel Request;
+                    Cancel Request
                   </Button>
                 ) : null}
               </div>
@@ -251,7 +247,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <UserPlus className="h-6 w-6" />
-            Friend Requests;
+            Friend Requests
           </h2>
           <p className="text-gray-600">Manage your incoming and outgoing friend requests</p>
         </div>
@@ -261,7 +257,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {}
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="received" className="flex items-center gap-2">
             <UserPlus className="h-4 w-4" />
-            Received;
+            Received
             {receivedRequests.length > 0 && (
               <Badge variant="destructive" className="ml-1">
                 {receivedRequests.length}

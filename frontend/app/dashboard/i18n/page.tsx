@@ -1,6 +1,7 @@
+"use client"
+
 import MultiLanguageSystem from "@/components/i18n/multi-language-system"
 
-"use client"
 
 export default function MultiLanguagePage() {
   return (

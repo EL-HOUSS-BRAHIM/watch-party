@@ -7,7 +7,7 @@ export default function AdminUsersPage() {
       <div>
         <h1 className="text-3xl font-bold">User Management</h1>
         <p className="text-muted-foreground mt-2">
-          Manage user accounts, permissions, and account status;
+          Manage user accounts, permissions, and account status
         </p>
       </div>
       <UserManagement />

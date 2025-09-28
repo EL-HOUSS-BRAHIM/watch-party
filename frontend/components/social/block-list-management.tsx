@@ -1,3 +1,5 @@
+"use client"
+
 import { AlertTriangle, Calendar, Loader2, Search, Shield } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
@@ -7,10 +9,9 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
-import {}
+
 import { formatDistanceToNow } from "date-fns"
 
-"use client"
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -19,28 +20,28 @@ import { formatDistanceToNow } from "date-fns"
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 interface BlockedUser {}
-  id: string;
+  id: string
   blockedUser: {}
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    avatar?: string;
-    bio?: string;
+    id: string
+    username: string
+    firstName: string
+    lastName: string
+    email: string
+    avatar?: string
+    bio?: string
   }
-  blockedAt: string;
-  reason?: string;
+  blockedAt: string
+  reason?: string
   blockedBy: {}
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
+    id: string
+    username: string
+    firstName: string
+    lastName: string
   }
 }
 
 interface BlockListManagementProps {}
-  className?: string;
+  className?: string
 }
 
 export default function BlockListManagement({ className }: BlockListManagementProps) {}
@@ -58,12 +59,12 @@ export default function BlockListManagement({ className }: BlockListManagementPr
   }, [])
 
   useEffect(() => {
-    // Filter users based on search query;
+    // Filter users based on search query
     if (!searchQuery) {
       setFilteredUsers(blockedUsers)
     } else {}
       const filtered = blockedUsers.filter(block => {}
-        const user = block.blockedUser;
+        const user = block.blockedUser
         const query = searchQuery.toLowerCase()
         return (
           user.username.toLowerCase().includes(query) ||
@@ -89,14 +90,13 @@ export default function BlockListManagement({ className }: BlockListManagementPr
         const data = await response.json()
         setBlockedUsers(data.blocks || [])
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to load blocked users:", error)
-      toast({}
-        title: "Failed to load blocked users",
+      toast({title: "Failed to load blocked users",
         description: "Please try refreshing the page",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -115,25 +115,23 @@ export default function BlockListManagement({ className }: BlockListManagementPr
 
       if (response.ok) {
         setBlockedUsers(prev => prev.filter(block => block.id !== blockId))
-        toast({}
-          title: "User unblocked",
+        toast({title: "User unblocked",
           description: `${username} has been unblocked successfully`,
         })
       } else {}
         throw new Error("Failed to unblock user")
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to unblock user:", error)
-      toast({}
-        title: "Failed to unblock user",
+      toast({title: "Failed to unblock user",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setProcessingUsers(prev => {}
         const newSet = new Set(prev)
         newSet.delete(blockId)
-        return newSet;
+        return newSet
       })
       setUserToUnblock(null)
     }
@@ -152,18 +150,16 @@ export default function BlockListManagement({ className }: BlockListManagementPr
       })
 
       if (response.ok) {
-        await loadBlockedUsers() // Refresh the list;
-        toast({}
-          title: "User blocked",
+        await loadBlockedUsers() // Refresh the list
+        toast({title: "User blocked",
           description: "The user has been blocked successfully",
         })
       } else {}
         throw new Error("Failed to block user")
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to block user:", error)
-      toast({}
-        title: "Failed to block user",
+      toast({title: "Failed to block user",
         description: "Please try again",
         variant: "destructive",
       })
@@ -188,7 +184,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
 
   const BlockedUserCard = ({ block }: { block: BlockedUser }) => {}
     const isProcessing = processingUsers.has(block.id)
-    const { blockedUser } = block;
+    const { blockedUser } = block
     const reasonDisplay = getReasonDisplay(block.reason)
 
     return (
@@ -217,18 +213,18 @@ export default function BlockListManagement({ className }: BlockListManagementPr
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm">
-                        Actions;
+                        Actions
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>Block Actions</DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem;
+                      <DropdownMenuItem
                         onClick={() => setUserToUnblock(block.id)}
                         className="text-green-600 dark:text-green-400"
                       >
                         <RotateCcw className="h-4 w-4 mr-2" />
-                        Unblock User;
+                        Unblock User
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -285,7 +281,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            Blocked Users;
+            Blocked Users
             {blockedUsers.length > 0 && (
               <Badge variant="secondary">
                 {blockedUsers.length}
@@ -301,7 +297,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
           {blockedUsers.length > 0 && (
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input;
+              <Input
                 placeholder="Search blocked users..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -316,7 +312,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
               {searchQuery ? (
                 <>
                   <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>No blocked users found matching &quot;{searchQuery}&quot;</p>
+                  <p>No blocked users found matching &quot;{searchQuery}&quot</p>
                 </>
               ) : (
                 <>
@@ -375,7 +371,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction;
+            <AlertDialogAction
               onClick={() => {}
                 if (userToUnblock) {
                   const block = blockedUsers.find(b => b.id === userToUnblock)
@@ -387,7 +383,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
               className="bg-green-600 text-white hover:bg-green-700"
             >
               <RotateCcw className="h-4 w-4 mr-2" />
-              Unblock User;
+              Unblock User
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

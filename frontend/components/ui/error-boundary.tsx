@@ -1,19 +1,20 @@
+"use client"
+
 import { Component, type ErrorInfo, type ReactNode } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { AlertTriangle, Refresh, RefreshCw } from "lucide-react"
 
-"use client"
 
 
 interface Props {}
-  children: ReactNode;
-  fallback?: ReactNode;
+  children: ReactNode
+  fallback?: ReactNode
 }
 
 interface State {}
-  hasError: boolean;
-  error?: Error;
+  hasError: boolean
+  error?: Error
 }
 
 export class ErrorBoundary extends Component<Props, State> {}
@@ -27,7 +28,7 @@ export class ErrorBoundary extends Component<Props, State> {}
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {}
     console.error("ErrorBoundary caught an error:", error, errorInfo)
 
-    // Log error to monitoring service;
+    // Log error to monitoring service
     if (process.env.NODE_ENV === "production") {
       // Send to error tracking service (e.g., Sentry)
       console.error("Production error:", { error, errorInfo })
@@ -41,7 +42,7 @@ export class ErrorBoundary extends Component<Props, State> {}
   public render() {}
     if (this.state.hasError) {
       if (this.props.fallback) {
-        return this.props.fallback;
+        return this.props.fallback
       }
 
       return (
@@ -65,10 +66,10 @@ export class ErrorBoundary extends Component<Props, State> {}
               <div className="flex space-x-2">
                 <Button onClick={this.handleReset} className="flex-1">
                   <RefreshCw className="w-4 h-4 mr-2" />
-                  Try Again;
+                  Try Again
                 </Button>
                 <Button variant="outline" onClick={() => (window.location.href = &quot;/dashboard&quot;)} className=&quot;flex-1">"
-                  Go Home;
+                  Go Home
                 </Button>
               </div>
             </CardContent>
@@ -77,6 +78,6 @@ export class ErrorBoundary extends Component<Props, State> {}
       )
     }
 
-    return this.props.children;
+    return this.props.children
   }
 }

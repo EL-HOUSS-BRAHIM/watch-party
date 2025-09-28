@@ -6,13 +6,7 @@ import Link from "next/link"
 import { ArrowLeft, Check, CheckCircle, Mail } from "lucide-react"
 import { WatchPartyButton } from "@/components/ui/watch-party-button"
 import { WatchPartyInput } from "@/components/ui/watch-party-input"
-import {
-  WatchPartyCard, 
-  WatchPartyCardHeader, 
-  WatchPartyCardTitle, 
-  WatchPartyCardDescription, 
-  WatchPartyCardContent, 
-  WatchPartyCardFooter
+import {WatchPartyCard,WatchPartyCardHeader,WatchPartyCardTitle,WatchPartyCardDescription,WatchPartyCardContent,WatchPartyCardFooter
 } from "@/components/ui/watch-party-card"
 import { authAPI } from "@/lib/api"
 import { useToast } from "@/hooks/use-toast"

@@ -1,3 +1,5 @@
+"use client"
+
 import { Check, CheckCircle, File, Image, Lock, Upload, User, Users, Video, X } from "lucide-react"
 import * as React from "react"
 import Image from "next/image"
@@ -16,28 +18,27 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { useRouter } from "next/navigation"
 
-"use client"
 interface UploadFile {}
-  id: string;
-  file: File;
-  progress: number;
+  id: string
+  file: File
+  progress: number
   status: "pending" | "uploading" | "processing" | "completed" | "error"
-  error?: string;
-  preview?: string;
-  duration?: number;
-  size: number;
+  error?: string
+  preview?: string
+  duration?: number
+  size: number
 }
 
 interface VideoMetadata {}
-  title: string;
-  description: string;
+  title: string
+  description: string
   visibility: "public" | "private" | "unlisted"
-  thumbnail?: File;
+  thumbnail?: File
   tags: string[]
-  category: string;
-  allowComments: boolean;
-  allowDownload: boolean;
-  scheduledPublish?: Date;
+  category: string
+  allowComments: boolean
+  allowDownload: boolean
+  scheduledPublish?: Date
 }
 
 const visibilityOptions = []
@@ -74,7 +75,7 @@ const categoryOptions = []
 
 function formatFileSize(bytes: number): string {}
   if (bytes === 0) return "0 Bytes"
-  const k = 1024;
+  const k = 1024
   const sizes = ["Bytes", "KB", "MB", "GB"]
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
@@ -91,12 +92,11 @@ function formatDuration(seconds: number): string {}
   return `${minutes}:${secs.toString().padStart(2, "0")}`
 }
 
-function FileUploadZone({}
-  onFilesSelected,
+function FileUploadZone({onFilesSelected,
   uploading,
 }: {}
-  onFilesSelected: (files: FileList) => void;
-  uploading: boolean;
+  onFilesSelected: (files: FileList) => void
+  uploading: boolean
 }) {}
   const [dragActive, setDragActive] = useState(false)
   const inputRef = React.useRef<HTMLInputElement>(null)
@@ -134,7 +134,7 @@ function FileUploadZone({}
   )
 
   return (
-    <div;
+    <div
       className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${}
         dragActive ? "border-primary bg-primary/5" : "border-muted-foreground/25 hover:border-primary/50"
       } ${uploading ? "opacity-50 pointer-events-none" : ""}`}
@@ -143,10 +143,10 @@ function FileUploadZone({}
       onDragOver={handleDrag}
       onDrop={handleDrop}
     >
-      <input;
+      <input
         ref={inputRef}
         type="file"
-        multiple;
+        multiple
         accept="video/*"
         onChange={handleChange}
         className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -161,13 +161,13 @@ function FileUploadZone({}
           <h3 className="text-lg font-semibold">Drop your videos here</h3>
           <p className="text-muted-foreground">
             or{" "}
-            <button;
+            <button
               type="button"
               onClick={() => inputRef.current?.click()}
               className="text-primary hover:underline"
               disabled={uploading}
             >
-              browse files;
+              browse files
             </button>
           </p>
         </div>
@@ -180,14 +180,13 @@ function FileUploadZone({}
   )
 }
 
-function UploadProgress({}
-  files,
+function UploadProgress({files,
   onRemoveFile,
 }: {}
   files: UploadFile[]
-  onRemoveFile: (id: string) => void;
+  onRemoveFile: (id: string) => void
 }) {}
-  if (files.length === 0) return null;
+  if (files.length === 0) return null
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Upload Progress</h3>
@@ -197,7 +196,7 @@ function UploadProgress({}
             <div className="flex items-start gap-4">
               <div className="flex-shrink-0">
                 {file.preview ? (
-                  <img;
+                  <img
                     src={file.preview || "/placeholder.svg"}
                     alt="Video thumbnail"
                     className="w-16 h-12 object-cover rounded"
@@ -224,14 +223,14 @@ function UploadProgress({}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge;
+                    <Badge
                       variant={}
                         file.status === "completed" ? "default" : file.status === "error" ? "destructive" : "secondary"
                       }
                     >
                       {file.status}
                     </Badge>
-                    <WatchPartyButton;
+                    <WatchPartyButton
                       variant="ghost"
                       size="sm"
                       onClick={() => onRemoveFile(file.id)}
@@ -257,7 +256,7 @@ function UploadProgress({}
                 ) : file.status === "completed" ? (
                   <div className="flex items-center gap-1 text-sm text-green-600">
                     <CheckCircle className="h-4 w-4" />
-                    Upload completed successfully;
+                    Upload completed successfully
                   </div>
                 ) : null}
               </div>
@@ -295,7 +294,7 @@ export default function VideoUploadPage() {
 
     setFiles((prev) => [...prev, ...newFiles])
 
-    // Start upload simulation;
+    // Start upload simulation
     newFiles.forEach((uploadFile) => {}
       simulateUpload(uploadFile.id)
     })
@@ -304,33 +303,33 @@ export default function VideoUploadPage() {
   const simulateUpload = async (fileId: string) => {}
     setUploading(true)
 
-    // Update status to uploading;
+    // Update status to uploading
     setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: &quot;uploading&quot; as const } : f)))
 
-    // Simulate upload progress;
+    // Simulate upload progress
     for (let progress = 0; progress <= 100; progress += 10) {
       await new Promise((resolve) => setTimeout(resolve, 200))
       setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, progress } : f)))
     }
 
-    // Switch to processing;
+    // Switch to processing
     setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: &quot;processing&quot; as const, progress: 0 } : f)))
 
-    // Simulate processing;
+    // Simulate processing
     for (let progress = 0; progress <= 100; progress += 20) {
       await new Promise((resolve) => setTimeout(resolve, 300))
       setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, progress } : f)))
     }
 
-    // Complete;
+    // Complete
     setFiles((prev) =>
       prev.map((f) =>
-        f.id === fileId;
+        f.id === fileId
           ? {}
               ...f,
               status: "completed" as const,
               progress: 100,
-              duration: Math.floor(Math.random() * 7200) + 300, // Random duration 5min-2h;
+              duration: Math.floor(Math.random() * 7200) + 300, // Random duration 5min-2h
               preview: `/placeholder.svg?height=120&width=160&text=${f.file.name.split(".")[0]}`,
             }
           : f,
@@ -345,16 +344,16 @@ export default function VideoUploadPage() {
   }, [])
 
   const handleSubmit = async () => {
-    // Simulate API call to save video metadata;
+    // Simulate API call to save video metadata
     console.log("Submitting video metadata:", metadata)
     console.log("Files:", files)
 
-    // Redirect to videos page;
+    // Redirect to videos page
     router.push("/dashboard/videos")
   }
 
   const completedFiles = files.filter((f) => f.status === &quot;completed&quot;)
-  const canProceed = completedFiles.length > 0;
+  const canProceed = completedFiles.length > 0
   return (
     <div className="container mx-auto p-6 max-w-4xl">
       <div className="mb-6">
@@ -366,7 +365,7 @@ export default function VideoUploadPage() {
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="upload">Upload Files</TabsTrigger>
           <TabsTrigger value="details" disabled={!canProceed}>
-            Video Details;
+            Video Details
           </TabsTrigger>
         </TabsList>
 
@@ -394,7 +393,7 @@ export default function VideoUploadPage() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="space-y-4">
                 <FormField label="Title" required>
-                  <WatchPartyInput;
+                  <WatchPartyInput
                     placeholder="Enter video title..."
                     value={metadata.title}
                     onChange={(e) => setMetadata((prev) => ({ ...prev, title: e.target.value }))}
@@ -402,18 +401,18 @@ export default function VideoUploadPage() {
                 </FormField>
 
                 <FormField label="Description">
-                  <WatchPartyTextarea;
+                  <WatchPartyTextarea
                     placeholder="Describe your video..."
                     value={metadata.description}
                     onChange={(value) => setMetadata((prev) => ({ ...prev, description: value }))}
                     maxLength={5000}
-                    showCharCount;
-                    autoResize;
+                    showCharCount
+                    autoResize
                   />
                 </FormField>
 
                 <FormField label="Category" required>
-                  <WatchPartySelect;
+                  <WatchPartySelect
                     options={categoryOptions}
                     value={metadata.category}
                     onValueChange={(value) => setMetadata((prev) => ({ ...prev, category: value as string }))}
@@ -422,13 +421,13 @@ export default function VideoUploadPage() {
                 </FormField>
 
                 <FormField label="Tags" description="Add tags to help people discover your video">
-                  <WatchPartyInput;
+                  <WatchPartyInput
                     placeholder="Enter tags separated by commas..."
                     value={metadata.tags.join(", ")}
                     onChange={(e) =>
                       setMetadata((prev) => ({}
                         ...prev,
-                        tags: e.target.value;
+                        tags: e.target.value
                           .split(",")
                           .map((tag: string) => tag.trim())
                           .filter(Boolean),
@@ -440,7 +439,7 @@ export default function VideoUploadPage() {
 
               <div className="space-y-4">
                 <FormField label="Visibility">
-                  <WatchPartySelect;
+                  <WatchPartySelect
                     options={visibilityOptions}
                     value={metadata.visibility}
                     onValueChange={(value) => setMetadata((prev) => ({ ...prev, visibility: value as Record<string, unknown> }))}
@@ -462,7 +461,7 @@ export default function VideoUploadPage() {
                       <Label htmlFor="allow-comments">Allow Comments</Label>
                       <p className="text-xs text-muted-foreground">Let viewers comment on your video</p>
                     </div>
-                    <Switch;
+                    <Switch
                       id="allow-comments"
                       checked={metadata.allowComments}
                       onCheckedChange={(checked) => setMetadata((prev) => ({ ...prev, allowComments: checked }))}
@@ -474,7 +473,7 @@ export default function VideoUploadPage() {
                       <Label htmlFor="allow-download">Allow Download</Label>
                       <p className="text-xs text-muted-foreground">Let viewers download your video</p>
                     </div>
-                    <Switch;
+                    <Switch
                       id="allow-download"
                       checked={metadata.allowDownload}
                       onCheckedChange={(checked) => setMetadata((prev) => ({ ...prev, allowDownload: checked }))}
@@ -486,7 +485,7 @@ export default function VideoUploadPage() {
 
             <FormActions>
               <WatchPartyButton variant="outline" onClick={() => setCurrentStep(&quot;upload&quot;)}>
-                Back;
+                Back
               </WatchPartyButton>
               <WatchPartyButton type="submit">Publish Videos</WatchPartyButton>
             </FormActions>

@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { Check, ChevronDown, Search, X } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -6,29 +8,28 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Badge } from "@/components/ui/badge"
 
-"use client"
 
 export interface SelectOption {}
-  value: string;
-  label: string;
-  description?: string;
-  disabled?: boolean;
-  icon?: React.ReactNode;
+  value: string
+  label: string
+  description?: string
+  disabled?: boolean
+  icon?: React.ReactNode
 }
 
 interface WatchPartySelectProps {}
   options: SelectOption[]
   value?: string | string[]
-  onValueChange?: (value: string | string[]) => void;
-  placeholder?: string;
-  searchPlaceholder?: string;
-  emptyMessage?: string;
-  multiple?: boolean;
-  searchable?: boolean;
-  disabled?: boolean;
-  className?: string;
-  maxSelected?: number;
-  clearable?: boolean;
+  onValueChange?: (value: string | string[]) => void
+  placeholder?: string
+  searchPlaceholder?: string
+  emptyMessage?: string
+  multiple?: boolean
+  searchable?: boolean
+  disabled?: boolean
+  className?: string
+  maxSelected?: number
+  clearable?: boolean
 }
 
 const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectProps>(
@@ -46,7 +47,7 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
       className,
       maxSelected,
       clearable = false,
-      ...props;
+      ...props
     },
     ref,
   ) => {}
@@ -61,7 +62,7 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
     }, [value, multiple]) as string[]
 
     const filteredOptions = React.useMemo(() => {}
-      if (!searchValue) return options;
+      if (!searchValue) return options
       return options.filter(
         (option) =>
           option.label.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -71,14 +72,14 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
 
     const handleSelect = (optionValue: string) => {}
       if (multiple) {
-        const currentValues = selectedValues;
+        const currentValues = selectedValues
         let newValues: string[]
 
         if (currentValues.includes(optionValue)) {}
           newValues = currentValues.filter((v) => v !== optionValue)
         } else {}
           if (maxSelected && currentValues.length >= maxSelected) {
-            return;
+            return
           }
           newValues = [...currentValues, optionValue]
         }
@@ -97,7 +98,7 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
 
     const getDisplayValue = () => {}
       if (selectedValues.length === 0) {
-        return placeholder;
+        return placeholder
       }
 
       if (multiple) {
@@ -112,11 +113,11 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
       return option?.label || selectedValues[0]
     }
 
-    const showClearButton = clearable && selectedValues.length > 0 && !disabled;
+    const showClearButton = clearable && selectedValues.length > 0 && !disabled
     return (
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button;
+          <Button
             ref={ref}
             variant="outline"
             role="combobox"
@@ -162,7 +163,7 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
             {searchable && (
               <div className="flex items-center border-b px-3">
                 <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-                <CommandInput;
+                <CommandInput
                   placeholder={searchPlaceholder}
                   value={searchValue}
                   onValueChange={setSearchValue}
@@ -176,7 +177,7 @@ const WatchPartySelect = React.forwardRef<HTMLButtonElement, WatchPartySelectPro
                 {filteredOptions.map((option) => {}
                   const isSelected = selectedValues.includes(option.value)
                   return (
-                    <CommandItem;
+                    <CommandItem
                       key={option.value}
                       value={option.value}
                       disabled={option.disabled}

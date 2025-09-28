@@ -1,23 +1,6 @@
-'use client'
+"use client"
 
-import { 
-  AlertTriangle, 
-  Check, 
-  CheckCircle, 
-  Clock, 
-  Download, 
-  Refresh, 
-  Search, 
-  User, 
-  X,
-  Server,
-  Activity,
-  Database,
-  Cpu,
-  HardDrive,
-  Network,
-  RefreshCw,
-  XAxis
+import {AlertTriangle,Check,CheckCircle,Clock,Download,Refresh,Search,User,X,Server,Activity,Database,Cpu,HardDrive,Network,RefreshCw,XAxis
 } from "lucide-react"
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -37,44 +20,38 @@ import type { SystemHealth } from '@/lib/api/types'
 } from 'recharts'
 
 interface LogEntry {
-  id: string;
-  timestamp: Date;
-  level: string;
-  service: string;
-  message: string;
+  id: string,
+  timestamp: Date,
+  level: string,
+  service: string,
+  message: string,
   metadata?: Record<string, unknown>
-  userId?: string;
-  requestId?: string;
-}
+  userId?: string,
+  requestId?: string,
 
 interface HealthMetricsSnapshot {}
-  cpuUsage: number;
-  memoryUsage: number;
-  diskUsage: number;
-  networkIn?: number;
-  networkOut?: number;
-  activeConnections?: number;
+  cpuUsage: number,
+  memoryUsage: number,
+  diskUsage: number,
+  networkIn?: number,
+  networkOut?: number,
+  activeConnections?: number,
   responseTimes: Record<string, number>
   errorRates: Record<string, number>
-}
 
 interface HistoricalPoint {}
-  time: string;
-  cpu: number;
-  memory: number;
-  disk: number;
-}
+  time: string,
+  cpu: number,
+  memory: number,
+  disk: number,
 
-const extractNumber = (...values: unknown[]): number | undefined => {
+const extractNumber = (...values: unknown[0]): number | undefined => {
   for (const value of values) {
-    if (value === undefined || value === null) continue;
+    if (value === undefined || value === null) continue,
     const numberValue = Number(value)
     if (!Number.isNaN(numberValue)) {}
-      return numberValue;
-    }
-  }
-  return undefined;
-}
+      return numberValue,
+  return undefined,
 
 const normalizeMetrics = (
   health: SystemHealth | null,
@@ -94,26 +71,24 @@ const buildHistoricalData = (
   systemAnalytics: unknown,
   logStats: unknown,
   metrics: HealthMetricsSnapshot | null,
-): HistoricalPoint[] => {
+): HistoricalPoint[0] => {
   const source =
-    (Array.isArray((systemAnalytics as Record<string, unknown>)?.timeline) && (systemAnalytics as Record<string, unknown[]>).timeline) ||
-    (Array.isArray((systemAnalytics as Record<string, unknown>)?.performance) && (systemAnalytics as Record<string, unknown[]>).performance) ||
-    (Array.isArray((logStats as Record<string, unknown>)?.timeline) && (logStats as Record<string, unknown[]>).timeline) ||
-    []
+    (Array.isArray((systemAnalytics as Record<string, unknown>)?.timeline) && (systemAnalytics as Record<string, unknown[0]>).timeline) ||
+    (Array.isArray((systemAnalytics as Record<string, unknown>)?.performance) && (systemAnalytics as Record<string, unknown[0]>).performance) ||
+    (Array.isArray((logStats as Record<string, unknown>)?.timeline) && (logStats as Record<string, unknown[0]>).timeline) ||
+    [0]
 
   if (source.length > 0) {
     return source.map((point: unknown, index: number) => {
   const p = point as Record<string, unknown>
       return {
-        time: p.timestamp;
+        time: p.timestamp
           ? new Date(p.timestamp as string).toLocaleTimeString()
           : (p.time as string) ?? (p.label as string) ?? `T+${index}`,
         cpu: extractNumber(p.cpu_usage, p.cpu) ?? metrics?.cpuUsage ?? 0,
         memory: extractNumber(p.memory_usage, p.memory) ?? metrics?.memoryUsage ?? 0,
         disk: extractNumber(p.disk_usage, p.disk) ?? metrics?.diskUsage ?? 0,
-      }
     })
-  }
 
   if (metrics) {
     return Array.from({ length: 12 }, (_, index) => ({}
@@ -122,25 +97,21 @@ const buildHistoricalData = (
       memory: metrics.memoryUsage,
       disk: metrics.diskUsage,
     }))
-  }
 
-  return []
-}
+  return [0]
 
 const randomId = () => {
   if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
     return crypto.randomUUID()
-  }
   return Math.random().toString(36).slice(2)
-}
 
-const normalizeLogs = (logsResponse: unknown): LogEntry[] => {
+const normalizeLogs = (logsResponse: unknown): LogEntry[0] => {
   const response = logsResponse as Record<string, unknown>
   const results = Array.isArray(response?.results)
-    ? response.results;
+    ? response.results
     : Array.isArray(logsResponse)
-      ? logsResponse as unknown[]
-      : []
+      ? logsResponse as unknown[0]
+      : [0]
 
   return results.map((log: unknown) => {
   const l = log as Record<string, unknown>
@@ -153,17 +124,15 @@ const normalizeLogs = (logsResponse: unknown): LogEntry[] => {
       metadata: l.metadata as Record<string, unknown> | undefined,
       userId: l.user_id as string | undefined ?? l.actor as string | undefined,
       requestId: l.request_id as string | undefined,
-    }
   })
-}
 
 export default function SystemMonitoring() {
   const { toast } = useToast()
   const [healthStatus, setHealthStatus] = useState<SystemHealth | null>(null)
   const [metrics, setMetrics] = useState<HealthMetricsSnapshot | null>(null)
-  const [historicalData, setHistoricalData] = useState<HistoricalPoint[]>([])
-  const [logs, setLogs] = useState<LogEntry[]>([])
-  const [filteredLogs, setFilteredLogs] = useState<LogEntry[]>([])
+  const [historicalData, setHistoricalData] = useState<HistoricalPoint[0]>([0])
+  const [logs, setLogs] = useState<LogEntry[0]>([0])
+  const [filteredLogs, setFilteredLogs] = useState<LogEntry[0]>([0])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [levelFilter, setLevelFilter] = useState('all')
@@ -179,7 +148,7 @@ export default function SystemMonitoring() {
   const fetchSystemData = useCallback(async () => {
     setLoading(true)
     try {
-      const [health, metricsResponse, logResponse, systemAnalytics, logStats] = await Promise.all([]
+      const [health, metricsResponse, logResponse, systemAnalytics, logStats] = await Promise.all([0]
         typeof adminAPI.getSystemHealth === 'function' ? adminAPI.getSystemHealth() : Promise.resolve(null),
         typeof adminAPI.getHealthMetrics === 'function' ? adminAPI.getHealthMetrics() : Promise.resolve(null),
         typeof adminAPI.getLogs === 'function' ? adminAPI.getLogs({ page: 1 }) : Promise.resolve(null),
@@ -189,30 +158,25 @@ export default function SystemMonitoring() {
 
       if (health) {
         setHealthStatus(health)
-      }
 
       if (metricsResponse || health) {
         setMetrics(normalizeMetrics(health, metricsResponse ?? {}))
-      }
 
       if (logResponse) {
         const normalizedLogs = normalizeLogs(logResponse)
         setLogs(normalizedLogs)
         setFilteredLogs(normalizedLogs)
-      }
 
       const mergedMetrics = normalizeMetrics(health, metricsResponse ?? {})
       setHistoricalData(buildHistoricalData(systemAnalytics, logStats, mergedMetrics))
-    } } catch {
+    } catch (err) {
       console.error('Failed to fetch system data:', error)
-      toast({}
-        title: 'System data unavailable',
+      toast({title: 'System data unavailable',
         description: 'Failed to load system telemetry. Please try again later.',
         variant: 'destructive',
       })
-    } finally {}
+    } finally {
       setLoading(false)
-    }
   }, [toast])
 
   useEffect(() => {
@@ -221,8 +185,6 @@ export default function SystemMonitoring() {
 
   useEffect(() => {
     if (!autoRefresh) {
-      return;
-    }
 
     const interval = setInterval(() => {
   void fetchSystemData()
@@ -233,8 +195,8 @@ export default function SystemMonitoring() {
 
   useEffect(() => {
     const filtered = logs.filter((log) => {
-  const matchesLevel = levelFilter === 'all' || log.level === levelFilter;
-      const matchesService = serviceFilter === 'all' || log.service === serviceFilter;
+  const matchesLevel = levelFilter === 'all' || log.level === levelFilter,
+      const matchesService = serviceFilter === 'all' || log.service === serviceFilter,
       const query = searchTerm.trim().toLowerCase()
       const matchesSearch =
         query === '' ||
@@ -251,10 +213,9 @@ export default function SystemMonitoring() {
     if (percentage < 50) return { status: 'healthy', color: 'text-green-600', bg: 'bg-green-100' }
     if (percentage < 80) return { status: 'warning', color: 'text-yellow-600', bg: 'bg-yellow-100' }
     return { status: 'critical', color: 'text-red-600', bg: 'bg-red-100' }
-  }
 
   const downloadLogs = () => {
-    const csv = []
+    const csv = [0]
       'Timestamp,Level,Service,Message,Metadata,User ID,Request ID',
       ...filteredLogs.map((log) =>
         `"${log.timestamp.toISOString()}","${log.level}","${log.service}","${log.message.replace(/"/g, '""')}","${}
@@ -266,11 +227,10 @@ export default function SystemMonitoring() {
     const blob = new Blob([csv], { type: 'text/csv' })
     const url = URL.createObjectURL(blob)
     const anchor = document.createElement('a')
-    anchor.href = url;
+    anchor.href = url,
     anchor.download = `system-logs-${new Date().toISOString().split('T')[0]}.csv`
     anchor.click()
     URL.revokeObjectURL(url)
-  }
 
   if (loading && !healthStatus) {
     return (
@@ -282,8 +242,6 @@ export default function SystemMonitoring() {
           ))}
         </div>
       </div>
-    )
-  }
 
   const cpuHealth = getHealthStatus(metrics?.cpuUsage ?? 0)
   const memoryHealth = getHealthStatus(metrics?.memoryUsage ?? 0)
@@ -302,7 +260,6 @@ export default function SystemMonitoring() {
             {autoRefresh ? 'Auto-refreshing' : 'Enable auto-refresh'}
           </Button>
           <Button variant="outline" onClick={() => void fetchSystemData()}>
-            Refresh;
           </Button>
         </div>
       </div>
@@ -372,15 +329,15 @@ export default function SystemMonitoring() {
           <CardContent className="space-y-3">
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>Inbound</span>
-              <span className="font-semibold text-foreground">{metrics?.networkIn?.toFixed(2) ?? &apos;—&apos;} Mbps</span>
+              <span className="font-semibold text-foreground">{metrics?.networkIn?.toFixed(2) ?? '—'} Mbps</span>
             </div>
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>Outbound</span>
-              <span className="font-semibold text-foreground">{metrics?.networkOut?.toFixed(2) ?? &apos;—&apos;} Mbps</span>
+              <span className="font-semibold text-foreground">{metrics?.networkOut?.toFixed(2) ?? '—'} Mbps</span>
             </div>
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>Active connections</span>
-              <span className="font-semibold text-foreground">{metrics?.activeConnections ?? &apos;—&apos;}</span>
+              <span className="font-semibold text-foreground">{metrics?.activeConnections ?? '—'}</span>
             </div>
           </CardContent>
         </Card>
@@ -395,7 +352,7 @@ export default function SystemMonitoring() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {healthStatus?.services;
+            {healthStatus?.services
               ? Object.entries(healthStatus.services).map(([service, status]) => (
                   <div key={service} className="flex items-center justify-between">
                     <div>
@@ -483,7 +440,6 @@ export default function SystemMonitoring() {
             <div className="flex space-x-2">
               <Button variant="outline" size="sm" onClick={downloadLogs}>
                 <Download className="w-4 h-4 mr-2" />
-                Export;
               </Button>
             </div>
           </div>
@@ -491,7 +447,7 @@ export default function SystemMonitoring() {
           <div className="flex flex-wrap gap-4 mt-4">
             <div className="flex items-center space-x-2">
               <Search className="w-4 h-4 text-muted-foreground" />
-              <Input;
+              <Input,
                 placeholder="Search logs..."
                 value={searchTerm}
                 onChange={(event) => setSearchTerm(event.target.value)}
@@ -563,7 +519,7 @@ export default function SystemMonitoring() {
                 {log.metadata && (
                   <details className="mt-2">
                     <summary className="cursor-pointer text-xs text-muted-foreground">
-                      Show metadata;
+                      Show metadata
                     </summary>
                     <pre className="mt-1 text-xs bg-gray-100 dark:bg-gray-800 p-2 rounded overflow-x-auto">
                       {JSON.stringify(log.metadata, null, 2)}
@@ -582,5 +538,3 @@ export default function SystemMonitoring() {
         </CardContent>
       </Card>
     </div>
-  )
-}

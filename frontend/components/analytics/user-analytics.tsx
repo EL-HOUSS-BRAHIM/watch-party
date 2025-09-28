@@ -1,3 +1,5 @@
+"use client"
+
 import { Activity, BarChart, Clock, Download, Heart, PieChart, Play, Share, TrendingUp, User, Users, X } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -6,9 +8,8 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Progress } from "@/components/ui/progress"
-import {}
 
-'use client'
+
   BarChart, 
   Bar, 
   XAxis, 
@@ -22,24 +23,24 @@ import {}
   Pie,
   Cell,
   Area,
-  AreaChart;
+  AreaChart
 } from 'recharts'
 
 interface UserAnalyticsData {}
   user: {}
-    id: string;
-    displayName: string;
-    avatar: string | null;
-    joinDate: string;
+    id: string
+    displayName: string
+    avatar: string | null
+    joinDate: string
   }
   summary: {}
-    totalWatchTime: number;
-    partiesHosted: number;
-    partiesJoined: number;
-    totalMessages: number;
-    totalReactions: number;
-    friendsCount: number;
-    averagePartyDuration: number;
+    totalWatchTime: number
+    partiesHosted: number
+    partiesJoined: number
+    totalMessages: number
+    totalReactions: number
+    friendsCount: number
+    averagePartyDuration: number
     favoriteGenres: string[]
   }
   activity: {}
@@ -48,11 +49,11 @@ interface UserAnalyticsData {}
     monthly: { month: string; watchTime: number; parties: number }[]
   }
   engagement: {}
-    messagesPerParty: number;
-    reactionsPerParty: number;
-    averageStayTime: number;
-    participationRate: number;
-    hostSuccessRate: number;
+    messagesPerParty: number
+    reactionsPerParty: number
+    averageStayTime: number
+    participationRate: number
+    hostSuccessRate: number
   }
   preferences: {}
     favoriteHours: { hour: number; count: number }[]
@@ -60,22 +61,22 @@ interface UserAnalyticsData {}
     contentTypes: { type: string; hours: number }[]
   }
   achievements: {}
-    id: string;
-    name: string;
-    description: string;
-    icon: string;
-    unlockedAt: string;
-    progress?: number;
-    target?: number;
+    id: string
+    name: string
+    description: string
+    icon: string
+    unlockedAt: string
+    progress?: number
+    target?: number
   }[]
   socialStats: {}
-    friendsAdded: number;
-    invitesSent: number;
-    partiesShared: number;
-    avgPartySize: number;
+    friendsAdded: number
+    invitesSent: number
+    partiesShared: number
+    avgPartySize: number
     topWatchPartners: {}
       user: { id: string; displayName: string; avatar: string | null }
-      watchTime: number;
+      watchTime: number
     }[]
   }
 }
@@ -99,9 +100,9 @@ export function UserAnalytics() {
         const data = await response.json()
         setAnalytics(data)
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to load user analytics:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -120,7 +121,7 @@ export function UserAnalytics() {
   }
 
   const exportData = () => {}
-    if (!analytics) return;
+    if (!analytics) return
     const data = { user: analytics.user.displayName,
       totalWatchTime: formatDuration(analytics.summary.totalWatchTime),
       partiesHosted: analytics.summary.partiesHosted,
@@ -132,7 +133,7 @@ export function UserAnalytics() {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
-    a.href = url;
+    a.href = url
     a.download = `user-analytics-${analytics.user.id}.json`
     a.click()
     URL.revokeObjectURL(url)
@@ -144,9 +145,9 @@ export function UserAnalytics() {
       target: Target,
       zap: Zap,
       heart: Heart,
-      users: Users;
+      users: Users
     }
-    const IconComponent = iconMap[icon] || Trophy;
+    const IconComponent = iconMap[icon] || Trophy
     return <IconComponent className="h-6 w-6" />
   }
 
@@ -176,9 +177,9 @@ export function UserAnalytics() {
 
   const getActivityData = () => {}
     switch (activityView) {
-      case 'weekly': return analytics.activity.weekly;
-      case 'monthly': return analytics.activity.monthly;
-      default: return analytics.activity.daily;
+      case 'weekly': return analytics.activity.weekly
+      case 'monthly': return analytics.activity.monthly
+      default: return analytics.activity.daily
     }
   }
 
@@ -206,7 +207,7 @@ export function UserAnalytics() {
           </Select>
           <Button variant="outline" size="sm" onClick={exportData}>
             <Download className="h-4 w-4 mr-2" />
-            Export;
+            Export
           </Button>
         </div>
       </div>
@@ -342,26 +343,26 @@ export function UserAnalytics() {
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={getActivityData()}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis;
+                    <XAxis
                       dataKey={activityView === 'daily' ? 'date' : activityView === 'weekly' ? 'week' : 'month'}
                       tickFormatter={(value) => {}
                         if (activityView === 'daily') return new Date(value).toLocaleDateString()
-                        return value;
+                        return value
                       }}
                     />
                     <YAxis yAxisId="time" orientation="left" />
                     <YAxis yAxisId="parties" orientation="right" />
-                    <Tooltip;
+                    <Tooltip
                       labelFormatter={(value) => {}
                         if (activityView === 'daily') return new Date(value).toLocaleDateString()
-                        return value;
+                        return value
                       }}
                       formatter={(value, name) => {}
                         if (name === 'watchTime') return [formatDuration(value as number), 'Watch Time']
                         return [value, 'Parties']
                       }}
                     />
-                    <Area;
+                    <Area
                       yAxisId="time"
                       type="monotone" 
                       dataKey="watchTime" 
@@ -369,7 +370,7 @@ export function UserAnalytics() {
                       fill="#8884d8" 
                       fillOpacity={0.6}
                     />
-                    <Line;
+                    <Line
                       yAxisId="parties"
                       type="monotone" 
                       dataKey="parties" 
@@ -394,12 +395,12 @@ export function UserAnalytics() {
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={analytics.preferences.favoriteHours}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis;
+                      <XAxis
                         dataKey="hour" 
                         tickFormatter={(hour) => `${hour}:00`}
                       />
                       <YAxis />
-                      <Tooltip;
+                      <Tooltip
                         labelFormatter={(hour) => `${hour}:00`}
                       />
                       <Bar dataKey="count" fill="#8884d8" />
@@ -417,7 +418,7 @@ export function UserAnalytics() {
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie;
+                      <Pie
                         data={analytics.preferences.contentTypes}
                         cx="50%"
                         cy="50%"
@@ -532,7 +533,7 @@ export function UserAnalytics() {
                       </div>
                     </div>
                     <span className="text-sm text-muted-foreground">
-                      {formatDuration(partner.watchTime)} together;
+                      {formatDuration(partner.watchTime)} together
                     </span>
                   </div>
                 ))}
@@ -561,7 +562,7 @@ export function UserAnalytics() {
                             <span>Progress</span>
                             <span>{achievement.progress}/{achievement.target}</span>
                           </div>
-                          <Progress;
+                          <Progress
                             value={(achievement.progress / achievement.target) * 100} 
                             className="h-2"
                           />

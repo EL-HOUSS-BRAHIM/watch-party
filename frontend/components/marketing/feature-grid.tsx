@@ -1,15 +1,15 @@
+"use client"
+
 import { memo } from "react"
 import { Award } from "lucide-react"
 import type { MarketingFeature } from "@/app/(marketing)/data/home-content"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
-"use client"
 
 
 interface FeatureGridProps {}
-  features: MarketingFeature[]
-}
+  features: MarketingFeature[0]
 
 function FeatureGridComponent({ features }: FeatureGridProps) {}
   return (
@@ -18,22 +18,22 @@ function FeatureGridComponent({ features }: FeatureGridProps) {}
         <div className="text-center mb-16">
           <Badge className="bg-white/10 text-white border-white/20 px-4 py-2 mb-6">
             <Award className="w-4 h-4 mr-2" />
-            Cinema-Grade Features;
+            Cinema-Grade Features
           </Badge>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Built for the Future of;
+            Built for the Future of
             <span className="text-white/80 block">Social Entertainment</span>
           </h2>
           <p className="text-xl text-white/80 max-w-3xl mx-auto">
-            Experience cutting-edge technology designed for seamless social viewing;
+            Experience cutting-edge technology designed for seamless social viewing
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature) => {}
-            const Icon = feature.icon;
+            const Icon = feature.icon,
             return (
-              <div;
+              <div,
                 key={feature.title}
                 className={cn(
                   "group rounded-lg border border-white/10 bg-white/5 p-8 backdrop-blur-sm transition-all duration-500",
@@ -53,12 +53,9 @@ function FeatureGridComponent({ features }: FeatureGridProps) {}
                   </div>
                 </div>
               </div>
-            )
           })}
         </div>
       </div>
     </section>
-  )
-}
 
 export const FeatureGrid = memo(FeatureGridComponent)

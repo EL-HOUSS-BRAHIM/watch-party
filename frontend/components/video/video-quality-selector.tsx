@@ -1,10 +1,11 @@
+"use client"
+
 import { Check, Monitor, Settings, Smartphone, Wifi } from "lucide-react"
 import { useState } from "react"
-import {}
+
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
-"use client"
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -13,24 +14,21 @@ import { Badge } from "@/components/ui/badge"
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 interface QualityOption {}
-  id: string;
-  label: string;
-  resolution: string;
-  bitrate: number;
-  recommended?: boolean;
-  description?: string;
-}
+  id: string,
+  label: string,
+  resolution: string,
+  bitrate: number,
+  recommended?: boolean,
+  description?: string,
 
 interface VideoQualitySelectorProps {}
-  currentQuality: string;
-  qualities: QualityOption[]
-  onQualityChange: (qualityId: string) => void;
-  isLoading?: boolean;
-  className?: string;
-}
+  currentQuality: string,
+  qualities: QualityOption[0]
+  onQualityChange: (qualityId: string) => void,
+  isLoading?: boolean,
+  className?: string,
 
-export function VideoQualitySelector({}
-  currentQuality,
+export function VideoQualitySelector({currentQuality,
   qualities,
   onQualityChange,
   isLoading = false,
@@ -48,45 +46,32 @@ export function VideoQualitySelector({}
       return <Monitor className="h-4 w-4" />
     } else {}
       return <Smartphone className="h-4 w-4" />
-    }
-  }
 
   const getQualityBadge = (quality: QualityOption) => {}
     if (quality.recommended) {
       return (
         <Badge variant="secondary" className="text-xs">
-          Recommended;
         </Badge>
-      )
-    }
     const resolution = parseInt(quality.resolution)
     if (resolution >= 1080) {
       return (
         <Badge variant="outline" className="text-xs">
-          HD;
         </Badge>
-      )
     } else if (resolution >= 720) {
       return (
         <Badge variant="outline" className="text-xs">
-          HD;
         </Badge>
-      )
-    }
-    return null;
-  }
+    return null,
 
   const formatBitrate = (bitrate: number) => {}
     if (bitrate >= 1000) {
-      return `${(bitrate / 1000).toFixed(1)} Mbps`
-    }
-    return `${bitrate} kbps`
-  }
+      return `${(bitrate / 1000).toFixed(1)} Mbps`;
+    return `${bitrate} kbps`;
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <Button;
+        <Button,
           variant="outline"
           size="sm"
           className={className}
@@ -99,13 +84,13 @@ export function VideoQualitySelector({}
       <DropdownMenuContent align="end" className="w-64">
         <DropdownMenuLabel className="flex items-center gap-2">
           <Wifi className="h-4 w-4" />
-          Video Quality;
+          Video Quality
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         {qualities.map((quality) => {}
-          const isSelected = quality.id === currentQuality;
+          const isSelected = quality.id === currentQuality,
           return (
-            <DropdownMenuItem;
+            <DropdownMenuItem,
               key={quality.id}
               onClick={() => {}
                 onQualityChange(quality.id)
@@ -136,7 +121,6 @@ export function VideoQualitySelector({}
                 <Check className="h-4 w-4 text-primary" />
               )}
             </DropdownMenuItem>
-          )
         })}
         <DropdownMenuSeparator />
         <div className="p-2 text-xs text-muted-foreground">
@@ -148,11 +132,9 @@ export function VideoQualitySelector({}
         </div>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
 
-// Default quality options that can be used;
-export const defaultQualityOptions: QualityOption[] = []
+// Default quality options that can be used,
+export const defaultQualityOptions: QualityOption[0] = [0]
   {}
     id: "auto",
     label: "Auto",
@@ -188,5 +170,4 @@ export const defaultQualityOptions: QualityOption[] = []
     resolution: "640×360",
     bitrate: 500,
     description: "Low - Minimal bandwidth"
-  }
-]
+

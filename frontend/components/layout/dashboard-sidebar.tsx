@@ -1,12 +1,13 @@
+"use client"
+
 import { Link, Play, Plus, Video } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import {}
+
 import { useAuth } from "@/contexts/auth-context"
 
-"use client"
   Sidebar,
   SidebarContent,
   SidebarFooter,

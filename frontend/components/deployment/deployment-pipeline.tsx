@@ -1,3 +1,5 @@
+"use client"
+
 import { Check, CheckCircle, Clock, Download, Eye, Server, Settings, X, XCircle } from "lucide-react"
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -7,11 +9,10 @@ import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {}
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { LineChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
 
-"use client"
   Dialog,
   DialogContent,
   DialogDescription,
@@ -20,39 +21,39 @@ import { LineChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Res
   DialogTitle,
 } from "@/components/ui/dialog"
 interface Deployment {}
-  id: string;
-  version: string;
+  id: string
+  version: string
   environment: "development" | "staging" | "production"
   status: "pending" | "running" | "success" | "failed" | "cancelled"
-  branch: string;
-  commit: string;
-  author: string;
-  startedAt: string;
-  completedAt?: string;
-  duration?: number;
+  branch: string
+  commit: string
+  author: string
+  startedAt: string
+  completedAt?: string
+  duration?: number
   stages: DeploymentStage[]
 }
 
 interface DeploymentStage {}
-  id: string;
-  name: string;
+  id: string
+  name: string
   status: "pending" | "running" | "success" | "failed" | "skipped"
-  startedAt?: string;
-  completedAt?: string;
-  duration?: number;
+  startedAt?: string
+  completedAt?: string
+  duration?: number
   logs?: string[]
 }
 
 interface Environment {}
-  id: string;
-  name: string;
+  id: string
+  name: string
   type: "development" | "staging" | "production"
-  url: string;
+  url: string
   status: "healthy" | "degraded" | "down"
-  lastDeployment: string;
-  version: string;
-  uptime: number;
-  responseTime: number;
+  lastDeployment: string
+  version: string
+  uptime: number
+  responseTime: number
 }
 
 const mockDeployments: Deployment[] = []
@@ -198,11 +199,11 @@ export function DeploymentPipeline() {
 
     setDeployments((prev) => [newDeployment, ...prev])
 
-    // Simulate deployment progress;
+    // Simulate deployment progress
     setTimeout(() => {}
       setDeployments((prev) =>
         prev.map((dep) =>
-          dep.id === newDeployment.id;
+          dep.id === newDeployment.id
             ? {}
                 ...dep,
                 status: Math.random() > 0.2 ? &quot;success&quot; : &quot;failed",
@@ -222,7 +223,7 @@ export function DeploymentPipeline() {
   }
 
   const rollbackDeployment = (deploymentId: string) => {}
-    // Implement rollback logic;
+    // Implement rollback logic
     console.log("Rolling back deployment:", deploymentId)
   }
 
@@ -274,15 +275,15 @@ export function DeploymentPipeline() {
   }
 
   const filteredDeployments = deployments.filter((deployment) => {}
-    const matchesEnvironment = filterEnvironment === "all" || deployment.environment === filterEnvironment;
-    const matchesStatus = filterStatus === "all" || deployment.status === filterStatus;
-    return matchesEnvironment && matchesStatus;
+    const matchesEnvironment = filterEnvironment === "all" || deployment.environment === filterEnvironment
+    const matchesStatus = filterStatus === "all" || deployment.status === filterStatus
+    return matchesEnvironment && matchesStatus
   })
 
-  const totalDeployments = deployments.length;
-  const successfulDeployments = deployments.filter((d) => d.status === &quot;success&quot;).length;
-  const failedDeployments = deployments.filter((d) => d.status === &quot;failed").length;
-  const runningDeployments = deployments.filter((d) => d.status === "running").length;
+  const totalDeployments = deployments.length
+  const successfulDeployments = deployments.filter((d) => d.status === &quot;success&quot;).length
+  const failedDeployments = deployments.filter((d) => d.status === &quot;failed").length
+  const runningDeployments = deployments.filter((d) => d.status === "running").length
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -295,11 +296,11 @@ export function DeploymentPipeline() {
         <div className="flex gap-2">
           <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
             <Settings className="mr-2 h-4 w-4" />
-            Settings;
+            Settings
           </Button>
           <Button onClick={() => triggerDeployment(&quot;staging&quot;)}>
             <Rocket className="mr-2 h-4 w-4" />
-            Deploy to Staging;
+            Deploy to Staging
           </Button>
         </div>
       </div>
@@ -417,7 +418,7 @@ export function DeploymentPipeline() {
                     <TableRow key={deployment.id}>
                       <TableCell className="font-medium">{deployment.version}</TableCell>
                       <TableCell>
-                        <Badge;
+                        <Badge
                           variant="outline"
                           className={}
                             deployment.environment === "production"
@@ -451,7 +452,7 @@ export function DeploymentPipeline() {
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-1">
-                          <Button;
+                          <Button
                             size="sm"
                             variant="outline"
                             onClick={() => {}
@@ -512,17 +513,17 @@ export function DeploymentPipeline() {
                   </div>
 
                   <div className="flex gap-2">
-                    <Button;
+                    <Button
                       size="sm"
                       onClick={() => triggerDeployment(environment.type)}
                       disabled={environment.type === "production"}
                     >
                       <Rocket className="mr-2 h-4 w-4" />
-                      Deploy;
+                      Deploy
                     </Button>
                     <Button size="sm" variant="outline">
                       <Globe className="mr-2 h-4 w-4" />
-                      Visit;
+                      Visit
                     </Button>
                   </div>
                 </CardContent>
@@ -800,11 +801,11 @@ export function DeploymentPipeline() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setDetailsDialogOpen(false)}>
-              Close;
+              Close
             </Button>
             <Button onClick={() => setDetailsDialogOpen(false)}>
               <Download className="mr-2 h-4 w-4" />
-              Download Logs;
+              Download Logs
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -862,7 +863,7 @@ export function DeploymentPipeline() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setSettingsDialogOpen(false)}>
-              Cancel;
+              Cancel
             </Button>
             <Button onClick={() => setSettingsDialogOpen(false)}>Save Settings</Button>
           </DialogFooter>

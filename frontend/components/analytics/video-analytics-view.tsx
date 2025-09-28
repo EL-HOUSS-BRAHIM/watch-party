@@ -1,3 +1,5 @@
+"use client"
+
 import { BarChart, Download, Eye, Heart, PieChart, Play, Share, TrendingUp, Video } from "lucide-react"
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -9,30 +11,29 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast'
 import { analyticsAPI } from '@/lib/api'
 
-'use client'
 interface VideoAnalyticsProps {}
-  videoId: string;
+  videoId: string
 }
 
 interface VideoStats {}
-  views: number;
-  likes: number;
-  dislikes: number;
-  shares: number;
-  comments: number;
-  watchTime: number;
-  avgWatchTime: number;
-  retentionRate: number;
-  completionRate: number;
+  views: number
+  likes: number
+  dislikes: number
+  shares: number
+  comments: number
+  watchTime: number
+  avgWatchTime: number
+  retentionRate: number
+  completionRate: number
 }
 
 interface ViewerData {}
-  timestamp: string;
-  viewers: number;
-  country?: string;
-  device?: string;
-  age?: string;
-  gender?: string;
+  timestamp: string
+  viewers: number
+  country?: string
+  device?: string
+  age?: string
+  gender?: string
 }
 
 const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
@@ -48,7 +49,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
     watchTime: 0,
     avgWatchTime: 0,
     retentionRate: 0,
-    completionRate: 0;
+    completionRate: 0
   })
   const [viewerData, setViewerData] = useState<ViewerData[]>([])
 
@@ -61,18 +62,17 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
       setLoading(true)
       const response = await analyticsAPI.getVideoAnalytics(videoId)
       if (response) {
-        setStats({}
-          views: response.video?.views || 0,
+        setStats({views: response.video?.views || 0,
           likes: response.engagement?.likes || 0,
-          dislikes: 0, // Not provided by API;
+          dislikes: 0, // Not provided by API
           shares: response.engagement?.shares || 0,
           comments: response.engagement?.comments || 0,
-          watchTime: 0, // Not provided by API;
-          avgWatchTime: 0, // Not provided by API;
+          watchTime: 0, // Not provided by API
+          avgWatchTime: 0, // Not provided by API
           retentionRate: response.video?.completion_rate || 0,
-          completionRate: response.video?.completion_rate || 0;
+          completionRate: response.video?.completion_rate || 0
         })
-        // Transform view chart data to match expected format;
+        // Transform view chart data to match expected format
         const transformedViewerData = response.view_chart?.map((item: unknown) => ({}
           timestamp: item.date,
           viewers: item.views,
@@ -83,14 +83,13 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
         })) || []
         setViewerData(transformedViewerData)
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to fetch video analytics:', error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load video analytics. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -113,26 +112,23 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
 
   const exportData = async (format: 'csv' | 'json') => {}
     try {
-      const response = await analyticsAPI.exportAnalytics({}
-        format,
+      const response = await analyticsAPI.exportAnalytics({format,
         metrics: ['video_analytics'],
-        date_range: dateRange;
+        date_range: dateRange
       })
-      // Create download link;
+      // Create download link
       const link = document.createElement('a')
-      link.href = response.download_url;
+      link.href = response.download_url
       link.download = `video-${videoId}-analytics.${format}`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-      toast({}
-        title: "Export Successful",
+      toast({title: "Export Successful",
         description: `Video analytics exported as ${format.toUpperCase()}`
       })
-    } } catch {
+    } catch (err) {
       console.error('Export failed:', error)
-      toast({}
-        title: "Export Failed",
+      toast({title: "Export Failed",
         description: "Failed to export video analytics. Please try again.",
         variant: "destructive",
       })
@@ -161,11 +157,11 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
           </Select>
           <Button variant="outline" onClick={() => exportData(&apos;csv&apos;)}>
             <Download className="h-4 w-4 mr-2" />
-            Export CSV;
+            Export CSV
           </Button>
           <Button variant="outline" onClick={() => exportData(&apos;json&apos;)}>
             <Download className="h-4 w-4 mr-2" />
-            Export JSON;
+            Export JSON
           </Button>
         </div>
       </div>
@@ -193,7 +189,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
                 <CardContent>
                   <div className="text-2xl font-bold">{formatNumber(stats.views)}</div>
                   <p className="text-xs text-muted-foreground">
-                    +12% from last period;
+                    +12% from last period
                   </p>
                 </CardContent>
               </Card>
@@ -206,7 +202,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
                 <CardContent>
                   <div className="text-2xl font-bold">{formatNumber(stats.likes)}</div>
                   <p className="text-xs text-muted-foreground">
-                    Likes & interactions;
+                    Likes & interactions
                   </p>
                 </CardContent>
               </Card>
@@ -219,7 +215,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
                 <CardContent>
                   <div className="text-2xl font-bold">{formatDuration(stats.watchTime)}</div>
                   <p className="text-xs text-muted-foreground">
-                    Total across all viewers;
+                    Total across all viewers
                   </p>
                 </CardContent>
               </Card>
@@ -232,7 +228,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
                 <CardContent>
                   <div className="text-2xl font-bold">{stats.completionRate.toFixed(1)}%</div>
                   <p className="text-xs text-muted-foreground">
-                    Average view completion;
+                    Average view completion
                   </p>
                 </CardContent>
               </Card>
@@ -243,7 +239,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
               <CardHeader>
                 <CardTitle>Performance Metrics</CardTitle>
                 <CardDescription>
-                  Key performance indicators for your video;
+                  Key performance indicators for your video
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -265,7 +261,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
                         {((stats.likes + stats.comments + stats.shares) / stats.views * 100).toFixed(1)}%
                       </span>
                     </div>
-                    <Progress;
+                    <Progress
                       value={(stats.likes + stats.comments + stats.shares) / stats.views * 100} 
                       className="h-2" 
                     />
@@ -295,7 +291,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
               <CardHeader>
                 <CardTitle>Engagement Metrics</CardTitle>
                 <CardDescription>
-                  How viewers interact with your video;
+                  How viewers interact with your video
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -338,7 +334,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
               <CardHeader>
                 <CardTitle>Viewer Demographics</CardTitle>
                 <CardDescription>
-                  Understand your audience better;
+                  Understand your audience better
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -358,4 +354,4 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {}
   )
 }
 
-export default VideoAnalyticsView;
+export default VideoAnalyticsView

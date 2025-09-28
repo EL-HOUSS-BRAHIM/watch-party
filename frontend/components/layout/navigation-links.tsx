@@ -1,28 +1,28 @@
+"use client"
+
 import { Link } from "lucide-react"
 import type React from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 
-"use client"
 export interface NavigationLink {}
-  name: string;
-  href: string;
+  name: string
+  href: string
   icon?: React.ComponentType<{ className?: string }>
-  badge?: string | number;
-  external?: boolean;
+  badge?: string | number
+  external?: boolean
 }
 
 interface NavigationLinksProps {}
   links: NavigationLink[]
-  className?: string;
-  itemClassName?: string;
-  activeClassName?: string;
+  className?: string
+  itemClassName?: string
+  activeClassName?: string
   variant?: "default" | "sidebar" | "header"
 }
 
-export function NavigationLinks({}
-  links,
+export function NavigationLinks({links,
   className,
   itemClassName,
   activeClassName,
@@ -52,13 +52,13 @@ export function NavigationLinks({}
       {links.map((link) => {}
         const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href))
 
-        const LinkComponent = link.external ? "a" : Link;
-        const linkProps = link.external;
+        const LinkComponent = link.external ? "a" : Link
+        const linkProps = link.external
           ? { href: link.href, target: "_blank", rel: "noopener noreferrer" }
           : { href: link.href }
 
         return (
-          <LinkComponent;
+          <LinkComponent
             key={link.href}
             {...linkProps}
             className={cn(itemStyles[variant], isActive && (activeClassName || activeStyles[variant]), itemClassName)}
@@ -77,7 +77,7 @@ export function NavigationLinks({}
   )
 }
 
-// Predefined navigation configurations;
+// Predefined navigation configurations
 export const mainNavLinks: NavigationLink[] = []
   { name: "Home", href: "/" },
   { name: "Discover", href: "/discover" },

@@ -1,3 +1,5 @@
+"use client"
+
 import { Eye, Filter, Loader2, MapPin, MessageCircle, Refresh, Search, User, Users } from "lucide-react"
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -7,29 +9,28 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-'use client'
 interface User {}
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string;
-  isOnline: boolean;
+  id: string
+  username: string
+  displayName: string
+  avatar: string
+  isOnline: boolean
   mutualFriends: Array<{}
-    id: string;
-    username: string;
-    avatar: string;
+    id: string
+    username: string
+    avatar: string
   }>
   commonInterests: string[]
-  location?: string;
-  joinedDate: string;
-  friendsCount: number;
-  isVerified: boolean;
-  bio?: string;
+  location?: string
+  joinedDate: string
+  friendsCount: number
+  isVerified: boolean
+  bio?: string
 }
 
 interface FriendSuggestion extends User {}
   suggestionReason: 'mutual_friends' | 'location' | 'interests' | 'recent_activity' | 'similar_groups'
-  confidence: number;
+  confidence: number
 }
 
 export function MutualFriendsSuggestions() {
@@ -57,9 +58,9 @@ export function MutualFriendsSuggestions() {
         const data = await response.json()
         setSuggestions(data.suggestions)
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to fetch friend suggestions:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -72,16 +73,16 @@ export function MutualFriendsSuggestions() {
         const data = await response.json()
         setSuggestions(data.suggestions)
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to refresh suggestions:', error)
-    } finally {}
+    } finally {
       setRefreshing(false)
     }
   }
 
   const filterAndSortSuggestions = () => {}
-    let filtered = suggestions;
-    // Apply search filter;
+    let filtered = suggestions
+    // Apply search filter
     if (searchQuery) {
       filtered = filtered.filter(user => 
         user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -89,22 +90,22 @@ export function MutualFriendsSuggestions() {
       )
     }
 
-    // Apply category filter;
+    // Apply category filter
     if (filter !== 'all') {
       filtered = filtered.filter(user => user.suggestionReason === filter)
     }
 
-    // Apply sorting;
+    // Apply sorting
     filtered.sort((a, b) => {}
       switch (sortBy) {
         case 'confidence':
-          return b.confidence - a.confidence;
+          return b.confidence - a.confidence
         case 'mutual_friends':
-          return b.mutualFriends.length - a.mutualFriends.length;
+          return b.mutualFriends.length - a.mutualFriends.length
         case 'recent':
           return new Date(b.joinedDate).getTime() - new Date(a.joinedDate).getTime()
         default:
-          return 0;
+          return 0
       }
     })
 
@@ -120,10 +121,10 @@ export function MutualFriendsSuggestions() {
       })
 
       if (response.ok) {
-        // Remove from suggestions;
+        // Remove from suggestions
         setSuggestions(prev => prev.filter(s => s.id !== userId))
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to send friend request:', error)
     }
   }
@@ -137,7 +138,7 @@ export function MutualFriendsSuggestions() {
       if (response.ok) {
         setSuggestions(prev => prev.filter(s => s.id !== userId))
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to dismiss suggestion:', error)
     }
   }
@@ -190,7 +191,7 @@ export function MutualFriendsSuggestions() {
       setDismissed(true)
     }
 
-    if (dismissed) return null;
+    if (dismissed) return null
     return (
       <Card className="hover:shadow-md transition-shadow">
         <CardContent className="p-4">
@@ -210,7 +211,7 @@ export function MutualFriendsSuggestions() {
                 {user.isVerified && (
                   <UserCheck className="h-4 w-4 text-blue-500" />
                 )}
-                <Badge;
+                <Badge
                   variant="secondary" 
                   className={`text-xs text-white ${getSuggestionReasonColor(user.suggestionReason)}`}
                 >
@@ -266,7 +267,7 @@ export function MutualFriendsSuggestions() {
                   ))}
                   {user.commonInterests.length > 3 && (
                     <Badge variant="outline" className="text-xs">
-                      +{user.commonInterests.length - 3} more;
+                      +{user.commonInterests.length - 3} more
                     </Badge>
                   )}
                 </div>
@@ -275,12 +276,12 @@ export function MutualFriendsSuggestions() {
                 {requestSent ? (
                   <Button disabled size="sm" className="flex-1">
                     <UserCheck className="h-3 w-3 mr-1" />
-                    Request Sent;
+                    Request Sent
                   </Button>
                 ) : (
                   <Button onClick={handleSendRequest} size="sm" className="flex-1">
                     <UserPlus className="h-3 w-3 mr-1" />
-                    Add Friend;
+                    Add Friend
                   </Button>
                 )}
                 <Button variant="ghost" size="sm" onClick={handleDismiss}>
@@ -315,21 +316,21 @@ export function MutualFriendsSuggestions() {
           <Users className="h-6 w-6" />
           <span>Friend Suggestions</span>
         </h1>
-        <Button;
+        <Button
           onClick={refreshSuggestions} 
           disabled={refreshing}
           variant="outline"
           size="sm"
         >
           <RefreshCw className={`h-4 w-4 mr-1 ${refreshing ? 'animate-spin' : ''}`} />
-          Refresh;
+          Refresh
         </Button>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input;
+          <Input
             placeholder="Search suggestions..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

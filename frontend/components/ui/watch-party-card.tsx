@@ -1,11 +1,12 @@
+"use client"
+
 import * as React from "react"
 import { cn } from "@/lib/utils"
 
-"use client"
 
 const WatchPartyCard = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div;
+    <div
       ref={ref}
       className={cn(
         "rounded-lg border border-watch-party-border bg-watch-party-surface text-watch-party-text-primary shadow-watch-party-elevation backdrop-blur-sm transition-all duration-200 hover:shadow-watch-party-deep",
@@ -26,7 +27,7 @@ WatchPartyCardHeader.displayName = "WatchPartyCardHeader"
 
 const WatchPartyCardTitle = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div;
+    <div
       ref={ref}
       className={cn("text-2xl font-semibold leading-none tracking-tight text-watch-party-text-primary", className)}
       {...props}

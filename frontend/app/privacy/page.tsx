@@ -5,7 +5,7 @@ const PrivacyPage = () => {}
       <h1 className="text-3xl font-bold mb-4">Privacy Policy</h1>
 
       <p className="mb-4">
-        Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal;
+        Your privacy is important to us. This Privacy Policy explains how we collect, use, and protect your personal
         information when you use our website and services.
       </p>
 
@@ -14,15 +14,15 @@ const PrivacyPage = () => {}
         <p className="mb-2">We collect the following types of information:</p>
         <ul className="list-disc pl-5">
           <li>
-            <strong>Personal Information:</strong> Name, email address, contact information, and other details you;
+            <strong>Personal Information:</strong> Name, email address, contact information, and other details you
             provide when registering or using our services.
           </li>
           <li>
-            <strong>Usage Data:</strong> Information about how you use our website and services, including your IP;
+            <strong>Usage Data:</strong> Information about how you use our website and services, including your IP
             address, browser type, operating system, and pages visited.
           </li>
           <li>
-            <strong>Cookies:</strong> We use cookies to enhance your experience and collect information about your;
+            <strong>Cookies:</strong> We use cookies to enhance your experience and collect information about your
             preferences.
           </li>
         </ul>
@@ -76,7 +76,7 @@ const PrivacyPage = () => {}
       <section className="mb-6">
         <h2 className="text-2xl font-semibold mb-2">Changes to This Privacy Policy</h2>
         <p className="mb-2">
-          We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting;
+          We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting
           the new policy on our website.
         </p>
       </section>
@@ -93,4 +93,4 @@ const PrivacyPage = () => {}
   )
 }
 
-export default PrivacyPage;
+export default PrivacyPage

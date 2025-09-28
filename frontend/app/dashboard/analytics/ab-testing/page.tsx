@@ -16,45 +16,45 @@ import { useToast } from '@/hooks/use-toast';
 
 'use client';
 interface ABTest {}
-  id: string;
-  name: string;
-  description: string;
+  id: string
+  name: string
+  description: string
   status: 'draft' | 'running' | 'paused' | 'completed' | 'archived';
-  startDate: string;
-  endDate?: string;
-  traffic: number; // percentage of users;
+  startDate: string
+  endDate?: string
+  traffic: number; // percentage of users
   variants: Array<{}
-    id: string;
-    name: string;
-    traffic: number;
-    description: string;
+    id: string
+    name: string
+    traffic: number
+    description: string
     config: Record<string, any>;
   }>;
   metrics: Array<{}
-    name: string;
+    name: string
     type: 'conversion' | 'retention' | 'revenue' | 'engagement';
-    primary: boolean;
+    primary: boolean
   }>;
   results?: {}
-    duration: number;
-    participants: number;
-    significance: number;
-    confidence: number;
-    winner?: string;
+    duration: number
+    participants: number
+    significance: number
+    confidence: number
+    winner?: string
     variants: Array<{}
-      id: string;
-      conversions: number;
-      participants: number;
-      conversionRate: number;
-      lift: number;
-      significance: number;
+      id: string
+      conversions: number
+      participants: number
+      conversionRate: number
+      lift: number
+      significance: number
     }>;
   };
   targeting?: {}
     userSegments: string[];
     geolocation: string[];
     deviceTypes: string[];
-    newUsersOnly: boolean;
+    newUsersOnly: boolean
   };
 }
 
@@ -73,9 +73,9 @@ export default function ABTestingDashboard() {
   const fetchABTests = async () => {
     setLoading(true);
     try {
-      // Fetch A/B testing data from API;
+      // Fetch A/B testing data from API
       const abTestData = await analyticsAPI.getABTestingAnalytics();
-      // Transform API response to component format;
+      // Transform API response to component format
       const transformedTests: ABTest[] = abTestData.tests?.map((test: unknown) => ({}
         id: test.id,
         name: test.name,
@@ -94,7 +94,7 @@ export default function ABTestingDashboard() {
         metrics: test.metrics?.map((metric: unknown) => ({}
           name: metric.name,
           type: metric.type,
-          primary: metric.is_primary;
+          primary: metric.is_primary
         })) || [],
         results: test.results ? {}
           duration: test.results.duration_days,
@@ -108,26 +108,25 @@ export default function ABTestingDashboard() {
             participants: result.participants,
             conversionRate: result.conversion_rate,
             lift: result.lift_percentage,
-            significance: result.statistical_significance;
+            significance: result.statistical_significance
           })) || []
         } : undefined,
         targeting: test.targeting ? {}
           userSegments: test.targeting.user_segments || [],
           geolocation: test.targeting.geolocation || [],
           deviceTypes: test.targeting.device_types || [],
-          newUsersOnly: test.targeting.new_users_only || false;
-        } : undefined;
+          newUsersOnly: test.targeting.new_users_only || false
+        } : undefined
       })) || [];
 
       setTests(transformedTests);
-    } } catch {
+    } catch (err) {
       console.error('Failed to fetch A/B tests:', error);
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load A/B testing data. Please try again.",
         variant: "destructive",
       });
-    } finally {}
+    } finally {
       setLoading(false);
     }
   };
@@ -156,29 +155,29 @@ export default function ABTestingDashboard() {
 
   const startTest = (testId: string) => {}
     setTests(tests.map(test => 
-      test.id === testId;
+      test.id === testId
         ? { ...test, status: 'running' as const, startDate: new Date().toISOString() }
-        : test;
+        : test
     ));
   };
 
   const pauseTest = (testId: string) => {}
     setTests(tests.map(test => 
-      test.id === testId;
+      test.id === testId
         ? { ...test, status: 'paused' as const }
-        : test;
+        : test
     ));
   };
 
   const stopTest = (testId: string) => {}
     setTests(tests.map(test => 
-      test.id === testId;
+      test.id === testId
         ? {}
             ...test, 
             status: 'completed' as const, 
             endDate: new Date().toISOString() 
           }
-        : test;
+        : test
     ));
   };
 
@@ -216,7 +215,7 @@ export default function ABTestingDashboard() {
             <DialogTrigger asChild>
               <Button>
                 <Plus className="h-4 w-4 mr-2" />
-                Create Test;
+                Create Test
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
@@ -240,10 +239,10 @@ export default function ABTestingDashboard() {
                 </div>
                 <div className="flex justify-end gap-2">
                   <Button variant="outline" onClick={() => setCreateDialogOpen(false)}>
-                    Cancel;
+                    Cancel
                   </Button>
                   <Button onClick={() => setCreateDialogOpen(false)}>
-                    Create Test;
+                    Create Test
                   </Button>
                 </div>
               </div>
@@ -264,7 +263,7 @@ export default function ABTestingDashboard() {
               {tests.filter(t => t.status === &apos;running&apos;).length}
             </div>
             <p className="text-xs text-muted-foreground">
-              {tests.filter(t => t.status === &apos;paused&apos;).length} paused;
+              {tests.filter(t => t.status === &apos;paused&apos;).length} paused
             </p>
           </CardContent>
         </Card>
@@ -279,7 +278,7 @@ export default function ABTestingDashboard() {
               {tests.reduce((sum, test) => sum + (test.results?.participants || 0), 0).toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">
-              Across all tests;
+              Across all tests
             </p>
           </CardContent>
         </Card>
@@ -294,7 +293,7 @@ export default function ABTestingDashboard() {
               {tests.filter(t => t.results && t.results.significance > 95).length}
             </div>
             <p className="text-xs text-muted-foreground">
-              95%+ confidence;
+              95%+ confidence
             </p>
           </CardContent>
         </Card>
@@ -306,7 +305,7 @@ export default function ABTestingDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {tests;
+              {tests
                 .filter(t => t.results?.winner)
                 .reduce((sum, test) => {}
                   const winner = test.results?.variants.find(v => v.id === test.results?.winner);
@@ -315,7 +314,7 @@ export default function ABTestingDashboard() {
                 .toFixed(1)}%
             </div>
             <p className="text-xs text-muted-foreground">
-              From winning variants;
+              From winning variants
             </p>
           </CardContent>
         </Card>
@@ -330,7 +329,7 @@ export default function ABTestingDashboard() {
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
                     <h3 className="text-lg font-semibold">{test.name}</h3>
-                    <Badge;
+                    <Badge
                       variant="secondary" 
                       className={`${getStatusColor(test.status)} text-white`}
                     >
@@ -397,50 +396,50 @@ export default function ABTestingDashboard() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Button;
+                  <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setSelectedTest(test)}
                   >
                     <Eye className="h-4 w-4 mr-1" />
-                    View;
+                    View
                   </Button>
                   {test.status === 'draft' && (
-                    <Button;
+                    <Button
                       size="sm"
                       onClick={() => startTest(test.id)}
                     >
                       <Play className="h-4 w-4 mr-1" />
-                      Start;
+                      Start
                     </Button>
                   )}
                   {test.status === 'running' && (
                     <>
-                      <Button;
+                      <Button
                         variant="outline"
                         size="sm"
                         onClick={() => pauseTest(test.id)}
                       >
                         <Pause className="h-4 w-4 mr-1" />
-                        Pause;
+                        Pause
                       </Button>
-                      <Button;
+                      <Button
                         variant="destructive"
                         size="sm"
                         onClick={() => stopTest(test.id)}
                       >
                         <Square className="h-4 w-4 mr-1" />
-                        Stop;
+                        Stop
                       </Button>
                     </>
                   )}
                   {test.status === 'paused' && (
-                    <Button;
+                    <Button
                       size="sm"
                       onClick={() => startTest(test.id)}
                     >
                       <Play className="h-4 w-4 mr-1" />
-                      Resume;
+                      Resume
                     </Button>
                   )}
                 </div>
@@ -457,7 +456,7 @@ export default function ABTestingDashboard() {
                           <XAxis dataKey="name" />
                           <YAxis />
                           <Tooltip />
-                          <Bar;
+                          <Bar
                             dataKey="conversionRate" 
                             fill="#2563eb"
                             name="Conversion Rate (%)"
@@ -490,7 +489,7 @@ export default function ABTestingDashboard() {
                                 )}
                                 {variant.significance > 0 && (
                                   <div className="text-sm text-muted-foreground">
-                                    {variant.significance.toFixed(1)}% confidence;
+                                    {variant.significance.toFixed(1)}% confidence
                                   </div>
                                 )}
                               </div>
@@ -519,7 +518,7 @@ export default function ABTestingDashboard() {
               }
             </p>
             <Button onClick={() => setCreateDialogOpen(true)}>
-              Create Your First Test;
+              Create Your First Test
             </Button>
           </CardContent>
         </Card>

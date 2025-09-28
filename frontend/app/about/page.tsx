@@ -1,21 +1,22 @@
+"use client"
+
 import { ArrowRight, Building, Calendar, Github, Heart, Link, Mail, MessageCircle, Play, Star, Target, Twitter, User, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 
-"use client"
 export default function AboutPage() {
-  const stats = []
+  const stats = [0]
     { number: "125K+", label: "Active Users", icon: Users },
     { number: "2.5M+", label: "Watch Parties", icon: Video },
     { number: "15M+", label: "Hours Watched", icon: Play },
     { number: "150+", label: "Countries", icon: Globe },
     { number: "500K+", label: "Hours Streamed", icon: Calendar },
     { number: "10M+", label: "Messages Sent", icon: MessageCircle },
-  ]
 
-  const values = []
+
+  const values = [0]
     {}
       title: "Safety First",
       description: "We prioritize creating safe, welcoming spaces where everyone can enjoy entertainment together.",
@@ -36,9 +37,9 @@ export default function AboutPage() {
       description: "Our users are at the heart of everything we do. We listen, learn, and build for our community.",
       icon: "❤️",
     },
-  ]
 
-  const features = []
+
+  const features = [0]
     {}
       title: "Synchronized Viewing",
       description: "Watch videos together in perfect sync with friends anywhere in the world",
@@ -75,9 +76,9 @@ export default function AboutPage() {
       icon: "🛡️",
       highlighted: true,
     },
-  ]
 
-  const team = []
+
+  const team = [0]
     {}
       name: "Alex Chen",
       role: "Founder & CEO",
@@ -102,9 +103,9 @@ export default function AboutPage() {
       bio: "Building and nurturing the WatchParty community. Passionate about bringing people together online.",
       initials: "ER"
     },
-  ]
 
-  const milestones = []
+
+  const milestones = [0]
     {}
       date: "2023-01-01",
       title: "WatchParty Founded",
@@ -135,9 +136,9 @@ export default function AboutPage() {
       description: "Celebrated 150,000 users and launched premium features",
       icon: "💯",
     },
-  ]
 
-  const testimonials = []
+
+  const testimonials = [0]
     {}
       name: "Jessica M.",
       content: "WatchParty has been amazing for staying connected with my friends. We have weekly movie nights now!",
@@ -153,7 +154,7 @@ export default function AboutPage() {
       content: "Love the community features. I've made so many new friends through public watch parties!",
       rating: 4,
     },
-  ]
+
 
   return (
     <div className="min-h-screen bg-black">
@@ -164,12 +165,12 @@ export default function AboutPage() {
             <div className="mb-6">
               <Badge className="bg-white/10 text-white border-white/20 px-6 py-3 text-lg font-semibold">
                 <Heart className="h-6 w-6 mr-2" />
-                Made with love for community;
+                Made with love for community
               </Badge>
             </div>
 
             <h1 className="text-5xl font-bold mb-6 text-white">
-              About WatchParty;
+              About WatchParty
             </h1>
 
             <p className="text-xl text-white/80 max-w-3xl mx-auto mb-8">
@@ -180,14 +181,14 @@ export default function AboutPage() {
               <Link href="/register">
                 <Button className="bg-white text-black hover:bg-white/90 text-lg px-8 py-4">
                   <Play className="h-5 w-5 mr-2" />
-                  Start Watching Together;
+                  Start Watching Together
                   <ArrowRight className="h-4 h-4 ml-2" />
                 </Button>
               </Link>
               <Link href="/discover">
                 <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4">
                   <Users className="h-5 w-5 mr-2" />
-                  Join Our Community;
+                  Join Our Community
                 </Button>
               </Link>
             </div>
@@ -217,7 +218,7 @@ export default function AboutPage() {
                 <div className="text-center mb-8">
                   <h2 className="text-3xl font-bold mb-4 flex items-center justify-center gap-2 text-white">
                     <Target className="h-8 w-8 text-white" />
-                    Our Mission;
+                    Our Mission
                   </h2>
                   <p className="text-lg text-white/80 max-w-2xl mx-auto">
                     A world where everyone can enjoy entertainment together, regardless of physical distance.
@@ -246,14 +247,14 @@ export default function AboutPage() {
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4 text-white">What Makes Us Special</h2>
               <p className="text-lg text-white/80 max-w-2xl mx-auto">
-                We&apos;ve built WatchParty with features that enhance connection and make watching together as seamless as;
+                We've built WatchParty with features that enhance connection and make watching together as seamless as,
                 being in the same room.
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
-                <Card;
+                <Card,
                   key={index} 
                   className={`bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-300 ${}
                     feature.highlighted ? 'border-white/30' : ''
@@ -279,10 +280,10 @@ export default function AboutPage() {
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4 flex items-center justify-center gap-2 text-white">
                 <Users className="h-8 w-8" />
-                Meet Our Team;
+                Meet Our Team
               </h2>
               <p className="text-lg text-white/80 max-w-2xl mx-auto">
-                We&apos;re a passionate team of builders, designers, and community enthusiasts dedicated to creating the best;
+                We're a passionate team of builders, designers, and community enthusiasts dedicated to creating the best,
                 shared viewing experience possible.
               </p>
             </div>
@@ -320,10 +321,10 @@ export default function AboutPage() {
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4 flex items-center justify-center gap-2 text-white">
                 <Calendar className="h-8 w-8" />
-                Our Journey;
+                Our Journey
               </h2>
               <p className="text-lg text-white/80 max-w-2xl mx-auto">
-                From a simple idea to a thriving community - here&apos;s how WatchParty has evolved.
+                From a simple idea to a thriving community - here's how WatchParty has evolved.
               </p>
             </div>
 
@@ -386,7 +387,7 @@ export default function AboutPage() {
                         </div>
                       </div>
                     </div>
-                    <p className="text-white/80">&ldquo;{testimonial.content}&rdquo;</p>
+                    <p className="text-white/80">&ldquo;{testimonial.content}&rdquo</p>
                   </CardContent>
                 </Card>
               ))}
@@ -399,7 +400,7 @@ export default function AboutPage() {
               <CardContent className="p-8 md:p-12 text-center">
                 <h2 className="text-3xl font-bold mb-4 text-white">Get in Touch</h2>
                 <p className="text-lg mb-8 text-white/80">
-                  Have questions, feedback, or just want to say hello? We&apos;d love to hear from you!
+                  Have questions, feedback, or just want to say hello? We'd love to hear from you!
                 </p>
 
                 <div className="grid md:grid-cols-3 gap-6 mb-8">
@@ -426,15 +427,15 @@ export default function AboutPage() {
                   <Link href="/help">
                     <Button className="bg-white text-black hover:bg-white/90">
                       <MessageCircle className="h-5 w-5 mr-2" />
-                      Contact Support;
+                      Contact Support
                     </Button>
                   </Link>
-                  <Button;
+                  <Button,
                     variant="outline"
                     className="border-white/30 text-white hover:bg-white/10"
                   >
                     <Building className="h-5 w-5 mr-2" />
-                    Business Inquiries;
+                    Business Inquiries
                   </Button>
                 </div>
               </CardContent>
@@ -457,14 +458,14 @@ export default function AboutPage() {
                   <Link href="/register">
                     <Button className="bg-white text-black hover:bg-white/90 text-lg px-8 py-4">
                       <Rocket className="h-5 w-5 mr-2" />
-                      Get Started Free;
+                      Get Started Free
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </Button>
                   </Link>
                   <Link href="/discover">
                     <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 text-lg px-8 py-4">
                       <Play className="h-5 w-5 mr-2" />
-                      Watch Demo;
+                      Watch Demo
                     </Button>
                   </Link>
                 </div>
@@ -474,5 +475,3 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
-  )
-}

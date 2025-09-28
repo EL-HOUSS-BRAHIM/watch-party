@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -9,42 +11,41 @@ import { usersAPI } from "@/lib/api"
 import { cn } from "@/lib/utils"
 import { formatDistanceToNow } from "date-fns"
 
-"use client"
 
 interface ActivityItem {}
-  id: string;
+  id: string
   type: "friend_added" | "party_joined" | "party_created" | "video_watched" | "achievement_unlocked" | "party_completed"
   user: {}
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    avatar?: string;
-    isPremium: boolean;
+    id: string
+    username: string
+    firstName: string
+    lastName: string
+    avatar?: string
+    isPremium: boolean
   }
-  timestamp: string;
+  timestamp: string
   data: {}
-    friendName?: string;
-    partyName?: string;
-    partyId?: string;
-    videoTitle?: string;
-    videoId?: string;
-    achievementName?: string;
-    achievementIcon?: string;
-    participantCount?: number;
-    duration?: number;
+    friendName?: string
+    partyName?: string
+    partyId?: string
+    videoTitle?: string
+    videoId?: string
+    achievementName?: string
+    achievementIcon?: string
+    participantCount?: number
+    duration?: number
   }
-  isPublic: boolean;
+  isPublic: boolean
   reactions?: {}
-    likes: number;
-    hearts: number;
-    userReacted?: "like" | "heart" | null;
+    likes: number
+    hearts: number
+    userReacted?: "like" | "heart" | null
   }
 }
 
 interface ActivityFeedProps {}
-  userId?: string // If provided, show activities for specific user;
-  className?: string;
+  userId?: string // If provided, show activities for specific user
+  className?: string
 }
 
 export default function ActivityFeed({ userId, className }: ActivityFeedProps) {}
@@ -63,7 +64,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
     try {
       if (!usersAPI) {
         console.error('Users API not available')
-        return;
+        return
       }
 
       const params: Record<string, string | number> = { page: pageNum,
@@ -71,7 +72,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
       }
 
       if (userId) {
-        params.user_id = userId;
+        params.user_id = userId
       }
 
       const response = await usersAPI.getActivity(params)
@@ -82,9 +83,9 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
       }
       setHasMore(!!response.next)
       setPage(pageNum)
-    } } catch {
+    } catch (err) {
       console.error("Failed to load activity feed:", error)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -113,7 +114,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
           prev.map((activity) => (activity.id === activityId ? { ...activity, reactions: data.reactions } : activity)),
         )
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to react to activity:", error)
     }
   }
@@ -162,15 +163,15 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
     switch (activity.type) {
       case "party_joined":
       case "party_created":
-        return activity.data.participantCount;
+        return activity.data.participantCount
           ? `${activity.data.participantCount} participant${activity.data.participantCount !== 1 ? "s" : ""}`
-          : null;
+          : null
       case "video_watched":
-        return activity.data.duration ? `${Math.floor(activity.data.duration / 60)} minutes` : null;
+        return activity.data.duration ? `${Math.floor(activity.data.duration / 60)} minutes` : null
       case "party_completed":
-        return activity.data.duration ? `Watched for ${Math.floor(activity.data.duration / 60)} minutes` : null;
+        return activity.data.duration ? `Watched for ${Math.floor(activity.data.duration / 60)} minutes` : null
       default:
-        return null;
+        return null
     }
   }
 
@@ -213,7 +214,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
 
                   {activity.reactions && (
                     <div className="flex items-center gap-3">
-                      <button;
+                      <button
                         onClick={() => reactToActivity(activity.id, &quot;like&quot;)}
                         className={cn(
                           "flex items-center gap-1 hover:text-blue-600 transition-colors",
@@ -224,7 +225,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
                         {activity.reactions.likes > 0 && activity.reactions.likes}
                       </button>
 
-                      <button;
+                      <button
                         onClick={() => reactToActivity(activity.id, &quot;heart&quot;)}
                         className={cn(
                           "flex items-center gap-1 hover:text-red-600 transition-colors",
@@ -253,13 +254,13 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
             {/* Party info for party activities */}
             {(activity.type === "party_joined" || activity.type === "party_created") && activity.data.partyId && (
               <div className="mt-2">
-                <Button;
+                <Button
                   variant="outline"
                   size="sm"
                   onClick={() => (window.location.href = `/watch/${activity.data.partyId}`)}
                 >
                   <Video className="mr-2 h-4 w-4" />
-                  View Party;
+                  View Party
                 </Button>
               </div>
             )}
@@ -303,7 +304,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
             <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium mb-2">No activity yet</h3>
             <p className="text-gray-600">
-              {userId;
+              {userId
                 ? "This user hasn't had any recent activity."
                 : "Follow some friends to see their activities here!"}
             </p>

@@ -1,3 +1,5 @@
+"use client"
+
 import { BarChart, Clock, Download, MessageCircle, PieChart, ThumbsUp, TrendingUp, User, Users, X } from "lucide-react"
 import { useState, useEffect } from 'react'
 import Image from "next/image"
@@ -9,34 +11,33 @@ import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts'
 
-'use client'
 interface PartyAnalyticsModalProps {}
-  isOpen: boolean;
-  onClose: () => void;
-  partyId: string;
-  partyTitle: string;
+  isOpen: boolean
+  onClose: () => void
+  partyId: string
+  partyTitle: string
 }
 
 interface ParticipantData {}
-  id: string;
-  username: string;
-  avatar: string;
-  joinTime: string;
-  watchTime: number;
-  reactions: number;
-  messages: number;
-  isActive: boolean;
+  id: string
+  username: string
+  avatar: string
+  joinTime: string
+  watchTime: number
+  reactions: number
+  messages: number
+  isActive: boolean
 }
 
 interface AnalyticsData {}
-  totalParticipants: number;
-  currentViewers: number;
-  averageWatchTime: number;
-  totalReactions: number;
-  totalMessages: number;
-  peakViewers: number;
-  retentionRate: number;
-  engagementScore: number;
+  totalParticipants: number
+  currentViewers: number
+  averageWatchTime: number
+  totalReactions: number
+  totalMessages: number
+  peakViewers: number
+  retentionRate: number
+  engagementScore: number
   viewershipData: Array<{ time: string; viewers: number }>
   reactionData: Array<{ type: string; count: number; color: string }>
   participantActivity: ParticipantData[]
@@ -60,15 +61,15 @@ export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: Pa
         const data = await response.json()
         setAnalytics(data)
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to fetch party analytics:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
   const exportData = () => {}
-    if (!analytics) return;
+    if (!analytics) return
     const csvContent = "data:text/csv;charset=utf-8," + 
       "Metric,Value\n" +
       `Total Participants,${analytics.totalParticipants}\n` +
@@ -91,7 +92,7 @@ export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: Pa
 
   const formatDuration = (minutes: number) => {}
     const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60;
+    const mins = minutes % 60
     return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
   }
 
@@ -130,7 +131,7 @@ export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: Pa
           <DialogTitle>Party Analytics: {partyTitle}</DialogTitle>
           <Button variant="outline" size="sm" onClick={exportData}>
             <Download className="h-4 w-4 mr-2" />
-            Export Data;
+            Export Data
           </Button>
         </DialogHeader>
 
@@ -152,7 +153,7 @@ export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: Pa
                 <CardContent>
                   <div className="text-2xl font-bold">{analytics.totalParticipants}</div>
                   <p className="text-xs text-muted-foreground">
-                    {analytics.currentViewers} currently watching;
+                    {analytics.currentViewers} currently watching
                   </p>
                 </CardContent>
               </Card>
@@ -165,7 +166,7 @@ export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: Pa
                 <CardContent>
                   <div className="text-2xl font-bold">{formatDuration(analytics.averageWatchTime)}</div>
                   <p className="text-xs text-muted-foreground">
-                    {analytics.retentionRate}% retention rate;
+                    {analytics.retentionRate}% retention rate
                   </p>
                 </CardContent>
               </Card>
@@ -178,7 +179,7 @@ export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: Pa
                 <CardContent>
                   <div className="text-2xl font-bold">{analytics.peakViewers}</div>
                   <p className="text-xs text-muted-foreground">
-                    Maximum concurrent viewers;
+                    Maximum concurrent viewers
                   </p>
                 </CardContent>
               </Card>
@@ -222,7 +223,7 @@ export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: Pa
                 <CardContent>
                   <ResponsiveContainer width="100%" height={300}>
                     <PieChart>
-                      <Pie;
+                      <Pie
                         data={analytics.reactionData}
                         cx="50%"
                         cy="50%"
@@ -285,7 +286,7 @@ export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: Pa
                   {analytics.participantActivity.map((participant) => (
                     <div key={participant.id} className="flex items-center justify-between p-3 rounded-lg border">
                       <div className="flex items-center space-x-3">
-                        <img;
+                        <img
                           src={participant.avatar || '/placeholder-user.jpg'}
                           alt={participant.username}
                           className="w-8 h-8 rounded-full"
@@ -298,7 +299,7 @@ export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: Pa
                         </div>
                         {participant.isActive && (
                           <Badge variant="default" className="bg-green-500">
-                            Online;
+                            Online
                           </Badge>
                         )}
                       </div>

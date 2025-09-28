@@ -1,16 +1,17 @@
+"use client"
+
 import { Calendar, Check, CheckCircle, Info, Shield, Trash } from "lucide-react"
 import { useState } from 'react'
 
-'use client'
 interface DataExportRequest {}
-  id: string;
+  id: string
   type: 'profile' | 'videos' | 'parties' | 'all'
   status: 'pending' | 'processing' | 'ready' | 'expired'
-  requestedAt: string;
-  completedAt?: string;
-  downloadUrl?: string;
-  expiresAt?: string;
-  size?: string;
+  requestedAt: string
+  completedAt?: string
+  downloadUrl?: string
+  expiresAt?: string
+  size?: string
 }
 
 const exportRequests: DataExportRequest[] = []
@@ -89,23 +90,23 @@ export default function DataManagementPage() {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const handleExportData = async () => {
-    if (!selectedExportType) return;
+    if (!selectedExportType) return
     setIsExporting(true)
-    // Simulate API call;
+    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000))
     setIsExporting(false)
     setSelectedExportType('')
-    // In real app, this would trigger the export process;
+    // In real app, this would trigger the export process
     console.log('Exporting data type:', selectedExportType)
   }
 
   const handleDeleteAccount = async () => {
-    if (!deletePassword) return;
+    if (!deletePassword) return
     setIsDeleting(true)
-    // Simulate API call;
+    // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 3000))
     setIsDeleting(false)
-    // In real app, this would delete the account;
+    // In real app, this would delete the account
     console.log('Deleting account')
   }
 
@@ -123,7 +124,7 @@ export default function DataManagementPage() {
     const expiry = new Date(expiresAt)
     const now = new Date()
     const diffInHours = (expiry.getTime() - now.getTime()) / (1000 * 60 * 60)
-    return diffInHours < 24;
+    return diffInHours < 24
   }
 
   return (
@@ -136,7 +137,7 @@ export default function DataManagementPage() {
             <h1 className="text-4xl font-bold text-white">Data Management</h1>
           </div>
           <p className="text-white/70 text-lg">
-            Export your data or delete your account in compliance with privacy regulations;
+            Export your data or delete your account in compliance with privacy regulations
           </p>
         </div>
 
@@ -167,11 +168,11 @@ export default function DataManagementPage() {
             <h3 className="text-lg font-semibold text-white mb-4">What would you like to export?</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {exportTypes.map(type => (
-                <button;
+                <button
                   key={type.key}
                   onClick={() => setSelectedExportType(type.key)}
                   className={`p-4 rounded-lg border-2 transition-all text-left ${}
-                    selectedExportType === type.key;
+                    selectedExportType === type.key
                       ? 'border-blue-400 bg-blue-500/20'
                       : 'border-white/20 bg-white/5 hover:bg-white/10'
                   }`}
@@ -186,7 +187,7 @@ export default function DataManagementPage() {
           {/* Export Button */}
           {selectedExportType && (
             <div className="mb-6">
-              <button;
+              <button
                 onClick={handleExportData}
                 disabled={isExporting}
                 className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 text-white px-6 py-3 rounded-lg font-medium transition-colors"
@@ -199,7 +200,7 @@ export default function DataManagementPage() {
                 ) : (
                   <>
                     <DocumentArrowDownIcon className="w-5 h-5" />
-                    Request Export;
+                    Request Export
                   </>
                 )}
               </button>
@@ -211,7 +212,7 @@ export default function DataManagementPage() {
             <h3 className="text-lg font-semibold text-white mb-4">Export History</h3>
             <div className="space-y-4">
               {exportRequests.map(request => (
-                <div;
+                <div
                   key={request.id}
                   className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6"
                 >
@@ -247,7 +248,7 @@ export default function DataManagementPage() {
                       {request.status === 'ready' && request.downloadUrl && (
                         <div className="flex flex-col items-end gap-2">
                           <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                            Download;
+                            Download
                           </button>
                           {request.expiresAt && (
                             <span className={`text-xs ${}}
@@ -296,12 +297,12 @@ export default function DataManagementPage() {
               </div>
             </div>
 
-            <button;
+            <button
               onClick={() => setShowDeleteConfirm(true)}
               className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
             >
               <TrashIcon className="w-5 h-5" />
-              Delete My Account;
+              Delete My Account
             </button>
           </div>
         </div>
@@ -322,7 +323,7 @@ export default function DataManagementPage() {
                 <label className="block text-white font-medium mb-2">
                   Enter your password to confirm:
                 </label>
-                <input;
+                <input
                   type="password"
                   value={deletePassword}
                   onChange={(e) => setDeletePassword(e.target.value)}
@@ -332,7 +333,7 @@ export default function DataManagementPage() {
               </div>
 
               <div className="flex gap-4">
-                <button;
+                <button
                   onClick={() => {}
                     setShowDeleteConfirm(false)
                     setDeletePassword('')
@@ -340,9 +341,9 @@ export default function DataManagementPage() {
                   className="flex-1 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors"
                   disabled={isDeleting}
                 >
-                  Cancel;
+                  Cancel
                 </button>
-                <button;
+                <button
                   onClick={handleDeleteAccount}
                   disabled={!deletePassword || isDeleting}
                   className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-red-600/50 text-white px-4 py-2 rounded-lg transition-colors"

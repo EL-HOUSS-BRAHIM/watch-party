@@ -1,10 +1,11 @@
+"use client"
+
 import { cn } from "@/lib/utils"
 
-"use client"
 
 interface LoadingSpinnerProps {}
   size?: "sm" | "md" | "lg"
-  className?: string;
+  className?: string
 }
 
 export function LoadingSpinner({ size = "md", className }: LoadingSpinnerProps) {}
@@ -14,7 +15,7 @@ export function LoadingSpinner({ size = "md", className }: LoadingSpinnerProps) 
   }
 
   return (
-    <div;
+    <div
       className={cn(
         "animate-spin rounded-full border-2 border-gray-300 border-t-primary",
         sizeClasses[size],

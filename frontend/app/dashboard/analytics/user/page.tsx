@@ -8,7 +8,7 @@ export default function UserAnalyticsPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold">Your Analytics</h1>
           <p className="text-muted-foreground mt-2">
-            Track your watch party activity and engagement;
+            Track your watch party activity and engagement
           </p>
         </div>
         <UserAnalytics />

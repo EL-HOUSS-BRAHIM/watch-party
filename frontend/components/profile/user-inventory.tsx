@@ -1,3 +1,5 @@
+"use client"
+
 import { Calendar, Package } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import Image from "next/image"
@@ -8,16 +10,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useApi } from "@/hooks/use-api"
 import { formatDistanceToNow } from "date-fns"
 
-"use client"
 interface InventoryItem {}
-  id: string;
-  name: string;
-  description: string;
+  id: string
+  name: string
+  description: string
   type: "avatar" | "theme" | "badge" | "emote" | "decoration"
   rarity: "common" | "rare" | "epic" | "legendary"
-  image_url?: string;
-  is_equipped: boolean;
-  acquired_at: string;
+  image_url?: string
+  is_equipped: boolean
+  acquired_at: string
   source: "store" | "achievement" | "gift" | "event"
 }
 
@@ -35,7 +36,7 @@ const rarityColors = { common: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:
 }
 
 interface UserInventoryProps {}
-  userId: string;
+  userId: string
 }
 
 export function UserInventory({ userId }: UserInventoryProps) {}
@@ -54,9 +55,9 @@ export function UserInventory({ userId }: UserInventoryProps) {}
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/inventory/`)
       setItems((response.data as Record<string, unknown>).items || [])
-    } } catch {
+    } catch (err) {
       console.error("Failed to load inventory:", err)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -69,9 +70,9 @@ export function UserInventory({ userId }: UserInventoryProps) {}
         ...item,
         is_equipped: item.id === itemId ? true : (item.type === items.find(i => i.id === itemId)?.type ? false : item.is_equipped)
       })))
-    } } catch {
+    } catch (err) {
       console.error("Failed to equip item:", err)
-    } finally {}
+    } finally {
       setEquippingItem(null)
     }
   }
@@ -81,11 +82,11 @@ export function UserInventory({ userId }: UserInventoryProps) {}
     try {
       await api.post(`/users/${userId}/inventory/${itemId}/unequip/`)
       setItems(items.map(item => 
-        item.id === itemId ? { ...item, is_equipped: false } : item;
+        item.id === itemId ? { ...item, is_equipped: false } : item
       ))
-    } } catch {
+    } catch (err) {
       console.error("Failed to unequip item:", err)
-    } finally {}
+    } finally {
       setEquippingItem(null)
     }
   }
@@ -105,7 +106,7 @@ export function UserInventory({ userId }: UserInventoryProps) {}
 
   const itemTypes = Array.from(new Set(items.map(item => item.type)))
   const filteredItems = selectedType === "all" 
-    ? items;
+    ? items
     : items.filter(item => item.type === selectedType)
 
   const equippedItems = items.filter(item => item.is_equipped)
@@ -169,7 +170,7 @@ export function UserInventory({ userId }: UserInventoryProps) {}
           <TabsTrigger value="all">All Items</TabsTrigger>
           {itemTypes.map((type) => (
             <TabsTrigger key={type} value={type} className="capitalize">
-              {type}s;
+              {type}s
             </TabsTrigger>
           ))}
         </TabsList>
@@ -179,7 +180,7 @@ export function UserInventory({ userId }: UserInventoryProps) {}
             {filteredItems.map((item) => {}
               const TypeIcon = itemTypeIcons[item.type]
               return (
-                <Card;
+                <Card
                   key={item.id}
                   className={`relative ${item.is_equipped ? "ring-2 ring-primary" : ""}`}
                 >
@@ -187,7 +188,7 @@ export function UserInventory({ userId }: UserInventoryProps) {}
                     <div className="flex items-start justify-between">
                       <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
                         {item.image_url ? (
-                          <img;
+                          <img
                             src={item.image_url} 
                             alt={item.name}
                             className="w-8 h-8 object-cover rounded"
@@ -202,7 +203,7 @@ export function UserInventory({ userId }: UserInventoryProps) {}
                         </Badge>
                         {item.is_equipped && (
                           <Badge variant="secondary" className="text-xs">
-                            Equipped;
+                            Equipped
                           </Badge>
                         )}
                       </div>
@@ -230,7 +231,7 @@ export function UserInventory({ userId }: UserInventoryProps) {}
                       </div>
                       <div className="pt-2">
                         {item.is_equipped ? (
-                          <Button;
+                          <Button
                             variant="outline"
                             size="sm"
                             className="w-full"
@@ -240,7 +241,7 @@ export function UserInventory({ userId }: UserInventoryProps) {}
                             {equippingItem === item.id ? "Unequipping..." : "Unequip"}
                           </Button>
                         ) : (
-                          <Button;
+                          <Button
                             size="sm"
                             className="w-full"
                             onClick={() => equipItem(item.id)}

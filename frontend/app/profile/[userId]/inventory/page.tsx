@@ -1,8 +1,7 @@
-
 "use client"
 
 const InventoryPage = () => {}
-  // Mock data for user's inventory items;
+  // Mock data for user's inventory items
   const inventoryItems = []
     {}
       id: 1,
@@ -46,4 +45,4 @@ const InventoryPage = () => {}
   )
 }
 
-export default InventoryPage;
+export default InventoryPage

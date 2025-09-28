@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -5,11 +7,10 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
-import {}
+
 import { formatDistanceToNow, parseISO } from "date-fns"
 
 } from "lucide-react"
-"use client"
 
   Trophy,
   Award,
@@ -33,76 +34,76 @@ import { formatDistanceToNow, parseISO } from "date-fns"
   Loader2,
   Smile,
   Palette,
-  Camera;
+  Camera
 interface Achievement {}
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
+  id: string
+  name: string
+  description: string
+  icon: string
   category: "social" | "parties" | "content" | "streaks" | "milestones" | "special"
   tier: "bronze" | "silver" | "gold" | "platinum" | "diamond"
-  points: number;
-  unlocked: boolean;
-  unlocked_at?: string;
+  points: number
+  unlocked: boolean
+  unlocked_at?: string
   progress?: {}
-    current: number;
-    target: number;
-    percentage: number;
+    current: number
+    target: number
+    percentage: number
   }
   rarity: "common" | "rare" | "epic" | "legendary"
-  requirements: string;
+  requirements: string
 }
 
 interface Reward {}
-  id: string;
-  name: string;
-  description: string;
+  id: string
+  name: string
+  description: string
   category: "cosmetic" | "functional" | "premium" | "exclusive"
   type: "theme" | "emote" | "badge" | "avatar_frame" | "title" | "feature"
-  cost: number;
+  cost: number
   currency: "points" | "coins" | "gems"
-  icon: string;
-  preview?: string;
-  owned: boolean;
-  limited_time?: boolean;
-  expires_at?: string;
+  icon: string
+  preview?: string
+  owned: boolean
+  limited_time?: boolean
+  expires_at?: string
   requirements?: string[]
 }
 
 interface UserStats {}
-  total_points: number;
-  total_coins: number;
-  total_gems: number;
-  level: number;
+  total_points: number
+  total_coins: number
+  total_gems: number
+  level: number
   level_progress: {}
-    current_xp: number;
-    required_xp: number;
-    percentage: number;
+    current_xp: number
+    required_xp: number
+    percentage: number
   }
   streak: {}
-    current: number;
-    longest: number;
-    last_activity: string;
+    current: number
+    longest: number
+    last_activity: string
   }
-  achievements_unlocked: number;
-  total_achievements: number;
-  leaderboard_rank: number;
-  weekly_rank: number;
+  achievements_unlocked: number
+  total_achievements: number
+  leaderboard_rank: number
+  weekly_rank: number
 }
 
 interface LeaderboardEntry {
-  rank: number;
+  rank: number
   user: {}
-    id: string;
-    username: string;
-    display_name: string;
-    avatar?: string;
-    is_verified: boolean;
+    id: string
+    username: string
+    display_name: string
+    avatar?: string
+    is_verified: boolean
   }
-  points: number;
-  level: number;
-  achievements_count: number;
-  weekly_points: number;
+  points: number
+  level: number
+  achievements_count: number
+  weekly_points: number
 }
 
 export default function RewardsPage() {
@@ -149,14 +150,13 @@ export default function RewardsPage() {
         const data = await leaderboardRes.json()
         setLeaderboard(data.leaderboard || [])
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to load rewards data:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load rewards data.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }, [toast])
@@ -177,9 +177,9 @@ export default function RewardsPage() {
         const data = await response.json()
         setRewards(prev => 
           prev.map(reward => 
-            reward.id === rewardId;
+            reward.id === rewardId
               ? { ...reward, owned: true }
-              : reward;
+              : reward
           )
         )
         if (userStats) {
@@ -187,29 +187,27 @@ export default function RewardsPage() {
             ...prev,
             total_points: data.remaining_points || prev.total_points,
             total_coins: data.remaining_coins || prev.total_coins,
-            total_gems: data.remaining_gems || prev.total_gems;
+            total_gems: data.remaining_gems || prev.total_gems
           } : null)
         }
-        toast({}
-          title: "Reward Claimed!",
+        toast({title: "Reward Claimed!",
           description: `You've successfully claimed ${data.reward_name}!`,
         })
       } else {}
         const error = await response.json()
         throw new Error(error.message || "Failed to claim reward")
       }
-    } } catch {
+    } catch (err) {
       console.error("Claim reward error:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: error.message || "Failed to claim reward.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setClaimingRewards(prev => {}
         const newSet = new Set(prev)
         newSet.delete(rewardId)
-        return newSet;
+        return newSet
       })
     }
   }
@@ -315,7 +313,7 @@ export default function RewardsPage() {
   }
 
   const filteredAchievements = selectedCategory === "all" 
-    ? achievements;
+    ? achievements
     : achievements.filter(achievement => achievement.category === selectedCategory)
 
   if (isLoading) {
@@ -337,7 +335,7 @@ export default function RewardsPage() {
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <Trophy className="h-8 w-8 text-yellow-500" />
-              Rewards & Achievements;
+              Rewards & Achievements
             </h1>
             <p className="text-gray-600 mt-2">Earn points, unlock achievements, and claim rewards</p>
           </div>
@@ -352,7 +350,7 @@ export default function RewardsPage() {
                   <div>
                     <p className="text-yellow-100 text-sm">Level</p>
                     <p className="text-3xl font-bold">{userStats.level}</p>
-                    <Progress;
+                    <Progress
                       value={userStats.level_progress.percentage} 
                       className="mt-2 bg-yellow-600" 
                     />
@@ -396,7 +394,7 @@ export default function RewardsPage() {
                     <p className="text-3xl font-bold">
                       {userStats.achievements_unlocked}/{userStats.total_achievements}
                     </p>
-                    <Progress;
+                    <Progress
                       value={(userStats.achievements_unlocked / userStats.total_achievements) * 100} 
                       className="mt-2" 
                     />
@@ -419,15 +417,15 @@ export default function RewardsPage() {
           <TabsContent value="achievements" className="space-y-6">
             {/* Category Filter */}
             <div className="flex flex-wrap gap-2">
-              <Button;
+              <Button
                 variant={selectedCategory === "all" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setSelectedCategory(&quot;all&quot;)}
               >
-                All Categories;
+                All Categories
               </Button>
               {["social", "parties", "content", "streaks", "milestones", "special"].map(category => (
-                <Button;
+                <Button
                   key={category}
                   variant={selectedCategory === category ? "default" : "outline"}
                   size="sm"
@@ -443,7 +441,7 @@ export default function RewardsPage() {
             {/* Achievements Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredAchievements.map((achievement) => (
-                <Card;
+                <Card
                   key={achievement.id} 
                   className={`border-l-4 ${getTierColor(achievement.tier)} ${}
                     achievement.unlocked ? 'ring-2 ring-green-200' : 'opacity-75'
@@ -555,7 +553,7 @@ export default function RewardsPage() {
                       {reward.limited_time && (
                         <Badge variant="destructive" className="text-xs">
                           <Clock className="h-3 w-3 mr-1" />
-                          Limited;
+                          Limited
                         </Badge>
                       )}
                     </div>
@@ -585,10 +583,10 @@ export default function RewardsPage() {
                       {reward.owned ? (
                         <Badge variant="secondary" className="bg-green-100 text-green-800">
                           <CheckCircle className="h-3 w-3 mr-1" />
-                          Owned;
+                          Owned
                         </Badge>
                       ) : (
-                        <Button;
+                        <Button
                           size="sm"
                           onClick={() => claimReward(reward.id)}
                           disabled={claimingRewards.has(reward.id)}
@@ -598,7 +596,7 @@ export default function RewardsPage() {
                           ) : (
                             <>
                               <Gift className="h-4 w-4 mr-2" />
-                              Claim;
+                              Claim
                             </>
                           )}
                         </Button>
@@ -615,10 +613,10 @@ export default function RewardsPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Trophy className="h-5 w-5" />
-                  Global Leaderboard;
+                  Global Leaderboard
                 </CardTitle>
                 <CardDescription>
-                  Top performers in the watch party community;
+                  Top performers in the watch party community
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -637,7 +635,7 @@ export default function RewardsPage() {
                             entry.rank === 2 ? <Medal className="h-4 w-4" /> :
                             <Award className="h-4 w-4" />
                           ) : (
-                            entry.rank;
+                            entry.rank
                           )}
                         </div>
                         <div className="flex items-center gap-3">
@@ -654,7 +652,7 @@ export default function RewardsPage() {
                               )}
                             </div>
                             <div className="text-sm text-gray-600">
-                              Level {entry.level} • {entry.achievements_count} achievements;
+                              Level {entry.level} • {entry.achievements_count} achievements
                             </div>
                           </div>
                         </div>
@@ -662,7 +660,7 @@ export default function RewardsPage() {
                       <div className="text-right">
                         <div className="font-medium">{entry.points.toLocaleString()} points</div>
                         <div className="text-sm text-gray-600">
-                          +{entry.weekly_points} this week;
+                          +{entry.weekly_points} this week
                         </div>
                       </div>
                     </div>
@@ -720,7 +718,7 @@ export default function RewardsPage() {
                   <CardHeader>
                     <CardTitle>How to Earn Currency</CardTitle>
                     <CardDescription>
-                      Different ways to earn points, coins, and gems;
+                      Different ways to earn points, coins, and gems
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -728,7 +726,7 @@ export default function RewardsPage() {
                       <div className="space-y-4">
                         <h4 className="font-medium flex items-center gap-2">
                           <Star className="h-4 w-4 text-yellow-500" />
-                          Earn Points;
+                          Earn Points
                         </h4>
                         <ul className="space-y-2 text-sm text-gray-600">
                           <li>• Host watch parties (+50)</li>
@@ -743,7 +741,7 @@ export default function RewardsPage() {
                       <div className="space-y-4">
                         <h4 className="font-medium flex items-center gap-2">
                           <Coins className="h-4 w-4 text-orange-500" />
-                          Earn Coins;
+                          Earn Coins
                         </h4>
                         <ul className="space-y-2 text-sm text-gray-600">
                           <li>• Weekly challenges (+100)</li>
@@ -757,7 +755,7 @@ export default function RewardsPage() {
                       <div className="space-y-4">
                         <h4 className="font-medium flex items-center gap-2">
                           <Gem className="h-4 w-4 text-purple-500" />
-                          Earn Gems;
+                          Earn Gems
                         </h4>
                         <ul className="space-y-2 text-sm text-gray-600">
                           <li>• Major achievements (+10)</li>

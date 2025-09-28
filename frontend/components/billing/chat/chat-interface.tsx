@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useRef, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,27 +10,26 @@ import { useSocket } from "@/contexts/socket-context"
 import { useAuth } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
 
-"use client"
 
 interface Message {}
-  id: string;
+  id: string
   user: {}
-    id: string;
-    username: string;
-    avatar?: string;
+    id: string
+    username: string
+    avatar?: string
     role: "user" | "admin" | "moderator"
   }
-  content: string;
-  timestamp: string;
+  content: string
+  timestamp: string
   type: "text" | "image" | "file"
   reactions?: { [emoji: string]: string[] }
-  isEdited?: boolean;
-  replyTo?: string;
+  isEdited?: boolean
+  replyTo?: string
 }
 
 interface ChatInterfaceProps {}
-  roomId: string;
-  className?: string;
+  roomId: string
+  className?: string
 }
 
 export default function ChatInterface({ roomId, className }: ChatInterfaceProps) {}
@@ -50,37 +51,37 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
   const { sendMessage, onMessage } = useSocket()
   const { user } = useAuth()
 
-  // Load chat history;
+  // Load chat history
   useEffect(() => {
     loadChatHistory()
   }, [roomId])
 
-  // WebSocket message handler;
+  // WebSocket message handler
   useEffect(() => {
     const unsubscribe = onMessage((message) => {}
       switch (message.type) {
         case "chat_message":
           handleNewMessage(message.data)
-          break;
+          break
         case "typing":
           handleTypingIndicator(message.data)
-          break;
+          break
         case "message_reaction":
           handleMessageReaction(message.data)
-          break;
+          break
         case "message_edit":
           handleMessageEdit(message.data)
-          break;
+          break
         case "message_delete":
           handleMessageDelete(message.data)
-          break;
+          break
       }
     })
 
-    return unsubscribe;
+    return unsubscribe
   }, [onMessage])
 
-  // Auto-scroll to bottom;
+  // Auto-scroll to bottom
   useEffect(() => {
     scrollToBottom()
   }, [messages])
@@ -100,7 +101,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
         setHasMore(!!data.next)
         setIsLoading(false)
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to load chat history:", error)
       setIsLoading(false)
     }
@@ -121,9 +122,9 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
   }
 
   const handleMessageReaction = (data: {}
-    message_id: string;
-    emoji: string;
-    user_id: string;
+    message_id: string
+    emoji: string
+    user_id: string
     action: "add" | "remove"
   }) => {}
     setMessages((prev) =>
@@ -145,7 +146,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
 
           return { ...msg, reactions }
         }
-        return msg;
+        return msg
       }),
     )
   }
@@ -161,7 +162,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
   }
 
   const sendChatMessage = async () => {
-    if (!newMessage.trim() || !user) return;
+    if (!newMessage.trim() || !user) return
     const messageData = { room_id: roomId,
       content: newMessage.trim(),
       type: "text",
@@ -169,14 +170,14 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
     }
 
     if (editingMessage) {
-      // Edit existing message;
+      // Edit existing message
       sendMessage("edit_message", {}
         message_id: editingMessage,
         content: newMessage.trim(),
       })
       setEditingMessage(null)
     } else {}
-      // Send new message;
+      // Send new message
       sendMessage("chat_message", messageData)
     }
 
@@ -238,13 +239,13 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }
 
-  const filteredMessages = searchQuery;
+  const filteredMessages = searchQuery
     ? messages.filter(
         (msg) =>
           msg.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
           msg.user.username.toLowerCase().includes(searchQuery.toLowerCase()),
       )
-    : messages;
+    : messages
   const canModerate = user?.role === "admin" || user?.role === "moderator"
 
   return (
@@ -267,7 +268,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
       {/* Search bar */}
       {showSearch && (
         <div className="p-4 border-b">
-          <Input;
+          <Input
             placeholder="Search messages..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -312,7 +313,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                     {message.reactions && Object.keys(message.reactions).length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2">
                         {Object.entries(message.reactions).map(([emoji, userIds]) => (
-                          <Button;
+                          <Button
                             key={emoji}
                             variant="ghost"
                             size="sm"
@@ -335,7 +336,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                   {/* Message actions */}
                   <div className="opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="flex items-center gap-1">
-                      <Button;
+                      <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => addReaction(message.id, &quot;👍&quot;)}
@@ -343,7 +344,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                       >
                         <ThumbsUp className="h-3 w-3" />
                       </Button>
-                      <Button;
+                      <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => addReaction(message.id, &quot;❤️&quot;)}
@@ -359,7 +360,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                           <Button variant="ghost" size="sm" onClick={() => startEdit(message)} className=&quot;h-6 w-6 p-0&quot;>
                             <Edit className="h-3 w-3" />
                           </Button>
-                          <Button;
+                          <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => deleteMessage(message.id)}
@@ -413,7 +414,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
             <Paperclip className="h-4 w-4" />
           </Button>
           <div className="flex-1 relative">
-            <Input;
+            <Input
               ref={inputRef}
               placeholder={editingMessage ? "Edit message..." : "Type a message..."}
               value={newMessage}
@@ -429,7 +430,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
               }}
             />
             {editingMessage && (
-              <Button;
+              <Button
                 variant="ghost"
                 size="sm"
                 className="absolute right-2 top-1/2 -translate-y-1/2"
@@ -438,7 +439,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                   setNewMessage("")
                 }}
               >
-                Cancel;
+                Cancel
               </Button>
             )}
           </div>

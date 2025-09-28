@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {}
+
 import { toast } from '@/hooks/use-toast';
 
 } from 'lucide-react';
@@ -23,29 +23,29 @@ import { toast } from '@/hooks/use-toast';
   Upload,
   AlertTriangle,
   Globe,
-  Filter;
+  Filter
 interface Translation {}
-  key: string;
-  category: string;
-  context?: string;
-  source: string; // English text;
+  key: string
+  category: string
+  context?: string
+  source: string; // English text
   translations: Record<string, {}
-    text: string;
+    text: string
     status: 'approved' | 'pending' | 'needs_review';
-    lastModified: Date;
-    translator: string;
+    lastModified: Date
+    translator: string
   }>;
 }
 
 interface Language {}
-  code: string;
-  name: string;
-  nativeName: string;
-  flag: string;
-  completion: number;
-  totalStrings: number;
-  translatedStrings: number;
-  pendingStrings: number;
+  code: string
+  name: string
+  nativeName: string
+  flag: string
+  completion: number
+  totalStrings: number
+  translatedStrings: number
+  pendingStrings: number
 }
 
 const mockLanguages: Language[] = []
@@ -57,7 +57,7 @@ const mockLanguages: Language[] = []
     completion: 95,
     totalStrings: 1000,
     translatedStrings: 950,
-    pendingStrings: 25;
+    pendingStrings: 25
   },
   {}
     code: 'fr',
@@ -67,7 +67,7 @@ const mockLanguages: Language[] = []
     completion: 90,
     totalStrings: 1000,
     translatedStrings: 900,
-    pendingStrings: 50;
+    pendingStrings: 50
   },
   {}
     code: 'de',
@@ -77,7 +77,7 @@ const mockLanguages: Language[] = []
     completion: 88,
     totalStrings: 1000,
     translatedStrings: 880,
-    pendingStrings: 60;
+    pendingStrings: 60
   }
 ];
 
@@ -160,8 +160,7 @@ export default function TranslationManagement() {
   const [languages] = useState<Language[]>(mockLanguages);
   const [translations, setTranslations] = useState<Translation[]>(mockTranslations);
   const [selectedLanguage, setSelectedLanguage] = useState('es');
-  const [filter, setFilter] = useState({}
-    category: 'all',
+  const [filter, setFilter] = useState({category: 'all',
     status: 'all',
     search: ''
   });
@@ -170,7 +169,7 @@ export default function TranslationManagement() {
 
   const selectedLang = languages.find(lang => lang.code === selectedLanguage);
   const filteredTranslations = translations.filter(translation => {}
-    const matchesCategory = filter.category === 'all' || translation.category === filter.category;
+    const matchesCategory = filter.category === 'all' || translation.category === filter.category
     const matchesSearch = !filter.search || 
       translation.key.toLowerCase().includes(filter.search.toLowerCase()) ||
       translation.source.toLowerCase().includes(filter.search.toLowerCase()) ||
@@ -179,7 +178,7 @@ export default function TranslationManagement() {
     const matchesStatus = filter.status === 'all' || 
       (filter.status === 'missing' && !translationForLang) ||
       (translationForLang && translationForLang.status === filter.status);
-    return matchesCategory && matchesSearch && matchesStatus;
+    return matchesCategory && matchesSearch && matchesStatus
   });
 
   const getStatusColor = (status: string) => {}
@@ -212,13 +211,12 @@ export default function TranslationManagement() {
           }
         };
       }
-      return translation;
+      return translation
     }));
 
     setEditingKey(null);
     setEditingText('');
-    toast({}
-      title: "Translation Updated",
+    toast({title: "Translation Updated",
       description: `Translation for "${key}" has been updated and is pending review.`,
     });
   };
@@ -238,11 +236,10 @@ export default function TranslationManagement() {
           }
         };
       }
-      return translation;
+      return translation
     }));
 
-    toast({}
-      title: "Translation Approved",
+    toast({title: "Translation Approved",
       description: `Translation for "${key}" has been approved.`,
     });
   };
@@ -250,13 +247,13 @@ export default function TranslationManagement() {
   const exportTranslations = () => {}
     const exportData = translations.reduce((acc, translation) => {}
       acc[translation.key] = translation.translations[selectedLanguage]?.text || '';
-      return acc;
+      return acc
     }, {} as Record<string, string>);
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
+    a.href = url
     a.download = `translations-${selectedLanguage}.json`;
     a.click();
     URL.revokeObjectURL(url);
@@ -275,11 +272,11 @@ export default function TranslationManagement() {
         <div className="flex items-center space-x-2">
           <Button variant="outline" onClick={exportTranslations}>
             <Download className="w-4 h-4 mr-2" />
-            Export;
+            Export
           </Button>
           <Button variant="outline">
             <Upload className="w-4 h-4 mr-2" />
-            Import;
+            Import
           </Button>
         </div>
       </div>
@@ -328,13 +325,13 @@ export default function TranslationManagement() {
                       </div>
                     </div>
 
-                    <Button;
+                    <Button
                       variant="outline" 
                       className="w-full"
                       onClick={() => setSelectedLanguage(language.code)}
                     >
                       <Edit className="w-4 h-4 mr-2" />
-                      Manage Translations;
+                      Manage Translations
                     </Button>
                   </div>
                 </CardContent>
@@ -397,7 +394,7 @@ export default function TranslationManagement() {
 
                 <div className="flex items-center space-x-2">
                   <Search className="w-4 h-4 text-muted-foreground" />
-                  <Input;
+                  <Input
                     placeholder="Search translations..."
                     value={filter.search}
                     onChange={(e) => setFilter(prev => ({ ...prev, search: e.target.value }))}
@@ -405,7 +402,7 @@ export default function TranslationManagement() {
                   />
                 </div>
 
-                <Select;
+                <Select
                   value={filter.category} 
                   onValueChange={(value) => setFilter(prev => ({ ...prev, category: value }))}
                 >
@@ -420,7 +417,7 @@ export default function TranslationManagement() {
                   </SelectContent>
                 </Select>
 
-                <Select;
+                <Select
                   value={filter.status} 
                   onValueChange={(value) => setFilter(prev => ({ ...prev, status: value }))}
                 >
@@ -449,7 +446,7 @@ export default function TranslationManagement() {
                     <div>
                       <h3 className="font-semibold">{selectedLang.nativeName}</h3>
                       <p className="text-sm text-muted-foreground">
-                        {selectedLang.translatedStrings} of {selectedLang.totalStrings} strings translated;
+                        {selectedLang.translatedStrings} of {selectedLang.totalStrings} strings translated
                       </p>
                     </div>
                   </div>
@@ -468,8 +465,7 @@ export default function TranslationManagement() {
               <div className="space-y-4">
                 {filteredTranslations.map((translation) => {}
                   const translationForLang = translation.translations[selectedLanguage];
-                  const isEditing = editingKey === translation.key;
-
+                  const isEditing = editingKey === translation.key
                   return (
                     <div key={translation.key} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between mb-3">
@@ -486,7 +482,7 @@ export default function TranslationManagement() {
                             )}
                             {!translationForLang && (
                               <Badge variant="outline" className="bg-gray-100 text-gray-800 border-gray-200">
-                                Missing;
+                                Missing
                               </Badge>
                             )}
                           </div>
@@ -504,7 +500,7 @@ export default function TranslationManagement() {
                               </label>
                               {isEditing ? (
                                 <div className="space-y-2">
-                                  <Textarea;
+                                  <Textarea
                                     value={editingText}
                                     onChange={(e) => setEditingText(e.target.value)}
                                     className="text-sm"
@@ -513,15 +509,15 @@ export default function TranslationManagement() {
                                   <div className="flex space-x-2">
                                     <Button size="sm" onClick={() => handleSaveTranslation(translation.key)}>
                                       <Check className="w-4 h-4 mr-1" />
-                                      Save;
+                                      Save
                                     </Button>
-                                    <Button;
+                                    <Button
                                       size="sm" 
                                       variant="outline" 
                                       onClick={() => setEditingKey(null)}
                                     >
                                       <X className="w-4 h-4 mr-1" />
-                                      Cancel;
+                                      Cancel
                                     </Button>
                                   </div>
                                 </div>
@@ -533,7 +529,7 @@ export default function TranslationManagement() {
                                     )}
                                   </p>
                                   <div className="flex space-x-2 ml-4">
-                                    <Button;
+                                    <Button
                                       size="sm"
                                       variant="outline"
                                       onClick={() => handleEditTranslation(
@@ -544,7 +540,7 @@ export default function TranslationManagement() {
                                       <Edit className="w-4 h-4" />
                                     </Button>
                                     {translationForLang && translationForLang.status !== 'approved' && (
-                                      <Button;
+                                      <Button
                                         size="sm"
                                         variant="outline"
                                         onClick={() => handleApproveTranslation(translation.key)}
@@ -583,7 +579,7 @@ export default function TranslationManagement() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {translations;
+                {translations
                   .filter(t => Object.values(t.translations).some(trans => trans.status === &apos;pending&apos; || trans.status === &apos;needs_review'))
                   .map((translation) => (
                     <div key={translation.key} className="border rounded-lg p-4">
@@ -617,7 +613,7 @@ export default function TranslationManagement() {
                                   </Badge>
                                   <Button size="sm" onClick={() => handleApproveTranslation(translation.key)}>
                                     <Check className="w-4 h-4 mr-1" />
-                                    Approve;
+                                    Approve
                                   </Button>
                                 </div>
                               </div>

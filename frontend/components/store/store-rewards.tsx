@@ -1,3 +1,5 @@
+"use client"
+
 import { Calendar, Check, CheckCircle, Clock, Gift, Heart, Lock, Play, Star, Target, Trophy, User, Users } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -7,55 +9,54 @@ import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useApiToast } from "@/hooks/use-toast"
 
-'use client'
 interface Reward {}
-  id: string;
-  name: string;
-  description: string;
+  id: string
+  name: string
+  description: string
   type: 'item' | 'currency' | 'badge' | 'title' | 'feature'
   category: 'daily' | 'weekly' | 'monthly' | 'achievement' | 'milestone' | 'seasonal'
   value: {}
-    coins?: number;
-    premium?: number;
-    itemId?: string;
-    badgeId?: string;
-    title?: string;
-    feature?: string;
+    coins?: number
+    premium?: number
+    itemId?: string
+    badgeId?: string
+    title?: string
+    feature?: string
   }
   requirements: {}
     type: 'login_streak' | 'parties_hosted' | 'parties_joined' | 'messages_sent' | 'friends_added' | 'watch_time' | 'level' | 'achievement'
-    target: number;
-    current: number;
-    description: string;
+    target: number
+    current: number
+    description: string
   }[]
   rarity: 'common' | 'rare' | 'epic' | 'legendary'
-  isClaimable: boolean;
-  isClaimed: boolean;
-  expiresAt?: string;
-  unlockedAt?: string;
-  preview?: string;
-  icon: string;
+  isClaimable: boolean
+  isClaimed: boolean
+  expiresAt?: string
+  unlockedAt?: string
+  preview?: string
+  icon: string
 }
 
 interface DailyReward {}
-  day: number;
+  day: number
   reward: {}
     type: 'coins' | 'premium' | 'item'
-    amount?: number;
-    itemId?: string;
-    itemName?: string;
-    itemIcon?: string;
+    amount?: number
+    itemId?: string
+    itemName?: string
+    itemIcon?: string
   }
-  isClaimed: boolean;
-  isToday: boolean;
-  isPast: boolean;
+  isClaimed: boolean
+  isToday: boolean
+  isPast: boolean
 }
 
 interface LoginStreak {}
-  currentStreak: number;
-  longestStreak: number;
-  nextRewardAt: number;
-  bonusMultiplier: number;
+  currentStreak: number
+  longestStreak: number
+  nextRewardAt: number
+  bonusMultiplier: number
 }
 
 export function StoreRewards() {
@@ -77,7 +78,7 @@ export function StoreRewards() {
       if (response) {
         setRewards(response)
       }
-    } } catch {
+    } catch (err) {
       toastError(error, 'Failed to load rewards')
     }
   }
@@ -88,7 +89,7 @@ export function StoreRewards() {
       if (response) {
         setDailyRewards(response)
       }
-    } } catch {
+    } catch (err) {
       toastError(error, 'Failed to load daily rewards')
     }
   }
@@ -99,9 +100,9 @@ export function StoreRewards() {
       if (response) {
         setLoginStreak(response)
       }
-    } } catch {
+    } catch (err) {
       toastError(error, 'Failed to load login streak')
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -130,7 +131,7 @@ export function StoreRewards() {
   }
 
   const getRewardIcon = (type: string, icon: string) => {}
-    if (icon) return icon;
+    if (icon) return icon
     switch (type) {
       case 'item': return '📦'
       case 'currency': return '💰'
@@ -168,7 +169,7 @@ export function StoreRewards() {
   const groupedRewards = rewards.reduce((acc, reward) => {}
     if (!acc[reward.category]) acc[reward.category] = []
     acc[reward.category].push(reward)
-    return acc;
+    return acc
   }, {} as Record<string, Reward[]>)
 
   if (loading) {
@@ -212,7 +213,7 @@ export function StoreRewards() {
                 <span>Next reward in {loginStreak.nextRewardAt - loginStreak.currentStreak} days</span>
                 <span>{loginStreak.currentStreak}/{loginStreak.nextRewardAt}</span>
               </div>
-              <Progress;
+              <Progress
                 value={(loginStreak.currentStreak / loginStreak.nextRewardAt) * 100} 
                 className="h-2"
               />
@@ -232,7 +233,7 @@ export function StoreRewards() {
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
             {dailyRewards.map((dailyReward) => (
-              <DailyRewardCard;
+              <DailyRewardCard
                 key={dailyReward.day}
                 dailyReward={dailyReward}
                 onClaim={handleClaimDailyReward}
@@ -263,7 +264,7 @@ export function StoreRewards() {
         </TabsList>
 
         <TabsContent value="all" className="space-y-4">
-          <RewardsList;
+          <RewardsList
             rewards={rewards}
             onClaim={handleClaimReward}
             getRarityColor={getRarityColor}
@@ -273,7 +274,7 @@ export function StoreRewards() {
         </TabsContent>
 
         <TabsContent value="claimable" className="space-y-4">
-          <RewardsList;
+          <RewardsList
             rewards={rewards.filter(r => r.isClaimable && !r.isClaimed)}
             onClaim={handleClaimReward}
             getRarityColor={getRarityColor}
@@ -283,7 +284,7 @@ export function StoreRewards() {
         </TabsContent>
 
         <TabsContent value="achievement" className="space-y-4">
-          <RewardsList;
+          <RewardsList
             rewards={groupedRewards.achievement || []}
             onClaim={handleClaimReward}
             getRarityColor={getRarityColor}
@@ -293,7 +294,7 @@ export function StoreRewards() {
         </TabsContent>
 
         <TabsContent value="milestone" className="space-y-4">
-          <RewardsList;
+          <RewardsList
             rewards={groupedRewards.milestone || []}
             onClaim={handleClaimReward}
             getRarityColor={getRarityColor}
@@ -303,7 +304,7 @@ export function StoreRewards() {
         </TabsContent>
 
         <TabsContent value="seasonal" className="space-y-4">
-          <RewardsList;
+          <RewardsList
             rewards={groupedRewards.seasonal || []}
             onClaim={handleClaimReward}
             getRarityColor={getRarityColor}
@@ -316,12 +317,11 @@ export function StoreRewards() {
   )
 }
 
-function DailyRewardCard({}
-  dailyReward,
-  onClaim;
+function DailyRewardCard({dailyReward,
+  onClaim
 }: {}
-  dailyReward: DailyReward;
-  onClaim: (day: number) => void;
+  dailyReward: DailyReward
+  onClaim: (day: number) => void
 }) {}
   const getRewardDisplay = () => {}
     switch (dailyReward.reward.type) {
@@ -364,12 +364,12 @@ function DailyRewardCard({}
             <span className="text-xs">Claimed</span>
           </div>
         ) : dailyReward.isToday ? (
-          <Button;
+          <Button
             size="sm" 
             onClick={() => onClaim(dailyReward.day)}
             className="w-full"
           >
-            Claim;
+            Claim
           </Button>
         ) : dailyReward.isPast ? (
           <div className="flex items-center justify-center space-x-1 text-muted-foreground">
@@ -387,18 +387,17 @@ function DailyRewardCard({}
   )
 }
 
-function RewardsList({}
-  rewards,
+function RewardsList({rewards,
   onClaim,
   getRarityColor,
   getRewardIcon,
-  getRequirementIcon;
+  getRequirementIcon
 }: {}
   rewards: Reward[]
-  onClaim: (rewardId: string) => void;
-  getRarityColor: (rarity: string) => string;
-  getRewardIcon: (type: string, icon: string) => string;
-  getRequirementIcon: (type: string) => React.ReactNode;
+  onClaim: (rewardId: string) => void
+  getRarityColor: (rarity: string) => string
+  getRewardIcon: (type: string, icon: string) => string
+  getRequirementIcon: (type: string) => React.ReactNode
 }) {}
   if (rewards.length === 0) {
     return (
@@ -417,7 +416,7 @@ function RewardsList({}
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {rewards.map((reward) => (
-        <RewardCard;
+        <RewardCard
           key={reward.id}
           reward={reward}
           onClaim={onClaim}
@@ -430,18 +429,17 @@ function RewardsList({}
   )
 }
 
-function RewardCard({}
-  reward,
+function RewardCard({reward,
   onClaim,
   getRarityColor,
   getRewardIcon,
-  getRequirementIcon;
+  getRequirementIcon
 }: {}
-  reward: Reward;
-  onClaim: (rewardId: string) => void;
-  getRarityColor: (rarity: string) => string;
-  getRewardIcon: (type: string, icon: string) => string;
-  getRequirementIcon: (type: string) => React.ReactNode;
+  reward: Reward
+  onClaim: (rewardId: string) => void
+  getRarityColor: (rarity: string) => string
+  getRewardIcon: (type: string, icon: string) => string
+  getRequirementIcon: (type: string) => React.ReactNode
 }) {}
   const getRewardValue = () => {}
     if (reward.value.coins) {
@@ -464,7 +462,7 @@ function RewardCard({}
       return (
         <div className="flex items-center space-x-1">
           <Crown className="h-4 w-4 text-purple-500" />
-          <span>&quot;{reward.value.title}&quot;</span>
+          <span>&quot;{reward.value.title}&quot</span>
         </div>
       )
     }
@@ -480,7 +478,7 @@ function RewardCard({}
         <div className="absolute top-2 right-2">
           <Badge className="bg-green-500 text-white">
             <CheckCircle className="h-3 w-3 mr-1" />
-            Claimed;
+            Claimed
           </Badge>
         </div>
       )}
@@ -488,7 +486,7 @@ function RewardCard({}
         <div className="absolute top-2 right-2">
           <Badge className="bg-primary text-white">
             <Sparkles className="h-3 w-3 mr-1" />
-            Ready;
+            Ready
           </Badge>
         </div>
       )}
@@ -526,7 +524,7 @@ function RewardCard({}
                   {req.current}/{req.target}
                 </span>
               </div>
-              <Progress;
+              <Progress
                 value={(req.current / req.target) * 100} 
                 className="h-1"
               />
@@ -544,17 +542,17 @@ function RewardCard({}
           {reward.isClaimed ? (
             <Button variant="outline" disabled className="w-full">
               <CheckCircle className="h-4 w-4 mr-2" />
-              Claimed;
+              Claimed
             </Button>
           ) : reward.isClaimable ? (
             <Button onClick={() => onClaim(reward.id)} className=&quot;w-full&quot;>
               <Gift className="h-4 w-4 mr-2" />
-              Claim Reward;
+              Claim Reward
             </Button>
           ) : (
             <Button variant="outline" disabled className="w-full">
               <Lock className="h-4 w-4 mr-2" />
-              Requirements Not Met;
+              Requirements Not Met
             </Button>
           )}
         </div>

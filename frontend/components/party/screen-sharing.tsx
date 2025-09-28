@@ -1,3 +1,5 @@
+"use client"
+
 import { Loader2, Monitor, Settings, User, Users } from "lucide-react"
 import { useState, useRef, useEffect } from 'react'
 import Image from "next/image"
@@ -9,24 +11,23 @@ import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { useSocket } from '@/contexts/socket-context'
 
-'use client'
 interface ScreenSharingProps {}
-  partyId: string;
-  isHost: boolean;
+  partyId: string
+  isHost: boolean
   participants: Array<{}
-    id: string;
-    username: string;
-    avatar: string;
-    isScreenSharing: boolean;
+    id: string
+    username: string
+    avatar: string
+    isScreenSharing: boolean
   }>
 }
 
 interface ScreenShareOptions {}
-  video: boolean;
-  audio: boolean;
-  cursor: boolean;
+  video: boolean
+  audio: boolean
+  cursor: boolean
   quality: 'low' | 'medium' | 'high'
-  frameRate: number;
+  frameRate: number
 }
 
 export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingProps) {}
@@ -41,7 +42,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
     audio: true,
     cursor: true,
     quality: 'medium',
-    frameRate: 30;
+    frameRate: 30
   })
 
   const localStreamRef = useRef<MediaStream | null>(null)
@@ -79,7 +80,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
         height: { ideal: getResolution().height },
         frameRate: { ideal: options.frameRate }
       },
-      audio: options.audio;
+      audio: options.audio
     }
 
     return await navigator.mediaDevices.getDisplayMedia(constraints)
@@ -103,31 +104,31 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
       setLoading(true)
       setError(null)
       const stream = await getDisplayMedia()
-      localStreamRef.current = stream;
+      localStreamRef.current = stream
       if (localVideoRef.current) {
-        localVideoRef.current.srcObject = stream;
+        localVideoRef.current.srcObject = stream
       }
       // Listen for stream end (user stops sharing via browser UI)
       stream.getVideoTracks()[0].onended = () => {}
         stopScreenShare()
       }
-      // Create peer connection for sharing;
+      // Create peer connection for sharing
       await createPeerConnection()
       setIsSharing(true)
       setActiveSharer('local')
-      // Notify other participants;
+      // Notify other participants
       socket?.emit('screen-share-start', {}
         partyId, 
         options: {}
           hasAudio: options.audio,
           quality: options.quality,
-          frameRate: options.frameRate;
+          frameRate: options.frameRate
         }
       })
-    } } catch {
+    } catch (err) {
       console.error('Failed to start screen sharing:', error)
       setError('Failed to start screen sharing. Please check permissions.')
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -142,25 +143,24 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
   const cleanup = () => {}
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach(track => track.stop())
-      localStreamRef.current = null;
+      localStreamRef.current = null
     }
     if (peerConnectionRef.current) {
       peerConnectionRef.current.close()
-      peerConnectionRef.current = null;
+      peerConnectionRef.current = null
     }
     if (localVideoRef.current) {
-      localVideoRef.current.srcObject = null;
+      localVideoRef.current.srcObject = null
     }
     if (remoteVideoRef.current) {
-      remoteVideoRef.current.srcObject = null;
+      remoteVideoRef.current.srcObject = null
     }
   }
 
   const createPeerConnection = async () => {
-    const pc = new RTCPeerConnection({}
-      iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+    const pc = new RTCPeerConnection({iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
     })
-    peerConnectionRef.current = pc;
+    peerConnectionRef.current = pc
     if (localStreamRef.current) {
       localStreamRef.current.getTracks().forEach(track => {}
         pc.addTrack(track, localStreamRef.current!)
@@ -170,7 +170,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
       if (event.candidate) {
         socket?.emit('screen-share-ice-candidate', {}
           candidate: event.candidate,
-          partyId;
+          partyId
         })
       }
     }
@@ -180,7 +180,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
         setIsReceiving(true)
       }
     }
-    // Create and send offer;
+    // Create and send offer
     const offer = await pc.createOffer()
     await pc.setLocalDescription(offer)
     socket?.emit('screen-share-offer', { offer, partyId })
@@ -195,14 +195,13 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
     setActiveSharer(null)
     setIsReceiving(false)
     if (remoteVideoRef.current) {
-      remoteVideoRef.current.srcObject = null;
+      remoteVideoRef.current.srcObject = null
     }
   }
 
   const handleScreenShareOffer = async (data: { offer: RTCSessionDescriptionInit; from: string }) => {}
     if (!peerConnectionRef.current) {
-      peerConnectionRef.current = new RTCPeerConnection({}
-        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
+      peerConnectionRef.current = new RTCPeerConnection({iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
       })
       peerConnectionRef.current.ontrack = (event) => {}
         if (remoteVideoRef.current) {
@@ -214,7 +213,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
         if (event.candidate) {
           socket?.emit('screen-share-ice-candidate', {}
             candidate: event.candidate,
-            partyId;
+            partyId
           })
         }
       }
@@ -248,7 +247,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
   }
 
   const toggleFullscreen = () => {}
-    const video = isSharing ? localVideoRef.current : remoteVideoRef.current;
+    const video = isSharing ? localVideoRef.current : remoteVideoRef.current
     if (video) {
       if (document.fullscreenElement) {
         document.exitFullscreen()
@@ -272,7 +271,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                 </Badge>
               )}
             </div>
-            <Button;
+            <Button
               variant="ghost"
               size="sm"
               onClick={() => setShowSettings(!showSettings)}
@@ -295,7 +294,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="include-audio">Include Audio</Label>
-                  <Switch;
+                  <Switch
                     id="include-audio"
                     checked={options.audio}
                     onCheckedChange={(checked) => 
@@ -305,7 +304,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                 </div>
                 <div className="flex items-center justify-between">
                   <Label htmlFor="show-cursor">Show Cursor</Label>
-                  <Switch;
+                  <Switch
                     id="show-cursor"
                     checked={options.cursor}
                     onCheckedChange={(checked) => 
@@ -316,7 +315,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
               </div>
               <div className="space-y-2">
                 <Label>Quality</Label>
-                <Select;
+                <Select
                   value={options.quality}
                   onValueChange={(value: 'low' | 'medium' | 'high') =>
                     setOptions(prev => ({ ...prev, quality: value }))
@@ -334,7 +333,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
               </div>
               <div className="space-y-2">
                 <Label>Frame Rate</Label>
-                <Select;
+                <Select
                   value={options.frameRate.toString()}
                   onValueChange={(value) =>
                     setOptions(prev => ({ ...prev, frameRate: parseInt(value) }))
@@ -356,7 +355,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
 
           <div className="flex items-center justify-center space-x-2">
             {!isSharing && !activeSharer && (
-              <Button;
+              <Button
                 onClick={startScreenShare}
                 disabled={loading}
                 className="flex items-center space-x-2"
@@ -370,7 +369,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
               </Button>
             )}
             {isSharing && (
-              <Button;
+              <Button
                 onClick={stopScreenShare}
                 variant="destructive"
                 className="flex items-center space-x-2"
@@ -384,15 +383,15 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
           {/* Local screen share preview */}
           {isSharing && (
             <div className="relative">
-              <video;
+              <video
                 ref={localVideoRef}
-                autoPlay;
-                muted;
+                autoPlay
+                muted
                 className="w-full rounded-lg border"
                 style={{ maxHeight: '300px', objectFit: 'contain' }}
               />
               <div className="absolute top-2 right-2 flex space-x-1">
-                <Button;
+                <Button
                   variant="secondary"
                   size="sm"
                   onClick={toggleFullscreen}
@@ -409,14 +408,14 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
           {/* Remote screen share viewer */}
           {isReceiving && !isSharing && (
             <div className="relative">
-              <video;
+              <video
                 ref={remoteVideoRef}
-                autoPlay;
+                autoPlay
                 className="w-full rounded-lg border"
                 style={{ maxHeight: '400px', objectFit: 'contain' }}
               />
               <div className="absolute top-2 right-2 flex space-x-1">
-                <Button;
+                <Button
                   variant="secondary"
                   size="sm"
                   onClick={toggleFullscreen}
@@ -424,7 +423,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                   <Maximize className="h-3 w-3" />
                 </Button>
                 {isHost && (
-                  <Button;
+                  <Button
                     variant="destructive"
                     size="sm"
                     onClick={() => activeSharer && stopRemoteScreenShare(activeSharer)}
@@ -435,7 +434,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
               </div>
               <div className="absolute bottom-2 left-2">
                 <Badge>
-                  {participants.find(p => p.id === activeSharer)?.username || &apos;Unknown&apos;}&apos;s Screen;
+                  {participants.find(p => p.id === activeSharer)?.username || &apos;Unknown&apos;}&apos;s Screen
                 </Badge>
               </div>
             </div>
@@ -451,7 +450,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
               {participants.map((participant) => (
                 <div key={participant.id} className="flex items-center justify-between p-2 rounded-md border">
                   <div className="flex items-center space-x-2">
-                    <img;
+                    <img
                       src={participant.avatar || '/placeholder-user.jpg'}
                       alt={participant.username}
                       className="w-6 h-6 rounded-full"
@@ -460,13 +459,13 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                     {participant.isScreenSharing && (
                       <Badge variant="default" className="bg-blue-500">
                         <Monitor className="h-3 w-3 mr-1" />
-                        Sharing;
+                        Sharing
                       </Badge>
                     )}
                   </div>
                   <div className="flex items-center space-x-1">
                     {!participant.isScreenSharing && participant.id !== 'current-user' && (
-                      <Button;
+                      <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => requestScreenShare(participant.id)}
@@ -475,7 +474,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                       </Button>
                     )}
                     {participant.isScreenSharing && isHost && participant.id !== 'current-user' && (
-                      <Button;
+                      <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => stopRemoteScreenShare(participant.id)}

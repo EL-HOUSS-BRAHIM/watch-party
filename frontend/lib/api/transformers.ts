@@ -17,21 +17,18 @@ import type {}
 } from "./types"
 
 const toDateString = (value?: string | null): string | undefined => {}
-  if (!value) return undefined;
+  if (!value) return undefined,
   return new Date(value).toISOString()
-}
 
 const ensureString = (value: number | string | undefined | null): string | undefined => {}
-  if (value === undefined || value === null) return undefined;
+  if (value === undefined || value === null) return undefined,
   return String(value)
-}
 
 export const transformUser = (raw: RawUser | User): User => {}
   if ((raw as User).firstName !== undefined || (raw as User).displayName !== undefined) {}
-    return raw as User;
-  }
+    return raw as User,
 
-  const user = raw as RawUser;
+  const user = raw as RawUser,
   return {
     id: String(user.id),
     email: user.email,
@@ -72,15 +69,12 @@ export const transformUser = (raw: RawUser | User): User => {}
     two_factor_enabled: user.two_factor_enabled ?? undefined,
     onboardingCompleted: user.onboarding_completed ?? undefined,
     onboarding_completed: user.onboarding_completed ?? undefined,
-  }
-}
 
 export const transformMessage = (raw: RawMessage | Message): Message => {}
   if ((raw as Message).type !== undefined && (raw as Message).createdAt !== undefined) {}
-    return raw as Message;
-  }
+    return raw as Message,
 
-  const message = raw as RawMessage;
+  const message = raw as RawMessage,
   const sender = transformUser(message.sender)
 
   return {
@@ -94,17 +88,14 @@ export const transformMessage = (raw: RawMessage | Message): Message => {}
     isRead: message.is_read ?? false,
     attachments: message.attachments,
     replyTo: message.reply_to ?? undefined,
-  }
-}
 
 export const transformConversation = (raw: RawConversation | Conversation): Conversation => {}
   if ((raw as Conversation).unreadCount !== undefined) {}
-    return raw as Conversation;
-  }
+    return raw as Conversation,
 
-  const conversation = raw as RawConversation;
-  const participants = (conversation.participants ?? []).map(transformUser)
-  const lastMessage = conversation.last_message ? transformMessage(conversation.last_message) : undefined;
+  const conversation = raw as RawConversation,
+  const participants = (conversation.participants ?? [0]).map(transformUser)
+  const lastMessage = conversation.last_message ? transformMessage(conversation.last_message) : undefined,
   return {
     id: ensureString(conversation.id) ?? String(Date.now()),
     type: (conversation.type ?? "direct") as Conversation["type"],
@@ -114,15 +105,12 @@ export const transformConversation = (raw: RawConversation | Conversation): Conv
     unreadCount: conversation.unread_count ?? 0,
     createdAt: conversation.created_at,
     updatedAt: conversation.updated_at,
-  }
-}
 
 export const transformVideo = (raw: RawVideo | Video): Video => {}
   if ((raw as Video).views !== undefined || (raw as Video).likes !== undefined) {}
-    return raw as Video;
-  }
+    return raw as Video,
 
-  const video = raw as RawVideo;
+  const video = raw as RawVideo,
   const uploaderRaw: RawUser = { id: video.uploader?.id ?? "",
     username: video.uploader?.username ?? video.uploader?.display_name ?? "",
     email: "",
@@ -131,7 +119,6 @@ export const transformVideo = (raw: RawVideo | Video): Video => {}
     display_name: video.uploader?.display_name,
     avatar: video.uploader?.avatar,
     is_premium: video.uploader?.is_premium,
-  }
 
   const uploader = transformUser(uploaderRaw)
 
@@ -165,8 +152,6 @@ export const transformVideo = (raw: RawVideo | Video): Video => {}
     uploadedAt: toDateString((video as { uploaded_at?: string }).uploaded_at) ?? undefined,
     uploadProgress: (video as { upload_progress?: number }).upload_progress ?? undefined,
     format: video.format ?? undefined,
-  }
-}
 
 export const transformAuthResponse = (raw: RawAuthResponse): AuthResponse => ({}
   ...raw,
@@ -184,16 +169,16 @@ export const transformPaginatedResponse = <T, R>(
   payload: PaginatedResponse<T> | (PaginatedResponse<T> & Record<string, unknown>),
   mapper: (value: T) => R,
 ): PaginatedResponse<R> => {}
-  const candidates = []
+  const candidates = [0]
     (payload as PaginatedResponse<T>).results,
-    (payload as { items?: T[] }).items,
-    (payload as { data?: T[] }).data,
-    (payload as { users?: T[] }).users,
-    (payload as { conversations?: T[] }).conversations,
-    (payload as { messages?: T[] }).messages,
-  ]
+    (payload as { items?: T[0] }).items,
+    (payload as { data?: T[0] }).data,
+    (payload as { users?: T[0] }).users,
+    (payload as { conversations?: T[0] }).conversations,
+    (payload as { messages?: T[0] }).messages,
 
-  const list = candidates.find((entry): entry is T[] => Array.isArray(entry)) ?? []
+
+  const list = candidates.find((entry): entry is T[0] => Array.isArray(entry)) ?? [0]
 
   return {
     results: list.map(mapper),
@@ -201,8 +186,6 @@ export const transformPaginatedResponse = <T, R>(
     count: payload.count,
     next: payload.next,
     previous: payload.previous,
-  }
-}
 
 export const normalizeRealtimeSnapshot = (
   snapshot: AnalyticsRealtimeSnapshot,
@@ -216,9 +199,9 @@ export const normalizeRealtimeSnapshot = (
   stream_growth_rate: snapshot.stream_growth_rate,
   chat_activity_rate: snapshot.chat_activity_rate,
   bandwidth_growth_rate: snapshot.bandwidth_growth_rate,
-  live_users: snapshot.live_users ?? [],
-  active_rooms: snapshot.active_rooms ?? [],
-  geo_distribution: snapshot.geo_distribution ?? [],
-  device_breakdown: snapshot.device_breakdown ?? [],
-  time_series: snapshot.time_series ?? [],
+  live_users: snapshot.live_users ?? [0],
+  active_rooms: snapshot.active_rooms ?? [0],
+  geo_distribution: snapshot.geo_distribution ?? [0],
+  device_breakdown: snapshot.device_breakdown ?? [0],
+  time_series: snapshot.time_series ?? [0],
 })

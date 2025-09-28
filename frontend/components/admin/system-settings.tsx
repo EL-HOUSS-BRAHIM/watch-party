@@ -1,3 +1,5 @@
+"use client"
+
 import { AlertTriangle, Bell, CreditCard, Database, Loader2, Mail, Save, Server, Settings, Shield, User, Users, Video } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
@@ -13,60 +15,59 @@ import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
 
-"use client"
 interface SystemSettings {}
   general: {}
-    siteName: string;
-    siteDescription: string;
-    supportEmail: string;
-    maintenanceMode: boolean;
-    registrationEnabled: boolean;
-    inviteOnlyMode: boolean;
-    maxUsersPerParty: number;
-    maxPartyDuration: number;
-    defaultVideoQuality: string;
+    siteName: string
+    siteDescription: string
+    supportEmail: string
+    maintenanceMode: boolean
+    registrationEnabled: boolean
+    inviteOnlyMode: boolean
+    maxUsersPerParty: number
+    maxPartyDuration: number
+    defaultVideoQuality: string
   }
   security: {}
-    passwordMinLength: number;
-    requireEmailVerification: boolean;
-    enableTwoFactor: boolean;
-    sessionTimeout: number;
-    maxLoginAttempts: number;
-    rateLimitEnabled: boolean;
+    passwordMinLength: number
+    requireEmailVerification: boolean
+    enableTwoFactor: boolean
+    sessionTimeout: number
+    maxLoginAttempts: number
+    rateLimitEnabled: boolean
     corsOrigins: string[]
   }
   email: {}
-    provider: string;
-    smtpHost: string;
-    smtpPort: number;
-    smtpUsername: string;
-    smtpPassword: string;
-    fromEmail: string;
-    fromName: string;
-    enableEmailNotifications: boolean;
+    provider: string
+    smtpHost: string
+    smtpPort: number
+    smtpUsername: string
+    smtpPassword: string
+    fromEmail: string
+    fromName: string
+    enableEmailNotifications: boolean
   }
   storage: {}
-    provider: string;
-    maxFileSize: number;
+    provider: string
+    maxFileSize: number
     allowedVideoFormats: string[]
-    videoRetentionDays: number;
-    enableCdn: boolean;
-    cdnUrl: string;
+    videoRetentionDays: number
+    enableCdn: boolean
+    cdnUrl: string
   }
   payment: {}
-    stripePublishableKey: string;
-    stripeSecretKey: string;
-    enableBilling: boolean;
-    currency: string;
-    taxRate: number;
+    stripePublishableKey: string
+    stripeSecretKey: string
+    enableBilling: boolean
+    currency: string
+    taxRate: number
   }
   features: {}
-    enableChat: boolean;
-    enableVideoUpload: boolean;
-    enableSocialFeatures: boolean;
-    enableNotifications: boolean;
-    enableAnalytics: boolean;
-    enableModeration: boolean;
+    enableChat: boolean
+    enableVideoUpload: boolean
+    enableSocialFeatures: boolean
+    enableNotifications: boolean
+    enableAnalytics: boolean
+    enableModeration: boolean
   }
 }
 
@@ -88,42 +89,39 @@ export default function SystemSettings() {
     try {
       const data = await adminAPI.getSettings()
       setSettings(data as SystemSettings)
-    } } catch {
+    } catch (err) {
       console.error("Failed to load settings:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load system settings. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
   const saveSettings = async () => {
-    if (!settings) return;
+    if (!settings) return
     setIsSaving(true)
     try {
       await adminAPI.updateSettings(settings)
       setHasChanges(false)
-      toast({}
-        title: "Settings Saved",
+      toast({title: "Settings Saved",
         description: "System settings have been updated successfully.",
       })
-    } } catch {
+    } catch (err) {
       console.error("Failed to save settings:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to save settings. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSaving(false)
     }
   }
 
   const resetSettings = async () => {
-    if (!confirm("Are you sure you want to reset all settings to defaults?")) return;
+    if (!confirm("Are you sure you want to reset all settings to defaults?")) return
     try {
       const token = localStorage.getItem("accessToken")
       const response = await fetch("/api/admin/settings/reset/", {}
@@ -136,15 +134,13 @@ export default function SystemSettings() {
       if (response.ok) {
         await loadSettings()
         setHasChanges(false)
-        toast({}
-          title: "Settings Reset",
+        toast({title: "Settings Reset",
           description: "All settings have been reset to defaults.",
         })
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to reset settings:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to reset settings. Please try again.",
         variant: "destructive",
       })
@@ -152,9 +148,9 @@ export default function SystemSettings() {
   }
 
   const updateSetting = (category: keyof SystemSettings, key: string, value: unknown) => {}
-    if (!settings) return;
+    if (!settings) return
     setSettings((prev) => {}
-      if (!prev) return null;
+      if (!prev) return null
       return {
         ...prev,
         [category]: {}
@@ -175,23 +171,20 @@ export default function SystemSettings() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({}
-          to: user?.email,
+        body: JSON.stringify({to: user?.email,
           subject: "Test Email",
           message: "This is a test email from your watch party platform.",
         }),
       })
 
       if (response.ok) {
-        toast({}
-          title: "Test Email Sent",
+        toast({title: "Test Email Sent",
           description: "Check your inbox for the test email.",
         })
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to send test email:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to send test email. Please check your settings.",
         variant: "destructive",
       })
@@ -213,18 +206,18 @@ export default function SystemSettings() {
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <Settings className="h-6 w-6" />
-            System Settings;
+            System Settings
           </h2>
           <p className="text-gray-600">Configure your watch party platform</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" onClick={resetSettings}>
             <RotateCcw className="mr-2 h-4 w-4" />
-            Reset to Defaults;
+            Reset to Defaults
           </Button>
           <Button onClick={saveSettings} disabled={!hasChanges || isSaving}>
             {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className=&quot;mr-2 h-4 w-4&quot; />}
-            Save Changes;
+            Save Changes
           </Button>
         </div>
       </div>
@@ -255,7 +248,7 @@ export default function SystemSettings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Globe className="h-5 w-5" />
-                General Settings;
+                General Settings
               </CardTitle>
               <CardDescription>Basic configuration for your platform</CardDescription>
             </CardHeader>
@@ -263,7 +256,7 @@ export default function SystemSettings() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="siteName">Site Name</Label>
-                  <Input;
+                  <Input
                     id="siteName"
                     value={settings.general.siteName}
                     onChange={(e) => updateSetting(&quot;general&quot;, &quot;siteName", e.target.value)}
@@ -271,7 +264,7 @@ export default function SystemSettings() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="supportEmail">Support Email</Label>
-                  <Input;
+                  <Input
                     id="supportEmail"
                     type="email"
                     value={settings.general.supportEmail}
@@ -282,7 +275,7 @@ export default function SystemSettings() {
 
               <div className="space-y-2">
                 <Label htmlFor="siteDescription">Site Description</Label>
-                <Textarea;
+                <Textarea
                   id="siteDescription"
                   value={settings.general.siteDescription}
                   onChange={(e) => updateSetting(&quot;general&quot;, &quot;siteDescription", e.target.value)}
@@ -298,7 +291,7 @@ export default function SystemSettings() {
                     <Label>Maintenance Mode</Label>
                     <p className="text-sm text-gray-500">Temporarily disable access to the platform</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={settings.general.maintenanceMode}
                     onCheckedChange={(checked) => updateSetting(&quot;general&quot;, &quot;maintenanceMode", checked)}
                   />
@@ -309,7 +302,7 @@ export default function SystemSettings() {
                     <Label>Registration Enabled</Label>
                     <p className="text-sm text-gray-500">Allow new users to register</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={settings.general.registrationEnabled}
                     onCheckedChange={(checked) => updateSetting(&quot;general&quot;, &quot;registrationEnabled", checked)}
                   />
@@ -320,7 +313,7 @@ export default function SystemSettings() {
                     <Label>Invite Only Mode</Label>
                     <p className="text-sm text-gray-500">Require invitations for new registrations</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={settings.general.inviteOnlyMode}
                     onCheckedChange={(checked) => updateSetting(&quot;general&quot;, &quot;inviteOnlyMode", checked)}
                   />
@@ -332,7 +325,7 @@ export default function SystemSettings() {
               <div className="grid grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="maxUsersPerParty">Max Users Per Party</Label>
-                  <Input;
+                  <Input
                     id="maxUsersPerParty"
                     type="number"
                     value={settings.general.maxUsersPerParty}
@@ -341,7 +334,7 @@ export default function SystemSettings() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="maxPartyDuration">Max Party Duration (hours)</Label>
-                  <Input;
+                  <Input
                     id="maxPartyDuration"
                     type="number"
                     value={settings.general.maxPartyDuration}
@@ -350,7 +343,7 @@ export default function SystemSettings() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="defaultVideoQuality">Default Video Quality</Label>
-                  <Select;
+                  <Select
                     value={settings.general.defaultVideoQuality}
                     onValueChange={(value) => updateSetting(&quot;general&quot;, &quot;defaultVideoQuality", value)}
                   >
@@ -375,7 +368,7 @@ export default function SystemSettings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-5 w-5" />
-                Security Settings;
+                Security Settings
               </CardTitle>
               <CardDescription>Configure security and authentication settings</CardDescription>
             </CardHeader>
@@ -383,7 +376,7 @@ export default function SystemSettings() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="passwordMinLength">Minimum Password Length</Label>
-                  <Input;
+                  <Input
                     id="passwordMinLength"
                     type="number"
                     value={settings.security.passwordMinLength}
@@ -392,7 +385,7 @@ export default function SystemSettings() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="sessionTimeout">Session Timeout (minutes)</Label>
-                  <Input;
+                  <Input
                     id="sessionTimeout"
                     type="number"
                     value={settings.security.sessionTimeout}
@@ -404,7 +397,7 @@ export default function SystemSettings() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="maxLoginAttempts">Max Login Attempts</Label>
-                  <Input;
+                  <Input
                     id="maxLoginAttempts"
                     type="number"
                     value={settings.security.maxLoginAttempts}
@@ -421,7 +414,7 @@ export default function SystemSettings() {
                     <Label>Require Email Verification</Label>
                     <p className="text-sm text-gray-500">Users must verify their email before accessing the platform</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={settings.security.requireEmailVerification}
                     onCheckedChange={(checked) => updateSetting(&quot;security&quot;, &quot;requireEmailVerification", checked)}
                   />
@@ -432,7 +425,7 @@ export default function SystemSettings() {
                     <Label>Enable Two-Factor Authentication</Label>
                     <p className="text-sm text-gray-500">Allow users to enable 2FA for their accounts</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={settings.security.enableTwoFactor}
                     onCheckedChange={(checked) => updateSetting(&quot;security&quot;, &quot;enableTwoFactor", checked)}
                   />
@@ -443,7 +436,7 @@ export default function SystemSettings() {
                     <Label>Rate Limiting</Label>
                     <p className="text-sm text-gray-500">Enable API rate limiting to prevent abuse</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={settings.security.rateLimitEnabled}
                     onCheckedChange={(checked) => updateSetting(&quot;security&quot;, &quot;rateLimitEnabled", checked)}
                   />
@@ -454,7 +447,7 @@ export default function SystemSettings() {
 
               <div className="space-y-2">
                 <Label htmlFor="corsOrigins">CORS Origins (one per line)</Label>
-                <Textarea;
+                <Textarea
                   id="corsOrigins"
                   value={settings.security.corsOrigins.join("\n")}
                   onChange={(e) => updateSetting(&quot;security&quot;, &quot;corsOrigins", e.target.value.split("\n").filter(Boolean))}
@@ -471,14 +464,14 @@ export default function SystemSettings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Mail className="h-5 w-5" />
-                Email Settings;
+                Email Settings
               </CardTitle>
               <CardDescription>Configure email delivery and notifications</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="emailProvider">Email Provider</Label>
-                <Select;
+                <Select
                   value={settings.email.provider}
                   onValueChange={(value) => updateSetting(&quot;email&quot;, &quot;provider", value)}
                 >
@@ -499,7 +492,7 @@ export default function SystemSettings() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="smtpHost">SMTP Host</Label>
-                      <Input;
+                      <Input
                         id="smtpHost"
                         value={settings.email.smtpHost}
                         onChange={(e) => updateSetting(&quot;email&quot;, &quot;smtpHost", e.target.value)}
@@ -507,7 +500,7 @@ export default function SystemSettings() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="smtpPort">SMTP Port</Label>
-                      <Input;
+                      <Input
                         id="smtpPort"
                         type="number"
                         value={settings.email.smtpPort}
@@ -519,7 +512,7 @@ export default function SystemSettings() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="smtpUsername">SMTP Username</Label>
-                      <Input;
+                      <Input
                         id="smtpUsername"
                         value={settings.email.smtpUsername}
                         onChange={(e) => updateSetting(&quot;email&quot;, &quot;smtpUsername", e.target.value)}
@@ -527,7 +520,7 @@ export default function SystemSettings() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="smtpPassword">SMTP Password</Label>
-                      <Input;
+                      <Input
                         id="smtpPassword"
                         type="password"
                         value={settings.email.smtpPassword}
@@ -541,7 +534,7 @@ export default function SystemSettings() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="fromEmail">From Email</Label>
-                  <Input;
+                  <Input
                     id="fromEmail"
                     type="email"
                     value={settings.email.fromEmail}
@@ -550,7 +543,7 @@ export default function SystemSettings() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="fromName">From Name</Label>
-                  <Input;
+                  <Input
                     id="fromName"
                     value={settings.email.fromName}
                     onChange={(e) => updateSetting(&quot;email&quot;, &quot;fromName", e.target.value)}
@@ -565,7 +558,7 @@ export default function SystemSettings() {
                   <Label>Enable Email Notifications</Label>
                   <p className="text-sm text-gray-500">Send email notifications to users</p>
                 </div>
-                <Switch;
+                <Switch
                   checked={settings.email.enableEmailNotifications}
                   onCheckedChange={(checked) => updateSetting(&quot;email&quot;, &quot;enableEmailNotifications", checked)}
                 />
@@ -574,7 +567,7 @@ export default function SystemSettings() {
               <div className="flex justify-end">
                 <Button variant="outline" onClick={testEmailSettings}>
                   <Mail className="mr-2 h-4 w-4" />
-                  Send Test Email;
+                  Send Test Email
                 </Button>
               </div>
             </CardContent>
@@ -586,14 +579,14 @@ export default function SystemSettings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Database className="h-5 w-5" />
-                Storage Settings;
+                Storage Settings
               </CardTitle>
               <CardDescription>Configure file storage and video settings</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="storageProvider">Storage Provider</Label>
-                <Select;
+                <Select
                   value={settings.storage.provider}
                   onValueChange={(value) => updateSetting(&quot;storage&quot;, &quot;provider", value)}
                 >
@@ -612,7 +605,7 @@ export default function SystemSettings() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="maxFileSize">Max File Size (MB)</Label>
-                  <Input;
+                  <Input
                     id="maxFileSize"
                     type="number"
                     value={settings.storage.maxFileSize}
@@ -621,7 +614,7 @@ export default function SystemSettings() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="videoRetentionDays">Video Retention (days)</Label>
-                  <Input;
+                  <Input
                     id="videoRetentionDays"
                     type="number"
                     value={settings.storage.videoRetentionDays}
@@ -632,7 +625,7 @@ export default function SystemSettings() {
 
               <div className="space-y-2">
                 <Label htmlFor="allowedVideoFormats">Allowed Video Formats (comma-separated)</Label>
-                <Input;
+                <Input
                   id="allowedVideoFormats"
                   value={settings.storage.allowedVideoFormats.join(", ")}
                   onChange={(e) =>
@@ -653,7 +646,7 @@ export default function SystemSettings() {
                   <Label>Enable CDN</Label>
                   <p className="text-sm text-gray-500">Use CDN for faster video delivery</p>
                 </div>
-                <Switch;
+                <Switch
                   checked={settings.storage.enableCdn}
                   onCheckedChange={(checked) => updateSetting(&quot;storage&quot;, &quot;enableCdn", checked)}
                 />
@@ -662,7 +655,7 @@ export default function SystemSettings() {
               {settings.storage.enableCdn && (
                 <div className="space-y-2">
                   <Label htmlFor="cdnUrl">CDN URL</Label>
-                  <Input;
+                  <Input
                     id="cdnUrl"
                     value={settings.storage.cdnUrl}
                     onChange={(e) => updateSetting(&quot;storage&quot;, &quot;cdnUrl", e.target.value)}
@@ -679,7 +672,7 @@ export default function SystemSettings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CreditCard className="h-5 w-5" />
-                Payment Settings;
+                Payment Settings
               </CardTitle>
               <CardDescription>Configure payment processing and billing</CardDescription>
             </CardHeader>
@@ -689,7 +682,7 @@ export default function SystemSettings() {
                   <Label>Enable Billing</Label>
                   <p className="text-sm text-gray-500">Enable subscription billing and payments</p>
                 </div>
-                <Switch;
+                <Switch
                   checked={settings.payment.enableBilling}
                   onCheckedChange={(checked) => updateSetting(&quot;payment&quot;, &quot;enableBilling", checked)}
                 />
@@ -700,7 +693,7 @@ export default function SystemSettings() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="stripePublishableKey">Stripe Publishable Key</Label>
-                      <Input;
+                      <Input
                         id="stripePublishableKey"
                         value={settings.payment.stripePublishableKey}
                         onChange={(e) => updateSetting(&quot;payment&quot;, &quot;stripePublishableKey", e.target.value)}
@@ -709,7 +702,7 @@ export default function SystemSettings() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="stripeSecretKey">Stripe Secret Key</Label>
-                      <Input;
+                      <Input
                         id="stripeSecretKey"
                         type="password"
                         value={settings.payment.stripeSecretKey}
@@ -722,7 +715,7 @@ export default function SystemSettings() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="currency">Currency</Label>
-                      <Select;
+                      <Select
                         value={settings.payment.currency}
                         onValueChange={(value) => updateSetting(&quot;payment&quot;, &quot;currency", value)}
                       >
@@ -739,7 +732,7 @@ export default function SystemSettings() {
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="taxRate">Tax Rate (%)</Label>
-                      <Input;
+                      <Input
                         id="taxRate"
                         type="number"
                         step="0.01"
@@ -759,7 +752,7 @@ export default function SystemSettings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Server className="h-5 w-5" />
-                Feature Settings;
+                Feature Settings
               </CardTitle>
               <CardDescription>Enable or disable platform features</CardDescription>
             </CardHeader>
@@ -770,11 +763,11 @@ export default function SystemSettings() {
                     <div className="space-y-0.5">
                       <Label className="flex items-center gap-2">
                         <MessageSquare className="h-4 w-4" />
-                        Chat System;
+                        Chat System
                       </Label>
                       <p className="text-sm text-gray-500">Enable real-time chat in parties</p>
                     </div>
-                    <Switch;
+                    <Switch
                       checked={settings.features.enableChat}
                       onCheckedChange={(checked) => updateSetting(&quot;features&quot;, &quot;enableChat", checked)}
                     />
@@ -784,11 +777,11 @@ export default function SystemSettings() {
                     <div className="space-y-0.5">
                       <Label className="flex items-center gap-2">
                         <Video className="h-4 w-4" />
-                        Video Upload;
+                        Video Upload
                       </Label>
                       <p className="text-sm text-gray-500">Allow users to upload videos</p>
                     </div>
-                    <Switch;
+                    <Switch
                       checked={settings.features.enableVideoUpload}
                       onCheckedChange={(checked) => updateSetting(&quot;features&quot;, &quot;enableVideoUpload", checked)}
                     />
@@ -798,11 +791,11 @@ export default function SystemSettings() {
                     <div className="space-y-0.5">
                       <Label className="flex items-center gap-2">
                         <Users className="h-4 w-4" />
-                        Social Features;
+                        Social Features
                       </Label>
                       <p className="text-sm text-gray-500">Enable friends, following, and social interactions</p>
                     </div>
-                    <Switch;
+                    <Switch
                       checked={settings.features.enableSocialFeatures}
                       onCheckedChange={(checked) => updateSetting(&quot;features&quot;, &quot;enableSocialFeatures", checked)}
                     />
@@ -814,11 +807,11 @@ export default function SystemSettings() {
                     <div className="space-y-0.5">
                       <Label className="flex items-center gap-2">
                         <Bell className="h-4 w-4" />
-                        Notifications;
+                        Notifications
                       </Label>
                       <p className="text-sm text-gray-500">Enable push and email notifications</p>
                     </div>
-                    <Switch;
+                    <Switch
                       checked={settings.features.enableNotifications}
                       onCheckedChange={(checked) => updateSetting(&quot;features&quot;, &quot;enableNotifications", checked)}
                     />
@@ -829,7 +822,7 @@ export default function SystemSettings() {
                       <Label>Analytics</Label>
                       <p className="text-sm text-gray-500">Enable usage analytics and tracking</p>
                     </div>
-                    <Switch;
+                    <Switch
                       checked={settings.features.enableAnalytics}
                       onCheckedChange={(checked) => updateSetting(&quot;features&quot;, &quot;enableAnalytics", checked)}
                     />
@@ -839,11 +832,11 @@ export default function SystemSettings() {
                     <div className="space-y-0.5">
                       <Label className="flex items-center gap-2">
                         <Shield className="h-4 w-4" />
-                        Content Moderation;
+                        Content Moderation
                       </Label>
                       <p className="text-sm text-gray-500">Enable automated content moderation</p>
                     </div>
-                    <Switch;
+                    <Switch
                       checked={settings.features.enableModeration}
                       onCheckedChange={(checked) => updateSetting(&quot;features&quot;, &quot;enableModeration", checked)}
                     />

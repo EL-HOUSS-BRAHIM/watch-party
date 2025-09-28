@@ -1,3 +1,5 @@
+"use client"
+
 import { BarChart, Clock, TrendingUp, User, Users } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -7,29 +9,28 @@ import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useApi } from "@/hooks/use-api"
 
-"use client"
 interface UserStats {}
-  total_watch_time: number;
-  videos_watched: number;
-  parties_hosted: number;
-  parties_joined: number;
-  friends_count: number;
-  achievements_earned: number;
+  total_watch_time: number
+  videos_watched: number
+  parties_hosted: number
+  parties_joined: number
+  friends_count: number
+  achievements_earned: number
   favorite_genres: string[]
   recent_activity: Array<{}
-    type: string;
-    description: string;
-    timestamp: string;
+    type: string
+    description: string
+    timestamp: string
   }>
   weekly_stats: Array<{}
-    week: string;
-    watch_time: number;
-    parties: number;
+    week: string
+    watch_time: number
+    parties: number
   }>
 }
 
 interface UserStatsProps {}
-  userId: string;
+  userId: string
 }
 
 export function UserStats({ userId }: UserStatsProps) {}
@@ -47,9 +48,9 @@ export function UserStats({ userId }: UserStatsProps) {}
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/stats/?timeframe=${timeframe}`)
       setStats(response.data as UserStats)
-    } } catch {
+    } catch (err) {
       console.error("Failed to load user stats:", err)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -94,26 +95,26 @@ export function UserStats({ userId }: UserStatsProps) {}
       <div className="text-center space-y-4">
         <h1 className="text-3xl font-bold">User Statistics</h1>
         <div className="flex justify-center space-x-2">
-          <Button;
+          <Button
             variant={timeframe === "week" ? "default" : "outline"}
             onClick={() => setTimeframe(&quot;week&quot;)}
             size="sm"
           >
-            This Week;
+            This Week
           </Button>
-          <Button;
+          <Button
             variant={timeframe === "month" ? "default" : "outline"}
             onClick={() => setTimeframe(&quot;month&quot;)}
             size="sm"
           >
-            This Month;
+            This Month
           </Button>
-          <Button;
+          <Button
             variant={timeframe === "year" ? "default" : "outline"}
             onClick={() => setTimeframe(&quot;year&quot;)}
             size="sm"
           >
-            This Year;
+            This Year
           </Button>
         </div>
       </div>
@@ -128,7 +129,7 @@ export function UserStats({ userId }: UserStatsProps) {}
           <CardContent>
             <div className="text-2xl font-bold">{formatWatchTime(stats.total_watch_time)}</div>
             <p className="text-xs text-muted-foreground">
-              Across {stats.videos_watched} videos;
+              Across {stats.videos_watched} videos
             </p>
           </CardContent>
         </Card>
@@ -141,7 +142,7 @@ export function UserStats({ userId }: UserStatsProps) {}
           <CardContent>
             <div className="text-2xl font-bold">{stats.parties_hosted}</div>
             <p className="text-xs text-muted-foreground">
-              {stats.parties_joined} joined;
+              {stats.parties_joined} joined
             </p>
           </CardContent>
         </Card>
@@ -154,7 +155,7 @@ export function UserStats({ userId }: UserStatsProps) {}
           <CardContent>
             <div className="text-2xl font-bold">{stats.friends_count}</div>
             <p className="text-xs text-muted-foreground">
-              In your network;
+              In your network
             </p>
           </CardContent>
         </Card>
@@ -167,7 +168,7 @@ export function UserStats({ userId }: UserStatsProps) {}
           <CardContent>
             <div className="text-2xl font-bold">{stats.achievements_earned}</div>
             <p className="text-xs text-muted-foreground">
-              Badges earned;
+              Badges earned
             </p>
           </CardContent>
         </Card>

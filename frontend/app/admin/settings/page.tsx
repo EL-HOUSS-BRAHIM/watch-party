@@ -13,26 +13,26 @@ import { toast } from '@/hooks/use-toast';
 
 'use client';
 interface FeatureFlag {}
-  id: string;
-  name: string;
-  description: string;
-  enabled: boolean;
+  id: string
+  name: string
+  description: string
+  enabled: boolean
   category: 'features' | 'experiments' | 'maintenance' | 'security';
-  rolloutPercentage?: number;
+  rolloutPercentage?: number
   environment: 'development' | 'staging' | 'production' | 'all';
-  lastModified: Date;
-  modifiedBy: string;
+  lastModified: Date
+  modifiedBy: string
 }
 
 interface SystemSetting {}
-  id: string;
-  category: string;
-  name: string;
-  value: string | number | boolean;
+  id: string
+  category: string
+  name: string
+  value: string | number | boolean
   type: 'string' | 'number' | 'boolean' | 'json';
-  description: string;
-  isSecret?: boolean;
-  requiresRestart?: boolean;
+  description: string
+  isSecret?: boolean
+  requiresRestart?: boolean
 }
 
 export default function AdminSettings() {
@@ -150,7 +150,7 @@ export default function AdminSettings() {
       type: 'string',
       description: 'Secret key for JWT token generation',
       isSecret: true,
-      requiresRestart: true;
+      requiresRestart: true
     }
   ]);
 
@@ -162,33 +162,32 @@ export default function AdminSettings() {
 
   const toggleFeatureFlag = (flagId: string) => {
     setFeatureFlags(prev => prev.map(flag => 
-      flag.id === flagId;
+      flag.id === flagId
         ? {}
             ...flag, 
             enabled: !flag.enabled, 
             lastModified: new Date(),
             modifiedBy: 'current-admin@watchparty.com'
           }
-        : flag;
+        : flag
     ));
     setHasUnsavedChanges(true);
   };
 
   const updateSystemSetting = (settingId: string, newValue: string | number | boolean) => {
     setSystemSettings(prev => prev.map(setting => 
-      setting.id === settingId;
+      setting.id === settingId
         ? { ...setting, value: newValue }
-        : setting;
+        : setting
     ));
     setHasUnsavedChanges(true);
   };
 
   const saveChanges = () => {
-    // Simulate API call to save changes;
+    // Simulate API call to save changes
     setTimeout(() => {
   setHasUnsavedChanges(false);
-      toast({}
-        title: "Settings Saved",
+      toast({title: "Settings Saved",
         description: "All configuration changes have been saved successfully.",
       });
     }, 1000);
@@ -199,10 +198,9 @@ export default function AdminSettings() {
     setFeatureFlags(prev => prev.map(flag => 
       flag.id === 'maintenance_mode' 
         ? { ...flag, enabled: true, lastModified: new Date() }
-        : flag;
+        : flag
     ));
-    toast({}
-      title: "Maintenance Mode Enabled",
+    toast({title: "Maintenance Mode Enabled",
       description: "The platform is now in maintenance mode.",
       variant: "destructive"
     });
@@ -213,10 +211,9 @@ export default function AdminSettings() {
     setFeatureFlags(prev => prev.map(flag => 
       flag.id === 'maintenance_mode' 
         ? { ...flag, enabled: false, lastModified: new Date() }
-        : flag;
+        : flag
     ));
-    toast({}
-      title: "Maintenance Mode Disabled",
+    toast({title: "Maintenance Mode Disabled",
       description: "The platform is now accessible to users.",
     });
   };
@@ -246,7 +243,7 @@ export default function AdminSettings() {
       acc[setting.category] = [];
     }
     acc[setting.category].push(setting);
-    return acc;
+    return acc
   }, {} as Record<string, SystemSetting[]>);
 
   return (
@@ -261,12 +258,12 @@ export default function AdminSettings() {
           {hasUnsavedChanges && (
             <Button onClick={saveChanges} className="bg-green-600 hover:bg-green-700">
               <Save className="w-4 h-4 mr-2" />
-              Save Changes;
+              Save Changes
             </Button>
           )}
           <Button variant="outline">
             <RefreshCw className="w-4 h-4 mr-2" />
-            Refresh;
+            Refresh
           </Button>
         </div>
       </div>
@@ -277,13 +274,13 @@ export default function AdminSettings() {
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
             <strong>Maintenance Mode is Active</strong> - The platform is currently unavailable to users.
-            <Button;
+            <Button
               variant="outline"
               size="sm"
               className="ml-4"
               onClick={disableMaintenanceMode}
             >
-              Disable Maintenance Mode;
+              Disable Maintenance Mode
             </Button>
           </AlertDescription>
         </Alert>
@@ -302,21 +299,21 @@ export default function AdminSettings() {
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium mb-2">Maintenance Mode</h4>
               <p className="text-sm text-muted-foreground mb-3">
-                Temporarily disable the platform for maintenance;
+                Temporarily disable the platform for maintenance
               </p>
               <div className="space-y-3">
-                <Textarea;
+                <Textarea
                   placeholder="Maintenance message..."
                   value={maintenanceMessage}
                   onChange={(e) => setMaintenanceMessage(e.target.value)}
                   rows={2}
                 />
-                <Button;
+                <Button
                   variant={maintenanceMode ? "destructive" : "default"}
                   onClick={maintenanceMode ? disableMaintenanceMode : enableMaintenanceMode}
                   className="w-full"
                 >
-                  {maintenanceMode ? 'Disable' : 'Enable'} Maintenance Mode;
+                  {maintenanceMode ? 'Disable' : 'Enable'} Maintenance Mode
                 </Button>
               </div>
             </div>
@@ -324,14 +321,14 @@ export default function AdminSettings() {
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium mb-2">System Health</h4>
               <p className="text-sm text-muted-foreground mb-3">
-                Current system status and performance;
+                Current system status and performance
               </p>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm">Status</span>
                   <Badge variant="outline" className="text-green-600 border-green-200">
                     <CheckCircle className="w-3 h-3 mr-1" />
-                    Healthy;
+                    Healthy
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
@@ -339,7 +336,7 @@ export default function AdminSettings() {
                   <span className="text-sm font-medium">99.9%</span>
                 </div>
                 <Button variant="outline" className="w-full mt-2">
-                  View Detailed Metrics;
+                  View Detailed Metrics
                 </Button>
               </div>
             </div>
@@ -347,7 +344,7 @@ export default function AdminSettings() {
             <div className="p-4 border rounded-lg">
               <h4 className="font-medium mb-2">Recent Changes</h4>
               <p className="text-sm text-muted-foreground mb-3">
-                Last configuration updates;
+                Last configuration updates
               </p>
               <div className="space-y-2 text-sm">
                 <div>
@@ -403,7 +400,7 @@ export default function AdminSettings() {
                       {flag.enabled ? 'Enabled' : 'Disabled'}
                     </div>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={flag.enabled}
                     onCheckedChange={() => toggleFeatureFlag(flag.id)}
                   />
@@ -445,7 +442,7 @@ export default function AdminSettings() {
                           </Label>
                           {setting.requiresRestart && (
                             <Badge variant="outline" className="ml-2 text-xs">
-                              Requires Restart;
+                              Requires Restart
                             </Badge>
                           )}
                         </div>
@@ -454,7 +451,7 @@ export default function AdminSettings() {
                       <p className="text-sm text-muted-foreground mb-3">{setting.description}</p>
                       {setting.type === 'boolean' ? (
                         <div className="flex items-center space-x-2">
-                          <Switch;
+                          <Switch
                             id={setting.id}
                             checked={setting.value as boolean}
                             onCheckedChange={(checked) => updateSystemSetting(setting.id, checked)}
@@ -464,14 +461,14 @@ export default function AdminSettings() {
                           </Label>
                         </div>
                       ) : (
-                        <Input;
+                        <Input
                           id={setting.id}
                           type={setting.type === 'number' ? 'number' : 'text'}
                           value={setting.value.toString()}
                           onChange={(e) => {
   const value = setting.type === 'number' 
-                              ? parseInt(e.target.value) || 0;
-                              : e.target.value;
+                              ? parseInt(e.target.value) || 0
+                              : e.target.value
                             updateSystemSetting(setting.id, value);
                           }}
                           className="w-full"

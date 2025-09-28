@@ -1,3 +1,5 @@
+"use client"
+
 import { Calendar, Clock, Eye, Filter, Play, Search } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import Image from "next/image"
@@ -8,27 +10,26 @@ import { Badge } from "@/components/ui/badge"
 import { useApi } from "@/hooks/use-api"
 import { formatDistanceToNow, formatDuration } from "date-fns"
 
-"use client"
 interface WatchHistoryItem {}
-  id: string;
+  id: string
   video: {}
-    id: string;
-    title: string;
-    thumbnail_url?: string;
-    duration: number;
-    views: number;
+    id: string
+    title: string
+    thumbnail_url?: string
+    duration: number
+    views: number
   }
-  watched_at: string;
-  watch_time: number;
-  completion_percentage: number;
+  watched_at: string
+  watch_time: number
+  completion_percentage: number
   party?: {}
-    id: string;
-    name: string;
+    id: string
+    name: string
   }
 }
 
 interface UserWatchHistoryProps {}
-  userId: string;
+  userId: string
 }
 
 export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
@@ -47,25 +48,25 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/watch-history/`)
       setHistory((response.data as Record<string, unknown>).history || [])
-    } } catch {
+    } catch (err) {
       console.error("Failed to load watch history:", err)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
   const filteredHistory = history.filter(item => {}
     const matchesSearch = item.video.title.toLowerCase().includes(searchQuery.toLowerCase())
-    if (filterBy === "solo") return matchesSearch && !item.party;
-    if (filterBy === "party") return matchesSearch && !!item.party;
-    return matchesSearch;
+    if (filterBy === "solo") return matchesSearch && !item.party
+    if (filterBy === "party") return matchesSearch && !!item.party
+    return matchesSearch
   })
 
   const totalWatchTime = history.reduce((sum, item) => sum + item.watch_time, 0)
-  const totalVideos = history.length;
-  const averageCompletion = history.length > 0;
-    ? history.reduce((sum, item) => sum + item.completion_percentage, 0) / history.length;
-    : 0;
+  const totalVideos = history.length
+  const averageCompletion = history.length > 0
+    ? history.reduce((sum, item) => sum + item.completion_percentage, 0) / history.length
+    : 0
   if (isLoading) {
     return (
       <Card>
@@ -91,7 +92,7 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-primary">
-              {Math.round(totalWatchTime / 3600)}h;
+              {Math.round(totalWatchTime / 3600)}h
             </div>
             <div className="text-sm text-muted-foreground">Total Watch Time</div>
           </div>
@@ -117,7 +118,7 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input;
+                <Input
                   placeholder="Search videos..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -126,26 +127,26 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
               </div>
             </div>
             <div className="flex space-x-2">
-              <Button;
+              <Button
                 variant={filterBy === "all" ? "default" : "outline"}
                 onClick={() => setFilterBy(&quot;all&quot;)}
                 size="sm"
               >
-                All;
+                All
               </Button>
-              <Button;
+              <Button
                 variant={filterBy === "solo" ? "default" : "outline"}
                 onClick={() => setFilterBy(&quot;solo&quot;)}
                 size="sm"
               >
-                Solo;
+                Solo
               </Button>
-              <Button;
+              <Button
                 variant={filterBy === "party" ? "default" : "outline"}
                 onClick={() => setFilterBy(&quot;party&quot;)}
                 size="sm"
               >
-                Party;
+                Party
               </Button>
             </div>
           </div>
@@ -161,7 +162,7 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
                 {/* Thumbnail */}
                 <div className="relative w-32 h-20 bg-muted rounded-lg overflow-hidden flex-shrink-0">
                   {item.video.thumbnail_url ? (
-                    <img;
+                    <img
                       src={item.video.thumbnail_url}
                       alt={item.video.title}
                       className="w-full h-full object-cover"
@@ -173,7 +174,7 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
                   )}
                   {/* Progress bar */}
                   <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/20">
-                    <div;
+                    <div
                       className="h-full bg-primary"
                       style={{ width: `${item.completion_percentage}%` }}
                     />
@@ -202,10 +203,10 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
 
                   <div className="flex flex-wrap items-center gap-2">
                     <Badge variant="secondary">
-                      {item.completion_percentage}% complete;
+                      {item.completion_percentage}% complete
                     </Badge>
                     <Badge variant="outline">
-                      {Math.round(item.watch_time / 60)}m watched;
+                      {Math.round(item.watch_time / 60)}m watched
                     </Badge>
                     {item.party && (
                       <Badge className="bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-200">
@@ -219,7 +220,7 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {}
                 <div className="flex flex-col space-y-2">
                   <Button size="sm" onClick={() => window.open(`/videos/${item.video.id}`, &apos;_blank&apos;)}>
                     <Play className="w-4 h-4 mr-1" />
-                    Watch Again;
+                    Watch Again
                   </Button>
                 </div>
               </div>

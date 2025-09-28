@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
   try {
-    // Basic health check;
+    // Basic health check
     const healthCheck = { status: 'ok',
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
@@ -15,10 +15,8 @@ export async function GET() {
     }
 
     return NextResponse.json(healthCheck)
-  } } catch {
-    return NextResponse.json(
-      {}
-        status: 'error', 
+  } catch (err) {
+    return NextResponse.json({status: 'error', 
         message: 'Health check failed',
         timestamp: new Date().toISOString() 
       },

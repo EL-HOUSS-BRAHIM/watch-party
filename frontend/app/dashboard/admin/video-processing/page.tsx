@@ -6,5 +6,3 @@ export default function VideoProcessingPage() {
     <div className="container mx-auto py-6">
       <VideoProcessingPipeline />
     </div>
-  )
-}

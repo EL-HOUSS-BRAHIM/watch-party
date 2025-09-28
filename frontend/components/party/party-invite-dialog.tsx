@@ -1,6 +1,8 @@
+"use client"
+
 import { useState } from "react"
 import { Copy, Link as LinkIcon, Mail, QrCode, Share, Share2, User, Users } from "lucide-react"
-import {}
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -8,7 +10,6 @@ import { useToast } from "@/hooks/use-toast"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 
-"use client"
 
   Dialog,
   DialogContent,
@@ -17,16 +18,16 @@ import { Badge } from "@/components/ui/badge"
   DialogTitle,
 } from "@/components/ui/dialog"
 interface PartyInviteDialogProps {}
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
   party: {}
-    id: string;
-    title: string;
-    roomCode: string;
-    inviteCode?: string;
-    maxParticipants: number;
-    participantCount: number;
-    isPrivate: boolean;
+    id: string
+    title: string
+    roomCode: string
+    inviteCode?: string
+    maxParticipants: number
+    participantCount: number
+    isPrivate: boolean
   }
 }
 
@@ -41,8 +42,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
 
   const copyToClipboard = (text: string, description: string) => {}
     navigator.clipboard.writeText(text)
-    toast({}
-      title: "Copied!",
+    toast({title: "Copied!",
       description: `${description} copied to clipboard`,
     })
   }
@@ -50,12 +50,11 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
   const shareNatively = async () => {
     if (navigator.share) {
       try {
-        await navigator.share({}
-          title: `Join "${party.title}" on WatchParty`,
+        await navigator.share({title: `Join "${party.title}" on WatchParty`,
           text: `You're invited to watch "${party.title}" together! Use code: ${party.roomCode}`,
           url: inviteUrl,
         })
-      } } catch {
+      } catch (err) {
         if ((error as Error).name !== 'AbortError') {}
           console.error('Error sharing:', error)
         }
@@ -67,12 +66,11 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
 
   const sendEmailInvites = async () => {
     if (!emailList.trim()) {}
-      toast({}
-        title: "No emails provided",
+      toast({title: "No emails provided",
         description: "Please enter at least one email address",
         variant: "destructive",
       })
-      return;
+      return
     }
 
     setIsSendingEmails(true)
@@ -84,15 +82,13 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
-        body: JSON.stringify({}
-          emails,
+        body: JSON.stringify({emails,
           message: customMessage,
         }),
       })
 
       if (response.ok) {
-        toast({}
-          title: "Invitations sent!",
+        toast({title: "Invitations sent!",
           description: `Successfully sent invites to ${emails.length} email${emails.length > 1 ? &apos;s&apos; : &apos;'}`,
         })
         setEmailList("")
@@ -100,14 +96,13 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
       } else {}
         throw new Error("Failed to send invitations")
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to send email invites:", error)
-      toast({}
-        title: "Failed to send invites",
+      toast({title: "Failed to send invites",
         description: "Please try again or use the invite link",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSendingEmails(false)
     }
   }
@@ -121,7 +116,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
             Invite to "{party.title}"
           </DialogTitle>
           <DialogDescription>
-            Share this party with friends and family;
+            Share this party with friends and family
           </DialogDescription>
         </DialogHeader>
 
@@ -146,7 +141,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
               </div>
               {party.isPrivate && (
                 <Badge variant="outline" className="text-xs">
-                  Private Party;
+                  Private Party
                 </Badge>
               )}
             </div>
@@ -155,12 +150,12 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
             <div className="space-y-2">
               <Label>Invite Link</Label>
               <div className="flex gap-2">
-                <Input;
+                <Input
                   value={inviteUrl}
-                  readOnly;
+                  readOnly
                   className="font-mono text-sm"
                 />
-                <Button;
+                <Button
                   size="icon"
                   variant="outline"
                   onClick={() => copyToClipboard(inviteUrl, &quot;Invite link&quot;)}
@@ -174,12 +169,12 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
             <div className="space-y-2">
               <Label>Direct Watch Link</Label>
               <div className="flex gap-2">
-                <Input;
+                <Input
                   value={watchUrl}
-                  readOnly;
+                  readOnly
                   className="font-mono text-sm"
                 />
-                <Button;
+                <Button
                   size="icon"
                   variant="outline"
                   onClick={() => copyToClipboard(watchUrl, &quot;Watch link&quot;)}
@@ -191,20 +186,20 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
 
             {/* Share Actions */}
             <div className="flex gap-2">
-              <Button;
+              <Button
                 variant="outline"
                 className="flex-1"
                 onClick={shareNatively}
               >
                 <Share2 className="h-4 w-4 mr-2" />
-                Share;
+                Share
               </Button>
-              <Button;
+              <Button
                 variant="outline"
                 onClick={() => copyToClipboard(party.roomCode, &quot;Room code&quot;)}
               >
                 <Copy className="h-4 w-4 mr-2" />
-                Copy Code;
+                Copy Code
               </Button>
             </div>
           </TabsContent>
@@ -212,7 +207,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
           <TabsContent value="email" className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="emails">Email Addresses</Label>
-              <textarea;
+              <textarea
                 id="emails"
                 placeholder="Enter email addresses separated by commas"
                 value={emailList}
@@ -223,7 +218,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
 
             <div className="space-y-2">
               <Label htmlFor="message">Custom Message (Optional)</Label>
-              <textarea;
+              <textarea
                 id="message"
                 placeholder="Add a personal message to your invite..."
                 value={customMessage}
@@ -232,7 +227,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
               />
             </div>
 
-            <Button;
+            <Button
               onClick={sendEmailInvites}
               disabled={isSendingEmails || !emailList.trim()}
               className="w-full"

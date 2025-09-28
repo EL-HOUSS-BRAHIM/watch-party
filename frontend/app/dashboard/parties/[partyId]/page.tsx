@@ -1,3 +1,5 @@
+"use client"
+
 import { AlertTriangle, BarChart, Calendar, Check, CheckCircle, Clock, Copy, Edit, Eye, Flag, Heart, Loader2, Lock, MessageCircle, MoreVertical, Play, Settings, Share, Shield, Trash, TrendingUp, User, Users, Video, X, XCircle } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
@@ -15,88 +17,87 @@ import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { format, formatDistanceToNow } from "date-fns"
 
-"use client"
 interface Participant {}
-  id: string;
+  id: string
   user: {}
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    avatar?: string;
-    isVerified: boolean;
+    id: string
+    username: string
+    firstName: string
+    lastName: string
+    avatar?: string
+    isVerified: boolean
   }
   role: "host" | "moderator" | "participant"
-  joinedAt: string;
-  isOnline: boolean;
+  joinedAt: string
+  isOnline: boolean
   permissions: {}
-    canControlVideo: boolean;
-    canChat: boolean;
-    canInvite: boolean;
-    canKick: boolean;
+    canControlVideo: boolean
+    canChat: boolean
+    canInvite: boolean
+    canKick: boolean
   }
 }
 
 interface JoinRequest {}
-  id: string;
+  id: string
   user: {}
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    avatar?: string;
+    id: string
+    username: string
+    firstName: string
+    lastName: string
+    avatar?: string
   }
-  message?: string;
-  requestedAt: string;
+  message?: string
+  requestedAt: string
   status: "pending" | "approved" | "rejected"
 }
 
 interface WatchParty {}
-  id: string;
-  name: string;
-  description: string;
-  roomCode: string;
+  id: string
+  name: string
+  description: string
+  roomCode: string
   host: {}
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    avatar?: string;
-    isVerified: boolean;
+    id: string
+    username: string
+    firstName: string
+    lastName: string
+    avatar?: string
+    isVerified: boolean
   }
   video: {}
-    id: string;
-    title: string;
-    description: string;
-    thumbnail: string;
-    duration: number;
-    url: string;
+    id: string
+    title: string
+    description: string
+    thumbnail: string
+    duration: number
+    url: string
   }
   participants: Participant[]
   joinRequests: JoinRequest[]
-  maxParticipants: number;
-  isPrivate: boolean;
-  requiresApproval: boolean;
-  allowChat: boolean;
-  allowReactions: boolean;
+  maxParticipants: number
+  isPrivate: boolean
+  requiresApproval: boolean
+  allowChat: boolean
+  allowReactions: boolean
   allowVideoControl: "host" | "all" | "moderators"
-  password?: string;
+  password?: string
   status: "scheduled" | "active" | "ended" | "cancelled"
-  scheduledFor: string;
-  startedAt?: string;
-  endedAt?: string;
-  createdAt: string;
-  updatedAt: string;
+  scheduledFor: string
+  startedAt?: string
+  endedAt?: string
+  createdAt: string
+  updatedAt: string
   tags: string[]
   analytics?: {}
-    totalViews: number;
-    peakViewers: number;
-    averageWatchTime: number;
-    chatMessages: number;
-    reactions: number;
-    joinRequests: number;
+    totalViews: number
+    peakViewers: number
+    averageWatchTime: number
+    chatMessages: number
+    reactions: number
+    joinRequests: number
   }
-  inviteCode: string;
+  inviteCode: string
 }
 
 export default function PartyDetailsPage() {
@@ -104,7 +105,7 @@ export default function PartyDetailsPage() {
   const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
-  const partyId = params.partyId as string;
+  const partyId = params.partyId as string
   const [party, setParty] = useState<WatchParty | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("overview")
@@ -129,27 +130,25 @@ export default function PartyDetailsPage() {
         const partyData = await response.json()
         setParty(partyData)
       } else if (response.status === 404) {
-        toast({}
-          title: "Party Not Found",
+        toast({title: "Party Not Found",
           description: "The party you're looking for doesn't exist.",
           variant: "destructive",
         })
         router.push("/dashboard/parties")
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to load party:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load party details.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
   const joinParty = async () => {
-    if (!party) return;
+    if (!party) return
     setIsJoining(true)
     try {
       const token = localStorage.getItem("accessToken")
@@ -164,34 +163,31 @@ export default function PartyDetailsPage() {
         if (party.status === "active") {
           router.push(`/watch/${party.roomCode}`)
         } else {}
-          await loadParty() // Refresh party data;
-          toast({}
-            title: "Joined Party",
+          await loadParty() // Refresh party data
+          toast({title: "Joined Party",
             description: "You've successfully joined the party.",
           })
         }
       } else {}
         const errorData = await response.json()
-        toast({}
-          title: "Failed to Join",
+        toast({title: "Failed to Join",
           description: errorData.message || "Unable to join the party.",
           variant: "destructive",
         })
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to join party:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsJoining(false)
     }
   }
 
   const leaveParty = async () => {
-    if (!party || !confirm("Are you sure you want to leave this party?")) return;
+    if (!party || !confirm("Are you sure you want to leave this party?")) return
     try {
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/parties/${partyId}/leave/`, {}
@@ -203,15 +199,13 @@ export default function PartyDetailsPage() {
 
       if (response.ok) {
         await loadParty()
-        toast({}
-          title: "Left Party",
+        toast({title: "Left Party",
           description: "You've left the party.",
         })
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to leave party:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to leave party.",
         variant: "destructive",
       })
@@ -230,15 +224,13 @@ export default function PartyDetailsPage() {
 
       if (response.ok) {
         await loadParty()
-        toast({}
-          title: `Request ${action === "approve" ? "Approved" : "Rejected"}`,
+        toast({title: `Request ${action === "approve" ? "Approved" : "Rejected"}`,
           description: `The join request has been ${action}d.`,
         })
       }
-    } } catch {
+    } catch (err) {
       console.error(`Failed to ${action} request:`, error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: `Failed to ${action} request.`,
         variant: "destructive",
       })
@@ -246,7 +238,7 @@ export default function PartyDetailsPage() {
   }
 
   const removeParticipant = async (participantId: string) => {}
-    if (!confirm("Are you sure you want to remove this participant?")) return;
+    if (!confirm("Are you sure you want to remove this participant?")) return
     try {
       const token = localStorage.getItem("accessToken")
       const response = await fetch(`/api/parties/${partyId}/participants/${participantId}/`, {}
@@ -258,15 +250,13 @@ export default function PartyDetailsPage() {
 
       if (response.ok) {
         await loadParty()
-        toast({}
-          title: "Participant Removed",
+        toast({title: "Participant Removed",
           description: "The participant has been removed from the party.",
         })
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to remove participant:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to remove participant.",
         variant: "destructive",
       })
@@ -274,27 +264,25 @@ export default function PartyDetailsPage() {
   }
 
   const copyInviteLink = () => {}
-    if (!party) return;
+    if (!party) return
     const inviteLink = `${window.location.origin}/invite/${party.inviteCode}`
     navigator.clipboard.writeText(inviteLink)
-    toast({}
-      title: "Copied!",
+    toast({title: "Copied!",
       description: "Invite link copied to clipboard.",
     })
   }
 
   const shareParty = async () => {
-    if (!party) return;
+    if (!party) return
     const inviteLink = `${window.location.origin}/invite/${party.inviteCode}`
 
     if (navigator.share) {
       try {
-        await navigator.share({}
-          title: party.name,
+        await navigator.share({title: party.name,
           text: `Join my watch party: ${party.name}`,
           url: inviteLink,
         })
-      } } catch {
+      } catch (err) {
         console.log("Share cancelled")
       }
     } else {}
@@ -304,7 +292,7 @@ export default function PartyDetailsPage() {
 
   const deleteParty = async () => {
     if (!party || !confirm("Are you sure you want to delete this party? This action cannot be undone.")) {}
-      return;
+      return
     }
 
     try {
@@ -317,16 +305,14 @@ export default function PartyDetailsPage() {
       })
 
       if (response.ok) {
-        toast({}
-          title: "Party Deleted",
+        toast({title: "Party Deleted",
           description: "The party has been deleted.",
         })
         router.push("/dashboard/parties")
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to delete party:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to delete party.",
         variant: "destructive",
       })
@@ -336,7 +322,7 @@ export default function PartyDetailsPage() {
   const formatDuration = (seconds: number) => {}
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60;
+    const secs = seconds % 60
     if (hours > 0) {
       return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
     }
@@ -369,7 +355,7 @@ export default function PartyDetailsPage() {
       case "cancelled":
         return "Cancelled"
       default:
-        return status;
+        return status
     }
   }
 
@@ -398,9 +384,9 @@ export default function PartyDetailsPage() {
     )
   }
 
-  const isHost = party.host.id === user?.id;
+  const isHost = party.host.id === user?.id
   const isParticipant = party.participants.some((p) => p.user.id === user?.id)
-  const canJoin = !isParticipant && party.participants.length < party.maxParticipants;
+  const canJoin = !isParticipant && party.participants.length < party.maxParticipants
   const isScheduled = party.status === "scheduled"
   const isActive = party.status === "active"
   const hasEnded = party.status === "ended"
@@ -424,12 +410,12 @@ export default function PartyDetailsPage() {
                 {party.isPrivate ? (
                   <>
                     <Lock className="w-3 h-3 mr-1" />
-                    Private;
+                    Private
                   </>
                 ) : (
                   <>
                     <Globe className="w-3 h-3 mr-1" />
-                    Public;
+                    Public
                   </>
                 )}
               </Badge>
@@ -437,7 +423,7 @@ export default function PartyDetailsPage() {
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               <span className="flex items-center gap-1">
                 <Users className="h-4 w-4" />
-                {party.participants.length}/{party.maxParticipants} participants;
+                {party.participants.length}/{party.maxParticipants} participants
               </span>
               <span className="flex items-center gap-1">
                 <Calendar className="h-4 w-4" />
@@ -469,14 +455,14 @@ export default function PartyDetailsPage() {
             {isParticipant && !isHost && (
               <Button onClick={leaveParty} variant="outline" size="lg">
                 <UserMinus className="h-5 w-5 mr-2" />
-                Leave Party;
+                Leave Party
               </Button>
             )}
 
             {/* Share Button */}
             <Button onClick={shareParty} variant="outline" size="lg">
               <Share2 className="h-5 w-5 mr-2" />
-              Share;
+              Share
             </Button>
 
             {/* Host Actions */}
@@ -490,19 +476,19 @@ export default function PartyDetailsPage() {
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={() => router.push(`/dashboard/parties/${partyId}/edit`)}>
                     <Edit className="h-4 w-4 mr-2" />
-                    Edit Party;
+                    Edit Party
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => router.push(`/dashboard/parties/${partyId}/analytics`)}>
                     <TrendingUp className="h-4 w-4 mr-2" />
-                    View Analytics;
+                    View Analytics
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={copyInviteLink}>
                     <Copy className="h-4 w-4 mr-2" />
-                    Copy Invite Link;
+                    Copy Invite Link
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={deleteParty} className="text-destructive">
                     <Trash2 className="h-4 w-4 mr-2" />
-                    Delete Party;
+                    Delete Party
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -539,7 +525,7 @@ export default function PartyDetailsPage() {
             <Card>
               <CardContent className="p-0">
                 <div className="relative aspect-video bg-gradient-to-br from-primary/20 to-secondary/20 rounded-t-lg overflow-hidden">
-                  <img;
+                  <img
                     src={party.video.thumbnail || "/placeholder.svg"}
                     alt={party.video.title}
                     className="w-full h-full object-cover"
@@ -608,7 +594,7 @@ export default function PartyDetailsPage() {
                           </span>
                           {party.host.isVerified && (
                             <Badge variant="secondary" className="text-xs">
-                              Verified;
+                              Verified
                             </Badge>
                           )}
                         </div>
@@ -617,7 +603,7 @@ export default function PartyDetailsPage() {
                         <span className="font-medium">Room Code:</span>
                         <div className="flex items-center gap-2 mt-1">
                           <code className="bg-muted px-2 py-1 rounded text-xs font-mono">{party.roomCode}</code>
-                          <Button;
+                          <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => {}
@@ -695,7 +681,7 @@ export default function PartyDetailsPage() {
                                   {participant.user.lastName[0]}
                                 </AvatarFallback>
                               </Avatar>
-                              <div;
+                              <div
                                 className={cn(
                                   "absolute -bottom-1 -right-1 w-3 h-3 rounded-full border-2 border-background",
                                   participant.isOnline ? "bg-green-500" : "bg-gray-400",
@@ -709,19 +695,19 @@ export default function PartyDetailsPage() {
                                 </span>
                                 {participant.user.isVerified && (
                                   <Badge variant="secondary" className="text-xs">
-                                    Verified;
+                                    Verified
                                   </Badge>
                                 )}
                                 {participant.role === "host" && (
                                   <Badge className="text-xs bg-yellow-500">
                                     <Crown className="w-3 h-3 mr-1" />
-                                    Host;
+                                    Host
                                   </Badge>
                                 )}
                                 {participant.role === "moderator" && (
                                   <Badge variant="outline" className="text-xs">
                                     <Shield className="w-3 h-3 mr-1" />
-                                    Moderator;
+                                    Moderator
                                   </Badge>
                                 )}
                               </div>
@@ -742,14 +728,14 @@ export default function PartyDetailsPage() {
                               <DropdownMenuContent align="end">
                                 <DropdownMenuItem>
                                   <Shield className="h-4 w-4 mr-2" />
-                                  Make Moderator;
+                                  Make Moderator
                                 </DropdownMenuItem>
-                                <DropdownMenuItem;
+                                <DropdownMenuItem
                                   onClick={() => removeParticipant(participant.id)}
                                   className="text-destructive"
                                 >
                                   <UserMinus className="h-4 w-4 mr-2" />
-                                  Remove from Party;
+                                  Remove from Party
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
@@ -764,7 +750,7 @@ export default function PartyDetailsPage() {
               {isHost && party.joinRequests.length > 0 && (
                 <TabsContent value="requests" className="space-y-4">
                   <div className="grid gap-4">
-                    {party.joinRequests;
+                    {party.joinRequests
                       .filter((r) => r.status === &quot;pending&quot;)
                       .map((request) => (
                         <Card key={request.id}>
@@ -787,7 +773,7 @@ export default function PartyDetailsPage() {
                                     {formatDistanceToNow(new Date(request.requestedAt), { addSuffix: true })}
                                   </p>
                                   {request.message && (
-                                    <p className="text-sm mt-1 p-2 bg-muted rounded">&quot;{request.message}&quot;</p>
+                                    <p className="text-sm mt-1 p-2 bg-muted rounded">&quot;{request.message}&quot</p>
                                   )}
                                 </div>
                               </div>
@@ -795,15 +781,15 @@ export default function PartyDetailsPage() {
                               <div className="flex items-center gap-2">
                                 <Button size="sm" onClick={() => handleJoinRequest(request.id, &quot;approve&quot;)}>
                                   <CheckCircle className="h-4 w-4 mr-1" />
-                                  Approve;
+                                  Approve
                                 </Button>
-                                <Button;
+                                <Button
                                   size="sm"
                                   variant="outline"
                                   onClick={() => handleJoinRequest(request.id, &quot;reject&quot;)}
                                 >
                                   <XCircle className="h-4 w-4 mr-1" />
-                                  Reject;
+                                  Reject
                                 </Button>
                               </div>
                             </div>
@@ -913,25 +899,25 @@ export default function PartyDetailsPage() {
               <CardContent className="space-y-2">
                 <Button variant="outline" className="w-full justify-start bg-transparent" onClick={copyInviteLink}>
                   <Copy className="h-4 w-4 mr-2" />
-                  Copy Invite Link;
+                  Copy Invite Link
                 </Button>
                 <Button variant="outline" className="w-full justify-start bg-transparent" onClick={shareParty}>
                   <Share2 className="h-4 w-4 mr-2" />
-                  Share Party;
+                  Share Party
                 </Button>
                 {isHost && (
-                  <Button;
+                  <Button
                     variant="outline"
                     className="w-full justify-start bg-transparent"
                     onClick={() => router.push(`/dashboard/parties/${partyId}/edit`)}
                   >
                     <Settings className="h-4 w-4 mr-2" />
-                    Edit Settings;
+                    Edit Settings
                   </Button>
                 )}
                 <Button variant="outline" className="w-full justify-start bg-transparent">
                   <Flag className="h-4 w-4 mr-2" />
-                  Report Party;
+                  Report Party
                 </Button>
               </CardContent>
             </Card>
@@ -983,9 +969,9 @@ export default function PartyDetailsPage() {
                   <div>
                     <Label className="text-sm">Invite Link</Label>
                     <div className="flex items-center gap-2 mt-1">
-                      <Input;
+                      <Input
                         value={`${window.location.origin}/invite/${party.inviteCode}`}
-                        readOnly;
+                        readOnly
                         className="font-mono text-xs"
                       />
                       <Button variant="outline" size="sm" onClick={copyInviteLink}>
@@ -997,7 +983,7 @@ export default function PartyDetailsPage() {
                     <Label className="text-sm">Room Code</Label>
                     <div className="flex items-center gap-2 mt-1">
                       <Input value={party.roomCode} readOnly className="font-mono text-center font-bold" />
-                      <Button;
+                      <Button
                         variant="outline"
                         size="sm"
                         onClick={() => {}

@@ -1,3 +1,5 @@
+"use client"
+
 import { Check, Clock, Play, Refresh, Star, TrendingDown, TrendingUp, X, Zap } from "lucide-react"
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -8,46 +10,44 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 
-'use client'
 interface BillingPlan {}
-  id: string;
-  name: string;
-  price: number;
+  id: string
+  name: string
+  price: number
   interval: 'monthly' | 'yearly'
   features: string[]
-  popular?: boolean;
-  description: string;
+  popular?: boolean
+  description: string
 }
 
 interface Subscription {}
-  id: string;
-  planId: string;
+  id: string
+  planId: string
   status: 'active' | 'canceled' | 'past_due' | 'paused' | 'trial'
-  currentPlan: BillingPlan;
-  nextBillingDate: string;
-  cancelAtPeriodEnd: boolean;
-  pausedUntil?: string;
-  trialEndsAt?: string;
+  currentPlan: BillingPlan
+  nextBillingDate: string
+  cancelAtPeriodEnd: boolean
+  pausedUntil?: string
+  trialEndsAt?: string
   usage: {}
-    partiesHosted: number;
-    storageUsed: number;
-    bandwidthUsed: number;
-    maxParties: number;
-    maxStorage: number;
-    maxBandwidth: number;
+    partiesHosted: number
+    storageUsed: number
+    bandwidthUsed: number
+    maxParties: number
+    maxStorage: number
+    maxBandwidth: number
   }
 }
 
 interface SubscriptionManagerProps {}
-  subscription: Subscription;
+  subscription: Subscription
   availablePlans: BillingPlan[]
-  onSubscriptionChange?: () => void;
+  onSubscriptionChange?: () => void
 }
 
-export function SubscriptionManager({}
-  subscription, 
+export function SubscriptionManager({subscription, 
   availablePlans, 
-  onSubscriptionChange;
+  onSubscriptionChange
 }: SubscriptionManagerProps) {}
   const [loading, setLoading] = useState(false)
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false)
@@ -55,21 +55,21 @@ export function SubscriptionManager({}
   const [selectedPlan, setSelectedPlan] = useState<BillingPlan | null>(null)
   const [confirmationStep, setConfirmationStep] = useState(false)
 
-  const currentPlan = subscription.currentPlan;
+  const currentPlan = subscription.currentPlan
   const isTrialing = subscription.status === 'trial'
-  const isCanceled = subscription.status === 'canceled' || subscription.cancelAtPeriodEnd;
+  const isCanceled = subscription.status === 'canceled' || subscription.cancelAtPeriodEnd
   const isPaused = subscription.status === 'paused'
   const isPastDue = subscription.status === 'past_due'
 
   const getUpgradePlans = () => {}
     return availablePlans.filter(plan => 
-      plan.price > currentPlan.price && plan.interval === currentPlan.interval;
+      plan.price > currentPlan.price && plan.interval === currentPlan.interval
     )
   }
 
   const getDowngradePlans = () => {}
     return availablePlans.filter(plan => 
-      plan.price < currentPlan.price && plan.interval === currentPlan.interval;
+      plan.price < currentPlan.price && plan.interval === currentPlan.interval
     )
   }
 
@@ -79,9 +79,8 @@ export function SubscriptionManager({}
       const response = await fetch('/api/billing/subscription/upgrade', {}
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}
-          subscriptionId: subscription.id,
-          newPlanId: newPlan.id;
+        body: JSON.stringify({subscriptionId: subscription.id,
+          newPlanId: newPlan.id
         })
       })
 
@@ -90,9 +89,9 @@ export function SubscriptionManager({}
         setShowUpgradeDialog(false)
         setConfirmationStep(false)
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to upgrade subscription:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -103,9 +102,8 @@ export function SubscriptionManager({}
       const response = await fetch('/api/billing/subscription/downgrade', {}
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}
-          subscriptionId: subscription.id,
-          newPlanId: newPlan.id;
+        body: JSON.stringify({subscriptionId: subscription.id,
+          newPlanId: newPlan.id
         })
       })
 
@@ -114,9 +112,9 @@ export function SubscriptionManager({}
         setShowDowngradeDialog(false)
         setConfirmationStep(false)
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to downgrade subscription:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -133,9 +131,9 @@ export function SubscriptionManager({}
       if (response.ok) {
         onSubscriptionChange?.()
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to resume subscription:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -152,9 +150,9 @@ export function SubscriptionManager({}
       if (response.ok) {
         onSubscriptionChange?.()
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to pause subscription:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -171,9 +169,9 @@ export function SubscriptionManager({}
       if (response.ok) {
         onSubscriptionChange?.()
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to cancel subscription:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -335,7 +333,7 @@ export function SubscriptionManager({}
                 <DialogTrigger asChild>
                   <Button>
                     <TrendingUp className="h-4 w-4 mr-2" />
-                    Upgrade;
+                    Upgrade
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl">
@@ -354,13 +352,13 @@ export function SubscriptionManager({}
                       </div>
                       <div className="flex justify-end space-x-2">
                         <Button variant="outline" onClick={() => setShowUpgradeDialog(false)}>
-                          Cancel;
+                          Cancel
                         </Button>
-                        <Button;
+                        <Button
                           onClick={() => setConfirmationStep(true)}
                           disabled={!selectedPlan}
                         >
-                          Continue;
+                          Continue
                         </Button>
                       </div>
                     </div>
@@ -375,14 +373,14 @@ export function SubscriptionManager({}
                       </Alert>
                       <div className="flex justify-end space-x-2">
                         <Button variant="outline" onClick={() => setConfirmationStep(false)}>
-                          Back;
+                          Back
                         </Button>
-                        <Button;
+                        <Button
                           onClick={() => selectedPlan && handleUpgrade(selectedPlan)}
                           disabled={loading}
                         >
                           {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : null}
-                          Confirm Upgrade;
+                          Confirm Upgrade
                         </Button>
                       </div>
                     </div>
@@ -396,7 +394,7 @@ export function SubscriptionManager({}
                 <DialogTrigger asChild>
                   <Button variant="outline">
                     <TrendingDown className="h-4 w-4 mr-2" />
-                    Downgrade;
+                    Downgrade
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl">
@@ -418,14 +416,14 @@ export function SubscriptionManager({}
                       </div>
                       <div className="flex justify-end space-x-2">
                         <Button variant="outline" onClick={() => setShowDowngradeDialog(false)}>
-                          Cancel;
+                          Cancel
                         </Button>
-                        <Button;
+                        <Button
                           onClick={() => setConfirmationStep(true)}
                           disabled={!selectedPlan}
                           variant="outline"
                         >
-                          Continue;
+                          Continue
                         </Button>
                       </div>
                     </div>
@@ -440,15 +438,15 @@ export function SubscriptionManager({}
                       </Alert>
                       <div className="flex justify-end space-x-2">
                         <Button variant="outline" onClick={() => setConfirmationStep(false)}>
-                          Back;
+                          Back
                         </Button>
-                        <Button;
+                        <Button
                           onClick={() => selectedPlan && handleDowngrade(selectedPlan)}
                           disabled={loading}
                           variant="destructive"
                         >
                           {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : null}
-                          Confirm Downgrade;
+                          Confirm Downgrade
                         </Button>
                       </div>
                     </div>
@@ -460,28 +458,28 @@ export function SubscriptionManager({}
             {isCanceled && (
               <Button onClick={handleResume} disabled={loading}>
                 {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className=&quot;h-4 w-4 mr-2&quot; />}
-                Resume Subscription;
+                Resume Subscription
               </Button>
             )}
 
             {!isCanceled && !isPaused && (
               <Button variant="outline" onClick={handlePause} disabled={loading}>
                 {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Pause className=&quot;h-4 w-4 mr-2&quot; />}
-                Pause Subscription;
+                Pause Subscription
               </Button>
             )}
 
             {isPaused && (
               <Button onClick={handleResume} disabled={loading}>
                 {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className=&quot;h-4 w-4 mr-2&quot; />}
-                Resume Subscription;
+                Resume Subscription
               </Button>
             )}
 
             {!isCanceled && !isPaused && (
               <Button variant="destructive" onClick={handleCancel} disabled={loading}>
                 {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <X className=&quot;h-4 w-4 mr-2&quot; />}
-                Cancel Subscription;
+                Cancel Subscription
               </Button>
             )}
           </div>

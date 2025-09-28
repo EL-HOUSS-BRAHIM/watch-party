@@ -1,22 +1,23 @@
+"use client"
+
 import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import {}
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {}
+
 import { useApi } from '@/hooks/use-api'
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
 
 } from 'lucide-react'
-'use client'
 
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
-  DropdownMenuTrigger;
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
   Users, 
   Play, 
@@ -27,34 +28,34 @@ import { LoadingSpinner } from '@/components/ui/loading'
   Eye,
   Search,
   Filter,
-  AlertTriangle;
+  AlertTriangle
 interface WatchParty {}
-  id: string;
-  name: string;
-  description: string;
+  id: string
+  name: string
+  description: string
   host: {}
-    id: string;
-    username: string;
-    display_name: string;
-    avatar_url: string | null;
+    id: string
+    username: string
+    display_name: string
+    avatar_url: string | null
   }
   status: 'active' | 'paused' | 'ended' | 'suspended'
   privacy: 'public' | 'private' | 'friends_only'
-  participant_count: number;
-  max_participants?: number;
-  created_at: string;
-  started_at?: string;
-  ended_at?: string;
+  participant_count: number
+  max_participants?: number
+  created_at: string
+  started_at?: string
+  ended_at?: string
   current_video?: {}
-    id: string;
-    title: string;
-    duration: number;
+    id: string
+    title: string
+    duration: number
   }
   flags: Array<{}
-    id: string;
-    reason: string;
-    reporter: string;
-    created_at: string;
+    id: string
+    reason: string
+    reporter: string
+    created_at: string
   }>
 }
 
@@ -81,20 +82,19 @@ export function AdminPartiesView() {
       setIsLoading(true)
       const response = await get('/admin/parties/')
       setParties((response.data as WatchParty[]) || [])
-    } } catch {
-      toast({}
-        title: 'Error',
+    } catch (err) {
+      toast({title: 'Error',
         description: 'Failed to load parties',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
   const filterParties = () => {}
-    let filtered = parties;
-    // Filter by tab;
+    let filtered = parties
+    // Filter by tab
     if (activeTab === 'flagged') {
       filtered = filtered.filter(party => party.flags.length > 0)
     } else if (activeTab === 'active') {
@@ -103,12 +103,12 @@ export function AdminPartiesView() {
       filtered = filtered.filter(party => party.status === 'suspended')
     }
 
-    // Filter by status;
+    // Filter by status
     if (statusFilter !== 'all') {
       filtered = filtered.filter(party => party.status === statusFilter)
     }
 
-    // Filter by search term;
+    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(party =>
         party.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -122,19 +122,17 @@ export function AdminPartiesView() {
 
   const handleSuspendParty = async (partyId: string) => {}
     if (!confirm('Are you sure you want to suspend this party? This will end the party and notify all participants.')) {}
-      return;
+      return
     }
 
     try {
       await put(`/admin/parties/${partyId}/suspend/`)
-      toast({}
-        title: 'Party suspended',
+      toast({title: 'Party suspended',
         description: 'The party has been suspended successfully.',
       })
       await fetchParties()
-    } } catch {
-      toast({}
-        title: 'Error',
+    } catch (err) {
+      toast({title: 'Error',
         description: 'Failed to suspend party',
         variant: 'destructive'
       })
@@ -144,14 +142,12 @@ export function AdminPartiesView() {
   const handleUnsuspendParty = async (partyId: string) => {}
     try {
       await put(`/admin/parties/${partyId}/unsuspend/`)
-      toast({}
-        title: 'Party unsuspended',
+      toast({title: 'Party unsuspended',
         description: 'The party has been unsuspended successfully.',
       })
       await fetchParties()
-    } } catch {
-      toast({}
-        title: 'Error',
+    } catch (err) {
+      toast({title: 'Error',
         description: 'Failed to unsuspend party',
         variant: 'destructive'
       })
@@ -205,7 +201,7 @@ export function AdminPartiesView() {
         <div>
           <h1 className="text-3xl font-bold">Manage Parties</h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Monitor and moderate watch parties;
+            Monitor and moderate watch parties
           </p>
         </div>
       </div>
@@ -217,7 +213,7 @@ export function AdminPartiesView() {
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input;
+                <Input
                   placeholder="Search parties, hosts..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -234,19 +230,19 @@ export function AdminPartiesView() {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem onClick={() => setStatusFilter(&apos;all&apos;)}>
-                  All Status;
+                  All Status
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setStatusFilter(&apos;active&apos;)}>
-                  Active;
+                  Active
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setStatusFilter(&apos;paused&apos;)}>
-                  Paused;
+                  Paused
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setStatusFilter(&apos;ended&apos;)}>
-                  Ended;
+                  Ended
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setStatusFilter(&apos;suspended&apos;)}>
-                  Suspended;
+                  Suspended
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -400,24 +396,24 @@ export function AdminPartiesView() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => handleViewParty(party.id)}>
                             <Eye className="w-4 h-4 mr-2" />
-                            View Party;
+                            View Party
                           </DropdownMenuItem>
 
                           {party.status === 'suspended' ? (
-                            <DropdownMenuItem;
+                            <DropdownMenuItem
                               onClick={() => handleUnsuspendParty(party.id)}
                               className="text-green-600"
                             >
                               <Shield className="w-4 h-4 mr-2" />
-                              Unsuspend;
+                              Unsuspend
                             </DropdownMenuItem>
                           ) : (
-                            <DropdownMenuItem;
+                            <DropdownMenuItem
                               onClick={() => handleSuspendParty(party.id)}
                               className="text-red-600"
                             >
                               <Ban className="w-4 h-4 mr-2" />
-                              Suspend Party;
+                              Suspend Party
                             </DropdownMenuItem>
                           )}
                         </DropdownMenuContent>

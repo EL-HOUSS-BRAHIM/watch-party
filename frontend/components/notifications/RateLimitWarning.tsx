@@ -7,19 +7,18 @@ import { Progress } from '@/components/ui/progress';
 'use client';
 
 interface RateLimitWarningProps {}
-  isVisible: boolean;
+  isVisible: boolean
   rateLimitInfo: {}
-    limit: number;
-    remaining: number;
-    resetTime: Date;
-    action: string;
+    limit: number
+    remaining: number
+    resetTime: Date
+    action: string
   };
-  onDismiss: () => void;
+  onDismiss: () => void
   severity?: 'warning' | 'critical';
 }
 
-export default function RateLimitWarning({}
-  isVisible,
+export default function RateLimitWarning({isVisible,
   rateLimitInfo,
   onDismiss,
   severity = 'warning'
@@ -27,8 +26,7 @@ export default function RateLimitWarning({}
   const [timeUntilReset, setTimeUntilReset] = useState<string>(&apos;&apos;);
 
   useEffect(() => {
-    if (!isVisible) return;
-
+    if (!isVisible) return
     const updateCountdown = () => {}
       const now = new Date();
       const resetTime = new Date(rateLimitInfo.resetTime);
@@ -36,7 +34,7 @@ export default function RateLimitWarning({}
 
       if (diff <= 0) {
         setTimeUntilReset('Rate limit has reset');
-        return;
+        return
       }
 
       const minutes = Math.floor(diff / (1000 * 60));
@@ -50,15 +48,13 @@ export default function RateLimitWarning({}
     return () => clearInterval(interval);
   }, [isVisible, rateLimitInfo.resetTime]);
 
-  if (!isVisible) return null;
-
-  const usagePercentage = ((rateLimitInfo.limit - rateLimitInfo.remaining) / rateLimitInfo.limit) * 100;
-  const isCritical = severity === 'critical' || usagePercentage >= 90;
-
+  if (!isVisible) return null
+  const usagePercentage = ((rateLimitInfo.limit - rateLimitInfo.remaining) / rateLimitInfo.limit) * 100
+  const isCritical = severity === 'critical' || usagePercentage >= 90
   return (
     <div className="fixed top-4 right-4 z-50 w-96">
       <Card className={`p-4 border-l-4 ${}}
-        isCritical;
+        isCritical
           ? 'border-l-red-500 bg-red-50 dark:bg-red-900/10' 
           : 'border-l-yellow-500 bg-yellow-50 dark:bg-yellow-900/10' />
       }`}>
@@ -76,17 +72,17 @@ export default function RateLimitWarning({}
               <p className={`text-xs mt-1 ${}}
                 isCritical ? 'text-red-700 dark:text-red-300' : 'text-yellow-700 dark:text-yellow-300'
               }`}>
-                You've used {rateLimitInfo.limit - rateLimitInfo.remaining} of {rateLimitInfo.limit} {rateLimitInfo.action} requests;
+                You've used {rateLimitInfo.limit - rateLimitInfo.remaining} of {rateLimitInfo.limit} {rateLimitInfo.action} requests
               </p>
               <div className="mt-3 space-y-2">
                 <div className="flex justify-between text-xs">
                   <span className="text-muted-foreground">Usage</span>
                   <span className="font-medium">{Math.round(usagePercentage)}%</span>
                 </div>
-                <Progress;
+                <Progress
                   value={usagePercentage} 
                   className={`h-2 ${}
-                    isCritical ? '[&>div]:bg-red-500&apos; : &apos;[&>div]:bg-yellow-500&apos;
+                    isCritical ? '[&>div]:bg-red-500&apos; : &apos;[&>div]:bg-yellow-500&apos
                   }`}
                 />
               </div>
@@ -103,7 +99,7 @@ export default function RateLimitWarning({}
               )}
             </div>
           </div>
-          <Button;
+          <Button
             variant="ghost"
             size="sm"
             onClick={onDismiss}
@@ -117,10 +113,10 @@ export default function RateLimitWarning({}
   );
 }
 
-// Hook for managing rate limit warnings;
+// Hook for managing rate limit warnings
 export function useRateLimitWarning() {
   const [warnings, setWarnings] = useState<Array<{}
-    id: string;
+    id: string
     rateLimitInfo: RateLimitWarningProps['rateLimitInfo'];
     severity: 'warning' | 'critical';
   }>>([]);
@@ -142,6 +138,6 @@ export function useRateLimitWarning() {
     warnings,
     showWarning,
     dismissWarning,
-    dismissAll;
+    dismissAll
   };
 }

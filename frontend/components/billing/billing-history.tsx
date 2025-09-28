@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -10,19 +12,18 @@ import { billingAPI } from "@/lib/api"
 import type { BillingHistory } from "@/lib/api/types"
 import { AlertTriangle, Check, CheckCircle, Clock, Download, Filter, Loader2, Refresh, RefreshCw, Search, X, XCircle } from "lucide-react"
 
-"use client"
 
 
 interface Invoice {}
-  id: string;
-  amount: number;
-  currency: string;
-  status: string;
-  description: string;
-  invoice_date: string;
-  due_date: string;
-  paid_date?: string;
-  download_url: string;
+  id: string
+  amount: number
+  currency: string
+  status: string
+  description: string
+  invoice_date: string
+  due_date: string
+  paid_date?: string
+  download_url: string
 }
 
 export function BillingHistory() {
@@ -37,7 +38,7 @@ export function BillingHistory() {
     fetchBillingHistory()
   }, [])
 
-  // Helper function to map API billing history to local invoice type;
+  // Helper function to map API billing history to local invoice type
   const mapBillingHistoryToInvoice = (history: BillingHistory): Invoice => ({}
     id: history.id,
     amount: history.amount,
@@ -55,14 +56,13 @@ export function BillingHistory() {
       const data = await billingAPI.getBillingHistory()
       const mappedHistory = (data.results || []).map(mapBillingHistoryToInvoice)
       setBillingHistory(mappedHistory)
-    } } catch {
+    } catch (err) {
       console.error("Failed to fetch billing history:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load billing history.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -73,28 +73,28 @@ export function BillingHistory() {
         return (
           <Badge className="bg-green-100 text-green-800">
             <CheckCircle className="w-3 h-3 mr-1" />
-            Paid;
+            Paid
           </Badge>
         )
       case "failed":
         return (
           <Badge variant="destructive">
             <XCircle className="w-3 h-3 mr-1" />
-            Failed;
+            Failed
           </Badge>
         )
       case "pending":
         return (
           <Badge variant="secondary">
             <Clock className="w-3 h-3 mr-1" />
-            Pending;
+            Pending
           </Badge>
         )
       case "refunded":
         return (
           <Badge variant="outline">
             <RefreshCw className="w-3 h-3 mr-1" />
-            Refunded;
+            Refunded
           </Badge>
         )
       default:
@@ -106,12 +106,12 @@ export function BillingHistory() {
     const matchesSearch =
       item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.id.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesStatus = statusFilter === "all" || item.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesStatus = statusFilter === "all" || item.status === statusFilter
+    return matchesSearch && matchesStatus
   })
 
   const totalAmount = filteredHistory.reduce((sum, item) => {}
-    return item.status === "paid" ? sum + item.amount : sum;
+    return item.status === "paid" ? sum + item.amount : sum
   }, 0)
 
   const downloadInvoice = async (invoiceId: string, downloadUrl: string) => {}
@@ -119,16 +119,15 @@ export function BillingHistory() {
       const blob = await billingAPI.downloadInvoice(invoiceId)
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
-      a.href = url;
+      a.href = url
       a.download = `invoice_${invoiceId}.pdf`
       document.body.appendChild(a)
       a.click()
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
-    } } catch {
+    } catch (err) {
       console.error("Failed to download invoice:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to download invoice.",
         variant: "destructive",
       })
@@ -157,7 +156,7 @@ export function BillingHistory() {
           <CardContent>
             <div className="text-2xl font-bold">${totalAmount.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">
-              Across {filteredHistory.filter((i) => i.status === &quot;paid&quot;).length} payments;
+              Across {filteredHistory.filter((i) => i.status === &quot;paid&quot;).length} payments
             </p>
           </CardContent>
         </Card>
@@ -196,7 +195,7 @@ export function BillingHistory() {
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input;
+                <Input
                   placeholder="Search invoices..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -255,18 +254,18 @@ export function BillingHistory() {
                     <TableCell>{getStatusBadge(item.status)}</TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end space-x-2">
-                        <Button;
+                        <Button
                           size="sm" 
                           variant="outline"
                           onClick={() => downloadInvoice(item.id, item.download_url)}
                         >
                           <Download className="w-4 h-4 mr-1" />
-                          Download;
+                          Download
                         </Button>
                         {item.status === "failed" && (
                           <Button size="sm" variant="default">
                             <RefreshCw className="w-4 h-4 mr-1" />
-                            Retry;
+                            Retry
                           </Button>
                         )}
                       </div>

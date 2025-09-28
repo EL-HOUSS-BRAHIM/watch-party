@@ -12,14 +12,14 @@ import { useToast } from '@/hooks/use-toast';
 'use client';
 interface AdminMetrics {}
   overview: {}
-    totalUsers: number;
-    activeUsers: number;
-    totalRevenue: number;
-    totalVideos: number;
-    totalParties: number;
-    conversionRate: number;
-    churnRate: number;
-    avgSessionDuration: number;
+    totalUsers: number
+    activeUsers: number
+    totalRevenue: number
+    totalVideos: number
+    totalParties: number
+    conversionRate: number
+    churnRate: number
+    avgSessionDuration: number
   };
   trends: {}
     userGrowth: Array<{ date: string; users: number; active: number }>;
@@ -60,11 +60,10 @@ export default function AdminAnalyticsDashboard() {
   const fetchMetrics = useCallback(async () => {
     setLoading(true);
     try {
-      // Fetch real data from analytics API;
+      // Fetch real data from analytics API
       const [dashboardData, advancedData] = await Promise.all([]
         analyticsAPI.getDashboard(timeframe),
-        analyticsAPI.executeAdvancedQuery({}
-          metrics: ['users', 'revenue', 'videos', 'parties'],
+        analyticsAPI.executeAdvancedQuery({metrics: ['users', 'revenue', 'videos', 'parties'],
           date_range: {}
             start: new Date(Date.now() - (timeframe === '7d' ? 7 : timeframe === '30d' ? 30 : timeframe === '90d' ? 90 : 365) * 24 * 60 * 60 * 1000).toISOString(),
             end: new Date().toISOString()
@@ -74,7 +73,7 @@ export default function AdminAnalyticsDashboard() {
         analyticsAPI.getRealtimeAnalytics()
       ]);
 
-      // Transform API data to component format;
+      // Transform API data to component format
   const performanceSource = (advancedData as Record<string, unknown>).performance || (dashboardData as Record<string, unknown>).performance || {}
 
   const transformedMetrics: AdminMetrics = { overview: {}
@@ -111,14 +110,13 @@ export default function AdminAnalyticsDashboard() {
       };
 
       setMetrics(transformedMetrics);
-    } } catch {
+    } catch (err) {
       console.error('Failed to fetch admin metrics:', error);
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load analytics data. Please try again.",
         variant: "destructive",
       });
-    } finally {}
+    } finally {
       setLoading(false);
     }
   }, [timeframe, toast]);
@@ -131,26 +129,23 @@ export default function AdminAnalyticsDashboard() {
 
   const exportData = async () => {
     try {
-      const exportResult = await analyticsAPI.exportAnalytics({}
-        format: 'json',
+      const exportResult = await analyticsAPI.exportAnalytics({format: 'json',
         date_range: timeframe,
         metrics: ['users', 'revenue', 'videos', 'parties', 'demographics', 'performance']
       });
-      // Create download link from API response;
+      // Create download link from API response
       const link = document.createElement('a');
-      link.href = exportResult.download_url;
+      link.href = exportResult.download_url
       link.download = `admin-analytics-${timeframe}-${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      toast({}
-        title: "Success",
+      toast({title: "Success",
         description: "Analytics data exported successfully.",
       });
-    } } catch {
+    } catch (err) {
       console.error('Failed to export analytics:', error);
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to export analytics data. Please try again.",
         variant: "destructive",
       });
@@ -197,11 +192,11 @@ export default function AdminAnalyticsDashboard() {
           </Select>
           <Button variant="outline" onClick={refreshData} disabled={refreshing}>
             <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-            Refresh;
+            Refresh
           </Button>
           <Button variant="outline" onClick={exportData}>
             <Download className="h-4 w-4 mr-2" />
-            Export;
+            Export
           </Button>
         </div>
       </div>
@@ -216,7 +211,7 @@ export default function AdminAnalyticsDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{metrics.overview.totalUsers.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+{((metrics.overview.activeUsers / metrics.overview.totalUsers) * 100).toFixed(1)}%</span> active;
+              <span className="text-green-600">+{((metrics.overview.activeUsers / metrics.overview.totalUsers) * 100).toFixed(1)}%</span> active
             </p>
           </CardContent>
         </Card>
@@ -229,7 +224,7 @@ export default function AdminAnalyticsDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">${metrics.overview.totalRevenue.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+12.5%</span> from last period;
+              <span className="text-green-600">+12.5%</span> from last period
             </p>
           </CardContent>
         </Card>
@@ -242,7 +237,7 @@ export default function AdminAnalyticsDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{metrics.overview.conversionRate}%</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+0.8%</span> from last period;
+              <span className="text-green-600">+0.8%</span> from last period
             </p>
           </CardContent>
         </Card>
@@ -255,7 +250,7 @@ export default function AdminAnalyticsDashboard() {
           <CardContent>
             <div className="text-2xl font-bold">{metrics.overview.avgSessionDuration}m</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-red-600">-2.1%</span> from last period;
+              <span className="text-red-600">-2.1%</span> from last period
             </p>
           </CardContent>
         </Card>
@@ -338,7 +333,7 @@ export default function AdminAnalyticsDashboard() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
-                    <Pie;
+                    <Pie
                       data={metrics.demographics.subscriptionTiers}
                       cx="50%"
                       cy="50%"
@@ -367,21 +362,21 @@ export default function AdminAnalyticsDashboard() {
                 {metrics.demographics.subscriptionTiers.map((tier) => (
                   <div key={tier.tier} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div;
+                      <div
                         className="w-4 h-4 rounded-full" 
                         style={{ backgroundColor: tier.color }}
                       />
                       <div>
                         <div className="font-medium">{tier.tier}</div>
                         <div className="text-sm text-muted-foreground">
-                          {tier.count.toLocaleString()} users;
+                          {tier.count.toLocaleString()} users
                         </div>
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="font-medium">${tier.revenue.toLocaleString()}</div>
                       <div className="text-sm text-muted-foreground">
-                        ${(tier.revenue / tier.count || 0).toFixed(2)} per user;
+                        ${(tier.revenue / tier.count || 0).toFixed(2)} per user
                       </div>
                     </div>
                   </div>
@@ -417,7 +412,7 @@ export default function AdminAnalyticsDashboard() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
-                    <Pie;
+                    <Pie
                       data={metrics.demographics.devices}
                       cx="50%"
                       cy="50%"
@@ -450,14 +445,14 @@ export default function AdminAnalyticsDashboard() {
                       <div>
                         <div className="font-medium">{location.country}</div>
                         <div className="text-sm text-muted-foreground">
-                          {location.percentage}% of total users;
+                          {location.percentage}% of total users
                         </div>
                       </div>
                     </div>
                     <div className="text-right">
                       <div className="font-medium">{location.count.toLocaleString()}</div>
                       <div className="w-24 bg-gray-200 rounded-full h-2">
-                        <div;
+                        <div
                           className="bg-blue-600 h-2 rounded-full"
                           style={{ width: `${location.percentage}%` }}
                         />
@@ -519,11 +514,11 @@ export default function AdminAnalyticsDashboard() {
                     <div className="flex justify-between">
                       <span className="font-medium">{page.page}</span>
                       <div className="text-sm text-muted-foreground">
-                        Avg: {page.averageTime}s | P95: {page.p95Time}s;
+                        Avg: {page.averageTime}s | P95: {page.p95Time}s
                       </div>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2">
-                      <div;
+                      <div
                         className="bg-blue-600 h-2 rounded-full"
                         style={{ width: `${(page.averageTime / 5) * 100}%` }}
                       />
@@ -558,7 +553,7 @@ export default function AdminAnalyticsDashboard() {
                       <tr key={cohort.cohort} className="border-b">
                         <td className="p-2 font-medium">{cohort.cohort}</td>
                         <td className="text-center p-2">
-                          <div;
+                          <div
                             className="inline-block px-2 py-1 rounded text-white text-sm"
                             style={{ backgroundColor: `hsl(${cohort.week0 * 1.2}, 70%, 50%)` }}
                           >
@@ -566,7 +561,7 @@ export default function AdminAnalyticsDashboard() {
                           </div>
                         </td>
                         <td className="text-center p-2">
-                          <div;
+                          <div
                             className="inline-block px-2 py-1 rounded text-white text-sm"
                             style={{ backgroundColor: `hsl(${cohort.week1 * 1.2}, 70%, 50%)` }}
                           >
@@ -574,7 +569,7 @@ export default function AdminAnalyticsDashboard() {
                           </div>
                         </td>
                         <td className="text-center p-2">
-                          <div;
+                          <div
                             className="inline-block px-2 py-1 rounded text-white text-sm"
                             style={{ backgroundColor: `hsl(${cohort.week2 * 1.2}, 70%, 50%)` }}
                           >
@@ -582,7 +577,7 @@ export default function AdminAnalyticsDashboard() {
                           </div>
                         </td>
                         <td className="text-center p-2">
-                          <div;
+                          <div
                             className="inline-block px-2 py-1 rounded text-white text-sm"
                             style={{ backgroundColor: `hsl(${cohort.week4 * 1.2}, 70%, 50%)` }}
                           >
@@ -590,7 +585,7 @@ export default function AdminAnalyticsDashboard() {
                           </div>
                         </td>
                         <td className="text-center p-2">
-                          <div;
+                          <div
                             className="inline-block px-2 py-1 rounded text-white text-sm"
                             style={{ backgroundColor: `hsl(${cohort.week8 * 1.2}, 70%, 50%)` }}
                           >

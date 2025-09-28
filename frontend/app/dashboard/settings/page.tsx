@@ -1,3 +1,5 @@
+"use client"
+
 import { AlertTriangle, Bell, Download, External, Eye, Loader2, Mail, Monitor, Moon, Play, Save, Settings, Shield, Smartphone, Sun, Trash, User, Users, Video, Volume2 } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { useRouter } from "next/navigation"
@@ -11,61 +13,60 @@ import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 
-"use client"
 interface NotificationSettings {}
   email: {}
-    friendRequests: boolean;
-    partyInvites: boolean;
-    newMessages: boolean;
-    partyUpdates: boolean;
-    systemUpdates: boolean;
-    newsletter: boolean;
+    friendRequests: boolean
+    partyInvites: boolean
+    newMessages: boolean
+    partyUpdates: boolean
+    systemUpdates: boolean
+    newsletter: boolean
   }
   push: {}
-    friendRequests: boolean;
-    partyInvites: boolean;
-    newMessages: boolean;
-    partyUpdates: boolean;
-    liveNotifications: boolean;
+    friendRequests: boolean
+    partyInvites: boolean
+    newMessages: boolean
+    partyUpdates: boolean
+    liveNotifications: boolean
   }
   inApp: {}
-    friendRequests: boolean;
-    partyInvites: boolean;
-    newMessages: boolean;
-    partyUpdates: boolean;
-    reactions: boolean;
-    mentions: boolean;
+    friendRequests: boolean
+    partyInvites: boolean
+    newMessages: boolean
+    partyUpdates: boolean
+    reactions: boolean
+    mentions: boolean
   }
 }
 
 interface AppearanceSettings {}
   theme: "light" | "dark" | "system"
-  accentColor: string;
+  accentColor: string
   fontSize: "small" | "medium" | "large"
-  compactMode: boolean;
-  animations: boolean;
-  autoPlayVideos: boolean;
+  compactMode: boolean
+  animations: boolean
+  autoPlayVideos: boolean
 }
 
 interface PrivacySettings {}
   profileVisibility: "public" | "friends" | "private"
-  showOnlineStatus: boolean;
-  showLastSeen: boolean;
-  allowFriendRequests: boolean;
-  allowMessages: boolean;
-  showActivity: boolean;
-  dataCollection: boolean;
-  analytics: boolean;
+  showOnlineStatus: boolean
+  showLastSeen: boolean
+  allowFriendRequests: boolean
+  allowMessages: boolean
+  showActivity: boolean
+  dataCollection: boolean
+  analytics: boolean
 }
 
 interface PlaybackSettings {}
-  autoPlay: boolean;
+  autoPlay: boolean
   defaultQuality: "auto" | "1080p" | "720p" | "480p" | "360p"
-  volume: number;
-  muted: boolean;
-  subtitles: boolean;
-  subtitleLanguage: string;
-  playbackSpeed: number;
+  volume: number
+  muted: boolean
+  subtitles: boolean
+  subtitleLanguage: string
+  playbackSpeed: number
 }
 
 export default function SettingsPage() {
@@ -153,14 +154,13 @@ export default function SettingsPage() {
         setPrivacy(settings.privacy || privacy)
         setPlayback(settings.playback || playback)
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to load settings:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load settings.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -175,8 +175,7 @@ export default function SettingsPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({}
-          notifications,
+        body: JSON.stringify({notifications,
           appearance,
           privacy,
           playback,
@@ -184,21 +183,19 @@ export default function SettingsPage() {
       })
 
       if (response.ok) {
-        toast({}
-          title: "Settings Saved",
+        toast({title: "Settings Saved",
           description: "Your settings have been updated successfully.",
         })
       } else {}
         throw new Error("Failed to save settings")
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to save settings:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to save settings. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setSaving(false)
     }
   }
@@ -216,22 +213,20 @@ export default function SettingsPage() {
         const blob = await response.blob()
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
-        a.href = url;
+        a.href = url
         a.download = `watchparty-data-${new Date().toISOString().split("T")[0]}.json`
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
         window.URL.revokeObjectURL(url)
 
-        toast({}
-          title: "Data Exported",
+        toast({title: "Data Exported",
           description: "Your data has been exported successfully.",
         })
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to export data:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to export data.",
         variant: "destructive",
       })
@@ -242,7 +237,7 @@ export default function SettingsPage() {
     const confirmation = prompt('To delete your account, type "DELETE" in the box below. This action cannot be undone.')
 
     if (confirmation !== "DELETE") {
-      return;
+      return
     }
 
     try {
@@ -255,19 +250,17 @@ export default function SettingsPage() {
       })
 
       if (response.ok) {
-        toast({}
-          title: "Account Deleted",
+        toast({title: "Account Deleted",
           description: "Your account has been permanently deleted.",
         })
-        // Redirect to home page after a delay;
+        // Redirect to home page after a delay
         setTimeout(() => {}
           window.location.href = "/"
         }, 2000)
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to delete account:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to delete account.",
         variant: "destructive",
       })
@@ -298,7 +291,7 @@ export default function SettingsPage() {
           <div className="flex-1">
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <SettingsIcon className="h-8 w-8" />
-              Settings;
+              Settings
             </h1>
             <p className="text-muted-foreground mt-2">Manage your account preferences and privacy settings</p>
           </div>
@@ -311,7 +304,7 @@ export default function SettingsPage() {
             ) : (
               <>
                 <Save className="h-4 w-4 mr-2" />
-                Save Changes;
+                Save Changes
               </>
             )}
           </Button>
@@ -321,23 +314,23 @@ export default function SettingsPage() {
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="notifications" className="flex items-center gap-2">
               <Bell className="h-4 w-4" />
-              Notifications;
+              Notifications
             </TabsTrigger>
             <TabsTrigger value="appearance" className="flex items-center gap-2">
               <Palette className="h-4 w-4" />
-              Appearance;
+              Appearance
             </TabsTrigger>
             <TabsTrigger value="privacy" className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
-              Privacy;
+              Privacy
             </TabsTrigger>
             <TabsTrigger value="playback" className="flex items-center gap-2">
               <Video className="h-4 w-4" />
-              Playback;
+              Playback
             </TabsTrigger>
             <TabsTrigger value="account" className="flex items-center gap-2">
               <AlertTriangle className="h-4 w-4" />
-              Account;
+              Account
             </TabsTrigger>
           </TabsList>
 
@@ -347,7 +340,7 @@ export default function SettingsPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Mail className="h-5 w-5" />
-                  Email Notifications;
+                  Email Notifications
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -364,7 +357,7 @@ export default function SettingsPage() {
                         {key === "newsletter" && "Weekly newsletter with platform updates"}
                       </p>
                     </div>
-                    <Switch;
+                    <Switch
                       checked={value}
                       onCheckedChange={(checked) =>
                         setNotifications((prev) => ({}
@@ -382,7 +375,7 @@ export default function SettingsPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Smartphone className="h-5 w-5" />
-                  Push Notifications;
+                  Push Notifications
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -398,7 +391,7 @@ export default function SettingsPage() {
                         {key === "liveNotifications" && "Real-time notifications during live parties"}
                       </p>
                     </div>
-                    <Switch;
+                    <Switch
                       checked={value}
                       onCheckedChange={(checked) =>
                         setNotifications((prev) => ({}
@@ -416,7 +409,7 @@ export default function SettingsPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Bell className="h-5 w-5" />
-                  In-App Notifications;
+                  In-App Notifications
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -433,7 +426,7 @@ export default function SettingsPage() {
                         {key === "mentions" && "Show mention notifications"}
                       </p>
                     </div>
-                    <Switch;
+                    <Switch
                       checked={value}
                       onCheckedChange={(checked) =>
                         setNotifications((prev) => ({}
@@ -457,7 +450,7 @@ export default function SettingsPage() {
               <CardContent className="space-y-4">
                 <div>
                   <Label>Color Theme</Label>
-                  <Select;
+                  <Select
                     value={appearance.theme}
                     onValueChange={(value) => setAppearance((prev) => ({ ...prev, theme: value as Record<string, unknown> }))}
                   >
@@ -468,19 +461,19 @@ export default function SettingsPage() {
                       <SelectItem value="light">
                         <div className="flex items-center gap-2">
                           <Sun className="w-4 h-4" />
-                          Light;
+                          Light
                         </div>
                       </SelectItem>
                       <SelectItem value="dark">
                         <div className="flex items-center gap-2">
                           <Moon className="w-4 h-4" />
-                          Dark;
+                          Dark
                         </div>
                       </SelectItem>
                       <SelectItem value="system">
                         <div className="flex items-center gap-2">
                           <Monitor className="w-4 h-4" />
-                          System;
+                          System
                         </div>
                       </SelectItem>
                     </SelectContent>
@@ -489,7 +482,7 @@ export default function SettingsPage() {
 
                 <div>
                   <Label>Font Size</Label>
-                  <Select;
+                  <Select
                     value={appearance.fontSize}
                     onValueChange={(value) => setAppearance((prev) => ({ ...prev, fontSize: value as Record<string, unknown> }))}
                   >
@@ -509,7 +502,7 @@ export default function SettingsPage() {
                     <Label>Compact Mode</Label>
                     <p className="text-sm text-muted-foreground">Use a more compact layout</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={appearance.compactMode}
                     onCheckedChange={(checked) => setAppearance((prev) => ({ ...prev, compactMode: checked }))}
                   />
@@ -520,7 +513,7 @@ export default function SettingsPage() {
                     <Label>Animations</Label>
                     <p className="text-sm text-muted-foreground">Enable smooth animations and transitions</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={appearance.animations}
                     onCheckedChange={(checked) => setAppearance((prev) => ({ ...prev, animations: checked }))}
                   />
@@ -531,7 +524,7 @@ export default function SettingsPage() {
                     <Label>Auto-play Videos</Label>
                     <p className="text-sm text-muted-foreground">Automatically play video previews</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={appearance.autoPlayVideos}
                     onCheckedChange={(checked) => setAppearance((prev) => ({ ...prev, autoPlayVideos: checked }))}
                   />
@@ -549,7 +542,7 @@ export default function SettingsPage() {
               <CardContent className="space-y-4">
                 <div>
                   <Label>Profile Visibility</Label>
-                  <Select;
+                  <Select
                     value={privacy.profileVisibility}
                     onValueChange={(value) => setPrivacy((prev) => ({ ...prev, profileVisibility: value as Record<string, unknown> }))}
                   >
@@ -560,19 +553,19 @@ export default function SettingsPage() {
                       <SelectItem value="public">
                         <div className="flex items-center gap-2">
                           <Globe className="w-4 h-4" />
-                          Public - Anyone can see your profile;
+                          Public - Anyone can see your profile
                         </div>
                       </SelectItem>
                       <SelectItem value="friends">
                         <div className="flex items-center gap-2">
                           <Users className="w-4 h-4" />
-                          Friends Only - Only friends can see your profile;
+                          Friends Only - Only friends can see your profile
                         </div>
                       </SelectItem>
                       <SelectItem value="private">
                         <div className="flex items-center gap-2">
                           <Eye className="w-4 h-4" />
-                          Private - Only you can see your profile;
+                          Private - Only you can see your profile
                         </div>
                       </SelectItem>
                     </SelectContent>
@@ -584,7 +577,7 @@ export default function SettingsPage() {
                     <Label>Show Online Status</Label>
                     <p className="text-sm text-muted-foreground">Let others see when you&apos;re online</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={privacy.showOnlineStatus}
                     onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, showOnlineStatus: checked }))}
                   />
@@ -595,7 +588,7 @@ export default function SettingsPage() {
                     <Label>Show Last Seen</Label>
                     <p className="text-sm text-muted-foreground">Display when you were last active</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={privacy.showLastSeen}
                     onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, showLastSeen: checked }))}
                   />
@@ -606,7 +599,7 @@ export default function SettingsPage() {
                     <Label>Allow Friend Requests</Label>
                     <p className="text-sm text-muted-foreground">Let others send you friend requests</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={privacy.allowFriendRequests}
                     onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, allowFriendRequests: checked }))}
                   />
@@ -617,7 +610,7 @@ export default function SettingsPage() {
                     <Label>Allow Messages</Label>
                     <p className="text-sm text-muted-foreground">Let others send you direct messages</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={privacy.allowMessages}
                     onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, allowMessages: checked }))}
                   />
@@ -628,7 +621,7 @@ export default function SettingsPage() {
                     <Label>Show Activity</Label>
                     <p className="text-sm text-muted-foreground">Display your recent activity to friends</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={privacy.showActivity}
                     onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, showActivity: checked }))}
                   />
@@ -645,10 +638,10 @@ export default function SettingsPage() {
                   <div>
                     <Label>Data Collection</Label>
                     <p className="text-sm text-muted-foreground">
-                      Allow us to collect usage data to improve the service;
+                      Allow us to collect usage data to improve the service
                     </p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={privacy.dataCollection}
                     onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, dataCollection: checked }))}
                   />
@@ -659,7 +652,7 @@ export default function SettingsPage() {
                     <Label>Analytics</Label>
                     <p className="text-sm text-muted-foreground">Help us understand how you use the platform</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={privacy.analytics}
                     onCheckedChange={(checked) => setPrivacy((prev) => ({ ...prev, analytics: checked }))}
                   />
@@ -674,7 +667,7 @@ export default function SettingsPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Video className="h-5 w-5" />
-                  Video Playback;
+                  Video Playback
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -683,7 +676,7 @@ export default function SettingsPage() {
                     <Label>Auto-play Videos</Label>
                     <p className="text-sm text-muted-foreground">Automatically start playing videos when opened</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={playback.autoPlay}
                     onCheckedChange={(checked) => setPlayback((prev) => ({ ...prev, autoPlay: checked }))}
                   />
@@ -691,7 +684,7 @@ export default function SettingsPage() {
 
                 <div>
                   <Label>Default Quality</Label>
-                  <Select;
+                  <Select
                     value={playback.defaultQuality}
                     onValueChange={(value) => setPlayback((prev) => ({ ...prev, defaultQuality: value as Record<string, unknown> }))}
                   >
@@ -712,7 +705,7 @@ export default function SettingsPage() {
                   <Label>Volume</Label>
                   <div className="flex items-center gap-4 mt-2">
                     <Volume2 className="h-4 w-4" />
-                    <input;
+                    <input
                       type="range"
                       min="0"
                       max="100"
@@ -726,7 +719,7 @@ export default function SettingsPage() {
 
                 <div>
                   <Label>Playback Speed</Label>
-                  <Select;
+                  <Select
                     value={playback.playbackSpeed.toString()}
                     onValueChange={(value) => setPlayback((prev) => ({ ...prev, playbackSpeed: Number(value) }))}
                   >
@@ -756,7 +749,7 @@ export default function SettingsPage() {
                     <Label>Enable Subtitles</Label>
                     <p className="text-sm text-muted-foreground">Show subtitles when available</p>
                   </div>
-                  <Switch;
+                  <Switch
                     checked={playback.subtitles}
                     onCheckedChange={(checked) => setPlayback((prev) => ({ ...prev, subtitles: checked }))}
                   />
@@ -765,7 +758,7 @@ export default function SettingsPage() {
                 {playback.subtitles && (
                   <div>
                     <Label>Subtitle Language</Label>
-                    <Select;
+                    <Select
                       value={playback.subtitleLanguage}
                       onValueChange={(value) => setPlayback((prev) => ({ ...prev, subtitleLanguage: value }))}
                     >
@@ -804,7 +797,7 @@ export default function SettingsPage() {
                   </div>
                   <Button variant="outline" onClick={exportData}>
                     <Download className="h-4 w-4 mr-2" />
-                    Export;
+                    Export
                   </Button>
                 </div>
 
@@ -817,7 +810,7 @@ export default function SettingsPage() {
                   </p>
                   <Button variant="destructive" onClick={deleteAccount}>
                     <Trash2 className="h-4 w-4 mr-2" />
-                    Delete Account;
+                    Delete Account
                   </Button>
                 </div>
               </CardContent>
@@ -835,7 +828,7 @@ export default function SettingsPage() {
                   </div>
                   <Button variant="outline" onClick={() => window.open(&quot;/terms&quot;, &quot;_blank")}>
                     <ExternalLink className="h-4 w-4 mr-2" />
-                    View;
+                    View
                   </Button>
                 </div>
 
@@ -846,7 +839,7 @@ export default function SettingsPage() {
                   </div>
                   <Button variant="outline" onClick={() => window.open(&quot;/privacy&quot;, &quot;_blank")}>
                     <ExternalLink className="h-4 w-4 mr-2" />
-                    View;
+                    View
                   </Button>
                 </div>
 
@@ -857,7 +850,7 @@ export default function SettingsPage() {
                   </div>
                   <Button variant="outline" onClick={() => router.push(&quot;/help&quot;)}>
                     <ExternalLink className="h-4 w-4 mr-2" />
-                    Contact;
+                    Contact
                   </Button>
                 </div>
               </CardContent>

@@ -1,6 +1,6 @@
 
 interface LogContext {}
-  [key: string]: unknown;
+  [key: string]: unknown
 }
 
 type LogLevel = "debug" | "info" | "warn" | "error"

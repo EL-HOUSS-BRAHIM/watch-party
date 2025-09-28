@@ -1,5 +1,7 @@
+"use client"
+
 import { AlertTriangle, Bell, Calendar, Filter, Mail, Monitor, Moon, Settings, Smartphone, Star, Sun, User, Users, Volume2, Zap } from "lucide-react"
-import { useState, useEffect , useCallback } from "react"
+import { useState, useEffect} from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
@@ -8,11 +10,10 @@ import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
 import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
-import {}
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-"use client"
   Select,
   SelectContent,
   SelectItem,
@@ -20,66 +21,57 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
   SelectValue,
 } from "@/components/ui/select"
 interface NotificationSettings {}
-  // Global settings;
-  pushEnabled: boolean;
-  emailEnabled: boolean;
-  inAppEnabled: boolean;
-  desktopEnabled: boolean;
-  // Timing settings;
-  quietHoursEnabled: boolean;
-  quietHoursStart: string;
-  quietHoursEnd: string;
-  // Category settings;
+  // Global settings,
+  pushEnabled: boolean,
+  emailEnabled: boolean,
+  inAppEnabled: boolean,
+  desktopEnabled: boolean
+  // Timing settings,
+  quietHoursEnabled: boolean,
+  quietHoursStart: string,
+  quietHoursEnd: string
+  // Category settings,
   categories: {}
     friends: {}
-      enabled: boolean;
-      pushEnabled: boolean;
-      emailEnabled: boolean;
+      enabled: boolean,
+      pushEnabled: boolean,
+      emailEnabled: boolean,
       priority: "low" | "normal" | "high"
-    }
     parties: {}
-      enabled: boolean;
-      pushEnabled: boolean;
-      emailEnabled: boolean;
+      enabled: boolean,
+      pushEnabled: boolean,
+      emailEnabled: boolean,
       priority: "low" | "normal" | "high"
-    }
     messages: {}
-      enabled: boolean;
-      pushEnabled: boolean;
-      emailEnabled: boolean;
+      enabled: boolean,
+      pushEnabled: boolean,
+      emailEnabled: boolean,
       priority: "low" | "normal" | "high"
-    }
     achievements: {}
-      enabled: boolean;
-      pushEnabled: boolean;
-      emailEnabled: boolean;
+      enabled: boolean,
+      pushEnabled: boolean,
+      emailEnabled: boolean,
       priority: "low" | "normal" | "high"
-    }
     store: {}
-      enabled: boolean;
-      pushEnabled: boolean;
-      emailEnabled: boolean;
+      enabled: boolean,
+      pushEnabled: boolean,
+      emailEnabled: boolean,
       priority: "low" | "normal" | "high"
-    }
     system: {}
-      enabled: boolean;
-      pushEnabled: boolean;
-      emailEnabled: boolean;
+      enabled: boolean,
+      pushEnabled: boolean,
+      emailEnabled: boolean,
       priority: "low" | "normal" | "high"
-    }
-  }
-  // Advanced settings;
-  groupSimilar: boolean;
-  batchDelay: number // minutes;
-  maxNotificationsPerHour: number;
-  soundEnabled: boolean;
-  vibrationEnabled: boolean;
+  // Advanced settings,
+  groupSimilar: boolean,
+  batchDelay: number // minutes,
+  maxNotificationsPerHour: number,
+  soundEnabled: boolean,
+  vibrationEnabled: boolean,
   theme: "system" | "light" | "dark"
-}
 
 interface NotificationPreferencesProps {}
-  className?: string;
-}
+  className?: string,
 
 export function NotificationPreferences({ className }: NotificationPreferencesProps) {}
   const [settings, setSettings] = useState<NotificationSettings | null>(null)
@@ -91,7 +83,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
 
   useEffect(() => {
     loadSettings()
-  }, [])
+  }, [0])
 
   const loadSettings = async () => {
     try {
@@ -106,9 +98,8 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
         const data = await response.json()
         setSettings(data.settings)
       } else {}
-        // Set default settings if none exist;
-        setSettings({}
-          pushEnabled: true,
+        // Set default settings if none exist,
+        setSettings({pushEnabled: true,
           emailEnabled: true,
           inAppEnabled: true,
           desktopEnabled: true,
@@ -130,21 +121,17 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
           vibrationEnabled: true,
           theme: "system",
         })
-      }
-    } } catch {
+    } catch (err) {
       console.error("Failed to load notification settings:", error)
-      toast({}
-        title: "Failed to load settings",
+      toast({title: "Failed to load settings",
         description: "Please try refreshing the page",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
-    }
-  }
 
   const saveSettings = async () => {
-    if (!settings) return;
+    if (!settings) return,
     setIsSaving(true)
     try {
       const token = localStorage.getItem("accessToken")
@@ -159,35 +146,28 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
 
       if (response.ok) {
         setHasChanges(false)
-        toast({}
-          title: "Settings saved",
+        toast({title: "Settings saved",
           description: "Your notification preferences have been updated",
         })
       } else {}
         throw new Error("Failed to save settings")
-      }
-    } } catch {
+    } catch (err) {
       console.error("Failed to save settings:", error)
-      toast({}
-        title: "Failed to save settings",
+      toast({title: "Failed to save settings",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSaving(false)
-    }
-  }
 
   const updateSettings = (updates: Partial<NotificationSettings>) => {}
-    if (!settings) return;
+    if (!settings) return,
     setSettings({ ...settings, ...updates })
     setHasChanges(true)
-  }
 
   const updateCategorySettings = (category: keyof NotificationSettings["categories"], updates: Partial<NotificationSettings["categories"][keyof NotificationSettings["categories"]]>) => {}
-    if (!settings) return;
-    setSettings({}
-      ...settings,
+    if (!settings) return,
+    setSettings({...settings,
       categories: {}
         ...settings.categories,
         [category]: {}
@@ -197,7 +177,6 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
       },
     })
     setHasChanges(true)
-  }
 
   const getCategoryIcon = (category: string) => {}
     switch (category) {
@@ -208,29 +187,23 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
       case "store": return <Zap className="h-4 w-4" />
       case "system": return <Settings className="h-4 w-4" />
       default: return <Bell className="h-4 w-4" />
-    }
-  }
 
   const getCategoryTitle = (category: string) => {}
     switch (category) {
-      case "friends": return "Friend Requests & Activity"
-      case "parties": return "Party Invitations & Updates"
-      case "messages": return "Direct Messages & Chat"
-      case "achievements": return "Achievements & Rewards"
-      case "store": return "Store & Purchases"
-      case "system": return "System & Security"
-      default: return category;
-    }
-  }
+      case "friends": return "Friend Requests & Activity";
+      case "parties": return "Party Invitations & Updates";
+      case "messages": return "Direct Messages & Chat";
+      case "achievements": return "Achievements & Rewards";
+      case "store": return "Store & Purchases";
+      case "system": return "System & Security";
+      default: return category,
 
   const getPriorityColor = (priority: string) => {}
     switch (priority) {
-      case "high": return "text-red-500"
-      case "normal": return "text-blue-500"
-      case "low": return "text-gray-500"
-      default: return "text-gray-500"
-    }
-  }
+      case "high": return "text-red-500";
+      case "normal": return "text-blue-500";
+      case "low": return "text-gray-500";
+      default: return "text-gray-500";
 
   if (isLoading) {
     return (
@@ -244,8 +217,6 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
           </CardContent>
         </Card>
       </div>
-    )
-  }
 
   if (!settings) {
     return (
@@ -253,13 +224,11 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
         <Card>
           <CardContent className="p-8">
             <div className="text-center text-muted-foreground">
-              Failed to load notification settings;
+              Failed to load notification settings
             </div>
           </CardContent>
         </Card>
       </div>
-    )
-  }
 
   return (
     <div className={className}>
@@ -268,7 +237,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
               <Bell className="h-5 w-5" />
-              Notification Preferences;
+              Notification Preferences
             </CardTitle>
             {hasChanges && (
               <Button onClick={saveSettings} disabled={isSaving}>
@@ -277,7 +246,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
             )}
           </div>
           <p className="text-sm text-muted-foreground">
-            Customize how and when you receive notifications;
+            Customize how and when you receive notifications
           </p>
         </CardHeader>
         <CardContent>
@@ -302,7 +271,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                         <p className="text-sm text-muted-foreground">Receive notifications on your device</p>
                       </div>
                     </div>
-                    <Switch;
+                    <Switch,
                       checked={settings.pushEnabled}
                       onCheckedChange={(checked) => updateSettings({ pushEnabled: checked })}
                     />
@@ -316,7 +285,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                         <p className="text-sm text-muted-foreground">Receive notifications via email</p>
                       </div>
                     </div>
-                    <Switch;
+                    <Switch,
                       checked={settings.emailEnabled}
                       onCheckedChange={(checked) => updateSettings({ emailEnabled: checked })}
                     />
@@ -330,7 +299,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                         <p className="text-sm text-muted-foreground">Show notifications in your browser</p>
                       </div>
                     </div>
-                    <Switch;
+                    <Switch,
                       checked={settings.desktopEnabled}
                       onCheckedChange={(checked) => updateSettings({ desktopEnabled: checked })}
                     />
@@ -344,7 +313,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                         <p className="text-sm text-muted-foreground">Show notifications within the app</p>
                       </div>
                     </div>
-                    <Switch;
+                    <Switch,
                       checked={settings.inAppEnabled}
                       onCheckedChange={(checked) => updateSettings({ inAppEnabled: checked })}
                     />
@@ -360,13 +329,13 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                 <div className="grid gap-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      {settings.soundEnabled ? <Volume2 className="h-5 w-5 text-primary" /> : <VolumeX className=&quot;h-5 w-5 text-muted-foreground&quot; />}
+                      {settings.soundEnabled ? <Volume2 className="h-5 w-5 text-primary" /> : <VolumeX className="h-5 w-5 text-muted-foreground" />}
                       <div>
                         <Label className="text-base">Sound</Label>
                         <p className="text-sm text-muted-foreground">Play sounds for notifications</p>
                       </div>
                     </div>
-                    <Switch;
+                    <Switch,
                       checked={settings.soundEnabled}
                       onCheckedChange={(checked) => updateSettings({ soundEnabled: checked })}
                     />
@@ -380,7 +349,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                         <p className="text-sm text-muted-foreground">Vibrate device for notifications</p>
                       </div>
                     </div>
-                    <Switch;
+                    <Switch,
                       checked={settings.vibrationEnabled}
                       onCheckedChange={(checked) => updateSettings({ vibrationEnabled: checked })}
                     />
@@ -393,7 +362,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Notification Categories</h3>
                 <p className="text-sm text-muted-foreground">
-                  Configure notifications for different types of activities;
+                  Configure notifications for different types of activities
                 </p>
 
                 <div className="space-y-4">
@@ -408,12 +377,12 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                                 <h4 className="font-medium">{getCategoryTitle(category)}</h4>
                                 <div className="flex items-center gap-2 mt-1">
                                   <Badge variant="outline" className={getPriorityColor(categorySettings.priority)}>
-                                    {categorySettings.priority} priority;
+                                    {categorySettings.priority} priority
                                   </Badge>
                                 </div>
                               </div>
                             </div>
-                            <Switch;
+                            <Switch,
                               checked={categorySettings.enabled}
                               onCheckedChange={(checked) => updateCategorySettings(category as Record<string, unknown>, { enabled: checked })}
                             />
@@ -424,7 +393,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                               <div className="grid grid-cols-2 gap-4">
                                 <div className="flex items-center justify-between">
                                   <Label className="text-sm">Push</Label>
-                                  <Switch;
+                                  <Switch,
                                     checked={categorySettings.pushEnabled && settings.pushEnabled}
                                     disabled={!settings.pushEnabled}
                                     onCheckedChange={(checked) => updateCategorySettings(category as Record<string, unknown>, { pushEnabled: checked })}
@@ -432,7 +401,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                                 </div>
                                 <div className="flex items-center justify-between">
                                   <Label className="text-sm">Email</Label>
-                                  <Switch;
+                                  <Switch,
                                     checked={categorySettings.emailEnabled && settings.emailEnabled}
                                     disabled={!settings.emailEnabled}
                                     onCheckedChange={(checked) => updateCategorySettings(category as Record<string, unknown>, { emailEnabled: checked })}
@@ -442,7 +411,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
 
                               <div className="space-y-2">
                                 <Label className="text-sm">Priority Level</Label>
-                                <Select;
+                                <Select,
                                   value={categorySettings.priority}
                                   onValueChange={(value: unknown) => updateCategorySettings(category as Record<string, unknown>, { priority: value })}
                                 >
@@ -453,19 +422,19 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                                     <SelectItem value="low">
                                       <span className="flex items-center gap-2">
                                         <span className="w-2 h-2 rounded-full bg-gray-400"></span>
-                                        Low Priority;
+                                        Low Priority
                                       </span>
                                     </SelectItem>
                                     <SelectItem value="normal">
                                       <span className="flex items-center gap-2">
                                         <span className="w-2 h-2 rounded-full bg-blue-400"></span>
-                                        Normal Priority;
+                                        Normal Priority
                                       </span>
                                     </SelectItem>
                                     <SelectItem value="high">
                                       <span className="flex items-center gap-2">
                                         <span className="w-2 h-2 rounded-full bg-red-400"></span>
-                                        High Priority;
+                                        High Priority
                                       </span>
                                     </SelectItem>
                                   </SelectContent>
@@ -486,7 +455,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Quiet Hours</h3>
                 <p className="text-sm text-muted-foreground">
-                  Disable notifications during specific hours;
+                  Disable notifications during specific hours
                 </p>
 
                 <div className="space-y-4">
@@ -498,7 +467,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                         <p className="text-sm text-muted-foreground">Pause notifications during sleep hours</p>
                       </div>
                     </div>
-                    <Switch;
+                    <Switch,
                       checked={settings.quietHoursEnabled}
                       onCheckedChange={(checked) => updateSettings({ quietHoursEnabled: checked })}
                     />
@@ -508,7 +477,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                     <div className="pl-8 grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label>Start Time</Label>
-                        <Select;
+                        <Select,
                           value={settings.quietHoursStart}
                           onValueChange={(value) => updateSettings({ quietHoursStart: value })}
                         >
@@ -520,16 +489,15 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                               const hour = i.toString().padStart(2, '0')
                               return (
                                 <SelectItem key={`${hour}:00`} value={`${hour}:00`}>
-                                  {hour}:00;
+                                  {hour}:00
                                 </SelectItem>
-                              )
                             })}
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="space-y-2">
                         <Label>End Time</Label>
-                        <Select;
+                        <Select,
                           value={settings.quietHoursEnd}
                           onValueChange={(value) => updateSettings({ quietHoursEnd: value })}
                         >
@@ -541,9 +509,8 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                               const hour = i.toString().padStart(2, '0')
                               return (
                                 <SelectItem key={`${hour}:00`} value={`${hour}:00`}>
-                                  {hour}:00;
+                                  {hour}:00
                                 </SelectItem>
-                              )
                             })}
                           </SelectContent>
                         </Select>
@@ -559,13 +526,13 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Rate Limiting</h3>
                 <p className="text-sm text-muted-foreground">
-                  Control how many notifications you receive;
+                  Control how many notifications you receive
                 </p>
 
                 <div className="space-y-4">
                   <div className="space-y-2">
                     <Label>Maximum notifications per hour: {settings.maxNotificationsPerHour}</Label>
-                    <Slider;
+                    <Slider,
                       value={[settings.maxNotificationsPerHour]}
                       onValueChange={([value]) => updateSettings({ maxNotificationsPerHour: value })}
                       max={50}
@@ -596,7 +563,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                         <p className="text-sm text-muted-foreground">Combine multiple similar notifications into one</p>
                       </div>
                     </div>
-                    <Switch;
+                    <Switch,
                       checked={settings.groupSimilar}
                       onCheckedChange={(checked) => updateSettings({ groupSimilar: checked })}
                     />
@@ -604,7 +571,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
 
                   <div className="space-y-2">
                     <Label>Batch delay (minutes): {settings.batchDelay}</Label>
-                    <Slider;
+                    <Slider,
                       value={[settings.batchDelay]}
                       onValueChange={([value]) => updateSettings({ batchDelay: value })}
                       max={60}
@@ -629,7 +596,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                 <div className="space-y-4">
                   <div className="space-y-3">
                     <Label>Notification Theme</Label>
-                    <RadioGroup;
+                    <RadioGroup,
                       value={settings.theme}
                       onValueChange={(value: unknown) => updateSettings({ theme: value })}
                     >
@@ -637,21 +604,21 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                         <RadioGroupItem value="system" id="system" />
                         <Label htmlFor="system" className="flex items-center gap-2">
                           <Monitor className="h-4 w-4" />
-                          Follow system theme;
+                          Follow system theme
                         </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="light" id="light" />
                         <Label htmlFor="light" className="flex items-center gap-2">
                           <Sun className="h-4 w-4" />
-                          Light theme;
+                          Light theme
                         </Label>
                       </div>
                       <div className="flex items-center space-x-2">
                         <RadioGroupItem value="dark" id="dark" />
                         <Label htmlFor="dark" className="flex items-center gap-2">
                           <Moon className="h-4 w-4" />
-                          Dark theme;
+                          Dark theme
                         </Label>
                       </div>
                     </RadioGroup>
@@ -678,8 +645,6 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
         </CardContent>
       </Card>
     </div>
-  )
-}
 
-// Default export;
-export default NotificationPreferences;
+// Default export,
+export default NotificationPreferences

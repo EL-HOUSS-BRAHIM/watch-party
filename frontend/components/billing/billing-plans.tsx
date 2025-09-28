@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -6,16 +8,15 @@ import { Check, Crown, Star, Zap } from "lucide-react"
 import { useApi } from "@/hooks/use-api"
 import { useToast } from "@/hooks/use-toast"
 
-"use client"
 
 interface Plan {}
-  id: string;
-  name: string;
-  price: number;
+  id: string
+  name: string
+  price: number
   interval: "month" | "year"
   features: string[]
-  popular?: boolean;
-  current?: boolean;
+  popular?: boolean
+  current?: boolean
 }
 
 export function BillingPlans() {
@@ -30,9 +31,9 @@ export function BillingPlans() {
       setIsLoading(true)
       const response = await api.get("/billing/plans/")
       setPlans((response.data as Record<string, unknown>).plans || [])
-    } } catch {
+    } catch (err) {
       console.error("Failed to load plans:", err)
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }, [api])
@@ -45,20 +46,18 @@ export function BillingPlans() {
     setSubscribing(planId)
     try {
       const response = await api.post(`/billing/subscribe/${planId}/`)
-      // Handle payment flow here;
-      toast({}
-        title: "Subscription initiated",
+      // Handle payment flow here
+      toast({title: "Subscription initiated",
         description: "Redirecting to payment...",
       })
-      // Redirect to payment processor;
-      window.location.href = (response.data as Record<string, unknown>).checkout_url;
-    } } catch {
-      toast({}
-        title: "Error",
+      // Redirect to payment processor
+      window.location.href = (response.data as Record<string, unknown>).checkout_url
+    } catch (err) {
+      toast({title: "Error",
         description: "Failed to start subscription",
         variant: "destructive"
       })
-    } finally {}
+    } finally {
       setSubscribing(null)
     }
   }
@@ -79,7 +78,7 @@ export function BillingPlans() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {plans.map((plan) => (
-        <Card;
+        <Card
           key={plan.id}
           className={`relative ${plan.popular ? "ring-2 ring-primary" : ""}`}
         >
@@ -87,7 +86,7 @@ export function BillingPlans() {
             <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
               <Badge className="bg-primary text-primary-foreground">
                 <Star className="w-3 h-3 mr-1" />
-                Most Popular;
+                Most Popular
               </Badge>
             </div>
           )}
@@ -114,7 +113,7 @@ export function BillingPlans() {
                 </li>
               ))}
             </ul>
-            <Button;
+            <Button
               className="w-full"
               variant={plan.current ? "outline" : "default"}
               disabled={plan.current || subscribing === plan.id}
@@ -127,7 +126,7 @@ export function BillingPlans() {
               ) : (
                 <>
                   <Zap className="w-4 h-4 mr-2" />
-                  Subscribe;
+                  Subscribe
                 </>
               )}
             </Button>

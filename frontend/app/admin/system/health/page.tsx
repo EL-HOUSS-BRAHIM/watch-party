@@ -1,39 +1,29 @@
-'use client'
+"use client"
 
 import { Check, CheckCircle, Clock, Cloud, Server, Shield, X, XCircle } from "lucide-react"
 import { useState, useEffect, useCallback } from 'react'
-import {
-  CpuChipIcon,
-  ServerIcon,
-  ClockIcon,
-  ExclamationTriangleIcon,
-  CheckCircleIcon,
-  XCircleIcon,
-  ChartBarIcon,
-  BoltIcon,
-  CloudIcon,
-  ShieldCheckIcon
+import {CpuChipIcon,ServerIcon,ClockIcon,ExclamationTriangleIcon,CheckCircleIcon,XCircleIcon,ChartBarIcon,BoltIcon,CloudIcon,ShieldCheckIcon
 } from '@heroicons/react/24/outline'
 import { adminAPI } from '@/lib/api'
 import { useToast } from '@/hooks/use-toast'
 interface ServerMetric {}
-  id: string;
-  name: string;
-  value: string | number;
+  id: string
+  name: string
+  value: string | number
   status: 'healthy' | 'warning' | 'critical'
-  unit?: string;
-  description: string;
+  unit?: string
+  description: string
 }
 
 interface SystemComponent {}
-  id: string;
-  name: string;
+  id: string
+  name: string
   type: 'service' | 'database' | 'cache' | 'cdn'
   status: 'online' | 'degraded' | 'offline'
-  uptime: string;
-  responseTime: number;
-  lastCheck: Date;
-  version?: string;
+  uptime: string
+  responseTime: number
+  lastCheck: Date
+  version?: string
 }
 
 export default function SystemHealthPage() {
@@ -47,7 +37,7 @@ export default function SystemHealthPage() {
 
   useEffect(() => {
     fetchSystemHealth()
-    // Set up auto-refresh every 30 seconds;
+    // Set up auto-refresh every 30 seconds
     const interval = setInterval(fetchSystemHealth, 30000)
     return () => clearInterval(interval)
   }, [fetchSystemHealth])
@@ -62,13 +52,13 @@ export default function SystemHealthPage() {
   const fetchSystemHealth = useCallback(async () => {
     try {
       setLoading(true)
-      // Fetch system health data from admin API;
+      // Fetch system health data from admin API
       const [healthData, healthMetrics] = await Promise.all([]
         adminAPI.getSystemHealth(),
         adminAPI.getHealthMetrics()
       ])
 
-      // Transform health data to metrics;
+      // Transform health data to metrics
       if (healthMetrics) {
         const transformedMetrics: ServerMetric[] = []
           {}
@@ -109,7 +99,7 @@ export default function SystemHealthPage() {
         setMetrics(transformedMetrics)
       }
 
-      // Transform system components;
+      // Transform system components
       if (healthData.services) {
         const transformedComponents: SystemComponent[] = Object.entries(healthData.services).map(([name, service]) => ({}
           id: name,
@@ -119,23 +109,22 @@ export default function SystemHealthPage() {
                 name.includes('cdn') ? 'cdn' : 'service',
           status: service.status === 'up' ? 'online' : 
                  service.status === 'degraded' ? 'degraded' : 'offline',
-          uptime: '99.9%', // Would come from service data;
+          uptime: '99.9%', // Would come from service data
           responseTime: service.response_time || 0,
           lastCheck: new Date(service.last_check || Date.now()),
-          version: service.version;
+          version: service.version
         }))
         setComponents(transformedComponents)
       }
 
       setLastUpdated(new Date())
-    } } catch {
+    } catch (err) {
       console.error('Failed to fetch system health:', error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load system health data. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }, [toast])
@@ -187,11 +176,11 @@ export default function SystemHealthPage() {
     }
   }
 
-  const healthyCount = components.filter(c => c.status === &apos;online&apos;).length;
-  const degradedCount = components.filter(c => c.status === &apos;degraded').length;
-  const offlineCount = components.filter(c => c.status === 'offline').length;
-  const criticalMetrics = metrics.filter(m => m.status === 'critical').length;
-  const warningMetrics = metrics.filter(m => m.status === 'warning').length;
+  const healthyCount = components.filter(c => c.status === &apos;online&apos;).length
+  const degradedCount = components.filter(c => c.status === &apos;degraded').length
+  const offlineCount = components.filter(c => c.status === 'offline').length
+  const criticalMetrics = metrics.filter(m => m.status === 'critical').length
+  const warningMetrics = metrics.filter(m => m.status === 'warning').length
   const overallStatus = offlineCount > 0 ? 'critical' : 
                        (degradedCount > 0 || criticalMetrics > 0 || warningMetrics > 0) ? 'warning' : 'healthy'
 
@@ -211,7 +200,7 @@ export default function SystemHealthPage() {
               <h1 className="text-4xl font-bold text-white">System Health</h1>
             </div>
             <p className="text-white/70 text-lg">
-              Real-time monitoring of system components and performance metrics;
+              Real-time monitoring of system components and performance metrics
             </p>
           </div>
           <div className="flex items-center gap-4">
@@ -290,7 +279,7 @@ export default function SystemHealthPage() {
                 </div>
                 {typeof metric.value === 'number' && metric.unit === '%' && (
                   <div className="w-full bg-white/20 rounded-full h-2 mb-2">
-                    <div;
+                    <div
                       className={`h-2 rounded-full ${}
                         metric.status === 'healthy' ? 'bg-green-400' :
                         metric.status === 'warning' ? 'bg-yellow-400' : 'bg-red-400'
@@ -312,7 +301,7 @@ export default function SystemHealthPage() {
               <h3 className="text-lg font-bold text-white">System Components</h3>
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <input;
+                  <input
                     type="checkbox"
                     id="autoRefresh"
                     checked={autoRefresh}
@@ -320,10 +309,10 @@ export default function SystemHealthPage() {
                     className="rounded"
                   />
                   <label htmlFor="autoRefresh" className="text-sm text-white/70">
-                    Auto-refresh;
+                    Auto-refresh
                   </label>
                 </div>
-                <select;
+                <select
                   value={refreshInterval}
                   onChange={(e) => setRefreshInterval(Number(e.target.value))}
                   className="px-3 py-1 bg-white/10 rounded border border-white/20 text-white text-sm focus:outline-none focus:border-blue-400"
@@ -338,7 +327,7 @@ export default function SystemHealthPage() {
           </div>
           <div className="divide-y divide-white/10">
             {components.map(component => (
-              <div;
+              <div
                 key={component.id}
                 className="p-4 hover:bg-white/5 transition-colors cursor-pointer"
                 onClick={() => setSelectedComponent(selectedComponent === component.id ? null : component.id)}
@@ -418,7 +407,7 @@ export default function SystemHealthPage() {
 
         {/* Actions */}
         <div className="flex gap-4">
-          <button;
+          <button
             onClick={refreshSystemHealth}
             disabled={loading}
             className="bg-blue-500 hover:bg-blue-600 disabled:bg-blue-500/50 text-white px-6 py-3 rounded-lg font-medium transition-colors"
@@ -426,10 +415,10 @@ export default function SystemHealthPage() {
             {loading ? 'Refreshing...' : 'Refresh All'}
           </button>
           <button className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-            View Logs;
+            View Logs
           </button>
           <button className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-            Export Report;
+            Export Report
           </button>
         </div>
       </div>

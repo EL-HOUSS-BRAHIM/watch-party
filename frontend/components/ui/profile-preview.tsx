@@ -1,3 +1,5 @@
+"use client"
+
 import { Calendar, Link, MapPin, MessageCircle, User, Users } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -5,28 +7,27 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
-'use client'
 interface UserProfile {}
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string | null;
-  bio?: string;
-  location?: string;
-  website?: string;
-  joinedDate: string;
+  id: string
+  username: string
+  displayName: string
+  avatar: string | null
+  bio?: string
+  location?: string
+  website?: string
+  joinedDate: string
   status: 'online' | 'offline' | 'away' | 'busy'
-  friendsCount: number;
-  partiesCount: number;
-  isCurrentUser: boolean;
-  isFriend: boolean;
-  hasPendingRequest: boolean;
+  friendsCount: number
+  partiesCount: number
+  isCurrentUser: boolean
+  isFriend: boolean
+  hasPendingRequest: boolean
 }
 
 interface ProfilePreviewProps {}
-  userId: string;
-  children: React.ReactNode;
-  disabled?: boolean;
+  userId: string
+  children: React.ReactNode
+  disabled?: boolean
 }
 
 export function ProfilePreview({ userId, children, disabled = false }: ProfilePreviewProps) {}
@@ -51,9 +52,9 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
       }
       const data = await response.json()
       setProfile(data)
-    } } catch {
+    } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load profile')
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -70,13 +71,13 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
       if (response.ok) {
         setProfile(prev => prev ? { ...prev, hasPendingRequest: true } : null)
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to send friend request:', err)
     }
   }
 
   const handleSendMessage = () => {}
-    // Navigate to messages with this user;
+    // Navigate to messages with this user
     window.location.href = `/messages?user=${userId}`
   }
 
@@ -162,7 +163,7 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
             {profile.website && (
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <LinkIcon className="h-4 w-4" />
-                <a;
+                <a
                   href={profile.website} 
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -189,33 +190,33 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
           </div>
           {!profile.isCurrentUser && (
             <div className="flex space-x-2 pt-2">
-              <Button;
+              <Button
                 variant="outline" 
                 size="sm" 
                 onClick={handleSendMessage}
                 className="flex-1"
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
-                Message;
+                Message
               </Button>
               {!profile.isFriend && !profile.hasPendingRequest && (
-                <Button;
+                <Button
                   size="sm" 
                   onClick={handleSendFriendRequest}
                   className="flex-1"
                 >
                   <UserPlus className="h-4 w-4 mr-2" />
-                  Add Friend;
+                  Add Friend
                 </Button>
               )}
               {profile.hasPendingRequest && (
-                <Button;
+                <Button
                   variant="outline" 
                   size="sm" 
-                  disabled;
+                  disabled
                   className="flex-1"
                 >
-                  Request Sent;
+                  Request Sent
                 </Button>
               )}
             </div>

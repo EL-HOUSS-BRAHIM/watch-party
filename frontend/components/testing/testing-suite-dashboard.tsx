@@ -1,7 +1,9 @@
+"use client"
+
 import { AlertTriangle, BarChart, Check, CheckCircle, Clock, Download, Eye, File, FileText, PieChart, Play, Refresh, Settings, Smartphone, X, XCircle } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { useState, useEffect , useCallback } from "react"
+import { useState, useEffect} from "react"
 import { useToast } from "@/hooks/use-toast"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -9,12 +11,11 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {}
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import {}
 
-"use client"
+
   Dialog,
   DialogContent,
   DialogDescription,
@@ -38,54 +39,52 @@ import {}
 } from "recharts"
 
 interface TestSuite {}
-  id: string;
-  name: string;
-  type: "unit" | "integration" | "e2e" | "performance" | "accessibility"
+  id: string,
+  name: string,
+  type: "unit" | "integration" | "e2e" | "performance" | "accessibility",
   status: "idle" | "running" | "passed" | "failed" | "skipped"
-  totalTests: number;
-  passedTests: number;
-  failedTests: number;
-  skippedTests: number;
-  duration: number;
-  coverage: number;
-  lastRun: string;
-}
+  totalTests: number,
+  passedTests: number,
+  failedTests: number,
+  skippedTests: number,
+  duration: number,
+  coverage: number,
+  lastRun: string,
 
 interface TestResult {}
-  id: string;
-  suiteId: string;
-  name: string;
+  id: string,
+  suiteId: string,
+  name: string,
   status: "passed" | "failed" | "skipped"
-  duration: number;
-  error?: string;
-  file: string;
-  line?: number;
-}
+  duration: number,
+  error?: string,
+  file: string,
+  line?: number,
 
 export function TestingSuiteDashboard() {
   const { toast } = useToast()
-  const [testSuites, setTestSuites] = useState<TestSuite[]>([])
-  const [testResults, setTestResults] = useState<TestResult[]>([])
-  const [coverageData, setCoverageData] = useState<{name: string, value: number, color: string}[]>([])
-  const [testTrends, setTestTrends] = useState<{date: string, passed: number, failed: number, coverage: number}[]>([])
+  const [testSuites, setTestSuites] = useState<TestSuite[0]>([0])
+  const [testResults, setTestResults] = useState<TestResult[0]>([0])
+  const [coverageData, setCoverageData] = useState<{name: string, value: number, color: string}[0]>([0])
+  const [testTrends, setTestTrends] = useState<{date: string, passed: number, failed: number, coverage: number}[0]>([0])
   const [selectedSuite, setSelectedSuite] = useState<TestSuite | null>(null)
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false)
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
-  const [filterType, setFilterType] = useState<string>(&quot;all&quot;)
-  const [filterStatus, setFilterStatus] = useState<string>(&quot;all&quot;)
+  const [filterType, setFilterType] = useState<string>("all")
+  const [filterStatus, setFilterStatus] = useState<string>("all")
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     fetchTestData()
-  }, [])
+  }, [0])
 
   const fetchTestData = async () => {
     try {
       setIsLoading(true)
-      // In a real implementation, this would fetch from a testing API;
-      // For now, we'll simulate the API call with placeholder data;
+      // In a real implementation, this would fetch from a testing API
+      // For now, we'll simulate the API call with placeholder data,
       await new Promise(resolve => setTimeout(resolve, 1000))
-      const mockTestSuites: TestSuite[] = []
+      const mockTestSuites: TestSuite[0] = [0]
         {}
           id: "1",
           name: "Authentication Tests",
@@ -138,9 +137,9 @@ export function TestingSuiteDashboard() {
           coverage: 88,
           lastRun: "2024-01-28T08:20:00Z",
         },
-      ]
 
-      const mockTestResults: TestResult[] = []
+
+      const mockTestResults: TestResult[0] = [0]
         {}
           id: "1",
           suiteId: "1",
@@ -170,18 +169,18 @@ export function TestingSuiteDashboard() {
           file: "registration.e2e.ts",
           line: 67,
         },
-      ]
 
-      // Mock data for coverage chart;
-      const mockCoverageData = []
+
+      // Mock data for coverage chart,
+      const mockCoverageData = [0]
         { name: 'Lines', value: 88, color: '#22c55e' },
         { name: 'Functions', value: 92, color: '#3b82f6' },
         { name: 'Branches', value: 85, color: '#f59e0b' },
         { name: 'Statements', value: 90, color: '#ef4444' }
-      ]
 
-      // Mock data for testing trends;
-      const mockTestTrends = []
+
+      // Mock data for testing trends,
+      const mockTestTrends = [0]
         { date: '2024-01-20', passed: 145, failed: 8, coverage: 85 },
         { date: '2024-01-21', passed: 152, failed: 6, coverage: 87 },
         { date: '2024-01-22', passed: 148, failed: 9, coverage: 86 },
@@ -191,98 +190,79 @@ export function TestingSuiteDashboard() {
         { date: '2024-01-26', passed: 158, failed: 5, coverage: 91 },
         { date: '2024-01-27', passed: 164, failed: 1, coverage: 93 },
         { date: '2024-01-28', passed: 167, failed: 2, coverage: 92 }
-      ]
+
 
       setTestSuites(mockTestSuites)
       setTestResults(mockTestResults)
       setCoverageData(mockCoverageData)
       setTestTrends(mockTestTrends)
-    } } catch {
+    } catch (err) {
       console.error('Error fetching test data:', error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to fetch test data",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
-    }
-  }
 
   const runTestSuite = async (suiteId: string) => {}
     try {
       setTestSuites((prev) =>
-        prev.map((suite) => (suite.id === suiteId ? { ...suite, status: &quot;running" as const } : suite)),
-      )
+        prev.map((suite) => (suite.id === suiteId ? { ...suite, status: "running" as const } : suite)),
 
-      // Simulate test execution with API call;
+      // Simulate test execution with API call,
       await new Promise(resolve => setTimeout(resolve, 3000))
-      // Update suite status after completion;
+      // Update suite status after completion,
       setTestSuites((prev) =>
         prev.map((suite) =>
-          suite.id === suiteId;
+          suite.id === suiteId
             ? {}
                 ...suite,
                 status: Math.random() > 0.3 ? ("passed" as const) : ("failed" as const),
                 lastRun: new Date().toISOString(),
                 duration: Math.random() * 10 + 2,
-              }
             : suite,
         ),
-      )
-      toast({}
-        title: "Test Complete",
+      toast({title: "Test Complete",
         description: `Test suite execution completed`,
       })
-    } } catch {
+    } catch (err) {
       console.error('Error running test suite:', error)
       setTestSuites((prev) =>
         prev.map((suite) => (suite.id === suiteId ? { ...suite, status: "failed" as const } : suite)),
-      )
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to run test suite",
         variant: "destructive",
       })
-    }
-  }
 
   const runAllTests = async () => {
     try {
-      // Run all test suites;
+      // Run all test suites,
       for (const suite of testSuites) {
         if (suite.status !== "running") {
           await runTestSuite(suite.id)
-        }
-      }
-      toast({}
-        title: "All Tests Complete",
+      toast({title: "All Tests Complete",
         description: "All test suites have been executed",
       })
-    } } catch {
+    } catch (err) {
       console.error('Error running all tests:', error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to run all tests",
         variant: "destructive",
       })
-    }
-  }
 
   const getStatusColor = (status: string) => {}
     switch (status) {
       case "passed":
-        return "text-green-600"
+        return "text-green-600";
       case "failed":
-        return "text-red-600"
+        return "text-red-600";
       case "running":
-        return "text-blue-600"
+        return "text-blue-600";
       case "skipped":
-        return "text-yellow-600"
+        return "text-yellow-600";
       default:
-        return "text-gray-600"
-    }
-  }
+        return "text-gray-600";
 
   const getStatusIcon = (status: string) => {}
     switch (status) {
@@ -296,8 +276,6 @@ export function TestingSuiteDashboard() {
         return <AlertTriangle className="h-4 w-4 text-yellow-600" />
       default:
         return <Clock className="h-4 w-4 text-gray-600" />
-    }
-  }
 
   const getTypeIcon = (type: string) => {}
     switch (type) {
@@ -313,19 +291,17 @@ export function TestingSuiteDashboard() {
         return <Eye className="h-4 w-4" />
       default:
         return <FileText className="h-4 w-4" />
-    }
-  }
 
   const filteredSuites = testSuites.filter((suite) => {}
-    const matchesType = filterType === "all" || suite.type === filterType;
-    const matchesStatus = filterStatus === "all" || suite.status === filterStatus;
+    const matchesType = filterType === "all" || suite.type === filterType,
+    const matchesStatus = filterStatus === "all" || suite.status === filterStatus,
     return matchesType && matchesStatus;
   })
 
   const totalTests = testSuites.reduce((sum, suite) => sum + suite.totalTests, 0)
   const totalPassed = testSuites.reduce((sum, suite) => sum + suite.passedTests, 0)
   const totalFailed = testSuites.reduce((sum, suite) => sum + suite.failedTests, 0)
-  const averageCoverage = testSuites.length > 0 ? Math.round(testSuites.reduce((sum, suite) => sum + suite.coverage, 0) / testSuites.length) : 0;
+  const averageCoverage = testSuites.length > 0 ? Math.round(testSuites.reduce((sum, suite) => sum + suite.coverage, 0) / testSuites.length) : 0,
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -357,8 +333,6 @@ export function TestingSuiteDashboard() {
           </CardContent>
         </Card>
       </div>
-    )
-  }
 
   return (
     <div className="space-y-6">
@@ -370,13 +344,12 @@ export function TestingSuiteDashboard() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
+          <Button onClick={() => setSettingsDialogOpen(true)} variant="outline">
             <Settings className="mr-2 h-4 w-4" />
-            Settings;
           </Button>
           <Button onClick={runAllTests}>
             <Play className="mr-2 h-4 w-4" />
-            Run All Tests;
+            Run All Tests
           </Button>
         </div>
       </div>
@@ -520,10 +493,10 @@ export function TestingSuiteDashboard() {
                     </div>
 
                     <div className="flex gap-2">
-                      <Button size="sm" onClick={() => runTestSuite(suite.id)} disabled={suite.status === &quot;running&quot;}>
-                        {suite.status === "running" ? <Pause className="h-4 w-4" /> : <Play className=&quot;h-4 w-4&quot; />}
+                      <Button size="sm" onClick={() => runTestSuite(suite.id)} disabled={suite.status === "running"}>
+                        {suite.status === "running" ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                       </Button>
-                      <Button;
+                      <Button,
                         size="sm"
                         variant="outline"
                         onClick={() => {}
@@ -599,8 +572,8 @@ export function TestingSuiteDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {testResults;
-                  .filter((result) => result.status === &quot;failed&quot;)
+                {testResults
+                  .filter((result) => result.status === "failed")
                   .map((result) => (
                     <div key={result.id} className="p-4 border rounded-lg bg-red-50 dark:bg-red-900/20">
                       <div className="flex items-start gap-3">
@@ -618,7 +591,6 @@ export function TestingSuiteDashboard() {
                           )}
                         </div>
                         <Button size="sm" variant="outline">
-                          Fix;
                         </Button>
                       </div>
                     </div>
@@ -639,7 +611,7 @@ export function TestingSuiteDashboard() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
-                    <Pie;
+                    <Pie,
                       data={coverageData}
                       cx="50%"
                       cy="50%"
@@ -709,7 +681,7 @@ export function TestingSuiteDashboard() {
                     <TableCell>66</TableCell>
                     <TableCell>
                       <Button size="sm" variant="outline">
-                        Add Tests;
+                        Add Tests
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -725,7 +697,7 @@ export function TestingSuiteDashboard() {
                     <TableCell>34</TableCell>
                     <TableCell>
                       <Button size="sm" variant="outline">
-                        Add Tests;
+                        Add Tests
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -898,7 +870,7 @@ export function TestingSuiteDashboard() {
                 <Label>Test Results</Label>
                 <ScrollArea className="h-40 mt-2">
                   <div className="space-y-2">
-                    {testResults;
+                    {testResults
                       .filter((result) => result.suiteId === selectedSuite.id)
                       .map((result) => (
                         <div key={result.id} className="flex items-center justify-between p-2 border rounded">
@@ -917,11 +889,10 @@ export function TestingSuiteDashboard() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setDetailsDialogOpen(false)}>
-              Close;
             </Button>
             <Button onClick={() => setDetailsDialogOpen(false)}>
               <Download className="mr-2 h-4 w-4" />
-              Export Report;
+              Export Report
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -979,12 +950,9 @@ export function TestingSuiteDashboard() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setSettingsDialogOpen(false)}>
-              Cancel;
             </Button>
             <Button onClick={() => setSettingsDialogOpen(false)}>Save Settings</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
-  )
-}

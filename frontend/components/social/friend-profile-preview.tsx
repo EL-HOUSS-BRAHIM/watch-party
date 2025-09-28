@@ -1,3 +1,5 @@
+"use client"
+
 import { Activity, Calendar, Clock, Flag, MapPin, MessageCircle, MoreHorizontal, Play, Shield, Star, Trophy, User, Users } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
@@ -6,12 +8,11 @@ import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
 import { Progress } from "@/components/ui/progress"
-import {}
-import {}
+
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { formatDistanceToNow, format } from "date-fns"
 
-"use client"
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -26,67 +27,67 @@ import { formatDistanceToNow, format } from "date-fns"
   DialogTitle,
 } from "@/components/ui/dialog"
 interface Achievement {}
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
+  id: string
+  name: string
+  description: string
+  icon: string
   rarity: "common" | "rare" | "epic" | "legendary"
-  unlockedAt: string;
-  progress: number;
-  maxProgress: number;
+  unlockedAt: string
+  progress: number
+  maxProgress: number
 }
 
 interface WatchHistory {}
-  id: string;
-  videoTitle: string;
-  watchedAt: string;
-  duration: number;
-  completionRate: number;
+  id: string
+  videoTitle: string
+  watchedAt: string
+  duration: number
+  completionRate: number
 }
 
 interface FriendProfile {}
-  id: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  avatar?: string;
-  bio?: string;
-  location?: string;
-  isOnline: boolean;
-  lastActive: string;
-  joinedDate: string;
+  id: string
+  username: string
+  firstName: string
+  lastName: string
+  email: string
+  avatar?: string
+  bio?: string
+  location?: string
+  isOnline: boolean
+  lastActive: string
+  joinedDate: string
   friendshipStatus: "none" | "friends" | "pending_sent" | "pending_received" | "blocked"
   stats: {}
-    partiesHosted: number;
-    partiesJoined: number;
-    friendsCount: number;
-    totalWatchTime: number;
+    partiesHosted: number
+    partiesJoined: number
+    friendsCount: number
+    totalWatchTime: number
     favoriteGenres: string[]
-    averageRating: number;
-    reviewsCount: number;
+    averageRating: number
+    reviewsCount: number
   }
   achievements: Achievement[]
   recentActivity: WatchHistory[]
   mutualFriends: {}
-    id: string;
-    username: string;
-    firstName: string;
-    lastName: string;
-    avatar?: string;
+    id: string
+    username: string
+    firstName: string
+    lastName: string
+    avatar?: string
   }[]
   preferences: {}
     profileVisibility: "public" | "friends" | "private"
-    showActivity: boolean;
-    showWatchHistory: boolean;
+    showActivity: boolean
+    showWatchHistory: boolean
   }
 }
 
 interface FriendProfilePreviewProps {}
-  userId: string;
-  isOpen: boolean;
-  onClose: () => void;
-  className?: string;
+  userId: string
+  isOpen: boolean
+  onClose: () => void
+  className?: string
 }
 
 export default function FriendProfilePreview({ userId, isOpen, onClose, className }: FriendProfilePreviewProps) {}
@@ -118,20 +119,19 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
       } else {}
         throw new Error("Failed to load profile")
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to load profile:", error)
-      toast({}
-        title: "Failed to load profile",
+      toast({title: "Failed to load profile",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
   const sendFriendRequest = async () => {
-    if (!profile) return;
+    if (!profile) return
     setIsActioning(true)
     try {
       const token = localStorage.getItem("accessToken")
@@ -144,27 +144,25 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
 
       if (response.ok) {
         setProfile(prev => prev ? { ...prev, friendshipStatus: &quot;pending_sent&quot; } : null)
-        toast({}
-          title: "Friend request sent",
+        toast({title: "Friend request sent",
           description: `Friend request sent to ${profile.firstName}`,
         })
       } else {}
         throw new Error("Failed to send friend request")
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to send friend request:", error)
-      toast({}
-        title: "Failed to send request",
+      toast({title: "Failed to send request",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsActioning(false)
     }
   }
 
   const removeFriend = async () => {
-    if (!profile) return;
+    if (!profile) return
     setIsActioning(true)
     try {
       const token = localStorage.getItem("accessToken")
@@ -177,27 +175,25 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
 
       if (response.ok) {
         setProfile(prev => prev ? { ...prev, friendshipStatus: &quot;none" } : null)
-        toast({}
-          title: "Friend removed",
+        toast({title: "Friend removed",
           description: `Removed ${profile.firstName} from your friends`,
         })
       } else {}
         throw new Error("Failed to remove friend")
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to remove friend:", error)
-      toast({}
-        title: "Failed to remove friend",
+      toast({title: "Failed to remove friend",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsActioning(false)
     }
   }
 
   const blockUser = async () => {
-    if (!profile) return;
+    if (!profile) return
     setIsActioning(true)
     try {
       const token = localStorage.getItem("accessToken")
@@ -210,22 +206,20 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
 
       if (response.ok) {
         setProfile(prev => prev ? { ...prev, friendshipStatus: "blocked" } : null)
-        toast({}
-          title: "User blocked",
+        toast({title: "User blocked",
           description: `${profile.firstName} has been blocked`,
         })
         onClose()
       } else {}
         throw new Error("Failed to block user")
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to block user:", error)
-      toast({}
-        title: "Failed to block user",
+      toast({title: "Failed to block user",
         description: "Please try again",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsActioning(false)
     }
   }
@@ -235,7 +229,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
   }
 
   const getAchievementIcon = (achievement: Achievement) => {}
-    // Map achievement icons to components;
+    // Map achievement icons to components
     const iconMap: Record<string, any> = { trophy: Trophy,
       star: Star,
       award: Award,
@@ -243,7 +237,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
       heart: Heart,
       play: Play,
     }
-    const IconComponent = iconMap[achievement.icon] || Trophy;
+    const IconComponent = iconMap[achievement.icon] || Trophy
     return <IconComponent className="h-4 w-4" />
   }
 
@@ -257,7 +251,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
   }
 
   const getFriendshipButton = () => {}
-    if (!profile) return null;
+    if (!profile) return null
     switch (profile.friendshipStatus) {
       case "friends":
         return (
@@ -265,13 +259,13 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
             <DropdownMenuTrigger asChild>
               <Button variant="outline" disabled={isActioning}>
                 <Users className="h-4 w-4 mr-2" />
-                Friends;
+                Friends
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem onClick={removeFriend}>
                 <UserMinus className="h-4 w-4 mr-2" />
-                Remove Friend;
+                Remove Friend
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -280,34 +274,34 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
         return (
           <Button variant="outline" disabled>
             <Clock className="h-4 w-4 mr-2" />
-            Request Sent;
+            Request Sent
           </Button>
         )
       case "pending_received":
         return (
           <Button onClick={sendFriendRequest} disabled={isActioning}>
             <UserPlus className="h-4 w-4 mr-2" />
-            Accept Request;
+            Accept Request
           </Button>
         )
       case "blocked":
         return (
           <Badge variant="destructive">
             <Shield className="h-4 w-4 mr-1" />
-            Blocked;
+            Blocked
           </Badge>
         )
       default:
         return (
           <Button onClick={sendFriendRequest} disabled={isActioning}>
             <UserPlus className="h-4 w-4 mr-2" />
-            Add Friend;
+            Add Friend
           </Button>
         )
     }
   }
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
@@ -376,16 +370,16 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
                       <DropdownMenuSeparator />
                       <DropdownMenuItem>
                         <MessageCircle className="h-4 w-4 mr-2" />
-                        Send Message;
+                        Send Message
                       </DropdownMenuItem>
                       <DropdownMenuItem>
                         <Flag className="h-4 w-4 mr-2" />
-                        Report User;
+                        Report User
                       </DropdownMenuItem>
                       {profile.friendshipStatus !== "blocked" && (
                         <DropdownMenuItem onClick={blockUser} className="text-red-600">
                           <Shield className="h-4 w-4 mr-2" />
-                          Block User;
+                          Block User
                         </DropdownMenuItem>
                       )}
                     </DropdownMenuContent>
@@ -460,7 +454,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
                         <span className="text-xl font-bold">{profile.stats.averageRating.toFixed(1)}</span>
                       </div>
                       <div className="text-sm text-muted-foreground">
-                        {profile.stats.reviewsCount} reviews;
+                        {profile.stats.reviewsCount} reviews
                       </div>
                     </div>
                   </CardContent>
@@ -493,7 +487,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
                                     <span>Progress</span>
                                     <span>{achievement.progress}/{achievement.maxProgress}</span>
                                   </div>
-                                  <Progress;
+                                  <Progress
                                     value={(achievement.progress / achievement.maxProgress) * 100} 
                                     className="h-2"
                                   />

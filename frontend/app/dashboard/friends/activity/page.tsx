@@ -12,26 +12,26 @@ import { useToast } from '@/hooks/use-toast';
 'use client';
 
 interface ActivityItem {}
-  id: string;
-  userId: string;
+  id: string
+  userId: string
   user: {}
-    id: string;
-    username: string;
-    displayName: string;
-    avatar: string;
-    isOnline: boolean;
-    lastSeen?: string;
+    id: string
+    username: string
+    displayName: string
+    avatar: string
+    isOnline: boolean
+    lastSeen?: string
   };
   type: 'watch_video' | 'join_party' | 'like_video' | 'comment' | 'achievement' | 'friend_added';
   content: {}
-    title: string;
-    description?: string;
-    thumbnail?: string;
-    videoId?: string;
-    partyId?: string;
-    achievementId?: string;
+    title: string
+    description?: string
+    thumbnail?: string
+    videoId?: string
+    partyId?: string
+    achievementId?: string
   };
-  timestamp: string;
+  timestamp: string
   privacy: 'public' | 'friends_only' | 'private';
 }
 
@@ -55,7 +55,7 @@ const ActivityIcon = ({ type }: { type: ActivityItem['type'] }) => {}
 };
 
 const fallbackId = (prefix: string) =>
-  typeof crypto !== 'undefined' && 'randomUUID' in crypto;
+  typeof crypto !== 'undefined' && 'randomUUID' in crypto
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
@@ -80,7 +80,7 @@ const normalizePrivacy = (privacy: unknown): ActivityItem['privacy'] => {}
 const formatTimestamp = (timestamp: string) => {}
   const date = new Date(timestamp);
   if (Number.isNaN(date.getTime())) {}
-    return timestamp;
+    return timestamp
   }
   return date.toLocaleString();
 };
@@ -98,8 +98,7 @@ const normalizeActivity = (activity: unknown): ActivityItem => {}
     metadata.achievement_name ??
     'Activity update';
 
-  const description = metadata.description ?? metadata.summary ?? null;
-
+  const description = metadata.description ?? metadata.summary ?? null
   return {
     id: String(activity?.id ?? fallbackId('activity')),
     userId: String(user?.id ?? activity?.user_id ?? fallbackId('user')),
@@ -137,24 +136,23 @@ export default function FriendsActivityFeed() {
     try {
       const params: Record<string, any> = { page: 1 };
       if (filter !== 'all') {
-        params.type = filter;
+        params.type = filter
       }
       if (timeframe) {
-        params.timeframe = timeframe;
+        params.timeframe = timeframe
       }
 
       const response = await usersAPI.getActivity(params);
       const results = Array.isArray(response?.results) ? response.results : [];
       setActivities(results.map((item: unknown) => normalizeActivity(item)));
-    } } catch {
+    } catch (err) {
       console.error('Failed to fetch activities:', error);
-      toast({}
-        title: 'Could not load friend activity',
+      toast({title: 'Could not load friend activity',
         description: 'Please try again later.',
         variant: 'destructive',
       });
       setActivities([]);
-    } finally {}
+    } finally {
       setLoading(false);
     }
   }, [filter, timeframe, toast]);
@@ -164,7 +162,7 @@ export default function FriendsActivityFeed() {
   }, [fetchActivities]);
 
   const filteredActivities = activities.filter(activity => 
-    filter === 'all' || activity.type === filter;
+    filter === 'all' || activity.type === filter
   );
 
   const getActivityText = (activity: ActivityItem) => {}
@@ -278,7 +276,7 @@ export default function FriendsActivityFeed() {
 
                       <div className="flex items-start gap-4">
                         {activity.content.thumbnail && (
-                          <img;
+                          <img
                             src={activity.content.thumbnail}
                             alt=""
                             className="w-16 h-12 object-cover rounded border"
@@ -303,12 +301,12 @@ export default function FriendsActivityFeed() {
                         <div className="flex gap-2">
                           {activity.type === 'watch_video' && activity.content.videoId && (
                             <Button variant="outline" size="sm">
-                              Watch Too;
+                              Watch Too
                             </Button>
                           )}
                           {activity.type === 'join_party' && activity.content.partyId && (
                             <Button variant="outline" size="sm">
-                              Join Party;
+                              Join Party
                             </Button>
                           )}
                           <Button variant="ghost" size="sm">

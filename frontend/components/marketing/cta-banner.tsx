@@ -1,14 +1,15 @@
+"use client"
+
 import Link from "next/link"
 import { memo } from "react"
 import { Check, CheckCircle, Film, Link, Play, User, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-"use client"
 
 
 interface CtaBannerProps {}
-  isAuthenticated: boolean;
+  isAuthenticated: boolean
 }
 
 function CtaBannerComponent({ isAuthenticated }: CtaBannerProps) {}
@@ -25,12 +26,12 @@ function CtaBannerComponent({ isAuthenticated }: CtaBannerProps) {}
 
             <div className="space-y-4">
               <h2 className="text-4xl md:text-5xl font-bold text-white">
-                Ready for Your First;
+                Ready for Your First
                 <span className="text-white/80 block">Cinema Experience?</span>
               </h2>
 
               <p className="text-xl text-white/80 max-w-3xl mx-auto leading-relaxed">
-                Join thousands of users already enjoying synchronized viewing experiences. Create your first watch party in;
+                Join thousands of users already enjoying synchronized viewing experiences. Create your first watch party in
                 seconds and discover the future of social entertainment.
               </p>
             </div>
@@ -38,38 +39,38 @@ function CtaBannerComponent({ isAuthenticated }: CtaBannerProps) {}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               {isAuthenticated ? (
                 <Link href="/dashboard/parties/create">
-                  <Button;
+                  <Button
                     className={cn(
                       "group rounded-lg px-8 py-4 text-lg font-semibold transition-all duration-300",
                       "bg-white text-black hover:bg-white/90",
                     )}
                   >
                     <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                    Create Watch Party;
+                    Create Watch Party
                   </Button>
                 </Link>
               ) : (
                 <>
                   <Link href="/register">
-                    <Button;
+                    <Button
                       className={cn(
                         "group rounded-lg px-8 py-4 text-lg font-semibold transition-all duration-300",
                         "bg-white text-black hover:bg-white/90",
                       )}
                     >
                       <Users className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                      Get Started Free;
+                      Get Started Free
                     </Button>
                   </Link>
                   <Link href="/about">
-                    <Button;
+                    <Button
                       variant="outline"
                       className={cn(
                         "rounded-lg px-8 py-4 text-lg transition-all duration-300 backdrop-blur-sm",
                         "border-white/30 bg-transparent text-white hover:bg-white/10",
                       )}
                     >
-                      Learn More;
+                      Learn More
                     </Button>
                   </Link>
                 </>

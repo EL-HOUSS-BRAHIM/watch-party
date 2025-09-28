@@ -1,3 +1,5 @@
+"use client"
+
 import { ChevronDown, ChevronRight, Clock, External, Headphones, HelpCircle, Mail, MessageCircle, Search, Settings, Smartphone, ThumbsDown, ThumbsUp, User, Users, Video } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -11,24 +13,23 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
 
-"use client"
 interface FAQ {}
-  id: string;
-  question: string;
-  answer: string;
-  category: string;
-  helpful: number;
-  notHelpful: number;
+  id: string
+  question: string
+  answer: string
+  category: string
+  helpful: number
+  notHelpful: number
 }
 
 interface SupportTicket {}
-  id: string;
-  subject: string;
-  category: string;
+  id: string
+  subject: string
+  category: string
   priority: "low" | "medium" | "high"
   status: "open" | "in-progress" | "resolved" | "closed"
-  createdAt: string;
-  lastReply?: string;
+  createdAt: string
+  lastReply?: string
 }
 
 export default function HelpPage() {
@@ -39,8 +40,7 @@ export default function HelpPage() {
   const [faqs, setFaqs] = useState<FAQ[]>([])
   const [supportTickets, setSupportTickets] = useState<SupportTicket[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [contactForm, setContactForm] = useState({}
-    subject: "",
+  const [contactForm, setContactForm] = useState({subject: "",
     category: "",
     priority: "medium" as const,
     message: "",
@@ -57,7 +57,7 @@ export default function HelpPage() {
       setIsLoading(true)
       const token = localStorage.getItem("accessToken")
 
-      // Load FAQs;
+      // Load FAQs
       const faqResponse = await fetch("/api/support/faqs/", {}
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -69,7 +69,7 @@ export default function HelpPage() {
         setFaqs(faqData.results || [])
       }
 
-      // Load support tickets;
+      // Load support tickets
       const ticketsResponse = await fetch("/api/support/tickets/", {}
         headers: {}
           Authorization: `Bearer ${token}`,
@@ -81,14 +81,13 @@ export default function HelpPage() {
         setSupportTickets(ticketsData.results || [])
       }
 
-    } } catch {
+    } catch (err) {
       console.error("Failed to load help data:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load help content.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -110,18 +109,17 @@ export default function HelpPage() {
   const filteredFAQs = faqs.filter(faq => {}
     const matchesSearch = faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesCategory = selectedCategory === "all" || faq.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesCategory = selectedCategory === "all" || faq.category === selectedCategory
+    return matchesSearch && matchesCategory
   })
 
   const submitContactForm = async () => {
     if (!contactForm.subject || !contactForm.message || !contactForm.category) {
-      toast({}
-        title: "Missing Information",
+      toast({title: "Missing Information",
         description: "Please fill in all required fields.",
         variant: "destructive",
       })
-      return;
+      return
     }
 
     setIsSubmitting(true)
@@ -137,12 +135,10 @@ export default function HelpPage() {
       })
 
       if (response.ok) {
-        toast({}
-          title: "Support Ticket Created",
+        toast({title: "Support Ticket Created",
           description: "We've received your message and will respond within 24 hours.",
         })
-        setContactForm({}
-          subject: "",
+        setContactForm({subject: "",
           category: "",
           priority: "medium",
           message: "",
@@ -151,22 +147,20 @@ export default function HelpPage() {
       } else {}
         throw new Error("Failed to submit ticket")
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to submit support ticket:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to submit your request. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSubmitting(false)
     }
   }
 
   const markFAQHelpful = (faqId: string, helpful: boolean) => {}
-    // In a real app, this would make an API call;
-    toast({}
-      title: "Thank you!",
+    // In a real app, this would make an API call
+    toast({title: "Thank you!",
       description: "Your feedback helps us improve our help content.",
     })
   }
@@ -197,10 +191,10 @@ export default function HelpPage() {
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold flex items-center justify-center gap-3 mb-4">
             <HelpCircle className="h-10 w-10 text-blue-600" />
-            Help & Support;
+            Help & Support
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Find answers to common questions or get personalized support from our team;
+            Find answers to common questions or get personalized support from our team
           </p>
         </div>
 
@@ -247,7 +241,7 @@ export default function HelpPage() {
                 <CardContent className="p-6">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                    <Input;
+                    <Input
                       placeholder="Search for help articles..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
@@ -260,7 +254,7 @@ export default function HelpPage() {
               {/* Categories */}
               <div className="flex flex-wrap gap-2">
                 {categories.map((category) => (
-                  <Button;
+                  <Button
                     key={category.id}
                     variant={selectedCategory === category.id ? "default" : "outline"}
                     size="sm"
@@ -279,7 +273,7 @@ export default function HelpPage() {
                   filteredFAQs.map((faq) => (
                     <Card key={faq.id}>
                       <CardContent className="p-0">
-                        <button;
+                        <button
                           className="w-full p-6 text-left hover:bg-gray-50 transition-colors"
                           onClick={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
                         >
@@ -311,23 +305,23 @@ export default function HelpPage() {
                             <div className="mt-6 pt-4 border-t">
                               <p className="text-sm text-gray-600 mb-3">Was this helpful?</p>
                               <div className="flex items-center gap-2">
-                                <Button;
+                                <Button
                                   variant="outline"
                                   size="sm"
                                   onClick={() => markFAQHelpful(faq.id, true)}
                                   className="flex items-center gap-1"
                                 >
                                   <ThumbsUp className="h-3 w-3" />
-                                  Yes;
+                                  Yes
                                 </Button>
-                                <Button;
+                                <Button
                                   variant="outline"
                                   size="sm"
                                   onClick={() => markFAQHelpful(faq.id, false)}
                                   className="flex items-center gap-1"
                                 >
                                   <ThumbsDown className="h-3 w-3" />
-                                  No;
+                                  No
                                 </Button>
                               </div>
                             </div>
@@ -342,10 +336,10 @@ export default function HelpPage() {
                       <Search className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                       <h3 className="text-xl font-semibold mb-2">No results found</h3>
                       <p className="text-gray-600 mb-6">
-                        Try adjusting your search or browse by category;
+                        Try adjusting your search or browse by category
                       </p>
                       <Button variant="outline" onClick={() => setSearchQuery(&quot;&quot;)}>
-                        Clear Search;
+                        Clear Search
                       </Button>
                     </CardContent>
                   </Card>
@@ -362,13 +356,13 @@ export default function HelpPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <MessageCircle className="h-5 w-5" />
-                    Send us a message;
+                    Send us a message
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
                     <Label htmlFor="subject">Subject *</Label>
-                    <Input;
+                    <Input
                       id="subject"
                       placeholder="Brief description of your issue"
                       value={contactForm.subject}
@@ -378,7 +372,7 @@ export default function HelpPage() {
 
                   <div>
                     <Label htmlFor="category">Category *</Label>
-                    <Select;
+                    <Select
                       value={contactForm.category} 
                       onValueChange={(value) => setContactForm(prev => ({ ...prev, category: value }))}
                     >
@@ -401,7 +395,7 @@ export default function HelpPage() {
 
                   <div>
                     <Label htmlFor="priority">Priority</Label>
-                    <Select;
+                    <Select
                       value={contactForm.priority} 
                       onValueChange={(value) => setContactForm(prev => ({ ...prev, priority: value as Record<string, unknown> }))}
                     >
@@ -418,7 +412,7 @@ export default function HelpPage() {
 
                   <div>
                     <Label htmlFor="email">Email (optional)</Label>
-                    <Input;
+                    <Input
                       id="email"
                       type="email"
                       placeholder="your@email.com"
@@ -426,13 +420,13 @@ export default function HelpPage() {
                       onChange={(e) => setContactForm(prev => ({ ...prev, email: e.target.value }))}
                     />
                     <p className="text-sm text-gray-600 mt-1">
-                      We'll use your account email if not provided;
+                      We'll use your account email if not provided
                     </p>
                   </div>
 
                   <div>
                     <Label htmlFor="message">Message *</Label>
-                    <Textarea;
+                    <Textarea
                       id="message"
                       placeholder="Please describe your issue in detail..."
                       value={contactForm.message}
@@ -441,7 +435,7 @@ export default function HelpPage() {
                     />
                   </div>
 
-                  <Button;
+                  <Button
                     onClick={submitContactForm} 
                     disabled={isSubmitting}
                     className="w-full"
@@ -454,7 +448,7 @@ export default function HelpPage() {
                     ) : (
                       <>
                         <Send className="h-4 w-4 mr-2" />
-                        Send Message;
+                        Send Message
                       </>
                     )}
                   </Button>
@@ -466,7 +460,7 @@ export default function HelpPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Headphones className="h-5 w-5" />
-                    Other ways to reach us;
+                    Other ways to reach us
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -476,7 +470,7 @@ export default function HelpPage() {
                       <h3 className="font-semibold">Email Support</h3>
                       <p className="text-gray-600 mb-2">Get help via email</p>
                       <a href="mailto:support@watchparty.com" className="text-blue-600 hover:underline">
-                        support@watchparty.com;
+                        support@watchparty.com
                       </a>
                     </div>
                   </div>
@@ -525,7 +519,7 @@ export default function HelpPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MessageCircle className="h-5 w-5" />
-                  Your Support Tickets;
+                  Your Support Tickets
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -557,7 +551,7 @@ export default function HelpPage() {
                           </div>
                         )}
                         <Button variant="outline" size="sm" className="mt-3">
-                          View Details;
+                          View Details
                         </Button>
                       </div>
                     ))}

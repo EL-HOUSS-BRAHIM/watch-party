@@ -1,18 +1,19 @@
+"use client"
+
 import { Calendar, Clock, User } from "lucide-react"
 import { useState } from 'react'
 
-'use client'
 interface SupportTicket {}
-  id: string;
-  title: string;
-  description: string;
+  id: string
+  title: string
+  description: string
   status: 'open' | 'in-progress' | 'waiting' | 'resolved' | 'closed'
   priority: 'low' | 'medium' | 'high' | 'urgent'
-  category: string;
-  createdAt: string;
-  updatedAt: string;
-  assignedTo?: string;
-  responses: number;
+  category: string
+  createdAt: string
+  updatedAt: string
+  assignedTo?: string
+  responses: number
 }
 
 const supportTickets: SupportTicket[] = []
@@ -26,7 +27,7 @@ const supportTickets: SupportTicket[] = []
     createdAt: '2024-03-20',
     updatedAt: '2024-03-21',
     assignedTo: 'Support Team',
-    responses: 3;
+    responses: 3
   },
   {}
     id: 'TK-002',
@@ -37,7 +38,7 @@ const supportTickets: SupportTicket[] = []
     category: 'Watch Parties',
     createdAt: '2024-03-19',
     updatedAt: '2024-03-19',
-    responses: 0;
+    responses: 0
   },
   {}
     id: 'TK-003',
@@ -49,7 +50,7 @@ const supportTickets: SupportTicket[] = []
     createdAt: '2024-03-15',
     updatedAt: '2024-03-16',
     assignedTo: 'Billing Team',
-    responses: 5;
+    responses: 5
   },
   {}
     id: 'TK-004',
@@ -61,7 +62,7 @@ const supportTickets: SupportTicket[] = []
     createdAt: '2024-03-10',
     updatedAt: '2024-03-12',
     assignedTo: 'Product Team',
-    responses: 2;
+    responses: 2
   }
 ]
 
@@ -97,11 +98,11 @@ export default function SupportTicketsPage() {
   const [showNewTicketForm, setShowNewTicketForm] = useState(false)
 
   const filteredTickets = supportTickets.filter(ticket => {}
-    const matchesFilter = filter === 'all' || ticket.status === filter;
+    const matchesFilter = filter === 'all' || ticket.status === filter
     const matchesSearch = ticket.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          ticket.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          ticket.category.toLowerCase().includes(searchQuery.toLowerCase())
-    return matchesFilter && matchesSearch;
+    return matchesFilter && matchesSearch
   })
 
   return (
@@ -115,14 +116,14 @@ export default function SupportTicketsPage() {
               <h1 className="text-4xl font-bold text-white">Support Tickets</h1>
             </div>
             <p className="text-white/70 text-lg">
-              Track and manage your support requests;
+              Track and manage your support requests
             </p>
           </div>
-          <button;
+          <button
             onClick={() => setShowNewTicketForm(true)}
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
           >
-            New Ticket;
+            New Ticket
           </button>
         </div>
 
@@ -131,7 +132,7 @@ export default function SupportTicketsPage() {
           {/* Search */}
           <div className="relative flex-1 max-w-md">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/50" />
-            <input;
+            <input
               type="text"
               placeholder="Search tickets..."
               value={searchQuery}
@@ -148,11 +149,11 @@ export default function SupportTicketsPage() {
               { key: 'in-progress', label: 'In Progress' },
               { key: 'resolved', label: 'Resolved' }
             ].map(({ key, label }) => (
-              <button;
+              <button
                 key={key}
                 onClick={() => setFilter(key as Record<string, unknown>)}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${}
-                  filter === key;
+                  filter === key
                     ? 'bg-blue-500 text-white'
                     : 'bg-white/10 text-white/70 hover:bg-white/20'
                 }`}
@@ -166,7 +167,7 @@ export default function SupportTicketsPage() {
         {/* Tickets List */}
         <div className="space-y-4">
           {filteredTickets.map(ticket => (
-            <div;
+            <div
               key={ticket.id}
               className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6 hover:border-blue-400/50 transition-all cursor-pointer"
             >
@@ -269,17 +270,17 @@ export default function SupportTicketsPage() {
                 Describe your issue and we'll get back to you as soon as possible.
               </p>
               <div className="flex gap-4">
-                <button;
+                <button
                   onClick={() => setShowNewTicketForm(false)}
                   className="flex-1 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors"
                 >
-                  Cancel;
+                  Cancel
                 </button>
-                <button;
+                <button
                   onClick={() => setShowNewTicketForm(false)}
                   className="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
                 >
-                  Create Ticket;
+                  Create Ticket
                 </button>
               </div>
             </div>

@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -7,10 +9,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
-import {}
+
 
 } from 'lucide-react'
-'use client'
 
   Shield, 
   UserX, 
@@ -27,23 +28,22 @@ import {}
   Undo,
   Filter,
   MoreHorizontal,
-  Flag;
-
+  Flag
 interface BlockedUser {}
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string;
-  blockedAt: string;
-  reason: string;
+  id: string
+  username: string
+  displayName: string
+  avatar: string
+  blockedAt: string
+  reason: string
   blockType: 'full' | 'messages' | 'parties' | 'profile'
-  reportCount: number;
-  lastSeen: string;
+  reportCount: number
+  lastSeen: string
 }
 
 interface BlockReason {}
   type: 'harassment' | 'spam' | 'inappropriate' | 'privacy' | 'other'
-  description: string;
+  description: string
 }
 
 const BLOCK_REASONS: BlockReason[] = []
@@ -77,24 +77,23 @@ export function BlockUnblockManager() {
         const data = await response.json()
         setBlockedUsers(data.blockedUsers)
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to fetch blocked users:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
 
   const blockUser = async () => {
-    if (!newBlockUser.trim()) return;
+    if (!newBlockUser.trim()) return
     try {
       const reason = blockReason === 'other' ? customReason : BLOCK_REASONS.find(r => r.type === blockReason)?.description || &apos;'
       const response = await fetch('/api/users/block', {}
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}
-          username: newBlockUser,
+        body: JSON.stringify({username: newBlockUser,
           reason,
-          blockType;
+          blockType
         })
       })
 
@@ -107,7 +106,7 @@ export function BlockUnblockManager() {
         setBlockReason('other')
         setBlockType('full')
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to block user:', error)
     }
   }
@@ -121,7 +120,7 @@ export function BlockUnblockManager() {
       if (response.ok) {
         setBlockedUsers(prev => prev.filter(user => user.id !== userId))
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to unblock user:', error)
     }
   }
@@ -137,11 +136,11 @@ export function BlockUnblockManager() {
       if (response.ok) {
         setBlockedUsers(prev => 
           prev.map(user => 
-            user.id === userId ? { ...user, blockType: newBlockType } : user;
+            user.id === userId ? { ...user, blockType: newBlockType } : user
           )
         )
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to update block type:', error)
     }
   }
@@ -155,14 +154,14 @@ export function BlockUnblockManager() {
       })
 
       if (response.ok) {
-        // Update report count;
+        // Update report count
         setBlockedUsers(prev => 
           prev.map(user => 
-            user.id === userId ? { ...user, reportCount: user.reportCount + 1 } : user;
+            user.id === userId ? { ...user, reportCount: user.reportCount + 1 } : user
           )
         )
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to report user:', error)
     }
   }
@@ -170,8 +169,8 @@ export function BlockUnblockManager() {
   const filteredUsers = blockedUsers.filter(user => {}
     const matchesSearch = user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          user.displayName.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesFilter = filter === 'all' || user.blockType === filter;
-    return matchesSearch && matchesFilter;
+    const matchesFilter = filter === 'all' || user.blockType === filter
+    return matchesSearch && matchesFilter
   })
 
   const getBlockTypeIcon = (type: BlockedUser['blockType']) => {}
@@ -262,19 +261,19 @@ export function BlockUnblockManager() {
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <Button;
+                <Button
                   onClick={() => unblockUser(user.id)}
                   variant="outline"
                   size="sm"
                 >
                   <UserCheck className="h-3 w-3 mr-1" />
-                  Unblock;
+                  Unblock
                 </Button>
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="ghost" size="sm">
                       <Shield className="h-3 w-3 mr-1" />
-                      Modify;
+                      Modify
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
@@ -284,7 +283,7 @@ export function BlockUnblockManager() {
                     <div className="space-y-4">
                       <div className="space-y-2">
                         <Label>Block Type</Label>
-                        <Select;
+                        <Select
                           value={user.blockType}
                           onValueChange={(value: BlockedUser['blockType']) => updateBlockType(user.id, value)}
                         >
@@ -317,7 +316,7 @@ export function BlockUnblockManager() {
                     </div>
                   </DialogContent>
                 </Dialog>
-                <Button;
+                <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowOptions(!showOptions)}
@@ -341,14 +340,14 @@ export function BlockUnblockManager() {
             <span>Blocked Users</span>
           </h1>
           <p className="text-muted-foreground mt-1">
-            Manage users you've blocked and their access levels;
+            Manage users you've blocked and their access levels
           </p>
         </div>
         <Dialog open={showBlockDialog} onOpenChange={setShowBlockDialog}>
           <DialogTrigger asChild>
             <Button>
               <UserX className="h-4 w-4 mr-2" />
-              Block User;
+              Block User
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -358,7 +357,7 @@ export function BlockUnblockManager() {
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label>Username</Label>
-                <Input;
+                <Input
                   placeholder="Enter username to block"
                   value={newBlockUser}
                   onChange={(e) => setNewBlockUser(e.target.value)}
@@ -396,7 +395,7 @@ export function BlockUnblockManager() {
               {blockReason === 'other' && (
                 <div className="space-y-2">
                   <Label>Custom Reason</Label>
-                  <Textarea;
+                  <Textarea
                     placeholder="Please specify the reason..."
                     value={customReason}
                     onChange={(e) => setCustomReason(e.target.value)}
@@ -405,13 +404,13 @@ export function BlockUnblockManager() {
               )}
               <div className="flex justify-end space-x-2">
                 <Button variant="outline" onClick={() => setShowBlockDialog(false)}>
-                  Cancel;
+                  Cancel
                 </Button>
-                <Button;
+                <Button
                   onClick={blockUser}
                   disabled={!newBlockUser.trim() || (blockReason === 'other' && !customReason.trim())}
                 >
-                  Block User;
+                  Block User
                 </Button>
               </div>
             </div>
@@ -422,7 +421,7 @@ export function BlockUnblockManager() {
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input;
+          <Input
             placeholder="Search blocked users..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

@@ -21,12 +21,12 @@ function isPathMatching(patterns: RegExp[], pathname: string) {
 }
 
 export function isAuthRoute(pathname: string | null | undefined): boolean {}
-  if (!pathname) return false;
+  if (!pathname) return false
   return isPathMatching(AUTH_ROUTE_PATTERNS, pathname)
 }
 
 export function isMarketingRoute(pathname: string | null | undefined): boolean {}
-  if (!pathname) return false;
+  if (!pathname) return false
   return MARKETING_PREFIXES.some((prefix) => {}
     if (prefix === "/") {
       return pathname === "/"
@@ -36,10 +36,10 @@ export function isMarketingRoute(pathname: string | null | undefined): boolean {
 }
 
 export function shouldShowDashboardChrome(pathname: string | null | undefined): boolean {}
-  if (!pathname) return false;
-  if (isAuthRoute(pathname)) return false;
-  if (pathname.startsWith(ADMIN_PREFIX)) return false;
-  if (pathname.startsWith(WATCH_PREFIX)) return false;
-  if (isMarketingRoute(pathname)) return false;
+  if (!pathname) return false
+  if (isAuthRoute(pathname)) return false
+  if (pathname.startsWith(ADMIN_PREFIX)) return false
+  if (pathname.startsWith(WATCH_PREFIX)) return false
+  if (isMarketingRoute(pathname)) return false
   return pathname.startsWith(DASHBOARD_PREFIX)
 }

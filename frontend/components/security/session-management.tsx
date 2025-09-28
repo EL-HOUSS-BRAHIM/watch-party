@@ -1,3 +1,5 @@
+"use client"
+
 import { Check, CheckCircle, Clock, MapPin, Shield } from "lucide-react"
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -6,10 +8,9 @@ import { Badge } from '@/components/ui/badge'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { toast } from '@/hooks/use-toast'
 import { usersAPI } from '@/lib/api'
-import {}
+
 import { CheckCircleIcon } from '@heroicons/react/24/solid'
 
-'use client'
   ComputerDesktopIcon,
   DevicePhoneMobileIcon,
   DeviceTabletIcon,
@@ -18,41 +19,41 @@ import { CheckCircleIcon } from '@heroicons/react/24/solid'
   ClockIcon,
   ShieldCheckIcon,
   ExclamationTriangleIcon,
-  XMarkIcon;
+  XMarkIcon
 } from '@heroicons/react/24/outline'
 interface SessionData {}
-  id: string;
+  id: string
   deviceType: 'desktop' | 'mobile' | 'tablet' | 'tv' | 'unknown'
-  browser: string;
-  operatingSystem: string;
-  ipAddress: string;
+  browser: string
+  operatingSystem: string
+  ipAddress: string
   location: {}
-    city: string;
-    region: string;
-    country: string;
-    countryCode: string;
+    city: string
+    region: string
+    country: string
+    countryCode: string
   }
-  loginTime: string;
-  lastActivity: string;
-  isCurrent: boolean;
-  isSecure: boolean;
-  userAgent: string;
+  loginTime: string
+  lastActivity: string
+  isCurrent: boolean
+  isSecure: boolean
+  userAgent: string
 }
 
 interface SessionManagementProps {}
-  userId?: string;
-  showRevealOptions?: boolean;
+  userId?: string
+  showRevealOptions?: boolean
 }
 
 const deviceIcons = { desktop: ComputerDesktopIcon,
   mobile: DevicePhoneMobileIcon,
   tablet: DeviceTabletIcon,
   tv: ComputerDesktopIcon,
-  unknown: ComputerDesktopIcon;
+  unknown: ComputerDesktopIcon
 }
 
 const generateSessionId = () =>
-  typeof crypto !== 'undefined' && 'randomUUID' in crypto;
+  typeof crypto !== 'undefined' && 'randomUUID' in crypto
     ? crypto.randomUUID()
     : `session-${Math.random().toString(36).slice(2, 10)}`
 
@@ -94,7 +95,7 @@ const determineDeviceType = (session: unknown, userAgent: string): SessionData['
 }
 
 const parseLocation = (session: unknown): SessionData['location'] => {}
-  const locationData = session?.location ?? session?.geo ?? session?.ip_location ?? session?.metadata?.location;
+  const locationData = session?.location ?? session?.geo ?? session?.ip_location ?? session?.metadata?.location
   const base: SessionData['location'] = { city: 'Unknown',
     region: '',
     country: 'Unknown',
@@ -102,7 +103,7 @@ const parseLocation = (session: unknown): SessionData['location'] => {}
   }
 
   if (!locationData) {
-    return base;
+    return base
   }
 
   if (typeof locationData === 'string') {
@@ -139,24 +140,24 @@ const parseLocation = (session: unknown): SessionData['location'] => {}
       region: locationData.region ?? locationData.state ?? locationData.province ?? base.region,
       country: locationData.country ?? locationData.country_name ?? locationData.code ?? base.country,
       countryCode:
-        locationData.country_code ?? locationData.code ?? locationData.countryCode ?? session?.country_code ?? base.countryCode;
+        locationData.country_code ?? locationData.code ?? locationData.countryCode ?? session?.country_code ?? base.countryCode
     }
   }
 
-  return base;
+  return base
 }
 
 const resolveBrowser = (session: unknown, userAgent: string) => {}
   if (typeof session?.browser === 'string' && session.browser.trim().length > 0) {}
-    return session.browser;
+    return session.browser
   }
   if (typeof session?.client === 'string' && session.client.trim().length > 0) {}
-    return session.client;
+    return session.client
   }
   if (typeof session?.device === 'string' && session.device.trim().length > 0) {}
     const [firstPart] = session.device.split(/ on /i)
     if (firstPart) {
-      return firstPart;
+      return firstPart
     }
   }
   return guessBrowserFromUserAgent(userAgent)
@@ -164,18 +165,18 @@ const resolveBrowser = (session: unknown, userAgent: string) => {}
 
 const resolveOperatingSystem = (session: unknown, userAgent: string) => {}
   if (typeof session?.operating_system === 'string' && session.operating_system.trim().length > 0) {}
-    return session.operating_system;
+    return session.operating_system
   }
   if (typeof session?.os === 'string' && session.os.trim().length > 0) {}
-    return session.os;
+    return session.os
   }
   if (typeof session?.platform === 'string' && session.platform.trim().length > 0) {}
-    return session.platform;
+    return session.platform
   }
   if (typeof session?.device === 'string' && session.device.includes(' on ')) {}
     const [, osPart] = session.device.split(/ on /i)
     if (osPart) {
-      return osPart;
+      return osPart
     }
   }
   return guessOsFromUserAgent(userAgent)
@@ -183,22 +184,22 @@ const resolveOperatingSystem = (session: unknown, userAgent: string) => {}
 
 const determineSecurityState = (session: unknown) => {}
   if (typeof session?.is_secure === 'boolean') {
-    return session.is_secure;
+    return session.is_secure
   }
   if (typeof session?.is_suspicious === 'boolean') {
-    return !session.is_suspicious;
+    return !session.is_suspicious
   }
   if (typeof session?.risk_level === 'string') {
     const risk = session.risk_level.toLowerCase()
     return !['high', 'critical'].includes(risk)
   }
-  return true;
+  return true
 }
 
 const normalizeSession = (session: unknown): SessionData => {}
   const userAgent: string = session?.user_agent ?? session?.userAgent ?? ''
   const loginTime = session?.login_time ?? session?.created_at ?? session?.logged_in_at ?? new Date().toISOString()
-  const lastActivity = session?.last_activity ?? session?.last_active_at ?? session?.updated_at ?? loginTime;
+  const lastActivity = session?.last_activity ?? session?.last_active_at ?? session?.updated_at ?? loginTime
   return {
     id: String(session?.id ?? session?.session_id ?? session?.key ?? generateSessionId()),
     deviceType: determineDeviceType(session, userAgent),
@@ -235,15 +236,14 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
       const response = await usersAPI.getSessions()
       const normalized = Array.isArray(response) ? response.map(normalizeSession) : []
       setSessions(normalized)
-    } } catch {
+    } catch (err) {
       console.error('Failed to fetch sessions:', error)
-      toast({}
-        title: 'Error',
+      toast({title: 'Error',
         description: 'Failed to load session data',
         variant: 'destructive'
       })
       setSessions([])
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -251,12 +251,11 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
   const revokeSession = async (sessionId: string) => {}
     const targetSession = sessions.find(session => session.id === sessionId)
     if (targetSession?.isCurrent) {
-      toast({}
-        title: 'Cannot Revoke',
+      toast({title: 'Cannot Revoke',
         description: 'You cannot revoke your current session',
         variant: 'destructive'
       })
-      return;
+      return
     }
 
     setRevoking(sessionId)
@@ -269,18 +268,16 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
 
       setSessions(prev => prev.filter(session => session.id !== sessionId))
 
-      toast({}
-        title: 'Session Revoked',
+      toast({title: 'Session Revoked',
         description: 'The session has been successfully terminated',
       })
-    } } catch {
+    } catch (err) {
       console.error('Failed to revoke session:', error)
-      toast({}
-        title: 'Error',
+      toast({title: 'Error',
         description: 'Failed to revoke session',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setRevoking(null)
     }
   }
@@ -288,11 +285,10 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
   const revokeAllOtherSessions = async () => {
     const otherSessions = sessions.filter(s => !s.isCurrent)
     if (otherSessions.length === 0) {
-      toast({}
-        title: 'No Sessions',
+      toast({title: 'No Sessions',
         description: 'No other sessions to revoke',
       })
-      return;
+      return
     }
 
     try {
@@ -306,18 +302,16 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
 
       setSessions(prev => prev.filter(session => session.isCurrent))
 
-      toast({}
-        title: 'Sessions Revoked',
+      toast({title: 'Sessions Revoked',
         description: `${otherSessions.length} session(s) have been terminated`,
       })
-    } } catch {
+    } catch (err) {
       console.error('Failed to revoke sessions:', error)
-      toast({}
-        title: 'Error',
+      toast({title: 'Error',
         description: 'Failed to revoke sessions',
         variant: 'destructive'
       })
-    } finally {}
+    } finally {
       setRevokingAll(false)
     }
   }
@@ -359,7 +353,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <ShieldCheckIcon className="w-5 h-5" />
-            Session Management;
+            Session Management
           </CardTitle>
           <CardDescription>Loading session data...</CardDescription>
         </CardHeader>
@@ -374,8 +368,8 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
     )
   }
 
-  const activeSessions = sessions.length;
-  const suspiciousSessions = sessions.filter(s => !s.isSecure).length;
+  const activeSessions = sessions.length
+  const suspiciousSessions = sessions.filter(s => !s.isSecure).length
   return (
     <div className="space-y-6">
       {/* Overview Cards */}
@@ -411,10 +405,10 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
             <div>
               <CardTitle className="flex items-center gap-2">
                 <ShieldCheckIcon className="w-5 h-5" />
-                Active Sessions;
+                Active Sessions
               </CardTitle>
               <CardDescription>
-                Manage your active login sessions across all devices;
+                Manage your active login sessions across all devices
               </CardDescription>
             </div>
             {sessions.filter(s => !s.isCurrent).length > 0 && (
@@ -433,7 +427,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction;
+                    <AlertDialogAction
                       onClick={revokeAllOtherSessions}
                       className="bg-red-600 hover:bg-red-700"
                       disabled={revokingAll}
@@ -453,9 +447,9 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
               const isExpanded = showDetails[session.id]
               return (
                 <Card key={session.id} className={`border transition-colors ${}
-                  session.isCurrent;
+                  session.isCurrent
                     ? 'border-green-500/30 bg-green-500/5' 
-                    : !session.isSecure;
+                    : !session.isSecure
                     ? 'border-red-500/30 bg-red-500/5'
                     : 'border-white/10 bg-white/5' />
                 }`}>
@@ -478,12 +472,12 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
                             </h4>
                             {session.isCurrent && (
                               <Badge className="bg-green-500/20 text-green-400 text-xs">
-                                Current;
+                                Current
                               </Badge>
                             )}
                             {!session.isSecure && (
                               <Badge className="bg-red-500/20 text-red-400 text-xs">
-                                Suspicious;
+                                Suspicious
                               </Badge>
                             )}
                           </div>
@@ -522,7 +516,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
                               {showRevealOptions && (
                                 <details className="mt-2">
                                   <summary className="text-white/50 cursor-pointer hover:text-white/70">
-                                    User Agent;
+                                    User Agent
                                   </summary>
                                   <code className="text-xs text-white/60 block mt-1 p-2 bg-white/5 rounded">
                                     {session.userAgent}
@@ -534,7 +528,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
                         </div>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Button;
+                        <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => toggleDetails(session.id)}
@@ -544,7 +538,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
                         {!session.isCurrent && (
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button;
+                              <Button
                                 variant="destructive" 
                                 size="sm"
                                 disabled={revoking === session.id}
@@ -565,7 +559,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                <AlertDialogAction;
+                                <AlertDialogAction
                                   onClick={() => revokeSession(session.id)}
                                   className="bg-red-600 hover:bg-red-700"
                                   disabled={revoking === session.id}

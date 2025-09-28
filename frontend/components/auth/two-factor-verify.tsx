@@ -1,3 +1,5 @@
+"use client"
+
 import { Shield } from "lucide-react"
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -11,7 +13,6 @@ import { useToast } from "@/hooks/use-toast"
 import { authAPI } from "@/lib/api"
 import { tokenStorage } from "@/lib/auth/token-storage"
 
-"use client"
 export function TwoFactorVerify() {
   const [code, setCode] = useState("")
   const [backupCode, setBackupCode] = useState("")
@@ -27,11 +28,9 @@ export function TwoFactorVerify() {
   const context = searchParams.get("context") || "login" // login, sensitive_action, etc.
 
   const verify2FA = async () => {
-    const verificationCode = useBackupCode ? backupCode : code;
+    const verificationCode = useBackupCode ? backupCode : code,
     if (!verificationCode) {
       setError("Please enter a verification code")
-      return;
-    }
 
     setIsVerifying(true)
     setError("")
@@ -44,51 +43,39 @@ export function TwoFactorVerify() {
 
       if (!response?.success) {
         throw new Error(response?.message || "Invalid verification code")
-      }
 
       if (response.access_token || response.refresh_token) {
-        tokenStorage.setTokens({}
-          accessToken: response.access_token,
+        tokenStorage.setTokens({accessToken: response.access_token,
           refreshToken: response.refresh_token,
         })
-      }
 
-      toast({}
-        title: "Verification successful!",
+      toast({title: "Verification successful!",
         description: "You have been authenticated",
       })
 
-      // Redirect to the intended page;
+      // Redirect to the intended page,
       router.push(redirectUrl)
-    } } catch {
-      const errorData = err?.response?.data;
+    } catch (err) {
+      const errorData = err?.response?.data,
       const message = errorData?.message || err?.message || "Invalid verification code"
       setError(message)
 
       if (typeof errorData?.attempts_left === "number") {
         setAttemptsLeft(errorData.attempts_left)
-      }
 
       if (errorData?.account_locked) {
         setError("Account temporarily locked due to too many failed attempts")
-      }
-    } finally {}
+    } finally {
       setIsVerifying(false)
-    }
-  }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {}
     if (e.key === "Enter") {
       verify2FA()
-    }
-  }
 
   const resendCode = () => {}
-    toast({}
-      title: "Need a new code?",
+    toast({title: "Need a new code?",
       description: "Open your authenticator app to view the latest verification code.",
     })
-  }
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -102,42 +89,39 @@ export function TwoFactorVerify() {
             {context === "login" 
               ? "Enter the 6-digit code from your authenticator app to continue"
               : "Verify your identity to perform this action"
-            }
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           {!useBackupCode ? (
             <div>
               <Label htmlFor="verification-code">Authenticator Code</Label>
-              <Input;
+              <Input,
                 id="verification-code"
                 value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, &quot;&quot;))}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
                 onKeyPress={handleKeyPress}
                 placeholder="123456"
                 maxLength={6}
                 className="text-center text-lg tracking-widest"
                 autoComplete="one-time-code"
-                autoFocus;
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Enter the 6-digit code from your authenticator app;
+                Enter the 6-digit code from your authenticator app
               </p>
             </div>
           ) : (
             <div>
               <Label htmlFor="backup-code">Backup Code</Label>
-              <Input;
+              <Input,
                 id="backup-code"
                 value={backupCode}
-                onChange={(e) => setBackupCode(e.target.value.replace(/[^a-zA-Z0-9]/g, &quot;&quot;))}
+                onChange={(e) => setBackupCode(e.target.value.replace(/[^a-zA-Z0-9]/g, ""))}
                 onKeyPress={handleKeyPress}
                 placeholder="Enter backup code"
                 className="text-center text-lg tracking-widest font-mono"
-                autoFocus;
               />
               <p className="text-xs text-muted-foreground mt-1">
-                Enter one of your saved backup codes;
+                Enter one of your saved backup codes
               </p>
             </div>
           )}
@@ -149,7 +133,7 @@ export function TwoFactorVerify() {
                 {error}
                 {attemptsLeft > 0 && attemptsLeft < 5 && (}
                   <span className="block mt-1">
-                    {attemptsLeft} attempt{attemptsLeft !== 1 ? "s" : ""} remaining;
+                    {attemptsLeft} attempt{attemptsLeft !== 1 ? "s" : ""} remaining
                   </span>
                 )}
               </AlertDescription>
@@ -157,7 +141,7 @@ export function TwoFactorVerify() {
           )}
 
           <div className="space-y-3">
-            <Button;
+            <Button,
               onClick={verify2FA}
               disabled={isVerifying || (!useBackupCode && code.length !== 6) || (useBackupCode && !backupCode)}
               className="w-full"
@@ -168,7 +152,7 @@ export function TwoFactorVerify() {
             <Separator />
 
             <div className="space-y-2">
-              <Button;
+              <Button,
                 variant="ghost"
                 onClick={() => setUseBackupCode(!useBackupCode)}
                 className="w-full text-sm"
@@ -176,7 +160,7 @@ export function TwoFactorVerify() {
                 {useBackupCode ? (
                   <>
                     <ArrowLeft className="w-4 h-4 mr-2" />
-                    Use authenticator app instead;
+                    Use authenticator app instead
                   </>
                 ) : (
                   "Use backup code instead"
@@ -184,12 +168,12 @@ export function TwoFactorVerify() {
               </Button>
 
               {!useBackupCode && (
-                <Button;
+                <Button,
                   variant="ghost"
                   onClick={resendCode}
                   className="w-full text-sm"
                 >
-                  Resend code;
+                  Resend code
                 </Button>
               )}
             </div>
@@ -197,13 +181,11 @@ export function TwoFactorVerify() {
 
           {/* Help text */}
           <div className="text-center text-xs text-muted-foreground space-y-1">
-            <p>Can&apos;t access your authenticator app?</p>
+            <p>Can't access your authenticator app?</p>
             <Button variant="link" className="text-xs p-0 h-auto">
-              Contact support;
+              Contact support
             </Button>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
-}

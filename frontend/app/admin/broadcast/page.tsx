@@ -15,9 +15,9 @@ import { adminAPI } from '@/lib/api';
 
 'use client';
 interface BroadcastMessage {}
-  id: string;
-  title: string;
-  content: string;
+  id: string
+  title: string
+  content: string
   type: 'announcement' | 'alert' | 'maintenance' | 'feature' | 'marketing';
   channels: ('in-app' | 'email' | 'push' | 'sms')[];
   targetAudience: {}
@@ -25,25 +25,25 @@ interface BroadcastMessage {}
     customFilters?: {}
       userType?: string[];
       registrationDate?: { from: Date; to: Date };
-      activityLevel?: string;
+      activityLevel?: string
       location?: string[];
     };
   };
   scheduling: {}
-    sendNow: boolean;
-    scheduledTime?: Date;
-    timezone: string;
+    sendNow: boolean
+    scheduledTime?: Date
+    timezone: string
   };
   status: 'draft' | 'scheduled' | 'sending' | 'sent' | 'failed';
   stats?: {}
-    totalRecipients: number;
-    delivered: number;
-    opened: number;
-    clicked: number;
-    failed: number;
+    totalRecipients: number
+    delivered: number
+    opened: number
+    clicked: number
+    failed: number
   };
-  createdAt: Date;
-  sentAt?: Date;
+  createdAt: Date
+  sentAt?: Date
 }
 
 const messageTypes = []
@@ -83,13 +83,12 @@ export default function AdminBroadcastSystem() {
   const fetchBroadcastMessages = async () => {
     try {
       setLoading(true);
-      // Get broadcast messages from admin API;
-      const response = await adminAPI.getLogs({}
-        component: 'broadcast',
+      // Get broadcast messages from admin API
+      const response = await adminAPI.getLogs({component: 'broadcast',
         level: 'info',
-        page: 1;
+        page: 1
       });
-      // Transform API response to BroadcastMessage format;
+      // Transform API response to BroadcastMessage format
       const broadcastMessages: BroadcastMessage[] = response.results?.map((log: unknown) => ({}
         id: log.id || Date.now().toString(),
         title: log.message?.split(':')[0] || 'Broadcast Message',
@@ -110,32 +109,30 @@ export default function AdminBroadcastSystem() {
         sentAt: new Date(log.timestamp || Date.now()),
       })) || [];
       setMessages(broadcastMessages);
-    } } catch {
+    } catch (err) {
       console.error('Failed to fetch broadcast messages:', error);
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load broadcast messages. Please try again.",
         variant: "destructive",
       });
-      // Set empty array on error;
+      // Set empty array on error
       setMessages([]);
-    } finally {}
+    } finally {
       setLoading(false);
     }
   };
 
   const handleCreateMessage = async () => {
     if (!newMessage.title || !newMessage.content) {
-      toast({}
-        title: "Validation Error",
+      toast({title: "Validation Error",
         description: "Please fill in the title and content.",
         variant: "destructive",
       });
-      return;
+      return
     }
 
     try {
-      // Map message types to API types;
+      // Map message types to API types
       const getAPIType = (messageType: string): 'info' | 'warning' | 'error' | 'success' => {
   switch (messageType) {
           case 'alert': return 'error';
@@ -145,7 +142,7 @@ export default function AdminBroadcastSystem() {
         }
       };
 
-      // Map audience types to API types;
+      // Map audience types to API types
       const getAPIAudience = (audienceType: string): 'all' | 'premium' | 'active' => {
   switch (audienceType) {
           case 'premium': return 'premium';
@@ -154,7 +151,7 @@ export default function AdminBroadcastSystem() {
         }
       };
 
-      // Use admin API to broadcast message;
+      // Use admin API to broadcast message
       const broadcastData = { title: newMessage.title!,
         message: newMessage.content!,
         type: getAPIType(newMessage.type!),
@@ -183,8 +180,7 @@ export default function AdminBroadcastSystem() {
 
       setMessages(prev => [message, ...prev]);
       setIsCreating(false);
-      setNewMessage({}
-        title: '',
+      setNewMessage({title: '',
         content: '',
         type: 'announcement',
         channels: ['in-app'],
@@ -192,18 +188,17 @@ export default function AdminBroadcastSystem() {
         scheduling: { sendNow: true, timezone: 'UTC' },
       });
 
-      toast({}
-        title: "Broadcast Created",
-        description: message.scheduling.sendNow;
+      toast({title: "Broadcast Created",
+        description: message.scheduling.sendNow
           ? "Your message has been sent to users." 
           : "Your message has been scheduled.",
       });
 
-      // Simulate sending process;
+      // Simulate sending process
       if (message.scheduling.sendNow) {
         setTimeout(() => {
   setMessages(prev => prev.map(m => 
-            m.id === message.id;
+            m.id === message.id
               ? {}
                   ...m, 
                   status: 'sent', 
@@ -216,14 +211,13 @@ export default function AdminBroadcastSystem() {
                     failed: Math.floor(m.stats!.totalRecipients * 0.05),
                   }
                 }
-              : m;
+              : m
           ));
         }, 3000);
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to create broadcast:', error);
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to create broadcast message. Please try again.",
         variant: "destructive",
       });
@@ -232,10 +226,9 @@ export default function AdminBroadcastSystem() {
 
   const cancelMessage = (messageId: string) => {
     setMessages(prev => prev.map(m => 
-      m.id === messageId ? { ...m, status: 'draft' as const } : m;
+      m.id === messageId ? { ...m, status: 'draft' as const } : m
     ));
-    toast({}
-      title: "Message Cancelled",
+    toast({title: "Message Cancelled",
       description: "The scheduled message has been cancelled.",
     });
   };
@@ -251,8 +244,7 @@ export default function AdminBroadcastSystem() {
       stats: undefined,
     };
     setMessages(prev => [duplicate, ...prev]);
-    toast({}
-      title: "Message Duplicated",
+    toast({title: "Message Duplicated",
       description: "A copy of the message has been created as a draft.",
     });
   };
@@ -263,8 +255,7 @@ export default function AdminBroadcastSystem() {
       sending: 'default',
       sent: 'default',
       failed: 'destructive',
-    } as const;
-
+    } as const
     const colors = { draft: 'text-gray-600',
       scheduled: 'text-blue-600',
       sending: 'text-orange-600',
@@ -292,7 +283,7 @@ export default function AdminBroadcastSystem() {
   const getTypeIcon = (type: string) => {
     const messageType = messageTypes.find(t => t.value === type);
     if (!messageType) return <Megaphone className="h-4 w-4" />;
-    const Icon = messageType.icon;
+    const Icon = messageType.icon
     return <Icon className="h-4 w-4" />;
   };
 
@@ -307,7 +298,7 @@ export default function AdminBroadcastSystem() {
   };
 
   const calculateEngagementRate = (stats: BroadcastMessage['stats']) => {
-    if (!stats || stats.delivered === 0) return 0;
+    if (!stats || stats.delivered === 0) return 0
     return ((stats.opened / stats.delivered) * 100).toFixed(1);
   };
 
@@ -317,14 +308,14 @@ export default function AdminBroadcastSystem() {
         <div>
           <h1 className="text-2xl font-bold">Broadcast System</h1>
           <p className="text-muted-foreground">
-            Send messages to your users across multiple channels;
+            Send messages to your users across multiple channels
           </p>
         </div>
         <Dialog open={isCreating} onOpenChange={setIsCreating}>
           <DialogTrigger asChild>
             <Button>
               <Megaphone className="h-4 w-4 mr-2" />
-              New Broadcast;
+              New Broadcast
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -336,7 +327,7 @@ export default function AdminBroadcastSystem() {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="title">Title *</Label>
-                  <Input;
+                  <Input
                     id="title"
                     value={newMessage.title || ''}
                     onChange={(e) => setNewMessage({...newMessage, title: e.target.value})}
@@ -346,7 +337,7 @@ export default function AdminBroadcastSystem() {
 
                 <div className="space-y-2">
                   <Label htmlFor="content">Content *</Label>
-                  <Textarea;
+                  <Textarea
                     id="content"
                     value={newMessage.content || ''}
                     onChange={(e) => setNewMessage({...newMessage, content: e.target.value})}
@@ -357,7 +348,7 @@ export default function AdminBroadcastSystem() {
 
                 <div className="space-y-2">
                   <Label>Message Type</Label>
-                  <Select;
+                  <Select
                     value={newMessage.type} 
                     onValueChange={(value) => setNewMessage({...newMessage, type: value as Record<string, unknown>})}
                   >
@@ -391,7 +382,7 @@ export default function AdminBroadcastSystem() {
                     { id: 'sms', label: 'SMS', icon: Smartphone },
                   ].map(channel => (
                     <div key={channel.id} className="flex items-center space-x-2">
-                      <input;
+                      <input
                         type="checkbox"
                         id={channel.id}
                         checked={newMessage.channels?.includes(channel.id as Record<string, unknown>) || false}
@@ -419,10 +410,9 @@ export default function AdminBroadcastSystem() {
               {/* Target Audience */}
               <div className="space-y-3">
                 <Label>Target Audience</Label>
-                <Select;
+                <Select
                   value={newMessage.targetAudience?.type} 
-                  onValueChange={(value) => setNewMessage({}
-                    ...newMessage, 
+                  onValueChange={(value) => setNewMessage({...newMessage, 
                     targetAudience: { type: value as Record<string, unknown> }
                   })}
                 >
@@ -448,10 +438,9 @@ export default function AdminBroadcastSystem() {
               <div className="space-y-3">
                 <Label>Scheduling</Label>
                 <div className="flex items-center space-x-2">
-                  <Switch;
+                  <Switch
                     checked={newMessage.scheduling?.sendNow || false}
-                    onCheckedChange={(checked) => setNewMessage({}
-                      ...newMessage,
+                    onCheckedChange={(checked) => setNewMessage({...newMessage,
                       scheduling: { ...newMessage.scheduling!, sendNow: checked }
                     })}
                   />
@@ -462,10 +451,9 @@ export default function AdminBroadcastSystem() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label>Scheduled Date & Time</Label>
-                      <Input;
+                      <Input
                         type="datetime-local"
-                        onChange={(e) => setNewMessage({}
-                          ...newMessage,
+                        onChange={(e) => setNewMessage({...newMessage,
                           scheduling: {}
                             ...newMessage.scheduling!,
                             scheduledTime: new Date(e.target.value)
@@ -475,10 +463,9 @@ export default function AdminBroadcastSystem() {
                     </div>
                     <div className="space-y-2">
                       <Label>Timezone</Label>
-                      <Select;
+                      <Select
                         value={newMessage.scheduling?.timezone} 
-                        onValueChange={(value) => setNewMessage({}
-                          ...newMessage,
+                        onValueChange={(value) => setNewMessage({...newMessage,
                           scheduling: { ...newMessage.scheduling!, timezone: value }
                         })}
                       >
@@ -500,7 +487,7 @@ export default function AdminBroadcastSystem() {
 
               <div className="flex justify-end space-x-2 pt-4">
                 <Button variant="outline" onClick={() => setIsCreating(false)}>
-                  Cancel;
+                  Cancel
                 </Button>
                 <Button onClick={handleCreateMessage}>
                   <Send className="h-4 w-4 mr-2" />
@@ -531,7 +518,7 @@ export default function AdminBroadcastSystem() {
               </p>
               <Button onClick={() => setIsCreating(true)}>
                 <Megaphone className="h-4 w-4 mr-2" />
-                Create Your First Broadcast;
+                Create Your First Broadcast
               </Button>
             </CardContent>
           </Card>
@@ -565,36 +552,36 @@ export default function AdminBroadcastSystem() {
                       )}
                       <div className="flex items-center gap-1">
                         <Users className="h-3 w-3" />
-                        {message.targetAudience.type} users;
+                        {message.targetAudience.type} users
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-2">
                   {message.status === 'scheduled' && (
-                    <Button;
+                    <Button
                       variant="outline"
                       size="sm"
                       onClick={() => cancelMessage(message.id)}
                     >
                       <X className="h-4 w-4 mr-1" />
-                      Cancel;
+                      Cancel
                     </Button>
                   )}
-                  <Button;
+                  <Button
                     variant="outline"
                     size="sm"
                     onClick={() => duplicateMessage(message)}
                   >
-                    Duplicate;
+                    Duplicate
                   </Button>
-                  <Button;
+                  <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setSelectedMessage(message)}
                   >
                     <Eye className="h-4 w-4 mr-1" />
-                    View;
+                    View
                   </Button>
                 </div>
               </div>

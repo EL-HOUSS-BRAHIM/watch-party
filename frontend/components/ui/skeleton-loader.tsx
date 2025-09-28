@@ -1,16 +1,17 @@
-import { cn } from "@/lib/utils"
-
 "use client"
 
+import { cn } from "@/lib/utils"
+
+
 interface SkeletonProps {}
-  className?: string;
+  className?: string
 }
 
 export function Skeleton({ className }: SkeletonProps) {
   return <div className={cn("animate-pulse rounded-md bg-gray-200 dark:bg-gray-800", className)} />
 }
 
-// Specific skeleton components for different content types;
+// Specific skeleton components for different content types
 export function VideoCardSkeleton() {
   return (
     <div className="space-y-3">

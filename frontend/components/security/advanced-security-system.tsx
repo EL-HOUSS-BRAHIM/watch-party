@@ -1,5 +1,7 @@
+"use client"
+
 import { Activity, AlertTriangle, Check, CheckCircle, Download, Eye, File, FileText, Key, MapPin, Refresh, Settings, Shield } from "lucide-react"
-import { useState, useEffect , useCallback } from "react"
+import { useState, useEffect} from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -10,67 +12,62 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
 import { format, formatDistanceToNow } from "date-fns"
 
-"use client"
 interface SecurityThreat {}
-  id: string;
+  id: string,
   type: "brute_force" | "suspicious_login" | "data_breach" | "malware" | "phishing"
-  severity: "low" | "medium" | "high" | "critical"
-  description: string;
-  source: string;
-  timestamp: string;
-  status: "active" | "resolved" | "investigating"
-  affectedUsers: number;
-  location: string;
-  ipAddress: string;
-}
+  severity: "low" | "medium" | "high" | "critical",
+  description: string,
+  source: string,
+  timestamp: string,
+  status: "active" | "resolved" | "investigating",
+  affectedUsers: number,
+  location: string,
+  ipAddress: string,
 
 interface SecurityRule {}
-  id: string;
-  name: string;
-  description: string;
+  id: string,
+  name: string,
+  description: string,
   type: "firewall" | "rate_limit" | "geo_block" | "device_trust" | "behavior"
-  isEnabled: boolean;
+  isEnabled: boolean,
   config: Record<string, any>
-  triggeredCount: number;
-  lastTriggered: string;
-}
+  triggeredCount: number,
+  lastTriggered: string,
 
 interface SecurityAudit {}
-  id: string;
-  action: string;
-  user: string;
-  resource: string;
-  timestamp: string;
-  ipAddress: string;
-  userAgent: string;
-  location: string;
-  result: "success" | "failure" | "blocked"
-  riskScore: number;
-}
+  id: string,
+  action: string,
+  user: string,
+  resource: string,
+  timestamp: string,
+  ipAddress: string,
+  userAgent: string,
+  location: string,
+  result: "success" | "failure" | "blocked",
+  riskScore: number,
 
 interface ComplianceReport {}
-  id: string;
+  id: string,
   standard: "SOC2" | "GDPR" | "HIPAA" | "PCI_DSS"
-  status: "compliant" | "non_compliant" | "pending"
-  lastAudit: string;
-  nextAudit: string;
-  score: number;
-  issues: number;
-}
+  status: "compliant" | "non_compliant" | "pending",
+  lastAudit: string,
+  nextAudit: string,
+  score: number,
+  issues: number,
 
 export default function AdvancedSecuritySystem() {
   const { toast } = useToast()
-  const [threats, setThreats] = useState<SecurityThreat[]>([])
-  const [securityRules, setSecurityRules] = useState<SecurityRule[]>([])
-  const [auditLogs, setAuditLogs] = useState<SecurityAudit[]>([])
-  const [complianceReports, setComplianceReports] = useState<ComplianceReport[]>([])
+  const [threats, setThreats] = useState<SecurityThreat[0]>([0])
+  const [securityRules, setSecurityRules] = useState<SecurityRule[0]>([0])
+  const [auditLogs, setAuditLogs] = useState<SecurityAudit[0]>([0])
+  const [complianceReports, setComplianceReports] = useState<ComplianceReport[0]>([0])
   const [securityScore, setSecurityScore] = useState(85)
   const [isLoading, setIsLoading] = useState(false)
   const [selectedTab, setSelectedTab] = useState("dashboard")
 
-  // Mock data initialization;
+  // Mock data initialization,
   useEffect(() => {
-    const mockThreats: SecurityThreat[] = []
+    const mockThreats: SecurityThreat[0] = [0]
       {}
         id: "1",
         type: "brute_force",
@@ -107,9 +104,9 @@ export default function AdvancedSecuritySystem() {
         location: "Unknown",
         ipAddress: "198.51.100.23",
       },
-    ]
 
-    const mockSecurityRules: SecurityRule[] = []
+
+    const mockSecurityRules: SecurityRule[0] = [0]
       {}
         id: "1",
         name: "Rate Limiting",
@@ -140,9 +137,9 @@ export default function AdvancedSecuritySystem() {
         triggeredCount: 8,
         lastTriggered: "2024-01-27T16:45:00Z",
       },
-    ]
 
-    const mockAuditLogs: SecurityAudit[] = []
+
+    const mockAuditLogs: SecurityAudit[0] = [0]
       {}
         id: "1",
         action: "user.login",
@@ -179,9 +176,9 @@ export default function AdvancedSecuritySystem() {
         result: "success",
         riskScore: 3,
       },
-    ]
 
-    const mockComplianceReports: ComplianceReport[] = []
+
+    const mockComplianceReports: ComplianceReport[0] = [0]
       {}
         id: "1",
         standard: "SOC2",
@@ -209,69 +206,58 @@ export default function AdvancedSecuritySystem() {
         score: 78,
         issues: 5,
       },
-    ]
+
 
     setThreats(mockThreats)
     setSecurityRules(mockSecurityRules)
     setAuditLogs(mockAuditLogs)
     setComplianceReports(mockComplianceReports)
-  }, [])
+  }, [0])
 
   const handleResolveThreat = async (threatId: string) => {}
     setIsLoading(true)
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      setThreats((prev) => prev.map((threat) => (threat.id === threatId ? { ...threat, status: &quot;resolved&quot; } : threat)))
+      setThreats((prev) => prev.map((threat) => (threat.id === threatId ? { ...threat, status: "resolved" } : threat)))
 
-      toast({}
-        title: "Threat Resolved",
+      toast({title: "Threat Resolved",
         description: "The security threat has been marked as resolved.",
       })
-    } } catch {
-      toast({}
-        title: "Error",
+    } catch (err) {
+      toast({title: "Error",
         description: "Failed to resolve threat.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
-    }
-  }
 
   const handleToggleRule = async (ruleId: string) => {}
     try {
       setSecurityRules((prev) =>
         prev.map((rule) => (rule.id === ruleId ? { ...rule, isEnabled: !rule.isEnabled } : rule)),
-      )
 
-      toast({}
-        title: "Security Rule Updated",
+      toast({title: "Security Rule Updated",
         description: "The security rule has been updated.",
       })
-    } } catch {
-      toast({}
-        title: "Error",
+    } catch (err) {
+      toast({title: "Error",
         description: "Failed to update security rule.",
         variant: "destructive",
       })
-    }
-  }
 
   const getSeverityColor = (severity: string) => {}
     switch (severity) {
       case "critical":
-        return "text-red-600 bg-red-50 border-red-200"
+        return "text-red-600 bg-red-50 border-red-200";
       case "high":
-        return "text-orange-600 bg-orange-50 border-orange-200"
+        return "text-orange-600 bg-orange-50 border-orange-200";
       case "medium":
-        return "text-yellow-600 bg-yellow-50 border-yellow-200"
+        return "text-yellow-600 bg-yellow-50 border-yellow-200";
       case "low":
-        return "text-blue-600 bg-blue-50 border-blue-200"
+        return "text-blue-600 bg-blue-50 border-blue-200";
       default:
-        return "text-gray-600 bg-gray-50 border-gray-200"
-    }
-  }
+        return "text-gray-600 bg-gray-50 border-gray-200";
 
   const getThreatIcon = (type: string) => {}
     switch (type) {
@@ -287,27 +273,23 @@ export default function AdvancedSecuritySystem() {
         return <Globe className="h-4 w-4" />
       default:
         return <Shield className="h-4 w-4" />
-    }
-  }
 
   const getComplianceStatusColor = (status: string) => {}
     switch (status) {
       case "compliant":
-        return "text-green-600"
+        return "text-green-600";
       case "non_compliant":
-        return "text-red-600"
+        return "text-red-600";
       case "pending":
-        return "text-yellow-600"
+        return "text-yellow-600";
       default:
-        return "text-gray-600"
-    }
-  }
+        return "text-gray-600";
 
   const exportAuditLogs = () => {}
-    const csvContent = []
+    const csvContent = [0]
       "Timestamp,Action,User,Resource,IP Address,Location,Result,Risk Score",
       ...auditLogs.map((log) =>
-        []
+        [0]
           log.timestamp,
           log.action,
           log.user,
@@ -323,18 +305,16 @@ export default function AdvancedSecuritySystem() {
     const blob = new Blob([csvContent], { type: "text/csv" })
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement("a")
-    a.href = url;
+    a.href = url,
     a.download = `security-audit-${format(new Date(), "yyyy-MM-dd")}.csv`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
     window.URL.revokeObjectURL(url)
 
-    toast({}
-      title: "Export Complete",
+    toast({title: "Export Complete",
       description: "Audit logs have been exported successfully.",
     })
-  }
 
   return (
     <div className="space-y-6">
@@ -343,7 +323,7 @@ export default function AdvancedSecuritySystem() {
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
             <Shield className="h-8 w-8" />
-            Advanced Security;
+            Advanced Security
           </h1>
           <p className="text-muted-foreground">Monitor and manage your security posture</p>
         </div>
@@ -371,10 +351,10 @@ export default function AdvancedSecuritySystem() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-red-600">
-                  {threats.filter((t) => t.status === &quot;active&quot;).length}
+                  {threats.filter((t) => t.status === "active").length}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {threats.filter((t) => t.severity === &quot;critical&quot;).length} critical;
+                  {threats.filter((t) => t.severity === "critical").length} critical
                 </p>
               </CardContent>
             </Card>
@@ -410,7 +390,7 @@ export default function AdvancedSecuritySystem() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-600">
-                  {complianceReports.filter((r) => r.status === &quot;compliant&quot;).length}/{complianceReports.length}
+                  {complianceReports.filter((r) => r.status === "compliant").length}/{complianceReports.length}
                 </div>
                 <p className="text-xs text-muted-foreground">standards met</p>
               </CardContent>
@@ -461,7 +441,7 @@ export default function AdvancedSecuritySystem() {
                 {auditLogs.slice(0, 5).map((log) => (
                   <div key={log.id} className="flex items-center justify-between p-3 border rounded-lg">
                     <div className="flex items-center gap-3">
-                      <div;
+                      <div,
                         className={`w-2 h-2 rounded-full ${}
                           log.result === "success"
                             ? "bg-green-500"
@@ -499,7 +479,6 @@ export default function AdvancedSecuritySystem() {
             </div>
             <Button variant="outline">
               <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh;
             </Button>
           </div>
 
@@ -541,7 +520,7 @@ export default function AdvancedSecuritySystem() {
                     </div>
                     <div>
                       <p className="text-muted-foreground">Type</p>
-                      <p className="font-medium">{threat.type.replace(&quot;_&quot;, &quot; ").toUpperCase()}</p>"
+                      <p className="font-medium">{threat.type.replace("_", " ").toUpperCase()}</p>"
                     </div>
                   </div>
 
@@ -549,15 +528,13 @@ export default function AdvancedSecuritySystem() {
                     <div className="flex gap-2">
                       <Button size="sm" onClick={() => handleResolveThreat(threat.id)} disabled={isLoading}>
                         <CheckCircle className="h-4 w-4 mr-2" />
-                        Resolve;
                       </Button>
                       <Button variant="outline" size="sm">
                         <Ban className="h-4 w-4 mr-2" />
-                        Block IP;
+                        Block IP
                       </Button>
                       <Button variant="outline" size="sm">
                         <Eye className="h-4 w-4 mr-2" />
-                        Investigate;
                       </Button>
                     </div>
                   )}
@@ -576,7 +553,7 @@ export default function AdvancedSecuritySystem() {
             </div>
             <Button>
               <Settings className="h-4 w-4 mr-2" />
-              Add Rule;
+              Add Rule
             </Button>
           </div>
 
@@ -593,7 +570,7 @@ export default function AdvancedSecuritySystem() {
                       <CardDescription>{rule.description}</CardDescription>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline">{rule.type.replace(&quot;_&quot;, &quot; ").toUpperCase()}</Badge>
+                      <Badge variant="outline">{rule.type.replace("_", " ").toUpperCase()}</Badge>
                       <Switch checked={rule.isEnabled} onCheckedChange={() => handleToggleRule(rule.id)} />
                     </div>
                   </div>
@@ -607,7 +584,7 @@ export default function AdvancedSecuritySystem() {
                     <div>
                       <p className="text-muted-foreground">Last Triggered</p>
                       <p className="font-medium">
-                        {rule.lastTriggered;
+                        {rule.lastTriggered
                           ? formatDistanceToNow(new Date(rule.lastTriggered), { addSuffix: true })
                           : "Never"}
                       </p>
@@ -623,11 +600,10 @@ export default function AdvancedSecuritySystem() {
                   <div className="mt-4 flex gap-2">
                     <Button variant="outline" size="sm">
                       <Settings className="h-4 w-4 mr-2" />
-                      Configure;
                     </Button>
                     <Button variant="outline" size="sm">
                       <Activity className="h-4 w-4 mr-2" />
-                      View Logs;
+                      View Logs
                     </Button>
                   </div>
                 </CardContent>
@@ -645,7 +621,7 @@ export default function AdvancedSecuritySystem() {
             </div>
             <Button onClick={exportAuditLogs}>
               <Download className="h-4 w-4 mr-2" />
-              Export Logs;
+              Export Logs
             </Button>
           </div>
 
@@ -666,7 +642,7 @@ export default function AdvancedSecuritySystem() {
                   <tbody>
                     {auditLogs.map((log) => (
                       <tr key={log.id} className="border-b hover:bg-muted/50">
-                        <td className="p-4 text-sm">{format(new Date(log.timestamp), &quot;MMM dd, HH:mm&quot;)}</td>
+                        <td className="p-4 text-sm">{format(new Date(log.timestamp), "MMM dd, HH:mm")}</td>
                         <td className="p-4">
                           <code className="text-sm bg-muted px-2 py-1 rounded">{log.action}</code>
                         </td>
@@ -678,25 +654,24 @@ export default function AdvancedSecuritySystem() {
                           </div>
                         </td>
                         <td className="p-4">
-                          <Badge;
+                          <Badge,
                             variant={}
                               log.result === "success"
                                 ? "default"
                                 : log.result === "failure"
                                   ? "destructive"
                                   : "secondary"
-                            }
                           >
                             {log.result}
                           </Badge>
                         </td>
                         <td className="p-4">
                           <div className="flex items-center gap-2">
-                            <div;
+                            <div,
                               className={`w-2 h-2 rounded-full ${}
-                                log.riskScore <= 3;
+                                log.riskScore <= 3
                                   ? "bg-green-500"
-                                  : log.riskScore <= 6;
+                                  : log.riskScore <= 6
                                     ? "bg-yellow-500"
                                     : "bg-red-500"
                               }`}
@@ -746,11 +721,11 @@ export default function AdvancedSecuritySystem() {
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <p className="text-muted-foreground">Last Audit</p>
-                      <p className="font-medium">{format(new Date(report.lastAudit), &quot;MMM dd, yyyy&quot;)}</p>
+                      <p className="font-medium">{format(new Date(report.lastAudit), "MMM dd, yyyy")}</p>
                     </div>
                     <div>
                       <p className="text-muted-foreground">Next Audit</p>
-                      <p className="font-medium">{format(new Date(report.nextAudit), &quot;MMM dd, yyyy&quot;)}</p>
+                      <p className="font-medium">{format(new Date(report.nextAudit), "MMM dd, yyyy")}</p>
                     </div>
                   </div>
 
@@ -764,7 +739,7 @@ export default function AdvancedSecuritySystem() {
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm" className="flex-1 bg-transparent">
                       <FileText className="h-4 w-4 mr-2" />
-                      View Report;
+                      View Report
                     </Button>
                     <Button variant="outline" size="sm">
                       <Download className="h-4 w-4" />
@@ -777,5 +752,3 @@ export default function AdvancedSecuritySystem() {
         </TabsContent>
       </Tabs>
     </div>
-  )
-}

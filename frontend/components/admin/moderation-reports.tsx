@@ -1,3 +1,5 @@
+"use client"
+
 import { AlertTriangle, Eye, Filter, Flag, Search, User, X, XCircle } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,45 +12,44 @@ import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 
-'use client'
 interface Report {}
-  id: string;
+  id: string
   type: 'user' | 'content' | 'party' | 'message'
   category: 'harassment' | 'spam' | 'inappropriate' | 'copyright' | 'violence' | 'other'
   status: 'pending' | 'investigating' | 'resolved' | 'dismissed'
   priority: 'low' | 'medium' | 'high' | 'critical'
   reporter: {}
-    id: string;
-    username: string;
-    displayName: string;
-    avatar: string | null;
+    id: string
+    username: string
+    displayName: string
+    avatar: string | null
   }
   reported: {}
-    id: string;
-    username?: string;
-    displayName?: string;
-    avatar?: string | null;
-    content?: string;
-    title?: string;
+    id: string
+    username?: string
+    displayName?: string
+    avatar?: string | null
+    content?: string
+    title?: string
   }
-  reason: string;
-  description: string;
+  reason: string
+  description: string
   evidence?: string[]
-  createdAt: string;
-  updatedAt: string;
+  createdAt: string
+  updatedAt: string
   assignedTo?: {}
-    id: string;
-    name: string;
+    id: string
+    name: string
   }
   resolution?: {}
-    action: string;
-    reason: string;
-    actionDate: string;
-    moderator: string;
+    action: string
+    reason: string
+    actionDate: string
+    moderator: string
   }
 }
 
-// Helper functions;
+// Helper functions
 const getCategoryIcon = (category: string) => {}
   switch (category) {
     case 'harassment': return <User className="h-4 w-4 text-red-500" />
@@ -100,9 +101,9 @@ export function ModerationReports() {
         const data = await response.json()
         setReports(data)
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to load reports:', error)
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -121,7 +122,7 @@ export function ModerationReports() {
         loadReports()
         setSelectedReport(null)
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to take action:', error)
     }
   }
@@ -139,7 +140,7 @@ export function ModerationReports() {
       if (response.ok) {
         loadReports()
       }
-    } } catch {
+    } catch (err) {
       console.error('Failed to assign report:', error)
     }
   }
@@ -148,10 +149,10 @@ export function ModerationReports() {
     const matchesSearch = report.reason.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          report.reporter.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          report.reported.displayName?.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStatus = statusFilter === 'all' || report.status === statusFilter;
-    const matchesPriority = priorityFilter === 'all' || report.priority === priorityFilter;
-    const matchesType = typeFilter === 'all' || report.type === typeFilter;
-    return matchesSearch && matchesStatus && matchesPriority && matchesType;
+    const matchesStatus = statusFilter === 'all' || report.status === statusFilter
+    const matchesPriority = priorityFilter === 'all' || report.priority === priorityFilter
+    const matchesType = typeFilter === 'all' || report.type === typeFilter
+    return matchesSearch && matchesStatus && matchesPriority && matchesType
   })
 
   const getStatusColor = (status: Report['status']) => {}
@@ -207,7 +208,7 @@ export function ModerationReports() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input;
+              <Input
                 placeholder="Search reports..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -291,7 +292,7 @@ export function ModerationReports() {
       <Dialog open={!!selectedReport} onOpenChange={() => setSelectedReport(null)}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           {selectedReport && (
-            <ReportDetails;
+            <ReportDetails
               report={selectedReport} 
               onTakeAction={handleTakeAction}
               onAssign={handleAssignReport}
@@ -340,7 +341,7 @@ function ReportCard({ report, onViewDetails }: { report: Report; onViewDetails: 
             <Badge className={`text-white ${getStatusColor(report.status)}`}>
               {report.status}
             </Badge>
-            <Button;
+            <Button
               variant="outline"
               size="sm"
               onClick={() => onViewDetails(report)}
@@ -354,14 +355,13 @@ function ReportCard({ report, onViewDetails }: { report: Report; onViewDetails: 
   )
 }
 
-function ReportDetails({}
-  report, 
+function ReportDetails({report, 
   onTakeAction, 
-  onAssign;
+  onAssign
 }: {}
-  report: Report;
-  onTakeAction: (reportId: string, action: string, reason: string) => void;
-  onAssign: (reportId: string, moderatorId: string) => void;
+  report: Report
+  onTakeAction: (reportId: string, action: string, reason: string) => void
+  onAssign: (reportId: string, moderatorId: string) => void
 }) {}
   const [actionReason, setActionReason] = useState('')
   const [selectedAction, setSelectedAction] = useState('')
@@ -479,21 +479,21 @@ function ReportDetails({}
                 </SelectContent>
               </Select>
             </div>
-            <Textarea;
+            <Textarea
               placeholder="Reason for action..."
               value={actionReason}
               onChange={(e) => setActionReason(e.target.value)}
               rows={3}
             />
             <div className="flex space-x-2">
-              <Button;
+              <Button
                 onClick={handleSubmitAction}
                 disabled={!selectedAction || !actionReason.trim()}
               >
-                Take Action;
+                Take Action
               </Button>
               <Button variant="outline">
-                Assign to Me;
+                Assign to Me
               </Button>
             </div>
           </CardContent>

@@ -1,6 +1,7 @@
+"use client"
+
 import AdvancedSecuritySystem from "@/components/security/advanced-security-system"
 
-"use client"
 
 export default function AdvancedSecurityPage() {
   return (

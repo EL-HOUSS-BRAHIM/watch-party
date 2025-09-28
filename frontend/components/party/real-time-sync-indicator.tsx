@@ -1,30 +1,30 @@
+"use client"
+
 import { Activity, Check, CheckCircle, Refresh, User, Users, Wifi, WifiOff } from "lucide-react"
 import { useState, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 
-'use client'
 interface SyncStatus {}
-  is_synced: boolean;
-  time_difference: number;
-  buffer_health: number;
+  is_synced: boolean
+  time_difference: number
+  buffer_health: number
   connection_quality: 'excellent' | 'good' | 'poor' | 'offline'
-  sync_participants: number;
-  total_participants: number;
-  last_sync: string;
-  is_buffering: boolean;
+  sync_participants: number
+  total_participants: number
+  last_sync: string
+  is_buffering: boolean
 }
 
 interface RealTimeSyncIndicatorProps {}
-  syncStatus: SyncStatus;
-  onForceSync: () => void;
-  onReconnect: () => void;
-  className?: string;
+  syncStatus: SyncStatus
+  onForceSync: () => void
+  onReconnect: () => void
+  className?: string
 }
 
-export function RealTimeSyncIndicator({}
-  syncStatus,
+export function RealTimeSyncIndicator({syncStatus,
   onForceSync,
   onReconnect,
   className = ''
@@ -86,12 +86,12 @@ export function RealTimeSyncIndicator({}
     setIsReconnecting(true)
     try {
       await onReconnect()
-    } finally {}
+    } finally {
       setTimeout(() => setIsReconnecting(false), 2000)
     }
   }
 
-  const syncPercentage = (syncStatus.sync_participants / syncStatus.total_participants) * 100;
+  const syncPercentage = (syncStatus.sync_participants / syncStatus.total_participants) * 100
   return (
     <div className={`${className}`}>
       {/* Compact Status Bar */}
@@ -108,7 +108,7 @@ export function RealTimeSyncIndicator({}
         <div className="flex items-center gap-2">
           {getSyncIcon()}
           <span className="text-sm">
-            {syncStatus.is_buffering;
+            {syncStatus.is_buffering
               ? 'Buffering...' 
               : formatTimeDifference(syncStatus.time_difference)
             }
@@ -126,7 +126,7 @@ export function RealTimeSyncIndicator({}
         {/* Actions */}
         <div className="flex items-center gap-1 ml-auto">
           {syncStatus.connection_quality === 'offline' ? (
-            <Button;
+            <Button
               size="sm"
               variant="outline"
               onClick={handleReconnect}
@@ -140,14 +140,14 @@ export function RealTimeSyncIndicator({}
               )}
             </Button>
           ) : !syncStatus.is_synced && (
-            <Button;
+            <Button
               size="sm"
               variant="outline"
               onClick={onForceSync}
               className="h-7 px-2"
             >
               <RefreshCw className="w-3 h-3 mr-1" />
-              Sync;
+              Sync
             </Button>
           )}
         </div>
@@ -191,13 +191,13 @@ export function RealTimeSyncIndicator({}
 
       {/* Status Badges */}
       <div className="flex flex-wrap gap-1 mt-2">
-        <Badge;
+        <Badge
           variant={syncStatus.is_synced ? "default" : "destructive"}
           className="text-xs"
         >
           {syncStatus.is_synced ? 'Synced' : 'Out of Sync'}
         </Badge>
-        <Badge;
+        <Badge
           variant={syncStatus.buffer_health > 50 ? &quot;secondary&quot; : &quot;destructive"}
           className="text-xs"
         >
@@ -206,13 +206,13 @@ export function RealTimeSyncIndicator({}
 
         {syncStatus.connection_quality === 'excellent' && (
           <Badge variant="secondary" className="text-xs">
-            HD Quality;
+            HD Quality
           </Badge>
         )}
 
         {Date.now() - new Date(syncStatus.last_sync).getTime() < 5000 && (}
           <Badge variant="secondary" className="text-xs">
-            Recently Synced;
+            Recently Synced
           </Badge>
         )}
       </div>

@@ -1,12 +1,13 @@
+"use client"
+
 import { Check, CheckCircle, Mic, X } from "lucide-react"
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import {}
+
 import { integrationsAPI } from '@/lib/api'
 import type { HealthStatus, IntegrationConnection } from '@/lib/api'
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
 
-'use client'
   ChatBubbleLeftRightIcon,
   MicrophoneIcon,
   ArrowPathIcon,
@@ -15,10 +16,10 @@ import { LoadingSpinner } from '@/components/ui/loading'
   ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline'
 interface DiscordServer {}
-  id: string;
-  name: string;
-  member_count?: number;
-  is_connected?: boolean;
+  id: string
+  name: string
+  member_count?: number
+  is_connected?: boolean
 }
 
 export default function DiscordIntegrationPage() {
@@ -36,18 +37,17 @@ export default function DiscordIntegrationPage() {
         integrationsAPI.getHealth().catch(() => null),
       ])
       const discordConnection = connectionsResponse.connections?.find(
-        (item) => item.provider === &apos;discord&apos;
+        (item) => item.provider === &apos;discord&apos
       )
       setConnection(discordConnection ?? null)
       setHealth(healthResponse)
-    } } catch {
+    } catch (err) {
       console.error('Failed to load Discord integration', error)
-      toast({}
-        title: 'Unable to load Discord integration',
+      toast({title: 'Unable to load Discord integration',
         description: 'Check your network connection and try again.',
         variant: 'destructive',
       })
-    } finally {}
+    } finally {
       setLoading(false)
       setAction(null)
     }
@@ -59,7 +59,7 @@ export default function DiscordIntegrationPage() {
 
   const servers: DiscordServer[] = useMemo(() => {}
     const rawServers = (connection?.metadata?.servers as DiscordServer[] | undefined) ?? []
-    return rawServers;
+    return rawServers
   }, [connection])
 
   const handleConnect = async () => {
@@ -67,10 +67,9 @@ export default function DiscordIntegrationPage() {
     try {
       const { auth_url } = await integrationsAPI.getAuthUrl('discord')
       window.location.assign(auth_url)
-    } } catch {
+    } catch (err) {
       console.error('Failed to start Discord OAuth', error)
-      toast({}
-        title: 'Connection failed',
+      toast({title: 'Connection failed',
         description: 'We were unable to start the Discord authorization flow.',
         variant: 'destructive',
       })
@@ -79,19 +78,17 @@ export default function DiscordIntegrationPage() {
   }
 
   const handleDisconnect = async () => {
-    if (!connection) return;
+    if (!connection) return
     setAction('disconnect')
     try {
       await integrationsAPI.disconnectConnection(connection.id)
-      toast({}
-        title: 'Discord disconnected',
+      toast({title: 'Discord disconnected',
         description: 'The integration has been removed from your account.',
       })
       await loadData()
-    } } catch {
+    } catch (err) {
       console.error('Failed to disconnect Discord', error)
-      toast({}
-        title: 'Unable to disconnect',
+      toast({title: 'Unable to disconnect',
         description: 'We could not disconnect the Discord integration. Try again later.',
         variant: 'destructive',
       })
@@ -122,7 +119,7 @@ export default function DiscordIntegrationPage() {
             <h1 className="text-4xl font-bold text-white">Discord Integration</h1>
           </div>
           <p className="text-white/70 text-lg max-w-3xl">
-            Connect Discord to share party updates, synchronize voice channels, and broadcast what you are watching to your;
+            Connect Discord to share party updates, synchronize voice channels, and broadcast what you are watching to your
             community in real time.
           </p>
         </header>
@@ -133,7 +130,7 @@ export default function DiscordIntegrationPage() {
           </div>
         ) : (
           <div className="space-y-8">
-            <section;
+            <section
               className="rounded-xl border border-white/10 bg-white/10 p-6 text-white shadow-sm backdrop-blur"
               data-testid="discord-connection-card"
             >
@@ -168,7 +165,7 @@ export default function DiscordIntegrationPage() {
                 </div>
 
                 <div className="flex flex-col items-end gap-3">
-                  <button;
+                  <button
                     type="button"
                     onClick={handleRefresh}
                     disabled={action === 'refresh'}
@@ -181,12 +178,12 @@ export default function DiscordIntegrationPage() {
                       </>
                     ) : (
                       <>
-                        <ArrowPathIcon className="h-4 w-4" /> Refresh;
+                        <ArrowPathIcon className="h-4 w-4" /> Refresh
                       </>
                     )}
                   </button>
                   {connection ? (
-                    <button;
+                    <button
                       type="button"
                       onClick={handleDisconnect}
                       disabled={action === 'disconnect'}
@@ -199,12 +196,12 @@ export default function DiscordIntegrationPage() {
                         </>
                       ) : (
                         <>
-                          <XMarkIcon className="h-4 w-4" /> Disconnect;
+                          <XMarkIcon className="h-4 w-4" /> Disconnect
                         </>
                       )}
                     </button>
                   ) : (
-                    <button;
+                    <button
                       type="button"
                       onClick={handleConnect}
                       disabled={action === 'connect'}
@@ -217,7 +214,7 @@ export default function DiscordIntegrationPage() {
                         </>
                       ) : (
                         <>
-                          <CheckCircleIcon className="h-4 w-4" /> Connect Discord;
+                          <CheckCircleIcon className="h-4 w-4" /> Connect Discord
                         </>
                       )}
                     </button>
@@ -228,17 +225,17 @@ export default function DiscordIntegrationPage() {
 
             <section className="rounded-xl border border-white/10 bg-white/10 p-6 text-white shadow-sm backdrop-blur">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <MicrophoneIcon className="w-5 h-5" /> Connected servers;
+                <MicrophoneIcon className="w-5 h-5" /> Connected servers
               </h2>
               {servers.length === 0 ? (
                 <p className="text-white/70 text-sm">
-                  No Discord servers are linked to this integration yet. Once connected, select servers and channels from the;
+                  No Discord servers are linked to this integration yet. Once connected, select servers and channels from the
                   authorization prompt.
                 </p>
               ) : (
                 <ul className="space-y-3" data-testid="discord-server-list">
                   {servers.map((server) => (
-                    <li;
+                    <li
                       key={server.id}
                       className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3"
                     >

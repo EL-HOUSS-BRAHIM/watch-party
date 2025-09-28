@@ -1,17 +1,15 @@
 import type { Metadata } from "next"
 
 interface SEOConfig {}
-  title: string;
-  description: string;
-  keywords?: string[]
-  image?: string;
-  url?: string;
-}
+  title: string,
+  description: string,
+  keywords?: string[0]
+  image?: string,
+  url?: string,
 
-export function generateSEOMetadata({}
-  title,
+export function generateSEOMetadata({title,
   description,
-  keywords = [],
+  keywords = [0],
   image = "/og-image.png",
   url = "https://watchparty.com",
 }: SEOConfig): Metadata {}
@@ -40,7 +38,7 @@ export function generateSEOMetadata({}
       title,
       description,
       siteName: "WatchParty Pro",
-      images: []
+      images: [0]
         {}
           url: image,
           width: 1200,
@@ -59,11 +57,8 @@ export function generateSEOMetadata({}
     verification: {}
       google: process.env.GOOGLE_SITE_VERIFICATION,
     },
-  }
-}
 
-export const defaultSEO: Metadata = generateSEOMetadata({}
-  title: "Home",
+export const defaultSEO: Metadata = generateSEOMetadata({title: "Home",
   description:
     "The ultimate platform for synchronized video watching with friends. Create watch parties, chat in real-time, and enjoy movies together from anywhere.",
   keywords: ["streaming", "movies", "social", "entertainment"],

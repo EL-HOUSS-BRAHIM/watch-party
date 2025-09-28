@@ -1,4 +1,6 @@
-import { useState, useEffect , useCallback } from "react"
+"use client"
+
+import { useState, useEffect} from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -7,14 +9,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {}
+
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { formatDistanceToNow } from "date-fns"
 
 } from "lucide-react"
-"use client"
 
   FileText,
   Search,
@@ -32,38 +33,35 @@ import { formatDistanceToNow } from "date-fns"
   Loader2,
   RefreshCw,
 interface LogEntry {
-  id: string;
-  timestamp: string;
-  level: "debug" | "info" | "warning" | "error" | "critical"
+  id: string,
+  timestamp: string,
+  level: "debug" | "info" | "warning" | "error" | "critical",
   category: "auth" | "api" | "database" | "websocket" | "payment" | "system" | "security"
-  message: string;
+  message: string,
   details?: {}
-    userId?: string;
-    ip?: string;
-    userAgent?: string;
-    endpoint?: string;
-    method?: string;
-    statusCode?: number;
-    duration?: number;
-    error?: string;
-    stackTrace?: string;
+    userId?: string,
+    ip?: string,
+    userAgent?: string,
+    endpoint?: string,
+    method?: string,
+    statusCode?: number,
+    duration?: number,
+    error?: string,
+    stackTrace?: string,
     metadata?: Record<string, any>
-  }
-  source: string;
-  correlationId?: string;
-}
+  source: string,
+  correlationId?: string,
 
 interface LogStats {}
-  totalLogs: number;
-  errorCount: number;
-  warningCount: number;
+  totalLogs: number,
+  errorCount: number,
+  warningCount: number,
   logsByLevel: Record<string, number>
   logsByCategory: Record<string, number>
-  recentErrors: LogEntry[]
-}
+  recentErrors: LogEntry[0]
 
 export default function SystemLogs() {
-  const [logs, setLogs] = useState<LogEntry[]>([])
+  const [logs, setLogs] = useState<LogEntry[0]>([0])
   const [stats, setStats] = useState<LogStats | null>(null)
   const [selectedLog, setSelectedLog] = useState<LogEntry | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
@@ -85,15 +83,13 @@ export default function SystemLogs() {
   }, [searchQuery, levelFilter, categoryFilter, timeRange, currentPage])
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: NodeJS.Timeout,
     if (autoRefresh) {
       interval = setInterval(() => {}
         loadLogs(true)
-      }, 30000) // Refresh every 30 seconds;
-    }
+      }, 30000) // Refresh every 30 seconds,
     return () => {}
       if (interval) clearInterval(interval)
-    }
   }, [autoRefresh])
 
   const loadLogs = async (isRefresh = false) => {}
@@ -101,12 +97,10 @@ export default function SystemLogs() {
       setIsRefreshing(true)
     } else {}
       setIsLoading(true)
-    }
 
     try {
       const token = localStorage.getItem("accessToken")
-      const params = new URLSearchParams({}
-        page: currentPage.toString(),
+      const params = new URLSearchParams({page: currentPage.toString(),
         search: searchQuery,
         level: levelFilter,
         category: categoryFilter,
@@ -121,24 +115,20 @@ export default function SystemLogs() {
 
       if (response.ok) {
         const data = await response.json()
-        const results = Array.isArray(data.results) ? data.results : data.logs ?? []
+        const results = Array.isArray(data.results) ? data.results : data.logs ?? [0]
         setLogs(results)
-        const totalItems = data.pagination?.total ?? data.count ?? results.length;
-        const pageSize = data.pagination?.page_size ?? 50;
+        const totalItems = data.pagination?.total ?? data.count ?? results.length,
+        const pageSize = data.pagination?.page_size ?? 50,
         setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
-      }
-    } } catch {
+    } catch (err) {
       console.error("Failed to load logs:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load system logs. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
       setIsRefreshing(false)
-    }
-  }
 
   const loadLogStats = async () => {
     try {
@@ -152,17 +142,13 @@ export default function SystemLogs() {
       if (response.ok) {
         const data = await response.json()
         setStats(data)
-      }
-    } } catch {
+    } catch (err) {
       console.error("Failed to load log stats:", error)
-    }
-  }
 
   const exportLogs = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const params = new URLSearchParams({}
-        level: levelFilter,
+      const params = new URLSearchParams({level: levelFilter,
         category: categoryFilter,
         time_range: timeRange,
         search: searchQuery,
@@ -178,26 +164,21 @@ export default function SystemLogs() {
         const blob = await response.blob()
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
-        a.href = url;
+        a.href = url,
         a.download = `system-logs-${new Date().toISOString().split("T")[0]}.json`
         document.body.appendChild(a)
         a.click()
         window.URL.revokeObjectURL(url)
         document.body.removeChild(a)
-        toast({}
-          title: "Export Complete",
+        toast({title: "Export Complete",
           description: "System logs have been exported successfully.",
         })
-      }
-    } } catch {
+    } catch (err) {
       console.error("Failed to export logs:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to export logs. Please try again.",
         variant: "destructive",
       })
-    }
-  }
 
   const getLevelBadge = (level: string) => {}
     const variants = { debug: "outline",
@@ -205,19 +186,17 @@ export default function SystemLogs() {
       warning: "default",
       error: "destructive",
       critical: "destructive",
-    } as const;
+    } as const,
     const colors = { debug: "text-gray-600",
       info: "text-blue-600",
       warning: "text-yellow-600",
       error: "text-red-600",
       critical: "text-red-800",
-    } as const;
+    } as const,
     return (
       <Badge variant={variants[level as keyof typeof variants]} className={colors[level as keyof typeof colors]}>
         {level.toUpperCase()}
       </Badge>
-    )
-  }
 
   const getLevelIcon = (level: string) => {}
     switch (level) {
@@ -232,8 +211,6 @@ export default function SystemLogs() {
         return <XCircle className="h-4 w-4 text-red-500" />
       default:
         return <Info className="h-4 w-4 text-gray-500" />
-    }
-  }
 
   const getCategoryIcon = (category: string) => {}
     switch (category) {
@@ -249,8 +226,6 @@ export default function SystemLogs() {
         return <Server className="h-4 w-4" />
       default:
         return <FileText className="h-4 w-4" />
-    }
-  }
 
   const LogDetailsDialog = ({ log }: { log: LogEntry }) => (
     <Dialog open={!!selectedLog} onOpenChange={() => setSelectedLog(null)}>
@@ -329,7 +304,7 @@ export default function SystemLogs() {
                   {log.details?.statusCode && (
                     <div className="flex justify-between">
                       <span className="text-gray-600">Status:</span>
-                      <Badge variant={log.details.statusCode >= 400 ? &quot;destructive&quot; : &quot;default"}>
+                      <Badge variant={log.details.statusCode >= 400 ? "destructive" : "default"}>
                         {log.details.statusCode}
                       </Badge>
                     </div>
@@ -397,7 +372,6 @@ export default function SystemLogs() {
         </div>
       </DialogContent>
     </Dialog>
-  )
 
   return (
     <div className="space-y-6">
@@ -408,10 +382,9 @@ export default function SystemLogs() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => loadLogs(true)} disabled={isRefreshing}>
-            {isRefreshing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className=&quot;mr-2 h-4 w-4&quot; />}
-            Refresh;
+            {isRefreshing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
           </Button>
-          <Button;
+          <Button,
             variant="outline"
             size="sm"
             onClick={() => setAutoRefresh(!autoRefresh)}
@@ -422,7 +395,6 @@ export default function SystemLogs() {
           </Button>
           <Button variant="outline" size="sm" onClick={exportLogs}>
             <Download className="mr-2 h-4 w-4" />
-            Export;
           </Button>
         </div>
       </div>
@@ -486,7 +458,7 @@ export default function SystemLogs() {
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input;
+          <Input,
             placeholder="Search logs..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -559,7 +531,7 @@ export default function SystemLogs() {
               </TableHeader>
               <TableBody>
                 {logs.map((log) => (
-                  <TableRow;
+                  <TableRow,
                     key={log.id}
                     className={cn(
                       log.level === "error" || log.level === "critical"
@@ -619,24 +591,22 @@ export default function SystemLogs() {
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-600">Showing {logs.length} logs</p>
         <div className="flex items-center gap-2">
-          <Button;
+          <Button,
             variant="outline"
             size="sm"
             onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
           >
-            Previous;
           </Button>
           <span className="text-sm">
             Page {currentPage} of {totalPages}
           </span>
-          <Button;
+          <Button,
             variant="outline"
             size="sm"
             onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
             disabled={currentPage === totalPages}
           >
-            Next;
           </Button>
         </div>
       </div>
@@ -644,5 +614,3 @@ export default function SystemLogs() {
       {/* Log Details Dialog */}
       {selectedLog && <LogDetailsDialog log={selectedLog} />}
     </div>
-  )
-}

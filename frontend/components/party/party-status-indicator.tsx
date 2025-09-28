@@ -1,10 +1,11 @@
+"use client"
+
 import { useState, useEffect , useCallback } from "react"
-import {}
+
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 } from "lucide-react"
-"use client"
 
   Play, 
   Pause, 
@@ -14,25 +15,24 @@ import { cn } from "@/lib/utils"
   WifiOff, 
   Eye,
   Crown,
-  Clock;
+  Clock
 interface PartyStatusIndicatorProps {}
-  isPlaying: boolean;
-  isBuffering: boolean;
-  isConnected: boolean;
-  participantCount: number;
+  isPlaying: boolean
+  isBuffering: boolean
+  isConnected: boolean
+  participantCount: number
   syncState: {}
     lastSyncedBy?: {}
-      username: string;
-      isHost: boolean;
+      username: string
+      isHost: boolean
     }
-    lastSyncAt: string;
+    lastSyncAt: string
     action: "play" | "pause" | "seek" | "buffer"
   }
-  className?: string;
+  className?: string
 }
 
-export function PartyStatusIndicator({}
-  isPlaying,
+export function PartyStatusIndicator({isPlaying,
   isBuffering,
   isConnected,
   participantCount,
@@ -50,10 +50,10 @@ export function PartyStatusIndicator({}
   }, [syncState.lastSyncAt])
 
   const getSyncMessage = () => {}
-    const { lastSyncedBy, action } = syncState;
+    const { lastSyncedBy, action } = syncState
     if (!lastSyncedBy) return ""
 
-    const prefix = lastSyncedBy.isHost ? "🎬 Host" : lastSyncedBy.username;
+    const prefix = lastSyncedBy.isHost ? "🎬 Host" : lastSyncedBy.username
     switch (action) {
       case "play":
         return `${prefix} resumed playback`
@@ -83,7 +83,7 @@ export function PartyStatusIndicator({}
       return (
         <Badge variant="destructive" className="text-xs">
           <WifiOff className="h-3 w-3 mr-1" />
-          Disconnected;
+          Disconnected
         </Badge>
       )
     }
@@ -91,7 +91,7 @@ export function PartyStatusIndicator({}
     return (
       <Badge variant="secondary" className="text-xs">
         <Wifi className="h-3 w-3 mr-1" />
-        Connected;
+        Connected
       </Badge>
     )
   }

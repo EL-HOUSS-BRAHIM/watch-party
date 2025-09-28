@@ -1,21 +1,22 @@
+"use client"
+
 import { Calendar, Clock, Heart, Play, Star, Trash } from "lucide-react"
 import { useState } from 'react'
 import Image from "next/image"
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
 
-'use client'
 interface FavoriteItem {}
-  id: string;
-  title: string;
+  id: string
+  title: string
   type: 'movie' | 'show' | 'video' | 'party'
-  genre?: string;
-  rating?: number;
-  duration?: string;
-  addedAt: string;
-  thumbnail: string;
-  description: string;
-  year?: number;
-  host?: string;
+  genre?: string
+  rating?: number
+  duration?: string
+  addedAt: string
+  thumbnail: string
+  description: string
+  year?: number
+  host?: string
 }
 
 const favorites: FavoriteItem[] = []
@@ -29,7 +30,7 @@ const favorites: FavoriteItem[] = []
     addedAt: '2024-01-15',
     thumbnail: '/placeholder.jpg',
     description: 'A thief who steals corporate secrets through dream-sharing technology...',
-    year: 2010;
+    year: 2010
   },
   {}
     id: '2',
@@ -50,7 +51,7 @@ const favorites: FavoriteItem[] = []
     addedAt: '2024-03-10',
     thumbnail: '/placeholder.jpg',
     description: 'A high school chemistry teacher turned methamphetamine manufacturer...',
-    year: 2008;
+    year: 2008
   },
   {}
     id: '4',
@@ -62,7 +63,7 @@ const favorites: FavoriteItem[] = []
     addedAt: '2024-03-25',
     thumbnail: '/placeholder.jpg',
     description: 'Personal travel video from last summer vacation...',
-    year: 2024;
+    year: 2024
   }
 ]
 
@@ -82,7 +83,7 @@ export default function DashboardFavoritesPage() {
   const [filter, setFilter] = useState<'all' | 'movie' | 'show' | 'video' | 'party'>(&apos;all&apos;)
   const [sortBy, setSortBy] = useState<'added' | 'rating' | 'title'>(&apos;added&apos;)
 
-  const filteredFavorites = favorites;
+  const filteredFavorites = favorites
     .filter(item => filter === &apos;all' || item.type === filter)
     .sort((a, b) => {}
       switch (sortBy) {
@@ -96,7 +97,7 @@ export default function DashboardFavoritesPage() {
     })
 
   const removeFavorite = (id: string) => {}
-    // In real app, call API to remove favorite;
+    // In real app, call API to remove favorite
     console.log('Removing favorite:', id)
   }
 
@@ -110,7 +111,7 @@ export default function DashboardFavoritesPage() {
             <h1 className="text-4xl font-bold text-white">My Favorites</h1>
           </div>
           <p className="text-white/70 text-lg">
-            Your collection of favorite content and watch parties;
+            Your collection of favorite content and watch parties
           </p>
         </div>
 
@@ -125,11 +126,11 @@ export default function DashboardFavoritesPage() {
               { key: 'video', label: 'Videos' },
               { key: 'party', label: 'Parties' }
             ].map(({ key, label }) => (
-              <button;
+              <button
                 key={key}
                 onClick={() => setFilter(key as Record<string, unknown>)}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${}
-                  filter === key;
+                  filter === key
                     ? 'bg-red-500 text-white'
                     : 'bg-white/10 text-white/70 hover:bg-white/20'
                 }`}
@@ -140,7 +141,7 @@ export default function DashboardFavoritesPage() {
           </div>
 
           {/* Sort Options */}
-          <select;
+          <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as Record<string, unknown>)}
             className="px-4 py-2 bg-white/10 rounded-lg border border-white/20 text-white focus:outline-none focus:border-red-500"
@@ -154,13 +155,13 @@ export default function DashboardFavoritesPage() {
         {/* Favorites Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredFavorites.map(item => (
-            <div;
+            <div
               key={item.id}
               className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 overflow-hidden hover:border-red-500/50 transition-all group"
             >
               {/* Thumbnail */}
               <div className="relative aspect-video bg-gradient-to-br from-purple-500/20 to-blue-500/20">
-                <img;
+                <img
                   src={item.thumbnail}
                   alt={item.title}
                   className="w-full h-full object-cover"
@@ -168,7 +169,7 @@ export default function DashboardFavoritesPage() {
                 <div className={`absolute top-2 left-2 ${typeColors[item.type]} text-white px-2 py-1 rounded-full text-xs font-bold`}>
                   {typeLabels[item.type]}
                 </div>
-                <button;
+                <button
                   onClick={() => removeFavorite(item.id)}
                   className="absolute top-2 right-2 p-2 bg-black/50 rounded-full hover:bg-red-500 transition-colors"
                 >

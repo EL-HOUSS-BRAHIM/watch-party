@@ -1,3 +1,5 @@
+"use client"
+
 import { Activity, AlertTriangle, Check, CheckCircle, Copy, Key, Link, Plus, Refresh, Settings, Shield, Trash, X, XCircle, Zap } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -7,14 +9,13 @@ import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {}
+
 import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/hooks/use-toast"
 import { integrationsAPI } from "@/lib/api"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism"
 
-"use client"
   Dialog,
   DialogContent,
   DialogDescription,
@@ -23,42 +24,42 @@ import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism"
   DialogTrigger,
 } from "@/components/ui/dialog"
 interface APIKey {}
-  id: string;
-  name: string;
-  key: string;
+  id: string
+  name: string
+  key: string
   permissions: string[]
-  rateLimit: number;
-  lastUsed: string;
-  createdAt: string;
-  isActive: boolean;
+  rateLimit: number
+  lastUsed: string
+  createdAt: string
+  isActive: boolean
   usage: {}
-    requests: number;
-    limit: number;
-    resetDate: string;
+    requests: number
+    limit: number
+    resetDate: string
   }
 }
 
 interface Integration {}
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  category: string;
+  id: string
+  name: string
+  description: string
+  icon: string
+  category: string
   status: "connected" | "disconnected" | "error"
   config: Record<string, any>
-  lastSync: string;
+  lastSync: string
   features: string[]
 }
 
 interface WebhookEndpoint {}
-  id: string;
-  url: string;
+  id: string
+  url: string
   events: string[]
-  secret: string;
-  isActive: boolean;
-  lastDelivery: string;
-  successRate: number;
-  createdAt: string;
+  secret: string
+  isActive: boolean
+  lastDelivery: string
+  successRate: number
+  createdAt: string
 }
 
 export default function IntegrationAPISystem() {
@@ -71,7 +72,7 @@ export default function IntegrationAPISystem() {
   const [selectedTab, setSelectedTab] = useState("api-keys")
   const [isLoading, setIsLoading] = useState(false)
 
-  // Load integrations data;
+  // Load integrations data
   useEffect(() => {
     loadIntegrations()
   }, [])
@@ -79,10 +80,10 @@ export default function IntegrationAPISystem() {
   const loadIntegrations = useCallback(async () => {
     try {
       setIsLoading(true)
-      // Fetch available integrations data from API;
+      // Fetch available integrations data from API
       const healthData = await integrationsAPI.getHealth()
-      // For now, create placeholder data since specific endpoints don't exist yet;
-      // In a real implementation, these would be separate API endpoints;
+      // For now, create placeholder data since specific endpoints don't exist yet
+      // In a real implementation, these would be separate API endpoints
       // Placeholder API keys (would come from a dedicated endpoint)
       const placeholderAPIKeys: APIKey[] = []
         {}
@@ -117,7 +118,7 @@ export default function IntegrationAPISystem() {
         },
       ]
 
-      // Use health data to determine integration status;
+      // Use health data to determine integration status
       const integrationsWithStatus: Integration[] = []
         {}
           id: "google_drive",
@@ -147,7 +148,7 @@ export default function IntegrationAPISystem() {
           description: "Send notifications to Discord channels",
           icon: "💬",
           category: "Communication",
-          status: "disconnected", // Not in health endpoint;
+          status: "disconnected", // Not in health endpoint
           config: {},
           lastSync: "",
           features: ["Party Notifications", "Event Reminders", "User Mentions"],
@@ -181,14 +182,13 @@ export default function IntegrationAPISystem() {
       setApiKeys(placeholderAPIKeys)
       setIntegrations(integrationsWithStatus)
       setWebhooks(placeholderWebhooks)
-    } } catch {
+    } catch (err) {
       console.error("Failed to load integrations:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load integrations data",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }, [])
@@ -216,17 +216,15 @@ export default function IntegrationAPISystem() {
       setApiKeys((prev) => [newKey, ...prev])
       setShowCreateKeyDialog(false)
 
-      toast({}
-        title: "API Key Created",
+      toast({title: "API Key Created",
         description: "Your new API key has been generated successfully.",
       })
-    } } catch {
-      toast({}
-        title: "Error",
+    } catch (err) {
+      toast({title: "Error",
         description: "Failed to create API key. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -249,17 +247,15 @@ export default function IntegrationAPISystem() {
       setWebhooks((prev) => [newWebhook, ...prev])
       setShowCreateWebhookDialog(false)
 
-      toast({}
-        title: "Webhook Created",
+      toast({title: "Webhook Created",
         description: "Your webhook endpoint has been configured successfully.",
       })
-    } } catch {
-      toast({}
-        title: "Error",
+    } catch (err) {
+      toast({title: "Error",
         description: "Failed to create webhook. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -268,13 +264,11 @@ export default function IntegrationAPISystem() {
     try {
       setApiKeys((prev) => prev.map((key) => (key.id === keyId ? { ...key, isActive: !key.isActive } : key)))
 
-      toast({}
-        title: "API Key Updated",
+      toast({title: "API Key Updated",
         description: "API key status has been updated.",
       })
-    } } catch {
-      toast({}
-        title: "Error",
+    } catch (err) {
+      toast({title: "Error",
         description: "Failed to update API key status.",
         variant: "destructive",
       })
@@ -285,13 +279,11 @@ export default function IntegrationAPISystem() {
     try {
       setApiKeys((prev) => prev.filter((key) => key.id !== keyId))
 
-      toast({}
-        title: "API Key Deleted",
+      toast({title: "API Key Deleted",
         description: "The API key has been permanently deleted.",
       })
-    } } catch {
-      toast({}
-        title: "Error",
+    } catch (err) {
+      toast({title: "Error",
         description: "Failed to delete API key.",
         variant: "destructive",
       })
@@ -300,8 +292,7 @@ export default function IntegrationAPISystem() {
 
   const handleCopyKey = (key: string) => {}
     navigator.clipboard.writeText(key)
-    toast({}
-      title: "Copied",
+    toast({title: "Copied",
       description: "API key copied to clipboard.",
     })
   }
@@ -311,24 +302,23 @@ export default function IntegrationAPISystem() {
       setIsLoading(true)
       const integration = integrations.find(i => i.id === integrationId)
       if (integration?.name === "Google Drive") {
-        // Get Google Drive auth URL and redirect;
+        // Get Google Drive auth URL and redirect
         const authResponse = await integrationsAPI.getGoogleDriveAuthUrl()
-        window.location.href = authResponse.auth_url;
-        return;
+        window.location.href = authResponse.auth_url
+        return
       }
-      // For other integrations, use generic auth;
+      // For other integrations, use generic auth
       if (integration) {
         const authResponse = await integrationsAPI.getAuthUrl(integration.name.toLowerCase().replace(/\s+/g, '-'))
-        window.location.href = authResponse.auth_url;
+        window.location.href = authResponse.auth_url
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to connect integration:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to connect integration. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -350,45 +340,43 @@ export default function IntegrationAPISystem() {
     return key.substring(0, 12) + "..." + key.substring(key.length - 4)
   }
 
-  const sampleCode = { javascript: `// Initialize the WatchParty API client;
+  const sampleCode = { javascript: `// Initialize the WatchParty API client
 const WatchParty = require('@watchparty/api');
 
-const client = new WatchParty({}
-  apiKey: 'your_api_key_here',
+const client = new WatchParty({apiKey: 'your_api_key_here',
   environment: 'production' // or 'sandbox'
 });
 
-// Create a new watch party;
-const party = await client.parties.create({}
-  title: 'Movie Night',
+// Create a new watch party
+const party = await client.parties.create({title: 'Movie Night',
   description: 'Join us for a great movie!',
   videoId: 'video_123',
   scheduledStart: '2024-02-01T20:00:00Z',
-  maxParticipants: 50;
+  maxParticipants: 50
 });
 
 console.log('Party created:', party.id);`,
 
-    python: `# Install: pip install watchparty-api;
-from watchparty import WatchPartyClient;
-# Initialize client;
+    python: `# Install: pip install watchparty-api
+from watchparty import WatchPartyClient
+# Initialize client
 client = WatchPartyClient(
     api_key='your_api_key_here',
     environment='production'
 )
 
-# Create a watch party;
+# Create a watch party
 party = client.parties.create(
     title='Movie Night',
     description='Join us for a great movie!',
     video_id='video_123',
     scheduled_start='2024-02-01T20:00:00Z',
-    max_participants=50;
+    max_participants=50
 )
 
 print(f'Party created: {party.id}')`,
 
-    curl: `# Create a watch party using cURL;
+    curl: `# Create a watch party using cURL
 curl -X POST https://api.watchparty.com/v1/parties \\
   -H "Authorization: Bearer your_api_key_here" \\
   -H "Content-Type: application/json" \\
@@ -397,7 +385,7 @@ curl -X POST https://api.watchparty.com/v1/parties \\
     "description": "Join us for a great movie!",
     "videoId": "video_123",
     "scheduledStart": "2024-02-01T20:00:00Z",
-    "maxParticipants": 50;
+    "maxParticipants": 50
   }'`,
   }
 
@@ -431,7 +419,7 @@ curl -X POST https://api.watchparty.com/v1/parties \\
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
-                  Create API Key;
+                  Create API Key
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -440,7 +428,7 @@ curl -X POST https://api.watchparty.com/v1/parties \\
                   <DialogDescription>Generate a new API key for accessing the WatchParty API</DialogDescription>
                 </DialogHeader>
 
-                <form;
+                <form
                   onSubmit={(e) => {}
                     e.preventDefault()
                     const formData = new FormData(e.currentTarget)
@@ -487,7 +475,7 @@ curl -X POST https://api.watchparty.com/v1/parties \\
 
                   <div className="flex justify-end gap-2">
                     <Button type="button" variant="outline" onClick={() => setShowCreateKeyDialog(false)}>
-                      Cancel;
+                      Cancel
                     </Button>
                     <Button type="submit" disabled={isLoading}>
                       {isLoading ? "Creating..." : "Create Key"}
@@ -554,7 +542,7 @@ curl -X POST https://api.watchparty.com/v1/parties \\
                         {apiKey.usage.requests}/{apiKey.usage.limit}
                       </p>
                       <div className="w-full bg-muted rounded-full h-1 mt-1">
-                        <div;
+                        <div
                           className="bg-primary h-1 rounded-full"
                           style={{ width: `${(apiKey.usage.requests / apiKey.usage.limit) * 100}%` }}
                         />
@@ -578,7 +566,7 @@ curl -X POST https://api.watchparty.com/v1/parties \\
           <div>
             <h2 className="text-xl font-semibold mb-2">Third-Party Integrations</h2>
             <p className="text-muted-foreground">
-              Connect with external services to enhance your watch party experience;
+              Connect with external services to enhance your watch party experience
             </p>
           </div>
 
@@ -625,7 +613,7 @@ curl -X POST https://api.watchparty.com/v1/parties \\
                       <>
                         <Button variant="outline" size="sm" className="flex-1 bg-transparent">
                           <Settings className="h-4 w-4 mr-2" />
-                          Configure;
+                          Configure
                         </Button>
                         <Button variant="outline" size="sm">
                           <RefreshCw className="h-4 w-4" />
@@ -634,7 +622,7 @@ curl -X POST https://api.watchparty.com/v1/parties \\
                     ) : (
                       <Button size="sm" className="flex-1" onClick={() => handleConnectIntegration(integration.id)}>
                         <Link className="h-4 w-4 mr-2" />
-                        Connect;
+                        Connect
                       </Button>
                     )}
                   </div>
@@ -656,7 +644,7 @@ curl -X POST https://api.watchparty.com/v1/parties \\
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
-                  Add Webhook;
+                  Add Webhook
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -665,7 +653,7 @@ curl -X POST https://api.watchparty.com/v1/parties \\
                   <DialogDescription>Add a new webhook endpoint to receive event notifications</DialogDescription>
                 </DialogHeader>
 
-                <form;
+                <form
                   onSubmit={(e) => {}
                     e.preventDefault()
                     const formData = new FormData(e.currentTarget)
@@ -685,7 +673,7 @@ curl -X POST https://api.watchparty.com/v1/parties \\
 
                   <div className="flex justify-end gap-2">
                     <Button type="button" variant="outline" onClick={() => setShowCreateWebhookDialog(false)}>
-                      Cancel;
+                      Cancel
                     </Button>
                     <Button type="submit" disabled={isLoading}>
                       {isLoading ? "Creating..." : "Create Webhook"}
@@ -751,11 +739,11 @@ curl -X POST https://api.watchparty.com/v1/parties \\
                   <div className="flex items-center gap-2">
                     <Button variant="outline" size="sm">
                       <Activity className="h-4 w-4 mr-2" />
-                      View Logs;
+                      View Logs
                     </Button>
                     <Button variant="outline" size="sm">
                       <Settings className="h-4 w-4 mr-2" />
-                      Configure;
+                      Configure
                     </Button>
                     <Button variant="outline" size="sm">
                       <Trash2 className="h-4 w-4" />
@@ -803,19 +791,19 @@ curl -X POST https://api.watchparty.com/v1/parties \\
                 <CardContent className="space-y-2">
                   <Button variant="ghost" className="w-full justify-start">
                     <Globe className="h-4 w-4 mr-2" />
-                    API Reference;
+                    API Reference
                   </Button>
                   <Button variant="ghost" className="w-full justify-start">
                     <Code className="h-4 w-4 mr-2" />
-                    SDKs & Libraries;
+                    SDKs & Libraries
                   </Button>
                   <Button variant="ghost" className="w-full justify-start">
                     <Shield className="h-4 w-4 mr-2" />
-                    Authentication;
+                    Authentication
                   </Button>
                   <Button variant="ghost" className="w-full justify-start">
                     <Zap className="h-4 w-4 mr-2" />
-                    Rate Limits;
+                    Rate Limits
                   </Button>
                 </CardContent>
               </Card>
@@ -838,14 +826,14 @@ curl -X POST https://api.watchparty.com/v1/parties \\
                     {Object.entries(sampleCode).map(([language, code]) => (
                       <TabsContent key={language} value={language}>
                         <div className="relative">
-                          <SyntaxHighlighter;
+                          <SyntaxHighlighter
                             language={language === "curl" ? "bash" : language}
                             style={tomorrow}
                             className="rounded-lg"
                           >
                             {code}
                           </SyntaxHighlighter>
-                          <Button;
+                          <Button
                             variant="outline"
                             size="sm"
                             className="absolute top-2 right-2 bg-transparent"

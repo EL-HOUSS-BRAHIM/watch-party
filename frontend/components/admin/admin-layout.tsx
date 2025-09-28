@@ -1,3 +1,5 @@
+"use client"
+
 import { AlertTriangle, Bell, ChevronRight, Link, Search, Shield } from "lucide-react"
 import React from 'react'
 import { useAuth } from '@/contexts/auth-context'
@@ -10,9 +12,8 @@ import { Badge } from "@/components/ui/badge"
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-'use client'
 interface AdminLayoutProps {}
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const navigation = []
@@ -136,11 +137,11 @@ export function AdminLayout({ children }: AdminLayoutProps) {}
                 (item.children && item.children.some(child => pathname === child.href))
               return (
                 <div key={item.name}>
-                  <Link;
+                  <Link
                     href={item.href}
                     className={`
-                      flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors;
-                      ${isActive;
+                      flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                      ${isActive
                         ? 'bg-primary text-primary-foreground'
                         : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                       }
@@ -155,12 +156,12 @@ export function AdminLayout({ children }: AdminLayoutProps) {}
                   {item.children && isActive && (
                     <div className="ml-7 mt-1 space-y-1">
                       {item.children.map((child) => (
-                        <Link;
+                        <Link
                           key={child.name}
                           href={child.href}
                           className={`
-                            block px-3 py-1 text-xs rounded transition-colors;
-                            ${pathname === child.href;
+                            block px-3 py-1 text-xs rounded transition-colors
+                            ${pathname === child.href
                               ? 'text-primary font-medium'
                               : 'text-muted-foreground hover:text-foreground'
                             }

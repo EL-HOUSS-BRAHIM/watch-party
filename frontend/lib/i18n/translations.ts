@@ -217,10 +217,10 @@ export const translations = { en: {}
   },
 }
 
-export type TranslationKey = keyof typeof translations.en;
-export type NestedTranslationKey<T> = T extends object;
+export type TranslationKey = keyof typeof translations.en
+export type NestedTranslationKey<T> = T extends object
   ? {}
-      [K in keyof T]: T[K] extends object ? `${string & K}.${NestedTranslationKey<T[K]>}` : string & K;
+      [K in keyof T]: T[K] extends object ? `${string & K}.${NestedTranslationKey<T[K]>}` : string & K
     }[keyof T]
-  : never;
+  : never
 export type AllTranslationKeys = NestedTranslationKey<typeof translations.en>

@@ -5,8 +5,8 @@ import { transformConversation, transformMessage, transformPaginatedResponse, tr
 import type {}
 
 /**
- * Messaging API Service;
- * Handles direct messaging and conversations;
+ * Messaging API Service
+ * Handles direct messaging and conversations
  */
 
   Conversation,
@@ -20,11 +20,11 @@ import type {}
 
 export class MessagingAPI {}
   /**
-   * Get user conversations;
+   * Get user conversations
    */
   async getConversations(params?: {}
-    page?: number;
-    unread_only?: boolean;
+    page?: number
+    unread_only?: boolean
   }): Promise<PaginatedResponse<Conversation>> {}
     const response = await apiClient.get<PaginatedResponse<RawConversation>>(
       API_ENDPOINTS.messaging.conversations,
@@ -34,24 +34,24 @@ export class MessagingAPI {}
   }
 
   /**
-   * Create new conversation;
+   * Create new conversation
    */
   async createConversation(data: {}
     type?: 'direct' | 'group'
     participants: string[]
-    message?: string;
+    message?: string
   }): Promise<Conversation> {}
     const response = await apiClient.post<RawConversation>(API_ENDPOINTS.messaging.conversations, data)
     return transformConversation(response)
   }
 
   /**
-   * Get conversation messages;
+   * Get conversation messages
    */
   async getMessages(conversationId: number | string, params?: {}
-    page?: number;
-    limit?: number;
-    before?: string;
+    page?: number
+    limit?: number
+    before?: string
   }): Promise<PaginatedResponse<Message>> {}
     const response = await apiClient.get<PaginatedResponse<RawMessage>>(
       API_ENDPOINTS.messaging.messages(Number(conversationId)),
@@ -61,10 +61,10 @@ export class MessagingAPI {}
   }
 
   /**
-   * Send message;
+   * Send message
    */
   async sendMessage(conversationId: number | string, data: {}
-    content: string;
+    content: string
     type?: 'text' | 'image' | 'file'
     message_type?: 'text' | 'image' | 'file'
   }): Promise<Message> {}
@@ -76,7 +76,7 @@ export class MessagingAPI {}
   }
 
   /**
-   * Get online friends for quick messaging;
+   * Get online friends for quick messaging
    */
   async getOnlineFriends(): Promise<User[]> {}
     const response = await apiClient.get<PaginatedResponse<RawUser> | RawUser[]>(
@@ -90,6 +90,6 @@ export class MessagingAPI {}
       return response.map(transformUser)
     }
 
-    return transformPaginatedResponse(response, transformUser).results;
+    return transformPaginatedResponse(response, transformUser).results
   }
 }

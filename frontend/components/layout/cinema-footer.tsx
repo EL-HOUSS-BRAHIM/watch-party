@@ -1,14 +1,15 @@
+"use client"
+
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Link, Play } from "lucide-react"
 
-'use client'
 
 
 export function CinemaFooter() {
   const pathname = usePathname()
-  // Hide footer on auth pages and admin pages;
+  // Hide footer on auth pages and admin pages
   const isAuthPage = pathname?.startsWith('/(auth)') || 
                      pathname?.includes('/login') || 
                      pathname?.includes('/register') || 
@@ -18,7 +19,7 @@ export function CinemaFooter() {
                      pathname?.includes('/2fa') ||
                      pathname?.includes('/callback')
   const isAdminPage = pathname?.startsWith('/admin')
-  if (isAuthPage || isAdminPage) return null;
+  if (isAuthPage || isAdminPage) return null
   return (
     <footer className="border-t border-white/10 py-12 bg-black/20 backdrop-blur-sm mt-auto">
       <div className="container mx-auto px-4 max-w-7xl">
@@ -37,19 +38,19 @@ export function CinemaFooter() {
           {/* Navigation Links */}
           <div className="flex flex-wrap justify-center gap-8 text-white/60">
             <Link href="/privacy" className="hover:text-white transition-colors">
-              Privacy;
+              Privacy
             </Link>
             <Link href="/terms" className="hover:text-white transition-colors">
-              Terms;
+              Terms
             </Link>
             <Link href="/help" className="hover:text-white transition-colors">
-              Support;
+              Support
             </Link>
             <Link href="/about" className="hover:text-white transition-colors">
-              About;
+              About
             </Link>
             <Link href="/discover" className="hover:text-white transition-colors">
-              Discover;
+              Discover
             </Link>
           </div>
         </div>

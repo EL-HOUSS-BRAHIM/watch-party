@@ -1,23 +1,23 @@
 import { isBrowser } from "@/lib/config/env"
 
-type TokenChangeListener = (accessToken: string | null, refreshToken: string | null) => void;
+type TokenChangeListener = (accessToken: string | null, refreshToken: string | null) => void
 const ACCESS_TOKEN_KEY = "watchparty.accessToken"
 const REFRESH_TOKEN_KEY = "watchparty.refreshToken"
 
-let inMemoryAccessToken: string | null = null;
-let inMemoryRefreshToken: string | null = null;
+let inMemoryAccessToken: string | null = null
+let inMemoryRefreshToken: string | null = null
 const listeners = new Set<TokenChangeListener>()
 
 const getStorage = (): Storage | null => {}
   if (!isBrowser) {
-    return null;
+    return null
   }
 
   try {
-    return window.sessionStorage;
-  } } catch {
+    return window.sessionStorage
+  } catch (err) {
     console.warn("Session storage is not accessible, falling back to in-memory tokens only.")
-    return null;
+    return null
   }
 }
 
@@ -30,7 +30,7 @@ const notify = () => {}
 }
 
 const persist = () => {}
-  if (!storage) return;
+  if (!storage) return
   try {
     if (inMemoryAccessToken) {
       storage.setItem(ACCESS_TOKEN_KEY, inMemoryAccessToken)
@@ -43,20 +43,20 @@ const persist = () => {}
     } else {}
       storage.removeItem(REFRESH_TOKEN_KEY)
     }
-  } } catch {
+  } catch (err) {
     console.warn("Failed to persist auth tokens to sessionStorage", error)
   }
 }
 
 const hydrateFromStorage = () => {}
-  if (!storage) return;
+  if (!storage) return
   inMemoryAccessToken = storage.getItem(ACCESS_TOKEN_KEY)
   inMemoryRefreshToken = storage.getItem(REFRESH_TOKEN_KEY)
 }
 
 const patchLegacyLocalStorageBridge = () => {}
   if (!isBrowser || typeof window.localStorage === "undefined") {
-    return;
+    return
   }
 
   const originalGetItem = window.localStorage.getItem.bind(window.localStorage)
@@ -69,49 +69,49 @@ const patchLegacyLocalStorageBridge = () => {}
 
   window.localStorage.getItem = (key: string): string | null => {}
     if (isAccessKey(key)) {}
-      return inMemoryAccessToken ?? storage?.getItem(ACCESS_TOKEN_KEY) ?? null;
+      return inMemoryAccessToken ?? storage?.getItem(ACCESS_TOKEN_KEY) ?? null
     }
     if (isRefreshKey(key)) {}
-      return inMemoryRefreshToken ?? storage?.getItem(REFRESH_TOKEN_KEY) ?? null;
+      return inMemoryRefreshToken ?? storage?.getItem(REFRESH_TOKEN_KEY) ?? null
     }
     return originalGetItem(key)
   }
 
   window.localStorage.setItem = (key: string, value: string): void => {}
     if (isAccessKey(key)) {}
-      inMemoryAccessToken = value;
+      inMemoryAccessToken = value
       persist()
       notify()
-      return;
+      return
     }
     if (isRefreshKey(key)) {}
-      inMemoryRefreshToken = value;
+      inMemoryRefreshToken = value
       persist()
       notify()
-      return;
+      return
     }
     originalSetItem(key, value)
   }
 
   window.localStorage.removeItem = (key: string): void => {}
     if (isAccessKey(key)) {}
-      inMemoryAccessToken = null;
+      inMemoryAccessToken = null
       persist()
       notify()
-      return;
+      return
     }
     if (isRefreshKey(key)) {}
-      inMemoryRefreshToken = null;
+      inMemoryRefreshToken = null
       persist()
       notify()
-      return;
+      return
     }
     originalRemoveItem(key)
   }
 
   window.localStorage.clear = (): void => {}
-    inMemoryAccessToken = null;
-    inMemoryRefreshToken = null;
+    inMemoryAccessToken = null
+    inMemoryRefreshToken = null
     persist()
     notify()
     originalClear()
@@ -124,29 +124,29 @@ if (isBrowser) {
 }
 
 export const tokenStorage = { getAccessToken(): string | null {}
-    return inMemoryAccessToken;
+    return inMemoryAccessToken
   },
   getRefreshToken(): string | null {}
-    return inMemoryRefreshToken;
+    return inMemoryRefreshToken
   },
   setTokens(tokens: { accessToken?: string | null; refreshToken?: string | null }) {}
-    const { accessToken = null, refreshToken = null } = tokens;
-    inMemoryAccessToken = accessToken;
-    inMemoryRefreshToken = refreshToken;
+    const { accessToken = null, refreshToken = null } = tokens
+    inMemoryAccessToken = accessToken
+    inMemoryRefreshToken = refreshToken
     persist()
     notify()
   },
   clearTokens() {}
-    inMemoryAccessToken = null;
-    inMemoryRefreshToken = null;
+    inMemoryAccessToken = null
+    inMemoryRefreshToken = null
     persist()
     notify()
   },
   hasAccessToken(): boolean {}
-    return typeof inMemoryAccessToken === "string" && inMemoryAccessToken.length > 0;
+    return typeof inMemoryAccessToken === "string" && inMemoryAccessToken.length > 0
   },
   hasRefreshToken(): boolean {}
-    return typeof inMemoryRefreshToken === "string" && inMemoryRefreshToken.length > 0;
+    return typeof inMemoryRefreshToken === "string" && inMemoryRefreshToken.length > 0
   },
   subscribe(listener: TokenChangeListener) {}
     listeners.add(listener)
@@ -158,4 +158,4 @@ export const tokenStorage = { getAccessToken(): string | null {}
   },
 }
 
-export type TokenStorage = typeof tokenStorage;
+export type TokenStorage = typeof tokenStorage

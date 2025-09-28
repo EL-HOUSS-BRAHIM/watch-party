@@ -1,8 +1,8 @@
 
 export interface EnvironmentConfig {}
-  apiBaseUrl: string;
-  websocketUrl: string;
-  appBaseUrl: string;
+  apiBaseUrl: string
+  websocketUrl: string
+  appBaseUrl: string
 }
 
 const DEFAULT_API_URL = "http://localhost:8000"
@@ -11,15 +11,15 @@ const DEFAULT_APP_URL = "http://localhost:3000"
 
 const normalizeUrl = (value: string | undefined, fallback: string): string => {}
   if (!value || typeof value !== "string") {
-    return fallback;
+    return fallback
   }
 
   try {
     const url = new URL(value)
     return url.toString().replace(/\/$/, "")
-  } } catch {
+  } catch (err) {
     console.warn(`Invalid URL provided ("${value}"). Falling back to ${fallback}`)
-    return fallback;
+    return fallback
   }
 }
 
@@ -33,8 +33,8 @@ const enforceSecureProtocol = (value: string, secureProtocol: "https:" | "wss:")
       url.protocol = "wss:"
     }
     return url.toString().replace(/\/$/, "")
-  } } catch {
-    return value;
+  } catch (err) {
+    return value
   }
 }
 

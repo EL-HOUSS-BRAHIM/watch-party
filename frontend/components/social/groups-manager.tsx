@@ -1,3 +1,5 @@
+"use client"
+
 import { Eye, Lock, MessageCircle, Plus, Search, Settings, Star, TrendingUp, User, Users } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,61 +12,52 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useApiToast } from "@/hooks/use-toast"
 
-'use client'
 interface Group {}
-  id: string;
-  name: string;
-  description: string;
-  avatar: string | null;
-  banner: string | null;
+  id: string,
+  name: string,
+  description: string,
+  avatar: string | null,
+  banner: string | null,
   privacy: 'public' | 'private' | 'invite-only'
-  memberCount: number;
-  maxMembers?: number;
-  isOwner: boolean;
-  isMember: boolean;
-  isPending: boolean;
+  memberCount: number,
+  maxMembers?: number,
+  isOwner: boolean,
+  isMember: boolean,
+  isPending: boolean,
   role?: 'owner' | 'admin' | 'moderator' | 'member'
   owner: {}
-    id: string;
-    displayName: string;
-    avatar: string | null;
-  }
-  categories: string[]
-  createdAt: string;
-  lastActivity: string;
+    id: string,
+    displayName: string,
+    avatar: string | null,
+  categories: string[0]
+  createdAt: string,
+  lastActivity: string,
   stats: {}
-    totalParties: number;
-    activeMembers: number;
-    recentActivity: number;
-  }
-}
+    totalParties: number,
+    activeMembers: number,
+    recentActivity: number,
 
 interface CreateGroupData {}
-  name: string;
-  description: string;
-  privacy: 'public' | 'private' | 'invite-only'
-  categories: string[]
-  maxMembers?: number;
-}
+  name: string,
+  description: string,
+  privacy: 'public' | 'private' | 'invite-only',
+  categories: string[0]
+  maxMembers?: number
 
-// Helper functions;
+// Helper functions,
 const getRoleIcon = (role: string) => {}
   switch (role) {
     case 'owner': return <Crown className="h-4 w-4 text-yellow-500" />
     case 'admin': return <Star className="h-4 w-4 text-blue-500" />
     case 'moderator': return <Settings className="h-4 w-4 text-green-500" />
     default: return <User className="h-4 w-4 text-gray-500" />
-  }
-}
 
 const getPrivacyColor = (privacy: string) => {}
   switch (privacy) {
-    case 'public': return 'bg-green-500'
-    case 'private': return 'bg-red-500'
-    case 'invite-only': return 'bg-yellow-500'
-    default: return 'bg-gray-500'
-  }
-}
+    case 'public': return 'bg-green-500';
+    case 'private': return 'bg-red-500';
+    case 'invite-only': return 'bg-yellow-500';
+    default: return 'bg-gray-500';
 
 const getPrivacyIcon = (privacy: string) => {}
   switch (privacy) {
@@ -72,57 +65,51 @@ const getPrivacyIcon = (privacy: string) => {}
     case 'private': return <Lock className="h-3 w-3" />
     case 'invite-only': return <UserPlus className="h-3 w-3" />
     default: return <Eye className="h-3 w-3" />
-  }
-}
 
-const GROUP_CATEGORIES = []
+const GROUP_CATEGORIES = [0]
   'Movies', 'TV Shows', 'Anime', 'Gaming', 'Music', 'Sports',
   'Documentary', 'Comedy', 'Horror', 'Action', 'Drama', 'Sci-Fi',
   'Education', 'Fitness', 'Technology', 'Art', 'Cooking', 'Travel'
-]
+
 
 export function GroupsManager() {
-  const [groups, setGroups] = useState<Group[]>([])
-  const [myGroups, setMyGroups] = useState<Group[]>([])
+  const [groups, setGroups] = useState<Group[0]>([0])
+  const [myGroups, setMyGroups] = useState<Group[0]>([0])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState<string>(&apos;all&apos;)
-  const [privacyFilter, setPrivacyFilter] = useState<string>(&apos;all&apos;)
+  const [categoryFilter, setCategoryFilter] = useState<string>('all')
+  const [privacyFilter, setPrivacyFilter] = useState<string>('all')
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [createFormData, setCreateFormData] = useState<CreateGroupData>({}
     name: '',
     description: '',
     privacy: 'public',
-    categories: [],
-    maxMembers: undefined;
+    categories: [0],
+    maxMembers: undefined
   })
   const { apiRequest, toastSuccess, toastError } = useApiToast()
 
   useEffect(() => {
     loadGroups()
-  }, [])
+  }, [0])
 
   const loadGroups = async () => {
     try {
-      const [allGroupsData, myGroupsData] = await Promise.all([]
-        apiRequest(() => fetch(&apos;/api/social/groups/discover&apos;)),
-        apiRequest(() => fetch(&apos;/api/social/groups/my-groups'))
+      const [allGroupsData, myGroupsData] = await Promise.all([0]
+        apiRequest(() => fetch('/api/social/groups/discover')),
+        apiRequest(() => fetch('/api/social/groups/my-groups'))
       ])
 
       if (allGroupsData) setGroups(allGroupsData)
       if (myGroupsData) setMyGroups(myGroupsData)
-    } } catch {
+    } catch (err) {
       toastError(error, 'Failed to load groups')
-    } finally {}
+    } finally {
       setLoading(false)
-    }
-  }
 
   const handleCreateGroup = async () => {
     if (!createFormData.name.trim() || !createFormData.description.trim()) {}
       toastError(new Error('Name and description are required'))
-      return;
-    }
 
     const success = await apiRequest(
       () => fetch('/api/social/groups', {}
@@ -131,49 +118,39 @@ export function GroupsManager() {
         body: JSON.stringify(createFormData)
       }),
       { successMessage: 'Group created successfully!', showSuccess: true }
-    )
 
     if (success) {
       setCreateDialogOpen(false)
-      setCreateFormData({}
-        name: '',
+      setCreateFormData({name: '',
         description: '',
         privacy: 'public',
-        categories: [],
-        maxMembers: undefined;
+        categories: [0],
+        maxMembers: undefined
       })
       loadGroups()
-    }
-  }
 
   const handleJoinGroup = async (groupId: string) => {}
     const success = await apiRequest(
       () => fetch(`/api/social/groups/${groupId}/join`, { method: 'POST' }),
       { successMessage: 'Join request sent!', showSuccess: true }
-    )
 
     if (success) {
       loadGroups()
-    }
-  }
 
   const handleLeaveGroup = async (groupId: string) => {}
     const success = await apiRequest(
       () => fetch(`/api/social/groups/${groupId}/leave`, { method: 'POST' }),
       { successMessage: 'Left group', showSuccess: true }
-    )
 
     if (success) {
       loadGroups()
-    }
-  }
 
   const filteredGroups = groups.filter(group => {}
     const matchesSearch = group.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          group.description.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesCategory = categoryFilter === 'all' || 
                            group.categories.some(cat => cat.toLowerCase() === categoryFilter.toLowerCase())
-    const matchesPrivacy = privacyFilter === 'all' || group.privacy === privacyFilter;
+    const matchesPrivacy = privacyFilter === 'all' || group.privacy === privacyFilter,
     return matchesSearch && matchesCategory && matchesPrivacy;
   })
 
@@ -183,26 +160,20 @@ export function GroupsManager() {
       case 'private': return <Lock className="h-4 w-4" />
       case 'invite-only': return <UserPlus className="h-4 w-4" />
       default: return <Globe className="h-4 w-4" />
-    }
-  }
 
   const getPrivacyColor = (privacy: Group['privacy']) => {}
     switch (privacy) {
-      case 'public': return 'bg-green-500'
-      case 'private': return 'bg-red-500'
-      case 'invite-only': return 'bg-blue-500'
-      default: return 'bg-gray-500'
-    }
-  }
+      case 'public': return 'bg-green-500';
+      case 'private': return 'bg-red-500';
+      case 'invite-only': return 'bg-blue-500';
+      default: return 'bg-gray-500';
 
   const getRoleIcon = (role: Group['role']) => {}
     switch (role) {
       case 'owner': return <Crown className="h-4 w-4 text-yellow-500" />
       case 'admin': return <Star className="h-4 w-4 text-purple-500" />
       case 'moderator': return <Settings className="h-4 w-4 text-blue-500" />
-      default: return null;
-    }
-  }
+      default: return null,
 
   if (loading) {
     return (
@@ -211,8 +182,6 @@ export function GroupsManager() {
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
         </CardContent>
       </Card>
-    )
-  }
 
   return (
     <div className="space-y-6">
@@ -225,7 +194,7 @@ export function GroupsManager() {
               <DialogTrigger asChild>
                 <Button>
                   <Plus className="h-4 w-4 mr-2" />
-                  Create Group;
+                  Create Group
                 </Button>
               </DialogTrigger>
               <DialogContent>
@@ -235,7 +204,7 @@ export function GroupsManager() {
                 <div className="space-y-4">
                   <div>
                     <label className="text-sm font-medium">Group Name</label>
-                    <Input;
+                    <Input,
                       value={createFormData.name}
                       onChange={(e) => setCreateFormData(prev => ({ ...prev, name: e.target.value }))}
                       placeholder="Enter group name..."
@@ -243,7 +212,7 @@ export function GroupsManager() {
                   </div>
                   <div>
                     <label className="text-sm font-medium">Description</label>
-                    <Textarea;
+                    <Textarea,
                       value={createFormData.description}
                       onChange={(e) => setCreateFormData(prev => ({ ...prev, description: e.target.value }))}
                       placeholder="Describe your group..."
@@ -252,7 +221,7 @@ export function GroupsManager() {
                   </div>
                   <div>
                     <label className="text-sm font-medium">Privacy</label>
-                    <Select;
+                    <Select,
                       value={createFormData.privacy} 
                       onValueChange={(value: unknown) => setCreateFormData(prev => ({ ...prev, privacy: value }))}
                     >
@@ -270,7 +239,7 @@ export function GroupsManager() {
                     <label className="text-sm font-medium">Categories</label>
                     <div className="flex flex-wrap gap-2 mt-2">
                       {GROUP_CATEGORIES.map(category => (
-                        <Badge;
+                        <Badge,
                           key={category}
                           variant={createFormData.categories.includes(category) ? "default" : "outline"}
                           className="cursor-pointer"
@@ -290,26 +259,25 @@ export function GroupsManager() {
                   </div>
                   <div>
                     <label className="text-sm font-medium">Max Members (Optional)</label>
-                    <Input;
+                    <Input,
                       type="number"
                       value={createFormData.maxMembers || ''}
                       onChange={(e) => setCreateFormData(prev => ({}
                         ...prev, 
-                        maxMembers: e.target.value ? parseInt(e.target.value) : undefined;
+                        maxMembers: e.target.value ? parseInt(e.target.value) : undefined
                       }))}
                       placeholder="Leave empty for unlimited"
                     />
                   </div>
                   <div className="flex space-x-2 pt-4">
                     <Button onClick={handleCreateGroup} className="flex-1">
-                      Create Group;
+                      Create Group
                     </Button>
-                    <Button;
+                    <Button,
                       variant="outline" 
                       onClick={() => setCreateDialogOpen(false)}
                       className="flex-1"
                     >
-                      Cancel;
                     </Button>
                   </div>
                 </div>
@@ -321,7 +289,7 @@ export function GroupsManager() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input;
+              <Input,
                 placeholder="Search groups..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -398,11 +366,10 @@ export function GroupsManager() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {myGroups.map((group) => (
-                <GroupCard;
+                <GroupCard,
                   key={group.id} 
                   group={group} 
                   onLeave={handleLeaveGroup}
-                  showManage;
                 />
               ))}
             </div>
@@ -410,19 +377,16 @@ export function GroupsManager() {
         </TabsContent>
       </Tabs>
     </div>
-  )
-}
 
-function GroupCard({}
-  group, 
+function GroupCard({group, 
   onJoin, 
   onLeave, 
-  showManage = false;
+  showManage = false
 }: {}
-  group: Group;
-  onJoin?: (groupId: string) => void;
-  onLeave?: (groupId: string) => void;
-  showManage?: boolean;
+  group: Group,
+  onJoin?: (groupId: string) => void,
+  onLeave?: (groupId: string) => void,
+  showManage?: boolean
 }) {}
   return (
     <Card className="h-full flex flex-col">
@@ -441,7 +405,7 @@ function GroupCard({}
                 {group.role && getRoleIcon(group.role)}
               </div>
               <div className="flex items-center space-x-2 mt-1">
-                <Badge;
+                <Badge,
                   variant="outline" 
                   className={`text-white text-xs ${getPrivacyColor(group.privacy)}`}
                 >
@@ -451,7 +415,7 @@ function GroupCard({}
                   </span>
                 </Badge>
                 <span className="text-sm text-muted-foreground">
-                  {group.memberCount} members;
+                  {group.memberCount} members
                 </span>
               </div>
             </div>
@@ -494,39 +458,36 @@ function GroupCard({}
         </div>
         <div className="mt-auto space-y-2">
           {!group.isMember && !group.isPending && onJoin && (
-            <Button;
+            <Button,
               size="sm" 
               onClick={() => onJoin(group.id)}
               className="w-full"
             >
-              Join Group;
+              Join Group
             </Button>
           )}
           {group.isPending && (
             <Button size="sm" variant="outline" disabled className="w-full">
-              Request Pending;
+              Request Pending
             </Button>
           )}
           {group.isMember && (
             <div className="flex space-x-2">
               <Button size="sm" variant="outline" className="flex-1">
                 <MessageCircle className="h-4 w-4 mr-1" />
-                Chat;
               </Button>
               {showManage && (group.isOwner || group.role === 'admin') && (
                 <Button size="sm" variant="outline" className="flex-1">
                   <Settings className="h-4 w-4 mr-1" />
-                  Manage;
                 </Button>
               )}
               {showManage && onLeave && !group.isOwner && (
-                <Button;
+                <Button,
                   size="sm" 
                   variant="outline" 
                   onClick={() => onLeave(group.id)}
                   className="flex-1"
                 >
-                  Leave;
                 </Button>
               )}
             </div>
@@ -534,5 +495,3 @@ function GroupCard({}
         </div>
       </CardContent>
     </Card>
-  )
-}

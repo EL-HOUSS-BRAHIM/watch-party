@@ -1,3 +1,5 @@
+"use client"
+
 import type React from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -5,14 +7,13 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-"use client"
 
 
 interface MobileDrawerProps {}
-  children: React.ReactNode;
-  trigger?: React.ReactNode;
+  children: React.ReactNode
+  trigger?: React.ReactNode
   side?: "left" | "right" | "top" | "bottom"
-  className?: string;
+  className?: string
 }
 
 export function MobileDrawer({ children, trigger, side = "left", className }: MobileDrawerProps) {}

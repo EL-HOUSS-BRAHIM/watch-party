@@ -1,3 +1,5 @@
+"use client"
+
 import { Calendar, Eye, Loader2, Lock, MessageCircle, Plus, Search, Settings, Shield, User, Users, Video } from "lucide-react"
 import { useState, useEffect, useCallback, useMemo } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,12 +10,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {}
-import {}
+
+
 import { useToast } from "@/hooks/use-toast"
 import { socialAPI } from "@/lib/api"
 
-"use client"
   Dialog,
   DialogContent,
   DialogDescription,
@@ -32,38 +33,38 @@ import { socialAPI } from "@/lib/api"
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 interface Group {}
-  id: string;
-  backendId?: number;
-  name: string;
-  description: string;
-  avatar?: string;
+  id: string
+  backendId?: number
+  name: string
+  description: string
+  avatar?: string
   privacy: "public" | "private" | "invite-only"
-  memberCount: number;
-  maxMembers?: number;
-  category: string;
+  memberCount: number
+  maxMembers?: number
+  category: string
   tags: string[]
-  createdAt?: string;
+  createdAt?: string
   owner: {}
-    id: string;
-    name: string;
-    avatar?: string;
+    id: string
+    name: string
+    avatar?: string
   }
-  isOwner: boolean;
-  isMember: boolean;
+  isOwner: boolean
+  isMember: boolean
   role?: "owner" | "admin" | "moderator" | "member"
 }
 
 interface GroupMember {}
-  id: string;
+  id: string
   user: {}
-    id: string;
-    name: string;
-    avatar?: string;
-    email?: string;
+    id: string
+    name: string
+    avatar?: string
+    email?: string
   }
   role: "owner" | "admin" | "moderator" | "member"
-  joinedAt?: string;
-  lastActive?: string;
+  joinedAt?: string
+  lastActive?: string
   status: "active" | "inactive" | "banned"
 }
 
@@ -73,9 +74,9 @@ const fallbackId = (prefix: string) => `${prefix}-${Math.random().toString(36).s
 
 const extractCollection = (value: unknown): unknown[] => {}
   if (!value) return []
-  if (Array.isArray(value)) return value;
-  if (Array.isArray(value?.results)) return value.results;
-  if (Array.isArray(value?.data)) return value.data;
+  if (Array.isArray(value)) return value
+  if (Array.isArray(value?.results)) return value.results
+  if (Array.isArray(value?.data)) return value.data
   return []
 }
 
@@ -93,9 +94,9 @@ const mapMemberStatus = (member: unknown): GroupMember["status"] => {}
 }
 
 const normalizeGroupMember = (member: unknown): GroupMember => {}
-  const memberUser = member?.user ?? member;
-  const firstName = memberUser?.first_name ?? memberUser?.firstName;
-  const lastName = memberUser?.last_name ?? memberUser?.lastName;
+  const memberUser = member?.user ?? member
+  const firstName = memberUser?.first_name ?? memberUser?.firstName
+  const lastName = memberUser?.last_name ?? memberUser?.lastName
   const composedName = [firstName, lastName].filter(Boolean).join(" ")
   const name = (memberUser?.name ?? memberUser?.full_name ?? memberUser?.username ?? composedName) || "Member"
 
@@ -116,7 +117,7 @@ const normalizeGroupMember = (member: unknown): GroupMember => {}
 
 const derivePrivacy = (group: unknown): Group["privacy"] => {}
   if (group?.privacy === "invite-only" || group?.privacy === "private" || group?.privacy === "public") {
-    return group.privacy;
+    return group.privacy
   }
 
   if (group?.is_public === false) {
@@ -129,8 +130,8 @@ const derivePrivacy = (group: unknown): Group["privacy"] => {}
 const normalizeGroup = (group: unknown): Group => {}
   const backendId = typeof group?.id === "number" ? group.id : Number.parseInt(String(group?.id ?? ""), 10)
   const owner = group?.owner ?? group?.created_by ?? {}
-  const firstName = owner?.first_name ?? owner?.firstName;
-  const lastName = owner?.last_name ?? owner?.lastName;
+  const firstName = owner?.first_name ?? owner?.firstName
+  const lastName = owner?.last_name ?? owner?.lastName
   const ownerName = (owner?.name ?? owner?.full_name ?? owner?.username ?? [firstName, lastName].filter(Boolean).join(" ")) || "Group Owner"
   const membership = group?.membership ?? {}
   const tags = Array.isArray(group?.tags)
@@ -142,8 +143,8 @@ const normalizeGroup = (group: unknown): Group => {}
     group?.member_count ??
     group?.members_count ??
     (Array.isArray(group?.members) ? group.members.length : undefined) ??
-    0;
-  const maxMembers = group?.max_members ?? group?.member_limit ?? group?.capacity;
+    0
+  const maxMembers = group?.max_members ?? group?.member_limit ?? group?.capacity
   return {
     id: backendId && Number.isFinite(backendId) ? String(backendId) : String(group?.slug ?? fallbackId("group")),
     backendId: Number.isFinite(backendId) ? backendId : undefined,
@@ -169,7 +170,7 @@ const normalizeGroup = (group: unknown): Group => {}
 
 const parseGroupId = (groupId: string): number | null => {}
   const numeric = Number.parseInt(groupId, 10)
-  return Number.isNaN(numeric) ? null : numeric;
+  return Number.isNaN(numeric) ? null : numeric
 }
 
 export default function GroupManagementSystem() {
@@ -190,7 +191,7 @@ export default function GroupManagementSystem() {
       setGroups([])
       setGroupsError("Social API is not available in this environment.")
       setIsFetchingGroups(false)
-      return;
+      return
     }
 
     setIsFetchingGroups(true)
@@ -200,16 +201,15 @@ export default function GroupManagementSystem() {
       const response = await socialAPI.getGroups({ page: 1 })
       const results = extractCollection(response)
       setGroups(results.map((group) => normalizeGroup(group)))
-    } } catch {
+    } catch (err) {
       console.error("Failed to load groups", error)
       setGroups([])
       setGroupsError("Failed to load groups. Please try again.")
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Unable to load groups from the server. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsFetchingGroups(false)
     }
   }, [toast])
@@ -241,13 +241,13 @@ export default function GroupManagementSystem() {
   const refreshGroup = useCallback(
     async (groupId: string, fallbackId?: number) => {}
       if (typeof socialAPI.getGroup !== "function") {
-        return null;
+        return null
       }
 
       const numericId =
         parseGroupId(groupId) ?? (typeof fallbackId === "number" && Number.isFinite(fallbackId) ? fallbackId : null)
       if (numericId === null) {
-        return null;
+        return null
       }
 
       try {
@@ -255,9 +255,9 @@ export default function GroupManagementSystem() {
         const normalized = normalizeGroup(detail)
         upsertGroup(normalized)
         return { normalized, detail }
-      } } catch {
+      } catch (err) {
         console.error(`Failed to refresh group ${groupId}`, error)
-        return null;
+        return null
       }
     },
     [upsertGroup],
@@ -265,12 +265,11 @@ export default function GroupManagementSystem() {
 
   const handleCreateGroup = async (formData: FormData) => {}
     if (typeof socialAPI.createGroup !== "function") {
-      toast({}
-        title: "Unavailable",
+      toast({title: "Unavailable",
         description: "Creating groups is not available in this environment.",
         variant: "destructive",
       })
-      return;
+      return
     }
 
     const name = (formData.get("name") as string) ?? ""
@@ -280,14 +279,14 @@ export default function GroupManagementSystem() {
     const rawTags = (formData.get("tags") as string) ?? ""
     const maxMembersRaw = formData.get("maxMembers")
 
-    const tags = rawTags;
+    const tags = rawTags
       .split(",")
       .map((tag) => tag.trim())
       .filter(Boolean)
     const maxMembersValue =
-      typeof maxMembersRaw === "string" && maxMembersRaw.length > 0;
+      typeof maxMembersRaw === "string" && maxMembersRaw.length > 0
         ? Number.parseInt(maxMembersRaw, 10)
-        : undefined;
+        : undefined
     setIsCreatingGroup(true)
     try {
       const isPublic = privacy === "public"
@@ -328,18 +327,16 @@ export default function GroupManagementSystem() {
         await refreshGroup(normalized.id, normalized.backendId)
       }
 
-      toast({}
-        title: "Group Created",
+      toast({title: "Group Created",
         description: "Your group has been created successfully!",
       })
-    } } catch {
+    } catch (err) {
       console.error("Failed to create group", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to create group. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsCreatingGroup(false)
     }
   }
@@ -347,15 +344,14 @@ export default function GroupManagementSystem() {
   const handleJoinGroup = async (group: Group) => {}
     const numericId =
       typeof group.backendId === "number" && Number.isFinite(group.backendId)
-        ? group.backendId;
+        ? group.backendId
         : parseGroupId(group.id)
     if (numericId === null || typeof socialAPI.joinGroup !== "function") {
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Joining this group is not available right now.",
         variant: "destructive",
       })
-      return;
+      return
     }
 
     try {
@@ -368,14 +364,12 @@ export default function GroupManagementSystem() {
         setGroupMembers(members)
       }
 
-      toast({}
-        title: "Joined Group",
+      toast({title: "Joined Group",
         description: "You have successfully joined the group!",
       })
-    } } catch {
+    } catch (err) {
       console.error(`Failed to join group ${group.id}`, error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to join group. Please try again.",
         variant: "destructive",
       })
@@ -385,15 +379,14 @@ export default function GroupManagementSystem() {
   const handleLeaveGroup = async (group: Group) => {}
     const numericId =
       typeof group.backendId === "number" && Number.isFinite(group.backendId)
-        ? group.backendId;
+        ? group.backendId
         : parseGroupId(group.id)
     if (numericId === null || typeof socialAPI.leaveGroup !== "function") {
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Leaving this group is not available right now.",
         variant: "destructive",
       })
-      return;
+      return
     }
 
     try {
@@ -406,14 +399,12 @@ export default function GroupManagementSystem() {
         setGroupMembers(members)
       }
 
-      toast({}
-        title: "Left Group",
+      toast({title: "Left Group",
         description: "You have left the group.",
       })
-    } } catch {
+    } catch (err) {
       console.error(`Failed to leave group ${group.id}`, error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to leave group. Please try again.",
         variant: "destructive",
       })
@@ -422,15 +413,13 @@ export default function GroupManagementSystem() {
 
   // TODO: Add socialAPI member management once `/api/social/groups/<group_id>/members/<member_id>/` is exposed.
   const handleRoleChange = async (_memberId: string, _newRole: string) => {}
-    toast({}
-      title: "Action unavailable",
+    toast({title: "Action unavailable",
       description: "Updating member roles requires a backend endpoint (\"/api/social/groups/<group_id>/members/<member_id>/\&quot;).&quot;,
     })
   }
 
   const handleRemoveMember = async (_memberId: string) => {}
-    toast({}
-      title: "Action unavailable",
+    toast({title: "Action unavailable",
       description: "Removing members requires backend support for member management.",
     })
   }
@@ -440,12 +429,11 @@ export default function GroupManagementSystem() {
     setGroupMembers([])
 
     if (typeof socialAPI.getGroup !== "function") {
-      toast({}
-        title: "Unavailable",
+      toast({title: "Unavailable",
         description: "Group details are not available in this environment.",
         variant: "destructive",
       })
-      return;
+      return
     }
 
     setIsFetchingMembers(true)
@@ -456,14 +444,13 @@ export default function GroupManagementSystem() {
         const members = extractCollection((result.detail as Record<string, unknown>)?.members).map((member) => normalizeGroupMember(member))
         setGroupMembers(members)
       }
-    } } catch {
+    } catch (err) {
       console.error(`Failed to load group ${group.id}`, error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load group details. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsFetchingMembers(false)
     }
   }
@@ -474,8 +461,8 @@ export default function GroupManagementSystem() {
     const matchesSearch =
       group.name.toLowerCase().includes(normalizedQuery) ||
       (group.description ?? "").toLowerCase().includes(normalizedQuery)
-    const matchesCategory = categoryFilter === "all" || group.category === categoryFilter;
-    return matchesSearch && matchesCategory;
+    const matchesCategory = categoryFilter === "all" || group.category === categoryFilter
+    return matchesSearch && matchesCategory
   })
 
   const getRoleIcon = (role: string) => {}
@@ -517,7 +504,7 @@ export default function GroupManagementSystem() {
           <DialogTrigger asChild>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              Create Group;
+              Create Group
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
@@ -526,7 +513,7 @@ export default function GroupManagementSystem() {
               <DialogDescription>Create a new group for watch parties and discussions</DialogDescription>
             </DialogHeader>
 
-            <form;
+            <form
               onSubmit={(e) => {}
                 e.preventDefault()
                 const formData = new FormData(e.currentTarget)
@@ -586,7 +573,7 @@ export default function GroupManagementSystem() {
 
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={() => setShowCreateDialog(false)}>
-                  Cancel;
+                  Cancel
                 </Button>
                 <Button type="submit" disabled={isCreatingGroup}>
                   {isCreatingGroup ? "Creating..." : "Create Group"}
@@ -602,7 +589,7 @@ export default function GroupManagementSystem() {
         <div className="flex-1">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input;
+            <Input
               placeholder="Search groups..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -681,7 +668,7 @@ export default function GroupManagementSystem() {
                   <Users className="h-4 w-4" />
                   <span>
                     {group.memberCount}
-                    {typeof group.maxMembers === "number" ? `/${group.maxMembers}` : ""} members;
+                    {typeof group.maxMembers === "number" ? `/${group.maxMembers}` : ""} members
                   </span>
                 </div>
                 {group.role && (
@@ -708,7 +695,7 @@ export default function GroupManagementSystem() {
               <div className="flex flex-col gap-2">
                 <Button variant="outline" size="sm" onClick={() => handleOpenGroup(group)}>
                   <Eye className="mr-2 h-4 w-4" />
-                  View Details;
+                  View Details
                 </Button>
 
                 <div className="flex gap-2">
@@ -716,13 +703,13 @@ export default function GroupManagementSystem() {
                     <>
                       <Button size="sm" className="flex-1">
                         <MessageCircle className="mr-2 h-4 w-4" />
-                        Chat;
+                        Chat
                       </Button>
                       {!group.isOwner && (
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button variant="outline" size="sm">
-                              Leave;
+                              Leave
                             </Button>
                           </AlertDialogTrigger>
                           <AlertDialogContent>
@@ -735,7 +722,7 @@ export default function GroupManagementSystem() {
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
                               <AlertDialogAction onClick={() => handleLeaveGroup(group)}>
-                                Leave Group;
+                                Leave Group
                               </AlertDialogAction>
                             </AlertDialogFooter>
                           </AlertDialogContent>
@@ -803,9 +790,9 @@ export default function GroupManagementSystem() {
 
                         {selectedGroup.isOwner && member.role !== "owner" && (
                           <div className="flex items-center gap-2">
-                            <Select;
+                            <Select
                               value={member.role}
-                              disabled;
+                              disabled
                               onValueChange={(value) => handleRoleChange(member.id, value)}
                             >
                               <SelectTrigger className="w-32">
@@ -834,7 +821,7 @@ export default function GroupManagementSystem() {
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>Close</AlertDialogCancel>
                                   <AlertDialogAction onClick={() => handleRemoveMember(member.id)}>
-                                    Acknowledge;
+                                    Acknowledge
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>

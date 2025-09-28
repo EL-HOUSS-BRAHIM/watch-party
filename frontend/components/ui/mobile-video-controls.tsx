@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useRef, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { TouchSlider } from "@/components/ui/touch-slider"
@@ -5,25 +7,23 @@ import { Maximize, MoreVertical, Pause, Play, SkipBack, SkipForward, Volume2, Vo
 import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 
-"use client"
 
 interface MobileVideoControlsProps {}
-  isPlaying: boolean;
-  currentTime: number;
-  duration: number;
-  volume: number;
-  isMuted: boolean;
-  onPlayPause: () => void;
-  onSeek: (time: number) => void;
-  onVolumeChange: (volume: number) => void;
-  onMute: () => void;
-  onFullscreen: () => void;
-  onSkip: (seconds: number) => void;
-  className?: string;
+  isPlaying: boolean
+  currentTime: number
+  duration: number
+  volume: number
+  isMuted: boolean
+  onPlayPause: () => void
+  onSeek: (time: number) => void
+  onVolumeChange: (volume: number) => void
+  onMute: () => void
+  onFullscreen: () => void
+  onSkip: (seconds: number) => void
+  className?: string
 }
 
-export function MobileVideoControls({}
-  isPlaying,
+export function MobileVideoControls({isPlaying,
   currentTime,
   duration,
   volume,
@@ -68,10 +68,10 @@ export function MobileVideoControls({}
     return `${minutes}:${seconds.toString().padStart(2, "0")}`
   }
 
-  const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
-  if (!isMobile) return null;
+  const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0
+  if (!isMobile) return null
   return (
-    <div;
+    <div
       className={cn(
         "absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent transition-opacity duration-300",
         showControls ? "opacity-100" : "opacity-0",
@@ -88,7 +88,7 @@ export function MobileVideoControls({}
 
       {/* Center play button */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <Button;
+        <Button
           variant="ghost"
           size="lg"
           onClick={onPlayPause}
@@ -102,7 +102,7 @@ export function MobileVideoControls({}
       <div className="absolute bottom-0 left-0 right-0 p-4 space-y-4">
         {/* Progress bar */}
         <div className="space-y-2">
-          <TouchSlider;
+          <TouchSlider
             value={progressPercentage}
             onChange={(value) => onSeek((value / 100) * duration)}
             className="h-8"
@@ -131,7 +131,7 @@ export function MobileVideoControls({}
 
           <div className="flex items-center gap-2">
             <div className="relative">
-              <Button;
+              <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setShowVolumeSlider(!showVolumeSlider)}
@@ -143,7 +143,7 @@ export function MobileVideoControls({}
               {showVolumeSlider && (
                 <div className="absolute bottom-full right-0 mb-2 p-2 bg-black/80 rounded">
                   <div className="h-24 w-8 flex items-center justify-center">
-                    <TouchSlider;
+                    <TouchSlider
                       value={isMuted ? 0 : volume * 100}
                       onChange={(value) => onVolumeChange(value / 100)}
                       className="h-20 w-8 rotate-[-90deg]"

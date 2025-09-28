@@ -1,16 +1,17 @@
+"use client"
+
 import { Calendar, MapPin, Shield, Trash } from "lucide-react"
 import { useState } from 'react'
 
-'use client'
 interface Session {}
-  id: string;
-  deviceName: string;
+  id: string
+  deviceName: string
   deviceType: 'desktop' | 'mobile' | 'tablet'
-  browser: string;
-  location: string;
-  ipAddress: string;
-  lastActive: string;
-  isCurrent: boolean;
+  browser: string
+  location: string
+  ipAddress: string
+  lastActive: string
+  isCurrent: boolean
 }
 
 const sessions: Session[] = []
@@ -22,7 +23,7 @@ const sessions: Session[] = []
     location: 'San Francisco, CA',
     ipAddress: '192.168.1.100',
     lastActive: '2024-03-21T10:30:00Z',
-    isCurrent: true;
+    isCurrent: true
   },
   {}
     id: '2',
@@ -32,7 +33,7 @@ const sessions: Session[] = []
     location: 'San Francisco, CA',
     ipAddress: '192.168.1.101',
     lastActive: '2024-03-21T08:15:00Z',
-    isCurrent: false;
+    isCurrent: false
   },
   {}
     id: '3',
@@ -42,7 +43,7 @@ const sessions: Session[] = []
     location: 'Los Angeles, CA',
     ipAddress: '10.0.0.50',
     lastActive: '2024-03-20T22:45:00Z',
-    isCurrent: false;
+    isCurrent: false
   },
   {}
     id: '4',
@@ -52,7 +53,7 @@ const sessions: Session[] = []
     location: 'New York, NY',
     ipAddress: '172.16.0.25',
     lastActive: '2024-03-19T14:20:00Z',
-    isCurrent: false;
+    isCurrent: false
   }
 ]
 
@@ -83,12 +84,12 @@ export default function SessionsPage() {
   const [showRevokeAll, setShowRevokeAll] = useState(false)
 
   const handleRevokeSession = (sessionId: string) => {}
-    // In real app, call API to revoke session;
+    // In real app, call API to revoke session
     console.log('Revoking session:', sessionId)
   }
 
   const handleRevokeAllOther = () => {}
-    // In real app, call API to revoke all other sessions;
+    // In real app, call API to revoke all other sessions
     console.log('Revoking all other sessions')
     setShowRevokeAll(false)
   }
@@ -105,7 +106,7 @@ export default function SessionsPage() {
             <h1 className="text-4xl font-bold text-white">Active Sessions</h1>
           </div>
           <p className="text-white/70 text-lg">
-            Manage your active login sessions across all devices;
+            Manage your active login sessions across all devices
           </p>
         </div>
 
@@ -164,18 +165,18 @@ export default function SessionsPage() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-bold text-white">Other Sessions</h2>
             {activeSessions.length > 0 && (
-              <button;
+              <button
                 onClick={() => setShowRevokeAll(true)}
                 className="text-red-400 hover:text-red-300 text-sm font-medium"
               >
-                Revoke All Other Sessions;
+                Revoke All Other Sessions
               </button>
             )}
           </div>
 
           <div className="space-y-4">
             {activeSessions.map(session => (
-              <div;
+              <div
                 key={session.id}
                 className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6"
               >
@@ -206,12 +207,12 @@ export default function SessionsPage() {
                     </div>
                   </div>
 
-                  <button;
+                  <button
                     onClick={() => handleRevokeSession(session.id)}
                     className="flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
                   >
                     <TrashIcon className="w-4 h-4" />
-                    Revoke;
+                    Revoke
                   </button>
                 </div>
               </div>
@@ -262,17 +263,17 @@ export default function SessionsPage() {
                 This will sign you out of all other devices. You'll need to sign in again on those devices.
               </p>
               <div className="flex gap-4">
-                <button;
+                <button
                   onClick={() => setShowRevokeAll(false)}
                   className="flex-1 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors"
                 >
-                  Cancel;
+                  Cancel
                 </button>
-                <button;
+                <button
                   onClick={handleRevokeAllOther}
                   className="flex-1 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors"
                 >
-                  Revoke All;
+                  Revoke All
                 </button>
               </div>
             </div>

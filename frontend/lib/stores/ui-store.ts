@@ -2,21 +2,21 @@ import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
 interface UIState {}
-  sidebarOpen: boolean;
+  sidebarOpen: boolean
   theme: "light" | "dark"
-  mobileMenuOpen: boolean;
+  mobileMenuOpen: boolean
 }
 
 interface UIActions {}
-  toggleSidebar: () => void;
-  setSidebarOpen: (open: boolean) => void;
-  setTheme: (theme: "light" | "dark") => void;
-  toggleMobileMenu: () => void;
+  toggleSidebar: () => void
+  setSidebarOpen: (open: boolean) => void
+  setTheme: (theme: "light" | "dark") => void
+  toggleMobileMenu: () => void
 }
 
 interface UIStore {}
-  ui: UIState;
-  actions: UIActions;
+  ui: UIState
+  actions: UIActions
 }
 
 export const useAppStore = create<UIStore>()(

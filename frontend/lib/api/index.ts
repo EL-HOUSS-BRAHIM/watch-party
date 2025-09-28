@@ -22,16 +22,16 @@ import { DashboardAPI } from "./dashboard"
 import { LocalizationAPI } from "./localization"
 
 /**
- * Main API Module;
- * Exports all API services and types;
+ * Main API Module
+ * Exports all API services and types
  */
 
-// Core client and configuration;
+// Core client and configuration
 export { apiClient } from "./client"
 export { API_ENDPOINTS, WS_ENDPOINTS } from "./endpoints"
 
-// API Services - Direct imports for better type safety;
-// Export API classes;
+// API Services - Direct imports for better type safety
+// Export API classes
 export { AuthAPI }
 export { UsersAPI }
 export { VideosAPI }
@@ -57,7 +57,7 @@ export { LocalizationAPI }
 
 // Create singleton instances (only on client-side)
 const createAPIInstance = <T>(APIClass: new () => T): T | null => {}
-  if (typeof window === 'undefined') return null;
+  if (typeof window === 'undefined') return null
   return new APIClass()
 }
 
@@ -84,10 +84,10 @@ export const docsAPI = createAPIInstance(DocsAPI)
 export const dashboardAPI = createAPIInstance(DashboardAPI)
 export const localizationAPI = createAPIInstance(LocalizationAPI)
 
-// Types;
+// Types
 export type * from "./types"
 
-// Unified API object for convenience;
+// Unified API object for convenience
 export const api = { auth: authAPI,
   users: usersAPI,
   videos: videosAPI,
@@ -110,4 +110,4 @@ export const api = { auth: authAPI,
   docs: docsAPI,
   dashboard: dashboardAPI,
   localization: localizationAPI,
-} as const;
+} as const

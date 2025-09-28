@@ -1,8 +1,9 @@
+"use client"
+
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { cva, type VariantProps } from "class-variance-authority"
 
-"use client"
 
 const formVariants = cva("space-y-6", {}
   variants: {}
@@ -26,12 +27,12 @@ const formVariants = cva("space-y-6", {}
 })
 
 interface WatchPartyFormProps extends React.FormHTMLAttributes<HTMLFormElement>, VariantProps<typeof formVariants> {}
-  title?: string;
-  description?: string;
-  footer?: React.ReactNode;
-  isLoading?: boolean;
+  title?: string
+  description?: string
+  footer?: React.ReactNode
+  isLoading?: boolean
   errors?: Record<string, string[]>
-  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void
 }
 
 const WatchPartyForm = React.forwardRef<HTMLFormElement, WatchPartyFormProps>(
@@ -47,7 +48,7 @@ const WatchPartyForm = React.forwardRef<HTMLFormElement, WatchPartyFormProps>(
       errors = {},
       children,
       onSubmit,
-      ...props;
+      ...props
     },
     ref,
   ) => {}
@@ -94,10 +95,10 @@ const WatchPartyForm = React.forwardRef<HTMLFormElement, WatchPartyFormProps>(
 WatchPartyForm.displayName = "WatchPartyForm"
 
 interface FormFieldProps extends React.HTMLAttributes<HTMLDivElement> {}
-  label?: string;
-  description?: string;
-  error?: string;
-  required?: boolean;
+  label?: string
+  description?: string
+  error?: string
+  required?: boolean
 }
 
 const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
@@ -126,7 +127,7 @@ interface FormActionsProps extends React.HTMLAttributes<HTMLDivElement> {}
 const FormActions = React.forwardRef<HTMLDivElement, FormActionsProps>(
   ({ className, align = "right", children, ...props }, ref) => {}
     return (
-      <div;
+      <div
         ref={ref}
         className={cn(
           "flex gap-3",

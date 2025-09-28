@@ -1,6 +1,8 @@
+"use client"
+
 import { Check, CheckCircle, Eye, EyeOff, Github, Link, Loader2, Lock, Mail, Play } from "lucide-react"
 import type React from "react"
-import { useState, useEffect , useCallback } from "react"
+import { useState, useEffect} from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/auth-context"
@@ -11,14 +13,12 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
-"use client"
 export default function LoginPage() {
   const searchParams = useSearchParams()
   const { login, socialLogin, isLoading } = useAuth()
   const { toast } = useToast()
 
-  const [formData, setFormData] = useState({}
-    email: "",
+  const [formData, setFormData] = useState({email: "",
     password: "",
   })
   const [showPassword, setShowPassword] = useState(false)
@@ -32,10 +32,8 @@ export default function LoginPage() {
 
     if (messageParam) {
       setMessage(messageParam)
-    }
     if (errorParam) {
       setErrors({ general: errorParam })
-    }
   }, [searchParams])
 
   const validateForm = () => {
@@ -43,63 +41,51 @@ export default function LoginPage() {
       newErrors.email = "Email is required"
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {}
       newErrors.email = "Please enter a valid email address"
-    }
 
     if (!formData.password) {
       newErrors.password = "Password is required"
     } else if (formData.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters"
-    }
 
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0;
-  }
+    return Object.keys(newErrors).length === 0,
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!validateForm()) return;
+    if (!validateForm()) return,
     setIsSubmitting(true)
-    setErrors({})
+    setErrors({)
 
     try {
       await login(formData.email, formData.password)
-      toast({}
-        title: "Welcome back!",
-        description: "You&apos;ve been successfully logged in.",
+      toast({title: "Welcome back!",
+        description: "You've been successfully logged in.",
         duration: 3000,
       })
-    } } catch {
+    } catch (err) {
       const errorMessage = (error as { message?: string })?.message || "Login failed. Please try again."
       setErrors({ general: errorMessage })
-      toast({}
-        title: "Login Failed",
+      toast({title: "Login Failed",
         description: errorMessage,
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsSubmitting(false)
-    }
-  }
 
   const handleSocialLogin = async (provider: "google" | "github") => {
     try {
       await socialLogin(provider)
-    } } catch {
-      toast({}
-        title: "Social Login Failed",
+    } catch (err) {
+      toast({title: "Social Login Failed",
         description: (error as { message?: string })?.message || `Failed to login with ${provider}`,
         variant: "destructive",
       })
-    }
-  }
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: &quot;&quot; }))
-    }
-  }
+      setErrors((prev) => ({ ...prev, [field]: "" }))
 
   if (isLoading) {
     return (
@@ -115,8 +101,6 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-    )
-  }
 
   return (
     <div className="w-full max-w-md mx-auto space-y-8">
@@ -157,23 +141,21 @@ export default function LoginPage() {
       {/* Social Login */}
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <Button;
+          <Button,
             variant="outline"
-            onClick={() => handleSocialLogin(&quot;google&quot;)}
+            onClick={() => handleSocialLogin("google")}
             disabled={isSubmitting}
             className="glass-card border-white/20 hover:border-neon-blue/50 hover:bg-neon-blue/10 text-white transition-all duration-300"
           >
             <Chrome className="w-4 h-4 mr-2" />
-            Google;
           </Button>
-          <Button;
+          <Button,
             variant="outline"
-            onClick={() => handleSocialLogin(&quot;github&quot;)}
+            onClick={() => handleSocialLogin("github")}
             disabled={isSubmitting}
             className="glass-card border-white/20 hover:border-neon-purple/50 hover:bg-neon-purple/10 text-white transition-all duration-300"
           >
             <Github className="w-4 h-4 mr-2" />
-            GitHub;
           </Button>
         </div>
 
@@ -193,22 +175,21 @@ export default function LoginPage() {
           {/* Email Field */}
           <div className="space-y-2">
             <Label htmlFor="email" className="text-gray-300 font-medium">
-              Email Address;
+              Email Address
             </Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input;
+              <Input,
                 id="email"
                 type="email"
                 placeholder="Enter your email"
                 value={formData.email}
-                onChange={(e) => handleInputChange(&quot;email&quot;, e.target.value)}
+                onChange={(e) => handleInputChange("email", e.target.value)}
                 className={`pl-10 glass-card border-white/20 focus:border-neon-red/50 focus:glow-red text-white placeholder-gray-400 transition-all duration-300 ${}
                   errors.email ? "border-red-500/50 focus:border-red-500" : ""
                 }`}
                 disabled={isSubmitting}
                 autoComplete="email"
-                required;
               />
             </div>
             {errors.email && (
@@ -222,30 +203,28 @@ export default function LoginPage() {
           {/* Password Field */}
           <div className="space-y-2">
             <Label htmlFor="password" className="text-gray-300 font-medium">
-              Password;
             </Label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input;
+              <Input,
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 value={formData.password}
-                onChange={(e) => handleInputChange(&quot;password&quot;, e.target.value)}
+                onChange={(e) => handleInputChange("password", e.target.value)}
                 className={`pl-10 pr-10 glass-card border-white/20 focus:border-neon-red/50 focus:glow-red text-white placeholder-gray-400 transition-all duration-300 ${}
                   errors.password ? "border-red-500/50 focus:border-red-500" : ""
                 }`}
                 disabled={isSubmitting}
                 autoComplete="current-password"
-                required;
               />
-              <button;
+              <button,
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                 disabled={isSubmitting}
               >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4&quot; />}
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
             {errors.password && (
@@ -265,7 +244,7 @@ export default function LoginPage() {
         </div>
 
         {/* Submit Button */}
-        <Button;
+        <Button,
           type="submit"
           disabled={isSubmitting}
           className="w-full bg-gradient-to-r from-neon-red to-neon-purple hover:from-neon-red/80 hover:to-neon-purple/80 text-white font-semibold py-3 rounded-xl transition-all duration-300 glow-red disabled:opacity-50 disabled:cursor-not-allowed"
@@ -284,9 +263,9 @@ export default function LoginPage() {
       {/* Register Link */}
       <div className="text-center">
         <p className="text-gray-400">
-          Don&apos;t have an account?{" "}
+          Don't have an account?{" "}
           <Link href="/register" className="text-neon-blue hover:text-neon-purple font-medium transition-colors">
-            Create one now;
+            Create one now
           </Link>
         </p>
       </div>
@@ -294,15 +273,10 @@ export default function LoginPage() {
       {/* Additional Links */}
       <div className="flex justify-center space-x-6 text-sm">
         <Link href="/help" className="text-gray-500 hover:text-gray-300 transition-colors">
-          Help;
         </Link>
         <Link href="/privacy" className="text-gray-500 hover:text-gray-300 transition-colors">
-          Privacy;
         </Link>
         <Link href="/terms" className="text-gray-500 hover:text-gray-300 transition-colors">
-          Terms;
         </Link>
       </div>
     </div>
-  )
-}

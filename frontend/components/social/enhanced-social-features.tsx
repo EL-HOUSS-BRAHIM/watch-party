@@ -1,3 +1,5 @@
+"use client"
+
 import { Activity, Calendar, Check, CheckCircle, Gift, Heart, MapPin, MessageCircle, Plus, Search, Settings, Share, Star, Trophy, User, Users, Zap } from "lucide-react"
 import { useEffect, useMemo, useState , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -6,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {}
+
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Progress } from "@/components/ui/progress"
 import { Textarea } from "@/components/ui/textarea"
@@ -16,7 +18,6 @@ import { socialAPI, usersAPI } from "@/lib/api"
 import { useToast } from "@/hooks/use-toast"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
-"use client"
   Dialog,
   DialogContent,
   DialogDescription,
@@ -25,70 +26,70 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
   DialogTitle,
 } from "@/components/ui/dialog"
 interface User {}
-  id: string;
-  username: string;
-  displayName: string;
-  avatar: string;
-  isOnline: boolean;
-  lastSeen: string;
-  mutualFriends: number;
+  id: string
+  username: string
+  displayName: string
+  avatar: string
+  isOnline: boolean
+  lastSeen: string
+  mutualFriends: number
   commonInterests: string[]
-  location?: string;
-  joinedDate: string;
+  location?: string
+  joinedDate: string
   friendshipStatus?: "none" | "pending_sent" | "pending_received" | "friends" | "blocked"
   stats: {}
-    partiesHosted: number;
-    partiesJoined: number;
-    friendsCount: number;
-    watchTime: number;
+    partiesHosted: number
+    partiesJoined: number
+    friendsCount: number
+    watchTime: number
   }
 }
 
 interface Community {}
-  id: string;
-  numericId?: number;
-  name: string;
-  description: string;
-  memberCount: number;
-  category: string;
-  isPrivate: boolean;
-  avatar: string;
+  id: string
+  numericId?: number
+  name: string
+  description: string
+  memberCount: number
+  category: string
+  isPrivate: boolean
+  avatar: string
   tags: string[]
-  createdBy: string;
-  createdAt: string;
-  recentActivity: string;
+  createdBy: string
+  createdAt: string
+  recentActivity: string
 }
 
 interface ActivityFeedItem {}
-  id: string;
+  id: string
   type: "party_created" | "friend_added" | "achievement_earned" | "community_joined" | "video_shared"
-  user: User;
-  content: string;
-  timestamp: string;
-  likes: number;
-  comments: number;
-  isLiked: boolean;
-  metadata?: unknown;
+  user: User
+  content: string
+  timestamp: string
+  likes: number
+  comments: number
+  isLiked: boolean
+  metadata?: unknown
 }
 
 interface Achievement {}
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
+  id: string
+  name: string
+  description: string
+  icon: string
   category: "social" | "content" | "engagement" | "milestone"
   rarity: "common" | "rare" | "epic" | "legendary"
-  progress: number;
-  maxProgress: number;
-  unlockedAt?: string;
+  progress: number
+  maxProgress: number
+  unlockedAt?: string
   reward: {}
     type: "badge" | "title" | "feature" | "cosmetic"
-    value: string;
+    value: string
   }
 }
 
 const fallbackId = (prefix: string) =>
-  typeof crypto !== "undefined" && "randomUUID" in crypto;
+  typeof crypto !== "undefined" && "randomUUID" in crypto
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 10)}`
 
@@ -122,11 +123,11 @@ const normalizeUser = (friend: unknown): User => ({}
   lastSeen: friend?.last_seen ?? friend?.last_activity ?? friend?.user?.last_seen ?? new Date().toISOString(),
   mutualFriends: friend?.mutual_friends_count ?? friend?.mutualFriends ?? friend?.mutual_friends ?? 0,
   commonInterests: Array.isArray(friend?.common_interests)
-    ? friend.common_interests;
+    ? friend.common_interests
     : Array.isArray(friend?.interests)
-      ? friend.interests;
+      ? friend.interests
       : Array.isArray(friend?.genres)
-        ? friend.genres;
+        ? friend.genres
         : [],
   location: friend?.location ?? friend?.city ?? friend?.user?.location,
   joinedDate: friend?.joined_at ?? friend?.created_at ?? friend?.user?.joined_at ?? new Date().toISOString(),
@@ -136,17 +137,17 @@ const normalizeUser = (friend: unknown): User => ({}
 
 const normalizeCommunity = (group: unknown): Community => {}
   const tags = Array.isArray(group?.tags)
-    ? group.tags;
+    ? group.tags
     : Array.isArray(group?.topics)
-      ? group.topics;
+      ? group.topics
       : []
 
   const category = (group?.category ?? group?.type ?? "general").toString()
   const rawId = group?.id ?? group?.uuid ?? fallbackId("community")
   const numericCandidate = typeof rawId === "number" ? rawId : Number(rawId)
   const numericId = typeof numericCandidate === "number" && !Number.isNaN(numericCandidate)
-    ? numericCandidate;
-    : undefined;
+    ? numericCandidate
+    : undefined
   return {
     id: String(rawId),
     numericId,
@@ -179,25 +180,25 @@ const formatActivityContent = (activity: unknown): string => {}
   }
 
   if (typeof activity.content === "string") {
-    return activity.content;
+    return activity.content
   }
 
   if (activity.content && typeof activity.content === "object") {
     if (typeof activity.content.title === "string") {
-      return activity.content.title;
+      return activity.content.title
     }
 
     if (typeof activity.content.description === "string") {
-      return activity.content.description;
+      return activity.content.description
     }
   }
 
   if (typeof activity.message === "string") {
-    return activity.message;
+    return activity.message
   }
 
   if (typeof activity.summary === "string") {
-    return activity.summary;
+    return activity.summary
   }
 
   const metadata = activity.metadata ?? {}
@@ -319,14 +320,13 @@ export function EnhancedSocialFeatures() {
       } else {}
         setAchievements([])
       }
-    } } catch {
+    } catch (err) {
       console.error("Failed to fetch social data:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load social data. Please try again.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setLoading(false)
     }
   }
@@ -334,11 +334,11 @@ export function EnhancedSocialFeatures() {
   const handleLikeActivity = async (activityId: string) => {}
     try {
       // Call API to like/unlike activity (placeholder - implement based on activity type)
-      // await api.videos.like(activityId) // if it's a video;
-      // await api.parties.like(activityId) // if it's a party;
+      // await api.videos.like(activityId) // if it's a video
+      // await api.parties.like(activityId) // if it's a party
       setActivityFeed((prev) =>
         prev.map((activity) =>
-          activity.id === activityId;
+          activity.id === activityId
             ? {}
                 ...activity,
                 isLiked: !activity.isLiked,
@@ -347,10 +347,9 @@ export function EnhancedSocialFeatures() {
             : activity,
         ),
       )
-    } } catch {
+    } catch (err) {
       console.error('Failed to like activity:', error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to like activity. Please try again.",
         variant: "destructive",
       })
@@ -362,7 +361,7 @@ export function EnhancedSocialFeatures() {
       await usersAPI.sendFriendRequestToUser(userId)
       setUsers((prev) =>
         prev.map((user) =>
-          user.id === userId;
+          user.id === userId
             ? {}
                 ...user,
                 friendshipStatus: "pending_sent",
@@ -370,14 +369,12 @@ export function EnhancedSocialFeatures() {
             : user,
         ),
       )
-      toast({}
-        title: "Friend request sent",
+      toast({title: "Friend request sent",
         description: "Your friend request has been delivered.",
       })
-    } } catch {
+    } catch (err) {
       console.error("Failed to send friend request:", error)
-      toast({}
-        title: "Request failed",
+      toast({title: "Request failed",
         description: "We couldn't send that friend request. Please try again.",
         variant: "destructive",
       })
@@ -394,20 +391,18 @@ export function EnhancedSocialFeatures() {
 
       setCommunities((prev) =>
         prev.map((community) =>
-          community.id === communityId;
+          community.id === communityId
             ? { ...community, memberCount: community.memberCount + 1 }
             : community,
         ),
       )
 
-      toast({}
-        title: "Joined community",
+      toast({title: "Joined community",
         description: "You're now part of this community.",
       })
-    } } catch {
+    } catch (err) {
       console.error("Failed to join community:", error)
-      toast({}
-        title: "Join failed",
+      toast({title: "Join failed",
         description: "Unable to join that community right now.",
         variant: "destructive",
       })
@@ -464,7 +459,7 @@ export function EnhancedSocialFeatures() {
 
   const filteredUsers = useMemo(() => {}
     if (!searchQuery.trim()) {}
-      return users;
+      return users
     }
 
     const query = searchQuery.toLowerCase()
@@ -484,8 +479,8 @@ export function EnhancedSocialFeatures() {
         community.description.toLowerCase().includes(query)
 
       const matchesCategory =
-        selectedCategory === "all" || community.category.toLowerCase() === selectedCategory;
-      return matchesSearch && matchesCategory;
+        selectedCategory === "all" || community.category.toLowerCase() === selectedCategory
+      return matchesSearch && matchesCategory
     })
   }, [communities, searchQuery, selectedCategory])
 
@@ -510,11 +505,11 @@ export function EnhancedSocialFeatures() {
         <div className="flex gap-2">
           <Button onClick={() => setCreateCommunityOpen(true)}>
             <Plus className="mr-2 h-4 w-4" />
-            Create Community;
+            Create Community
           </Button>
           <Button variant="outline">
             <Settings className="mr-2 h-4 w-4" />
-            Settings;
+            Settings
           </Button>
         </div>
       </div>
@@ -560,7 +555,7 @@ export function EnhancedSocialFeatures() {
                         <p className="text-gray-700 dark:text-gray-300">{activity.content}</p>
 
                         <div className="flex items-center gap-4">
-                          <Button;
+                          <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleLikeActivity(activity.id)}
@@ -575,7 +570,7 @@ export function EnhancedSocialFeatures() {
                             {activity.comments}
                           </Button>
 
-                          <Button;
+                          <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => {}
@@ -584,7 +579,7 @@ export function EnhancedSocialFeatures() {
                             }}
                           >
                             <Share2 className="mr-1 h-4 w-4" />
-                            Share;
+                            Share
                           </Button>
                         </div>
                       </div>
@@ -608,7 +603,7 @@ export function EnhancedSocialFeatures() {
                 <div className="flex gap-2">
                   <div className="relative">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input;
+                    <Input
                       placeholder="Search users..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
@@ -672,7 +667,7 @@ export function EnhancedSocialFeatures() {
                         </div>
                       </div>
 
-                      <Button;
+                      <Button
                         className="w-full"
                         onClick={() => handleFollowUser(user.id)}
                         disabled={user.friendshipStatus === "friends" || user.friendshipStatus === "pending_sent"}
@@ -722,7 +717,7 @@ export function EnhancedSocialFeatures() {
                   </Select>
                   <div className="relative">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input;
+                    <Input
                       placeholder="Search communities..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
@@ -770,7 +765,7 @@ export function EnhancedSocialFeatures() {
 
                       <Button className="w-full" onClick={() => handleJoinCommunity(community.id)}>
                         <Users className="mr-2 h-4 w-4" />
-                        Join Community;
+                        Join Community
                       </Button>
                     </CardContent>
                   </Card>
@@ -948,7 +943,7 @@ export function EnhancedSocialFeatures() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateCommunityOpen(false)}>
-              Cancel;
+              Cancel
             </Button>
             <Button onClick={() => setCreateCommunityOpen(false)}>Create Community</Button>
           </DialogFooter>
@@ -978,7 +973,7 @@ export function EnhancedSocialFeatures() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setShareDialogOpen(false)}>
-              Cancel;
+              Cancel
             </Button>
             <Button onClick={() => setShareDialogOpen(false)}>Share</Button>
           </DialogFooter>

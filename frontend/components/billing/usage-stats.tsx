@@ -1,3 +1,5 @@
+"use client"
+
 import { AlertTriangle, BarChart, Check, CheckCircle, Loader2, PieChart, TrendingUp, User, Users, Video, Wifi, X } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -5,9 +7,8 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { billingAPI } from "@/lib/api"
-import {}
 
-"use client"
+
   BarChart,
   Bar,
   XAxis,
@@ -30,21 +31,21 @@ interface UsageData {}
 }
 
 interface UsageStats {}
-  current_usage: UsageData;
+  current_usage: UsageData
   monthly_trends: Array<{}
-    month: string;
-    storage: number;
-    bandwidth: number;
-    parties: number;
+    month: string
+    storage: number
+    bandwidth: number
+    parties: number
   }>
   daily_activity: Array<{}
-    day: string;
-    participants: number;
+    day: string
+    participants: number
   }>
   quality_distribution: Array<{}
-    name: string;
-    value: number;
-    color: string;
+    name: string
+    value: number
+    color: string
   }>
 }
 
@@ -60,10 +61,10 @@ export function UsageStats() {
   const fetchUsageStats = async () => {
     try {
       setIsLoading(true)
-      // Fetch usage data from billing API;
+      // Fetch usage data from billing API
       const subscriptionData = await billingAPI.getSubscription()
-      // Note: Analytics endpoints would need to be implemented in analyticsAPI;
-      // For now, we'll use direct fetch for analytics data;
+      // Note: Analytics endpoints would need to be implemented in analyticsAPI
+      // For now, we'll use direct fetch for analytics data
       const token = localStorage.getItem("accessToken")
       const [analyticsResponse, trendsResponse] = await Promise.all([]
         fetch("/api/analytics/user/", {}
@@ -78,7 +79,7 @@ export function UsageStats() {
         analyticsResponse.ok ? analyticsResponse.json() : {},
         trendsResponse.ok ? trendsResponse.json() : { monthly_trends: [], daily_activity: [], quality_distribution: [] }
       ])
-      // Transform real data to match our interface;
+      // Transform real data to match our interface
       const currentUsage = subscriptionData.usage || {}
       const analytics = analyticsData || {}
       const stats: UsageStats = { current_usage: {}
@@ -112,20 +113,19 @@ export function UsageStats() {
         ],
       }
       setUsageStats(stats)
-    } } catch {
+    } catch (err) {
       console.error("Failed to fetch usage stats:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load usage statistics.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
 
   const getUsageColor = (percentage: number) => {}
-    if (percentage >= 90) return &quot;text-destructive&quot;
+    if (percentage >= 90) return &quot;text-destructive&quot
     if (percentage >= 75) return &quot;text-yellow-600"
     return "text-green-600"
   }
@@ -155,7 +155,7 @@ export function UsageStats() {
     )
   }
 
-  const { current_usage, monthly_trends, daily_activity, quality_distribution } = usageStats;
+  const { current_usage, monthly_trends, daily_activity, quality_distribution } = usageStats
   return (
     <div className="space-y-6">
       {/* Current Usage Overview */}
@@ -175,7 +175,7 @@ export function UsageStats() {
             </div>
             <Progress value={(current_usage.storage.used / current_usage.storage.limit) * 100} className="mb-2" />
             <p className="text-xs text-muted-foreground">
-              {current_usage.storage.used} of {current_usage.storage.limit} {current_usage.storage.unit} used;
+              {current_usage.storage.used} of {current_usage.storage.limit} {current_usage.storage.unit} used
             </p>
           </CardContent>
         </Card>
@@ -195,7 +195,7 @@ export function UsageStats() {
             </div>
             <Progress value={(current_usage.bandwidth.used / current_usage.bandwidth.limit) * 100} className="mb-2" />
             <p className="text-xs text-muted-foreground">
-              {current_usage.bandwidth.used} of {current_usage.bandwidth.limit} {current_usage.bandwidth.unit} used;
+              {current_usage.bandwidth.used} of {current_usage.bandwidth.limit} {current_usage.bandwidth.unit} used
             </p>
           </CardContent>
         </Card>
@@ -227,7 +227,7 @@ export function UsageStats() {
               <div className="text-2xl font-bold">{current_usage.participants.used}</div>
               {getUsageIcon((current_usage.participants.used / current_usage.participants.limit) * 100)}
             </div>
-            <Progress;
+            <Progress
               value={(current_usage.participants.used / current_usage.participants.limit) * 100}
               className="mb-2"
             />
@@ -288,7 +288,7 @@ export function UsageStats() {
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
-                <Pie;
+                <Pie
                   data={quality_distribution}
                   cx="50%"
                   cy="50%"
@@ -354,7 +354,7 @@ export function UsageStats() {
         <CardContent>
           <div className="space-y-4">
             {Object.entries(current_usage).map(([key, usage]) => {}
-              const percentage = (usage.used / usage.limit) * 100;
+              const percentage = (usage.used / usage.limit) * 100
               return (
                 <div key={key} className="space-y-2">
                   <div className="flex items-center justify-between">

@@ -1,3 +1,5 @@
+"use client"
+
 import { Loader2 } from "lucide-react"
 import { useEffect, useState , useCallback } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
@@ -6,7 +8,6 @@ import { tokenStorage } from "@/lib/auth/token-storage"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
-"use client"
 export function AuthCallback() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -34,14 +35,13 @@ export function AuthCallback() {
           throw new Error("No provider specified")
         }
 
-        // Send the code to our backend to complete OAuth flow;
+        // Send the code to our backend to complete OAuth flow
         const response = await fetch(`/api/auth/social/${provider}/`, {}
           method: "POST",
           headers: {}
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({}
-            code,
+          body: JSON.stringify({code,
             state,
             redirect_uri: `${window.location.origin}/callback?provider=${provider}`,
           }),
@@ -53,30 +53,27 @@ export function AuthCallback() {
           throw new Error(data.message || "Social authentication failed")
         }
 
-        // Store tokens;
+        // Store tokens
         if (data.access_token || data.refresh_token) {
-          tokenStorage.setTokens({}
-            accessToken: data.access_token,
+          tokenStorage.setTokens({accessToken: data.access_token,
             refreshToken: data.refresh_token,
           })
         }
 
-        toast({}
-          title: "Welcome!",
+        toast({title: "Welcome!",
           description: `Successfully signed in with ${provider}`,
         })
 
-        // Redirect to dashboard;
+        // Redirect to dashboard
         router.push("/dashboard")
-      } } catch {
+      } catch (err) {
         console.error("Social auth callback error:", error)
         setError(error instanceof Error ? error.message : "Authentication failed")
-        toast({}
-          title: "Authentication Failed",
+        toast({title: "Authentication Failed",
           description: error instanceof Error ? error.message : "Something went wrong",
           variant: "destructive",
         })
-      } finally {}
+      } finally {
         setIsLoading(false)
       }
     }
@@ -94,7 +91,7 @@ export function AuthCallback() {
               <div className="text-center">
                 <h3 className="font-semibold">Completing sign in...</h3>
                 <p className="text-sm text-muted-foreground">
-                  Please wait while we finish setting up your account;
+                  Please wait while we finish setting up your account
                 </p>
               </div>
             </div>
@@ -117,18 +114,18 @@ export function AuthCallback() {
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">{error}</p>
             <div className="flex space-x-2">
-              <Button;
+              <Button
                 onClick={() => router.push(&quot;/login&quot;)}
                 className="flex-1"
               >
-                Back to Login;
+                Back to Login
               </Button>
-              <Button;
+              <Button
                 variant="outline"
                 onClick={() => window.location.reload()}
                 className="flex-1"
               >
-                Try Again;
+                Try Again
               </Button>
             </div>
           </CardContent>
@@ -137,5 +134,5 @@ export function AuthCallback() {
     )
   }
 
-  return null;
+  return null
 }

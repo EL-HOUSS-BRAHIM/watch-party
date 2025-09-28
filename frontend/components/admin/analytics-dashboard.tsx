@@ -1,3 +1,5 @@
+"use client"
+
 import { Activity, BarChart, Calendar, CreditCard, DollarSign, Download, Eye, Loader2, PieChart, TrendingDown, TrendingUp, User, Users, Video, X } from "lucide-react"
 import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -6,9 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
-import {}
 
-"use client"
+
   XAxis,
   YAxis,
   CartesianGrid,
@@ -27,33 +28,33 @@ import {}
 
 interface AnalyticsData {}
   user_growth: Array<{}
-    date: string;
-    total_users: number;
-    active_users: number;
-    new_users: number;
+    date: string
+    total_users: number
+    active_users: number
+    new_users: number
   }>
   revenue_data: Array<{}
-    month: string;
-    revenue: number;
-    subscriptions: number;
-    avg_revenue: number;
+    month: string
+    revenue: number
+    subscriptions: number
+    avg_revenue: number
   }>
   engagement_data: Array<{}
-    hour: string;
-    parties: number;
-    viewers: number;
-    messages: number;
+    hour: string
+    parties: number
+    viewers: number
+    messages: number
   }>
   device_data: Array<{}
-    name: string;
-    value: number;
-    color: string;
+    name: string
+    value: number
+    color: string
   }>
   content_data: Array<{}
-    category: string;
-    uploads: number;
-    views: number;
-    duration: number;
+    category: string
+    uploads: number
+    views: number
+    duration: number
   }>
   kpi_data: {}
     total_users: { value: number; change: number; trend: string }
@@ -80,18 +81,17 @@ export function AnalyticsDashboard() {
       setIsLoading(true)
       if (!adminAPI) {
         console.error('Admin API not available')
-        return;
+        return
       }
       const data = await adminAPI.getAnalytics()
       setAnalyticsData(data)
-    } } catch {
+    } catch (err) {
       console.error("Failed to fetch analytics data:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to load analytics data.",
         variant: "destructive",
       })
-    } finally {}
+    } finally {
       setIsLoading(false)
     }
   }
@@ -112,20 +112,19 @@ export function AnalyticsDashboard() {
     try {
       if (!adminAPI) {
         console.error('Admin API not available')
-        return;
+        return
       }
       const response = await adminAPI.exportAnalytics({ time_range: timeRange })
-      // Handle export file download;
+      // Handle export file download
       const link = document.createElement("a")
-      link.href = response.download_url;
+      link.href = response.download_url
       link.download = `analytics-export-${timeRange}-${new Date().toISOString().split("T")[0]}.csv`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-    } } catch {
+    } catch (err) {
       console.error("Failed to export data:", error)
-      toast({}
-        title: "Error",
+      toast({title: "Error",
         description: "Failed to export analytics data.",
         variant: "destructive",
       })
@@ -152,13 +151,13 @@ export function AnalyticsDashboard() {
     )
   }
 
-  // Derived data for charts;
-  const kpiData = analyticsData.kpi_data;
-  const userGrowthData = analyticsData.user_growth;
-  const revenueData = analyticsData.revenue_data;
-  const engagementData = analyticsData.engagement_data;
-  const deviceData = analyticsData.device_data;
-  const contentData = analyticsData.content_data;
+  // Derived data for charts
+  const kpiData = analyticsData.kpi_data
+  const userGrowthData = analyticsData.user_growth
+  const revenueData = analyticsData.revenue_data
+  const engagementData = analyticsData.engagement_data
+  const deviceData = analyticsData.device_data
+  const contentData = analyticsData.content_data
   return (
     <div className="space-y-6">
       {/* Header Controls */}
@@ -182,7 +181,7 @@ export function AnalyticsDashboard() {
           </Select>
           <Button variant="outline" size="sm" onClick={exportData}>
             <Download className="w-4 h-4 mr-2" />
-            Export;
+            Export
           </Button>
         </div>
       </div>
@@ -199,7 +198,7 @@ export function AnalyticsDashboard() {
             <div className="flex items-center space-x-1 text-xs">
               {getTrendIcon(analyticsData.kpi_data.total_users.trend)}
               <span className={getTrendColor(analyticsData.kpi_data.total_users.trend)}>
-                {analyticsData.kpi_data.total_users.change}% from last period;
+                {analyticsData.kpi_data.total_users.change}% from last period
               </span>
             </div>
           </CardContent>
@@ -215,7 +214,7 @@ export function AnalyticsDashboard() {
             <div className="flex items-center space-x-1 text-xs">
               {getTrendIcon(analyticsData.kpi_data.active_users.trend)}
               <span className={getTrendColor(analyticsData.kpi_data.active_users.trend)}>
-                {analyticsData.kpi_data.active_users.change}% from last period;
+                {analyticsData.kpi_data.active_users.change}% from last period
               </span>
             </div>
           </CardContent>
@@ -231,7 +230,7 @@ export function AnalyticsDashboard() {
             <div className="flex items-center space-x-1 text-xs">
               {getTrendIcon(kpiData.total_revenue.trend)}
               <span className={getTrendColor(kpiData.total_revenue.trend)}>
-                {kpiData.total_revenue.change}% from last period;
+                {kpiData.total_revenue.change}% from last period
               </span>
             </div>
           </CardContent>
@@ -247,7 +246,7 @@ export function AnalyticsDashboard() {
             <div className="flex items-center space-x-1 text-xs">
               {getTrendIcon(kpiData.avg_session_time.trend)}
               <span className={getTrendColor(kpiData.avg_session_time.trend)}>
-                {Math.abs(kpiData.avg_session_time.change)}% from last period;
+                {Math.abs(kpiData.avg_session_time.change)}% from last period
               </span>
             </div>
           </CardContent>
@@ -263,7 +262,7 @@ export function AnalyticsDashboard() {
             <div className="flex items-center space-x-1 text-xs">
               {getTrendIcon(kpiData.watch_parties.trend)}
               <span className={getTrendColor(kpiData.watch_parties.trend)}>
-                {kpiData.watch_parties.change}% from last period;
+                {kpiData.watch_parties.change}% from last period
               </span>
             </div>
           </CardContent>
@@ -279,7 +278,7 @@ export function AnalyticsDashboard() {
             <div className="flex items-center space-x-1 text-xs">
               {getTrendIcon(kpiData.conversion_rate.trend)}
               <span className={getTrendColor(kpiData.conversion_rate.trend)}>
-                {kpiData.conversion_rate.change}% from last period;
+                {kpiData.conversion_rate.change}% from last period
               </span>
             </div>
           </CardContent>
@@ -310,7 +309,7 @@ export function AnalyticsDashboard() {
                     <XAxis dataKey="date" tickFormatter={(value) => new Date(value).toLocaleDateString()} />
                     <YAxis />
                     <Tooltip labelFormatter={(value) => new Date(value).toLocaleDateString()} />
-                    <Area;
+                    <Area
                       type="monotone"
                       dataKey="users"
                       stackId="1"
@@ -318,7 +317,7 @@ export function AnalyticsDashboard() {
                       fill="#8884d8"
                       name="Total Users"
                     />
-                    <Area;
+                    <Area
                       type="monotone"
                       dataKey="active"
                       stackId="2"
@@ -366,7 +365,7 @@ export function AnalyticsDashboard() {
                   <YAxis yAxisId="right" orientation="right" />
                   <Tooltip />
                   <Bar yAxisId="left" dataKey="revenue" fill="#8884d8" name="Revenue ($)" />
-                  <Line;
+                  <Line
                     yAxisId="right"
                     type="monotone"
                     dataKey="subscriptions"
@@ -433,7 +432,7 @@ export function AnalyticsDashboard() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
-                    <Pie;
+                    <Pie
                       data={deviceData}
                       cx="50%"
                       cy="50%"
@@ -468,7 +467,7 @@ export function AnalyticsDashboard() {
                     <div className="text-right">
                       <div className="font-bold">{device.value}%</div>
                       <div className="text-xs text-muted-foreground">
-                        {Math.round((device.value / 100) * 2847)} users;
+                        {Math.round((device.value / 100) * 2847)} users
                       </div>
                     </div>
                   </div>
@@ -482,4 +481,4 @@ export function AnalyticsDashboard() {
   )
 }
 
-export default AnalyticsDashboard;
+export default AnalyticsDashboard
