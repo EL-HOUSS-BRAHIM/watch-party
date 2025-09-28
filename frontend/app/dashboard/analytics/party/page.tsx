@@ -1,13 +1,12 @@
 "use client"
 
-import { useState, useEffect, Suspense } from "react"
+import { useState, useEffect, useCallback, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import {
   BarChart,
@@ -26,9 +25,7 @@ import {
   Area
 } from "recharts"
 import {
-  TrendingUp,
   Users,
-  Eye,
   Clock,
   MessageCircle,
   Heart,
@@ -38,29 +35,11 @@ import {
   Activity,
   Download,
   Loader2,
-  Filter,
-  ArrowUp,
-  ArrowDown,
-  Minus,
   Star,
   Video,
-  Play,
-  Pause,
-  Volume2,
-  Settings,
-  MoreHorizontal,
-  ChevronDown,
-  Target,
-  Award,
-  Zap,
-  Coffee,
-  Gift,
-  Crown,
-  AlertCircle,
-  Info,
-  CheckCircle
+  AlertCircle
 } from "lucide-react"
-import { formatDistanceToNow, format, subDays, subMonths, parseISO } from "date-fns"
+import { format, parseISO } from "date-fns"
 
 interface PartyAnalytics {
   party: {
@@ -120,7 +99,7 @@ interface PartyAnalytics {
     timestamp: string
     event_type: "join" | "leave" | "play" | "pause" | "seek" | "message" | "reaction"
     user_id?: string
-    data?: any
+    data?: Record<string, unknown>
   }>
   engagement: {
     chat_activity: Array<{
@@ -154,7 +133,6 @@ interface PartyAnalytics {
 function PartyAnalyticsContent() {
   const searchParams = useSearchParams()
   const partyId = searchParams.get('id')
-  const { user } = useAuth()
   const { toast } = useToast()
 
   const [analytics, setAnalytics] = useState<PartyAnalytics | null>(null)
@@ -162,13 +140,7 @@ function PartyAnalyticsContent() {
   const [timeRange, setTimeRange] = useState<string>("all")
   const [activeTab, setActiveTab] = useState("overview")
 
-  useEffect(() => {
-    if (partyId) {
-      loadPartyAnalytics()
-    }
-  }, [partyId, timeRange])
-
-  const loadPartyAnalytics = async () => {
+  const loadPartyAnalytics = useCallback(async () => {
     if (!partyId) return
 
     try {
@@ -194,7 +166,13 @@ function PartyAnalyticsContent() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [partyId, timeRange, toast])
+
+  useEffect(() => {
+    if (partyId) {
+      loadPartyAnalytics()
+    }
+  }, [partyId, loadPartyAnalytics])
 
   const exportAnalytics = async () => {
     if (!partyId) return
@@ -287,8 +265,8 @@ function PartyAnalyticsContent() {
               Analytics data is not available for this party. This may be because:
             </p>
             <ul className="text-gray-600 text-sm mt-2 space-y-1">
-              <li>• The party hasn't started yet</li>
-              <li>• You don't have permission to view this data</li>
+              <li>• The party hasn&apos;t started yet</li>
+              <li>• You don&apos;t have permission to view this data</li>
               <li>• The party ID is invalid</li>
             </ul>
           </CardContent>
@@ -446,7 +424,7 @@ function PartyAnalyticsContent() {
                       <YAxis />
                       <Tooltip 
                         labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
-                        formatter={(value: any) => [value, "Viewers"]}
+                        formatter={(value: number) => [value, "Viewers"]}
                       />
                       <Area 
                         type="monotone" 
@@ -683,7 +661,7 @@ function PartyAnalyticsContent() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {analytics.demographics.by_location.slice(0, 10).map((location, index) => (
+                  {analytics.demographics.by_location.slice(0, 10).map((location) => (
                     <div key={location.country} className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <MapPin className="h-4 w-4 text-gray-500" />
@@ -750,7 +728,7 @@ function PartyAnalyticsContent() {
                       <YAxis />
                       <Tooltip 
                         labelFormatter={(value) => `${value}:00`}
-                        formatter={(value: any) => [value, "Participants"]}
+                        formatter={(value: number) => [value, "Participants"]}
                       />
                       <Bar dataKey="count" fill="#8884d8" />
                     </BarChart>
@@ -779,7 +757,7 @@ function PartyAnalyticsContent() {
                       <YAxis />
                       <Tooltip 
                         labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
-                        formatter={(value: any) => [`${value}ms`, "Loading Time"]}
+                        formatter={(value: number) => [`${value}ms`, "Loading Time"]}
                       />
                       <Line 
                         type="monotone" 
@@ -811,7 +789,7 @@ function PartyAnalyticsContent() {
                       <YAxis />
                       <Tooltip 
                         labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
-                        formatter={(value: any) => [`${value}ms`, "Sync Offset"]}
+                        formatter={(value: number) => [`${value}ms`, "Sync Offset"]}
                       />
                       <Area 
                         type="monotone" 
@@ -844,7 +822,7 @@ function PartyAnalyticsContent() {
                       <YAxis />
                       <Tooltip 
                         labelFormatter={(value) => format(parseISO(value), "HH:mm:ss")}
-                        formatter={(value: any) => [value, "Errors"]}
+                        formatter={(value: number) => [value, "Errors"]}
                       />
                       <Bar dataKey="error_count" fill="#ff7300" />
                     </BarChart>
