@@ -1,14 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect, useCallback } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import {
   ShoppingCart,
@@ -18,44 +16,19 @@ import {
   Palette,
   Smile,
   Shield,
-  Crown,
   Zap,
-  Gift,
-  Heart,
   Search,
-  Filter,
-  Eye,
-  Download,
   Check,
   Plus,
   Loader2,
-  Tag,
   Clock,
-  TrendingUp,
-  Sparkles,
   Camera,
-  Volume2,
-  Gamepad2,
-  Award,
-  Lock,
   CreditCard,
   Package,
-  RefreshCw,
   ShoppingBag,
-  Banknote,
-  Diamond,
-  Flame,
-  Music,
-  Video,
-  Coffee,
-  Rocket,
-  Snowflake,
-  Sun,
-  Moon,
-  Leaf,
-  Mountain
+  Banknote
 } from "lucide-react"
-import { formatDistanceToNow, format, parseISO } from "date-fns"
+import { formatDistanceToNow, parseISO } from "date-fns"
 
 interface StoreItem {
   id: string
@@ -108,8 +81,6 @@ interface CartItem {
 }
 
 export default function StorePage() {
-  const router = useRouter()
-  const { user } = useAuth()
   const { toast } = useToast()
 
   const [storeItems, setStoreItems] = useState<StoreItem[]>([])
@@ -123,11 +94,7 @@ export default function StorePage() {
   const [showCart, setShowCart] = useState(false)
   const [processingPurchase, setProcessingPurchase] = useState(false)
 
-  useEffect(() => {
-    loadStoreData()
-  }, [])
-
-  const loadStoreData = async () => {
+  const loadStoreData = useCallback(async () => {
     try {
       const token = localStorage.getItem("accessToken")
       const [storeRes, inventoryRes] = await Promise.all([
@@ -154,7 +121,11 @@ export default function StorePage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [toast])
+
+  useEffect(() => {
+    loadStoreData()
+  }, [loadStoreData])
 
   const addToCart = (item: StoreItem) => {
     if (item.owned) {
@@ -229,11 +200,11 @@ export default function StorePage() {
         const error = await response.json()
         throw new Error(error.message || "Purchase failed")
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Purchase error:", error)
       toast({
         title: "Purchase Failed",
-        description: error.message || "Failed to complete purchase.",
+        description: error instanceof Error ? error.message : "Failed to complete purchase.",
         variant: "destructive",
       })
     } finally {
@@ -291,11 +262,11 @@ export default function StorePage() {
         const error = await response.json()
         throw new Error(error.message || "Purchase failed")
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Cart purchase error:", error)
       toast({
         title: "Purchase Failed",
-        description: error.message || "Failed to complete purchase.",
+        description: error instanceof Error ? error.message : "Failed to complete purchase.",
         variant: "destructive",
       })
     } finally {
@@ -703,7 +674,7 @@ export default function StorePage() {
                   <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No items found</h3>
                   <p className="text-gray-600">
-                    Try adjusting your search or filters to find what you're looking for.
+                    Try adjusting your search or filters to find what you&apos;re looking for.
                   </p>
                 </CardContent>
               </Card>
