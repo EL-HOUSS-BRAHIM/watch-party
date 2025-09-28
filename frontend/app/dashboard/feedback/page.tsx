@@ -1,7 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,7 +8,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { useForm } from "react-hook-form"
@@ -17,48 +15,27 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 import {
   MessageCircle,
-  Star,
   Send,
   FileText,
   Upload,
   Paperclip,
-  Image,
   Search,
-  Filter,
   TrendingUp,
-  Clock,
-  CheckCircle,
   AlertTriangle,
   X,
-  Eye,
   Reply,
   ThumbsUp,
   ThumbsDown,
-  Flag,
-  MoreHorizontal,
   Loader2,
   Plus,
-  Edit,
-  Trash2,
-  Archive,
   Tag,
-  Calendar,
   User,
-  Mail,
-  Phone,
-  Globe,
-  Lock,
   Shield,
-  Info,
   Bug,
   Lightbulb,
-  Heart,
-  Zap,
-  Target,
-  Award,
-  Gift
+  Heart
 } from "lucide-react"
-import { formatDistanceToNow, format, parseISO } from "date-fns"
+import { formatDistanceToNow, parseISO } from "date-fns"
 
 interface FeedbackItem {
   id: string
@@ -128,7 +105,6 @@ interface FilterOptions {
 }
 
 export default function FeedbackPage() {
-  const router = useRouter()
   const { user } = useAuth()
   const { toast } = useToast()
 
@@ -137,7 +113,6 @@ export default function FeedbackPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedFeedback, setSelectedFeedback] = useState<FeedbackItem | null>(null)
-  const [showSubmitForm, setShowSubmitForm] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
   const [processingVotes, setProcessingVotes] = useState<Set<string>>(new Set())
   const [filters, setFilters] = useState<FilterOptions>({
@@ -149,8 +124,8 @@ export default function FeedbackPage() {
     showMyFeedback: false
   })
 
-  const submitForm = useForm({
-    resolver: zodResolver(feedbackSchema) as any,
+  const submitForm = useForm<z.infer<typeof feedbackSchema>>({
+    resolver: zodResolver(feedbackSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -168,15 +143,7 @@ export default function FeedbackPage() {
     },
   })
 
-  useEffect(() => {
-    loadFeedback()
-  }, [])
-
-  useEffect(() => {
-    filterFeedback()
-  }, [feedback, filters])
-
-  const loadFeedback = async () => {
+  const loadFeedback = useCallback(async () => {
     try {
       const token = localStorage.getItem("accessToken")
       const response = await fetch("/api/feedback/", {
@@ -199,9 +166,9 @@ export default function FeedbackPage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [toast])
 
-  const filterFeedback = () => {
+  const filterFeedback = useCallback(() => {
     let filtered = [...feedback]
 
     // Search filter
@@ -253,7 +220,15 @@ export default function FeedbackPage() {
     }
 
     setFilteredFeedback(filtered)
-  }
+  }, [feedback, filters, user?.id])
+
+  useEffect(() => {
+    loadFeedback()
+  }, [loadFeedback])
+
+  useEffect(() => {
+    filterFeedback()
+  }, [filterFeedback])
 
   const submitFeedback = async (data: z.infer<typeof feedbackSchema>) => {
     setIsSubmitting(true)
@@ -724,13 +699,13 @@ export default function FeedbackPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={submitForm.handleSubmit(submitFeedback as any)} className="space-y-6">
+                <form onSubmit={submitForm.handleSubmit(submitFeedback)} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm font-medium mb-2 block">Category *</label>
                       <Select
                         value={submitForm.watch("category")}
-                        onValueChange={(value: any) => submitForm.setValue("category", value)}
+                        onValueChange={(value: string) => submitForm.setValue("category", value as "bug" | "feature" | "improvement" | "question" | "complaint" | "compliment" | "other")}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -786,7 +761,7 @@ export default function FeedbackPage() {
                       <label className="text-sm font-medium mb-2 block">Priority *</label>
                       <Select
                         value={submitForm.watch("priority")}
-                        onValueChange={(value: any) => submitForm.setValue("priority", value)}
+                        onValueChange={(value: string) => submitForm.setValue("priority", value as "low" | "medium" | "high" | "urgent")}
                       >
                         <SelectTrigger>
                           <SelectValue />
