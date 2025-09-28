@@ -84,6 +84,10 @@ chown deploy:deploy /srv
 print_status "Setting up SSH for deploy user..."
 mkdir -p /home/deploy/.ssh
 touch /home/deploy/.ssh/authorized_keys
+
+# Add the SSH public key for GitHub Actions deployment
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDrezlsRoiBQxCydGqh9hfkmRcQ6QEV3zLblo/2Sc3UKyDv1fzqHpuW1SIzDCg7/Cf93LGIv4jLhlwFqLxUGqSchIrXUsZ3iAf8eZsmVIJ5EfvqS8lJmwtBLwk1eilW6Xn6yvwQ9u9GINNft6kDifeL9WA/IFi3PQjwz21HjtyJl6N7atSezppcFeiurS0ntnjXgvs85osaERVIzsSossH25gV3tRvyJ9XFKQ6j4LgvsYqx1s8oNj4OZCvojruHbDpgdcYiP+JQRRZVLI2VFzNpR0gU3Itj0HxTIC2AVqXoZoS2kOz08U4qypY6nIdYvD1s7z4D0egv7vJ87+2fSYO5LHfylycrI0YI83sK34F1xNuFzQU9yKpYC0viDjAK2VboKThcNVSjDHPMm4psE7pfA2gWct7Z4hbsy/IXMswXn/7zNuBYOjGfgt35rsO0i51ph18blNdVuW7SXgFTWLLX95VaTf8UQMVaG1lB6yo5X2gky1mBQkZn3Up/FcZrB4eoSDg1yIwZkGcCydN/qQnuSWjPiWcJlC7K2ZPQP+uxaiVaO4XBDZpQ15djoyjx7hrNEsKStFwLtxI7OS0IIm9A2Via4J2oLSvXjmkTC/g4hdW/g+O5goh/KcPA/UovRu+70VNhyuIzPRiIzd4m025JsJuHqDolFDequ/F/k+47/w== brahim-crafts.tech@gmail.com" >> /home/deploy/.ssh/authorized_keys
+
 chown -R deploy:deploy /home/deploy/.ssh
 chmod 700 /home/deploy/.ssh
 chmod 600 /home/deploy/.ssh/authorized_keys
@@ -170,7 +174,7 @@ http {
     gzip on;
     gzip_vary on;
     gzip_min_length 10240;
-    gzip_proxied expired no-cache no-store private must-revalidate auth;
+    gzip_proxied expired no-cache no-store private auth;
     gzip_types
         text/plain
         text/css
@@ -226,11 +230,10 @@ print_header "Bootstrap Complete!"
 print_status "✅ Server setup completed successfully"
 print_status ""
 print_status "Next steps:"
-print_status "1. Add your SSH public key to /home/deploy/.ssh/authorized_keys"
+print_status "1. SSH key has been automatically added for deploy user"
 print_status "2. Configure GitHub secrets:"
 print_status "   - LIGHTSAIL_HOST: $(curl -s ifconfig.me || hostname -I | cut -d' ' -f1)"
-print_status "   - LIGHTSAIL_SSH_KEY: Your private key"
+print_status "   - LIGHTSAIL_SSH_KEY: Your private key content"
 print_status "3. Push to master branch to trigger deployment"
 print_status ""
-print_warning "Important: Add your SSH key before logging out!"
-print_warning "Example: echo 'your-public-key' >> /home/deploy/.ssh/authorized_keys"
+print_status "Test SSH access: ssh deploy@$(curl -s ifconfig.me || hostname -I | cut -d' ' -f1)"
