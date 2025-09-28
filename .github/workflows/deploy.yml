@@ -54,17 +54,22 @@ jobs:
         pnpm install
         pnpm run build
         
-    - name: Deploy Frontend
+    - name: Deploy Frontend Build
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "frontend/.next,frontend/public,frontend/package.json,frontend/next.config.mjs"
+        target: "${{ secrets.MONOREPO_PATH }}/"
+        strip_components: 0
+        
+    - name: Restart Frontend Service
       uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.SERVER_HOST }}
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          cd ${{ secrets.MONOREPO_PATH }}
-          git pull origin master
-          cd frontend
-          rm -rf node_modules
-          pnpm install
-          pnpm run build
+          cd ${{ secrets.MONOREPO_PATH }}/frontend
           pm2 restart watch-party-frontend
