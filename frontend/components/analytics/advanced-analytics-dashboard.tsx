@@ -7,9 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { CalendarIcon, Download, TrendingUp, Users, Play, DollarSign, Eye } from "lucide-react"
 import {
   LineChart,
   Line,
@@ -121,7 +119,7 @@ export function AdvancedAnalyticsDashboard() {
       }
 
       setData(transformedData)
-    } catch (error) {
+    } catch {
       console.error("Failed to fetch analytics:", error)
       toast({
         title: "Error",
@@ -166,7 +164,7 @@ export function AdvancedAnalyticsDashboard() {
         title: "Export Successful",
         description: `Analytics data exported as ${format.toUpperCase()}`,
       })
-    } catch (error) {
+    } catch {
       console.error("Export failed:", error)
       toast({
         title: "Export Failed",
@@ -237,11 +235,11 @@ export function AdvancedAnalyticsDashboard() {
             </SelectContent>
           </Select>
 
-          <Button onClick={() => exportData(&quot;csv")} variant="outline">
+          <Button onClick={() => exportData(&quot;csv&quot;)} variant=&quot;outline">
             <Download className="mr-2 h-4 w-4" />
             Export CSV
           </Button>
-          <Button onClick={() => exportData(&quot;excel")} variant="outline">
+          <Button onClick={() => exportData(&quot;excel&quot;)} variant=&quot;outline">
             <Download className="mr-2 h-4 w-4" />
             Export PDF
           </Button>
@@ -499,7 +497,7 @@ export function AdvancedAnalyticsDashboard() {
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold text-green-600">${plan.revenue}</div>
-                        <Progress value={(plan.revenue / data.revenueMetrics.plans.reduce((sum, p) => sum + p.revenue, 0)) * 100} className=&quot;w-20" />
+                        <Progress value={(plan.revenue / data.revenueMetrics.plans.reduce((sum, p) => sum + p.revenue, 0)) * 100} className=&quot;w-20&quot; />
                       </div>
                     </div>
                   ))}

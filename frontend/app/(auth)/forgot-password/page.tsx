@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
         title: "Reset link sent!",
         description: "Please check your email for the password reset link.",
       })
-    } catch (err: unknown) {
+    } catch {
       const errorMessage = (err as { response?: { data?: { message?: string; detail?: string } }; message?: string })?.response?.data?.message 
                           || (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail 
                           || (err as { message?: string })?.message 

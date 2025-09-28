@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
-import { Eye, EyeOff, Lock, Shield, CheckCircle, AlertCircle, ArrowLeft, Key, Sparkles } from "lucide-react"
 import Link from "next/link"
 import { AuthAPI } from "@/lib/api/auth"
 
@@ -117,7 +116,7 @@ function ResetPasswordForm() {
       } else {
         setErrors({ submit: response?.message || "Failed to reset password" })
       }
-    } catch (error: unknown) {
+    } catch {
       console.error("Reset password error:", error)
       const message = (error as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message 
         || (error as { message?: string })?.message 
@@ -134,7 +133,7 @@ function ResetPasswordForm() {
 
     // Clear specific error when user starts typing
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: &quot;" }))
+      setErrors((prev) => ({ ...prev, [name]: &quot;&quot; }))
     }
   }
 
@@ -223,7 +222,7 @@ function ResetPasswordForm() {
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                   disabled={isLoading}
                 >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4" />}
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4&quot; />}
                 </button>
               </div>
 
@@ -233,7 +232,7 @@ function ResetPasswordForm() {
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-gray-400">Password Strength</span>
                     <span
-                      className={`font-medium ${passwordStrength >= 75 ? &quot;text-green-400" : passwordStrength >= 50 ? "text-yellow-400" : "text-red-400"}`}
+                      className={`font-medium ${passwordStrength >= 75 ? &quot;text-green-400&quot; : passwordStrength >= 50 ? &quot;text-yellow-400" : "text-red-400"}`}
                     >
                       {getPasswordStrengthText(passwordStrength)}
                     </span>
@@ -273,7 +272,7 @@ function ResetPasswordForm() {
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                   disabled={isLoading}
                 >
-                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4" />}
+                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4&quot; />}
                 </button>
               </div>
 
@@ -305,7 +304,7 @@ function ResetPasswordForm() {
               </h4>
               <ul className="space-y-1 text-sm">
                 <li
-                  className={`flex items-center space-x-2 ${formData.password.length >= 8 ? &quot;text-green-400" : "text-gray-400"}`}
+                  className={`flex items-center space-x-2 ${formData.password.length >= 8 ? &quot;text-green-400&quot; : &quot;text-gray-400"}`}
                 >
                   <CheckCircle className="w-3 h-3" />
                   <span>At least 8 characters</span>

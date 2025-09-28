@@ -8,20 +8,6 @@ import { Badge } from '@/components/ui/badge'
 import { Slider } from '@/components/ui/slider'
 import { Switch } from '@/components/ui/switch'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-  Mic, 
-  MicOff, 
-  Volume2, 
-  VolumeX, 
-  Settings, 
-  Users, 
-  Phone, 
-  PhoneOff,
-  Headphones,
-  Speaker,
-  Waves,
-  AlertCircle
-} from 'lucide-react'
 import { useSocket } from '@/contexts/socket-context'
 
 interface VoiceChatProps {
@@ -51,8 +37,8 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {
   const [masterVolume, setMasterVolume] = useState([50])
   const [microphoneVolume, setMicrophoneVolume] = useState([50])
   const [audioDevices, setAudioDevices] = useState<AudioDevice[]>([])
-  const [selectedMicrophone, setSelectedMicrophone] = useState<string>(&apos;')
-  const [selectedSpeaker, setSelectedSpeaker] = useState<string>(&apos;')
+  const [selectedMicrophone, setSelectedMicrophone] = useState<string>(&apos;&apos;)
+  const [selectedSpeaker, setSelectedSpeaker] = useState<string>(&apos;&apos;)
   const [showSettings, setShowSettings] = useState(false)
   const [voiceActivity, setVoiceActivity] = useState<Record<string, boolean>>({})
   const [error, setError] = useState<string | null>(null)
@@ -100,11 +86,11 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {
       setAudioDevices(audioDevices)
       
       // Set default devices
-      const defaultMic = audioDevices.find(d => d.kind === &apos;audioinput')
-      const defaultSpeaker = audioDevices.find(d => d.kind === 'audiooutput')
+      const defaultMic = audioDevices.find(d => d.kind === &apos;audioinput&apos;)
+      const defaultSpeaker = audioDevices.find(d => d.kind === &apos;audiooutput')
       if (defaultMic) setSelectedMicrophone(defaultMic.deviceId)
       if (defaultSpeaker) setSelectedSpeaker(defaultSpeaker.deviceId)
-    } catch (error) {
+    } catch {
       console.error('Failed to get audio devices:', error)
       setError('Failed to access audio devices')
     }
@@ -129,7 +115,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {
       // Join voice chat room
       socket?.emit('join-voice-chat', { partyId })
       
-    } catch (error) {
+    } catch {
       console.error('Failed to connect to voice chat:', error)
       setError('Failed to access microphone. Please check permissions.')
     }
@@ -165,7 +151,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {
       
       analyserRef.current.fftSize = 256
       startVoiceActivityDetection()
-    } catch (error) {
+    } catch {
       console.error('Failed to setup audio analyzer:', error)
     }
   }
@@ -350,14 +336,14 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {
                 size="sm"
                 onClick={toggleMute}
               >
-                {isMuted ? <MicOff className="h-4 w-4" /> : <Mic className=&quot;h-4 w-4" />}
+                {isMuted ? <MicOff className="h-4 w-4" /> : <Mic className=&quot;h-4 w-4&quot; />}
               </Button>
               <Button
                 variant={isDeafened ? "destructive" : "outline"}
                 size="sm"
                 onClick={toggleDeafen}
               >
-                {isDeafened ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4" />}
+                {isDeafened ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4&quot; />}
               </Button>
             </div>
 
@@ -401,7 +387,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {
                       className="w-full p-2 border rounded-md"
                     >
                       {audioDevices
-                        .filter(device => device.kind === &apos;audioinput')
+                        .filter(device => device.kind === &apos;audioinput&apos;)
                         .map(device => (
                           <option key={device.deviceId} value={device.deviceId}>
                             {device.label || `Microphone ${device.deviceId.slice(0, 8)}`}
@@ -418,7 +404,7 @@ export function VoiceChat({ partyId, isHost, participants }: VoiceChatProps) {
                       className="w-full p-2 border rounded-md"
                     >
                       {audioDevices
-                        .filter(device => device.kind === &apos;audiooutput')
+                        .filter(device => device.kind === &apos;audiooutput&apos;)
                         .map(device => (
                           <option key={device.deviceId} value={device.deviceId}>
                             {device.label || `Speaker ${device.deviceId.slice(0, 8)}`}

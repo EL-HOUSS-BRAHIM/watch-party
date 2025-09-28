@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI, analyticsAPI } from "@/lib/api"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -21,21 +22,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {
-  Search,
-  Eye,
-  Accessibility,
-  TrendingUp,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  Settings,
-  RefreshCw,
-  ExternalLink,
-  FileText,
-  ImageIcon,
-  Link,
-} from "lucide-react"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
 
 interface SEOMetric {
@@ -117,8 +103,8 @@ export function SEOAccessibilityOptimizer() {
           {
             name: "Page Speed",
             score: analyticsData.performance?.page_speed || 85,
-            status: (analyticsData.performance?.page_speed || 85) >= 90 ? &quot;good" : 
-                   (analyticsData.performance?.page_speed || 85) >= 70 ? "needs-improvement" : "poor",
+            status: (analyticsData.performance?.page_speed || 85) >= 90 ? &quot;good&quot; : 
+                   (analyticsData.performance?.page_speed || 85) >= 70 ? &quot;needs-improvement" : "poor",
             description: "How fast your pages load",
             recommendations: ["Optimize images for web", "Enable compression", "Minimize JavaScript"],
           },
@@ -167,7 +153,7 @@ export function SEOAccessibilityOptimizer() {
         setAccessibilityIssues(issues)
       }
 
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch SEO data:', error)
       toast({
         title: "Error",
@@ -188,7 +174,7 @@ export function SEOAccessibilityOptimizer() {
         title: "SEO Scan Complete",
         description: "Your SEO and accessibility data has been updated.",
       })
-    } catch (error) {
+    } catch {
       console.error('SEO scan failed:', error)
       toast({
         title: "Scan Failed",
@@ -258,7 +244,7 @@ export function SEOAccessibilityOptimizer() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
@@ -315,7 +301,7 @@ export function SEOAccessibilityOptimizer() {
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${criticalIssues > 0 ? &quot;text-red-600" : "text-green-600"}`}>
+            <div className={`text-2xl font-bold ${criticalIssues > 0 ? &quot;text-red-600&quot; : &quot;text-green-600"}`}>
               {criticalIssues}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">Require immediate attention</div>

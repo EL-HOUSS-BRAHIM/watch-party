@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -73,7 +72,7 @@ export function UserManagement() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [roleFilter, setRoleFilter] = useState("all")
   const [sortBy, setSortBy] = useState("createdAt")
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">(&quot;desc")
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">(&quot;desc&quot;)
   const [isLoading, setIsLoading] = useState(true)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [userActions, setUserActions] = useState<UserAction[]>([])
@@ -102,7 +101,7 @@ export function UserManagement() {
       const totalItems = data.pagination?.total ?? data.count ?? results.length
       const pageSize = data.pagination?.page_size ?? 20
       setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
-    } catch (error) {
+    } catch {
       console.error("Failed to load users:", error)
       toast({
         title: "Error",
@@ -127,7 +126,7 @@ export function UserManagement() {
         const data = await response.json()
         setUserActions(data.results || data)
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load user actions:", error)
     }
   }
@@ -156,7 +155,7 @@ export function UserManagement() {
           description: `User status changed to ${status}`,
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to update user status:", error)
       toast({
         title: "Error",
@@ -186,7 +185,7 @@ export function UserManagement() {
           description: `User role changed to ${role}`,
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to update user role:", error)
       toast({
         title: "Error",
@@ -220,7 +219,7 @@ export function UserManagement() {
           description: `${action} applied to ${userIds.length} users`,
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to perform bulk action:", error)
       toast({
         title: "Error",
@@ -242,7 +241,7 @@ export function UserManagement() {
         a.click()
         document.body.removeChild(a)
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to export users:", error)
       toast({
         title: "Error",
@@ -442,7 +441,7 @@ export function UserManagement() {
                     </p>
                     {user.lastLoginAt && (
                       <p>
-                        <strong>Last Login:</strong>{&quot; "}
+                        <strong>Last Login:</strong>{&quot; &quot;}
                         {formatDistanceToNow(new Date(user.lastLoginAt), { addSuffix: true })}
                       </p>
                     )}
@@ -692,13 +691,13 @@ export function UserManagement() {
                             View Details
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => updateUserStatus(user.id, &quot;suspended", "Administrative action")}
+                            onClick={() => updateUserStatus(user.id, &quot;suspended&quot;, &quot;Administrative action")}
                           >
                             <Ban className="mr-2 h-4 w-4" />
                             Suspend
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => updateUserRole(user.id, user.role === &quot;moderator" ? "user" : "moderator")}
+                            onClick={() => updateUserRole(user.id, user.role === &quot;moderator&quot; ? &quot;user" : "moderator")}
                           >
                             <Shield className="mr-2 h-4 w-4" />
                             {user.role === "moderator" ? "Remove Moderator" : "Make Moderator"}
@@ -759,12 +758,12 @@ export function UserManagement() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-2">
-              <Button onClick={() => bulkUpdateUsers(&quot;suspend", selectedUsers, "Bulk suspension")}>Suspend All</Button>
-              <Button onClick={() => bulkUpdateUsers(&quot;activate", selectedUsers, "Bulk activation")}>
+              <Button onClick={() => bulkUpdateUsers(&quot;suspend&quot;, selectedUsers, &quot;Bulk suspension")}>Suspend All</Button>
+              <Button onClick={() => bulkUpdateUsers(&quot;activate&quot;, selectedUsers, &quot;Bulk activation")}>
                 Activate All
               </Button>
-              <Button onClick={() => bulkUpdateUsers(&quot;verify", selectedUsers, "Bulk verification")}>Verify All</Button>
-              <Button variant="destructive" onClick={() => bulkUpdateUsers(&quot;delete", selectedUsers, "Bulk deletion")}>
+              <Button onClick={() => bulkUpdateUsers(&quot;verify&quot;, selectedUsers, &quot;Bulk verification")}>Verify All</Button>
+              <Button variant="destructive" onClick={() => bulkUpdateUsers(&quot;delete&quot;, selectedUsers, &quot;Bulk deletion")}>
                 Delete All
               </Button>
             </div>

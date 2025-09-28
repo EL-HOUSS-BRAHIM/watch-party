@@ -8,19 +8,6 @@ import { Badge } from '@/components/ui/badge'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
-import { 
-  Monitor, 
-  MonitorX, 
-  Maximize, 
-  Minimize, 
-  Volume2, 
-  VolumeX,
-  Settings,
-  Users,
-  AlertCircle,
-  Loader2,
-  Cast
-} from 'lucide-react'
 import { useSocket } from '@/contexts/socket-context'
 
 interface ScreenSharingProps {
@@ -148,7 +135,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
         }
       })
       
-    } catch (error) {
+    } catch {
       console.error('Failed to start screen sharing:', error)
       setError('Failed to start screen sharing. Please check permissions.')
     } finally {
@@ -410,7 +397,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
                 ) : (
                   <Cast className="h-4 w-4" />
                 )}
-                <span>{loading ? &apos;Starting...' : 'Share Screen'}</span>
+                <span>{loading ? &apos;Starting...&apos; : &apos;Share Screen'}</span>
               </Button>
             )}
             
@@ -480,7 +467,7 @@ export function ScreenSharing({ partyId, isHost, participants }: ScreenSharingPr
               </div>
               <div className="absolute bottom-2 left-2">
                 <Badge>
-                  {participants.find(p => p.id === activeSharer)?.username || &apos;Unknown'}'s Screen
+                  {participants.find(p => p.id === activeSharer)?.username || &apos;Unknown&apos;}&apos;s Screen
                 </Badge>
               </div>
             </div>

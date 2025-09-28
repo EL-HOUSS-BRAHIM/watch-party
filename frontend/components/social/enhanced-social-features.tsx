@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
@@ -18,24 +17,6 @@ import {
 } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Progress } from "@/components/ui/progress"
-import {
-  Users,
-  UserPlus,
-  Heart,
-  MessageCircle,
-  Share2,
-  Trophy,
-  Star,
-  Crown,
-  Zap,
-  Gift,
-  Calendar,
-  MapPin,
-  Search,
-  Plus,
-  Settings,
-  CheckCircle,
-} from "lucide-react"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
@@ -339,7 +320,7 @@ export function EnhancedSocialFeatures() {
       } else {
         setAchievements([])
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to fetch social data:", error)
       toast({
         title: "Error",
@@ -368,7 +349,7 @@ export function EnhancedSocialFeatures() {
             : activity,
         ),
       )
-    } catch (error) {
+    } catch {
       console.error('Failed to like activity:', error)
       toast({
         title: "Error",
@@ -395,7 +376,7 @@ export function EnhancedSocialFeatures() {
         title: "Friend request sent",
         description: "Your friend request has been delivered.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to send friend request:", error)
       toast({
         title: "Request failed",
@@ -425,7 +406,7 @@ export function EnhancedSocialFeatures() {
         title: "Joined community",
         description: "You're now part of this community.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to join community:", error)
       toast({
         title: "Join failed",
@@ -879,7 +860,7 @@ export function EnhancedSocialFeatures() {
                       {index === 0 && <Crown className="h-4 w-4 text-yellow-500" />}
                       {index === 1 && <Trophy className="h-4 w-4 text-gray-400" />}
                       {index === 2 && <Trophy className="h-4 w-4 text-orange-500" />}
-                      {index > 2 && <span className=&quot;text-sm font-medium">#{index + 1}</span>}
+                      {index > 2 && <span className=&quot;text-sm font-medium&quot;>#{index + 1}</span>}
                     </div>
 
                     <Avatar>

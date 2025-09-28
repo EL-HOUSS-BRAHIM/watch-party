@@ -5,16 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Users, 
-  DollarSign, 
-  Activity,
-  Brain,
-  Calendar,
-  Target
-} from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, AreaChart, Area, BarChart, Bar } from 'recharts';
 import { analyticsAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
@@ -60,7 +50,7 @@ export default function PredictiveAnalytics() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const fetchPredictiveData = async () => {
+    const fetchPredictiveData = useCallback(async () => {
       setLoading(true);
       try {
         // Fetch real predictive analytics from API
@@ -90,7 +80,7 @@ export default function PredictiveAnalytics() {
         };
         
         setData(transformedData);
-      } catch (error) {
+      } catch {
         console.error('Failed to fetch predictive data:', error);
         toast({
           title: "Error",
@@ -100,7 +90,7 @@ export default function PredictiveAnalytics() {
       } finally {
         setLoading(false);
       }
-    };
+    };, [])
 
     fetchPredictiveData();
   }, [timeframe, toast]);

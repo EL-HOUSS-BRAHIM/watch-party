@@ -5,9 +5,7 @@ import Image from "next/image"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { UserPlus, MessageCircle, Share2, Calendar, MapPin, Link as LinkIcon } from 'lucide-react'
 import { useApi } from '@/hooks/use-api'
 import { LoadingSpinner } from '@/components/ui/loading'
 
@@ -63,28 +61,28 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
     fetchProfile()
   }, [userId])
 
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     try {
       setIsLoading(true)
       const response = await get(`/users/${userId}/public-profile/`)
       setProfile(response.data as PublicProfile)
-    } catch (err: unknown) {
+    } catch {
       setError(err.response?.data?.message || 'Failed to load profile')
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
-  const handleSendFriendRequest = async () => {
+  const handleSendFriendRequest = useCallback(async () => {
     try {
       await post('/friends/requests/', { recipient_id: userId })
       // Show success toast
-    } catch (err: unknown) {
+    } catch {
       // Show error toast
     }
-  }
+  }, [])
 
-  const handleShare = async () => {
+  const handleShare = useCallback(async () => {
     const url = `${window.location.origin}/profile/${userId}/public`
     if (navigator.share) {
       await navigator.share({
@@ -95,7 +93,7 @@ export function PublicProfileView({ userId }: PublicProfileViewProps) {
       await navigator.clipboard.writeText(url)
       // Show copied toast
     }
-  }
+  }, [])
 
   const formatWatchTime = (minutes: number) => {
     if (minutes < 60) return `${minutes}m`

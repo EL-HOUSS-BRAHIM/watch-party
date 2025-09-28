@@ -4,11 +4,9 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Search, Filter, UserPlus, Users, Star, MapPin, Calendar, RefreshCw } from 'lucide-react';
 import { usersAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
@@ -154,7 +152,7 @@ export default function SmartFriendSearch() {
       const response = await usersAPI.getFriendSuggestions({ limit: 12 });
       const normalized = (response ?? []).map((item: unknown) => normalizeSearchUser(item));
       setSuggestions(normalized);
-    } catch (error) {
+    } catch {
       console.error('Failed to load friend suggestions:', error);
       toast({
         title: 'Unable to load suggestions',
@@ -185,7 +183,7 @@ export default function SmartFriendSearch() {
       const response = await usersAPI.searchUsers(params);
       const results = response?.results ?? [];
       setUsers(results.map((result: unknown) => normalizeSearchUser(result)));
-    } catch (error) {
+    } catch {
       console.error('Failed to search users:', error);
       toast({
         title: 'Search failed',
@@ -350,7 +348,7 @@ export default function SmartFriendSearch() {
         title: 'Friend request sent',
         description: 'We let them know you want to connect.',
       });
-    } catch (error) {
+    } catch {
       console.error('Failed to send friend request:', error);
       toast({
         title: 'Unable to send request',
@@ -385,7 +383,7 @@ export default function SmartFriendSearch() {
         title: 'Friend request accepted',
         description: 'You are now connected.',
       });
-    } catch (error) {
+    } catch {
       console.error('Failed to accept friend request:', error);
       toast({
         title: 'Unable to update request',

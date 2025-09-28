@@ -4,27 +4,12 @@ import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
-import { 
-  AlertTriangle,
-  Clock,
-  CheckCircle,
-  XCircle,
-  Eye,
-  Flag,
-  MessageSquare,
-  User,
-  Calendar,
-  Filter,
-  Search,
-  MoreHorizontal
-} from 'lucide-react'
 
 interface Report {
   id: string
@@ -100,9 +85,9 @@ export function ModerationReports() {
   const [loading, setLoading] = useState(true)
   const [selectedReport, setSelectedReport] = useState<Report | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string>(&apos;all')
-  const [priorityFilter, setPriorityFilter] = useState<string>(&apos;all')
-  const [typeFilter, setTypeFilter] = useState<string>(&apos;all')
+  const [statusFilter, setStatusFilter] = useState<string>(&apos;all&apos;)
+  const [priorityFilter, setPriorityFilter] = useState<string>(&apos;all&apos;)
+  const [typeFilter, setTypeFilter] = useState<string>(&apos;all&apos;)
 
   useEffect(() => {
     loadReports()
@@ -115,7 +100,7 @@ export function ModerationReports() {
         const data = await response.json()
         setReports(data)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to load reports:', error)
     } finally {
       setLoading(false)
@@ -136,7 +121,7 @@ export function ModerationReports() {
         loadReports()
         setSelectedReport(null)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to take action:', error)
     }
   }
@@ -154,7 +139,7 @@ export function ModerationReports() {
       if (response.ok) {
         loadReports()
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to assign report:', error)
     }
   }
@@ -278,30 +263,30 @@ export function ModerationReports() {
       <Tabs defaultValue="pending" className="space-y-4">
         <TabsList>
           <TabsTrigger value="pending">
-            Pending ({reports.filter(r => r.status === &apos;pending').length})
+            Pending ({reports.filter(r => r.status === &apos;pending&apos;).length})
           </TabsTrigger>
           <TabsTrigger value="investigating">
-            Investigating ({reports.filter(r => r.status === &apos;investigating').length})
+            Investigating ({reports.filter(r => r.status === &apos;investigating&apos;).length})
           </TabsTrigger>
           <TabsTrigger value="resolved">
-            Resolved ({reports.filter(r => r.status === &apos;resolved').length})
+            Resolved ({reports.filter(r => r.status === &apos;resolved&apos;).length})
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="pending" className="space-y-4">
-          {filteredReports.filter(r => r.status === &apos;pending').map((report) => (
+          {filteredReports.filter(r => r.status === &apos;pending&apos;).map((report) => (
             <ReportCard key={report.id} report={report} onViewDetails={setSelectedReport} />
           ))}
         </TabsContent>
 
         <TabsContent value="investigating" className="space-y-4">
-          {filteredReports.filter(r => r.status === &apos;investigating').map((report) => (
+          {filteredReports.filter(r => r.status === &apos;investigating&apos;).map((report) => (
             <ReportCard key={report.id} report={report} onViewDetails={setSelectedReport} />
           ))}
         </TabsContent>
 
         <TabsContent value="resolved" className="space-y-4">
-          {filteredReports.filter(r => r.status === &apos;resolved').map((report) => (
+          {filteredReports.filter(r => r.status === &apos;resolved&apos;).map((report) => (
             <ReportCard key={report.id} report={report} onViewDetails={setSelectedReport} />
           ))}
         </TabsContent>

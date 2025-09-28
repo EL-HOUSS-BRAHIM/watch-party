@@ -16,22 +16,6 @@ import WatchPartyTable from "@/components/ui/watch-party-table"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { billingAPI } from "@/lib/api"
-import {
-  CreditCard,
-  Crown,
-  Zap,
-  Calendar,
-  Download,
-  Plus,
-  Edit,
-  Trash2,
-  Check,
-  X,
-  AlertTriangle,
-  ArrowLeft,
-  Loader2,
-  RefreshCw,
-} from "lucide-react"
 import { format } from "date-fns"
 
 import type { SubscriptionPlan, Subscription as APISubscription, PaymentMethod as APIPaymentMethod, BillingHistory } from "@/lib/api/types"
@@ -205,7 +189,7 @@ export default function BillingPage() {
       try {
         const subData = await billingAPI.getSubscription()
         setSubscription(mapAPISubscriptionToLocal(subData))
-      } catch (error) {
+      } catch {
         console.log("No active subscription")
       }
 
@@ -214,7 +198,7 @@ export default function BillingPage() {
         const pmData = await billingAPI.getPaymentMethods()
         const mappedPaymentMethods = (pmData.payment_methods || []).map(mapAPIPaymentMethodToLocal)
         setPaymentMethods(mappedPaymentMethods)
-      } catch (error) {
+      } catch {
         console.error("Failed to load payment methods:", error)
       }
 
@@ -223,7 +207,7 @@ export default function BillingPage() {
         const invoiceData = await billingAPI.getBillingHistory()
         const mappedInvoices = (invoiceData.results || []).map(mapAPIBillingHistoryToInvoice)
         setInvoices(mappedInvoices)
-      } catch (error) {
+      } catch {
         console.error("Failed to load invoices:", error)
       }
 
@@ -232,10 +216,10 @@ export default function BillingPage() {
         const plansData = await billingAPI.getPlans()
         const mappedPlans = (plansData.plans || []).map(mapAPIPlanToLocal)
         setAvailablePlans(mappedPlans)
-      } catch (error) {
+      } catch {
         console.error("Failed to load plans:", error)
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load billing data:", error)
       toast({
         title: "Error",
@@ -267,7 +251,7 @@ export default function BillingPage() {
         title: "Payment Method Added",
         description: "Your payment method has been added successfully.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to add payment method:", error)
       toast({
         title: "Error",
@@ -289,7 +273,7 @@ export default function BillingPage() {
         title: "Payment Method Removed",
         description: "The payment method has been removed.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to remove payment method:", error)
       toast({
         title: "Error",
@@ -307,7 +291,7 @@ export default function BillingPage() {
         title: "Default Payment Method Updated",
         description: "Your default payment method has been updated.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to set default payment method:", error)
       toast({
         title: "Error",
@@ -322,7 +306,7 @@ export default function BillingPage() {
     try {
       const response = await billingAPI.subscribe({
         plan_id: planId,
-        payment_method_id: paymentMethods.find(pm => pm.isDefault)?.id || &quot;",
+        payment_method_id: paymentMethods.find(pm => pm.isDefault)?.id || &quot;&quot;,
       })
 
       if (response.success) {
@@ -334,7 +318,7 @@ export default function BillingPage() {
           description: "Your subscription plan has been updated successfully.",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to change plan:", error)
       toast({
         title: "Error",
@@ -364,7 +348,7 @@ export default function BillingPage() {
         description:
           "Your subscription has been cancelled. You'll retain access until the end of your billing period.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to cancel subscription:", error)
       toast({
         title: "Error",
@@ -383,7 +367,7 @@ export default function BillingPage() {
         title: "Subscription Reactivated",
         description: "Your subscription has been reactivated successfully.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to reactivate subscription:", error)
       toast({
         title: "Error",
@@ -404,7 +388,7 @@ export default function BillingPage() {
       a.click()
       document.body.removeChild(a)
       window.URL.revokeObjectURL(url)
-    } catch (error) {
+    } catch {
       console.error("Failed to download invoice:", error)
       toast({
         title: "Error",
@@ -450,7 +434,7 @@ export default function BillingPage() {
       id: "number",
       header: "Invoice",
       accessorKey: "number" as keyof Invoice,
-      cell: ({ row }: { row: Invoice }) => <div className=&quot;font-medium">#{row.number}</div>,
+      cell: ({ row }: { row: Invoice }) => <div className=&quot;font-medium&quot;>#{row.number}</div>,
     },
     {
       id: "description",
@@ -460,12 +444,12 @@ export default function BillingPage() {
     {
       id: "amount",
       header: "Amount",
-      cell: ({ row }: { row: Invoice }) => <div className=&quot;font-medium">${row.amount.toFixed(2)}</div>,
+      cell: ({ row }: { row: Invoice }) => <div className=&quot;font-medium&quot;>${row.amount.toFixed(2)}</div>,
     },
     {
       id: "date",
       header: "Date",
-      cell: ({ row }: { row: Invoice }) => <div>{format(new Date(row.date), &quot;MMM dd, yyyy")}</div>,
+      cell: ({ row }: { row: Invoice }) => <div>{format(new Date(row.date), &quot;MMM dd, yyyy&quot;)}</div>,
     },
     {
       id: "status",
@@ -501,7 +485,7 @@ export default function BillingPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -549,7 +533,7 @@ export default function BillingPage() {
                       {subscription.trialEnd && (
                         <div className="flex items-center justify-between text-sm">
                           <span>Trial ends:</span>
-                          <span>{format(new Date(subscription.trialEnd), &quot;MMM dd, yyyy")}</span>
+                          <span>{format(new Date(subscription.trialEnd), &quot;MMM dd, yyyy&quot;)}</span>
                         </div>
                       )}
                     </div>
@@ -760,7 +744,7 @@ export default function BillingPage() {
                               ))}
                             </div>
 
-                            <Button onClick={() => changePlan(plan.id)} disabled={isProcessing} className=&quot;w-full">
+                            <Button onClick={() => changePlan(plan.id)} disabled={isProcessing} className=&quot;w-full&quot;>
                               Select Plan
                             </Button>
                           </CardContent>

@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Play, Clock, Calendar, Filter, Search, Eye } from "lucide-react"
 import { useApi } from "@/hooks/use-api"
 import { formatDistanceToNow, formatDuration } from "date-fns"
 
@@ -36,7 +35,7 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {
   const [history, setHistory] = useState<WatchHistoryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [filterBy, setFilterBy] = useState<"all" | "solo" | "party">(&quot;all")
+  const [filterBy, setFilterBy] = useState<"all" | "solo" | "party">(&quot;all&quot;)
   
   const api = useApi()
 
@@ -49,7 +48,7 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/watch-history/`)
       setHistory((response.data as Record<string, unknown>).history || [])
-    } catch (err) {
+    } catch {
       console.error("Failed to load watch history:", err)
     } finally {
       setIsLoading(false)
@@ -132,21 +131,21 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {
             <div className="flex space-x-2">
               <Button
                 variant={filterBy === "all" ? "default" : "outline"}
-                onClick={() => setFilterBy(&quot;all")}
+                onClick={() => setFilterBy(&quot;all&quot;)}
                 size="sm"
               >
                 All
               </Button>
               <Button
                 variant={filterBy === "solo" ? "default" : "outline"}
-                onClick={() => setFilterBy(&quot;solo")}
+                onClick={() => setFilterBy(&quot;solo&quot;)}
                 size="sm"
               >
                 Solo
               </Button>
               <Button
                 variant={filterBy === "party" ? "default" : "outline"}
-                onClick={() => setFilterBy(&quot;party")}
+                onClick={() => setFilterBy(&quot;party&quot;)}
                 size="sm"
               >
                 Party
@@ -223,7 +222,7 @@ export function UserWatchHistory({ userId }: UserWatchHistoryProps) {
 
                 {/* Actions */}
                 <div className="flex flex-col space-y-2">
-                  <Button size="sm" onClick={() => window.open(`/videos/${item.video.id}`, &apos;_blank')}>
+                  <Button size="sm" onClick={() => window.open(`/videos/${item.video.id}`, &apos;_blank&apos;)}>
                     <Play className="w-4 h-4 mr-1" />
                     Watch Again
                   </Button>

@@ -470,7 +470,7 @@ export class VideosAPI {
           audio_channels: video.audio_channels || 0
         }
       })) || []
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch processing jobs:', error)
       // Return empty array on error
       return []

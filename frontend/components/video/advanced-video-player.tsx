@@ -10,23 +10,6 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
-import {
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
-  Maximize,
-  Minimize,
-  Settings,
-  SkipBack,
-  SkipForward,
-  PictureInPicture,
-  Download,
-  Share2,
-  Bookmark,
-  ThumbsUp,
-  MessageCircle,
-} from "lucide-react"
 
 interface VideoQuality {
   label: string
@@ -136,7 +119,7 @@ export default function AdvancedVideoPlayer({
     }
 
     document.addEventListener("keydown", handleKeyPress)
-    return () => document.removeEventListener(&quot;keydown", handleKeyPress)
+    return () => document.removeEventListener(&quot;keydown&quot;, handleKeyPress)
   }, [])
 
   // Video event handlers
@@ -275,7 +258,7 @@ export default function AdvancedVideoPlayer({
         await videoRef.current.requestPictureInPicture()
         setIsPiPActive(true)
       }
-    } catch (error) {
+    } catch {
       toast({
         title: "Picture-in-Picture Error",
         description: "Could not toggle picture-in-picture mode",
@@ -373,7 +356,7 @@ export default function AdvancedVideoPlayer({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Button variant="ghost" size="sm" onClick={togglePlayPause} className="text-white hover:bg-white/20">
-                  {isPlaying ? <Pause className="h-4 w-4" /> : <Play className=&quot;h-4 w-4" />}
+                  {isPlaying ? <Pause className="h-4 w-4" /> : <Play className=&quot;h-4 w-4&quot; />}
                 </Button>
 
                 <Button variant="ghost" size="sm" onClick={skipBackward} className="text-white hover:bg-white/20">
@@ -386,7 +369,7 @@ export default function AdvancedVideoPlayer({
 
                 <div className="flex items-center gap-2 ml-4">
                   <Button variant="ghost" size="sm" onClick={toggleMute} className="text-white hover:bg-white/20">
-                    {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4" />}
+                    {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4&quot; />}
                   </Button>
                   <Slider
                     value={[isMuted ? 0 : volume]}
@@ -420,7 +403,7 @@ export default function AdvancedVideoPlayer({
                 )}
 
                 <Button variant="ghost" size="sm" onClick={toggleFullscreen} className="text-white hover:bg-white/20">
-                  {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className=&quot;h-4 w-4" />}
+                  {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className=&quot;h-4 w-4&quot; />}
                 </Button>
               </div>
             </div>

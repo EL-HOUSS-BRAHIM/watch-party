@@ -9,34 +9,9 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Skeleton } from "@/components/ui/skeleton"
 import { analyticsAPI, partiesAPI, searchAPI, usersAPI, videosAPI } from "@/lib/api"
 import type { DiscoverContent, DiscoverRecommendation } from "@/lib/api"
-import {
-  Compass,
-  TrendingUp,
-  Star,
-  Users,
-  Video,
-  Calendar,
-  Eye,
-  Heart,
-  Play,
-  UserPlus,
-  Globe,
-  Search,
-  ChevronRight,
-  MessageCircle,
-  Share2,
-  Bookmark,
-  MoreHorizontal,
-  Flame,
-  Zap,
-  Crown,
-  MapPin,
-  Sparkles,
-} from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 
 type SuggestionReason =
@@ -283,7 +258,7 @@ const buildVideoCard = (video: Record<string, unknown>): TrendingVideoCard => {
   }
 }
 
-const buildPartyCard = (party: Record<string, unknown>, highlight?: &quot;trending" | "recommended"): FeaturedPartyCard => {
+const buildPartyCard = (party: Record<string, unknown>, highlight?: &quot;trending&quot; | &quot;recommended"): FeaturedPartyCard => {
   const host = party?.host ?? party?.owner ?? party?.organizer ?? {}
   const id = party?.id ?? party?.room_code ?? fallbackId("party")
 
@@ -372,7 +347,7 @@ const buildSuggestedUserCard = (
 
   const nameParts = fullName.trim().split(/\s+/)
   const firstName = nameParts[0] ?? username
-  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(&quot; ") : firstName
+  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(&quot; &quot;) : firstName
 
   const mutualFriends = safeNumber(
     raw?.mutual_friends_count ?? raw?.mutual_friends ?? raw?.mutualFriends,
@@ -589,11 +564,11 @@ export default function DiscoverPage() {
         : []
 
       const discoverParties: FeaturedPartyCard[] = Array.isArray(discoverData.trending_parties)
-        ? discoverData.trending_parties.map((party) => buildPartyCard(party, &quot;trending"))
+        ? discoverData.trending_parties.map((party) => buildPartyCard(party, &quot;trending&quot;))
         : []
 
       const trendingParties: FeaturedPartyCard[] = Array.isArray(trendingPartiesPayload)
-        ? trendingPartiesPayload.map((party) => buildPartyCard(party, "trending"))
+        ? trendingPartiesPayload.map((party) => buildPartyCard(party, &quot;trending"))
         : []
 
       const recommendedParties: FeaturedPartyCard[] = Array.isArray(recommendedPartiesPayload)
@@ -669,7 +644,7 @@ export default function DiscoverPage() {
         suggestions: normalizedSuggestions,
         categories: normalizedCategoryCards,
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to load discover data:", error)
       toast({
         title: "Error",
@@ -725,7 +700,7 @@ export default function DiscoverPage() {
 
         const normalizedParties = dedupePartyCards(
           Array.isArray(partyResults?.results)
-            ? partyResults.results.map((party: Record<string, unknown>) => buildPartyCard(party, &quot;trending"))
+            ? partyResults.results.map((party: Record<string, unknown>) => buildPartyCard(party, &quot;trending&quot;))
             : [],
         )
 
@@ -757,7 +732,7 @@ export default function DiscoverPage() {
         setFeaturedParties(normalizedParties)
         setSuggestedUsers(normalizedSuggestions)
         setTrendingCategories(normalizedCategories)
-      } catch (error) {
+      } catch {
         if (!ignore) {
           console.error("Failed to search discover content:", error)
           toast({
@@ -794,7 +769,7 @@ export default function DiscoverPage() {
         title: "Friend request sent",
         description: "Your connection request is on its way.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to send friend request:", error)
       toast({
         title: "Unable to send request",

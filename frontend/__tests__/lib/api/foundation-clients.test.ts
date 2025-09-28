@@ -24,7 +24,7 @@ type RequestHandler = (
   req: http.IncomingMessage,
   res: http.ServerResponse,
   url: URL,
-  body: any,
+  body: unknown,
 ) => Promise<boolean> | boolean
 
 async function startTestServer(handler: RequestHandler): Promise<TestServer> {
@@ -56,7 +56,7 @@ async function startTestServer(handler: RequestHandler): Promise<TestServer> {
   }
 }
 
-async function readBody(req: http.IncomingMessage): Promise<any> {
+async function readBody(req: http.IncomingMessage): Promise<Record<string, unknown>> {
   if (req.method === "GET" || req.method === "HEAD") {
     return undefined
   }
@@ -78,7 +78,7 @@ async function readBody(req: http.IncomingMessage): Promise<any> {
   }
 }
 
-function sendJson(res: http.ServerResponse, status: number, data: any): boolean {
+function sendJson(res: http.ServerResponse, status: number, data: unknown): boolean {
   res.statusCode = status
   res.setHeader("content-type", "application/json")
   res.end(JSON.stringify(data))
@@ -293,7 +293,7 @@ describe("Phase 1 foundation API clients", () => {
 
     try {
       const languageResponse = await localizationApi.getLanguages()
-      expect(languageResponse.map((lang) => lang.code)).toContain("es")
+      expect(languageResponse.map((lang) => lang.code)).toContain(&quot;es&quot;)
 
       const submission = await localizationApi.submitString("proj-1", {
         key: "dashboard.title",
@@ -386,10 +386,10 @@ describe("Phase 1 foundation API clients", () => {
       expect(updated.is_published).toBe(false)
 
       const reorder = await supportApi.reorderFAQs([{ id: "faq-1", order: 2 }])
-      expect((reorder as any).success).toBe(true)
+      expect((reorder as Record<string, unknown>).success).toBe(true)
 
       const deletion = await supportApi.deleteFAQ("faq-1")
-      expect((deletion as any).success).toBe(true)
+      expect((deletion as Record<string, unknown>).success).toBe(true)
     } finally {
       await server.close()
     }

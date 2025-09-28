@@ -9,21 +9,6 @@ import { Switch } from "@/components/ui/switch"
 import { Progress } from "@/components/ui/progress"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
-import {
-  Shield,
-  AlertTriangle,
-  Eye,
-  Key,
-  Globe,
-  Activity,
-  Ban,
-  CheckCircle,
-  MapPin,
-  FileText,
-  Download,
-  RefreshCw,
-  Settings,
-} from "lucide-react"
 import { format, formatDistanceToNow } from "date-fns"
 
 interface SecurityThreat {
@@ -237,13 +222,13 @@ export default function AdvancedSecuritySystem() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000))
 
-      setThreats((prev) => prev.map((threat) => (threat.id === threatId ? { ...threat, status: &quot;resolved" } : threat)))
+      setThreats((prev) => prev.map((threat) => (threat.id === threatId ? { ...threat, status: &quot;resolved&quot; } : threat)))
 
       toast({
         title: "Threat Resolved",
         description: "The security threat has been marked as resolved.",
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to resolve threat.",
@@ -264,7 +249,7 @@ export default function AdvancedSecuritySystem() {
         title: "Security Rule Updated",
         description: "The security rule has been updated.",
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to update security rule.",
@@ -386,10 +371,10 @@ export default function AdvancedSecuritySystem() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-red-600">
-                  {threats.filter((t) => t.status === &quot;active").length}
+                  {threats.filter((t) => t.status === &quot;active&quot;).length}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {threats.filter((t) => t.severity === &quot;critical").length} critical
+                  {threats.filter((t) => t.severity === &quot;critical&quot;).length} critical
                 </p>
               </CardContent>
             </Card>
@@ -425,7 +410,7 @@ export default function AdvancedSecuritySystem() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-600">
-                  {complianceReports.filter((r) => r.status === &quot;compliant").length}/{complianceReports.length}
+                  {complianceReports.filter((r) => r.status === &quot;compliant&quot;).length}/{complianceReports.length}
                 </div>
                 <p className="text-xs text-muted-foreground">standards met</p>
               </CardContent>
@@ -556,7 +541,7 @@ export default function AdvancedSecuritySystem() {
                     </div>
                     <div>
                       <p className="text-muted-foreground">Type</p>
-                      <p className="font-medium">{threat.type.replace(&quot;_", " ").toUpperCase()}</p>
+                      <p className="font-medium">{threat.type.replace(&quot;_&quot;, &quot; ").toUpperCase()}</p>
                     </div>
                   </div>
 
@@ -608,7 +593,7 @@ export default function AdvancedSecuritySystem() {
                       <CardDescription>{rule.description}</CardDescription>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline">{rule.type.replace(&quot;_", " ").toUpperCase()}</Badge>
+                      <Badge variant="outline">{rule.type.replace(&quot;_&quot;, &quot; ").toUpperCase()}</Badge>
                       <Switch checked={rule.isEnabled} onCheckedChange={() => handleToggleRule(rule.id)} />
                     </div>
                   </div>
@@ -681,7 +666,7 @@ export default function AdvancedSecuritySystem() {
                   <tbody>
                     {auditLogs.map((log) => (
                       <tr key={log.id} className="border-b hover:bg-muted/50">
-                        <td className="p-4 text-sm">{format(new Date(log.timestamp), &quot;MMM dd, HH:mm")}</td>
+                        <td className="p-4 text-sm">{format(new Date(log.timestamp), &quot;MMM dd, HH:mm&quot;)}</td>
                         <td className="p-4">
                           <code className="text-sm bg-muted px-2 py-1 rounded">{log.action}</code>
                         </td>
@@ -761,11 +746,11 @@ export default function AdvancedSecuritySystem() {
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <p className="text-muted-foreground">Last Audit</p>
-                      <p className="font-medium">{format(new Date(report.lastAudit), &quot;MMM dd, yyyy")}</p>
+                      <p className="font-medium">{format(new Date(report.lastAudit), &quot;MMM dd, yyyy&quot;)}</p>
                     </div>
                     <div>
                       <p className="text-muted-foreground">Next Audit</p>
-                      <p className="font-medium">{format(new Date(report.nextAudit), &quot;MMM dd, yyyy")}</p>
+                      <p className="font-medium">{format(new Date(report.nextAudit), &quot;MMM dd, yyyy&quot;)}</p>
                     </div>
                   </div>
 

@@ -23,23 +23,6 @@ import {
   Area,
   AreaChart
 } from 'recharts'
-import { 
-  Users, 
-  Clock, 
-  Activity, 
-  TrendingUp, 
-  Eye, 
-  MessageSquare,
-  Heart,
-  Share2,
-  Play,
-  Calendar,
-  Download,
-  Trophy,
-  Target,
-  Zap,
-  Star
-} from 'lucide-react'
 
 interface UserAnalyticsData {
   user: {
@@ -115,7 +98,7 @@ export function UserAnalytics() {
         const data = await response.json()
         setAnalytics(data)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to load user analytics:', error)
     } finally {
       setLoading(false)
@@ -451,7 +434,7 @@ export function UserAnalytics() {
                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                       </Pie>
-                      <Tooltip formatter={(value) => [formatDuration(value as number), &apos;Watch Time']} />
+                      <Tooltip formatter={(value) => [formatDuration(value as number), &apos;Watch Time&apos;]} />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>

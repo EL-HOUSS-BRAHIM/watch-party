@@ -23,19 +23,6 @@ import {
   AreaChart,
   Area,
 } from "recharts"
-import {
-  TrendingUp,
-  TrendingDown,
-  Users,
-  Video,
-  DollarSign,
-  Activity,
-  Calendar,
-  Download,
-  Eye,
-  CreditCard,
-  Loader2,
-} from "lucide-react"
 
 interface AnalyticsData {
   user_growth: Array<{
@@ -98,7 +85,7 @@ export function AnalyticsDashboard() {
       
       const data = await adminAPI.getAnalytics()
       setAnalyticsData(data)
-    } catch (error) {
+    } catch {
       console.error("Failed to fetch analytics data:", error)
       toast({
         title: "Error",
@@ -138,7 +125,7 @@ export function AnalyticsDashboard() {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
-    } catch (error) {
+    } catch {
       console.error("Failed to export data:", error)
       toast({
         title: "Error",

@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Package, Shirt, Palette, Crown, Calendar } from "lucide-react"
 import { useApi } from "@/hooks/use-api"
 import { formatDistanceToNow } from "date-fns"
 
@@ -58,7 +57,7 @@ export function UserInventory({ userId }: UserInventoryProps) {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/inventory/`)
       setItems((response.data as Record<string, unknown>).items || [])
-    } catch (err) {
+    } catch {
       console.error("Failed to load inventory:", err)
     } finally {
       setIsLoading(false)
@@ -73,7 +72,7 @@ export function UserInventory({ userId }: UserInventoryProps) {
         ...item,
         is_equipped: item.id === itemId ? true : (item.type === items.find(i => i.id === itemId)?.type ? false : item.is_equipped)
       })))
-    } catch (err) {
+    } catch {
       console.error("Failed to equip item:", err)
     } finally {
       setEquippingItem(null)
@@ -87,7 +86,7 @@ export function UserInventory({ userId }: UserInventoryProps) {
       setItems(items.map(item => 
         item.id === itemId ? { ...item, is_equipped: false } : item
       ))
-    } catch (err) {
+    } catch {
       console.error("Failed to unequip item:", err)
     } finally {
       setEquippingItem(null)
@@ -130,7 +129,7 @@ export function UserInventory({ userId }: UserInventoryProps) {
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-primary">
-              {items.filter(item => item.rarity === &quot;legendary").length}
+              {items.filter(item => item.rarity === &quot;legendary&quot;).length}
             </div>
             <div className="text-sm text-muted-foreground">Legendary</div>
           </div>

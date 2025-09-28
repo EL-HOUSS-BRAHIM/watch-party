@@ -36,11 +36,11 @@ export default function DiscordIntegrationPage() {
         integrationsAPI.getHealth().catch(() => null),
       ])
       const discordConnection = connectionsResponse.connections?.find(
-        (item) => item.provider === &apos;discord'
+        (item) => item.provider === &apos;discord&apos;
       )
       setConnection(discordConnection ?? null)
       setHealth(healthResponse)
-    } catch (error) {
+    } catch {
       console.error('Failed to load Discord integration', error)
       toast({
         title: 'Unable to load Discord integration',
@@ -67,7 +67,7 @@ export default function DiscordIntegrationPage() {
     try {
       const { auth_url } = await integrationsAPI.getAuthUrl('discord')
       window.location.assign(auth_url)
-    } catch (error) {
+    } catch {
       console.error('Failed to start Discord OAuth', error)
       toast({
         title: 'Connection failed',
@@ -89,7 +89,7 @@ export default function DiscordIntegrationPage() {
         description: 'The integration has been removed from your account.',
       })
       await loadData()
-    } catch (error) {
+    } catch {
       console.error('Failed to disconnect Discord', error)
       toast({
         title: 'Unable to disconnect',
@@ -107,7 +107,7 @@ export default function DiscordIntegrationPage() {
 
   const healthMessage = useMemo(() => {
     if (!health) return 'Discord service status is currently unavailable.'
-    const discordService = health.services?.find((service) => service.name === 'discord')
+    const discordService = health.services?.find((service) => service.name === &apos;discord')
     if (!discordService) return 'Discord health information is not available from the status endpoint.'
     return discordService.status === 'up'
       ? 'Discord integrations are operational.'

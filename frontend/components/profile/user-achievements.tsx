@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Trophy, Lock, Calendar, Target } from "lucide-react"
 import { useApi } from "@/hooks/use-api"
 import { formatDistanceToNow } from "date-fns"
 
@@ -65,7 +64,7 @@ export function UserAchievements({ userId }: UserAchievementsProps) {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/achievements/`)
       setCategories((response.data as Record<string, unknown>).categories || [])
-    } catch (err) {
+    } catch {
       console.error("Failed to load achievements:", err)
     } finally {
       setIsLoading(false)

@@ -2,18 +2,6 @@
 
 import { useState } from 'react'
 import Image from "next/image"
-import { 
-  EyeIcon, 
-  HeartIcon, 
-  ChatBubbleLeftIcon, 
-  ArrowDownTrayIcon,
-  ChartBarIcon,
-  CalendarIcon,
-  ClockIcon,
-  UsersIcon,
-  ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon
-} from '@heroicons/react/24/outline'
 
 interface VideoAnalytics {
   id: string
@@ -104,8 +92,8 @@ const formatDuration = (seconds: number) => {
 }
 
 export default function VideoAnalyticsPage() {
-  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>(&apos;30d')
-  const [sortBy, setSortBy] = useState<'views' | 'likes' | 'engagement' | 'revenue'>(&apos;views')
+  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>(&apos;30d&apos;)
+  const [sortBy, setSortBy] = useState<'views' | 'likes' | 'engagement' | 'revenue'>(&apos;views&apos;)
 
   const sortedVideos = [...videoAnalytics].sort((a, b) => {
     switch (sortBy) {
@@ -285,7 +273,7 @@ export default function VideoAnalyticsPage() {
                     <td className="p-4">
                       <div className="text-white font-medium">{formatNumber(video.views)}</div>
                       <div className={`flex items-center gap-1 text-sm ${
-                        video.viewsChange >= 0 ? &apos;text-green-400' : 'text-red-400'
+                        video.viewsChange >= 0 ? &apos;text-green-400&apos; : &apos;text-red-400'
                       }`}>
                         {video.viewsChange >= 0 ? (
                           <ArrowTrendingUpIcon className="w-3 h-3" />
@@ -298,7 +286,7 @@ export default function VideoAnalyticsPage() {
                     <td className="p-4">
                       <div className="text-white font-medium">{formatNumber(video.likes)}</div>
                       <div className={`flex items-center gap-1 text-sm ${
-                        video.likesChange >= 0 ? &apos;text-green-400' : 'text-red-400'
+                        video.likesChange >= 0 ? &apos;text-green-400&apos; : &apos;text-red-400'
                       }`}>
                         {video.likesChange >= 0 ? (
                           <ArrowTrendingUpIcon className="w-3 h-3" />
@@ -311,7 +299,7 @@ export default function VideoAnalyticsPage() {
                     <td className="p-4">
                       <div className="text-white font-medium">{video.comments}</div>
                       <div className={`flex items-center gap-1 text-sm ${
-                        video.commentsChange >= 0 ? &apos;text-green-400' : 'text-red-400'
+                        video.commentsChange >= 0 ? &apos;text-green-400&apos; : &apos;text-red-400'
                       }`}>
                         {video.commentsChange >= 0 ? (
                           <ArrowTrendingUpIcon className="w-3 h-3" />

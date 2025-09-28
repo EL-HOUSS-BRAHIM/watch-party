@@ -19,21 +19,6 @@ import {
 } from "@/components/ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import {
-  FileText,
-  Book,
-  Code,
-  Search,
-  Plus,
-  Edit,
-  Trash2,
-  Eye,
-  Download,
-  Settings,
-  Clock,
-  CheckCircle,
-  AlertTriangle,
-} from "lucide-react"
 
 interface DocumentationItem {
   id: string
@@ -138,9 +123,9 @@ export function DocumentationManager() {
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false)
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const [filterType, setFilterType] = useState<string>(&quot;all")
-  const [filterStatus, setFilterStatus] = useState<string>(&quot;all")
-  const [filterCategory, setFilterCategory] = useState<string>(&quot;all")
+  const [filterType, setFilterType] = useState<string>(&quot;all&quot;)
+  const [filterStatus, setFilterStatus] = useState<string>(&quot;all&quot;)
+  const [filterCategory, setFilterCategory] = useState<string>(&quot;all&quot;)
 
   const createDocument = () => {
     const newDocument: DocumentationItem = {
@@ -210,8 +195,8 @@ export function DocumentationManager() {
   })
 
   const totalDocuments = documents.length
-  const publishedDocuments = documents.filter((doc) => doc.status === &quot;published").length
-  const draftDocuments = documents.filter((doc) => doc.status === "draft").length
+  const publishedDocuments = documents.filter((doc) => doc.status === &quot;published&quot;).length
+  const draftDocuments = documents.filter((doc) => doc.status === &quot;draft").length
   const totalViews = documents.reduce((sum, doc) => sum + doc.views, 0)
 
   return (
@@ -224,7 +209,7 @@ export function DocumentationManager() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
@@ -537,7 +522,7 @@ export function DocumentationManager() {
                   <div className="flex justify-between items-center">
                     <span className="text-sm">Review</span>
                     <span className="text-sm font-medium text-blue-600">
-                      {documents.filter((doc) => doc.status === &quot;review").length}
+                      {documents.filter((doc) => doc.status === &quot;review&quot;).length}
                     </span>
                   </div>
                 </div>

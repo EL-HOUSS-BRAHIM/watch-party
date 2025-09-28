@@ -12,22 +12,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI, analyticsAPI } from "@/lib/api"
-import {
-  TrendingUp,
-  TrendingDown,
-  Activity,
-  AlertTriangle,
-  CheckCircle,
-  Monitor,
-  BarChart3,
-  RefreshCw,
-  Download,
-  HardDrive,
-  Cpu,
-  MemoryStick,
-  Network,
-  Globe,
-} from "lucide-react"
 
 interface PerformanceMetric {
   name: string
@@ -220,7 +204,7 @@ const PerformancePage = () => {
             current: performanceData.avgResponseTime || 145.2,
             previous: performanceData.prevAvgResponseTime || 132.8,
             unit: "ms",
-            trend: performanceData.avgResponseTime > performanceData.prevAvgResponseTime ? &quot;up" : "down",
+            trend: performanceData.avgResponseTime > performanceData.prevAvgResponseTime ? &quot;up&quot; : &quot;down",
             threshold: { warning: 200, critical: 500 },
           },
           {
@@ -268,7 +252,7 @@ const PerformancePage = () => {
       }
 
       setLastUpdated(new Date())
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch performance data:', error)
       toast({
         title: "Error",
@@ -354,8 +338,8 @@ const PerformancePage = () => {
 
   const getSystemHealthStatus = () => {
     const avgUsage = (systemHealth.cpu + systemHealth.memory + systemHealth.disk) / 3
-    if (avgUsage > 80) return &quot;critical"
-    if (avgUsage > 60) return "warning"
+    if (avgUsage > 80) return &quot;critical&quot;
+    if (avgUsage > 60) return &quot;warning"
     return "healthy"
   }
 

@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { BarChart3, Clock, Users, TrendingUp } from "lucide-react"
 import { useApi } from "@/hooks/use-api"
 
 interface UserStats {
@@ -49,7 +48,7 @@ export function UserStats({ userId }: UserStatsProps) {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/stats/?timeframe=${timeframe}`)
       setStats(response.data as UserStats)
-    } catch (err) {
+    } catch {
       console.error("Failed to load user stats:", err)
     } finally {
       setIsLoading(false)
@@ -98,21 +97,21 @@ export function UserStats({ userId }: UserStatsProps) {
         <div className="flex justify-center space-x-2">
           <Button
             variant={timeframe === "week" ? "default" : "outline"}
-            onClick={() => setTimeframe(&quot;week")}
+            onClick={() => setTimeframe(&quot;week&quot;)}
             size="sm"
           >
             This Week
           </Button>
           <Button
             variant={timeframe === "month" ? "default" : "outline"}
-            onClick={() => setTimeframe(&quot;month")}
+            onClick={() => setTimeframe(&quot;month&quot;)}
             size="sm"
           >
             This Month
           </Button>
           <Button
             variant={timeframe === "year" ? "default" : "outline"}
-            onClick={() => setTimeframe(&quot;year")}
+            onClick={() => setTimeframe(&quot;year&quot;)}
             size="sm"
           >
             This Year

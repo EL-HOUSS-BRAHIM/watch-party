@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Search, Users, Video, Settings, Plus, Home, Bell, CreditCard } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { cn } from "@/lib/utils"
 
@@ -39,7 +38,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "Go to Dashboard",
         description: "Navigate to the main dashboard",
         icon: <Home className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard"),
+        action: () => router.push(&quot;/dashboard&quot;),
         keywords: ["dashboard", "home", "main"],
         category: "Navigation",
       },
@@ -48,7 +47,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "Create New Party",
         description: "Start a new watch party",
         icon: <Plus className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard/parties/create"),
+        action: () => router.push(&quot;/dashboard/parties/create&quot;),
         keywords: ["create", "new", "party", "watch"],
         category: "Actions",
       },
@@ -57,7 +56,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "View Parties",
         description: "See all your parties",
         icon: <Users className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard/parties"),
+        action: () => router.push(&quot;/dashboard/parties&quot;),
         keywords: ["parties", "watch", "rooms"],
         category: "Navigation",
       },
@@ -66,7 +65,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "Video Library",
         description: "Manage your video library",
         icon: <Video className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard/videos"),
+        action: () => router.push(&quot;/dashboard/videos&quot;),
         keywords: ["videos", "library", "media"],
         category: "Navigation",
       },
@@ -75,7 +74,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "Friends",
         description: "Manage your friends list",
         icon: <Users className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard/friends"),
+        action: () => router.push(&quot;/dashboard/friends&quot;),
         keywords: ["friends", "social", "contacts"],
         category: "Navigation",
       },
@@ -99,7 +98,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "Settings",
         description: "Manage your account settings",
         icon: <Settings className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard/settings"),
+        action: () => router.push(&quot;/dashboard/settings&quot;),
         keywords: ["settings", "preferences", "account"],
         category: "Navigation",
       },
@@ -108,7 +107,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         title: "Billing",
         description: "Manage your subscription",
         icon: <CreditCard className="h-4 w-4" />,
-        action: () => router.push(&quot;/dashboard/billing"),
+        action: () => router.push(&quot;/dashboard/billing&quot;),
         keywords: ["billing", "subscription", "payment"],
         category: "Navigation",
       },
@@ -173,7 +172,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
     }
 
     document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener(&quot;keydown", handleKeyDown)
+    return () => document.removeEventListener(&quot;keydown&quot;, handleKeyDown)
   }, [open, selectedIndex, filteredCommands, onOpenChange])
 
   const handleCommandSelect = (command: Command) => {
@@ -229,7 +228,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
           ))}
 
           {filteredCommands.length === 0 && (
-            <div className="p-8 text-center text-gray-500">No commands found for &quot;{query}"</div>
+            <div className="p-8 text-center text-gray-500">No commands found for &quot;{query}&quot;</div>
           )}
         </ScrollArea>
 

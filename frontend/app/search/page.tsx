@@ -7,28 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { useDebounce } from "@/hooks/use-debounce"
-import {
-  Search,
-  Users,
-  Video,
-  Calendar,
-  Clock,
-  Eye,
-  Heart,
-  Play,
-  UserPlus,
-  Filter,
-  TrendingUp,
-  Star,
-  MapPin,
-  X,
-} from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 
 interface SearchUser {
@@ -179,7 +162,7 @@ function SearchContent() {
           Object.entries(filters.videoFilters).filter(([_, v]) => v !== undefined)
         ),
         ...Object.fromEntries(
-          Object.entries(filters.partyFilters).filter(([_, v]) => v !== undefined && v !== &quot;all")
+          Object.entries(filters.partyFilters).filter(([_, v]) => v !== undefined && v !== &quot;all&quot;)
         ),
       })
 
@@ -205,7 +188,7 @@ function SearchContent() {
         // Add to search history
         addToSearchHistory(searchQuery)
       }
-    } catch (error) {
+    } catch {
       console.error("Search failed:", error)
       toast({
         title: "Search Error",
@@ -257,7 +240,7 @@ function SearchContent() {
           description: "Your friend request has been sent.",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to send friend request:", error)
       toast({
         title: "Error",
@@ -310,7 +293,7 @@ function SearchContent() {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  onClick={() => setQuery(&quot;")}
+                  onClick={() => setQuery(&quot;&quot;)}
                   className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
                 >
                   <X className="h-4 w-4" />
@@ -446,7 +429,7 @@ function SearchContent() {
 
       {/* Results */}
       {query && (
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as SearchFilters[&quot;type"])}>
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as SearchFilters[&quot;type&quot;])}>
           <TabsList className="grid w-full grid-cols-4 mb-6">
             <TabsTrigger value="all">All Results</TabsTrigger>
             <TabsTrigger value="users">Users ({users.length})</TabsTrigger>
@@ -467,7 +450,7 @@ function SearchContent() {
                 <p className="text-gray-600 mb-4">
                   No results found for "{query}". Try adjusting your search terms or filters.
                 </p>
-                <Button variant="outline" onClick={() => setQuery(&quot;")}>
+                <Button variant="outline" onClick={() => setQuery(&quot;&quot;)}>
                   Clear Search
                 </Button>
               </CardContent>

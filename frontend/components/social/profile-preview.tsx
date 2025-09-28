@@ -1,25 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { 
-  UserPlus, 
-  MessageCircle, 
-  MapPin, 
-  Calendar, 
-  Users, 
-  Star,
-  Crown,
-  Shield,
-  Clock,
-  Eye,
-  UserCheck,
-  UserX
-} from 'lucide-react'
 
 interface UserProfile {
   id: string
@@ -84,7 +69,7 @@ export function ProfilePreview({
         const data = await response.json()
         setProfile(data.profile)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch profile preview:', error)
     } finally {
       setLoading(false)
@@ -102,7 +87,7 @@ export function ProfilePreview({
       if (response.ok && profile) {
         setProfile({ ...profile, relationship: 'pending_out' })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to send friend request:', error)
     }
   }
@@ -116,7 +101,7 @@ export function ProfilePreview({
       if (response.ok && profile) {
         setProfile({ ...profile, relationship: 'friend' })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to accept friend request:', error)
     }
   }
@@ -130,7 +115,7 @@ export function ProfilePreview({
       if (response.ok && profile) {
         setProfile({ ...profile, relationship: 'none' })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to remove friend:', error)
     }
   }
@@ -146,7 +131,7 @@ export function ProfilePreview({
       if (response.ok && profile) {
         setProfile({ ...profile, relationship: 'blocked' })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to block user:', error)
     }
   }
@@ -299,7 +284,7 @@ export function ProfilePreview({
                           ) : (
                             <>
                               <Clock className="h-3 w-3" />
-                              <span>Last seen {profile.lastSeen ? new Date(profile.lastSeen).toLocaleDateString() : &apos;recently'}</span>
+                              <span>Last seen {profile.lastSeen ? new Date(profile.lastSeen).toLocaleDateString() : &apos;recently&apos;}</span>
                             </>
                           )}
                         </div>

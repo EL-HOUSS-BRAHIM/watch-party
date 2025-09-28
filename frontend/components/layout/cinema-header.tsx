@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation"
 import { Play } from "lucide-react"
 
 import { MobileNavigation } from "@/components/navigation/mobile-navigation"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
 import { isAuthRoute, isMarketingRoute } from "@/lib/navigation/visibility"

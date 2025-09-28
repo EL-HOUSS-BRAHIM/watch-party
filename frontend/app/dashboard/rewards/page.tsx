@@ -113,7 +113,7 @@ export default function RewardsPage() {
   const [userStats, setUserStats] = useState<UserStats | null>(null)
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [selectedCategory, setSelectedCategory] = useState<string>(&quot;all")
+  const [selectedCategory, setSelectedCategory] = useState<string>(&quot;all&quot;)
   const [claimingRewards, setClaimingRewards] = useState<Set<string>>(new Set())
 
   useEffect(() => {
@@ -149,7 +149,7 @@ export default function RewardsPage() {
         const data = await leaderboardRes.json()
         setLeaderboard(data.leaderboard || [])
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load rewards data:", error)
       toast({
         title: "Error",
@@ -200,7 +200,7 @@ export default function RewardsPage() {
         const error = await response.json()
         throw new Error(error.message || "Failed to claim reward")
       }
-    } catch (error: unknown) {
+    } catch {
       console.error("Claim reward error:", error)
       toast({
         title: "Error",
@@ -424,7 +424,7 @@ export default function RewardsPage() {
               <Button
                 variant={selectedCategory === "all" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setSelectedCategory(&quot;all")}
+                onClick={() => setSelectedCategory(&quot;all&quot;)}
               >
                 All Categories
               </Button>

@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/hooks/use-toast'
@@ -111,7 +110,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {
         setHasMore(data.hasNext || false)
         setCurrentPage(page)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to load comments:', error)
       toast({
         title: 'Error',
@@ -136,7 +135,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {
         const data = await response.json()
         setStats(data)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to load comment stats:', error)
     }
   }
@@ -169,7 +168,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {
           description: 'Comment posted successfully!',
         })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to post comment:', error)
       toast({
         title: 'Error',
@@ -214,7 +213,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {
           description: 'Reply posted successfully!',
         })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to post reply:', error)
       toast({
         title: 'Error',
@@ -264,7 +263,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {
           }
         }))
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to like comment:', error)
     }
   }
@@ -307,7 +306,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {
           }
         }))
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to dislike comment:', error)
     }
   }
@@ -328,7 +327,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {
           description: 'Comment reported successfully. We will review it shortly.',
         })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to report comment:', error)
       toast({
         title: 'Error',
@@ -357,7 +356,7 @@ export function VideoComments({ videoId, className }: VideoCommentsProps) {
           description: 'Comment deleted successfully.',
         })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to delete comment:', error)
       toast({
         title: 'Error',

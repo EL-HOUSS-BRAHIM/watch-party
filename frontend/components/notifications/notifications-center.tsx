@@ -5,32 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { useApiToast } from "@/hooks/use-toast"
-import { 
-  Bell,
-  Check,
-  X,
-  Settings,
-  Users,
-  MessageSquare,
-  Calendar,
-  Star,
-  Heart,
-  UserPlus,
-  Play,
-  Gift,
-  AlertTriangle,
-  Info,
-  CheckCircle,
-  Trash2,
-  Volume2,
-  Mail,
-  Smartphone,
-  User
-} from 'lucide-react'
 
 interface Notification {
   id: string
@@ -98,22 +75,22 @@ export function NotificationsCenter() {
 
   const loadNotifications = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/notifications'))
+      const response = await apiRequest(() => fetch(&apos;/api/notifications&apos;))
       if (response) {
         setNotifications(response)
       }
-    } catch (error) {
+    } catch {
       toastError(error, 'Failed to load notifications')
     }
   }
 
   const loadSettings = async () => {
     try {
-      const response = await apiRequest(() => fetch('/api/notifications/settings'))
+      const response = await apiRequest(() => fetch(&apos;/api/notifications/settings'))
       if (response) {
         setSettings(response)
       }
-    } catch (error) {
+    } catch {
       toastError(error, 'Failed to load notification settings')
     } finally {
       setLoading(false)
@@ -535,7 +512,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.categories.friend_requests}
-                  onCheckedChange={() => handleToggleCategory(&apos;friend_requests')}
+                  onCheckedChange={() => handleToggleCategory(&apos;friend_requests&apos;)}
                 />
               </div>
 
@@ -549,7 +526,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.categories.party_invites}
-                  onCheckedChange={() => handleToggleCategory(&apos;party_invites')}
+                  onCheckedChange={() => handleToggleCategory(&apos;party_invites&apos;)}
                 />
               </div>
 
@@ -563,7 +540,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.categories.party_updates}
-                  onCheckedChange={() => handleToggleCategory(&apos;party_updates')}
+                  onCheckedChange={() => handleToggleCategory(&apos;party_updates&apos;)}
                 />
               </div>
 
@@ -577,7 +554,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.categories.messages}
-                  onCheckedChange={() => handleToggleCategory(&apos;messages')}
+                  onCheckedChange={() => handleToggleCategory(&apos;messages&apos;)}
                 />
               </div>
 
@@ -591,7 +568,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.categories.reactions}
-                  onCheckedChange={() => handleToggleCategory(&apos;reactions')}
+                  onCheckedChange={() => handleToggleCategory(&apos;reactions&apos;)}
                 />
               </div>
 
@@ -605,7 +582,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.categories.achievements}
-                  onCheckedChange={() => handleToggleCategory(&apos;achievements')}
+                  onCheckedChange={() => handleToggleCategory(&apos;achievements&apos;)}
                 />
               </div>
             </div>
@@ -627,7 +604,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.delivery.push}
-                  onCheckedChange={() => handleToggleDelivery(&apos;push')}
+                  onCheckedChange={() => handleToggleDelivery(&apos;push&apos;)}
                 />
               </div>
 
@@ -641,7 +618,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.delivery.email}
-                  onCheckedChange={() => handleToggleDelivery(&apos;email')}
+                  onCheckedChange={() => handleToggleDelivery(&apos;email&apos;)}
                 />
               </div>
 
@@ -655,7 +632,7 @@ function NotificationSettings({
                 </div>
                 <Switch
                   checked={settings.delivery.inApp}
-                  onCheckedChange={() => handleToggleDelivery(&apos;inApp')}
+                  onCheckedChange={() => handleToggleDelivery(&apos;inApp&apos;)}
                 />
               </div>
             </div>

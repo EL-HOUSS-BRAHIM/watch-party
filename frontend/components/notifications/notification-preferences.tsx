@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Bell, BellOff, Settings, Smartphone, Mail, MessageSquare, Users, Calendar, Star, Volume2, VolumeX, Monitor, Moon, Sun, Zap, Filter, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
@@ -135,7 +134,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
           theme: "system",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load notification settings:", error)
       toast({
         title: "Failed to load settings",
@@ -171,7 +170,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
       } else {
         throw new Error("Failed to save settings")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to save settings:", error)
       toast({
         title: "Failed to save settings",
@@ -369,7 +368,7 @@ export function NotificationPreferences({ className }: NotificationPreferencesPr
                 <div className="grid gap-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      {settings.soundEnabled ? <Volume2 className="h-5 w-5 text-primary" /> : <VolumeX className=&quot;h-5 w-5 text-muted-foreground" />}
+                      {settings.soundEnabled ? <Volume2 className="h-5 w-5 text-primary" /> : <VolumeX className=&quot;h-5 w-5 text-muted-foreground&quot; />}
                       <div>
                         <Label className="text-base">Sound</Label>
                         <p className="text-sm text-muted-foreground">Play sounds for notifications</p>

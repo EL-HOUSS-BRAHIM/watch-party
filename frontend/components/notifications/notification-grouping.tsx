@@ -1,11 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Bell, BellOff, Filter, Search, Trash2, Mail, CheckCheck, Star, Users, MessageSquare, Calendar, Zap, Settings, ChevronDown, Archive } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
@@ -123,7 +121,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
       }))
 
       setNotifications(mapped)
-    } catch (error) {
+    } catch {
       console.error("Failed to load notifications:", error)
       toast({
         title: "Failed to load notifications",
@@ -235,7 +233,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
         title: "Marked as read",
         description: `${notificationIds.length} notification(s) marked as read`,
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to mark as read:", error)
       toast({
         title: "Failed to mark as read",
@@ -258,7 +256,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
         title: "Marked locally",
         description: "Notifications marked as unread locally. Backend does not support this action yet.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to mark as unread:", error)
       toast({
         title: "Failed to mark as unread",
@@ -277,7 +275,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
         title: "Notifications deleted",
         description: `${notificationIds.length} notification(s) deleted`,
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to delete notifications:", error)
       toast({
         title: "Failed to delete notifications",
@@ -419,7 +417,7 @@ export default function NotificationGrouping({ className }: NotificationGrouping
     return (
       <div className="space-y-2">
         <Collapsible open={group.isExpanded} onOpenChange={() => toggleGroupExpansion(group.key)}>
-          <Card className={`transition-all ${group.unreadCount > 0 ? &apos;border-l-4 border-l-primary' : ''}`}>
+          <Card className={`transition-all ${group.unreadCount > 0 ? &apos;border-l-4 border-l-primary&apos; : &apos;'}`}>
             <CardContent className="p-4">
               <div className="flex items-center gap-3">
                 <Checkbox

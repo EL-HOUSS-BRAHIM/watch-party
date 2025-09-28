@@ -74,7 +74,7 @@ export function useCache<T>(key: string, fetcher: () => Promise<T>, options: Cac
       globalCache.set(key, result, ttl)
       setData(result)
       return result
-    } catch (err) {
+    } catch {
       const error = err instanceof Error ? err : new Error("Unknown error")
       setError(error)
       throw error

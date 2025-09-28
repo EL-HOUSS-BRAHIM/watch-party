@@ -11,31 +11,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
-import {
-  HelpCircle,
-  MessageCircle,
-  Book,
-  Search,
-  ChevronDown,
-  ChevronRight,
-  ExternalLink,
-  Mail,
-  Phone,
-  Clock,
-  CheckCircle,
-  Users,
-  VideoIcon,
-  Settings,
-  Shield,
-  CreditCard,
-  Smartphone,
-  Globe,
-  Headphones,
-  Send,
-  Star,
-  ThumbsUp,
-  ThumbsDown,
-} from "lucide-react"
 
 interface FAQ {
   id: string
@@ -106,7 +81,7 @@ export default function HelpPage() {
         setSupportTickets(ticketsData.results || [])
       }
 
-    } catch (error) {
+    } catch {
       console.error("Failed to load help data:", error)
       toast({
         title: "Error",
@@ -176,7 +151,7 @@ export default function HelpPage() {
       } else {
         throw new Error("Failed to submit ticket")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to submit support ticket:", error)
       toast({
         title: "Error",
@@ -370,7 +345,7 @@ export default function HelpPage() {
                       <p className="text-gray-600 mb-6">
                         Try adjusting your search or browse by category
                       </p>
-                      <Button variant="outline" onClick={() => setSearchQuery(&quot;")}>
+                      <Button variant="outline" onClick={() => setSearchQuery(&quot;&quot;)}>
                         Clear Search
                       </Button>
                     </CardContent>

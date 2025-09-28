@@ -6,23 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { 
-  Activity, 
-  Users, 
-  Play, 
-  MessageSquare, 
-  TrendingUp, 
-  TrendingDown, 
-  Eye,
-  Clock,
-  Globe,
-  Smartphone,
-  Monitor,
-  Tablet,
-  Signal,
-  Wifi,
-  Zap
-} from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { analyticsAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
@@ -154,7 +137,7 @@ export default function RealTimeAnalytics() {
           name: 'Active Users',
           value: realtimeData.active_users || dashboardData.active_users || 0,
           change: realtimeData.user_growth_rate || 0,
-          trend: (realtimeData.user_growth_rate || 0) > 0 ? &apos;up' : (realtimeData.user_growth_rate || 0) < 0 ? 'down' : 'stable',
+          trend: (realtimeData.user_growth_rate || 0) > 0 ? &apos;up&apos; : (realtimeData.user_growth_rate || 0) < 0 ? &apos;down' : 'stable',
           unit: '',
           color: '#3b82f6',
         },
@@ -163,7 +146,7 @@ export default function RealTimeAnalytics() {
           name: 'Concurrent Streams',
           value: realtimeData.concurrent_streams || dashboardData.active_parties || 0,
           change: realtimeData.stream_growth_rate || 0,
-          trend: (realtimeData.stream_growth_rate || 0) > 0 ? &apos;up' : (realtimeData.stream_growth_rate || 0) < 0 ? 'down' : 'stable',
+          trend: (realtimeData.stream_growth_rate || 0) > 0 ? &apos;up&apos; : (realtimeData.stream_growth_rate || 0) < 0 ? 'down' : 'stable',
           unit: '',
           color: '#10b981',
         },
@@ -172,7 +155,7 @@ export default function RealTimeAnalytics() {
           name: 'Messages/Min',
           value: realtimeData.messages_per_minute || 0,
           change: realtimeData.chat_activity_rate || 0,
-          trend: (realtimeData.chat_activity_rate || 0) > 0 ? &apos;up' : (realtimeData.chat_activity_rate || 0) < 0 ? 'down' : 'stable',
+          trend: (realtimeData.chat_activity_rate || 0) > 0 ? &apos;up&apos; : (realtimeData.chat_activity_rate || 0) < 0 ? &apos;down' : 'stable',
           unit: '/min',
           color: '#f59e0b',
         },
@@ -181,7 +164,7 @@ export default function RealTimeAnalytics() {
           name: 'Bandwidth Usage',
           value: realtimeData.bandwidth_usage || 0,
           change: realtimeData.bandwidth_growth_rate || 0,
-          trend: (realtimeData.bandwidth_growth_rate || 0) > 0 ? &apos;up' : (realtimeData.bandwidth_growth_rate || 0) < 0 ? 'down' : 'stable',
+          trend: (realtimeData.bandwidth_growth_rate || 0) > 0 ? &apos;up&apos; : (realtimeData.bandwidth_growth_rate || 0) < 0 ? 'down' : 'stable',
           unit: 'TB/h',
           color: '#ef4444',
         },
@@ -228,7 +211,7 @@ export default function RealTimeAnalytics() {
       
       setTimeSeriesData(prev => [...prev.slice(-29), newDataPoint]);
       
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch real-time data:', error);
       toast({
         title: "Error",
@@ -248,7 +231,7 @@ export default function RealTimeAnalytics() {
           ...metric,
           value: Math.max(0, metric.value + (Math.random() - 0.5) * metric.value * 0.02),
           change: (Math.random() - 0.5) * 20,
-          trend: Math.random() > 0.5 ? &apos;up' : Math.random() > 0.25 ? 'down' : 'stable',
+          trend: Math.random() > 0.5 ? &apos;up&apos; : Math.random() > 0.25 ? &apos;down' : 'stable',
         })));
 
         // Add new data point to time series
@@ -328,8 +311,8 @@ export default function RealTimeAnalytics() {
   };
 
   const formatNumber = (num: number) => {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + &apos;M';
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + &apos;M&apos;;
+    if (num >= 1000) return (num / 1000).toFixed(1) + &apos;K';
     return num.toString();
   };
 
@@ -391,7 +374,7 @@ export default function RealTimeAnalytics() {
                 <span className="text-2xl font-bold">{formatNumber(metric.value)}</span>
                 <span className="text-sm text-muted-foreground">{metric.unit}</span>
               </div>
-              <div className={`text-xs mt-1 ${metric.change >= 0 ? &apos;text-green-600' : 'text-red-600'}`}>
+              <div className={`text-xs mt-1 ${metric.change >= 0 ? &apos;text-green-600&apos; : &apos;text-red-600'}`}>
                 {metric.change >= 0 ? '+' : ''}{metric.change.toFixed(1)}% from last hour
               </div>
             </CardContent>
@@ -428,8 +411,8 @@ export default function RealTimeAnalytics() {
                 <Area
                   type="monotone"
                   dataKey={selectedMetric}
-                  stroke={metrics.find(m => m.id.includes(selectedMetric))?.color || &apos;#3b82f6'}
-                  fill={metrics.find(m => m.id.includes(selectedMetric))?.color || '#3b82f6'}
+                  stroke={metrics.find(m => m.id.includes(selectedMetric))?.color || &apos;#3b82f6&apos;}
+                  fill={metrics.find(m => m.id.includes(selectedMetric))?.color || &apos;#3b82f6'}
                   fillOpacity={0.3}
                 />
               </AreaChart>

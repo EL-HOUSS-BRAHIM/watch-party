@@ -6,29 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import {
-  AlertTriangle,
-  Search,
-  MoreHorizontal,
-  Eye,
-  Check,
-  X,
-  Flag,
-  MessageSquare,
-  Video,
-  Users,
-  Calendar,
-  TrendingUp,
-  Shield,
-  Loader2,
-} from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
@@ -113,7 +96,7 @@ export default function ContentModeration() {
       const totalItems = data.pagination?.total ?? data.count ?? results.length
       const pageSize = data.pagination?.page_size ?? 20
       setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
-    } catch (error) {
+    } catch {
       console.error("Failed to load reports:", error)
       toast({
         title: "Error",
@@ -138,7 +121,7 @@ export default function ContentModeration() {
         const data = await response.json()
         setStats(data)
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load moderation stats:", error)
     }
   }
@@ -156,7 +139,7 @@ export default function ContentModeration() {
         title: "Report Updated",
         description: `Report status changed to ${status}`,
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to update report:", error)
       toast({
         title: "Error",
@@ -178,7 +161,7 @@ export default function ContentModeration() {
         title: "Action Taken",
         description: `${action} applied successfully`,
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to take content action:", error)
       toast({
         title: "Error",
@@ -283,7 +266,7 @@ export default function ContentModeration() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600">Category:</span>
-                      <span className="capitalize">{report.category.replace(&quot;_", " ")}</span>
+                      <span className="capitalize">{report.category.replace(&quot;_&quot;, &quot; ")}</span>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600">Status:</span>
@@ -419,7 +402,7 @@ export default function ContentModeration() {
                   </div>
 
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => updateReportStatus(report.id, &quot;dismissed", resolution)}>
+                    <Button variant="outline" onClick={() => updateReportStatus(report.id, &quot;dismissed&quot;, resolution)}>
                       Dismiss
                     </Button>
                     <Button onClick={handleResolve} disabled={!resolution}>
@@ -586,7 +569,7 @@ export default function ContentModeration() {
                     <TableCell>
                       <div>
                         <p className="font-medium text-sm">#{report.id.slice(-8)}</p>
-                        <p className="text-xs text-gray-500 capitalize">{report.category.replace(&quot;_", " ")}</p>
+                        <p className="text-xs text-gray-500 capitalize">{report.category.replace(&quot;_&quot;, &quot; ")}</p>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -625,18 +608,18 @@ export default function ContentModeration() {
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => updateReportStatus(report.id, &quot;reviewing")}>
+                          <DropdownMenuItem onClick={() => updateReportStatus(report.id, &quot;reviewing&quot;)}>
                             <Shield className="mr-2 h-4 w-4" />
                             Start Review
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => updateReportStatus(report.id, &quot;resolved", "Quick resolution")}
+                            onClick={() => updateReportStatus(report.id, &quot;resolved&quot;, &quot;Quick resolution")}
                           >
                             <Check className="mr-2 h-4 w-4" />
                             Quick Resolve
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            onClick={() => updateReportStatus(report.id, &quot;dismissed", "Not actionable")}
+                            onClick={() => updateReportStatus(report.id, &quot;dismissed&quot;, &quot;Not actionable")}
                           >
                             <X className="mr-2 h-4 w-4" />
                             Dismiss

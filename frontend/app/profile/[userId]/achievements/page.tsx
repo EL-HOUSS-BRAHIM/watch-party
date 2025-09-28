@@ -2,7 +2,6 @@
 
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
-import { TrophyIcon, StarIcon, CalendarIcon } from '@heroicons/react/24/outline'
 
 interface Achievement {
   id: string
@@ -74,7 +73,7 @@ const rarityBorders = {
 
 export default function UserAchievementsPage() {
   const params = useParams()
-  const [filter, setFilter] = useState<'all' | 'completed' | 'in-progress'>(&apos;all')
+  const [filter, setFilter] = useState<'all' | 'completed' | 'in-progress'>(&apos;all&apos;)
   
   const filteredAchievements = achievements.filter(achievement => {
     switch (filter) {

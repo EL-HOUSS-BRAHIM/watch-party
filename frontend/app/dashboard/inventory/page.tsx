@@ -86,8 +86,8 @@ const rarityBorders = {
 }
 
 export default function InventoryPage() {
-  const [filter, setFilter] = useState<'all' | 'equipped' | 'avatar_frame' | 'emoji_pack' | 'theme' | 'achievement'>(&apos;all')
-  const [sortBy, setSortBy] = useState<'acquired' | 'rarity' | 'name'>(&apos;acquired')
+  const [filter, setFilter] = useState<'all' | 'equipped' | 'avatar_frame' | 'emoji_pack' | 'theme' | 'achievement'>(&apos;all&apos;)
+  const [sortBy, setSortBy] = useState<'acquired' | 'rarity' | 'name'>(&apos;acquired&apos;)
 
   const filteredItems = inventoryItems
     .filter(item => {
@@ -272,14 +272,14 @@ export default function InventoryPage() {
           
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-yellow-400 mb-2">
-              {inventoryItems.filter(i => i.rarity === &apos;legendary' || i.rarity === 'epic').length}
+              {inventoryItems.filter(i => i.rarity === &apos;legendary&apos; || i.rarity === &apos;epic').length}
             </div>
             <div className="text-white/70">Rare Items</div>
           </div>
           
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-blue-400 mb-2">
-              {inventoryItems.filter(i => i.type === &apos;achievement').length}
+              {inventoryItems.filter(i => i.type === &apos;achievement&apos;).length}
             </div>
             <div className="text-white/70">Achievements</div>
           </div>

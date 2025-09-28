@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { cn } from "@/lib/utils"
-import { Eye, EyeOff, AlertCircle, Check } from "lucide-react"
 
 export interface WatchPartyInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string
@@ -88,7 +87,7 @@ const WatchPartyInput = React.forwardRef<HTMLInputElement, WatchPartyInputProps>
               onClick={() => setShowPassword(!showPassword)}
               tabIndex={-1}
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4" />}
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4&quot; />}
             </button>
           )}
 

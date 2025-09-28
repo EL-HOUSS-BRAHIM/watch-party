@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -21,24 +21,6 @@ import { useToast } from "@/hooks/use-toast"
 import { integrationsAPI } from "@/lib/api"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { tomorrow } from "react-syntax-highlighter/dist/esm/styles/prism"
-import {
-  Key,
-  Plus,
-  Copy,
-  Trash2,
-  RefreshCw,
-  Code,
-  Webhook,
-  Settings,
-  Activity,
-  Shield,
-  Globe,
-  Zap,
-  Link,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-} from "lucide-react"
 
 interface APIKey {
   id: string
@@ -94,7 +76,7 @@ export default function IntegrationAPISystem() {
     loadIntegrations()
   }, [])
 
-  const loadIntegrations = async () => {
+  const loadIntegrations = useCallback(async () => {
     try {
       setIsLoading(true)
       
@@ -202,7 +184,7 @@ export default function IntegrationAPISystem() {
       setApiKeys(placeholderAPIKeys)
       setIntegrations(integrationsWithStatus)
       setWebhooks(placeholderWebhooks)
-    } catch (error) {
+    } catch {
       console.error("Failed to load integrations:", error)
       toast({
         title: "Error",
@@ -212,7 +194,7 @@ export default function IntegrationAPISystem() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
   const handleCreateAPIKey = async (formData: FormData) => {
     setIsLoading(true)
@@ -242,7 +224,7 @@ export default function IntegrationAPISystem() {
         title: "API Key Created",
         description: "Your new API key has been generated successfully.",
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to create API key. Please try again.",
@@ -276,7 +258,7 @@ export default function IntegrationAPISystem() {
         title: "Webhook Created",
         description: "Your webhook endpoint has been configured successfully.",
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to create webhook. Please try again.",
@@ -295,7 +277,7 @@ export default function IntegrationAPISystem() {
         title: "API Key Updated",
         description: "API key status has been updated.",
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to update API key status.",
@@ -312,7 +294,7 @@ export default function IntegrationAPISystem() {
         title: "API Key Deleted",
         description: "The API key has been permanently deleted.",
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to delete API key.",
@@ -346,7 +328,7 @@ export default function IntegrationAPISystem() {
         const authResponse = await integrationsAPI.getAuthUrl(integration.name.toLowerCase().replace(/\s+/g, '-'))
         window.location.href = authResponse.auth_url
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to connect integration:", error)
       toast({
         title: "Error",

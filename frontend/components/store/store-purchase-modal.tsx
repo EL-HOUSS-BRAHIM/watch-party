@@ -103,7 +103,7 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
           variant: 'destructive'
         })
       }
-    } catch (error) {
+    } catch {
       setPromoDiscount(0)
       toast({
         title: 'Error',
@@ -131,7 +131,7 @@ export function StorePurchaseModal({ item, isOpen, onClose, onPurchaseComplete }
 
       onPurchaseComplete(item, quantity)
       onClose()
-    } catch (error: unknown) {
+    } catch {
       toast({
         title: 'Purchase failed',
         description: error.response?.data?.message || 'Failed to complete purchase',

@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import Image from "next/image"
 import { Card, CardContent } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -129,7 +128,7 @@ const normalizeActivity = (activity: unknown): ActivityItem => {
 export default function FriendsActivityFeed() {
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | ActivityItem['type']>(&apos;all');
+  const [filter, setFilter] = useState<'all' | ActivityItem['type']>(&apos;all&apos;);
   const [timeframe, setTimeframe] = useState('today');
   const { toast } = useToast();
 
@@ -147,7 +146,7 @@ export default function FriendsActivityFeed() {
       const response = await usersAPI.getActivity(params);
       const results = Array.isArray(response?.results) ? response.results : [];
       setActivities(results.map((item: unknown) => normalizeActivity(item)));
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch activities:', error);
       toast({
         title: 'Could not load friend activity',
@@ -257,7 +256,7 @@ export default function FriendsActivityFeed() {
                       <Avatar className="h-12 w-12">
                         <AvatarImage src={activity.user.avatar} alt={activity.user.displayName} />
                         <AvatarFallback>
-                          {activity.user.displayName.split(' ').map(n => n[0]).join(&apos;')}
+                          {activity.user.displayName.split(' ').map(n => n[0]).join(&apos;&apos;)}
                         </AvatarFallback>
                       </Avatar>
                       {activity.user.isOnline && (

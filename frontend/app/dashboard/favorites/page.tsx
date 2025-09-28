@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import Image from "next/image"
-import { HeartIcon, PlayIcon, StarIcon, CalendarIcon, ClockIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
 
 interface FavoriteItem {
@@ -82,11 +81,11 @@ const typeLabels = {
 }
 
 export default function DashboardFavoritesPage() {
-  const [filter, setFilter] = useState<'all' | 'movie' | 'show' | 'video' | 'party'>(&apos;all')
-  const [sortBy, setSortBy] = useState<'added' | 'rating' | 'title'>(&apos;added')
+  const [filter, setFilter] = useState<'all' | 'movie' | 'show' | 'video' | 'party'>(&apos;all&apos;)
+  const [sortBy, setSortBy] = useState<'added' | 'rating' | 'title'>(&apos;added&apos;)
 
   const filteredFavorites = favorites
-    .filter(item => filter === 'all' || item.type === filter)
+    .filter(item => filter === &apos;all' || item.type === filter)
     .sort((a, b) => {
       switch (sortBy) {
         case 'rating':
@@ -266,21 +265,21 @@ export default function DashboardFavoritesPage() {
           
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-blue-400 mb-2">
-              {favorites.filter(f => f.type === &apos;movie').length}
+              {favorites.filter(f => f.type === &apos;movie&apos;).length}
             </div>
             <div className="text-white/70">Movies</div>
           </div>
           
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-purple-400 mb-2">
-              {favorites.filter(f => f.type === &apos;show').length}
+              {favorites.filter(f => f.type === &apos;show&apos;).length}
             </div>
             <div className="text-white/70">TV Shows</div>
           </div>
           
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-orange-400 mb-2">
-              {favorites.filter(f => f.type === &apos;party').length}
+              {favorites.filter(f => f.type === &apos;party&apos;).length}
             </div>
             <div className="text-white/70">Parties</div>
           </div>

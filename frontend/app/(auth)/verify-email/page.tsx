@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
-import { Mail, CheckCircle, AlertCircle, RefreshCw, Sparkles, Clock, Send } from "lucide-react"
 import Link from "next/link"
 
 function EmailVerificationHandler() {
@@ -14,7 +13,7 @@ function EmailVerificationHandler() {
   const searchParams = useSearchParams()
   const { toast } = useToast()
 
-  const [status, setStatus] = useState<"loading" | "success" | "error" | "expired">(&quot;loading")
+  const [status, setStatus] = useState<"loading" | "success" | "error" | "expired">(&quot;loading&quot;)
   const [message, setMessage] = useState("")
   const [isResending, setIsResending] = useState(false)
   const [canResend, setCanResend] = useState(false)
@@ -61,7 +60,7 @@ function EmailVerificationHandler() {
           setMessage(data.message || "Email verification failed. Please try again.")
         }
       }
-    } catch (error) {
+    } catch {
       console.error("Email verification error:", error)
       setStatus("error")
       setMessage("An unexpected error occurred. Please try again.")
@@ -117,7 +116,7 @@ function EmailVerificationHandler() {
       } else {
         throw new Error(data.message || "Failed to resend verification email")
       }
-    } catch (error) {
+    } catch {
       console.error("Resend verification error:", error)
       toast({
         title: "Resend Failed",

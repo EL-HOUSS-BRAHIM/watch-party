@@ -239,7 +239,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
       const response = await usersAPI.getSessions()
       const normalized = Array.isArray(response) ? response.map(normalizeSession) : []
       setSessions(normalized)
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch sessions:', error)
       toast({
         title: 'Error',
@@ -277,7 +277,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
         title: 'Session Revoked',
         description: 'The session has been successfully terminated',
       })
-    } catch (error) {
+    } catch {
       console.error('Failed to revoke session:', error)
       toast({
         title: 'Error',
@@ -314,7 +314,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
         title: 'Sessions Revoked',
         description: `${otherSessions.length} session(s) have been terminated`,
       })
-    } catch (error) {
+    } catch {
       console.error('Failed to revoke sessions:', error)
       toast({
         title: 'Error',
@@ -407,7 +407,7 @@ export default function SessionManagement({ userId, showRevealOptions = true }: 
         
         <Card className="bg-white/5 border-white/10">
           <CardContent className="p-4 text-center">
-            <div className={`text-2xl font-bold mb-1 ${suspiciousSessions > 0 ? &apos;text-red-400' : 'text-green-400'}`}>
+            <div className={`text-2xl font-bold mb-1 ${suspiciousSessions > 0 ? &apos;text-red-400&apos; : &apos;text-green-400'}`}>
               {suspiciousSessions}
             </div>
             <div className="text-white/70 text-sm">Suspicious Sessions</div>

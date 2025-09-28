@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Switch } from '@/components/ui/switch';
-import { Bell, BellOff, Smartphone, AlertCircle, CheckCircle, Info } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 interface PushSubscription {
@@ -31,7 +30,7 @@ interface NotificationSettings {
 }
 
 export default function PushPermissionRegistration() {
-  const [permission, setPermission] = useState<NotificationPermission>(&apos;default');
+  const [permission, setPermission] = useState<NotificationPermission>(&apos;default&apos;);
   const [subscription, setSubscription] = useState<PushSubscription | null>(null);
   const [settings, setSettings] = useState<NotificationSettings>({
     enabled: false,
@@ -107,7 +106,7 @@ export default function PushPermissionRegistration() {
           registeredAt: new Date().toISOString(), // This should come from your backend
         });
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to check existing subscription:', error);
     }
   };
@@ -118,7 +117,7 @@ export default function PushPermissionRegistration() {
       // const response = await fetch('/api/user/notification-settings');
       // const data = await response.json();
       // setSettings(data);
-    } catch (error) {
+    } catch {
       console.error('Failed to load notification settings:', error);
     }
   };
@@ -152,7 +151,7 @@ export default function PushPermissionRegistration() {
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to request permission:', error);
       toast({
         title: "Error",
@@ -198,7 +197,7 @@ export default function PushPermissionRegistration() {
       });
 
       setSettings({ ...settings, enabled: true });
-    } catch (error) {
+    } catch {
       console.error('Failed to subscribe to push:', error);
       throw error;
     }
@@ -213,7 +212,7 @@ export default function PushPermissionRegistration() {
       //   body: JSON.stringify(subscriptionData),
       // });
       console.log('Subscription saved:', subscriptionData);
-    } catch (error) {
+    } catch {
       console.error('Failed to save subscription:', error);
       throw error;
     }
@@ -243,7 +242,7 @@ export default function PushPermissionRegistration() {
         title: "Notifications disabled",
         description: "You will no longer receive push notifications.",
       });
-    } catch (error) {
+    } catch {
       console.error('Failed to unsubscribe:', error);
       toast({
         title: "Error",
@@ -279,7 +278,7 @@ export default function PushPermissionRegistration() {
         title: "Test notification sent",
         description: "Check if you received the notification.",
       });
-    } catch (error) {
+    } catch {
       console.error('Failed to send test notification:', error);
       toast({
         title: "Error",
@@ -307,7 +306,7 @@ export default function PushPermissionRegistration() {
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify(newSettings),
       // });
-    } catch (error) {
+    } catch {
       console.error('Failed to update settings:', error);
     }
   };
@@ -315,7 +314,7 @@ export default function PushPermissionRegistration() {
   // Helper functions
   const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
     const bytes = new Uint8Array(buffer);
-    const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join(&apos;');
+    const binary = Array.from(bytes, byte => String.fromCharCode(byte)).join(&apos;&apos;);
     return btoa(binary);
   };
 

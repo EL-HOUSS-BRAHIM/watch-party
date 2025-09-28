@@ -7,7 +7,6 @@ import { useState } from "react"
 import { WatchPartyButton } from "@/components/ui/watch-party-button"
 import { ThemeSwitcher } from "@/components/theme/theme-switcher"
 import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
@@ -163,7 +162,7 @@ export function WatchPartyHeader() {
               className="md:hidden"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
-              {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className=&quot;h-4 w-4" />}
+              {isMobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className=&quot;h-4 w-4&quot; />}
             </WatchPartyButton>
           </div>
         </div>

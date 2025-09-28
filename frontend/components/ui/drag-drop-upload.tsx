@@ -6,7 +6,6 @@ import Image from "next/image"
 import { useState, useRef, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { Upload, X, File, ImageIcon, Video } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface FileWithPreview extends File {
@@ -151,7 +150,7 @@ export function DragDropUpload({
       >
         <Upload className="h-12 w-12 mx-auto mb-4 text-gray-400" />
         <div className="space-y-2">
-          <p className="text-lg font-medium">{isDragOver ? &quot;Drop files here" : "Drag and drop files here"}</p>
+          <p className="text-lg font-medium">{isDragOver ? &quot;Drop files here&quot; : &quot;Drag and drop files here"}</p>
           <p className="text-sm text-gray-500">
             or{" "}
             <Button

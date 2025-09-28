@@ -11,17 +11,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { useMemo } from "react"
-import {
-  Shield,
-  Smartphone,
-  Key,
-  AlertCircle,
-  ArrowLeft,
-  RefreshCw,
-  HelpCircle,
-  CheckCircle,
-  Clock,
-} from "lucide-react"
 import Link from "next/link"
 import { AuthAPI } from "@/lib/api/auth"
 import { tokenStorage } from "@/lib/auth/token-storage"
@@ -82,7 +71,7 @@ function TwoFactorVerifyForm() {
 
     // Clear errors when user starts typing
     if (errors.code) {
-      setErrors((prev) => ({ ...prev, code: &quot;" }))
+      setErrors((prev) => ({ ...prev, code: &quot;&quot; }))
     }
 
     // Auto-focus next input
@@ -164,7 +153,7 @@ function TwoFactorVerifyForm() {
 
       const redirectTo = searchParams.get("redirect") || "/dashboard"
       router.push(redirectTo)
-    } catch (error: unknown) {
+    } catch {
       console.error("2FA verification error:", error)
       const data = (error as { response?: { data?: { attempts_remaining?: number; account_locked?: boolean; message?: string } } })?.response?.data
 
@@ -316,7 +305,7 @@ function TwoFactorVerifyForm() {
                     value={backupCode}
                     onChange={(e) => {
                       setBackupCode(e.target.value.toUpperCase())
-                      if (errors.backup) setErrors((prev) => ({ ...prev, backup: &quot;" }))
+                      if (errors.backup) setErrors((prev) => ({ ...prev, backup: &quot;&quot; }))
                     }}
                     className="text-center text-lg font-mono bg-white/5 border-white/20 text-white placeholder-gray-400 focus:border-orange-500/50"
                     placeholder="XXXXXXXX"

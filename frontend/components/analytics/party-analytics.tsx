@@ -22,20 +22,6 @@ import {
   Area,
   AreaChart
 } from 'recharts'
-import { 
-  Users, 
-  Clock, 
-  Activity, 
-  TrendingUp, 
-  Eye, 
-  MessageSquare,
-  Heart,
-  Share2,
-  Play,
-  Pause,
-  Calendar,
-  Download
-} from 'lucide-react'
 
 interface PartyAnalyticsData {
   id: string
@@ -97,19 +83,19 @@ export function PartyAnalytics({ partyId }: PartyAnalyticsProps) {
     loadAnalytics()
   }, [partyId, timeRange])
 
-  const loadAnalytics = async () => {
+  const loadAnalytics = useCallback(async () => {
     try {
       const response = await fetch(`/api/analytics/party/${partyId}?range=${timeRange}`)
       if (response.ok) {
         const data = await response.json()
         setAnalytics(data)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to load party analytics:', error)
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)

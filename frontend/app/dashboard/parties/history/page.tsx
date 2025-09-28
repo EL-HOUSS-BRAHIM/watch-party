@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import WatchPartyTable from "@/components/ui/watch-party-table"
@@ -136,7 +135,7 @@ export default function PartyHistoryPage() {
       } else {
         throw new Error("Failed to load party history")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load party history:", error)
       toast({
         title: "Error",
@@ -240,7 +239,7 @@ export default function PartyHistoryPage() {
           description: "Your party history has been exported successfully.",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to export history:", error)
       toast({
         title: "Export Failed",
@@ -312,8 +311,8 @@ export default function PartyHistoryPage() {
       accessorKey: "scheduledFor" as keyof PartyHistoryItem,
       cell: ({ row }: { row: PartyHistoryItem }) => (
         <div className="text-sm">
-          <div>{format(parseISO(row.scheduledFor), &quot;MMM dd, yyyy")}</div>
-          <div className="text-muted-foreground">{format(parseISO(row.scheduledFor), &quot;h:mm a")}</div>
+          <div>{format(parseISO(row.scheduledFor), &quot;MMM dd, yyyy&quot;)}</div>
+          <div className="text-muted-foreground">{format(parseISO(row.scheduledFor), &quot;h:mm a&quot;)}</div>
         </div>
       ),
     },
@@ -396,7 +395,7 @@ export default function PartyHistoryPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -452,7 +451,7 @@ export default function PartyHistoryPage() {
           </Card>
           <Card>
             <CardContent className="p-4 text-center">
-              <div className="text-2xl font-bold text-red-600">{stats.mostWatchedGenre || &quot;N/A"}</div>
+              <div className="text-2xl font-bold text-red-600">{stats.mostWatchedGenre || &quot;N/A&quot;}</div>
               <div className="text-sm text-muted-foreground">Top Genre</div>
             </CardContent>
           </Card>
@@ -567,7 +566,7 @@ export default function PartyHistoryPage() {
                   <History className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <h3 className="text-lg font-medium mb-2">No parties found</h3>
                   <p className="text-muted-foreground">
-                    {filters.search || Object.values(filters).some((f) => f !== &quot;all")
+                    {filters.search || Object.values(filters).some((f) => f !== &quot;all&quot;)
                       ? "Try adjusting your search or filters"
                       : activeTab === "hosted"
                         ? "You haven't hosted any parties yet"
@@ -575,7 +574,7 @@ export default function PartyHistoryPage() {
                           ? "You haven't joined any parties yet"
                           : "No party history available"}
                   </p>
-                  <Button className="mt-4" onClick={() => router.push(&quot;/dashboard/parties/create")}>
+                  <Button className="mt-4" onClick={() => router.push(&quot;/dashboard/parties/create&quot;)}>
                     <Play className="h-4 w-4 mr-2" />
                     Create Your First Party
                   </Button>

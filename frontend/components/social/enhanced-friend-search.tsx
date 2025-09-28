@@ -5,18 +5,8 @@ import { Search, UserPlus, Users, MapPin, Activity, Star, Loader2, UserCheck, Cl
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
-import { Separator } from "@/components/ui/separator"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface User {
@@ -60,63 +50,44 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
   const [isSearching, setIsSearching] = useState(false)
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(true)
   const [sendingRequests, setSendingRequests] = useState<Set<string>>(new Set())
-  
-  const [filters, setFilters] = useState({
-    location: "all",
-    activity: "all",
-    compatibility: "all",
-    hasAvatar: false,
-  })
 
   const { toast } = useToast()
 
-  // Native debounce function
-  const debounce = (func: Function, wait: number) => {
-    let timeout: NodeJS.Timeout
-    return function executedFunction(...args: unknown[]) {
-      const later = () => {
-        clearTimeout(timeout)
-        func(...args)
-      }
-      clearTimeout(timeout)
-      timeout = setTimeout(later, wait)
+  // Perform search function
+  const performSearch = useCallback(async (query: string) => {
+    if (!query.trim()) {
+      setSearchResults([])
+      return
     }
-  }
 
-  // Debounced search function
-  const debouncedSearch = useCallback(
-    debounce(async (query: string) => {
-      if (!query.trim()) {
-        setSearchResults([])
-        return
+    setIsSearching(true)
+    try {
+      const token = localStorage.getItem("accessToken")
+      const response = await fetch(`/api/users/search/?q=${encodeURIComponent(query)}&limit=20`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setSearchResults(data.users || [])
       }
+    } catch {
+      console.error("Search failed:", error)
+      toast({
+        title: "Search failed",
+        description: "Please try again",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSearching(false)
+    }
+  }, [toast])
 
-      setIsSearching(true)
-      try {
-        const token = localStorage.getItem("accessToken")
-        const response = await fetch(`/api/users/search/?q=${encodeURIComponent(query)}&limit=20`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-
-        if (response.ok) {
-          const data = await response.json()
-          setSearchResults(data.users || [])
-        }
-      } catch (error) {
-        console.error("Search failed:", error)
-        toast({
-          title: "Search failed",
-          description: "Please try again",
-          variant: "destructive",
-        })
-      } finally {
-        setIsSearching(false)
-      }
-    }, 300),
-    []
-  )
+  const debouncedSearch = useCallback((query: string) => {
+    performSearch(query)
+  }, [performSearch])
 
   useEffect(() => {
     debouncedSearch(searchQuery)
@@ -139,7 +110,7 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
         const data = await response.json()
         setSuggestions(data.suggestions || [])
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load suggestions:", error)
     } finally {
       setIsLoadingSuggestions(false)
@@ -183,7 +154,7 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
       } else {
         throw new Error("Failed to send friend request")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to send friend request:", error)
       toast({
         title: "Failed to send request",
@@ -382,7 +353,7 @@ export default function EnhancedFriendSearch({ className }: EnhancedFriendSearch
 
               {!isSearching && searchQuery && searchResults.length === 0 && (
                 <div className="text-center py-8 text-muted-foreground">
-                  No users found matching "{searchQuery}"
+                  No users found matching &quot;{searchQuery}&quot;
                 </div>
               )}
 

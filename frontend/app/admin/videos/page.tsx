@@ -10,25 +10,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  Video, 
-  Play, 
-  Pause, 
-  Eye, 
-  EyeOff, 
-  AlertTriangle, 
-  Ban, 
-  CheckCircle, 
-  Clock,
-  Search,
-  Filter,
-  Flag,
-  MessageSquare,
-  User,
-  Calendar,
-  MoreHorizontal
-} from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { adminAPI, videosAPI } from '@/lib/api';
 
@@ -78,11 +59,11 @@ interface VideoContent {
 export default function VideoModerationPage() {
   const [videos, setVideos] = useState<VideoContent[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<VideoContent | null>(null);
-  const [filter, setFilter] = useState<'all' | VideoContent['status']>(&apos;all');
+  const [filter, setFilter] = useState<'all' | VideoContent['status']>(&apos;all&apos;);
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'date' | 'reports' | 'views'>(&apos;date');
+  const [sortBy, setSortBy] = useState<'date' | 'reports' | 'views'>(&apos;date&apos;);
   const [showModerationDialog, setShowModerationDialog] = useState(false);
-  const [moderationAction, setModerationAction] = useState<'approve' | 'reject' | 'flag'>(&apos;approve');
+  const [moderationAction, setModerationAction] = useState<'approve' | 'reject' | 'flag'>(&apos;approve&apos;);
   const [moderationNotes, setModerationNotes] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -148,7 +129,7 @@ export default function VideoModerationPage() {
       })) || [];
 
       setVideos(transformedVideos);
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch videos:', error);
       toast({
         title: "Error",
@@ -250,7 +231,7 @@ export default function VideoModerationPage() {
       setShowModerationDialog(false);
       setSelectedVideo(null);
       setModerationNotes('');
-    } catch (error) {
+    } catch {
       console.error('Failed to moderate video:', error);
       toast({
         title: "Error",
@@ -274,10 +255,10 @@ export default function VideoModerationPage() {
         </div>
         <div className="flex gap-4">
           <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-            {videos.filter(v => v.status === &apos;pending').length} Pending Review
+            {videos.filter(v => v.status === &apos;pending&apos;).length} Pending Review
           </Badge>
           <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
-            {videos.filter(v => v.status === &apos;flagged').length} Flagged
+            {videos.filter(v => v.status === &apos;flagged&apos;).length} Flagged
           </Badge>
         </div>
       </div>
@@ -479,7 +460,7 @@ export default function VideoModerationPage() {
                     <>
                       <Button
                         size="sm"
-                        onClick={() => moderateVideo(video.id, &apos;approve', 'Auto-approved')}
+                        onClick={() => moderateVideo(video.id, &apos;approve&apos;, &apos;Auto-approved')}
                       >
                         <CheckCircle className="h-4 w-4 mr-1" />
                         Approve
@@ -487,7 +468,7 @@ export default function VideoModerationPage() {
                       <Button
                         variant="destructive"
                         size="sm"
-                        onClick={() => moderateVideo(video.id, &apos;reject', 'Content policy violation')}
+                        onClick={() => moderateVideo(video.id, &apos;reject&apos;, &apos;Content policy violation')}
                       >
                         <Ban className="h-4 w-4 mr-1" />
                         Reject
@@ -597,21 +578,21 @@ export default function VideoModerationPage() {
                   <div className="flex gap-4">
                     <Button
                       variant={moderationAction === 'approve' ? 'default' : 'outline'}
-                      onClick={() => setModerationAction(&apos;approve')}
+                      onClick={() => setModerationAction(&apos;approve&apos;)}
                     >
                       <CheckCircle className="h-4 w-4 mr-2" />
                       Approve
                     </Button>
                     <Button
                       variant={moderationAction === 'reject' ? 'destructive' : 'outline'}
-                      onClick={() => setModerationAction(&apos;reject')}
+                      onClick={() => setModerationAction(&apos;reject&apos;)}
                     >
                       <Ban className="h-4 w-4 mr-2" />
                       Reject
                     </Button>
                     <Button
                       variant={moderationAction === 'flag' ? 'secondary' : 'outline'}
-                      onClick={() => setModerationAction(&apos;flag')}
+                      onClick={() => setModerationAction(&apos;flag&apos;)}
                     >
                       <Flag className="h-4 w-4 mr-2" />
                       Flag for Review

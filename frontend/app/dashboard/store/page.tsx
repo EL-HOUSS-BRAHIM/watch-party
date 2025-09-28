@@ -88,9 +88,9 @@ export default function StorePage() {
   const [cart, setCart] = useState<CartItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState<string>(&quot;all")
-  const [sortBy, setSortBy] = useState<string>(&quot;featured")
-  const [priceFilter, setPriceFilter] = useState<string>(&quot;all")
+  const [selectedCategory, setSelectedCategory] = useState<string>(&quot;all&quot;)
+  const [sortBy, setSortBy] = useState<string>(&quot;featured&quot;)
+  const [priceFilter, setPriceFilter] = useState<string>(&quot;all&quot;)
   const [showCart, setShowCart] = useState(false)
   const [processingPurchase, setProcessingPurchase] = useState(false)
 
@@ -111,7 +111,7 @@ export default function StorePage() {
         const data = await inventoryRes.json()
         setInventory(data)
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load store data:", error)
       toast({
         title: "Error",
@@ -200,7 +200,7 @@ export default function StorePage() {
         const error = await response.json()
         throw new Error(error.message || "Purchase failed")
       }
-    } catch (error: unknown) {
+    } catch {
       console.error("Purchase error:", error)
       toast({
         title: "Purchase Failed",
@@ -262,7 +262,7 @@ export default function StorePage() {
         const error = await response.json()
         throw new Error(error.message || "Purchase failed")
       }
-    } catch (error: unknown) {
+    } catch {
       console.error("Cart purchase error:", error)
       toast({
         title: "Purchase Failed",

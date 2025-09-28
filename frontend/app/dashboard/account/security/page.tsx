@@ -158,7 +158,7 @@ export default function SecuritySettingsPage() {
       // Security events endpoint isn't available in the backend specification.
       // Clear previous events to avoid showing stale data.
       setSecurityEvents([])
-    } catch (error) {
+    } catch {
       console.error("Failed to load security data:", error)
       toast({
         title: "Error",
@@ -199,7 +199,7 @@ export default function SecuritySettingsPage() {
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Password change error:", error)
       toast({
         title: "Error",
@@ -222,7 +222,7 @@ export default function SecuritySettingsPage() {
         backupCodes: data.backup_codes || [],
       })
       setShow2FADialog(true)
-    } catch (error) {
+    } catch {
       console.error("2FA setup error:", error)
       toast({
         title: "Error",
@@ -259,7 +259,7 @@ export default function SecuritySettingsPage() {
         title: "2FA Enabled",
         description: "Two-factor authentication has been enabled successfully.",
       })
-    } catch (error) {
+    } catch {
       console.error("2FA verification error:", error)
       toast({
         title: "Error",
@@ -283,7 +283,7 @@ export default function SecuritySettingsPage() {
         title: "2FA Disabled",
         description: "Two-factor authentication has been disabled.",
       })
-    } catch (error) {
+    } catch {
       console.error("2FA disable error:", error)
       toast({
         title: "Error",
@@ -302,7 +302,7 @@ export default function SecuritySettingsPage() {
         title: "Settings Updated",
         description: "Your security settings have been saved locally.",
       })
-    } catch (error) {
+    } catch {
       console.error("Settings update error:", error)
       toast({
         title: "Error",
@@ -322,7 +322,7 @@ export default function SecuritySettingsPage() {
         title: "Session Terminated",
         description: "The session has been terminated successfully.",
       })
-    } catch (error) {
+    } catch {
       console.error("Session termination error:", error)
       toast({
         title: "Error",
@@ -344,7 +344,7 @@ export default function SecuritySettingsPage() {
         title: "Sessions Terminated",
         description: "All other sessions have been terminated.",
       })
-    } catch (error) {
+    } catch {
       console.error("Terminate all sessions error:", error)
       toast({
         title: "Error",
@@ -418,7 +418,7 @@ export default function SecuritySettingsPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -457,7 +457,7 @@ export default function SecuritySettingsPage() {
                       className="absolute right-2 top-1/2 transform -translate-y-1/2"
                       onClick={() => setShowCurrentPassword(!showCurrentPassword)}
                     >
-                      {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4" />}
+                      {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4&quot; />}
                     </Button>
                   </div>
                   {errors.currentPassword && (
@@ -481,7 +481,7 @@ export default function SecuritySettingsPage() {
                       className="absolute right-2 top-1/2 transform -translate-y-1/2"
                       onClick={() => setShowNewPassword(!showNewPassword)}
                     >
-                      {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4" />}
+                      {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4&quot; />}
                     </Button>
                   </div>
                   {errors.newPassword && <p className="text-sm text-destructive mt-1">{errors.newPassword.message}</p>}
@@ -503,7 +503,7 @@ export default function SecuritySettingsPage() {
                       className="absolute right-2 top-1/2 transform -translate-y-1/2"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     >
-                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4" />}
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className=&quot;h-4 w-4&quot; />}
                     </Button>
                   </div>
                   {errors.confirmPassword && (
@@ -792,7 +792,7 @@ export default function SecuritySettingsPage() {
                 </Button>
               </div>
 
-              <Button onClick={() => setShowBackupCodes(false)} className=&quot;w-full">
+              <Button onClick={() => setShowBackupCodes(false)} className=&quot;w-full&quot;>
                 I've Saved My Backup Codes
               </Button>
             </div>

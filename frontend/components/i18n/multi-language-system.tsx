@@ -19,19 +19,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
-import {
-  Globe,
-  Languages,
-  Plus,
-  Edit,
-  Download,
-  CheckCircle,
-  AlertCircle,
-  Search,
-  Save,
-  Users,
-  BarChart3,
-} from "lucide-react"
 
 interface Language {
   code: string
@@ -283,7 +270,7 @@ export default function MultiLanguageSystem() {
         title: "Language Added",
         description: `${newLanguage.name} has been added to the project.`,
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to add language.",
@@ -317,7 +304,7 @@ export default function MultiLanguageSystem() {
         prev.map((lang) => {
           if (lang.code === languageCode) {
             const translatedCount =
-              translations.filter((t) => t.translations[languageCode] && t.translations[languageCode].trim() !== &quot;")
+              translations.filter((t) => t.translations[languageCode] && t.translations[languageCode].trim() !== &quot;&quot;)
                 .length + 1
             return {
               ...lang,
@@ -334,7 +321,7 @@ export default function MultiLanguageSystem() {
         title: "Translation Updated",
         description: "The translation has been saved successfully.",
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to update translation.",
@@ -353,7 +340,7 @@ export default function MultiLanguageSystem() {
         title: "Language Updated",
         description: "Language status has been updated.",
       })
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to update language status.",
@@ -733,7 +720,7 @@ export default function MultiLanguageSystem() {
 
                       <div className="grid gap-3">
                         {languages
-                          .filter((lang) => lang.code !== &quot;en")
+                          .filter((lang) => lang.code !== &quot;en&quot;)
                           .map((language) => (
                             <div key={language.code}>
                               <Label className="text-sm font-medium flex items-center gap-2">
@@ -886,7 +873,7 @@ export default function MultiLanguageSystem() {
 
                 <div className="space-y-3">
                   {languages
-                    .filter((lang) => lang.code !== &quot;en")
+                    .filter((lang) => lang.code !== &quot;en&quot;)
                     .map((language) => (
                       <div key={language.code}>
                         <Label className="text-sm font-medium flex items-center gap-2">

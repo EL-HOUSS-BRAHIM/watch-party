@@ -10,24 +10,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 import { useApiToast } from "@/hooks/use-toast"
-import { 
-  Link as LinkIcon, 
-  Settings,
-  Check,
-  X,
-  Shield,
-  Zap,
-  Globe,
-  Music,
-  Video,
-  MessageSquare,
-  Calendar,
-  Users,
-  Star,
-  AlertTriangle,
-  RefreshCw,
-  ExternalLink
-} from 'lucide-react'
 
 interface Integration {
   id: string
@@ -170,7 +152,7 @@ export function IntegrationsManager() {
 
   const loadIntegrations = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/integrations'))
+      const response = await apiRequest(() => fetch(&apos;/api/integrations&apos;))
       if (response) {
         // Merge with available integrations to show all possible integrations
         const mergedIntegrations = AVAILABLE_INTEGRATIONS.map(available => {
@@ -187,7 +169,7 @@ export function IntegrationsManager() {
         })
         setIntegrations(mergedIntegrations)
       }
-    } catch (error) {
+    } catch {
       toastError(error, 'Failed to load integrations')
     } finally {
       setLoading(false)
@@ -196,7 +178,7 @@ export function IntegrationsManager() {
 
   const handleConnect = async (integrationId: string) => {
     const success = await apiRequest(
-      () => fetch(`/api/integrations/${integrationId}/connect`, { method: 'POST' }),
+      () => fetch(`/api/integrations/${integrationId}/connect`, { method: &apos;POST' }),
       { successMessage: 'Integration connected successfully!', showSuccess: true }
     )
 
@@ -408,7 +390,7 @@ export function IntegrationsManager() {
         <TabsContent value="streaming" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {integrations
-              .filter(i => i.category === &apos;streaming')
+              .filter(i => i.category === &apos;streaming&apos;)
               .map((integration) => (
                 <IntegrationCard
                   key={integration.id}
@@ -429,7 +411,7 @@ export function IntegrationsManager() {
         <TabsContent value="social" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {integrations
-              .filter(i => i.category === &apos;social')
+              .filter(i => i.category === &apos;social&apos;)
               .map((integration) => (
                 <IntegrationCard
                   key={integration.id}
@@ -450,7 +432,7 @@ export function IntegrationsManager() {
         <TabsContent value="entertainment" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {integrations
-              .filter(i => i.category === &apos;entertainment')
+              .filter(i => i.category === &apos;entertainment&apos;)
               .map((integration) => (
                 <IntegrationCard
                   key={integration.id}

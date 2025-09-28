@@ -8,21 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Shield,
-  MessageSquare,
-  Video,
-  Bell,
-  Server,
-  Save,
-  RotateCcw,
-  CheckCircle,
-  AlertTriangle,
-  Info,
-  Settings,
-  Zap,
-  Download
-} from 'lucide-react';
 
 interface SystemSetting {
   id: string;

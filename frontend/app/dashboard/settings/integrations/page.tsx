@@ -79,7 +79,7 @@ export default function IntegrationsPage() {
       }
       setStatus(mappedStatus)
       setHealth(healthResponse)
-    } catch (error) {
+    } catch {
       console.error('Failed to load integrations data', error)
       toast({
         title: 'Unable to load integrations',
@@ -109,7 +109,7 @@ export default function IntegrationsPage() {
         : await integrationsAPI.getAuthUrl(provider)
 
       window.location.assign(auth_url)
-    } catch (error) {
+    } catch {
       console.error('Failed to start integration authorization', error)
       toast({
         title: 'Connection failed',
@@ -133,7 +133,7 @@ export default function IntegrationsPage() {
         description: 'The integration has been disconnected from your account.',
       })
       await loadData()
-    } catch (error) {
+    } catch {
       console.error('Failed to disconnect integration', error)
       toast({
         title: 'Unable to disconnect',
@@ -154,12 +154,12 @@ export default function IntegrationsPage() {
   }, [definitions, connectionFor, status])
 
   const connectedCount = useMemo(
-    () => connections.filter(connection => connection.status === &apos;connected').length,
+    () => connections.filter(connection => connection.status === &apos;connected&apos;).length,
     [connections]
   )
 
   const issueCount = useMemo(
-    () => connections.filter(connection => connection.status === 'error').length,
+    () => connections.filter(connection => connection.status === &apos;error').length,
     [connections]
   )
 
@@ -215,7 +215,7 @@ export default function IntegrationsPage() {
                       key={service.name}
                       className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3"
                     >
-                      <span className="font-medium capitalize">{service.name.replace(/_/g, &apos; ')}</span>
+                      <span className="font-medium capitalize">{service.name.replace(/_/g, &apos; &apos;)}</span>
                       <span className={service.status === 'up' ? 'text-green-300' : 'text-red-300'}>
                         {service.status === 'up' ? 'Operational' : 'Unavailable'}
                       </span>

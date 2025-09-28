@@ -33,7 +33,7 @@ export default function RealtimeAnalytics() {
   const realtimeData = await analyticsAPI.getRealtimeAnalytics();
   setSnapshot(realtimeData);
         setLoading(false);
-      } catch (error) {
+      } catch {
         console.error('Failed to fetch realtime stats:', error);
         setLoading(false);
       }

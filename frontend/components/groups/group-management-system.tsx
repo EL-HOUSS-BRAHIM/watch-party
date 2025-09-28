@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
@@ -31,23 +30,6 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useToast } from "@/hooks/use-toast"
 import { socialAPI } from "@/lib/api"
-import {
-  Users,
-  Plus,
-  Settings,
-  Crown,
-  Shield,
-  UserPlus,
-  UserMinus,
-  MessageCircle,
-  Calendar,
-  Video,
-  Search,
-  Lock,
-  Globe,
-  Eye,
-  Loader2,
-} from "lucide-react"
 
 interface Group {
   id: string
@@ -219,7 +201,7 @@ export default function GroupManagementSystem() {
       const response = await socialAPI.getGroups({ page: 1 })
       const results = extractCollection(response)
       setGroups(results.map((group) => normalizeGroup(group)))
-    } catch (error) {
+    } catch {
       console.error("Failed to load groups", error)
       setGroups([])
       setGroupsError("Failed to load groups. Please try again.")
@@ -274,7 +256,7 @@ export default function GroupManagementSystem() {
         const normalized = normalizeGroup(detail)
         upsertGroup(normalized)
         return { normalized, detail }
-      } catch (error) {
+      } catch {
         console.error(`Failed to refresh group ${groupId}`, error)
         return null
       }
@@ -353,7 +335,7 @@ export default function GroupManagementSystem() {
         title: "Group Created",
         description: "Your group has been created successfully!",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to create group", error)
       toast({
         title: "Error",
@@ -393,7 +375,7 @@ export default function GroupManagementSystem() {
         title: "Joined Group",
         description: "You have successfully joined the group!",
       })
-    } catch (error) {
+    } catch {
       console.error(`Failed to join group ${group.id}`, error)
       toast({
         title: "Error",
@@ -431,7 +413,7 @@ export default function GroupManagementSystem() {
         title: "Left Group",
         description: "You have left the group.",
       })
-    } catch (error) {
+    } catch {
       console.error(`Failed to leave group ${group.id}`, error)
       toast({
         title: "Error",
@@ -445,7 +427,7 @@ export default function GroupManagementSystem() {
   const handleRoleChange = async (_memberId: string, _newRole: string) => {
     toast({
       title: "Action unavailable",
-      description: "Updating member roles requires a backend endpoint (\"/api/social/groups/<group_id>/members/<member_id>/\&quot;).",
+      description: "Updating member roles requires a backend endpoint (\"/api/social/groups/<group_id>/members/<member_id>/\&quot;).&quot;,
     })
   }
 
@@ -477,7 +459,7 @@ export default function GroupManagementSystem() {
         const members = extractCollection((result.detail as Record<string, unknown>)?.members).map((member) => normalizeGroupMember(member))
         setGroupMembers(members)
       }
-    } catch (error) {
+    } catch {
       console.error(`Failed to load group ${group.id}`, error)
       toast({
         title: "Error",
@@ -806,7 +788,7 @@ export default function GroupManagementSystem() {
                         <div className="flex items-center gap-3">
                           <Avatar>
                             <AvatarImage src={member.user.avatar || "/placeholder.svg"} />
-                            <AvatarFallback>{member.user.name?.charAt(0) ?? &quot;?"}</AvatarFallback>
+                            <AvatarFallback>{member.user.name?.charAt(0) ?? &quot;?&quot;}</AvatarFallback>
                           </Avatar>
                           <div>
                             <div className="flex items-center gap-2">

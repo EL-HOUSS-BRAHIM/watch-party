@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useCallback, useEffect } from "react"
+import Image from "next/image"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -16,22 +17,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import {
-  Zap,
-  TrendingUp,
-  Clock,
-  Database,
-  ImageIcon,
-  Code,
-  Wifi,
-  HardDrive,
-  Cpu,
-  Settings,
-  RefreshCw,
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-} from "lucide-react"
 import {
   LineChart,
   Line,
@@ -200,7 +185,7 @@ export function PerformanceOptimizer() {
       if (trendLower.includes('down') || trendLower.includes('decrease')) return 'down'
     }
     if (typeof trend === 'number') {
-      if (trend > 0.05) return &apos;up'
+      if (trend > 0.05) return &apos;up&apos;
       if (trend < -0.05) return 'down'
     }
     return 'stable'
@@ -331,7 +316,7 @@ export function PerformanceOptimizer() {
         }
       }
 
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch performance data:', error)
       toast({
         title: 'Performance Data Unavailable',
@@ -458,7 +443,7 @@ export function PerformanceOptimizer() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>

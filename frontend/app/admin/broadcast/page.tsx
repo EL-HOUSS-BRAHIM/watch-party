@@ -13,22 +13,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/hooks/use-toast';
 import { adminAPI } from '@/lib/api';
-import {
-  Megaphone,
-  AlertTriangle,
-  Clock,
-  CheckCircle,
-  Target,
-  MessageSquare,
-  Mail,
-  Bell,
-  Smartphone,
-  Send,
-  X,
-  Eye,
-  Users,
-  Calendar,
-} from 'lucide-react';
 
 interface BroadcastMessage {
   id: string;
@@ -128,7 +112,7 @@ export default function AdminBroadcastSystem() {
       })) || [];
       
       setMessages(broadcastMessages);
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch broadcast messages:', error);
       toast({
         title: "Error",
@@ -240,7 +224,7 @@ export default function AdminBroadcastSystem() {
           ));
         }, 3000);
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to create broadcast:', error);
       toast({
         title: "Error",

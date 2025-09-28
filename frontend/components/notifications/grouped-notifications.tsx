@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Bell, 
@@ -113,7 +112,7 @@ export default function GroupedNotifications() {
   const [notifications, setNotifications] = useState<NotificationWithMeta[]>([]);
   const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'all' | 'unread' | 'actionable'>(&apos;all');
+  const [filter, setFilter] = useState<'all' | 'unread' | 'actionable'>(&apos;all&apos;);
   const [pagination, setPagination] = useState<PaginationState>({ currentPage: 1, next: null, count: 0 });
 
   const fetchNotifications = useCallback(
@@ -134,7 +133,7 @@ export default function GroupedNotifications() {
           next: response?.next ?? null,
           count: response?.count ?? enhanced.length,
         });
-      } catch (error) {
+      } catch {
         console.error('Failed to fetch notifications:', error);
         toast({
           title: 'Unable to load notifications',
@@ -224,7 +223,7 @@ export default function GroupedNotifications() {
             notification.id === notificationId ? { ...notification, is_read: true } : notification,
           ),
         );
-      } catch (error) {
+      } catch {
         console.error('Failed to mark notification as read:', error);
         toast({
           title: 'Unable to update notification',
@@ -253,7 +252,7 @@ export default function GroupedNotifications() {
             notification.type === groupId ? { ...notification, is_read: true } : notification,
           ),
         );
-      } catch (error) {
+      } catch {
         console.error('Failed to mark notifications as read:', error);
         toast({
           title: 'Unable to update notifications',
@@ -277,7 +276,7 @@ export default function GroupedNotifications() {
         title: 'All notifications marked as read',
         description: 'You are all caught up.',
       });
-    } catch (error) {
+    } catch {
       console.error('Failed to mark all notifications as read:', error);
       toast({
         title: 'Unable to update notifications',
@@ -296,7 +295,7 @@ export default function GroupedNotifications() {
           ...prev,
           count: Math.max(0, prev.count - 1),
         }));
-      } catch (error) {
+      } catch {
         console.error('Failed to delete notification:', error);
         toast({
           title: 'Unable to delete notification',
@@ -321,7 +320,7 @@ export default function GroupedNotifications() {
         title: 'Notifications cleared',
         description: 'All notifications have been removed.',
       });
-    } catch (error) {
+    } catch {
       console.error('Failed to clear notifications:', error);
       toast({
         title: 'Unable to clear notifications',
@@ -364,7 +363,7 @@ export default function GroupedNotifications() {
               ? 'You are now connected.'
               : 'The request has been declined.',
         });
-      } catch (error) {
+      } catch {
         console.error('Failed to handle friend request:', error);
         toast({
           title: 'Unable to update friend request',
@@ -402,7 +401,7 @@ export default function GroupedNotifications() {
               ? 'You have joined the watch party.'
               : 'The invitation has been dismissed.',
         });
-      } catch (error) {
+      } catch {
         console.error('Failed to handle party invite:', error);
         toast({
           title: 'Unable to update party invite',
@@ -440,7 +439,7 @@ export default function GroupedNotifications() {
         <div>
           <h1 className="text-2xl font-bold">Notifications</h1>
           <p className="text-muted-foreground">
-            {unreadCount > 0 ? `${unreadCount} unread notifications` : &quot;You&apos;re all caught up!"}
+            {unreadCount > 0 ? `${unreadCount} unread notifications` : &quot;You&apos;re all caught up!&quot;}
           </p>
         </div>
         <div className="flex gap-2">
@@ -587,14 +586,14 @@ export default function GroupedNotifications() {
                                   <>
                                     <Button
                                       size="sm"
-                                      onClick={() => void handleFriendRequest(notification, &apos;accept')}
+                                      onClick={() => void handleFriendRequest(notification, &apos;accept&apos;)}
                                     >
                                       Accept
                                     </Button>
                                     <Button
                                       variant="outline"
                                       size="sm"
-                                      onClick={() => void handleFriendRequest(notification, &apos;decline')}
+                                      onClick={() => void handleFriendRequest(notification, &apos;decline&apos;)}
                                     >
                                       Decline
                                     </Button>
@@ -604,14 +603,14 @@ export default function GroupedNotifications() {
                                   <>
                                     <Button
                                       size="sm"
-                                      onClick={() => void handlePartyInvite(notification, &apos;accept')}
+                                      onClick={() => void handlePartyInvite(notification, &apos;accept&apos;)}
                                     >
                                       Join Party
                                     </Button>
                                     <Button
                                       variant="outline"
                                       size="sm"
-                                      onClick={() => void handlePartyInvite(notification, &apos;decline')}
+                                      onClick={() => void handlePartyInvite(notification, &apos;decline&apos;)}
                                     >
                                       Decline
                                     </Button>

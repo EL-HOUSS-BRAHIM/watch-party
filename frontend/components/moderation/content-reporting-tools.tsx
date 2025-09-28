@@ -143,13 +143,13 @@ export default function ContentReportingTools({
   onClose,
   onSubmit
 }: ContentReportingProps) {
-  const [selectedReason, setSelectedReason] = useState<string>(&apos;')
+  const [selectedReason, setSelectedReason] = useState<string>(&apos;&apos;)
   const [description, setDescription] = useState('')
   const [evidence, setEvidence] = useState<File[]>([])
   const [anonymous, setAnonymous] = useState(false)
   const [blockUser, setBlockUser] = useState(false)
   const [submitting, setSubmitting] = useState(false)
-  const [step, setStep] = useState<'reason' | 'details' | 'confirmation'>(&apos;reason')
+  const [step, setStep] = useState<'reason' | 'details' | 'confirmation'>(&apos;reason&apos;)
 
   if (!isOpen) return null
 
@@ -193,7 +193,7 @@ export default function ContentReportingTools({
 
       onClose()
       resetForm()
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to submit report. Please try again.',
@@ -257,7 +257,7 @@ export default function ContentReportingTools({
                 Cancel
               </Button>
               <Button 
-                onClick={() => setStep(&apos;details')}
+                onClick={() => setStep(&apos;details&apos;)}
                 disabled={!selectedReason}
               >
                 Next
@@ -387,10 +387,10 @@ export default function ContentReportingTools({
             </div>
 
             <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={() => setStep(&apos;reason')}>
+              <Button variant="outline" onClick={() => setStep(&apos;reason&apos;)}>
                 Back
               </Button>
-              <Button onClick={() => setStep(&apos;confirmation')}>
+              <Button onClick={() => setStep(&apos;confirmation&apos;)}>
                 Review Report
               </Button>
             </div>
@@ -478,7 +478,7 @@ export default function ContentReportingTools({
             </Card>
 
             <div className="flex justify-between pt-4">
-              <Button variant="outline" onClick={() => setStep(&apos;details')}>
+              <Button variant="outline" onClick={() => setStep(&apos;details&apos;)}>
                 Back
               </Button>
               <Button 

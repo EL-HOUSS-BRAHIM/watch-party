@@ -10,33 +10,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import {
-  User,
-  Mail,
-  MapPin,
-  Calendar,
-  Globe,
-  UserPlus,
-  UserMinus,
-  MessageCircle,
-  Share2,
-  Flag,
-  Shield,
-  Trophy,
-  Play,
-  Users,
-  Clock,
-  Star,
-  Eye,
-  EyeOff,
-  Award,
-  Activity,
-  Film,
-  AlertCircle,
-  Lock,
-  UserX,
-  ArrowRight,
-} from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -120,7 +93,7 @@ export default function PublicProfilePage() {
       
       const data = await usersAPI.getUserProfile(userId)
       setProfile(data as PublicProfile)
-    } catch (error) {
+    } catch {
       console.error("Profile fetch error:", error)
       
       // Handle API errors
@@ -256,7 +229,7 @@ export default function PublicProfilePage() {
         const errorData = await response.json()
         throw new Error(errorData.message || "Action failed")
       }
-    } catch (error) {
+    } catch {
       console.error("Friend action error:", error)
       toast({
         title: "Error",
@@ -283,7 +256,7 @@ export default function PublicProfilePage() {
       })
 
       if (response.ok) {
-        setProfile((prev) => (prev ? { ...prev, friendshipStatus: &quot;blocked" } : null))
+        setProfile((prev) => (prev ? { ...prev, friendshipStatus: &quot;blocked&quot; } : null))
         toast({
           title: "User Blocked",
           description: "This user has been blocked and can no longer interact with you.",
@@ -291,7 +264,7 @@ export default function PublicProfilePage() {
       } else {
         throw new Error("Failed to block user")
       }
-    } catch (error) {
+    } catch {
       console.error("Block error:", error)
       toast({
         title: "Error",
@@ -359,7 +332,7 @@ export default function PublicProfilePage() {
         return {
           text: "Add Friend",
           icon: UserPlus,
-          action: () => handleFriendAction("add"),
+          action: () => handleFriendAction(&quot;add"),
           variant: "default" as const,
           className: "bg-white text-black hover:bg-white/90",
         }

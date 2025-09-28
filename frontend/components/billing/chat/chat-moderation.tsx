@@ -12,24 +12,6 @@ import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { 
-  Shield, 
-  Ban, 
-  Clock, 
-  Eye, 
-  EyeOff, 
-  AlertTriangle, 
-  MessageSquare,
-  Users,
-  Filter,
-  History,
-  Settings,
-  Trash2,
-  Flag,
-  Volume2,
-  VolumeX,
-  X
-} from 'lucide-react'
 import { useSocket } from '@/contexts/socket-context'
 
 interface ChatModerationProps {
@@ -133,7 +115,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
         const data = await response.json()
         setSettings(data.settings)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch moderation settings:', error)
     }
   }
@@ -145,7 +127,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
         const data = await response.json()
         setActions(data.actions)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch moderation logs:', error)
     }
   }
@@ -163,7 +145,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
         setSettings(updatedSettings)
         socket?.emit('moderation-settings-updated', { partyId, settings: updatedSettings })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to update moderation settings:', error)
     }
   }
@@ -192,7 +174,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
           moderator: 'current-user'
         })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to moderate user:', error)
     }
   }
@@ -208,7 +190,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
       if (response.ok) {
         socket?.emit('message-deleted', { partyId, messageId, reason })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to delete message:', error)
     }
   }
@@ -338,7 +320,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => deleteMessage(message.id, &apos;Reported content')}
+                        onClick={() => deleteMessage(message.id, &apos;Reported content&apos;)}
                       >
                         <Trash2 className="h-3 w-3" />
                       </Button>
@@ -544,7 +526,7 @@ export function ChatModeration({ partyId, isHost, isModerator, messages, partici
                           placeholder="Add banned word..."
                           value={newBannedWord}
                           onChange={(e) => setNewBannedWord(e.target.value)}
-                          onKeyPress={(e) => e.key === &apos;Enter' && addBannedWord()}
+                          onKeyPress={(e) => e.key === &apos;Enter&apos; && addBannedWord()}
                         />
                         <Button onClick={addBannedWord}>Add</Button>
                       </div>

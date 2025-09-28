@@ -34,7 +34,7 @@ export function NotificationBell() {
         setIsLoading(true)
         const data = await notificationsAPI.getNotifications()
         setNotifications(data.results || [])
-      } catch (error) {
+      } catch {
         console.error("Failed to load notifications:", error)
       } finally {
         setIsLoading(false)
@@ -53,7 +53,7 @@ export function NotificationBell() {
       setNotifications(prev => prev.map(n => 
         n.id === notificationId ? { ...n, is_read: true } : n
       ))
-    } catch (error) {
+    } catch {
       console.error("Failed to mark notification as read:", error)
     }
   }
@@ -63,7 +63,7 @@ export function NotificationBell() {
     try {
       await notificationsAPI.markAllAsRead()
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
-    } catch (error) {
+    } catch {
       console.error("Failed to mark all notifications as read:", error)
     }
   }
@@ -73,7 +73,7 @@ export function NotificationBell() {
     try {
       await notificationsAPI.deleteNotification(notificationId)
       setNotifications(prev => prev.filter(n => n.id !== notificationId))
-    } catch (error) {
+    } catch {
       console.error("Failed to delete notification:", error)
     }
   }
@@ -94,7 +94,7 @@ export function NotificationBell() {
               variant="destructive" 
               className="absolute -top-1 -right-1 h-5 w-5 p-0 text-xs flex items-center justify-center"
             >
-              {unreadCount > 99 ? &quot;99+" : unreadCount}
+              {unreadCount > 99 ? &quot;99+&quot; : unreadCount}
             </Badge>
           )}
         </Button>

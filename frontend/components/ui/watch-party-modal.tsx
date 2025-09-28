@@ -34,7 +34,7 @@ const WatchPartyModalContent = React.forwardRef<
     size?: "sm" | "md" | "lg" | "xl" | "full"
     showCloseButton?: boolean
   }
->(({ className, children, size = &quot;md", showCloseButton = true, ...props }, ref) => {
+>(({ className, children, size = &quot;md&quot;, showCloseButton = true, ...props }, ref) => {
   const sizeClasses = {
     sm: "max-w-sm",
     md: "max-w-md",

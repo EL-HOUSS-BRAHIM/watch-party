@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -85,7 +84,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
       }
       setHasMore(!!response.next)
       setPage(pageNum)
-    } catch (error) {
+    } catch {
       console.error("Failed to load activity feed:", error)
     } finally {
       setIsLoading(false)
@@ -116,7 +115,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
           prev.map((activity) => (activity.id === activityId ? { ...activity, reactions: data.reactions } : activity)),
         )
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to react to activity:", error)
     }
   }
@@ -217,7 +216,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
                   {activity.reactions && (
                     <div className="flex items-center gap-3">
                       <button
-                        onClick={() => reactToActivity(activity.id, &quot;like")}
+                        onClick={() => reactToActivity(activity.id, &quot;like&quot;)}
                         className={cn(
                           "flex items-center gap-1 hover:text-blue-600 transition-colors",
                           activity.reactions.userReacted === "like" && "text-blue-600",
@@ -228,7 +227,7 @@ export default function ActivityFeed({ userId, className }: ActivityFeedProps) {
                       </button>
 
                       <button
-                        onClick={() => reactToActivity(activity.id, &quot;heart")}
+                        onClick={() => reactToActivity(activity.id, &quot;heart&quot;)}
                         className={cn(
                           "flex items-center gap-1 hover:text-red-600 transition-colors",
                           activity.reactions.userReacted === "heart" && "text-red-600",

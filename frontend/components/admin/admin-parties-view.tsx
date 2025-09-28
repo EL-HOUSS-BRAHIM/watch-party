@@ -5,7 +5,6 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -64,7 +63,7 @@ export function AdminPartiesView() {
   const [filteredParties, setFilteredParties] = useState<WatchParty[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const [statusFilter, setStatusFilter] = useState<string>(&apos;all')
+  const [statusFilter, setStatusFilter] = useState<string>(&apos;all&apos;)
   const [activeTab, setActiveTab] = useState('all')
   const { get, post, put } = useApi()
   const { toast } = useToast()
@@ -82,7 +81,7 @@ export function AdminPartiesView() {
       setIsLoading(true)
       const response = await get('/admin/parties/')
       setParties((response.data as WatchParty[]) || [])
-    } catch (error: unknown) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to load parties',
@@ -100,7 +99,7 @@ export function AdminPartiesView() {
     if (activeTab === 'flagged') {
       filtered = filtered.filter(party => party.flags.length > 0)
     } else if (activeTab === 'active') {
-      filtered = filtered.filter(party => party.status === 'active')
+      filtered = filtered.filter(party => party.status === &apos;active')
     } else if (activeTab === 'suspended') {
       filtered = filtered.filter(party => party.status === 'suspended')
     }
@@ -134,7 +133,7 @@ export function AdminPartiesView() {
         description: 'The party has been suspended successfully.',
       })
       await fetchParties()
-    } catch (error: unknown) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to suspend party',
@@ -151,7 +150,7 @@ export function AdminPartiesView() {
         description: 'The party has been unsuspended successfully.',
       })
       await fetchParties()
-    } catch (error: unknown) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to unsuspend party',
@@ -236,19 +235,19 @@ export function AdminPartiesView() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;all')}>
+                <DropdownMenuItem onClick={() => setStatusFilter(&apos;all&apos;)}>
                   All Status
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;active')}>
+                <DropdownMenuItem onClick={() => setStatusFilter(&apos;active&apos;)}>
                   Active
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;paused')}>
+                <DropdownMenuItem onClick={() => setStatusFilter(&apos;paused&apos;)}>
                   Paused
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;ended')}>
+                <DropdownMenuItem onClick={() => setStatusFilter(&apos;ended&apos;)}>
                   Ended
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setStatusFilter(&apos;suspended')}>
+                <DropdownMenuItem onClick={() => setStatusFilter(&apos;suspended&apos;)}>
                   Suspended
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -262,7 +261,7 @@ export function AdminPartiesView() {
         <Card>
           <CardContent className="pt-6 text-center">
             <div className="text-2xl font-bold text-green-600">
-              {parties.filter(p => p.status === &apos;active').length}
+              {parties.filter(p => p.status === &apos;active&apos;).length}
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">Active</p>
           </CardContent>
@@ -289,7 +288,7 @@ export function AdminPartiesView() {
         <Card>
           <CardContent className="pt-6 text-center">
             <div className="text-2xl font-bold text-orange-600">
-              {parties.filter(p => p.status === &apos;suspended').length}
+              {parties.filter(p => p.status === &apos;suspended&apos;).length}
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400">Suspended</p>
           </CardContent>
@@ -383,7 +382,7 @@ export function AdminPartiesView() {
                           {party.flags.length > 0 && (
                             <div className="p-2 bg-red-50 dark:bg-red-900/20 rounded border border-red-200 dark:border-red-800">
                               <p className="text-sm font-medium text-red-800 dark:text-red-400 mb-1">
-                                {party.flags.length} Flag{party.flags.length > 1 ? &apos;s' : ''}
+                                {party.flags.length} Flag{party.flags.length > 1 ? &apos;s&apos; : &apos;'}
                               </p>
                               <div className="text-xs text-red-600 dark:text-red-400 space-y-1">
                                 {party.flags.map((flag) => (

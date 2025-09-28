@@ -10,7 +10,6 @@ import { Progress } from "@/components/ui/progress"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useDropzone } from "react-dropzone"
-import { Upload, File, CheckCircle, AlertCircle, Cloud, HardDrive } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { useApi } from "@/hooks/use-api"
 import { integrationsAPI } from "@/lib/api"
@@ -26,7 +25,7 @@ export function VideoUpload() {
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null)
   const [isUploading, setIsUploading] = useState(false)
   const [uploadComplete, setUploadComplete] = useState(false)
-  const [uploadMethod, setUploadMethod] = useState<"local" | "drive">(&quot;local")
+  const [uploadMethod, setUploadMethod] = useState<"local" | "drive">(&quot;local&quot;)
   const [videoDetails, setVideoDetails] = useState({
     title: "",
     description: "",
@@ -92,7 +91,7 @@ export function VideoUpload() {
         title: "Upload successful!",
         description: "Your video has been uploaded and is being processed",
       })
-    } catch (err: unknown) {
+    } catch {
       toast({
         title: "Upload failed",
         description: err.response?.data?.message || "Failed to upload video",
@@ -107,7 +106,7 @@ export function VideoUpload() {
     try {
       const { auth_url } = await integrationsAPI.getGoogleDriveAuthUrl()
       window.location.assign(auth_url)
-    } catch (err) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to connect to Google Drive",
@@ -144,7 +143,7 @@ export function VideoUpload() {
             <Button onClick={() => window.location.reload()}>
               Upload Another Video
             </Button>
-            <Button variant="outline" onClick={() => window.location.href = &quot;/videos/manage"}>
+            <Button variant="outline" onClick={() => window.location.href = &quot;/videos/manage&quot;}>
               Manage Videos
             </Button>
           </div>

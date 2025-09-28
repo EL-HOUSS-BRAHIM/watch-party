@@ -8,22 +8,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {
-  Search,
-  Play,
-  Download,
-  Share2,
-  MoreVertical,
-  Edit,
-  Trash2,
-  Eye,
-  FileVideo,
-  Loader2,
-  CheckCircle,
-  AlertCircle,
-  Grid,
-  List,
-} from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useAuth } from "@/contexts/auth-context"
@@ -61,7 +45,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState("uploadedAt")
   const [filterBy, setFilterBy] = useState("all")
-  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid&quot;)
   const [isLoading, setIsLoading] = useState(true)
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null)
   const { user } = useAuth()
@@ -88,7 +72,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
         const data = await response.json()
         setVideos(data.results || data)
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load videos:", error)
     } finally {
       setIsLoading(false)
@@ -110,7 +94,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
       if (response.ok) {
         setVideos((prev) => prev.filter((v) => v.id !== videoId))
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to delete video:", error)
     }
   }
@@ -127,7 +111,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
 
       // Reload videos to get updated thumbnail
       loadVideos()
-    } catch (error) {
+    } catch {
       console.error("Failed to regenerate thumbnail:", error)
     }
   }
@@ -264,7 +248,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
                   <Download className="mr-2 h-4 w-4" />
                   Download
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-red-600">
+                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-red-600&quot;>
                   <Trash2 className="mr-2 h-4 w-4" />
                   Delete
                 </DropdownMenuItem>
@@ -355,7 +339,7 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
                       <Download className="mr-2 h-4 w-4" />
                       Download
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-red-600">
+                    <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-red-600&quot;>
                       <Trash2 className="mr-2 h-4 w-4" />
                       Delete
                     </DropdownMenuItem>
@@ -378,8 +362,8 @@ export default function VideoLibrary({ onVideoSelect, selectionMode = false, cla
           <p className="text-gray-600">Manage your uploaded videos</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => setViewMode(viewMode === &quot;grid" ? "list" : "grid")}>
-            {viewMode === "grid" ? <List className="h-4 w-4" /> : <Grid className=&quot;h-4 w-4" />}
+          <Button variant="outline" size="sm" onClick={() => setViewMode(viewMode === &quot;grid&quot; ? &quot;list" : "grid")}>
+            {viewMode === "grid" ? <List className="h-4 w-4" /> : <Grid className=&quot;h-4 w-4&quot; />}
           </Button>
         </div>
       </div>

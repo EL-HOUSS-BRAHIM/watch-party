@@ -47,7 +47,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
         setIsLoading(true)
         const data = await notificationsAPI.getNotifications()
         setNotifications(data.results || [])
-      } catch (error) {
+      } catch {
         console.error("Failed to load notifications:", error)
       } finally {
         setIsLoading(false)
@@ -65,7 +65,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       try {
         const data = await notificationsAPI.getPreferences()
         setPreferences(data)
-      } catch (error) {
+      } catch {
         console.error("Failed to load preferences:", error)
       }
     }
@@ -80,7 +80,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       setNotifications(prev => prev.map(n => 
         n.id === notificationId ? { ...n, is_read: true } : n
       ))
-    } catch (error) {
+    } catch {
       console.error("Failed to mark notification as read:", error)
     }
   }
@@ -90,7 +90,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
     try {
       await notificationsAPI.markAllAsRead()
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
-    } catch (error) {
+    } catch {
       console.error("Failed to mark all notifications as read:", error)
     }
   }
@@ -100,7 +100,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
     try {
       await notificationsAPI.deleteNotification(notificationId)
       setNotifications(prev => prev.filter(n => n.id !== notificationId))
-    } catch (error) {
+    } catch {
       console.error("Failed to delete notification:", error)
     }
   }
@@ -111,7 +111,7 @@ export function NotificationCenter({ className }: NotificationCenterProps) {
       const newPreferences = { ...preferences, ...updatedPreferences }
       await notificationsAPI.updatePreferences(newPreferences)
       setPreferences(newPreferences)
-    } catch (error) {
+    } catch {
       console.error("Failed to update preferences:", error)
     }
   }

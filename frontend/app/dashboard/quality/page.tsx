@@ -9,24 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI, analyticsAPI } from "@/lib/api"
-import {
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  Clock,
-  Target,
-  Bug,
-  TestTube,
-  Users,
-  Zap,
-  TrendingUp,
-  TrendingDown,
-  Activity,
-  Eye,
-  Shield,
-  Globe,
-  Search,
-} from "lucide-react"
 
 interface QualityMetric {
   id: string
@@ -121,7 +103,7 @@ const QualityPage = () => {
             category: "performance", 
             score: performanceData.performance_score || 85,
             target: 90,
-            trend: (performanceData.performance_score || 85) > 85 ? &quot;up" : "down",
+            trend: (performanceData.performance_score || 85) > 85 ? &quot;up&quot; : &quot;down",
             lastTested: new Date(),
             tests: []
           },
@@ -155,7 +137,7 @@ const QualityPage = () => {
         setQualityTests(tests)
 
         // Transform error logs to issues
-        const errorLogs = systemLogs.results.filter((log: unknown) => log.level === &apos;error')
+        const errorLogs = systemLogs.results.filter((log: unknown) => log.level === &apos;error&apos;)
         const transformedIssues: Issue[] = errorLogs.slice(0, 5).map((log: unknown, index: number) => ({
           id: log.id || `issue-${index}`,
           title: log.message?.substring(0, 60) || `Quality Issue ${index + 1}`,
@@ -176,14 +158,14 @@ const QualityPage = () => {
           releaseDate: new Date(),
           testCoverage: 85,
           passRate: systemHealth.overall_status === 'healthy' ? 95 : 75,
-          criticalIssues: issues.filter(i => i.severity === 'critical').length,
+          criticalIssues: issues.filter(i => i.severity === &apos;critical').length,
           blockerIssues: issues.filter(i => i.severity === 'high').length,
           status: "approved"
         }
       ]
       setQaReports(reports)
 
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch quality data:', error)
       toast({
         title: "Error",
@@ -310,7 +292,7 @@ const QualityPage = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {qualityTests.filter(t => t.status === &apos;passed').length}
+              {qualityTests.filter(t => t.status === &apos;passed&apos;).length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
               of {qualityTests.length} total tests
@@ -325,10 +307,10 @@ const QualityPage = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
-              {issues.filter(i => i.status === &apos;open').length}
+              {issues.filter(i => i.status === &apos;open&apos;).length}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
-              {issues.filter(i => i.severity === &apos;critical').length} critical
+              {issues.filter(i => i.severity === &apos;critical&apos;).length} critical
             </div>
           </CardContent>
         </Card>

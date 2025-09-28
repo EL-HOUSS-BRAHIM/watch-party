@@ -1,20 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { 
-  Play, 
-  Pause, 
-  SkipForward, 
-  SkipBack, 
-  Volume2, 
-  Users, 
-  Settings, 
-  UserX, 
-  Crown,
-  MessageSquare,
-  Eye,
-  EyeOff
-} from "lucide-react"
 import {
   Sheet,
   SheetContent,
@@ -28,7 +14,6 @@ import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 
@@ -110,7 +95,7 @@ export function PartyHostControls({
       } else {
         throw new Error("Failed to update settings")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to update party settings:", error)
       toast({
         title: "Update failed",
@@ -319,7 +304,7 @@ export function PartyHostControls({
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => onParticipantAction(participant.id, &quot;promote")}
+                            onClick={() => onParticipantAction(participant.id, &quot;promote&quot;)}
                             title="Promote to moderator"
                           >
                             <Crown className="h-3 w-3" />
@@ -327,7 +312,7 @@ export function PartyHostControls({
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => onParticipantAction(participant.id, &quot;mute")}
+                            onClick={() => onParticipantAction(participant.id, &quot;mute&quot;)}
                             title="Mute participant"
                           >
                             <MessageSquare className="h-3 w-3" />
@@ -335,7 +320,7 @@ export function PartyHostControls({
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => onParticipantAction(participant.id, &quot;kick")}
+                            onClick={() => onParticipantAction(participant.id, &quot;kick&quot;)}
                             title="Remove participant"
                             className="text-destructive hover:text-destructive"
                           >

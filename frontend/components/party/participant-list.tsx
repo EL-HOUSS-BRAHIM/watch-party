@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -118,7 +117,7 @@ export function ParticipantList({ participants, currentUserId, isHost, className
                     className="h-8 w-8"
                     onClick={() => toggleMute(participant.user.id)}
                   >
-                    {isMuted ? <VolumeX className="w-4 h-4 text-muted-foreground" /> : <Volume2 className=&quot;w-4 h-4" />}
+                    {isMuted ? <VolumeX className="w-4 h-4 text-muted-foreground" /> : <Volume2 className=&quot;w-4 h-4&quot; />}
                   </Button>
 
                   {/* Participant Actions (Host Only) */}
@@ -134,7 +133,7 @@ export function ParticipantList({ participants, currentUserId, isHost, className
                           <Shield className="w-4 h-4 mr-2" />
                           Make Co-host
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => kickUser(participant.user.id)} className=&quot;text-destructive">
+                        <DropdownMenuItem onClick={() => kickUser(participant.user.id)} className=&quot;text-destructive&quot;>
                           <UserMinus className="w-4 h-4 mr-2" />
                           Remove from Party
                         </DropdownMenuItem>

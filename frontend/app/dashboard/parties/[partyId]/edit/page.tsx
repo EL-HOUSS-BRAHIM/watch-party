@@ -14,28 +14,9 @@ import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
-import {
-  Calendar,
-  Clock,
-  Users,
-  Video,
-  Settings,
-  ArrowLeft,
-  Save,
-  Trash2,
-  Loader2,
-  AlertTriangle,
-  Lock,
-  Globe,
-  UserPlus,
-  X,
-  Copy,
-  Share
-} from "lucide-react"
 import { parseISO } from "date-fns"
 
 // Validation schema
@@ -187,7 +168,7 @@ export default function EditPartyPage() {
       } else {
         throw new Error("Failed to load party")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load party:", error)
       toast({
         title: "Error",
@@ -234,7 +215,7 @@ export default function EditPartyPage() {
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Party update error:", error)
       toast({
         title: "Error",
@@ -273,7 +254,7 @@ export default function EditPartyPage() {
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Party delete error:", error)
       toast({
         title: "Error",
@@ -314,7 +295,7 @@ export default function EditPartyPage() {
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Remove participant error:", error)
       toast({
         title: "Error",
@@ -349,7 +330,7 @@ export default function EditPartyPage() {
           text: `Join my watch party: ${party.name}`,
           url: inviteLink,
         })
-      } catch (error) {
+      } catch {
         console.log("Share cancelled")
       }
     } else {
@@ -375,8 +356,8 @@ export default function EditPartyPage() {
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-2xl font-bold mb-4">Party Not Found</h1>
-          <p className="text-gray-600 mb-4">The party you&apos;re looking for doesn't exist.</p>
-          <Button onClick={() => router.push(&quot;/dashboard/parties")}>
+          <p className="text-gray-600 mb-4">The party you&apos;re looking for doesn&apos;t exist.</p>
+          <Button onClick={() => router.push(&quot;/dashboard/parties&quot;)}>
             Back to Parties
           </Button>
         </div>
@@ -512,7 +493,7 @@ export default function EditPartyPage() {
             <CardContent className="space-y-6">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  {watchedValues.isPublic ? <Globe className="h-4 w-4" /> : <Lock className=&quot;h-4 w-4" />}
+                  {watchedValues.isPublic ? <Globe className="h-4 w-4" /> : <Lock className=&quot;h-4 w-4&quot; />}
                   <div>
                     <Label htmlFor="isPublic">Public Party</Label>
                     <p className="text-sm text-gray-600">

@@ -6,36 +6,10 @@ import { useSearchParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { partiesAPI } from "@/lib/api"
-import {
-  Users,
-  Calendar,
-  Clock,
-  Lock,
-  Globe,
-  Film,
-  Tv,
-  Play,
-  UserPlus,
-  AlertCircle,
-  CheckCircle,
-  ExternalLink,
-  Share2,
-  MessageCircle,
-  Star,
-  Timer,
-  Eye,
-  Heart,
-  Loader2,
-  ArrowRight,
-  PartyPopper,
-  Shield,
-  AlertTriangle
-} from "lucide-react"
 import { formatDistanceToNow, format, parseISO } from "date-fns"
 
 interface PartyInvite {
@@ -138,7 +112,7 @@ function QuickInviteContent() {
       } else {
         setError("Failed to load party details")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load party invite:", error)
       setError("Something went wrong while loading the invite")
     } finally {
@@ -192,7 +166,7 @@ function QuickInviteContent() {
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Join party error:", error)
       toast({
         title: "Error",
@@ -214,7 +188,7 @@ function QuickInviteContent() {
           text: `Watch ${party?.video.title} together!`,
           url: shareUrl,
         })
-      } catch (error) {
+      } catch {
         // User cancelled sharing or share failed
       }
     } else {
@@ -225,7 +199,7 @@ function QuickInviteContent() {
           title: "Link Copied",
           description: "Invite link copied to clipboard!",
         })
-      } catch (error) {
+      } catch {
         toast({
           title: "Share Failed",
           description: "Unable to copy link to clipboard.",
@@ -312,7 +286,7 @@ function QuickInviteContent() {
               <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
               <h2 className="text-xl font-semibold mb-2">Invite Not Found</h2>
               <p className="text-gray-600 mb-4">{error}</p>
-              <Button onClick={() => router.push(&quot;/discover")}>
+              <Button onClick={() => router.push(&quot;/discover&quot;)}>
                 Browse Public Parties
               </Button>
             </CardContent>
@@ -347,7 +321,7 @@ function QuickInviteContent() {
                 <Button className="flex-1" onClick={() => router.push(`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`)}>
                   Sign In
                 </Button>
-                <Button variant="outline" onClick={() => router.push(&quot;/register")}>
+                <Button variant="outline" onClick={() => router.push(&quot;/register&quot;)}>
                   Sign Up
                 </Button>
               </div>
@@ -421,7 +395,7 @@ function QuickInviteContent() {
                       <span>{party.video.release_year}</span>
                     )}
                     {party.video.genre && party.video.genre.length > 0 && (
-                      <span>{party.video.genre.slice(0, 2).join(&quot;, ")}</span>
+                      <span>{party.video.genre.slice(0, 2).join(&quot;, &quot;)}</span>
                     )}
                   </div>
                 </div>
@@ -446,7 +420,7 @@ function QuickInviteContent() {
                       <Calendar className="h-4 w-4" />
                       Scheduled
                     </span>
-                    <span>{format(parseISO(party.scheduled_for), &quot;MMM d, yyyy &apos;at' h:mm a")}</span>
+                    <span>{format(parseISO(party.scheduled_for), &quot;MMM d, yyyy &apos;at&apos; h:mm a&quot;)}</span>
                   </div>
                 )}
 
@@ -600,7 +574,7 @@ function QuickInviteContent() {
           <div className="text-center mt-6">
             <p className="text-sm text-gray-500">
               New to Watch Party?{" "}
-              <Button variant="link" className="p-0 h-auto" onClick={() => router.push(&quot;/register")}>
+              <Button variant="link" className="p-0 h-auto" onClick={() => router.push(&quot;/register&quot;)}>
                 Create your free account
               </Button>
             </p>

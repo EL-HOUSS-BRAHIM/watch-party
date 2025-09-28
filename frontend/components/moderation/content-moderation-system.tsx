@@ -18,20 +18,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
-import {
-  Shield,
-  CheckCircle,
-  XCircle,
-  Eye,
-  Flag,
-  MessageSquare,
-  Video,
-  User,
-  Clock,
-  Search,
-  Download,
-  Settings,
-} from "lucide-react"
 import { moderationAPI, adminAPI } from "@/lib/api"
 import { useToast } from "@/hooks/use-toast"
 
@@ -66,9 +52,9 @@ export function ContentModerationSystem() {
   const [items, setItems] = useState<ModerationItem[]>([])
   const [stats, setStats] = useState<ModerationStats | null>(null)
   const [selectedItems, setSelectedItems] = useState<string[]>([])
-  const [filterStatus, setFilterStatus] = useState<string>(&quot;all")
-  const [filterType, setFilterType] = useState<string>(&quot;all")
-  const [filterPriority, setFilterPriority] = useState<string>(&quot;all")
+  const [filterStatus, setFilterStatus] = useState<string>(&quot;all&quot;)
+  const [filterType, setFilterType] = useState<string>(&quot;all&quot;)
+  const [filterPriority, setFilterPriority] = useState<string>(&quot;all&quot;)
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedItem, setSelectedItem] = useState<ModerationItem | null>(null)
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false)
@@ -119,7 +105,7 @@ export function ContentModerationSystem() {
 
       setItems(transformedReports)
       setStats(transformedStats)
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch moderation data:', error)
       toast({
         title: "Error",
@@ -170,7 +156,7 @@ export function ContentModerationSystem() {
         title: "Success",
         description: `Report ${action}d successfully.`,
       })
-    } catch (error) {
+    } catch {
       console.error(`Failed to ${action} report:`, error)
       toast({
         title: "Error",
@@ -187,7 +173,7 @@ export function ContentModerationSystem() {
         selectedItems.map(itemId => handleItemAction(itemId, action))
       )
       setSelectedItems([])
-    } catch (error) {
+    } catch {
       console.error('Failed to perform bulk action:', error)
       toast({
         title: "Error",
@@ -252,7 +238,7 @@ export function ContentModerationSystem() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
@@ -382,15 +368,15 @@ export function ContentModerationSystem() {
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{selectedItems.length} item(s) selected</span>
               <div className="flex gap-2">
-                <Button size="sm" variant="outline" onClick={() => handleBulkAction(&quot;approve")}>
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction(&quot;approve&quot;)}>
                   <CheckCircle className="mr-2 h-4 w-4" />
                   Approve
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => handleBulkAction(&quot;reject")}>
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction(&quot;reject&quot;)}>
                   <XCircle className="mr-2 h-4 w-4" />
                   Reject
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => handleBulkAction(&quot;flag")}>
+                <Button size="sm" variant="outline" onClick={() => handleBulkAction(&quot;flag&quot;)}>
                   <Flag className="mr-2 h-4 w-4" />
                   Flag
                 </Button>
@@ -507,10 +493,10 @@ export function ContentModerationSystem() {
                       </Button>
                       {item.status === "pending" && (
                         <>
-                          <Button size="sm" variant="outline" onClick={() => handleItemAction(item.id, &quot;approve")}>
+                          <Button size="sm" variant="outline" onClick={() => handleItemAction(item.id, &quot;approve&quot;)}>
                             <CheckCircle className="h-4 w-4 text-green-600" />
                           </Button>
-                          <Button size="sm" variant="outline" onClick={() => handleItemAction(item.id, &quot;reject")}>
+                          <Button size="sm" variant="outline" onClick={() => handleItemAction(item.id, &quot;reject&quot;)}>
                             <XCircle className="h-4 w-4 text-red-600" />
                           </Button>
                         </>
@@ -582,7 +568,7 @@ export function ContentModerationSystem() {
 
               <div>
                 <Label>Reported By</Label>
-                <p>{selectedItem.reportedBy.join(&quot;, ")}</p>
+                <p>{selectedItem.reportedBy.join(&quot;, &quot;)}</p>
               </div>
             </div>
           )}

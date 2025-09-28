@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import Image from "next/image"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -19,21 +20,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import {
-  Video,
-  Upload,
-  Settings,
-  Pause,
-  RotateCcw,
-  CheckCircle,
-  XCircle,
-  Clock,
-  Zap,
-  ImageIcon,
-  FileText,
-  Download,
-  Eye,
-} from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { videosAPI } from "@/lib/api"
 import { useToast } from "@/hooks/use-toast"
@@ -115,7 +101,7 @@ export function VideoProcessingPipeline() {
   const [selectedJob, setSelectedJob] = useState<ProcessingJob | null>(null)
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false)
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
-  const [filterStatus, setFilterStatus] = useState<string>(&quot;all")
+  const [filterStatus, setFilterStatus] = useState<string>(&quot;all&quot;)
   const [loading, setLoading] = useState(true)
   const { toast } = useToast()
 
@@ -227,7 +213,7 @@ export function VideoProcessingPipeline() {
       // The API now returns an array directly
       const jobsData = Array.isArray(response) ? response : []
       setJobs(jobsData.map(normalizeProcessingJob))
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch processing jobs:', error)
       toast({
         title: 'Processing Jobs Unavailable',
@@ -245,7 +231,7 @@ export function VideoProcessingPipeline() {
     
     // Set up polling for active jobs
     const interval = setInterval(() => {
-      const hasActiveJobs = jobs.some(job => job.status === &apos;processing' || job.status === 'queued')
+      const hasActiveJobs = jobs.some(job => job.status === &apos;processing&apos; || job.status === &apos;queued')
       if (hasActiveJobs) {
         fetchProcessingJobs()
       }
@@ -254,7 +240,7 @@ export function VideoProcessingPipeline() {
     return () => clearInterval(interval)
   }, [fetchProcessingJobs, jobs])
 
-  const filteredJobs = jobs.filter((job) => filterStatus === &quot;all" || job.status === filterStatus)
+  const filteredJobs = jobs.filter((job) => filterStatus === &quot;all&quot; || job.status === filterStatus)
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -322,8 +308,8 @@ export function VideoProcessingPipeline() {
 
   const stats = {
     total: jobs.length,
-    processing: jobs.filter((j) => j.status === &quot;processing").length,
-    completed: jobs.filter((j) => j.status === "completed").length,
+    processing: jobs.filter((j) => j.status === &quot;processing&quot;).length,
+    completed: jobs.filter((j) => j.status === &quot;completed").length,
     failed: jobs.filter((j) => j.status === "failed").length,
     queued: jobs.filter((j) => j.status === "queued").length,
   }
@@ -338,7 +324,7 @@ export function VideoProcessingPipeline() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
@@ -462,7 +448,7 @@ export function VideoProcessingPipeline() {
                       <span className="text-sm">{job.progress}%</span>
                     </div>
                   </TableCell>
-                  <TableCell>{job.duration ? formatDuration(job.duration) : &quot;-"}</TableCell>
+                  <TableCell>{job.duration ? formatDuration(job.duration) : &quot;-&quot;}</TableCell>
                   <TableCell>
                     <span className="text-sm text-muted-foreground">{new Date(job.startedAt).toLocaleString()}</span>
                   </TableCell>
@@ -479,17 +465,17 @@ export function VideoProcessingPipeline() {
                         <Eye className="h-4 w-4" />
                       </Button>
                       {job.status === "processing" && (
-                        <Button size="sm" variant="outline" onClick={() => handleJobAction(job.id, &quot;pause")}>
+                        <Button size="sm" variant="outline" onClick={() => handleJobAction(job.id, &quot;pause&quot;)}>
                           <Pause className="h-4 w-4" />
                         </Button>
                       )}
                       {job.status === "failed" && (
-                        <Button size="sm" variant="outline" onClick={() => handleJobAction(job.id, &quot;retry")}>
+                        <Button size="sm" variant="outline" onClick={() => handleJobAction(job.id, &quot;retry&quot;)}>
                           <RotateCcw className="h-4 w-4" />
                         </Button>
                       )}
                       {(job.status === "processing" || job.status === "queued") && (
-                        <Button size="sm" variant="outline" onClick={() => handleJobAction(job.id, &quot;cancel")}>
+                        <Button size="sm" variant="outline" onClick={() => handleJobAction(job.id, &quot;cancel&quot;)}>
                           <XCircle className="h-4 w-4" />
                         </Button>
                       )}

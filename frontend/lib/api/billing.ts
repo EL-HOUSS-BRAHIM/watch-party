@@ -66,7 +66,7 @@ export class BillingAPI {
    * Cancel subscription
    */
   async cancelSubscription(): Promise<APIResponse> {
-    return apiClient.post<APIResponse>(API_ENDPOINTS.billing.subscription + "cancel/")
+    return apiClient.post<APIResponse>(API_ENDPOINTS.billing.subscription + &quot;cancel/&quot;)
   }
 
   /**

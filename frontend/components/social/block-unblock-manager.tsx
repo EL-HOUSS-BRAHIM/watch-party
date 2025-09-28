@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
@@ -58,12 +57,12 @@ export function BlockUnblockManager() {
   const [blockedUsers, setBlockedUsers] = useState<BlockedUser[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filter, setFilter] = useState<'all' | 'full' | 'messages' | 'parties' | 'profile'>(&apos;all')
+  const [filter, setFilter] = useState<'all' | 'full' | 'messages' | 'parties' | 'profile'>(&apos;all&apos;)
   const [showBlockDialog, setShowBlockDialog] = useState(false)
   const [newBlockUser, setNewBlockUser] = useState('')
-  const [blockReason, setBlockReason] = useState<BlockReason['type']>(&apos;other')
+  const [blockReason, setBlockReason] = useState<BlockReason['type']>(&apos;other&apos;)
   const [customReason, setCustomReason] = useState('')
-  const [blockType, setBlockType] = useState<BlockedUser['blockType']>(&apos;full')
+  const [blockType, setBlockType] = useState<BlockedUser['blockType']>(&apos;full&apos;)
 
   useEffect(() => {
     fetchBlockedUsers()
@@ -77,7 +76,7 @@ export function BlockUnblockManager() {
         const data = await response.json()
         setBlockedUsers(data.blockedUsers)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch blocked users:', error)
     } finally {
       setLoading(false)
@@ -88,7 +87,7 @@ export function BlockUnblockManager() {
     if (!newBlockUser.trim()) return
 
     try {
-      const reason = blockReason === 'other' ? customReason : BLOCK_REASONS.find(r => r.type === blockReason)?.description || ''
+      const reason = blockReason === 'other' ? customReason : BLOCK_REASONS.find(r => r.type === blockReason)?.description || &apos;'
       
       const response = await fetch('/api/users/block', {
         method: 'POST',
@@ -109,7 +108,7 @@ export function BlockUnblockManager() {
         setBlockReason('other')
         setBlockType('full')
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to block user:', error)
     }
   }
@@ -123,7 +122,7 @@ export function BlockUnblockManager() {
       if (response.ok) {
         setBlockedUsers(prev => prev.filter(user => user.id !== userId))
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to unblock user:', error)
     }
   }
@@ -143,7 +142,7 @@ export function BlockUnblockManager() {
           )
         )
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to update block type:', error)
     }
   }
@@ -164,7 +163,7 @@ export function BlockUnblockManager() {
           )
         )
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to report user:', error)
     }
   }
@@ -468,11 +467,11 @@ export function BlockUnblockManager() {
             <div className="flex items-center space-x-2 text-sm text-muted-foreground">
               <Badge variant="outline">
                 <Ban className="h-3 w-3 mr-1" />
-                Full: {blockedUsers.filter(u => u.blockType === &apos;full').length}
+                Full: {blockedUsers.filter(u => u.blockType === &apos;full&apos;).length}
               </Badge>
               <Badge variant="outline">
                 <MessageCircle className="h-3 w-3 mr-1" />
-                Messages: {blockedUsers.filter(u => u.blockType === &apos;messages').length}
+                Messages: {blockedUsers.filter(u => u.blockType === &apos;messages&apos;).length}
               </Badge>
             </div>
           </CardTitle>

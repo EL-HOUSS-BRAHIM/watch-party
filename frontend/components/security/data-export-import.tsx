@@ -122,7 +122,7 @@ const dataCategories: DataCategory[] = [
 ]
 
 export default function DataExportImport({ userId }: DataManagementProps) {
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([&apos;profile'])
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([&apos;profile&apos;])
   const [exportRequests, setExportRequests] = useState<ExportRequest[]>([
     {
       id: 'export-1',
@@ -216,7 +216,7 @@ export default function DataExportImport({ userId }: DataManagementProps) {
         ))
       }, 3000)
 
-    } catch (error) {
+    } catch {
       toast({
         title: 'Export Failed',
         description: 'Failed to request data export. Please try again.',
@@ -243,7 +243,7 @@ export default function DataExportImport({ userId }: DataManagementProps) {
         title: 'Download Started',
         description: 'Your data export is being downloaded.',
       })
-    } catch (error) {
+    } catch {
       toast({
         title: 'Download Failed',
         description: 'Failed to download export. Please try again.',
@@ -266,7 +266,7 @@ export default function DataExportImport({ userId }: DataManagementProps) {
 
       // In real implementation, this would redirect to a confirmation page
       // or log the user out after successful deletion
-    } catch (error) {
+    } catch {
       toast({
         title: 'Deletion Failed',
         description: 'Failed to delete account data. Please contact support.',
@@ -307,7 +307,7 @@ export default function DataExportImport({ userId }: DataManagementProps) {
         description: 'Your data has been successfully imported.',
       })
 
-    } catch (error) {
+    } catch {
       toast({
         title: 'Import Failed',
         description: 'Failed to import data. Please check the file format.',

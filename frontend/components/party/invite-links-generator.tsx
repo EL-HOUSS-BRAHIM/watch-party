@@ -59,7 +59,7 @@ export function InviteLinksGenerator({
           text: `${hostName} invited you to watch ${partyName} together!`,
           url: inviteUrl
         })
-      } catch (error) {
+      } catch {
         // User cancelled sharing
       }
     } else {

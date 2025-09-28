@@ -19,19 +19,6 @@ import {
   Pie,
   Cell,
 } from "recharts"
-import {
-  Server,
-  Database,
-  Cpu,
-  HardDrive,
-  Users,
-  Video,
-  AlertTriangle,
-  CheckCircle,
-  TrendingUp,
-  Activity,
-  Loader2,
-} from "lucide-react"
 
 interface SystemMetrics {
   cpu_usage: number
@@ -93,7 +80,7 @@ export function AdminDashboard() {
       setSystemMetrics(metrics)
       // Use the health and analytics data as needed
       
-    } catch (error) {
+    } catch {
       console.error("Failed to fetch admin data:", error)
       toast({
         title: "Error",
@@ -123,8 +110,8 @@ export function AdminDashboard() {
   }
 
   const getMetricColor = (value: number) => {
-    if (value >= 80) return &quot;text-red-600"
-    if (value >= 60) return "text-yellow-600"
+    if (value >= 80) return &quot;text-red-600&quot;
+    if (value >= 60) return &quot;text-yellow-600"
     return "text-green-600"
   }
 

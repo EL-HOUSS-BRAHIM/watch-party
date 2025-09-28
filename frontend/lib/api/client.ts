@@ -160,7 +160,7 @@ export class ApiClient {
               })
               return this.client(originalRequest)
             }
-          } catch (refreshError) {
+          } catch {
             logger.error("api.refresh_failed", {
               message: refreshError instanceof Error ? refreshError.message : "Unknown error",
             })
@@ -228,7 +228,7 @@ export class ApiClient {
         accessToken: access,
         refreshToken: refresh ?? refreshToken,
       })
-    } catch (error) {
+    } catch {
       // Clear tokens on refresh failure
       tokenStorage.clearTokens()
       throw error
@@ -402,8 +402,8 @@ export default apiClient
 // Error handling utilities
 export const isApiError = (error: unknown): error is ApiError => {
   return error && typeof error === 'object' && error !== null && 
-    'message' in error && typeof (error as Record<string, unknown>).message === "string" && 
-    'status' in error && typeof (error as Record<string, unknown>).status === "number"
+    'message' in error && typeof (error as Record<string, unknown>).message === &quot;string&quot; && 
+    'status' in error && typeof (error as Record<string, unknown>).status === &quot;number&quot;
 }
 
 export const getErrorMessage = (error: unknown): string => {

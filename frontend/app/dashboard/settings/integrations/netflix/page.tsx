@@ -66,7 +66,7 @@ export default function NetflixIntegrationPage() {
   const [lastSync, setLastSync] = useState<Date | null>(null)
   const [isSyncing, setIsSyncing] = useState(false)
   const [showDisconnectModal, setShowDisconnectModal] = useState(false)
-  const [contentFilter, setContentFilter] = useState<'all' | 'movies' | 'series'>(&apos;all')
+  const [contentFilter, setContentFilter] = useState<'all' | 'movies' | 'series'>(&apos;all&apos;)
 
   useEffect(() => {
     checkNetflixConnection()
@@ -83,7 +83,7 @@ export default function NetflixIntegrationPage() {
       if (isConnected) {
         await fetchNetflixData()
       }
-    } catch (error) {
+    } catch {
       console.error('Error checking Netflix connection:', error)
       toast({
         title: "Error",
@@ -111,7 +111,7 @@ export default function NetflixIntegrationPage() {
       
       setContent([])
       setLastSync(new Date(Date.now() - 3600000))
-    } catch (error) {
+    } catch {
       console.error('Error fetching Netflix data:', error)
       toast({
         title: "Error",
@@ -132,7 +132,7 @@ export default function NetflixIntegrationPage() {
         title: "Success",
         description: "Netflix data synced successfully",
       })
-    } catch (error) {
+    } catch {
       console.error('Error syncing Netflix data:', error)
       toast({
         title: "Error",
@@ -155,7 +155,7 @@ export default function NetflixIntegrationPage() {
         title: "Success",
         description: "Netflix account disconnected",
       })
-    } catch (error) {
+    } catch {
       console.error('Error disconnecting Netflix:', error)
       toast({
         title: "Error",
@@ -171,7 +171,7 @@ export default function NetflixIntegrationPage() {
       const authResponse = await integrationsAPI.getAuthUrl('netflix')
       // In a real implementation, this would redirect to Netflix OAuth
       window.location.href = authResponse.auth_url
-    } catch (error) {
+    } catch {
       console.error('Error connecting to Netflix:', error)
       toast({
         title: "Error",
@@ -294,7 +294,7 @@ export default function NetflixIntegrationPage() {
           <h3 className="font-semibold text-white mb-2">Content Synced</h3>
           <div className="text-2xl font-bold text-red-400 mb-2">{content.length}</div>
           <div className="text-sm text-white/60">movies & series</div>
-        </div>          <div className=&quot;bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+        </div>          <div className=&quot;bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20&quot;>
             <h3 className="font-semibold text-white mb-2">Watched</h3>
             <div className="text-2xl font-bold text-green-400 mb-2">{watchedCount}</div>
             <div className="text-sm text-white/60">completed items</div>
@@ -359,7 +359,7 @@ export default function NetflixIntegrationPage() {
                   <p className="text-sm text-white/60">Sync your viewing history</p>
                 </div>
                 <button
-                  onClick={() => updateSyncSetting(&apos;watchHistory')}
+                  onClick={() => updateSyncSetting(&apos;watchHistory&apos;)}
                   className={`relative w-12 h-6 rounded-full transition-colors ${
                     syncSettings.watchHistory ? 'bg-red-600' : 'bg-white/20'
                   }`}
@@ -378,7 +378,7 @@ export default function NetflixIntegrationPage() {
                   <p className="text-sm text-white/60">Sync your watchlist</p>
                 </div>
                 <button
-                  onClick={() => updateSyncSetting(&apos;watchlist')}
+                  onClick={() => updateSyncSetting(&apos;watchlist&apos;)}
                   className={`relative w-12 h-6 rounded-full transition-colors ${
                     syncSettings.watchlist ? 'bg-red-600' : 'bg-white/20'
                   }`}
@@ -397,7 +397,7 @@ export default function NetflixIntegrationPage() {
                   <p className="text-sm text-white/60">Sync your ratings</p>
                 </div>
                 <button
-                  onClick={() => updateSyncSetting(&apos;ratings')}
+                  onClick={() => updateSyncSetting(&apos;ratings&apos;)}
                   className={`relative w-12 h-6 rounded-full transition-colors ${
                     syncSettings.ratings ? 'bg-red-600' : 'bg-white/20'
                   }`}
@@ -416,7 +416,7 @@ export default function NetflixIntegrationPage() {
                   <p className="text-sm text-white/60">Automatically sync new content</p>
                 </div>
                 <button
-                  onClick={() => updateSyncSetting(&apos;autoImport')}
+                  onClick={() => updateSyncSetting(&apos;autoImport&apos;)}
                   className={`relative w-12 h-6 rounded-full transition-colors ${
                     syncSettings.autoImport ? 'bg-red-600' : 'bg-white/20'
                   }`}
@@ -486,7 +486,7 @@ export default function NetflixIntegrationPage() {
               
               <div className="flex gap-2">
                 <button
-                  onClick={() => setContentFilter(&apos;all')}
+                  onClick={() => setContentFilter(&apos;all&apos;)}
                   className={`px-3 py-1 rounded-lg text-sm transition-colors ${
                     contentFilter === 'all' ? 'bg-red-600 text-white' : 'bg-white/10 text-white/70 hover:bg-white/20'
                   }`}
@@ -494,7 +494,7 @@ export default function NetflixIntegrationPage() {
                   All
                 </button>
                 <button
-                  onClick={() => setContentFilter(&apos;movies')}
+                  onClick={() => setContentFilter(&apos;movies&apos;)}
                   className={`px-3 py-1 rounded-lg text-sm transition-colors ${
                     contentFilter === 'movies' ? 'bg-red-600 text-white' : 'bg-white/10 text-white/70 hover:bg-white/20'
                   }`}
@@ -502,7 +502,7 @@ export default function NetflixIntegrationPage() {
                   Movies
                 </button>
                 <button
-                  onClick={() => setContentFilter(&apos;series')}
+                  onClick={() => setContentFilter(&apos;series&apos;)}
                   className={`px-3 py-1 rounded-lg text-sm transition-colors ${
                     contentFilter === 'series' ? 'bg-red-600 text-white' : 'bg-white/10 text-white/70 hover:bg-white/20'
                   }`}
@@ -539,10 +539,10 @@ export default function NetflixIntegrationPage() {
                         ) : (
                           <TvIcon className="w-4 h-4" />
                         )}
-                        <span>{item.type === &apos;movie' ? item.duration : `${item.episodes} episodes`}</span>
+                        <span>{item.type === &apos;movie&apos; ? item.duration : `${item.episodes} episodes`}</span>
                       </div>
                       
-                      <span>{item.genre.join(&apos;, ')}</span>
+                      <span>{item.genre.join(&apos;, &apos;)}</span>
                     </div>
 
                     {item.progress && item.progress > 0 && (

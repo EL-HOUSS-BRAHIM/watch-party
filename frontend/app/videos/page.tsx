@@ -43,7 +43,7 @@ export default function VideosPage() {
   
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState("all")
-  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid&quot;)
   const [sortBy, setSortBy] = useState("created")
   const [visibility, setVisibility] = useState("all")
   
@@ -70,7 +70,7 @@ export default function VideosPage() {
         description: "The video has been successfully deleted.",
       })
       refresh()
-    } catch (error) {
+    } catch {
       console.error("Failed to delete video:", error)
       toast({
         title: "Error",
@@ -99,7 +99,7 @@ export default function VideosPage() {
           text: video.description,
           url: shareUrl,
         })
-      } catch (error) {
+      } catch {
         console.log("Share cancelled")
       }
     } else {
@@ -182,7 +182,7 @@ export default function VideosPage() {
           {/* Remove tags section since it's not in the Video interface */}
 
           <div className="flex items-center justify-between">
-            <Button onClick={() => router.push(`/videos/${video.id}`)} size=&quot;sm" className="flex-1 mr-2">
+            <Button onClick={() => router.push(`/videos/${video.id}`)} size=&quot;sm&quot; className=&quot;flex-1 mr-2">
               <Play className="h-4 w-4 mr-2" />
               Watch
             </Button>
@@ -202,7 +202,7 @@ export default function VideosPage() {
                   <Share2 className="h-4 w-4 mr-2" />
                   Share
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-destructive">
+                <DropdownMenuItem onClick={() => deleteVideo(video.id)} className=&quot;text-destructive&quot;>
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete
                 </DropdownMenuItem>
@@ -289,7 +289,7 @@ export default function VideosPage() {
               <Button
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode(&quot;grid")}
+                onClick={() => setViewMode(&quot;grid&quot;)}
                 className="rounded-r-none"
               >
                 <Grid3X3 className="h-4 w-4" />
@@ -297,7 +297,7 @@ export default function VideosPage() {
               <Button
                 variant={viewMode === "list" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode(&quot;list")}
+                onClick={() => setViewMode(&quot;list&quot;)}
                 className="rounded-l-none"
               >
                 <List className="h-4 w-4" />

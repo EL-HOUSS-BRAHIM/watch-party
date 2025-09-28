@@ -5,32 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
-import {
-  Activity,
-  Users,
-  Play,
-  Heart,
-  MessageCircle,
-  Share2,
-  UserPlus,
-  Clock,
-  TrendingUp,
-  Search,
-  RefreshCw,
-  Bell,
-  BellOff,
-  Star,
-  Trophy,
-  Loader2,
-  MapPin,
-  Sparkles,
-  Target,
-  Award
-} from "lucide-react"
 import { formatDistanceToNow, parseISO } from "date-fns"
 
 interface ActivityItem {
@@ -147,7 +124,7 @@ export default function ActivityFeedPage() {
       } else {
         throw new Error("Failed to load activities")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load activities:", error)
       toast({
         title: "Error",
@@ -196,7 +173,7 @@ export default function ActivityFeedPage() {
           description: "Your notification preferences have been saved.",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to update settings:", error)
       toast({
         title: "Error",
@@ -237,7 +214,7 @@ export default function ActivityFeedPage() {
           })
         }
       }
-    } catch (error) {
+    } catch {
       console.error("Engagement error:", error)
       toast({
         title: "Error",
@@ -468,14 +445,14 @@ export default function ActivityFeedPage() {
                     <Activity className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No activities found</h3>
                     <p className="text-gray-600">
-                      {searchQuery || Object.values(filters).some(f => f !== &quot;all" && f !== false)
+                      {searchQuery || Object.values(filters).some(f => f !== &quot;all&quot; && f !== false)
                         ? "Try adjusting your search or filters"
                         : "Follow friends to see their watch party activities here"
                       }
                     </p>
                     <Button 
                       className="mt-4" 
-                      onClick={() => router.push(&quot;/dashboard/social/discover")}
+                      onClick={() => router.push(&quot;/dashboard/social/discover&quot;)}
                     >
                       Discover Friends
                     </Button>
@@ -541,7 +518,7 @@ export default function ActivityFeedPage() {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => engageWithActivity(activity.id, &quot;like")}
+                                onClick={() => engageWithActivity(activity.id, &quot;like&quot;)}
                                 disabled={engagingWith.has(activity.id)}
                                 className="text-gray-600 hover:text-red-600"
                               >
@@ -552,7 +529,7 @@ export default function ActivityFeedPage() {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => engageWithActivity(activity.id, &quot;comment")}
+                                onClick={() => engageWithActivity(activity.id, &quot;comment&quot;)}
                                 disabled={engagingWith.has(activity.id)}
                                 className="text-gray-600 hover:text-blue-600"
                               >
@@ -563,7 +540,7 @@ export default function ActivityFeedPage() {
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() => engageWithActivity(activity.id, &quot;share")}
+                                onClick={() => engageWithActivity(activity.id, &quot;share&quot;)}
                                 disabled={engagingWith.has(activity.id)}
                                 className="text-gray-600 hover:text-green-600"
                               >
@@ -625,7 +602,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ new_friends: !notificationSettings.new_friends })}
                     >
-                      {notificationSettings.new_friends ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}
+                      {notificationSettings.new_friends ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4&quot; />}
                     </Button>
                   </div>
 
@@ -639,7 +616,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ friend_parties: !notificationSettings.friend_parties })}
                     >
-                      {notificationSettings.friend_parties ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}
+                      {notificationSettings.friend_parties ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4&quot; />}
                     </Button>
                   </div>
 
@@ -653,7 +630,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ trending_content: !notificationSettings.trending_content })}
                     >
-                      {notificationSettings.trending_content ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}
+                      {notificationSettings.trending_content ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4&quot; />}
                     </Button>
                   </div>
 
@@ -667,7 +644,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ achievements: !notificationSettings.achievements })}
                     >
-                      {notificationSettings.achievements ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}
+                      {notificationSettings.achievements ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4&quot; />}
                     </Button>
                   </div>
 
@@ -681,7 +658,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ recommendations: !notificationSettings.recommendations })}
                     >
-                      {notificationSettings.recommendations ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}
+                      {notificationSettings.recommendations ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4&quot; />}
                     </Button>
                   </div>
 
@@ -695,7 +672,7 @@ export default function ActivityFeedPage() {
                       size="sm"
                       onClick={() => updateNotificationSettings({ weekly_digest: !notificationSettings.weekly_digest })}
                     >
-                      {notificationSettings.weekly_digest ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4" />}
+                      {notificationSettings.weekly_digest ? <Bell className="h-4 w-4" /> : <BellOff className=&quot;h-4 w-4&quot; />}
                     </Button>
                   </div>
                 </div>

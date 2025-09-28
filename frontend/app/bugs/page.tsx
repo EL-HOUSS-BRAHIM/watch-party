@@ -9,23 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Bug, 
-  Plus, 
-  Search, 
-  Filter, 
-  AlertCircle, 
-  CheckCircle, 
-  Clock,
-  User,
-  Calendar,
-  Tag,
-  MessageSquare,
-  FileText,
-  ExternalLink,
-  GitBranch,
-  Zap
-} from 'lucide-react';
 
 interface BugReport {
   id: string;
@@ -228,8 +211,8 @@ export default function BugReports() {
   const getBugStats = () => {
     const stats = {
       total: bugs.length,
-      open: bugs.filter(b => b.status === &apos;open').length,
-      inProgress: bugs.filter(b => b.status === 'in-progress').length,
+      open: bugs.filter(b => b.status === &apos;open&apos;).length,
+      inProgress: bugs.filter(b => b.status === &apos;in-progress').length,
       resolved: bugs.filter(b => b.status === 'resolved').length,
       closed: bugs.filter(b => b.status === 'closed').length,
       critical: bugs.filter(b => b.priority === 'critical').length,

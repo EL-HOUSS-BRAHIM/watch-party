@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
 import { QRCodeSVG } from "qrcode.react"
-import { Copy, CheckCircle, AlertCircle, Shield } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { authAPI } from "@/lib/api"
 
@@ -45,7 +44,7 @@ export function TwoFactorSetup() {
         secret_key: response.secret,
         backup_codes: response.backup_codes || [],
       })
-    } catch (err) {
+    } catch {
       setError("Failed to generate 2FA setup data")
     }
   }
@@ -94,7 +93,7 @@ export function TwoFactorSetup() {
         title: "2FA Enabled!",
         description: "Two-factor authentication has been successfully enabled",
       })
-    } catch (err: unknown) {
+    } catch {
       setError(err?.message || "Invalid verification code. Please try again.")
     } finally {
       setIsVerifying(false)
@@ -115,7 +114,7 @@ export function TwoFactorSetup() {
         </CardHeader>
         <CardContent>
           <Button 
-            onClick={() => window.location.href = &quot;/dashboard"}
+            onClick={() => window.location.href = &quot;/dashboard&quot;}
             className="w-full"
           >
             Continue to Dashboard
@@ -182,7 +181,7 @@ export function TwoFactorSetup() {
                   type="button"
                   variant="outline"
                   size="icon"
-                  onClick={() => copyToClipboard(setupData.secret_key, &quot;Secret key")}
+                  onClick={() => copyToClipboard(setupData.secret_key, &quot;Secret key&quot;)}
                 >
                   <Copy className="w-4 h-4" />
                 </Button>

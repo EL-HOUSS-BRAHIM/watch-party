@@ -76,7 +76,7 @@ class LintBatchFixer {
       // Final summary
       this.printSummary();
       
-    } catch (error) {
+    } catch {
       console.error('❌ Error during batch processing:', error.message);
       process.exit(1);
     }
@@ -91,7 +91,7 @@ class LintBatchFixer {
     try {
       const output = execSync('npm run lint', { encoding: 'utf8', stdio: 'pipe' });
       return { totalErrors: 0, fileCount: 0, files: [] };
-    } catch (error) {
+    } catch {
       return this.parseLintOutput(error.stdout + error.stderr);
     }
   }
@@ -361,11 +361,11 @@ class LintBatchFixer {
     
     // Common any type replacements
     const replacements = [
-      { from: ': any', to: ': unknown' },
-      { from: ' as any', to: ' as Record<string, unknown>' },
-      { from: '(any)', to: '(unknown)' },
-      { from: '<any>', to: '<Record<string, unknown>>' },
-      { from: 'any[]', to: 'unknown[]' }
+      { from: ': unknown', to: ': unknown' },
+      { from: ' as Record<string, unknown>&apos;, to: &apos; as Record<string, unknown>&apos; },
+      { from: '(unknown)', to: '(unknown)' },
+      { from: '<Record<string, unknown>>&apos;, to: &apos;<Record<string, unknown>>&apos; },
+      { from: 'unknown[]', to: 'unknown[]' }
     ];
     
     for (const { from, to } of replacements) {
@@ -396,11 +396,11 @@ class LintBatchFixer {
       { from: '"', to: "&quot;" },
       { from: '&', to: "&amp;" },
       { from: '<', to: "&lt;" },
-      { from: '>', to: "&gt;" }
+      { from: '>&apos;, to: &quot;&gt;&quot; }
     ];
     
     // Only replace within JSX content (not in attributes or code)
-    const jsxTextRegex = />([^<]*['"&<>][^<]*)</g;
+    const jsxTextRegex = />([^<]*[&apos;"&<>][^<]*)</g;
     line = line.replace(jsxTextRegex, (match, textContent) => {
       let fixed = textContent;
       for (const { from, to } of replacements) {

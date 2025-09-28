@@ -33,8 +33,8 @@ export function UserFavorites({ userId }: UserFavoritesProps) {
   const [favorites, setFavorites] = useState<FavoriteVideo[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
-  const [genreFilter, setGenreFilter] = useState<string>(&quot;all")
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid&quot;)
+  const [genreFilter, setGenreFilter] = useState<string>(&quot;all&quot;)
   
   const api = useApi()
 
@@ -47,7 +47,7 @@ export function UserFavorites({ userId }: UserFavoritesProps) {
       setIsLoading(true)
       const response = await api.get(`/users/${userId}/favorites/`)
       setFavorites((response.data as Record<string, unknown>).favorites || [])
-    } catch (err) {
+    } catch {
       console.error("Failed to load favorites:", err)
     } finally {
       setIsLoading(false)
@@ -58,7 +58,7 @@ export function UserFavorites({ userId }: UserFavoritesProps) {
     try {
       await api.delete(`/users/${userId}/favorites/${videoId}/`)
       setFavorites(favorites.filter(fav => fav.video.id !== videoId))
-    } catch (err) {
+    } catch {
       console.error("Failed to remove favorite:", err)
     }
   }
@@ -140,14 +140,14 @@ export function UserFavorites({ userId }: UserFavoritesProps) {
               <Button
                 variant={viewMode === "grid" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setViewMode(&quot;grid")}
+                onClick={() => setViewMode(&quot;grid&quot;)}
               >
                 <Grid className="w-4 h-4" />
               </Button>
               <Button
                 variant={viewMode === "list" ? "default" : "outline"}
                 size="sm"
-                onClick={() => setViewMode(&quot;list")}
+                onClick={() => setViewMode(&quot;list&quot;)}
               >
                 <List className="w-4 h-4" />
               </Button>

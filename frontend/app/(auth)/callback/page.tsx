@@ -6,7 +6,6 @@ import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
-import { CheckCircle, AlertCircle, Loader2, Play, Sparkles, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import { AuthAPI } from "@/lib/api/auth"
 import { tokenStorage } from "@/lib/auth/token-storage"
@@ -18,7 +17,7 @@ function CallbackHandler() {
   const { toast } = useToast()
   const authService = useMemo(() => new AuthAPI(), [])
 
-  const [status, setStatus] = useState<"loading" | "success" | "error">(&quot;loading")
+  const [status, setStatus] = useState<"loading" | "success" | "error">(&quot;loading&quot;)
   const [message, setMessage] = useState("")
   const [isRetrying, setIsRetrying] = useState(false)
 
@@ -88,7 +87,7 @@ function CallbackHandler() {
         sessionStorage.removeItem("auth_redirect")
         router.push(redirectTo)
       }, 2000)
-    } catch (error: unknown) {
+    } catch {
       console.error("Callback error:", error)
       setStatus("error")
       const message = (error as { response?: { data?: { message?: string } }; message?: string })?.response?.data?.message 

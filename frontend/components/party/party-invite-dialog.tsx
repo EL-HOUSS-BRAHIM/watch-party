@@ -55,7 +55,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
           text: `You're invited to watch "${party.title}" together! Use code: ${party.roomCode}`,
           url: inviteUrl,
         })
-      } catch (error) {
+      } catch {
         if ((error as Error).name !== 'AbortError') {
           console.error('Error sharing:', error)
         }
@@ -95,14 +95,14 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
       if (response.ok) {
         toast({
           title: "Invitations sent!",
-          description: `Successfully sent invites to ${emails.length} email${emails.length > 1 ? &apos;s' : ''}`,
+          description: `Successfully sent invites to ${emails.length} email${emails.length > 1 ? &apos;s&apos; : &apos;'}`,
         })
         setEmailList("")
         setCustomMessage("")
       } else {
         throw new Error("Failed to send invitations")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to send email invites:", error)
       toast({
         title: "Failed to send invites",
@@ -165,7 +165,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
                 <Button
                   size="icon"
                   variant="outline"
-                  onClick={() => copyToClipboard(inviteUrl, &quot;Invite link")}
+                  onClick={() => copyToClipboard(inviteUrl, &quot;Invite link&quot;)}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
@@ -184,7 +184,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
                 <Button
                   size="icon"
                   variant="outline"
-                  onClick={() => copyToClipboard(watchUrl, &quot;Watch link")}
+                  onClick={() => copyToClipboard(watchUrl, &quot;Watch link&quot;)}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
@@ -203,7 +203,7 @@ export function PartyInviteDialog({ open, onOpenChange, party }: PartyInviteDial
               </Button>
               <Button
                 variant="outline"
-                onClick={() => copyToClipboard(party.roomCode, &quot;Room code")}
+                onClick={() => copyToClipboard(party.roomCode, &quot;Room code&quot;)}
               >
                 <Copy className="h-4 w-4 mr-2" />
                 Copy Code

@@ -28,7 +28,7 @@ export function useAPICall<T>() {
       const result = await apiCall()
       setData(result)
       return result
-    } catch (err) {
+    } catch {
       const error = err instanceof Error ? err : new Error("Unknown error")
       setError(error)
       throw error
@@ -56,7 +56,7 @@ export function useDashboardStats() {
     try {
       const data = await api.users.getDashboardStats()
       setStats(data)
-    } catch (err) {
+    } catch {
       setError(err instanceof Error ? err : new Error("Failed to load stats"))
     } finally {
       setLoading(false)
@@ -87,7 +87,7 @@ export function useVideos(filters?: {
     try {
       const data = await api.videos.getVideos(filters)
       setVideos(data)
-    } catch (err) {
+    } catch {
       setError(err instanceof Error ? err : new Error("Failed to load videos"))
     } finally {
       setLoading(false)
@@ -119,7 +119,7 @@ export function useParties(filters?: {
     try {
       const data = await api.parties.getParties(filters)
       setParties(data)
-    } catch (err) {
+    } catch {
       setError(err instanceof Error ? err : new Error("Failed to load parties"))
     } finally {
       setLoading(false)
@@ -151,7 +151,7 @@ export function useNotifications() {
       const data = await api.notifications.getNotifications()
       setNotifications(data.results)
       setUnreadCount(data.unread_count)
-    } catch (err) {
+    } catch {
       setError(err instanceof Error ? err : new Error("Failed to load notifications"))
     } finally {
       setLoading(false)
@@ -165,7 +165,7 @@ export function useNotifications() {
         prev.map(n => n.id === notificationId ? { ...n, is_read: true } : n)
       )
       setUnreadCount(prev => Math.max(0, prev - 1))
-    } catch (err) {
+    } catch {
       throw err instanceof Error ? err : new Error("Failed to mark as read")
     }
   }, [])
@@ -175,7 +175,7 @@ export function useNotifications() {
       await api.notifications.markAllAsRead()
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
       setUnreadCount(0)
-    } catch (err) {
+    } catch {
       throw err instanceof Error ? err : new Error("Failed to mark all as read")
     }
   }, [])
@@ -220,7 +220,7 @@ export function useVideoUpload() {
         (progress) => setProgress(progress)
       )
       return result
-    } catch (err) {
+    } catch {
       const error = err instanceof Error ? err : new Error("Upload failed")
       setError(error)
       throw error
@@ -245,7 +245,7 @@ export function usePartyActions() {
     try {
       const result = await api.parties.joinParty(partyId, message)
       return result
-    } catch (err) {
+    } catch {
       const error = err instanceof Error ? err : new Error("Failed to join party")
       setError(error)
       throw error
@@ -260,7 +260,7 @@ export function usePartyActions() {
 
     try {
       await api.parties.leaveParty(partyId)
-    } catch (err) {
+    } catch {
       const error = err instanceof Error ? err : new Error("Failed to leave party")
       setError(error)
       throw error
@@ -279,7 +279,7 @@ export function usePartyActions() {
 
     try {
       await api.parties.controlVideo(partyId, { action, timestamp })
-    } catch (err) {
+    } catch {
       const error = err instanceof Error ? err : new Error("Failed to control video")
       setError(error)
       throw error
@@ -325,7 +325,7 @@ export function useApi() {
       const result = await apiCall()
       setData(result)
       return result
-    } catch (err) {
+    } catch {
       const error = err instanceof Error ? err : new Error("Unknown error")
       setError(error)
       throw error
@@ -334,27 +334,27 @@ export function useApi() {
     }
   }, [])
 
-  const get = useCallback(async (endpoint: string, config?: any) => {
+  const get = useCallback(async (endpoint: string, config?: unknown) => {
     const result = await execute(() => apiClient.get(normalizeEndpoint(endpoint), config))
     return { data: result }
   }, [execute, normalizeEndpoint])
 
-  const post = useCallback(async (endpoint: string, data?: any, config?: any) => {
+  const post = useCallback(async (endpoint: string, data?: unknown, config?: unknown) => {
     const result = await execute(() => apiClient.post(normalizeEndpoint(endpoint), data, config))
     return { data: result }
   }, [execute, normalizeEndpoint])
 
-  const put = useCallback(async (endpoint: string, data?: any, config?: any) => {
+  const put = useCallback(async (endpoint: string, data?: unknown, config?: unknown) => {
     const result = await execute(() => apiClient.put(normalizeEndpoint(endpoint), data, config))
     return { data: result }
   }, [execute, normalizeEndpoint])
 
-  const patch = useCallback(async (endpoint: string, data?: any, config?: any) => {
+  const patch = useCallback(async (endpoint: string, data?: unknown, config?: unknown) => {
     const result = await execute(() => apiClient.patch(normalizeEndpoint(endpoint), data, config))
     return { data: result }
   }, [execute, normalizeEndpoint])
 
-  const deleteMethod = useCallback(async (endpoint: string, config?: any) => {
+  const deleteMethod = useCallback(async (endpoint: string, config?: unknown) => {
     const result = await execute(() => apiClient.delete(normalizeEndpoint(endpoint), config))
     return { data: result }
   }, [execute, normalizeEndpoint])

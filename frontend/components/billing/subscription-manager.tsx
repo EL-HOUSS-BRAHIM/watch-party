@@ -8,23 +8,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  Play, 
-  Pause, 
-  Calendar, 
-  CreditCard,
-  AlertCircle,
-  Check,
-  Crown,
-  Zap,
-  Shield,
-  Star,
-  Clock,
-  RefreshCw,
-  X
-} from 'lucide-react'
 
 interface BillingPlan {
   id: string
@@ -107,7 +90,7 @@ export function SubscriptionManager({
         setShowUpgradeDialog(false)
         setConfirmationStep(false)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to upgrade subscription:', error)
     } finally {
       setLoading(false)
@@ -131,7 +114,7 @@ export function SubscriptionManager({
         setShowDowngradeDialog(false)
         setConfirmationStep(false)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to downgrade subscription:', error)
     } finally {
       setLoading(false)
@@ -150,7 +133,7 @@ export function SubscriptionManager({
       if (response.ok) {
         onSubscriptionChange?.()
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to resume subscription:', error)
     } finally {
       setLoading(false)
@@ -169,7 +152,7 @@ export function SubscriptionManager({
       if (response.ok) {
         onSubscriptionChange?.()
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to pause subscription:', error)
     } finally {
       setLoading(false)
@@ -188,7 +171,7 @@ export function SubscriptionManager({
       if (response.ok) {
         onSubscriptionChange?.()
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to cancel subscription:', error)
     } finally {
       setLoading(false)
@@ -479,28 +462,28 @@ export function SubscriptionManager({
 
             {isCanceled && (
               <Button onClick={handleResume} disabled={loading}>
-                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className=&quot;h-4 w-4 mr-2" />}
+                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className=&quot;h-4 w-4 mr-2&quot; />}
                 Resume Subscription
               </Button>
             )}
 
             {!isCanceled && !isPaused && (
               <Button variant="outline" onClick={handlePause} disabled={loading}>
-                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Pause className=&quot;h-4 w-4 mr-2" />}
+                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Pause className=&quot;h-4 w-4 mr-2&quot; />}
                 Pause Subscription
               </Button>
             )}
 
             {isPaused && (
               <Button onClick={handleResume} disabled={loading}>
-                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className=&quot;h-4 w-4 mr-2" />}
+                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <Play className=&quot;h-4 w-4 mr-2&quot; />}
                 Resume Subscription
               </Button>
             )}
 
             {!isCanceled && !isPaused && (
               <Button variant="destructive" onClick={handleCancel} disabled={loading}>
-                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <X className=&quot;h-4 w-4 mr-2" />}
+                {loading ? <RefreshCw className="h-4 w-4 animate-spin mr-2" /> : <X className=&quot;h-4 w-4 mr-2&quot; />}
                 Cancel Subscription
               </Button>
             )}

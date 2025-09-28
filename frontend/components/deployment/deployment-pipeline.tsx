@@ -17,19 +17,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {
-  Rocket,
-  GitBranch,
-  CheckCircle,
-  XCircle,
-  Clock,
-  RotateCcw,
-  Settings,
-  Eye,
-  Download,
-  Server,
-  Globe,
-} from "lucide-react"
 import { LineChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
 
 interface Deployment {
@@ -190,8 +177,8 @@ export function DeploymentPipeline() {
   const [selectedDeployment, setSelectedDeployment] = useState<Deployment | null>(null)
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false)
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
-  const [filterEnvironment, setFilterEnvironment] = useState<string>(&quot;all")
-  const [filterStatus, setFilterStatus] = useState<string>(&quot;all")
+  const [filterEnvironment, setFilterEnvironment] = useState<string>(&quot;all&quot;)
+  const [filterStatus, setFilterStatus] = useState<string>(&quot;all&quot;)
 
   const triggerDeployment = (environment: string, branch = "main") => {
     const newDeployment: Deployment = {
@@ -219,7 +206,7 @@ export function DeploymentPipeline() {
           dep.id === newDeployment.id
             ? {
                 ...dep,
-                status: Math.random() > 0.2 ? &quot;success" : "failed",
+                status: Math.random() > 0.2 ? &quot;success&quot; : &quot;failed",
                 completedAt: new Date().toISOString(),
                 duration: Math.floor(Math.random() * 600) + 300,
                 stages: dep.stages.map((stage) => ({
@@ -294,8 +281,8 @@ export function DeploymentPipeline() {
   })
 
   const totalDeployments = deployments.length
-  const successfulDeployments = deployments.filter((d) => d.status === &quot;success").length
-  const failedDeployments = deployments.filter((d) => d.status === "failed").length
+  const successfulDeployments = deployments.filter((d) => d.status === &quot;success&quot;).length
+  const failedDeployments = deployments.filter((d) => d.status === &quot;failed").length
   const runningDeployments = deployments.filter((d) => d.status === "running").length
 
   return (
@@ -308,11 +295,11 @@ export function DeploymentPipeline() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
-          <Button onClick={() => triggerDeployment(&quot;staging")}>
+          <Button onClick={() => triggerDeployment(&quot;staging&quot;)}>
             <Rocket className="mr-2 h-4 w-4" />
             Deploy to Staging
           </Button>
@@ -458,7 +445,7 @@ export function DeploymentPipeline() {
                         </div>
                       </TableCell>
                       <TableCell>{deployment.author}</TableCell>
-                      <TableCell>{deployment.duration ? `${Math.round(deployment.duration / 60)}m` : &quot;-"}</TableCell>
+                      <TableCell>{deployment.duration ? `${Math.round(deployment.duration / 60)}m` : &quot;-&quot;}</TableCell>
                       <TableCell>
                         <span className="text-sm text-muted-foreground">
                           {new Date(deployment.startedAt).toLocaleString()}

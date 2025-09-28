@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -17,7 +17,6 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CreditCard, Plus, Trash2, Star, Shield, Calendar } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { billingAPI } from "@/lib/api"
@@ -63,17 +62,17 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
     isDefault: apiPM.is_default,
   })
 
-  const loadPaymentMethods = async () => {
+  const loadPaymentMethods = useCallback(async () => {
     try {
       const data = await billingAPI.getPaymentMethods()
       const mappedMethods = (data.payment_methods || []).map(mapAPIPaymentMethodToLocal)
       setPaymentMethods(mappedMethods)
-    } catch (error) {
+    } catch {
       console.error("Failed to load payment methods:", error)
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
   const addPaymentMethod = async (formData: FormData) => {
     setIsAdding(true)
@@ -89,7 +88,7 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
         title: "Payment method added",
         description: "Your payment method has been successfully added.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to add payment method:", error)
       toast({
         title: "Error",
@@ -111,7 +110,7 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
         title: "Payment method removed",
         description: "The payment method has been successfully removed.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to remove payment method:", error)
       toast({
         title: "Error",
@@ -134,7 +133,7 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
         title: "Default payment method updated",
         description: "Your default payment method has been updated.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to set default payment method:", error)
       toast({
         title: "Error",

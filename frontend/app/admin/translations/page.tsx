@@ -588,7 +588,7 @@ export default function TranslationManagement() {
             <CardContent>
               <div className="space-y-4">
                 {translations
-                  .filter(t => Object.values(t.translations).some(trans => trans.status === &apos;pending' || trans.status === 'needs_review'))
+                  .filter(t => Object.values(t.translations).some(trans => trans.status === &apos;pending&apos; || trans.status === &apos;needs_review'))
                   .map((translation) => (
                     <div key={translation.key} className="border rounded-lg p-4">
                       <div className="flex items-start justify-between mb-3">
@@ -601,7 +601,7 @@ export default function TranslationManagement() {
                       </div>
                       <div className="space-y-2">
                         {Object.entries(translation.translations)
-                          .filter(([, trans]) => trans.status === &apos;pending' || trans.status === 'needs_review')
+                          .filter(([, trans]) => trans.status === &apos;pending&apos; || trans.status === &apos;needs_review')
                           .map(([langCode, trans]) => {
                             const lang = languages.find(l => l.code === langCode);
                             return (

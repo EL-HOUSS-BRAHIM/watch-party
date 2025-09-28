@@ -11,19 +11,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import {
-  Eye,
-  EyeOff,
-  Mail,
-  Lock,
-  Loader2,
-  Github,
-  Chrome,
-  AlertCircle,
-  CheckCircle,
-  Sparkles,
-  Play,
-} from "lucide-react"
 
 export default function LoginPage() {
   const searchParams = useSearchParams()
@@ -85,7 +72,7 @@ export default function LoginPage() {
         description: "You&apos;ve been successfully logged in.",
         duration: 3000,
       })
-    } catch (error: unknown) {
+    } catch {
       const errorMessage = (error as { message?: string })?.message || "Login failed. Please try again."
       setErrors({ general: errorMessage })
       toast({
@@ -101,7 +88,7 @@ export default function LoginPage() {
   const handleSocialLogin = async (provider: "google" | "github") => {
     try {
       await socialLogin(provider)
-    } catch (error: unknown) {
+    } catch {
       toast({
         title: "Social Login Failed",
         description: (error as { message?: string })?.message || `Failed to login with ${provider}`,
@@ -113,7 +100,7 @@ export default function LoginPage() {
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: &quot;" }))
+      setErrors((prev) => ({ ...prev, [field]: &quot;&quot; }))
     }
   }
 
@@ -175,7 +162,7 @@ export default function LoginPage() {
         <div className="grid grid-cols-2 gap-3">
           <Button
             variant="outline"
-            onClick={() => handleSocialLogin(&quot;google")}
+            onClick={() => handleSocialLogin(&quot;google&quot;)}
             disabled={isSubmitting}
             className="glass-card border-white/20 hover:border-neon-blue/50 hover:bg-neon-blue/10 text-white transition-all duration-300"
           >
@@ -184,7 +171,7 @@ export default function LoginPage() {
           </Button>
           <Button
             variant="outline"
-            onClick={() => handleSocialLogin(&quot;github")}
+            onClick={() => handleSocialLogin(&quot;github&quot;)}
             disabled={isSubmitting}
             className="glass-card border-white/20 hover:border-neon-purple/50 hover:bg-neon-purple/10 text-white transition-all duration-300"
           >
@@ -218,7 +205,7 @@ export default function LoginPage() {
                 type="email"
                 placeholder="Enter your email"
                 value={formData.email}
-                onChange={(e) => handleInputChange(&quot;email", e.target.value)}
+                onChange={(e) => handleInputChange(&quot;email&quot;, e.target.value)}
                 className={`pl-10 glass-card border-white/20 focus:border-neon-red/50 focus:glow-red text-white placeholder-gray-400 transition-all duration-300 ${
                   errors.email ? "border-red-500/50 focus:border-red-500" : ""
                 }`}
@@ -247,7 +234,7 @@ export default function LoginPage() {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 value={formData.password}
-                onChange={(e) => handleInputChange(&quot;password", e.target.value)}
+                onChange={(e) => handleInputChange(&quot;password&quot;, e.target.value)}
                 className={`pl-10 pr-10 glass-card border-white/20 focus:border-neon-red/50 focus:glow-red text-white placeholder-gray-400 transition-all duration-300 ${
                   errors.password ? "border-red-500/50 focus:border-red-500" : ""
                 }`}
@@ -261,7 +248,7 @@ export default function LoginPage() {
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
                 disabled={isSubmitting}
               >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4" />}
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className=&quot;w-4 h-4&quot; />}
               </button>
             </div>
             {errors.password && (

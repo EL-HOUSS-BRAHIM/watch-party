@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts'
-import { Eye, Clock, TrendingUp, Users } from 'lucide-react'
 import { videosAPI } from '@/lib/api'
 import { useToast } from '@/hooks/use-toast'
 
@@ -96,7 +95,7 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
           viewer_locations: []
         })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch video analytics:', error)
       toast({
         title: 'Analytics Unavailable',
@@ -232,7 +231,7 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
                   <XAxis dataKey="timestamp" />
                   <YAxis domain={[0, 100]} />
                   <Tooltip 
-                    formatter={(value) => [`${value}%`, &apos;Retention']}
+                    formatter={(value) => [`${value}%`, &apos;Retention&apos;]}
                     labelFormatter={(label) => `Time: ${label}%`}
                   />
                   <Area 

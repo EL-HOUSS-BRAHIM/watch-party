@@ -64,7 +64,7 @@ export function SessionsManager() {
       setIsLoading(true)
       const response = await api.get("/auth/sessions/")
       setSessions((response.data as Record<string, unknown>).sessions || [])
-    } catch (err) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to load sessions",
@@ -84,7 +84,7 @@ export function SessionsManager() {
         title: "Session revoked",
         description: "The session has been successfully terminated",
       })
-    } catch (err) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to revoke session",
@@ -104,7 +104,7 @@ export function SessionsManager() {
         title: "Sessions revoked",
         description: "All other sessions have been terminated",
       })
-    } catch (err) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to revoke sessions",
@@ -117,7 +117,7 @@ export function SessionsManager() {
 
   const getLocationString = (location: Session["location"]) => {
     const parts = [location.city, location.region, location.country].filter(Boolean)
-    return parts.length > 0 ? parts.join(&quot;, ") : "Unknown location"
+    return parts.length > 0 ? parts.join(&quot;, &quot;) : &quot;Unknown location"
   }
 
   const getDeviceString = (session: Session) => {

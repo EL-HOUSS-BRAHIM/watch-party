@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Separator } from "@/components/ui/separator"
-import { Shield, AlertCircle, ArrowLeft } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { authAPI } from "@/lib/api"
 import { tokenStorage } from "@/lib/auth/token-storage"
@@ -63,7 +62,7 @@ export function TwoFactorVerify() {
 
       // Redirect to the intended page
       router.push(redirectUrl)
-    } catch (err: unknown) {
+    } catch {
       const errorData = err?.response?.data
       const message = errorData?.message || err?.message || "Invalid verification code"
       setError(message)
@@ -115,7 +114,7 @@ export function TwoFactorVerify() {
               <Input
                 id="verification-code"
                 value={code}
-                onChange={(e) => setCode(e.target.value.replace(/\D/g, &quot;"))}
+                onChange={(e) => setCode(e.target.value.replace(/\D/g, &quot;&quot;))}
                 onKeyPress={handleKeyPress}
                 placeholder="123456"
                 maxLength={6}
@@ -133,7 +132,7 @@ export function TwoFactorVerify() {
               <Input
                 id="backup-code"
                 value={backupCode}
-                onChange={(e) => setBackupCode(e.target.value.replace(/[^a-zA-Z0-9]/g, &quot;"))}
+                onChange={(e) => setBackupCode(e.target.value.replace(/[^a-zA-Z0-9]/g, &quot;&quot;))}
                 onKeyPress={handleKeyPress}
                 placeholder="Enter backup code"
                 className="text-center text-lg tracking-widest font-mono"

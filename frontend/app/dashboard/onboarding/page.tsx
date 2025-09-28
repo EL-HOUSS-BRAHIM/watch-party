@@ -12,7 +12,6 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import {
@@ -259,7 +258,7 @@ export default function OnboardingPage() {
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Onboarding error:", error)
       toast({
         title: "Error",
@@ -528,7 +527,7 @@ export default function OnboardingPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={socialForm.handleSubmit(onSocialSubmit as Record<string, unknown>)} className=&quot;space-y-6">
+              <form onSubmit={socialForm.handleSubmit(onSocialSubmit as Record<string, unknown>)} className=&quot;space-y-6&quot;>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-4 border rounded-lg">
                     <div>

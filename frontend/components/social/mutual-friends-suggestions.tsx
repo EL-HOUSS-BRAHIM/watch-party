@@ -5,24 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-  UserPlus, 
-  Users, 
-  Search, 
-  Filter, 
-  MapPin, 
-  Calendar,
-  Star,
-  Eye,
-  MessageCircle,
-  UserCheck,
-  UserX,
-  Loader2,
-  RefreshCw
-} from 'lucide-react'
 
 interface User {
   id: string
@@ -54,8 +38,8 @@ export function MutualFriendsSuggestions() {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [filter, setFilter] = useState<'all' | 'mutual_friends' | 'location' | 'interests'>(&apos;all')
-  const [sortBy, setSortBy] = useState<'confidence' | 'mutual_friends' | 'recent'>(&apos;confidence')
+  const [filter, setFilter] = useState<'all' | 'mutual_friends' | 'location' | 'interests'>(&apos;all&apos;)
+  const [sortBy, setSortBy] = useState<'confidence' | 'mutual_friends' | 'recent'>(&apos;confidence&apos;)
 
   useEffect(() => {
     fetchSuggestions()
@@ -73,7 +57,7 @@ export function MutualFriendsSuggestions() {
         const data = await response.json()
         setSuggestions(data.suggestions)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch friend suggestions:', error)
     } finally {
       setLoading(false)
@@ -88,7 +72,7 @@ export function MutualFriendsSuggestions() {
         const data = await response.json()
         setSuggestions(data.suggestions)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to refresh suggestions:', error)
     } finally {
       setRefreshing(false)
@@ -140,7 +124,7 @@ export function MutualFriendsSuggestions() {
         // Remove from suggestions
         setSuggestions(prev => prev.filter(s => s.id !== userId))
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to send friend request:', error)
     }
   }
@@ -154,7 +138,7 @@ export function MutualFriendsSuggestions() {
       if (response.ok) {
         setSuggestions(prev => prev.filter(s => s.id !== userId))
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to dismiss suggestion:', error)
     }
   }

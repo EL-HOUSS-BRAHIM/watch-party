@@ -304,7 +304,7 @@ export class AdminAPI {
    */
   async getAlerts(): Promise<AdminAlert[]> {
     // This would need to be implemented in backend
-    return apiClient.get<AdminAlert[]>('/api/admin/alerts/')
+    return apiClient.get<AdminAlert[]>(&apos;/api/admin/alerts/&apos;)
   }
 
   /**
@@ -319,7 +319,7 @@ export class AdminAPI {
    */
   async getPerformanceMetrics(): Promise<AdminPerformanceMetric[]> {
     // This would need to be implemented in backend
-    return apiClient.get<AdminPerformanceMetric[]>('/api/admin/performance/')
+    return apiClient.get<AdminPerformanceMetric[]>(&apos;/api/admin/performance/&apos;)
   }
 
   // === ADDITIONAL USER MANAGEMENT ===
@@ -351,7 +351,7 @@ export class AdminAPI {
     date_to?: string
     page?: number
   }): Promise<PaginatedResponse<AdminSystemLog>> {
-    return apiClient.get<PaginatedResponse<AdminSystemLog>>('/api/admin/system-logs/', { params })
+    return apiClient.get<PaginatedResponse<AdminSystemLog>>(&apos;/api/admin/system-logs/&apos;, { params })
   }
 
   /**
@@ -367,7 +367,7 @@ export class AdminAPI {
    * Export system logs
    */
   async exportSystemLogs(params?: Record<string, unknown>): Promise<AdminExportResponse> {
-    return apiClient.get<AdminExportResponse>('/api/admin/system-logs/export/', { params })
+    return apiClient.get<AdminExportResponse>(&apos;/api/admin/system-logs/export/&apos;, { params })
   }
 
   // === MODERATION ===
@@ -376,7 +376,7 @@ export class AdminAPI {
    * Get moderation statistics
    */
   async getModerationStats(): Promise<Record<string, number>> {
-    return apiClient.get<Record<string, number>>('/api/admin/moderation/stats/')
+    return apiClient.get<Record<string, number>>(&apos;/api/admin/moderation/stats/&apos;)
   }
 
   // === SETTINGS MANAGEMENT ===
@@ -385,14 +385,14 @@ export class AdminAPI {
    * Reset settings to defaults
    */
   async resetSettings(): Promise<APIResponse> {
-    return apiClient.post<APIResponse>('/api/admin/settings/reset/')
+    return apiClient.post<APIResponse>(&apos;/api/admin/settings/reset/&apos;)
   }
 
   /**
    * Test email configuration
    */
   async testEmailSettings(data: { recipient: string }): Promise<APIResponse> {
-    return apiClient.post<APIResponse>('/api/admin/settings/test-email/', data)
+    return apiClient.post<APIResponse>(&apos;/api/admin/settings/test-email/&apos;, data)
   }
 
   // === ANALYTICS EXPORT ===

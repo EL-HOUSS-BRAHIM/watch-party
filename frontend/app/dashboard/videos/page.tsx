@@ -3,7 +3,6 @@
 import * as React from "react"
 import Image from "next/image"
 import { useState, useEffect } from "react"
-import { Search, Grid, List, Upload, Play, MoreHorizontal, Eye, Heart, MessageCircle, Calendar } from "lucide-react"
 import { WatchPartyButton } from "@/components/ui/watch-party-button"
 import { WatchPartyInput } from "@/components/ui/watch-party-input"
 import { WatchPartySelect } from "@/components/ui/watch-party-select"
@@ -257,7 +256,7 @@ function VideoListItem({ video }: { video: APIVideo }) {
 export default function VideosPage() {
   const [videos, setVideos] = useState<APIVideo[]>([])
   const [loading, setLoading] = useState(true)
-  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid&quot;)
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState("newest")
   const [filterBy, setFilterBy] = useState("all")
@@ -273,7 +272,7 @@ export default function VideosPage() {
       setLoading(true)
       const response = await videosAPI.getVideos()
       setVideos(response.results || [])
-    } catch (error) {
+    } catch {
       console.error("Failed to load videos:", error)
     } finally {
       setLoading(false)
@@ -403,7 +402,7 @@ export default function VideosPage() {
           <WatchPartyButton
             variant={viewMode === "grid" ? "default" : "ghost"}
             size="sm"
-            onClick={() => setViewMode(&quot;grid")}
+            onClick={() => setViewMode(&quot;grid&quot;)}
             className="rounded-r-none"
           >
             <Grid className="h-4 w-4" />
@@ -411,7 +410,7 @@ export default function VideosPage() {
           <WatchPartyButton
             variant={viewMode === "list" ? "default" : "ghost"}
             size="sm"
-            onClick={() => setViewMode(&quot;list")}
+            onClick={() => setViewMode(&quot;list&quot;)}
             className="rounded-l-none"
           >
             <List className="h-4 w-4" />
@@ -429,13 +428,13 @@ export default function VideosPage() {
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;ready").length}</div>
+            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;ready&quot;).length}</div>
             <p className="text-xs text-muted-foreground">Ready</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;processing").length}</div>
+            <div className="text-2xl font-bold">{videos.filter((v) => v.status === &quot;processing&quot;).length}</div>
             <p className="text-xs text-muted-foreground">Processing</p>
           </CardContent>
         </Card>

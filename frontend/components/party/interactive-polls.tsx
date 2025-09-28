@@ -19,10 +19,7 @@ import {
   Users, 
   BarChart3, 
   X, 
-  Check,
-  AlertCircle,
-  TrendingUp
-} from 'lucide-react'
+  Check} from 'lucide-react'
 import { useSocket } from '@/contexts/socket-context'
 
 interface Poll {
@@ -83,17 +80,17 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
     }
   }, [socket])
 
-  const fetchPolls = async () => {
+  const fetchPolls = useCallback(async () => {
     try {
       const response = await fetch(`/api/parties/${partyId}/polls`)
       if (response.ok) {
         const data = await response.json()
         setPolls(data.polls)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch polls:', error)
     }
-  }
+  }, [])
 
   const handlePollCreated = (poll: Poll) => {
     setPolls(prev => [poll, ...prev])
@@ -111,7 +108,7 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
     ))
   }
 
-  const createPoll = async () => {
+  const createPoll = useCallback(async () => {
     if (!newPoll.question.trim() || newPoll.options.some(opt => !opt.trim())) {
       return
     }
@@ -138,12 +135,12 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
           duration: '5'
         })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to create poll:', error)
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   const votePoll = async (pollId: string, optionIds: string[]) => {
     try {
@@ -157,7 +154,7 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
         const updatedPoll = await response.json()
         socket?.emit('poll-vote', { partyId, poll: updatedPoll })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to vote on poll:', error)
     }
   }
@@ -171,7 +168,7 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
       if (response.ok) {
         socket?.emit('poll-ended', { partyId, pollId })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to end poll:', error)
     }
   }
@@ -225,7 +222,7 @@ export function InteractivePolls({ partyId, isHost, currentUserId }: Interactive
       }
     }
 
-    const handleOptionSelect = (optionId: string) => {
+
       if (poll.type === 'single') {
         setSelectedOptions([optionId])
       } else {

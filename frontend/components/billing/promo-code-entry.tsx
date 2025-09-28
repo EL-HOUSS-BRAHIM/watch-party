@@ -8,19 +8,6 @@ import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { 
-  Gift, 
-  Percent, 
-  DollarSign, 
-  Calendar, 
-  Check, 
-  X, 
-  AlertCircle,
-  Loader2,
-  Tag,
-  Star,
-  Clock
-} from 'lucide-react'
 
 interface PromoCode {
   code: string
@@ -89,7 +76,7 @@ export function PromoCodeEntry({
       } else {
         setError(data.error || 'Invalid promo code')
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to validate promo code:', error)
       setError('Failed to validate promo code. Please try again.')
     } finally {
@@ -221,7 +208,7 @@ export function PromoCodeEntry({
                 placeholder="Enter promo code"
                 value={promoCode}
                 onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                onKeyPress={(e) => e.key === &apos;Enter' && validatePromoCode()}
+                onKeyPress={(e) => e.key === &apos;Enter&apos; && validatePromoCode()}
                 disabled={loading}
               />
               <Button 

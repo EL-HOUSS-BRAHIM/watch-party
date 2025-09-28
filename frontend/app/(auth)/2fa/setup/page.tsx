@@ -10,20 +10,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/contexts/auth-context"
-import {
-  Shield,
-  Smartphone,
-  QrCode,
-  Copy,
-  CheckCircle,
-  AlertCircle,
-  ArrowLeft,
-  ArrowRight,
-  Key,
-  Download,
-  RefreshCw,
-  Sparkles,
-} from "lucide-react"
 import Link from "next/link"
 import QRCode from "qrcode"
 import { AuthAPI } from "@/lib/api/auth"
@@ -73,7 +59,7 @@ export default function TwoFactorSetupPage() {
         },
       })
       setQrCodeUrl(qrCodeDataUrl)
-    } catch (error) {
+    } catch {
       console.error("2FA setup error:", error)
       toast({
         title: "Setup Error",
@@ -107,7 +93,7 @@ export default function TwoFactorSetupPage() {
         title: "Copied!",
         description: "Secret key copied to clipboard.",
       })
-    } catch (error) {
+    } catch {
       console.error("Copy failed:", error)
       toast({
         title: "Copy Failed",
@@ -145,7 +131,7 @@ export default function TwoFactorSetupPage() {
         title: "2FA Enabled!",
         description: "Two-factor authentication has been successfully enabled.",
       })
-    } catch (error: unknown) {
+    } catch {
       console.error("2FA verification error:", error)
       const message = error instanceof Error 
         ? error.message 
@@ -185,7 +171,7 @@ export default function TwoFactorSetupPage() {
         title: "Copied!",
         description: "Backup codes copied to clipboard.",
       })
-    } catch (error) {
+    } catch {
       console.error("Copy failed:", error)
       toast({
         title: "Copy Failed",
@@ -227,12 +213,12 @@ export default function TwoFactorSetupPage() {
                         : "bg-white/10 text-gray-400"
                     }`}
                   >
-                    {step > stepNumber ? <CheckCircle className=&quot;w-4 h-4" /> : stepNumber}
+                    {step > stepNumber ? <CheckCircle className=&quot;w-4 h-4&quot; /> : stepNumber}
                   </div>
                   {stepNumber < 3 && (
                     <div
                       className={`w-8 h-0.5 mx-2 transition-all duration-300 ${
-                        step > stepNumber ? &quot;bg-gradient-to-r from-green-500 to-blue-500" : "bg-white/20"
+                        step > stepNumber ? &quot;bg-gradient-to-r from-green-500 to-blue-500&quot; : &quot;bg-white/20"
                       }`}
                     />
                   )}

@@ -10,18 +10,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { useSocket } from "@/contexts/socket-context"
-import {
-  Settings,
-  Pause,
-  Play,
-  SkipForward,
-  SkipBack,
-  Volume2,
-  Users,
-  MessageCircle,
-  Share,
-  StopCircle,
-} from "lucide-react"
 
 interface PartyControlsProps {
   partyId: string
@@ -61,7 +49,7 @@ export function PartyControls({ partyId }: PartyControlsProps) {
       </Button>
 
       <Button variant="outline" size="sm" onClick={handlePlayPause}>
-        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className=&quot;w-4 h-4" />}
+        {isPlaying ? <Pause className="w-4 h-4" /> : <Play className=&quot;w-4 h-4&quot; />}
       </Button>
 
       <Button variant="outline" size="sm" onClick={() => handleSkip(10)}>

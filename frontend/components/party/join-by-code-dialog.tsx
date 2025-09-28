@@ -94,7 +94,7 @@ export function JoinByCodeDialog({ open, onOpenChange }: JoinByCodeDialogProps) 
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to join party:", error)
       toast({
         title: "Connection error",

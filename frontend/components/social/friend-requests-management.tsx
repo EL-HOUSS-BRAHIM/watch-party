@@ -1,10 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { UserPlus, UserCheck, UserX, Clock, Mail, Calendar, MapPin, Loader2, Users, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
@@ -85,7 +83,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
         setReceivedRequests(receivedData.requests || [])
         setSentRequests(sentData.requests || [])
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load friend requests:", error)
       toast({
         title: "Failed to load requests",
@@ -118,7 +116,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
       } else {
         throw new Error("Failed to accept request")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to accept request:", error)
       toast({
         title: "Failed to accept request",
@@ -155,7 +153,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
       } else {
         throw new Error("Failed to reject request")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to reject request:", error)
       toast({
         title: "Failed to reject request",
@@ -192,7 +190,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
       } else {
         throw new Error("Failed to cancel request")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to cancel request:", error)
       toast({
         title: "Failed to cancel request",
@@ -274,7 +272,7 @@ export default function FriendRequestsManagement({ className }: FriendRequestsMa
 
               {request.message && (
                 <div className="bg-muted/50 rounded-lg p-3 mb-2">
-                  <p className="text-sm italic">&quot;{request.message}"</p>
+                  <p className="text-sm italic">&quot;{request.message}&quot;</p>
                 </div>
               )}
 

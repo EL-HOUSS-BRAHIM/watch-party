@@ -3,7 +3,6 @@
 import * as React from "react"
 import Image from "next/image"
 import { useState, useCallback } from "react"
-import { Upload, X, Globe, Lock, Users, AlertCircle, CheckCircle, FileVideo, ImageIcon } from "lucide-react"
 import { WatchPartyButton } from "@/components/ui/watch-party-button"
 import { WatchPartyInput } from "@/components/ui/watch-party-input"
 import { WatchPartyTextarea } from "@/components/ui/watch-party-textarea"
@@ -275,7 +274,7 @@ export default function VideoUploadPage() {
   const router = useRouter()
   const [files, setFiles] = useState<UploadFile[]>([])
   const [uploading, setUploading] = useState(false)
-  const [currentStep, setCurrentStep] = useState<"upload" | "details">(&quot;upload")
+  const [currentStep, setCurrentStep] = useState<"upload" | "details">(&quot;upload&quot;)
   const [metadata, setMetadata] = useState<VideoMetadata>({
     title: "",
     description: "",
@@ -307,7 +306,7 @@ export default function VideoUploadPage() {
     setUploading(true)
 
     // Update status to uploading
-    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: &quot;uploading" as const } : f)))
+    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: &quot;uploading&quot; as const } : f)))
 
     // Simulate upload progress
     for (let progress = 0; progress <= 100; progress += 10) {
@@ -316,7 +315,7 @@ export default function VideoUploadPage() {
     }
 
     // Switch to processing
-    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: &quot;processing" as const, progress: 0 } : f)))
+    setFiles((prev) => prev.map((f) => (f.id === fileId ? { ...f, status: &quot;processing&quot; as const, progress: 0 } : f)))
 
     // Simulate processing
     for (let progress = 0; progress <= 100; progress += 20) {
@@ -355,7 +354,7 @@ export default function VideoUploadPage() {
     router.push("/dashboard/videos")
   }
 
-  const completedFiles = files.filter((f) => f.status === &quot;completed")
+  const completedFiles = files.filter((f) => f.status === &quot;completed&quot;)
   const canProceed = completedFiles.length > 0
 
   return (
@@ -387,7 +386,7 @@ export default function VideoUploadPage() {
 
           {canProceed && (
             <div className="flex justify-end">
-              <WatchPartyButton onClick={() => setCurrentStep(&quot;details")}>Continue to Details</WatchPartyButton>
+              <WatchPartyButton onClick={() => setCurrentStep(&quot;details&quot;)}>Continue to Details</WatchPartyButton>
             </div>
           )}
         </TabsContent>
@@ -488,7 +487,7 @@ export default function VideoUploadPage() {
             </div>
 
             <FormActions>
-              <WatchPartyButton variant="outline" onClick={() => setCurrentStep(&quot;upload")}>
+              <WatchPartyButton variant="outline" onClick={() => setCurrentStep(&quot;upload&quot;)}>
                 Back
               </WatchPartyButton>
               <WatchPartyButton type="submit">Publish Videos</WatchPartyButton>

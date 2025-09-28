@@ -7,30 +7,10 @@ import { apiClient } from "@/lib/api"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
-import {
-  User,
-  MapPin,
-  Calendar,
-  Users,
-  Video,
-  Heart,
-  MessageCircle,
-  UserPlus,
-  UserMinus,
-  Settings,
-  Share,
-  Flag,
-  Shield,
-  Clock,
-  Play,
-  Eye,
-  TrendingUp,
-} from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 
 interface UserProfile {
@@ -121,7 +101,7 @@ export default function UserProfilePage() {
         })
         router.push("/dashboard")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load user profile:", error)
       toast({
         title: "Error",
@@ -141,7 +121,7 @@ export default function UserProfilePage() {
         const data = response.data
         setVideos(data.results || data.videos || [])
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load user videos:", error)
     }
   }
@@ -187,7 +167,7 @@ export default function UserProfilePage() {
           description: `Friend ${action.replace("_", " ")} successful.`,
         })
       }
-    } catch (error) {
+    } catch {
       console.error(`Failed to ${action}:`, error)
       toast({
         title: "Error",
@@ -211,7 +191,7 @@ export default function UserProfilePage() {
           description: "Thank you for reporting. We'll review this user.",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to report user:", error)
       toast({
         title: "Error",
@@ -227,7 +207,7 @@ export default function UserProfilePage() {
     switch (profile.friendshipStatus) {
       case "none":
         return (
-          <Button onClick={() => handleFriendAction(&quot;send_request")} className="flex items-center gap-2">
+          <Button onClick={() => handleFriendAction(&quot;send_request&quot;)} className=&quot;flex items-center gap-2">
             <UserPlus className="w-4 h-4" />
             Add Friend
           </Button>
@@ -241,17 +221,17 @@ export default function UserProfilePage() {
       case "pending_received":
         return (
           <div className="flex gap-2">
-            <Button onClick={() => handleFriendAction(&quot;accept")} size="sm">
+            <Button onClick={() => handleFriendAction(&quot;accept&quot;)} size=&quot;sm">
               Accept
             </Button>
-            <Button onClick={() => handleFriendAction(&quot;decline")} variant="outline" size="sm">
+            <Button onClick={() => handleFriendAction(&quot;decline&quot;)} variant=&quot;outline" size="sm">
               Decline
             </Button>
           </div>
         )
       case "friends":
         return (
-          <Button onClick={() => handleFriendAction(&quot;remove")} variant="outline" className="flex items-center gap-2">
+          <Button onClick={() => handleFriendAction(&quot;remove&quot;)} variant=&quot;outline" className="flex items-center gap-2">
             <UserMinus className="w-4 h-4" />
             Remove Friend
           </Button>
@@ -285,8 +265,8 @@ export default function UserProfilePage() {
     return (
       <div className="container mx-auto py-8 px-4 text-center">
         <h1 className="text-2xl font-bold mb-4">Profile Not Found</h1>
-        <p className="text-gray-600 mb-4">The user profile you&apos;re looking for doesn't exist.</p>
-        <Button onClick={() => router.push(&quot;/dashboard")}>Return to Dashboard</Button>
+        <p className="text-gray-600 mb-4">The user profile you&apos;re looking for doesn&apos;t exist.</p>
+        <Button onClick={() => router.push(&quot;/dashboard&quot;)}>Return to Dashboard</Button>
       </div>
     )
   }
@@ -338,7 +318,7 @@ export default function UserProfilePage() {
                 <div className="flex gap-2">
                   {getFriendshipButton()}
                   {isOwnProfile ? (
-                    <Button onClick={() => router.push(&quot;/dashboard/settings")} variant="outline">
+                    <Button onClick={() => router.push(&quot;/dashboard/settings&quot;)} variant=&quot;outline">
                       <Settings className="w-4 h-4 mr-2" />
                       Edit Profile
                     </Button>

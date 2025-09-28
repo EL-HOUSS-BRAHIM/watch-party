@@ -7,32 +7,8 @@ import { useTheme } from "next-themes"
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import {
-  Menu,
-  Home,
-  Play,
-  Users,
-  MessageCircle,
-  Search,
-  Bell,
-  Settings,
-  User,
-  LogOut,
-  Crown,
-  Store,
-  TrendingUp,
-  Calendar,
-  Heart,
-  History,
-  Trophy,
-  CreditCard,
-  HelpCircle,
-  Moon,
-  Sun,
-} from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useNotifications } from "@/hooks/use-api"
 

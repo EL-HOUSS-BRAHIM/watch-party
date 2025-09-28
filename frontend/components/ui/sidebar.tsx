@@ -109,7 +109,7 @@ const SidebarProvider = React.forwardRef<
       }
 
       window.addEventListener("keydown", handleKeyDown)
-      return () => window.removeEventListener(&quot;keydown", handleKeyDown)
+      return () => window.removeEventListener(&quot;keydown&quot;, handleKeyDown)
     }, [toggleSidebar])
 
     // We add a state so that we can do data-state="expanded" or "collapsed".
@@ -712,7 +712,7 @@ const SidebarMenuSubButton = React.forwardRef<
     size?: "sm" | "md"
     isActive?: boolean
   }
->(({ asChild = false, size = &quot;md", isActive, className, ...props }, ref) => {
+>(({ asChild = false, size = &quot;md&quot;, isActive, className, ...props }, ref) => {
   const Comp = asChild ? Slot : "a"
 
   return (

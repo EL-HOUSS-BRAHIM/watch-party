@@ -1,10 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Crown, Check, Star, Zap } from "lucide-react"
 import { useApi } from "@/hooks/use-api"
 import { useToast } from "@/hooks/use-toast"
@@ -27,21 +26,21 @@ export function BillingPlans() {
   const api = useApi()
   const { toast } = useToast()
 
-  useEffect(() => {
-    fetchPlans()
-  }, [])
-
-  const fetchPlans = async () => {
+  const fetchPlans = useCallback(async () => {
     try {
       setIsLoading(true)
       const response = await api.get("/billing/plans/")
       setPlans((response.data as Record<string, unknown>).plans || [])
-    } catch (err) {
+    } catch {
       console.error("Failed to load plans:", err)
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [api])
+
+  useEffect(() => {
+    fetchPlans()
+  }, [fetchPlans])
 
   const subscribeToPlan = async (planId: string) => {
     setSubscribing(planId)
@@ -54,7 +53,7 @@ export function BillingPlans() {
       })
       // Redirect to payment processor
       window.location.href = (response.data as Record<string, unknown>).checkout_url
-    } catch (err) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to start subscription",

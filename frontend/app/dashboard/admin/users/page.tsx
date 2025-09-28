@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -157,7 +156,7 @@ export default function UserManagementPage() {
       
       setUsers(transformedUsers)
       // setStats would need to be extracted from the response or fetched separately
-    } catch (error) {
+    } catch {
       console.error("Failed to load users:", error)
       toast({
         title: "Error",
@@ -217,7 +216,7 @@ export default function UserManagementPage() {
           filtered = filtered.filter((user) => !user.isPremium)
           break
         case "expired":
-          filtered = filtered.filter((user) => user.subscription && user.subscription.status === &quot;expired")
+          filtered = filtered.filter((user) => user.subscription && user.subscription.status === &quot;expired&quot;)
           break
       }
     }
@@ -263,7 +262,7 @@ export default function UserManagementPage() {
         title: "Action Completed",
         description: `Successfully ${action.type}ed ${userIds.length} user(s).`,
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to execute user action:", error)
       toast({
         title: "Action Failed",
@@ -310,7 +309,7 @@ export default function UserManagementPage() {
           description: "User data has been exported successfully.",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to export users:", error)
       toast({
         title: "Export Failed",
@@ -418,7 +417,7 @@ export default function UserManagementPage() {
       header: "Joined",
       cell: ({ row }: { row: AdminUser }) => (
         <div className="text-sm">
-          <div>{format(new Date(row.joinedAt), &quot;MMM dd, yyyy")}</div>
+          <div>{format(new Date(row.joinedAt), &quot;MMM dd, yyyy&quot;)}</div>
           <div className="text-muted-foreground">
             {formatDistanceToNow(new Date(row.joinedAt), { addSuffix: true })}
           </div>
@@ -432,7 +431,7 @@ export default function UserManagementPage() {
         <div className="text-sm">
           {row.lastActive ? (
             <>
-              <div>{format(new Date(row.lastActive), &quot;MMM dd, yyyy")}</div>
+              <div>{format(new Date(row.lastActive), &quot;MMM dd, yyyy&quot;)}</div>
               <div className="text-muted-foreground">
                 {formatDistanceToNow(new Date(row.lastActive), { addSuffix: true })}
               </div>
@@ -490,7 +489,7 @@ export default function UserManagementPage() {
           <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
           <p className="text-muted-foreground mb-4">You don&apos;t have permission to access user management.</p>
-          <Button onClick={() => router.push(&quot;/dashboard")}>Back to Dashboard</Button>
+          <Button onClick={() => router.push(&quot;/dashboard&quot;)}>Back to Dashboard</Button>
         </div>
       </div>
     )
@@ -514,7 +513,7 @@ export default function UserManagementPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -643,15 +642,15 @@ export default function UserManagementPage() {
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">{selectedUsers.length} user(s) selected</span>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;suspend")}>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;suspend&quot;)}>
                     <UserCheck className="h-4 w-4 mr-2" />
                     Suspend
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;ban")}>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;ban&quot;)}>
                     <Ban className="h-4 w-4 mr-2" />
                     Ban
                   </Button>
-                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;unban")}>
+                  <Button variant="outline" size="sm" onClick={() => handleBulkAction(&quot;unban&quot;)}>
                     <Unlock className="h-4 w-4 mr-2" />
                     Unban
                   </Button>

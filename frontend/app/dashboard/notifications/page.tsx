@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -14,25 +13,6 @@ import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { notificationsAPI } from "@/lib/api"
 import type { Notification as APINotification } from "@/lib/api/types"
-import {
-  Bell,
-  BellOff,
-  Check,
-  CheckCheck,
-  MoreHorizontal,
-  UserPlus,
-  Calendar,
-  MessageCircle,
-  Heart,
-  Star,
-  Info,
-  Trash2,
-  Settings,
-  ArrowLeft,
-  Loader2,
-  RefreshCw,
-  Video,
-} from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 import { CheckedState } from "@radix-ui/react-checkbox"
 
@@ -130,7 +110,7 @@ export default function NotificationsPage() {
         ...prev,
         unread: data.unread_count || 0
       }))
-    } catch (error) {
+    } catch {
       console.error("Failed to load notifications:", error)
       toast({
         title: "Error",
@@ -170,7 +150,7 @@ export default function NotificationsPage() {
       await notificationsAPI.markAsRead(notificationId)
       setNotifications((prev) => prev.map((n) => (n.id === notificationId ? { ...n, is_read: true } : n)))
       setStats((prev) => ({ ...prev, unread: Math.max(0, prev.unread - 1) }))
-    } catch (error) {
+    } catch {
       console.error("Failed to mark notification as read:", error)
     }
   }
@@ -184,7 +164,7 @@ export default function NotificationsPage() {
         title: "All Marked as Read",
         description: "All notifications have been marked as read.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to mark all as read:", error)
       toast({
         title: "Error",
@@ -203,7 +183,7 @@ export default function NotificationsPage() {
         total: prev.total - 1,
         unread: prev.unread - (notifications.find((n) => n.id === notificationId)?.is_read ? 0 : 1),
       }))
-    } catch (error) {
+    } catch {
       console.error("Failed to delete notification:", error)
       toast({
         title: "Error",
@@ -232,7 +212,7 @@ export default function NotificationsPage() {
         title: "Notifications Deleted",
         description: `${selectedNotifications.length} notifications deleted.`,
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to delete selected notifications:", error)
       toast({
         title: "Error",
@@ -271,7 +251,7 @@ export default function NotificationsPage() {
       } else if (notification.action_url) {
         router.push(notification.action_url)
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to handle notification action:", error)
       toast({
         title: "Error",
@@ -346,7 +326,7 @@ export default function NotificationsPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -372,7 +352,7 @@ export default function NotificationsPage() {
                 Mark All Read
               </Button>
             )}
-            <Button variant="outline" onClick={() => router.push(&quot;/dashboard/settings")}>
+            <Button variant="outline" onClick={() => router.push(&quot;/dashboard/settings&quot;)}>
               <Settings className="h-4 w-4 mr-2" />
               Settings
             </Button>
@@ -590,13 +570,13 @@ export default function NotificationsPage() {
                               <div className="flex items-center gap-2">
                                 {notification.type === "friend_request" && (
                                   <>
-                                    <Button size="sm" onClick={() => handleNotificationAction(notification, &quot;accept")}>
+                                    <Button size="sm" onClick={() => handleNotificationAction(notification, &quot;accept&quot;)}>
                                       Accept
                                     </Button>
                                     <Button
                                       variant="outline"
                                       size="sm"
-                                      onClick={() => handleNotificationAction(notification, &quot;decline")}
+                                      onClick={() => handleNotificationAction(notification, &quot;decline&quot;)}
                                     >
                                       Decline
                                     </Button>
@@ -606,7 +586,7 @@ export default function NotificationsPage() {
                                   <Button
                                     variant="outline"
                                     size="sm"
-                                    onClick={() => handleNotificationAction(notification, &quot;view")}
+                                    onClick={() => handleNotificationAction(notification, &quot;view&quot;)}
                                   >
                                     View
                                   </Button>

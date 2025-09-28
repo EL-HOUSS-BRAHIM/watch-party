@@ -13,7 +13,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/contexts/auth-context"
 import { cn } from "@/lib/utils"
-import { Upload, X, FileVideo, CheckCircle, AlertCircle, Cloud, HardDrive, Loader2 } from "lucide-react"
 
 interface UploadFile {
   id: string
@@ -42,7 +41,7 @@ export function VideoUploader({
 }: VideoUploaderProps) {
   const [uploadFiles, setUploadFiles] = useState<UploadFile[]>([])
   const [isDragOver, setIsDragOver] = useState(false)
-  const [uploadSource, setUploadSource] = useState<"local" | "cloud">(&quot;local")
+  const [uploadSource, setUploadSource] = useState<"local" | "cloud">(&quot;local&quot;)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { user } = useAuth()
   const { toast } = useToast()
@@ -156,7 +155,7 @@ export function VideoUploader({
               title: "Upload completed",
               description: `${uploadFile.title} is now being processed.`,
             })
-          } catch (parseError) {
+          } catch {
             console.error("Failed to parse upload response:", parseError)
             updateFile(uploadFile.id, { status: 'error', error: 'Invalid response from server' })
           }
@@ -165,7 +164,7 @@ export function VideoUploader({
           try {
             const errorResponse = JSON.parse(xhr.responseText)
             errorMessage = errorResponse.error || errorResponse.message || errorMessage
-          } catch (e) {
+          } catch {
             // Use default error message
           }
           updateFile(uploadFile.id, { status: 'error', error: errorMessage })
@@ -189,7 +188,7 @@ export function VideoUploader({
       xhr.timeout = 30 * 60 * 1000 // 30 minutes timeout
       xhr.send(formData)
 
-    } catch (error) {
+    } catch {
       console.error("Upload error:", error)
       updateFile(uploadFile.id, { status: "error", error: error instanceof Error ? error.message : "Upload failed" })
       toast({
@@ -238,7 +237,7 @@ export function VideoUploader({
           }
           // If status is still 'processing', continue polling
         }
-      } catch (error) {
+      } catch {
         console.error("Failed to check processing status:", error)
         // Continue polling - don't clear interval on temporary errors
       }
@@ -252,7 +251,7 @@ export function VideoUploader({
   }
 
   const uploadAllFiles = async () => {
-    const pendingFiles = uploadFiles.filter((f) => f.status === &quot;pending")
+    const pendingFiles = uploadFiles.filter((f) => f.status === &quot;pending&quot;)
 
     for (const file of pendingFiles) {
       await uploadFile(file)
@@ -333,7 +332,7 @@ export function VideoUploader({
           <div className="grid grid-cols-2 gap-4">
             <Button
               variant={uploadSource === "local" ? "default" : "outline"}
-              onClick={() => setUploadSource(&quot;local")}
+              onClick={() => setUploadSource(&quot;local&quot;)}
               className="h-20 flex-col"
             >
               <HardDrive className="w-6 h-6 mb-2" />
@@ -341,7 +340,7 @@ export function VideoUploader({
             </Button>
             <Button
               variant={uploadSource === "cloud" ? "default" : "outline"}
-              onClick={() => setUploadSource(&quot;cloud")}
+              onClick={() => setUploadSource(&quot;cloud&quot;)}
               className="h-20 flex-col"
             >
               <Cloud className="w-6 h-6 mb-2" />
@@ -400,7 +399,7 @@ export function VideoUploader({
                     <Button
                       variant="outline"
                       onClick={() => setUploadFiles([])}
-                      disabled={uploadFiles.some((f) => f.status === &quot;uploading" || f.status === "processing")}
+                      disabled={uploadFiles.some((f) => f.status === &quot;uploading&quot; || f.status === &quot;processing")}
                     >
                       Clear All
                     </Button>
@@ -408,8 +407,8 @@ export function VideoUploader({
                       onClick={uploadAllFiles}
                       disabled={
                         uploadFiles.length === 0 ||
-                        uploadFiles.every((f) => f.status !== &quot;pending") ||
-                        uploadFiles.some((f) => f.status === "uploading" || f.status === "processing")
+                        uploadFiles.every((f) => f.status !== &quot;pending&quot;) ||
+                        uploadFiles.some((f) => f.status === &quot;uploading" || f.status === "processing")
                       }
                     >
                       Upload All

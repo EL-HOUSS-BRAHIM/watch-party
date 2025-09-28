@@ -57,7 +57,7 @@ export function SessionExpiryModal({ isOpen, onClose, expiresAt }: SessionExpiry
     try {
       await refreshTokens()
       onClose()
-    } catch (error) {
+    } catch {
       await handleExpiry()
     } finally {
       setIsExtending(false)

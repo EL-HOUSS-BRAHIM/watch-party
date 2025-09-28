@@ -45,7 +45,7 @@ const persist = () => {
     } else {
       storage.removeItem(REFRESH_TOKEN_KEY)
     }
-  } catch (error) {
+  } catch {
     console.warn("Failed to persist auth tokens to sessionStorage", error)
   }
 }

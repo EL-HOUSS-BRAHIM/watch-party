@@ -1,15 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { 
-  ComputerDesktopIcon,
-  DevicePhoneMobileIcon,
-  GlobeAltIcon,
-  MapPinIcon,
-  CalendarIcon,
-  TrashIcon,
-  ShieldCheckIcon
-} from '@heroicons/react/24/outline'
 
 interface Session {
   id: string
@@ -254,14 +245,14 @@ export default function SessionsPage() {
           
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-green-400 mb-2">
-              {sessions.filter(s => s.deviceType === &apos;desktop').length}
+              {sessions.filter(s => s.deviceType === &apos;desktop&apos;).length}
             </div>
             <div className="text-white/70">Desktop Sessions</div>
           </div>
           
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-purple-400 mb-2">
-              {sessions.filter(s => s.deviceType === &apos;mobile' || s.deviceType === 'tablet').length}
+              {sessions.filter(s => s.deviceType === &apos;mobile&apos; || s.deviceType === &apos;tablet').length}
             </div>
             <div className="text-white/70">Mobile Sessions</div>
           </div>

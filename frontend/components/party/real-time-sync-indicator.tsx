@@ -4,16 +4,6 @@ import { useState, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
-import { 
-  Wifi, 
-  WifiOff, 
-  AlertCircle, 
-  CheckCircle, 
-  RefreshCw, 
-  Users,
-  Signal,
-  Activity
-} from 'lucide-react'
 
 interface SyncStatus {
   is_synced: boolean
@@ -88,7 +78,7 @@ export function RealTimeSyncIndicator({
 
   const formatTimeDifference = (diff: number) => {
     if (Math.abs(diff) < 0.5) return 'Perfect sync'
-    const sign = diff > 0 ? &apos;+' : ''
+    const sign = diff > 0 ? &apos;+&apos; : &apos;'
     return `${sign}${diff.toFixed(1)}s`
   }
 
@@ -210,7 +200,7 @@ export function RealTimeSyncIndicator({
         </Badge>
         
         <Badge 
-          variant={syncStatus.buffer_health > 50 ? &quot;secondary" : "destructive"}
+          variant={syncStatus.buffer_health > 50 ? &quot;secondary&quot; : &quot;destructive"}
           className="text-xs"
         >
           Buffer: {syncStatus.buffer_health}%

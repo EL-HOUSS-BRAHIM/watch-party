@@ -9,7 +9,6 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts'
-import { Users, Clock, ThumbsUp, MessageCircle, Download, TrendingUp, UserCheck } from 'lucide-react'
 
 interface PartyAnalyticsModalProps {
   isOpen: boolean
@@ -61,7 +60,7 @@ export function PartyAnalyticsModal({ isOpen, onClose, partyId, partyTitle }: Pa
         const data = await response.json()
         setAnalytics(data)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch party analytics:', error)
     } finally {
       setLoading(false)

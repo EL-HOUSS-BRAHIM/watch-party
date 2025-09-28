@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -12,17 +11,6 @@ import {
   DropdownMenuSeparator, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu'
-import { 
-  Crown, 
-  MoreVertical, 
-  Shield, 
-  UserX, 
-  MessageSquareOff, 
-  Volume2, 
-  VolumeX,
-  UserCheck,
-  Settings
-} from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
 
 interface Participant {
@@ -109,7 +97,7 @@ export function HostControlPanel({
           })
           break
       }
-    } catch (error) {
+    } catch {
       toast({
         title: 'Action failed',
         description: 'Unable to perform this action.',
@@ -178,7 +166,7 @@ export function HostControlPanel({
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">
-              {participants.filter(p => p.status === &apos;active').length}
+              {participants.filter(p => p.status === &apos;active&apos;).length}
             </div>
             <div className="text-xs text-gray-600 dark:text-gray-400">
               Active
@@ -246,14 +234,14 @@ export function HostControlPanel({
                       <>
                         {participant.role === 'member' ? (
                           <DropdownMenuItem
-                            onClick={() => handleAction(&apos;promote', participant.id, 'co-host')}
+                            onClick={() => handleAction(&apos;promote&apos;, participant.id, &apos;co-host')}
                           >
                             <UserCheck className="w-4 h-4 mr-2" />
                             Promote to Co-host
                           </DropdownMenuItem>
                         ) : (
                           <DropdownMenuItem
-                            onClick={() => handleAction(&apos;demote', participant.id)}
+                            onClick={() => handleAction(&apos;demote&apos;, participant.id)}
                           >
                             <UserX className="w-4 h-4 mr-2" />
                             Demote to Member
@@ -264,7 +252,7 @@ export function HostControlPanel({
                     )}
 
                     <DropdownMenuItem
-                      onClick={() => handleAction(&apos;mute', participant.id, !participant.is_muted)}
+                      onClick={() => handleAction(&apos;mute&apos;, participant.id, !participant.is_muted)}
                     >
                       {participant.is_muted ? (
                         <>
@@ -282,7 +270,7 @@ export function HostControlPanel({
                     <DropdownMenuSeparator />
 
                     <DropdownMenuItem
-                      onClick={() => handleAction(&apos;kick', participant.id)}
+                      onClick={() => handleAction(&apos;kick&apos;, participant.id)}
                       className="text-orange-600"
                     >
                       <UserX className="w-4 h-4 mr-2" />
@@ -291,7 +279,7 @@ export function HostControlPanel({
 
                     {isHost && (
                       <DropdownMenuItem
-                        onClick={() => handleAction(&apos;ban', participant.id)}
+                        onClick={() => handleAction(&apos;ban&apos;, participant.id)}
                         className="text-red-600"
                       >
                         <MessageSquareOff className="w-4 h-4 mr-2" />

@@ -6,47 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { socialAPI, usersAPI } from "@/lib/api"
-import {
-  UserPlus,
-  Users,
-  Search,
-  Filter,
-  RefreshCw,
-  Sparkles,
-  Heart,
-  MessageCircle,
-  Eye,
-  Check,
-  X,
-  Star,
-  Globe,
-  MapPin,
-  Calendar,
-  Film,
-  Tv,
-  Music,
-  Gamepad2,
-  BookOpen,
-  Camera,
-  Plane,
-  Coffee,
-  Loader2,
-  TrendingUp,
-  UserCheck,
-  Clock,
-  Mail,
-  Phone,
-  Link as LinkIcon,
-  Github,
-  Twitter,
-  Instagram,
-  Facebook
-} from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
 
 interface MutualFriend {
@@ -144,7 +107,7 @@ export default function FriendSuggestionsPage() {
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load suggestions:", error)
       toast({
         title: "Error",
@@ -251,7 +214,7 @@ export default function FriendSuggestionsPage() {
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Send friend request error:", error)
       toast({
         title: "Error",
@@ -310,8 +273,8 @@ export default function FriendSuggestionsPage() {
   }
 
   const getCompatibilityColor = (score: number) => {
-    if (score >= 80) return &quot;text-green-600 bg-green-50"
-    if (score >= 60) return "text-yellow-600 bg-yellow-50"
+    if (score >= 80) return &quot;text-green-600 bg-green-50&quot;
+    if (score >= 60) return &quot;text-yellow-600 bg-yellow-50"
     return "text-gray-600 bg-gray-50"
   }
 
@@ -448,7 +411,7 @@ export default function FriendSuggestionsPage() {
                   <UserPlus className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No suggestions found</h3>
                   <p className="text-gray-600">
-                    {searchQuery || Object.values(filters).some(f => f !== &quot;all" && f !== false)
+                    {searchQuery || Object.values(filters).some(f => f !== &quot;all&quot; && f !== false)
                       ? "Try adjusting your search or filters"
                       : "Check back later for new friend suggestions"
                     }

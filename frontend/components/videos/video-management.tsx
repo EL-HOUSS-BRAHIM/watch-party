@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 import { useToast } from '@/hooks/use-toast'
 import {
@@ -52,27 +51,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import {
-  Video,
-  Search,
-  Filter,
-  MoreHorizontal,
-  Play,
-  Pause,
-  Eye,
-  EyeOff,
-  Edit,
-  Trash2,
-  Download,
-  Share2,
-  Calendar,
-  Clock,
-  FileText,
-  Upload,
-  CheckCircle,
-  XCircle,
-  AlertCircle
-} from 'lucide-react'
 
 interface VideoManagementProps {
   className?: string
@@ -167,7 +145,7 @@ export function VideoManagement({ className }: VideoManagementProps) {
         const pageSize = data.pagination?.page_size ?? 20
         setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to load videos:', error)
       toast({
         title: 'Error',
@@ -192,7 +170,7 @@ export function VideoManagement({ className }: VideoManagementProps) {
         const data = await response.json()
         setStats(data)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to load video stats:', error)
     }
   }
@@ -223,7 +201,7 @@ export function VideoManagement({ className }: VideoManagementProps) {
           description: actionMessages[action as keyof typeof actionMessages] || 'Action completed successfully',
         })
       }
-    } catch (error) {
+    } catch {
       console.error(`Failed to ${action} video:`, error)
       toast({
         title: 'Error',
@@ -260,7 +238,7 @@ export function VideoManagement({ className }: VideoManagementProps) {
           description: `Bulk ${bulkAction} completed successfully`,
         })
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to perform bulk action:', error)
       toast({
         title: 'Error',
@@ -472,7 +450,7 @@ export function VideoManagement({ className }: VideoManagementProps) {
           {selectedVideos.length > 0 && (
             <div className="flex items-center gap-4 mt-4 p-4 bg-muted rounded-lg">
               <span className="text-sm font-medium">
-                {selectedVideos.length} video{selectedVideos.length > 1 ? &apos;s' : ''} selected
+                {selectedVideos.length} video{selectedVideos.length > 1 ? &apos;s&apos; : &apos;'} selected
               </span>
               
               <Select value={bulkAction} onValueChange={setBulkAction}>
@@ -633,24 +611,24 @@ export function VideoManagement({ className }: VideoManagementProps) {
                         <DropdownMenuSeparator />
                         
                         {video.status === 'active' ? (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;deactivate')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;deactivate&apos;)}>
                             <Pause className="w-4 h-4 mr-2" />
                             Deactivate
                           </DropdownMenuItem>
                         ) : (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;activate')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;activate&apos;)}>
                             <Play className="w-4 h-4 mr-2" />
                             Activate
                           </DropdownMenuItem>
                         )}
                         
                         {video.isPublished ? (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;unpublish')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;unpublish&apos;)}>
                             <EyeOff className="w-4 h-4 mr-2" />
                             Unpublish
                           </DropdownMenuItem>
                         ) : (
-                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;publish')}>
+                          <DropdownMenuItem onClick={() => handleVideoAction(video.id, &apos;publish&apos;)}>
                             <Eye className="w-4 h-4 mr-2" />
                             Publish
                           </DropdownMenuItem>
@@ -674,7 +652,7 @@ export function VideoManagement({ className }: VideoManagementProps) {
                             </AlertDialogHeader>
                             <AlertDialogFooter>
                               <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleVideoAction(video.id, &apos;delete')}>
+                              <AlertDialogAction onClick={() => handleVideoAction(video.id, &apos;delete&apos;)}>
                                 Delete
                               </AlertDialogAction>
                             </AlertDialogFooter>

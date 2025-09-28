@@ -41,9 +41,9 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
     setIsLoadingConnection(true)
     try {
       const { connections } = await integrationsAPI.getConnections()
-      const driveConnection = connections.find(conn => conn.provider === &apos;google_drive') || null
+      const driveConnection = connections.find(conn => conn.provider === &apos;google_drive&apos;) || null
       setConnection(driveConnection)
-    } catch (error) {
+    } catch {
       console.error('Failed to load Google Drive connection', error)
       toast({
         title: 'Unable to load Google Drive status',
@@ -70,7 +70,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
         )
         setFiles(response.files || [])
         setNextPageToken(response.next_page_token)
-      } catch (error) {
+      } catch {
         console.error('Failed to load Google Drive files', error)
         toast({
           title: 'Unable to load Drive files',
@@ -107,7 +107,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
     try {
       const { auth_url } = await integrationsAPI.getGoogleDriveAuthUrl()
       window.location.assign(auth_url)
-    } catch (error) {
+    } catch {
       console.error('Failed to start Google Drive OAuth', error)
       toast({
         title: 'Connection error',
@@ -128,7 +128,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
       })
       setConnection(null)
       setFiles([])
-    } catch (error) {
+    } catch {
       console.error('Failed to disconnect Google Drive', error)
       toast({
         title: 'Unable to disconnect',
@@ -147,7 +147,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
         title: 'Streaming link ready',
         description: 'Use this link to play the file inside your watch party.',
       })
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch streaming URL', error)
       toast({
         title: 'Could not fetch streaming link',
@@ -239,7 +239,7 @@ export function GoogleDriveWorkspace({ className }: GoogleDriveWorkspaceProps) {
         </CardContent>
         <CardFooter className="flex flex-wrap items-center justify-between gap-3">
           <div className="text-sm text-muted-foreground">
-            {files.length > 0 ? `${files.length} files • ${formatBytes(totalSize)}` : &apos;No files loaded yet'}
+            {files.length > 0 ? `${files.length} files • ${formatBytes(totalSize)}` : &apos;No files loaded yet&apos;}
           </div>
           <div className="flex items-center gap-2">
             <Button

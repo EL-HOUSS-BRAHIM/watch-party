@@ -7,25 +7,6 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useApiToast } from "@/hooks/use-toast"
-import { 
-  Gift,
-  Star,
-  Trophy,
-  Crown,
-  Zap,
-  Target,
-  Calendar,
-  Users,
-  Play,
-  MessageSquare,
-  Heart,
-  Clock,
-  Coins,
-  CheckCircle,
-  Lock,
-  Sparkles,
-  Award
-} from 'lucide-react'
 
 interface Reward {
   id: string
@@ -92,22 +73,22 @@ export function StoreRewards() {
 
   const loadRewards = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/store/rewards'))
+      const response = await apiRequest(() => fetch(&apos;/api/store/rewards&apos;))
       if (response) {
         setRewards(response)
       }
-    } catch (error) {
+    } catch {
       toastError(error, 'Failed to load rewards')
     }
   }
 
   const loadDailyRewards = async () => {
     try {
-      const response = await apiRequest(() => fetch('/api/store/rewards/daily'))
+      const response = await apiRequest(() => fetch(&apos;/api/store/rewards/daily'))
       if (response) {
         setDailyRewards(response)
       }
-    } catch (error) {
+    } catch {
       toastError(error, 'Failed to load daily rewards')
     }
   }
@@ -118,7 +99,7 @@ export function StoreRewards() {
       if (response) {
         setLoginStreak(response)
       }
-    } catch (error) {
+    } catch {
       toastError(error, 'Failed to load login streak')
     } finally {
       setLoading(false)
@@ -362,7 +343,7 @@ function DailyRewardCard({
       case 'item':
         return (
           <div className="text-center">
-            <div className="text-2xl mb-1">{dailyReward.reward.itemIcon || &apos;📦'}</div>
+            <div className="text-2xl mb-1">{dailyReward.reward.itemIcon || &apos;📦&apos;}</div>
             <div className="text-xs">{dailyReward.reward.itemName}</div>
           </div>
         )
@@ -488,7 +469,7 @@ function RewardCard({
       return (
         <div className="flex items-center space-x-1">
           <Crown className="h-4 w-4 text-purple-500" />
-          <span>&quot;{reward.value.title}"</span>
+          <span>&quot;{reward.value.title}&quot;</span>
         </div>
       )
     }
@@ -550,7 +531,7 @@ function RewardCard({
                   {getRequirementIcon(req.type)}
                   <span>{req.description}</span>
                 </div>
-                <span className={req.current >= req.target ? &apos;text-green-500' : ''}>
+                <span className={req.current >= req.target ? &apos;text-green-500&apos; : &apos;'}>
                   {req.current}/{req.target}
                 </span>
               </div>
@@ -575,7 +556,7 @@ function RewardCard({
               Claimed
             </Button>
           ) : reward.isClaimable ? (
-            <Button onClick={() => onClaim(reward.id)} className=&quot;w-full">
+            <Button onClick={() => onClaim(reward.id)} className=&quot;w-full&quot;>
               <Gift className="h-4 w-4 mr-2" />
               Claim Reward
             </Button>

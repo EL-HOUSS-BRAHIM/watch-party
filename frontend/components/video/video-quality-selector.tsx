@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { Settings, Check, Monitor, Smartphone, Wifi } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,

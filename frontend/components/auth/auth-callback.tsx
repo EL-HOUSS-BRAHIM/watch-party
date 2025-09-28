@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation"
 
 import { useToast } from "@/hooks/use-toast"
 import { tokenStorage } from "@/lib/auth/token-storage"
-import { Loader2, AlertCircle } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -70,7 +69,7 @@ export function AuthCallback() {
 
         // Redirect to dashboard
         router.push("/dashboard")
-      } catch (error) {
+      } catch {
         console.error("Social auth callback error:", error)
         setError(error instanceof Error ? error.message : "Authentication failed")
         
@@ -121,7 +120,7 @@ export function AuthCallback() {
             <p className="text-sm text-muted-foreground">{error}</p>
             <div className="flex space-x-2">
               <Button 
-                onClick={() => router.push(&quot;/login")}
+                onClick={() => router.push(&quot;/login&quot;)}
                 className="flex-1"
               >
                 Back to Login

@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
-import { MapPin, CreditCard, Shield, AlertCircle } from 'lucide-react'
+import { MapPin, CreditCard, Shield} from 'lucide-react'
 import { useApi } from '@/hooks/use-api'
 import { useToast } from '@/hooks/use-toast'
 import { LoadingSpinner } from '@/components/ui/loading'
@@ -79,12 +79,12 @@ export function BillingAddressView() {
     fetchAddresses()
   }, [])
 
-  const fetchAddresses = async () => {
+  const fetchAddresses = useCallback(async () => {
     try {
       setIsLoading(true)
       const response = await get('/billing/addresses/')
       setAddresses((response.data as BillingAddress[]) || [])
-    } catch (error: unknown) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to load billing addresses',
@@ -93,9 +93,9 @@ export function BillingAddressView() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     try {
       setIsSaving(true)
       
@@ -127,7 +127,7 @@ export function BillingAddressView() {
       setEditingAddress(null)
       setIsAddingNew(false)
       resetForm()
-    } catch (error: unknown) {
+    } catch {
       toast({
         title: 'Error',
         description: error.response?.data?.message || 'Failed to save billing address',
@@ -136,7 +136,7 @@ export function BillingAddressView() {
     } finally {
       setIsSaving(false)
     }
-  }
+  }, [])
 
   const handleDelete = async (addressId: string) => {
     if (!confirm('Are you sure you want to delete this billing address?')) return
@@ -148,7 +148,7 @@ export function BillingAddressView() {
         description: 'Billing address deleted successfully'
       })
       await fetchAddresses()
-    } catch (error: unknown) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to delete billing address',
@@ -165,7 +165,7 @@ export function BillingAddressView() {
         description: 'Default billing address updated'
       })
       await fetchAddresses()
-    } catch (error: unknown) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to update default address',

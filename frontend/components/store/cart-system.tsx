@@ -51,7 +51,7 @@ export function CartSystem({ children, onCheckoutComplete }: CartSystemProps) {
       setIsLoading(true)
       const response = await get('/store/cart/')
       setCartItems((response.data as Record<string, unknown>)?.items || [])
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to load cart',
@@ -75,7 +75,7 @@ export function CartSystem({ children, onCheckoutComplete }: CartSystemProps) {
           item.id === itemId ? { ...item, quantity: newQuantity } : item
         )
       )
-    } catch (error: unknown) {
+    } catch {
       toast({
         title: 'Error',
         description: error.response?.data?.message || 'Failed to update quantity',
@@ -92,7 +92,7 @@ export function CartSystem({ children, onCheckoutComplete }: CartSystemProps) {
         title: 'Item removed',
         description: 'Item has been removed from your cart',
       })
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to remove item',
@@ -109,7 +109,7 @@ export function CartSystem({ children, onCheckoutComplete }: CartSystemProps) {
         title: 'Cart cleared',
         description: 'All items have been removed from your cart',
       })
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to clear cart',
@@ -133,7 +133,7 @@ export function CartSystem({ children, onCheckoutComplete }: CartSystemProps) {
       setCartItems([])
       setIsOpen(false)
       onCheckoutComplete?.()
-    } catch (error: unknown) {
+    } catch {
       toast({
         title: 'Checkout failed',
         description: error.response?.data?.message || 'Failed to complete purchase',
@@ -173,7 +173,7 @@ export function CartSystem({ children, onCheckoutComplete }: CartSystemProps) {
               variant="destructive" 
               className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
             >
-              {totalItems > 99 ? &apos;99+' : totalItems}
+              {totalItems > 99 ? &apos;99+&apos; : totalItems}
             </Badge>
           )}
         </div>

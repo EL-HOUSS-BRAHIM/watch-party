@@ -1,11 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Shield, ShieldAlert, RotateCcw, Search, AlertTriangle, UserX, Calendar, Loader2, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
@@ -91,7 +89,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
         const data = await response.json()
         setBlockedUsers(data.blocks || [])
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load blocked users:", error)
       toast({
         title: "Failed to load blocked users",
@@ -124,7 +122,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
       } else {
         throw new Error("Failed to unblock user")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to unblock user:", error)
       toast({
         title: "Failed to unblock user",
@@ -162,7 +160,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
       } else {
         throw new Error("Failed to block user")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to block user:", error)
       toast({
         title: "Failed to block user",
@@ -246,7 +244,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
               )}
 
               <div className="flex items-center gap-2 mb-2">
-                <Badge variant={reasonDisplay.color as Record<string, unknown>} className=&quot;text-xs">
+                <Badge variant={reasonDisplay.color as Record<string, unknown>} className=&quot;text-xs&quot;>
                   <ShieldAlert className="h-3 w-3 mr-1" />
                   {reasonDisplay.label}
                 </Badge>
@@ -320,7 +318,7 @@ export default function BlockListManagement({ className }: BlockListManagementPr
               {searchQuery ? (
                 <>
                   <Search className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>No blocked users found matching &quot;{searchQuery}"</p>
+                  <p>No blocked users found matching &quot;{searchQuery}&quot;</p>
                 </>
               ) : (
                 <>

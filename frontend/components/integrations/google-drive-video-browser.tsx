@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
   Play, 
@@ -92,7 +91,7 @@ export function GoogleDriveVideoBrowser({
       })) as DriveFile[]
 
       setFiles(mappedFiles)
-    } catch (error: unknown) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to load Google Drive files',
@@ -216,7 +215,7 @@ export function GoogleDriveVideoBrowser({
           <div className="flex items-center gap-2 text-sm">
             {folderPath.map((folder, index) => (
               <div key={folder.id} className="flex items-center gap-2">
-                {index > 0 && <span className=&quot;text-gray-400">/</span>}
+                {index > 0 && <span className=&quot;text-gray-400&quot;>/</span>}
                 <button
                   onClick={() => handleBreadcrumbClick(index)}
                   className="hover:text-blue-600 transition-colors"

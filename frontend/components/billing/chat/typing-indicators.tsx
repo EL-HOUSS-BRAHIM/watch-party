@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { chatAPI } from '@/lib/api'
 import { useToast } from '@/hooks/use-toast'
 
@@ -77,7 +76,7 @@ export function TypingIndicators({
         if (errorNotifiedRef.current) {
           errorNotifiedRef.current = false
         }
-      } catch (error) {
+      } catch {
         if (!errorNotifiedRef.current) {
           console.error('Failed to load typing indicators:', error)
           toast({

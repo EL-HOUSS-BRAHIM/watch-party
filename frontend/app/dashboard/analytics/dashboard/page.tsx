@@ -7,14 +7,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
-import { 
-  Users, 
-  DollarSign, 
-  TrendingUp, 
-  Activity,
-  Download,
-  RefreshCw
-} from 'lucide-react';
 import { analyticsAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
@@ -120,7 +112,7 @@ export default function AdminAnalyticsDashboard() {
       };
 
       setMetrics(transformedMetrics);
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch admin metrics:', error);
       toast({
         title: "Error",
@@ -158,7 +150,7 @@ export default function AdminAnalyticsDashboard() {
         title: "Success",
         description: "Analytics data exported successfully.",
       });
-    } catch (error) {
+    } catch {
       console.error('Failed to export analytics:', error);
       toast({
         title: "Error",

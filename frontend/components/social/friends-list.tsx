@@ -4,7 +4,6 @@ import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/contexts/auth-context"
@@ -83,7 +82,7 @@ export function FriendsList({ className }: FriendsListProps) {
       } else {
         throw new Error("Failed to load friends")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load friends:", error)
       toast({
         title: "Error",
@@ -116,7 +115,7 @@ export function FriendsList({ className }: FriendsListProps) {
         title: "Friend removed",
         description: "The user has been removed from your friends list.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to remove friend:", error)
       toast({
         title: "Error",
@@ -147,7 +146,7 @@ export function FriendsList({ className }: FriendsListProps) {
         title: "User blocked",
         description: "The user has been blocked and removed from your friends list.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to block user:", error)
       toast({
         title: "Error",
@@ -254,8 +253,8 @@ export function FriendsList({ className }: FriendsListProps) {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
           <TabsTrigger value="all">All Friends ({friends.length})</TabsTrigger>
-          <TabsTrigger value="online">Online ({friends.filter((f) => f.status === &quot;online").length})</TabsTrigger>
-          <TabsTrigger value="offline">Offline ({friends.filter((f) => f.status === &quot;offline").length})</TabsTrigger>
+          <TabsTrigger value="online">Online ({friends.filter((f) => f.status === &quot;online&quot;).length})</TabsTrigger>
+          <TabsTrigger value="offline">Offline ({friends.filter((f) => f.status === &quot;offline&quot;).length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className="mt-6">
@@ -337,11 +336,11 @@ export function FriendsList({ className }: FriendsListProps) {
                             <Video className="w-4 h-4 mr-2" />
                             Invite to Party
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => removeFriend(friend.id)} className=&quot;text-orange-600">
+                          <DropdownMenuItem onClick={() => removeFriend(friend.id)} className=&quot;text-orange-600&quot;>
                             <UserMinus className="w-4 h-4 mr-2" />
                             Remove Friend
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => blockUser(friend.id)} className=&quot;text-destructive">
+                          <DropdownMenuItem onClick={() => blockUser(friend.id)} className=&quot;text-destructive&quot;>
                             <UserX className="w-4 h-4 mr-2" />
                             Block User
                           </DropdownMenuItem>
@@ -385,11 +384,11 @@ export function FriendsList({ className }: FriendsListProps) {
 
                     {/* Quick Actions */}
                     <div className="flex space-x-2 mt-4">
-                      <Button variant="outline" size="sm" onClick={() => startChat(friend.id)} className=&quot;flex-1">
+                      <Button variant="outline" size="sm" onClick={() => startChat(friend.id)} className=&quot;flex-1&quot;>
                         <MessageCircle className="w-4 h-4 mr-1" />
                         Chat
                       </Button>
-                      <Button variant="outline" size="sm" onClick={() => inviteToParty(friend.id)} className=&quot;flex-1">
+                      <Button variant="outline" size="sm" onClick={() => inviteToParty(friend.id)} className=&quot;flex-1&quot;>
                         <Video className="w-4 h-4 mr-1" />
                         Invite
                       </Button>

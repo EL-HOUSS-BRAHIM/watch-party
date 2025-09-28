@@ -11,32 +11,6 @@ import { Slider } from "@/components/ui/slider"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
-import {
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
-  Maximize,
-  Minimize,
-  Users,
-  MessageCircle,
-  Send,
-  Crown,
-  UserMinus,
-  MoreHorizontal,
-  Share2,
-  Heart,
-  ThumbsUp,
-  ArrowLeft,
-  Loader2,
-  Wifi,
-  WifiOff,
-  AlertTriangle,
-  Settings,
-  Video,
-  Mic,
-  MicOff,
-} from "lucide-react"
 
 interface Participant {
   id: string
@@ -147,7 +121,7 @@ export default function WatchRoomPage() {
   const [showChat, setShowChat] = useState(true)
   const [newMessage, setNewMessage] = useState("")
   const [isHost, setIsHost] = useState(false)
-  const [userRole, setUserRole] = useState<"host" | "moderator" | "participant">(&quot;participant")
+  const [userRole, setUserRole] = useState<"host" | "moderator" | "participant">(&quot;participant&quot;)
 
   const wsRef = useRef<WebSocket | null>(null)
 
@@ -188,7 +162,7 @@ export default function WatchRoomPage() {
       } else {
         throw new Error("Failed to load party data")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load party:", error)
       // Mock data for demonstration
       setParty({
@@ -477,8 +451,8 @@ export default function WatchRoomPage() {
           <CardContent className="p-8 text-center">
             <AlertTriangle className="h-12 w-12 text-white mx-auto mb-4" />
             <h2 className="text-xl font-bold text-white mb-2">Party Not Found</h2>
-            <p className="text-white/70 mb-6">This watch party doesn&apos;t exist or you don't have access to it.</p>
-            <Button onClick={() => router.push(&quot;/dashboard")} className="bg-white text-black hover:bg-white/90">
+            <p className="text-white/70 mb-6">This watch party doesn&apos;t exist or you don&apos;t have access to it.</p>
+            <Button onClick={() => router.push(&quot;/dashboard&quot;)} className=&quot;bg-white text-black hover:bg-white/90">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Dashboard
             </Button>
@@ -496,7 +470,7 @@ export default function WatchRoomPage() {
           <div className="flex items-center space-x-4">
             <Button
               variant="ghost"
-              onClick={() => router.push(&quot;/dashboard")}
+              onClick={() => router.push(&quot;/dashboard&quot;)}
               className="text-white hover:bg-white/10"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -576,7 +550,7 @@ export default function WatchRoomPage() {
                     max={party.video.duration}
                     step={1}
                     className="w-full"
-                    onValueChange={([value]) => handleVideoControl(&quot;seek", value)}
+                    onValueChange={([value]) => handleVideoControl(&quot;seek&quot;, value)}
                   />
                   <div className="flex justify-between text-xs text-white/70 mt-1">
                     <span>{formatTime(syncState.currentTime)}</span>
@@ -590,10 +564,10 @@ export default function WatchRoomPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleVideoControl(syncState.isPlaying ? &quot;pause" : "play")}
+                      onClick={() => handleVideoControl(syncState.isPlaying ? &quot;pause&quot; : &quot;play")}
                       className="text-white hover:bg-white/20"
                     >
-                      {syncState.isPlaying ? <Pause className="h-5 w-5" /> : <Play className=&quot;h-5 w-5" />}
+                      {syncState.isPlaying ? <Pause className="h-5 w-5" /> : <Play className=&quot;h-5 w-5&quot; />}
                     </Button>
 
                     <div className="flex items-center space-x-2">
@@ -603,7 +577,7 @@ export default function WatchRoomPage() {
                         onClick={() => setIsMuted(!isMuted)}
                         className="text-white hover:bg-white/20"
                       >
-                        {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4" />}
+                        {isMuted ? <VolumeX className="h-4 w-4" /> : <Volume2 className=&quot;h-4 w-4&quot; />}
                       </Button>
                       <Slider
                         value={[volume]}
@@ -626,7 +600,7 @@ export default function WatchRoomPage() {
                       onClick={() => setIsFullscreen(!isFullscreen)}
                       className="text-white hover:bg-white/20"
                     >
-                      {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className=&quot;h-4 w-4" />}
+                      {isFullscreen ? <Minimize className="h-4 w-4" /> : <Maximize className=&quot;h-4 w-4&quot; />}
                     </Button>
                   </div>
                 </div>
@@ -639,7 +613,7 @@ export default function WatchRoomPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => sendReaction(&quot;heart")}
+                  onClick={() => sendReaction(&quot;heart&quot;)}
                   className="bg-black/50 text-white hover:bg-black/70"
                 >
                   <Heart className="h-4 w-4" />
@@ -647,7 +621,7 @@ export default function WatchRoomPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => sendReaction(&quot;like")}
+                  onClick={() => sendReaction(&quot;like&quot;)}
                   className="bg-black/50 text-white hover:bg-black/70"
                 >
                   <ThumbsUp className="h-4 w-4" />
@@ -766,7 +740,7 @@ export default function WatchRoomPage() {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Type a message..."
-                    onKeyPress={(e) => e.key === &quot;Enter" && sendChatMessage()}
+                    onKeyPress={(e) => e.key === &quot;Enter&quot; && sendChatMessage()}
                     className="flex-1 bg-white/10 border-white/20 text-white placeholder-white/60 focus:border-white/40"
                   />
                   <Button onClick={sendChatMessage} className="bg-white text-black hover:bg-white/90">

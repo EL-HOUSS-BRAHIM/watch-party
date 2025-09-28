@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
@@ -15,7 +14,6 @@ import {
 import { NotificationBell } from "@/components/notifications/notification-bell"
 import { useAuth } from "@/contexts/auth-context"
 import { useAppStore } from "@/lib/stores/ui-store"
-import { Menu, Search, Plus, Crown, User, Settings, CreditCard, LogOut, Moon, Sun } from "lucide-react"
 import Link from "next/link"
 
 export function DashboardHeader() {
@@ -25,7 +23,7 @@ export function DashboardHeader() {
   const handleLogout = async () => {
     try {
       await logout()
-    } catch (error) {
+    } catch {
       console.error("Logout error:", error)
     }
   }
@@ -66,7 +64,7 @@ export function DashboardHeader() {
 
         {/* Theme Toggle */}
         <Button variant="ghost" size="icon" onClick={toggleTheme}>
-          {ui.theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className=&quot;w-5 h-5" />}
+          {ui.theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className=&quot;w-5 h-5&quot; />}
         </Button>
 
         {/* User Menu */}

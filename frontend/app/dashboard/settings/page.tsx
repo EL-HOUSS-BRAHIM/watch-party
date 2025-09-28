@@ -11,29 +11,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
-import {
-  SettingsIcon,
-  Bell,
-  Shield,
-  Palette,
-  Globe,
-  Volume2,
-  Eye,
-  Moon,
-  Sun,
-  Monitor,
-  Smartphone,
-  Mail,
-  Users,
-  Video,
-  Download,
-  Trash2,
-  AlertTriangle,
-  Save,
-  Loader2,
-  ArrowLeft,
-  ExternalLink,
-} from "lucide-react"
 
 interface NotificationSettings {
   email: {
@@ -176,7 +153,7 @@ export default function SettingsPage() {
         setPrivacy(settings.privacy || privacy)
         setPlayback(settings.playback || playback)
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load settings:", error)
       toast({
         title: "Error",
@@ -214,7 +191,7 @@ export default function SettingsPage() {
       } else {
         throw new Error("Failed to save settings")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to save settings:", error)
       toast({
         title: "Error",
@@ -251,7 +228,7 @@ export default function SettingsPage() {
           description: "Your data has been exported successfully.",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to export data:", error)
       toast({
         title: "Error",
@@ -287,7 +264,7 @@ export default function SettingsPage() {
           window.location.href = "/"
         }, 2000)
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to delete account:", error)
       toast({
         title: "Error",
@@ -315,7 +292,7 @@ export default function SettingsPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -377,7 +354,7 @@ export default function SettingsPage() {
                 {Object.entries(notifications.email).map(([key, value]) => (
                   <div key={key} className="flex items-center justify-between">
                     <div>
-                      <Label className="capitalize">{key.replace(/([A-Z])/g, &quot; $1").trim()}</Label>
+                      <Label className="capitalize">{key.replace(/([A-Z])/g, &quot; $1&quot;).trim()}</Label>
                       <p className="text-sm text-muted-foreground">
                         {key === "friendRequests" && "Get notified when someone sends you a friend request"}
                         {key === "partyInvites" && "Receive invitations to watch parties"}
@@ -412,7 +389,7 @@ export default function SettingsPage() {
                 {Object.entries(notifications.push).map(([key, value]) => (
                   <div key={key} className="flex items-center justify-between">
                     <div>
-                      <Label className="capitalize">{key.replace(/([A-Z])/g, &quot; $1").trim()}</Label>
+                      <Label className="capitalize">{key.replace(/([A-Z])/g, &quot; $1&quot;).trim()}</Label>
                       <p className="text-sm text-muted-foreground">
                         {key === "friendRequests" && "Push notifications for friend requests"}
                         {key === "partyInvites" && "Push notifications for party invitations"}
@@ -446,7 +423,7 @@ export default function SettingsPage() {
                 {Object.entries(notifications.inApp).map(([key, value]) => (
                   <div key={key} className="flex items-center justify-between">
                     <div>
-                      <Label className="capitalize">{key.replace(/([A-Z])/g, &quot; $1").trim()}</Label>
+                      <Label className="capitalize">{key.replace(/([A-Z])/g, &quot; $1&quot;).trim()}</Label>
                       <p className="text-sm text-muted-foreground">
                         {key === "friendRequests" && "Show friend request notifications in the app"}
                         {key === "partyInvites" && "Show party invitation notifications"}
@@ -856,7 +833,7 @@ export default function SettingsPage() {
                     <Label>Terms of Service</Label>
                     <p className="text-sm text-muted-foreground">Read our terms and conditions</p>
                   </div>
-                  <Button variant="outline" onClick={() => window.open(&quot;/terms", "_blank")}>
+                  <Button variant="outline" onClick={() => window.open(&quot;/terms&quot;, &quot;_blank")}>
                     <ExternalLink className="h-4 w-4 mr-2" />
                     View
                   </Button>
@@ -867,7 +844,7 @@ export default function SettingsPage() {
                     <Label>Privacy Policy</Label>
                     <p className="text-sm text-muted-foreground">Learn how we protect your privacy</p>
                   </div>
-                  <Button variant="outline" onClick={() => window.open(&quot;/privacy", "_blank")}>
+                  <Button variant="outline" onClick={() => window.open(&quot;/privacy&quot;, &quot;_blank")}>
                     <ExternalLink className="h-4 w-4 mr-2" />
                     View
                   </Button>
@@ -878,7 +855,7 @@ export default function SettingsPage() {
                     <Label>Contact Support</Label>
                     <p className="text-sm text-muted-foreground">Get help with your account</p>
                   </div>
-                  <Button variant="outline" onClick={() => router.push(&quot;/help")}>
+                  <Button variant="outline" onClick={() => router.push(&quot;/help&quot;)}>
                     <ExternalLink className="h-4 w-4 mr-2" />
                     Contact
                   </Button>

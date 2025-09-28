@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -54,7 +53,7 @@ const resolveStatus = (status: unknown, isOnlineFallback?: boolean): OnlineFrien
 const normalizeActivity = (activity: unknown): OnlineFriend['activity'] | undefined => {
   if (!activity) return undefined;
 
-  let type: NonNullable<OnlineFriend['activity']>[&apos;type'] = 'watching';
+  let type: NonNullable<OnlineFriend['activity']>[&apos;type&apos;] = &apos;watching';
 
   const rawType = (activity.type ?? activity.activity_type ?? '').toString().toLowerCase();
   
@@ -146,7 +145,7 @@ export default function OnlineStatusIndicators() {
       setFriends(results.map((friend: unknown) => normalizeOnlineFriend(friend)));
       setTotalOnline(typeof response?.total_online === 'number' ? response.total_online : results.length);
       errorNotifiedRef.current = false;
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch online friends:', error);
       if (!errorNotifiedRef.current) {
         toast({
@@ -170,8 +169,8 @@ export default function OnlineStatusIndicators() {
     return () => clearInterval(interval);
   }, [fetchOnlineFriends]);
 
-  const onlineFriends = friends.filter(friend => friend.status !== &apos;offline');
-  const offlineFriends = friends.filter(friend => friend.status === 'offline');
+  const onlineFriends = friends.filter(friend => friend.status !== &apos;offline&apos;);
+  const offlineFriends = friends.filter(friend => friend.status === &apos;offline');
 
   const handleStartChat = (friendId: string) => {
     // Implement chat functionality
@@ -229,7 +228,7 @@ export default function OnlineStatusIndicators() {
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={friend.avatar} alt={friend.displayName} />
                     <AvatarFallback>
-                      {friend.displayName.split(' ').map(n => n[0]).join(&apos;')}
+                      {friend.displayName.split(' ').map(n => n[0]).join(&apos;&apos;)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute -bottom-1 -right-1">
@@ -306,7 +305,7 @@ export default function OnlineStatusIndicators() {
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={friend.avatar} alt={friend.displayName} />
                     <AvatarFallback>
-                      {friend.displayName.split(' ').map(n => n[0]).join(&apos;')}
+                      {friend.displayName.split(' ').map(n => n[0]).join(&apos;&apos;)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="absolute -bottom-1 -right-1">

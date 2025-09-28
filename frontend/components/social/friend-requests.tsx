@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Check, X, UserPlus, Clock, Send } from "lucide-react"
@@ -63,7 +62,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
         const data = await response.json()
         setRequests(data.results || data)
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load friend requests:", error)
       toast({
         title: "Error",
@@ -97,7 +96,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
           description: action === "accept" ? "You are now friends!" : "The friend request has been declined.",
         })
       }
-    } catch (error) {
+    } catch {
       console.error(`Failed to ${action} friend request:`, error)
       toast({
         title: "Error",
@@ -124,7 +123,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
           description: "The friend request has been cancelled.",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to cancel friend request:", error)
       toast({
         title: "Error",
@@ -163,7 +162,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
   }
 
-  const receivedRequests = requests.filter((req) => req.type === &quot;received" && req.status === "pending")
+  const receivedRequests = requests.filter((req) => req.type === &quot;received&quot; && req.status === &quot;pending")
   const sentRequests = requests.filter((req) => req.type === "sent")
   const processedRequests = requests.filter((req) => req.status !== "pending")
 
@@ -190,13 +189,13 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
 
                   {isReceived && (otherUser as Record<string, unknown>).mutualFriends > 0 && (
                     <p className="text-sm text-gray-500 mt-1">
-                      {(otherUser as Record<string, unknown>).mutualFriends} mutual friend{(otherUser as Record<string, unknown>).mutualFriends !== 1 ? &quot;s" : ""}
+                      {(otherUser as Record<string, unknown>).mutualFriends} mutual friend{(otherUser as Record<string, unknown>).mutualFriends !== 1 ? &quot;s&quot; : &quot;"}
                     </p>
                   )}
 
                   {request.message && (
                     <div className="mt-2 p-2 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-700">&quot;{request.message}"</p>
+                      <p className="text-sm text-gray-700">&quot;{request.message}&quot;</p>
                     </div>
                   )}
 
@@ -214,14 +213,14 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
               <div className="flex gap-2 mt-4">
                 {isReceived && request.status === "pending" ? (
                   <>
-                    <Button size="sm" onClick={() => handleFriendRequest(request.id, &quot;accept")} className="flex-1">
+                    <Button size="sm" onClick={() => handleFriendRequest(request.id, &quot;accept&quot;)} className=&quot;flex-1">
                       <Check className="mr-2 h-4 w-4" />
                       Accept
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => handleFriendRequest(request.id, &quot;decline")}
+                      onClick={() => handleFriendRequest(request.id, &quot;decline&quot;)}
                       className="flex-1"
                     >
                       <X className="mr-2 h-4 w-4" />

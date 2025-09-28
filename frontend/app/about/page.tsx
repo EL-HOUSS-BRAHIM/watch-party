@@ -1,22 +1,5 @@
 "use client"
 
-import {
-  Heart,
-  Users,
-  Play,
-  Github,
-  Twitter,
-  Mail,
-  Globe,
-  MessageCircle,
-  Video,
-  Calendar,
-  Target,
-  Rocket,
-  Building,
-  Star,
-  ArrowRight,
-} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"

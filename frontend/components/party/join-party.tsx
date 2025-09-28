@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Users, Loader2, AlertCircle } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { partiesAPI } from "@/lib/api"
 
@@ -54,7 +53,7 @@ export function JoinParty() {
       } else {
         router.push(`/watch/${partyId}`)
       }
-    } catch (err: unknown) {
+    } catch {
       const errorData = err?.response?.data
       const message = errorData?.message || err?.message
       setError(message || "Failed to join party. Please check the code and try again.")

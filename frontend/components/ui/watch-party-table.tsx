@@ -340,7 +340,7 @@ export function WatchPartyTable<T = any>({
       return <ChevronsUpDown className="h-4 w-4 opacity-50" />
     }
 
-    return currentSort.direction === "asc" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className=&quot;h-4 w-4" />
+    return currentSort.direction === "asc" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className=&quot;h-4 w-4&quot; />
   }
 
   // Get table size classes

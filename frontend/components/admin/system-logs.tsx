@@ -127,7 +127,7 @@ export default function SystemLogs() {
         const pageSize = data.pagination?.page_size ?? 50
         setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load logs:", error)
       toast({
         title: "Error",
@@ -153,7 +153,7 @@ export default function SystemLogs() {
         const data = await response.json()
         setStats(data)
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load log stats:", error)
     }
   }
@@ -189,7 +189,7 @@ export default function SystemLogs() {
           description: "System logs have been exported successfully.",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to export logs:", error)
       toast({
         title: "Error",
@@ -333,7 +333,7 @@ export default function SystemLogs() {
                   {log.details?.statusCode && (
                     <div className="flex justify-between">
                       <span className="text-gray-600">Status:</span>
-                      <Badge variant={log.details.statusCode >= 400 ? &quot;destructive" : "default"}>
+                      <Badge variant={log.details.statusCode >= 400 ? &quot;destructive&quot; : &quot;default"}>
                         {log.details.statusCode}
                       </Badge>
                     </div>
@@ -412,7 +412,7 @@ export default function SystemLogs() {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={() => loadLogs(true)} disabled={isRefreshing}>
-            {isRefreshing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className=&quot;mr-2 h-4 w-4" />}
+            {isRefreshing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className=&quot;mr-2 h-4 w-4&quot; />}
             Refresh
           </Button>
           <Button

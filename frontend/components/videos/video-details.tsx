@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Progress } from '@/components/ui/progress'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
@@ -70,7 +69,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
     loadRelatedVideos()
   }, [videoId])
 
-  const loadVideoDetails = async () => {
+  const loadVideoDetails = useCallback(async () => {
     try {
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/`, {
@@ -83,7 +82,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         const data = await response.json()
         setVideoInfo(data)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to load video details:', error)
       toast({
         title: 'Error',
@@ -93,9 +92,9 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
-  const loadComments = async () => {
+  const loadComments = useCallback(async () => {
     try {
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/comments/`, {
@@ -108,12 +107,12 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         const data = await response.json()
         setComments(data.results || [])
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to load comments:', error)
     }
-  }
+  }, [])
 
-  const loadRelatedVideos = async () => {
+  const loadRelatedVideos = useCallback(async () => {
     try {
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/related/`, {
@@ -126,12 +125,12 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         const data = await response.json()
         setRelatedVideos(data.results || [])
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to load related videos:', error)
     }
-  }
+  }, [])
 
-  const handleLike = async () => {
+  const handleLike = useCallback(async () => {
     try {
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/like/`, {
@@ -150,7 +149,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
           dislikes: prev.isDisliked ? prev.dislikes - 1 : prev.dislikes
         } : null)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to like video:', error)
       toast({
         title: 'Error',
@@ -158,9 +157,9 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         variant: 'destructive',
       })
     }
-  }
+  }, [])
 
-  const handleDislike = async () => {
+  const handleDislike = useCallback(async () => {
     try {
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/dislike/`, {
@@ -179,7 +178,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
           likes: prev.isLiked ? prev.likes - 1 : prev.likes
         } : null)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to dislike video:', error)
       toast({
         title: 'Error',
@@ -187,9 +186,9 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         variant: 'destructive',
       })
     }
-  }
+  }, [])
 
-  const handleAddToWatchlist = async () => {
+  const handleAddToWatchlist = useCallback(async () => {
     try {
       const token = localStorage.getItem('accessToken')
       const response = await fetch(`/api/videos/${videoId}/watchlist/`, {
@@ -212,7 +211,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         
         onAddToWatchlist?.()
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to update watchlist:', error)
       toast({
         title: 'Error',
@@ -220,7 +219,7 @@ export function VideoDetails({ videoId, onWatchParty, onAddToWatchlist }: VideoD
         variant: 'destructive',
       })
     }
-  }
+  }, [])
 
   const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600)

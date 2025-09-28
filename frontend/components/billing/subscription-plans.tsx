@@ -36,7 +36,7 @@ interface SubscriptionPlansProps {
 }
 
 export default function SubscriptionPlans({ className }: SubscriptionPlansProps) {
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(&quot;monthly")
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(&quot;monthly&quot;)
   const [isLoading, setIsLoading] = useState<string | null>(null)
   const { user } = useAuth()
   const { toast } = useToast()
@@ -133,7 +133,7 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
         // Refresh user data or redirect
         window.location.reload()
       }
-    } catch (error) {
+    } catch {
       console.error("Subscription error:", error)
       toast({
         title: "Subscription Error",
@@ -179,7 +179,7 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
           <Switch
             id="billing-toggle"
             checked={billingCycle === "yearly"}
-            onCheckedChange={(checked) => setBillingCycle(checked ? &quot;yearly" : "monthly")}
+            onCheckedChange={(checked) => setBillingCycle(checked ? &quot;yearly&quot; : &quot;monthly")}
           />
           <Label htmlFor="billing-toggle" className={cn(billingCycle === "yearly" && "font-semibold")}>
             Yearly

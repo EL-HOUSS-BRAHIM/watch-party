@@ -1,35 +1,16 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import Image from "next/image"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { messagingAPI } from "@/lib/api"
 import type { Conversation, Message, User } from "@/lib/api/types"
-import {
-  MessageCircle,
-  Send,
-  Search,
-  MoreVertical,
-  Phone,
-  Video,
-  Info,
-  Smile,
-  Paperclip,
-  Image,
-  Mic,
-  Users,
-  Plus,
-  X,
-  Check,
-  CheckCheck,
-  Circle,
-} from "lucide-react"
 import { formatDistanceToNow, format, isToday, isYesterday } from "date-fns"
 
 type OnlineUser = Pick<User, "id" | "username" | "firstName" | "lastName" | "avatar"> & {
@@ -77,7 +58,7 @@ export default function MessagesPage() {
     try {
       const data = await messagingAPI.getConversations()
       setConversations(data.results)
-    } catch (error) {
+    } catch {
       console.error("Failed to load conversations:", error)
       toast({
         title: "Error",
@@ -93,7 +74,7 @@ export default function MessagesPage() {
     try {
       const data = await messagingAPI.getMessages(conversationId)
       setMessages(data.results)
-    } catch (error) {
+    } catch {
       console.error("Failed to load messages:", error)
       toast({
         title: "Error",
@@ -117,7 +98,7 @@ export default function MessagesPage() {
           lastSeen: friend.lastSeen,
         })),
       )
-    } catch (error) {
+    } catch {
       console.error("Failed to load online users:", error)
     }
   }
@@ -149,7 +130,7 @@ export default function MessagesPage() {
           ? { ...conv, lastMessage: data, updatedAt: data.createdAt }
           : conv
       ))
-    } catch (error) {
+    } catch {
       console.error("Failed to send message:", error)
       setNewMessage(messageContent) // Restore message on failure
       toast({
@@ -176,7 +157,7 @@ export default function MessagesPage() {
       })
       setSelectedConversation(data)
       setShowUserSearch(false)
-    } catch (error) {
+    } catch {
       console.error("Failed to start direct message:", error)
       toast({
         title: "Error",
@@ -434,9 +415,9 @@ export default function MessagesPage() {
                       <div className="w-8">
                         {showAvatar && (
                           <Avatar className="w-8 h-8">
-                            <AvatarImage src={selectedConversation.participants.find(p => p.id === message.senderId)?.avatar || &quot;/placeholder-user.jpg"} />
+                            <AvatarImage src={selectedConversation.participants.find(p => p.id === message.senderId)?.avatar || &quot;/placeholder-user.jpg&quot;} />
                             <AvatarFallback className="text-xs">
-                              {selectedConversation.participants.find(p => p.id === message.senderId)?.firstName?.[0] || &quot;U"}
+                              {selectedConversation.participants.find(p => p.id === message.senderId)?.firstName?.[0] || &quot;U&quot;}
                             </AvatarFallback>
                           </Avatar>
                         )}

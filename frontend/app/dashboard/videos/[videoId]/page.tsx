@@ -5,34 +5,11 @@ import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
-import {
-  Heart,
-  Share2,
-  Download,
-  Edit,
-  Trash2,
-  MoreVertical,
-  Eye,
-  Clock,
-  Calendar,
-  User,
-  MessageCircle,
-  ThumbsUp,
-  ThumbsDown,
-  Flag,
-  ArrowLeft,
-  Settings,
-  Loader2,
-  Star,
-  Users,
-  Film,
-} from "lucide-react"
 import { formatDistanceToNow, format } from "date-fns"
 
 interface Video {
@@ -138,7 +115,7 @@ export default function VideoDetailsPage() {
         })
         router.push("/dashboard/videos")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load video:", error)
       toast({
         title: "Error",
@@ -163,7 +140,7 @@ export default function VideoDetailsPage() {
         const commentsData = await response.json()
         setComments(commentsData.results || [])
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load comments:", error)
     }
   }
@@ -192,7 +169,7 @@ export default function VideoDetailsPage() {
             : null,
         )
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to like video:", error)
     }
   }
@@ -221,7 +198,7 @@ export default function VideoDetailsPage() {
             : null,
         )
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to dislike video:", error)
     }
   }
@@ -236,7 +213,7 @@ export default function VideoDetailsPage() {
           text: video?.description,
           url: shareUrl,
         })
-      } catch (error) {
+      } catch {
         console.log("Share cancelled")
       }
     } else {
@@ -272,7 +249,7 @@ export default function VideoDetailsPage() {
           description: "Your comment has been posted.",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to submit comment:", error)
       toast({
         title: "Error",
@@ -305,7 +282,7 @@ export default function VideoDetailsPage() {
         })
         router.push("/dashboard/videos")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to delete video:", error)
       toast({
         title: "Error",
@@ -351,8 +328,8 @@ export default function VideoDetailsPage() {
       <div className="container mx-auto py-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <h1 className="text-2xl font-bold mb-4">Video Not Found</h1>
-          <p className="text-gray-600 mb-4">The video you&apos;re looking for doesn't exist.</p>
-          <Button onClick={() => router.push(&quot;/dashboard/videos")}>Back to Videos</Button>
+          <p className="text-gray-600 mb-4">The video you&apos;re looking for doesn&apos;t exist.</p>
+          <Button onClick={() => router.push(&quot;/dashboard/videos&quot;)}>Back to Videos</Button>
         </div>
       </div>
     )
@@ -365,7 +342,7 @@ export default function VideoDetailsPage() {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2">
+          <Button variant="ghost" onClick={() => router.back()} className=&quot;p-2&quot;>
             <ArrowLeft className="h-4 w-4" />
           </Button>
           <div className="flex-1">
@@ -501,7 +478,7 @@ export default function VideoDetailsPage() {
                     <CardTitle>Description</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="whitespace-pre-wrap">{video.description || &quot;No description provided."}</p>
+                    <p className="whitespace-pre-wrap">{video.description || &quot;No description provided.&quot;}</p>
 
                     {video.tags.length > 0 && (
                       <div className="mt-4">
@@ -576,7 +553,7 @@ export default function VideoDetailsPage() {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => setNewComment(&quot;")}
+                            onClick={() => setNewComment(&quot;&quot;)}
                             disabled={!newComment.trim()}
                           >
                             Cancel

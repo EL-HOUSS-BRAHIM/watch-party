@@ -8,8 +8,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Calendar } from "@/components/ui/calendar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   Dialog,
@@ -23,24 +21,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/hooks/use-toast"
 import { format, isSameDay, parseISO } from "date-fns"
-import {
-  CalendarIcon,
-  Clock,
-  Users,
-  Plus,
-  Edit,
-  Share2,
-  Globe,
-  Lock,
-  Eye,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-  Play,
-  Crown,
-  MessageCircle,
-  Loader2,
-} from "lucide-react"
 import { eventsAPI } from "@/lib/api"
 import type { WatchEvent, EventAttendee, CreateEventRequest } from "@/lib/api/types"
 
@@ -51,7 +31,7 @@ export default function EventSchedulingSystem() {
   const [selectedEvent, setSelectedEvent] = useState<WatchEvent | null>(null)
   const [eventAttendees, setEventAttendees] = useState<EventAttendee[]>([])
   const [showCreateDialog, setShowCreateDialog] = useState(false)
-  const [viewMode, setViewMode] = useState<"calendar" | "list">(&quot;calendar")
+  const [viewMode, setViewMode] = useState<"calendar" | "list">(&quot;calendar&quot;)
   const [filterStatus, setFilterStatus] = useState("all")
   const [isLoading, setIsLoading] = useState(false)
   const [isLoadingEvents, setIsLoadingEvents] = useState(true)
@@ -70,7 +50,7 @@ export default function EventSchedulingSystem() {
         status: filterStatus === "all" ? undefined : filterStatus as Record<string, unknown>,
       })
       setEvents(response.results)
-    } catch (error) {
+    } catch {
       console.error("Failed to load events:", error)
       toast({
         title: "Error",
@@ -91,7 +71,7 @@ export default function EventSchedulingSystem() {
     try {
       const attendees = await eventsAPI.getEventAttendees(eventId)
       setEventAttendees(attendees.results)
-    } catch (error) {
+    } catch {
       console.error("Failed to load attendees:", error)
       toast({
         title: "Error",
@@ -138,7 +118,7 @@ export default function EventSchedulingSystem() {
         title: "Event Created",
         description: "Your watch party event has been scheduled!",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to create event:", error)
       toast({
         title: "Error",
@@ -161,7 +141,7 @@ export default function EventSchedulingSystem() {
         title: "RSVP Updated",
         description: `You have marked yourself as ${status} for this event.`,
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to update RSVP:", error)
       toast({
         title: "Error",
@@ -188,7 +168,7 @@ export default function EventSchedulingSystem() {
         title: "Joining Event",
         description: "Opening watch party room...",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to join event:", error)
       toast({
         title: "Error",
@@ -203,13 +183,13 @@ export default function EventSchedulingSystem() {
       await eventsAPI.cancelEvent(eventId)
       
       // Update local state
-      setEvents((prev) => prev.map((event) => (event.id === eventId ? { ...event, status: &quot;cancelled" } : event)))
+      setEvents((prev) => prev.map((event) => (event.id === eventId ? { ...event, status: &quot;cancelled&quot; } : event)))
 
       toast({
         title: "Event Cancelled",
         description: "The event has been cancelled and attendees will be notified.",
       })
-    } catch (error) {
+    } catch {
       console.error("Failed to cancel event:", error)
       toast({
         title: "Error",
@@ -443,7 +423,7 @@ export default function EventSchedulingSystem() {
           {/* Events for Selected Date */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle>Events for {format(selectedDate, &quot;MMMM d, yyyy")}</CardTitle>
+              <CardTitle>Events for {format(selectedDate, &quot;MMMM d, yyyy&quot;)}</CardTitle>
               <CardDescription>
                 {eventsForSelectedDate.length} event{eventsForSelectedDate.length !== 1 ? "s" : ""} scheduled
               </CardDescription>
@@ -501,10 +481,10 @@ export default function EventSchedulingSystem() {
 
                           {event.status === "scheduled" && !event.rsvp_status && (
                             <div className="flex gap-1">
-                              <Button size="sm" variant="outline" onClick={() => handleRSVP(event.id, &quot;going")}>
+                              <Button size="sm" variant="outline" onClick={() => handleRSVP(event.id, &quot;going&quot;)}>
                                 Going
                               </Button>
-                              <Button size="sm" variant="outline" onClick={() => handleRSVP(event.id, &quot;maybe")}>
+                              <Button size="sm" variant="outline" onClick={() => handleRSVP(event.id, &quot;maybe&quot;)}>
                                 Maybe
                               </Button>
                             </div>
@@ -601,13 +581,13 @@ export default function EventSchedulingSystem() {
 
                         {event.status === "scheduled" && !event.rsvp_status && (
                           <div className="flex gap-2">
-                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;going")}>
+                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;going&quot;)}>
                               Going
                             </Button>
-                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;maybe")}>
+                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;maybe&quot;)}>
                               Maybe
                             </Button>
-                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;not-going")}>
+                            <Button variant="outline" onClick={() => handleRSVP(event.id, &quot;not-going&quot;)}>
                               Can't Go
                             </Button>
                           </div>
@@ -714,7 +694,7 @@ export default function EventSchedulingSystem() {
                           className="w-16 h-12 object-cover rounded"
                         />
                         <div>
-                          <p className="font-medium">{selectedEvent.video?.title || &quot;No video"}</p>
+                          <p className="font-medium">{selectedEvent.video?.title || &quot;No video&quot;}</p>
                           <p className="text-sm text-muted-foreground">
                             {selectedEvent.video?.duration ? Math.floor(selectedEvent.video.duration / 60) : 0} minutes
                           </p>

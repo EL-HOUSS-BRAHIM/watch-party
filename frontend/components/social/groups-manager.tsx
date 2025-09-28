@@ -5,28 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useApiToast } from "@/hooks/use-toast"
-import { 
-  Search, 
-  Plus, 
-  Users, 
-  Lock,
-  Globe,
-  Settings,
-  Star,
-  MessageCircle,
-  Calendar,
-  TrendingUp,
-  Eye,
-  Crown,
-  UserPlus,
-  User
-} from 'lucide-react'
 
 interface Group {
   id: string
@@ -103,8 +86,8 @@ export function GroupsManager() {
   const [myGroups, setMyGroups] = useState<Group[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState<string>(&apos;all')
-  const [privacyFilter, setPrivacyFilter] = useState<string>(&apos;all')
+  const [categoryFilter, setCategoryFilter] = useState<string>(&apos;all&apos;)
+  const [privacyFilter, setPrivacyFilter] = useState<string>(&apos;all&apos;)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [createFormData, setCreateFormData] = useState<CreateGroupData>({
     name: '',
@@ -122,13 +105,13 @@ export function GroupsManager() {
   const loadGroups = async () => {
     try {
       const [allGroupsData, myGroupsData] = await Promise.all([
-        apiRequest(() => fetch(&apos;/api/social/groups/discover')),
-        apiRequest(() => fetch('/api/social/groups/my-groups'))
+        apiRequest(() => fetch(&apos;/api/social/groups/discover&apos;)),
+        apiRequest(() => fetch(&apos;/api/social/groups/my-groups'))
       ])
 
       if (allGroupsData) setGroups(allGroupsData)
       if (myGroupsData) setMyGroups(myGroupsData)
-    } catch (error) {
+    } catch {
       toastError(error, 'Failed to load groups')
     } finally {
       setLoading(false)

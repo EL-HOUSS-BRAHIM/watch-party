@@ -1,6 +1,6 @@
 "use client"
 
-import { lazy, type ComponentType, type ComponentProps, Suspense } from "react"
+import { lazy, type ComponentType, type ComponentProps, Suspense , useCallback } from "react"
 import { useState, useCallback, useEffect, useRef } from "react"
 
 // Lazy loading utility with error boundary

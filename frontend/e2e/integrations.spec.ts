@@ -117,7 +117,7 @@ test.describe('Integrations management', () => {
     await expect(page.locator('[data-testid="integration-card-discord"]')).toContainText('Not connected')
 
     await page.click('[data-testid="connect-discord"]')
-    const discordRedirect = await page.evaluate(() => (window as any).__mockNavigations?.[0] as string | undefined)
+    const discordRedirect = await page.evaluate(() => (window as Record<string, unknown>).__mockNavigations?.[0] as string | undefined)
     expect(discordRedirect).toContain('discord.com')
 
     await page.click('[data-testid="disconnect-google_drive"]')

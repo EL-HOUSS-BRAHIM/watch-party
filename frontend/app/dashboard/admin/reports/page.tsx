@@ -6,34 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
-import {
-  Shield,
-  AlertTriangle,
-  Search,
-  Eye,
-  CheckCircle,
-  XCircle,
-  User,
-  Flag,
-  Ban,
-  AlertCircle,
-  FileText,
-  Calendar,
-  Loader2,
-  ChevronRight,
-  UserX,
-  MessageSquare,
-  Image as ImageIcon,
-  Video,
-  Link as LinkIcon,
-  ExternalLink
-} from "lucide-react"
 import { formatDistanceToNow, format, parseISO } from "date-fns"
 
 interface ReportedUser {
@@ -145,7 +122,7 @@ export default function ReportsManagementPage() {
         page: 1, // You can add pagination later
       })
       setReports(data.results || [])
-    } catch (error) {
+    } catch {
       console.error("Failed to load reports:", error)
       if ((error as Record<string, unknown>)?.response?.status === 403) {
         toast({
@@ -252,7 +229,7 @@ export default function ReportsManagementPage() {
           setSelectedReport(updatedReport)
         }
       }
-    } catch (error) {
+    } catch {
       console.error("Update report error:", error)
       toast({
         title: "Error",
@@ -305,7 +282,7 @@ export default function ReportsManagementPage() {
       } else {
         throw new Error("Failed to take action")
       }
-    } catch (error) {
+    } catch {
       console.error("Take action error:", error)
       toast({
         title: "Error",
@@ -402,10 +379,10 @@ export default function ReportsManagementPage() {
           
           <div className="flex items-center gap-2">
             <Badge variant="outline">
-              {filteredReports.filter(r => r.status === &quot;pending").length} Pending
+              {filteredReports.filter(r => r.status === &quot;pending&quot;).length} Pending
             </Badge>
             <Badge variant="outline">
-              {filteredReports.filter(r => r.severity === &quot;critical" || r.severity === "high").length} High Priority
+              {filteredReports.filter(r => r.severity === &quot;critical&quot; || r.severity === &quot;high").length} High Priority
             </Badge>
           </div>
         </div>
@@ -508,7 +485,7 @@ export default function ReportsManagementPage() {
                     <Shield className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No reports found</h3>
                     <p className="text-gray-600">
-                      {searchQuery || Object.values(filters).some(f => f !== &quot;all" && f !== false)
+                      {searchQuery || Object.values(filters).some(f => f !== &quot;all&quot; && f !== false)
                         ? "Try adjusting your search or filters"
                         : "All caught up! No pending reports to review"
                       }
@@ -627,7 +604,7 @@ export default function ReportsManagementPage() {
                       </div>
                       <div className="flex justify-between">
                         <span>Created:</span>
-                        <span>{format(parseISO(selectedReport.created_at), &quot;MMM d, yyyy")}</span>
+                        <span>{format(parseISO(selectedReport.created_at), &quot;MMM d, yyyy&quot;)}</span>
                       </div>
                     </div>
                   </div>
@@ -681,7 +658,7 @@ export default function ReportsManagementPage() {
                         </div>
                         <div className="flex justify-between">
                           <span>Status:</span>
-                          <span>{selectedReport.reported_user.is_banned ? &quot;Banned" : "Active"}</span>
+                          <span>{selectedReport.reported_user.is_banned ? &quot;Banned&quot; : &quot;Active"}</span>
                         </div>
                       </div>
                     </div>
@@ -698,7 +675,7 @@ export default function ReportsManagementPage() {
                             variant="outline"
                             size="sm"
                             className="w-full justify-start"
-                            onClick={() => window.open(url, &quot;_blank")}
+                            onClick={() => window.open(url, &quot;_blank&quot;)}
                           >
                             <ExternalLink className="h-4 w-4 mr-2" />
                             Evidence {index + 1}
@@ -743,7 +720,7 @@ export default function ReportsManagementPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => updateReportStatus(selectedReport.id, &quot;under_review")}
+                          onClick={() => updateReportStatus(selectedReport.id, &quot;under_review&quot;)}
                           disabled={processingActions.has(selectedReport.id)}
                         >
                           <Eye className="h-4 w-4 mr-1" />
@@ -753,7 +730,7 @@ export default function ReportsManagementPage() {
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => updateReportStatus(selectedReport.id, &quot;dismissed", "No violation found")}
+                          onClick={() => updateReportStatus(selectedReport.id, &quot;dismissed&quot;, &quot;No violation found")}
                           disabled={processingActions.has(selectedReport.id)}
                         >
                           <XCircle className="h-4 w-4 mr-1" />
@@ -767,7 +744,7 @@ export default function ReportsManagementPage() {
                             variant="destructive"
                             size="sm"
                             className="w-full"
-                            onClick={() => takeAction(selectedReport.id, &quot;ban_user", "Violation of community guidelines")}
+                            onClick={() => takeAction(selectedReport.id, &quot;ban_user&quot;, &quot;Violation of community guidelines")}
                             disabled={processingActions.has(selectedReport.id)}
                           >
                             <Ban className="h-4 w-4 mr-1" />
@@ -778,7 +755,7 @@ export default function ReportsManagementPage() {
                             variant="outline"
                             size="sm"
                             className="w-full"
-                            onClick={() => takeAction(selectedReport.id, &quot;warn_user", "Warning for reported behavior")}
+                            onClick={() => takeAction(selectedReport.id, &quot;warn_user&quot;, &quot;Warning for reported behavior")}
                             disabled={processingActions.has(selectedReport.id)}
                           >
                             <AlertTriangle className="h-4 w-4 mr-1" />
@@ -790,7 +767,7 @@ export default function ReportsManagementPage() {
                       <Button
                         size="sm"
                         className="w-full"
-                        onClick={() => updateReportStatus(selectedReport.id, &quot;resolved", "Issue has been addressed")}
+                        onClick={() => updateReportStatus(selectedReport.id, &quot;resolved&quot;, &quot;Issue has been addressed")}
                         disabled={processingActions.has(selectedReport.id)}
                       >
                         {processingActions.has(selectedReport.id) ? (

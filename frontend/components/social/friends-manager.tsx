@@ -5,7 +5,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ProfilePreview } from "@/components/ui/profile-preview"
 import { useApiToast } from "@/hooks/use-toast"
@@ -72,15 +71,15 @@ export function FriendsManager() {
   const loadFriendsData = async () => {
     try {
       const [friendsData, incomingData, outgoingData] = await Promise.all([
-        apiRequest(() => fetch(&apos;/api/social/friends')),
-        apiRequest(() => fetch('/api/social/friend-requests/incoming')),
+        apiRequest(() => fetch(&apos;/api/social/friends&apos;)),
+        apiRequest(() => fetch(&apos;/api/social/friend-requests/incoming')),
         apiRequest(() => fetch('/api/social/friend-requests/outgoing'))
       ])
 
       if (friendsData) setFriends(friendsData)
       if (incomingData) setIncomingRequests(incomingData)
       if (outgoingData) setOutgoingRequests(outgoingData)
-    } catch (error) {
+    } catch {
       toastError(error, 'Failed to load friends data')
     } finally {
       setLoading(false)
@@ -184,7 +183,7 @@ export function FriendsManager() {
             All Friends ({friends.length})
           </TabsTrigger>
           <TabsTrigger value="online">
-            Online ({friends.filter(f => f.status === &apos;online').length})
+            Online ({friends.filter(f => f.status === &apos;online&apos;).length})
           </TabsTrigger>
           <TabsTrigger value="requests">
             Requests ({incomingRequests.length + outgoingRequests.length})
@@ -284,7 +283,7 @@ export function FriendsManager() {
         </TabsContent>
 
         <TabsContent value="online" className="space-y-4">
-          {filteredFriends.filter(f => f.status === &apos;online').map((friend) => (
+          {filteredFriends.filter(f => f.status === &apos;online&apos;).map((friend) => (
             <Card key={friend.id}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
@@ -365,7 +364,7 @@ export function FriendsManager() {
                             </ProfilePreview>
                             <p className="text-sm text-muted-foreground">@{request.fromUser.username}</p>
                             {request.message && (
-                              <p className="text-sm mt-1 italic">&quot;{request.message}"</p>
+                              <p className="text-sm mt-1 italic">&quot;{request.message}&quot;</p>
                             )}
                             <div className="flex items-center space-x-1 mt-1">
                               <Clock className="h-3 w-3 text-muted-foreground" />

@@ -2,7 +2,6 @@
 
 // Inspired by react-hot-toast library
 import * as React from "react"
-import { CheckCircle, AlertCircle, Info, AlertTriangle } from 'lucide-react'
 
 import type {
   ToastActionElement,
@@ -151,7 +150,7 @@ function toast({ ...props }: Toast) {
       type: "UPDATE_TOAST",
       toast: { ...props, id },
     })
-  const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
+  const dismiss = () => dispatch({ type: &quot;DISMISS_TOAST&quot;, toastId: id })
 
   dispatch({
     type: "ADD_TOAST",
@@ -188,7 +187,7 @@ function useToast() {
   return {
     ...state,
     toast,
-    dismiss: (toastId?: string) => dispatch({ type: "DISMISS_TOAST", toastId }),
+    dismiss: (toastId?: string) => dispatch({ type: &quot;DISMISS_TOAST&quot;, toastId }),
   }
 }
 
@@ -196,7 +195,7 @@ function useToast() {
 export function useApiToast() {
   const { toast } = useToast()
 
-  const toastError = React.useCallback((error: any, title?: string) => {
+  const toastError = React.useCallback((error: unknown, title?: string) => {
     const errorMessage = error?.message || error?.error || 'An unexpected error occurred'
     toast({
       variant: 'destructive',
@@ -256,7 +255,7 @@ export function useApiToast() {
       }
 
       return data
-    } catch (error) {
+    } catch {
       toastError(error, options?.errorTitle)
       return null
     }

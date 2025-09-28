@@ -8,31 +8,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
-import {
-  User,
-  Mail,
-  MapPin,
-  Calendar,
-  Globe,
-  Edit,
-  Settings,
-  Trophy,
-  Play,
-  Users,
-  Clock,
-  Star,
-  Heart,
-  Share2,
-  Eye,
-  EyeOff,
-  Award,
-  Zap,
-  Target,
-  TrendingUp,
-  Activity,
-  Film,
-  Sparkles,
-} from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 
@@ -114,7 +89,7 @@ export default function ProfilePage() {
       } else {
         throw new Error("Failed to fetch profile")
       }
-    } catch (error) {
+    } catch {
       console.error("Profile fetch error:", error)
       toast({
         title: "Error",

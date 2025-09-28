@@ -9,34 +9,11 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
-import {
-  Plus,
-  Search,
-  Calendar,
-  Users,
-  Play,
-  Clock,
-  Share2,
-  MoreVertical,
-  Edit,
-  Trash2,
-  Copy,
-  Eye,
-  Grid3X3,
-  List,
-  Loader2,
-  Video,
-  Globe,
-  Lock,
-  TrendingUp,
-  UserPlus,
-} from "lucide-react"
 import { format, formatDistanceToNow, isToday, isTomorrow, isYesterday } from "date-fns"
 
 interface Party {
@@ -95,7 +72,7 @@ export default function PartiesPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
-  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid")
+  const [viewMode, setViewMode] = useState<"grid" | "list">(&quot;grid&quot;)
   const [filters, setFilters] = useState<FilterOptions>({
     status: "all",
     privacy: "all",
@@ -149,7 +126,7 @@ export default function PartiesPage() {
       } else {
         throw new Error("Failed to load parties")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load parties:", error)
       toast({
         title: "Error",
@@ -183,7 +160,7 @@ export default function PartiesPage() {
 
     // Privacy filter
     if (filters.privacy !== "all") {
-      filtered = filtered.filter((party) => (filters.privacy === &quot;private" ? party.isPrivate : !party.isPrivate))
+      filtered = filtered.filter((party) => (filters.privacy === &quot;private&quot; ? party.isPrivate : !party.isPrivate))
     }
 
     // Role filter
@@ -254,7 +231,7 @@ export default function PartiesPage() {
           variant: "destructive",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to join party:", error)
       toast({
         title: "Error",
@@ -287,7 +264,7 @@ export default function PartiesPage() {
       } else {
         throw new Error("Failed to delete party")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to delete party:", error)
       toast({
         title: "Error",
@@ -315,7 +292,7 @@ export default function PartiesPage() {
           text: party.description,
           url: shareUrl,
         })
-      } catch (error) {
+      } catch {
         console.log("Share cancelled")
       }
     } else {
@@ -459,7 +436,7 @@ export default function PartiesPage() {
                   Share Party
                 </DropdownMenuItem>
                 {isHost(party) && (
-                  <DropdownMenuItem onClick={() => deleteParty(party.id)} className=&quot;text-destructive">
+                  <DropdownMenuItem onClick={() => deleteParty(party.id)} className=&quot;text-destructive&quot;>
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete Party
                   </DropdownMenuItem>
@@ -536,7 +513,7 @@ export default function PartiesPage() {
           {/* Action Buttons */}
           <div className="flex gap-2">
             {party.status === "active" ? (
-              <Button onClick={() => router.push(`/watch/${party.roomCode}`)} className=&quot;flex-1" size="sm">
+              <Button onClick={() => router.push(`/watch/${party.roomCode}`)} className=&quot;flex-1&quot; size=&quot;sm">
                 <Play className="h-4 w-4 mr-2" />
                 Join Live
               </Button>
@@ -558,7 +535,7 @@ export default function PartiesPage() {
             )}
 
             {!isParticipant(party) && !isHost(party) && party.status !== "ended" && (
-              <Button onClick={() => joinParty(party.roomCode)} variant=&quot;outline" size="sm">
+              <Button onClick={() => joinParty(party.roomCode)} variant=&quot;outline&quot; size=&quot;sm">
                 <UserPlus className="h-4 w-4" />
               </Button>
             )}
@@ -596,7 +573,7 @@ export default function PartiesPage() {
               <h3 className="font-semibold truncate pr-2">{party.name}</h3>
               <div className="flex items-center gap-2 flex-shrink-0">
                 <Badge variant="outline" className="text-xs">
-                  {party.isPrivate ? <Lock className="w-3 h-3" /> : <Globe className=&quot;w-3 h-3" />}
+                  {party.isPrivate ? <Lock className="w-3 h-3" /> : <Globe className=&quot;w-3 h-3&quot; />}
                 </Badge>
                 <Badge variant="outline" className="text-xs">
                   <Users className="w-3 h-3 mr-1" />
@@ -626,12 +603,12 @@ export default function PartiesPage() {
 
               <div className="flex items-center gap-2">
                 {party.status === "active" ? (
-                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} size=&quot;sm">
+                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} size=&quot;sm&quot;>
                     <Play className="h-4 w-4 mr-1" />
                     Join
                   </Button>
                 ) : (
-                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} variant=&quot;outline" size="sm">
+                  <Button onClick={() => router.push(`/watch/${party.roomCode}`)} variant=&quot;outline&quot; size=&quot;sm">
                     <Eye className="h-4 w-4 mr-1" />
                     View
                   </Button>
@@ -751,7 +728,7 @@ export default function PartiesPage() {
               <Button
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode(&quot;grid")}
+                onClick={() => setViewMode(&quot;grid&quot;)}
                 className="rounded-r-none"
               >
                 <Grid3X3 className="h-4 w-4" />
@@ -759,7 +736,7 @@ export default function PartiesPage() {
               <Button
                 variant={viewMode === "list" ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setViewMode(&quot;list")}
+                onClick={() => setViewMode(&quot;list&quot;)}
                 className="rounded-l-none"
               >
                 <List className="h-4 w-4" />
@@ -836,7 +813,7 @@ export default function PartiesPage() {
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-green-600">
-                  {filteredParties.filter((p) => p.status === &quot;active").length}
+                  {filteredParties.filter((p) => p.status === &quot;active&quot;).length}
                 </div>
                 <div className="text-sm text-muted-foreground">Live Now</div>
               </CardContent>
@@ -844,7 +821,7 @@ export default function PartiesPage() {
             <Card>
               <CardContent className="p-4 text-center">
                 <div className="text-2xl font-bold text-blue-600">
-                  {filteredParties.filter((p) => p.status === &quot;scheduled").length}
+                  {filteredParties.filter((p) => p.status === &quot;scheduled&quot;).length}
                 </div>
                 <div className="text-sm text-muted-foreground">Scheduled</div>
               </CardContent>

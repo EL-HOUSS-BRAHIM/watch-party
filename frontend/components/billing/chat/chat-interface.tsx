@@ -4,7 +4,6 @@ import { useState, useRef, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Send, Smile, Paperclip, Search, Shield, Trash2, Edit, Reply, Heart, ThumbsUp } from "lucide-react"
 import { useSocket } from "@/contexts/socket-context"
@@ -101,7 +100,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
         setHasMore(!!data.next)
         setIsLoading(false)
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load chat history:", error)
       setIsLoading(false)
     }
@@ -342,7 +341,7 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => addReaction(message.id, &quot;👍")}
+                        onClick={() => addReaction(message.id, &quot;👍&quot;)}
                         className="h-6 w-6 p-0"
                       >
                         <ThumbsUp className="h-3 w-3" />
@@ -350,17 +349,17 @@ export default function ChatInterface({ roomId, className }: ChatInterfaceProps)
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => addReaction(message.id, &quot;❤️")}
+                        onClick={() => addReaction(message.id, &quot;❤️&quot;)}
                         className="h-6 w-6 p-0"
                       >
                         <Heart className="h-3 w-3" />
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => startReply(message)} className=&quot;h-6 w-6 p-0">
+                      <Button variant="ghost" size="sm" onClick={() => startReply(message)} className=&quot;h-6 w-6 p-0&quot;>
                         <Reply className="h-3 w-3" />
                       </Button>
                       {(message.user.id === user?.id || canModerate) && (
                         <>
-                          <Button variant="ghost" size="sm" onClick={() => startEdit(message)} className=&quot;h-6 w-6 p-0">
+                          <Button variant="ghost" size="sm" onClick={() => startEdit(message)} className=&quot;h-6 w-6 p-0&quot;>
                             <Edit className="h-3 w-3" />
                           </Button>
                           <Button

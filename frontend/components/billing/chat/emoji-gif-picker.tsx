@@ -4,21 +4,8 @@ import { useState } from 'react'
 import Image from "next/image"
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
-  Smile, 
-  Image, 
-  Gift, 
-  TrendingUp,
-  Search,
-  Heart,
-  Laugh,
-  ThumbsUp,
-  Flame
-} from 'lucide-react'
 
 interface EmojiGifPickerProps {
   onEmojiSelect: (emoji: string) => void
@@ -135,7 +122,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
                 Emojis
               </TabsTrigger>
               <TabsTrigger value="gifs" className="flex items-center gap-2">
-                <Image className="w-4 h-4" />
+                <Image className="w-4 h-4" alt="" />
                 GIFs
               </TabsTrigger>
             </TabsList>
@@ -193,11 +180,14 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
                       onClose()
                     }}
                   >
-                    <img
-                      src={gif.url}
-                      alt={gif.title}
-                      className="w-full h-24 object-cover"
-                    />
+                    <div className="relative w-full h-24">
+                      <Image
+                        src={gif.url}
+                        alt={gif.title || "GIF"}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                     <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white text-xs p-1">
                       {gif.title}
                     </div>
@@ -207,7 +197,7 @@ export function EmojiGifPicker({ onEmojiSelect, onGifSelect, isOpen, onClose }: 
 
               {filteredGifs.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
-                  <Image className="w-8 h-8 mx-auto mb-2" />
+                  <Image className="w-8 h-8 mx-auto mb-2" alt="" />
                   <p>No GIFs found</p>
                 </div>
               )}

@@ -2,20 +2,9 @@
 
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { 
-  User, 
-  MessageCircle, 
-  UserPlus, 
-  Users, 
-  Calendar,
-  MapPin,
-  Link as LinkIcon,
-  Globe
-} from 'lucide-react'
 
 interface UserProfile {
   id: string
@@ -64,7 +53,7 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
       
       const data = await response.json()
       setProfile(data)
-    } catch (err) {
+    } catch {
       setError(err instanceof Error ? err.message : 'Failed to load profile')
     } finally {
       setLoading(false)
@@ -84,7 +73,7 @@ export function ProfilePreview({ userId, children, disabled = false }: ProfilePr
       if (response.ok) {
         setProfile(prev => prev ? { ...prev, hasPendingRequest: true } : null)
       }
-    } catch (err) {
+    } catch {
       console.error('Failed to send friend request:', err)
     }
   }

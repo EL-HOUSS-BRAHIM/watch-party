@@ -9,20 +9,6 @@ import { Progress } from '@/components/ui/progress'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
 import { analyticsAPI } from '@/lib/api'
-import { 
-  Play, 
-  Pause, 
-  Users, 
-  Eye, 
-  Heart, 
-  Share2, 
-  MessageSquare, 
-  TrendingUp, 
-  Download,
-  BarChart3,
-  PieChart,
-  Activity
-} from 'lucide-react'
 
 interface VideoAnalyticsProps {
   videoId: string
@@ -100,7 +86,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
         
         setViewerData(transformedViewerData)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch video analytics:', error)
       toast({
         title: "Error",
@@ -149,7 +135,7 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
         title: "Export Successful",
         description: `Video analytics exported as ${format.toUpperCase()}`
       })
-    } catch (error) {
+    } catch {
       console.error('Export failed:', error)
       toast({
         title: "Export Failed",
@@ -179,11 +165,11 @@ const VideoAnalyticsView = ({ videoId }: VideoAnalyticsProps) => {
               <SelectItem value="90d">Last 90 days</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" onClick={() => exportData(&apos;csv')}>
+          <Button variant="outline" onClick={() => exportData(&apos;csv&apos;)}>
             <Download className="h-4 w-4 mr-2" />
             Export CSV
           </Button>
-          <Button variant="outline" onClick={() => exportData(&apos;json')}>
+          <Button variant="outline" onClick={() => exportData(&apos;json&apos;)}>
             <Download className="h-4 w-4 mr-2" />
             Export JSON
           </Button>

@@ -13,8 +13,8 @@ interface SocketContextType {
   connectionStatus: "connecting" | "connected" | "disconnected" | "error"
   joinRoom: (roomId: string) => void
   leaveRoom: (roomId: string) => void
-  sendMessage: (type: string, data: any) => void
-  onMessage: (callback: (data: any) => void) => () => void
+  sendMessage: (type: string, data: unknown) => void
+  onMessage: (callback: (data: unknown) => void) => () => void
   reconnect: () => void
 }
 
@@ -26,7 +26,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   const [connectionStatus, setConnectionStatus] = useState<"connecting" | "connected" | "disconnected" | "error">(
     "disconnected",
   )
-  const [messageCallbacks, setMessageCallbacks] = useState<Set<(data: any) => void>>(new Set())
+  const [messageCallbacks, setMessageCallbacks] = useState<Set<(data: unknown) => void>>(new Set())
   const [reconnectAttempts, setReconnectAttempts] = useState(0)
   const [currentRoom, setCurrentRoom] = useState<string | null>(null)
   const { user, isAuthenticated, accessToken } = useAuth()
@@ -183,7 +183,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   )
 
   const sendMessage = useCallback(
-    (type: string, data: any) => {
+    (type: string, data: unknown) => {
       if (socket && isConnected) {
         socket.emit(type, data)
       } else {
@@ -193,7 +193,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     [socket, isConnected],
   )
 
-  const onMessage = useCallback((callback: (data: any) => void) => {
+  const onMessage = useCallback((callback: (data: unknown) => void) => {
     setMessageCallbacks((prev) => new Set([...prev, callback]))
 
     return () => {

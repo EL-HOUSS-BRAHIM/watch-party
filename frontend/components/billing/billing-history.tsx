@@ -54,7 +54,7 @@ export function BillingHistory() {
       const data = await billingAPI.getBillingHistory()
       const mappedHistory = (data.results || []).map(mapBillingHistoryToInvoice)
       setBillingHistory(mappedHistory)
-    } catch (error) {
+    } catch {
       console.error("Failed to fetch billing history:", error)
       toast({
         title: "Error",
@@ -125,7 +125,7 @@ export function BillingHistory() {
       a.click()
       window.URL.revokeObjectURL(url)
       document.body.removeChild(a)
-    } catch (error) {
+    } catch {
       console.error("Failed to download invoice:", error)
       toast({
         title: "Error",
@@ -157,7 +157,7 @@ export function BillingHistory() {
           <CardContent>
             <div className="text-2xl font-bold">${totalAmount.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">
-              Across {filteredHistory.filter((i) => i.status === &quot;paid").length} payments
+              Across {filteredHistory.filter((i) => i.status === &quot;paid&quot;).length} payments
             </p>
           </CardContent>
         </Card>
@@ -168,7 +168,7 @@ export function BillingHistory() {
             <AlertTriangle className="w-4 h-4 text-destructive" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{filteredHistory.filter((i) => i.status === &quot;failed").length}</div>
+            <div className="text-2xl font-bold">{filteredHistory.filter((i) => i.status === &quot;failed&quot;).length}</div>
             <p className="text-xs text-muted-foreground">Requires attention</p>
           </CardContent>
         </Card>

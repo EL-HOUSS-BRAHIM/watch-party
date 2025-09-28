@@ -1,10 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { User, MapPin, Calendar, Star, Trophy, Users, MessageCircle, UserPlus, UserMinus, MoreHorizontal, Flag, Shield, Activity, Clock, Play } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { useToast } from "@/hooks/use-toast"
 import { Separator } from "@/components/ui/separator"
@@ -123,7 +121,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
       } else {
         throw new Error("Failed to load profile")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to load profile:", error)
       toast({
         title: "Failed to load profile",
@@ -149,7 +147,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
       })
 
       if (response.ok) {
-        setProfile(prev => prev ? { ...prev, friendshipStatus: &quot;pending_sent" } : null)
+        setProfile(prev => prev ? { ...prev, friendshipStatus: &quot;pending_sent&quot; } : null)
         toast({
           title: "Friend request sent",
           description: `Friend request sent to ${profile.firstName}`,
@@ -157,7 +155,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
       } else {
         throw new Error("Failed to send friend request")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to send friend request:", error)
       toast({
         title: "Failed to send request",
@@ -183,7 +181,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
       })
 
       if (response.ok) {
-        setProfile(prev => prev ? { ...prev, friendshipStatus: "none" } : null)
+        setProfile(prev => prev ? { ...prev, friendshipStatus: &quot;none" } : null)
         toast({
           title: "Friend removed",
           description: `Removed ${profile.firstName} from your friends`,
@@ -191,7 +189,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
       } else {
         throw new Error("Failed to remove friend")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to remove friend:", error)
       toast({
         title: "Failed to remove friend",
@@ -226,7 +224,7 @@ export default function FriendProfilePreview({ userId, isOpen, onClose, classNam
       } else {
         throw new Error("Failed to block user")
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to block user:", error)
       toast({
         title: "Failed to block user",

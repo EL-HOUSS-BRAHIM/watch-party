@@ -21,22 +21,6 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
-  Play,
-  Pause,
-  CheckCircle,
-  XCircle,
-  Clock,
-  AlertTriangle,
-  FileText,
-  Code,
-  Globe,
-  Smartphone,
-  Settings,
-  RefreshCw,
-  Download,
-  Eye,
-} from "lucide-react"
-import {
   LineChart,
   Line,
   BarChart,
@@ -86,8 +70,8 @@ export function TestingSuiteDashboard() {
   const [selectedSuite, setSelectedSuite] = useState<TestSuite | null>(null)
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false)
   const [settingsDialogOpen, setSettingsDialogOpen] = useState(false)
-  const [filterType, setFilterType] = useState<string>(&quot;all")
-  const [filterStatus, setFilterStatus] = useState<string>(&quot;all")
+  const [filterType, setFilterType] = useState<string>(&quot;all&quot;)
+  const [filterStatus, setFilterStatus] = useState<string>(&quot;all&quot;)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -213,7 +197,7 @@ export function TestingSuiteDashboard() {
       setTestResults(mockTestResults)
       setCoverageData(mockCoverageData)
       setTestTrends(mockTestTrends)
-    } catch (error) {
+    } catch {
       console.error('Error fetching test data:', error)
       toast({
         title: "Error",
@@ -228,7 +212,7 @@ export function TestingSuiteDashboard() {
   const runTestSuite = async (suiteId: string) => {
     try {
       setTestSuites((prev) =>
-        prev.map((suite) => (suite.id === suiteId ? { ...suite, status: "running" as const } : suite)),
+        prev.map((suite) => (suite.id === suiteId ? { ...suite, status: &quot;running" as const } : suite)),
       )
 
       // Simulate test execution with API call
@@ -252,7 +236,7 @@ export function TestingSuiteDashboard() {
         title: "Test Complete",
         description: `Test suite execution completed`,
       })
-    } catch (error) {
+    } catch {
       console.error('Error running test suite:', error)
       setTestSuites((prev) =>
         prev.map((suite) => (suite.id === suiteId ? { ...suite, status: "failed" as const } : suite)),
@@ -277,7 +261,7 @@ export function TestingSuiteDashboard() {
         title: "All Tests Complete",
         description: "All test suites have been executed",
       })
-    } catch (error) {
+    } catch {
       console.error('Error running all tests:', error)
       toast({
         title: "Error",
@@ -391,7 +375,7 @@ export function TestingSuiteDashboard() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline">
+          <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
             <Settings className="mr-2 h-4 w-4" />
             Settings
           </Button>
@@ -541,8 +525,8 @@ export function TestingSuiteDashboard() {
                     </div>
 
                     <div className="flex gap-2">
-                      <Button size="sm" onClick={() => runTestSuite(suite.id)} disabled={suite.status === &quot;running"}>
-                        {suite.status === "running" ? <Pause className="h-4 w-4" /> : <Play className=&quot;h-4 w-4" />}
+                      <Button size="sm" onClick={() => runTestSuite(suite.id)} disabled={suite.status === &quot;running&quot;}>
+                        {suite.status === "running" ? <Pause className="h-4 w-4" /> : <Play className=&quot;h-4 w-4&quot; />}
                       </Button>
                       <Button
                         size="sm"
@@ -621,7 +605,7 @@ export function TestingSuiteDashboard() {
             <CardContent>
               <div className="space-y-4">
                 {testResults
-                  .filter((result) => result.status === &quot;failed")
+                  .filter((result) => result.status === &quot;failed&quot;)
                   .map((result) => (
                     <div key={result.id} className="p-4 border rounded-lg bg-red-50 dark:bg-red-900/20">
                       <div className="flex items-start gap-3">

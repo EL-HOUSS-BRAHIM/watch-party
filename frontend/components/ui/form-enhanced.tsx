@@ -5,7 +5,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Check, X, AlertCircle, Eye, EyeOff } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface ValidationRule {
@@ -115,7 +114,7 @@ export function EnhancedInput({
               className="h-auto p-0 hover:bg-transparent"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <EyeOff className="h-4 w-4 text-gray-500" /> : <Eye className=&quot;h-4 w-4 text-gray-500" />}
+              {showPassword ? <EyeOff className="h-4 w-4 text-gray-500" /> : <Eye className=&quot;h-4 w-4 text-gray-500&quot; />}
             </Button>
           )}
 
@@ -172,7 +171,7 @@ export function PasswordStrengthIndicator({ password }: { password: string }) {
           />
         ))}
       </div>
-      <p className="text-sm text-gray-600">Password strength: {strengthLabels[strength - 1] || &quot;Very Weak"}</p>
+      <p className="text-sm text-gray-600">Password strength: {strengthLabels[strength - 1] || &quot;Very Weak&quot;}</p>
     </div>
   )
 }

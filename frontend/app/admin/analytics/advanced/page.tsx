@@ -1,16 +1,6 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import {
-  ChartBarIcon,
-  UsersIcon,
-  PlayIcon,
-  ArrowTrendingUpIcon,
-  ArrowTrendingDownIcon,
-  DevicePhoneMobileIcon,
-  ComputerDesktopIcon,
-  GlobeAltIcon,
-} from '@heroicons/react/24/outline'
 import { analyticsAPI } from '@/lib/api'
 import { useToast } from '@/hooks/use-toast'
 import { Button } from '@/components/ui/button'
@@ -68,7 +58,7 @@ const extractNumber = (...values: unknown[]): number | undefined => {
 }
 
 const determineTrend = (change: number): 'up' | 'down' | 'stable' => {
-  if (change > 0) return &apos;up'
+  if (change > 0) return &apos;up&apos;
   if (change < 0) return 'down'
   return 'stable'
 }
@@ -283,7 +273,7 @@ const getDeviceIcon = (type: string) => {
 export default function AdvancedAnalyticsPage() {
   const { toast } = useToast()
   const [dateRange, setDateRange] = useState('30d')
-  const [viewType, setViewType] = useState<'overview' | 'users' | 'content' | 'revenue'>(&apos;overview')
+  const [viewType, setViewType] = useState<'overview' | 'users' | 'content' | 'revenue'>(&apos;overview&apos;)
   const [metrics, setMetrics] = useState<AnalyticsMetric[]>([])
   const [userSegments, setUserSegments] = useState<UserSegment[]>([])
   const [regions, setRegions] = useState<RegionData[]>([])
@@ -326,7 +316,7 @@ export default function AdvancedAnalyticsPage() {
       setRegions(buildRegions(systemAnalytics, realtime))
       setDevices(buildDevices(systemAnalytics, realtime))
       setActivitySeries(buildActivitySeries(realtime, adminAnalytics, dashboard))
-    } catch (err) {
+    } catch {
       console.error('Failed to load analytics data:', err)
       setError('Failed to load analytics data. Please try again.')
       toast({
@@ -396,7 +386,7 @@ export default function AdvancedAnalyticsPage() {
       } else {
         toast({ title: 'Export started', description: 'Analytics export has been scheduled.' })
       }
-    } catch (err) {
+    } catch {
       console.error('Failed to export analytics:', err)
       toast({
         title: 'Export failed',
@@ -571,7 +561,7 @@ export default function AdvancedAnalyticsPage() {
                           </div>
                           <div className="flex items-center justify-between mt-1 text-sm">
                             <span className="text-white/60">{segment.percentage.toFixed(1)}%</span>
-                            <span className={segment.growth >= 0 ? &apos;text-green-400' : 'text-red-400'}>
+                            <span className={segment.growth >= 0 ? &apos;text-green-400&apos; : &apos;text-red-400'}>
                               {segment.growth >= 0 ? '+' : ''}{segment.growth.toFixed(1)}%
                             </span>
                           </div>

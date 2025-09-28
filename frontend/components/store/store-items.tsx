@@ -10,24 +10,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { useApiToast } from "@/hooks/use-toast"
-import { 
-  Search,
-  Filter,
-  ShoppingCart,
-  Star,
-  Crown,
-  Palette,
-  Zap,
-  Gift,
-  Coins,
-  Eye,
-  Download,
-  Heart,
-  Sparkles,
-  Image as ImageIcon,
-  Music,
-  Video
-} from 'lucide-react'
 
 interface StoreItem {
   id: string
@@ -90,9 +72,9 @@ export function StoreItems() {
   const [userCurrency, setUserCurrency] = useState<UserCurrency>({ coins: 0, premium: 0 })
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
-  const [categoryFilter, setCategoryFilter] = useState<string>(&apos;all')
-  const [rarityFilter, setRarityFilter] = useState<string>(&apos;all')
-  const [sortBy, setSortBy] = useState<string>(&apos;featured')
+  const [categoryFilter, setCategoryFilter] = useState<string>(&apos;all&apos;)
+  const [rarityFilter, setRarityFilter] = useState<string>(&apos;all&apos;)
+  const [sortBy, setSortBy] = useState<string>(&apos;featured&apos;)
   const [showOwned, setShowOwned] = useState(false)
   const [selectedItem, setSelectedItem] = useState<StoreItem | null>(null)
   const [previewDialogOpen, setPreviewDialogOpen] = useState(false)
@@ -105,11 +87,11 @@ export function StoreItems() {
 
   const loadStoreItems = async () => {
     try {
-      const response = await apiRequest(() => fetch(&apos;/api/store/items'))
+      const response = await apiRequest(() => fetch(&apos;/api/store/items&apos;))
       if (response) {
         setItems(response)
       }
-    } catch (error) {
+    } catch {
       toastError(error, 'Failed to load store items')
     } finally {
       setLoading(false)
@@ -118,11 +100,11 @@ export function StoreItems() {
 
   const loadUserCurrency = async () => {
     try {
-      const response = await apiRequest(() => fetch('/api/store/currency'))
+      const response = await apiRequest(() => fetch(&apos;/api/store/currency'))
       if (response) {
         setUserCurrency(response)
       }
-    } catch (error) {
+    } catch {
       console.error('Failed to load user currency:', error)
     }
   }

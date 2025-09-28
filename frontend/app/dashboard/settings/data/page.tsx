@@ -1,15 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { 
-  DocumentArrowDownIcon,
-  TrashIcon,
-  ExclamationTriangleIcon,
-  ShieldCheckIcon,
-  CalendarIcon,
-  InformationCircleIcon,
-  CheckCircleIcon
-} from '@heroicons/react/24/outline'
 
 interface DataExportRequest {
   id: string
@@ -91,7 +82,7 @@ const getStatusLabel = (status: string) => {
 }
 
 export default function DataManagementPage() {
-  const [selectedExportType, setSelectedExportType] = useState<string>(&apos;')
+  const [selectedExportType, setSelectedExportType] = useState<string>(&apos;&apos;)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deletePassword, setDeletePassword] = useState('')
   const [isExporting, setIsExporting] = useState(false)

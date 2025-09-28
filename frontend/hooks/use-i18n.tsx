@@ -52,7 +52,7 @@ export const I18nProvider = ({ children }: { children: React.ReactNode }) => {
 
   const t = (key: AllTranslationKeys, params?: Record<string, any>): string => {
     const keys = key.split(".")
-    let value: any = translations[language as keyof typeof translations] || translations.en
+    let value: unknown = translations[language as keyof typeof translations] || translations.en
 
     for (const k of keys) {
       value = value?.[k]

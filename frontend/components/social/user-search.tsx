@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Search, UserPlus, Users, MessageCircle, Crown, Loader2 } from "lucide-react"
@@ -81,7 +80,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
           const data = await response.json()
           setUsers(data.results || data)
         }
-      } catch (error) {
+      } catch {
         console.error("Failed to search users:", error)
         toast({
           title: "Search Error",
@@ -115,13 +114,13 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
       })
 
       if (response.ok) {
-        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: &quot;pending_sent" } : u)))
+        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: &quot;pending_sent&quot; } : u)))
         toast({
           title: "Friend request sent",
           description: "Your friend request has been sent successfully.",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to send friend request:", error)
       toast({
         title: "Error",
@@ -150,13 +149,13 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
       })
 
       if (response.ok) {
-        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: "friends" } : u)))
+        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: &quot;friends" } : u)))
         toast({
           title: "Friend request accepted",
           description: "You are now friends!",
         })
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to accept friend request:", error)
       toast({
         title: "Error",

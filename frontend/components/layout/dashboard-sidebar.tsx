@@ -17,22 +17,6 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import {
-  Home,
-  Video,
-  Users,
-  Settings,
-  CreditCard,
-  Play,
-  Plus,
-  Shield,
-  BarChart3,
-  UserCheck,
-  AlertTriangle,
-  Activity,
-  Database,
-  Crown,
-} from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 
 const navigationItems = [

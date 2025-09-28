@@ -12,20 +12,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { 
-  Beaker, 
-  Play, 
-  Pause, 
-  Square, 
-  TrendingUp, 
-  TrendingDown, 
-  Users, 
-  Target,
-  Calendar,
-  Plus,
-  Eye,
-  Edit
-} from 'lucide-react';
 import { analyticsAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
@@ -76,7 +62,7 @@ export default function ABTestingDashboard() {
   const [tests, setTests] = useState<ABTest[]>([]);
   const [selectedTest, setSelectedTest] = useState<ABTest | null>(null);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [filter, setFilter] = useState<'all' | ABTest['status']>(&apos;all');
+  const [filter, setFilter] = useState<'all' | ABTest['status']>(&apos;all&apos;);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -135,7 +121,7 @@ export default function ABTestingDashboard() {
       })) || [];
 
       setTests(transformedTests);
-    } catch (error) {
+    } catch {
       console.error('Failed to fetch A/B tests:', error);
       toast({
         title: "Error",
@@ -147,7 +133,7 @@ export default function ABTestingDashboard() {
     }
   };
 
-  const filteredTests = tests.filter(test => filter === 'all' || test.status === filter);
+  const filteredTests = tests.filter(test => filter === &apos;all' || test.status === filter);
 
   const getStatusColor = (status: ABTest['status']) => {
     switch (status) {
@@ -277,10 +263,10 @@ export default function ABTestingDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {tests.filter(t => t.status === &apos;running').length}
+              {tests.filter(t => t.status === &apos;running&apos;).length}
             </div>
             <p className="text-xs text-muted-foreground">
-              {tests.filter(t => t.status === &apos;paused').length} paused
+              {tests.filter(t => t.status === &apos;paused&apos;).length} paused
             </p>
           </CardContent>
         </Card>
@@ -398,8 +384,8 @@ export default function ABTestingDashboard() {
                         <div>
                           <span className="text-muted-foreground">Significance:</span>
                           <span className={`font-medium ml-1 ${
-                            test.results.significance > 95 ? &apos;text-green-600' : 
-                            test.results.significance > 90 ? 'text-yellow-600' : 
+                            test.results.significance > 95 ? &apos;text-green-600&apos; : 
+                            test.results.significance > 90 ? &apos;text-yellow-600' : 
                             'text-red-600'
                           }`}>
                             {test.results.significance.toFixed(1)}%
@@ -504,7 +490,7 @@ export default function ABTestingDashboard() {
                               <div className="text-right">
                                 {variant.lift !== 0 && (
                                   <div className={`font-medium ${
-                                    variant.lift > 0 ? &apos;text-green-600' : 'text-red-600'
+                                    variant.lift > 0 ? &apos;text-green-600&apos; : &apos;text-red-600'
                                   }`}>
                                     {variant.lift > 0 ? '+' : ''}{variant.lift.toFixed(1)}%
                                   </div>

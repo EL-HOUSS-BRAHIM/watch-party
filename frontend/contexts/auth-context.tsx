@@ -98,7 +98,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const userData = await authAPI.getProfile()
   setUser(normalizeUser(userData))
-    } catch (error) {
+    } catch {
       console.error("Auth check failed:", error)
       tokenStorage.clearTokens()
       setAccessToken(null)
@@ -127,7 +127,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         router.push("/dashboard")
       }
-    } catch (error) {
+    } catch {
       console.error("Login error:", error)
       throw error
     }
@@ -149,7 +149,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Email verification required
         router.push("/login?message=Please check your email to verify your account")
       }
-    } catch (error) {
+    } catch {
       throw error
     }
   }
@@ -157,7 +157,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     try {
       await authAPI.logout()
-    } catch (error) {
+    } catch {
       // Continue with logout even if API call fails
       console.error("Logout API call failed:", error)
     } finally {
@@ -172,7 +172,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const forgotPassword = async (email: string) => {
     try {
       await authAPI.forgotPassword({ email })
-    } catch (error) {
+    } catch {
       throw error
     }
   }
@@ -184,7 +184,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         new_password: password,
         confirm_password: password 
       })
-    } catch (error) {
+    } catch {
       throw error
     }
   }
@@ -197,7 +197,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (user) {
         setUser({ ...user, isEmailVerified: true })
       }
-    } catch (error) {
+    } catch {
       throw error
     }
   }
@@ -209,7 +209,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       await authAPI.resendVerification(user.email)
-    } catch (error) {
+    } catch {
       throw error
     }
   }
@@ -225,7 +225,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         throw new Error("No redirect URL received")
       }
-    } catch (error) {
+    } catch {
       console.error("Social login error:", error)
       throw error
     }
@@ -248,7 +248,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Get updated user data
   const userData = await authAPI.getProfile()
   setUser(normalizeUser(userData))
-    } catch (error) {
+    } catch {
       tokenStorage.clearTokens()
       setAccessToken(null)
       setRefreshToken(null)
@@ -261,16 +261,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       // Convert User data to UserProfile format for the API
       const profileData = {
-        bio: (data as any).bio,
-        timezone: (data as any).timezone,
-        language: (data as any).language,
+        bio: (data as Record<string, unknown>).bio,
+        timezone: (data as Record<string, unknown>).timezone,
+        language: (data as Record<string, unknown>).language,
         // Add other profile fields as needed
       }
       
       const response = await usersAPI.updateProfile(profileData)
       const { profile, ...userData } = response
       setUser(normalizeUser(userData))
-    } catch (error) {
+    } catch {
       throw error
     }
   }
@@ -301,7 +301,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const userData = await authAPI.getProfile()
         setUser(normalizeUser(userData))
       }
-    } catch (error) {
+    } catch {
       console.error("Failed to refresh user:", error)
     } finally {
       setIsLoading(false)
