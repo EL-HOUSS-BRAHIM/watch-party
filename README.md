@@ -75,28 +75,77 @@ watch-party-monorepo/
 
 ## 🏭 Production Deployment
 
+### Docker-Based Deployment
+
+The application is deployed using Docker Compose on AWS Lightsail with Cloudflare integration.
+
 ### Automatic Deployment
 
-The repository includes GitHub Actions workflows for automatic deployment:
+GitHub Actions automatically deploy to production:
 
-- **Backend Deployment:** Triggered on changes to `backend/` directory
-- **Frontend Deployment:** Triggered on changes to `frontend/` directory
-- **Full Deployment:** Triggered on pushes to `master` branch
+- **Trigger:** Push to `master` branch
+- **Target:** Lightsail server via SSH
+- **Process:** Git pull → Docker build → Container restart
+
+### Server Setup
+
+1. **Bootstrap Server (one-time):**
+   ```bash
+   # Run on fresh Ubuntu Lightsail instance
+   curl -sSL https://raw.githubusercontent.com/EL-HOUSS-BRAHIM/watch-party/master/bootstrap.sh | sudo bash
+   ```
+
+2. **Deploy Application:**
+   ```bash
+   # As deploy user on server
+   ./deploy-docker.sh
+   ```
 
 ### Manual Deployment
 
-1. **Backend:**
-   ```bash
-   cd backend
-   ./deploy.sh
-   ```
+From your local machine:
+```bash
+# Deploy via GitHub Actions
+git push origin master
 
-2. **Frontend:**
-   ```bash
-   cd frontend
-   npm run build
-   # Deploy build files to server
-   ```
+# Or deploy directly to server
+ssh deploy@35.181.116.57
+cd /srv/watch-party
+./deploy-docker.sh
+```
+
+### Deployment Architecture
+
+- **Cloudflare:** DNS + SSL termination + CDN
+- **Lightsail:** Docker containers (Nginx → Next.js + Django)  
+- **Domains:** watch-party.brahim-elhouss.me (main), be-watch-party.brahim-elhouss.me (API)
+
+### Environment Configuration
+
+Configure environment variables for both services:
+
+**Backend (`backend/.env`)**:
+```bash
+cp backend/.env.example backend/.env
+# Edit with your settings:
+# - Database credentials (Docker containers or external AWS RDS)
+# - Redis URLs (Docker container or AWS ElastiCache) 
+# - AWS S3 settings (uses IAM role MyAppRole)
+# - Email SMTP configuration
+# - Social OAuth keys (Google, Discord, GitHub)
+# - Stripe payment keys
+# - JWT secret keys
+# - Domain names and CORS settings
+```
+
+**Frontend (`frontend/.env.local`)**:
+```bash
+cp frontend/.env.example frontend/.env.local
+# Already configured with correct API URLs:
+# - NEXT_PUBLIC_API_URL=https://be-watch-party.brahim-elhouss.me
+# - NEXT_PUBLIC_WS_URL=wss://be-watch-party.brahim-elhouss.me/ws
+# - Analytics and feature flags
+```
 
 ## 🔧 Configuration
 

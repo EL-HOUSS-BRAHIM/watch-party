@@ -1,75 +1,60 @@
-name: Deploy Watch Party Monorepo
+name: Deploy to Lightsail
 
 on:
   push:
-    branches: [ master, main ]
-  pull_request:
-    branches: [ master, main ]
+    branches: [ "master", "main" ]
 
 jobs:
-  deploy-backend:
+  deploy:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'backend/') || github.event_name == 'push'
-    
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Deploy Backend
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          cd ${{ secrets.MONOREPO_PATH }}/backend
-          git pull origin master
-          source venv/bin/activate
-          pip install -r requirements.txt
-          python manage.py migrate
-          python manage.py collectstatic --noinput
-          pm2 restart watchparty-django
-          pm2 restart watchparty-celery-worker
-          pm2 restart watchparty-celery-beat
+      - uses: actions/checkout@v4
 
-  deploy-frontend:
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'frontend/') || github.event_name == 'push'
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 8
-        
-    - name: Build Frontend
-      run: |
-        cd frontend
-        pnpm install
-        pnpm run build
-        
-    - name: Deploy Frontend Build
-      uses: appleboy/scp-action@v0.1.7
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: "frontend/.next,frontend/public,frontend/package.json,frontend/next.config.mjs"
-        target: "${{ secrets.MONOREPO_PATH }}/"
-        strip_components: 0
-        
-    - name: Restart Frontend Service
-      uses: appleboy/ssh-action@v1.0.3
-      with:
-        host: ${{ secrets.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          cd ${{ secrets.MONOREPO_PATH }}/frontend
-          pm2 restart watch-party-frontend
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: deploy
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          script: |
+            set -e
+            APP_NAME=watch-party
+            APP_DIR=/srv/$APP_NAME
+            
+            # Clone or update repo
+            if [ ! -d "$APP_DIR" ]; then
+              git clone https://github.com/EL-HOUSS-BRAHIM/watch-party.git $APP_DIR
+              cd $APP_DIR
+            else
+              cd $APP_DIR
+              git fetch origin
+              git reset --hard origin/master
+            fi
+            
+            # Setup environment files if they don't exist
+            if [ ! -f "$APP_DIR/backend/.env" ]; then
+              cp backend/.env.example backend/.env
+              echo "⚠️  Created backend/.env from example - please customize it!"
+            fi
+            
+            if [ ! -f "$APP_DIR/frontend/.env.local" ]; then
+              cp frontend/.env.example frontend/.env.local
+              echo "✅ Created frontend/.env.local with correct API URLs"
+            fi
+            
+            # Build and deploy with Docker Compose
+            docker compose build --no-cache
+            docker compose up -d --remove-orphans
+            
+            # Wait for services to be ready
+            sleep 30
+            
+            # Run initial setup if this is first deployment
+            if docker compose exec -T backend python manage.py showmigrations --plan | grep -q "\[ \]"; then
+              echo "🔧 Running initial Django setup..."
+              docker compose exec -T backend python manage.py migrate
+              docker compose exec -T backend python manage.py collectstatic --noinput
+            fi
+            
+            # Cleanup
+            docker system prune -f
