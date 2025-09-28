@@ -107,7 +107,7 @@ Provide `.env.example` (no real values):
 ```
 DEBUG=True
 SECRET_KEY=change_me_dev_only
-DJANGO_SETTINGS_MODULE=watchparty.settings.development
+DJANGO_SETTINGS_MODULE=config.settings.development
 DATABASE_URL=sqlite:///db.sqlite3
 REDIS_URL=redis://localhost:6379/0
 ALLOWED_HOSTS=localhost,127.0.0.1

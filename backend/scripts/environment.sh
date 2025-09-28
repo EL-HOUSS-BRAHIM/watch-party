@@ -427,7 +427,7 @@ create_env_file() {
 # Django Settings
 DEBUG=True
 SECRET_KEY=your-secret-key-here-change-in-production
-DJANGO_SETTINGS_MODULE=watchparty.settings.development
+DJANGO_SETTINGS_MODULE=config.settings.development
 
 # Database
 DATABASE_URL=sqlite:///db.sqlite3

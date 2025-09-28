@@ -100,7 +100,7 @@ check_database() {
     fi
     
     source venv/bin/activate
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     
     # Test database connection
     if python manage.py check --database default &> /dev/null; then

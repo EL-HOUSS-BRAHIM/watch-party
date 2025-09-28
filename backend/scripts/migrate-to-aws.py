@@ -263,7 +263,7 @@ class DatabaseMigrator:
         try:
             # Set environment to use production settings (AWS)
             env = os.environ.copy()
-            env['DJANGO_SETTINGS_MODULE'] = 'watchparty.settings.production'
+            env['DJANGO_SETTINGS_MODULE'] = 'config.settings.production'
             
             # Run migrations
             cmd = [sys.executable, 'manage.py', 'migrate', '--run-syncdb']
@@ -287,7 +287,7 @@ class DatabaseMigrator:
         
         try:
             env = os.environ.copy()
-            env['DJANGO_SETTINGS_MODULE'] = 'watchparty.settings.production'
+            env['DJANGO_SETTINGS_MODULE'] = 'config.settings.production'
             
             # Check if superuser already exists
             cmd = [
@@ -315,7 +315,7 @@ class DatabaseMigrator:
         
         try:
             env = os.environ.copy()
-            env['DJANGO_SETTINGS_MODULE'] = 'watchparty.settings.production'
+            env['DJANGO_SETTINGS_MODULE'] = 'config.settings.production'
             
             validation_script = """
 import django

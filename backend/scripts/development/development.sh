@@ -50,7 +50,7 @@ start_dev_server() {
     log_info "Starting Django development server..."
     
     # Set environment
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     
     # Check migrations
     log_info "Checking migrations..."
@@ -78,7 +78,7 @@ start_dev_server_ws() {
     log_info "Starting Django server with WebSocket support..."
     
     # Set environment
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     
     # Install daphne if needed
     pip show daphne &>/dev/null || {
@@ -107,7 +107,7 @@ start_dev_server_ws() {
 # Open Django shell
 open_shell() {
     check_venv
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     log_info "Opening Django shell..."
     python manage.py shell
 }
@@ -115,7 +115,7 @@ open_shell() {
 # Open database shell
 open_dbshell() {
     check_venv
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     log_info "Opening database shell..."
     python manage.py dbshell
 }
@@ -123,7 +123,7 @@ open_dbshell() {
 # Run tests
 run_tests() {
     check_venv
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.testing
+    export DJANGO_SETTINGS_MODULE=config.settings.testing
     
     local test_args=("$@")
     
@@ -152,7 +152,7 @@ run_tests() {
 # Run migrations
 run_migrations() {
     check_venv
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     
     if [[ "$1" == "--fake" ]]; then
         log_info "Running fake migrations..."
@@ -169,7 +169,7 @@ run_migrations() {
 # Create migrations
 make_migrations() {
     check_venv
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     
     local apps=("$@")
     
@@ -189,7 +189,7 @@ make_migrations() {
 # Collect static files
 collect_static() {
     check_venv
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     
     log_info "Collecting static files..."
     python manage.py collectstatic --noinput --clear --verbosity=2
@@ -199,7 +199,7 @@ collect_static() {
 # Create superuser
 create_superuser() {
     check_venv
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     
     log_info "Creating Django superuser..."
     python manage.py createsuperuser
@@ -219,7 +219,7 @@ reset_project() {
         fi
     fi
     
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     
     # Remove database
     log_info "Removing database..."
@@ -257,7 +257,7 @@ reset_project() {
 # Load sample data
 load_sample_data() {
     check_venv
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     
     log_info "Loading sample data..."
     
@@ -319,7 +319,7 @@ EOF
 # Django management command wrapper
 django_command() {
     check_venv
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     
     log_info "Running Django command: manage.py $*"
     python manage.py "$@"

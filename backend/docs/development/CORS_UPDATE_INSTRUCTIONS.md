@@ -20,7 +20,7 @@ Backend error: `User() got unexpected keyword arguments: 'username'`
 - Added `CORS_ALLOWED_ORIGINS` environment variable
 - Updated `CSRF_TRUSTED_ORIGINS` to include the Vercel URL
 
-### 3. Updated `watchparty/settings/production.py`
+### 3. Updated `config/settings/production.py`
 - Added explicit CORS configuration that reads from environment variables
 - Ensured `CORS_ALLOW_CREDENTIALS = True` for cookie-based authentication
 

@@ -5,7 +5,7 @@
 ### 1. **Logging Directory Issue**
 **Problem**: The production settings were trying to write logs to `/var/log/watchparty/` which doesn't exist in the CI environment.
 **Solution**: 
-- Created `watchparty/settings/testing.py` with CI-appropriate logging configuration
+- Created `config/settings/testing.py` with CI-appropriate logging configuration
 - Logs now write to a local `logs/` directory created during the workflow
 
 ### 2. **Missing Dependencies**
@@ -31,12 +31,12 @@
 ## Files Changed
 
 1. **`.github/workflows/deploy.yml`**
-   - Updated test job to use `watchparty.settings.testing`
+   - Updated test job to use `config.settings.testing`
    - Changed dependency installation to use minimal set
    - Added graceful error handling for missing dependencies
    - Enhanced test strategy with fallbacks
 
-2. **`watchparty/settings/testing.py`** (NEW)
+2. **`config/settings/testing.py`** (NEW)
    - CI-optimized Django settings
    - Local logging configuration
    - Simplified app list and middleware

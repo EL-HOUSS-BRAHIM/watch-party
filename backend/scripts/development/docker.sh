@@ -112,7 +112,7 @@ FROM python:3.11-slim as production
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    DJANGO_SETTINGS_MODULE=watchparty.settings.production
+    DJANGO_SETTINGS_MODULE=config.settings.production
 
 # Install system dependencies for runtime
 RUN apt-get update && apt-get install -y \
@@ -143,7 +143,7 @@ RUN mkdir -p /app/logs /app/media /app/static && \
 USER watchparty
 
 # Collect static files
-RUN python manage.py collectstatic --noinput --settings=watchparty.settings.production || true
+RUN python manage.py collectstatic --noinput --settings=config.settings.production || true
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \

@@ -210,13 +210,13 @@ sudo ls -la /var/backups/watchparty/
 ```bash
 # Access Django shell
 cd /var/www/watch-party-backend
-sudo -u watchparty ./venv/bin/python manage.py shell --settings=watchparty.settings.production
+sudo -u watchparty ./venv/bin/python manage.py shell --settings=config.settings.production
 
 # Run migrations
-sudo -u watchparty ./venv/bin/python manage.py migrate --settings=watchparty.settings.production
+sudo -u watchparty ./venv/bin/python manage.py migrate --settings=config.settings.production
 
 # Create superuser
-sudo -u watchparty ./venv/bin/python manage.py createsuperuser --settings=watchparty.settings.production
+sudo -u watchparty ./venv/bin/python manage.py createsuperuser --settings=config.settings.production
 ```
 
 ## 🔄 Update Deployment
@@ -236,10 +236,10 @@ sudo -u watchparty git pull origin main
 sudo -u watchparty ./venv/bin/pip install -r requirements.txt
 
 # Run migrations
-sudo -u watchparty ./venv/bin/python manage.py migrate --settings=watchparty.settings.production
+sudo -u watchparty ./venv/bin/python manage.py migrate --settings=config.settings.production
 
 # Collect static files
-sudo -u watchparty ./venv/bin/python manage.py collectstatic --noinput --settings=watchparty.settings.production
+sudo -u watchparty ./venv/bin/python manage.py collectstatic --noinput --settings=config.settings.production
 
 # Restart services
 sudo supervisorctl restart all
@@ -293,13 +293,36 @@ sudo supervisorctl restart all
 The deployment creates a `.env` file with all necessary configurations. Key settings include:
 
 ```env
-DJANGO_SETTINGS_MODULE=watchparty.settings.production
+DJANGO_SETTINGS_MODULE=config.settings.production
 SECRET_KEY=auto-generated-secure-key
 DEBUG=False
 ALLOWED_HOSTS=your-domain.com,www.your-domain.com
 DATABASE_URL=postgres://user:pass@localhost:5432/dbname
 REDIS_URL=redis://:password@127.0.0.1:6379/0
 ```
+
+## 🧨 Destroy & Recovery
+
+### GitHub Actions Destroy Workflow
+
+When you need to completely remove the Watch Party deployment from the Lightsail
+server, use the **Destroy Lightsail Deployment** workflow:
+
+1. Open your repository on GitHub and navigate to **Actions → Destroy Lightsail Deployment**.
+2. Click **Run workflow** and type `destroy` to confirm.
+3. The workflow will automatically:
+   - Archive the `/srv/watch-party` directory and any detected Docker volumes
+     (`static_volume`, `media_volume`, `postgres_data`, `redis_data`,
+     `valkey_data`).
+   - Stop and remove Docker containers, volumes, and networks tied to the stack.
+   - Delete `/srv/watch-party` from the server.
+   - Attempt to remove nginx site configuration and reload nginx when passwordless
+     sudo access is available.
+   - Upload the backup archive as a workflow artifact so you can download and
+     restore it later if needed.
+
+Download the artifact immediately after the workflow completes if you want an
+off-site copy of the backup before server resources are wiped.
 
 ## 📞 Support
 

@@ -122,7 +122,7 @@ setup_environment() {
 # Basic Django Configuration
 DEBUG=True
 SECRET_KEY=django-insecure-please-change-this-in-production
-DJANGO_SETTINGS_MODULE=watchparty.settings.development
+DJANGO_SETTINGS_MODULE=config.settings.development
 
 # Database
 DATABASE_URL=sqlite:///db.sqlite3
@@ -151,7 +151,7 @@ setup_database() {
     source venv/bin/activate
     
     # Set Django settings
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     
     # Check if manage.py exists
     if [[ ! -f "manage.py" ]]; then
@@ -175,7 +175,7 @@ setup_static_files() {
     log_info "Setting up static files..."
     
     source venv/bin/activate
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     
     # Create directories
     mkdir -p static staticfiles media logs
@@ -191,7 +191,7 @@ create_superuser() {
     log_info "Creating Django superuser..."
     
     source venv/bin/activate
-    export DJANGO_SETTINGS_MODULE=watchparty.settings.development
+    export DJANGO_SETTINGS_MODULE=config.settings.development
     
     if [[ "$FORCE" == "true" ]]; then
         # Create superuser with default credentials
