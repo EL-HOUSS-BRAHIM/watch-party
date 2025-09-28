@@ -508,7 +508,7 @@ LOGGING = {
             'level': 'INFO',
             'propagate': False,
         },
-        'watchparty': {
+        'shared': {
             'handlers': ['console', 'file'],
             'level': 'DEBUG',
             'propagate': False,
