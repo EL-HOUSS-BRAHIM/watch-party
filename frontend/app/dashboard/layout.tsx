@@ -1,18 +1,18 @@
-"use client"
-
 import type React from "react"
 import { useAuth } from "@/contexts/auth-context"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect , useCallback } from "react"
 import { Loader2 } from "lucide-react"
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { DashboardSidebar } from "@/components/layout/dashboard-sidebar"
 
-export default function DashboardLayout({
+"use client"
+
+export default function DashboardLayout({}
   children,
-}: {
-  children: React.ReactNode
-}) {
+}: {}
+  children: React.ReactNode;
+}) {}
   const { user, isLoading, isAuthenticated } = useAuth()
   const router = useRouter()
 
@@ -40,14 +40,13 @@ export default function DashboardLayout({
   }
 
   if (!isAuthenticated || !user) {
-    return null
+    return null;
   }
 
   return (
     <SidebarProvider>
       <div className="min-h-screen bg-black flex">
         <DashboardSidebar />
-        
         {/* Main Content Area */}
         <div className="flex-1">
           <main className="container mx-auto px-4 py-8">

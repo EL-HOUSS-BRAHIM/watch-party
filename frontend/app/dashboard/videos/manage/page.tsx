@@ -1,3 +1,4 @@
+import { Video } from "lucide-react"
 import { VideoManagement } from "@/components/videos/video-management"
 
 export default function VideoManagePage() {
@@ -7,7 +8,7 @@ export default function VideoManagePage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold">Manage Videos</h1>
           <p className="text-muted-foreground mt-2">
-            Edit, organize, and manage your uploaded videos
+            Edit, organize, and manage your uploaded videos;
           </p>
         </div>
         <VideoManagement />

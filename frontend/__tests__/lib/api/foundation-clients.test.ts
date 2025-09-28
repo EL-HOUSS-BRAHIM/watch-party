@@ -6,7 +6,8 @@ import { DashboardAPI } from "@/lib/api/dashboard"
 import { LocalizationAPI } from "@/lib/api/localization"
 import { SupportAPI } from "@/lib/api/support"
 import { API_ENDPOINTS } from "@/lib/api/endpoints"
-import type {
+import type {}
+
   DocumentationDocument,
   DashboardActivity,
   DashboardStatsSummary,
@@ -15,8 +16,7 @@ import type {
   LocalizationApproval,
 } from "@/lib/api/types"
 
-type TestServer = {
-  baseUrl: string
+type TestServer = { baseUrl: string;
   close: () => Promise<void>
 }
 
@@ -25,30 +25,29 @@ type RequestHandler = (
   res: http.ServerResponse,
   url: URL,
   body: unknown,
-) => Promise<boolean> | boolean
-
-async function startTestServer(handler: RequestHandler): Promise<TestServer> {
+) => Promise<boolean> | boolean;
+async function startTestServer(handler: RequestHandler): Promise<TestServer> {}
   let baseUrl = "http://127.0.0.1"
 
-  const server = http.createServer(async (req, res) => {
+  const server = http.createServer(async (req, res) => {}
     const requestUrl = new URL(req.url ?? "/", baseUrl)
     const body = await readBody(req)
     const handled = await handler(req, res, requestUrl, body)
     if (!handled) {
-      res.statusCode = 404
+      res.statusCode = 404;
       res.end()
     }
   })
 
   await new Promise<void>((resolve) => server.listen(0, resolve))
-  const { port } = server.address() as AddressInfo
+  const { port } = server.address() as AddressInfo;
   baseUrl = `http://127.0.0.1:${port}`
 
   return {
     baseUrl,
     close: () =>
-      new Promise<void>((resolve, reject) => {
-        server.close((error) => {
+      new Promise<void>((resolve, reject) => {}
+        server.close((error) => {}
           if (error) reject(error)
           else resolve()
         })
@@ -56,46 +55,46 @@ async function startTestServer(handler: RequestHandler): Promise<TestServer> {
   }
 }
 
-async function readBody(req: http.IncomingMessage): Promise<Record<string, unknown>> {
+async function readBody(req: http.IncomingMessage): Promise<Record<string, unknown>> {}
   if (req.method === "GET" || req.method === "HEAD") {
-    return undefined
+    return undefined;
   }
 
   const chunks: Uint8Array[] = []
-  for await (const chunk of req) {
+  for await (const chunk of req) {}
     chunks.push(typeof chunk === "string" ? Buffer.from(chunk) : chunk)
   }
 
   if (chunks.length === 0) {
-    return undefined
+    return undefined;
   }
 
   const raw = Buffer.concat(chunks).toString("utf-8")
   try {
     return JSON.parse(raw)
-  } catch {
-    return raw
+  } } catch {
+    return raw;
   }
 }
 
-function sendJson(res: http.ServerResponse, status: number, data: unknown): boolean {
-  res.statusCode = status
+function sendJson(res: http.ServerResponse, status: number, data: unknown): boolean {}
+  res.statusCode = status;
   res.setHeader("content-type", "application/json")
   res.end(JSON.stringify(data))
-  return true
+  return true;
 }
 
-describe("Phase 1 foundation API clients", () => {
+describe("Phase 1 foundation API clients", () => {}
   it("lists and publishes documentation entries via DocsAPI", async () => {
-    const documents: DocumentationDocument[] = [
-      {
+    const documents: DocumentationDocument[] = []
+      {}
         id: "doc-1",
         slug: "getting-started",
         title: "Getting Started",
         summary: "Quickstart checklist",
         type: "guide",
         status: "published",
-        category: {
+        category: {}
           id: "cat-1",
           slug: "user-guide",
           name: "User Guide",
@@ -114,12 +113,12 @@ describe("Phase 1 foundation API clients", () => {
       },
     ]
 
-    const server = await startTestServer(async (req, res, url) => {
+    const server = await startTestServer(async (req, res, url) => {}
       if (req.method === "GET" && url.pathname === API_ENDPOINTS.docs.list) {
         expect(url.searchParams.get("status")).toBe("published")
         expect(url.searchParams.get("tags")).toBe("onboarding,basics")
         expect(url.searchParams.get("page")).toBe("1")
-        return sendJson(res, 200, {
+        return sendJson(res, 200, {}
           results: documents,
           count: documents.length,
           next: null,
@@ -127,11 +126,11 @@ describe("Phase 1 foundation API clients", () => {
         })
       }
 
-      if (req.method === "POST" && url.pathname === API_ENDPOINTS.docs.publish("doc-1")) {
+      if (req.method === "POST" && url.pathname === API_ENDPOINTS.docs.publish("doc-1")) {}
         return sendJson(res, 200, { ...documents[0], status: "published", version: "1.0.1" })
       }
 
-      return false
+      return false;
     })
 
     const docsApi = new DocsAPI(new ApiClient({ baseURL: server.baseUrl }))
@@ -143,15 +142,14 @@ describe("Phase 1 foundation API clients", () => {
 
       const publishResponse = await docsApi.publishDocument("doc-1")
       expect(publishResponse.version).toBe("1.0.1")
-    } finally {
+    } finally {}
       await server.close()
     }
   })
 
   it("fetches dashboard stats and paginated activity", async () => {
-    const stats: DashboardStatsSummary = {
-      user: { id: "user-1", name: "Alex", email: "alex@example.com" },
-      stats: {
+    const stats: DashboardStatsSummary = { user: { id: "user-1", name: "Alex", email: "alex@example.com" },
+      stats: {}
         total_parties: 12,
         recent_parties: 2,
         total_videos: 5,
@@ -162,8 +160,8 @@ describe("Phase 1 foundation API clients", () => {
       timestamp: "2024-05-09T15:00:00Z",
     }
 
-    const activities: DashboardActivity[] = [
-      {
+    const activities: DashboardActivity[] = []
+      {}
         id: "act-1",
         type: "party_created",
         timestamp: "2024-05-09T14:30:00Z",
@@ -174,14 +172,14 @@ describe("Phase 1 foundation API clients", () => {
       },
     ]
 
-    const server = await startTestServer(async (req, res, url, body) => {
+    const server = await startTestServer(async (req, res, url, body) => {}
       if (req.method === "GET" && url.pathname === API_ENDPOINTS.dashboard.stats) {
         return sendJson(res, 200, stats)
       }
 
       if (req.method === "GET" && url.pathname === API_ENDPOINTS.dashboard.activities) {
         expect(url.searchParams.get("page_size")).toBe("25")
-        return sendJson(res, 200, {
+        return sendJson(res, 200, {}
           results: activities,
           count: 1,
           next: null,
@@ -197,7 +195,7 @@ describe("Phase 1 foundation API clients", () => {
         return sendJson(res, 200, { ...activities[0], status: "read" })
       }
 
-      return false
+      return false;
     })
 
     const dashboardApi = new DashboardAPI(new ApiClient({ baseURL: server.baseUrl }))
@@ -211,14 +209,14 @@ describe("Phase 1 foundation API clients", () => {
 
       const acknowledged = await dashboardApi.acknowledgeActivity("act-1")
       expect(acknowledged.status).toBe("read")
-    } finally {
+    } finally {}
       await server.close()
     }
   })
 
   it("manages localization strings and approvals", async () => {
-    const languages: LocalizationLanguage[] = [
-      {
+    const languages: LocalizationLanguage[] = []
+      {}
         code: "en",
         name: "English",
         native_name: "English",
@@ -227,7 +225,7 @@ describe("Phase 1 foundation API clients", () => {
         strings_translated: 1200,
         updated_at: "2024-05-08T12:00:00Z",
       },
-      {
+      {}
         code: "es",
         name: "Spanish",
         native_name: "Español",
@@ -239,15 +237,14 @@ describe("Phase 1 foundation API clients", () => {
       },
     ]
 
-    const submittedString: LocalizationString = {
-      id: "string-1",
+    const submittedString: LocalizationString = { id: "string-1",
       key: "dashboard.title",
       context: "Dashboard header",
       description: "Main dashboard hero title",
       source_text: "Welcome back",
       status: "in_review",
-      translations: [
-        {
+      translations: []
+        {}
           language: "es",
           text: "Bienvenido de nuevo",
           status: "in_review",
@@ -257,8 +254,8 @@ describe("Phase 1 foundation API clients", () => {
       updated_at: "2024-05-09T10:00:00Z",
     }
 
-    const approvals: LocalizationApproval[] = [
-      {
+    const approvals: LocalizationApproval[] = []
+      {}
         id: "approval-1",
         string_id: "string-1",
         language: "es",
@@ -269,7 +266,7 @@ describe("Phase 1 foundation API clients", () => {
       },
     ]
 
-    const server = await startTestServer(async (req, res, url, body) => {
+    const server = await startTestServer(async (req, res, url, body) => {}
       if (req.method === "GET" && url.pathname === API_ENDPOINTS.localization.languages) {
         return sendJson(res, 200, languages)
       }
@@ -277,16 +274,16 @@ describe("Phase 1 foundation API clients", () => {
       if (
         req.method === "POST" &&
         url.pathname === API_ENDPOINTS.localization.submitString("proj-1")
-      ) {
+      ) {}
         expect(body.translation).toBe("Bienvenido de nuevo")
         return sendJson(res, 200, submittedString)
       }
 
-      if (req.method === "GET" && url.pathname === API_ENDPOINTS.localization.approvals("proj-1")) {
+      if (req.method === "GET" && url.pathname === API_ENDPOINTS.localization.approvals("proj-1")) {}
         return sendJson(res, 200, approvals)
       }
 
-      return false
+      return false;
     })
 
     const localizationApi = new LocalizationAPI(new ApiClient({ baseURL: server.baseUrl }))
@@ -295,7 +292,7 @@ describe("Phase 1 foundation API clients", () => {
       const languageResponse = await localizationApi.getLanguages()
       expect(languageResponse.map((lang) => lang.code)).toContain(&quot;es&quot;)
 
-      const submission = await localizationApi.submitString("proj-1", {
+      const submission = await localizationApi.submitString("proj-1", {}
         key: "dashboard.title",
         language: "es",
         translation: "Bienvenido de nuevo",
@@ -304,14 +301,13 @@ describe("Phase 1 foundation API clients", () => {
 
       const approvalQueue = await localizationApi.getApprovals("proj-1")
       expect(approvalQueue).toHaveLength(1)
-    } finally {
+    } finally {}
       await server.close()
     }
   })
 
   it("creates, updates, and reorders FAQs via SupportAPI", async () => {
-    const existingFaq = {
-      id: "faq-1",
+    const existingFaq = { id: "faq-1",
       question: "How do I host a watch party?",
       answer: "Select the create party button and invite your friends.",
       category: { id: "general", name: "General", description: "", faq_count: 10 },
@@ -322,7 +318,7 @@ describe("Phase 1 foundation API clients", () => {
       tags: ["hosting"],
     }
 
-    const server = await startTestServer(async (req, res, url, body) => {
+    const server = await startTestServer(async (req, res, url, body) => {}
       if (req.method === "GET" && url.pathname === API_ENDPOINTS.support.faq) {
         return sendJson(res, 200, { results: [existingFaq], count: 1 })
       }
@@ -330,7 +326,7 @@ describe("Phase 1 foundation API clients", () => {
       if (req.method === "POST" && url.pathname === API_ENDPOINTS.support.faq) {
         expect(body.question).toBe("What is Watch Party?")
         expect(body.tags).toEqual(["intro"])
-        return sendJson(res, 201, {
+        return sendJson(res, 201, {}
           id: "faq-2",
           question: body.question,
           answer: body.answer,
@@ -346,7 +342,7 @@ describe("Phase 1 foundation API clients", () => {
       if (
         req.method === "PUT" &&
         url.pathname === API_ENDPOINTS.support.faqDetail("faq-1")
-      ) {
+      ) {}
         expect(body.is_published).toBe(false)
         return sendJson(res, 200, { ...existingFaq, is_published: false })
       }
@@ -359,11 +355,11 @@ describe("Phase 1 foundation API clients", () => {
       if (
         req.method === "DELETE" &&
         url.pathname === API_ENDPOINTS.support.faqDetail("faq-1")
-      ) {
+      ) {}
         return sendJson(res, 200, { success: true })
       }
 
-      return false
+      return false;
     })
 
     const supportApi = new SupportAPI(new ApiClient({ baseURL: server.baseUrl }))
@@ -372,7 +368,7 @@ describe("Phase 1 foundation API clients", () => {
       const faqResponse = await supportApi.getFAQs()
       expect(faqResponse.results[0].question).toContain("host")
 
-      const created = await supportApi.createFAQ({
+      const created = await supportApi.createFAQ({}
         question: "What is Watch Party?",
         answer: "A shared viewing experience with synchronized playback.",
         category: "general",
@@ -390,7 +386,7 @@ describe("Phase 1 foundation API clients", () => {
 
       const deletion = await supportApi.deleteFAQ("faq-1")
       expect((deletion as Record<string, unknown>).success).toBe(true)
-    } finally {
+    } finally {}
       await server.close()
     }
   })

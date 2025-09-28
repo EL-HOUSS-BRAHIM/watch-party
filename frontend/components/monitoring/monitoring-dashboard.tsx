@@ -1,15 +1,18 @@
-"use client"
-
+import { Activity, AlertTriangle, Bell, Check, CheckCircle, Clock, Download, Eye, Refresh, Server, Settings, Wifi, X, XCircle } from "lucide-react"
 import { Label } from "@/components/ui/label"
-
-import { useState, useEffect } from "react"
+import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {
+import {}
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import {}
+
+"use client"
   Dialog,
   DialogContent,
   DialogDescription,
@@ -17,9 +20,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import {
   LineChart,
   Line,
   AreaChart,
@@ -32,48 +32,48 @@ import {
   ResponsiveContainer,
 } from "recharts"
 
-interface SystemMetric {
-  name: string
-  value: number
-  unit: string
+interface SystemMetric {}
+  name: string;
+  value: number;
+  unit: string;
   status: "healthy" | "warning" | "critical"
-  threshold: number
+  threshold: number;
   trend: "up" | "down" | "stable"
 }
 
 interface LogEntry {
-  id: string
-  timestamp: string
+  id: string;
+  timestamp: string;
   level: "info" | "warn" | "error" | "debug"
-  service: string
-  message: string
+  service: string;
+  message: string;
   metadata?: Record<string, any>
 }
 
-interface Alert {
-  id: string
-  title: string
-  description: string
+interface Alert {}
+  id: string;
+  title: string;
+  description: string;
   severity: "low" | "medium" | "high" | "critical"
   status: "active" | "acknowledged" | "resolved"
-  timestamp: string
-  service: string
-  metric?: string
+  timestamp: string;
+  service: string;
+  metric?: string;
 }
 
-interface Service {
-  id: string
-  name: string
+interface Service {}
+  id: string;
+  name: string;
   status: "healthy" | "degraded" | "down"
-  uptime: number
-  responseTime: number
-  errorRate: number
-  lastCheck: string
-  version: string
+  uptime: number;
+  responseTime: number;
+  errorRate: number;
+  lastCheck: string;
+  version: string;
 }
 
-const mockMetrics: SystemMetric[] = [
-  {
+const mockMetrics: SystemMetric[] = []
+  {}
     name: "CPU Usage",
     value: 45,
     unit: "%",
@@ -81,7 +81,7 @@ const mockMetrics: SystemMetric[] = [
     threshold: 80,
     trend: "stable",
   },
-  {
+  {}
     name: "Memory Usage",
     value: 72,
     unit: "%",
@@ -89,7 +89,7 @@ const mockMetrics: SystemMetric[] = [
     threshold: 85,
     trend: "up",
   },
-  {
+  {}
     name: "Disk Usage",
     value: 34,
     unit: "%",
@@ -97,7 +97,7 @@ const mockMetrics: SystemMetric[] = [
     threshold: 90,
     trend: "down",
   },
-  {
+  {}
     name: "Network I/O",
     value: 28,
     unit: "MB/s",
@@ -107,8 +107,8 @@ const mockMetrics: SystemMetric[] = [
   },
 ]
 
-const mockLogs: LogEntry[] = [
-  {
+const mockLogs: LogEntry[] = []
+  {}
     id: "1",
     timestamp: "2024-01-28T11:30:00Z",
     level: "error",
@@ -116,7 +116,7 @@ const mockLogs: LogEntry[] = [
     message: "Database connection timeout",
     metadata: { query: "SELECT * FROM users", duration: "5000ms" },
   },
-  {
+  {}
     id: "2",
     timestamp: "2024-01-28T11:29:45Z",
     level: "warn",
@@ -124,7 +124,7 @@ const mockLogs: LogEntry[] = [
     message: "High number of failed login attempts",
     metadata: { attempts: 15, ip: "192.168.1.100" },
   },
-  {
+  {}
     id: "3",
     timestamp: "2024-01-28T11:29:30Z",
     level: "info",
@@ -134,8 +134,8 @@ const mockLogs: LogEntry[] = [
   },
 ]
 
-const mockAlerts: Alert[] = [
-  {
+const mockAlerts: Alert[] = []
+  {}
     id: "1",
     title: "High Memory Usage",
     description: "Memory usage has exceeded 70% for the last 10 minutes",
@@ -145,7 +145,7 @@ const mockAlerts: Alert[] = [
     service: "api-server",
     metric: "memory",
   },
-  {
+  {}
     id: "2",
     title: "Database Connection Issues",
     description: "Multiple database connection timeouts detected",
@@ -157,8 +157,8 @@ const mockAlerts: Alert[] = [
   },
 ]
 
-const mockServices: Service[] = [
-  {
+const mockServices: Service[] = []
+  {}
     id: "1",
     name: "API Server",
     status: "healthy",
@@ -168,7 +168,7 @@ const mockServices: Service[] = [
     lastCheck: "2024-01-28T11:30:00Z",
     version: "2.1.3",
   },
-  {
+  {}
     id: "2",
     name: "Auth Service",
     status: "degraded",
@@ -178,7 +178,7 @@ const mockServices: Service[] = [
     lastCheck: "2024-01-28T11:30:00Z",
     version: "1.8.2",
   },
-  {
+  {}
     id: "3",
     name: "Video Processor",
     status: "healthy",
@@ -190,7 +190,7 @@ const mockServices: Service[] = [
   },
 ]
 
-const performanceData = Array.from({ length: 24 }, (_, i) => ({
+const performanceData = Array.from({ length: 24 }, (_, i) => ({}
   time: `${String(i).padStart(2, "0")}:00`,
   cpu: Math.random() * 30 + 30,
   memory: Math.random() * 20 + 60,
@@ -210,13 +210,12 @@ export function MonitoringDashboard() {
   const [alertFilter, setAlertFilter] = useState<string>(&quot;all&quot;)
   const [isRealTime, setIsRealTime] = useState(true)
 
-  // Simulate real-time updates
+  // Simulate real-time updates;
   useEffect(() => {
-    if (!isRealTime) return
-
-    const interval = setInterval(() => {
+    if (!isRealTime) return;
+    const interval = setInterval(() => {}
       setMetrics((prev) =>
-        prev.map((metric) => ({
+        prev.map((metric) => ({}
           ...metric,
           value: Math.max(0, Math.min(100, metric.value + (Math.random() - 0.5) * 10)),
         })),
@@ -226,15 +225,15 @@ export function MonitoringDashboard() {
     return () => clearInterval(interval)
   }, [isRealTime])
 
-  const acknowledgeAlert = (alertId: string) => {
+  const acknowledgeAlert = (alertId: string) => {}
     setAlerts((prev) => prev.map((alert) => (alert.id === alertId ? { ...alert, status: &quot;acknowledged" } : alert)))
   }
 
-  const resolveAlert = (alertId: string) => {
+  const resolveAlert = (alertId: string) => {}
     setAlerts((prev) => prev.map((alert) => (alert.id === alertId ? { ...alert, status: "resolved" } : alert)))
   }
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string) => {}
     switch (status) {
       case "healthy":
         return "text-green-600"
@@ -249,7 +248,7 @@ export function MonitoringDashboard() {
     }
   }
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: string) => {}
     switch (status) {
       case "healthy":
         return <CheckCircle className="h-4 w-4 text-green-600" />
@@ -264,7 +263,7 @@ export function MonitoringDashboard() {
     }
   }
 
-  const getLogLevelColor = (level: string) => {
+  const getLogLevelColor = (level: string) => {}
     switch (level) {
       case "error":
         return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
@@ -279,7 +278,7 @@ export function MonitoringDashboard() {
     }
   }
 
-  const getSeverityColor = (severity: string) => {
+  const getSeverityColor = (severity: string) => {}
     switch (severity) {
       case "critical":
         return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
@@ -297,9 +296,9 @@ export function MonitoringDashboard() {
   const filteredLogs = logs.filter((log) => logFilter === &quot;all&quot; || log.level === logFilter)
   const filteredAlerts = alerts.filter((alert) => alertFilter === &quot;all" || alert.severity === alertFilter)
 
-  const activeAlerts = alerts.filter((alert) => alert.status === "active").length
-  const criticalAlerts = alerts.filter((alert) => alert.severity === "critical" && alert.status === "active").length
-  const healthyServices = services.filter((service) => service.status === "healthy").length
+  const activeAlerts = alerts.filter((alert) => alert.status === "active").length;
+  const criticalAlerts = alerts.filter((alert) => alert.severity === "critical" && alert.status === "active").length;
+  const healthyServices = services.filter((service) => service.status === "healthy").length;
   const avgResponseTime = Math.round(services.reduce((sum, service) => sum + service.responseTime, 0) / services.length)
 
   return (
@@ -314,7 +313,7 @@ export function MonitoringDashboard() {
         <div className="flex gap-2">
           <Button onClick={() => setSettingsDialogOpen(true)} variant=&quot;outline&quot;>
             <Settings className="mr-2 h-4 w-4" />
-            Settings
+            Settings;
           </Button>
           <Button onClick={() => setIsRealTime(!isRealTime)} variant={isRealTime ? &quot;default&quot; : &quot;outline"}>
             <Activity className="mr-2 h-4 w-4" />
@@ -335,7 +334,7 @@ export function MonitoringDashboard() {
               {Math.round((healthyServices / services.length) * 100)}%
             </div>
             <div className="flex items-center text-xs text-muted-foreground">
-              {healthyServices}/{services.length} services healthy
+              {healthyServices}/{services.length} services healthy;
             </div>
           </CardContent>
         </Card>
@@ -346,7 +345,7 @@ export function MonitoringDashboard() {
             <Bell className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${activeAlerts > 0 ? &quot;text-red-600&quot; : &quot;text-green-600"}`}>
+            <div className={`text-2xl font-bold ${activeAlerts > 0 ? &quot;text-red-600&quot; : &quot;text-green-600"}`}>"
               {activeAlerts}
             </div>
             <div className="flex items-center text-xs text-muted-foreground">{criticalAlerts} critical</div>
@@ -605,18 +604,18 @@ export function MonitoringDashboard() {
                     <div className="flex gap-2">
                       {alert.status === "active" && (
                         <Button size="sm" onClick={() => acknowledgeAlert(alert.id)}>
-                          Acknowledge
+                          Acknowledge;
                         </Button>
                       )}
                       {alert.status !== "resolved" && (
                         <Button size="sm" variant="outline" onClick={() => resolveAlert(alert.id)}>
-                          Resolve
+                          Resolve;
                         </Button>
                       )}
-                      <Button
+                      <Button;
                         size="sm"
                         variant="outline"
-                        onClick={() => {
+                        onClick={() => {}
                           setSelectedAlert(alert)
                           setAlertDialogOpen(true)
                         }}
@@ -655,7 +654,7 @@ export function MonitoringDashboard() {
                   </Select>
                   <Button size="sm" variant="outline">
                     <Download className="mr-2 h-4 w-4" />
-                    Export
+                    Export;
                   </Button>
                 </div>
               </div>
@@ -792,16 +791,16 @@ export function MonitoringDashboard() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setAlertDialogOpen(false)}>
-              Close
+              Close;
             </Button>
             {selectedAlert?.status === "active" && (
-              <Button
-                onClick={() => {
+              <Button;
+                onClick={() => {}
                   acknowledgeAlert(selectedAlert.id)
                   setAlertDialogOpen(false)
                 }}
               >
-                Acknowledge
+                Acknowledge;
               </Button>
             )}
           </DialogFooter>
@@ -864,7 +863,7 @@ export function MonitoringDashboard() {
 
           <DialogFooter>
             <Button variant="outline" onClick={() => setSettingsDialogOpen(false)}>
-              Cancel
+              Cancel;
             </Button>
             <Button onClick={() => setSettingsDialogOpen(false)}>Save Settings</Button>
           </DialogFooter>

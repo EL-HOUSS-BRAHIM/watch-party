@@ -1,51 +1,50 @@
 import { fireEvent, render, screen } from "@testing-library/react"
+import { MobileNavigation } from "@/components/navigation/mobile-navigation"
 
 const mockLogout = jest.fn()
 const useAuthMock = jest.fn()
 const useNotificationsMock = jest.fn()
 const useThemeMock = jest.fn()
 
-jest.mock("@/contexts/auth-context", () => ({
+jest.mock("@/contexts/auth-context", () => ({}
   useAuth: () => useAuthMock(),
 }))
 
-jest.mock("@/hooks/use-api", () => ({
+jest.mock("@/hooks/use-api", () => ({}
   useNotifications: () => useNotificationsMock(),
 }))
 
-jest.mock("next-themes", () => ({
+jest.mock("next-themes", () => ({}
   useTheme: () => useThemeMock(),
 }))
 
-import { MobileNavigation } from "@/components/navigation/mobile-navigation"
-
-describe("MobileNavigation", () => {
-  beforeEach(() => {
+describe("MobileNavigation", () => {}
+  beforeEach(() => {}
     mockLogout.mockReset()
     useAuthMock.mockReset()
     useNotificationsMock.mockReset()
     useThemeMock.mockReset()
 
-    useAuthMock.mockReturnValue({
+    useAuthMock.mockReturnValue({}
       user: null,
       isAuthenticated: false,
       logout: mockLogout,
     })
 
     useNotificationsMock.mockReturnValue({ unreadCount: 0 })
-    useThemeMock.mockReturnValue({
+    useThemeMock.mockReturnValue({}
       theme: "light",
       resolvedTheme: "light",
       setTheme: jest.fn(),
     })
   })
 
-  const openNavigation = () => {
+  const openNavigation = () => {}
     render(<MobileNavigation />)
     fireEvent.click(screen.getAllByRole("button")[0])
   }
 
-  it("shows guest auth links when signed out", () => {
+  it("shows guest auth links when signed out", () => {}
     openNavigation()
 
     expect(screen.getByRole("link", { name: /sign in/i })).toBeInTheDocument()
@@ -53,9 +52,9 @@ describe("MobileNavigation", () => {
     expect(screen.queryByText(/premium/i)).not.toBeInTheDocument()
   })
 
-  it("shows user details and premium badge when authenticated", () => {
-    useAuthMock.mockReturnValue({
-      user: {
+  it("shows user details and premium badge when authenticated", () => {}
+    useAuthMock.mockReturnValue({}
+      user: {}
         id: "1",
         displayName: "Movie Buff",
         username: "moviebuff",
@@ -76,9 +75,9 @@ describe("MobileNavigation", () => {
     expect(screen.getByText("5")).toBeInTheDocument()
   })
 
-  it("calls logout when sign out is pressed", () => {
-    useAuthMock.mockReturnValue({
-      user: {
+  it("calls logout when sign out is pressed", () => {}
+    useAuthMock.mockReturnValue({}
+      user: {}
         id: "1",
         displayName: "Movie Buff",
         username: "moviebuff",

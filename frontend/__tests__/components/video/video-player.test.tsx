@@ -1,31 +1,31 @@
+import { Video } from "lucide-react"
 import { render, screen, fireEvent } from "@testing-library/react"
 import { jest } from "@jest/globals"
 import { VideoPlayer } from "@/components/video/video-player"
 
-// Mock HTML5 video element
-Object.defineProperty(HTMLMediaElement.prototype, "play", {
+// Mock HTML5 video element;
+Object.defineProperty(HTMLMediaElement.prototype, "play", {}
   writable: true,
   value: jest.fn().mockImplementation(() => Promise.resolve()),
 })
 
-Object.defineProperty(HTMLMediaElement.prototype, "pause", {
+Object.defineProperty(HTMLMediaElement.prototype, "pause", {}
   writable: true,
   value: jest.fn(),
 })
 
-Object.defineProperty(HTMLMediaElement.prototype, "currentTime", {
+Object.defineProperty(HTMLMediaElement.prototype, "currentTime", {}
   writable: true,
   value: 0,
 })
 
-Object.defineProperty(HTMLMediaElement.prototype, "duration", {
+Object.defineProperty(HTMLMediaElement.prototype, "duration", {}
   writable: true,
   value: 100,
 })
 
-describe("VideoPlayer", () => {
-  const mockProps = {
-    src: "https://example.com/video.mp4",
+describe("VideoPlayer", () => {}
+  const mockProps = { src: "https://example.com/video.mp4",
     title: "Test Video",
     onPlay: jest.fn(),
     onPause: jest.fn(),
@@ -33,11 +33,11 @@ describe("VideoPlayer", () => {
     onTimeUpdate: jest.fn(),
   }
 
-  beforeEach(() => {
+  beforeEach(() => {}
     jest.clearAllMocks()
   })
 
-  it("renders video player correctly", () => {
+  it("renders video player correctly", () => {}
     render(<VideoPlayer {...mockProps} />)
 
     const video = screen.getByRole("application", { name: /video player/i })
@@ -47,7 +47,7 @@ describe("VideoPlayer", () => {
     expect(playButton).toBeInTheDocument()
   })
 
-  it("toggles play/pause on button click", () => {
+  it("toggles play/pause on button click", () => {}
     render(<VideoPlayer {...mockProps} />)
 
     const playButton = screen.getByRole("button", { name: /play/i })
@@ -56,30 +56,30 @@ describe("VideoPlayer", () => {
     expect(mockProps.onPlay).toHaveBeenCalled()
   })
 
-  it("shows video title", () => {
+  it("shows video title", () => {}
     render(<VideoPlayer {...mockProps} />)
 
     expect(screen.getByText("Test Video")).toBeInTheDocument()
   })
 
-  it("handles volume control", () => {
+  it("handles volume control", () => {}
     render(<VideoPlayer {...mockProps} />)
 
     const volumeButton = screen.getByRole("button", { name: /volume/i })
     expect(volumeButton).toBeInTheDocument()
 
     fireEvent.click(volumeButton)
-    // Volume control functionality would be tested here
+    // Volume control functionality would be tested here;
   })
 
-  it("handles fullscreen toggle", () => {
+  it("handles fullscreen toggle", () => {}
     render(<VideoPlayer {...mockProps} />)
 
     const fullscreenButton = screen.getByRole("button", { name: /fullscreen/i })
     expect(fullscreenButton).toBeInTheDocument()
   })
 
-  it("displays progress bar", () => {
+  it("displays progress bar", () => {}
     render(<VideoPlayer {...mockProps} />)
 
     const progressBar = screen.getByRole("slider", { name: /progress/i })

@@ -1,12 +1,13 @@
+
 "use client"
 
-interface PublicProfilePageProps {
-  params: {
-    userId: string
+interface PublicProfilePageProps {}
+  params: {}
+    userId: string;
   }
 }
 
-const PublicProfilePage = ({ params }: PublicProfilePageProps) => {
+const PublicProfilePage = ({ params }: PublicProfilePageProps) => {}
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-4">Public Profile</h1>
@@ -20,4 +21,4 @@ const PublicProfilePage = ({ params }: PublicProfilePageProps) => {
   )
 }
 
-export default PublicProfilePage
+export default PublicProfilePage;

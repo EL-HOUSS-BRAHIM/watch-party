@@ -1,6 +1,5 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { AlertTriangle, Calendar, Check, Eye, Flag, Loader2, MoreHorizontal, Search, Shield, TrendingUp, User, Users, Video, X } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -17,47 +16,48 @@ import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
 import { formatDistanceToNow } from "date-fns"
 
-interface Report {
-  id: string
+"use client"
+interface Report {}
+  id: string;
   type: "user" | "video" | "party" | "message"
   status: "pending" | "reviewing" | "resolved" | "dismissed"
   priority: "low" | "medium" | "high" | "critical"
   category: "spam" | "harassment" | "inappropriate_content" | "copyright" | "violence" | "other"
-  description: string
-  reportedBy: {
-    id: string
-    username: string
-    avatar?: string
+  description: string;
+  reportedBy: {}
+    id: string;
+    username: string;
+    avatar?: string;
   }
-  reportedItem: {
-    id: string
-    title?: string
-    content?: string
-    author?: {
-      id: string
-      username: string
-      avatar?: string
+  reportedItem: {}
+    id: string;
+    title?: string;
+    content?: string;
+    author?: {}
+      id: string;
+      username: string;
+      avatar?: string;
     }
   }
-  createdAt: string
-  reviewedAt?: string
-  reviewedBy?: {
-    id: string
-    username: string
+  createdAt: string;
+  reviewedAt?: string;
+  reviewedBy?: {}
+    id: string;
+    username: string;
   }
-  resolution?: string
-  evidence: {
+  resolution?: string;
+  evidence: {}
     screenshots: string[]
     logs: string[]
-    additionalInfo: string
+    additionalInfo: string;
   }
 }
 
-interface ModerationStats {
-  totalReports: number
-  pendingReports: number
-  resolvedToday: number
-  averageResolutionTime: number
+interface ModerationStats {}
+  totalReports: number;
+  pendingReports: number;
+  resolvedToday: number;
+  averageResolutionTime: number;
   reportsByCategory: Record<string, number>
   reportsByPriority: Record<string, number>
 }
@@ -84,7 +84,7 @@ export default function ContentModeration() {
 
   const loadReports = async () => {
     try {
-      const data = await adminAPI.getReports({
+      const data = await adminAPI.getReports({}
         status: statusFilter !== "all" ? statusFilter as Record<string, unknown> : undefined,
         type: typeFilter !== "all" ? typeFilter : undefined,
         page: currentPage,
@@ -93,17 +93,17 @@ export default function ContentModeration() {
       const results = data.results ?? []
       setReports(results)
 
-      const totalItems = data.pagination?.total ?? data.count ?? results.length
-      const pageSize = data.pagination?.page_size ?? 20
+      const totalItems = data.pagination?.total ?? data.count ?? results.length;
+      const pageSize = data.pagination?.page_size ?? 20;
       setTotalPages(totalItems ? Math.max(1, Math.ceil(totalItems / pageSize)) : 1)
-    } catch {
+    } } catch {
       console.error("Failed to load reports:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load reports. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
@@ -111,8 +111,8 @@ export default function ContentModeration() {
   const loadModerationStats = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/admin/moderation/stats/", {
-        headers: {
+      const response = await fetch("/api/admin/moderation/stats/", {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -121,27 +121,27 @@ export default function ContentModeration() {
         const data = await response.json()
         setStats(data)
       }
-    } catch {
+    } } catch {
       console.error("Failed to load moderation stats:", error)
     }
   }
 
-  const updateReportStatus = async (reportId: string, status: string, resolution?: string) => {
+  const updateReportStatus = async (reportId: string, status: string, resolution?: string) => {}
     try {
-      await adminAPI.resolveReport(reportId, {
+      await adminAPI.resolveReport(reportId, {}
         action: status === "resolved" ? "dismiss" : status as Record<string, unknown>,
         reason: resolution,
       })
 
-      await loadReports() // Reload to get updated data
+      await loadReports() // Reload to get updated data;
       setSelectedReport(null)
-      toast({
+      toast({}
         title: "Report Updated",
         description: `Report status changed to ${status}`,
       })
-    } catch {
+    } } catch {
       console.error("Failed to update report:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to update report. Please try again.",
         variant: "destructive",
@@ -149,21 +149,21 @@ export default function ContentModeration() {
     }
   }
 
-  const takeContentAction = async (reportId: string, action: string, reason: string) => {
+  const takeContentAction = async (reportId: string, action: string, reason: string) => {}
     try {
-      await adminAPI.resolveReport(reportId, {
+      await adminAPI.resolveReport(reportId, {}
         action: action as Record<string, unknown>,
         reason,
       })
 
-      await loadReports() // Reload to get updated data
-      toast({
+      await loadReports() // Reload to get updated data;
+      toast({}
         title: "Action Taken",
         description: `${action} applied successfully`,
       })
-    } catch {
+    } } catch {
       console.error("Failed to take content action:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to take action. Please try again.",
         variant: "destructive",
@@ -171,21 +171,17 @@ export default function ContentModeration() {
     }
   }
 
-  const getPriorityBadge = (priority: string) => {
-    const variants = {
-      low: "outline",
+  const getPriorityBadge = (priority: string) => {}
+    const variants = { low: "outline",
       medium: "secondary",
       high: "default",
       critical: "destructive",
-    } as const
-
-    const colors = {
-      low: "text-gray-600",
+    } as const;
+    const colors = { low: "text-gray-600",
       medium: "text-yellow-600",
       high: "text-orange-600",
       critical: "text-red-600",
-    } as const
-
+    } as const;
     return (
       <Badge variant={variants[priority as keyof typeof variants]} className={colors[priority as keyof typeof colors]}>
         {priority.charAt(0).toUpperCase() + priority.slice(1)}
@@ -193,14 +189,12 @@ export default function ContentModeration() {
     )
   }
 
-  const getStatusBadge = (status: string) => {
-    const variants = {
-      pending: "outline",
+  const getStatusBadge = (status: string) => {}
+    const variants = { pending: "outline",
       reviewing: "secondary",
       resolved: "default",
       dismissed: "destructive",
-    } as const
-
+    } as const;
     return (
       <Badge variant={variants[status as keyof typeof variants]}>
         {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -208,7 +202,7 @@ export default function ContentModeration() {
     )
   }
 
-  const getTypeIcon = (type: string) => {
+  const getTypeIcon = (type: string) => {}
     switch (type) {
       case "user":
         return <Users className="h-4 w-4" />
@@ -223,14 +217,14 @@ export default function ContentModeration() {
     }
   }
 
-  const ReportDetailsDialog = ({ report }: { report: Report }) => {
+  const ReportDetailsDialog = ({ report }: { report: Report }) => {}
     const [resolution, setResolution] = useState("")
     const [actionType, setActionType] = useState("")
 
-    const handleResolve = () => {
+    const handleResolve = () => {}
       if (actionType && resolution) {
         takeContentAction(report.id, actionType, resolution)
-      } else {
+      } else {}
         updateReportStatus(report.id, "resolved", resolution)
       }
     }
@@ -266,7 +260,7 @@ export default function ContentModeration() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600">Category:</span>
-                      <span className="capitalize">{report.category.replace(&quot;_&quot;, &quot; ")}</span>
+                      <span className="capitalize">{report.category.replace(&quot;_&quot;, &quot; ")}</span>"
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600">Status:</span>
@@ -349,7 +343,7 @@ export default function ContentModeration() {
                       <p className="text-xs text-gray-600 mb-2">Screenshots:</p>
                       <div className="grid grid-cols-3 gap-2">
                         {report.evidence.screenshots.map((screenshot, index) => (
-                          <img
+                          <img;
                             key={index}
                             src={screenshot || "/placeholder.svg"}
                             alt={`Evidence ${index + 1}`}
@@ -393,7 +387,7 @@ export default function ContentModeration() {
 
                   <div>
                     <Label className="text-xs">Resolution Notes</Label>
-                    <Textarea
+                    <Textarea;
                       placeholder="Explain your decision and any actions taken..."
                       value={resolution}
                       onChange={(e) => setResolution(e.target.value)}
@@ -403,10 +397,10 @@ export default function ContentModeration() {
 
                   <div className="flex justify-end gap-2">
                     <Button variant="outline" onClick={() => updateReportStatus(report.id, &quot;dismissed&quot;, resolution)}>
-                      Dismiss
+                      Dismiss;
                     </Button>
                     <Button onClick={handleResolve} disabled={!resolution}>
-                      Resolve Report
+                      Resolve Report;
                     </Button>
                   </div>
                 </div>
@@ -494,7 +488,7 @@ export default function ContentModeration() {
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input
+          <Input;
             placeholder="Search reports..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -569,7 +563,7 @@ export default function ContentModeration() {
                     <TableCell>
                       <div>
                         <p className="font-medium text-sm">#{report.id.slice(-8)}</p>
-                        <p className="text-xs text-gray-500 capitalize">{report.category.replace(&quot;_&quot;, &quot; ")}</p>
+                        <p className="text-xs text-gray-500 capitalize">{report.category.replace(&quot;_&quot;, &quot; ")}</p>"
                       </div>
                     </TableCell>
                     <TableCell>
@@ -606,23 +600,23 @@ export default function ContentModeration() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => setSelectedReport(report)}>
                             <Eye className="mr-2 h-4 w-4" />
-                            View Details
+                            View Details;
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => updateReportStatus(report.id, &quot;reviewing&quot;)}>
                             <Shield className="mr-2 h-4 w-4" />
-                            Start Review
+                            Start Review;
                           </DropdownMenuItem>
-                          <DropdownMenuItem
+                          <DropdownMenuItem;
                             onClick={() => updateReportStatus(report.id, &quot;resolved&quot;, &quot;Quick resolution")}
                           >
                             <Check className="mr-2 h-4 w-4" />
-                            Quick Resolve
+                            Quick Resolve;
                           </DropdownMenuItem>
-                          <DropdownMenuItem
+                          <DropdownMenuItem;
                             onClick={() => updateReportStatus(report.id, &quot;dismissed&quot;, &quot;Not actionable")}
                           >
                             <X className="mr-2 h-4 w-4" />
-                            Dismiss
+                            Dismiss;
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -639,24 +633,24 @@ export default function ContentModeration() {
       <div className="flex items-center justify-between">
         <p className="text-sm text-gray-600">Showing {reports.length} reports</p>
         <div className="flex items-center gap-2">
-          <Button
+          <Button;
             variant="outline"
             size="sm"
             onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
           >
-            Previous
+            Previous;
           </Button>
           <span className="text-sm">
             Page {currentPage} of {totalPages}
           </span>
-          <Button
+          <Button;
             variant="outline"
             size="sm"
             onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
             disabled={currentPage === totalPages}
           >
-            Next
+            Next;
           </Button>
         </div>
       </div>

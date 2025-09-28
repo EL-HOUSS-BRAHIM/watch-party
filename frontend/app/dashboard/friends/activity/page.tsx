@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useEffect, useCallback } from 'react';
 import Image from "next/image"
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,14 +5,16 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Heart, MessageCircle, Play, Users, Clock, Sparkles } from 'lucide-react';
+import { Activity, Clock, Heart, MessageCircle, Play, Sparkles, User, Users } from "lucide-react"
 import { usersAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
-interface ActivityItem {
+'use client';
+
+interface ActivityItem {}
   id: string;
   userId: string;
-  user: {
+  user: {}
     id: string;
     username: string;
     displayName: string;
@@ -23,7 +23,7 @@ interface ActivityItem {
     lastSeen?: string;
   };
   type: 'watch_video' | 'join_party' | 'like_video' | 'comment' | 'achievement' | 'friend_added';
-  content: {
+  content: {}
     title: string;
     description?: string;
     thumbnail?: string;
@@ -35,7 +35,7 @@ interface ActivityItem {
   privacy: 'public' | 'friends_only' | 'private';
 }
 
-const ActivityIcon = ({ type }: { type: ActivityItem['type'] }) => {
+const ActivityIcon = ({ type }: { type: ActivityItem['type'] }) => {}
   switch (type) {
     case 'watch_video':
       return <Play className="h-4 w-4 text-blue-500" />;
@@ -55,11 +55,11 @@ const ActivityIcon = ({ type }: { type: ActivityItem['type'] }) => {
 };
 
 const fallbackId = (prefix: string) =>
-  typeof crypto !== 'undefined' && 'randomUUID' in crypto
+  typeof crypto !== 'undefined' && 'randomUUID' in crypto;
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
-const resolveActivityType = (rawType: unknown): ActivityItem['type'] => {
+const resolveActivityType = (rawType: unknown): ActivityItem['type'] => {}
   const type = typeof rawType === 'string' ? rawType.toLowerCase() : '';
 
   if (type.includes('friend')) return 'friend_added';
@@ -70,22 +70,22 @@ const resolveActivityType = (rawType: unknown): ActivityItem['type'] => {
   return 'watch_video';
 };
 
-const normalizePrivacy = (privacy: unknown): ActivityItem['privacy'] => {
+const normalizePrivacy = (privacy: unknown): ActivityItem['privacy'] => {}
   const value = typeof privacy === 'string' ? privacy.toLowerCase() : '';
   if (value === 'friends' || value === 'friends_only') return 'friends_only';
   if (value === 'private') return 'private';
   return 'public';
 };
 
-const formatTimestamp = (timestamp: string) => {
+const formatTimestamp = (timestamp: string) => {}
   const date = new Date(timestamp);
-  if (Number.isNaN(date.getTime())) {
+  if (Number.isNaN(date.getTime())) {}
     return timestamp;
   }
   return date.toLocaleString();
 };
 
-const normalizeActivity = (activity: unknown): ActivityItem => {
+const normalizeActivity = (activity: unknown): ActivityItem => {}
   const activityType = resolveActivityType(activity?.activity_type ?? activity?.type);
   const user = activity?.user ?? {};
   const metadata = activity?.metadata ?? activity?.content ?? {};
@@ -103,7 +103,7 @@ const normalizeActivity = (activity: unknown): ActivityItem => {
   return {
     id: String(activity?.id ?? fallbackId('activity')),
     userId: String(user?.id ?? activity?.user_id ?? fallbackId('user')),
-    user: {
+    user: {}
       id: String(user?.id ?? activity?.user_id ?? fallbackId('user')),
       username: user?.username ?? user?.handle ?? 'user',
       displayName: user?.display_name ?? user?.name ?? user?.username ?? 'Friend',
@@ -112,7 +112,7 @@ const normalizeActivity = (activity: unknown): ActivityItem => {
       lastSeen: user?.last_seen ?? user?.last_activity ?? undefined,
     },
     type: activityType,
-    content: {
+    content: {}
       title,
       description: description ?? undefined,
       thumbnail: metadata.thumbnail ?? metadata.thumbnail_url ?? undefined,
@@ -146,15 +146,15 @@ export default function FriendsActivityFeed() {
       const response = await usersAPI.getActivity(params);
       const results = Array.isArray(response?.results) ? response.results : [];
       setActivities(results.map((item: unknown) => normalizeActivity(item)));
-    } catch {
+    } } catch {
       console.error('Failed to fetch activities:', error);
-      toast({
+      toast({}
         title: 'Could not load friend activity',
         description: 'Please try again later.',
         variant: 'destructive',
       });
       setActivities([]);
-    } finally {
+    } finally {}
       setLoading(false);
     }
   }, [filter, timeframe, toast]);
@@ -164,10 +164,10 @@ export default function FriendsActivityFeed() {
   }, [fetchActivities]);
 
   const filteredActivities = activities.filter(activity => 
-    filter === 'all' || activity.type === filter
+    filter === 'all' || activity.type === filter;
   );
 
-  const getActivityText = (activity: ActivityItem) => {
+  const getActivityText = (activity: ActivityItem) => {}
     switch (activity.type) {
       case 'watch_video':
         return 'watched a video';
@@ -278,7 +278,7 @@ export default function FriendsActivityFeed() {
 
                       <div className="flex items-start gap-4">
                         {activity.content.thumbnail && (
-                          <img
+                          <img;
                             src={activity.content.thumbnail}
                             alt=""
                             className="w-16 h-12 object-cover rounded border"
@@ -303,12 +303,12 @@ export default function FriendsActivityFeed() {
                         <div className="flex gap-2">
                           {activity.type === 'watch_video' && activity.content.videoId && (
                             <Button variant="outline" size="sm">
-                              Watch Too
+                              Watch Too;
                             </Button>
                           )}
                           {activity.type === 'join_party' && activity.content.partyId && (
                             <Button variant="outline" size="sm">
-                              Join Party
+                              Join Party;
                             </Button>
                           )}
                           <Button variant="ghost" size="sm">

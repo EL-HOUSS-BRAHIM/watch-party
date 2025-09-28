@@ -1,6 +1,5 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { AlertTriangle, Copy, Loader2, Lock, Save, Settings, Share, Trash, User, Users, Video, X } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { useRouter, useParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -19,8 +18,9 @@ import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { parseISO } from "date-fns"
 
-// Validation schema
-const partyFormSchema = z.object({
+"use client"
+// Validation schema;
+const partyFormSchema = z.object({}
   name: z.string().min(1, "Party name is required").max(100, "Name too long"),
   description: z.string().max(500, "Description too long").optional(),
   scheduledFor: z.string().min(1, "Start time is required"),
@@ -36,29 +36,29 @@ const partyFormSchema = z.object({
 
 type PartyFormData = z.infer<typeof partyFormSchema>
 
-interface Participant {
-  id: string
-  username: string
-  firstName: string
-  lastName: string
-  avatar?: string
+interface Participant {}
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  avatar?: string;
   role: "host" | "moderator" | "participant"
-  joinedAt: string
+  joinedAt: string;
 }
 
-interface WatchParty extends PartyFormData {
-  id: string
-  hostId: string
-  hostName: string
+interface WatchParty extends PartyFormData {}
+  id: string;
+  hostId: string;
+  hostName: string;
   status: "scheduled" | "active" | "ended" | "cancelled"
   participants: Participant[]
-  inviteCode: string
-  createdAt: string
-  updatedAt: string
-  currentVideo?: {
-    id: string
-    title: string
-    url: string
+  inviteCode: string;
+  createdAt: string;
+  updatedAt: string;
+  currentVideo?: {}
+    id: string;
+    title: string;
+    url: string;
   }
 }
 
@@ -67,8 +67,7 @@ export default function EditPartyPage() {
   const params = useParams()
   const { user } = useAuth()
   const { toast } = useToast()
-  const partyId = params.partyId as string
-
+  const partyId = params.partyId as string;
   const [party, setParty] = useState<WatchParty | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isSaving, setIsSaving] = useState(false)
@@ -76,16 +75,16 @@ export default function EditPartyPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [participantToRemove, setParticipantToRemove] = useState<string | null>(null)
 
-  const {
+  const {}
     register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors, isDirty },
-    reset
-  } = useForm<PartyFormData>({
+    reset;
+  } = useForm<PartyFormData>({}
     resolver: zodResolver(partyFormSchema),
-    defaultValues: {
+    defaultValues: {}
       name: "",
       description: "",
       scheduledFor: "",
@@ -101,8 +100,7 @@ export default function EditPartyPage() {
   })
 
   const watchedValues = watch()
-  const isHost = party?.hostId === user?.id
-
+  const isHost = party?.hostId === user?.id;
   useEffect(() => {
     if (partyId) {
       loadParty()
@@ -112,8 +110,8 @@ export default function EditPartyPage() {
   const loadParty = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/`, {
-        headers: {
+      const response = await fetch(`/api/parties/${partyId}/`, {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -122,30 +120,30 @@ export default function EditPartyPage() {
         const partyData: WatchParty = await response.json()
         setParty(partyData)
 
-        // Check if user is authorized to edit
+        // Check if user is authorized to edit;
         if (partyData.hostId !== user?.id) {
-          toast({
+          toast({}
             title: "Access Denied",
             description: "You can only edit parties that you host.",
             variant: "destructive",
           })
           router.push("/dashboard/parties")
-          return
+          return;
         }
 
-        // Check if party is active and prevent editing
+        // Check if party is active and prevent editing;
         if (partyData.status === "active") {
-          toast({
+          toast({}
             title: "Cannot Edit Active Party",
             description: "You cannot edit a party that is currently active.",
             variant: "destructive",
           })
           router.push(`/watch/${partyId}`)
-          return
+          return;
         }
 
-        // Populate form
-        reset({
+        // Populate form;
+        reset({}
           name: partyData.name,
           description: partyData.description || "",
           scheduledFor: partyData.scheduledFor,
@@ -159,37 +157,36 @@ export default function EditPartyPage() {
           tags: partyData.tags || [],
         })
       } else if (response.status === 404) {
-        toast({
+        toast({}
           title: "Party Not Found",
           description: "The party you're looking for doesn't exist.",
           variant: "destructive",
         })
         router.push("/dashboard/parties")
-      } else {
+      } else {}
         throw new Error("Failed to load party")
       }
-    } catch {
+    } } catch {
       console.error("Failed to load party:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load party details.",
         variant: "destructive",
       })
       router.push("/dashboard/parties")
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const onSubmit = async (data: PartyFormData) => {
-    if (!party || !isHost) return
-
+  const onSubmit = async (data: PartyFormData) => {}
+    if (!party || !isHost) return;
     setIsSaving(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/`, {
+      const response = await fetch(`/api/parties/${partyId}/`, {}
         method: "PUT",
-        headers: {
+        headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
@@ -199,141 +196,135 @@ export default function EditPartyPage() {
       if (response.ok) {
         const updatedParty = await response.json()
         setParty(updatedParty)
-        reset(data) // Reset form dirty state
-
-        toast({
+        reset(data) // Reset form dirty state;
+        toast({}
           title: "Party Updated",
           description: "Your watch party has been successfully updated.",
         })
 
         router.push("/dashboard/parties")
-      } else {
+      } else {}
         const errorData = await response.json()
-        toast({
+        toast({}
           title: "Update Failed",
           description: errorData.message || "Failed to update party.",
           variant: "destructive",
         })
       }
-    } catch {
+    } } catch {
       console.error("Party update error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsSaving(false)
     }
   }
 
   const deleteParty = async () => {
-    if (!party || !isHost) return
-
+    if (!party || !isHost) return;
     setIsDeleting(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/`, {
+      const response = await fetch(`/api/parties/${partyId}/`, {}
         method: "DELETE",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
-        toast({
+        toast({}
           title: "Party Deleted",
           description: "Your watch party has been deleted.",
         })
         router.push("/dashboard/parties")
-      } else {
+      } else {}
         const errorData = await response.json()
-        toast({
+        toast({}
           title: "Delete Failed",
           description: errorData.message || "Failed to delete party.",
           variant: "destructive",
         })
       }
-    } catch {
+    } } catch {
       console.error("Party delete error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsDeleting(false)
       setShowDeleteConfirm(false)
     }
   }
 
-  const removeParticipant = async (participantId: string) => {
-    if (!party || !isHost) return
-
+  const removeParticipant = async (participantId: string) => {}
+    if (!party || !isHost) return;
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/parties/${partyId}/participants/${participantId}/`, {
+      const response = await fetch(`/api/parties/${partyId}/participants/${participantId}/`, {}
         method: "DELETE",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
-        setParty({
+        setParty({}
           ...party,
           participants: party.participants.filter(p => p.id !== participantId)
         })
-        toast({
+        toast({}
           title: "Participant Removed",
           description: "The participant has been removed from the party.",
         })
-      } else {
-        toast({
+      } else {}
+        toast({}
           title: "Error",
           description: "Failed to remove participant.",
           variant: "destructive",
         })
       }
-    } catch {
+    } } catch {
       console.error("Remove participant error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setParticipantToRemove(null)
     }
   }
 
-  const copyInviteLink = () => {
-    if (!party) return
-    
+  const copyInviteLink = () => {}
+    if (!party) return;
     const inviteLink = `${window.location.origin}/invite/${party.inviteCode}`
     navigator.clipboard.writeText(inviteLink)
-    toast({
+    toast({}
       title: "Copied!",
       description: "Invite link copied to clipboard.",
     })
   }
 
   const shareParty = async () => {
-    if (!party) return
-
+    if (!party) return;
     const inviteLink = `${window.location.origin}/invite/${party.inviteCode}`
-    
     if (navigator.share) {
       try {
-        await navigator.share({
+        await navigator.share({}
           title: party.name,
           text: `Join my watch party: ${party.name}`,
           url: inviteLink,
         })
-      } catch {
+      } } catch {
         console.log("Share cancelled")
       }
-    } else {
+    } else {}
       copyInviteLink()
     }
   }
@@ -358,7 +349,7 @@ export default function EditPartyPage() {
           <h1 className="text-2xl font-bold mb-4">Party Not Found</h1>
           <p className="text-gray-600 mb-4">The party you&apos;re looking for doesn&apos;t exist.</p>
           <Button onClick={() => router.push(&quot;/dashboard/parties&quot;)}>
-            Back to Parties
+            Back to Parties;
           </Button>
         </div>
       </div>
@@ -371,7 +362,7 @@ export default function EditPartyPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
-            <Button
+            <Button;
               variant="ghost"
               onClick={() => router.back()}
               className="p-2"
@@ -381,7 +372,7 @@ export default function EditPartyPage() {
             <div>
               <h1 className="text-3xl font-bold flex items-center gap-2">
                 <Settings className="h-8 w-8" />
-                Edit Party
+                Edit Party;
               </h1>
               <p className="text-gray-600">Modify your watch party settings</p>
             </div>
@@ -394,7 +385,7 @@ export default function EditPartyPage() {
             {isDirty && (
               <Badge variant="secondary" className="flex items-center gap-1">
                 <AlertTriangle className="h-3 w-3" />
-                Unsaved Changes
+                Unsaved Changes;
               </Badge>
             )}
           </div>
@@ -418,14 +409,14 @@ export default function EditPartyPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Video className="h-5 w-5" />
-                Party Details
+                Party Details;
               </CardTitle>
               <CardDescription>Basic information about your watch party</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <Label htmlFor="name">Party Name *</Label>
-                <Input
+                <Input;
                   id="name"
                   {...register("name")}
                   className={errors.name ? "border-red-500" : ""}
@@ -438,7 +429,7 @@ export default function EditPartyPage() {
 
               <div>
                 <Label htmlFor="description">Description</Label>
-                <Textarea
+                <Textarea;
                   id="description"
                   placeholder="What are you watching? Add details..."
                   {...register("description")}
@@ -452,7 +443,7 @@ export default function EditPartyPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="scheduledFor">Start Time *</Label>
-                  <Input
+                  <Input;
                     id="scheduledFor"
                     type="datetime-local"
                     {...register("scheduledFor")}
@@ -465,7 +456,7 @@ export default function EditPartyPage() {
                 </div>
                 <div>
                   <Label htmlFor="maxParticipants">Max Participants *</Label>
-                  <Input
+                  <Input;
                     id="maxParticipants"
                     type="number"
                     min="2"
@@ -486,7 +477,7 @@ export default function EditPartyPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Lock className="h-5 w-5" />
-                Privacy & Access
+                Privacy & Access;
               </CardTitle>
               <CardDescription>Control who can join and how they can participate</CardDescription>
             </CardHeader>
@@ -501,7 +492,7 @@ export default function EditPartyPage() {
                     </p>
                   </div>
                 </div>
-                <Switch
+                <Switch;
                   id="isPublic"
                   {...register("isPublic")}
                 />
@@ -515,7 +506,7 @@ export default function EditPartyPage() {
                     <Label htmlFor="allowRequests">Allow Join Requests</Label>
                     <p className="text-sm text-gray-600">Let users request to join the party</p>
                   </div>
-                  <Switch
+                  <Switch;
                     id="allowRequests"
                     {...register("allowRequests")}
                   />
@@ -526,7 +517,7 @@ export default function EditPartyPage() {
                     <Label htmlFor="requireApproval">Require Approval</Label>
                     <p className="text-sm text-gray-600">Manually approve join requests</p>
                   </div>
-                  <Switch
+                  <Switch;
                     id="requireApproval"
                     {...register("requireApproval")}
                   />
@@ -537,7 +528,7 @@ export default function EditPartyPage() {
 
               <div>
                 <Label htmlFor="password">Party Password (Optional)</Label>
-                <Input
+                <Input;
                   id="password"
                   type="password"
                   placeholder="Set a password for additional security"
@@ -556,7 +547,7 @@ export default function EditPartyPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Party Features
+                Party Features;
               </CardTitle>
               <CardDescription>Configure what participants can do during the party</CardDescription>
             </CardHeader>
@@ -566,7 +557,7 @@ export default function EditPartyPage() {
                   <Label htmlFor="allowChat">Allow Chat</Label>
                   <p className="text-sm text-gray-600">Enable text chat during the party</p>
                 </div>
-                <Switch
+                <Switch;
                   id="allowChat"
                   {...register("allowChat")}
                 />
@@ -577,7 +568,7 @@ export default function EditPartyPage() {
                   <Label htmlFor="allowVideoRequests">Allow Video Requests</Label>
                   <p className="text-sm text-gray-600">Let participants suggest videos to watch</p>
                 </div>
-                <Switch
+                <Switch;
                   id="allowVideoRequests"
                   {...register("allowVideoRequests")}
                 />
@@ -618,7 +609,7 @@ export default function EditPartyPage() {
                           {participant.role}
                         </Badge>
                         {participant.role !== "host" && isHost && party.status === "scheduled" && (
-                          <Button
+                          <Button;
                             variant="outline"
                             size="sm"
                             onClick={() => setParticipantToRemove(participant.id)}
@@ -643,25 +634,25 @@ export default function EditPartyPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <UserPlus className="h-5 w-5" />
-                Invite Link
+                Invite Link;
               </CardTitle>
               <CardDescription>Share this link to invite people to your party</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-2">
-                <Input
+                <Input;
                   value={`${window.location.origin}/invite/${party.inviteCode}`}
-                  readOnly
+                  readOnly;
                   className="font-mono text-sm"
                 />
-                <Button
+                <Button;
                   type="button"
                   variant="outline"
                   onClick={copyInviteLink}
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
-                <Button
+                <Button;
                   type="button"
                   variant="outline"
                   onClick={shareParty}
@@ -674,25 +665,25 @@ export default function EditPartyPage() {
 
           {/* Action Buttons */}
           <div className="flex items-center justify-between">
-            <Button
+            <Button;
               type="button"
               variant="destructive"
               onClick={() => setShowDeleteConfirm(true)}
               disabled={party.status === "active" || isDeleting}
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              Delete Party
+              Delete Party;
             </Button>
 
             <div className="flex items-center gap-4">
-              <Button
+              <Button;
                 type="button"
                 variant="outline"
                 onClick={() => router.back()}
               >
-                Cancel
+                Cancel;
               </Button>
-              <Button
+              <Button;
                 type="submit"
                 disabled={isSaving || !isDirty || party.status === "active"}
               >
@@ -704,7 +695,7 @@ export default function EditPartyPage() {
                 ) : (
                   <>
                     <Save className="mr-2 h-4 w-4" />
-                    Save Changes
+                    Save Changes;
                   </>
                 )}
               </Button>
@@ -719,7 +710,7 @@ export default function EditPartyPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5 text-red-500" />
-                  Delete Party
+                  Delete Party;
                 </CardTitle>
                 <CardDescription>
                   This action cannot be undone. This will permanently delete your party and remove all participants.
@@ -727,14 +718,14 @@ export default function EditPartyPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex justify-end gap-2">
-                  <Button
+                  <Button;
                     variant="outline"
                     onClick={() => setShowDeleteConfirm(false)}
                     disabled={isDeleting}
                   >
-                    Cancel
+                    Cancel;
                   </Button>
-                  <Button
+                  <Button;
                     variant="destructive"
                     onClick={deleteParty}
                     disabled={isDeleting}
@@ -766,17 +757,17 @@ export default function EditPartyPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex justify-end gap-2">
-                  <Button
+                  <Button;
                     variant="outline"
                     onClick={() => setParticipantToRemove(null)}
                   >
-                    Cancel
+                    Cancel;
                   </Button>
-                  <Button
+                  <Button;
                     variant="destructive"
                     onClick={() => removeParticipant(participantToRemove)}
                   >
-                    Remove
+                    Remove;
                   </Button>
                 </div>
               </CardContent>

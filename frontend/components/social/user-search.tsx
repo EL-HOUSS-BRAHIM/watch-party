@@ -1,39 +1,39 @@
-"use client"
-
 import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, UserPlus, Users, MessageCircle, Crown, Loader2 } from "lucide-react"
+import { Crown, Loader2, MessageCircle, Search, User, UserPlus, Users } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useAuthGuard } from "@/components/auth/auth-guard"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { useDebounce } from "@/hooks/use-debounce"
 
-interface SearchUser {
-  id: string
-  username: string
-  firstName: string
-  lastName: string
-  avatar?: string
-  isOnline: boolean
-  mutualFriends: number
+"use client"
+
+interface SearchUser {}
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  avatar?: string;
+  isOnline: boolean;
+  mutualFriends: number;
   friendshipStatus: "none" | "pending_sent" | "pending_received" | "friends" | "blocked"
-  isPremium: boolean
-  lastActive?: string
-  bio?: string
-  location?: string
+  isPremium: boolean;
+  lastActive?: string;
+  bio?: string;
+  location?: string;
 }
 
-interface UserSearchProps {
-  onUserSelect?: (user: SearchUser) => void
-  className?: string
+interface UserSearchProps {}
+  onUserSelect?: (user: SearchUser) => void;
+  className?: string;
 }
 
-export default function UserSearch({ onUserSelect, className }: UserSearchProps) {
+export default function UserSearch({ onUserSelect, className }: UserSearchProps) {}
   const [searchQuery, setSearchQuery] = useState("")
   const [users, setUsers] = useState<SearchUser[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -47,16 +47,16 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
   const { toast } = useToast()
 
   const searchUsers = useCallback(
-    async (query: string) => {
-      if (!query.trim()) {
+    async (query: string) => {}
+      if (!query.trim()) {}
         setUsers([])
         setHasSearched(false)
-        return
+        return;
       }
 
-      if (!canMakeApiCall()) {
+      if (!canMakeApiCall()) {}
         console.log("Cannot search users: user not authenticated")
-        return
+        return;
       }
 
       setIsLoading(true)
@@ -64,14 +64,14 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
 
       try {
         const token = getAuthToken()
-        const params = new URLSearchParams({
+        const params = new URLSearchParams({}
           q: query,
           sort: sortBy,
           filter: filterBy,
         })
 
-        const response = await fetch(`/api/users/search/?${params}`, {
-          headers: {
+        const response = await fetch(`/api/users/search/?${params}`, {}
+          headers: {}
             Authorization: `Bearer ${token}`,
           },
         })
@@ -80,14 +80,14 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
           const data = await response.json()
           setUsers(data.results || data)
         }
-      } catch {
+      } } catch {
         console.error("Failed to search users:", error)
-        toast({
+        toast({}
           title: "Search Error",
           description: "Failed to search users. Please try again.",
           variant: "destructive",
         })
-      } finally {
+      } finally {}
         setIsLoading(false)
       }
     },
@@ -98,31 +98,31 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
     searchUsers(debouncedSearchQuery)
   }, [debouncedSearchQuery, searchUsers])
 
-  const sendFriendRequest = async (userId: string) => {
-    if (!canMakeApiCall()) {
+  const sendFriendRequest = async (userId: string) => {}
+    if (!canMakeApiCall()) {}
       console.log("Cannot send friend request: user not authenticated")
-      return
+      return;
     }
 
     try {
       const token = getAuthToken()
-      const response = await fetch(`/api/users/${userId}/friend-request/`, {
+      const response = await fetch(`/api/users/${userId}/friend-request/`, {}
         method: "POST",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
         setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: &quot;pending_sent&quot; } : u)))
-        toast({
+        toast({}
           title: "Friend request sent",
           description: "Your friend request has been sent successfully.",
         })
       }
-    } catch {
+    } } catch {
       console.error("Failed to send friend request:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to send friend request. Please try again.",
         variant: "destructive",
@@ -130,18 +130,18 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
     }
   }
 
-  const acceptFriendRequest = async (userId: string) => {
-    if (!canMakeApiCall()) {
+  const acceptFriendRequest = async (userId: string) => {}
+    if (!canMakeApiCall()) {}
       console.log("Cannot accept friend request: user not authenticated")
-      return
+      return;
     }
 
     try {
       const token = getAuthToken()
       // Find the request ID (this would come from the user data in a real implementation)
-      const response = await fetch(`/api/users/friend-requests/accept/`, {
+      const response = await fetch(`/api/users/friend-requests/accept/`, {}
         method: "POST",
-        headers: {
+        headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
@@ -150,14 +150,14 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
 
       if (response.ok) {
         setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, friendshipStatus: &quot;friends" } : u)))
-        toast({
+        toast({}
           title: "Friend request accepted",
           description: "You are now friends!",
         })
       }
-    } catch {
+    } } catch {
       console.error("Failed to accept friend request:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to accept friend request. Please try again.",
         variant: "destructive",
@@ -165,60 +165,60 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
     }
   }
 
-  const startChat = (userId: string) => {
-    // TODO: Implement chat functionality
-    toast({
+  const startChat = (userId: string) => {}
+    // TODO: Implement chat functionality;
+    toast({}
       title: "Chat feature",
       description: "Direct messaging coming soon!",
     })
   }
 
-  const getFriendshipStatusButton = (user: SearchUser) => {
+  const getFriendshipStatusButton = (user: SearchUser) => {}
     switch (user.friendshipStatus) {
       case "none":
         return (
           <Button size="sm" onClick={() => sendFriendRequest(user.id)}>
             <UserPlus className="mr-2 h-4 w-4" />
-            Add Friend
+            Add Friend;
           </Button>
         )
       case "pending_sent":
         return (
           <Button size="sm" variant="outline" disabled>
             <UserPlus className="mr-2 h-4 w-4" />
-            Request Sent
+            Request Sent;
           </Button>
         )
       case "pending_received":
         return (
           <Button size="sm" onClick={() => acceptFriendRequest(user.id)}>
             <UserPlus className="mr-2 h-4 w-4" />
-            Accept Request
+            Accept Request;
           </Button>
         )
       case "friends":
         return (
           <Button size="sm" variant="outline" onClick={() => startChat(user.id)}>
             <MessageCircle className="mr-2 h-4 w-4" />
-            Message
+            Message;
           </Button>
         )
       case "blocked":
         return (
           <Button size="sm" variant="outline" disabled>
-            Blocked
+            Blocked;
           </Button>
         )
       default:
-        return null
+        return null;
     }
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {
+  const getUserInitials = (firstName: string, lastName: string) => {}
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
   }
 
-  const getStatusIndicator = (user: SearchUser) => {
+  const getStatusIndicator = (user: SearchUser) => {}
     if (user.isOnline) {
       return <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
     }
@@ -230,7 +230,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
       <div>
         <h2 className="text-2xl font-bold flex items-center gap-2 mb-2">
           <Search className="h-6 w-6" />
-          Find Friends
+          Find Friends;
         </h2>
         <p className="text-gray-600">Search for users to connect with</p>
       </div>
@@ -239,7 +239,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
       <div className="space-y-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <Input
+          <Input;
             placeholder="Search by username, name, or email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -296,7 +296,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
         ) : (
           <div className="space-y-3">
             {users.map((searchUser) => (
-              <Card
+              <Card;
                 key={searchUser.id}
                 className="hover:shadow-md transition-shadow cursor-pointer"
                 onClick={() => onUserSelect?.(searchUser)}
@@ -321,7 +321,7 @@ export default function UserSearch({ onUserSelect, className }: UserSearchProps)
                             {searchUser.isPremium && <Crown className="h-4 w-4 text-yellow-500" />}
                             {searchUser.isOnline && (
                               <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                                Online
+                                Online;
                               </Badge>
                             )}
                           </div>

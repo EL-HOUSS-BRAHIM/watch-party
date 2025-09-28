@@ -1,5 +1,4 @@
-"use client"
-
+import { Loader2, User, Users } from "lucide-react"
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,27 +9,26 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useToast } from "@/hooks/use-toast"
 import { partiesAPI } from "@/lib/api"
 
+"use client"
 export function JoinParty() {
   const [partyCode, setPartyCode] = useState("")
   const [isJoining, setIsJoining] = useState(false)
   const [error, setError] = useState("")
-  
   const router = useRouter()
   const searchParams = useSearchParams()
   const { toast } = useToast()
-  // Check if there's a code in the URL
+  // Check if there's a code in the URL;
   const urlCode = searchParams.get("code")
-  
-  useState(() => {
+  useState(() => {}
     if (urlCode) {
       setPartyCode(urlCode)
     }
   })
 
   const joinParty = async () => {
-    if (!partyCode.trim()) {
+    if (!partyCode.trim()) {}
       setError("Please enter a party code")
-      return
+      return;
     }
 
     setIsJoining(true)
@@ -38,31 +36,30 @@ export function JoinParty() {
 
     try {
       const response = await partiesAPI.joinByCode(partyCode.trim().toUpperCase())
-      const partyId = response.party?.id
-
+      const partyId = response.party?.id;
       if (!partyId) {
         throw new Error("The server response did not include a party identifier")
       }
-      toast({
+      toast({}
         title: "Joined party!",
         description: "Welcome to the watch party",
       })
 
       if (response.redirect_url) {
-        window.location.href = response.redirect_url
-      } else {
+        window.location.href = response.redirect_url;
+      } else {}
         router.push(`/watch/${partyId}`)
       }
-    } catch {
-      const errorData = err?.response?.data
-      const message = errorData?.message || err?.message
+    } } catch {
+      const errorData = err?.response?.data;
+      const message = errorData?.message || err?.message;
       setError(message || "Failed to join party. Please check the code and try again.")
-    } finally {
+    } finally {}
       setIsJoining(false)
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent) => {}
     if (e.key === "Enter") {
       joinParty()
     }
@@ -76,13 +73,13 @@ export function JoinParty() {
         </div>
         <CardTitle>Join Watch Party</CardTitle>
         <CardDescription>
-          Enter the party code to join your friends
+          Enter the party code to join your friends;
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
           <Label htmlFor="party-code">Party Code</Label>
-          <Input
+          <Input;
             id="party-code"
             value={partyCode}
             onChange={(e) => setPartyCode(e.target.value.toUpperCase())}
@@ -90,10 +87,10 @@ export function JoinParty() {
             placeholder="Enter 6-digit code"
             maxLength={6}
             className="text-center text-lg tracking-widest font-mono"
-            autoFocus
+            autoFocus;
           />
           <p className="text-xs text-muted-foreground mt-1">
-            The party code is usually 6 characters long
+            The party code is usually 6 characters long;
           </p>
         </div>
 
@@ -104,7 +101,7 @@ export function JoinParty() {
           </Alert>
         )}
 
-        <Button
+        <Button;
           onClick={joinParty}
           disabled={isJoining || !partyCode.trim()}
           className="w-full"
@@ -122,7 +119,7 @@ export function JoinParty() {
         <div className="text-center text-sm text-muted-foreground">
           <p>Don&apos;t have a party code?</p>
           <Button variant="link" className="text-sm p-0 h-auto">
-            Create your own party
+            Create your own party;
           </Button>
         </div>
       </CardContent>

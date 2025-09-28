@@ -1,10 +1,10 @@
-"use client"
-
 import { render, screen, act } from "@testing-library/react"
 import { AuthProvider, useAuth } from "@/contexts/auth-context"
 import type { ReactNode } from "react"
 
-// Test component to use the auth context
+"use client"
+
+// Test component to use the auth context;
 function TestComponent() {
   const { user, login, logout, isLoading } = useAuth()
 
@@ -18,12 +18,12 @@ function TestComponent() {
   )
 }
 
-describe("AuthContext", () => {
-  const renderWithProvider = (children: ReactNode) => {
+describe("AuthContext", () => {}
+  const renderWithProvider = (children: ReactNode) => {}
     return render(<AuthProvider>{children}</AuthProvider>)
   }
 
-  it("provides initial auth state", () => {
+  it("provides initial auth state", () => {}
     renderWithProvider(<TestComponent />)
 
     expect(screen.getByTestId("user")).toHaveTextContent("No user")
@@ -39,7 +39,7 @@ describe("AuthContext", () => {
       loginButton.click()
     })
 
-    // Would test actual login logic here with mocked API
+    // Would test actual login logic here with mocked API;
   })
 
   it("handles logout flow", async () => {

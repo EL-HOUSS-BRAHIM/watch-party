@@ -1,21 +1,22 @@
+
 "use client"
 
-const InventoryPage = () => {
-  // Mock data for user's inventory items
-  const inventoryItems = [
-    {
+const InventoryPage = () => {}
+  // Mock data for user's inventory items;
+  const inventoryItems = []
+    {}
       id: 1,
       name: "Exclusive Avatar",
       description: "A unique avatar only available to premium members.",
       type: "Avatar",
     },
-    {
+    {}
       id: 2,
       name: "Animated Background",
       description: "A cool animated background for your profile.",
       type: "Background",
     },
-    {
+    {}
       id: 3,
       name: "VIP Badge",
       description: "A badge to show off your VIP status.",
@@ -45,4 +46,4 @@ const InventoryPage = () => {
   )
 }
 
-export default InventoryPage
+export default InventoryPage;

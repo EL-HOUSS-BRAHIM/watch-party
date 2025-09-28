@@ -1,34 +1,34 @@
-'use client'
-
+import { Activity, Check, CheckCircle, Refresh, User, Users, Wifi, WifiOff } from "lucide-react"
 import { useState, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 
-interface SyncStatus {
-  is_synced: boolean
-  time_difference: number
-  buffer_health: number
+'use client'
+interface SyncStatus {}
+  is_synced: boolean;
+  time_difference: number;
+  buffer_health: number;
   connection_quality: 'excellent' | 'good' | 'poor' | 'offline'
-  sync_participants: number
-  total_participants: number
-  last_sync: string
-  is_buffering: boolean
+  sync_participants: number;
+  total_participants: number;
+  last_sync: string;
+  is_buffering: boolean;
 }
 
-interface RealTimeSyncIndicatorProps {
-  syncStatus: SyncStatus
-  onForceSync: () => void
-  onReconnect: () => void
-  className?: string
+interface RealTimeSyncIndicatorProps {}
+  syncStatus: SyncStatus;
+  onForceSync: () => void;
+  onReconnect: () => void;
+  className?: string;
 }
 
-export function RealTimeSyncIndicator({
+export function RealTimeSyncIndicator({}
   syncStatus,
   onForceSync,
   onReconnect,
   className = ''
-}: RealTimeSyncIndicatorProps) {
+}: RealTimeSyncIndicatorProps) {}
   const [isReconnecting, setIsReconnecting] = useState(false)
   const [lastUpdate, setLastUpdate] = useState(Date.now())
 
@@ -36,7 +36,7 @@ export function RealTimeSyncIndicator({
     setLastUpdate(Date.now())
   }, [syncStatus])
 
-  const getConnectionIcon = () => {
+  const getConnectionIcon = () => {}
     switch (syncStatus.connection_quality) {
       case 'excellent':
         return <Wifi className="w-4 h-4 text-green-500" />
@@ -51,7 +51,7 @@ export function RealTimeSyncIndicator({
     }
   }
 
-  const getSyncIcon = () => {
+  const getSyncIcon = () => {}
     if (syncStatus.is_buffering) {
       return <Activity className="w-4 h-4 text-blue-500 animate-pulse" />
     }
@@ -61,7 +61,7 @@ export function RealTimeSyncIndicator({
     return <AlertCircle className="w-4 h-4 text-red-500" />
   }
 
-  const getConnectionColor = () => {
+  const getConnectionColor = () => {}
     switch (syncStatus.connection_quality) {
       case 'excellent':
         return 'border-green-500 bg-green-50 dark:bg-green-900/20'
@@ -76,7 +76,7 @@ export function RealTimeSyncIndicator({
     }
   }
 
-  const formatTimeDifference = (diff: number) => {
+  const formatTimeDifference = (diff: number) => {}
     if (Math.abs(diff) < 0.5) return 'Perfect sync'
     const sign = diff > 0 ? &apos;+&apos; : &apos;'
     return `${sign}${diff.toFixed(1)}s`
@@ -86,13 +86,12 @@ export function RealTimeSyncIndicator({
     setIsReconnecting(true)
     try {
       await onReconnect()
-    } finally {
+    } finally {}
       setTimeout(() => setIsReconnecting(false), 2000)
     }
   }
 
-  const syncPercentage = (syncStatus.sync_participants / syncStatus.total_participants) * 100
-
+  const syncPercentage = (syncStatus.sync_participants / syncStatus.total_participants) * 100;
   return (
     <div className={`${className}`}>
       {/* Compact Status Bar */}
@@ -109,7 +108,7 @@ export function RealTimeSyncIndicator({
         <div className="flex items-center gap-2">
           {getSyncIcon()}
           <span className="text-sm">
-            {syncStatus.is_buffering 
+            {syncStatus.is_buffering;
               ? 'Buffering...' 
               : formatTimeDifference(syncStatus.time_difference)
             }
@@ -127,7 +126,7 @@ export function RealTimeSyncIndicator({
         {/* Actions */}
         <div className="flex items-center gap-1 ml-auto">
           {syncStatus.connection_quality === 'offline' ? (
-            <Button
+            <Button;
               size="sm"
               variant="outline"
               onClick={handleReconnect}
@@ -141,21 +140,21 @@ export function RealTimeSyncIndicator({
               )}
             </Button>
           ) : !syncStatus.is_synced && (
-            <Button
+            <Button;
               size="sm"
               variant="outline"
               onClick={onForceSync}
               className="h-7 px-2"
             >
               <RefreshCw className="w-3 h-3 mr-1" />
-              Sync
+              Sync;
             </Button>
           )}
         </div>
       </div>
 
       {/* Detailed Status (when issues detected) */}
-      {(!syncStatus.is_synced || syncStatus.connection_quality === 'poor' || syncStatus.buffer_health < 50) && (
+      {(!syncStatus.is_synced || syncStatus.connection_quality === 'poor' || syncStatus.buffer_health < 50) && (}
         <div className="mt-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-2">
           {/* Buffer Health */}
           <div className="space-y-1">
@@ -180,7 +179,7 @@ export function RealTimeSyncIndicator({
             {syncStatus.connection_quality === 'poor' && (
               <p>• Poor connection detected. Consider lowering video quality.</p>
             )}
-            {syncStatus.buffer_health < 30 && (
+            {syncStatus.buffer_health < 30 && (}
               <p>• Low buffer health. Video may pause frequently.</p>
             )}
             {!syncStatus.is_synced && Math.abs(syncStatus.time_difference) > 5 && (
@@ -192,14 +191,13 @@ export function RealTimeSyncIndicator({
 
       {/* Status Badges */}
       <div className="flex flex-wrap gap-1 mt-2">
-        <Badge 
+        <Badge;
           variant={syncStatus.is_synced ? "default" : "destructive"}
           className="text-xs"
         >
           {syncStatus.is_synced ? 'Synced' : 'Out of Sync'}
         </Badge>
-        
-        <Badge 
+        <Badge;
           variant={syncStatus.buffer_health > 50 ? &quot;secondary&quot; : &quot;destructive"}
           className="text-xs"
         >
@@ -208,13 +206,13 @@ export function RealTimeSyncIndicator({
 
         {syncStatus.connection_quality === 'excellent' && (
           <Badge variant="secondary" className="text-xs">
-            HD Quality
+            HD Quality;
           </Badge>
         )}
 
-        {Date.now() - new Date(syncStatus.last_sync).getTime() < 5000 && (
+        {Date.now() - new Date(syncStatus.last_sync).getTime() < 5000 && (}
           <Badge variant="secondary" className="text-xs">
-            Recently Synced
+            Recently Synced;
           </Badge>
         )}
       </div>

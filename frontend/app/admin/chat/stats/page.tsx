@@ -1,5 +1,4 @@
-'use client';
-
+import { PieChart, TrendingUp, User, Users, X } from "lucide-react"
 import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -11,27 +10,28 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { chatAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
-interface ChatStats {
+'use client';
+interface ChatStats {}
   totalMessages: number;
   totalUsers: number;
   activeUsers: number;
   averageMessagesPerUser: number;
-  topChannels: Array<{
+  topChannels: Array<{}
     id: string;
     name: string;
     messageCount: number;
     userCount: number;
   }>;
-  messagesByHour: Array<{
+  messagesByHour: Array<{}
     hour: number;
     count: number;
   }>;
-  moderationActions: Array<{
+  moderationActions: Array<{}
     type: string;
     count: number;
     color: string;
   }>;
-  recentActivity: Array<{
+  recentActivity: Array<{}
     id: string;
     type: 'message' | 'join' | 'leave' | 'moderation';
     user: string;
@@ -49,7 +49,7 @@ export default function ChatStatsPage() {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const normalizeActivityType = (type: unknown): 'message' | 'join' | 'leave' | 'moderation' => {
+  const normalizeActivityType = (type: unknown): 'message' | 'join' | 'leave' | 'moderation' => {}
     const typeStr = String(type).toLowerCase()
     if (typeStr.includes('moderation') || typeStr.includes('mod') || typeStr.includes('ban') || typeStr.includes('warn')) return 'moderation'
     if (typeStr.includes('join') || typeStr.includes('enter')) return 'join'
@@ -60,10 +60,10 @@ export default function ChatStatsPage() {
   const fetchChatStats = useCallback(async () => {
     setLoading(true);
     try {
-      // Fetch chat statistics from multiple API endpoints
+      // Fetch chat statistics from multiple API endpoints;
       const defaultRoomId = selectedChannel !== 'all' ? selectedChannel : 'global'
 
-      const [messagesResponse, usersResponse, moderationResponse] = await Promise.allSettled([
+      const [messagesResponse, usersResponse, moderationResponse] = await Promise.allSettled([]
         chatAPI.getMessages(defaultRoomId, { limit: 1000 }),
         typeof chatAPI.getActiveUsers === 'function'
           ? chatAPI.getActiveUsers(defaultRoomId)
@@ -71,8 +71,7 @@ export default function ChatStatsPage() {
         chatAPI.getModerationLog ? chatAPI.getModerationLog(defaultRoomId, { page: 1 }) : Promise.resolve(null)
       ])
 
-      const chatStats: ChatStats = {
-        totalMessages: 0,
+      const chatStats: ChatStats = { totalMessages: 0,
         totalUsers: 0,
         activeUsers: 0,
         averageMessagesPerUser: 0,
@@ -82,19 +81,18 @@ export default function ChatStatsPage() {
         recentActivity: []
       }
 
-      // Process messages data
+      // Process messages data;
       if (messagesResponse.status === 'fulfilled' && messagesResponse.value) {
-        const messagesData = messagesResponse.value
+        const messagesData = messagesResponse.value;
         chatStats.totalMessages = Number(messagesData.count ?? 0)
-        
-        // Create default hourly data since API doesn't provide it
-        chatStats.messagesByHour = Array.from({ length: 24 }, (_, i) => ({
+        // Create default hourly data since API doesn't provide it;
+        chatStats.messagesByHour = Array.from({ length: 24 }, (_, i) => ({}
           hour: i,
           count: Math.floor(Math.random() * 100)
         }))
 
-        // Generate default channel data since API doesn't provide it
-        chatStats.topChannels = [
+        // Generate default channel data since API doesn't provide it;
+        chatStats.topChannels = []
           { id: '1', name: 'general', messageCount: Math.floor(Math.random() * 1000) + 100, userCount: Math.floor(Math.random() * 50) + 10 },
           { id: '2', name: 'random', messageCount: Math.floor(Math.random() * 500) + 50, userCount: Math.floor(Math.random() * 30) + 5 },
           { id: '3', name: 'announcements', messageCount: Math.floor(Math.random() * 300) + 30, userCount: Math.floor(Math.random() * 40) + 8 },
@@ -102,25 +100,25 @@ export default function ChatStatsPage() {
           { id: '5', name: 'off-topic', messageCount: Math.floor(Math.random() * 100) + 10, userCount: Math.floor(Math.random() * 15) + 2 },
         ]
 
-        // Generate default recent activity data since API doesn't provide it
-        chatStats.recentActivity = [
+        // Generate default recent activity data since API doesn't provide it;
+        chatStats.recentActivity = []
           { id: '1', type: 'join', user: 'user1', channel: 'general', timestamp: new Date().toISOString() },
           { id: '2', type: 'message', user: 'user2', channel: 'general', timestamp: new Date(Date.now() - 60000).toISOString() },
           { id: '3', type: 'moderation', user: 'admin', channel: 'general', timestamp: new Date(Date.now() - 120000).toISOString(), details: 'Message deleted' },
         ]
-      } else {
-        // Generate default data when messages couldn't be fetched
-        chatStats.messagesByHour = Array.from({ length: 24 }, (_, i) => ({
+      } else {}
+        // Generate default data when messages couldn't be fetched;
+        chatStats.messagesByHour = Array.from({ length: 24 }, (_, i) => ({}
           hour: i,
-          count: 0
+          count: 0;
         }))
       }
 
-      // Process users data
+      // Process users data;
       if (usersResponse.status === 'fulfilled' && usersResponse.value) {
         const usersData = usersResponse.value as { active_users?: unknown[]; total_active?: number; total_users?: number; total?: number }
         const activeList = Array.isArray(usersData.active_users)
-          ? usersData.active_users
+          ? usersData.active_users;
           : Array.isArray(usersResponse.value)
             ? (usersResponse.value as Record<string, unknown>[])
             : []
@@ -133,9 +131,9 @@ export default function ChatStatsPage() {
         }
       }
 
-      // Generate default moderation data
+      // Generate default moderation data;
       if (moderationResponse.status === 'fulfilled' && moderationResponse.value) {
-        chatStats.moderationActions = [
+        chatStats.moderationActions = []
           { type: 'Message Deleted', count: Math.floor(Math.random() * 50) + 10, color: 'hsl(var(--chart-1))' },
           { type: 'User Warned', count: Math.floor(Math.random() * 30) + 5, color: 'hsl(var(--chart-2))' },
           { type: 'User Muted', count: Math.floor(Math.random() * 20) + 3, color: 'hsl(var(--chart-3))' },
@@ -144,15 +142,15 @@ export default function ChatStatsPage() {
       }
 
       setStats(chatStats);
-    } catch {
+    } } catch {
       console.error('Failed to fetch chat stats:', error);
-      toast({
+      toast({}
         title: 'Chat Statistics Unavailable',
         description: 'Unable to load chat statistics. Please try again later.',
         variant: 'destructive'
       })
       setStats(null)
-    } finally {
+    } finally {}
       setLoading(false);
     }
   }, [selectedChannel, toast])
@@ -226,11 +224,10 @@ export default function ChatStatsPage() {
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalMessages.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+12%</span> from last period
+              <span className="text-green-600">+12%</span> from last period;
             </p>
           </CardContent>
         </Card>
-        
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Users</CardTitle>
@@ -239,7 +236,7 @@ export default function ChatStatsPage() {
           <CardContent>
             <div className="text-2xl font-bold">{stats.activeUsers}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+5%</span> from last period
+              <span className="text-green-600">+5%</span> from last period;
             </p>
           </CardContent>
         </Card>
@@ -252,7 +249,7 @@ export default function ChatStatsPage() {
           <CardContent>
             <div className="text-2xl font-bold">{stats.averageMessagesPerUser}</div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-blue-600">+2.1</span> from last period
+              <span className="text-blue-600">+2.1</span> from last period;
             </p>
           </CardContent>
         </Card>
@@ -267,7 +264,7 @@ export default function ChatStatsPage() {
               {stats.moderationActions.reduce((sum, action) => sum + action.count, 0)}
             </div>
             <p className="text-xs text-muted-foreground">
-              <span className="text-red-600">+8</span> from last period
+              <span className="text-red-600">+8</span> from last period;
             </p>
           </CardContent>
         </Card>
@@ -314,7 +311,7 @@ export default function ChatStatsPage() {
                       <div>
                         <h3 className="font-medium">{channel.name}</h3>
                         <p className="text-sm text-muted-foreground">
-                          {channel.userCount} users active
+                          {channel.userCount} users active;
                         </p>
                       </div>
                     </div>
@@ -338,7 +335,7 @@ export default function ChatStatsPage() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
-                    <Pie
+                    <Pie;
                       data={stats.moderationActions}
                       cx="50%"
                       cy="50%"
@@ -366,7 +363,7 @@ export default function ChatStatsPage() {
                   {stats.moderationActions.map((action, index) => (
                     <div key={index} className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div 
+                        <div;
                           className="w-3 h-3 rounded-full" 
                           style={{ backgroundColor: action.color }}
                         />
@@ -386,7 +383,7 @@ export default function ChatStatsPage() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Recent Activity</CardTitle>
-                <Input
+                <Input;
                   placeholder="Search activity..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -396,7 +393,7 @@ export default function ChatStatsPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {stats.recentActivity
+                {stats.recentActivity;
                   .filter(activity => 
                     activity.user.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     activity.channel.toLowerCase().includes(searchTerm.toLowerCase())
@@ -404,8 +401,8 @@ export default function ChatStatsPage() {
                   .map((activity) => (
                     <div key={activity.id} className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="flex items-center gap-3">
-                        <Badge 
-                          variant={
+                        <Badge;
+                          variant={}
                             activity.type === 'moderation' ? 'destructive' :
                             activity.type === 'join' ? 'secondary' :
                             activity.type === 'leave' ? 'outline' : 'default'

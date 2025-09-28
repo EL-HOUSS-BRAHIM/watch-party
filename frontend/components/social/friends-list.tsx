@@ -1,6 +1,4 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
@@ -10,7 +8,11 @@ import { useAuth } from "@/contexts/auth-context"
 import { useAuthGuard } from "@/components/auth/auth-guard"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
-import {
+import {}
+
+} from "lucide-react"
+"use client"
+
   Search,
   UserPlus,
   MoreVertical,
@@ -21,31 +23,30 @@ import {
   Crown,
   Circle,
   Users,
-} from "lucide-react"
 
-interface Friend {
-  id: string
-  first_name: string
-  last_name: string
-  email: string
-  avatar?: string
+interface Friend {}
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  avatar?: string;
   status: "online" | "offline" | "away" | "busy"
-  last_seen?: string
-  mutual_friends: number
-  friendship_date: string
-  is_premium: boolean
-  current_activity?: {
+  last_seen?: string;
+  mutual_friends: number;
+  friendship_date: string;
+  is_premium: boolean;
+  current_activity?: {}
     type: "watching" | "in_party" | "idle"
-    details?: string
-    party_id?: string
+    details?: string;
+    party_id?: string;
   }
 }
 
-interface FriendsListProps {
-  className?: string
+interface FriendsListProps {}
+  className?: string;
 }
 
-export function FriendsList({ className }: FriendsListProps) {
+export function FriendsList({ className }: FriendsListProps) {}
   const [friends, setFriends] = useState<Friend[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
@@ -55,23 +56,22 @@ export function FriendsList({ className }: FriendsListProps) {
   const { toast } = useToast()
 
   useEffect(() => {
-    if (canMakeApiCall()) {
+    if (canMakeApiCall()) {}
       loadFriends()
     }
   }, [canMakeApiCall])
 
   const loadFriends = async () => {
-    if (!canMakeApiCall()) {
+    if (!canMakeApiCall()) {}
       console.log("Cannot load friends: user not authenticated")
-      return
+      return;
     }
 
     try {
       setIsLoading(true)
       const token = getAuthToken()
-      
-      const response = await fetch("/api/users/friends/", {
-        headers: {
+      const response = await fetch("/api/users/friends/", {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -79,45 +79,44 @@ export function FriendsList({ className }: FriendsListProps) {
       if (response.ok) {
         const data = await response.json()
         setFriends(data.results || [])
-      } else {
+      } else {}
         throw new Error("Failed to load friends")
       }
-    } catch {
+    } } catch {
       console.error("Failed to load friends:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load friends. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const removeFriend = async (friendId: string) => {
-    if (!canMakeApiCall()) {
+  const removeFriend = async (friendId: string) => {}
+    if (!canMakeApiCall()) {}
       console.log("Cannot remove friend: user not authenticated")
-      return
+      return;
     }
 
     try {
       const token = getAuthToken()
-      
-      await fetch(`/api/users/friends/${friendId}/`, {
+      await fetch(`/api/users/friends/${friendId}/`, {}
         method: "DELETE",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       setFriends((prev) => prev.filter((friend) => friend.id !== friendId))
-      toast({
+      toast({}
         title: "Friend removed",
         description: "The user has been removed from your friends list.",
       })
-    } catch {
+    } } catch {
       console.error("Failed to remove friend:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to remove friend. Please try again.",
         variant: "destructive",
@@ -125,30 +124,29 @@ export function FriendsList({ className }: FriendsListProps) {
     }
   }
 
-  const blockUser = async (friendId: string) => {
-    if (!canMakeApiCall()) {
+  const blockUser = async (friendId: string) => {}
+    if (!canMakeApiCall()) {}
       console.log("Cannot block user: user not authenticated")
-      return
+      return;
     }
 
     try {
       const token = getAuthToken()
-      
-      await fetch(`/api/users/${friendId}/block/`, {
+      await fetch(`/api/users/${friendId}/block/`, {}
         method: "POST",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       setFriends((prev) => prev.filter((friend) => friend.id !== friendId))
-      toast({
+      toast({}
         title: "User blocked",
         description: "The user has been blocked and removed from your friends list.",
       })
-    } catch {
+    } } catch {
       console.error("Failed to block user:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to block user. Please try again.",
         variant: "destructive",
@@ -156,23 +154,23 @@ export function FriendsList({ className }: FriendsListProps) {
     }
   }
 
-  const startChat = (friendId: string) => {
-    // TODO: Implement chat functionality
-    toast({
+  const startChat = (friendId: string) => {}
+    // TODO: Implement chat functionality;
+    toast({}
       title: "Chat feature",
       description: "Direct messaging coming soon!",
     })
   }
 
-  const inviteToParty = (friendId: string) => {
-    // TODO: Implement party invitation
-    toast({
+  const inviteToParty = (friendId: string) => {}
+    // TODO: Implement party invitation;
+    toast({}
       title: "Party invitation",
       description: "Party invitation feature coming soon!",
     })
   }
 
-  const getStatusColor = (status: Friend["status"]) => {
+  const getStatusColor = (status: Friend["status"]) => {}
     switch (status) {
       case "online":
         return "bg-green-500"
@@ -187,7 +185,7 @@ export function FriendsList({ className }: FriendsListProps) {
     }
   }
 
-  const getStatusText = (friend: Friend) => {
+  const getStatusText = (friend: Friend) => {}
     switch (friend.status) {
       case "online":
         return friend.current_activity?.type === "watching"
@@ -206,11 +204,11 @@ export function FriendsList({ className }: FriendsListProps) {
     }
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {
+  const getUserInitials = (firstName: string, lastName: string) => {}
     return `${firstName[0]}${lastName[0]}`.toUpperCase()
   }
 
-  const filteredFriends = friends.filter((friend) => {
+  const filteredFriends = friends.filter((friend) => {}
     const matchesSearch =
       friend.first_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       friend.last_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -221,7 +219,7 @@ export function FriendsList({ className }: FriendsListProps) {
       (activeTab === "online" && friend.status === "online") ||
       (activeTab === "offline" && friend.status === "offline")
 
-    return matchesSearch && matchesTab
+    return matchesSearch && matchesTab;
   })
 
   return (
@@ -234,14 +232,14 @@ export function FriendsList({ className }: FriendsListProps) {
         </div>
         <Button>
           <UserPlus className="w-4 h-4 mr-2" />
-          Add Friend
+          Add Friend;
         </Button>
       </div>
 
       {/* Search */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-        <Input
+        <Input;
           placeholder="Search friends..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -279,7 +277,7 @@ export function FriendsList({ className }: FriendsListProps) {
               <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
               <h3 className="text-lg font-semibold mb-2">No friends found</h3>
               <p className="text-muted-foreground mb-4">
-                {searchQuery
+                {searchQuery;
                   ? "No friends match your search criteria."
                   : activeTab === "online"
                     ? "None of your friends are currently online."
@@ -288,7 +286,7 @@ export function FriendsList({ className }: FriendsListProps) {
               {!searchQuery && activeTab === "all" && (
                 <Button>
                   <UserPlus className="w-4 h-4 mr-2" />
-                  Find Friends
+                  Find Friends;
                 </Button>
               )}
             </div>
@@ -304,7 +302,7 @@ export function FriendsList({ className }: FriendsListProps) {
                             <AvatarImage src={friend.avatar || "/placeholder.svg"} />
                             <AvatarFallback>{getUserInitials(friend.first_name, friend.last_name)}</AvatarFallback>
                           </Avatar>
-                          <div
+                          <div;
                             className={cn(
                               "absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-background",
                               getStatusColor(friend.status),
@@ -330,19 +328,19 @@ export function FriendsList({ className }: FriendsListProps) {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => startChat(friend.id)}>
                             <MessageCircle className="w-4 h-4 mr-2" />
-                            Send Message
+                            Send Message;
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => inviteToParty(friend.id)}>
                             <Video className="w-4 h-4 mr-2" />
-                            Invite to Party
+                            Invite to Party;
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => removeFriend(friend.id)} className=&quot;text-orange-600&quot;>
                             <UserMinus className="w-4 h-4 mr-2" />
-                            Remove Friend
+                            Remove Friend;
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => blockUser(friend.id)} className=&quot;text-destructive&quot;>
                             <UserX className="w-4 h-4 mr-2" />
-                            Block User
+                            Block User;
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -386,11 +384,11 @@ export function FriendsList({ className }: FriendsListProps) {
                     <div className="flex space-x-2 mt-4">
                       <Button variant="outline" size="sm" onClick={() => startChat(friend.id)} className=&quot;flex-1&quot;>
                         <MessageCircle className="w-4 h-4 mr-1" />
-                        Chat
+                        Chat;
                       </Button>
                       <Button variant="outline" size="sm" onClick={() => inviteToParty(friend.id)} className=&quot;flex-1&quot;>
                         <Video className="w-4 h-4 mr-1" />
-                        Invite
+                        Invite;
                       </Button>
                     </div>
                   </CardContent>
@@ -404,4 +402,4 @@ export function FriendsList({ className }: FriendsListProps) {
   )
 }
 
-export default FriendsList
+export default FriendsList;

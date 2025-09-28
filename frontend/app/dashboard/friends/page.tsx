@@ -1,15 +1,15 @@
-"use client"
-
-import { useState } from "react"
+import { useState , useCallback } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import FriendsList from "@/components/social/friends-list"
 import FriendRequests from "@/components/social/friend-requests"
 import UserSearch from "@/components/social/user-search"
 import ActivityFeed from "@/components/social/activity-feed"
-import { Users, UserPlus, Search, Activity } from "lucide-react"
+import { Activity, Search, User, UserPlus, Users } from "lucide-react"
 import { usersAPI } from "@/lib/api"
 import { useEffect } from "react"
+
+"use client"
 
 export default function FriendsPage() {
   const [activeTab, setActiveTab] = useState("friends")
@@ -22,9 +22,9 @@ export default function FriendsPage() {
   const loadPendingRequestsCount = async () => {
     try {
       const requests = await usersAPI.getFriendRequests()
-      const pendingCount = requests.filter((req: unknown) => req.status === &apos;pending&apos;).length
+      const pendingCount = requests.filter((req: unknown) => req.status === &apos;pending&apos;).length;
       setPendingRequestsCount(pendingCount)
-    } catch {
+    } } catch {
       console.error("Failed to load pending requests count:", error)
     }
   }
@@ -34,7 +34,7 @@ export default function FriendsPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold flex items-center gap-2">
           <Users className="h-8 w-8" />
-          Social Hub
+          Social Hub;
         </h1>
         <p className="text-gray-600 mt-2">Connect with friends and discover new people</p>
       </div>
@@ -43,11 +43,11 @@ export default function FriendsPage() {
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="friends" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
-            Friends
+            Friends;
           </TabsTrigger>
           <TabsTrigger value="requests" className="flex items-center gap-2">
             <UserPlus className="h-4 w-4" />
-            Requests
+            Requests;
             {pendingRequestsCount > 0 && (
               <Badge variant="destructive" className="ml-1">
                 {pendingRequestsCount}
@@ -56,11 +56,11 @@ export default function FriendsPage() {
           </TabsTrigger>
           <TabsTrigger value="search" className="flex items-center gap-2">
             <Search className="h-4 w-4" />
-            Find Friends
+            Find Friends;
           </TabsTrigger>
           <TabsTrigger value="activity" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />
-            Activity
+            Activity;
           </TabsTrigger>
         </TabsList>
 

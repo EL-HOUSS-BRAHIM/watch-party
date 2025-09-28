@@ -1,5 +1,4 @@
-'use client'
-
+import { Eye, Filter, Loader2, MapPin, MessageCircle, Refresh, Search, User, Users } from "lucide-react"
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -8,28 +7,29 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
-interface User {
-  id: string
-  username: string
-  displayName: string
-  avatar: string
-  isOnline: boolean
-  mutualFriends: Array<{
-    id: string
-    username: string
-    avatar: string
+'use client'
+interface User {}
+  id: string;
+  username: string;
+  displayName: string;
+  avatar: string;
+  isOnline: boolean;
+  mutualFriends: Array<{}
+    id: string;
+    username: string;
+    avatar: string;
   }>
   commonInterests: string[]
-  location?: string
-  joinedDate: string
-  friendsCount: number
-  isVerified: boolean
-  bio?: string
+  location?: string;
+  joinedDate: string;
+  friendsCount: number;
+  isVerified: boolean;
+  bio?: string;
 }
 
-interface FriendSuggestion extends User {
+interface FriendSuggestion extends User {}
   suggestionReason: 'mutual_friends' | 'location' | 'interests' | 'recent_activity' | 'similar_groups'
-  confidence: number
+  confidence: number;
 }
 
 export function MutualFriendsSuggestions() {
@@ -57,9 +57,9 @@ export function MutualFriendsSuggestions() {
         const data = await response.json()
         setSuggestions(data.suggestions)
       }
-    } catch {
+    } } catch {
       console.error('Failed to fetch friend suggestions:', error)
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
@@ -72,17 +72,16 @@ export function MutualFriendsSuggestions() {
         const data = await response.json()
         setSuggestions(data.suggestions)
       }
-    } catch {
+    } } catch {
       console.error('Failed to refresh suggestions:', error)
-    } finally {
+    } finally {}
       setRefreshing(false)
     }
   }
 
-  const filterAndSortSuggestions = () => {
-    let filtered = suggestions
-
-    // Apply search filter
+  const filterAndSortSuggestions = () => {}
+    let filtered = suggestions;
+    // Apply search filter;
     if (searchQuery) {
       filtered = filtered.filter(user => 
         user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -90,60 +89,60 @@ export function MutualFriendsSuggestions() {
       )
     }
 
-    // Apply category filter
+    // Apply category filter;
     if (filter !== 'all') {
       filtered = filtered.filter(user => user.suggestionReason === filter)
     }
 
-    // Apply sorting
-    filtered.sort((a, b) => {
+    // Apply sorting;
+    filtered.sort((a, b) => {}
       switch (sortBy) {
         case 'confidence':
-          return b.confidence - a.confidence
+          return b.confidence - a.confidence;
         case 'mutual_friends':
-          return b.mutualFriends.length - a.mutualFriends.length
+          return b.mutualFriends.length - a.mutualFriends.length;
         case 'recent':
           return new Date(b.joinedDate).getTime() - new Date(a.joinedDate).getTime()
         default:
-          return 0
+          return 0;
       }
     })
 
     setFilteredSuggestions(filtered)
   }
 
-  const sendFriendRequest = async (userId: string) => {
+  const sendFriendRequest = async (userId: string) => {}
     try {
-      const response = await fetch('/api/friends/requests', {
+      const response = await fetch('/api/friends/requests', {}
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ recipientId: userId })
       })
 
       if (response.ok) {
-        // Remove from suggestions
+        // Remove from suggestions;
         setSuggestions(prev => prev.filter(s => s.id !== userId))
       }
-    } catch {
+    } } catch {
       console.error('Failed to send friend request:', error)
     }
   }
 
-  const dismissSuggestion = async (userId: string) => {
+  const dismissSuggestion = async (userId: string) => {}
     try {
-      const response = await fetch(`/api/friends/suggestions/${userId}/dismiss`, {
+      const response = await fetch(`/api/friends/suggestions/${userId}/dismiss`, {}
         method: 'POST'
       })
 
       if (response.ok) {
         setSuggestions(prev => prev.filter(s => s.id !== userId))
       }
-    } catch {
+    } } catch {
       console.error('Failed to dismiss suggestion:', error)
     }
   }
 
-  const getSuggestionReasonText = (reason: string) => {
+  const getSuggestionReasonText = (reason: string) => {}
     switch (reason) {
       case 'mutual_friends':
         return 'Mutual friends'
@@ -160,7 +159,7 @@ export function MutualFriendsSuggestions() {
     }
   }
 
-  const getSuggestionReasonColor = (reason: string) => {
+  const getSuggestionReasonColor = (reason: string) => {}
     switch (reason) {
       case 'mutual_friends':
         return 'bg-blue-500'
@@ -177,7 +176,7 @@ export function MutualFriendsSuggestions() {
     }
   }
 
-  const SuggestionCard = ({ user }: { user: FriendSuggestion }) => {
+  const SuggestionCard = ({ user }: { user: FriendSuggestion }) => {}
     const [requestSent, setRequestSent] = useState(false)
     const [dismissed, setDismissed] = useState(false)
 
@@ -191,8 +190,7 @@ export function MutualFriendsSuggestions() {
       setDismissed(true)
     }
 
-    if (dismissed) return null
-
+    if (dismissed) return null;
     return (
       <Card className="hover:shadow-md transition-shadow">
         <CardContent className="p-4">
@@ -206,27 +204,23 @@ export function MutualFriendsSuggestions() {
                 <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
               )}
             </div>
-            
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-2 mb-1">
                 <h3 className="font-medium truncate">{user.displayName}</h3>
                 {user.isVerified && (
                   <UserCheck className="h-4 w-4 text-blue-500" />
                 )}
-                <Badge 
+                <Badge;
                   variant="secondary" 
                   className={`text-xs text-white ${getSuggestionReasonColor(user.suggestionReason)}`}
                 >
                   {getSuggestionReasonText(user.suggestionReason)}
                 </Badge>
               </div>
-              
               <p className="text-sm text-muted-foreground mb-2">@{user.username}</p>
-              
               {user.bio && (
                 <p className="text-sm text-muted-foreground mb-2 line-clamp-2">{user.bio}</p>
               )}
-              
               <div className="flex items-center space-x-4 text-xs text-muted-foreground mb-3">
                 {user.mutualFriends.length > 0 && (
                   <div className="flex items-center space-x-1">
@@ -234,12 +228,10 @@ export function MutualFriendsSuggestions() {
                     <span>{user.mutualFriends.length} mutual</span>
                   </div>
                 )}
-                
                 <div className="flex items-center space-x-1">
                   <UserPlus className="h-3 w-3" />
                   <span>{user.friendsCount} friends</span>
                 </div>
-                
                 {user.location && (
                   <div className="flex items-center space-x-1">
                     <MapPin className="h-3 w-3" />
@@ -247,7 +239,6 @@ export function MutualFriendsSuggestions() {
                   </div>
                 )}
               </div>
-              
               {user.mutualFriends.length > 0 && (
                 <div className="flex items-center space-x-1 mb-3">
                   <span className="text-xs text-muted-foreground">Mutual friends:</span>
@@ -266,7 +257,6 @@ export function MutualFriendsSuggestions() {
                   </div>
                 </div>
               )}
-              
               {user.commonInterests.length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-3">
                   {user.commonInterests.slice(0, 3).map((interest) => (
@@ -276,33 +266,29 @@ export function MutualFriendsSuggestions() {
                   ))}
                   {user.commonInterests.length > 3 && (
                     <Badge variant="outline" className="text-xs">
-                      +{user.commonInterests.length - 3} more
+                      +{user.commonInterests.length - 3} more;
                     </Badge>
                   )}
                 </div>
               )}
-              
               <div className="flex items-center space-x-2">
                 {requestSent ? (
                   <Button disabled size="sm" className="flex-1">
                     <UserCheck className="h-3 w-3 mr-1" />
-                    Request Sent
+                    Request Sent;
                   </Button>
                 ) : (
                   <Button onClick={handleSendRequest} size="sm" className="flex-1">
                     <UserPlus className="h-3 w-3 mr-1" />
-                    Add Friend
+                    Add Friend;
                   </Button>
                 )}
-                
                 <Button variant="ghost" size="sm" onClick={handleDismiss}>
                   <UserX className="h-3 w-3" />
                 </Button>
-                
                 <Button variant="ghost" size="sm">
                   <Eye className="h-3 w-3" />
                 </Button>
-                
                 <Button variant="ghost" size="sm">
                   <MessageCircle className="h-3 w-3" />
                 </Button>
@@ -329,28 +315,27 @@ export function MutualFriendsSuggestions() {
           <Users className="h-6 w-6" />
           <span>Friend Suggestions</span>
         </h1>
-        <Button 
+        <Button;
           onClick={refreshSuggestions} 
           disabled={refreshing}
           variant="outline"
           size="sm"
         >
           <RefreshCw className={`h-4 w-4 mr-1 ${refreshing ? 'animate-spin' : ''}`} />
-          Refresh
+          Refresh;
         </Button>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
+          <Input;
             placeholder="Search suggestions..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
           />
         </div>
-        
         <Select value={filter} onValueChange={(value: unknown) => setFilter(value)}>
           <SelectTrigger className="w-full sm:w-48">
             <Filter className="h-4 w-4 mr-2" />
@@ -363,7 +348,6 @@ export function MutualFriendsSuggestions() {
             <SelectItem value="interests">Similar Interests</SelectItem>
           </SelectContent>
         </Select>
-        
         <Select value={sortBy} onValueChange={(value: unknown) => setSortBy(value)}>
           <SelectTrigger className="w-full sm:w-48">
             <SelectValue />
@@ -381,7 +365,6 @@ export function MutualFriendsSuggestions() {
           <TabsTrigger value="grid">Grid View</TabsTrigger>
           <TabsTrigger value="list">List View</TabsTrigger>
         </TabsList>
-        
         <TabsContent value="grid" className="mt-6">
           {filteredSuggestions.length === 0 ? (
             <Card>
@@ -404,7 +387,6 @@ export function MutualFriendsSuggestions() {
             </div>
           )}
         </TabsContent>
-        
         <TabsContent value="list" className="mt-6">
           {filteredSuggestions.length === 0 ? (
             <Card>

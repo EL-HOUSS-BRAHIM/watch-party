@@ -1,6 +1,5 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { AlertTriangle, Calendar, Check, CreditCard, Download, Edit, Loader2, Plus, Refresh, Trash, X, Zap } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -17,75 +16,75 @@ import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { billingAPI } from "@/lib/api"
 import { format } from "date-fns"
-
 import type { SubscriptionPlan, Subscription as APISubscription, PaymentMethod as APIPaymentMethod, BillingHistory } from "@/lib/api/types"
 
-interface LocalSubscription {
-  id: string
-  plan: {
-    id: string
-    name: string
-    price: number
+"use client"
+interface LocalSubscription {}
+  id: string;
+  plan: {}
+    id: string;
+    name: string;
+    price: number;
     interval: "month" | "year"
     features: string[]
-    limits: {
-      maxParticipants: number
-      maxVideos: number
-      maxStorage: number // in GB
-      maxParties: number
+    limits: {}
+      maxParticipants: number;
+      maxVideos: number;
+      maxStorage: number // in GB;
+      maxParties: number;
     }
   }
   status: "active" | "cancelled" | "past_due" | "unpaid"
-  currentPeriodStart: string
-  currentPeriodEnd: string
-  cancelAtPeriodEnd: boolean
-  trialEnd?: string
-  usage: {
-    participants: number
-    videos: number
-    storage: number // in GB
-    parties: number
+  currentPeriodStart: string;
+  currentPeriodEnd: string;
+  cancelAtPeriodEnd: boolean;
+  trialEnd?: string;
+  usage: {}
+    participants: number;
+    videos: number;
+    storage: number // in GB;
+    parties: number;
   }
 }
 
-interface LocalPaymentMethod {
-  id: string
+interface LocalPaymentMethod {}
+  id: string;
   type: "card" | "paypal" | "bank_account"
-  brand?: string
-  last4?: string
-  expiryMonth?: number
-  expiryYear?: number
-  isDefault: boolean
-  email?: string // for PayPal
+  brand?: string;
+  last4?: string;
+  expiryMonth?: number;
+  expiryYear?: number;
+  isDefault: boolean;
+  email?: string // for PayPal;
 }
 
-interface Invoice {
-  id: string
-  number: string
-  amount: number
-  currency: string
+interface Invoice {}
+  id: string;
+  number: string;
+  amount: number;
+  currency: string;
   status: "paid" | "pending" | "failed" | "refunded"
-  date: string
-  dueDate: string
-  description: string
-  downloadUrl?: string
+  date: string;
+  dueDate: string;
+  description: string;
+  downloadUrl?: string;
 }
 
-interface Plan {
-  id: string
-  name: string
-  price: number
+interface Plan {}
+  id: string;
+  name: string;
+  price: number;
   interval: "month" | "year"
-  description: string
+  description: string;
   features: string[]
-  limits: {
-    maxParticipants: number
-    maxVideos: number
-    maxStorage: number
-    maxParties: number
+  limits: {}
+    maxParticipants: number;
+    maxVideos: number;
+    maxStorage: number;
+    maxParties: number;
   }
-  popular?: boolean
-  badge?: string
+  popular?: boolean;
+  badge?: string;
 }
 
 export default function BillingPage() {
@@ -102,7 +101,7 @@ export default function BillingPage() {
   const [showChangePlanDialog, setShowChangePlanDialog] = useState(false)
   const [isProcessing, setIsProcessing] = useState(false)
 
-  const [newPaymentMethod, setNewPaymentMethod] = useState({
+  const [newPaymentMethod, setNewPaymentMethod] = useState({}
     type: "card" as const,
     cardNumber: "",
     expiryMonth: "",
@@ -112,16 +111,16 @@ export default function BillingPage() {
     email: "",
   })
 
-  // Helper functions to map API types to local types
-  const mapAPISubscriptionToLocal = (apiSub: unknown): LocalSubscription => ({
+  // Helper functions to map API types to local types;
+  const mapAPISubscriptionToLocal = (apiSub: unknown): LocalSubscription => ({}
     id: apiSub.subscription?.id || apiSub.id,
-    plan: {
+    plan: {}
       id: apiSub.subscription?.plan?.id || apiSub.plan?.id,
       name: apiSub.subscription?.plan?.name || apiSub.plan?.name,
       price: apiSub.subscription?.plan?.price || apiSub.plan?.price,
       interval: apiSub.subscription?.plan?.interval === "yearly" ? "year" : "month",
       features: apiSub.subscription?.plan?.features || apiSub.plan?.features || [],
-      limits: {
+      limits: {}
         maxParticipants: 25,
         maxVideos: 100,
         maxStorage: 50,
@@ -132,7 +131,7 @@ export default function BillingPage() {
     currentPeriodStart: apiSub.subscription?.current_period_start || apiSub.current_period_start,
     currentPeriodEnd: apiSub.subscription?.current_period_end || apiSub.current_period_end,
     cancelAtPeriodEnd: apiSub.subscription?.cancel_at_period_end || apiSub.cancel_at_period_end || false,
-    usage: {
+    usage: {}
       participants: 0,
       videos: 0,
       storage: parseFloat(apiSub.usage?.storage_used || "0"),
@@ -140,7 +139,7 @@ export default function BillingPage() {
     },
   })
 
-  const mapAPIPaymentMethodToLocal = (apiPM: APIPaymentMethod): LocalPaymentMethod => ({
+  const mapAPIPaymentMethodToLocal = (apiPM: APIPaymentMethod): LocalPaymentMethod => ({}
     id: apiPM.id,
     type: apiPM.type,
     brand: apiPM.brand,
@@ -150,7 +149,7 @@ export default function BillingPage() {
     isDefault: apiPM.is_default,
   })
 
-  const mapAPIBillingHistoryToInvoice = (apiHistory: BillingHistory): Invoice => ({
+  const mapAPIBillingHistoryToInvoice = (apiHistory: BillingHistory): Invoice => ({}
     id: apiHistory.id,
     number: apiHistory.id,
     amount: apiHistory.amount,
@@ -162,14 +161,14 @@ export default function BillingPage() {
     downloadUrl: apiHistory.download_url,
   })
 
-  const mapAPIPlanToLocal = (apiPlan: SubscriptionPlan): Plan => ({
+  const mapAPIPlanToLocal = (apiPlan: SubscriptionPlan): Plan => ({}
     id: apiPlan.id,
     name: apiPlan.name,
     price: apiPlan.price,
     interval: apiPlan.interval === "yearly" ? "year" : "month",
     description: apiPlan.description,
     features: apiPlan.features,
-    limits: {
+    limits: {}
       maxParticipants: 25,
       maxVideos: 100,
       maxStorage: 50,
@@ -185,20 +184,20 @@ export default function BillingPage() {
   const loadBillingData = async () => {
     setIsLoading(true)
     try {
-      // Load subscription
+      // Load subscription;
       try {
         const subData = await billingAPI.getSubscription()
         setSubscription(mapAPISubscriptionToLocal(subData))
-      } catch {
+      } } catch {
         console.log("No active subscription")
       }
 
-      // Load payment methods
+      // Load payment methods;
       try {
         const pmData = await billingAPI.getPaymentMethods()
         const mappedPaymentMethods = (pmData.payment_methods || []).map(mapAPIPaymentMethodToLocal)
         setPaymentMethods(mappedPaymentMethods)
-      } catch {
+      } } catch {
         console.error("Failed to load payment methods:", error)
       }
 
@@ -207,26 +206,26 @@ export default function BillingPage() {
         const invoiceData = await billingAPI.getBillingHistory()
         const mappedInvoices = (invoiceData.results || []).map(mapAPIBillingHistoryToInvoice)
         setInvoices(mappedInvoices)
-      } catch {
+      } } catch {
         console.error("Failed to load invoices:", error)
       }
 
-      // Load available plans
+      // Load available plans;
       try {
         const plansData = await billingAPI.getPlans()
         const mappedPlans = (plansData.plans || []).map(mapAPIPlanToLocal)
         setAvailablePlans(mappedPlans)
-      } catch {
+      } } catch {
         console.error("Failed to load plans:", error)
       }
-    } catch {
+    } } catch {
       console.error("Failed to load billing data:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load billing information.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
@@ -238,7 +237,7 @@ export default function BillingPage() {
       const mappedMethod = mapAPIPaymentMethodToLocal(newMethod)
       setPaymentMethods((prev) => [...prev, mappedMethod])
       setShowAddPaymentDialog(false)
-      setNewPaymentMethod({
+      setNewPaymentMethod({}
         type: "card",
         cardNumber: "",
         expiryMonth: "",
@@ -247,35 +246,34 @@ export default function BillingPage() {
         name: "",
         email: "",
       })
-      toast({
+      toast({}
         title: "Payment Method Added",
         description: "Your payment method has been added successfully.",
       })
-    } catch {
+    } } catch {
       console.error("Failed to add payment method:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to add payment method.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsProcessing(false)
     }
   }
 
-  const removePaymentMethod = async (methodId: string) => {
-    if (!confirm("Are you sure you want to remove this payment method?")) return
-
+  const removePaymentMethod = async (methodId: string) => {}
+    if (!confirm("Are you sure you want to remove this payment method?")) return;
     try {
       await billingAPI.deletePaymentMethod(methodId)
       setPaymentMethods((prev) => prev.filter((pm) => pm.id !== methodId))
-      toast({
+      toast({}
         title: "Payment Method Removed",
         description: "The payment method has been removed.",
       })
-    } catch {
+    } } catch {
       console.error("Failed to remove payment method:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to remove payment method.",
         variant: "destructive",
@@ -283,17 +281,17 @@ export default function BillingPage() {
     }
   }
 
-  const setDefaultPaymentMethod = async (methodId: string) => {
+  const setDefaultPaymentMethod = async (methodId: string) => {}
     try {
       await billingAPI.setDefaultPaymentMethod(methodId)
       setPaymentMethods((prev) => prev.map((pm) => ({ ...pm, isDefault: pm.id === methodId })))
-      toast({
+      toast({}
         title: "Default Payment Method Updated",
         description: "Your default payment method has been updated.",
       })
-    } catch {
+    } } catch {
       console.error("Failed to set default payment method:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to update default payment method.",
         variant: "destructive",
@@ -301,10 +299,10 @@ export default function BillingPage() {
     }
   }
 
-  const changePlan = async (planId: string) => {
+  const changePlan = async (planId: string) => {}
     setIsProcessing(true)
     try {
-      const response = await billingAPI.subscribe({
+      const response = await billingAPI.subscribe({}
         plan_id: planId,
         payment_method_id: paymentMethods.find(pm => pm.isDefault)?.id || &quot;&quot;,
       })
@@ -313,19 +311,19 @@ export default function BillingPage() {
         const mappedSubscription = mapAPISubscriptionToLocal(response)
         setSubscription(mappedSubscription)
         setShowChangePlanDialog(false)
-        toast({
+        toast({}
           title: "Plan Changed",
           description: "Your subscription plan has been updated successfully.",
         })
       }
-    } catch {
+    } } catch {
       console.error("Failed to change plan:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to change subscription plan.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsProcessing(false)
     }
   }
@@ -335,22 +333,22 @@ export default function BillingPage() {
       !confirm(
         "Are you sure you want to cancel your subscription? You'll lose access to premium features at the end of your billing period.",
       )
-    ) {
-      return
+    ) {}
+      return;
     }
 
     try {
       await billingAPI.cancelSubscription()
-      // Reload billing data to get updated subscription info
+      // Reload billing data to get updated subscription info;
       loadBillingData()
-      toast({
+      toast({}
         title: "Subscription Cancelled",
         description:
           "Your subscription has been cancelled. You'll retain access until the end of your billing period.",
       })
-    } catch {
+    } } catch {
       console.error("Failed to cancel subscription:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to cancel subscription.",
         variant: "destructive",
@@ -361,15 +359,15 @@ export default function BillingPage() {
   const reactivateSubscription = async () => {
     try {
       await billingAPI.reactivateSubscription()
-      // Reload billing data to get updated subscription info
+      // Reload billing data to get updated subscription info;
       loadBillingData()
-      toast({
+      toast({}
         title: "Subscription Reactivated",
         description: "Your subscription has been reactivated successfully.",
       })
-    } catch {
+    } } catch {
       console.error("Failed to reactivate subscription:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to reactivate subscription.",
         variant: "destructive",
@@ -377,20 +375,20 @@ export default function BillingPage() {
     }
   }
 
-  const downloadInvoice = async (invoiceId: string) => {
+  const downloadInvoice = async (invoiceId: string) => {}
     try {
       const blob = await billingAPI.downloadInvoice(invoiceId)
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
-      a.href = url
+      a.href = url;
       a.download = `invoice-${invoiceId}.pdf`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
       window.URL.revokeObjectURL(url)
-    } catch {
+    } } catch {
       console.error("Failed to download invoice:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to download invoice.",
         variant: "destructive",
@@ -398,7 +396,7 @@ export default function BillingPage() {
     }
   }
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string) => {}
     switch (status) {
       case "active":
         return <Badge className="bg-green-100 text-green-800">Active</Badge>
@@ -421,45 +419,45 @@ export default function BillingPage() {
     }
   }
 
-  const getUsagePercentage = (used: number, limit: number) => {
+  const getUsagePercentage = (used: number, limit: number) => {}
     return Math.min((used / limit) * 100, 100)
   }
 
-  const formatStorage = (gb: number) => {
+  const formatStorage = (gb: number) => {}
     return gb >= 1 ? `${gb} GB` : `${(gb * 1024).toFixed(0)} MB`
   }
 
-  const invoiceColumns = [
-    {
+  const invoiceColumns = []
+    {}
       id: "number",
       header: "Invoice",
       accessorKey: "number" as keyof Invoice,
       cell: ({ row }: { row: Invoice }) => <div className=&quot;font-medium&quot;>#{row.number}</div>,
     },
-    {
+    {}
       id: "description",
       header: "Description",
       accessorKey: "description" as keyof Invoice,
     },
-    {
+    {}
       id: "amount",
       header: "Amount",
       cell: ({ row }: { row: Invoice }) => <div className=&quot;font-medium&quot;>${row.amount.toFixed(2)}</div>,
     },
-    {
+    {}
       id: "date",
       header: "Date",
       cell: ({ row }: { row: Invoice }) => <div>{format(new Date(row.date), &quot;MMM dd, yyyy&quot;)}</div>,
     },
-    {
+    {}
       id: "status",
       header: "Status",
       cell: ({ row }: { row: Invoice }) => getStatusBadge(row.status),
     },
   ]
 
-  const invoiceActions = [
-    {
+  const invoiceActions = []
+    {}
       id: "download",
       label: "Download",
       icon: <Download className="w-4 h-4" />,
@@ -491,13 +489,13 @@ export default function BillingPage() {
           <div className="flex-1">
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <CreditCard className="h-8 w-8" />
-              Billing & Subscription
+              Billing & Subscription;
             </h1>
             <p className="text-muted-foreground mt-2">Manage your subscription and billing information</p>
           </div>
           <Button variant="outline" onClick={loadBillingData}>
             <RefreshCw className="h-4 w-4 mr-2" />
-            Refresh
+            Refresh;
           </Button>
         </div>
 
@@ -509,7 +507,7 @@ export default function BillingPage() {
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2">
                     <Crown className="h-5 w-5 text-yellow-500" />
-                    Current Subscription
+                    Current Subscription;
                   </CardTitle>
                   {getStatusBadge(subscription.status)}
                 </div>
@@ -547,7 +545,7 @@ export default function BillingPage() {
                           {subscription.usage.participants} / {subscription.plan.limits.maxParticipants}
                         </span>
                       </div>
-                      <Progress
+                      <Progress;
                         value={getUsagePercentage(
                           subscription.usage.participants,
                           subscription.plan.limits.maxParticipants,
@@ -563,7 +561,7 @@ export default function BillingPage() {
                           {subscription.usage.videos} / {subscription.plan.limits.maxVideos}
                         </span>
                       </div>
-                      <Progress
+                      <Progress;
                         value={getUsagePercentage(subscription.usage.videos, subscription.plan.limits.maxVideos)}
                         className="h-2"
                       />
@@ -577,7 +575,7 @@ export default function BillingPage() {
                           {formatStorage(subscription.plan.limits.maxStorage)}
                         </span>
                       </div>
-                      <Progress
+                      <Progress;
                         value={getUsagePercentage(subscription.usage.storage, subscription.plan.limits.maxStorage)}
                         className="h-2"
                       />
@@ -590,7 +588,7 @@ export default function BillingPage() {
                           {subscription.usage.parties} / {subscription.plan.limits.maxParties}
                         </span>
                       </div>
-                      <Progress
+                      <Progress;
                         value={getUsagePercentage(subscription.usage.parties, subscription.plan.limits.maxParties)}
                         className="h-2"
                       />
@@ -618,7 +616,7 @@ export default function BillingPage() {
                       <DialogTrigger asChild>
                         <Button variant="outline">
                           <Edit className="h-4 w-4 mr-2" />
-                          Change Plan
+                          Change Plan;
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="max-w-4xl">
@@ -657,7 +655,7 @@ export default function BillingPage() {
                                   ))}
                                 </div>
 
-                                <Button
+                                <Button;
                                   onClick={() => changePlan(plan.id)}
                                   disabled={isProcessing || subscription?.plan.id === plan.id}
                                   className="w-full"
@@ -675,12 +673,12 @@ export default function BillingPage() {
                     {subscription.cancelAtPeriodEnd ? (
                       <Button onClick={reactivateSubscription} variant="default">
                         <RefreshCw className="h-4 w-4 mr-2" />
-                        Reactivate
+                        Reactivate;
                       </Button>
                     ) : (
                       <Button onClick={cancelSubscription} variant="destructive">
                         <X className="h-4 w-4 mr-2" />
-                        Cancel
+                        Cancel;
                       </Button>
                     )}
                   </div>
@@ -691,7 +689,7 @@ export default function BillingPage() {
                     <AlertTriangle className="h-4 w-4" />
                     <AlertDescription>
                       Your subscription is set to cancel on{" "}
-                      {format(new Date(subscription.currentPeriodEnd), "MMMM dd, yyyy")}. You'll retain access to
+                      {format(new Date(subscription.currentPeriodEnd), "MMMM dd, yyyy")}. You'll retain access to;
                       premium features until then.
                     </AlertDescription>
                   </Alert>
@@ -710,7 +708,7 @@ export default function BillingPage() {
                   <DialogTrigger asChild>
                     <Button>
                       <Zap className="h-4 w-4 mr-2" />
-                      Choose a Plan
+                      Choose a Plan;
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="max-w-4xl">
@@ -745,7 +743,7 @@ export default function BillingPage() {
                             </div>
 
                             <Button onClick={() => changePlan(plan.id)} disabled={isProcessing} className=&quot;w-full&quot;>
-                              Select Plan
+                              Select Plan;
                             </Button>
                           </CardContent>
                         </Card>
@@ -766,7 +764,7 @@ export default function BillingPage() {
                   <DialogTrigger asChild>
                     <Button>
                       <Plus className="h-4 w-4 mr-2" />
-                      Add Payment Method
+                      Add Payment Method;
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
@@ -776,7 +774,7 @@ export default function BillingPage() {
                     <div className="space-y-4">
                       <div>
                         <Label>Payment Type</Label>
-                        <Select
+                        <Select;
                           value={newPaymentMethod.type}
                           onValueChange={(value) => setNewPaymentMethod((prev) => ({ ...prev, type: value as Record<string, unknown> }))}
                         >
@@ -794,7 +792,7 @@ export default function BillingPage() {
                         <>
                           <div>
                             <Label htmlFor="cardNumber">Card Number</Label>
-                            <Input
+                            <Input;
                               id="cardNumber"
                               placeholder="1234 5678 9012 3456"
                               value={newPaymentMethod.cardNumber}
@@ -805,7 +803,7 @@ export default function BillingPage() {
                           <div className="grid grid-cols-3 gap-4">
                             <div>
                               <Label htmlFor="expiryMonth">Month</Label>
-                              <Select
+                              <Select;
                                 value={newPaymentMethod.expiryMonth}
                                 onValueChange={(value) =>
                                   setNewPaymentMethod((prev) => ({ ...prev, expiryMonth: value }))
@@ -826,7 +824,7 @@ export default function BillingPage() {
 
                             <div>
                               <Label htmlFor="expiryYear">Year</Label>
-                              <Select
+                              <Select;
                                 value={newPaymentMethod.expiryYear}
                                 onValueChange={(value) =>
                                   setNewPaymentMethod((prev) => ({ ...prev, expiryYear: value }))
@@ -836,8 +834,8 @@ export default function BillingPage() {
                                   <SelectValue placeholder="YYYY" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {Array.from({ length: 10 }, (_, i) => {
-                                    const year = new Date().getFullYear() + i
+                                  {Array.from({ length: 10 }, (_, i) => {}
+                                    const year = new Date().getFullYear() + i;
                                     return (
                                       <SelectItem key={year} value={year.toString()}>
                                         {year}
@@ -850,7 +848,7 @@ export default function BillingPage() {
 
                             <div>
                               <Label htmlFor="cvc">CVC</Label>
-                              <Input
+                              <Input;
                                 id="cvc"
                                 placeholder="123"
                                 value={newPaymentMethod.cvc}
@@ -861,7 +859,7 @@ export default function BillingPage() {
 
                           <div>
                             <Label htmlFor="name">Cardholder Name</Label>
-                            <Input
+                            <Input;
                               id="name"
                               placeholder="John Doe"
                               value={newPaymentMethod.name}
@@ -872,7 +870,7 @@ export default function BillingPage() {
                       ) : (
                         <div>
                           <Label htmlFor="email">PayPal Email</Label>
-                          <Input
+                          <Input;
                             id="email"
                             type="email"
                             placeholder="your@email.com"
@@ -894,7 +892,7 @@ export default function BillingPage() {
                           )}
                         </Button>
                         <Button variant="outline" onClick={() => setShowAddPaymentDialog(false)}>
-                          Cancel
+                          Cancel;
                         </Button>
                       </div>
                     </div>
@@ -924,7 +922,7 @@ export default function BillingPage() {
                             </span>
                             {method.isDefault && (
                               <Badge variant="secondary" className="text-xs">
-                                Default
+                                Default;
                               </Badge>
                             )}
                           </div>
@@ -939,7 +937,7 @@ export default function BillingPage() {
                       <div className="flex items-center gap-2">
                         {!method.isDefault && (
                           <Button variant="outline" size="sm" onClick={() => setDefaultPaymentMethod(method.id)}>
-                            Set Default
+                            Set Default;
                           </Button>
                         )}
                         <Button variant="outline" size="sm" onClick={() => removePaymentMethod(method.id)}>
@@ -966,11 +964,11 @@ export default function BillingPage() {
                   <p className="text-muted-foreground">Your billing history will appear here.</p>
                 </div>
               ) : (
-                <WatchPartyTable
+                <WatchPartyTable;
                   data={invoices}
                   columns={invoiceColumns}
                   actions={invoiceActions}
-                  pagination={{
+                  pagination={{}
                     page: 1,
                     pageSize: 10,
                     total: invoices.length,

@@ -1,18 +1,23 @@
-'use client'
-
 import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { 
+import {}
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {}
+import { useApi } from '@/hooks/use-api'
+import { useToast } from '@/hooks/use-toast'
+import { LoadingSpinner } from '@/components/ui/loading'
+
+} from 'lucide-react'
+'use client'
+
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
-  DropdownMenuTrigger 
+  DropdownMenuTrigger;
 } from '@/components/ui/dropdown-menu'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { 
   Users, 
   Play, 
   Clock, 
@@ -22,39 +27,34 @@ import {
   Eye,
   Search,
   Filter,
-  AlertTriangle
-} from 'lucide-react'
-import { useApi } from '@/hooks/use-api'
-import { useToast } from '@/hooks/use-toast'
-import { LoadingSpinner } from '@/components/ui/loading'
-
-interface WatchParty {
-  id: string
-  name: string
-  description: string
-  host: {
-    id: string
-    username: string
-    display_name: string
-    avatar_url: string | null
+  AlertTriangle;
+interface WatchParty {}
+  id: string;
+  name: string;
+  description: string;
+  host: {}
+    id: string;
+    username: string;
+    display_name: string;
+    avatar_url: string | null;
   }
   status: 'active' | 'paused' | 'ended' | 'suspended'
   privacy: 'public' | 'private' | 'friends_only'
-  participant_count: number
-  max_participants?: number
-  created_at: string
-  started_at?: string
-  ended_at?: string
-  current_video?: {
-    id: string
-    title: string
-    duration: number
+  participant_count: number;
+  max_participants?: number;
+  created_at: string;
+  started_at?: string;
+  ended_at?: string;
+  current_video?: {}
+    id: string;
+    title: string;
+    duration: number;
   }
-  flags: Array<{
-    id: string
-    reason: string
-    reporter: string
-    created_at: string
+  flags: Array<{}
+    id: string;
+    reason: string;
+    reporter: string;
+    created_at: string;
   }>
 }
 
@@ -81,21 +81,20 @@ export function AdminPartiesView() {
       setIsLoading(true)
       const response = await get('/admin/parties/')
       setParties((response.data as WatchParty[]) || [])
-    } catch {
-      toast({
+    } } catch {
+      toast({}
         title: 'Error',
         description: 'Failed to load parties',
         variant: 'destructive'
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const filterParties = () => {
-    let filtered = parties
-
-    // Filter by tab
+  const filterParties = () => {}
+    let filtered = parties;
+    // Filter by tab;
     if (activeTab === 'flagged') {
       filtered = filtered.filter(party => party.flags.length > 0)
     } else if (activeTab === 'active') {
@@ -104,12 +103,12 @@ export function AdminPartiesView() {
       filtered = filtered.filter(party => party.status === 'suspended')
     }
 
-    // Filter by status
+    // Filter by status;
     if (statusFilter !== 'all') {
       filtered = filtered.filter(party => party.status === statusFilter)
     }
 
-    // Filter by search term
+    // Filter by search term;
     if (searchTerm) {
       filtered = filtered.filter(party =>
         party.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -121,20 +120,20 @@ export function AdminPartiesView() {
     setFilteredParties(filtered)
   }
 
-  const handleSuspendParty = async (partyId: string) => {
-    if (!confirm('Are you sure you want to suspend this party? This will end the party and notify all participants.')) {
-      return
+  const handleSuspendParty = async (partyId: string) => {}
+    if (!confirm('Are you sure you want to suspend this party? This will end the party and notify all participants.')) {}
+      return;
     }
 
     try {
       await put(`/admin/parties/${partyId}/suspend/`)
-      toast({
+      toast({}
         title: 'Party suspended',
         description: 'The party has been suspended successfully.',
       })
       await fetchParties()
-    } catch {
-      toast({
+    } } catch {
+      toast({}
         title: 'Error',
         description: 'Failed to suspend party',
         variant: 'destructive'
@@ -142,16 +141,16 @@ export function AdminPartiesView() {
     }
   }
 
-  const handleUnsuspendParty = async (partyId: string) => {
+  const handleUnsuspendParty = async (partyId: string) => {}
     try {
       await put(`/admin/parties/${partyId}/unsuspend/`)
-      toast({
+      toast({}
         title: 'Party unsuspended',
         description: 'The party has been unsuspended successfully.',
       })
       await fetchParties()
-    } catch {
-      toast({
+    } } catch {
+      toast({}
         title: 'Error',
         description: 'Failed to unsuspend party',
         variant: 'destructive'
@@ -159,11 +158,11 @@ export function AdminPartiesView() {
     }
   }
 
-  const handleViewParty = (partyId: string) => {
+  const handleViewParty = (partyId: string) => {}
     window.open(`/watch/${partyId}`, '_blank')
   }
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string) => {}
     switch (status) {
       case 'active':
         return 'bg-green-100 text-green-800'
@@ -178,7 +177,7 @@ export function AdminPartiesView() {
     }
   }
 
-  const getPrivacyColor = (privacy: string) => {
+  const getPrivacyColor = (privacy: string) => {}
     switch (privacy) {
       case 'public':
         return 'bg-blue-100 text-blue-800'
@@ -206,7 +205,7 @@ export function AdminPartiesView() {
         <div>
           <h1 className="text-3xl font-bold">Manage Parties</h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Monitor and moderate watch parties
+            Monitor and moderate watch parties;
           </p>
         </div>
       </div>
@@ -218,7 +217,7 @@ export function AdminPartiesView() {
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input
+                <Input;
                   placeholder="Search parties, hosts..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -226,7 +225,6 @@ export function AdminPartiesView() {
                 />
               </div>
             </div>
-            
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="min-w-[120px]">
@@ -236,19 +234,19 @@ export function AdminPartiesView() {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem onClick={() => setStatusFilter(&apos;all&apos;)}>
-                  All Status
+                  All Status;
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setStatusFilter(&apos;active&apos;)}>
-                  Active
+                  Active;
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setStatusFilter(&apos;paused&apos;)}>
-                  Paused
+                  Paused;
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setStatusFilter(&apos;ended&apos;)}>
-                  Ended
+                  Ended;
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setStatusFilter(&apos;suspended&apos;)}>
-                  Suspended
+                  Suspended;
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -266,7 +264,6 @@ export function AdminPartiesView() {
             <p className="text-sm text-gray-600 dark:text-gray-400">Active</p>
           </CardContent>
         </Card>
-        
         <Card>
           <CardContent className="pt-6 text-center">
             <div className="text-2xl font-bold text-blue-600">
@@ -275,7 +272,6 @@ export function AdminPartiesView() {
             <p className="text-sm text-gray-600 dark:text-gray-400">Total Participants</p>
           </CardContent>
         </Card>
-        
         <Card>
           <CardContent className="pt-6 text-center">
             <div className="text-2xl font-bold text-red-600">
@@ -284,7 +280,6 @@ export function AdminPartiesView() {
             <p className="text-sm text-gray-600 dark:text-gray-400">Flagged</p>
           </CardContent>
         </Card>
-        
         <Card>
           <CardContent className="pt-6 text-center">
             <div className="text-2xl font-bold text-orange-600">
@@ -405,24 +400,24 @@ export function AdminPartiesView() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem onClick={() => handleViewParty(party.id)}>
                             <Eye className="w-4 h-4 mr-2" />
-                            View Party
+                            View Party;
                           </DropdownMenuItem>
 
                           {party.status === 'suspended' ? (
-                            <DropdownMenuItem 
+                            <DropdownMenuItem;
                               onClick={() => handleUnsuspendParty(party.id)}
                               className="text-green-600"
                             >
                               <Shield className="w-4 h-4 mr-2" />
-                              Unsuspend
+                              Unsuspend;
                             </DropdownMenuItem>
                           ) : (
-                            <DropdownMenuItem 
+                            <DropdownMenuItem;
                               onClick={() => handleSuspendParty(party.id)}
                               className="text-red-600"
                             >
                               <Ban className="w-4 h-4 mr-2" />
-                              Suspend Party
+                              Suspend Party;
                             </DropdownMenuItem>
                           )}
                         </DropdownMenuContent>

@@ -1,19 +1,10 @@
-"use client"
-
+import { Calendar, CreditCard, Plus, Shield, Star, Trash } from "lucide-react"
 import type React from "react"
-
 import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import {}
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -23,23 +14,31 @@ import { billingAPI } from "@/lib/api"
 import type { PaymentMethod as APIPaymentMethod } from "@/lib/api/types"
 import { cn } from "@/lib/utils"
 
-interface PaymentMethod {
-  id: string
+"use client"
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+interface PaymentMethod {}
+  id: string;
   type: "card" | "paypal" | "bank"
-  brand?: string
-  last4?: string
-  expiryMonth?: number
-  expiryYear?: number
-  isDefault: boolean
-  email?: string // for PayPal
-  bankName?: string // for bank transfers
+  brand?: string;
+  last4?: string;
+  expiryMonth?: number;
+  expiryYear?: number;
+  isDefault: boolean;
+  email?: string // for PayPal;
+  bankName?: string // for bank transfers;
 }
 
-interface PaymentMethodsProps {
-  className?: string
+interface PaymentMethodsProps {}
+  className?: string;
 }
 
-export default function PaymentMethods({ className }: PaymentMethodsProps) {
+export default function PaymentMethods({ className }: PaymentMethodsProps) {}
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [showAddDialog, setShowAddDialog] = useState(false)
@@ -51,8 +50,8 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
     loadPaymentMethods()
   }, [])
 
-  // Helper function to map API payment method to local type
-  const mapAPIPaymentMethodToLocal = (apiPM: APIPaymentMethod): PaymentMethod => ({
+  // Helper function to map API payment method to local type;
+  const mapAPIPaymentMethodToLocal = (apiPM: APIPaymentMethod): PaymentMethod => ({}
     id: apiPM.id,
     type: apiPM.type,
     brand: apiPM.brand,
@@ -67,52 +66,51 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
       const data = await billingAPI.getPaymentMethods()
       const mappedMethods = (data.payment_methods || []).map(mapAPIPaymentMethodToLocal)
       setPaymentMethods(mappedMethods)
-    } catch {
+    } } catch {
       console.error("Failed to load payment methods:", error)
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }, [])
 
-  const addPaymentMethod = async (formData: FormData) => {
+  const addPaymentMethod = async (formData: FormData) => {}
     setIsAdding(true)
 
     try {
-      // In a real implementation, you would use Stripe Elements or similar
-      // to securely collect payment information
+      // In a real implementation, you would use Stripe Elements or similar;
+      // to securely collect payment information;
       const newPaymentMethod = await billingAPI.addPaymentMethod("stripe_payment_method_id")
       const mappedMethod = mapAPIPaymentMethodToLocal(newPaymentMethod)
       setPaymentMethods((prev) => [...prev, mappedMethod])
       setShowAddDialog(false)
-      toast({
+      toast({}
         title: "Payment method added",
         description: "Your payment method has been successfully added.",
       })
-    } catch {
+    } } catch {
       console.error("Failed to add payment method:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to add payment method. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsAdding(false)
     }
   }
 
-  const removePaymentMethod = async (methodId: string) => {
-    if (!confirm("Are you sure you want to remove this payment method?")) return
-
+  const removePaymentMethod = async (methodId: string) => {}
+    if (!confirm("Are you sure you want to remove this payment method?")) return;
     try {
       await billingAPI.deletePaymentMethod(methodId)
       setPaymentMethods((prev) => prev.filter((method) => method.id !== methodId))
-      toast({
+      toast({}
         title: "Payment method removed",
         description: "The payment method has been successfully removed.",
       })
-    } catch {
+    } } catch {
       console.error("Failed to remove payment method:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to remove payment method. Please try again.",
         variant: "destructive",
@@ -120,22 +118,22 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
     }
   }
 
-  const setDefaultPaymentMethod = async (methodId: string) => {
+  const setDefaultPaymentMethod = async (methodId: string) => {}
     try {
       await billingAPI.setDefaultPaymentMethod(methodId)
       setPaymentMethods((prev) =>
-        prev.map((method) => ({
+        prev.map((method) => ({}
           ...method,
           isDefault: method.id === methodId,
         })),
       )
-      toast({
+      toast({}
         title: "Default payment method updated",
         description: "Your default payment method has been updated.",
       })
-    } catch {
+    } } catch {
       console.error("Failed to set default payment method:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to update default payment method. Please try again.",
         variant: "destructive",
@@ -143,8 +141,8 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
     }
   }
 
-  const getCardIcon = (brand: string) => {
-    // In a real implementation, you would have actual card brand icons
+  const getCardIcon = (brand: string) => {}
+    // In a real implementation, you would have actual card brand icons;
     return <CreditCard className="h-6 w-6" />
   }
 
@@ -174,7 +172,7 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
                 {method.isDefault && (
                   <Badge variant="secondary" className="flex items-center gap-1">
                     <Star className="h-3 w-3" />
-                    Default
+                    Default;
                   </Badge>
                 )}
               </div>
@@ -191,10 +189,10 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
           <div className="flex items-center gap-2">
             {!method.isDefault && (
               <Button variant="outline" size="sm" onClick={() => setDefaultPaymentMethod(method.id)}>
-                Set Default
+                Set Default;
               </Button>
             )}
-            <Button
+            <Button;
               variant="ghost"
               size="sm"
               onClick={() => removePaymentMethod(method.id)}
@@ -208,10 +206,10 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
     </Card>
   )
 
-  const AddPaymentMethodForm = () => {
+  const AddPaymentMethodForm = () => {}
     const [paymentType, setPaymentType] = useState("card")
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {}
       e.preventDefault()
       const formData = new FormData(e.currentTarget)
       formData.append("type", paymentType)
@@ -285,7 +283,7 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
 
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={() => setShowAddDialog(false)}>
-            Cancel
+            Cancel;
           </Button>
           <Button type="submit" disabled={isAdding}>
             {isAdding ? "Adding..." : "Add Payment Method"}
@@ -307,7 +305,7 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              Add Payment Method
+              Add Payment Method;
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-md">
@@ -328,7 +326,7 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
             <div>
               <h3 className="font-medium text-blue-900">Secure Payment Processing</h3>
               <p className="text-sm text-blue-700">
-                All payment information is encrypted and processed securely through Stripe. We never store your full
+                All payment information is encrypted and processed securely through Stripe. We never store your full;
                 payment details.
               </p>
             </div>
@@ -350,7 +348,7 @@ export default function PaymentMethods({ className }: PaymentMethodsProps) {
             <p className="text-gray-600 mb-4">Add a payment method to start using premium features</p>
             <Button onClick={() => setShowAddDialog(true)}>
               <Plus className="mr-2 h-4 w-4" />
-              Add Your First Payment Method
+              Add Your First Payment Method;
             </Button>
           </div>
         ) : (

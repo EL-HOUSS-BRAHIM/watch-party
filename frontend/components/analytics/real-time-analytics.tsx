@@ -1,5 +1,4 @@
-'use client';
-
+import { Activity, BarChart, Clock, Eye, Monitor, PieChart, Play, Smartphone, Tablet, TrendingDown, TrendingUp, User, Users, X, Zap } from "lucide-react"
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { analyticsAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
-interface RealTimeMetric {
+'use client';
+interface RealTimeMetric {}
   id: string;
   name: string;
   value: number;
@@ -20,7 +20,7 @@ interface RealTimeMetric {
   color: string;
 }
 
-interface LiveUser {
+interface LiveUser {}
   id: string;
   username: string;
   location: string;
@@ -30,13 +30,13 @@ interface LiveUser {
   joinedAt: Date;
 }
 
-interface ActiveRoom {
+interface ActiveRoom {}
   id: string;
   name: string;
   viewers: number;
   maxViewers: number;
   duration: number;
-  video: {
+  video: {}
     title: string;
     duration: number;
     currentTime: number;
@@ -44,9 +44,9 @@ interface ActiveRoom {
   createdAt: Date;
 }
 
-// Generate time series data for charts
-const generateTimeSeriesData = (hours: number = 24) => {
-  return Array.from({ length: hours }, (_, i) => {
+// Generate time series data for charts;
+const generateTimeSeriesData = (hours: number = 24) => {}
+  return Array.from({ length: hours }, (_, i) => {}
     const time = new Date(Date.now() - (hours - i - 1) * 60 * 60 * 1000);
     return {
       time: time.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
@@ -58,7 +58,7 @@ const generateTimeSeriesData = (hours: number = 24) => {
   });
 };
 
-const mockLiveUsers: LiveUser[] = Array.from({ length: 25 }, (_, i) => ({
+const mockLiveUsers: LiveUser[] = Array.from({ length: 25 }, (_, i) => ({}
   id: `user-${i}`,
   username: `User${i + 1}`,
   location: ['US', 'UK', 'DE', 'FR', 'JP', 'CA', 'AU'][Math.floor(Math.random() * 7)],
@@ -68,13 +68,13 @@ const mockLiveUsers: LiveUser[] = Array.from({ length: 25 }, (_, i) => ({
   joinedAt: new Date(Date.now() - Math.random() * 3600000),
 }));
 
-const mockActiveRooms: ActiveRoom[] = Array.from({ length: 8 }, (_, i) => ({
+const mockActiveRooms: ActiveRoom[] = Array.from({ length: 8 }, (_, i) => ({}
   id: `room-${i}`,
   name: `Room ${i + 1}`,
   viewers: Math.floor(Math.random() * 50) + 10,
   maxViewers: Math.floor(Math.random() * 100) + 50,
   duration: Math.floor(Math.random() * 7200) + 600,
-  video: {
+  video: {}
     title: `Movie ${i + 1}`,
     duration: Math.floor(Math.random() * 7200) + 3600,
     currentTime: Math.floor(Math.random() * 3600) + 600,
@@ -84,13 +84,13 @@ const mockActiveRooms: ActiveRoom[] = Array.from({ length: 8 }, (_, i) => ({
 
 
 
-const deviceData = [
+const deviceData = []
   { name: 'Desktop', value: 45, fill: '#3b82f6' },
   { name: 'Mobile', value: 35, fill: '#10b981' },
   { name: 'Tablet', value: 20, fill: '#f59e0b' },
 ];
 
-const locationData = [
+const locationData = []
   { name: 'US', users: 450 },
   { name: 'UK', users: 320 },
   { name: 'DE', users: 280 },
@@ -117,22 +117,22 @@ export default function RealTimeAnalytics() {
 
   useEffect(() => {
     if (isLive) {
-      const interval = setInterval(fetchRealTimeData, 30000); // Update every 30 seconds
+      const interval = setInterval(fetchRealTimeData, 30000); // Update every 30 seconds;
       return () => clearInterval(interval);
     }
   }, [isLive]);
 
   const fetchRealTimeData = async () => {
     try {
-      // Fetch real-time analytics data from API
-      const [realtimeData, dashboardData] = await Promise.all([
+      // Fetch real-time analytics data from API;
+      const [realtimeData, dashboardData] = await Promise.all([]
         analyticsAPI.getRealtimeAnalytics(),
         analyticsAPI.getRealTimeData()
       ]);
 
-      // Transform metrics data
-      const transformedMetrics: RealTimeMetric[] = [
-        {
+      // Transform metrics data;
+      const transformedMetrics: RealTimeMetric[] = []
+        {}
           id: 'active-users',
           name: 'Active Users',
           value: realtimeData.active_users || dashboardData.active_users || 0,
@@ -141,7 +141,7 @@ export default function RealTimeAnalytics() {
           unit: '',
           color: '#3b82f6',
         },
-        {
+        {}
           id: 'concurrent-streams',
           name: 'Concurrent Streams',
           value: realtimeData.concurrent_streams || dashboardData.active_parties || 0,
@@ -150,7 +150,7 @@ export default function RealTimeAnalytics() {
           unit: '',
           color: '#10b981',
         },
-        {
+        {}
           id: 'messages-per-min',
           name: 'Messages/Min',
           value: realtimeData.messages_per_minute || 0,
@@ -159,7 +159,7 @@ export default function RealTimeAnalytics() {
           unit: '/min',
           color: '#f59e0b',
         },
-        {
+        {}
           id: 'bandwidth',
           name: 'Bandwidth Usage',
           value: realtimeData.bandwidth_usage || 0,
@@ -170,8 +170,8 @@ export default function RealTimeAnalytics() {
         },
       ];
 
-      // Transform live users data
-      const transformedLiveUsers: LiveUser[] = (realtimeData.live_users || []).map((user: unknown) => ({
+      // Transform live users data;
+      const transformedLiveUsers: LiveUser[] = (realtimeData.live_users || []).map((user: unknown) => ({}
         id: user.id,
         username: user.username,
         location: user.location || 'Unknown',
@@ -181,17 +181,17 @@ export default function RealTimeAnalytics() {
         joinedAt: new Date(user.session_start || new Date())
       })).slice(0, 25);
 
-      // Transform active rooms data
-      const transformedActiveRooms: ActiveRoom[] = (realtimeData.active_rooms || []).map((room: unknown) => ({
+      // Transform active rooms data;
+      const transformedActiveRooms: ActiveRoom[] = (realtimeData.active_rooms || []).map((room: unknown) => ({}
         id: room.id,
         name: room.name,
         viewers: room.viewer_count,
         maxViewers: room.max_viewers,
         duration: room.duration_minutes,
-        video: {
+        video: {}
           title: room.video?.title || 'Unknown Video',
           duration: room.video?.duration || 0,
-          currentTime: room.video?.current_time || 0
+          currentTime: room.video?.current_time || 0;
         },
         createdAt: new Date(room.created_at || new Date())
       })).slice(0, 10);
@@ -199,46 +199,42 @@ export default function RealTimeAnalytics() {
       setMetrics(transformedMetrics);
       setLiveUsers(transformedLiveUsers);
       setActiveRooms(transformedActiveRooms);
-      
-      // Update time series data
-      const newDataPoint = {
-        time: new Date().toLocaleTimeString('en-US', { hour12: false }),
+      // Update time series data;
+      const newDataPoint = { time: new Date().toLocaleTimeString('en-US', { hour12: false }),
         users: realtimeData.active_users || 0,
         streams: realtimeData.concurrent_streams || 0,
         messages: realtimeData.messages_per_minute || 0,
         bandwidth: realtimeData.bandwidth_usage || 0,
       };
-      
       setTimeSeriesData(prev => [...prev.slice(-29), newDataPoint]);
-      
-    } catch {
+    } } catch {
       console.error('Failed to fetch real-time data:', error);
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load real-time analytics data.",
         variant: "destructive",
       });
-    } finally {
+    } finally {}
       setLoading(false);
     }
   };
 
   useEffect(() => {
     if (isLive) {
-      const interval = setInterval(() => {
-        // Update metrics with realistic fluctuations
-        setMetrics(prev => prev.map(metric => ({
+      const interval = setInterval(() => {}
+        // Update metrics with realistic fluctuations;
+        setMetrics(prev => prev.map(metric => ({}
           ...metric,
           value: Math.max(0, metric.value + (Math.random() - 0.5) * metric.value * 0.02),
           change: (Math.random() - 0.5) * 20,
           trend: Math.random() > 0.5 ? &apos;up&apos; : Math.random() > 0.25 ? &apos;down' : 'stable',
         })));
 
-        // Add new data point to time series
-        setTimeSeriesData(prev => {
+        // Add new data point to time series;
+        setTimeSeriesData(prev => {}
           const newData = [...prev.slice(1)];
           const now = new Date();
-          newData.push({
+          newData.push({}
             time: now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
             users: Math.floor(Math.random() * 500) + 800,
             streams: Math.floor(Math.random() * 200) + 200,
@@ -248,23 +244,22 @@ export default function RealTimeAnalytics() {
           return newData;
         });
 
-        // Update active rooms
-        setActiveRooms(prev => prev.map(room => ({
+        // Update active rooms;
+        setActiveRooms(prev => prev.map(room => ({}
           ...room,
           viewers: Math.max(1, room.viewers + Math.floor((Math.random() - 0.5) * 5)),
-          video: {
+          video: {}
             ...room.video,
             currentTime: Math.min(room.video.duration, room.video.currentTime + 10),
           },
         })));
 
-        // Simulate users joining/leaving
-        if (Math.random() > 0.8) {
-          setLiveUsers(prev => {
+        // Simulate users joining/leaving;
+        if (Math.random() > 0.8) {}
+          setLiveUsers(prev => {}
             const action = Math.random() > 0.6 ? 'add' : 'remove';
             if (action === 'add' && prev.length < 50) {
-              const newUser: LiveUser = {
-                id: `user-${Date.now()}`,
+              const newUser: LiveUser = { id: `user-${Date.now()}`,
                 username: `User${prev.length + 1}`,
                 location: ['US', 'UK', 'DE', 'FR', 'JP', 'CA', 'AU'][Math.floor(Math.random() * 7)],
                 device: ['desktop', 'mobile', 'tablet'][Math.floor(Math.random() * 3)] as Record<string, unknown>,
@@ -285,7 +280,7 @@ export default function RealTimeAnalytics() {
     }
   }, [isLive]);
 
-  const getActivityIcon = (activity: LiveUser['activity']) => {
+  const getActivityIcon = (activity: LiveUser['activity']) => {}
     switch (activity) {
       case 'watching': return <Eye className="h-4 w-4 text-green-500" />;
       case 'chatting': return <MessageSquare className="h-4 w-4 text-blue-500" />;
@@ -294,7 +289,7 @@ export default function RealTimeAnalytics() {
     }
   };
 
-  const getDeviceIcon = (device: LiveUser['device']) => {
+  const getDeviceIcon = (device: LiveUser['device']) => {}
     switch (device) {
       case 'desktop': return <Monitor className="h-4 w-4" />;
       case 'mobile': return <Smartphone className="h-4 w-4" />;
@@ -302,7 +297,7 @@ export default function RealTimeAnalytics() {
     }
   };
 
-  const getTrendIcon = (trend: RealTimeMetric['trend']) => {
+  const getTrendIcon = (trend: RealTimeMetric['trend']) => {}
     switch (trend) {
       case 'up': return <TrendingUp className="h-4 w-4 text-green-500" />;
       case 'down': return <TrendingDown className="h-4 w-4 text-red-500" />;
@@ -310,19 +305,19 @@ export default function RealTimeAnalytics() {
     }
   };
 
-  const formatNumber = (num: number) => {
+  const formatNumber = (num: number) => {}
     if (num >= 1000000) return (num / 1000000).toFixed(1) + &apos;M&apos;;
     if (num >= 1000) return (num / 1000).toFixed(1) + &apos;K';
     return num.toString();
   };
 
-  const formatDuration = (seconds: number) => {
+  const formatDuration = (seconds: number) => {}
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     return `${hours}h ${minutes}m`;
   };
 
-  const calculateProgress = (current: number, total: number) => {
+  const calculateProgress = (current: number, total: number) => {}
     return Math.min(100, (current / total) * 100);
   };
 
@@ -332,16 +327,16 @@ export default function RealTimeAnalytics() {
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Zap className="h-6 w-6" />
-            Real-time Analytics
+            Real-time Analytics;
             {isLive && <Badge className="animate-pulse bg-red-500">LIVE</Badge>}
           </h1>
           <p className="text-muted-foreground">
-            Monitor your platform activity in real-time
+            Monitor your platform activity in real-time;
           </p>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Switch
+            <Switch;
               checked={isLive}
               onCheckedChange={setIsLive}
             />
@@ -375,7 +370,7 @@ export default function RealTimeAnalytics() {
                 <span className="text-sm text-muted-foreground">{metric.unit}</span>
               </div>
               <div className={`text-xs mt-1 ${metric.change >= 0 ? &apos;text-green-600&apos; : &apos;text-red-600'}`}>
-                {metric.change >= 0 ? '+' : ''}{metric.change.toFixed(1)}% from last hour
+                {metric.change >= 0 ? '+' : ''}{metric.change.toFixed(1)}% from last hour;
               </div>
             </CardContent>
           </Card>
@@ -408,7 +403,7 @@ export default function RealTimeAnalytics() {
                 <XAxis dataKey="time" />
                 <YAxis />
                 <Tooltip />
-                <Area
+                <Area;
                   type="monotone"
                   dataKey={selectedMetric}
                   stroke={metrics.find(m => m.id.includes(selectedMetric))?.color || &apos;#3b82f6&apos;}
@@ -428,7 +423,7 @@ export default function RealTimeAnalytics() {
           <CardContent>
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
-                <Pie
+                <Pie;
                   data={deviceData}
                   cx="50%"
                   cy="50%"
@@ -448,7 +443,7 @@ export default function RealTimeAnalytics() {
               {deviceData.map((device) => (
                 <div key={device.name} className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2">
-                    <div
+                    <div;
                       className="w-3 h-3 rounded-full"
                       style={{ backgroundColor: device.fill }}
                     />
@@ -489,9 +484,9 @@ export default function RealTimeAnalytics() {
                   <div className="text-right">
                     <div className="text-sm font-medium">{room.viewers} viewers</div>
                     <div className="w-16 bg-muted rounded-full h-1 mt-1">
-                      <div
+                      <div;
                         className="bg-blue-500 h-1 rounded-full transition-all"
-                        style={{
+                        style={{}
                           width: `${calculateProgress(room.video.currentTime, room.video.duration)}%`,
                         }}
                       />

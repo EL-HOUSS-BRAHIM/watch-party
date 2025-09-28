@@ -1,7 +1,11 @@
+import { useState, useEffect , useCallback } from "react"
+import {}
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
+
+} from "lucide-react"
 "use client"
 
-import { useState, useEffect } from "react"
-import { 
   Play, 
   Pause, 
   Loader2, 
@@ -10,35 +14,31 @@ import {
   WifiOff, 
   Eye,
   Crown,
-  Clock
-} from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { cn } from "@/lib/utils"
-
-interface PartyStatusIndicatorProps {
-  isPlaying: boolean
-  isBuffering: boolean
-  isConnected: boolean
-  participantCount: number
-  syncState: {
-    lastSyncedBy?: {
-      username: string
-      isHost: boolean
+  Clock;
+interface PartyStatusIndicatorProps {}
+  isPlaying: boolean;
+  isBuffering: boolean;
+  isConnected: boolean;
+  participantCount: number;
+  syncState: {}
+    lastSyncedBy?: {}
+      username: string;
+      isHost: boolean;
     }
-    lastSyncAt: string
+    lastSyncAt: string;
     action: "play" | "pause" | "seek" | "buffer"
   }
-  className?: string
+  className?: string;
 }
 
-export function PartyStatusIndicator({
+export function PartyStatusIndicator({}
   isPlaying,
   isBuffering,
   isConnected,
   participantCount,
   syncState,
   className,
-}: PartyStatusIndicatorProps) {
+}: PartyStatusIndicatorProps) {}
   const [showSyncMessage, setShowSyncMessage] = useState(false)
 
   useEffect(() => {
@@ -49,12 +49,11 @@ export function PartyStatusIndicator({
     }
   }, [syncState.lastSyncAt])
 
-  const getSyncMessage = () => {
-    const { lastSyncedBy, action } = syncState
+  const getSyncMessage = () => {}
+    const { lastSyncedBy, action } = syncState;
     if (!lastSyncedBy) return ""
 
-    const prefix = lastSyncedBy.isHost ? "🎬 Host" : lastSyncedBy.username
-    
+    const prefix = lastSyncedBy.isHost ? "🎬 Host" : lastSyncedBy.username;
     switch (action) {
       case "play":
         return `${prefix} resumed playback`
@@ -69,24 +68,22 @@ export function PartyStatusIndicator({
     }
   }
 
-  const getStatusIcon = () => {
+  const getStatusIcon = () => {}
     if (isBuffering) {
       return <Loader2 className="h-4 w-4 animate-spin text-yellow-500" />
     }
-    
     if (isPlaying) {
       return <Play className="h-4 w-4 text-green-500" />
     }
-    
     return <Pause className="h-4 w-4 text-gray-500" />
   }
 
-  const getConnectionStatus = () => {
+  const getConnectionStatus = () => {}
     if (!isConnected) {
       return (
         <Badge variant="destructive" className="text-xs">
           <WifiOff className="h-3 w-3 mr-1" />
-          Disconnected
+          Disconnected;
         </Badge>
       )
     }
@@ -94,23 +91,22 @@ export function PartyStatusIndicator({
     return (
       <Badge variant="secondary" className="text-xs">
         <Wifi className="h-3 w-3 mr-1" />
-        Connected
+        Connected;
       </Badge>
     )
   }
 
-  const formatTimeAgo = (timestamp: string) => {
+  const formatTimeAgo = (timestamp: string) => {}
     const now = new Date()
     const syncTime = new Date(timestamp)
     const diffMs = now.getTime() - syncTime.getTime()
     const diffSeconds = Math.floor(diffMs / 1000)
-    
     if (diffSeconds < 60) {
       return "just now"
     } else if (diffSeconds < 3600) {
       const minutes = Math.floor(diffSeconds / 60)
       return `${minutes}m ago`
-    } else {
+    } else {}
       const hours = Math.floor(diffSeconds / 3600)
       return `${hours}h ago`
     }

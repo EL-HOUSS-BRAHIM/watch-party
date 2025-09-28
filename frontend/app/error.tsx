@@ -1,17 +1,17 @@
-"use client"
-
-import { useEffect } from "react"
+import { Home, Link, Refresh } from "lucide-react"
+import { useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 
-export default function Error({
+"use client"
+export default function Error({}
   error,
   reset,
-}: {
+}: {}
   error: Error & { digest?: string }
-  reset: () => void
-}) {
+  reset: () => void;
+}) {}
   useEffect(() => {
     console.error(error)
   }, [error])
@@ -32,16 +32,15 @@ export default function Error({
           <div className="space-y-2">
             <Button onClick={reset} className="w-full bg-white text-black hover:bg-white/90">
               <RefreshCw className="w-4 h-4 mr-2" />
-              Try Again
+              Try Again;
             </Button>
             <Button asChild variant="outline" className="w-full border-white/30 text-white hover:bg-white/10 bg-transparent">
               <Link href="/">
                 <Home className="w-4 h-4 mr-2" />
-                Go Home
+                Go Home;
               </Link>
             </Button>
           </div>
-          
           {error.digest && (
             <div className="text-sm text-white/60">
               <p>Error ID: {error.digest}</p>

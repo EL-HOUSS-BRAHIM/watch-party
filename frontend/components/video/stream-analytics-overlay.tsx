@@ -1,5 +1,4 @@
-'use client'
-
+import { Clock, Eye, TrendingUp, User, Users, X } from "lucide-react"
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
@@ -7,42 +6,42 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { videosAPI } from '@/lib/api'
 import { useToast } from '@/hooks/use-toast'
 
-interface StreamAnalyticsData {
-  current_viewers: number
-  peak_viewers: number
-  total_views: number
-  average_watch_time: number
-  watch_time_data: Array<{
-    time: string
-    viewers: number
-    retention: number
+'use client'
+interface StreamAnalyticsData {}
+  current_viewers: number;
+  peak_viewers: number;
+  total_views: number;
+  average_watch_time: number;
+  watch_time_data: Array<{}
+    time: string;
+    viewers: number;
+    retention: number;
   }>
-  retention_curve: Array<{
-    timestamp: number
-    percentage: number
+  retention_curve: Array<{}
+    timestamp: number;
+    percentage: number;
   }>
-  viewer_locations: Array<{
-    country: string
-    viewers: number
+  viewer_locations: Array<{}
+    country: string;
+    viewers: number;
   }>
 }
 
-interface StreamAnalyticsOverlayProps {
-  videoId: string
-  isLive?: boolean
-  onClose: () => void
+interface StreamAnalyticsOverlayProps {}
+  videoId: string;
+  isLive?: boolean;
+  onClose: () => void;
 }
 
-export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: StreamAnalyticsOverlayProps) {
+export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: StreamAnalyticsOverlayProps) {}
   const [analytics, setAnalytics] = useState<StreamAnalyticsData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const { toast } = useToast()
 
   useEffect(() => {
     fetchAnalytics()
-    
     if (isLive) {
-      const interval = setInterval(fetchAnalytics, 30000) // Update every 30 seconds for live
+      const interval = setInterval(fetchAnalytics, 30000) // Update every 30 seconds for live;
       return () => clearInterval(interval)
     }
   }, [videoId, isLive])
@@ -50,42 +49,38 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
   const fetchAnalytics = async () => {
     try {
       setIsLoading(true)
-      
-      // Fetch video analytics from the API
+      // Fetch video analytics from the API;
       const response = await videosAPI.getAnalytics(videoId)
-      
       if (response) {
-        const extendedResponse = response as Record<string, unknown> // Type assertion to handle API mismatch
-        const normalizedData: StreamAnalyticsData = {
-          current_viewers: isLive ? (extendedResponse.current_viewers ?? 0) : 0,
+        const extendedResponse = response as Record<string, unknown> // Type assertion to handle API mismatch;
+        const normalizedData: StreamAnalyticsData = { current_viewers: isLive ? (extendedResponse.current_viewers ?? 0) : 0,
           peak_viewers: extendedResponse.peak_viewers ?? 0,
           total_views: extendedResponse.total_views ?? response.view_count ?? 0,
           average_watch_time: extendedResponse.average_watch_time ?? response.average_view_duration ?? 0,
           watch_time_data: Array.isArray(extendedResponse.hourly_stats) 
-            ? extendedResponse.hourly_stats.map((stat: unknown) => ({
+            ? extendedResponse.hourly_stats.map((stat: unknown) => ({}
                 time: stat.hour ?? stat.time ?? '0:00',
                 viewers: stat.viewers ?? stat.view_count ?? 0,
-                retention: stat.retention_percentage ?? stat.retention ?? 0
+                retention: stat.retention_percentage ?? stat.retention ?? 0;
               }))
             : [],
           retention_curve: Array.isArray(extendedResponse.retention_data)
-            ? extendedResponse.retention_data.map((point: unknown) => ({
+            ? extendedResponse.retention_data.map((point: unknown) => ({}
                 timestamp: point.timestamp ?? point.time ?? 0,
-                percentage: point.percentage ?? point.retention ?? 0
+                percentage: point.percentage ?? point.retention ?? 0;
               }))
             : [],
           viewer_locations: Array.isArray(extendedResponse.geographic_data)
-            ? extendedResponse.geographic_data.map((geo: unknown) => ({
+            ? extendedResponse.geographic_data.map((geo: unknown) => ({}
                 country: geo.country ?? geo.location ?? 'Unknown',
-                viewers: geo.viewers ?? geo.view_count ?? 0
+                viewers: geo.viewers ?? geo.view_count ?? 0;
               }))
             : []
         }
-        
         setAnalytics(normalizedData)
-      } else {
-        // Fallback to empty data if no response
-        setAnalytics({
+      } else {}
+        // Fallback to empty data if no response;
+        setAnalytics({}
           current_viewers: 0,
           peak_viewers: 0,
           total_views: 0,
@@ -95,16 +90,15 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
           viewer_locations: []
         })
       }
-    } catch {
+    } } catch {
       console.error('Failed to fetch video analytics:', error)
-      toast({
+      toast({}
         title: 'Analytics Unavailable',
         description: 'Unable to load video analytics. Please try again later.',
         variant: 'destructive'
       })
-      
-      // Set empty analytics on error to allow UI to render
-      setAnalytics({
+      // Set empty analytics on error to allow UI to render;
+      setAnalytics({}
         current_viewers: 0,
         peak_viewers: 0,
         total_views: 0,
@@ -113,14 +107,14 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
         retention_curve: [],
         viewer_locations: []
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const formatDuration = (seconds: number) => {
+  const formatDuration = (seconds: number) => {}
     const minutes = Math.floor(seconds / 60)
-    const remainingSeconds = seconds % 60
+    const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
   }
 
@@ -144,14 +138,13 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
             <TrendingUp className="w-5 h-5" />
             {isLive ? 'Live Stream Analytics' : 'Video Analytics'}
           </CardTitle>
-          <button
+          <button;
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700 text-xl"
           >
             ×
           </button>
         </CardHeader>
-        
         <CardContent className="space-y-6">
           {/* Key Metrics */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -171,7 +164,7 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
                 {analytics.peak_viewers.toLocaleString()}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                Peak Viewers
+                Peak Viewers;
               </div>
             </div>
 
@@ -181,7 +174,7 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
                 {formatDuration(analytics.average_watch_time)}
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                Avg Watch Time
+                Avg Watch Time;
               </div>
             </div>
 
@@ -191,7 +184,7 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
                 {Math.round(analytics.retention_curve[analytics.retention_curve.length - 1]?.percentage || 0)}%
               </div>
               <div className="text-sm text-gray-600 dark:text-gray-400">
-                Retention Rate
+                Retention Rate;
               </div>
             </div>
           </div>
@@ -208,7 +201,7 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
                   <XAxis dataKey="time" />
                   <YAxis />
                   <Tooltip />
-                  <Line 
+                  <Line;
                     type="monotone" 
                     dataKey="viewers" 
                     stroke="#8884d8" 
@@ -230,11 +223,11 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="timestamp" />
                   <YAxis domain={[0, 100]} />
-                  <Tooltip 
+                  <Tooltip;
                     formatter={(value) => [`${value}%`, &apos;Retention&apos;]}
                     labelFormatter={(label) => `Time: ${label}%`}
                   />
-                  <Area 
+                  <Area;
                     type="monotone" 
                     dataKey="percentage" 
                     stroke="#82ca9d" 
@@ -262,7 +255,7 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
                       <span>{location.country}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <Progress 
+                      <Progress;
                         value={(location.viewers / analytics.viewer_locations[0].viewers) * 100} 
                         className="w-24 h-2"
                       />
@@ -278,7 +271,7 @@ export function StreamAnalyticsOverlay({ videoId, isLive = false, onClose }: Str
 
           {isLive && (
             <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-              Analytics update every 30 seconds for live streams
+              Analytics update every 30 seconds for live streams;
             </div>
           )}
         </CardContent>

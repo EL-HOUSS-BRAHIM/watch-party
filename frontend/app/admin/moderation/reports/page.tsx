@@ -6,7 +6,7 @@ export default function ModerationReportsPage() {
       <div>
         <h1 className="text-3xl font-bold">Moderation Reports</h1>
         <p className="text-muted-foreground mt-2">
-          Review and manage reported content and user violations
+          Review and manage reported content and user violations;
         </p>
       </div>
       <ModerationReports />

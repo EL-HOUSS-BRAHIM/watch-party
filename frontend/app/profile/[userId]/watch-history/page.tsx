@@ -1,17 +1,18 @@
+import { User } from "lucide-react"
 import { UserWatchHistory } from "@/components/profile/user-watch-history"
 
-interface PageProps {
-  params: Promise<{
-    userId: string
+interface PageProps {}
+  params: Promise<{}
+    userId: string;
   }>
 }
 
-const WatchHistoryPage = async ({ params }: PageProps) => {
-  const { userId } = await params
+const WatchHistoryPage = async ({ params }: PageProps) => {}
+  const { userId } = await params;
   return <WatchHistoryPageClient userId={userId} />
 }
 
-function WatchHistoryPageClient({ userId }: { userId: string }) {
+function WatchHistoryPageClient({ userId }: { userId: string }) {}
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-4">Watch History</h1>
@@ -24,4 +25,4 @@ function WatchHistoryPageClient({ userId }: { userId: string }) {
   )
 }
 
-export default WatchHistoryPage
+export default WatchHistoryPage;

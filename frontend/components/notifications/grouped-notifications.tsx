@@ -1,11 +1,17 @@
-'use client';
-
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
+import {}
+import { formatDistanceToNow } from 'date-fns';
+import { useToast } from '@/hooks/use-toast';
+import { notificationsAPI, partiesAPI, usersAPI } from '@/lib/api';
+import type { Notification as APINotification } from '@/lib/api';
+
+} from 'lucide-react';
+'use client';
+
   Bell, 
   Users, 
   Heart, 
@@ -18,19 +24,13 @@ import {
   CheckCheck,
   Trash2,
   MoreHorizontal,
-} from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
-import { useToast } from '@/hooks/use-toast';
-import { notificationsAPI, partiesAPI, usersAPI } from '@/lib/api';
-import type { Notification as APINotification } from '@/lib/api';
-
-type NotificationWithMeta = APINotification & {
+type NotificationWithMeta = APINotification & {}
   avatar?: string | null;
   actionable: boolean;
   metadata?: Record<string, any>;
 };
 
-interface NotificationGroup {
+interface NotificationGroup {}
   id: string;
   type: string;
   title: string;
@@ -40,7 +40,7 @@ interface NotificationGroup {
   collapsed: boolean;
 }
 
-interface PaginationState {
+interface PaginationState {}
   currentPage: number;
   next: string | null;
   count: number;
@@ -48,7 +48,7 @@ interface PaginationState {
 
 const FALLBACK_AVATAR = '/placeholder-user.jpg';
 
-const getGroupTitle = (type: string): string => {
+const getGroupTitle = (type: string): string => {}
   switch (type) {
     case 'friend_request':
       return 'Friend Requests';
@@ -67,7 +67,7 @@ const getGroupTitle = (type: string): string => {
   }
 };
 
-const enhanceNotification = (notification: APINotification): NotificationWithMeta => {
+const enhanceNotification = (notification: APINotification): NotificationWithMeta => {}
   const metadata = notification.action_data ?? {};
   const userData = metadata.user ?? metadata.sender ?? metadata.requester ?? {};
   const avatar =
@@ -88,7 +88,7 @@ const enhanceNotification = (notification: APINotification): NotificationWithMet
   };
 };
 
-const NotificationIcon = ({ type }: { type: string }) => {
+const NotificationIcon = ({ type }: { type: string }) => {}
   switch (type) {
     case 'friend_request':
       return <Users className="h-4 w-4 text-blue-500" />;
@@ -116,10 +116,10 @@ export default function GroupedNotifications() {
   const [pagination, setPagination] = useState<PaginationState>({ currentPage: 1, next: null, count: 0 });
 
   const fetchNotifications = useCallback(
-    async (page = 1, append = false) => {
+    async (page = 1, append = false) => {}
       setLoading(true);
       try {
-        const response = await notificationsAPI.getNotifications({
+        const response = await notificationsAPI.getNotifications({}
           page,
           unread: filter === 'unread' ? true : undefined,
         });
@@ -128,19 +128,19 @@ export default function GroupedNotifications() {
         const enhanced = items.map(enhanceNotification);
 
         setNotifications((prev) => (append ? [...prev, ...enhanced] : enhanced));
-        setPagination({
+        setPagination({}
           currentPage: page,
           next: response?.next ?? null,
           count: response?.count ?? enhanced.length,
         });
-      } catch {
+      } } catch {
         console.error('Failed to fetch notifications:', error);
-        toast({
+        toast({}
           title: 'Unable to load notifications',
           description: 'Please try again later.',
           variant: 'destructive',
         });
-      } finally {
+      } finally {}
         setLoading(false);
       }
     },
@@ -151,7 +151,7 @@ export default function GroupedNotifications() {
     void fetchNotifications(1, false);
   }, [fetchNotifications]);
 
-  const filteredNotifications = useMemo(() => {
+  const filteredNotifications = useMemo(() => {}
     if (filter === 'unread') {
       return notifications.filter((notification) => !notification.is_read);
     }
@@ -163,14 +163,14 @@ export default function GroupedNotifications() {
     return notifications;
   }, [notifications, filter]);
 
-  const groupedNotifications = useMemo(() => {
+  const groupedNotifications = useMemo(() => {}
     const groups = new Map<string, NotificationGroup>();
 
-    filteredNotifications.forEach((notification) => {
+    filteredNotifications.forEach((notification) => {}
       const groupKey = notification.type ?? 'system';
 
-      if (!groups.has(groupKey)) {
-        groups.set(groupKey, {
+      if (!groups.has(groupKey)) {}
+        groups.set(groupKey, {}
           id: groupKey,
           type: groupKey,
           title: getGroupTitle(groupKey),
@@ -185,7 +185,7 @@ export default function GroupedNotifications() {
       group.notifications.push(notification);
       group.count += 1;
 
-      if (new Date(notification.created_at).getTime() > new Date(group.latestTimestamp).getTime()) {
+      if (new Date(notification.created_at).getTime() > new Date(group.latestTimestamp).getTime()) {}
         group.latestTimestamp = notification.created_at;
       }
     });
@@ -207,15 +207,15 @@ export default function GroupedNotifications() {
 
   const totalCount = pagination.count ?? notifications.length;
 
-  const toggleGroup = useCallback((groupId: string) => {
-    setCollapsedGroups((prev) => ({
+  const toggleGroup = useCallback((groupId: string) => {}
+    setCollapsedGroups((prev) => ({}
       ...prev,
       [groupId]: !prev[groupId],
     }));
   }, []);
 
   const handleMarkAsRead = useCallback(
-    async (notificationId: string) => {
+    async (notificationId: string) => {}
       try {
         await notificationsAPI.markAsRead(notificationId);
         setNotifications((prev) =>
@@ -223,9 +223,9 @@ export default function GroupedNotifications() {
             notification.id === notificationId ? { ...notification, is_read: true } : notification,
           ),
         );
-      } catch {
+      } } catch {
         console.error('Failed to mark notification as read:', error);
-        toast({
+        toast({}
           title: 'Unable to update notification',
           description: 'Please try again later.',
           variant: 'destructive',
@@ -236,7 +236,7 @@ export default function GroupedNotifications() {
   );
 
   const handleMarkGroupAsRead = useCallback(
-    async (groupId: string) => {
+    async (groupId: string) => {}
       const groupNotifications = notifications.filter(
         (notification) => notification.type === groupId && !notification.is_read,
       );
@@ -252,9 +252,9 @@ export default function GroupedNotifications() {
             notification.type === groupId ? { ...notification, is_read: true } : notification,
           ),
         );
-      } catch {
+      } } catch {
         console.error('Failed to mark notifications as read:', error);
-        toast({
+        toast({}
           title: 'Unable to update notifications',
           description: 'Please try again later.',
           variant: 'destructive',
@@ -272,13 +272,13 @@ export default function GroupedNotifications() {
     try {
       await notificationsAPI.markAllAsRead();
       setNotifications((prev) => prev.map((notification) => ({ ...notification, is_read: true })));
-      toast({
+      toast({}
         title: 'All notifications marked as read',
         description: 'You are all caught up.',
       });
-    } catch {
+    } } catch {
       console.error('Failed to mark all notifications as read:', error);
-      toast({
+      toast({}
         title: 'Unable to update notifications',
         description: 'Please try again later.',
         variant: 'destructive',
@@ -287,17 +287,17 @@ export default function GroupedNotifications() {
   }, [notifications.length, unreadCount, toast]);
 
   const handleDeleteNotification = useCallback(
-    async (notificationId: string) => {
+    async (notificationId: string) => {}
       try {
         await notificationsAPI.deleteNotification(notificationId);
         setNotifications((prev) => prev.filter((notification) => notification.id !== notificationId));
-        setPagination((prev) => ({
+        setPagination((prev) => ({}
           ...prev,
           count: Math.max(0, prev.count - 1),
         }));
-      } catch {
+      } } catch {
         console.error('Failed to delete notification:', error);
-        toast({
+        toast({}
           title: 'Unable to delete notification',
           description: 'Please try again later.',
           variant: 'destructive',
@@ -316,13 +316,13 @@ export default function GroupedNotifications() {
       await notificationsAPI.clearAll();
       setNotifications([]);
       setPagination({ currentPage: 1, next: null, count: 0 });
-      toast({
+      toast({}
         title: 'Notifications cleared',
         description: 'All notifications have been removed.',
       });
-    } catch {
+    } } catch {
       console.error('Failed to clear notifications:', error);
-      toast({
+      toast({}
         title: 'Unable to clear notifications',
         description: 'Please try again later.',
         variant: 'destructive',
@@ -330,7 +330,7 @@ export default function GroupedNotifications() {
     }
   }, [notifications.length, toast]);
 
-  const handleLoadMore = useCallback(() => {
+  const handleLoadMore = useCallback(() => {}
     if (!pagination.next) {
       return;
     }
@@ -339,7 +339,7 @@ export default function GroupedNotifications() {
   }, [fetchNotifications, pagination]);
 
   const handleFriendRequest = useCallback(
-    async (notification: NotificationWithMeta, action: 'accept' | 'decline') => {
+    async (notification: NotificationWithMeta, action: 'accept' | 'decline') => {}
       try {
         const metadata = notification.metadata ?? {};
         const requestId =
@@ -348,7 +348,7 @@ export default function GroupedNotifications() {
         if (requestId) {
           if (action === 'accept') {
             await usersAPI.acceptFriendRequest(String(requestId));
-          } else {
+          } else {}
             await usersAPI.declineFriendRequest(String(requestId));
           }
         }
@@ -356,16 +356,16 @@ export default function GroupedNotifications() {
         await notificationsAPI.markAsRead(notification.id);
         setNotifications((prev) => prev.filter((item) => item.id !== notification.id));
 
-        toast({
+        toast({}
           title: action === 'accept' ? 'Friend request accepted' : 'Friend request declined',
           description:
             action === 'accept'
               ? 'You are now connected.'
               : 'The request has been declined.',
         });
-      } catch {
+      } } catch {
         console.error('Failed to handle friend request:', error);
-        toast({
+        toast({}
           title: 'Unable to update friend request',
           description: 'Please try again later.',
           variant: 'destructive',
@@ -376,7 +376,7 @@ export default function GroupedNotifications() {
   );
 
   const handlePartyInvite = useCallback(
-    async (notification: NotificationWithMeta, action: 'accept' | 'decline') => {
+    async (notification: NotificationWithMeta, action: 'accept' | 'decline') => {}
       try {
         const metadata = notification.metadata ?? {};
 
@@ -394,16 +394,16 @@ export default function GroupedNotifications() {
         await notificationsAPI.markAsRead(notification.id);
         setNotifications((prev) => prev.filter((item) => item.id !== notification.id));
 
-        toast({
+        toast({}
           title: action === 'accept' ? 'Party invite accepted' : 'Party invite dismissed',
           description:
             action === 'accept'
               ? 'You have joined the watch party.'
               : 'The invitation has been dismissed.',
         });
-      } catch {
+      } } catch {
         console.error('Failed to handle party invite:', error);
-        toast({
+        toast({}
           title: 'Unable to update party invite',
           description: 'Please try again later.',
           variant: 'destructive',
@@ -443,23 +443,23 @@ export default function GroupedNotifications() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button
+          <Button;
             variant="outline"
             size="sm"
             disabled={notifications.length === 0 || unreadCount === 0}
             onClick={handleMarkAllRead}
           >
             <CheckCheck className="h-4 w-4 mr-1" />
-            Mark All Read
+            Mark All Read;
           </Button>
-          <Button
+          <Button;
             variant="outline"
             size="sm"
             disabled={notifications.length === 0}
             onClick={handleClearAll}
           >
             <Trash2 className="h-4 w-4 mr-1" />
-            Clear All
+            Clear All;
           </Button>
         </div>
       </div>
@@ -489,7 +489,7 @@ export default function GroupedNotifications() {
           ) : (
             groupedNotifications.map((group) => (
               <Card key={group.id}>
-                <CardHeader
+                <CardHeader;
                   className="cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={() => toggleGroup(group.id)}
                 >
@@ -511,10 +511,10 @@ export default function GroupedNotifications() {
                       )}
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button
+                      <Button;
                         variant="ghost"
                         size="sm"
-                        onClick={(event) => {
+                        onClick={(event) => {}
                           event.stopPropagation();
                           void handleMarkGroupAsRead(group.id);
                         }}
@@ -534,9 +534,9 @@ export default function GroupedNotifications() {
                   <CardContent className="pt-0">
                     <div className="space-y-3">
                       {group.notifications.map((notification) => (
-                        <div
+                        <div;
                           key={notification.id}
-                          className={`flex items-start gap-4 p-4 rounded-lg border transition-colors ${
+                          className={`flex items-start gap-4 p-4 rounded-lg border transition-colors ${}
                             !notification.is_read ? 'bg-blue-50 border-blue-200' : 'bg-background'
                           }`}
                         >
@@ -562,7 +562,7 @@ export default function GroupedNotifications() {
                               </div>
                               <div className="flex items-center gap-1">
                                 {!notification.is_read && (
-                                  <Button
+                                  <Button;
                                     variant="ghost"
                                     size="sm"
                                     onClick={() => void handleMarkAsRead(notification.id)}
@@ -570,7 +570,7 @@ export default function GroupedNotifications() {
                                     <Check className="h-4 w-4" />
                                   </Button>
                                 )}
-                                <Button
+                                <Button;
                                   variant="ghost"
                                   size="sm"
                                   onClick={() => void handleDeleteNotification(notification.id)}
@@ -584,35 +584,35 @@ export default function GroupedNotifications() {
                               <div className="flex gap-2 mt-3">
                                 {notification.type === 'friend_request' && (
                                   <>
-                                    <Button
+                                    <Button;
                                       size="sm"
                                       onClick={() => void handleFriendRequest(notification, &apos;accept&apos;)}
                                     >
-                                      Accept
+                                      Accept;
                                     </Button>
-                                    <Button
+                                    <Button;
                                       variant="outline"
                                       size="sm"
                                       onClick={() => void handleFriendRequest(notification, &apos;decline&apos;)}
                                     >
-                                      Decline
+                                      Decline;
                                     </Button>
                                   </>
                                 )}
                                 {notification.type === 'party_invite' && (
                                   <>
-                                    <Button
+                                    <Button;
                                       size="sm"
                                       onClick={() => void handlePartyInvite(notification, &apos;accept&apos;)}
                                     >
-                                      Join Party
+                                      Join Party;
                                     </Button>
-                                    <Button
+                                    <Button;
                                       variant="outline"
                                       size="sm"
                                       onClick={() => void handlePartyInvite(notification, &apos;decline&apos;)}
                                     >
-                                      Decline
+                                      Decline;
                                     </Button>
                                   </>
                                 )}
@@ -630,7 +630,7 @@ export default function GroupedNotifications() {
           {pagination.next && groupedNotifications.length > 0 && (
             <div className="flex justify-center pt-2">
               <Button variant="outline" onClick={handleLoadMore} disabled={loading}>
-                Load More
+                Load More;
               </Button>
             </div>
           )}

@@ -1,5 +1,4 @@
-'use client';
-
+import { Calendar, Filter, MapPin, Refresh, Search, Star, User, Users } from "lucide-react"
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { usersAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
-interface User {
+'use client';
+interface User {}
   id: string;
   username: string;
   displayName: string;
@@ -25,14 +25,14 @@ interface User {
   isVerified: boolean;
   friendshipStatus: 'none' | 'pending_sent' | 'pending_received' | 'friends' | 'blocked';
   bio?: string;
-  stats: {
+  stats: {}
     moviesWatched: number;
     partiesHosted: number;
     friendsCount: number;
   };
 }
 
-interface SearchFilters {
+interface SearchFilters {}
   sortBy: 'relevance' | 'mutual_friends' | 'activity' | 'recent';
   location: 'any' | 'nearby' | 'same_city';
   hasAvatar: boolean;
@@ -43,11 +43,11 @@ interface SearchFilters {
 }
 
 const fallbackId = (prefix: string) =>
-  typeof crypto !== 'undefined' && 'randomUUID' in crypto
+  typeof crypto !== 'undefined' && 'randomUUID' in crypto;
     ? `${prefix}-${crypto.randomUUID()}`
     : `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
 
-const normalizeSearchUser = (user: unknown): User => ({
+const normalizeSearchUser = (user: unknown): User => ({}
   id: String(user?.id ?? user?.user_id ?? user?.username ?? fallbackId('user')),
   username: user?.username ?? user?.handle ?? 'user',
   displayName:
@@ -66,33 +66,32 @@ const normalizeSearchUser = (user: unknown): User => ({
   isOnline: Boolean(user?.is_online ?? user?.online ?? user?.status === 'online'),
   mutualFriends: user?.mutual_friends_count ?? user?.mutual_friends ?? user?.mutualFriends ?? 0,
   commonInterests: Array.isArray(user?.common_interests)
-    ? user.common_interests
+    ? user.common_interests;
     : Array.isArray(user?.interests)
-      ? user.interests
+      ? user.interests;
       : Array.isArray(user?.genres)
-        ? user.genres
+        ? user.genres;
         : [],
   location: user?.location ?? user?.city ?? user?.region,
   joinedDate: user?.joined_at ?? user?.created_at ?? new Date().toISOString(),
   watchedGenres: Array.isArray(user?.watched_genres)
-    ? user.watched_genres
+    ? user.watched_genres;
     : Array.isArray(user?.favorite_genres)
-      ? user.favorite_genres
+      ? user.favorite_genres;
       : [],
   favoriteMovies: Array.isArray(user?.favorite_movies) ? user.favorite_movies : [],
   isVerified: Boolean(user?.is_verified ?? user?.verified),
   friendshipStatus: user?.friendship_status ?? 'none',
   bio: user?.bio ?? user?.about ?? '',
-  stats: {
+  stats: {}
     moviesWatched: user?.stats?.movies_watched ?? user?.movies_watched ?? 0,
     partiesHosted: user?.stats?.parties_hosted ?? user?.parties_hosted ?? 0,
     friendsCount: user?.stats?.friends_count ?? user?.friends_count ?? 0,
   },
 });
 
-const buildSearchParams = (searchTerm: string, filters: SearchFilters) => {
-  const result = {
-    q: searchTerm || '',
+const buildSearchParams = (searchTerm: string, filters: SearchFilters) => {}
+  const result = { q: searchTerm || '',
     limit: 20,
     sort: filters.sortBy,
   } as Record<string, unknown>;
@@ -130,7 +129,7 @@ export default function SmartFriendSearch() {
   const [loading, setLoading] = useState(false);
   const [suggestions, setSuggestions] = useState<User[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
-  const [filters, setFilters] = useState<SearchFilters>({
+  const [filters, setFilters] = useState<SearchFilters>({}
     sortBy: 'relevance',
     location: 'any',
     hasAvatar: false,
@@ -141,7 +140,7 @@ export default function SmartFriendSearch() {
   });
   const { toast } = useToast();
 
-  const availableGenres = [
+  const availableGenres = []
     'Action', 'Comedy', 'Drama', 'Horror', 'Sci-Fi',
     'Romance', 'Thriller', 'Documentary', 'Animation', 'Fantasy'
   ];
@@ -152,14 +151,14 @@ export default function SmartFriendSearch() {
       const response = await usersAPI.getFriendSuggestions({ limit: 12 });
       const normalized = (response ?? []).map((item: unknown) => normalizeSearchUser(item));
       setSuggestions(normalized);
-    } catch {
+    } } catch {
       console.error('Failed to load friend suggestions:', error);
-      toast({
+      toast({}
         title: 'Unable to load suggestions',
         description: 'Please try refreshing suggestions in a moment.',
         variant: 'destructive',
       });
-    } finally {
+    } finally {}
       setLoadingSuggestions(false);
     }
   }, [toast]);
@@ -167,7 +166,7 @@ export default function SmartFriendSearch() {
   useEffect(() => {
     if (searchTerm.length > 2) {
       searchUsers();
-    } else {
+    } else {}
       setUsers([]);
     }
   }, [searchTerm, filters]);
@@ -183,20 +182,20 @@ export default function SmartFriendSearch() {
       const response = await usersAPI.searchUsers(params);
       const results = response?.results ?? [];
       setUsers(results.map((result: unknown) => normalizeSearchUser(result)));
-    } catch {
+    } } catch {
       console.error('Failed to search users:', error);
-      toast({
+      toast({}
         title: 'Search failed',
         description: 'We could not complete that search. Please try again.',
         variant: 'destructive',
       });
-    } finally {
+    } finally {}
       setLoading(false);
     }
   };
 
-  const applyFilters = (list: User[]) => {
-    const filtered = list.filter(user => {
+  const applyFilters = (list: User[]) => {}
+    const filtered = list.filter(user => {}
       if (filters.hasAvatar && !user.avatar) return false;
       if (filters.isOnline && !user.isOnline) return false;
       if (filters.verifiedOnly && !user.isVerified) return false;
@@ -221,7 +220,7 @@ export default function SmartFriendSearch() {
         sorted.sort((a, b) => new Date(b.joinedDate).getTime() - new Date(a.joinedDate).getTime());
         break;
       default:
-        sorted.sort((a, b) => {
+        sorted.sort((a, b) => {}
           const aScore = a.mutualFriends * 2 + a.commonInterests.length;
           const bScore = b.mutualFriends * 2 + b.commonInterests.length;
           return bScore - aScore;
@@ -242,7 +241,7 @@ export default function SmartFriendSearch() {
             <Avatar className="h-16 w-16">
               <AvatarImage src={user.avatar} alt={user.displayName} />
               <AvatarFallback>
-                {user.displayName
+                {user.displayName;
                   .split(' ')
                   .map((n) => n[0])
                   .join('')}
@@ -297,7 +296,7 @@ export default function SmartFriendSearch() {
             {user.mutualFriends > 0 && (
               <div className="mb-3">
                 <Badge variant="secondary" className="mb-2">
-                  {user.mutualFriends} mutual friends
+                  {user.mutualFriends} mutual friends;
                 </Badge>
               </div>
             )}
@@ -316,7 +315,7 @@ export default function SmartFriendSearch() {
           <div className="flex flex-col gap-2">
             {getFriendshipButton(user)}
             <Button variant="ghost" size="sm">
-              View Profile
+              View Profile;
             </Button>
           </div>
         </div>
@@ -324,33 +323,33 @@ export default function SmartFriendSearch() {
     </Card>
   );
 
-  const handleSendFriendRequest = async (userId: string) => {
+  const handleSendFriendRequest = async (userId: string) => {}
     try {
       await usersAPI.sendFriendRequestToUser(userId);
 
       setUsers(prev =>
         prev.map(user =>
-          user.id === userId
+          user.id === userId;
             ? { ...user, friendshipStatus: 'pending_sent' }
-            : user
+            : user;
         )
       );
 
       setSuggestions(prev =>
         prev.map(user =>
-          user.id === userId
+          user.id === userId;
             ? { ...user, friendshipStatus: 'pending_sent' }
-            : user
+            : user;
         )
       );
 
-      toast({
+      toast({}
         title: 'Friend request sent',
         description: 'We let them know you want to connect.',
       });
-    } catch {
+    } } catch {
       console.error('Failed to send friend request:', error);
-      toast({
+      toast({}
         title: 'Unable to send request',
         description: 'Please try again in a moment.',
         variant: 'destructive',
@@ -358,34 +357,34 @@ export default function SmartFriendSearch() {
     }
   };
 
-  const handleAcceptFriendRequest = async (userId: string) => {
+  const handleAcceptFriendRequest = async (userId: string) => {}
     try {
-      // API call to accept friend request
+      // API call to accept friend request;
       console.log('Accepting friend request from:', userId);
 
       setUsers(prev =>
         prev.map(user =>
-          user.id === userId
+          user.id === userId;
             ? { ...user, friendshipStatus: 'friends' }
-            : user
+            : user;
         )
       );
 
       setSuggestions(prev =>
         prev.map(user =>
-          user.id === userId
+          user.id === userId;
             ? { ...user, friendshipStatus: 'friends' }
-            : user
+            : user;
         )
       );
 
-      toast({
+      toast({}
         title: 'Friend request accepted',
         description: 'You are now connected.',
       });
-    } catch {
+    } } catch {
       console.error('Failed to accept friend request:', error);
-      toast({
+      toast({}
         title: 'Unable to update request',
         description: 'Please try again later.',
         variant: 'destructive',
@@ -393,40 +392,40 @@ export default function SmartFriendSearch() {
     }
   };
 
-  const getFriendshipButton = (user: User) => {
+  const getFriendshipButton = (user: User) => {}
     switch (user.friendshipStatus) {
       case 'none':
         return (
-          <Button
+          <Button;
             variant="outline"
             size="sm"
             onClick={() => handleSendFriendRequest(user.id)}
           >
             <UserPlus className="h-4 w-4 mr-1" />
-            Add Friend
+            Add Friend;
           </Button>
         );
       case 'pending_sent':
         return (
           <Button variant="outline" size="sm" disabled>
-            Request Sent
+            Request Sent;
           </Button>
         );
       case 'pending_received':
         return (
-          <Button
+          <Button;
             variant="default"
             size="sm"
             onClick={() => handleAcceptFriendRequest(user.id)}
           >
-            Accept Request
+            Accept Request;
           </Button>
         );
       case 'friends':
         return (
           <Badge variant="secondary">
             <Users className="h-4 w-4 mr-1" />
-            Friends
+            Friends;
           </Badge>
         );
       default:
@@ -439,7 +438,7 @@ export default function SmartFriendSearch() {
       <div className="flex items-center gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
+          <Input;
             placeholder="Search for friends by name, username, or interests..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -448,7 +447,7 @@ export default function SmartFriendSearch() {
         </div>
         <Button variant="outline">
           <Filter className="h-4 w-4 mr-2" />
-          Advanced Filters
+          Advanced Filters;
         </Button>
       </div>
 
@@ -489,7 +488,7 @@ export default function SmartFriendSearch() {
                 <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-medium mb-2">No users found</h3>
                 <p className="text-muted-foreground">
-                  Try adjusting your search terms or filters
+                  Try adjusting your search terms or filters;
                 </p>
               </CardContent>
             </Card>
@@ -499,7 +498,7 @@ export default function SmartFriendSearch() {
                 <Search className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-medium mb-2">Start searching</h3>
                 <p className="text-muted-foreground">
-                  Enter at least 3 characters to search for users
+                  Enter at least 3 characters to search for users;
                 </p>
               </CardContent>
             </Card>
@@ -509,7 +508,7 @@ export default function SmartFriendSearch() {
         <TabsContent value="suggestions" className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold">Suggested connections</h3>
-            <Button
+            <Button;
               variant="outline"
               size="sm"
               onClick={loadSuggestions}
@@ -566,7 +565,7 @@ export default function SmartFriendSearch() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Sort by</label>
-                  <Select
+                  <Select;
                     value={filters.sortBy}
                     onValueChange={(value: SearchFilters['sortBy']) =>
                       setFilters({ ...filters, sortBy: value })
@@ -586,7 +585,7 @@ export default function SmartFriendSearch() {
 
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Location</label>
-                  <Select
+                  <Select;
                     value={filters.location}
                     onValueChange={(value: SearchFilters['location']) =>
                       setFilters({ ...filters, location: value })
@@ -607,7 +606,7 @@ export default function SmartFriendSearch() {
               <div className="space-y-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Minimum Mutual Friends</label>
-                  <Select
+                  <Select;
                     value={filters.minMutualFriends.toString()}
                     onValueChange={(value) =>
                       setFilters({ ...filters, minMutualFriends: parseInt(value) })
@@ -629,11 +628,11 @@ export default function SmartFriendSearch() {
                   <label className="text-sm font-medium">Favorite Genres</label>
                   <div className="flex flex-wrap gap-2">
                     {availableGenres.map((genre) => (
-                      <Badge
+                      <Badge;
                         key={genre}
                         variant={filters.genres.includes(genre) ? "default" : "outline"}
                         className="cursor-pointer"
-                        onClick={() => {
+                        onClick={() => {}
                           const newGenres = filters.genres.includes(genre)
                             ? filters.genres.filter(g => g !== genre)
                             : [...filters.genres, genre];

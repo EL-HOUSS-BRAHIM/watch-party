@@ -1,12 +1,16 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { analyticsAPI } from "@/lib/api"
 import { Progress } from '@/components/ui/progress';
-import { 
+import {}
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import type { AnalyticsRealtimeSnapshot } from "@/lib/api/types"
+
+} from 'lucide-react';
+"use client"
+
   Activity, 
   Users, 
   Video, 
@@ -16,11 +20,7 @@ import {
   Globe,
   Smartphone,
   Monitor,
-  RefreshCw
-} from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, AreaChart, Area } from 'recharts';
-import type { AnalyticsRealtimeSnapshot } from "@/lib/api/types"
-
+  RefreshCw;
 export default function RealtimeAnalytics() {
   const [snapshot, setSnapshot] = useState<AnalyticsRealtimeSnapshot | null>(null);
   const [loading, setLoading] = useState(true);
@@ -29,11 +29,11 @@ export default function RealtimeAnalytics() {
   useEffect(() => {
     const fetchRealtimeStats = async () => {
       try {
-        // Real API call for realtime analytics
+        // Real API call for realtime analytics;
   const realtimeData = await analyticsAPI.getRealtimeAnalytics();
   setSnapshot(realtimeData);
         setLoading(false);
-      } catch {
+      } } catch {
         console.error('Failed to fetch realtime stats:', error);
         setLoading(false);
       }
@@ -42,7 +42,7 @@ export default function RealtimeAnalytics() {
     fetchRealtimeStats();
 
     if (autoRefresh) {
-      const interval = setInterval(fetchRealtimeStats, 5000); // Update every 5 seconds
+      const interval = setInterval(fetchRealtimeStats, 5000); // Update every 5 seconds;
       return () => clearInterval(interval);
     }
   }, [autoRefresh]);
@@ -79,20 +79,20 @@ export default function RealtimeAnalytics() {
   const lastUpdate = timeSeries.at(-1)?.timestamp ?? null;
   const uptimeDisplay = lastUpdate ? new Date(lastUpdate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "N/A";
 
-  const deviceStats = deviceBreakdown.map((entry) => ({
+  const deviceStats = deviceBreakdown.map((entry) => ({}
     device: entry.device,
     percentage: entry.percentage,
     count: Math.round(((entry.percentage ?? 0) / 100) * activeUsers),
   }));
 
   const totalRegionUsers = geoDistribution.reduce((sum, entry) => sum + entry.users, 0) || 1;
-  const regionStats = geoDistribution.map((entry) => ({
+  const regionStats = geoDistribution.map((entry) => ({}
     country: entry.country,
     users: entry.users,
     percentage: Math.round((entry.users / totalRegionUsers) * 100),
   }));
 
-  const activityData = timeSeries.map((point) => ({
+  const activityData = timeSeries.map((point) => ({}
     time: new Date(point.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     users: point.active_users,
     streams: point.concurrent_streams,
@@ -108,17 +108,17 @@ export default function RealtimeAnalytics() {
           <p className="text-muted-foreground">Live system metrics and user activity</p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button
+          <Button;
             variant={autoRefresh ? "default" : "outline"}
             size="sm"
             onClick={() => setAutoRefresh(!autoRefresh)}
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${autoRefresh ? 'animate-spin' : ''}`} />
-            Auto Refresh
+            Auto Refresh;
           </Button>
           <Badge variant="outline" className="text-green-600 border-green-200">
             <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-            Live
+            Live;
           </Badge>
         </div>
       </div>
@@ -136,7 +136,7 @@ export default function RealtimeAnalytics() {
             </div>
             <div className="mt-2 flex items-center text-sm text-green-600">
               <Activity className="w-4 h-4 mr-1" />
-              +12% from last hour
+              +12% from last hour;
             </div>
           </CardContent>
         </Card>
@@ -152,7 +152,7 @@ export default function RealtimeAnalytics() {
             </div>
             <div className="mt-2 flex items-center text-sm text-green-600">
               <Activity className="w-4 h-4 mr-1" />
-              +5% from last hour
+              +5% from last hour;
             </div>
           </CardContent>
         </Card>
@@ -168,7 +168,7 @@ export default function RealtimeAnalytics() {
             </div>
             <div className="mt-2 flex items-center text-sm text-green-600">
               <Activity className="w-4 h-4 mr-1" />
-              +8% from last hour
+              +8% from last hour;
             </div>
           </CardContent>
         </Card>
@@ -184,7 +184,7 @@ export default function RealtimeAnalytics() {
             </div>
             <div className="mt-2 flex items-center text-sm text-green-600">
               <Activity className="w-4 h-4 mr-1" />
-              +15% from last hour
+              +15% from last hour;
             </div>
           </CardContent>
         </Card>
@@ -204,7 +204,6 @@ export default function RealtimeAnalytics() {
               </div>
               <Progress value={estimatedServerLoad} className="h-2" />
             </div>
-            
             <div>
               <div className="flex justify-between text-sm mb-2">
                 <span>Bandwidth Usage</span>
@@ -284,7 +283,7 @@ export default function RealtimeAnalytics() {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="time" />
                 <YAxis />
-                <Area 
+                <Area;
                   type="monotone" 
                   dataKey="users" 
                   stackId="1"
@@ -292,7 +291,7 @@ export default function RealtimeAnalytics() {
                   fill="#3b82f6" 
                   fillOpacity={0.6}
                 />
-                <Area 
+                <Area;
                   type="monotone" 
                   dataKey="parties" 
                   stackId="2"

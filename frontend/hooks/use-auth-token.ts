@@ -1,8 +1,8 @@
-"use client"
-
 import { useCallback, useMemo } from "react"
 import { useAuth } from "@/contexts/auth-context"
 import { tokenStorage } from "@/lib/auth/token-storage"
+
+"use client"
 
 export function useAuthToken() {
   const { accessToken, refreshToken, isAuthenticated, isLoading } = useAuth()
@@ -13,12 +13,12 @@ export function useAuthToken() {
     [refreshToken],
   )
 
-  const ensureAccessToken = useCallback(() => {
-    const token = currentAccessToken
+  const ensureAccessToken = useCallback(() => {}
+    const token = currentAccessToken;
     if (!token) {
       throw new Error("Authentication token is missing. Please sign in again.")
     }
-    return token
+    return token;
   }, [currentAccessToken])
 
   return {
@@ -30,7 +30,7 @@ export function useAuthToken() {
   }
 }
 
-export const isAuthTokenError = (error: unknown): error is Error => {
+export const isAuthTokenError = (error: unknown): error is Error => {}
   return (
     error instanceof Error &&
     error.message.toLowerCase().includes("token") &&

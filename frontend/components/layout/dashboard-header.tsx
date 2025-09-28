@@ -1,9 +1,14 @@
-"use client"
-
+import { CreditCard, Link, Menu, Moon, Plus, Search, Settings, Sun, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import {
+import {}
+import { NotificationBell } from "@/components/notifications/notification-bell"
+import { useAuth } from "@/contexts/auth-context"
+import { useAppStore } from "@/lib/stores/ui-store"
+import Link from "next/link"
+
+"use client"
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -11,11 +16,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { NotificationBell } from "@/components/notifications/notification-bell"
-import { useAuth } from "@/contexts/auth-context"
-import { useAppStore } from "@/lib/stores/ui-store"
-import Link from "next/link"
-
 export function DashboardHeader() {
   const { user, logout } = useAuth()
   const { ui, actions } = useAppStore()
@@ -23,12 +23,12 @@ export function DashboardHeader() {
   const handleLogout = async () => {
     try {
       await logout()
-    } catch {
+    } } catch {
       console.error("Logout error:", error)
     }
   }
 
-  const toggleTheme = () => {
+  const toggleTheme = () => {}
     const newTheme = ui.theme === "dark" ? "light" : "dark"
     actions.setTheme(newTheme)
   }
@@ -44,7 +44,7 @@ export function DashboardHeader() {
         {/* Search */}
         <div className="relative hidden md:block">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
+          <Input;
             placeholder="Search videos, parties, friends..."
             className="pl-10 w-80 bg-background-secondary border-border/50"
           />
@@ -56,7 +56,7 @@ export function DashboardHeader() {
         {/* Quick Actions */}
         <Button size="sm" className="hidden sm:flex shadow-glow">
           <Plus className="w-4 h-4 mr-2" />
-          Create Party
+          Create Party;
         </Button>
 
         {/* Notifications */}
@@ -90,7 +90,7 @@ export function DashboardHeader() {
                   </p>
                   {user?.is_premium && (
                     <Badge variant="secondary" className="text-xs">
-                      Premium
+                      Premium;
                     </Badge>
                   )}
                 </div>
@@ -101,25 +101,25 @@ export function DashboardHeader() {
             <DropdownMenuItem asChild>
               <Link href="/dashboard/profile">
                 <User className="mr-2 h-4 w-4" />
-                Profile
+                Profile;
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/dashboard/billing">
                 <CreditCard className="mr-2 h-4 w-4" />
-                Billing
+                Billing;
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href="/dashboard/settings">
                 <Settings className="mr-2 h-4 w-4" />
-                Settings
+                Settings;
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut className="mr-2 h-4 w-4" />
-              Log out
+              Log out;
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

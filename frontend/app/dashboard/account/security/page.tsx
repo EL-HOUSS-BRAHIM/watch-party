@@ -1,6 +1,4 @@
-"use client"
-
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo , useCallback } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
@@ -16,7 +14,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
-import {
+import {}
+import { format, formatDistanceToNow } from "date-fns"
+import { AuthAPI } from "@/lib/api/auth"
+
+} from "lucide-react"
+"use client"
+
   Shield,
   Key,
   Smartphone,
@@ -35,15 +39,11 @@ import {
   Globe,
   Clock,
   Monitor,
-} from "lucide-react"
-import { format, formatDistanceToNow } from "date-fns"
-import { AuthAPI } from "@/lib/api/auth"
-
-// Validation schemas
-const changePasswordSchema = z
-  .object({
+// Validation schemas;
+const changePasswordSchema = z;
+  .object({}
     currentPassword: z.string().min(1, "Current password is required"),
-    newPassword: z
+    newPassword: z;
       .string()
       .min(8, "Password must be at least 8 characters")
       .regex(
@@ -52,48 +52,48 @@ const changePasswordSchema = z
       ),
     confirmPassword: z.string(),
   })
-  .refine((data) => data.newPassword === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmPassword, {}
     message: "Passwords don't match",
     path: ["confirmPassword"],
   })
 
 type ChangePasswordFormData = z.infer<typeof changePasswordSchema>
 
-interface SecuritySettings {
-  twoFactorEnabled: boolean
-  loginAlerts: boolean
-  sessionTimeout: number
-  requirePasswordForSensitiveActions: boolean
-  allowMultipleSessions: boolean
-  logSecurityEvents: boolean
+interface SecuritySettings {}
+  twoFactorEnabled: boolean;
+  loginAlerts: boolean;
+  sessionTimeout: number;
+  requirePasswordForSensitiveActions: boolean;
+  allowMultipleSessions: boolean;
+  logSecurityEvents: boolean;
 }
 
-interface LoginSession {
-  id: string
-  deviceName: string
+interface LoginSession {}
+  id: string;
+  deviceName: string;
   deviceType: "desktop" | "mobile" | "tablet"
-  browser: string
-  location: string
-  ipAddress: string
-  lastActive: string
-  isCurrent: boolean
-  createdAt: string
+  browser: string;
+  location: string;
+  ipAddress: string;
+  lastActive: string;
+  isCurrent: boolean;
+  createdAt: string;
 }
 
-interface SecurityEvent {
-  id: string
+interface SecurityEvent {}
+  id: string;
   type: "login" | "password_change" | "2fa_enabled" | "2fa_disabled" | "suspicious_activity"
-  description: string
-  ipAddress: string
-  location: string
-  userAgent: string
-  timestamp: string
+  description: string;
+  ipAddress: string;
+  location: string;
+  userAgent: string;
+  timestamp: string;
   severity: "low" | "medium" | "high"
 }
 
-interface TwoFactorSetup {
-  qrCode: string
-  secret: string
+interface TwoFactorSetup {}
+  qrCode: string;
+  secret: string;
   backupCodes: string[]
 }
 
@@ -113,7 +113,7 @@ export default function SecuritySettingsPage() {
   const [twoFactorSetup, setTwoFactorSetup] = useState<TwoFactorSetup | null>(null)
   const [verificationCode, setVerificationCode] = useState("")
 
-  const [settings, setSettings] = useState<SecuritySettings>({
+  const [settings, setSettings] = useState<SecuritySettings>({}
     twoFactorEnabled: false,
     loginAlerts: true,
     sessionTimeout: 30,
@@ -125,12 +125,12 @@ export default function SecuritySettingsPage() {
   const [sessions, setSessions] = useState<LoginSession[]>([])
   const [securityEvents, setSecurityEvents] = useState<SecurityEvent[]>([])
 
-  const {
+  const {}
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     reset,
-  } = useForm<ChangePasswordFormData>({
+  } = useForm<ChangePasswordFormData>({}
     resolver: zodResolver(changePasswordSchema),
   })
 
@@ -142,7 +142,7 @@ export default function SecuritySettingsPage() {
     setIsLoading(true)
     try {
       const sessionsData = await authService.getSessions()
-      const mappedSessions: LoginSession[] = (sessionsData || []).map((session: unknown) => ({
+      const mappedSessions: LoginSession[] = (sessionsData || []).map((session: unknown) => ({}
         id: session.id,
         deviceName: session.device || session.device_name || "Unknown device",
         deviceType: (session.device_type || "desktop") as LoginSession["deviceType"],
@@ -158,28 +158,28 @@ export default function SecuritySettingsPage() {
       // Security events endpoint isn't available in the backend specification.
       // Clear previous events to avoid showing stale data.
       setSecurityEvents([])
-    } catch {
+    } } catch {
       console.error("Failed to load security data:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load security settings.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const changePassword = async (data: ChangePasswordFormData) => {
+  const changePassword = async (data: ChangePasswordFormData) => {}
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/auth/change-password/", {
+      const response = await fetch("/api/auth/change-password/", {}
         method: "POST",
-        headers: {
+        headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
+        body: JSON.stringify({}
           current_password: data.currentPassword,
           new_password: data.newPassword,
         }),
@@ -187,21 +187,21 @@ export default function SecuritySettingsPage() {
 
       if (response.ok) {
         reset()
-        toast({
+        toast({}
           title: "Password Changed",
           description: "Your password has been updated successfully.",
         })
-      } else {
+      } else {}
         const errorData = await response.json()
-        toast({
+        toast({}
           title: "Password Change Failed",
           description: errorData.message || "Failed to change password.",
           variant: "destructive",
         })
       }
-    } catch {
+    } } catch {
       console.error("Password change error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
@@ -216,15 +216,15 @@ export default function SecuritySettingsPage() {
         throw new Error("Missing secret in setup response")
       }
 
-      setTwoFactorSetup({
+      setTwoFactorSetup({}
         qrCode: data.qr_code || `otpauth://totp/WatchParty?secret=${data.secret}`,
         secret: data.secret,
         backupCodes: data.backup_codes || [],
       })
       setShow2FADialog(true)
-    } catch {
+    } } catch {
       console.error("2FA setup error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to set up 2FA.",
         variant: "destructive",
@@ -233,18 +233,17 @@ export default function SecuritySettingsPage() {
   }
 
   const verify2FA = async () => {
-    if (!verificationCode.trim() || !twoFactorSetup) return
-
+    if (!verificationCode.trim() || !twoFactorSetup) return;
     try {
       const response = await authService.verify2FA(verificationCode, { context: "setup" })
 
       if (!response?.success) {
-        toast({
+        toast({}
           title: "Verification Failed",
           description: response?.message || "Invalid verification code. Please try again.",
           variant: "destructive",
         })
-        return
+        return;
       }
 
       if (response.backup_codes) {
@@ -255,13 +254,13 @@ export default function SecuritySettingsPage() {
       setShow2FADialog(false)
       setShowBackupCodes(true)
       setVerificationCode("")
-      toast({
+      toast({}
         title: "2FA Enabled",
         description: "Two-factor authentication has been enabled successfully.",
       })
-    } catch {
+    } } catch {
       console.error("2FA verification error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to verify 2FA code.",
         variant: "destructive",
@@ -272,20 +271,20 @@ export default function SecuritySettingsPage() {
   const disable2FA = async () => {
     if (
       !confirm("Are you sure you want to disable two-factor authentication? This will make your account less secure.")
-    ) {
-      return
+    ) {}
+      return;
     }
 
     try {
       await authService.disable2FA()
       setSettings((prev) => ({ ...prev, twoFactorEnabled: false }))
-      toast({
+      toast({}
         title: "2FA Disabled",
         description: "Two-factor authentication has been disabled.",
       })
-    } catch {
+    } } catch {
       console.error("2FA disable error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to disable 2FA.",
         variant: "destructive",
@@ -293,38 +292,38 @@ export default function SecuritySettingsPage() {
     }
   }
 
-  const updateSettings = async (newSettings: Partial<SecuritySettings>) => {
+  const updateSettings = async (newSettings: Partial<SecuritySettings>) => {}
     setSaving(true)
     try {
       const updatedSettings = { ...settings, ...newSettings }
       setSettings(updatedSettings)
-      toast({
+      toast({}
         title: "Settings Updated",
         description: "Your security settings have been saved locally.",
       })
-    } catch {
+    } } catch {
       console.error("Settings update error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to update settings.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setSaving(false)
     }
   }
 
-  const terminateSession = async (sessionId: string) => {
+  const terminateSession = async (sessionId: string) => {}
     try {
       await authService.deleteSession(sessionId)
       setSessions((prev) => prev.filter((s) => s.id !== sessionId))
-      toast({
+      toast({}
         title: "Session Terminated",
         description: "The session has been terminated successfully.",
       })
-    } catch {
+    } } catch {
       console.error("Session termination error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to terminate session.",
         variant: "destructive",
@@ -333,20 +332,20 @@ export default function SecuritySettingsPage() {
   }
 
   const terminateAllSessions = async () => {
-    if (!confirm("This will log you out of all devices except this one. Continue?")) {
-      return
+    if (!confirm("This will log you out of all devices except this one. Continue?")) {}
+      return;
     }
 
     try {
       await authService.revokeAllSessions()
       setSessions((prev) => prev.filter((s) => s.isCurrent))
-      toast({
+      toast({}
         title: "Sessions Terminated",
         description: "All other sessions have been terminated.",
       })
-    } catch {
+    } } catch {
       console.error("Terminate all sessions error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to terminate sessions.",
         variant: "destructive",
@@ -354,22 +353,22 @@ export default function SecuritySettingsPage() {
     }
   }
 
-  const copyBackupCodes = () => {
+  const copyBackupCodes = () => {}
     if (twoFactorSetup?.backupCodes) {
       navigator.clipboard.writeText(twoFactorSetup.backupCodes.join("\n"))
-      toast({
+      toast({}
         title: "Copied",
         description: "Backup codes copied to clipboard.",
       })
     }
   }
 
-  const downloadBackupCodes = () => {
+  const downloadBackupCodes = () => {}
     if (twoFactorSetup?.backupCodes) {
       const blob = new Blob([twoFactorSetup.backupCodes.join("\n")], { type: "text/plain" })
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
-      a.href = url
+      a.href = url;
       a.download = "watchparty-backup-codes.txt"
       document.body.appendChild(a)
       a.click()
@@ -378,7 +377,7 @@ export default function SecuritySettingsPage() {
     }
   }
 
-  const getDeviceIcon = (deviceType: string) => {
+  const getDeviceIcon = (deviceType: string) => {}
     switch (deviceType) {
       case "mobile":
         return <Smartphone className="w-4 h-4" />
@@ -389,7 +388,7 @@ export default function SecuritySettingsPage() {
     }
   }
 
-  const getEventSeverityColor = (severity: string) => {
+  const getEventSeverityColor = (severity: string) => {}
     switch (severity) {
       case "high":
         return "text-red-600"
@@ -424,7 +423,7 @@ export default function SecuritySettingsPage() {
           <div className="flex-1">
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <Shield className="h-8 w-8" />
-              Security Settings
+              Security Settings;
             </h1>
             <p className="text-muted-foreground mt-2">Manage your account security and privacy</p>
           </div>
@@ -436,7 +435,7 @@ export default function SecuritySettingsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Key className="h-5 w-5" />
-                Change Password
+                Change Password;
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -444,13 +443,13 @@ export default function SecuritySettingsPage() {
                 <div>
                   <Label htmlFor="currentPassword">Current Password</Label>
                   <div className="relative">
-                    <Input
+                    <Input;
                       id="currentPassword"
                       type={showCurrentPassword ? "text" : "password"}
                       {...register("currentPassword")}
                       className={errors.currentPassword ? "border-destructive" : ""}
                     />
-                    <Button
+                    <Button;
                       type="button"
                       variant="ghost"
                       size="sm"
@@ -468,13 +467,13 @@ export default function SecuritySettingsPage() {
                 <div>
                   <Label htmlFor="newPassword">New Password</Label>
                   <div className="relative">
-                    <Input
+                    <Input;
                       id="newPassword"
                       type={showNewPassword ? "text" : "password"}
                       {...register("newPassword")}
                       className={errors.newPassword ? "border-destructive" : ""}
                     />
-                    <Button
+                    <Button;
                       type="button"
                       variant="ghost"
                       size="sm"
@@ -490,13 +489,13 @@ export default function SecuritySettingsPage() {
                 <div>
                   <Label htmlFor="confirmPassword">Confirm New Password</Label>
                   <div className="relative">
-                    <Input
+                    <Input;
                       id="confirmPassword"
                       type={showConfirmPassword ? "text" : "password"}
                       {...register("confirmPassword")}
                       className={errors.confirmPassword ? "border-destructive" : ""}
                     />
-                    <Button
+                    <Button;
                       type="button"
                       variant="ghost"
                       size="sm"
@@ -520,7 +519,7 @@ export default function SecuritySettingsPage() {
                   ) : (
                     <>
                       <Save className="h-4 w-4 mr-2" />
-                      Change Password
+                      Change Password;
                     </>
                   )}
                 </Button>
@@ -533,11 +532,11 @@ export default function SecuritySettingsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Smartphone className="h-5 w-5" />
-                Two-Factor Authentication
+                Two-Factor Authentication;
                 {settings.twoFactorEnabled && (
                   <Badge className="bg-green-100 text-green-800">
                     <CheckCircle className="w-3 h-3 mr-1" />
-                    Enabled
+                    Enabled;
                   </Badge>
                 )}
               </CardTitle>
@@ -555,7 +554,7 @@ export default function SecuritySettingsPage() {
                   </div>
                   <Button variant="destructive" onClick={disable2FA}>
                     <XCircle className="h-4 w-4 mr-2" />
-                    Disable 2FA
+                    Disable 2FA;
                   </Button>
                 </div>
               ) : (
@@ -566,7 +565,7 @@ export default function SecuritySettingsPage() {
                   </div>
                   <Button onClick={setup2FA}>
                     <Plus className="h-4 w-4 mr-2" />
-                    Enable 2FA
+                    Enable 2FA;
                   </Button>
                 </div>
               )}
@@ -584,7 +583,7 @@ export default function SecuritySettingsPage() {
                   <Label>Login Alerts</Label>
                   <p className="text-sm text-muted-foreground">Get notified when someone logs into your account</p>
                 </div>
-                <Switch
+                <Switch;
                   checked={settings.loginAlerts}
                   onCheckedChange={(checked) => updateSettings({ loginAlerts: checked })}
                   disabled={isSaving}
@@ -595,10 +594,10 @@ export default function SecuritySettingsPage() {
                 <div>
                   <Label>Require Password for Sensitive Actions</Label>
                   <p className="text-sm text-muted-foreground">
-                    Require password confirmation for sensitive operations
+                    Require password confirmation for sensitive operations;
                   </p>
                 </div>
-                <Switch
+                <Switch;
                   checked={settings.requirePasswordForSensitiveActions}
                   onCheckedChange={(checked) => updateSettings({ requirePasswordForSensitiveActions: checked })}
                   disabled={isSaving}
@@ -610,7 +609,7 @@ export default function SecuritySettingsPage() {
                   <Label>Allow Multiple Sessions</Label>
                   <p className="text-sm text-muted-foreground">Allow logging in from multiple devices simultaneously</p>
                 </div>
-                <Switch
+                <Switch;
                   checked={settings.allowMultipleSessions}
                   onCheckedChange={(checked) => updateSettings({ allowMultipleSessions: checked })}
                   disabled={isSaving}
@@ -622,7 +621,7 @@ export default function SecuritySettingsPage() {
                   <Label>Log Security Events</Label>
                   <p className="text-sm text-muted-foreground">Keep a log of security-related activities</p>
                 </div>
-                <Switch
+                <Switch;
                   checked={settings.logSecurityEvents}
                   onCheckedChange={(checked) => updateSettings({ logSecurityEvents: checked })}
                   disabled={isSaving}
@@ -637,11 +636,11 @@ export default function SecuritySettingsPage() {
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <Globe className="h-5 w-5" />
-                  Active Sessions
+                  Active Sessions;
                 </CardTitle>
                 <Button variant="outline" onClick={terminateAllSessions} size="sm">
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Terminate All Others
+                  Terminate All Others;
                 </Button>
               </div>
             </CardHeader>
@@ -656,7 +655,7 @@ export default function SecuritySettingsPage() {
                           <span className="font-medium">{session.deviceName}</span>
                           {session.isCurrent && (
                             <Badge variant="secondary" className="text-xs">
-                              Current Session
+                              Current Session;
                             </Badge>
                           )}
                         </div>
@@ -671,7 +670,7 @@ export default function SecuritySettingsPage() {
                     {!session.isCurrent && (
                       <Button variant="outline" size="sm" onClick={() => terminateSession(session.id)}>
                         <Trash2 className="h-4 w-4 mr-2" />
-                        Terminate
+                        Terminate;
                       </Button>
                     )}
                   </div>
@@ -685,7 +684,7 @@ export default function SecuritySettingsPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="h-5 w-5" />
-                Recent Security Events
+                Recent Security Events;
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -721,7 +720,7 @@ export default function SecuritySettingsPage() {
                   <div className="text-center">
                     <p className="text-sm text-muted-foreground mb-4">Scan this QR code with your authenticator app</p>
                     <div className="flex justify-center mb-4">
-                      <img src={twoFactorSetup.qrCode || "/placeholder.svg"} alt="2FA QR Code" className="w-48 h-48" />
+                      <Image src="/placeholder.png" alt="2FA QR Code" fill className="w-48 h-48" />
                     </div>
                     <p className="text-xs text-muted-foreground">
                       Or enter this code manually:{" "}
@@ -731,7 +730,7 @@ export default function SecuritySettingsPage() {
 
                   <div>
                     <Label htmlFor="verificationCode">Verification Code</Label>
-                    <Input
+                    <Input;
                       id="verificationCode"
                       placeholder="Enter 6-digit code"
                       value={verificationCode}
@@ -742,10 +741,10 @@ export default function SecuritySettingsPage() {
 
                   <div className="flex gap-2">
                     <Button onClick={verify2FA} disabled={verificationCode.length !== 6} className="flex-1">
-                      Verify & Enable
+                      Verify & Enable;
                     </Button>
                     <Button variant="outline" onClick={() => setShow2FADialog(false)}>
-                      Cancel
+                      Cancel;
                     </Button>
                   </div>
                 </>
@@ -764,7 +763,7 @@ export default function SecuritySettingsPage() {
               <Alert>
                 <AlertTriangle className="h-4 w-4" />
                 <AlertDescription>
-                  Save these backup codes in a safe place. You can use them to access your account if you lose your
+                  Save these backup codes in a safe place. You can use them to access your account if you lose your;
                   phone.
                 </AlertDescription>
               </Alert>
@@ -784,16 +783,16 @@ export default function SecuritySettingsPage() {
               <div className="flex gap-2">
                 <Button variant="outline" onClick={copyBackupCodes} className="flex-1 bg-transparent">
                   <Copy className="h-4 w-4 mr-2" />
-                  Copy
+                  Copy;
                 </Button>
                 <Button variant="outline" onClick={downloadBackupCodes} className="flex-1 bg-transparent">
                   <Download className="h-4 w-4 mr-2" />
-                  Download
+                  Download;
                 </Button>
               </div>
 
               <Button onClick={() => setShowBackupCodes(false)} className=&quot;w-full&quot;>
-                I've Saved My Backup Codes
+                I've Saved My Backup Codes;
               </Button>
             </div>
           </DialogContent>

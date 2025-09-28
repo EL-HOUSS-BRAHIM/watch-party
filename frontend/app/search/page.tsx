@@ -1,5 +1,4 @@
-"use client"
-
+import { Calendar, Clock, Eye, Filter, Heart, MapPin, Play, Search, Star, TrendingUp, User, Users, X } from "lucide-react"
 import { useState, useEffect, useCallback, Suspense } from "react"
 import Image from "next/image"
 import { useSearchParams, useRouter } from "next/navigation"
@@ -14,69 +13,70 @@ import { useToast } from "@/hooks/use-toast"
 import { useDebounce } from "@/hooks/use-debounce"
 import { formatDistanceToNow } from "date-fns"
 
-interface SearchUser {
-  id: string
-  username: string
-  firstName: string
-  lastName: string
-  avatar?: string
-  bio?: string
-  location?: string
-  isOnline: boolean
+"use client"
+interface SearchUser {}
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  avatar?: string;
+  bio?: string;
+  location?: string;
+  isOnline: boolean;
   friendshipStatus: "none" | "pending_sent" | "pending_received" | "friends" | "blocked"
-  mutualFriends: number
-  isVerified: boolean
+  mutualFriends: number;
+  isVerified: boolean;
 }
 
-interface SearchVideo {
-  id: string
-  title: string
-  description: string
-  thumbnail: string
-  duration: number
-  views: number
-  likes: number
-  createdAt: string
-  author: {
-    id: string
-    username: string
-    avatar?: string
+interface SearchVideo {}
+  id: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  duration: number;
+  views: number;
+  likes: number;
+  createdAt: string;
+  author: {}
+    id: string;
+    username: string;
+    avatar?: string;
   }
   privacy: "public" | "friends" | "private"
   tags: string[]
 }
 
-interface SearchParty {
-  id: string
-  name: string
-  description: string
-  host: {
-    id: string
-    username: string
-    avatar?: string
+interface SearchParty {}
+  id: string;
+  name: string;
+  description: string;
+  host: {}
+    id: string;
+    username: string;
+    avatar?: string;
   }
-  scheduledFor?: string
-  isActive: boolean
-  participantCount: number
-  maxParticipants?: number
-  isPrivate: boolean
+  scheduledFor?: string;
+  isActive: boolean;
+  participantCount: number;
+  maxParticipants?: number;
+  isPrivate: boolean;
   tags: string[]
 }
 
-interface SearchFilters {
+interface SearchFilters {}
   type: "all" | "users" | "videos" | "parties"
   sortBy: "relevance" | "date" | "popularity"
   dateRange: "all" | "today" | "week" | "month" | "year"
-  userFilters: {
-    location?: string
-    isOnline?: boolean
-    isVerified?: boolean
+  userFilters: {}
+    location?: string;
+    isOnline?: boolean;
+    isVerified?: boolean;
   }
-  videoFilters: {
+  videoFilters: {}
     duration?: "short" | "medium" | "long"
-    minViews?: number
+    minViews?: number;
   }
-  partyFilters: {
+  partyFilters: {}
     status: "all" | "active" | "scheduled"
     availability: "all" | "open" | "full"
   }
@@ -100,17 +100,17 @@ function SearchContent() {
   const [videos, setVideos] = useState<SearchVideo[]>([])
   const [parties, setParties] = useState<SearchParty[]>([])
   const [searchHistory, setSearchHistory] = useState<string[]>([])
-  const [popularSearches] = useState([
+  const [popularSearches] = useState([]
     "gaming videos", "movie night", "anime party", "study group", "music videos", "comedy shows"
   ])
 
-  const [filters, setFilters] = useState<SearchFilters>({
+  const [filters, setFilters] = useState<SearchFilters>({}
     type: "all",
     sortBy: "relevance",
     dateRange: "all",
     userFilters: {},
     videoFilters: {},
-    partyFilters: {
+    partyFilters: {}
       status: "all",
       availability: "all",
     },
@@ -126,31 +126,28 @@ function SearchContent() {
   }, [])
 
   useEffect(() => {
-    if (debouncedQuery.trim()) {
+    if (debouncedQuery.trim()) {}
       performSearch(debouncedQuery)
       updateURL()
-    } else {
+    } else {}
       clearResults()
     }
   }, [debouncedQuery, filters, activeTab])
 
-  const updateURL = useCallback(() => {
+  const updateURL = useCallback(() => {}
     const params = new URLSearchParams()
     if (query.trim()) params.set("q", query.trim())
     if (activeTab !== "all") params.set("type", activeTab)
-    
     const newURL = `/search${params.toString() ? `?${params.toString()}` : ""}`
     router.replace(newURL, { scroll: false })
   }, [query, activeTab, router])
 
-  const performSearch = async (searchQuery: string) => {
-    if (!searchQuery.trim()) return
-
+  const performSearch = async (searchQuery: string) => {}
+    if (!searchQuery.trim()) return;
     setIsLoading(true)
-    
     try {
       const token = localStorage.getItem("accessToken")
-      const params = new URLSearchParams({
+      const params = new URLSearchParams({}
         q: searchQuery,
         type: activeTab,
         sort: filters.sortBy,
@@ -166,15 +163,14 @@ function SearchContent() {
         ),
       })
 
-      const response = await fetch(`/api/search/?${params}`, {
-        headers: {
+      const response = await fetch(`/api/search/?${params}`, {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
         const data = await response.json()
-        
         if (activeTab === "all" || activeTab === "users") {
           setUsers(data.users || [])
         }
@@ -185,46 +181,46 @@ function SearchContent() {
           setParties(data.parties || [])
         }
 
-        // Add to search history
+        // Add to search history;
         addToSearchHistory(searchQuery)
       }
-    } catch {
+    } } catch {
       console.error("Search failed:", error)
-      toast({
+      toast({}
         title: "Search Error",
         description: "Failed to perform search. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const addToSearchHistory = (searchQuery: string) => {
+  const addToSearchHistory = (searchQuery: string) => {}
     const newHistory = [searchQuery, ...searchHistory.filter(q => q !== searchQuery)].slice(0, 10)
     setSearchHistory(newHistory)
     localStorage.setItem("searchHistory", JSON.stringify(newHistory))
   }
 
-  const clearResults = () => {
+  const clearResults = () => {}
     setUsers([])
     setVideos([])
     setParties([])
   }
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
+  const handleSearchSubmit = (e: React.FormEvent) => {}
     e.preventDefault()
-    if (query.trim()) {
+    if (query.trim()) {}
       performSearch(query.trim())
     }
   }
 
-  const handleSendFriendRequest = async (userId: string) => {
+  const handleSendFriendRequest = async (userId: string) => {}
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/friends/request/", {
+      const response = await fetch("/api/users/friends/request/", {}
         method: "POST",
-        headers: {
+        headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
@@ -233,16 +229,16 @@ function SearchContent() {
 
       if (response.ok) {
         setUsers(prev => prev.map(u => 
-          u.id === userId ? { ...u, friendshipStatus: "pending_sent" } : u
+          u.id === userId ? { ...u, friendshipStatus: "pending_sent" } : u;
         ))
-        toast({
+        toast({}
           title: "Friend Request Sent",
           description: "Your friend request has been sent.",
         })
       }
-    } catch {
+    } } catch {
       console.error("Failed to send friend request:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to send friend request.",
         variant: "destructive",
@@ -250,7 +246,7 @@ function SearchContent() {
     }
   }
 
-  const getFriendshipStatusBadge = (status: SearchUser["friendshipStatus"]) => {
+  const getFriendshipStatusBadge = (status: SearchUser["friendshipStatus"]) => {}
     switch (status) {
       case "friends":
         return <Badge variant="default">Friends</Badge>
@@ -261,27 +257,25 @@ function SearchContent() {
       case "blocked":
         return <Badge variant="destructive">Blocked</Badge>
       default:
-        return null
+        return null;
     }
   }
 
-  const hasResults = users.length > 0 || videos.length > 0 || parties.length > 0
-
+  const hasResults = users.length > 0 || videos.length > 0 || parties.length > 0;
   return (
     <div className="container mx-auto py-8 px-4 max-w-6xl">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold flex items-center gap-2 mb-4">
           <Search className="h-8 w-8" />
-          Search
+          Search;
         </h1>
-        
         {/* Search Form */}
         <form onSubmit={handleSearchSubmit} className="space-y-4">
           <div className="flex gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
+              <Input;
                 type="text"
                 placeholder="Search for users, videos, or parties..."
                 value={query}
@@ -289,7 +283,7 @@ function SearchContent() {
                 className="pl-10 text-lg h-12"
               />
               {query && (
-                <Button
+                <Button;
                   type="button"
                   variant="ghost"
                   size="sm"
@@ -303,7 +297,7 @@ function SearchContent() {
             <Button type="submit" size="lg" disabled={!query.trim() || isLoading}>
               {isLoading ? "Searching..." : "Search"}
             </Button>
-            <Button
+            <Button;
               type="button"
               variant="outline"
               size="lg"
@@ -311,7 +305,7 @@ function SearchContent() {
               className="flex items-center gap-2"
             >
               <Filter className="h-4 w-4" />
-              Filters
+              Filters;
             </Button>
           </div>
 
@@ -323,7 +317,7 @@ function SearchContent() {
                   <h3 className="text-sm font-medium text-gray-700 mb-2">Recent Searches</h3>
                   <div className="flex flex-wrap gap-2">
                     {searchHistory.map((term, index) => (
-                      <Button
+                      <Button;
                         key={index}
                         variant="outline"
                         size="sm"
@@ -337,12 +331,11 @@ function SearchContent() {
                   </div>
                 </div>
               )}
-              
               <div>
                 <h3 className="text-sm font-medium text-gray-700 mb-2">Popular Searches</h3>
                 <div className="flex flex-wrap gap-2">
                   {popularSearches.map((term, index) => (
-                    <Button
+                    <Button;
                       key={index}
                       variant="outline"
                       size="sm"
@@ -405,7 +398,7 @@ function SearchContent() {
                   <div>
                     <label className="text-sm font-medium mb-2 block">Party Status</label>
                     <Select value={filters.partyFilters.status} onValueChange={(value) => 
-                      setFilters(prev => ({ 
+                      setFilters(prev => ({}
                         ...prev, 
                         partyFilters: { ...prev.partyFilters, status: value as Record<string, unknown> }
                       }))
@@ -451,7 +444,7 @@ function SearchContent() {
                   No results found for "{query}". Try adjusting your search terms or filters.
                 </p>
                 <Button variant="outline" onClick={() => setQuery(&quot;&quot;)}>
-                  Clear Search
+                  Clear Search;
                 </Button>
               </CardContent>
             </Card>
@@ -487,7 +480,7 @@ function SearchContent() {
                             {user.friendshipStatus === "none" && (
                               <Button size="sm" onClick={() => handleSendFriendRequest(user.id)}>
                                 <UserPlus className="w-3 h-3 mr-1" />
-                                Add
+                                Add;
                               </Button>
                             )}
                           </div>
@@ -504,7 +497,7 @@ function SearchContent() {
                       {videos.slice(0, 6).map((video) => (
                         <Card key={video.id} className="overflow-hidden">
                           <div className="aspect-video bg-gray-200 relative group cursor-pointer">
-                            <img
+                            <img;
                               src={video.thumbnail || "/placeholder.jpg"}
                               alt={video.title}
                               className="w-full h-full object-cover"
@@ -620,14 +613,14 @@ function SearchContent() {
                         {user.friendshipStatus === "none" && (
                           <Button onClick={() => handleSendFriendRequest(user.id)}>
                             <UserPlus className="w-4 h-4 mr-2" />
-                            Add Friend
+                            Add Friend;
                           </Button>
                         )}
-                        <Button
+                        <Button;
                           variant="outline"
                           onClick={() => router.push(`/profile/${user.id}`)}
                         >
-                          View Profile
+                          View Profile;
                         </Button>
                       </div>
                     </div>
@@ -640,7 +633,7 @@ function SearchContent() {
                   {videos.map((video) => (
                     <Card key={video.id} className="overflow-hidden">
                       <div className="aspect-video bg-gray-200 relative group cursor-pointer">
-                        <img
+                        <img;
                           src={video.thumbnail || "/placeholder.jpg"}
                           alt={video.title}
                           className="w-full h-full object-cover"
@@ -670,7 +663,7 @@ function SearchContent() {
                         <div className="flex items-center justify-between text-sm text-gray-600 mb-3">
                           <div className="flex items-center gap-1">
                             <Eye className="w-4 h-4" />
-                            {video.views.toLocaleString()} views
+                            {video.views.toLocaleString()} views;
                           </div>
                           <div className="flex items-center gap-1">
                             <Heart className="w-4 h-4" />
@@ -726,7 +719,7 @@ function SearchContent() {
                         <div className="flex items-center gap-6 text-sm text-gray-600">
                           <div className="flex items-center gap-1">
                             <Users className="w-4 h-4" />
-                            {party.participantCount} participants
+                            {party.participantCount} participants;
                             {party.maxParticipants && ` (max ${party.maxParticipants})`}
                           </div>
                           {party.scheduledFor && !party.isActive && (
@@ -739,7 +732,7 @@ function SearchContent() {
                       </div>
                       <div className="flex items-center gap-2">
                         <Button variant="outline">
-                          View Details
+                          View Details;
                         </Button>
                         <Button>
                           {party.isActive ? "Join Party" : "RSVP"}
@@ -759,7 +752,7 @@ function SearchContent() {
 
 export default function SearchPage() {
   return (
-    <Suspense fallback={
+    <Suspense fallback={} />
       <div className="container mx-auto py-8 px-4">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>

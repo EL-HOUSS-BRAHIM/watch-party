@@ -1,6 +1,5 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { Activity, AlertTriangle, BarChart, Calendar, Check, CheckCircle, Download, Loader2, Play, Refresh, Server, Settings, Shield, TrendingUp, User, Users, Video, X, XCircle } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -14,65 +13,66 @@ import { useToast } from "@/hooks/use-toast"
 import { adminAPI } from "@/lib/api"
 import { format } from "date-fns"
 
-interface SystemStats {
-  users: {
-    total: number
-    active: number
-    new: number
-    verified: number
-    premium: number
+"use client"
+interface SystemStats {}
+  users: {}
+    total: number;
+    active: number;
+    new: number;
+    verified: number;
+    premium: number;
   }
-  parties: {
-    total: number
-    active: number
-    completed: number
-    scheduled: number
+  parties: {}
+    total: number;
+    active: number;
+    completed: number;
+    scheduled: number;
   }
-  videos: {
-    total: number
-    uploaded: number
-    processed: number
-    storage: number // in GB
+  videos: {}
+    total: number;
+    uploaded: number;
+    processed: number;
+    storage: number // in GB;
   }
-  system: {
-    uptime: number
-    cpu: number
-    memory: number
-    storage: number
-    bandwidth: number
+  system: {}
+    uptime: number;
+    cpu: number;
+    memory: number;
+    storage: number;
+    bandwidth: number;
   }
 }
 
-interface RecentActivity {
-  id: string
+interface RecentActivity {}
+  id: string;
   type: "user_registered" | "party_created" | "video_uploaded" | "user_banned" | "system_alert"
-  description: string
-  user?: {
-    id: string
-    username: string
-    avatar?: string
+  description: string;
+  user?: {}
+    id: string;
+    username: string;
+    avatar?: string;
   }
-  timestamp: string
+  timestamp: string;
   severity: "low" | "medium" | "high"
 }
 
-interface SystemAlert {
-  id: string
+interface SystemAlert {}
+  id: string;
   type: "error" | "warning" | "info"
-  title: string
-  message: string
-  timestamp: string
-  resolved: boolean
+  title: string;
+  message: string;
+  timestamp: string;
+  resolved: boolean;
   priority: "low" | "medium" | "high" | "critical"
 }
 
-interface PerformanceMetric {
-  timestamp: string
-  cpu: number
-  memory: number
-  activeUsers: number
-  activeParties: number
-  responseTime: number
+interface PerformanceMetric {}
+  timestamp: string;
+  cpu: number;
+  memory: number;
+  activeUsers: number;
+  activeParties: number;
+  responseTime: number;
 }
 
 export default function AdminDashboardPage() {
@@ -80,7 +80,7 @@ export default function AdminDashboardPage() {
   const { toast } = useToast()
   const router = useRouter()
 
-  const [stats, setStats] = useState<SystemStats>({
+  const [stats, setStats] = useState<SystemStats>({}
     users: { total: 0, active: 0, new: 0, verified: 0, premium: 0 },
     parties: { total: 0, active: 0, completed: 0, scheduled: 0 },
     videos: { total: 0, uploaded: 0, processed: 0, storage: 0 },
@@ -93,44 +93,41 @@ export default function AdminDashboardPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date())
 
-  // Check if user is admin
+  // Check if user is admin;
   useEffect(() => {
     if (user && !user.is_staff && !user.is_superuser) {
       router.push("/dashboard")
-      return
+      return;
     }
   }, [user, router])
 
   const loadDashboardData = async () => {
-    if (!user?.is_staff && !user?.is_superuser) return
-
+    if (!user?.is_staff && !user?.is_superuser) return;
     setIsLoading(true)
     try {
-      // Load system stats
+      // Load system stats;
       const statsData = await adminAPI.getDashboard()
-      // We need to transform the AdminDashboard type to fit SystemStats
-      // For now, let's handle this properly
-      const transformedStats = {
-        users: statsData.users || { total: 0, active: 0, new: 0, verified: 0, premium: 0 },
+      // We need to transform the AdminDashboard type to fit SystemStats;
+      // For now, let's handle this properly;
+      const transformedStats = { users: statsData.users || { total: 0, active: 0, new: 0, verified: 0, premium: 0 },
         parties: statsData.parties || { total: 0, active: 0, completed: 0, scheduled: 0 },
         videos: statsData.videos || { total: 0, uploaded: 0, processed: 0, storage: 0 },
         system: statsData.system || { uptime: 0, cpu: 0, memory: 0, storage: 0, bandwidth: 0 },
       }
       setStats(transformedStats)
 
-      // Load system health
+      // Load system health;
       await adminAPI.getSystemHealth()
-      // Update stats with health data if needed
-
+      // Update stats with health data if needed;
       setLastUpdated(new Date())
-    } catch {
+    } } catch {
       console.error("Failed to load admin dashboard data:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load dashboard data.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
@@ -138,29 +135,29 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     loadDashboardData()
 
-    // Set up auto-refresh every 30 seconds
+    // Set up auto-refresh every 30 seconds;
     const interval = setInterval(loadDashboardData, 30000)
     return () => clearInterval(interval)
   }, [loadDashboardData])
 
-  const resolveAlert = async (alertId: string) => {
+  const resolveAlert = async (alertId: string) => {}
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/admin/alerts/${alertId}/resolve/`, {
+      const response = await fetch(`/api/admin/alerts/${alertId}/resolve/`, {}
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       })
 
       if (response.ok) {
         setSystemAlerts((prev) => prev.map((alert) => (alert.id === alertId ? { ...alert, resolved: true } : alert)))
-        toast({
+        toast({}
           title: "Alert Resolved",
           description: "The alert has been marked as resolved.",
         })
       }
-    } catch {
+    } } catch {
       console.error("Failed to resolve alert:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to resolve alert.",
         variant: "destructive",
@@ -168,17 +165,17 @@ export default function AdminDashboardPage() {
     }
   }
 
-  const exportData = async (type: "users" | "parties" | "videos" | "analytics") => {
+  const exportData = async (type: "users" | "parties" | "videos" | "analytics") => {}
     try {
-      let downloadData
+      let downloadData;
       switch (type) {
         case "users":
           downloadData = await adminAPI.exportUsers({ format: 'csv' })
-          break
+          break;
         default:
-          // For other types, we can extend the adminAPI or use a generic export
+          // For other types, we can extend the adminAPI or use a generic export;
           const token = localStorage.getItem("accessToken")
-          const response = await fetch(`/api/admin/export/${type}/`, {
+          const response = await fetch(`/api/admin/export/${type}/`, {}
             headers: { Authorization: `Bearer ${token}` },
           })
 
@@ -186,39 +183,39 @@ export default function AdminDashboardPage() {
             const blob = await response.blob()
             const url = window.URL.createObjectURL(blob)
             const a = document.createElement("a")
-            a.href = url
+            a.href = url;
             a.download = `${type}-export-${format(new Date(), "yyyy-MM-dd")}.csv`
             document.body.appendChild(a)
             a.click()
             document.body.removeChild(a)
             window.URL.revokeObjectURL(url)
 
-            toast({
+            toast({}
               title: "Export Complete",
               description: `${type} data has been exported successfully.`,
             })
-            return
+            return;
           }
-          break
+          break;
       }
 
       if (downloadData?.download_url) {
-        // Handle the download URL from the API
+        // Handle the download URL from the API;
         const a = document.createElement("a")
-        a.href = downloadData.download_url
+        a.href = downloadData.download_url;
         a.download = `${type}-export-${format(new Date(), "yyyy-MM-dd")}.csv`
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
 
-        toast({
+        toast({}
           title: "Export Complete",
           description: `${type} data has been exported successfully.`,
         })
       }
-    } catch {
+    } } catch {
       console.error("Failed to export data:", error)
-      toast({
+      toast({}
         title: "Export Failed",
         description: "Failed to export data.",
         variant: "destructive",
@@ -226,7 +223,7 @@ export default function AdminDashboardPage() {
     }
   }
 
-  const getActivityIcon = (type: string) => {
+  const getActivityIcon = (type: string) => {}
     switch (type) {
       case "user_registered":
         return <UserCheck className="h-4 w-4 text-green-500" />
@@ -243,7 +240,7 @@ export default function AdminDashboardPage() {
     }
   }
 
-  const getAlertIcon = (type: string) => {
+  const getAlertIcon = (type: string) => {}
     switch (type) {
       case "error":
         return <XCircle className="h-5 w-5 text-red-500" />
@@ -256,14 +253,14 @@ export default function AdminDashboardPage() {
     }
   }
 
-  const formatUptime = (seconds: number) => {
+  const formatUptime = (seconds: number) => {}
     const days = Math.floor(seconds / 86400)
     const hours = Math.floor((seconds % 86400) / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
     return `${days}d ${hours}h ${minutes}m`
   }
 
-  const formatBytes = (bytes: number) => {
+  const formatBytes = (bytes: number) => {}
     const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
     if (bytes === 0) return "0 Bytes"
     const i = Math.floor(Math.log(bytes) / Math.log(1024))
@@ -306,7 +303,7 @@ export default function AdminDashboardPage() {
           <div>
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <Shield className="h-8 w-8" />
-              Admin Dashboard
+              Admin Dashboard;
             </h1>
             <p className="text-muted-foreground mt-2">System overview and management tools</p>
           </div>
@@ -314,7 +311,7 @@ export default function AdminDashboardPage() {
             <span className="text-sm text-muted-foreground">Last updated: {format(lastUpdated, &quot;HH:mm:ss&quot;)}</span>
             <Button variant="outline" onClick={loadDashboardData}>
               <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh
+              Refresh;
             </Button>
           </div>
         </div>
@@ -327,13 +324,13 @@ export default function AdminDashboardPage() {
               Active Alerts ({systemAlerts.filter((alert) => !alert.resolved).length})
             </h2>
             <div className="space-y-3">
-              {systemAlerts
+              {systemAlerts;
                 .filter((alert) => !alert.resolved)
                 .slice(0, 3)
                 .map((alert) => (
-                  <Alert
+                  <Alert;
                     key={alert.id}
-                    className={`${
+                    className={`${}
                       alert.priority === "critical"
                         ? "border-red-500"
                         : alert.priority === "high"
@@ -346,8 +343,8 @@ export default function AdminDashboardPage() {
                       <div className="flex items-center justify-between">
                         <h4 className="font-medium">{alert.title}</h4>
                         <div className="flex items-center gap-2">
-                          <Badge
-                            variant={
+                          <Badge;
+                            variant={}
                               alert.priority === "critical"
                                 ? "destructive"
                                 : alert.priority === "high"
@@ -358,7 +355,7 @@ export default function AdminDashboardPage() {
                             {alert.priority}
                           </Badge>
                           <Button variant="outline" size="sm" onClick={() => resolveAlert(alert.id)}>
-                            Resolve
+                            Resolve;
                           </Button>
                         </div>
                       </div>
@@ -478,7 +475,7 @@ export default function AdminDashboardPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Cpu className="h-5 w-5" />
-                    System Resources
+                    System Resources;
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -518,41 +515,41 @@ export default function AdminDashboardPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Settings className="h-5 w-5" />
-                    Quick Actions
+                    Quick Actions;
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
                     onClick={() => router.push(&quot;/dashboard/admin/users&quot;)}
                   >
                     <Users className="h-4 w-4 mr-2" />
-                    Manage Users
+                    Manage Users;
                   </Button>
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
                     onClick={() => router.push(&quot;/dashboard/admin/reports&quot;)}
                   >
                     <AlertTriangle className="h-4 w-4 mr-2" />
-                    View Reports
+                    View Reports;
                   </Button>
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
                     onClick={() => router.push(&quot;/dashboard/admin/analytics&quot;)}
                   >
                     <BarChart3 className="h-4 w-4 mr-2" />
-                    Analytics
+                    Analytics;
                   </Button>
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
                     onClick={() => exportData(&quot;analytics&quot;)}
                   >
                     <Download className="h-4 w-4 mr-2" />
-                    Export Data
+                    Export Data;
                   </Button>
                 </CardContent>
               </Card>
@@ -564,7 +561,7 @@ export default function AdminDashboardPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Activity className="h-5 w-5" />
-                  Recent Activity
+                  Recent Activity;
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -578,8 +575,8 @@ export default function AdminDashboardPage() {
                           <span className="text-xs text-muted-foreground">
                             {format(new Date(activity.timestamp), "MMM dd, HH:mm")}
                           </span>
-                          <Badge
-                            variant={
+                          <Badge;
+                            variant={}
                               activity.severity === "high"
                                 ? "destructive"
                                 : activity.severity === "medium"
@@ -594,7 +591,7 @@ export default function AdminDashboardPage() {
                       </div>
                       {activity.user && (
                         <div className="flex items-center gap-2">
-                          <img
+                          <img;
                             src={activity.user.avatar || "/placeholder.svg"}
                             alt={activity.user.username}
                             className="w-6 h-6 rounded-full"
@@ -620,7 +617,7 @@ export default function AdminDashboardPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-green-600">
-                          {performanceData[performanceData.length - 1]?.responseTime || 0}ms
+                          {performanceData[performanceData.length - 1]?.responseTime || 0}ms;
                         </div>
                         <div className="text-sm text-muted-foreground">Avg Response Time</div>
                       </div>
@@ -657,35 +654,35 @@ export default function AdminDashboardPage() {
                       <span className="text-sm">Database</span>
                       <Badge className="bg-green-100 text-green-800">
                         <CheckCircle className="w-3 h-3 mr-1" />
-                        Healthy
+                        Healthy;
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">API Server</span>
                       <Badge className="bg-green-100 text-green-800">
                         <CheckCircle className="w-3 h-3 mr-1" />
-                        Healthy
+                        Healthy;
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">WebSocket</span>
                       <Badge className="bg-green-100 text-green-800">
                         <CheckCircle className="w-3 h-3 mr-1" />
-                        Healthy
+                        Healthy;
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">File Storage</span>
                       <Badge className="bg-green-100 text-green-800">
                         <CheckCircle className="w-3 h-3 mr-1" />
-                        Healthy
+                        Healthy;
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">CDN</span>
                       <Badge className="bg-green-100 text-green-800">
                         <CheckCircle className="w-3 h-3 mr-1" />
-                        Healthy
+                        Healthy;
                       </Badge>
                     </div>
                   </div>
@@ -701,37 +698,37 @@ export default function AdminDashboardPage() {
                   <CardTitle>Data Export</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
                     onClick={() => exportData(&quot;users&quot;)}
                   >
                     <Users className="h-4 w-4 mr-2" />
-                    Export User Data
+                    Export User Data;
                   </Button>
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
                     onClick={() => exportData(&quot;parties&quot;)}
                   >
                     <Calendar className="h-4 w-4 mr-2" />
-                    Export Party Data
+                    Export Party Data;
                   </Button>
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
                     onClick={() => exportData(&quot;videos&quot;)}
                   >
                     <Video className="h-4 w-4 mr-2" />
-                    Export Video Data
+                    Export Video Data;
                   </Button>
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
                     onClick={() => exportData(&quot;analytics&quot;)}
                   >
                     <BarChart3 className="h-4 w-4 mr-2" />
-                    Export Analytics
+                    Export Analytics;
                   </Button>
                 </CardContent>
               </Card>
@@ -741,33 +738,33 @@ export default function AdminDashboardPage() {
                   <CardTitle>System Management</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
                     onClick={() => router.push(&quot;/dashboard/admin/users&quot;)}
                   >
                     <Users className="h-4 w-4 mr-2" />
-                    User Management
+                    User Management;
                   </Button>
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
                     onClick={() => router.push(&quot;/dashboard/admin/reports&quot;)}
                   >
                     <AlertTriangle className="h-4 w-4 mr-2" />
-                    Content Moderation
+                    Content Moderation;
                   </Button>
-                  <Button
+                  <Button;
                     variant="outline"
                     className="w-full justify-start bg-transparent"
                     onClick={() => router.push(&quot;/dashboard/admin/analytics&quot;)}
                   >
                     <TrendingUp className="h-4 w-4 mr-2" />
-                    Advanced Analytics
+                    Advanced Analytics;
                   </Button>
                   <Button variant="outline" className="w-full justify-start bg-transparent" onClick={loadDashboardData}>
                     <RefreshCw className="h-4 w-4 mr-2" />
-                    Refresh Data
+                    Refresh Data;
                   </Button>
                 </CardContent>
               </Card>

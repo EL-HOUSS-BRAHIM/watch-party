@@ -1,60 +1,60 @@
-"use client"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { Check, Crown, Zap, Star, Users, Video, Cloud, Shield } from "lucide-react"
+import { Check, Cloud, Crown, Shield, Star, User, Users, Video, Zap } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { billingAPI } from "@/lib/api"
 
-interface Plan {
-  id: string
-  name: string
-  description: string
-  price: {
-    monthly: number
-    yearly: number
+"use client"
+
+interface Plan {}
+  id: string;
+  name: string;
+  description: string;
+  price: {}
+    monthly: number;
+    yearly: number;
   }
   features: string[]
-  limits: {
+  limits: {}
     parties: number | "unlimited"
-    participants: number
-    storage: string
-    videoQuality: string
+    participants: number;
+    storage: string;
+    videoQuality: string;
   }
-  popular?: boolean
-  current?: boolean
+  popular?: boolean;
+  current?: boolean;
 }
 
-interface SubscriptionPlansProps {
-  className?: string
+interface SubscriptionPlansProps {}
+  className?: string;
 }
 
-export default function SubscriptionPlans({ className }: SubscriptionPlansProps) {
+export default function SubscriptionPlans({ className }: SubscriptionPlansProps) {}
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(&quot;monthly&quot;)
   const [isLoading, setIsLoading] = useState<string | null>(null)
   const { user } = useAuth()
   const { toast } = useToast()
 
-  const plans: Plan[] = [
-    {
+  const plans: Plan[] = []
+    {}
       id: "free",
       name: "Free",
       description: "Perfect for getting started",
       price: { monthly: 0, yearly: 0 },
-      features: [
+      features: []
         "Create up to 3 watch parties",
         "Up to 5 participants per party",
         "Basic video quality (720p)",
         "1GB storage",
         "Community support",
       ],
-      limits: {
+      limits: {}
         parties: 3,
         participants: 5,
         storage: "1GB",
@@ -62,12 +62,12 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
       },
       current: user?.is_premium === false,
     },
-    {
+    {}
       id: "premium",
       name: "Premium",
       description: "For regular watch party hosts",
       price: { monthly: 9.99, yearly: 99.99 },
-      features: [
+      features: []
         "Unlimited watch parties",
         "Up to 25 participants per party",
         "HD video quality (1080p)",
@@ -77,7 +77,7 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
         "Custom themes",
         "Party scheduling",
       ],
-      limits: {
+      limits: {}
         parties: "unlimited",
         participants: 25,
         storage: "50GB",
@@ -86,12 +86,12 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
       popular: true,
       current: user?.is_premium === true,
     },
-    {
+    {}
       id: "pro",
       name: "Pro",
       description: "For power users and communities",
       price: { monthly: 19.99, yearly: 199.99 },
-      features: [
+      features: []
         "Everything in Premium",
         "Up to 100 participants per party",
         "4K video quality",
@@ -102,50 +102,48 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
         "API access",
         "White-label options",
       ],
-      limits: {
+      limits: {}
         parties: "unlimited",
         participants: 100,
         storage: "500GB",
         videoQuality: "4K",
       },
-      current: user?.is_premium === true, // Assuming pro is also premium
+      current: user?.is_premium === true, // Assuming pro is also premium;
     },
   ]
 
-  const handleSubscribe = async (planId: string) => {
-    if (planId === "free") return
-
+  const handleSubscribe = async (planId: string) => {}
+    if (planId === "free") return;
     setIsLoading(planId)
 
     try {
-      const response = await billingAPI.subscribe({
+      const response = await billingAPI.subscribe({}
         plan_id: planId,
-        payment_method_id: "", // This would come from a payment method selector
-        // promo_code: "" // Optional promo code
+        payment_method_id: "", // This would come from a payment method selector;
+        // promo_code: "" // Optional promo code;
       })
 
       if (response.success) {
-        toast({
+        toast({}
           title: "Subscription Created",
           description: "Your subscription has been successfully created!",
         })
-        
-        // Refresh user data or redirect
+        // Refresh user data or redirect;
         window.location.reload()
       }
-    } catch {
+    } } catch {
       console.error("Subscription error:", error)
-      toast({
+      toast({}
         title: "Subscription Error",
         description: "Failed to start subscription process. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(null)
     }
   }
 
-  const getPlanIcon = (planId: string) => {
+  const getPlanIcon = (planId: string) => {}
     switch (planId) {
       case "free":
         return <Users className="h-6 w-6 text-gray-500" />
@@ -158,9 +156,9 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
     }
   }
 
-  const getYearlySavings = (plan: Plan) => {
-    const monthlyTotal = plan.price.monthly * 12
-    const yearlySavings = monthlyTotal - plan.price.yearly
+  const getYearlySavings = (plan: Plan) => {}
+    const monthlyTotal = plan.price.monthly * 12;
+    const yearlySavings = monthlyTotal - plan.price.yearly;
     const savingsPercentage = Math.round((yearlySavings / monthlyTotal) * 100)
     return { amount: yearlySavings, percentage: savingsPercentage }
   }
@@ -174,15 +172,15 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
         {/* Billing Toggle */}
         <div className="flex items-center justify-center gap-4 mb-8">
           <Label htmlFor="billing-toggle" className={cn(billingCycle === "monthly" && "font-semibold")}>
-            Monthly
+            Monthly;
           </Label>
-          <Switch
+          <Switch;
             id="billing-toggle"
             checked={billingCycle === "yearly"}
             onCheckedChange={(checked) => setBillingCycle(checked ? &quot;yearly&quot; : &quot;monthly")}
           />
           <Label htmlFor="billing-toggle" className={cn(billingCycle === "yearly" && "font-semibold")}>
-            Yearly
+            Yearly;
             <Badge variant="secondary" className="ml-2">
               Save up to 17%
             </Badge>
@@ -191,12 +189,11 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
       </div>
 
       <div className="grid md:grid-cols-3 gap-8">
-        {plans.map((plan) => {
+        {plans.map((plan) => {}
           const savings = getYearlySavings(plan)
-          const price = billingCycle === "monthly" ? plan.price.monthly : plan.price.yearly
-
+          const price = billingCycle === "monthly" ? plan.price.monthly : plan.price.yearly;
           return (
-            <Card
+            <Card;
               key={plan.id}
               className={cn(
                 "relative transition-all hover:shadow-lg",
@@ -256,11 +253,11 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
                   <div className="grid grid-cols-2 gap-2 text-xs text-gray-600">
                     <div className="flex items-center gap-1">
                       <Video className="h-3 w-3" />
-                      {plan.limits.parties} parties
+                      {plan.limits.parties} parties;
                     </div>
                     <div className="flex items-center gap-1">
                       <Users className="h-3 w-3" />
-                      {plan.limits.participants} participants
+                      {plan.limits.participants} participants;
                     </div>
                     <div className="flex items-center gap-1">
                       <Cloud className="h-3 w-3" />
@@ -274,15 +271,15 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
                 </div>
 
                 {/* Action Button */}
-                <Button
+                <Button;
                   className="w-full"
                   variant={plan.current ? "outline" : plan.popular ? "default" : "outline"}
                   onClick={() => handleSubscribe(plan.id)}
                   disabled={plan.current || isLoading === plan.id}
                 >
-                  {isLoading === plan.id
+                  {isLoading === plan.id;
                     ? "Processing..."
-                    : plan.current
+                    : plan.current;
                       ? "Current Plan"
                       : plan.id === "free"
                         ? "Get Started"
@@ -293,7 +290,7 @@ export default function SubscriptionPlans({ className }: SubscriptionPlansProps)
                   <div className="text-center">
                     <div className="flex items-center justify-center gap-1 text-xs text-gray-500">
                       <Shield className="h-3 w-3" />
-                      30-day money-back guarantee
+                      30-day money-back guarantee;
                     </div>
                   </div>
                 )}

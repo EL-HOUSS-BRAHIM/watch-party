@@ -1,6 +1,4 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { useState, useEffect , useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -14,7 +12,11 @@ import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
-import {
+import {}
+
+} from "lucide-react"
+"use client"
+
   User,
   Heart,
   Users,
@@ -29,11 +31,10 @@ import {
   Loader2,
   Sparkles,
   Target,
-  UserPlus
-} from "lucide-react"
+  UserPlus;
 
-// Step schemas
-const profileSchema = z.object({
+// Step schemas;
+const profileSchema = z.object({}
   displayName: z.string().min(2, "Display name must be at least 2 characters"),
   bio: z.string().max(500, "Bio must be under 500 characters").optional(),
   avatar: z.any().optional(),
@@ -41,13 +42,13 @@ const profileSchema = z.object({
   language: z.string().min(1, "Please select your language"),
 })
 
-const interestsSchema = z.object({
+const interestsSchema = z.object({}
   genres: z.array(z.string()).min(1, "Please select at least one genre"),
   movieTypes: z.array(z.string()).min(1, "Please select at least one movie type"),
   watchingPreferences: z.array(z.string()).min(1, "Please select at least one preference"),
 })
 
-const socialSchema = z.object({
+const socialSchema = z.object({}
   allowFriendRequests: z.boolean().optional().default(true),
   allowPartyInvites: z.boolean().optional().default(true),
   shareWatchHistory: z.boolean().optional().default(false),
@@ -58,29 +59,29 @@ type ProfileFormData = z.infer<typeof profileSchema>
 type InterestsFormData = z.infer<typeof interestsSchema>
 type SocialFormData = z.infer<typeof socialSchema>
 
-interface OnboardingData {
-  profile: ProfileFormData
-  interests: InterestsFormData
-  social: SocialFormData
+interface OnboardingData {}
+  profile: ProfileFormData;
+  interests: InterestsFormData;
+  social: SocialFormData;
 }
 
-const GENRES = [
+const GENRES = []
   "Action", "Adventure", "Animation", "Comedy", "Crime", "Documentary",
   "Drama", "Fantasy", "Horror", "Musical", "Mystery", "Romance",
   "Sci-Fi", "Thriller", "War", "Western", "Biography", "History"
 ]
 
-const MOVIE_TYPES = [
+const MOVIE_TYPES = []
   "Blockbusters", "Independent Films", "Foreign Films", "Classic Movies",
   "TV Series", "Mini-Series", "Anime", "Documentaries", "Short Films"
 ]
 
-const WATCHING_PREFERENCES = [
+const WATCHING_PREFERENCES = []
   "Binge Watching", "Weekly Episodes", "Movie Marathons", "Short Sessions",
   "Late Night Viewing", "Weekend Movies", "Discussion After", "Silent Watching"
 ]
 
-const TIMEZONES = [
+const TIMEZONES = []
   { value: "America/New_York", label: "Eastern Time (ET)" },
   { value: "America/Chicago", label: "Central Time (CT)" },
   { value: "America/Denver", label: "Mountain Time (MT)" },
@@ -93,7 +94,7 @@ const TIMEZONES = [
   { value: "Australia/Sydney", label: "Australian Eastern Time" },
 ]
 
-const LANGUAGES = [
+const LANGUAGES = []
   { value: "en", label: "English" },
   { value: "es", label: "Español" },
   { value: "fr", label: "Français" },
@@ -114,12 +115,11 @@ export default function OnboardingPage() {
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
   const [onboardingData, setOnboardingData] = useState<Partial<OnboardingData>>({})
 
-  const totalSteps = 4
-
-  // Form instances
-  const profileForm = useForm<ProfileFormData>({
+  const totalSteps = 4;
+  // Form instances;
+  const profileForm = useForm<ProfileFormData>({}
     resolver: zodResolver(profileSchema),
-    defaultValues: {
+    defaultValues: {}
       displayName: user?.first_name || "",
       bio: "",
       timezone: "America/New_York",
@@ -127,18 +127,18 @@ export default function OnboardingPage() {
     }
   })
 
-  const interestsForm = useForm<InterestsFormData>({
+  const interestsForm = useForm<InterestsFormData>({}
     resolver: zodResolver(interestsSchema),
-    defaultValues: {
+    defaultValues: {}
       genres: [],
       movieTypes: [],
       watchingPreferences: [],
     }
   })
 
-  const socialForm = useForm({
+  const socialForm = useForm({}
     resolver: zodResolver(socialSchema) as Record<string, unknown>,
-    defaultValues: {
+    defaultValues: {}
       allowFriendRequests: true,
       allowPartyInvites: true,
       shareWatchHistory: false,
@@ -147,71 +147,68 @@ export default function OnboardingPage() {
   })
 
   useEffect(() => {
-    // Redirect if user has already completed onboarding
+    // Redirect if user has already completed onboarding;
     if (user?.onboarding_completed) {
       router.push("/dashboard")
     }
   }, [user, router])
 
-  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = (event: React.ChangeEvent<HTMLInputElement>) => {}
     const file = event.target.files?.[0]
-    if (!file) return
-
+    if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
-      toast({
+      toast({}
         title: "File Too Large",
         description: "Avatar must be under 5MB.",
         variant: "destructive",
       })
-      return
+      return;
     }
 
-    if (!file.type.startsWith("image/")) {
-      toast({
+    if (!file.type.startsWith("image/")) {}
+      toast({}
         title: "Invalid File Type",
         description: "Please upload an image file.",
         variant: "destructive",
       })
-      return
+      return;
     }
 
     const reader = new FileReader()
-    reader.onload = () => {
+    reader.onload = () => {}
       setAvatarPreview(reader.result as string)
     }
     reader.readAsDataURL(file)
     profileForm.setValue("avatar", file)
   }
 
-  const onProfileSubmit = (data: ProfileFormData) => {
+  const onProfileSubmit = (data: ProfileFormData) => {}
     setOnboardingData(prev => ({ ...prev, profile: data }))
     setCurrentStep(2)
   }
 
-  const onInterestsSubmit = (data: InterestsFormData) => {
+  const onInterestsSubmit = (data: InterestsFormData) => {}
     setOnboardingData(prev => ({ ...prev, interests: data }))
     setCurrentStep(3)
   }
 
-  const onSocialSubmit = (data: SocialFormData) => {
+  const onSocialSubmit = (data: SocialFormData) => {}
     setOnboardingData(prev => ({ ...prev, social: data }))
     setCurrentStep(4)
   }
 
   const completeOnboarding = async () => {
     setIsSubmitting(true)
-    
     try {
       const token = localStorage.getItem("accessToken")
       const formData = new FormData()
 
-      // Add all onboarding data
+      // Add all onboarding data;
       if (onboardingData.profile) {
         formData.append("display_name", onboardingData.profile.displayName)
         formData.append("bio", onboardingData.profile.bio || "")
         formData.append("timezone", onboardingData.profile.timezone)
         formData.append("language", onboardingData.profile.language)
-        
         if (onboardingData.profile.avatar) {
           formData.append("avatar", onboardingData.profile.avatar)
         }
@@ -232,9 +229,9 @@ export default function OnboardingPage() {
 
       formData.append("onboarding_completed", "true")
 
-      const response = await fetch("/api/users/onboarding/", {
+      const response = await fetch("/api/users/onboarding/", {}
         method: "POST",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
         body: formData,
@@ -243,48 +240,45 @@ export default function OnboardingPage() {
       if (response.ok) {
         const updatedUser = await response.json()
         updateUser(updatedUser)
-        
-        toast({
+        toast({}
           title: "Welcome to Watch Party! 🎉",
           description: "Your account has been set up successfully.",
         })
-        
         router.push("/dashboard")
-      } else {
+      } else {}
         const errorData = await response.json()
-        toast({
+        toast({}
           title: "Setup Failed",
           description: errorData.message || "Failed to complete onboarding.",
           variant: "destructive",
         })
       }
-    } catch {
+    } } catch {
       console.error("Onboarding error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsSubmitting(false)
     }
   }
 
-  const nextStep = () => {
+  const nextStep = () => {}
     if (currentStep < totalSteps) {
       setCurrentStep(currentStep + 1)
     }
   }
 
-  const prevStep = () => {
+  const prevStep = () => {}
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1)
     }
   }
 
-  const progress = (currentStep / totalSteps) * 100
-
-  const renderStep = () => {
+  const progress = (currentStep / totalSteps) * 100;
+  const renderStep = () => {}
     switch (currentStep) {
       case 1:
         return (
@@ -292,10 +286,10 @@ export default function OnboardingPage() {
             <CardHeader className="text-center">
               <CardTitle className="flex items-center justify-center gap-2">
                 <User className="h-6 w-6" />
-                Set Up Your Profile
+                Set Up Your Profile;
               </CardTitle>
               <CardDescription>
-                Tell us about yourself to personalize your experience
+                Tell us about yourself to personalize your experience;
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -309,13 +303,13 @@ export default function OnboardingPage() {
                         {user?.first_name?.[0] || user?.email?.[0] || "U"}
                       </AvatarFallback>
                     </Avatar>
-                    <label
+                    <label;
                       htmlFor="avatar-upload"
                       className="absolute bottom-0 right-0 bg-primary text-primary-foreground p-2 rounded-full cursor-pointer hover:bg-primary/90"
                     >
                       <Camera className="h-4 w-4" />
                     </label>
-                    <input
+                    <input;
                       id="avatar-upload"
                       type="file"
                       accept="image/*"
@@ -328,7 +322,7 @@ export default function OnboardingPage() {
 
                 <div>
                   <Label htmlFor="displayName">Display Name *</Label>
-                  <Input
+                  <Input;
                     id="displayName"
                     {...profileForm.register("displayName")}
                     className={profileForm.formState.errors.displayName ? "border-red-500" : ""}
@@ -341,7 +335,7 @@ export default function OnboardingPage() {
 
                 <div>
                   <Label htmlFor="bio">Bio</Label>
-                  <Textarea
+                  <Textarea;
                     id="bio"
                     {...profileForm.register("bio")}
                     className={profileForm.formState.errors.bio ? "border-red-500" : ""}
@@ -352,14 +346,14 @@ export default function OnboardingPage() {
                     <p className="text-sm text-red-500 mt-1">{profileForm.formState.errors.bio.message}</p>
                   )}
                   <p className="text-xs text-gray-500 mt-1">
-                    {profileForm.watch("bio")?.length || 0}/500 characters
+                    {profileForm.watch("bio")?.length || 0}/500 characters;
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="timezone">Timezone *</Label>
-                    <select
+                    <select;
                       id="timezone"
                       {...profileForm.register("timezone")}
                       className="w-full p-2 border border-gray-300 rounded-md"
@@ -372,7 +366,7 @@ export default function OnboardingPage() {
 
                   <div>
                     <Label htmlFor="language">Language *</Label>
-                    <select
+                    <select;
                       id="language"
                       {...profileForm.register("language")}
                       className="w-full p-2 border border-gray-300 rounded-md"
@@ -386,7 +380,7 @@ export default function OnboardingPage() {
 
                 <div className="flex justify-end">
                   <Button type="submit">
-                    Continue
+                    Continue;
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -401,10 +395,10 @@ export default function OnboardingPage() {
             <CardHeader className="text-center">
               <CardTitle className="flex items-center justify-center gap-2">
                 <Heart className="h-6 w-6" />
-                Your Interests
+                Your Interests;
               </CardTitle>
               <CardDescription>
-                Help us recommend the perfect content for you
+                Help us recommend the perfect content for you;
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -413,18 +407,18 @@ export default function OnboardingPage() {
                   <Label className="text-base font-medium">Favorite Genres *</Label>
                   <p className="text-sm text-gray-600 mb-3">Select all that apply</p>
                   <div className="grid grid-cols-3 gap-2">
-                    {GENRES.map(genre => {
+                    {GENRES.map(genre => {}
                       const isSelected = interestsForm.watch("genres")?.includes(genre)
                       return (
-                        <Badge
+                        <Badge;
                           key={genre}
                           variant={isSelected ? "default" : "outline"}
                           className="cursor-pointer justify-center py-2"
-                          onClick={() => {
+                          onClick={() => {}
                             const current = interestsForm.getValues("genres") || []
                             if (isSelected) {
                               interestsForm.setValue("genres", current.filter(g => g !== genre))
-                            } else {
+                            } else {}
                               interestsForm.setValue("genres", [...current, genre])
                             }
                           }}
@@ -443,18 +437,18 @@ export default function OnboardingPage() {
                   <Label className="text-base font-medium">Content Types *</Label>
                   <p className="text-sm text-gray-600 mb-3">What do you like to watch?</p>
                   <div className="grid grid-cols-2 gap-2">
-                    {MOVIE_TYPES.map(type => {
+                    {MOVIE_TYPES.map(type => {}
                       const isSelected = interestsForm.watch("movieTypes")?.includes(type)
                       return (
-                        <Badge
+                        <Badge;
                           key={type}
                           variant={isSelected ? "default" : "outline"}
                           className="cursor-pointer justify-center py-2"
-                          onClick={() => {
+                          onClick={() => {}
                             const current = interestsForm.getValues("movieTypes") || []
                             if (isSelected) {
                               interestsForm.setValue("movieTypes", current.filter(t => t !== type))
-                            } else {
+                            } else {}
                               interestsForm.setValue("movieTypes", [...current, type])
                             }
                           }}
@@ -473,18 +467,18 @@ export default function OnboardingPage() {
                   <Label className="text-base font-medium">Watching Preferences *</Label>
                   <p className="text-sm text-gray-600 mb-3">How do you prefer to watch?</p>
                   <div className="grid grid-cols-2 gap-2">
-                    {WATCHING_PREFERENCES.map(pref => {
+                    {WATCHING_PREFERENCES.map(pref => {}
                       const isSelected = interestsForm.watch("watchingPreferences")?.includes(pref)
                       return (
-                        <Badge
+                        <Badge;
                           key={pref}
                           variant={isSelected ? "default" : "outline"}
                           className="cursor-pointer justify-center py-2"
-                          onClick={() => {
+                          onClick={() => {}
                             const current = interestsForm.getValues("watchingPreferences") || []
                             if (isSelected) {
                               interestsForm.setValue("watchingPreferences", current.filter(p => p !== pref))
-                            } else {
+                            } else {}
                               interestsForm.setValue("watchingPreferences", [...current, pref])
                             }
                           }}
@@ -502,10 +496,10 @@ export default function OnboardingPage() {
                 <div className="flex justify-between">
                   <Button type="button" variant="outline" onClick={prevStep}>
                     <ChevronLeft className="mr-2 h-4 w-4" />
-                    Back
+                    Back;
                   </Button>
                   <Button type="submit">
-                    Continue
+                    Continue;
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -520,10 +514,10 @@ export default function OnboardingPage() {
             <CardHeader className="text-center">
               <CardTitle className="flex items-center justify-center gap-2">
                 <Users className="h-6 w-6" />
-                Privacy & Social
+                Privacy & Social;
               </CardTitle>
               <CardDescription>
-                Control how others can interact with you
+                Control how others can interact with you;
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -534,7 +528,7 @@ export default function OnboardingPage() {
                       <Label htmlFor="allowFriendRequests" className="font-medium">Friend Requests</Label>
                       <p className="text-sm text-gray-600">Allow others to send you friend requests</p>
                     </div>
-                    <input
+                    <input;
                       id="allowFriendRequests"
                       type="checkbox"
                       {...socialForm.register("allowFriendRequests")}
@@ -547,7 +541,7 @@ export default function OnboardingPage() {
                       <Label htmlFor="allowPartyInvites" className="font-medium">Party Invites</Label>
                       <p className="text-sm text-gray-600">Allow friends to invite you to watch parties</p>
                     </div>
-                    <input
+                    <input;
                       id="allowPartyInvites"
                       type="checkbox"
                       {...socialForm.register("allowPartyInvites")}
@@ -560,7 +554,7 @@ export default function OnboardingPage() {
                       <Label htmlFor="shareWatchHistory" className="font-medium">Share Watch History</Label>
                       <p className="text-sm text-gray-600">Let friends see what you&apos;ve been watching</p>
                     </div>
-                    <input
+                    <input;
                       id="shareWatchHistory"
                       type="checkbox"
                       {...socialForm.register("shareWatchHistory")}
@@ -573,7 +567,7 @@ export default function OnboardingPage() {
                       <Label htmlFor="findByEmail" className="font-medium">Discoverable by Email</Label>
                       <p className="text-sm text-gray-600">Allow others to find you by your email address</p>
                     </div>
-                    <input
+                    <input;
                       id="findByEmail"
                       type="checkbox"
                       {...socialForm.register("findByEmail")}
@@ -597,10 +591,10 @@ export default function OnboardingPage() {
                 <div className="flex justify-between">
                   <Button type="button" variant="outline" onClick={prevStep}>
                     <ChevronLeft className="mr-2 h-4 w-4" />
-                    Back
+                    Back;
                   </Button>
                   <Button type="submit">
-                    Continue
+                    Continue;
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -618,7 +612,7 @@ export default function OnboardingPage() {
                 You're All Set!
               </CardTitle>
               <CardDescription>
-                Review your setup and complete your onboarding
+                Review your setup and complete your onboarding;
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -626,7 +620,7 @@ export default function OnboardingPage() {
               <div className="border rounded-lg p-4">
                 <h3 className="font-medium mb-3 flex items-center gap-2">
                   <User className="h-4 w-4" />
-                  Profile
+                  Profile;
                 </h3>
                 <div className="flex items-center gap-3">
                   <Avatar className="w-12 h-12">
@@ -648,7 +642,7 @@ export default function OnboardingPage() {
               <div className="border rounded-lg p-4">
                 <h3 className="font-medium mb-3 flex items-center gap-2">
                   <Heart className="h-4 w-4" />
-                  Interests
+                  Interests;
                 </h3>
                 <div className="space-y-2">
                   <div>
@@ -659,7 +653,7 @@ export default function OnboardingPage() {
                       ))}
                       {(onboardingData.interests?.genres?.length || 0) > 5 && (
                         <Badge variant="outline" className="text-xs">
-                          +{(onboardingData.interests?.genres?.length || 0) - 5} more
+                          +{(onboardingData.interests?.genres?.length || 0) - 5} more;
                         </Badge>
                       )}
                     </div>
@@ -671,7 +665,7 @@ export default function OnboardingPage() {
               <div className="border rounded-lg p-4">
                 <h3 className="font-medium mb-3 flex items-center gap-2">
                   <Users className="h-4 w-4" />
-                  Privacy Settings
+                  Privacy Settings;
                 </h3>
                 <div className="grid grid-cols-2 gap-3 text-sm">
                   <div className="flex items-center gap-2">
@@ -724,7 +718,7 @@ export default function OnboardingPage() {
               <div className="flex justify-between">
                 <Button type="button" variant="outline" onClick={prevStep}>
                   <ChevronLeft className="mr-2 h-4 w-4" />
-                  Back
+                  Back;
                 </Button>
                 <Button onClick={completeOnboarding} disabled={isSubmitting}>
                   {isSubmitting ? (
@@ -734,7 +728,7 @@ export default function OnboardingPage() {
                     </>
                   ) : (
                     <>
-                      Complete Setup
+                      Complete Setup;
                       <Sparkles className="ml-2 h-4 w-4" />
                     </>
                   )}
@@ -745,7 +739,7 @@ export default function OnboardingPage() {
         )
 
       default:
-        return null
+        return null;
     }
   }
 

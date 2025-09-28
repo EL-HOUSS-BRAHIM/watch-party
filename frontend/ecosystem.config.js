@@ -1,14 +1,14 @@
-module.exports = {
-  apps: [{
+
+module.exports = { apps: [{}
     name: 'watch-party-frontend',
     script: 'npm',
     args: 'start',
     cwd: '/var/www/watch-party-frontend',
     instances: 1,
     exec_mode: 'fork',
-    env: {
+    env: {}
       NODE_ENV: 'production',
-      PORT: 3000
+      PORT: 3000;
     },
     error_file: '/var/log/pm2/watch-party-frontend-error.log',
     out_file: '/var/log/pm2/watch-party-frontend-out.log',
@@ -17,7 +17,7 @@ module.exports = {
     max_memory_restart: '1G',
     node_args: '--max-old-space-size=1024',
     watch: false,
-    ignore_watch: [
+    ignore_watch: []
       'node_modules',
       '.next',
       'logs'

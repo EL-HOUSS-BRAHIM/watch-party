@@ -1,20 +1,20 @@
 import type { Metadata } from "next"
 
-interface SEOConfig {
-  title: string
-  description: string
+interface SEOConfig {}
+  title: string;
+  description: string;
   keywords?: string[]
-  image?: string
-  url?: string
+  image?: string;
+  url?: string;
 }
 
-export function generateSEOMetadata({
+export function generateSEOMetadata({}
   title,
   description,
   keywords = [],
   image = "/og-image.png",
   url = "https://watchparty.com",
-}: SEOConfig): Metadata {
+}: SEOConfig): Metadata {}
   return {
     title: `${title} | WatchParty Pro`,
     description,
@@ -22,10 +22,10 @@ export function generateSEOMetadata({
     authors: [{ name: "WatchParty Team" }],
     creator: "WatchParty Pro",
     publisher: "WatchParty Pro",
-    robots: {
+    robots: {}
       index: true,
       follow: true,
-      googleBot: {
+      googleBot: {}
         index: true,
         follow: true,
         "max-video-preview": -1,
@@ -33,15 +33,15 @@ export function generateSEOMetadata({
         "max-snippet": -1,
       },
     },
-    openGraph: {
+    openGraph: {}
       type: "website",
       locale: "en_US",
       url,
       title,
       description,
       siteName: "WatchParty Pro",
-      images: [
-        {
+      images: []
+        {}
           url: image,
           width: 1200,
           height: 630,
@@ -49,20 +49,20 @@ export function generateSEOMetadata({
         },
       ],
     },
-    twitter: {
+    twitter: {}
       card: "summary_large_image",
       title,
       description,
       images: [image],
       creator: "@watchpartypro",
     },
-    verification: {
+    verification: {}
       google: process.env.GOOGLE_SITE_VERIFICATION,
     },
   }
 }
 
-export const defaultSEO: Metadata = generateSEOMetadata({
+export const defaultSEO: Metadata = generateSEOMetadata({}
   title: "Home",
   description:
     "The ultimate platform for synchronized video watching with friends. Create watch parties, chat in real-time, and enjoy movies together from anywhere.",

@@ -1,22 +1,22 @@
-'use client'
-
+import { Calendar, Clock, User } from "lucide-react"
 import { useState } from 'react'
 
-interface SupportTicket {
-  id: string
-  title: string
-  description: string
+'use client'
+interface SupportTicket {}
+  id: string;
+  title: string;
+  description: string;
   status: 'open' | 'in-progress' | 'waiting' | 'resolved' | 'closed'
   priority: 'low' | 'medium' | 'high' | 'urgent'
-  category: string
-  createdAt: string
-  updatedAt: string
-  assignedTo?: string
-  responses: number
+  category: string;
+  createdAt: string;
+  updatedAt: string;
+  assignedTo?: string;
+  responses: number;
 }
 
-const supportTickets: SupportTicket[] = [
-  {
+const supportTickets: SupportTicket[] = []
+  {}
     id: 'TK-001',
     title: 'Unable to upload large video files',
     description: 'When trying to upload video files larger than 2GB, the upload fails at around 50% progress.',
@@ -26,9 +26,9 @@ const supportTickets: SupportTicket[] = [
     createdAt: '2024-03-20',
     updatedAt: '2024-03-21',
     assignedTo: 'Support Team',
-    responses: 3
+    responses: 3;
   },
-  {
+  {}
     id: 'TK-002',
     title: 'Watch party audio sync issues',
     description: 'Audio appears to be out of sync with video during watch parties. This happens consistently across different browsers.',
@@ -37,9 +37,9 @@ const supportTickets: SupportTicket[] = [
     category: 'Watch Parties',
     createdAt: '2024-03-19',
     updatedAt: '2024-03-19',
-    responses: 0
+    responses: 0;
   },
-  {
+  {}
     id: 'TK-003',
     title: 'Payment not processed correctly',
     description: 'I upgraded to premium but my account still shows as free tier. Payment was successfully charged to my card.',
@@ -49,9 +49,9 @@ const supportTickets: SupportTicket[] = [
     createdAt: '2024-03-15',
     updatedAt: '2024-03-16',
     assignedTo: 'Billing Team',
-    responses: 5
+    responses: 5;
   },
-  {
+  {}
     id: 'TK-004',
     title: 'Feature request: Dark mode for mobile',
     description: 'Would love to have a dark mode option in the mobile app. Current bright theme is hard on the eyes during night viewing.',
@@ -61,35 +61,31 @@ const supportTickets: SupportTicket[] = [
     createdAt: '2024-03-10',
     updatedAt: '2024-03-12',
     assignedTo: 'Product Team',
-    responses: 2
+    responses: 2;
   }
 ]
 
-const statusColors = {
-  open: 'bg-blue-500',
+const statusColors = { open: 'bg-blue-500',
   'in-progress': 'bg-yellow-500',
   waiting: 'bg-orange-500',
   resolved: 'bg-green-500',
   closed: 'bg-gray-500'
 }
 
-const statusLabels = {
-  open: 'Open',
+const statusLabels = { open: 'Open',
   'in-progress': 'In Progress',
   waiting: 'Waiting',
   resolved: 'Resolved',
   closed: 'Closed'
 }
 
-const priorityColors = {
-  low: 'text-green-400',
+const priorityColors = { low: 'text-green-400',
   medium: 'text-yellow-400',
   high: 'text-orange-400',
   urgent: 'text-red-400'
 }
 
-const priorityIcons = {
-  low: '●',
+const priorityIcons = { low: '●',
   medium: '●●',
   high: '●●●',
   urgent: '🔥'
@@ -100,12 +96,12 @@ export default function SupportTicketsPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [showNewTicketForm, setShowNewTicketForm] = useState(false)
 
-  const filteredTickets = supportTickets.filter(ticket => {
-    const matchesFilter = filter === 'all' || ticket.status === filter
+  const filteredTickets = supportTickets.filter(ticket => {}
+    const matchesFilter = filter === 'all' || ticket.status === filter;
     const matchesSearch = ticket.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          ticket.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          ticket.category.toLowerCase().includes(searchQuery.toLowerCase())
-    return matchesFilter && matchesSearch
+    return matchesFilter && matchesSearch;
   })
 
   return (
@@ -119,15 +115,14 @@ export default function SupportTicketsPage() {
               <h1 className="text-4xl font-bold text-white">Support Tickets</h1>
             </div>
             <p className="text-white/70 text-lg">
-              Track and manage your support requests
+              Track and manage your support requests;
             </p>
           </div>
-          
-          <button
+          <button;
             onClick={() => setShowNewTicketForm(true)}
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
           >
-            New Ticket
+            New Ticket;
           </button>
         </div>
 
@@ -136,7 +131,7 @@ export default function SupportTicketsPage() {
           {/* Search */}
           <div className="relative flex-1 max-w-md">
             <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/50" />
-            <input
+            <input;
               type="text"
               placeholder="Search tickets..."
               value={searchQuery}
@@ -147,17 +142,17 @@ export default function SupportTicketsPage() {
 
           {/* Filters */}
           <div className="flex gap-2">
-            {[
+            {[]
               { key: 'all', label: 'All' },
               { key: 'open', label: 'Open' },
               { key: 'in-progress', label: 'In Progress' },
               { key: 'resolved', label: 'Resolved' }
             ].map(({ key, label }) => (
-              <button
+              <button;
                 key={key}
                 onClick={() => setFilter(key as Record<string, unknown>)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  filter === key
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${}
+                  filter === key;
                     ? 'bg-blue-500 text-white'
                     : 'bg-white/10 text-white/70 hover:bg-white/20'
                 }`}
@@ -171,7 +166,7 @@ export default function SupportTicketsPage() {
         {/* Tickets List */}
         <div className="space-y-4">
           {filteredTickets.map(ticket => (
-            <div
+            <div;
               key={ticket.id}
               className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 p-6 hover:border-blue-400/50 transition-all cursor-pointer"
             >
@@ -182,7 +177,6 @@ export default function SupportTicketsPage() {
                     <span className="text-white/60 text-sm">#{ticket.id}</span>
                   </div>
                   <p className="text-white/70 mb-3 line-clamp-2">{ticket.description}</p>
-                  
                   <div className="flex items-center gap-4 text-sm text-white/60">
                     <div className="flex items-center gap-1">
                       <CalendarIcon className="w-4 h-4" />
@@ -210,13 +204,11 @@ export default function SupportTicketsPage() {
                   <div className={`${statusColors[ticket.status]} text-white px-3 py-1 rounded-full text-sm font-medium`}>
                     {statusLabels[ticket.status]}
                   </div>
-                  
                   {/* Priority */}
                   <div className={`flex items-center gap-1 ${priorityColors[ticket.priority]}`}>
                     <span className="text-xs">{priorityIcons[ticket.priority]}</span>
                     <span className="text-xs font-medium capitalize">{ticket.priority}</span>
                   </div>
-                  
                   {/* Category */}
                   <span className="bg-white/10 text-white/70 px-2 py-1 rounded text-xs">
                     {ticket.category}
@@ -248,21 +240,18 @@ export default function SupportTicketsPage() {
             </div>
             <div className="text-white/70">Open Tickets</div>
           </div>
-          
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-yellow-400 mb-2">
               {supportTickets.filter(t => t.status === &apos;in-progress&apos;).length}
             </div>
             <div className="text-white/70">In Progress</div>
           </div>
-          
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-green-400 mb-2">
               {supportTickets.filter(t => t.status === &apos;resolved&apos;).length}
             </div>
             <div className="text-white/70">Resolved</div>
           </div>
-          
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-purple-400 mb-2">
               {Math.round(supportTickets.reduce((sum, t) => sum + t.responses, 0) / supportTickets.length)}
@@ -280,17 +269,17 @@ export default function SupportTicketsPage() {
                 Describe your issue and we'll get back to you as soon as possible.
               </p>
               <div className="flex gap-4">
-                <button
+                <button;
                   onClick={() => setShowNewTicketForm(false)}
                   className="flex-1 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors"
                 >
-                  Cancel
+                  Cancel;
                 </button>
-                <button
+                <button;
                   onClick={() => setShowNewTicketForm(false)}
                   className="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
                 >
-                  Create Ticket
+                  Create Ticket;
                 </button>
               </div>
             </div>

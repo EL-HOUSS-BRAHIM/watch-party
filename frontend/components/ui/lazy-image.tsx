@@ -1,21 +1,21 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { useState, useEffect , useCallback } from "react"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { useIntersectionObserver } from "@/lib/performance/lazy-loading"
 
-interface LazyImageProps {
-  src: string
-  alt: string
-  className?: string
-  placeholder?: string
-  blurDataURL?: string
-  onLoad?: () => void
-  onError?: () => void
+"use client"
+
+interface LazyImageProps {}
+  src: string;
+  alt: string;
+  className?: string;
+  placeholder?: string;
+  blurDataURL?: string;
+  onLoad?: () => void;
+  onError?: () => void;
 }
 
-export function LazyImage({
+export function LazyImage({}
   src,
   alt,
   className,
@@ -23,11 +23,11 @@ export function LazyImage({
   blurDataURL,
   onLoad,
   onError,
-}: LazyImageProps) {
+}: LazyImageProps) {}
   const [isLoaded, setIsLoaded] = useState(false)
   const [hasError, setHasError] = useState(false)
   const [imageSrc, setImageSrc] = useState(placeholder)
-  const { targetRef, hasIntersected } = useIntersectionObserver({
+  const { targetRef, hasIntersected } = useIntersectionObserver({}
     threshold: 0.1,
     rootMargin: "50px",
   })
@@ -35,26 +35,26 @@ export function LazyImage({
   useEffect(() => {
     if (hasIntersected && !isLoaded && !hasError) {
       const img = new Image()
-      img.onload = () => {
+      img.onload = () => {}
         setImageSrc(src)
         setIsLoaded(true)
         onLoad?.()
       }
-      img.onerror = () => {
+      img.onerror = () => {}
         setHasError(true)
         onError?.()
       }
-      img.src = src
+      img.src = src;
     }
   }, [hasIntersected, src, isLoaded, hasError, onLoad, onError])
 
   return (
     <div ref={targetRef as React.RefObject<HTMLDivElement>} className={cn(&quot;relative overflow-hidden&quot;, className)}>
-      <img
+      <img;
         src={imageSrc || "/placeholder.svg"}
         alt={alt}
         className={cn("transition-opacity duration-300", isLoaded ? "opacity-100" : "opacity-70", className)}
-        style={{
+        style={{}
           filter: !isLoaded && blurDataURL ? "blur(10px)" : "none",
         }}
       />

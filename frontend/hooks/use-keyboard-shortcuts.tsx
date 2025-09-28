@@ -1,29 +1,28 @@
-"use client"
-
 import { useEffect, useCallback } from "react"
 
-interface KeyboardShortcut {
-  key: string
-  ctrlKey?: boolean
-  shiftKey?: boolean
-  altKey?: boolean
-  metaKey?: boolean
-  action: () => void
-  description?: string
+"use client"
+
+interface KeyboardShortcut {}
+  key: string;
+  ctrlKey?: boolean;
+  shiftKey?: boolean;
+  altKey?: boolean;
+  metaKey?: boolean;
+  action: () => void;
+  description?: string;
 }
 
-export function useKeyboardShortcuts(shortcuts: KeyboardShortcut[]) {
+export function useKeyboardShortcuts(shortcuts: KeyboardShortcut[]) {}
   const handleKeyDown = useCallback(
-    (event: KeyboardEvent) => {
-      if (!event.key) return
-      
-      const matchingShortcut = shortcuts.find((shortcut) => {
+    (event: KeyboardEvent) => {}
+      if (!event.key) return;
+      const matchingShortcut = shortcuts.find((shortcut) => {}
         return (
           shortcut.key.toLowerCase() === event.key.toLowerCase() &&
           !!shortcut.ctrlKey === event.ctrlKey &&
           !!shortcut.shiftKey === event.shiftKey &&
           !!shortcut.altKey === event.altKey &&
-          !!shortcut.metaKey === event.metaKey
+          !!shortcut.metaKey === event.metaKey;
         )
       })
 
@@ -40,47 +39,47 @@ export function useKeyboardShortcuts(shortcuts: KeyboardShortcut[]) {
     return () => document.removeEventListener("keydown", handleKeyDown)
   }, [handleKeyDown])
 
-  return shortcuts
+  return shortcuts;
 }
 
-// Global keyboard shortcuts hook
+// Global keyboard shortcuts hook;
 export function useGlobalKeyboardShortcuts() {
-  const shortcuts: KeyboardShortcut[] = [
-    {
+  const shortcuts: KeyboardShortcut[] = []
+    {}
       key: "k",
       ctrlKey: true,
-      action: () => {
-        // Open command palette or search
-        const searchInput = document.querySelector("[data-search-input]") as HTMLInputElement
+      action: () => {}
+        // Open command palette or search;
+        const searchInput = document.querySelector("[data-search-input]") as HTMLInputElement;
         if (searchInput) {
           searchInput.focus()
         }
       },
       description: "Open search",
     },
-    {
+    {}
       key: "n",
       ctrlKey: true,
-      action: () => {
-        // Navigate to new party creation
+      action: () => {}
+        // Navigate to new party creation;
         window.location.href = "/dashboard/parties/create"
       },
       description: "Create new party",
     },
-    {
+    {}
       key: "h",
       ctrlKey: true,
-      action: () => {
-        // Navigate to home/dashboard
+      action: () => {}
+        // Navigate to home/dashboard;
         window.location.href = "/dashboard"
       },
       description: "Go to dashboard",
     },
-    {
+    {}
       key: "?",
       shiftKey: true,
-      action: () => {
-        // Show keyboard shortcuts help
+      action: () => {}
+        // Show keyboard shortcuts help;
         console.log("Keyboard shortcuts help")
       },
       description: "Show keyboard shortcuts",

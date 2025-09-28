@@ -1,18 +1,19 @@
+import * as React from 'react'
+import {}
+
 'use client'
 
-import * as React from 'react'
-import {
   ThemeProvider as NextThemesProvider,
   type ThemeProviderProps,
 } from 'next-themes'
 
-interface CinemaThemeProviderProps extends Omit<ThemeProviderProps, 'attribute' | 'defaultTheme'> {
-  children: React.ReactNode
+interface CinemaThemeProviderProps extends Omit<ThemeProviderProps, 'attribute' | 'defaultTheme'> {}
+  children: React.ReactNode;
 }
 
-export function ThemeProvider({ children, ...props }: CinemaThemeProviderProps) {
+export function ThemeProvider({ children, ...props }: CinemaThemeProviderProps) {}
   return (
-    <NextThemesProvider
+    <NextThemesProvider;
       attribute="class"
       defaultTheme="dark"
       enableSystem={false}

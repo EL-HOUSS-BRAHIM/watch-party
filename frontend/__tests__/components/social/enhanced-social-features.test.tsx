@@ -13,14 +13,13 @@ const sendFriendRequestMock: Mock = jest.fn()
 const useToastMock: Mock = jest.fn()
 const mockToast: Mock = jest.fn()
 
-const EnhancedSocialFeatures = require('@/components/social/enhanced-social-features').EnhancedSocialFeatures as typeof import('@/components/social/enhanced-social-features').EnhancedSocialFeatures
-
-jest.mock('@/lib/api', () => ({
-  socialAPI: {
+const EnhancedSocialFeatures = require('@/components/social/enhanced-social-features').EnhancedSocialFeatures as typeof import('@/components/social/enhanced-social-features').EnhancedSocialFeatures;
+jest.mock('@/lib/api', () => ({}
+  socialAPI: {}
     getGroups: (...args: unknown[]) => getGroupsMock(...args),
     joinGroup: (...args: unknown[]) => joinGroupMock(...args),
   },
-  usersAPI: {
+  usersAPI: {}
     getFriends: (...args: unknown[]) => getFriendsMock(...args),
     getFriendSuggestions: (...args: unknown[]) => getFriendSuggestionsMock(...args),
     getActivity: (...args: unknown[]) => getActivityMock(...args),
@@ -29,13 +28,12 @@ jest.mock('@/lib/api', () => ({
   },
 }))
 
-jest.mock('@/hooks/use-toast', () => ({
+jest.mock('@/hooks/use-toast', () => ({}
   useToast: (...args: unknown[]) => useToastMock(...args),
 }))
 
-const mockFriendsResponse = {
-  results: [
-    {
+const mockFriendsResponse = { results: []
+    {}
       id: '1',
       username: 'testuser1',
       displayName: 'Test User 1',
@@ -50,8 +48,8 @@ const mockFriendsResponse = {
   ],
 }
 
-const mockSuggestionsResponse = [
-  {
+const mockSuggestionsResponse = []
+  {}
     id: '2',
     username: 'suggested1',
     displayName: 'Suggested User',
@@ -65,9 +63,8 @@ const mockSuggestionsResponse = [
   },
 ]
 
-const mockCommunitiesResponse = {
-  results: [
-    {
+const mockCommunitiesResponse = { results: []
+    {}
       id: '1',
       name: 'Test Community',
       description: 'A test community',
@@ -80,11 +77,10 @@ const mockCommunitiesResponse = {
   ],
 }
 
-const mockActivityResponse = {
-  results: [
-    {
+const mockActivityResponse = { results: []
+    {}
       id: '1',
-      user: {
+      user: {}
         id: '1',
         username: 'testuser1',
         displayName: 'Test User 1',
@@ -94,7 +90,7 @@ const mockActivityResponse = {
       },
       activityType: 'video_watch',
       activity_type: 'video_watch',
-      metadata: {
+      metadata: {}
         title: 'Test Video',
         videoId: 'vid123',
         video_id: 'vid123',
@@ -105,8 +101,8 @@ const mockActivityResponse = {
   ],
 }
 
-const mockAchievementsResponse = [
-  {
+const mockAchievementsResponse = []
+  {}
     id: '1',
     name: 'First Watch',
     description: 'Watched your first video',
@@ -116,8 +112,8 @@ const mockAchievementsResponse = [
   },
 ]
 
-describe('EnhancedSocialFeatures', () => {
-  beforeEach(() => {
+describe('EnhancedSocialFeatures', () => {}
+  beforeEach(() => {}
     jest.clearAllMocks()
     getGroupsMock.mockReset()
     joinGroupMock.mockReset()
@@ -138,7 +134,7 @@ describe('EnhancedSocialFeatures', () => {
     sendFriendRequestMock.mockResolvedValue({})
   })
 
-  it('renders loading state initially', () => {
+  it('renders loading state initially', () => {}
     render(<EnhancedSocialFeatures />)
     expect(screen.getByTestId('loading-spinner')).toBeInTheDocument()
   })
@@ -146,7 +142,7 @@ describe('EnhancedSocialFeatures', () => {
   it('fetches and displays social data on mount', async () => {
     render(<EnhancedSocialFeatures />)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(getFriendsMock).toHaveBeenCalledWith({ limit: 20 })
       expect(getFriendSuggestionsMock).toHaveBeenCalledWith({ limit: 20 })
       expect(getGroupsMock).toHaveBeenCalledWith({ page: 1, public_only: true })
@@ -154,7 +150,7 @@ describe('EnhancedSocialFeatures', () => {
       expect(getAchievementsMock).toHaveBeenCalled()
     })
 
-    // Check that the data is displayed
+    // Check that the data is displayed;
     expect(screen.getByText('Test User 1')).toBeInTheDocument()
     expect(screen.getByText('Test Community')).toBeInTheDocument()
   })
@@ -164,8 +160,8 @@ describe('EnhancedSocialFeatures', () => {
 
     render(<EnhancedSocialFeatures />)
 
-    await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith({
+    await waitFor(() => {}
+      expect(mockToast).toHaveBeenCalledWith({}
         title: 'Error',
         description: 'Failed to load social data. Please try again.',
         variant: 'destructive',
@@ -178,14 +174,14 @@ describe('EnhancedSocialFeatures', () => {
 
     render(<EnhancedSocialFeatures />)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(screen.getByText('Suggested User')).toBeInTheDocument()
     })
 
     const addFriendButton = screen.getByRole('button', { name: /add friend/i })
     fireEvent.click(addFriendButton)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(sendFriendRequestMock).toHaveBeenCalledWith('2')
     })
   })
@@ -199,11 +195,11 @@ describe('EnhancedSocialFeatures', () => {
 
     render(<EnhancedSocialFeatures />)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(screen.queryByTestId('loading-spinner')).not.toBeInTheDocument()
     })
 
-    // Should still render the UI structure without errors
+    // Should still render the UI structure without errors;
     expect(screen.getByRole('tablist')).toBeInTheDocument()
   })
 })

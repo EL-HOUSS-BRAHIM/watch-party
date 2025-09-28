@@ -1,5 +1,4 @@
-'use client'
-
+import { Bell, Calendar, Check, CheckCircle, Heart, Info, Mail, Play, Settings, Smartphone, Star, Trash, User, Users, X } from "lucide-react"
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -9,54 +8,55 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { useApiToast } from "@/hooks/use-toast"
 
-interface Notification {
-  id: string
+'use client'
+interface Notification {}
+  id: string;
   type: 'friend_request' | 'party_invite' | 'party_start' | 'message' | 'reaction' | 'follow' | 'achievement' | 'system' | 'reminder'
-  title: string
-  message: string
-  isRead: boolean
-  createdAt: string
-  data?: {
-    userId?: string
-    partyId?: string
-    messageId?: string
-    achievementId?: string
-    [key: string]: unknown
+  title: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+  data?: {}
+    userId?: string;
+    partyId?: string;
+    messageId?: string;
+    achievementId?: string;
+    [key: string]: unknown;
   }
-  sender?: {
-    id: string
-    displayName: string
-    avatar: string | null
+  sender?: {}
+    id: string;
+    displayName: string;
+    avatar: string | null;
   }
-  actionUrl?: string
-  canReply?: boolean
-  canDismiss?: boolean
+  actionUrl?: string;
+  canReply?: boolean;
+  canDismiss?: boolean;
 }
 
-interface NotificationSettings {
-  enabled: boolean
-  categories: {
-    friend_requests: boolean
-    party_invites: boolean
-    party_updates: boolean
-    messages: boolean
-    reactions: boolean
-    achievements: boolean
-    system: boolean
-    reminders: boolean
+interface NotificationSettings {}
+  enabled: boolean;
+  categories: {}
+    friend_requests: boolean;
+    party_invites: boolean;
+    party_updates: boolean;
+    messages: boolean;
+    reactions: boolean;
+    achievements: boolean;
+    system: boolean;
+    reminders: boolean;
   }
-  delivery: {
-    push: boolean
-    email: boolean
-    inApp: boolean
+  delivery: {}
+    push: boolean;
+    email: boolean;
+    inApp: boolean;
   }
-  schedule: {
-    quietHours: {
-      enabled: boolean
-      start: string
-      end: string
+  schedule: {}
+    quietHours: {}
+      enabled: boolean;
+      start: string;
+      end: string;
     }
-    weekends: boolean
+    weekends: boolean;
   }
   frequency: 'immediate' | 'hourly' | 'daily' | 'weekly'
 }
@@ -79,7 +79,7 @@ export function NotificationsCenter() {
       if (response) {
         setNotifications(response)
       }
-    } catch {
+    } } catch {
       toastError(error, 'Failed to load notifications')
     }
   }
@@ -90,14 +90,14 @@ export function NotificationsCenter() {
       if (response) {
         setSettings(response)
       }
-    } catch {
+    } } catch {
       toastError(error, 'Failed to load notification settings')
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
-  const handleMarkAsRead = async (notificationId: string) => {
+  const handleMarkAsRead = async (notificationId: string) => {}
     const success = await apiRequest(
       () => fetch(`/api/notifications/${notificationId}/read`, { method: 'POST' }),
       { showSuccess: false }
@@ -121,7 +121,7 @@ export function NotificationsCenter() {
     }
   }
 
-  const handleDelete = async (notificationId: string) => {
+  const handleDelete = async (notificationId: string) => {}
     const success = await apiRequest(
       () => fetch(`/api/notifications/${notificationId}`, { method: 'DELETE' }),
       { successMessage: 'Notification deleted', showSuccess: true }
@@ -143,9 +143,9 @@ export function NotificationsCenter() {
     }
   }
 
-  const handleUpdateSettings = async (updatedSettings: NotificationSettings) => {
+  const handleUpdateSettings = async (updatedSettings: NotificationSettings) => {}
     const success = await apiRequest(
-      () => fetch('/api/notifications/settings', {
+      () => fetch('/api/notifications/settings', {}
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedSettings)
@@ -158,7 +158,7 @@ export function NotificationsCenter() {
     }
   }
 
-  const getNotificationIcon = (type: Notification['type']) => {
+  const getNotificationIcon = (type: Notification['type']) => {}
     switch (type) {
       case 'friend_request': return <UserPlus className="h-4 w-4" />
       case 'party_invite': return <Users className="h-4 w-4" />
@@ -173,7 +173,7 @@ export function NotificationsCenter() {
     }
   }
 
-  const getNotificationColor = (type: Notification['type']) => {
+  const getNotificationColor = (type: Notification['type']) => {}
     switch (type) {
       case 'friend_request': return 'text-blue-500'
       case 'party_invite': return 'text-purple-500'
@@ -188,18 +188,17 @@ export function NotificationsCenter() {
     }
   }
 
-  const filteredNotifications = notifications.filter(notification => {
+  const filteredNotifications = notifications.filter(notification => {}
     switch (activeTab) {
-      case 'unread': return !notification.isRead
+      case 'unread': return !notification.isRead;
       case 'social': return ['friend_request', 'follow', 'party_invite'].includes(notification.type)
       case 'parties': return ['party_invite', 'party_start', 'party_update'].includes(notification.type)
       case 'messages': return ['message', 'reaction'].includes(notification.type)
-      default: return true
+      default: return true;
     }
   })
 
-  const unreadCount = notifications.filter(n => !n.isRead).length
-
+  const unreadCount = notifications.filter(n => !n.isRead).length;
   if (loading) {
     return (
       <Card>
@@ -225,12 +224,12 @@ export function NotificationsCenter() {
           {unreadCount > 0 && (
             <Button variant="outline" size="sm" onClick={handleMarkAllAsRead}>
               <CheckCircle className="h-4 w-4 mr-2" />
-              Mark All Read
+              Mark All Read;
             </Button>
           )}
           <Button variant="outline" size="sm" onClick={handleDeleteAll}>
             <Trash2 className="h-4 w-4 mr-2" />
-            Delete All
+            Delete All;
           </Button>
         </div>
       </div>
@@ -244,21 +243,21 @@ export function NotificationsCenter() {
             Unread ({unreadCount})
           </TabsTrigger>
           <TabsTrigger value="social">
-            Social
+            Social;
           </TabsTrigger>
           <TabsTrigger value="parties">
-            Parties
+            Parties;
           </TabsTrigger>
           <TabsTrigger value="messages">
-            Messages
+            Messages;
           </TabsTrigger>
           <TabsTrigger value="settings">
-            Settings
+            Settings;
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="space-y-4">
-          <NotificationList 
+          <NotificationList;
             notifications={filteredNotifications}
             onMarkAsRead={handleMarkAsRead}
             onDelete={handleDelete}
@@ -266,7 +265,7 @@ export function NotificationsCenter() {
         </TabsContent>
 
         <TabsContent value="unread" className="space-y-4">
-          <NotificationList 
+          <NotificationList;
             notifications={filteredNotifications}
             onMarkAsRead={handleMarkAsRead}
             onDelete={handleDelete}
@@ -274,7 +273,7 @@ export function NotificationsCenter() {
         </TabsContent>
 
         <TabsContent value="social" className="space-y-4">
-          <NotificationList 
+          <NotificationList;
             notifications={filteredNotifications}
             onMarkAsRead={handleMarkAsRead}
             onDelete={handleDelete}
@@ -282,7 +281,7 @@ export function NotificationsCenter() {
         </TabsContent>
 
         <TabsContent value="parties" className="space-y-4">
-          <NotificationList 
+          <NotificationList;
             notifications={filteredNotifications}
             onMarkAsRead={handleMarkAsRead}
             onDelete={handleDelete}
@@ -290,7 +289,7 @@ export function NotificationsCenter() {
         </TabsContent>
 
         <TabsContent value="messages" className="space-y-4">
-          <NotificationList 
+          <NotificationList;
             notifications={filteredNotifications}
             onMarkAsRead={handleMarkAsRead}
             onDelete={handleDelete}
@@ -299,7 +298,7 @@ export function NotificationsCenter() {
 
         <TabsContent value="settings" className="space-y-4">
           {settings && (
-            <NotificationSettings 
+            <NotificationSettings;
               settings={settings}
               onUpdate={handleUpdateSettings}
             />
@@ -310,16 +309,16 @@ export function NotificationsCenter() {
   )
 }
 
-function NotificationList({
+function NotificationList({}
   notifications,
   onMarkAsRead,
-  onDelete
-}: {
+  onDelete;
+}: {}
   notifications: Notification[]
-  onMarkAsRead: (id: string) => void
-  onDelete: (id: string) => void
-}) {
-  const getNotificationIcon = (type: Notification['type']) => {
+  onMarkAsRead: (id: string) => void;
+  onDelete: (id: string) => void;
+}) {}
+  const getNotificationIcon = (type: Notification['type']) => {}
     switch (type) {
       case 'friend_request': return <UserPlus className="h-4 w-4" />
       case 'party_invite': return <Users className="h-4 w-4" />
@@ -334,7 +333,7 @@ function NotificationList({
     }
   }
 
-  const getNotificationColor = (type: Notification['type']) => {
+  const getNotificationColor = (type: Notification['type']) => {}
     switch (type) {
       case 'friend_request': return 'text-blue-500'
       case 'party_invite': return 'text-purple-500'
@@ -366,7 +365,7 @@ function NotificationList({
   return (
     <div className="space-y-2">
       {notifications.map((notification) => (
-        <Card 
+        <Card;
           key={notification.id} 
           className={`transition-colors ${!notification.isRead ? 'bg-muted/50' : ''}`}
         >
@@ -375,7 +374,6 @@ function NotificationList({
               <div className={`p-2 rounded-full bg-muted ${getNotificationColor(notification.type)}`}>
                 {getNotificationIcon(notification.type)}
               </div>
-              
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -388,7 +386,6 @@ function NotificationList({
                     <p className="text-sm text-muted-foreground mt-1">
                       {notification.message}
                     </p>
-                    
                     {notification.sender && (
                       <div className="flex items-center space-x-2 mt-2">
                         <Avatar className="h-6 w-6">
@@ -402,15 +399,13 @@ function NotificationList({
                         </span>
                       </div>
                     )}
-                    
                     <p className="text-xs text-muted-foreground mt-2">
                       {new Date(notification.createdAt).toLocaleString()}
                     </p>
                   </div>
-                  
                   <div className="flex items-center space-x-2">
                     {!notification.isRead && (
-                      <Button
+                      <Button;
                         variant="ghost"
                         size="sm"
                         onClick={() => onMarkAsRead(notification.id)}
@@ -418,9 +413,8 @@ function NotificationList({
                         <Check className="h-4 w-4" />
                       </Button>
                     )}
-                    
                     {notification.canDismiss !== false && (
-                      <Button
+                      <Button;
                         variant="ghost"
                         size="sm"
                         onClick={() => onDelete(notification.id)}
@@ -430,10 +424,9 @@ function NotificationList({
                     )}
                   </div>
                 </div>
-                
                 {notification.actionUrl && (
                   <Button variant="outline" size="sm" className="mt-3">
-                    View Details
+                    View Details;
                   </Button>
                 )}
               </div>
@@ -445,27 +438,27 @@ function NotificationList({
   )
 }
 
-function NotificationSettings({
+function NotificationSettings({}
   settings,
-  onUpdate
-}: {
-  settings: NotificationSettings
-  onUpdate: (settings: NotificationSettings) => void
-}) {
-  const handleToggleCategory = (category: keyof NotificationSettings['categories']) => {
-    onUpdate({
+  onUpdate;
+}: {}
+  settings: NotificationSettings;
+  onUpdate: (settings: NotificationSettings) => void;
+}) {}
+  const handleToggleCategory = (category: keyof NotificationSettings['categories']) => {}
+    onUpdate({}
       ...settings,
-      categories: {
+      categories: {}
         ...settings.categories,
         [category]: !settings.categories[category]
       }
     })
   }
 
-  const handleToggleDelivery = (method: keyof NotificationSettings['delivery']) => {
-    onUpdate({
+  const handleToggleDelivery = (method: keyof NotificationSettings['delivery']) => {}
+    onUpdate({}
       ...settings,
-      delivery: {
+      delivery: {}
         ...settings.delivery,
         [method]: !settings.delivery[method]
       }
@@ -487,10 +480,10 @@ function NotificationSettings({
             <div>
               <h3 className="font-semibold">Enable Notifications</h3>
               <p className="text-sm text-muted-foreground">
-                Turn on/off all notifications
+                Turn on/off all notifications;
               </p>
             </div>
-            <Switch
+            <Switch;
               checked={settings.enabled}
               onCheckedChange={(enabled) => onUpdate({ ...settings, enabled })}
             />
@@ -510,7 +503,7 @@ function NotificationSettings({
                     <p className="text-sm text-muted-foreground">New friend requests</p>
                   </div>
                 </div>
-                <Switch
+                <Switch;
                   checked={settings.categories.friend_requests}
                   onCheckedChange={() => handleToggleCategory(&apos;friend_requests&apos;)}
                 />
@@ -524,7 +517,7 @@ function NotificationSettings({
                     <p className="text-sm text-muted-foreground">Invitations to watch parties</p>
                   </div>
                 </div>
-                <Switch
+                <Switch;
                   checked={settings.categories.party_invites}
                   onCheckedChange={() => handleToggleCategory(&apos;party_invites&apos;)}
                 />
@@ -538,7 +531,7 @@ function NotificationSettings({
                     <p className="text-sm text-muted-foreground">When parties start or end</p>
                   </div>
                 </div>
-                <Switch
+                <Switch;
                   checked={settings.categories.party_updates}
                   onCheckedChange={() => handleToggleCategory(&apos;party_updates&apos;)}
                 />
@@ -552,7 +545,7 @@ function NotificationSettings({
                     <p className="text-sm text-muted-foreground">Direct messages and mentions</p>
                   </div>
                 </div>
-                <Switch
+                <Switch;
                   checked={settings.categories.messages}
                   onCheckedChange={() => handleToggleCategory(&apos;messages&apos;)}
                 />
@@ -566,7 +559,7 @@ function NotificationSettings({
                     <p className="text-sm text-muted-foreground">Likes and reactions to your content</p>
                   </div>
                 </div>
-                <Switch
+                <Switch;
                   checked={settings.categories.reactions}
                   onCheckedChange={() => handleToggleCategory(&apos;reactions&apos;)}
                 />
@@ -580,7 +573,7 @@ function NotificationSettings({
                     <p className="text-sm text-muted-foreground">New badges and milestones</p>
                   </div>
                 </div>
-                <Switch
+                <Switch;
                   checked={settings.categories.achievements}
                   onCheckedChange={() => handleToggleCategory(&apos;achievements&apos;)}
                 />
@@ -602,7 +595,7 @@ function NotificationSettings({
                     <p className="text-sm text-muted-foreground">Mobile and desktop notifications</p>
                   </div>
                 </div>
-                <Switch
+                <Switch;
                   checked={settings.delivery.push}
                   onCheckedChange={() => handleToggleDelivery(&apos;push&apos;)}
                 />
@@ -616,7 +609,7 @@ function NotificationSettings({
                     <p className="text-sm text-muted-foreground">Important updates via email</p>
                   </div>
                 </div>
-                <Switch
+                <Switch;
                   checked={settings.delivery.email}
                   onCheckedChange={() => handleToggleDelivery(&apos;email&apos;)}
                 />
@@ -630,7 +623,7 @@ function NotificationSettings({
                     <p className="text-sm text-muted-foreground">Notifications within the app</p>
                   </div>
                 </div>
-                <Switch
+                <Switch;
                   checked={settings.delivery.inApp}
                   onCheckedChange={() => handleToggleDelivery(&apos;inApp&apos;)}
                 />

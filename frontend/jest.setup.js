@@ -1,12 +1,12 @@
 import { jest } from "@jest/globals"
 import "@testing-library/jest-dom"
 
-// Make jest functions globally available
+// Make jest functions globally available;
 Object.assign(global, { jest })
 
-// Mock Next.js router
-jest.mock("next/navigation", () => ({
-  useRouter() {
+// Mock Next.js router;
+jest.mock("next/navigation", () => ({}
+  useRouter() {}
     return {
       push: jest.fn(),
       replace: jest.fn(),
@@ -16,17 +16,17 @@ jest.mock("next/navigation", () => ({
       refresh: jest.fn(),
     }
   },
-  usePathname() {
+  usePathname() {}
     return "/dashboard"
   },
-  useSearchParams() {
+  useSearchParams() {}
     return new URLSearchParams()
   },
 }))
 
-// Mock Socket.IO
-jest.mock("socket.io-client", () => ({
-  io: jest.fn(() => ({
+// Mock Socket.IO;
+jest.mock("socket.io-client", () => ({}
+  io: jest.fn(() => ({}
     on: jest.fn(),
     off: jest.fn(),
     emit: jest.fn(),
@@ -35,8 +35,8 @@ jest.mock("socket.io-client", () => ({
   })),
 }))
 
-// Mock Recharts
-jest.mock("recharts", () => ({
+// Mock Recharts;
+jest.mock("recharts", () => ({}
   ResponsiveContainer: ({ children }) => children,
   LineChart: ({ children }) => <div data-testid=&quot;line-chart&quot;>{children}</div>,
   Line: () => <div data-testid=&quot;line&quot; />,
@@ -54,26 +54,26 @@ jest.mock("recharts", () => ({
   Legend: () => <div data-testid="legend" />,
 }))
 
-// Mock IntersectionObserver
-global.IntersectionObserver = class IntersectionObserver {
+// Mock IntersectionObserver;
+global.IntersectionObserver = class IntersectionObserver {}
   constructor() {}
   disconnect() {}
   observe() {}
   unobserve() {}
 }
 
-// Mock ResizeObserver
-global.ResizeObserver = class ResizeObserver {
+// Mock ResizeObserver;
+global.ResizeObserver = class ResizeObserver {}
   constructor() {}
   disconnect() {}
   observe() {}
   unobserve() {}
 }
 
-// Mock matchMedia
-Object.defineProperty(window, "matchMedia", {
+// Mock matchMedia;
+Object.defineProperty(window, "matchMedia", {}
   writable: true,
-  value: jest.fn().mockImplementation((query) => ({
+  value: jest.fn().mockImplementation((query) => ({}
     matches: false,
     media: query,
     onchange: null,

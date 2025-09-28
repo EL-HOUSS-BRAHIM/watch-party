@@ -1,24 +1,24 @@
-'use client'
-
+import { Calendar, Clock, Heart, Play, Star } from "lucide-react"
 import { useState } from 'react'
 import Image from "next/image"
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
 
-interface FavoriteItem {
-  id: string
-  title: string
+'use client'
+interface FavoriteItem {}
+  id: string;
+  title: string;
   type: 'movie' | 'show' | 'video'
-  genre: string
-  rating: number
-  duration: string
-  addedAt: string
-  thumbnail: string
-  description: string
-  year: number
+  genre: string;
+  rating: number;
+  duration: string;
+  addedAt: string;
+  thumbnail: string;
+  description: string;
+  year: number;
 }
 
-const favorites: FavoriteItem[] = [
-  {
+const favorites: FavoriteItem[] = []
+  {}
     id: '1',
     title: 'Inception',
     type: 'movie',
@@ -28,9 +28,9 @@ const favorites: FavoriteItem[] = [
     addedAt: '2024-01-15',
     thumbnail: '/placeholder.jpg',
     description: 'A thief who steals corporate secrets through dream-sharing technology...',
-    year: 2010
+    year: 2010;
   },
-  {
+  {}
     id: '2',
     title: 'The Shawshank Redemption',
     type: 'movie',
@@ -40,9 +40,9 @@ const favorites: FavoriteItem[] = [
     addedAt: '2024-02-20',
     thumbnail: '/placeholder.jpg',
     description: 'Two imprisoned men bond over a number of years...',
-    year: 1994
+    year: 1994;
   },
-  {
+  {}
     id: '3',
     title: 'Breaking Bad',
     type: 'show',
@@ -52,9 +52,9 @@ const favorites: FavoriteItem[] = [
     addedAt: '2024-03-10',
     thumbnail: '/placeholder.jpg',
     description: 'A high school chemistry teacher turned methamphetamine manufacturer...',
-    year: 2008
+    year: 2008;
   },
-  {
+  {}
     id: '4',
     title: 'The Matrix',
     type: 'movie',
@@ -64,18 +64,16 @@ const favorites: FavoriteItem[] = [
     addedAt: '2024-03-25',
     thumbnail: '/placeholder.jpg',
     description: 'A computer programmer discovers reality is a simulation...',
-    year: 1999
+    year: 1999;
   }
 ]
 
-const typeColors = {
-  movie: 'bg-blue-500',
+const typeColors = { movie: 'bg-blue-500',
   show: 'bg-purple-500',
   video: 'bg-green-500'
 }
 
-const typeLabels = {
-  movie: 'Movie',
+const typeLabels = { movie: 'Movie',
   show: 'TV Show',
   video: 'Video'
 }
@@ -84,12 +82,12 @@ export default function FavoritesPage() {
   const [filter, setFilter] = useState<'all' | 'movie' | 'show' | 'video'>(&apos;all&apos;)
   const [sortBy, setSortBy] = useState<'added' | 'rating' | 'title'>(&apos;added&apos;)
 
-  const filteredFavorites = favorites
+  const filteredFavorites = favorites;
     .filter(item => filter === &apos;all' || item.type === filter)
-    .sort((a, b) => {
+    .sort((a, b) => {}
       switch (sortBy) {
         case 'rating':
-          return b.rating - a.rating
+          return b.rating - a.rating;
         case 'title':
           return a.title.localeCompare(b.title)
         default:
@@ -97,8 +95,8 @@ export default function FavoritesPage() {
       }
     })
 
-  const removeFavorite = (id: string) => {
-    // In real app, call API to remove favorite
+  const removeFavorite = (id: string) => {}
+    // In real app, call API to remove favorite;
     console.log('Removing favorite:', id)
   }
 
@@ -112,7 +110,7 @@ export default function FavoritesPage() {
             <h1 className="text-4xl font-bold">My Favorites</h1>
           </div>
           <p className="text-white/70 text-lg">
-            Your collection of favorite movies, shows, and videos
+            Your collection of favorite movies, shows, and videos;
           </p>
         </div>
 
@@ -120,17 +118,17 @@ export default function FavoritesPage() {
         <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-8">
           {/* Filters */}
           <div className="flex flex-wrap gap-2">
-            {[
+            {[]
               { key: 'all', label: 'All' },
               { key: 'movie', label: 'Movies' },
               { key: 'show', label: 'TV Shows' },
               { key: 'video', label: 'Videos' }
             ].map(({ key, label }) => (
-              <button
+              <button;
                 key={key}
                 onClick={() => setFilter(key as Record<string, unknown>)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  filter === key
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${}
+                  filter === key;
                     ? 'bg-red-500 text-white'
                     : 'bg-white/10 text-white/70 hover:bg-white/20'
                 }`}
@@ -141,7 +139,7 @@ export default function FavoritesPage() {
           </div>
 
           {/* Sort Options */}
-          <select
+          <select;
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as Record<string, unknown>)}
             className="px-4 py-2 bg-white/10 rounded-lg border border-white/20 text-white focus:outline-none focus:border-red-500"
@@ -155,13 +153,13 @@ export default function FavoritesPage() {
         {/* Favorites Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredFavorites.map(item => (
-            <div
+            <div;
               key={item.id}
               className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 overflow-hidden hover:border-red-500/50 transition-all group"
             >
               {/* Thumbnail */}
               <div className="relative aspect-video bg-gradient-to-br from-purple-500/20 to-blue-500/20">
-                <img
+                <img;
                   src={item.thumbnail}
                   alt={item.title}
                   className="w-full h-full object-cover"
@@ -169,13 +167,12 @@ export default function FavoritesPage() {
                 <div className={`absolute top-2 left-2 ${typeColors[item.type]} text-white px-2 py-1 rounded-full text-xs font-bold`}>
                   {typeLabels[item.type]}
                 </div>
-                <button
+                <button;
                   onClick={() => removeFavorite(item.id)}
                   className="absolute top-2 right-2 p-2 bg-black/50 rounded-full hover:bg-red-500 transition-colors"
                 >
                   <HeartSolidIcon className="w-4 h-4 text-red-500 hover:text-white" />
                 </button>
-                
                 {/* Play Overlay */}
                 <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <button className="p-4 bg-white/20 rounded-full hover:bg-white/30 transition-colors">
@@ -209,7 +206,6 @@ export default function FavoritesPage() {
                       <span>{item.duration}</span>
                     </div>
                   </div>
-                  
                   <div className="flex items-center gap-2 text-sm text-white/60">
                     <span className="bg-white/10 px-2 py-1 rounded text-xs">
                       {item.genre}
@@ -248,14 +244,12 @@ export default function FavoritesPage() {
             </div>
             <div className="text-white/70">Total Favorites</div>
           </div>
-          
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-blue-400 mb-2">
               {favorites.filter(f => f.type === &apos;movie&apos;).length}
             </div>
             <div className="text-white/70">Movies</div>
           </div>
-          
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 text-center">
             <div className="text-3xl font-bold text-purple-400 mb-2">
               {favorites.filter(f => f.type === &apos;show&apos;).length}

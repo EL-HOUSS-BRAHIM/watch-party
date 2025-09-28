@@ -1,55 +1,55 @@
-'use client'
-
+import { Calendar, Clock, Eye, MapPin, MessageCircle, User } from "lucide-react"
 import { useState, useEffect } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 
-interface UserProfile {
-  id: string
-  username: string
-  displayName: string
-  avatar: string
-  bio?: string
-  location?: string
-  joinedDate: string
-  isOnline: boolean
-  lastSeen?: string
-  isVerified: boolean
-  isPremium: boolean
-  stats: {
-    friendsCount: number
-    partiesHosted: number
-    watchTime: number
+'use client'
+interface UserProfile {}
+  id: string;
+  username: string;
+  displayName: string;
+  avatar: string;
+  bio?: string;
+  location?: string;
+  joinedDate: string;
+  isOnline: boolean;
+  lastSeen?: string;
+  isVerified: boolean;
+  isPremium: boolean;
+  stats: {}
+    friendsCount: number;
+    partiesHosted: number;
+    watchTime: number;
   }
-  mutualFriends: Array<{
-    id: string
-    username: string
-    avatar: string
+  mutualFriends: Array<{}
+    id: string;
+    username: string;
+    avatar: string;
   }>
-  badges: Array<{
-    id: string
-    name: string
-    icon: string
-    color: string
+  badges: Array<{}
+    id: string;
+    name: string;
+    icon: string;
+    color: string;
   }>
   relationship?: 'friend' | 'pending_out' | 'pending_in' | 'blocked' | 'none'
 }
 
-interface ProfilePreviewProps {
-  userId: string
-  children: React.ReactNode
+interface ProfilePreviewProps {}
+  userId: string;
+  children: React.ReactNode;
   trigger?: 'hover' | 'click'
-  disabled?: boolean
+  disabled?: boolean;
 }
 
-export function ProfilePreview({ 
+export function ProfilePreview({}
   userId, 
   children, 
   trigger = 'hover',
-  disabled = false 
-}: ProfilePreviewProps) {
+  disabled = false;
+}: ProfilePreviewProps) {}
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [isVisible, setIsVisible] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -69,16 +69,16 @@ export function ProfilePreview({
         const data = await response.json()
         setProfile(data.profile)
       }
-    } catch {
+    } } catch {
       console.error('Failed to fetch profile preview:', error)
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
   const sendFriendRequest = async () => {
     try {
-      const response = await fetch('/api/friends/requests', {
+      const response = await fetch('/api/friends/requests', {}
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ recipientId: userId })
@@ -87,42 +87,42 @@ export function ProfilePreview({
       if (response.ok && profile) {
         setProfile({ ...profile, relationship: 'pending_out' })
       }
-    } catch {
+    } } catch {
       console.error('Failed to send friend request:', error)
     }
   }
 
   const acceptFriendRequest = async () => {
     try {
-      const response = await fetch(`/api/friends/requests/${userId}/accept`, {
+      const response = await fetch(`/api/friends/requests/${userId}/accept`, {}
         method: 'POST'
       })
 
       if (response.ok && profile) {
         setProfile({ ...profile, relationship: 'friend' })
       }
-    } catch {
+    } } catch {
       console.error('Failed to accept friend request:', error)
     }
   }
 
   const removeFriend = async () => {
     try {
-      const response = await fetch(`/api/friends/${userId}`, {
+      const response = await fetch(`/api/friends/${userId}`, {}
         method: 'DELETE'
       })
 
       if (response.ok && profile) {
         setProfile({ ...profile, relationship: 'none' })
       }
-    } catch {
+    } } catch {
       console.error('Failed to remove friend:', error)
     }
   }
 
   const blockUser = async () => {
     try {
-      const response = await fetch('/api/users/block', {
+      const response = await fetch('/api/users/block', {}
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, blockType: 'full' })
@@ -131,91 +131,87 @@ export function ProfilePreview({
       if (response.ok && profile) {
         setProfile({ ...profile, relationship: 'blocked' })
       }
-    } catch {
+    } } catch {
       console.error('Failed to block user:', error)
     }
   }
 
-  const handleMouseEnter = (event: React.MouseEvent) => {
-    if (disabled || trigger !== 'hover') return
-    
+  const handleMouseEnter = (event: React.MouseEvent) => {}
+    if (disabled || trigger !== 'hover') return;
     const rect = event.currentTarget.getBoundingClientRect()
-    setPosition({
+    setPosition({}
       x: rect.left + rect.width / 2,
-      y: rect.bottom + 8
+      y: rect.bottom + 8;
     })
     setIsVisible(true)
   }
 
-  const handleMouseLeave = () => {
-    if (trigger !== 'hover') return
+  const handleMouseLeave = () => {}
+    if (trigger !== 'hover') return;
     setIsVisible(false)
   }
 
-  const handleClick = (event: React.MouseEvent) => {
-    if (disabled || trigger !== 'click') return
-    
+  const handleClick = (event: React.MouseEvent) => {}
+    if (disabled || trigger !== 'click') return;
     event.preventDefault()
     event.stopPropagation()
-    
     const rect = event.currentTarget.getBoundingClientRect()
-    setPosition({
+    setPosition({}
       x: rect.left + rect.width / 2,
-      y: rect.bottom + 8
+      y: rect.bottom + 8;
     })
     setIsVisible(!isVisible)
   }
 
-  const getRelationshipButton = () => {
-    if (!profile) return null
-
+  const getRelationshipButton = () => {}
+    if (!profile) return null;
     switch (profile.relationship) {
       case 'friend':
         return (
           <Button variant="outline" size="sm" onClick={removeFriend}>
             <UserCheck className="h-3 w-3 mr-1" />
-            Friends
+            Friends;
           </Button>
         )
       case 'pending_out':
         return (
           <Button variant="secondary" size="sm" disabled>
             <Clock className="h-3 w-3 mr-1" />
-            Pending
+            Pending;
           </Button>
         )
       case 'pending_in':
         return (
           <Button size="sm" onClick={acceptFriendRequest}>
             <UserCheck className="h-3 w-3 mr-1" />
-            Accept
+            Accept;
           </Button>
         )
       case 'blocked':
         return (
           <Button variant="destructive" size="sm" disabled>
             <UserX className="h-3 w-3 mr-1" />
-            Blocked
+            Blocked;
           </Button>
         )
       default:
         return (
           <Button size="sm" onClick={sendFriendRequest}>
             <UserPlus className="h-3 w-3 mr-1" />
-            Add Friend
+            Add Friend;
           </Button>
         )
     }
   }
 
-  const formatWatchTime = (minutes: number) => {
+  const formatWatchTime = (minutes: number) => {}
     const hours = Math.floor(minutes / 60)
     return hours > 0 ? `${hours}h` : `${minutes}m`
   }
 
   return (
     <>
-      <div
+      <div;
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onClick={handleClick}
@@ -228,16 +224,15 @@ export function ProfilePreview({
         <>
           {/* Backdrop for click-outside to close */}
           {trigger === 'click' && (
-            <div 
+            <div;
               className="fixed inset-0 z-40" 
               onClick={() => setIsVisible(false)}
             />
           )}
-          
           {/* Profile Card */}
-          <div
+          <div;
             className="fixed z-50 w-80"
-            style={{
+            style={{}
               left: `${position.x}px`,
               top: `${position.y}px`,
               transform: 'translateX(-50%)'
@@ -262,7 +257,6 @@ export function ProfilePreview({
                           <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
                         )}
                       </div>
-                      
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center space-x-2">
                           <h3 className="font-semibold truncate">{profile.displayName}</h3>
@@ -274,7 +268,6 @@ export function ProfilePreview({
                           )}
                         </div>
                         <p className="text-sm text-muted-foreground">@{profile.username}</p>
-                        
                         <div className="flex items-center space-x-1 text-xs text-muted-foreground mt-1">
                           {profile.isOnline ? (
                             <>
@@ -332,7 +325,7 @@ export function ProfilePreview({
                     {profile.badges.length > 0 && (
                       <div className="flex flex-wrap gap-1">
                         {profile.badges.slice(0, 3).map((badge) => (
-                          <Badge 
+                          <Badge;
                             key={badge.id} 
                             variant="secondary" 
                             className="text-xs"
@@ -377,17 +370,14 @@ export function ProfilePreview({
                     {/* Action Buttons */}
                     <div className="flex items-center space-x-2">
                       {getRelationshipButton()}
-                      
                       <Button variant="outline" size="sm">
                         <MessageCircle className="h-3 w-3 mr-1" />
-                        Message
+                        Message;
                       </Button>
-                      
                       <Button variant="outline" size="sm">
                         <Eye className="h-3 w-3 mr-1" />
-                        Profile
+                        Profile;
                       </Button>
-                      
                       {profile.relationship !== 'blocked' && (
                         <Button variant="ghost" size="sm" onClick={blockUser}>
                           <UserX className="h-3 w-3" />
@@ -397,7 +387,7 @@ export function ProfilePreview({
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-32 text-muted-foreground">
-                    Failed to load profile
+                    Failed to load profile;
                   </div>
                 )}
               </CardContent>

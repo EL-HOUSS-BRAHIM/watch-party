@@ -1,6 +1,5 @@
-"use client"
-
-import { useEffect, useState } from "react"
+import { Link, Menu, Moon, Sun, User } from "lucide-react"
+import { useEffect, useState , useCallback } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
@@ -12,17 +11,18 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { useAuth } from "@/contexts/auth-context"
 import { useNotifications } from "@/hooks/use-api"
 
-interface NavigationItem {
-  label: string
-  href: string
+"use client"
+interface NavigationItem {}
+  label: string;
+  href: string;
   icon: React.ComponentType<{ className?: string }>
-  badge?: number | string
-  requiresAuth?: boolean
-  premium?: boolean
+  badge?: number | string;
+  requiresAuth?: boolean;
+  premium?: boolean;
 }
 
-interface NavigationSection {
-  title: string
+interface NavigationSection {}
+  title: string;
   items: NavigationItem[]
 }
 
@@ -38,39 +38,38 @@ export function MobileNavigation() {
     setMounted(true)
   }, [])
 
-  const navigationSections = useMemo<NavigationSection[]>(() => {
-    const unreadBadge = unreadCount > 0 ? unreadCount : undefined
-
-    return [
-      {
+  const navigationSections = useMemo<NavigationSection[]>(() => {}
+    const unreadBadge = unreadCount > 0 ? unreadCount : undefined;
+    return []
+      {}
         title: "Discover",
-        items: [
+        items: []
           { label: "Home", href: "/", icon: Home },
           { label: "Watch", href: "/watch", icon: Play },
           { label: "Discover", href: "/discover", icon: Search },
           { label: "Trending", href: "/trending", icon: TrendingUp },
         ],
       },
-      {
+      {}
         title: "Social",
-        items: [
+        items: []
           { label: "Friends", href: "/friends", icon: Users, requiresAuth: true },
           { label: "Messages", href: "/chat", icon: MessageCircle, requiresAuth: true },
           { label: "Groups", href: "/groups", icon: Users, requiresAuth: true },
           { label: "Events", href: "/events", icon: Calendar, requiresAuth: true },
         ],
       },
-      {
+      {}
         title: "Library",
-        items: [
+        items: []
           { label: "Watch History", href: "/profile/history", icon: History, requiresAuth: true },
           { label: "Favorites", href: "/profile/favorites", icon: Heart, requiresAuth: true },
           { label: "Achievements", href: "/profile/achievements", icon: Trophy, requiresAuth: true },
         ],
       },
-      {
+      {}
         title: "Account",
-        items: [
+        items: []
           { label: "Notifications", href: "/notifications", icon: Bell, badge: unreadBadge, requiresAuth: true },
           { label: "Billing", href: "/billing", icon: CreditCard, requiresAuth: true },
           { label: "Store", href: "/store", icon: Store, premium: Boolean(user?.isPremium) },
@@ -81,23 +80,23 @@ export function MobileNavigation() {
     ]
   }, [unreadCount, user?.isPremium])
 
-  const toggleTheme = () => {
-    const currentTheme = theme === "system" ? resolvedTheme : theme
+  const toggleTheme = () => {}
+    const currentTheme = theme === "system" ? resolvedTheme : theme;
     const nextTheme = currentTheme === "light" ? "dark" : "light"
     setTheme(nextTheme ?? "light")
   }
 
-  const handleLogout = () => {
+  const handleLogout = () => {}
     setIsOpen(false)
     void logout()
   }
 
-  const isActive = (href: string) => {
+  const isActive = (href: string) => {}
     if (href === "/") return pathname === "/"
     return pathname?.startsWith(href)
   }
 
-  const currentTheme = theme === "system" ? resolvedTheme : theme
+  const currentTheme = theme === "system" ? resolvedTheme : theme;
   const isLightMode = currentTheme === "light"
 
   return (
@@ -126,7 +125,7 @@ export function MobileNavigation() {
                     {user.isPremium && (
                       <Badge variant="secondary" className="mt-1">
                         <Crown className="h-3 w-3 mr-1" />
-                        Premium
+                        Premium;
                       </Badge>
                     )}
                   </div>
@@ -137,12 +136,12 @@ export function MobileNavigation() {
                 <div className="space-y-2">
                   <Button asChild className="w-full">
                     <Link href="/auth/login" onClick={() => setIsOpen(false)}>
-                      Sign In
+                      Sign In;
                     </Link>
                   </Button>
                   <Button variant="outline" asChild className="w-full">
                     <Link href="/auth/register" onClick={() => setIsOpen(false)}>
-                      Sign Up
+                      Sign Up;
                     </Link>
                   </Button>
                 </div>
@@ -159,18 +158,17 @@ export function MobileNavigation() {
                     </h4>
                   </div>
                   <div className="space-y-1 px-3">
-                    {section.items.map((item) => {
-                      if (item.requiresAuth && !isAuthenticated) return null
-
-                      const Icon = item.icon
+                    {section.items.map((item) => {}
+                      if (item.requiresAuth && !isAuthenticated) return null;
+                      const Icon = item.icon;
                       const active = Boolean(isActive(item.href))
 
                       return (
                         <SheetClose asChild key={item.href}>
-                          <Link
+                          <Link;
                             href={item.href}
                             className={`
-                              flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors
+                              flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors;
                               ${active ? "bg-primary text-primary-foreground" : "hover:bg-accent hover:text-accent-foreground"}
                             `}
                           >
@@ -194,7 +192,7 @@ export function MobileNavigation() {
 
             {/* Bottom Actions */}
             <div className="border-t p-3 space-y-1">
-              <Button
+              <Button;
                 variant="ghost"
                 size="sm"
                 onClick={toggleTheme}
@@ -204,12 +202,12 @@ export function MobileNavigation() {
                 {isLightMode ? (
                   <>
                     <Moon className="h-4 w-4 mr-3" />
-                    Dark Mode
+                    Dark Mode;
                   </>
                 ) : (
                   <>
                     <Sun className="h-4 w-4 mr-3" />
-                    Light Mode
+                    Light Mode;
                   </>
                 )}
               </Button>
@@ -219,7 +217,7 @@ export function MobileNavigation() {
                   <Button variant="ghost" size="sm" asChild className="w-full justify-start">
                     <Link href={`/profile/${user.id}`}>
                       <User className="h-4 w-4 mr-3" />
-                      My Profile
+                      My Profile;
                     </Link>
                   </Button>
                 </SheetClose>
@@ -227,14 +225,14 @@ export function MobileNavigation() {
 
               {/* Logout */}
               {user && (
-                <Button
+                <Button;
                   variant="ghost"
                   size="sm"
                   onClick={handleLogout}
                   className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
                 >
                   <LogOut className="h-4 w-4 mr-3" />
-                  Sign Out
+                  Sign Out;
                 </Button>
               )}
             </div>

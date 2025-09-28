@@ -1,41 +1,41 @@
-'use client'
-
+import { ChevronDown, ChevronUp } from "lucide-react"
 import { useState } from 'react'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 
-interface FAQItem {
-  id: string
-  question: string
-  answer: string
-  category: string
+'use client'
+interface FAQItem {}
+  id: string;
+  question: string;
+  answer: string;
+  category: string;
 }
 
-const faqData: FAQItem[] = [
-  {
+const faqData: FAQItem[] = []
+  {}
     id: '1',
     question: 'How do I create a watch party?',
     answer: 'To create a watch party, go to your dashboard, click on "Watch Parties" in the sidebar, then click "Create New Party". You can add videos, set privacy settings, and invite friends.',
     category: 'Getting Started'
   },
-  {
+  {}
     id: '2',
     question: 'Can I upload my own videos?',
     answer: 'Yes! You can upload videos through the dashboard. Go to "My Videos" and click "Upload Video". We support MP4, MOV, and AVI formats up to 2GB.',
     category: 'Videos'
   },
-  {
+  {}
     id: '3',
     question: 'How do I invite friends to a party?',
     answer: 'When creating or managing a party, you can invite friends by their username, email, or by sharing the party link. Friends will receive notifications about your invitation.',
     category: 'Social Features'
   },
-  {
+  {}
     id: '4',
     question: 'Is my data secure?',
     answer: 'Yes, we take privacy seriously. All data is encrypted, and we comply with GDPR regulations. You can export or delete your data anytime from Settings > Data Management.&apos;,
     category: 'Privacy & Security'
   },
-  {
+  {}
     id: '5',
     question: 'How do voice chat and reactions work?',
     answer: 'During watch parties, you can enable voice chat to talk with friends and use live reactions to express your feelings about what you\'re watching. These features can be toggled on/off.',
@@ -50,7 +50,7 @@ export default function FAQPage() {
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
 
-  const toggleExpanded = (id: string) => {
+  const toggleExpanded = (id: string) => {}
     setExpandedItems(prev => 
       prev.includes(id) 
         ? prev.filter(item => item !== id)
@@ -58,11 +58,11 @@ export default function FAQPage() {
     )
   }
 
-  const filteredFAQs = faqData.filter(faq => {
-    const matchesCategory = selectedCategory === 'All' || faq.category === selectedCategory
+  const filteredFAQs = faqData.filter(faq => {}
+    const matchesCategory = selectedCategory === 'All' || faq.category === selectedCategory;
     const matchesSearch = faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
-    return matchesCategory && matchesSearch
+    return matchesCategory && matchesSearch;
   })
 
   return (
@@ -70,16 +70,16 @@ export default function FAQPage() {
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4">
-            Frequently Asked Questions
+            Frequently Asked Questions;
           </h1>
           <p className="text-white/70 text-lg">
-            Find answers to common questions about WatchParty
+            Find answers to common questions about WatchParty;
           </p>
         </div>
 
         {/* Search Bar */}
         <div className="mb-8">
-          <input
+          <input;
             type="text"
             placeholder="Search FAQs..."
             value={searchQuery}
@@ -92,11 +92,11 @@ export default function FAQPage() {
         <div className="mb-8">
           <div className="flex flex-wrap gap-2">
             {categories.map(category => (
-              <button
+              <button;
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  selectedCategory === category
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${}
+                  selectedCategory === category;
                     ? 'bg-red-500 text-white'
                     : 'bg-white/10 text-white/70 hover:bg-white/20'
                 }`}
@@ -110,11 +110,11 @@ export default function FAQPage() {
         {/* FAQ Items */}
         <div className="space-y-4">
           {filteredFAQs.map(faq => (
-            <div
+            <div;
               key={faq.id}
               className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 overflow-hidden"
             >
-              <button
+              <button;
                 onClick={() => toggleExpanded(faq.id)}
                 className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/5 transition-colors"
               >
@@ -128,7 +128,6 @@ export default function FAQPage() {
                   <ChevronDownIcon className="w-5 h-5 text-white/70" />
                 )}
               </button>
-              
               {expandedItems.includes(faq.id) && (
                 <div className="px-6 pb-4 border-t border-white/10">
                   <p className="text-white/80 leading-relaxed pt-4">
@@ -156,7 +155,7 @@ export default function FAQPage() {
               Can't find what you're looking for? Our support team is here to help.
             </p>
             <button className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-              Contact Support
+              Contact Support;
             </button>
           </div>
         </div>

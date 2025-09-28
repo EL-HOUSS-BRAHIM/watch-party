@@ -1,5 +1,4 @@
-'use client';
-
+import { Activity, Calendar, DollarSign, Target, TrendingDown, TrendingUp, User, Users, X } from "lucide-react"
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,31 +8,32 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Area
 import { analyticsAPI } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
-interface PredictiveData {
-  userGrowth: {
+'use client';
+interface PredictiveData {}
+  userGrowth: {}
     current: number;
     predicted: number;
     confidence: number;
     trend: 'up' | 'down' | 'stable';
   };
-  revenue: {
+  revenue: {}
     current: number;
     predicted: number;
     confidence: number;
     trend: 'up' | 'down' | 'stable';
   };
-  churn: {
+  churn: {}
     current: number;
     predicted: number;
     riskFactors: string[];
   };
-  seasonality: Array<{
+  seasonality: Array<{}
     month: string;
     predictedUsers: number;
     predictedRevenue: number;
     confidence: number;
   }>;
-  recommendations: Array<{
+  recommendations: Array<{}
     id: string;
     title: string;
     impact: 'high' | 'medium' | 'low';
@@ -53,24 +53,22 @@ export default function PredictiveAnalytics() {
     const fetchPredictiveData = useCallback(async () => {
       setLoading(true);
       try {
-        // Fetch real predictive analytics from API
+        // Fetch real predictive analytics from API;
         const predictiveData = await analyticsAPI.getPredictiveAnalytics();
-        
-        // Transform API response to component format
-        const transformedData: PredictiveData = {
-          userGrowth: {
+        // Transform API response to component format;
+        const transformedData: PredictiveData = { userGrowth: {}
             current: predictiveData.user_growth?.current || 0,
             predicted: predictiveData.user_growth?.predicted || 0,
             confidence: predictiveData.user_growth?.confidence || 0,
             trend: predictiveData.user_growth?.trend || 'stable'
           },
-          revenue: {
+          revenue: {}
             current: predictiveData.revenue?.current || 0,
             predicted: predictiveData.revenue?.predicted || 0,
             confidence: predictiveData.revenue?.confidence || 0,
             trend: predictiveData.revenue?.trend || 'stable'
           },
-          churn: {
+          churn: {}
             current: predictiveData.churn?.current_rate || 0,
             predicted: predictiveData.churn?.predicted_rate || 0,
             riskFactors: predictiveData.churn?.risk_factors || []
@@ -78,16 +76,15 @@ export default function PredictiveAnalytics() {
           seasonality: predictiveData.seasonality?.forecast || [],
           recommendations: predictiveData.recommendations?.strategic || []
         };
-        
         setData(transformedData);
-      } catch {
+      } } catch {
         console.error('Failed to fetch predictive data:', error);
-        toast({
+        toast({}
           title: "Error",
           description: "Failed to load predictive analytics. Please try again.",
           variant: "destructive",
         });
-      } finally {
+      } finally {}
         setLoading(false);
       }
     };, [])
@@ -112,7 +109,7 @@ export default function PredictiveAnalytics() {
 
   if (!data) return null;
 
-  const getImpactColor = (impact: string) => {
+  const getImpactColor = (impact: string) => {}
     switch (impact) {
       case 'high': return 'bg-red-100 text-red-800 border-red-200';
       case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
@@ -121,7 +118,7 @@ export default function PredictiveAnalytics() {
     }
   };
 
-  const getEffortColor = (effort: string) => {
+  const getEffortColor = (effort: string) => {}
     switch (effort) {
       case 'high': return 'bg-red-100 text-red-800 border-red-200';
       case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
@@ -152,7 +149,7 @@ export default function PredictiveAnalytics() {
           </Select>
           <Badge variant="outline" className="text-purple-600 border-purple-200">
             <Brain className="w-3 h-3 mr-1" />
-            ML Powered
+            ML Powered;
           </Badge>
         </div>
       </div>
@@ -172,7 +169,6 @@ export default function PredictiveAnalytics() {
                 <TrendingDown className="w-5 h-5 text-red-500" />
               )}
             </div>
-            
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-sm text-muted-foreground">Current</span>
@@ -189,7 +185,7 @@ export default function PredictiveAnalytics() {
             </div>
 
             <div className="mt-4 text-sm text-green-600">
-              +{Math.round(((data.userGrowth.predicted - data.userGrowth.current) / data.userGrowth.current) * 100)}% growth expected
+              +{Math.round(((data.userGrowth.predicted - data.userGrowth.current) / data.userGrowth.current) * 100)}% growth expected;
             </div>
           </CardContent>
         </Card>
@@ -207,7 +203,6 @@ export default function PredictiveAnalytics() {
                 <TrendingDown className="w-5 h-5 text-red-500" />
               )}
             </div>
-            
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-sm text-muted-foreground">Current</span>
@@ -224,7 +219,7 @@ export default function PredictiveAnalytics() {
             </div>
 
             <div className="mt-4 text-sm text-green-600">
-              +{Math.round(((data.revenue.predicted - data.revenue.current) / data.revenue.current) * 100)}% revenue growth
+              +{Math.round(((data.revenue.predicted - data.revenue.current) / data.revenue.current) * 100)}% revenue growth;
             </div>
           </CardContent>
         </Card>
@@ -238,7 +233,6 @@ export default function PredictiveAnalytics() {
               </div>
               <TrendingDown className="w-5 h-5 text-green-500" />
             </div>
-            
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-sm text-muted-foreground">Current Rate</span>
@@ -255,7 +249,7 @@ export default function PredictiveAnalytics() {
             </div>
 
             <div className="mt-4 text-sm text-green-600">
-              -{(data.churn.current - data.churn.predicted).toFixed(1)}% improvement expected
+              -{(data.churn.current - data.churn.predicted).toFixed(1)}% improvement expected;
             </div>
           </CardContent>
         </Card>
@@ -277,7 +271,7 @@ export default function PredictiveAnalytics() {
                 <XAxis dataKey="month" />
                 <YAxis yAxisId="users" orientation="left" />
                 <YAxis yAxisId="revenue" orientation="right" />
-                <Area 
+                <Area;
                   yAxisId="users"
                   type="monotone" 
                   dataKey="predictedUsers" 
@@ -285,7 +279,7 @@ export default function PredictiveAnalytics() {
                   fill="#3b82f6" 
                   fillOpacity={0.3}
                 />
-                <Line 
+                <Line;
                   yAxisId="revenue"
                   type="monotone" 
                   dataKey="predictedRevenue" 
@@ -328,10 +322,10 @@ export default function PredictiveAnalytics() {
                     <h4 className="font-medium text-sm">{rec.title}</h4>
                     <div className="flex space-x-1">
                       <Badge variant="outline" className={getImpactColor(rec.impact)}>
-                        {rec.impact} impact
+                        {rec.impact} impact;
                       </Badge>
                       <Badge variant="outline" className={getEffortColor(rec.effort)}>
-                        {rec.effort} effort
+                        {rec.effort} effort;
                       </Badge>
                     </div>
                   </div>
@@ -373,7 +367,7 @@ export default function PredictiveAnalytics() {
                   {rec.expectedOutcome}
                 </div>
                 <Button size="sm" className="mt-3 w-full">
-                  View Implementation Plan
+                  View Implementation Plan;
                 </Button>
               </div>
             ))}

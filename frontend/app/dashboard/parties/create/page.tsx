@@ -1,6 +1,5 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { Calendar, Check, Loader2, Lock, Plus, Search, Settings, Upload, User, Users, Video, X } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
@@ -21,8 +20,9 @@ import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { format, addHours } from "date-fns"
 
-// Validation schema
-const partyFormSchema = z.object({
+"use client"
+// Validation schema;
+const partyFormSchema = z.object({}
   name: z.string().min(1, "Party name is required").max(100, "Name too long"),
   description: z.string().max(500, "Description too long").optional(),
   videoId: z.string().min(1, "Please select a video"),
@@ -40,13 +40,13 @@ const partyFormSchema = z.object({
 
 type PartyFormData = z.infer<typeof partyFormSchema>
 
-interface InviteUser {
-  id: string
-  username: string
-  firstName: string
-  lastName: string
-  avatar?: string
-  email: string
+interface InviteUser {}
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  avatar?: string;
+  email: string;
 }
 
 export default function CreatePartyPage() {
@@ -64,16 +64,16 @@ export default function CreatePartyPage() {
   const [suggestedUsers, setSuggestedUsers] = useState<unknown[]>([])
   const [activeStep, setActiveStep] = useState(1)
 
-  const {
+  const {}
     register,
     handleSubmit,
     watch,
     setValue,
     formState: { errors, isValid },
     reset,
-  } = useForm<PartyFormData>({
+  } = useForm<PartyFormData>({}
     resolver: zodResolver(partyFormSchema),
-    defaultValues: {
+    defaultValues: {}
       name: "",
       description: "",
       videoId: "",
@@ -108,8 +108,8 @@ export default function CreatePartyPage() {
   const loadVideos = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/videos/?status=ready", {
-        headers: {
+      const response = await fetch("/api/videos/?status=ready", {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -118,14 +118,14 @@ export default function CreatePartyPage() {
         const data = await response.json()
         setVideos(data.results || [])
       }
-    } catch {
+    } } catch {
       console.error("Failed to load videos:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load your videos.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setLoadingVideos(false)
     }
   }
@@ -133,8 +133,8 @@ export default function CreatePartyPage() {
   const loadSuggestedUsers = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/friends/?limit=10", {
-        headers: {
+      const response = await fetch("/api/users/friends/?limit=10", {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -143,22 +143,22 @@ export default function CreatePartyPage() {
         const data = await response.json()
         setSuggestedUsers(data.results || [])
       }
-    } catch {
+    } } catch {
       console.error("Failed to load suggested users:", error)
     }
   }
 
-  const onSubmit = async (data: PartyFormData) => {
+  const onSubmit = async (data: PartyFormData) => {}
     setIsLoading(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/parties/", {
+      const response = await fetch("/api/parties/", {}
         method: "POST",
-        headers: {
+        headers: {}
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
+        body: JSON.stringify({}
           ...data,
           scheduled_for: data.scheduledFor.toISOString(),
           video_id: data.videoId,
@@ -174,65 +174,65 @@ export default function CreatePartyPage() {
 
       if (response.ok) {
         const party = await response.json()
-        toast({
+        toast({}
           title: "Party Created!",
           description: "Your watch party has been created successfully.",
         })
         router.push(`/dashboard/parties/${party.id}`)
-      } else {
+      } else {}
         const errorData = await response.json()
-        toast({
+        toast({}
           title: "Creation Failed",
           description: errorData.message || "Failed to create party.",
           variant: "destructive",
         })
       }
-    } catch {
+    } } catch {
       console.error("Party creation error:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Something went wrong. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const addTag = () => {
-    if (newTag.trim() && !watchedValues.tags.includes(newTag.trim()) && watchedValues.tags.length < 10) {
+  const addTag = () => {}
+    if (newTag.trim() && !watchedValues.tags.includes(newTag.trim()) && watchedValues.tags.length < 10) {}
       setValue("tags", [...watchedValues.tags, newTag.trim()])
       setNewTag("")
     }
   }
 
-  const removeTag = (tag: string) => {
+  const removeTag = (tag: string) => {}
     setValue(
       "tags",
       watchedValues.tags.filter((t) => t !== tag),
     )
   }
 
-  const addEmail = () => {
+  const addEmail = () => {}
     if (
       newEmail.trim() &&
       !watchedValues.inviteEmails.includes(newEmail.trim()) &&
-      watchedValues.inviteEmails.length < 50
-    ) {
+      watchedValues.inviteEmails.length < 50;
+    ) {}
       setValue("inviteEmails", [...watchedValues.inviteEmails, newEmail.trim()])
       setNewEmail("")
     }
   }
 
-  const removeEmail = (email: string) => {
+  const removeEmail = (email: string) => {}
     setValue(
       "inviteEmails",
       watchedValues.inviteEmails.filter((e) => e !== email),
     )
   }
 
-  const addUserEmail = (user: unknown) => {
-    if (!watchedValues.inviteEmails.includes(user.email) && watchedValues.inviteEmails.length < 50) {
+  const addUserEmail = (user: unknown) => {}
+    if (!watchedValues.inviteEmails.includes(user.email) && watchedValues.inviteEmails.length < 50) {}
       setValue("inviteEmails", [...watchedValues.inviteEmails, user.email])
     }
   }
@@ -243,34 +243,33 @@ export default function CreatePartyPage() {
       video.description.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
-  const formatDuration = (seconds: number) => {
+  const formatDuration = (seconds: number) => {}
     const hours = Math.floor(seconds / 3600)
     const minutes = Math.floor((seconds % 3600) / 60)
-    const secs = seconds % 60
-
+    const secs = seconds % 60;
     if (hours > 0) {
       return `${hours}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
     }
     return `${minutes}:${secs.toString().padStart(2, "0")}`
   }
 
-  const steps = [
+  const steps = []
     { id: 1, title: "Basic Info", description: "Party details and video selection" },
     { id: 2, title: "Settings", description: "Privacy and participation settings" },
     { id: 3, title: "Invites", description: "Invite friends to your party" },
     { id: 4, title: "Review", description: "Review and create your party" },
   ]
 
-  const canProceedToStep = (step: number) => {
+  const canProceedToStep = (step: number) => {}
     switch (step) {
       case 2:
-        return watchedValues.name && watchedValues.videoId
+        return watchedValues.name && watchedValues.videoId;
       case 3:
-        return true
+        return true;
       case 4:
-        return true
+        return true;
       default:
-        return true
+        return true;
     }
   }
 
@@ -284,7 +283,7 @@ export default function CreatePartyPage() {
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
             <Users className="h-8 w-8" />
-            Create Watch Party
+            Create Watch Party;
           </h1>
           <p className="text-muted-foreground mt-2">Set up your watch party and invite friends to join</p>
         </div>
@@ -296,12 +295,12 @@ export default function CreatePartyPage() {
           {steps.map((step, index) => (
             <div key={step.id} className="flex items-center">
               <div className="flex flex-col items-center">
-                <div
+                <div;
                   className={cn(
                     "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors",
-                    activeStep === step.id
+                    activeStep === step.id;
                       ? "bg-primary text-primary-foreground"
-                      : activeStep > step.id
+                      : activeStep > step.id;
                         ? "bg-green-500 text-white"
                         : "bg-muted text-muted-foreground",
                   )}
@@ -313,8 +312,8 @@ export default function CreatePartyPage() {
                   <div className="text-xs text-muted-foreground">{step.description}</div>
                 </div>
               </div>
-              {index < steps.length - 1 && (
-                <div
+              {index < steps.length - 1 && (}
+                <div;
                   className={cn(
                     "flex-1 h-0.5 mx-4 transition-colors",
                     activeStep > step.id ? &quot;bg-green-500&quot; : &quot;bg-muted",
@@ -334,14 +333,14 @@ export default function CreatePartyPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Settings className="h-5 w-5" />
-                  Basic Information
+                  Basic Information;
                 </CardTitle>
                 <CardDescription>Set up the basic details for your watch party</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
                   <Label htmlFor="name">Party Name *</Label>
-                  <Input
+                  <Input;
                     id="name"
                     placeholder="Enter a catchy name for your party"
                     {...register("name")}
@@ -352,7 +351,7 @@ export default function CreatePartyPage() {
 
                 <div>
                   <Label htmlFor="description">Description</Label>
-                  <Textarea
+                  <Textarea;
                     id="description"
                     placeholder="What are you watching? Add some context..."
                     {...register("description")}
@@ -360,7 +359,7 @@ export default function CreatePartyPage() {
                   />
                   {errors.description && <p className="text-sm text-destructive mt-1">{errors.description.message}</p>}
                   <p className="text-xs text-muted-foreground mt-1">
-                    {watchedValues.description?.length || 0}/500 characters
+                    {watchedValues.description?.length || 0}/500 characters;
                   </p>
                 </div>
 
@@ -368,7 +367,7 @@ export default function CreatePartyPage() {
                   <Label htmlFor="scheduledFor">Start Time *</Label>
                   <Popover>
                     <PopoverTrigger asChild>
-                      <Button
+                      <Button;
                         variant="outline"
                         className={cn(
                           "w-full justify-start text-left font-normal",
@@ -384,13 +383,13 @@ export default function CreatePartyPage() {
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
+                      <Calendar;
                         mode="single"
                         selected={watchedValues.scheduledFor}
-                        onSelect={(date) => {
+                        onSelect={(date) => {}
                           if (date) {
-                            // Preserve the time when selecting a new date
-                            const currentTime = watchedValues.scheduledFor
+                            // Preserve the time when selecting a new date;
+                            const currentTime = watchedValues.scheduledFor;
                             const newDateTime = new Date(date)
                             newDateTime.setHours(currentTime.getHours())
                             newDateTime.setMinutes(currentTime.getMinutes())
@@ -398,15 +397,15 @@ export default function CreatePartyPage() {
                           }
                         }}
                         disabled={(date) => date < new Date()}
-                        initialFocus
+                        initialFocus;
                       />
                       <div className="p-3 border-t">
                         <Label htmlFor="time">Time</Label>
-                        <Input
+                        <Input;
                           id="time"
                           type="time"
                           value={format(watchedValues.scheduledFor, "HH:mm")}
-                          onChange={(e) => {
+                          onChange={(e) => {}
                             const [hours, minutes] = e.target.value.split(":")
                             const newDateTime = new Date(watchedValues.scheduledFor)
                             newDateTime.setHours(Number.parseInt(hours), Number.parseInt(minutes))
@@ -424,7 +423,7 @@ export default function CreatePartyPage() {
 
                 <div>
                   <Label htmlFor="maxParticipants">Maximum Participants *</Label>
-                  <Select
+                  <Select;
                     value={watchedValues.maxParticipants.toString()}
                     onValueChange={(value) => setValue(&quot;maxParticipants&quot;, Number.parseInt(value))}
                   >
@@ -452,7 +451,7 @@ export default function CreatePartyPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Video className="h-5 w-5" />
-                  Select Video
+                  Select Video;
                 </CardTitle>
                 <CardDescription>Choose a video from your library to watch together</CardDescription>
               </CardHeader>
@@ -469,7 +468,7 @@ export default function CreatePartyPage() {
                     <p className="text-muted-foreground mb-4">You need to upload videos before creating a party.</p>
                     <Button onClick={() => router.push(&quot;/dashboard/videos/upload&quot;)}>
                       <Upload className="h-4 w-4 mr-2" />
-                      Upload Video
+                      Upload Video;
                     </Button>
                   </div>
                 ) : (
@@ -477,7 +476,7 @@ export default function CreatePartyPage() {
                     <div className="mb-4">
                       <div className="relative">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                        <Input
+                        <Input;
                           placeholder="Search your videos..."
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
@@ -488,11 +487,11 @@ export default function CreatePartyPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto">
                       {filteredVideos.map((video) => (
-                        <div
+                        <div;
                           key={video.id}
                           className={cn(
                             "border rounded-lg p-3 cursor-pointer transition-all hover:shadow-md",
-                            watchedValues.videoId === video.id
+                            watchedValues.videoId === video.id;
                               ? "border-primary bg-primary/5"
                               : "border-border hover:border-primary/50",
                           )}
@@ -500,7 +499,7 @@ export default function CreatePartyPage() {
                         >
                           <div className="flex gap-3">
                             <div className="relative w-20 h-12 bg-muted rounded overflow-hidden flex-shrink-0">
-                              <img
+                              <img;
                                 src={video.thumbnail || "/placeholder.svg"}
                                 alt={video.title}
                                 className="w-full h-full object-cover"
@@ -548,7 +547,7 @@ export default function CreatePartyPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Lock className="h-5 w-5" />
-                  Privacy & Access
+                  Privacy & Access;
                 </CardTitle>
                 <CardDescription>Control who can join and how they can participate</CardDescription>
               </CardHeader>
@@ -563,7 +562,7 @@ export default function CreatePartyPage() {
                       </p>
                     </div>
                   </div>
-                  <Switch
+                  <Switch;
                     id="isPrivate"
                     checked={watchedValues.isPrivate}
                     onCheckedChange={(checked) => setValue(&quot;isPrivate&quot;, checked)}
@@ -577,7 +576,7 @@ export default function CreatePartyPage() {
                     <Label htmlFor="requiresApproval">Require Approval</Label>
                     <p className="text-sm text-muted-foreground">Manually approve join requests</p>
                   </div>
-                  <Switch
+                  <Switch;
                     id="requiresApproval"
                     checked={watchedValues.requiresApproval}
                     onCheckedChange={(checked) => setValue(&quot;requiresApproval&quot;, checked)}
@@ -589,7 +588,7 @@ export default function CreatePartyPage() {
                     <Separator />
                     <div>
                       <Label htmlFor="password">Party Password (Optional)</Label>
-                      <Input
+                      <Input;
                         id="password"
                         type="password"
                         placeholder="Set a password for additional security"
@@ -607,7 +606,7 @@ export default function CreatePartyPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Users className="h-5 w-5" />
-                  Party Features
+                  Party Features;
                 </CardTitle>
                 <CardDescription>Configure what participants can do during the party</CardDescription>
               </CardHeader>
@@ -617,7 +616,7 @@ export default function CreatePartyPage() {
                     <Label htmlFor="allowChat">Enable Chat</Label>
                     <p className="text-sm text-muted-foreground">Allow participants to chat during the party</p>
                   </div>
-                  <Switch
+                  <Switch;
                     id="allowChat"
                     checked={watchedValues.allowChat}
                     onCheckedChange={(checked) => setValue(&quot;allowChat&quot;, checked)}
@@ -629,7 +628,7 @@ export default function CreatePartyPage() {
                     <Label htmlFor="allowReactions">Enable Reactions</Label>
                     <p className="text-sm text-muted-foreground">Allow emoji reactions during playback</p>
                   </div>
-                  <Switch
+                  <Switch;
                     id="allowReactions"
                     checked={watchedValues.allowReactions}
                     onCheckedChange={(checked) => setValue(&quot;allowReactions&quot;, checked)}
@@ -638,7 +637,7 @@ export default function CreatePartyPage() {
 
                 <div>
                   <Label>Video Control Permissions</Label>
-                  <Select
+                  <Select;
                     value={watchedValues.allowVideoControl}
                     onValueChange={(value: "host" | "all" | "moderators") => setValue(&quot;allowVideoControl&quot;, value)}
                   >
@@ -662,7 +661,7 @@ export default function CreatePartyPage() {
               </CardHeader>
               <CardContent>
                 <div className="flex gap-2 mb-3">
-                  <Input
+                  <Input;
                     placeholder="Add a tag"
                     value={newTag}
                     onChange={(e) => setNewTag(e.target.value)}
@@ -698,7 +697,7 @@ export default function CreatePartyPage() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <UserPlus className="h-5 w-5" />
-                  Invite Friends
+                  Invite Friends;
                 </CardTitle>
                 <CardDescription>Invite people to join your watch party</CardDescription>
               </CardHeader>
@@ -709,7 +708,7 @@ export default function CreatePartyPage() {
                     <Label className="text-sm font-medium">Suggested Friends</Label>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2">
                       {suggestedUsers.map((user) => (
-                        <div
+                        <div;
                           key={user.id}
                           className="flex items-center gap-3 p-2 border rounded-lg hover:bg-muted/50 transition-colors"
                         >
@@ -726,13 +725,13 @@ export default function CreatePartyPage() {
                             </p>
                             <p className="text-xs text-muted-foreground truncate">@{user.username}</p>
                           </div>
-                          <Button
+                          <Button;
                             type="button"
                             size="sm"
                             variant={watchedValues.inviteEmails.includes(user.email) ? "default" : "outline"}
                             onClick={() => addUserEmail(user)}
-                            disabled={
-                              watchedValues.inviteEmails.includes(user.email) || watchedValues.inviteEmails.length >= 50
+                            disabled={}
+                              watchedValues.inviteEmails.includes(user.email) || watchedValues.inviteEmails.length >= 50;
                             }
                           >
                             {watchedValues.inviteEmails.includes(user.email) ? (
@@ -753,7 +752,7 @@ export default function CreatePartyPage() {
                 <div>
                   <Label htmlFor="inviteEmails">Invite by Email</Label>
                   <div className="flex gap-2 mt-1">
-                    <Input
+                    <Input;
                       type="email"
                       placeholder="friend@example.com"
                       value={newEmail}
@@ -761,7 +760,7 @@ export default function CreatePartyPage() {
                       onKeyPress={(e) => e.key === &quot;Enter&quot; && (e.preventDefault(), addEmail())}
                       disabled={watchedValues.inviteEmails.length >= 50}
                     />
-                    <Button
+                    <Button;
                       type="button"
                       onClick={addEmail}
                       variant="outline"
@@ -817,7 +816,7 @@ export default function CreatePartyPage() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Privacy:</span>
-                        <span className="font-medium">{watchedValues.isPrivate ? &quot;Private&quot; : &quot;Public"}</span>
+                        <span className="font-medium">{watchedValues.isPrivate ? &quot;Private&quot; : &quot;Public"}</span>"
                       </div>
                     </div>
                   </div>
@@ -827,11 +826,11 @@ export default function CreatePartyPage() {
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Chat:</span>
-                        <span className="font-medium">{watchedValues.allowChat ? &quot;Enabled&quot; : &quot;Disabled"}</span>
+                        <span className="font-medium">{watchedValues.allowChat ? &quot;Enabled&quot; : &quot;Disabled"}</span>"
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Reactions:</span>
-                        <span className="font-medium">{watchedValues.allowReactions ? &quot;Enabled&quot; : &quot;Disabled"}</span>
+                        <span className="font-medium">{watchedValues.allowReactions ? &quot;Enabled&quot; : &quot;Disabled"}</span>"
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Video Control:</span>
@@ -839,7 +838,7 @@ export default function CreatePartyPage() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-muted-foreground">Approval Required:</span>
-                        <span className="font-medium">{watchedValues.requiresApproval ? &quot;Yes&quot; : &quot;No"}</span>
+                        <span className="font-medium">{watchedValues.requiresApproval ? &quot;Yes&quot; : &quot;No"}</span>"
                       </div>
                     </div>
                   </div>
@@ -851,7 +850,7 @@ export default function CreatePartyPage() {
                     <h3 className="font-medium mb-3">Selected Video</h3>
                     <div className="flex gap-3 p-3 border rounded-lg">
                       <div className="relative w-20 h-12 bg-muted rounded overflow-hidden flex-shrink-0">
-                        <img
+                        <img;
                           src={selectedVideo.thumbnail || "/placeholder.svg"}
                           alt={selectedVideo.title}
                           className="w-full h-full object-cover"
@@ -905,13 +904,13 @@ export default function CreatePartyPage() {
 
         {/* Navigation Buttons */}
         <div className="flex justify-between">
-          <Button
+          <Button;
             type="button"
             variant="outline"
-            onClick={() => {
+            onClick={() => {}
               if (activeStep > 1) {
                 setActiveStep(activeStep - 1)
-              } else {
+              } else {}
                 router.back()
               }
             }}
@@ -920,13 +919,13 @@ export default function CreatePartyPage() {
           </Button>
 
           <div className="flex gap-2">
-            {activeStep < 4 ? (
-              <Button
+            {activeStep < 4 ? (}
+              <Button;
                 type="button"
                 onClick={() => setActiveStep(activeStep + 1)}
                 disabled={!canProceedToStep(activeStep + 1)}
               >
-                Next
+                Next;
               </Button>
             ) : (
               <Button type="submit" disabled={isLoading || !isValid} className="min-w-32">
@@ -938,7 +937,7 @@ export default function CreatePartyPage() {
                 ) : (
                   <>
                     <Users className="h-4 w-4 mr-2" />
-                    Create Party
+                    Create Party;
                   </>
                 )}
               </Button>

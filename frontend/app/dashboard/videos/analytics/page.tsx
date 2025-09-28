@@ -1,28 +1,28 @@
-'use client'
-
+import { Calendar, Clock, Eye, Heart, User, Users } from "lucide-react"
 import { useState } from 'react'
 import Image from "next/image"
 
-interface VideoAnalytics {
-  id: string
-  title: string
-  thumbnail: string
-  views: number
-  likes: number
-  comments: number
-  downloads: number
-  uploadDate: string
-  duration: string
-  engagement: number
-  revenue?: number
-  watchTime: number
-  viewsChange: number
-  likesChange: number
-  commentsChange: number
+'use client'
+interface VideoAnalytics {}
+  id: string;
+  title: string;
+  thumbnail: string;
+  views: number;
+  likes: number;
+  comments: number;
+  downloads: number;
+  uploadDate: string;
+  duration: string;
+  engagement: number;
+  revenue?: number;
+  watchTime: number;
+  viewsChange: number;
+  likesChange: number;
+  commentsChange: number;
 }
 
-const videoAnalytics: VideoAnalytics[] = [
-  {
+const videoAnalytics: VideoAnalytics[] = []
+  {}
     id: '1',
     title: 'Epic Movie Night Compilation',
     thumbnail: '/placeholder.jpg',
@@ -37,9 +37,9 @@ const videoAnalytics: VideoAnalytics[] = [
     watchTime: 12560,
     viewsChange: 12.5,
     likesChange: 8.3,
-    commentsChange: -2.1
+    commentsChange: -2.1;
   },
-  {
+  {}
     id: '2',
     title: 'Horror Movies Marathon',
     thumbnail: '/placeholder.jpg',
@@ -54,9 +54,9 @@ const videoAnalytics: VideoAnalytics[] = [
     watchTime: 8340,
     viewsChange: -5.2,
     likesChange: 3.7,
-    commentsChange: 15.6
+    commentsChange: 15.6;
   },
-  {
+  {}
     id: '3',
     title: 'Sci-Fi Classics Collection',
     thumbnail: '/placeholder.jpg',
@@ -71,11 +71,11 @@ const videoAnalytics: VideoAnalytics[] = [
     watchTime: 18920,
     viewsChange: 25.8,
     likesChange: 18.2,
-    commentsChange: 8.9
+    commentsChange: 8.9;
   }
 ]
 
-const formatNumber = (num: number) => {
+const formatNumber = (num: number) => {}
   if (num >= 1000000) {
     return (num / 1000000).toFixed(1) + 'M'
   }
@@ -85,7 +85,7 @@ const formatNumber = (num: number) => {
   return num.toString()
 }
 
-const formatDuration = (seconds: number) => {
+const formatDuration = (seconds: number) => {}
   const hours = Math.floor(seconds / 3600)
   const minutes = Math.floor((seconds % 3600) / 60)
   return `${hours}:${minutes.toString().padStart(2, '0')}h`
@@ -95,16 +95,16 @@ export default function VideoAnalyticsPage() {
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>(&apos;30d&apos;)
   const [sortBy, setSortBy] = useState<'views' | 'likes' | 'engagement' | 'revenue'>(&apos;views&apos;)
 
-  const sortedVideos = [...videoAnalytics].sort((a, b) => {
+  const sortedVideos = [...videoAnalytics].sort((a, b) => {}
     switch (sortBy) {
       case 'likes':
-        return b.likes - a.likes
+        return b.likes - a.likes;
       case 'engagement':
-        return b.engagement - a.engagement
+        return b.engagement - a.engagement;
       case 'revenue':
         return (b.revenue || 0) - (a.revenue || 0)
       default:
-        return b.views - a.views
+        return b.views - a.views;
     }
   })
 
@@ -112,8 +112,7 @@ export default function VideoAnalyticsPage() {
   const totalLikes = videoAnalytics.reduce((sum, video) => sum + video.likes, 0)
   const totalComments = videoAnalytics.reduce((sum, video) => sum + video.comments, 0)
   const totalRevenue = videoAnalytics.reduce((sum, video) => sum + (video.revenue || 0), 0)
-  const avgEngagement = videoAnalytics.reduce((sum, video) => sum + video.engagement, 0) / videoAnalytics.length
-
+  const avgEngagement = videoAnalytics.reduce((sum, video) => sum + video.engagement, 0) / videoAnalytics.length;
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="max-w-7xl mx-auto px-4 py-12">
@@ -124,7 +123,7 @@ export default function VideoAnalyticsPage() {
             <h1 className="text-4xl font-bold text-white">Video Analytics</h1>
           </div>
           <p className="text-white/70 text-lg">
-            Track your video performance and audience engagement
+            Track your video performance and audience engagement;
           </p>
         </div>
 
@@ -132,17 +131,17 @@ export default function VideoAnalyticsPage() {
         <div className="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center mb-8">
           {/* Time Range */}
           <div className="flex gap-2">
-            {[
+            {[]
               { key: '7d', label: 'Last 7 days' },
               { key: '30d', label: 'Last 30 days' },
               { key: '90d', label: 'Last 90 days' },
               { key: '1y', label: 'Last year' }
             ].map(({ key, label }) => (
-              <button
+              <button;
                 key={key}
                 onClick={() => setTimeRange(key as Record<string, unknown>)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  timeRange === key
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${}
+                  timeRange === key;
                     ? 'bg-blue-500 text-white'
                     : 'bg-white/10 text-white/70 hover:bg-white/20'
                 }`}
@@ -153,7 +152,7 @@ export default function VideoAnalyticsPage() {
           </div>
 
           {/* Sort Options */}
-          <select
+          <select;
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as Record<string, unknown>)}
             className="px-4 py-2 bg-white/10 rounded-lg border border-white/20 text-white focus:outline-none focus:border-blue-400"
@@ -233,7 +232,6 @@ export default function VideoAnalyticsPage() {
           <div className="p-6 border-b border-white/10">
             <h2 className="text-xl font-bold text-white">Video Performance</h2>
           </div>
-          
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-white/5">
@@ -253,7 +251,7 @@ export default function VideoAnalyticsPage() {
                   <tr key={video.id} className="border-t border-white/10 hover:bg-white/5 transition-colors">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <img
+                        <img;
                           src={video.thumbnail}
                           alt={video.title}
                           className="w-16 h-12 object-cover rounded"
@@ -272,7 +270,7 @@ export default function VideoAnalyticsPage() {
                     </td>
                     <td className="p-4">
                       <div className="text-white font-medium">{formatNumber(video.views)}</div>
-                      <div className={`flex items-center gap-1 text-sm ${
+                      <div className={`flex items-center gap-1 text-sm ${}}
                         video.viewsChange >= 0 ? &apos;text-green-400&apos; : &apos;text-red-400'
                       }`}>
                         {video.viewsChange >= 0 ? (
@@ -285,7 +283,7 @@ export default function VideoAnalyticsPage() {
                     </td>
                     <td className="p-4">
                       <div className="text-white font-medium">{formatNumber(video.likes)}</div>
-                      <div className={`flex items-center gap-1 text-sm ${
+                      <div className={`flex items-center gap-1 text-sm ${}}
                         video.likesChange >= 0 ? &apos;text-green-400&apos; : &apos;text-red-400'
                       }`}>
                         {video.likesChange >= 0 ? (
@@ -298,7 +296,7 @@ export default function VideoAnalyticsPage() {
                     </td>
                     <td className="p-4">
                       <div className="text-white font-medium">{video.comments}</div>
-                      <div className={`flex items-center gap-1 text-sm ${
+                      <div className={`flex items-center gap-1 text-sm ${}}
                         video.commentsChange >= 0 ? &apos;text-green-400&apos; : &apos;text-red-400'
                       }`}>
                         {video.commentsChange >= 0 ? (
@@ -313,7 +311,7 @@ export default function VideoAnalyticsPage() {
                     <td className="p-4">
                       <div className="text-white font-medium">{video.engagement}%</div>
                       <div className="w-full bg-white/20 rounded-full h-1 mt-1">
-                        <div
+                        <div;
                           className="bg-blue-400 h-1 rounded-full"
                           style={{ width: `${video.engagement * 10}%` }}
                         ></div>
@@ -324,7 +322,7 @@ export default function VideoAnalyticsPage() {
                     </td>
                     <td className="p-4">
                       <button className="text-blue-400 hover:text-blue-300 text-sm font-medium">
-                        View Details
+                        View Details;
                       </button>
                     </td>
                   </tr>

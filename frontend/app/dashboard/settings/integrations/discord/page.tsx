@@ -1,7 +1,12 @@
-'use client'
-
+import { Check, CheckCircle, Mic, X } from "lucide-react"
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import {
+import {}
+import { integrationsAPI } from '@/lib/api'
+import type { HealthStatus, IntegrationConnection } from '@/lib/api'
+import { useToast } from '@/hooks/use-toast'
+import { LoadingSpinner } from '@/components/ui/loading'
+
+'use client'
   ChatBubbleLeftRightIcon,
   MicrophoneIcon,
   ArrowPathIcon,
@@ -9,16 +14,11 @@ import {
   XMarkIcon,
   ExclamationTriangleIcon,
 } from '@heroicons/react/24/outline'
-import { integrationsAPI } from '@/lib/api'
-import type { HealthStatus, IntegrationConnection } from '@/lib/api'
-import { useToast } from '@/hooks/use-toast'
-import { LoadingSpinner } from '@/components/ui/loading'
-
-interface DiscordServer {
-  id: string
-  name: string
-  member_count?: number
-  is_connected?: boolean
+interface DiscordServer {}
+  id: string;
+  name: string;
+  member_count?: number;
+  is_connected?: boolean;
 }
 
 export default function DiscordIntegrationPage() {
@@ -31,7 +31,7 @@ export default function DiscordIntegrationPage() {
   const loadData = useCallback(async () => {
     setLoading(true)
     try {
-      const [connectionsResponse, healthResponse] = await Promise.all([
+      const [connectionsResponse, healthResponse] = await Promise.all([]
         integrationsAPI.getConnections(),
         integrationsAPI.getHealth().catch(() => null),
       ])
@@ -40,14 +40,14 @@ export default function DiscordIntegrationPage() {
       )
       setConnection(discordConnection ?? null)
       setHealth(healthResponse)
-    } catch {
+    } } catch {
       console.error('Failed to load Discord integration', error)
-      toast({
+      toast({}
         title: 'Unable to load Discord integration',
         description: 'Check your network connection and try again.',
         variant: 'destructive',
       })
-    } finally {
+    } finally {}
       setLoading(false)
       setAction(null)
     }
@@ -57,9 +57,9 @@ export default function DiscordIntegrationPage() {
     loadData()
   }, [loadData])
 
-  const servers: DiscordServer[] = useMemo(() => {
+  const servers: DiscordServer[] = useMemo(() => {}
     const rawServers = (connection?.metadata?.servers as DiscordServer[] | undefined) ?? []
-    return rawServers
+    return rawServers;
   }, [connection])
 
   const handleConnect = async () => {
@@ -67,9 +67,9 @@ export default function DiscordIntegrationPage() {
     try {
       const { auth_url } = await integrationsAPI.getAuthUrl('discord')
       window.location.assign(auth_url)
-    } catch {
+    } } catch {
       console.error('Failed to start Discord OAuth', error)
-      toast({
+      toast({}
         title: 'Connection failed',
         description: 'We were unable to start the Discord authorization flow.',
         variant: 'destructive',
@@ -79,19 +79,18 @@ export default function DiscordIntegrationPage() {
   }
 
   const handleDisconnect = async () => {
-    if (!connection) return
-
+    if (!connection) return;
     setAction('disconnect')
     try {
       await integrationsAPI.disconnectConnection(connection.id)
-      toast({
+      toast({}
         title: 'Discord disconnected',
         description: 'The integration has been removed from your account.',
       })
       await loadData()
-    } catch {
+    } } catch {
       console.error('Failed to disconnect Discord', error)
-      toast({
+      toast({}
         title: 'Unable to disconnect',
         description: 'We could not disconnect the Discord integration. Try again later.',
         variant: 'destructive',
@@ -105,7 +104,7 @@ export default function DiscordIntegrationPage() {
     await loadData()
   }
 
-  const healthMessage = useMemo(() => {
+  const healthMessage = useMemo(() => {}
     if (!health) return 'Discord service status is currently unavailable.'
     const discordService = health.services?.find((service) => service.name === &apos;discord')
     if (!discordService) return 'Discord health information is not available from the status endpoint.'
@@ -123,7 +122,7 @@ export default function DiscordIntegrationPage() {
             <h1 className="text-4xl font-bold text-white">Discord Integration</h1>
           </div>
           <p className="text-white/70 text-lg max-w-3xl">
-            Connect Discord to share party updates, synchronize voice channels, and broadcast what you are watching to your
+            Connect Discord to share party updates, synchronize voice channels, and broadcast what you are watching to your;
             community in real time.
           </p>
         </header>
@@ -134,7 +133,7 @@ export default function DiscordIntegrationPage() {
           </div>
         ) : (
           <div className="space-y-8">
-            <section
+            <section;
               className="rounded-xl border border-white/10 bg-white/10 p-6 text-white shadow-sm backdrop-blur"
               data-testid="discord-connection-card"
             >
@@ -169,7 +168,7 @@ export default function DiscordIntegrationPage() {
                 </div>
 
                 <div className="flex flex-col items-end gap-3">
-                  <button
+                  <button;
                     type="button"
                     onClick={handleRefresh}
                     disabled={action === 'refresh'}
@@ -182,12 +181,12 @@ export default function DiscordIntegrationPage() {
                       </>
                     ) : (
                       <>
-                        <ArrowPathIcon className="h-4 w-4" /> Refresh
+                        <ArrowPathIcon className="h-4 w-4" /> Refresh;
                       </>
                     )}
                   </button>
                   {connection ? (
-                    <button
+                    <button;
                       type="button"
                       onClick={handleDisconnect}
                       disabled={action === 'disconnect'}
@@ -200,12 +199,12 @@ export default function DiscordIntegrationPage() {
                         </>
                       ) : (
                         <>
-                          <XMarkIcon className="h-4 w-4" /> Disconnect
+                          <XMarkIcon className="h-4 w-4" /> Disconnect;
                         </>
                       )}
                     </button>
                   ) : (
-                    <button
+                    <button;
                       type="button"
                       onClick={handleConnect}
                       disabled={action === 'connect'}
@@ -218,7 +217,7 @@ export default function DiscordIntegrationPage() {
                         </>
                       ) : (
                         <>
-                          <CheckCircleIcon className="h-4 w-4" /> Connect Discord
+                          <CheckCircleIcon className="h-4 w-4" /> Connect Discord;
                         </>
                       )}
                     </button>
@@ -229,17 +228,17 @@ export default function DiscordIntegrationPage() {
 
             <section className="rounded-xl border border-white/10 bg-white/10 p-6 text-white shadow-sm backdrop-blur">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <MicrophoneIcon className="w-5 h-5" /> Connected servers
+                <MicrophoneIcon className="w-5 h-5" /> Connected servers;
               </h2>
               {servers.length === 0 ? (
                 <p className="text-white/70 text-sm">
-                  No Discord servers are linked to this integration yet. Once connected, select servers and channels from the
+                  No Discord servers are linked to this integration yet. Once connected, select servers and channels from the;
                   authorization prompt.
                 </p>
               ) : (
                 <ul className="space-y-3" data-testid="discord-server-list">
                   {servers.map((server) => (
-                    <li
+                    <li;
                       key={server.id}
                       className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3"
                     >

@@ -1,16 +1,15 @@
-'use client';
-
+import { Calendar, Check, CheckCircle, Clock, Plus, Search, User } from "lucide-react"
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-interface BugReport {
+'use client';
+interface BugReport {}
   id: string;
   title: string;
   description: string;
@@ -27,7 +26,7 @@ interface BugReport {
   stepsToReproduce: string[];
   expectedBehavior: string;
   actualBehavior: string;
-  environment: {
+  environment: {}
     browser: string;
     os: string;
     version: string;
@@ -35,7 +34,7 @@ interface BugReport {
   attachments?: string[];
 }
 
-interface Comment {
+interface Comment {}
   id: string;
   author: string;
   content: string;
@@ -43,8 +42,8 @@ interface Comment {
 }
 
 export default function BugReports() {
-  const [bugs, setBugs] = useState<BugReport[]>([
-    {
+  const [bugs, setBugs] = useState<BugReport[]>([]
+    {}
       id: 'BUG-001',
       title: 'Video player controls not responding',
       description: 'The video player controls (play, pause, volume) become unresponsive after 5-10 minutes of playback.',
@@ -57,15 +56,15 @@ export default function BugReports() {
       createdAt: new Date(Date.now() - 86400000 * 2),
       updatedAt: new Date(Date.now() - 86400000),
       tags: ['video-player', 'controls', 'ui'],
-      comments: [
-        {
+      comments: []
+        {}
           id: '1',
           author: 'dev@example.com',
           content: 'I can reproduce this issue. Investigating the event listeners.',
           createdAt: new Date(Date.now() - 86400000)
         }
       ],
-      stepsToReproduce: [
+      stepsToReproduce: []
         'Start watching a video in a party',
         'Let it play for 5-10 minutes',
         'Try to pause or adjust volume',
@@ -73,13 +72,13 @@ export default function BugReports() {
       ],
       expectedBehavior: 'Video controls should remain responsive throughout playback',
       actualBehavior: 'Controls become unresponsive after extended playback',
-      environment: {
+      environment: {}
         browser: 'Chrome 119',
         os: 'Windows 11',
         version: '1.0.0'
       }
     },
-    {
+    {}
       id: 'BUG-002',
       title: 'Chat messages duplicating',
       description: 'Sometimes chat messages appear twice in the chat window.',
@@ -92,28 +91,28 @@ export default function BugReports() {
       createdAt: new Date(Date.now() - 86400000 * 3),
       updatedAt: new Date(Date.now() - 3600000),
       tags: ['chat', 'websocket', 'duplication'],
-      comments: [
-        {
+      comments: []
+        {}
           id: '2',
           author: 'dev2@example.com',
           content: 'This seems to be related to WebSocket reconnection logic.',
           createdAt: new Date(Date.now() - 3600000)
         }
       ],
-      stepsToReproduce: [
+      stepsToReproduce: []
         'Join a watch party',
         'Send several messages quickly',
         'Observe chat window'
       ],
       expectedBehavior: 'Each message should appear only once',
       actualBehavior: 'Messages sometimes appear duplicated',
-      environment: {
+      environment: {}
         browser: 'Firefox 120',
         os: 'macOS 14',
         version: '1.0.0'
       }
     },
-    {
+    {}
       id: 'BUG-003',
       title: 'Login page styling broken on mobile',
       description: 'Login form elements are misaligned on mobile devices.',
@@ -126,21 +125,21 @@ export default function BugReports() {
       createdAt: new Date(Date.now() - 86400000 * 5),
       updatedAt: new Date(Date.now() - 86400000 * 2),
       tags: ['mobile', 'responsive', 'css'],
-      comments: [
-        {
+      comments: []
+        {}
           id: '3',
           author: 'designer@example.com',
           content: 'Fixed the responsive CSS. Ready for testing.',
           createdAt: new Date(Date.now() - 86400000 * 2)
         }
       ],
-      stepsToReproduce: [
+      stepsToReproduce: []
         'Open login page on mobile device',
         'Observe form layout'
       ],
       expectedBehavior: 'Form should be properly aligned on mobile',
       actualBehavior: 'Form elements are misaligned',
-      environment: {
+      environment: {}
         browser: 'Safari Mobile',
         os: 'iOS 17',
         version: '1.0.0'
@@ -155,7 +154,7 @@ export default function BugReports() {
   const [selectedBug, setSelectedBug] = useState<BugReport | null>(null);
   const [showNewBugForm, setShowNewBugForm] = useState(false);
 
-  // Filter bugs based on search and filters
+  // Filter bugs based on search and filters;
   useEffect(() => {
     let filtered = bugs;
 
@@ -178,7 +177,7 @@ export default function BugReports() {
     setFilteredBugs(filtered);
   }, [bugs, searchTerm, statusFilter, priorityFilter]);
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string) => {}
     switch (status) {
       case 'open': return 'bg-red-100 text-red-800 border-red-200';
       case 'in-progress': return 'bg-blue-100 text-blue-800 border-blue-200';
@@ -188,7 +187,7 @@ export default function BugReports() {
     }
   };
 
-  const getPriorityColor = (priority: string) => {
+  const getPriorityColor = (priority: string) => {}
     switch (priority) {
       case 'critical': return 'bg-red-100 text-red-800 border-red-200';
       case 'high': return 'bg-orange-100 text-orange-800 border-orange-200';
@@ -198,7 +197,7 @@ export default function BugReports() {
     }
   };
 
-  const getStatusIcon = (status: string) => {
+  const getStatusIcon = (status: string) => {}
     switch (status) {
       case 'open': return <AlertCircle className="w-4 h-4" />;
       case 'in-progress': return <Clock className="w-4 h-4" />;
@@ -208,15 +207,14 @@ export default function BugReports() {
     }
   };
 
-  const getBugStats = () => {
-    const stats = {
-      total: bugs.length,
+  const getBugStats = () => {}
+    const stats = { total: bugs.length,
       open: bugs.filter(b => b.status === &apos;open&apos;).length,
       inProgress: bugs.filter(b => b.status === &apos;in-progress').length,
       resolved: bugs.filter(b => b.status === 'resolved').length,
       closed: bugs.filter(b => b.status === 'closed').length,
       critical: bugs.filter(b => b.priority === 'critical').length,
-      high: bugs.filter(b => b.priority === 'high').length
+      high: bugs.filter(b => b.priority === 'high').length;
     };
     return stats;
   };
@@ -233,7 +231,7 @@ export default function BugReports() {
         </div>
         <Button onClick={() => setShowNewBugForm(true)}>
           <Plus className="w-4 h-4 mr-2" />
-          Report Bug
+          Report Bug;
         </Button>
       </div>
 
@@ -304,7 +302,7 @@ export default function BugReports() {
             <div className="flex-1">
               <div className="relative">
                 <Search className="w-4 h-4 absolute left-3 top-3 text-muted-foreground" />
-                <Input
+                <Input;
                   placeholder="Search bugs..."
                   className="pl-10"
                   value={searchTerm}
@@ -346,9 +344,9 @@ export default function BugReports() {
           <h2 className="text-xl font-semibold">Bug Reports ({filteredBugs.length})</h2>
           <div className="space-y-3 max-h-[600px] overflow-y-auto">
             {filteredBugs.map((bug) => (
-              <Card 
+              <Card;
                 key={bug.id} 
-                className={`cursor-pointer transition-colors hover:bg-muted/50 ${
+                className={`cursor-pointer transition-colors hover:bg-muted/50 ${}
                   selectedBug?.id === bug.id ? 'ring-2 ring-primary' : ''
                 }`}
                 onClick={() => setSelectedBug(bug)}
@@ -539,7 +537,7 @@ export default function BugReports() {
                 <Bug className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">Select a Bug Report</h3>
                 <p className="text-muted-foreground">
-                  Choose a bug from the list to view details
+                  Choose a bug from the list to view details;
                 </p>
               </CardContent>
             </Card>

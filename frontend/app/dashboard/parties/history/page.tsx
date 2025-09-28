@@ -1,6 +1,4 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { useState, useEffect , useCallback } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -12,7 +10,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import WatchPartyTable from "@/components/ui/watch-party-table"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
-import {
+import {}
+import { format, parseISO } from "date-fns"
+
+} from "lucide-react"
+"use client"
+
   History,
   Users,
   Clock,
@@ -25,63 +28,60 @@ import {
   Loader2,
   ArrowLeft,
   RefreshCw,
-} from "lucide-react"
-import { format, parseISO } from "date-fns"
-
-interface PartyHistoryItem {
-  id: string
-  title: string
-  description?: string
-  video: {
-    id: string
-    title: string
-    thumbnail?: string
-    duration: number
+interface PartyHistoryItem {}
+  id: string;
+  title: string;
+  description?: string;
+  video: {}
+    id: string;
+    title: string;
+    thumbnail?: string;
+    duration: number;
   }
-  host: {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
+  host: {}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
   }
-  scheduledFor: string
-  startedAt?: string
-  endedAt?: string
+  scheduledFor: string;
+  startedAt?: string;
+  endedAt?: string;
   status: "completed" | "cancelled" | "abandoned"
-  participants: Array<{
-    id: string
-    user: {
-      id: string
-      username: string
-      firstName: string
-      lastName: string
-      avatar?: string
+  participants: Array<{}
+    id: string;
+    user: {}
+      id: string;
+      username: string;
+      firstName: string;
+      lastName: string;
+      avatar?: string;
     }
-    joinedAt: string
-    leftAt?: string
-    watchTime: number
+    joinedAt: string;
+    leftAt?: string;
+    watchTime: number;
   }>
-  stats: {
-    totalParticipants: number
-    averageWatchTime: number
-    completionRate: number
-    peakViewers: number
-    totalMessages: number
-    totalReactions: number
+  stats: {}
+    totalParticipants: number;
+    averageWatchTime: number;
+    completionRate: number;
+    peakViewers: number;
+    totalMessages: number;
+    totalReactions: number;
   }
-  rating?: number
+  rating?: number;
   tags: string[]
-  isPrivate: boolean
-  createdAt: string
+  isPrivate: boolean;
+  createdAt: string;
 }
 
-interface FilterOptions {
-  status: string
-  dateRange: string
-  minParticipants: string
-  rating: string
-  search: string
+interface FilterOptions {}
+  status: string;
+  dateRange: string;
+  minParticipants: string;
+  rating: string;
+  search: string;
 }
 
 export default function PartyHistoryPage() {
@@ -93,7 +93,7 @@ export default function PartyHistoryPage() {
   const [filteredParties, setFilteredParties] = useState<PartyHistoryItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("all")
-  const [filters, setFilters] = useState<FilterOptions>({
+  const [filters, setFilters] = useState<FilterOptions>({}
     status: "all",
     dateRange: "all",
     minParticipants: "all",
@@ -101,7 +101,7 @@ export default function PartyHistoryPage() {
     search: "",
   })
 
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState({}
     totalParties: 0,
     totalWatchTime: 0,
     averageParticipants: 0,
@@ -122,8 +122,8 @@ export default function PartyHistoryPage() {
     setIsLoading(true)
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/parties/history/", {
-        headers: {
+      const response = await fetch("/api/parties/history/", {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -132,25 +132,25 @@ export default function PartyHistoryPage() {
         const data = await response.json()
         setParties(data.results || data.parties || [])
         setStats(data.stats || stats)
-      } else {
+      } else {}
         throw new Error("Failed to load party history")
       }
-    } catch {
+    } } catch {
       console.error("Failed to load party history:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load party history. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const filterParties = () => {
+  const filterParties = () => {}
     let filtered = [...parties]
 
-    // Tab filter
+    // Tab filter;
     if (activeTab === "hosted") {
       filtered = filtered.filter((party) => party.host.id === user?.id)
     } else if (activeTab === "joined") {
@@ -159,12 +159,12 @@ export default function PartyHistoryPage() {
       )
     }
 
-    // Status filter
+    // Status filter;
     if (filters.status !== "all") {
       filtered = filtered.filter((party) => party.status === filters.status)
     }
 
-    // Date range filter
+    // Date range filter;
     if (filters.dateRange !== "all") {
       const now = new Date()
       const filterDate = new Date()
@@ -172,35 +172,35 @@ export default function PartyHistoryPage() {
       switch (filters.dateRange) {
         case "week":
           filterDate.setDate(now.getDate() - 7)
-          break
+          break;
         case "month":
           filterDate.setMonth(now.getMonth() - 1)
-          break
+          break;
         case "quarter":
           filterDate.setMonth(now.getMonth() - 3)
-          break
+          break;
         case "year":
           filterDate.setFullYear(now.getFullYear() - 1)
-          break
+          break;
       }
 
       filtered = filtered.filter((party) => new Date(party.createdAt) >= filterDate)
     }
 
-    // Minimum participants filter
+    // Minimum participants filter;
     if (filters.minParticipants !== "all") {
       const minCount = Number.parseInt(filters.minParticipants)
       filtered = filtered.filter((party) => party.stats.totalParticipants >= minCount)
     }
 
-    // Rating filter
+    // Rating filter;
     if (filters.rating !== "all") {
       const minRating = Number.parseInt(filters.rating)
       filtered = filtered.filter((party) => party.rating && party.rating >= minRating)
     }
 
-    // Search filter
-    if (filters.search.trim()) {
+    // Search filter;
+    if (filters.search.trim()) {}
       const searchTerm = filters.search.toLowerCase()
       filtered = filtered.filter(
         (party) =>
@@ -217,8 +217,8 @@ export default function PartyHistoryPage() {
   const exportHistory = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/parties/history/export/", {
-        headers: {
+      const response = await fetch("/api/parties/history/export/", {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -227,21 +227,21 @@ export default function PartyHistoryPage() {
         const blob = await response.blob()
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement("a")
-        a.href = url
+        a.href = url;
         a.download = `party-history-${new Date().toISOString().split("T")[0]}.csv`
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
         window.URL.revokeObjectURL(url)
 
-        toast({
+        toast({}
           title: "Export Complete",
           description: "Your party history has been exported successfully.",
         })
       }
-    } catch {
+    } } catch {
       console.error("Failed to export history:", error)
-      toast({
+      toast({}
         title: "Export Failed",
         description: "Failed to export party history.",
         variant: "destructive",
@@ -249,7 +249,7 @@ export default function PartyHistoryPage() {
     }
   }
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string) => {}
     switch (status) {
       case "completed":
         return <Badge className="bg-green-100 text-green-800">Completed</Badge>
@@ -262,20 +262,20 @@ export default function PartyHistoryPage() {
     }
   }
 
-  const formatDuration = (minutes: number) => {
+  const formatDuration = (minutes: number) => {}
     const hours = Math.floor(minutes / 60)
-    const mins = minutes % 60
+    const mins = minutes % 60;
     return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
   }
 
-  const tableColumns = [
-    {
+  const tableColumns = []
+    {}
       id: "title",
       header: "Party",
       accessorKey: "title" as keyof PartyHistoryItem,
       cell: ({ row }: { row: PartyHistoryItem }) => (
         <div className="flex items-center gap-3">
-          <img
+          <img;
             src={row.video.thumbnail || "/placeholder.svg"}
             alt={row.video.title}
             className="w-12 h-8 object-cover rounded"
@@ -287,7 +287,7 @@ export default function PartyHistoryPage() {
         </div>
       ),
     },
-    {
+    {}
       id: "host",
       header: "Host",
       cell: ({ row }: { row: PartyHistoryItem }) => (
@@ -305,7 +305,7 @@ export default function PartyHistoryPage() {
         </div>
       ),
     },
-    {
+    {}
       id: "date",
       header: "Date",
       accessorKey: "scheduledFor" as keyof PartyHistoryItem,
@@ -316,7 +316,7 @@ export default function PartyHistoryPage() {
         </div>
       ),
     },
-    {
+    {}
       id: "participants",
       header: "Participants",
       cell: ({ row }: { row: PartyHistoryItem }) => (
@@ -326,7 +326,7 @@ export default function PartyHistoryPage() {
         </div>
       ),
     },
-    {
+    {}
       id: "duration",
       header: "Duration",
       cell: ({ row }: { row: PartyHistoryItem }) => (
@@ -336,7 +336,7 @@ export default function PartyHistoryPage() {
         </div>
       ),
     },
-    {
+    {}
       id: "rating",
       header: "Rating",
       cell: ({ row }: { row: PartyHistoryItem }) =>
@@ -349,27 +349,27 @@ export default function PartyHistoryPage() {
           <span className="text-muted-foreground">-</span>
         ),
     },
-    {
+    {}
       id: "status",
       header: "Status",
       cell: ({ row }: { row: PartyHistoryItem }) => getStatusBadge(row.status),
     },
   ]
 
-  const tableActions = [
-    {
+  const tableActions = []
+    {}
       id: "view",
       label: "View Details",
       icon: <Eye className="w-4 h-4" />,
       onClick: (party: PartyHistoryItem) => router.push(`/dashboard/parties/${party.id}/analytics`),
     },
-    {
+    {}
       id: "share",
       label: "Share",
       icon: <Share2 className="w-4 h-4" />,
-      onClick: (party: PartyHistoryItem) => {
+      onClick: (party: PartyHistoryItem) => {}
         navigator.clipboard.writeText(`${window.location.origin}/parties/${party.id}`)
-        toast({
+        toast({}
           title: "Link Copied",
           description: "Party link copied to clipboard.",
         })
@@ -401,18 +401,18 @@ export default function PartyHistoryPage() {
           <div className="flex-1">
             <h1 className="text-3xl font-bold flex items-center gap-2">
               <History className="h-8 w-8" />
-              Party History
+              Party History;
             </h1>
             <p className="text-muted-foreground mt-2">View and analyze your past watch parties</p>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={loadPartyHistory}>
               <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh
+              Refresh;
             </Button>
             <Button variant="outline" onClick={exportHistory}>
               <Download className="h-4 w-4 mr-2" />
-              Export
+              Export;
             </Button>
           </div>
         </div>
@@ -465,7 +465,7 @@ export default function PartyHistoryPage() {
               <div className="flex-1">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                  <Input
+                  <Input;
                     placeholder="Search parties..."
                     value={filters.search}
                     onChange={(e) => setFilters((prev) => ({ ...prev, search: e.target.value }))}
@@ -476,7 +476,7 @@ export default function PartyHistoryPage() {
 
               {/* Filter dropdowns */}
               <div className="flex gap-2">
-                <Select
+                <Select;
                   value={filters.status}
                   onValueChange={(value) => setFilters((prev) => ({ ...prev, status: value }))}
                 >
@@ -491,7 +491,7 @@ export default function PartyHistoryPage() {
                   </SelectContent>
                 </Select>
 
-                <Select
+                <Select;
                   value={filters.dateRange}
                   onValueChange={(value) => setFilters((prev) => ({ ...prev, dateRange: value }))}
                 >
@@ -507,7 +507,7 @@ export default function PartyHistoryPage() {
                   </SelectContent>
                 </Select>
 
-                <Select
+                <Select;
                   value={filters.minParticipants}
                   onValueChange={(value) => setFilters((prev) => ({ ...prev, minParticipants: value }))}
                 >
@@ -523,7 +523,7 @@ export default function PartyHistoryPage() {
                   </SelectContent>
                 </Select>
 
-                <Select
+                <Select;
                   value={filters.rating}
                   onValueChange={(value) => setFilters((prev) => ({ ...prev, rating: value }))}
                 >
@@ -550,10 +550,10 @@ export default function PartyHistoryPage() {
             <TabsTrigger value="hosted">Hosted ({parties.filter((p) => p.host.id === user?.id).length})</TabsTrigger>
             <TabsTrigger value="joined">
               Joined (
-              {
+              {}
                 parties.filter(
                   (p) => p.participants.some((part) => part.user.id === user?.id) && p.host.id !== user?.id,
-                ).length
+                ).length;
               }
               )
             </TabsTrigger>
@@ -576,25 +576,25 @@ export default function PartyHistoryPage() {
                   </p>
                   <Button className="mt-4" onClick={() => router.push(&quot;/dashboard/parties/create&quot;)}>
                     <Play className="h-4 w-4 mr-2" />
-                    Create Your First Party
+                    Create Your First Party;
                   </Button>
                 </CardContent>
               </Card>
             ) : (
-              <WatchPartyTable
+              <WatchPartyTable;
                 data={filteredParties}
                 columns={tableColumns}
                 actions={tableActions}
-                pagination={{
+                pagination={{}
                   page: 1,
                   pageSize: 10,
                   total: filteredParties.length,
                   showSizeSelector: true,
                   pageSizeOptions: [10, 25, 50],
                 }}
-                exportable
+                exportable;
                 onExport={exportHistory}
-                refreshable
+                refreshable;
                 onRefresh={loadPartyHistory}
                 className="bg-background"
               />

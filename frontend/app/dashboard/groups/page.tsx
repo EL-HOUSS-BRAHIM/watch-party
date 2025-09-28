@@ -1,62 +1,62 @@
-"use client"
 import GroupManagementSystem from "@/components/groups/group-management-system"
 
-interface GroupMember {
-  id: string
-  user: {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
-    isVerified: boolean
+"use client"
+interface GroupMember {}
+  id: string;
+  user: {}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+    isVerified: boolean;
   }
   role: "owner" | "admin" | "moderator" | "member"
-  joinedAt: string
-  isOnline: boolean
-  lastActive?: string
+  joinedAt: string;
+  isOnline: boolean;
+  lastActive?: string;
 }
 
-interface Group {
-  id: string
-  name: string
-  description: string
-  avatar?: string
-  coverImage?: string
-  isPrivate: boolean
-  memberCount: number
-  maxMembers: number
-  owner: {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
+interface Group {}
+  id: string;
+  name: string;
+  description: string;
+  avatar?: string;
+  coverImage?: string;
+  isPrivate: boolean;
+  memberCount: number;
+  maxMembers: number;
+  owner: {}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
   }
   members: GroupMember[]
   tags: string[]
-  createdAt: string
-  updatedAt: string
-  lastActivity?: string
-  stats: {
-    totalMessages: number
-    totalParties: number
-    activeMembers: number
-    weeklyActivity: number
+  createdAt: string;
+  updatedAt: string;
+  lastActivity?: string;
+  stats: {}
+    totalMessages: number;
+    totalParties: number;
+    activeMembers: number;
+    weeklyActivity: number;
   }
-  permissions: {
-    canInvite: boolean
-    canCreateParties: boolean
-    canManageMembers: boolean
-    canEditGroup: boolean
+  permissions: {}
+    canInvite: boolean;
+    canCreateParties: boolean;
+    canManageMembers: boolean;
+    canEditGroup: boolean;
   }
 }
 
-interface CreateGroupData {
-  name: string
-  description: string
-  isPrivate: boolean
-  maxMembers: number
+interface CreateGroupData {}
+  name: string;
+  description: string;
+  isPrivate: boolean;
+  maxMembers: number;
   tags: string[]
 }
 

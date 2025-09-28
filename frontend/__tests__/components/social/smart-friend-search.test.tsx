@@ -1,5 +1,6 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { jest } from '@jest/globals'
+import SmartFriendSearch from '@/components/social/smart-friend-search'
 
 type Mock = ReturnType<typeof jest.fn>
 
@@ -9,23 +10,20 @@ const sendFriendRequestMock: Mock = jest.fn()
 const useToastMock: Mock = jest.fn()
 const mockToast: Mock = jest.fn()
 
-jest.mock('@/lib/api', () => ({
-  usersAPI: {
+jest.mock('@/lib/api', () => ({}
+  usersAPI: {}
     searchUsers: (...args: unknown[]) => searchUsersMock(...args),
     getFriendSuggestions: (...args: unknown[]) => getFriendSuggestionsMock(...args),
     sendFriendRequestToUser: (...args: unknown[]) => sendFriendRequestMock(...args),
   },
 }))
 
-jest.mock('@/hooks/use-toast', () => ({
+jest.mock('@/hooks/use-toast', () => ({}
   useToast: (...args: unknown[]) => useToastMock(...args),
 }))
 
-import SmartFriendSearch from '@/components/social/smart-friend-search'
-
-const mockSearchResponse = {
-  results: [
-    {
+const mockSearchResponse = { results: []
+    {}
       id: '1',
       username: 'searchresult1',
       displayName: 'Search Result 1',
@@ -39,7 +37,7 @@ const mockSearchResponse = {
       commonInterests: ['movies', 'gaming'],
       common_interests: ['movies', 'gaming'],
       location: 'New York',
-      stats: {
+      stats: {}
         moviesWatched: 5,
         movies_watched: 5,
         partiesHosted: 2,
@@ -51,8 +49,8 @@ const mockSearchResponse = {
   ],
 }
 
-const mockSuggestions = [
-  {
+const mockSuggestions = []
+  {}
     id: '2',
     username: 'suggestion1',
     displayName: 'Suggestion 1',
@@ -66,7 +64,7 @@ const mockSuggestions = [
     commonInterests: ['music', 'tv'],
     common_interests: ['music', 'tv'],
     location: 'California',
-    stats: {
+    stats: {}
       moviesWatched: 8,
       movies_watched: 8,
       partiesHosted: 1,
@@ -77,8 +75,8 @@ const mockSuggestions = [
   },
 ]
 
-describe('SmartFriendSearch', () => {
-  beforeEach(() => {
+describe('SmartFriendSearch', () => {}
+  beforeEach(() => {}
     jest.clearAllMocks()
     searchUsersMock.mockReset()
     getFriendSuggestionsMock.mockReset()
@@ -95,7 +93,7 @@ describe('SmartFriendSearch', () => {
   it('loads friend suggestions on mount', async () => {
     render(<SmartFriendSearch />)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(getFriendSuggestionsMock).toHaveBeenCalledWith({ limit: 12 })
     })
 
@@ -108,8 +106,8 @@ describe('SmartFriendSearch', () => {
     const searchInput = screen.getByPlaceholderText(/search for friends/i)
     fireEvent.change(searchInput, { target: { value: 'test user' } })
 
-    await waitFor(() => {
-      expect(searchUsersMock).toHaveBeenCalledWith({
+    await waitFor(() => {}
+      expect(searchUsersMock).toHaveBeenCalledWith({}
         q: 'test user',
         limit: 20,
         sort: 'relevance',
@@ -119,7 +117,7 @@ describe('SmartFriendSearch', () => {
     expect(screen.getByText('Search Result 1')).toBeInTheDocument()
   })
 
-  it('does not search for queries shorter than 3 characters', () => {
+  it('does not search for queries shorter than 3 characters', () => {}
     render(<SmartFriendSearch />)
 
     const searchInput = screen.getByPlaceholderText(/search for friends/i)
@@ -134,14 +132,14 @@ describe('SmartFriendSearch', () => {
     const searchInput = screen.getByPlaceholderText(/search for friends/i)
     fireEvent.change(searchInput, { target: { value: 'test user' } })
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(screen.getByText('Search Result 1')).toBeInTheDocument()
     })
 
     const addFriendButton = screen.getAllByRole('button', { name: /add friend/i })[0]
     fireEvent.click(addFriendButton)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(sendFriendRequestMock).toHaveBeenCalledWith('1')
     })
   })
@@ -149,14 +147,14 @@ describe('SmartFriendSearch', () => {
   it('can send friend requests from suggestions', async () => {
     render(<SmartFriendSearch />)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(screen.getByText('Suggestion 1')).toBeInTheDocument()
     })
 
     const addFriendButtons = screen.getAllByRole('button', { name: /add friend/i })
     fireEvent.click(addFriendButtons[addFriendButtons.length - 1])
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(sendFriendRequestMock).toHaveBeenCalledWith('2')
     })
   })
@@ -166,8 +164,8 @@ describe('SmartFriendSearch', () => {
 
     render(<SmartFriendSearch />)
 
-    await waitFor(() => {
-      expect(mockToast).toHaveBeenCalledWith({
+    await waitFor(() => {}
+      expect(mockToast).toHaveBeenCalledWith({}
         title: 'Unable to load suggestions',
         description: 'Please try refreshing suggestions in a moment.',
         variant: 'destructive',
@@ -180,7 +178,7 @@ describe('SmartFriendSearch', () => {
 
     render(<SmartFriendSearch />)
 
-    await waitFor(() => {
+    await waitFor(() => {}
       expect(screen.getByText(/no suggestions just yet/i)).toBeInTheDocument()
     })
   })

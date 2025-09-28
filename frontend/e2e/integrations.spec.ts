@@ -1,23 +1,23 @@
 import { test, expect } from '@playwright/test'
 
-test.describe('Integrations management', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.addInitScript(() => {
-      const win = window as typeof window & {
+test.describe('Integrations management', () => {}
+  test.beforeEach(async ({ page }) => {}
+    await page.addInitScript(() => {}
+      const win = window as typeof window & {}
         __mockNavigations: string[]
-        __originalAssign?: typeof window.location.assign
+        __originalAssign?: typeof window.location.assign;
       }
 
       win.__mockNavigations = []
       const originalAssign = window.location.assign.bind(window.location)
-      win.__originalAssign = originalAssign
-      window.location.assign = (url: string | URL) => {
+      win.__originalAssign = originalAssign;
+      window.location.assign = (url: string | URL) => {}
         win.__mockNavigations.push(url.toString())
       }
     })
 
     await page.route('**/api/auth/login/', route =>
-      route.fulfill({
+      route.fulfill({}
         json: { token: 'test-token' },
       })
     )
@@ -29,21 +29,20 @@ test.describe('Integrations management', () => {
     await expect(page).toHaveURL('/dashboard')
   })
 
-  test('shows integration overview with live data and handles connect/disconnect', async ({ page }) => {
-    let driveDisconnected = false
-
+  test('shows integration overview with live data and handles connect/disconnect', async ({ page }) => {}
+    let driveDisconnected = false;
     await page.route('**/api/integrations/types/', route =>
-      route.fulfill({
-        json: {
-          integrations: [
-            {
+      route.fulfill({}
+        json: {}
+          integrations: []
+            {}
               id: 'google-drive',
               provider: 'google_drive',
               name: 'Google Drive',
               description: 'Import content from your Drive folders.',
               capabilities: ['File import', 'Streaming'],
             },
-            {
+            {}
               id: 'discord',
               provider: 'discord',
               name: 'Discord',
@@ -56,12 +55,12 @@ test.describe('Integrations management', () => {
     )
 
     await page.route('**/api/integrations/connections/', route =>
-      route.fulfill({
-        json: driveDisconnected
+      route.fulfill({}
+        json: driveDisconnected;
           ? { connections: [] }
-          : {
-              connections: [
-                {
+          : {}
+              connections: []
+                {}
                   id: 'conn-gdrive',
                   provider: 'google_drive',
                   display_name: 'Google Drive',
@@ -76,9 +75,9 @@ test.describe('Integrations management', () => {
     )
 
     await page.route('**/api/integrations/status/', route =>
-      route.fulfill({
-        json: {
-          integrations: [
+      route.fulfill({}
+        json: {}
+          integrations: []
             { provider: 'google_drive', status: 'available' },
             { provider: 'discord', status: 'degraded' },
           ],
@@ -87,10 +86,10 @@ test.describe('Integrations management', () => {
     )
 
     await page.route('**/api/integrations/health/', route =>
-      route.fulfill({
-        json: {
+      route.fulfill({}
+        json: {}
           status: 'healthy',
-          services: [
+          services: []
             { name: 'google_drive', status: 'up' },
             { name: 'discord', status: 'down' },
           ],
@@ -106,8 +105,8 @@ test.describe('Integrations management', () => {
       route.fulfill({ json: { auth_url: 'https://discord.com/oauth2/mock' } })
     )
 
-    await page.route('**/api/integrations/connections/conn-gdrive/disconnect/', route => {
-      driveDisconnected = true
+    await page.route('**/api/integrations/connections/conn-gdrive/disconnect/', route => {}
+      driveDisconnected = true;
       route.fulfill({ json: { success: true } })
     })
 
@@ -124,12 +123,12 @@ test.describe('Integrations management', () => {
     await expect(page.locator('[data-testid="connect-google_drive"]')).toBeVisible()
   })
 
-  test('browses Google Drive files and loads streaming link', async ({ page }) => {
+  test('browses Google Drive files and loads streaming link', async ({ page }) => {}
     await page.route('**/api/integrations/connections/', route =>
-      route.fulfill({
-        json: {
-          connections: [
-            {
+      route.fulfill({}
+        json: {}
+          connections: []
+            {}
               id: 'conn-gdrive',
               provider: 'google_drive',
               display_name: 'Google Drive',
@@ -143,10 +142,10 @@ test.describe('Integrations management', () => {
     )
 
     await page.route('**/api/integrations/google-drive/files/', route =>
-      route.fulfill({
-        json: {
-          files: [
-            {
+      route.fulfill({}
+        json: {}
+          files: []
+            {}
               id: 'file-1',
               name: 'Movie Night.mp4',
               size: 104857600,
@@ -170,20 +169,20 @@ test.describe('Integrations management', () => {
     await expect(page.locator('[data-testid="drive-streaming-url"]')).toContainText('https://stream.watch/mock')
   })
 
-  test('renders Discord integration with server metadata', async ({ page }) => {
+  test('renders Discord integration with server metadata', async ({ page }) => {}
     await page.route('**/api/integrations/connections/', route =>
-      route.fulfill({
-        json: {
-          connections: [
-            {
+      route.fulfill({}
+        json: {}
+          connections: []
+            {}
               id: 'conn-discord',
               provider: 'discord',
               display_name: 'WatchParty Discord',
               status: 'connected',
               account_email: 'discord@example.com',
               connected_at: '2024-05-10T12:00:00Z',
-              metadata: {
-                servers: [
+              metadata: {}
+                servers: []
                   { id: '1', name: 'Watch Party Community', member_count: 1523, is_connected: true },
                   { id: '2', name: 'Movie Night Friends', member_count: 89, is_connected: false },
                 ],
@@ -195,10 +194,10 @@ test.describe('Integrations management', () => {
     )
 
     await page.route('**/api/integrations/health/', route =>
-      route.fulfill({
-        json: {
+      route.fulfill({}
+        json: {}
           status: 'healthy',
-          services: [
+          services: []
             { name: 'discord', status: 'up' },
           ],
         },

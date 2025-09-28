@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
 
-export const metadata: Metadata = {
-  title: 'Terms of Service | WatchParty',
+export const metadata: Metadata = { title: 'Terms of Service | WatchParty',
   description: 'Terms of Service and User Agreement for WatchParty platform',
 }
 
@@ -12,7 +11,7 @@ export default function TermsOfServicePage() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4">Terms of Service</h1>
           <p className="text-gray-600 text-lg">
-            Last updated: {new Date().toLocaleDateString('en-US', { 
+            Last updated: {new Date().toLocaleDateString('en-US', {}
               year: 'numeric', 
               month: 'long', 
               day: 'numeric' 
@@ -29,7 +28,7 @@ export default function TermsOfServicePage() {
               If you do not agree to abide by the above, please do not use this service.
             </p>
             <p>
-              These Terms of Service constitute a legally binding agreement between you and WatchParty 
+              These Terms of Service constitute a legally binding agreement between you and WatchParty;
               regarding your use of our platform and services.
             </p>
           </section>
@@ -47,7 +46,7 @@ export default function TermsOfServicePage() {
               <li>Connect with a community of video enthusiasts</li>
             </ul>
             <p>
-              We reserve the right to modify, suspend, or discontinue any aspect of the service 
+              We reserve the right to modify, suspend, or discontinue any aspect of the service;
               at any time without notice.
             </p>
           </section>
@@ -67,8 +66,8 @@ export default function TermsOfServicePage() {
 
             <h3 className="text-xl font-medium mb-3">3.2 Age Requirements</h3>
             <p className="mb-4">
-              You must be at least 13 years old to use WatchParty. If you are between 13 and 18 
-              years old, you represent that you have your parent&apos;s or guardian&apos;s permission to 
+              You must be at least 13 years old to use WatchParty. If you are between 13 and 18;
+              years old, you represent that you have your parent&apos;s or guardian&apos;s permission to;
               use the service.
             </p>
 
@@ -83,7 +82,7 @@ export default function TermsOfServicePage() {
             <h2 className="text-2xl font-semibold mb-4">4. Acceptable Use</h2>
             <h3 className="text-xl font-medium mb-3">4.1 Permitted Uses</h3>
             <p className="mb-4">
-              You may use WatchParty for lawful purposes only. You agree to use the platform 
+              You may use WatchParty for lawful purposes only. You agree to use the platform;
               in accordance with all applicable laws and regulations.
             </p>
 
@@ -106,20 +105,20 @@ export default function TermsOfServicePage() {
             <h3 className="text-xl font-medium mb-3">5.1 User Content</h3>
             <p className="mb-4">
               You retain ownership of content you create and share on WatchParty. However, 
-              by sharing content, you grant us a worldwide, non-exclusive, royalty-free license 
+              by sharing content, you grant us a worldwide, non-exclusive, royalty-free license;
               to use, reproduce, modify, and distribute your content in connection with the service.
             </p>
 
             <h3 className="text-xl font-medium mb-3">5.2 Copyright Compliance</h3>
             <p className="mb-4">
-              WatchParty respects intellectual property rights. We respond to valid DMCA takedown 
+              WatchParty respects intellectual property rights. We respond to valid DMCA takedown;
               notices and may terminate accounts of repeat infringers.
             </p>
 
             <h3 className="text-xl font-medium mb-3">5.3 Platform Content</h3>
             <p>
               All WatchParty branding, features, and original content are protected by copyright, 
-              trademark, and other intellectual property laws. You may not copy, modify, or 
+              trademark, and other intellectual property laws. You may not copy, modify, or;
               distribute our content without permission.
             </p>
           </section>
@@ -128,7 +127,7 @@ export default function TermsOfServicePage() {
             <h2 className="text-2xl font-semibold mb-4">6. Privacy and Data</h2>
             <p className="mb-4">
               Your privacy is important to us. Our Privacy Policy explains how we collect, 
-              use, and protect your information. By using WatchParty, you agree to our 
+              use, and protect your information. By using WatchParty, you agree to our;
               data practices as described in our Privacy Policy.
             </p>
             <p>
@@ -147,13 +146,13 @@ export default function TermsOfServicePage() {
 
             <h3 className="text-xl font-medium mb-3">7.2 Subscriptions</h3>
             <p className="mb-4">
-              Subscription services automatically renew unless cancelled. You can cancel anytime 
+              Subscription services automatically renew unless cancelled. You can cancel anytime;
               through your account settings. Cancellation takes effect at the end of the current billing period.
             </p>
 
             <h3 className="text-xl font-medium mb-3">7.3 Virtual Currency</h3>
             <p>
-              Virtual currencies (points, coins, gems) have no real-world value and cannot be 
+              Virtual currencies (points, coins, gems) have no real-world value and cannot be;
               exchanged for cash. Virtual currency purchases are final and non-refundable.
             </p>
           </section>
@@ -162,21 +161,21 @@ export default function TermsOfServicePage() {
             <h2 className="text-2xl font-semibold mb-4">8. Disclaimers and Limitations</h2>
             <h3 className="text-xl font-medium mb-3">8.1 Service Availability</h3>
             <p className="mb-4">
-              WatchParty is provided &quot;as is&quot; without warranties of any kind. We do not guarantee 
-              uninterrupted or error-free service. The platform may experience downtime for 
+              WatchParty is provided &quot;as is&quot; without warranties of any kind. We do not guarantee;
+              uninterrupted or error-free service. The platform may experience downtime for;
               maintenance or unforeseen issues.
             </p>
 
             <h3 className="text-xl font-medium mb-3">8.2 Third-Party Content</h3>
             <p className="mb-4">
-              We are not responsible for content shared by users or accessed through third-party 
+              We are not responsible for content shared by users or accessed through third-party;
               integrations. Users are solely responsible for the content they share and view.
             </p>
 
             <h3 className="text-xl font-medium mb-3">8.3 Limitation of Liability</h3>
             <p>
-              To the maximum extent permitted by law, WatchParty shall not be liable for any 
-              indirect, incidental, special, consequential, or punitive damages arising from 
+              To the maximum extent permitted by law, WatchParty shall not be liable for any;
+              indirect, incidental, special, consequential, or punitive damages arising from;
               your use of the service.
             </p>
           </section>
@@ -185,7 +184,7 @@ export default function TermsOfServicePage() {
             <h2 className="text-2xl font-semibold mb-4">9. Indemnification</h2>
             <p>
               You agree to indemnify and hold harmless WatchParty, its affiliates, officers, 
-              agents, and employees from any claims, damages, or expenses arising from your 
+              agents, and employees from any claims, damages, or expenses arising from your;
               use of the service or violation of these terms.
             </p>
           </section>
@@ -193,8 +192,8 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-semibold mb-4">10. Modifications to Terms</h2>
             <p className="mb-4">
-              We reserve the right to modify these Terms of Service at any time. Material 
-              changes will be communicated through the platform or via email. Continued use 
+              We reserve the right to modify these Terms of Service at any time. Material;
+              changes will be communicated through the platform or via email. Continued use;
               of the service after changes constitutes acceptance of the new terms.
             </p>
             <p>
@@ -206,14 +205,14 @@ export default function TermsOfServicePage() {
             <h2 className="text-2xl font-semibold mb-4">11. Governing Law and Disputes</h2>
             <h3 className="text-xl font-medium mb-3">11.1 Governing Law</h3>
             <p className="mb-4">
-              These terms are governed by the laws of [Your Jurisdiction] without regard to 
+              These terms are governed by the laws of [Your Jurisdiction] without regard to;
               conflict of law principles.
             </p>
 
             <h3 className="text-xl font-medium mb-3">11.2 Dispute Resolution</h3>
             <p>
-              Any disputes arising from these terms or your use of WatchParty will be resolved 
-              through binding arbitration, except where prohibited by law. You waive your right 
+              Any disputes arising from these terms or your use of WatchParty will be resolved;
+              through binding arbitration, except where prohibited by law. You waive your right;
               to participate in class action lawsuits.
             </p>
           </section>
@@ -221,9 +220,9 @@ export default function TermsOfServicePage() {
           <section>
             <h2 className="text-2xl font-semibold mb-4">12. Severability</h2>
             <p>
-              If any provision of these terms is found to be unenforceable, the remaining 
-              provisions will continue in full force and effect. The unenforceable provision 
-              will be replaced with an enforceable provision that most closely matches the 
+              If any provision of these terms is found to be unenforceable, the remaining;
+              provisions will continue in full force and effect. The unenforceable provision;
+              will be replaced with an enforceable provision that most closely matches the;
               intent of the original.
             </p>
           </section>
@@ -258,8 +257,8 @@ export default function TermsOfServicePage() {
         <div className="mt-12 p-6 bg-blue-50 rounded-lg">
           <h3 className="text-lg font-semibold mb-2">Questions?</h3>
           <p className="text-gray-700">
-            If you have any questions about these Terms of Service or need clarification 
-            on any section, please don&apos;t hesitate to contact our support team. We&apos;re here 
+            If you have any questions about these Terms of Service or need clarification;
+            on any section, please don&apos;t hesitate to contact our support team. We&apos;re here;
             to help ensure you have a great experience on WatchParty.
           </p>
         </div>

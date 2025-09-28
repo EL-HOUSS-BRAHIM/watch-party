@@ -1,8 +1,7 @@
 import type { Metadata } from "next"
 import { TestingSuiteDashboard } from "@/components/testing/testing-suite-dashboard"
 
-export const metadata: Metadata = {
-  title: "Testing Suite - Admin Dashboard",
+export const metadata: Metadata = { title: "Testing Suite - Admin Dashboard",
   description: "Comprehensive testing dashboard with coverage metrics and test management",
 }
 

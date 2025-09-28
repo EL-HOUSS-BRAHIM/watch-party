@@ -1,44 +1,44 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { useState, useEffect , useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Check, X, UserPlus, Clock, Send } from "lucide-react"
+import { Check, Clock, Send, User, UserPlus, X } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
 
-interface FriendRequest {
-  id: string
-  sender: {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
-    mutualFriends: number
+"use client"
+
+interface FriendRequest {}
+  id: string;
+  sender: {}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+    mutualFriends: number;
   }
-  recipient: {
-    id: string
-    username: string
-    firstName: string
-    lastName: string
-    avatar?: string
+  recipient: {}
+    id: string;
+    username: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
   }
-  message?: string
+  message?: string;
   status: "pending" | "accepted" | "declined"
-  createdAt: string
+  createdAt: string;
   type: "sent" | "received"
 }
 
-interface FriendRequestsProps {
-  className?: string
+interface FriendRequestsProps {}
+  className?: string;
 }
 
-export default function FriendRequests({ className }: FriendRequestsProps) {
+export default function FriendRequests({ className }: FriendRequestsProps) {}
   const [requests, setRequests] = useState<FriendRequest[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState("received")
@@ -52,8 +52,8 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
   const loadFriendRequests = async () => {
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/friend-requests/", {
-        headers: {
+      const response = await fetch("/api/users/friend-requests/", {}
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -62,24 +62,24 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
         const data = await response.json()
         setRequests(data.results || data)
       }
-    } catch {
+    } } catch {
       console.error("Failed to load friend requests:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load friend requests. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsLoading(false)
     }
   }
 
-  const handleFriendRequest = async (requestId: string, action: "accept" | "decline") => {
+  const handleFriendRequest = async (requestId: string, action: "accept" | "decline") => {}
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/friend-requests/${requestId}/${action}/`, {
+      const response = await fetch(`/api/users/friend-requests/${requestId}/${action}/`, {}
         method: "POST",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
@@ -91,14 +91,14 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
           ),
         )
 
-        toast({
+        toast({}
           title: action === "accept" ? "Friend request accepted" : "Friend request declined",
           description: action === "accept" ? "You are now friends!" : "The friend request has been declined.",
         })
       }
-    } catch {
+    } } catch {
       console.error(`Failed to ${action} friend request:`, error)
-      toast({
+      toast({}
         title: "Error",
         description: `Failed to ${action} friend request. Please try again.`,
         variant: "destructive",
@@ -106,26 +106,26 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
     }
   }
 
-  const cancelFriendRequest = async (requestId: string) => {
+  const cancelFriendRequest = async (requestId: string) => {}
     try {
       const token = localStorage.getItem("accessToken")
-      const response = await fetch(`/api/users/friend-requests/${requestId}/`, {
+      const response = await fetch(`/api/users/friend-requests/${requestId}/`, {}
         method: "DELETE",
-        headers: {
+        headers: {}
           Authorization: `Bearer ${token}`,
         },
       })
 
       if (response.ok) {
         setRequests((prev) => prev.filter((req) => req.id !== requestId))
-        toast({
+        toast({}
           title: "Friend request cancelled",
           description: "The friend request has been cancelled.",
         })
       }
-    } catch {
+    } } catch {
       console.error("Failed to cancel friend request:", error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to cancel friend request. Please try again.",
         variant: "destructive",
@@ -133,32 +133,32 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
     }
   }
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string) => {}
     switch (status) {
       case "pending":
         return (
           <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-            Pending
+            Pending;
           </Badge>
         )
       case "accepted":
         return (
           <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-            Accepted
+            Accepted;
           </Badge>
         )
       case "declined":
         return (
           <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
-            Declined
+            Declined;
           </Badge>
         )
       default:
-        return null
+        return null;
     }
   }
 
-  const getUserInitials = (firstName: string, lastName: string) => {
+  const getUserInitials = (firstName: string, lastName: string) => {}
     return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
   }
 
@@ -166,10 +166,9 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
   const sentRequests = requests.filter((req) => req.type === "sent")
   const processedRequests = requests.filter((req) => req.status !== "pending")
 
-  const FriendRequestCard = ({ request }: { request: FriendRequest }) => {
+  const FriendRequestCard = ({ request }: { request: FriendRequest }) => {}
     const isReceived = request.type === "received"
-    const otherUser = isReceived ? request.sender : request.recipient
-
+    const otherUser = isReceived ? request.sender : request.recipient;
     return (
       <Card className="hover:shadow-md transition-shadow">
         <CardContent className="p-4">
@@ -187,7 +186,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
                   </h3>
                   <p className="text-sm text-gray-600">@{otherUser.username}</p>
 
-                  {isReceived && (otherUser as Record<string, unknown>).mutualFriends > 0 && (
+                  {isReceived && (otherUser as Record<string, unknown>).mutualFriends > 0 && (}
                     <p className="text-sm text-gray-500 mt-1">
                       {(otherUser as Record<string, unknown>).mutualFriends} mutual friend{(otherUser as Record<string, unknown>).mutualFriends !== 1 ? &quot;s&quot; : &quot;"}
                     </p>
@@ -213,29 +212,29 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
               <div className="flex gap-2 mt-4">
                 {isReceived && request.status === "pending" ? (
                   <>
-                    <Button size="sm" onClick={() => handleFriendRequest(request.id, &quot;accept&quot;)} className=&quot;flex-1">
+                    <Button size="sm" onClick={() => handleFriendRequest(request.id, &quot;accept&quot;)} className=&quot;flex-1">"
                       <Check className="mr-2 h-4 w-4" />
-                      Accept
+                      Accept;
                     </Button>
-                    <Button
+                    <Button;
                       size="sm"
                       variant="outline"
                       onClick={() => handleFriendRequest(request.id, &quot;decline&quot;)}
                       className="flex-1"
                     >
                       <X className="mr-2 h-4 w-4" />
-                      Decline
+                      Decline;
                     </Button>
                   </>
                 ) : !isReceived && request.status === "pending" ? (
-                  <Button
+                  <Button;
                     size="sm"
                     variant="outline"
                     onClick={() => cancelFriendRequest(request.id)}
                     className="flex-1"
                   >
                     <X className="mr-2 h-4 w-4" />
-                    Cancel Request
+                    Cancel Request;
                   </Button>
                 ) : null}
               </div>
@@ -252,7 +251,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
         <div>
           <h2 className="text-2xl font-bold flex items-center gap-2">
             <UserPlus className="h-6 w-6" />
-            Friend Requests
+            Friend Requests;
           </h2>
           <p className="text-gray-600">Manage your incoming and outgoing friend requests</p>
         </div>
@@ -262,7 +261,7 @@ export default function FriendRequests({ className }: FriendRequestsProps) {
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="received" className="flex items-center gap-2">
             <UserPlus className="h-4 w-4" />
-            Received
+            Received;
             {receivedRequests.length > 0 && (
               <Badge variant="destructive" className="ml-1">
                 {receivedRequests.length}

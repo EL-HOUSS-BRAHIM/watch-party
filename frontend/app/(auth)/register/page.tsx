@@ -1,7 +1,6 @@
-"use client"
-
+import { Check, Eye, EyeOff, Github, Link, Loader2, Lock, Mail, Play, Shield, User } from "lucide-react"
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect , useCallback } from "react"
 import Link from "next/link"
 import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
@@ -12,11 +11,12 @@ import { Separator } from "@/components/ui/separator"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Checkbox } from "@/components/ui/checkbox"
 
+"use client"
 export default function RegisterPage() {
   const { register, socialLogin, isLoading } = useAuth()
   const { toast } = useToast()
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState({}
     firstName: "",
     lastName: "",
     email: "",
@@ -30,34 +30,32 @@ export default function RegisterPage() {
   const [agreedToTerms, setAgreedToTerms] = useState(false)
   const [passwordStrength, setPasswordStrength] = useState(0)
 
-  const validatePassword = (password: string) => {
-    let strength = 0
+  const validatePassword = (password: string) => {}
+    let strength = 0;
     if (password.length >= 8) strength++
     if (/[A-Z]/.test(password)) strength++
     if (/[a-z]/.test(password)) strength++
     if (/[0-9]/.test(password)) strength++
     if (/[^A-Za-z0-9]/.test(password)) strength++
-    return strength
+    return strength;
   }
 
   useEffect(() => {
     setPasswordStrength(validatePassword(formData.password))
   }, [formData.password])
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {}
-
-    if (!formData.firstName.trim()) {
+  const validateForm = () => {}
+    const newErrors: Record<string, string> = { if (!formData.firstName.trim()) {}
       newErrors.firstName = "First name is required"
     }
 
-    if (!formData.lastName.trim()) {
+    if (!formData.lastName.trim()) {}
       newErrors.lastName = "Last name is required"
     }
 
     if (!formData.email) {
       newErrors.email = "Email is required"
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {}
       newErrors.email = "Please enter a valid email address"
     }
 
@@ -80,19 +78,18 @@ export default function RegisterPage() {
     }
 
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    return Object.keys(newErrors).length === 0;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {}
     e.preventDefault()
 
-    if (!validateForm()) return
-
+    if (!validateForm()) return;
     setIsSubmitting(true)
     setErrors({})
 
     try {
-      await register({
+      await register({}
         first_name: formData.firstName,
         last_name: formData.lastName,
         email: formData.email,
@@ -100,29 +97,29 @@ export default function RegisterPage() {
         confirm_password: formData.confirmPassword,
       })
 
-      toast({
+      toast({}
         title: "Account Created!",
         description: "Welcome to WatchParty! Your account has been created successfully.",
         duration: 5000,
       })
-    } catch {
+    } } catch {
       const errorMessage = (error as { message?: string })?.message || "Registration failed. Please try again."
       setErrors({ general: errorMessage })
-      toast({
+      toast({}
         title: "Registration Failed",
         description: errorMessage,
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setIsSubmitting(false)
     }
   }
 
-  const handleSocialLogin = async (provider: "google" | "github") => {
+  const handleSocialLogin = async (provider: "google" | "github") => {}
     try {
       await socialLogin(provider)
-    } catch {
-      toast({
+    } } catch {
+      toast({}
         title: "Social Registration Failed",
         description: (error as { message?: string })?.message || `Failed to register with ${provider}`,
         variant: "destructive",
@@ -130,21 +127,21 @@ export default function RegisterPage() {
     }
   }
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string) => {}
     setFormData((prev) => ({ ...prev, [field]: value }))
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: &quot;&quot; }))
     }
   }
 
-  const getPasswordStrengthColor = () => {
+  const getPasswordStrengthColor = () => {}
     if (passwordStrength <= 1) return "bg-red-500"
     if (passwordStrength <= 2) return "bg-yellow-500"
     if (passwordStrength <= 3) return "bg-blue-500"
     return "bg-green-500"
   }
 
-  const getPasswordStrengthText = () => {
+  const getPasswordStrengthText = () => {}
     if (passwordStrength <= 1) return "Weak"
     if (passwordStrength <= 2) return "Fair"
     if (passwordStrength <= 3) return "Good"
@@ -200,23 +197,23 @@ export default function RegisterPage() {
       {/* Social Registration */}
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <Button
+          <Button;
             variant="outline"
             onClick={() => handleSocialLogin(&quot;google&quot;)}
             disabled={isSubmitting}
             className="glass-card border-white/20 hover:border-neon-blue/50 hover:bg-neon-blue/10 text-white transition-all duration-300"
           >
             <Chrome className="w-4 h-4 mr-2" />
-            Google
+            Google;
           </Button>
-          <Button
+          <Button;
             variant="outline"
             onClick={() => handleSocialLogin(&quot;github&quot;)}
             disabled={isSubmitting}
             className="glass-card border-white/20 hover:border-neon-purple/50 hover:bg-neon-purple/10 text-white transition-all duration-300"
           >
             <Github className="w-4 h-4 mr-2" />
-            GitHub
+            GitHub;
           </Button>
         </div>
 
@@ -237,22 +234,22 @@ export default function RegisterPage() {
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <Label htmlFor="firstName" className="text-gray-300 font-medium">
-                First Name
+                First Name;
               </Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input
+                <Input;
                   id="firstName"
                   type="text"
                   placeholder="First name"
                   value={formData.firstName}
                   onChange={(e) => handleInputChange(&quot;firstName&quot;, e.target.value)}
-                  className={`pl-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${
+                  className={`pl-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${}
                     errors.firstName ? "border-red-500/50 focus:border-red-500" : ""
                   }`}
                   disabled={isSubmitting}
                   autoComplete="given-name"
-                  required
+                  required;
                 />
               </div>
               {errors.firstName && (
@@ -265,20 +262,20 @@ export default function RegisterPage() {
 
             <div className="space-y-2">
               <Label htmlFor="lastName" className="text-gray-300 font-medium">
-                Last Name
+                Last Name;
               </Label>
-              <Input
+              <Input;
                 id="lastName"
                 type="text"
                 placeholder="Last name"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange(&quot;lastName&quot;, e.target.value)}
-                className={`pl-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${
+                className={`pl-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${}
                   errors.lastName ? "border-red-500/50 focus:border-red-500" : ""
                 }`}
                 disabled={isSubmitting}
                 autoComplete="family-name"
-                required
+                required;
               />
               {errors.lastName && (
                 <p className="text-red-400 text-xs flex items-center">
@@ -292,22 +289,22 @@ export default function RegisterPage() {
           {/* Email Field */}
           <div className="space-y-2">
             <Label htmlFor="email" className="text-gray-300 font-medium">
-              Email
+              Email;
             </Label>
             <div className="relative">
               <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input
+              <Input;
                 id="email"
                 type="email"
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={(e) => handleInputChange(&quot;email&quot;, e.target.value)}
-                className={`pl-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${
+                className={`pl-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${}
                   errors.email ? "border-red-500/50 focus:border-red-500" : ""
                 }`}
                 disabled={isSubmitting}
                 autoComplete="email"
-                required
+                required;
               />
             </div>
             {errors.email && (
@@ -321,24 +318,24 @@ export default function RegisterPage() {
           {/* Password Field */}
           <div className="space-y-2">
             <Label htmlFor="password" className="text-gray-300 font-medium">
-              Password
+              Password;
             </Label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input
+              <Input;
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Create a strong password"
                 value={formData.password}
                 onChange={(e) => handleInputChange(&quot;password&quot;, e.target.value)}
-                className={`pl-10 pr-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${
+                className={`pl-10 pr-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${}
                   errors.password ? "border-red-500/50 focus:border-red-500" : ""
                 }`}
                 disabled={isSubmitting}
                 autoComplete="new-password"
-                required
+                required;
               />
-              <button
+              <button;
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
@@ -353,13 +350,13 @@ export default function RegisterPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <span className="text-gray-400">Password strength:</span>
-                  <span
-                    className={`font-medium ${
-                      passwordStrength <= 1
+                  <span;
+                    className={`font-medium ${}
+                      passwordStrength <= 1;
                         ? "text-red-400"
-                        : passwordStrength <= 2
+                        : passwordStrength <= 2;
                           ? "text-yellow-400"
-                          : passwordStrength <= 3
+                          : passwordStrength <= 3;
                             ? "text-blue-400"
                             : "text-green-400"
                     }`}
@@ -368,7 +365,7 @@ export default function RegisterPage() {
                   </span>
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-1">
-                  <div
+                  <div;
                     className={`h-1 rounded-full transition-all duration-300 ${getPasswordStrengthColor()}`}
                     style={{ width: `${(passwordStrength / 5) * 100}%` }}
                   />
@@ -387,28 +384,28 @@ export default function RegisterPage() {
           {/* Confirm Password Field */}
           <div className="space-y-2">
             <Label htmlFor="confirmPassword" className="text-gray-300 font-medium">
-              Confirm Password
+              Confirm Password;
             </Label>
             <div className="relative">
               <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input
+              <Input;
                 id="confirmPassword"
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
                 onChange={(e) => handleInputChange(&quot;confirmPassword&quot;, e.target.value)}
-                className={`pl-10 pr-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${
+                className={`pl-10 pr-10 glass-card border-white/20 focus:border-neon-blue/50 focus:glow-blue text-white placeholder-gray-400 transition-all duration-300 ${}
                   errors.confirmPassword ? "border-red-500/50 focus:border-red-500" : ""
-                } ${
-                  formData.confirmPassword && formData.password === formData.confirmPassword
+                } ${}
+                  formData.confirmPassword && formData.password === formData.confirmPassword;
                     ? "border-green-500/50"
                     : ""
                 }`}
                 disabled={isSubmitting}
                 autoComplete="new-password"
-                required
+                required;
               />
-              <button
+              <button;
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
@@ -434,10 +431,10 @@ export default function RegisterPage() {
         {/* Terms Agreement */}
         <div className="space-y-2">
           <div className="flex items-start space-x-3">
-            <Checkbox
+            <Checkbox;
               id="terms"
               checked={agreedToTerms}
-              onCheckedChange={(checked) => {
+              onCheckedChange={(checked) => {}
                 setAgreedToTerms(checked as boolean)
                 if (errors.terms) {
                   setErrors((prev) => ({ ...prev, terms: &quot;&quot; }))
@@ -449,11 +446,11 @@ export default function RegisterPage() {
             <div className="text-sm text-gray-400 leading-relaxed">
               I agree to the{" "}
               <Link href="/terms" className="text-neon-blue hover:text-neon-purple transition-colors">
-                Terms of Service
+                Terms of Service;
               </Link>{&quot; &quot;}
               and{" "}
               <Link href="/privacy" className="text-neon-blue hover:text-neon-purple transition-colors">
-                Privacy Policy
+                Privacy Policy;
               </Link>
             </div>
           </div>
@@ -466,7 +463,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Submit Button */}
-        <Button
+        <Button;
           type="submit"
           disabled={isSubmitting || !agreedToTerms}
           className="w-full bg-gradient-to-r from-neon-blue to-neon-purple hover:from-neon-blue/80 hover:to-neon-purple/80 text-white font-semibold py-3 rounded-xl transition-all duration-300 glow-blue disabled:opacity-50 disabled:cursor-not-allowed"
@@ -487,7 +484,7 @@ export default function RegisterPage() {
         <p className="text-gray-400">
           Already have an account?{" "}
           <Link href="/login" className="text-neon-blue hover:text-neon-purple font-medium transition-colors">
-            Sign in here
+            Sign in here;
           </Link>
         </p>
       </div>
@@ -495,13 +492,13 @@ export default function RegisterPage() {
       {/* Additional Links */}
       <div className="flex justify-center space-x-6 text-sm">
         <Link href="/help" className="text-gray-500 hover:text-gray-300 transition-colors">
-          Help
+          Help;
         </Link>
         <Link href="/privacy" className="text-gray-500 hover:text-gray-300 transition-colors">
-          Privacy
+          Privacy;
         </Link>
         <Link href="/terms" className="text-gray-500 hover:text-gray-300 transition-colors">
-          Terms
+          Terms;
         </Link>
       </div>
     </div>

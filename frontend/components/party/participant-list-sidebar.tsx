@@ -1,41 +1,40 @@
-'use client'
-
+import { Activity, Check, CheckCircle, Shield, User, Users, Wifi, WifiOff } from "lucide-react"
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { ScrollArea } from '@/components/ui/scroll-area'
 
-interface ParticipantStatus {
-  id: string
-  username: string
-  display_name: string
-  avatar_url: string | null
+'use client'
+interface ParticipantStatus {}
+  id: string;
+  username: string;
+  display_name: string;
+  avatar_url: string | null;
   role: 'host' | 'co-host' | 'member'
   connection_status: 'connected' | 'reconnecting' | 'disconnected'
   sync_status: 'synced' | 'buffering' | 'out_of_sync'
-  video_position: number
-  last_heartbeat: string
-  joined_at: string
-  ping: number
+  video_position: number;
+  last_heartbeat: string;
+  joined_at: string;
+  ping: number;
 }
 
-interface ParticipantListSidebarProps {
+interface ParticipantListSidebarProps {}
   participants: ParticipantStatus[]
-  currentVideoPosition: number
-  isHost?: boolean
-  onParticipantClick?: (participantId: string) => void
+  currentVideoPosition: number;
+  isHost?: boolean;
+  onParticipantClick?: (participantId: string) => void;
 }
 
-export function ParticipantListSidebar({
+export function ParticipantListSidebar({}
   participants,
   currentVideoPosition,
   isHost = false,
-  onParticipantClick
-}: ParticipantListSidebarProps) {
-  const [syncTolerance] = useState(2) // seconds
-
-  const getConnectionIcon = (status: string, ping: number) => {
+  onParticipantClick;
+}: ParticipantListSidebarProps) {}
+  const [syncTolerance] = useState(2) // seconds;
+  const getConnectionIcon = (status: string, ping: number) => {}
     if (status === 'disconnected') {
       return <WifiOff className="w-4 h-4 text-red-500" />
     }
@@ -48,44 +47,43 @@ export function ParticipantListSidebar({
     return <Wifi className="w-4 h-4 text-green-500" />
   }
 
-  const getSyncIcon = (syncStatus: string, timeDiff: number) => {
+  const getSyncIcon = (syncStatus: string, timeDiff: number) => {}
     if (syncStatus === 'buffering') {
       return <Activity className="w-4 h-4 text-blue-500 animate-pulse" />
     }
-    if (Math.abs(timeDiff) > syncTolerance) {
+    if (Math.abs(timeDiff) > syncTolerance) {}
       return <AlertCircle className="w-4 h-4 text-red-500" />
     }
     return <CheckCircle className="w-4 h-4 text-green-500" />
   }
 
-  const getRoleIcon = (role: string) => {
+  const getRoleIcon = (role: string) => {}
     switch (role) {
       case 'host':
         return <Crown className="w-4 h-4 text-yellow-500" />
       case 'co-host':
         return <Shield className="w-4 h-4 text-blue-500" />
       default:
-        return null
+        return null;
     }
   }
 
-  const formatTime = (seconds: number) => {
+  const formatTime = (seconds: number) => {}
     const minutes = Math.floor(seconds / 60)
     const remainingSeconds = Math.floor(seconds % 60)
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`
   }
 
-  const formatPing = (ping: number) => {
+  const formatPing = (ping: number) => {}
     if (ping > 1000) return &apos;1000+ ms&apos;
     return `${ping} ms`
   }
 
-  const connectedCount = participants.filter(p => p.connection_status === &apos;connected').length
+  const connectedCount = participants.filter(p => p.connection_status === &apos;connected').length;
   const syncedCount = participants.filter(p => 
     p.connection_status === 'connected' && 
-    Math.abs(p.video_position - currentVideoPosition) <= syncTolerance
-  ).length
-
+    Math.abs(p.video_position - currentVideoPosition) <= syncTolerance;
+  ).length;
   return (
     <Card className="h-full">
       <CardHeader className="pb-3">
@@ -97,11 +95,11 @@ export function ParticipantListSidebar({
           <div className="flex items-center gap-4 text-xs">
             <div className="flex items-center gap-1">
               <div className="w-2 h-2 bg-green-500 rounded-full" />
-              {connectedCount} online
+              {connectedCount} online;
             </div>
             <div className="flex items-center gap-1">
               <div className="w-2 h-2 bg-blue-500 rounded-full" />
-              {syncedCount} synced
+              {syncedCount} synced;
             </div>
           </div>
         </CardDescription>
@@ -110,14 +108,13 @@ export function ParticipantListSidebar({
       <CardContent className="p-0">
         <ScrollArea className="h-[calc(100vh-200px)]">
           <div className="space-y-1 p-4">
-            {participants.map((participant) => {
-              const timeDiff = participant.video_position - currentVideoPosition
-              const isOutOfSync = Math.abs(timeDiff) > syncTolerance
-
+            {participants.map((participant) => {}
+              const timeDiff = participant.video_position - currentVideoPosition;
+              const isOutOfSync = Math.abs(timeDiff) > syncTolerance;
               return (
-                <div
+                <div;
                   key={participant.id}
-                  className={`p-3 rounded-lg border transition-colors cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 ${
+                  className={`p-3 rounded-lg border transition-colors cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 ${}
                     onParticipantClick ? 'hover:border-purple-300' : ''
                   }`}
                   onClick={() => onParticipantClick?.(participant.id)}
@@ -130,7 +127,6 @@ export function ParticipantListSidebar({
                           {participant.display_name?.charAt(0) || participant.username.charAt(0)}
                         </AvatarFallback>
                       </Avatar>
-                      
                       {/* Connection status indicator */}
                       <div className="absolute -bottom-1 -right-1">
                         {getConnectionIcon(participant.connection_status, participant.ping)}
@@ -150,7 +146,7 @@ export function ParticipantListSidebar({
                           {participant.role}
                         </Badge>
                         {participant.connection_status === 'connected' && (
-                          <Badge 
+                          <Badge;
                             variant={isOutOfSync ? "destructive" : "secondary"} 
                             className="text-xs px-1 py-0"
                           >
@@ -164,14 +160,13 @@ export function ParticipantListSidebar({
                         {getSyncIcon(participant.sync_status, timeDiff)}
                         <span>
                           {participant.connection_status === 'connected' 
-                            ? (isOutOfSync 
+                            ? (isOutOfSync;
                                 ? `${timeDiff > 0 ? &apos;+&apos; : &apos;'}${timeDiff.toFixed(1)}s` 
                                 : 'Synced'
                               )
-                            : participant.connection_status
+                            : participant.connection_status;
                           }
                         </span>
-                        
                         {participant.connection_status === 'connected' && (
                           <>
                             <span>•</span>
@@ -183,7 +178,7 @@ export function ParticipantListSidebar({
                       {/* Sync progress bar for out-of-sync users */}
                       {participant.connection_status === 'connected' && isOutOfSync && (
                         <div className="mt-2">
-                          <Progress 
+                          <Progress;
                             value={Math.max(0, 100 - Math.abs(timeDiff) * 10)} 
                             className="h-1"
                           />
@@ -217,7 +212,7 @@ export function ParticipantListSidebar({
                 {Math.round((syncedCount / participants.length) * 100)}%
               </div>
               <div className="text-xs text-gray-600 dark:text-gray-400">
-                In Sync
+                In Sync;
               </div>
             </div>
             <div>
@@ -225,7 +220,7 @@ export function ParticipantListSidebar({
                 {participants.filter(p => p.ping < 100).length}
               </div>
               <div className="text-xs text-gray-600 dark:text-gray-400">
-                Low Latency
+                Low Latency;
               </div>
             </div>
           </div>

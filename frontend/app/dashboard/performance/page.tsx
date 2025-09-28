@@ -1,6 +1,5 @@
-"use client"
-
-import { useState, useEffect } from "react"
+import { Activity, AlertTriangle, Check, CheckCircle, Download, Monitor, Refresh, TrendingDown, TrendingUp } from "lucide-react"
+import { useState, useEffect , useCallback } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -13,44 +12,45 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { adminAPI, analyticsAPI } from "@/lib/api"
 
-interface PerformanceMetric {
-  name: string
-  current: number
-  previous: number
-  unit: string
+"use client"
+interface PerformanceMetric {}
+  name: string;
+  current: number;
+  previous: number;
+  unit: string;
   trend: "up" | "down" | "stable"
-  threshold: {
-    warning: number
-    critical: number
+  threshold: {}
+    warning: number;
+    critical: number;
   }
 }
 
-interface SystemHealth {
-  cpu: number
-  memory: number
-  disk: number
-  network: number
+interface SystemHealth {}
+  cpu: number;
+  memory: number;
+  disk: number;
+  network: number;
   status: "healthy" | "warning" | "critical"
 }
 
-interface EndpointMetric {
-  endpoint: string
-  method: string
-  avgResponseTime: number
-  requests: number
-  errors: number
-  successRate: number
+interface EndpointMetric {}
+  endpoint: string;
+  method: string;
+  avgResponseTime: number;
+  requests: number;
+  errors: number;
+  successRate: number;
 }
 
-interface SystemAlert {
-  id: number
+interface SystemAlert {}
+  id: number;
   type: "info" | "warning" | "critical"
-  message: string
-  timestamp: Date
-  resolved: boolean
+  message: string;
+  timestamp: Date;
+  resolved: boolean;
 }
 
-const PerformancePage = () => {
+const PerformancePage = () => {}
   const { toast } = useToast()
   const [timeRange, setTimeRange] = useState("1h")
   const [autoRefresh, setAutoRefresh] = useState(true)
@@ -58,8 +58,8 @@ const PerformancePage = () => {
   const [lastUpdated, setLastUpdated] = useState(new Date())
   const [loading, setLoading] = useState(true)
 
-  const [metrics, setMetrics] = useState<PerformanceMetric[]>([
-    {
+  const [metrics, setMetrics] = useState<PerformanceMetric[]>([]
+    {}
       name: "Response Time",
       current: 145.2,
       previous: 132.8,
@@ -67,7 +67,7 @@ const PerformancePage = () => {
       trend: "up",
       threshold: { warning: 200, critical: 500 },
     },
-    {
+    {}
       name: "Throughput",
       current: 1847,
       previous: 1923,
@@ -75,7 +75,7 @@ const PerformancePage = () => {
       trend: "down",
       threshold: { warning: 1000, critical: 500 },
     },
-    {
+    {}
       name: "Error Rate",
       current: 0.34,
       previous: 0.28,
@@ -83,7 +83,7 @@ const PerformancePage = () => {
       trend: "up",
       threshold: { warning: 1, critical: 5 },
     },
-    {
+    {}
       name: "Active Connections",
       current: 1247,
       previous: 1356,
@@ -91,7 +91,7 @@ const PerformancePage = () => {
       trend: "down",
       threshold: { warning: 2000, critical: 3000 },
     },
-    {
+    {}
       name: "Cache Hit Rate",
       current: 94.2,
       previous: 91.8,
@@ -101,7 +101,7 @@ const PerformancePage = () => {
     },
   ])
 
-  const [systemHealth, setSystemHealth] = useState<SystemHealth>({
+  const [systemHealth, setSystemHealth] = useState<SystemHealth>({}
     cpu: 34,
     memory: 67,
     disk: 45,
@@ -109,8 +109,8 @@ const PerformancePage = () => {
     status: "healthy",
   })
 
-  const [endpointMetrics, setEndpointMetrics] = useState<EndpointMetric[]>([
-    {
+  const [endpointMetrics, setEndpointMetrics] = useState<EndpointMetric[]>([]
+    {}
       endpoint: "/api/auth/login",
       method: "POST",
       avgResponseTime: 156,
@@ -118,7 +118,7 @@ const PerformancePage = () => {
       errors: 12,
       successRate: 99.5,
     },
-    {
+    {}
       endpoint: "/api/parties/create",
       method: "POST",
       avgResponseTime: 234,
@@ -126,7 +126,7 @@ const PerformancePage = () => {
       errors: 3,
       successRate: 99.7,
     },
-    {
+    {}
       endpoint: "/api/videos/upload",
       method: "POST",
       avgResponseTime: 1250,
@@ -134,7 +134,7 @@ const PerformancePage = () => {
       errors: 23,
       successRate: 94.9,
     },
-    {
+    {}
       endpoint: "/api/chat/messages",
       method: "GET",
       avgResponseTime: 89,
@@ -142,7 +142,7 @@ const PerformancePage = () => {
       errors: 2,
       successRate: 99.9,
     },
-    {
+    {}
       endpoint: "/api/user/profile",
       method: "GET",
       avgResponseTime: 45,
@@ -152,22 +152,22 @@ const PerformancePage = () => {
     },
   ])
 
-  const [alerts, setAlerts] = useState<SystemAlert[]>([
-    {
+  const [alerts, setAlerts] = useState<SystemAlert[]>([]
+    {}
       id: 1,
       type: "warning",
       message: "High memory usage detected on server-02",
       timestamp: new Date(Date.now() - 300000),
       resolved: false,
     },
-    {
+    {}
       id: 2,
       type: "info",
       message: "Scheduled maintenance completed successfully",
       timestamp: new Date(Date.now() - 1800000),
       resolved: true,
     },
-    {
+    {}
       id: 3,
       type: "critical",
       message: "Database connection pool exhausted",
@@ -178,7 +178,6 @@ const PerformancePage = () => {
 
   useEffect(() => {
     fetchPerformanceData()
-    
     if (autoRefresh) {
       const interval = setInterval(fetchPerformanceData, refreshInterval * 1000)
       return () => clearInterval(interval)
@@ -188,18 +187,17 @@ const PerformancePage = () => {
   const fetchPerformanceData = async () => {
     try {
       setLoading(true)
-      
-      // Fetch performance data from APIs
-      const [performanceData, healthMetrics, systemHealth] = await Promise.all([
+      // Fetch performance data from APIs;
+      const [performanceData, healthMetrics, systemHealth] = await Promise.all([]
         analyticsAPI.getPerformanceAnalytics(),
         adminAPI.getHealthMetrics(),
         adminAPI.getSystemHealth()
       ])
 
-      // Transform performance metrics
+      // Transform performance metrics;
       if (performanceData) {
-        const performanceMetrics: PerformanceMetric[] = [
-          {
+        const performanceMetrics: PerformanceMetric[] = []
+          {}
             name: "Response Time",
             current: performanceData.avgResponseTime || 145.2,
             previous: performanceData.prevAvgResponseTime || 132.8,
@@ -207,7 +205,7 @@ const PerformancePage = () => {
             trend: performanceData.avgResponseTime > performanceData.prevAvgResponseTime ? &quot;up&quot; : &quot;down",
             threshold: { warning: 200, critical: 500 },
           },
-          {
+          {}
             name: "Throughput",
             current: performanceData.requestsPerSecond || 1847,
             previous: performanceData.prevRequestsPerSecond || 1923,
@@ -215,7 +213,7 @@ const PerformancePage = () => {
             trend: performanceData.requestsPerSecond > performanceData.prevRequestsPerSecond ? "up" : "down",
             threshold: { warning: 1000, critical: 500 },
           },
-          {
+          {}
             name: "Error Rate",
             current: performanceData.errorRate || 0.34,
             previous: performanceData.prevErrorRate || 0.28,
@@ -227,9 +225,9 @@ const PerformancePage = () => {
         setMetrics(performanceMetrics)
       }
 
-      // Transform system health
+      // Transform system health;
       if (systemHealth) {
-        setSystemHealth({
+        setSystemHealth({}
           cpu: systemHealth.metrics?.cpu_usage || 34,
           memory: systemHealth.metrics?.memory_usage || 67,
           disk: systemHealth.metrics?.disk_usage || 45,
@@ -240,46 +238,45 @@ const PerformancePage = () => {
 
       // Transform endpoint metrics (from system health services)
       if (systemHealth?.services) {
-        const endpoints: EndpointMetric[] = Object.entries(systemHealth.services).map(([name, service]: [string, any]) => ({
+        const endpoints: EndpointMetric[] = Object.entries(systemHealth.services).map(([name, service]: [string, any]) => ({}
           endpoint: `/${name}`,
           method: "GET",
           avgResponseTime: service.response_time || 0,
           requests: service.requests || 0,
           errors: service.errors || 0,
-          successRate: service.success_rate || 100
+          successRate: service.success_rate || 100;
         }))
         setEndpointMetrics(endpoints)
       }
 
       setLastUpdated(new Date())
-    } catch {
+    } } catch {
       console.error('Failed to fetch performance data:', error)
-      toast({
+      toast({}
         title: "Error",
         description: "Failed to load performance data. Please try again.",
         variant: "destructive",
       })
-    } finally {
+    } finally {}
       setLoading(false)
     }
   }
 
-  // Simulate real-time updates
+  // Simulate real-time updates;
   useEffect(() => {
-    if (!autoRefresh) return
-
-    const interval = setInterval(() => {
-      // Update metrics with random variations
+    if (!autoRefresh) return;
+    const interval = setInterval(() => {}
+      // Update metrics with random variations;
       setMetrics((prev) =>
-        prev.map((metric) => ({
+        prev.map((metric) => ({}
           ...metric,
           previous: metric.current,
           current: Math.max(0, metric.current + (Math.random() - 0.5) * metric.current * 0.1),
         })),
       )
 
-      // Update system health
-      setSystemHealth((prev) => ({
+      // Update system health;
+      setSystemHealth((prev) => ({}
         ...prev,
         cpu: Math.max(0, Math.min(100, prev.cpu + (Math.random() - 0.5) * 10)),
         memory: Math.max(0, Math.min(100, prev.memory + (Math.random() - 0.5) * 8)),
@@ -293,13 +290,13 @@ const PerformancePage = () => {
     return () => clearInterval(interval)
   }, [autoRefresh, refreshInterval])
 
-  const getMetricStatus = (metric: PerformanceMetric) => {
+  const getMetricStatus = (metric: PerformanceMetric) => {}
     if (metric.current >= metric.threshold.critical) return "critical"
     if (metric.current >= metric.threshold.warning) return "warning"
     return "healthy"
   }
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string) => {}
     switch (status) {
       case "healthy":
         return "text-green-600"
@@ -312,7 +309,7 @@ const PerformancePage = () => {
     }
   }
 
-  const getStatusBadgeClass = (status: string) => {
+  const getStatusBadgeClass = (status: string) => {}
     switch (status) {
       case "healthy":
         return "bg-green-100 text-green-800 border-green-200"
@@ -325,7 +322,7 @@ const PerformancePage = () => {
     }
   }
 
-  const getTrendIcon = (trend: string) => {
+  const getTrendIcon = (trend: string) => {}
     switch (trend) {
       case "up":
         return <TrendingUp className="w-4 h-4 text-green-600" />
@@ -336,28 +333,27 @@ const PerformancePage = () => {
     }
   }
 
-  const getSystemHealthStatus = () => {
-    const avgUsage = (systemHealth.cpu + systemHealth.memory + systemHealth.disk) / 3
+  const getSystemHealthStatus = () => {}
+    const avgUsage = (systemHealth.cpu + systemHealth.memory + systemHealth.disk) / 3;
     if (avgUsage > 80) return &quot;critical&quot;
     if (avgUsage > 60) return &quot;warning"
     return "healthy"
   }
 
-  const formatNumber = (num: number, decimals = 1) => {
+  const formatNumber = (num: number, decimals = 1) => {}
     if (num >= 1000000) return (num / 1000000).toFixed(decimals) + "M"
     if (num >= 1000) return (num / 1000).toFixed(decimals) + "K"
     return num.toFixed(decimals)
   }
 
-  const formatDuration = (ms: number) => {
+  const formatDuration = (ms: number) => {}
     if (ms < 1000) return `${ms.toFixed(0)}ms`
     if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`
     return `${(ms / 60000).toFixed(1)}m`
   }
 
-  const exportData = () => {
-    const data = {
-      metrics,
+  const exportData = () => {}
+    const data = { metrics,
       systemHealth,
       endpointMetrics,
       alerts,
@@ -366,7 +362,7 @@ const PerformancePage = () => {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
-    a.href = url
+    a.href = url;
     a.download = `performance-report-${new Date().toISOString().split("T")[0]}.json`
     a.click()
     URL.revokeObjectURL(url)
@@ -400,19 +396,19 @@ const PerformancePage = () => {
               </SelectContent>
             </Select>
 
-            <Button
+            <Button;
               onClick={fetchPerformanceData}
               disabled={loading}
               variant="outline"
               className="gap-2"
             >
               <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-              Refresh
+              Refresh;
             </Button>
 
             <Button onClick={exportData} variant="outline" className="gap-2">
               <Download className="w-4 h-4" />
-              Export
+              Export;
             </Button>
           </div>
         </div>
@@ -422,7 +418,7 @@ const PerformancePage = () => {
           <CardContent className="p-4">
             <div className="flex flex-wrap items-center gap-6">
               <div className="flex items-center space-x-2">
-                <Switch
+                <Switch;
                   id="auto-refresh"
                   checked={autoRefresh}
                   onCheckedChange={setAutoRefresh}
@@ -435,7 +431,7 @@ const PerformancePage = () => {
                   <Label htmlFor="refresh-interval" className="text-sm">
                     Interval:
                   </Label>
-                  <Select
+                  <Select;
                     value={refreshInterval.toString()}
                     onValueChange={(value) => setRefreshInterval(parseInt(value))}
                   >
@@ -468,7 +464,7 @@ const PerformancePage = () => {
           <TabsContent value="overview" className="space-y-6">
             {/* Key Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-              {metrics.map((metric) => {
+              {metrics.map((metric) => {}
                 const status = getMetricStatus(metric)
                 return (
                   <Card key={metric.name} className="relative overflow-hidden">
@@ -558,7 +554,7 @@ const PerformancePage = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Monitor className="h-5 w-5" />
-                  System Status
+                  System Status;
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -571,7 +567,7 @@ const PerformancePage = () => {
                       </span>
                     </p>
                     <p className="text-sm text-gray-600 mt-1">
-                      All systems operational
+                      All systems operational;
                     </p>
                   </div>
                   <Badge className={getStatusBadgeClass(getSystemHealthStatus())}>
@@ -588,13 +584,13 @@ const PerformancePage = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Globe className="h-5 w-5" />
-                  API Endpoints Performance
+                  API Endpoints Performance;
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {endpointMetrics.map((endpoint, index) => (
-                    <div
+                    <div;
                       key={index}
                       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
                     >
@@ -613,18 +609,18 @@ const PerformancePage = () => {
                         <div className="text-lg font-semibold">
                           {endpoint.successRate.toFixed(1)}%
                         </div>
-                        <Badge
-                          className={
-                            endpoint.successRate >= 99
+                        <Badge;
+                          className={}
+                            endpoint.successRate >= 99;
                               ? "bg-green-100 text-green-800"
-                              : endpoint.successRate >= 95
+                              : endpoint.successRate >= 95;
                               ? "bg-yellow-100 text-yellow-800"
                               : "bg-red-100 text-red-800"
                           }
                         >
-                          {endpoint.successRate >= 99
+                          {endpoint.successRate >= 99;
                             ? "Excellent"
-                            : endpoint.successRate >= 95
+                            : endpoint.successRate >= 95;
                             ? "Good"
                             : "Poor"}
                         </Badge>
@@ -642,15 +638,15 @@ const PerformancePage = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <AlertTriangle className="h-5 w-5" />
-                  System Alerts
+                  System Alerts;
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {alerts.map((alert) => (
-                    <div
+                    <div;
                       key={alert.id}
-                      className={`p-4 rounded-lg border-l-4 ${
+                      className={`p-4 rounded-lg border-l-4 ${}
                         alert.type === "critical"
                           ? "bg-red-50 border-red-500"
                           : alert.type === "warning"
@@ -661,8 +657,8 @@ const PerformancePage = () => {
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <Badge
-                              className={
+                            <Badge;
+                              className={}
                                 alert.type === "critical"
                                   ? "bg-red-100 text-red-800"
                                   : alert.type === "warning"
@@ -675,7 +671,7 @@ const PerformancePage = () => {
                             {alert.resolved && (
                               <Badge className="bg-green-100 text-green-800">
                                 <CheckCircle className="w-3 h-3 mr-1" />
-                                Resolved
+                                Resolved;
                               </Badge>
                             )}
                           </div>
@@ -697,4 +693,4 @@ const PerformancePage = () => {
   )
 }
 
-export default PerformancePage
+export default PerformancePage;
