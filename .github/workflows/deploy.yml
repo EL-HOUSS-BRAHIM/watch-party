@@ -43,11 +43,16 @@ jobs:
       with:
         node-version: '18'
         
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 8
+        
     - name: Build Frontend
       run: |
         cd frontend
-        npm ci
-        npm run build
+        pnpm install
+        pnpm run build
         
     - name: Deploy Frontend
       uses: appleboy/ssh-action@v1.0.3
@@ -59,6 +64,7 @@ jobs:
           cd ${{ secrets.MONOREPO_PATH }}
           git pull origin master
           cd frontend
-          npm ci
-          npm run build
+          rm -rf node_modules
+          pnpm install
+          pnpm run build
           pm2 restart watch-party-frontend
