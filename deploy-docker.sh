@@ -75,6 +75,54 @@ setup_repository() {
     print_status "Repository setup complete"
 }
 
+# Function to configure AWS
+configure_aws() {
+    print_header "Configuring AWS CLI and credentials"
+    
+    # Check if AWS CLI is installed
+    if ! command -v aws &> /dev/null; then
+        print_status "Installing AWS CLI..."
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
+        rm -rf aws awscliv2.zip
+        print_status "AWS CLI installed successfully"
+    else
+        print_status "AWS CLI already installed: $(aws --version)"
+    fi
+    
+    # Configure AWS to use IAM role
+    print_status "Configuring AWS to use IAM role..."
+    
+    mkdir -p ~/.aws
+    cat > ~/.aws/config << EOF
+[default]
+region = eu-west-3
+output = json
+EOF
+    
+    print_status "Testing AWS configuration..."
+    if aws sts get-caller-identity > /dev/null 2>&1; then
+        print_status "✅ AWS configuration successful!"
+        
+        # Test S3 access
+        if aws s3 ls > /dev/null 2>&1; then
+            print_status "✅ S3 access confirmed"
+        else
+            print_warning "❌ S3 access failed - check IAM role permissions"
+        fi
+    else
+        print_error "❌ AWS configuration failed!"
+        print_error "Please ensure:"
+        print_error "1. IAM role MyAppRole is attached to this Lightsail instance"
+        print_error "2. IAM role has necessary permissions (S3, SSM, etc.)"
+        print_error "3. Instance metadata service is accessible"
+        return 1
+    fi
+    
+    print_status "AWS configuration complete"
+}
+
 # Function to setup environment files
 setup_environment() {
     print_header "Setting up environment configuration"
@@ -325,6 +373,7 @@ show_menu() {
     echo "8. Show Resource Usage"
     echo "9. Create Backup"
     echo "10. Setup Environment Only"
+    echo "11. Configure AWS"
     echo "0. Exit"
     echo
 }
@@ -334,6 +383,7 @@ full_deploy() {
     print_header "Starting full deployment"
     
     setup_repository
+    configure_aws
     setup_environment
     deploy_services
     check_health
@@ -351,7 +401,7 @@ main() {
     
     while true; do
         show_menu
-        read -p "Choose an option [0-10]: " choice
+        read -p "Choose an option [0-11]: " choice
         
         case $choice in
             1)
@@ -384,12 +434,15 @@ main() {
             10)
                 setup_environment
                 ;;
+            11)
+                configure_aws
+                ;;
             0)
                 print_status "Goodbye!"
                 exit 0
                 ;;
             *)
-                print_error "Invalid option. Please choose 0-10."
+                print_error "Invalid option. Please choose 0-11."
                 ;;
         esac
         
