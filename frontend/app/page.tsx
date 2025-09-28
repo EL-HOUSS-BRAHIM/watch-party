@@ -6,7 +6,7 @@ import { TestimonialGrid } from "@/components/marketing/testimonial-grid"
 
 export default function HomePage() {
   return (
-    <div className="space-y-16">
+    <div className="space-y-20 lg:space-y-28">
       <Hero />
       <FeatureGrid />
       <MetricStrip />
