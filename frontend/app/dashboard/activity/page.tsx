@@ -1,7 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect, useCallback } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,8 +8,6 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { useAuth } from "@/contexts/auth-context"
 import { useToast } from "@/hooks/use-toast"
 import {
   Activity,
@@ -20,39 +17,21 @@ import {
   MessageCircle,
   Share2,
   UserPlus,
-  Calendar,
   Clock,
   TrendingUp,
-  Filter,
   Search,
   RefreshCw,
-  Settings,
   Bell,
   BellOff,
-  Eye,
-  EyeOff,
   Star,
   Trophy,
-  Gift,
-  Gamepad2,
-  Music,
-  Video,
-  Camera,
-  Mic,
-  Volume2,
   Loader2,
-  ChevronDown,
-  MoreHorizontal,
-  BookOpen,
-  Coffee,
   MapPin,
-  Globe,
-  Zap,
   Sparkles,
   Target,
   Award
 } from "lucide-react"
-import { formatDistanceToNow, format, parseISO } from "date-fns"
+import { formatDistanceToNow, parseISO } from "date-fns"
 
 interface ActivityItem {
   id: string
@@ -66,7 +45,7 @@ interface ActivityItem {
     is_premium: boolean
   }
   timestamp: string
-  data: any
+  data: Record<string, unknown>
   privacy: "public" | "friends" | "private"
   is_trending: boolean
   engagement: {
@@ -95,8 +74,6 @@ interface NotificationSettings {
 }
 
 export default function ActivityFeedPage() {
-  const router = useRouter()
-  const { user } = useAuth()
   const { toast } = useToast()
 
   const [activities, setActivities] = useState<ActivityItem[]>([])
@@ -125,13 +102,13 @@ export default function ActivityFeedPage() {
 
   useEffect(() => {
     loadActivities(true)
-  }, [filters])
+  }, [loadActivities])
 
   useEffect(() => {
     filterActivities()
-  }, [activities, searchQuery])
+  }, [filterActivities])
 
-  const loadActivities = async (reset = false) => {
+  const loadActivities = useCallback(async (reset = false) => {
     if (reset) {
       setIsLoading(true)
       setPage(1)
@@ -181,9 +158,9 @@ export default function ActivityFeedPage() {
       setIsLoading(false)
       setIsLoadingMore(false)
     }
-  }
+  }, [filters, page, toast])
 
-  const filterActivities = () => {
+  const filterActivities = useCallback(() => {
     let filtered = [...activities]
 
     if (searchQuery.trim()) {
@@ -196,23 +173,7 @@ export default function ActivityFeedPage() {
     }
 
     setFilteredActivities(filtered)
-  }
-
-  const loadNotificationSettings = async () => {
-    try {
-      const token = localStorage.getItem("accessToken")
-      const response = await fetch("/api/users/notification-settings/", {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-
-      if (response.ok) {
-        const data = await response.json()
-        setNotificationSettings(data)
-      }
-    } catch (error) {
-      console.error("Failed to load notification settings:", error)
-    }
-  }
+  }, [activities, searchQuery])
 
   const updateNotificationSettings = async (settings: Partial<NotificationSettings>) => {
     try {
@@ -320,7 +281,7 @@ export default function ActivityFeedPage() {
   }
 
   const getActivityMessage = (activity: ActivityItem) => {
-    const { type, data, user } = activity
+    const { type, data } = activity
     
     switch (type) {
       case "party_created":
@@ -396,7 +357,7 @@ export default function ActivityFeedPage() {
               <Activity className="h-8 w-8" />
               Activity Feed
             </h1>
-            <p className="text-gray-600 mt-2">Stay updated with your friends' watch party activities</p>
+            <p className="text-gray-600 mt-2">Stay updated with your friends&apos; watch party activities</p>
           </div>
           
           <div className="flex items-center gap-2">
