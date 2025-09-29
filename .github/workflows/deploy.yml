@@ -7,11 +7,13 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
+        timeout-minutes: 14
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -114,104 +116,97 @@ jobs:
             # Build and deploy with Docker Compose (uses external AWS services)
             echo "🏗️  Building Docker images with optimizations..."
             
-            # Enable Docker BuildKit for better caching
+            # Enable Docker BuildKit for better caching and parallel builds
             export DOCKER_BUILDKIT=1
             export COMPOSE_DOCKER_CLI_BUILD=1
+            export BUILDKIT_PROGRESS=plain
             
             # Clean up old containers first
             docker-compose down --remove-orphans || true
             
-            # Build backend first (faster and required by others)
-            echo "📦 Building backend image..."
-            if ! docker-compose build backend --no-cache; then
-              echo "❌ Backend build failed"
-              exit 1
-            fi
-            
-            # Build frontend with memory optimization and timeout handling
-            echo "📦 Building frontend image (this may take a few minutes)..."
-            
-            # Set build timeout to 20 minutes for frontend
-            timeout 1200 docker-compose build frontend --no-cache || {
-              echo "❌ Frontend build failed or timed out"
-              echo "📋 Trying alternative build approach..."
+            # Build images in parallel with optimized caching
+            echo "📦 Building images in parallel..."
+            timeout 1200 docker-compose build --parallel --build-arg BUILDKIT_INLINE_CACHE=1 || {
+              echo "⚠️ Parallel build failed, trying sequential build..."
               
-              # Try building with different memory settings
-              docker-compose -f docker-compose.yml build frontend \
-                --build-arg NODE_OPTIONS="--max-old-space-size=2048" \
-                --no-cache || {
-                echo "❌ Alternative frontend build also failed"
+              # Build backend first (faster and required by others)
+              echo "📦 Building backend image..."
+              if ! timeout 600 docker-compose build backend; then
+                echo "❌ Backend build failed"
                 exit 1
-              }
+              fi
+              
+              # Build frontend with optimized settings and compatibility timeout
+              echo "📦 Building frontend image..."
+              if ! timeout 1200 docker-compose build frontend \
+                --build-arg NODE_OPTIONS="--max-old-space-size=2048"; then
+                echo "❌ Frontend build failed"
+                exit 1
+              fi
             }
             
             echo "✅ All images built successfully"
             
-            # Start services in stages
+            # Start services in optimized stages
             echo "🚀 Starting backend service..."
             docker-compose up -d backend
             
-            # Wait for backend to be ready before starting dependent services
+            # Reduced wait time with smarter health checking
             echo "⏳ Waiting for backend to be ready..."
-            for i in {1..30}; do
+            for i in {1..20}; do
               if docker-compose exec -T backend python manage.py check --deploy > /dev/null 2>&1; then
                 echo "✅ Backend is ready"
                 break
-              elif [ $i -eq 30 ]; then
+              elif [ $i -eq 20 ]; then
                 echo "❌ Backend failed to start properly"
-                docker-compose logs backend
+                docker-compose logs --tail=30 backend
                 exit 1
               else
-                echo "⏳ Waiting for backend... ($i/30)"
-                sleep 5
+                echo "⏳ Waiting for backend... ($i/20)"
+                sleep 3
               fi
             done
             
-            echo "🚀 Starting Celery services..."
-            docker-compose up -d celery-worker celery-beat
+            echo "🚀 Starting all services..."
+            docker-compose up -d
             
-            echo "🚀 Starting frontend and nginx..."
-            docker-compose up -d frontend nginx
+            # Optimized health checking with shorter intervals
+            echo "⏳ Waiting for services to be ready..."
+            sleep 15
             
-            # Wait for backend to be ready (increased time for AWS connections)
-            echo "⏳ Waiting for all services to be ready..."
-            sleep 30
-            
-            # Test backend health with better error handling
+            # Test backend health with optimized retry logic
             echo "🏥 Testing backend health..."
-            for i in {1..20}; do
+            for i in {1..12}; do
               if curl -f -s http://localhost:8000/health/ > /dev/null 2>&1; then
                 echo "✅ Backend is healthy"
                 break
-              elif [ $i -eq 20 ]; then
-                echo "❌ Backend health check failed after 10 minutes"
+              elif [ $i -eq 12 ]; then
+                echo "❌ Backend health check failed after 6 minutes"
                 echo "📋 Backend logs:"
-                docker-compose logs --tail=50 backend
-                echo "📋 Celery worker logs:"
-                docker-compose logs --tail=20 celery-worker
+                docker-compose logs --tail=30 backend
                 echo "📋 Container status:"
                 docker-compose ps
                 exit 1
               else
-                echo "⏳ Waiting for backend health check... ($i/20)"
+                echo "⏳ Backend health check... ($i/12)"
                 sleep 30
               fi
             done
             
-            # Test frontend health
+            # Test frontend health with reduced wait time
             echo "🏥 Testing frontend health..."
-            for i in {1..10}; do
+            for i in {1..8}; do
               if curl -f -s http://localhost:3000 > /dev/null 2>&1; then
                 echo "✅ Frontend is healthy"
                 break
-              elif [ $i -eq 10 ]; then
+              elif [ $i -eq 8 ]; then
                 echo "❌ Frontend health check failed"
                 echo "📋 Frontend logs:"
-                docker-compose logs --tail=50 frontend
+                docker-compose logs --tail=30 frontend
                 exit 1
               else
-                echo "⏳ Waiting for frontend health check... ($i/10)"
-                sleep 15
+                echo "⏳ Frontend health check... ($i/8)"
+                sleep 10
               fi
             done
             

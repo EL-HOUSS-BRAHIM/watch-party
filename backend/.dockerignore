@@ -1,0 +1,74 @@
+# Python cache
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.coverage
+.pytest_cache
+
+# Virtual environments
+venv
+env
+ENV
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs
+
+# Development files
+.env.local
+.env.development
+
+# Database
+db.sqlite3
+*.sqlite3
+
+# Media files (handled by volumes)
+media/*
+!media/.gitkeep
+
+# Static files (collected during build)
+staticfiles/*
+!staticfiles/.gitkeep
+
+# Testing
+.coverage
+htmlcov
+.tox
+
+# Git
+.git
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# Migrations (may want to include these)
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# Local settings
+local_settings.py
+
+# Temporary files
+*.tmp
+*.temp
+.tmp
+
+# Build artifacts
+build
+dist
+*.egg-info
