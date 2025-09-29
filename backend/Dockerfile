@@ -36,6 +36,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     DEBIAN_FRONTEND=noninteractive \
     DJANGO_SETTINGS_MODULE=config.settings.production
 
+# Accept build argument to skip AWS during build
+ARG SKIP_AWS_DURING_BUILD=0
+ENV SKIP_AWS_DURING_BUILD=${SKIP_AWS_DURING_BUILD}
+
 # Install runtime dependencies only
 RUN apt-get update && apt-get install -y \
     curl \

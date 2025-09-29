@@ -32,7 +32,7 @@ app.conf.beat_schedule = {
         'schedule': crontab(hour=2, minute=0),  # 2 AM daily
     },
     
-    # Check for inactive parties and clean up
+    # Check for inactive parties and clean up 
     'cleanup-inactive-parties': {
         'task': 'apps.parties.tasks.cleanup_inactive_parties',
         'schedule': crontab(minute='*/15'),  # Every 15 minutes
