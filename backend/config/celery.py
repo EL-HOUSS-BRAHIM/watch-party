@@ -7,7 +7,7 @@ from celery.signals import task_failure, task_postrun, task_prerun
 from shared.observability import observability
 
 # Set default Django settings
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.development')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
 
 app = Celery('watchparty')
 
