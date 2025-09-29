@@ -16,7 +16,10 @@ The application uses separate environment files for frontend and backend:
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env.local
 
-# Edit backend configuration
+# Use the deployment helper to choose your configuration
+./deploy-helper.sh
+
+# Or manually edit backend configuration
 nano backend/.env
 
 # Frontend is pre-configured, but you can customize
