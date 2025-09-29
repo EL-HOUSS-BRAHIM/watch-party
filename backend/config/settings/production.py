@@ -8,6 +8,10 @@ import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
+from shared.aws import get_optional_secret
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Security
 DEBUG = False
@@ -31,44 +35,92 @@ DATABASES = {
     )
 }
 
+# Dynamic Redis/Valkey Configuration from AWS Secrets Manager
+def get_valkey_config():
+    """Get Valkey configuration from AWS Secrets Manager with fallback to environment."""
+    try:
+        # Try to get the auth token from AWS Secrets Manager
+        valkey_secret = get_optional_secret('watch-party-valkey-001-auth-token')
+        if valkey_secret and 'auth_token' in valkey_secret:
+            auth_token = valkey_secret['auth_token']
+            # Use the ElastiCache endpoint with the dynamic auth token
+            valkey_endpoint = config('VALKEY_ENDPOINT', default='clustercfg.watch-party-valkey-001.rnipvl.memorydb.eu-west-3.amazonaws.com:6379')
+            return f'rediss://:{auth_token}@{valkey_endpoint}/0'
+        else:
+            logger.info("Valkey auth token not found in Secrets Manager, using environment fallback")
+    except Exception as e:
+        logger.warning(f"Failed to fetch Valkey credentials from AWS Secrets Manager: {e}")
+    
+    # Fallback to environment variable
+    return config('REDIS_URL', default='redis://127.0.0.1:6379/0')
+
 # Redis Configuration - Enhanced for Phase 2 features
-REDIS_URL = config('REDIS_URL', default='redis://127.0.0.1:6379/0')
+REDIS_URL = get_valkey_config()
+logger.info(f"Using Redis/Valkey URL: {REDIS_URL.split('@')[0]}@***")  # Log URL without exposing credentials
 
-# Redis Cache Configuration (restored - connection working)
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': REDIS_URL,
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'CONNECTION_POOL_KWARGS': {
-                'max_connections': 100,
-                'retry_on_timeout': True,
-            }
-        },
-        'KEY_PREFIX': 'watchparty_prod',
-        'TIMEOUT': 3600,
+# Redis Cache Configuration with fallback
+try:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': REDIS_URL,
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                'CONNECTION_POOL_KWARGS': {
+                    'max_connections': 100,
+                    'retry_on_timeout': True,
+                    'socket_connect_timeout': 5,
+                    'socket_timeout': 5,
+                },
+                'IGNORE_EXCEPTIONS': True,
+            },
+            'KEY_PREFIX': 'watchparty_prod',
+            'TIMEOUT': 3600,
+        }
     }
-}
-
-# Previous fallback cache (no longer needed)
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-#         'LOCATION': 'watchparty-cache',
-#         'TIMEOUT': 3600,
-#     }
-# }
-# }
+except Exception:
+    # Fallback to local memory cache if Redis is unavailable
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'watchparty-cache',
+            'TIMEOUT': 3600,
+        }
+    }
 
 # Session Configuration - Redis backed (restored)
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_CACHE_ALIAS = 'default'
 
 # Enhanced Celery Configuration for Phase 2
-CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='redis://127.0.0.1:6379/2')
-CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND', default='redis://127.0.0.1:6379/3')
+# Use the same dynamic Redis URL but with different databases for broker and result backend
+def get_celery_redis_url(db_number):
+    """Get Celery Redis URL with specific database number."""
+    base_url = REDIS_URL
+    if base_url.startswith('rediss://') and '@' in base_url:
+        # For SSL Redis URLs like rediss://:token@host:port/0
+        parts = base_url.rsplit('/', 1)
+        return f"{parts[0]}/{db_number}"
+    elif base_url.startswith('redis://') and '@' in base_url:
+        # For non-SSL Redis URLs like redis://:token@host:port/0
+        parts = base_url.rsplit('/', 1)
+        return f"{parts[0]}/{db_number}"
+    else:
+        # Fallback to environment variables
+        return config(f'CELERY_BROKER_URL', default=f'redis://127.0.0.1:6379/{db_number}')
+
+CELERY_BROKER_URL = get_celery_redis_url(2)
+CELERY_RESULT_BACKEND = get_celery_redis_url(3)
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+logger.info(f"Celery broker URL: {CELERY_BROKER_URL.split('@')[0]}@***")
+logger.info(f"Celery result backend: {CELERY_RESULT_BACKEND.split('@')[0]}@***")
+
+# Celery Redis connection settings with fallback
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_BROKER_CONNECTION_RETRY = True
+CELERY_BROKER_CONNECTION_MAX_RETRIES = 10
+CELERY_RESULT_BACKEND_CONNECTION_RETRY = True
 
 # Task routing for different queues
 CELERY_TASK_ROUTES = {
@@ -78,24 +130,25 @@ CELERY_TASK_ROUTES = {
     'shared.background_tasks.*': {'queue': 'maintenance'},
 }
 
-# Channels Configuration - Redis backed for production (restored)
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [REDIS_URL],
-            "capacity": 2000,
-            "expiry": 60,
+# Channels Configuration with fallback
+try:
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels_redis.core.RedisChannelLayer',
+            'CONFIG': {
+                "hosts": [REDIS_URL],
+                "capacity": 2000,
+                "expiry": 60,
+            },
         },
-    },
-}
-
-# Previous in-memory fallback (no longer needed)
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels.layers.InMemoryChannelLayer',
-#     },
-# }
+    }
+except Exception:
+    # Fallback to in-memory channel layer if Redis is unavailable
+    CHANNEL_LAYERS = {
+        'default': {
+            'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        },
+    }
 
 # CSRF and CORS Configuration
 CSRF_TRUSTED_ORIGINS = config(

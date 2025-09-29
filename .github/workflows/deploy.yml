@@ -37,34 +37,93 @@ jobs:
               git reset --hard origin/master
             fi
             
-            # Setup environment files and fix old module references
-            if [ ! -f "$APP_DIR/backend/.env" ]; then
-              cp backend/.env.example backend/.env
-              echo "⚠️  Created backend/.env from example"
-              echo "⚠️  IMPORTANT: Update backend/.env with your AWS credentials:"
-              echo "   - Database password for RDS PostgreSQL"
-              echo "   - Redis auth token for ElastiCache"
-              echo "   - Other service credentials (email, OAuth, etc.)"
-            else
-              echo "🔧 Fixing environment configuration for module structure..."
-              # Fix old watchparty.settings references to use config.settings.production
-              sed -i 's/DJANGO_SETTINGS_MODULE=watchparty\.settings/DJANGO_SETTINGS_MODULE=config.settings.production/g' backend/.env
-              sed -i 's/DJANGO_SETTINGS_MODULE=config\.settings\.development/DJANGO_SETTINGS_MODULE=config.settings.production/g' backend/.env
-              echo "✅ Updated DJANGO_SETTINGS_MODULE references"
-              
-              # Verify the fix worked
-              if grep -q "DJANGO_SETTINGS_MODULE=config.settings.production" backend/.env; then
-                echo "✅ DJANGO_SETTINGS_MODULE correctly set to config.settings.production"
-              else
-                echo "⚠️  Warning: DJANGO_SETTINGS_MODULE may not be properly configured"
-                echo "📋 Current DJANGO_SETTINGS_MODULE value:"
-                grep "DJANGO_SETTINGS_MODULE" backend/.env || echo "DJANGO_SETTINGS_MODULE not found in .env"
-              fi
-            fi
+            # Generate production environment files from templates
+            echo "🔧 Setting up production environment files..."
             
-            if [ ! -f "$APP_DIR/frontend/.env.local" ]; then
-              cp frontend/.env.example frontend/.env.local
-              echo "✅ Created frontend/.env.local with correct API URLs"
+            # Generate backend .env for production
+            echo "📝 Creating backend/.env for production..."
+            cat > backend/.env << 'BACKEND_ENV'
+            # WATCH PARTY BACKEND - PRODUCTION CONFIGURATION
+            DEBUG=False
+            SECRET_KEY=your-super-secret-key-here-change-in-production
+            DJANGO_SETTINGS_MODULE=config.settings.production
+            ALLOWED_HOSTS=35.181.116.57,be-watch-party.brahim-elhouss.me,watch-party.brahim-elhouss.me,localhost,127.0.0.1
+            
+            # DATABASE CONFIGURATION (AWS RDS PostgreSQL)
+            DATABASE_URL=postgresql://watchparty_admin:your_secure_password@watch-party-postgres.cj6w0queklir.eu-west-3.rds.amazonaws.com:5432/watchparty_prod?sslmode=require
+            DB_NAME=watchparty_prod
+            DB_USER=watchparty_admin
+            DB_PASSWORD=your_secure_password
+            DB_HOST=watch-party-postgres.cj6w0queklir.eu-west-3.rds.amazonaws.com
+            DB_PORT=5432
+            DB_SSL_MODE=require
+            
+            # REDIS CONFIGURATION (AWS ElastiCache Valkey - using dynamic AWS Secrets Manager)
+            REDIS_HOST=master.watch-party-valkey.2muo9f.euw3.cache.amazonaws.com
+            REDIS_PORT=6379
+            REDIS_USE_SSL=True
+            
+            # SECURITY SETTINGS
+            SECURE_SSL_REDIRECT=True
+            SESSION_COOKIE_SECURE=True
+            CSRF_COOKIE_SECURE=True
+            SECURE_HSTS_SECONDS=31536000
+            SECURE_HSTS_INCLUDE_SUBDOMAINS=True
+            SECURE_HSTS_PRELOAD=True
+            
+            # AWS S3 CONFIGURATION
+            USE_S3=true
+            AWS_STORAGE_BUCKET_NAME=your-s3-bucket-name
+            AWS_S3_REGION_NAME=eu-west-3
+            
+            # CORS CONFIGURATION
+            CORS_ALLOWED_ORIGINS=https://watch-party.brahim-elhouss.me,https://be-watch-party.brahim-elhouss.me
+            
+            # ENVIRONMENT
+            ENVIRONMENT=production
+            
+            # FEATURE FLAGS
+            MAINTENANCE_MODE=False
+            REGISTRATION_ENABLED=True
+            GOOGLE_DRIVE_INTEGRATION_ENABLED=True
+            YOUTUBE_INTEGRATION_ENABLED=True
+            TWO_FACTOR_AUTH_ENABLED=True
+            
+            # EMAIL CONFIGURATION
+            EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+            DEFAULT_FROM_EMAIL=noreply@watchparty.com
+            
+            # JWT AUTHENTICATION
+            JWT_SECRET_KEY=your-jwt-secret-key-change-this
+            JWT_REFRESH_SECRET_KEY=your-jwt-refresh-secret-key-change-this
+            JWT_ACCESS_TOKEN_LIFETIME=60
+            JWT_REFRESH_TOKEN_LIFETIME=7
+            
+            # OTHER PRODUCTION SETTINGS
+            RATE_LIMIT_LOGIN=5/min
+            RATE_LIMIT_API=1000/hour
+            RATE_LIMIT_UPLOAD=10/hour
+            BACKEND_ENV
+            
+            # Generate frontend .env.local for production
+            echo "📝 Creating frontend/.env.local for production..."
+            cat > frontend/.env.local << 'FRONTEND_ENV'
+            # Production Frontend Environment Variables
+            NEXT_PUBLIC_API_URL=https://be-watch-party.brahim-elhouss.me
+            NEXT_PUBLIC_WS_URL=wss://be-watch-party.brahim-elhouss.me/ws
+            
+            # Feature Flags
+            NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE=true
+            NEXT_PUBLIC_ENABLE_DISCORD=true
+            NEXT_PUBLIC_ENABLE_ANALYTICS=true
+            FRONTEND_ENV
+            
+            echo "✅ Production environment files created"
+            echo "🔍 Verifying Django settings module..."
+            if grep -q "DJANGO_SETTINGS_MODULE=config.settings.production" backend/.env; then
+              echo "✅ DJANGO_SETTINGS_MODULE correctly set to config.settings.production"
+            else
+              echo "⚠️  Warning: DJANGO_SETTINGS_MODULE configuration issue"
             fi
             
             # Configure AWS CLI (required for AWS external services)
@@ -89,21 +148,21 @@ jobs:
             
             # Configure AWS credentials and region for Secrets Manager access
             mkdir -p ~/.aws
-            cat > ~/.aws/config << EOF
+            cat > ~/.aws/config << 'AWSCONFIG'
             [default]
             region = eu-west-3
             output = json
-            EOF
+            AWSCONFIG
             
             # Configure AWS credentials if provided via environment variables
             # (these would be set from GitHub Actions secrets)
             if [ -n "${AWS_ACCESS_KEY_ID:-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY:-}" ]; then
               echo "🔧 Configuring AWS credentials from environment variables..."
-              cat > ~/.aws/credentials << EOF
+              cat > ~/.aws/credentials << 'AWSCREDS'
             [default]
             aws_access_key_id = ${AWS_ACCESS_KEY_ID}
             aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
-            EOF
+            AWSCREDS
               chmod 600 ~/.aws/credentials
             else
               echo "🔧 Using IAM role for AWS access (no credentials file needed)"
