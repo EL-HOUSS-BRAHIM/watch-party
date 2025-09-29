@@ -34,7 +34,11 @@ jobs:
             # Setup environment files if they don't exist
             if [ ! -f "$APP_DIR/backend/.env" ]; then
               cp backend/.env.example backend/.env
-              echo "⚠️  Created backend/.env from example - please customize it!"
+              echo "⚠️  Created backend/.env from example"
+              echo "⚠️  IMPORTANT: Update backend/.env with your AWS credentials:"
+              echo "   - Database password for RDS PostgreSQL"
+              echo "   - Redis auth token for ElastiCache"
+              echo "   - Other service credentials (email, OAuth, etc.)"
             fi
             
             if [ ! -f "$APP_DIR/frontend/.env.local" ]; then
@@ -42,18 +46,80 @@ jobs:
               echo "✅ Created frontend/.env.local with correct API URLs"
             fi
             
-            # Build and deploy with Docker Compose
+            # Configure AWS CLI (required for AWS external services)
+            if ! command -v aws &> /dev/null; then
+              echo "📦 Installing AWS CLI..."
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip -q awscliv2.zip
+              sudo ./aws/install
+              rm -rf aws awscliv2.zip
+            fi
+            
+            # Configure AWS region (uses IAM role attached to server)
+            mkdir -p ~/.aws
+            cat > ~/.aws/config << EOF
+            [default]
+            region = eu-west-3
+            output = json
+            EOF
+            
+            # Test AWS connectivity
+            echo "🔍 Testing AWS connectivity..."
+            if ! aws sts get-caller-identity > /dev/null 2>&1; then
+              echo "❌ AWS configuration failed. Ensure IAM role MyAppRole is attached to this server."
+              exit 1
+            fi
+            echo "✅ AWS connectivity confirmed"
+            
+            # Build and deploy with Docker Compose (uses external AWS services)
+            echo "🏗️  Building Docker images..."
             docker-compose build --no-cache
+            
+            echo "🚀 Starting services..."
             docker-compose up -d --remove-orphans
             
-            # Wait for services to be ready
-            sleep 30
+            # Wait for backend to be ready (increased time for AWS connections)
+            echo "⏳ Waiting for services to be ready..."
+            sleep 45
+            
+            # Test backend health
+            for i in {1..12}; do
+              if curl -f http://localhost:8000/health/ > /dev/null 2>&1; then
+                echo "✅ Backend is healthy"
+                break
+              elif [ $i -eq 12 ]; then
+                echo "❌ Backend health check failed after 2 minutes"
+                docker-compose logs backend
+                exit 1
+              else
+                echo "⏳ Waiting for backend... ($i/12)"
+                sleep 10
+              fi
+            done
             
             # Run initial setup if this is first deployment
             if docker-compose exec -T backend python manage.py showmigrations --plan | grep -q "\[ \]"; then
               echo "🔧 Running initial Django setup..."
-              docker-compose exec -T backend python manage.py migrate
+              if ! docker-compose exec -T backend python manage.py migrate; then
+                echo "❌ Migration failed. Check database connectivity:"
+                echo "   - Verify RDS PostgreSQL is accessible"
+                echo "   - Check database credentials in backend/.env"
+                docker-compose logs backend
+                exit 1
+              fi
               docker-compose exec -T backend python manage.py collectstatic --noinput
+            fi
+            
+            # Final health check
+            echo "🏥 Final health check..."
+            if curl -f http://localhost:8000/health/ > /dev/null 2>&1; then
+              echo "🎉 Deployment successful!"
+              echo "   Frontend: http://${{ secrets.LIGHTSAIL_HOST }}/"
+              echo "   Backend API: http://${{ secrets.LIGHTSAIL_HOST }}/api/"
+            else
+              echo "❌ Final health check failed"
+              docker-compose logs --tail=20 backend
+              exit 1
             fi
             
             # Cleanup
