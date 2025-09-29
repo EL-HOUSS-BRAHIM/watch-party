@@ -191,36 +191,39 @@ jobs:
             
             # Configure SSL certificates for HTTPS
             echo "🔐 Setting up SSL certificates..."
-            sudo mkdir -p /etc/nginx/ssl
+            
+            # Create SSL directory in nginx/ssl (this will be mounted to nginx container)
+            SSL_DIR="$APP_DIR/nginx/ssl"
+            mkdir -p "$SSL_DIR"
             
             # Check if SSL certificates already exist
-            if [ -f "/etc/nginx/ssl/origin.pem" ] && [ -f "/etc/nginx/ssl/private.key" ]; then
+            if [ -f "$SSL_DIR/origin.pem" ] && [ -f "$SSL_DIR/private.key" ]; then
               echo "✅ SSL certificates already exist"
             else
               echo "📝 Creating SSL certificates from GitHub secrets..."
               
               # Create origin certificate from SSL_ORIGIN secret
               if [ -n "${SSL_ORIGIN:-}" ]; then
-                echo "$SSL_ORIGIN" | sudo tee /etc/nginx/ssl/origin.pem > /dev/null
-                sudo chmod 644 /etc/nginx/ssl/origin.pem
-                echo "✅ SSL origin certificate created"
+                echo "$SSL_ORIGIN" > "$SSL_DIR/origin.pem"
+                chmod 644 "$SSL_DIR/origin.pem"
+                echo "✅ SSL origin certificate created at $SSL_DIR/origin.pem"
               else
                 echo "⚠️  SSL_ORIGIN secret not provided - HTTPS will not work"
               fi
               
               # Create private key from SSL_PRIVATE secret
               if [ -n "${SSL_PRIVATE:-}" ]; then
-                echo "$SSL_PRIVATE" | sudo tee /etc/nginx/ssl/private.key > /dev/null
-                sudo chmod 600 /etc/nginx/ssl/private.key
-                echo "✅ SSL private key created"
+                echo "$SSL_PRIVATE" > "$SSL_DIR/private.key"
+                chmod 600 "$SSL_DIR/private.key"
+                echo "✅ SSL private key created at $SSL_DIR/private.key"
               else
                 echo "⚠️  SSL_PRIVATE secret not provided - HTTPS will not work"
               fi
               
               # Verify SSL certificate files
-              if [ -f "/etc/nginx/ssl/origin.pem" ] && [ -f "/etc/nginx/ssl/private.key" ]; then
+              if [ -f "$SSL_DIR/origin.pem" ] && [ -f "$SSL_DIR/private.key" ]; then
                 echo "🔍 Verifying SSL certificate..."
-                if sudo openssl x509 -in /etc/nginx/ssl/origin.pem -noout -text > /dev/null 2>&1; then
+                if openssl x509 -in "$SSL_DIR/origin.pem" -noout -text > /dev/null 2>&1; then
                   echo "✅ SSL certificate is valid"
                 else
                   echo "⚠️  SSL certificate validation failed"
