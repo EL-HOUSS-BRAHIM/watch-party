@@ -5,7 +5,8 @@ LABEL maintainer="watch-party-team"
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    DEBIAN_FRONTEND=noninteractive
+    DEBIAN_FRONTEND=noninteractive \
+    DJANGO_SETTINGS_MODULE=config.settings.production
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
