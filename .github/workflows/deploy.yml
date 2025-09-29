@@ -17,11 +17,13 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SSL_ORIGIN: ${{ secrets.SSL_ORIGIN }}
+          SSL_PRIVATE: ${{ secrets.SSL_PRIVATE }}
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: deploy
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY
+          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,SSL_ORIGIN,SSL_PRIVATE
           script: |
             set -e
             APP_NAME=watch-party
@@ -185,6 +187,45 @@ jobs:
             else
               echo "⚠️  Secrets Manager access test failed - check permissions"
               echo "   The app needs access to secrets like 'all-in-one-credentials'"
+            fi
+            
+            # Configure SSL certificates for HTTPS
+            echo "🔐 Setting up SSL certificates..."
+            sudo mkdir -p /etc/nginx/ssl
+            
+            # Check if SSL certificates already exist
+            if [ -f "/etc/nginx/ssl/origin.pem" ] && [ -f "/etc/nginx/ssl/private.key" ]; then
+              echo "✅ SSL certificates already exist"
+            else
+              echo "📝 Creating SSL certificates from GitHub secrets..."
+              
+              # Create origin certificate from SSL_ORIGIN secret
+              if [ -n "${SSL_ORIGIN:-}" ]; then
+                echo "$SSL_ORIGIN" | sudo tee /etc/nginx/ssl/origin.pem > /dev/null
+                sudo chmod 644 /etc/nginx/ssl/origin.pem
+                echo "✅ SSL origin certificate created"
+              else
+                echo "⚠️  SSL_ORIGIN secret not provided - HTTPS will not work"
+              fi
+              
+              # Create private key from SSL_PRIVATE secret
+              if [ -n "${SSL_PRIVATE:-}" ]; then
+                echo "$SSL_PRIVATE" | sudo tee /etc/nginx/ssl/private.key > /dev/null
+                sudo chmod 600 /etc/nginx/ssl/private.key
+                echo "✅ SSL private key created"
+              else
+                echo "⚠️  SSL_PRIVATE secret not provided - HTTPS will not work"
+              fi
+              
+              # Verify SSL certificate files
+              if [ -f "/etc/nginx/ssl/origin.pem" ] && [ -f "/etc/nginx/ssl/private.key" ]; then
+                echo "🔍 Verifying SSL certificate..."
+                if sudo openssl x509 -in /etc/nginx/ssl/origin.pem -noout -text > /dev/null 2>&1; then
+                  echo "✅ SSL certificate is valid"
+                else
+                  echo "⚠️  SSL certificate validation failed"
+                fi
+              fi
             fi
             
             # Build and deploy with Docker Compose (uses external AWS services)
@@ -358,8 +399,9 @@ jobs:
             echo "🏥 Final health check..."
             if curl -f http://localhost:8000/health/ > /dev/null 2>&1; then
               echo "🎉 Deployment successful!"
-              echo "   Frontend: http://${{ secrets.LIGHTSAIL_HOST }}/"
-              echo "   Backend API: http://${{ secrets.LIGHTSAIL_HOST }}/api/"
+              echo "   Frontend: https://${{ secrets.LIGHTSAIL_HOST }}/"
+              echo "   Backend API: https://${{ secrets.LIGHTSAIL_HOST }}/api/"
+              echo "   (HTTP requests will be automatically redirected to HTTPS)"
             else
               echo "❌ Final health check failed"
               docker-compose logs --tail=20 backend
