@@ -9,7 +9,7 @@ from shared.observability import observability
 # Set default Django settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.production')
 
-app = Celery('watchparty')
+app = Celery('config')
 
 # Load settings from Django
 app.config_from_object('django.conf:settings', namespace='CELERY')
