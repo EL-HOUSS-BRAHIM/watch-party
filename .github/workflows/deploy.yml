@@ -51,8 +51,17 @@ jobs:
               echo "📦 Installing AWS CLI..."
               curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
               unzip -q awscliv2.zip
-              sudo ./aws/install
+              # Try passwordless sudo first, fallback to user installation
+              if sudo -n true 2>/dev/null; then
+                sudo ./aws/install
+              else
+                echo "Installing AWS CLI for current user (deploy)..."
+                ./aws/install --install-dir ./aws-cli --bin-dir ./aws-cli-bin
+                export PATH="$PWD/aws-cli-bin:$PATH"
+              fi
               rm -rf aws awscliv2.zip
+            else
+              echo "AWS CLI already installed: $(aws --version)"
             fi
             
             # Configure AWS region (uses IAM role attached to server)

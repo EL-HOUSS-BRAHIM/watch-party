@@ -75,6 +75,11 @@ if ! id "deploy" &>/dev/null; then
     usermod -aG sudo deploy
 fi
 
+# Configure passwordless sudo for deploy user
+print_status "Configuring passwordless sudo for deploy user..."
+echo "deploy ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/deploy
+chmod 440 /etc/sudoers.d/deploy
+
 # Create application directory
 print_status "Setting up application directory..."
 mkdir -p /srv

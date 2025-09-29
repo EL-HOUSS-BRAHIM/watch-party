@@ -7,7 +7,15 @@ if ! command -v aws &> /dev/null; then
     echo "Installing AWS CLI..."
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     unzip awscliv2.zip
-    sudo ./aws/install
+    # Check if we can use sudo without password, otherwise try direct installation
+    if sudo -n true 2>/dev/null; then
+        sudo ./aws/install
+    else
+        echo "Warning: Cannot install AWS CLI system-wide. Installing for current user..."
+        ./aws/install --install-dir ./aws-cli --bin-dir ./aws-cli-bin
+        export PATH="$PWD/aws-cli-bin:$PATH"
+        echo 'export PATH="$PWD/aws-cli-bin:$PATH"' >> ~/.bashrc
+    fi
     rm -rf aws awscliv2.zip
     echo "AWS CLI installed successfully"
 else
