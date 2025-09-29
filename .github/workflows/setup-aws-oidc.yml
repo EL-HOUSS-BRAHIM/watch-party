@@ -1,0 +1,59 @@
+name: Setup AWS OIDC (Optional)
+
+# This workflow demonstrates how to configure AWS access for GitHub Actions
+# if you need to access AWS services from the GitHub Actions runner
+# (e.g., to fetch secrets from AWS Secrets Manager, deploy infrastructure, etc.)
+
+on:
+  workflow_dispatch:
+    inputs:
+      aws_role_arn:
+        description: 'AWS IAM Role ARN for GitHub Actions'
+        required: true
+        type: string
+      aws_region:
+        description: 'AWS Region'
+        required: false
+        default: 'eu-west-3'
+        type: string
+
+jobs:
+  demo-aws-access:
+    runs-on: ubuntu-latest
+    
+    # These permissions are needed for the GitHub Actions OIDC token
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ inputs.aws_role_arn }}
+          aws-region: ${{ inputs.aws_region }}
+          
+      - name: Test AWS access
+        run: |
+          echo "Testing AWS access..."
+          aws sts get-caller-identity
+          
+          echo "Available S3 buckets:"
+          aws s3 ls || echo "No S3 access or no buckets"
+          
+          echo "Testing AWS Secrets Manager access:"
+          aws secretsmanager list-secrets --region ${{ inputs.aws_region }} || echo "No Secrets Manager access"
+
+      - name: Example: Deploy with AWS access
+        run: |
+          echo "🚀 This is where you could:"
+          echo "  - Fetch secrets from AWS Secrets Manager"
+          echo "  - Deploy infrastructure with CloudFormation/CDK"
+          echo "  - Update S3 buckets"
+          echo "  - Manage AWS resources"
+          echo ""
+          echo "📝 Current workflow still uses SSH deployment to server"
+          echo "   Server uses IAM role MyAppRole for AWS access"
