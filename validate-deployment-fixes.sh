@@ -45,24 +45,62 @@ else
     fi
 fi
 
-# Test 3: Check IAM role access (if on AWS instance)
+# Test 3: Check AWS configuration and Secrets Manager access
 echo ""
-echo "Test 3: Testing AWS IAM role access..."
+echo "Test 3: Testing AWS configuration and Secrets Manager access..."
 if curl -s --connect-timeout 5 http://169.254.169.254/latest/meta-data/iam/security-credentials/ &>/dev/null; then
     echo "✅ Instance metadata service accessible"
     
     if command -v aws &> /dev/null; then
         if aws sts get-caller-identity &>/dev/null; then
-            echo "✅ AWS IAM role is working correctly"
-            aws sts get-caller-identity | grep -E "(UserId|Account|Arn)"
+            echo "✅ AWS authentication is working"
+            aws sts get-caller-identity | grep -E "(UserId|Account|Arn)" || true
+            
+            # Test Secrets Manager access
+            if aws secretsmanager list-secrets --region eu-west-3 &>/dev/null; then
+                echo "✅ AWS Secrets Manager access confirmed"
+                
+                # Test specific secrets the app expects
+                secrets=("all-in-one-credentials" "watch-party-valkey-001-auth-token")
+                for secret in "${secrets[@]}"; do
+                    if aws secretsmanager get-secret-value --secret-id "$secret" --region eu-west-3 &>/dev/null; then
+                        echo "✅ Secret '$secret' exists and accessible"
+                    else
+                        echo "❌ Secret '$secret' not found or not accessible"
+                        echo "   The Django app expects this secret for configuration"
+                    fi
+                done
+            else
+                echo "❌ AWS Secrets Manager access denied"
+                echo "   Check IAM permissions for secretsmanager:GetSecretValue"
+            fi
         else
-            echo "❌ AWS IAM role not configured or accessible"
+            echo "❌ AWS authentication failed"
+            echo "   Check AWS credentials or IAM role configuration"
         fi
     else
-        echo "⚠️  AWS CLI not installed - cannot test IAM role"
+        echo "⚠️  AWS CLI not installed - cannot test AWS access"
+    fi
+elif [ -f ~/.aws/credentials ] || [ -n "${AWS_ACCESS_KEY_ID:-}" ]; then
+    echo "✅ AWS credentials configuration found"
+    
+    if command -v aws &> /dev/null; then
+        if aws sts get-caller-identity &>/dev/null; then
+            echo "✅ AWS authentication working with configured credentials"
+            
+            # Test Secrets Manager access
+            if aws secretsmanager list-secrets --region eu-west-3 &>/dev/null; then
+                echo "✅ AWS Secrets Manager access confirmed"
+            else
+                echo "❌ AWS Secrets Manager access denied with current credentials"
+            fi
+        else
+            echo "❌ AWS authentication failed with configured credentials"
+        fi
     fi
 else
-    echo "⚠️  Not running on AWS instance or metadata service not accessible"
+    echo "⚠️  Not running on AWS instance and no credentials configured"
+    echo "   Configure AWS credentials for Secrets Manager access"
 fi
 
 # Test 4: Check deploy user setup

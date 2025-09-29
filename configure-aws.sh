@@ -22,47 +22,64 @@ else
     echo "AWS CLI already installed: $(aws --version)"
 fi
 
-# Configure AWS to use IAM role (EC2 instance profile)
-echo "Configuring AWS to use IAM role..."
-
-# Create AWS config directory
+# Configure AWS region
+echo "Configuring AWS region..."
 mkdir -p ~/.aws
-
-# Configure AWS to use the IAM role for the region
 cat > ~/.aws/config << EOF
 [default]
 region = eu-west-3
 output = json
 EOF
 
+# Configure AWS credentials if provided
+if [ -n "${AWS_ACCESS_KEY_ID:-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY:-}" ]; then
+    echo "Configuring AWS credentials from environment variables..."
+    cat > ~/.aws/credentials << EOF
+[default]
+aws_access_key_id = ${AWS_ACCESS_KEY_ID}
+aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
+EOF
+    chmod 600 ~/.aws/credentials
+else
+    echo "No AWS credentials provided - assuming IAM role will be used"
+fi
+
 # For the deploy user as well
 sudo mkdir -p /home/deploy/.aws
-sudo tee /home/deploy/.aws/config << EOF
-[default]
-region = eu-west-3
-output = json
-EOF
-
+sudo cp ~/.aws/config /home/deploy/.aws/config
+if [ -f ~/.aws/credentials ]; then
+    sudo cp ~/.aws/credentials /home/deploy/.aws/credentials
+    sudo chmod 600 /home/deploy/.aws/credentials
+fi
 sudo chown -R deploy:deploy /home/deploy/.aws
 
 echo "Testing AWS configuration..."
-aws sts get-caller-identity
-
-if [ $? -eq 0 ]; then
+if aws sts get-caller-identity; then
     echo "✅ AWS configuration successful!"
     
-    echo "Testing S3 access..."
-    aws s3 ls || echo "❌ S3 access failed - check IAM role permissions"
-    
-    echo "Testing Parameter Store access..."
-    aws ssm get-parameters --names "/test" --region eu-west-3 2>/dev/null || echo "❌ Parameter Store access failed - check IAM role permissions"
+    echo "Testing Secrets Manager access..."
+    if aws secretsmanager list-secrets --region eu-west-3 >/dev/null 2>&1; then
+        echo "✅ Secrets Manager access confirmed"
+        
+        # Check for expected secrets
+        secrets=("all-in-one-credentials" "watch-party-valkey-001-auth-token")
+        for secret in "${secrets[@]}"; do
+            if aws secretsmanager describe-secret --secret-id "$secret" --region eu-west-3 >/dev/null 2>&1; then
+                echo "✅ Secret '$secret' found"
+            else
+                echo "⚠️  Secret '$secret' not found - app may fail to start"
+            fi
+        done
+    else
+        echo "❌ Secrets Manager access failed - check permissions"
+    fi
     
 else
     echo "❌ AWS configuration failed!"
     echo "Please check:"
-    echo "1. IAM role is attached to the Lightsail instance"
-    echo "2. IAM role has necessary permissions (S3, SSM, etc.)"
-    echo "3. Instance metadata service is accessible"
+    echo "1. AWS credentials are properly configured"
+    echo "2. IAM user/role has necessary permissions"
+    echo "3. Network connectivity to AWS services"
 fi
 
 echo "=== AWS CONFIGURATION COMPLETE ==="

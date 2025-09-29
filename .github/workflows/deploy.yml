@@ -16,6 +16,10 @@ jobs:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: deploy
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           script: |
             set -e
             APP_NAME=watch-party
@@ -64,7 +68,7 @@ jobs:
               echo "AWS CLI already installed: $(aws --version)"
             fi
             
-            # Configure AWS region (uses IAM role attached to server)
+            # Configure AWS credentials and region for Secrets Manager access
             mkdir -p ~/.aws
             cat > ~/.aws/config << EOF
             [default]
@@ -72,13 +76,38 @@ jobs:
             output = json
             EOF
             
+            # Configure AWS credentials if provided via environment variables
+            # (these would be set from GitHub Actions secrets)
+            if [ -n "${AWS_ACCESS_KEY_ID:-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY:-}" ]; then
+              echo "🔧 Configuring AWS credentials from environment variables..."
+              cat > ~/.aws/credentials << EOF
+            [default]
+            aws_access_key_id = ${AWS_ACCESS_KEY_ID}
+            aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
+            EOF
+              chmod 600 ~/.aws/credentials
+            else
+              echo "🔧 Using IAM role for AWS access (no credentials file needed)"
+            fi
+            
             # Test AWS connectivity
             echo "🔍 Testing AWS connectivity..."
             if ! aws sts get-caller-identity > /dev/null 2>&1; then
-              echo "❌ AWS configuration failed. Ensure IAM role MyAppRole is attached to this server."
+              echo "❌ AWS configuration failed."
+              echo "   Either configure AWS credentials in GitHub secrets (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)"
+              echo "   OR ensure IAM role MyAppRole is attached to this server."
               exit 1
             fi
             echo "✅ AWS connectivity confirmed"
+            
+            # Test Secrets Manager access (required for app configuration)
+            echo "🔍 Testing Secrets Manager access..."
+            if aws secretsmanager list-secrets --region eu-west-3 > /dev/null 2>&1; then
+              echo "✅ AWS Secrets Manager access confirmed"
+            else
+              echo "⚠️  Secrets Manager access test failed - check permissions"
+              echo "   The app needs access to secrets like 'all-in-one-credentials'"
+            fi
             
             # Build and deploy with Docker Compose (uses external AWS services)
             echo "🏗️  Building Docker images..."

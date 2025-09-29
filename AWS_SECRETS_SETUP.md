@@ -1,39 +1,141 @@
 # AWS Secrets Configuration Guide
 
-This guide explains how to configure AWS access for your Watch Party deployment, addressing both server-side IAM roles and GitHub Actions AWS access.
+This guide explains how to configure AWS access for your Watch Party deployment. The application uses **AWS Secrets Manager** to fetch configuration like database passwords and Redis tokens.
 
-## Current Architecture
+## Why AWS Access is Required
 
-The Watch Party application is designed to use **AWS IAM roles** rather than AWS access keys for security:
+Your Watch Party application code fetches secrets from AWS Secrets Manager:
+- `all-in-one-credentials` - Bundled database/Redis credentials  
+- `watch-party-valkey-001-auth-token` - Redis authentication token
 
-- **Server (Lightsail)**: Uses IAM role `MyAppRole` attached to the instance
-- **GitHub Actions**: Currently uses SSH to deploy to server (no direct AWS access needed)
+The server needs AWS API access to call `secretsmanager.get_secret_value()`.
 
-## Option 1: Server-Only AWS Access (Current Recommended Setup)
+## Option 1: GitHub Actions Secrets (Recommended)
 
-### What you need:
-1. **IAM Role**: `MyAppRole` attached to your Lightsail instance
-2. **GitHub Secrets**: Only SSH-related secrets for deployment
-
-### Required GitHub Secrets:
-```bash
-# Server connection
-LIGHTSAIL_HOST=your-server-ip-or-domain
-LIGHTSAIL_SSH_KEY=your-private-ssh-key
-
-# Application secrets (these get copied to server)
-SECRET_KEY=your-django-secret-key
-DATABASE_URL=postgresql://user:pass@host:5432/db
-REDIS_URL=rediss://:token@host:6379/0
-# ... other app secrets
-```
+This approach stores AWS credentials in GitHub repository secrets and configures them on the server during deployment.
 
 ### Setup Steps:
-1. Ensure your Lightsail instance has the `MyAppRole` IAM role attached
-2. The server can access AWS services (RDS, ElastiCache) using this role
-3. GitHub Actions deploys via SSH - no AWS credentials needed
 
-## Option 2: GitHub Actions + AWS Access (Advanced)
+#### Step 1: Create AWS IAM User with Secrets Manager Access
+```bash
+# Create IAM user for the application
+aws iam create-user --user-name watch-party-secrets-access
+
+# Create policy for Secrets Manager access
+cat > secrets-policy.json << 'EOF'
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:ListSecrets"
+            ],
+            "Resource": [
+                "arn:aws:secretsmanager:eu-west-3:*:secret:all-in-one-credentials*",
+                "arn:aws:secretsmanager:eu-west-3:*:secret:watch-party-valkey-001-auth-token*"
+            ]
+        }
+    ]
+}
+EOF
+
+# Apply policy to user
+aws iam create-policy --policy-name WatchPartySecretsAccess --policy-document file://secrets-policy.json
+aws iam attach-user-policy --user-name watch-party-secrets-access --policy-arn arn:aws:iam::YOUR_ACCOUNT_ID:policy/WatchPartySecretsAccess
+
+# Create access keys
+aws iam create-access-key --user-name watch-party-secrets-access
+```
+
+#### Step 2: Add GitHub Repository Secrets
+Go to your repository → Settings → Secrets and variables → Actions
+
+Add these secrets:
+```
+AWS_ACCESS_KEY_ID=AKIA...
+AWS_SECRET_ACCESS_KEY=...
+```
+
+#### Step 3: Deploy
+The deployment workflow will now:
+1. Configure AWS credentials on the server using the GitHub secrets
+2. Test Secrets Manager access
+3. Your Django app can fetch secrets using the `shared.aws.get_secret()` function
+
+## Option 2: Server IAM Role (Alternative)
+
+Attach an IAM role to your Lightsail instance with Secrets Manager permissions.
+
+### Required Policy:
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:ListSecrets"
+            ],
+            "Resource": [
+                "arn:aws:secretsmanager:eu-west-3:*:secret:all-in-one-credentials*",
+                "arn:aws:secretsmanager:eu-west-3:*:secret:watch-party-valkey-001-auth-token*"
+            ]
+        }
+    ]
+}
+```
+
+## Security Considerations
+
+**GitHub Secrets Approach:**
+- ✅ Centralized credential management
+- ✅ Easy rotation via GitHub UI
+- ✅ Works with any hosting provider
+- ⚠️ Credentials transmitted during deployment
+
+**IAM Role Approach:**
+- ✅ No credential transmission
+- ✅ AWS native security model
+- ⚠️ Tied to specific AWS instance
+- ⚠️ Harder to manage across environments
+
+## Required AWS Secrets in Secrets Manager
+
+Your application expects these secrets to exist:
+
+### `all-in-one-credentials`
+JSON containing database and Redis configuration:
+```json
+{
+  "database": {
+    "url": "postgresql://user:pass@host:5432/db",
+    "password": "your-db-password"
+  },
+  "redis": {
+    "url": "rediss://:token@host:6379/0",
+    "password": "your-redis-token"
+  }
+}
+```
+
+### `watch-party-valkey-001-auth-token`
+Redis authentication token as a string.
+
+## Troubleshooting
+
+### "Unable to retrieve secret" errors:
+1. Check AWS credentials are configured: `aws sts get-caller-identity`
+2. Verify Secrets Manager access: `aws secretsmanager list-secrets --region eu-west-3`
+3. Ensure secrets exist with correct names
+4. Check IAM permissions include your specific secret ARNs
+
+### During deployment:
+- Workflow will test AWS connectivity and Secrets Manager access
+- Check deployment logs for AWS configuration status
+- Use the validation script: `./validate-deployment-fixes.sh`
 
 ### When you might need this:
 - Fetching secrets from AWS Secrets Manager during deployment
