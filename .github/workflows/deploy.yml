@@ -39,6 +39,27 @@ jobs:
               git reset --hard origin/master
             fi
             
+            # Ensure the deploy user has proper access to the application directory
+            echo "🔧 Setting up directory permissions..."
+            if [ "$(stat -c '%U' $APP_DIR 2>/dev/null)" != "deploy" ]; then
+              echo "⚠️  Application directory not owned by deploy user"
+              echo "   Attempting to fix permissions..."
+              sudo chown -R deploy:deploy $APP_DIR 2>/dev/null || {
+                echo "❌ Cannot change ownership. Trying alternative approach..."
+                # Create a new directory in home instead
+                APP_DIR="$HOME/watch-party"
+                echo "📁 Using alternative directory: $APP_DIR"
+                if [ ! -d "$APP_DIR" ]; then
+                  git clone https://github.com/EL-HOUSS-BRAHIM/watch-party.git $APP_DIR
+                else
+                  cd $APP_DIR
+                  git fetch origin
+                  git reset --hard origin/master
+                fi
+                cd $APP_DIR
+              }
+            fi
+            
             # Generate production environment files from templates
             echo "🔧 Setting up production environment files..."
             
@@ -194,7 +215,23 @@ jobs:
             
             # Create SSL directory in nginx/ssl (this will be mounted to nginx container)
             SSL_DIR="$APP_DIR/nginx/ssl"
+            echo "📁 Creating SSL directory: $SSL_DIR"
+            
+            # Ensure the parent directories exist with proper permissions
+            mkdir -p "$APP_DIR/nginx"
             mkdir -p "$SSL_DIR"
+            
+            # Test write permissions
+            if ! touch "$SSL_DIR/.test_write" 2>/dev/null; then
+              echo "❌ Cannot write to SSL directory: $SSL_DIR"
+              echo "   Directory owner: $(stat -c '%U:%G' $SSL_DIR 2>/dev/null || echo 'unknown')"
+              echo "   Directory permissions: $(stat -c '%a' $SSL_DIR 2>/dev/null || echo 'unknown')"
+              echo "   Current user: $(whoami)"
+              exit 1
+            else
+              rm -f "$SSL_DIR/.test_write"
+              echo "✅ SSL directory is writable"
+            fi
             
             # Check if SSL certificates already exist
             if [ -f "$SSL_DIR/origin.pem" ] && [ -f "$SSL_DIR/private.key" ]; then
@@ -204,18 +241,26 @@ jobs:
               
               # Create origin certificate from SSL_ORIGIN secret
               if [ -n "${SSL_ORIGIN:-}" ]; then
-                echo "$SSL_ORIGIN" > "$SSL_DIR/origin.pem"
-                chmod 644 "$SSL_DIR/origin.pem"
-                echo "✅ SSL origin certificate created at $SSL_DIR/origin.pem"
+                if echo "$SSL_ORIGIN" > "$SSL_DIR/origin.pem" 2>/dev/null; then
+                  chmod 644 "$SSL_DIR/origin.pem"
+                  echo "✅ SSL origin certificate created at $SSL_DIR/origin.pem"
+                else
+                  echo "❌ Failed to create SSL origin certificate"
+                  exit 1
+                fi
               else
                 echo "⚠️  SSL_ORIGIN secret not provided - HTTPS will not work"
               fi
               
               # Create private key from SSL_PRIVATE secret
               if [ -n "${SSL_PRIVATE:-}" ]; then
-                echo "$SSL_PRIVATE" > "$SSL_DIR/private.key"
-                chmod 600 "$SSL_DIR/private.key"
-                echo "✅ SSL private key created at $SSL_DIR/private.key"
+                if echo "$SSL_PRIVATE" > "$SSL_DIR/private.key" 2>/dev/null; then
+                  chmod 600 "$SSL_DIR/private.key"
+                  echo "✅ SSL private key created at $SSL_DIR/private.key"
+                else
+                  echo "❌ Failed to create SSL private key"
+                  exit 1
+                fi
               else
                 echo "⚠️  SSL_PRIVATE secret not provided - HTTPS will not work"
               fi
