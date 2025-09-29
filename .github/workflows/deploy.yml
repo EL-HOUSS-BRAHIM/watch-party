@@ -37,7 +37,7 @@ jobs:
               git reset --hard origin/master
             fi
             
-            # Setup environment files if they don't exist
+            # Setup environment files and fix old module references
             if [ ! -f "$APP_DIR/backend/.env" ]; then
               cp backend/.env.example backend/.env
               echo "⚠️  Created backend/.env from example"
@@ -45,6 +45,20 @@ jobs:
               echo "   - Database password for RDS PostgreSQL"
               echo "   - Redis auth token for ElastiCache"
               echo "   - Other service credentials (email, OAuth, etc.)"
+            else
+              echo "🔧 Fixing environment configuration for module structure..."
+              # Fix old watchparty.settings references to use config.settings
+              sed -i 's/DJANGO_SETTINGS_MODULE=watchparty\.settings/DJANGO_SETTINGS_MODULE=config.settings/g' backend/.env
+              echo "✅ Updated DJANGO_SETTINGS_MODULE references"
+              
+              # Verify the fix worked
+              if grep -q "DJANGO_SETTINGS_MODULE=config.settings" backend/.env; then
+                echo "✅ DJANGO_SETTINGS_MODULE correctly set to config.settings"
+              else
+                echo "⚠️  Warning: DJANGO_SETTINGS_MODULE may not be properly configured"
+                echo "📋 Current DJANGO_SETTINGS_MODULE value:"
+                grep "DJANGO_SETTINGS_MODULE" backend/.env || echo "DJANGO_SETTINGS_MODULE not found in .env"
+              fi
             fi
             
             if [ ! -f "$APP_DIR/frontend/.env.local" ]; then
@@ -184,8 +198,10 @@ jobs:
                   docker-compose logs --tail=50 backend
                   echo "📋 Backend container status:"
                   docker-compose ps backend
-                  echo "📋 Backend container inspect:"
-                  docker inspect $(docker-compose ps -q backend) || true
+                  echo "📋 Backend environment check:"
+                  docker-compose exec -T backend env | grep DJANGO_SETTINGS_MODULE || echo "DJANGO_SETTINGS_MODULE not found"
+                  echo "📋 Testing Django configuration:"
+                  docker-compose exec -T backend python test_django_config.py 2>&1 || echo "Django config test failed"
                   exit 1
                 fi
                 sleep 3
