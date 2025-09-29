@@ -75,7 +75,7 @@ CELERY_TASK_ROUTES = {
     'utils.email_service.*': {'queue': 'email'},
     'apps.analytics.tasks.*': {'queue': 'analytics'},
     'apps.videos.tasks.*': {'queue': 'video_processing'},
-    'watchparty.tasks.*': {'queue': 'maintenance'},
+    'shared.background_tasks.*': {'queue': 'maintenance'},
 }
 
 # Channels Configuration - Redis backed for production (restored)

@@ -16,7 +16,7 @@ app.conf.beat_schedule = {
     
     # Clean up expired sessions every hour
     'cleanup-sessions': {
-        'task': 'watchparty.tasks.cleanup_expired_sessions',
+        'task': 'shared.background_tasks.cleanup_expired_data',
         'schedule': crontab(minute=0),  # Every hour
     },
     
