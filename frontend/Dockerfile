@@ -9,7 +9,10 @@ WORKDIR /app
 
 # Copy package files
 COPY package.json pnpm-lock.yaml* ./
-RUN pnpm install --frozen-lockfile
+
+# Install with network timeout and retry
+RUN pnpm config set network-timeout 300000 && \
+    pnpm install --frozen-lockfile --prefer-offline
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -17,7 +20,8 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build the application
+# Build the application with memory optimization
+ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN pnpm run build
 
 # Production image, copy all the files and run next

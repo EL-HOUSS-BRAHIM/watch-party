@@ -8,6 +8,9 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+    image: watchparty-backend:latest
     env_file:
       - ./backend/.env
     volumes:
@@ -24,12 +27,11 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+      start_period: 60s
 
   # Celery Worker (uses external AWS ElastiCache for broker)
   celery-worker:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: watchparty-backend:latest
     command: celery -A config worker --loglevel=info --concurrency=2
     env_file:
       - ./backend/.env
@@ -37,23 +39,23 @@ services:
       - ./backend:/app
       - media_volume:/app/media
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - watchparty-network
     restart: unless-stopped
 
   # Celery Beat (scheduler, uses external AWS ElastiCache)
   celery-beat:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: watchparty-backend:latest
     command: celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     env_file:
       - ./backend/.env
     volumes:
       - ./backend:/app
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - watchparty-network
     restart: unless-stopped
@@ -63,12 +65,17 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+      target: runner
+    image: watchparty-frontend:latest
     env_file:
       - ./frontend/.env.local
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - watchparty-network
     restart: unless-stopped
@@ -77,6 +84,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+      start_period: 30s
 
   # Nginx Reverse Proxy
   nginx:
