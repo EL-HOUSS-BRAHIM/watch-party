@@ -87,7 +87,7 @@ import sys
 import os
 sys.path.append('.')
 try:
-    from watchparty.wsgi import application
+    from config.wsgi import application
     print('✅ Django WSGI application can be imported')
 except ImportError as e:
     print(f'❌ Django WSGI import failed: {e}')

@@ -192,7 +192,7 @@ except ImportError as e:
 
 # Test WSGI import (basic)
 try:
-    from watchparty import wsgi
+    from config import wsgi
     print('✅ WSGI module can be imported')
 except ImportError as e:
     print(f'⚠️  WSGI import warning: {e}')

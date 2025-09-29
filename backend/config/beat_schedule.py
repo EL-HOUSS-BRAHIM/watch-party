@@ -8,10 +8,10 @@ from celery.schedules import crontab
 app = Celery('config')
 
 app.conf.beat_schedule = {
-    # Send party reminders every 5 minutes
+    # Send party reminders every 30 minutes
     'send-party-reminders': {
-        'task': 'utils.email_service.schedule_party_reminders',
-        'schedule': crontab(minute='*/5'),  # Every 5 minutes
+        'task': 'apps.parties.tasks.send_party_reminders_batch',
+        'schedule': crontab(minute='*/30'),  # Every 30 minutes
     },
     
     # Clean up expired sessions every hour
@@ -22,13 +22,13 @@ app.conf.beat_schedule = {
     
     # Generate daily analytics reports
     'daily-analytics': {
-        'task': 'apps.analytics.tasks.generate_daily_report',
+        'task': 'apps.analytics.tasks.generate_daily_reports',
         'schedule': crontab(hour=6, minute=0),  # 6 AM daily
     },
     
     # Clean up old analytics events
     'cleanup-old-analytics': {
-        'task': 'apps.analytics.tasks.cleanup_old_events',
+        'task': 'apps.analytics.tasks.cleanup_old_analytics',
         'schedule': crontab(hour=2, minute=0),  # 2 AM daily
     },
     
@@ -38,15 +38,15 @@ app.conf.beat_schedule = {
         'schedule': crontab(minute='*/15'),  # Every 15 minutes
     },
     
-    # Process video uploads and thumbnails
-    'process-video-uploads': {
-        'task': 'apps.videos.tasks.process_pending_videos',
-        'schedule': crontab(minute='*/2'),  # Every 2 minutes
+    # Process video uploads and cleanup failed uploads
+    'process-video-cleanup': {
+        'task': 'apps.videos.tasks.cleanup_failed_uploads',
+        'schedule': crontab(minute='*/5'),  # Every 5 minutes
     },
     
     # Update user analytics
     'update-user-analytics': {
-        'task': 'apps.analytics.tasks.update_user_analytics',
+        'task': 'apps.analytics.tasks.calculate_user_metrics',
         'schedule': crontab(minute='*/10'),  # Every 10 minutes
     },
 }
