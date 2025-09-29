@@ -24,10 +24,10 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 60s
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
 
   # Celery Worker (uses external AWS ElastiCache for broker)
   celery-worker:
@@ -67,6 +67,7 @@ services:
       dockerfile: Dockerfile
       args:
         BUILDKIT_INLINE_CACHE: 1
+        NODE_OPTIONS: "--max-old-space-size=2048"
       target: runner
     image: watchparty-frontend:latest
     env_file:
@@ -81,10 +82,10 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
   # Nginx Reverse Proxy
   nginx:
