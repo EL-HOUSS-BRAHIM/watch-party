@@ -1,6 +1,44 @@
-version: '3.8'
-
 services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15
+    container_name: watchparty-postgres
+    environment:
+      POSTGRES_DB: watchparty
+      POSTGRES_USER: watchparty
+      POSTGRES_PASSWORD: watchparty123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    ports:
+      - "5432:5432"
+    networks:
+      - watchparty-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U watchparty -d watchparty"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Valkey Cache (Redis-compatible)
+  valkey:
+    image: valkey/valkey:7.2-alpine
+    container_name: watchparty-valkey
+    command: valkey-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - valkey_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - watchparty-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "valkey-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
   # Django Backend
   backend:
     build:
@@ -14,6 +52,14 @@ services:
       - media_volume:/app/media
     ports:
       - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    networks:
+      - watchparty-network
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
       interval: 30s
@@ -33,6 +79,11 @@ services:
       - media_volume:/app/media
     depends_on:
       - backend
+      - db
+      - valkey
+    networks:
+      - watchparty-network
+    restart: unless-stopped
 
   # Celery Beat (scheduler)
   celery-beat:
@@ -46,6 +97,11 @@ services:
       - ./backend:/app
     depends_on:
       - backend
+      - db
+      - valkey
+    networks:
+      - watchparty-network
+    restart: unless-stopped
 
   # Next.js Frontend
   frontend:
@@ -58,6 +114,9 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+    networks:
+      - watchparty-network
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 30s
@@ -79,6 +138,9 @@ services:
     depends_on:
       - backend
       - frontend
+    networks:
+      - watchparty-network
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/health"]
       interval: 30s
@@ -88,3 +150,9 @@ services:
 volumes:
   static_volume:
   media_volume:
+  postgres_data:
+  valkey_data:
+
+networks:
+  watchparty-network:
+    driver: bridge
