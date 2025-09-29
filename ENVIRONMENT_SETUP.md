@@ -16,7 +16,10 @@ The application uses separate environment files for frontend and backend:
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env.local
 
-# Edit backend configuration
+# Use the deployment helper to choose your configuration
+./deploy-helper.sh
+
+# Or manually edit backend configuration
 nano backend/.env
 
 # Frontend is pre-configured, but you can customize
@@ -43,19 +46,20 @@ SECRET_KEY=your-unique-secret-key-here
 JWT_SECRET_KEY=your-jwt-secret-key
 JWT_REFRESH_SECRET_KEY=your-jwt-refresh-secret-key
 
-# Domains
-ALLOWED_HOSTS=35.181.116.57,be-watch-party.brahim-elhouss.me,watch-party.brahim-elhouss.me
-CORS_ALLOWED_ORIGINS=https://watch-party.brahim-elhouss.me,https://be-watch-party.brahim-elhouss.me
+# Production domains (already configured)
+ALLOWED_HOSTS=35.181.116.57,be-watch-party.brahim-elhouss.me,watch-party.brahim-elhouss.me,localhost,127.0.0.1
+CORS_ALLOWED_ORIGINS=https://watch-party.brahim-elhouss.me,https://be-watch-party.brahim-elhouss.me,http://localhost:3000,http://127.0.0.1:3000
 
-# Database (for Docker deployment)
-DATABASE_URL=postgresql://watchparty:watchparty123@db:5432/watchparty
+# AWS RDS PostgreSQL (already configured with real endpoints)
+DATABASE_URL=postgresql://watchparty_admin:your_secure_password@watch-party-postgres.cj6w0queklir.eu-west-3.rds.amazonaws.com:5432/watchparty_prod?sslmode=require
 
-# Redis (for Docker deployment)  
-REDIS_URL=redis://redis:6379/0
+# AWS ElastiCache Valkey/Redis (already configured with real endpoints)
+REDIS_URL=rediss://:your_auth_token@master.watch-party-valkey.2muo9f.euw3.cache.amazonaws.com:6379/0?ssl_cert_reqs=none
 
-# AWS (uses IAM role - no keys needed)
+# AWS S3 (uses IAM role - no keys needed)
 USE_S3=true
-AWS_STORAGE_BUCKET_NAME=your-bucket-name
+AWS_STORAGE_BUCKET_NAME=your-s3-bucket-name
+AWS_S3_REGION_NAME=eu-west-3
 ```
 
 ## Frontend Environment (`frontend/.env.local`)
@@ -80,19 +84,37 @@ NEXT_PUBLIC_SENTRY_DSN=your-sentry-dsn
 
 ## Docker vs External Services
 
-The configuration supports both:
+The configuration supports both deployment models:
 
-1. **Docker containers** (default for development/simple production)
-   - PostgreSQL container
-   - Redis container
-   - Self-contained deployment
-
-2. **External AWS services** (for production scale)
-   - AWS RDS PostgreSQL
-   - AWS ElastiCache Redis
+1. **AWS Production (default)** - Uses external AWS services
+   - AWS RDS PostgreSQL (`watch-party-postgres.cj6w0queklir.eu-west-3.rds.amazonaws.com`)
+   - AWS ElastiCache Valkey/Redis (`master.watch-party-valkey.2muo9f.euw3.cache.amazonaws.com`) 
    - AWS S3 for media storage
+   - Use `docker-compose.yml` (default) or `docker-compose.aws.yml`
 
-Switch by updating the DATABASE_URL and REDIS_URL in `backend/.env`.
+2. **Local Development** - Uses Docker containers
+   - PostgreSQL container
+   - Redis container  
+   - Self-contained deployment
+   - Use `docker-compose.dev.yml`
+
+## Deployment Commands
+
+**AWS Production:**
+```bash
+# Uses external AWS RDS and ElastiCache
+docker-compose up -d
+# OR explicitly:
+docker-compose -f docker-compose.aws.yml up -d
+```
+
+**Local Development:**
+```bash
+# Uses local PostgreSQL and Redis containers
+docker-compose -f docker-compose.dev.yml up -d
+```
+
+Switch configurations by using the appropriate docker-compose file or updating DATABASE_URL and REDIS_URL in `backend/.env`.
 
 ## Security Checklist
 

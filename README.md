@@ -118,7 +118,24 @@ cd /srv/watch-party
 
 - **Cloudflare:** DNS + SSL termination + CDN
 - **Lightsail:** Docker containers (Nginx → Next.js + Django)  
+- **AWS RDS:** PostgreSQL database (external)
+- **AWS ElastiCache:** Valkey/Redis cache (external)
+- **AWS S3:** Media and static file storage
 - **Domains:** watch-party.brahim-elhouss.me (main), be-watch-party.brahim-elhouss.me (API)
+
+### Deployment Options
+
+**Production (default):**
+```bash
+# Uses external AWS RDS and ElastiCache
+docker-compose up -d
+```
+
+**Development:**
+```bash
+# Uses local PostgreSQL and Redis containers
+docker-compose -f docker-compose.dev.yml up -d
+```
 
 ### Environment Configuration
 
@@ -127,15 +144,15 @@ Configure environment variables for both services:
 **Backend (`backend/.env`)**:
 ```bash
 cp backend/.env.example backend/.env
-# Edit with your settings:
-# - Database credentials (Docker containers or external AWS RDS)
-# - Redis URLs (Docker container or AWS ElastiCache) 
+# Edit with your settings - AWS production endpoints are pre-configured:
+# - RDS PostgreSQL: watch-party-postgres.cj6w0queklir.eu-west-3.rds.amazonaws.com
+# - ElastiCache Valkey: master.watch-party-valkey.2muo9f.euw3.cache.amazonaws.com
+# - Update with your actual database password and Redis auth token
 # - AWS S3 settings (uses IAM role MyAppRole)
 # - Email SMTP configuration
 # - Social OAuth keys (Google, Discord, GitHub)
 # - Stripe payment keys
 # - JWT secret keys
-# - Domain names and CORS settings
 ```
 
 **Frontend (`frontend/.env.local`)**:
