@@ -55,7 +55,7 @@ SESSION_COOKIE_SECURE = False
 CSRF_COOKIE_SECURE = False
 
 # Logging - more verbose in development
-LOGGING['loggers']['watchparty']['level'] = 'DEBUG'
+LOGGING['loggers']['shared']['level'] = 'DEBUG'
 
 # Media files served by Django in development
 MEDIA_URL = '/media/'
