@@ -59,7 +59,7 @@ WORKDIR /app
 COPY . /app/
 
 # Create necessary directories
-RUN mkdir -p /app/staticfiles /app/media /var/log/watchparty
+RUN mkdir -p /app/staticfiles /app/media /app/logs /var/log/watchparty
 
 # Create a non-root user
 RUN adduser --disabled-password --gecos '' appuser && \

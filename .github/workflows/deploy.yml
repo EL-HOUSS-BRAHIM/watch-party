@@ -47,13 +47,14 @@ jobs:
               echo "   - Other service credentials (email, OAuth, etc.)"
             else
               echo "🔧 Fixing environment configuration for module structure..."
-              # Fix old watchparty.settings references to use config.settings
-              sed -i 's/DJANGO_SETTINGS_MODULE=watchparty\.settings/DJANGO_SETTINGS_MODULE=config.settings/g' backend/.env
+              # Fix old watchparty.settings references to use config.settings.production
+              sed -i 's/DJANGO_SETTINGS_MODULE=watchparty\.settings/DJANGO_SETTINGS_MODULE=config.settings.production/g' backend/.env
+              sed -i 's/DJANGO_SETTINGS_MODULE=config\.settings\.development/DJANGO_SETTINGS_MODULE=config.settings.production/g' backend/.env
               echo "✅ Updated DJANGO_SETTINGS_MODULE references"
               
               # Verify the fix worked
-              if grep -q "DJANGO_SETTINGS_MODULE=config.settings" backend/.env; then
-                echo "✅ DJANGO_SETTINGS_MODULE correctly set to config.settings"
+              if grep -q "DJANGO_SETTINGS_MODULE=config.settings.production" backend/.env; then
+                echo "✅ DJANGO_SETTINGS_MODULE correctly set to config.settings.production"
               else
                 echo "⚠️  Warning: DJANGO_SETTINGS_MODULE may not be properly configured"
                 echo "📋 Current DJANGO_SETTINGS_MODULE value:"
