@@ -58,7 +58,7 @@ if aws sts get-caller-identity; then
     echo "✅ AWS configuration successful!"
     
     echo "Testing Secrets Manager access..."
-    if aws secretsmanager list-secrets --region eu-west-3 >/dev/null 2>&1; then
+    if aws secretsmanager get-secret-value --secret-id all-in-one-credentials --region eu-west-3 >/dev/null 2>&1; then
         echo "✅ Secrets Manager access confirmed"
         
         # Check for expected secrets

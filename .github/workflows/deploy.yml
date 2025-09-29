@@ -106,7 +106,7 @@ jobs:
             
             # Test Secrets Manager access (required for app configuration)
             echo "🔍 Testing Secrets Manager access..."
-            if aws secretsmanager list-secrets --region eu-west-3 > /dev/null 2>&1; then
+            if aws secretsmanager get-secret-value --secret-id all-in-one-credentials --region eu-west-3 > /dev/null 2>&1; then
               echo "✅ AWS Secrets Manager access confirmed"
             else
               echo "⚠️  Secrets Manager access test failed - check permissions"

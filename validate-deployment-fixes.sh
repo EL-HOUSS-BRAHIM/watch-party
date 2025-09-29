@@ -57,7 +57,7 @@ if curl -s --connect-timeout 5 http://169.254.169.254/latest/meta-data/iam/secur
             aws sts get-caller-identity | grep -E "(UserId|Account|Arn)" || true
             
             # Test Secrets Manager access
-            if aws secretsmanager list-secrets --region eu-west-3 &>/dev/null; then
+            if aws secretsmanager get-secret-value --secret-id all-in-one-credentials --region eu-west-3 &>/dev/null; then
                 echo "✅ AWS Secrets Manager access confirmed"
                 
                 # Test specific secrets the app expects
@@ -89,7 +89,7 @@ elif [ -f ~/.aws/credentials ] || [ -n "${AWS_ACCESS_KEY_ID:-}" ]; then
             echo "✅ AWS authentication working with configured credentials"
             
             # Test Secrets Manager access
-            if aws secretsmanager list-secrets --region eu-west-3 &>/dev/null; then
+            if aws secretsmanager get-secret-value --secret-id all-in-one-credentials --region eu-west-3 &>/dev/null; then
                 echo "✅ AWS Secrets Manager access confirmed"
             else
                 echo "❌ AWS Secrets Manager access denied with current credentials"
