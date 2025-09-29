@@ -37,7 +37,7 @@ jobs:
               git reset --hard origin/master
             fi
             
-            # Setup environment files if they don't exist
+            # Setup environment files and fix old module references
             if [ ! -f "$APP_DIR/backend/.env" ]; then
               cp backend/.env.example backend/.env
               echo "⚠️  Created backend/.env from example"
@@ -45,6 +45,11 @@ jobs:
               echo "   - Database password for RDS PostgreSQL"
               echo "   - Redis auth token for ElastiCache"
               echo "   - Other service credentials (email, OAuth, etc.)"
+            else
+              echo "🔧 Fixing environment configuration for module structure..."
+              # Fix old watchparty.settings references to use config.settings
+              sed -i 's/DJANGO_SETTINGS_MODULE=watchparty\.settings/DJANGO_SETTINGS_MODULE=config.settings/g' backend/.env
+              echo "✅ Updated DJANGO_SETTINGS_MODULE references"
             fi
             
             if [ ! -f "$APP_DIR/frontend/.env.local" ]; then
