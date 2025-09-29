@@ -6,8 +6,6 @@ from functools import lru_cache
 from typing import Dict, Optional
 from urllib.parse import urlparse, urlunparse
 
-from shared.aws import get_optional_secret
-
 LOGGER = logging.getLogger(__name__)
 
 # Database connection optimization settings
@@ -369,6 +367,12 @@ def get_cache_config():
 
 @lru_cache(maxsize=1)
 def _get_all_in_one_credentials() -> Optional[Dict[str, Dict]]:
+    try:
+        from shared.aws import get_optional_secret
+    except ImportError:
+        LOGGER.warning("AWS module not available, skipping secrets retrieval")
+        return None
+    
     secret_name = os.environ.get('ALL_IN_ONE_SECRET_NAME', 'all-in-one-credentials')
     secret = get_optional_secret(secret_name)
 
@@ -381,6 +385,12 @@ def _get_all_in_one_credentials() -> Optional[Dict[str, Dict]]:
 
 @lru_cache(maxsize=1)
 def _get_redis_credentials() -> Dict[str, str]:
+    try:
+        from shared.aws import get_optional_secret
+    except ImportError:
+        LOGGER.warning("AWS module not available, using default Redis config")
+        return {}
+    
     secret_name = os.environ.get('REDIS_AUTH_SECRET_NAME', 'watch-party-valkey-001-auth-token')
     redis_secret = get_optional_secret(secret_name) or {}
 
