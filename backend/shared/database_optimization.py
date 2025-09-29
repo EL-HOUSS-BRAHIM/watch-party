@@ -373,14 +373,19 @@ def _get_all_in_one_credentials() -> Optional[Dict[str, Dict]]:
         LOGGER.warning("AWS module not available, skipping secrets retrieval")
         return None
     
-    secret_name = os.environ.get('ALL_IN_ONE_SECRET_NAME', 'all-in-one-credentials')
-    secret = get_optional_secret(secret_name)
+    try:
+        secret_name = os.environ.get('ALL_IN_ONE_SECRET_NAME', 'all-in-one-credentials')
+        secret = get_optional_secret(secret_name)
 
-    if secret is None:
+        if secret is None:
+            LOGGER.info("No credentials found in Secrets Manager for %s, using environment variables", secret_name)
+            return None
+
+        LOGGER.debug("Loaded credentials from Secrets Manager: %s", secret_name)
+        return secret
+    except Exception as e:
+        LOGGER.warning("Failed to retrieve AWS secrets (this is expected during build/CI): %s", e)
         return None
-
-    LOGGER.debug("Loaded credentials from Secrets Manager: %s", secret_name)
-    return secret
 
 
 @lru_cache(maxsize=1)
@@ -391,28 +396,32 @@ def _get_redis_credentials() -> Dict[str, str]:
         LOGGER.warning("AWS module not available, using default Redis config")
         return {}
     
-    secret_name = os.environ.get('REDIS_AUTH_SECRET_NAME', 'watch-party-valkey-001-auth-token')
-    redis_secret = get_optional_secret(secret_name) or {}
+    try:
+        secret_name = os.environ.get('REDIS_AUTH_SECRET_NAME', 'watch-party-valkey-001-auth-token')
+        redis_secret = get_optional_secret(secret_name) or {}
 
-    if not redis_secret:
-        bundled = _get_all_in_one_credentials() or {}
-        if isinstance(bundled, dict):
-            nested = bundled.get('redis')
-            if isinstance(nested, dict):
-                redis_secret = nested
-            else:
-                redis_secret = {
-                    'url': bundled.get('redis_url'),
-                    'password': bundled.get('redis_password') or bundled.get('redis_token'),
-                    'token': bundled.get('redis_token'),
-                    'username': bundled.get('redis_username'),
-                    'use_ssl': bundled.get('redis_use_ssl'),
-                }
+        if not redis_secret:
+            bundled = _get_all_in_one_credentials() or {}
+            if isinstance(bundled, dict):
+                nested = bundled.get('redis')
+                if isinstance(nested, dict):
+                    redis_secret = nested
+                else:
+                    redis_secret = {
+                        'url': bundled.get('redis_url'),
+                        'password': bundled.get('redis_password') or bundled.get('redis_token'),
+                        'token': bundled.get('redis_token'),
+                        'username': bundled.get('redis_username'),
+                        'use_ssl': bundled.get('redis_use_ssl'),
+                    }
 
-    if isinstance(redis_secret, dict):
-        return {key: value for key, value in redis_secret.items() if value is not None}
+        if isinstance(redis_secret, dict):
+            return {key: value for key, value in redis_secret.items() if value is not None}
 
-    return {}
+        return {}
+    except Exception as e:
+        LOGGER.warning("Failed to retrieve Redis credentials from AWS (this is expected during build/CI): %s", e)
+        return {}
 
 
 def _extract_database_settings(secret_payload: Optional[Dict[str, Dict]]) -> Dict[str, str]:

@@ -11,6 +11,7 @@ from __future__ import annotations
 import base64
 import json
 import logging
+import os
 from functools import lru_cache
 from typing import Any, Dict, Optional
 
@@ -80,8 +81,17 @@ def get_secret(secret_name: str, *, region: str = "eu-west-3") -> Dict[str, Any]
 
 def get_optional_secret(secret_name: str, *, region: str = "eu-west-3") -> Optional[Dict[str, Any]]:
     """Return the secret payload if it can be fetched, otherwise ``None``."""
+    
+    # Skip AWS calls during Docker build or CI environments
+    if (os.environ.get('DOCKER_BUILDKIT') or 
+        os.environ.get('CI') or 
+        os.environ.get('GITHUB_ACTIONS') or
+        os.environ.get('SKIP_AWS_DURING_BUILD')):
+        LOGGER.info("Skipping AWS Secrets Manager call during build/CI environment")
+        return None
 
     try:
         return get_secret(secret_name, region=region)
-    except (ClientError, BotoCoreError):
+    except (ClientError, BotoCoreError) as exc:
+        LOGGER.warning("Could not retrieve secret '%s': %s (this is expected during build/CI)", secret_name, exc)
         return None
