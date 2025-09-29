@@ -5,7 +5,7 @@ Celery beat schedule for periodic tasks
 from celery import Celery
 from celery.schedules import crontab
 
-app = Celery('watchparty')
+app = Celery('config')
 
 app.conf.beat_schedule = {
     # Send party reminders every 5 minutes
