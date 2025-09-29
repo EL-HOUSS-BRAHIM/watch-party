@@ -200,8 +200,8 @@ jobs:
                   docker-compose ps backend
                   echo "📋 Backend environment check:"
                   docker-compose exec -T backend env | grep DJANGO_SETTINGS_MODULE || echo "DJANGO_SETTINGS_MODULE not found"
-                  echo "📋 Testing Django settings import:"
-                  docker-compose exec -T backend python -c "import os; print('DJANGO_SETTINGS_MODULE:', os.environ.get('DJANGO_SETTINGS_MODULE')); import django.conf.settings" 2>&1 || echo "Settings import failed"
+                  echo "📋 Testing Django configuration:"
+                  docker-compose exec -T backend python test_django_config.py 2>&1 || echo "Django config test failed"
                   exit 1
                 fi
                 sleep 3
