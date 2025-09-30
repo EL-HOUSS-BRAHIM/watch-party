@@ -1,196 +1,137 @@
-'use client'
+"use client"
 
-import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import {
-  dashboardApi,
-  partiesApi,
-  type DashboardStatsResponse,
-  type PartySummary,
-} from "@/lib/api-client"
-
-// Fallback mock data for when API is unavailable
-const mockHighlights = [
-  { label: "Upcoming watch nights", value: "3", description: "Brunch classics, esports finals, and midnight premiere" },
-  { label: "Guests RSVP'd", value: "482", description: "Across six time zones" },
-  { label: "Automation cues", value: "28", description: "Ready to trigger this week" },
-]
-
-const mockTimeline = [
-  {
-    time: "08:30",
-    title: "Brunch classics",
-    description: "Daybreak ambience, latte chat, co-host Amy",
-  },
-  {
-    time: "19:00",
-    title: "Esports finals",
-    description: "Neon pulse, hype panel, reaction burst at finale",
-  },
-  {
-    time: "23:45",
-    title: "Midnight premiere",
-    description: "Indigo glow, director Q&A, encore lounge",
-  },
-]
+import { useState } from "react"
+import Link from "next/link"
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState<DashboardStatsResponse | null>(null)
-  const [recentParties, setRecentParties] = useState<PartySummary[]>([])
-  const [error, setError] = useState<string | null>(null)
+  const [newPartyName, setNewPartyName] = useState("")
+  const [movieUrl, setMovieUrl] = useState("")
 
-  useEffect(() => {
-    async function loadDashboardData() {
-      try {
-        // Fetch dashboard stats and recent parties in parallel
-        const [dashboardData, partiesData] = await Promise.allSettled([
-          dashboardApi.getStats(),
-          partiesApi.getRecent(),
-        ])
-
-        if (dashboardData.status === 'fulfilled') {
-          setStats(dashboardData.value)
-        }
-
-        if (partiesData.status === 'fulfilled') {
-          const value = partiesData.value
-          const list = Array.isArray(value) ? value : value?.results ?? []
-          setRecentParties(list)
-        }
-
-        setError(null)
-      } catch (err) {
-        console.error('Failed to load dashboard data:', err)
-        setError('Using demo data - API connection unavailable')
-      }
+  const handleCreateParty = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!newPartyName.trim()) {
+      alert("Please enter a party name")
+      return
     }
 
-    loadDashboardData()
-  }, [])
+    try {
+      // TODO: API call to create party
+      // For now, generate a simple party ID
+      const partyId = Math.random().toString(36).substring(2, 8).toUpperCase()
+      alert(`Party created! Share this code: ${partyId}`)
+      setNewPartyName("")
+    } catch (error) {
+      console.error("Failed to create party:", error)
+      alert("Failed to create party. Please try again.")
+    }
+  }
 
-  // Map API data to highlights, fallback to mock data
-  const highlights = stats ? [
-    { 
-      label: "Total parties", 
-      value: String(stats.stats?.total_parties || 0), 
-      description: `${stats.stats?.recent_parties || 0} in the last 30 days` 
-    },
-    { 
-      label: "Total videos", 
-      value: String(stats.stats?.total_videos || 0), 
-      description: `${stats.stats?.recent_videos || 0} uploaded recently` 
-    },
-    { 
-      label: "Watch time", 
-      value: `${stats.stats?.watch_time_minutes || 0}m`, 
-      description: "Total viewing time" 
-    },
-  ] : mockHighlights
-
-  // Map API parties to timeline format, fallback to mock data
-  const timeline = recentParties.length > 0
-    ? recentParties.slice(0, 3).map((party) => ({
-        time: party.scheduled_start
-          ? new Date(party.scheduled_start).toLocaleTimeString("en-US", {
-              hour: "2-digit",
-              minute: "2-digit",
-              hour12: false,
-            })
-          : "TBD",
-        title: party.title || "Untitled Party",
-        description: party.description || `${party.participant_count || 0} participants • ${party.status ?? "scheduled"}`,
-      }))
-    : mockTimeline
+  const handleConnectDrive = () => {
+    // TODO: Implement Google Drive OAuth
+    alert("Google Drive integration coming soon!")
+  }
 
   return (
-    <div className="space-y-10">
-      {error && (
-        <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm text-yellow-200">
-          ⚠️ {error}
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center space-y-4">
+        <h1 className="text-3xl font-bold text-white">Your Dashboard</h1>
+        <p className="text-white/70">Create parties, add movies, and manage your watch sessions</p>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Create Party */}
+        <div className="bg-white/5 border border-white/10 rounded-lg p-6 space-y-4">
+          <h2 className="text-xl font-semibold text-white">🎬 Create New Party</h2>
+          <form onSubmit={handleCreateParty} className="space-y-4">
+            <input
+              type="text"
+              value={newPartyName}
+              onChange={(e) => setNewPartyName(e.target.value)}
+              placeholder="Party name (e.g., Movie Night)"
+              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="submit"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition-colors"
+            >
+              Create Party
+            </button>
+          </form>
         </div>
-      )}
 
-      <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-10">
-        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-          <div className="space-y-3">
-            <p className="text-xs uppercase tracking-[0.4em] text-white/60">Today&rsquo;s focus</p>
-            <h1 className="text-3xl font-semibold text-white sm:text-4xl">Welcome back, host</h1>
-            <p className="text-sm text-white/70">
-              Dual ambience automation is standing by. Review your scheduled watch nights and confirm the cues you want to spotlight.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-4 text-sm text-white/70">
-            <div className="rounded-3xl border border-white/12 bg-white/5 px-4 py-3 text-center">
-              <p className="text-xs uppercase tracking-[0.4em] text-white/60">Ambience</p>
-              <p className="mt-2 text-base font-semibold text-white">Auto cycle</p>
-            </div>
-            <div className="rounded-3xl border border-white/12 bg-white/5 px-4 py-3 text-center">
-              <p className="text-xs uppercase tracking-[0.4em] text-white/60">Sync drift</p>
-              <p className="mt-2 text-base font-semibold text-white">±18 ms</p>
-            </div>
+        {/* Add Movie URL */}
+        <div className="bg-white/5 border border-white/10 rounded-lg p-6 space-y-4">
+          <h2 className="text-xl font-semibold text-white">🔗 Add Movie Link</h2>
+          <div className="space-y-4">
+            <input
+              type="url"
+              value={movieUrl}
+              onChange={(e) => setMovieUrl(e.target.value)}
+              placeholder="Paste streaming URL here"
+              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              onClick={() => {
+                if (movieUrl) {
+                  alert("Movie link added! (Demo)")
+                  setMovieUrl("")
+                } else {
+                  alert("Please enter a valid URL")
+                }
+              }}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded transition-colors"
+            >
+              Add to Library
+            </button>
           </div>
         </div>
-      </section>
+      </div>
 
-      <section className="grid gap-5 lg:grid-cols-3">
-        {highlights.map((item) => (
-          <Card key={item.label} className="border-white/10 bg-white/[0.02]">
-            <CardHeader>
-              <p className="text-xs uppercase tracking-[0.35em] text-white/60">{item.label}</p>
-              <CardTitle className="text-3xl text-white">{item.value}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-sm text-white/70">{item.description}</CardDescription>
-            </CardContent>
-          </Card>
-        ))}
-      </section>
+      {/* Drive Integration */}
+      <div className="bg-white/5 border border-white/10 rounded-lg p-6 space-y-4">
+        <h2 className="text-xl font-semibold text-white">☁️ Connect Your Drive</h2>
+        <p className="text-white/70">
+          Connect your Google Drive to access your personal movie collection
+        </p>
+        <button
+          onClick={handleConnectDrive}
+          className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-6 rounded transition-colors"
+        >
+          Connect Google Drive
+        </button>
+      </div>
 
-      <section className="grid gap-5 lg:grid-cols-[1.4fr,1fr]">
-        <Card className="border-white/10 bg-white/[0.02]">
-          <CardHeader>
-            <CardTitle className="text-2xl text-white">Today&rsquo;s timeline</CardTitle>
-            <CardDescription className="text-sm text-white/70">
-              All scheduled watch nights with ambience presets and spotlight notes.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {timeline.map((event) => (
-              <div key={event.time} className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <div className="rounded-2xl border border-white/15 bg-white/10 px-3 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-white/70">
-                  {event.time}
-                </div>
-                <div className="space-y-1 text-sm text-white/80">
-                  <p className="text-base font-semibold text-white">{event.title}</p>
-                  <p>{event.description}</p>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-    <Card className="border-white/10 bg-white/[0.02]">
-          <CardHeader>
-            <CardTitle className="text-2xl text-white">Crew notes</CardTitle>
-            <CardDescription className="text-sm text-white/70">
-              Shared reminders before you go live.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm text-white/75">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/60">Lighting</p>
-              <p className="mt-2 text-white/80">Check bedroom lamp automation for sunrise screening.</p>
+      {/* Recent Parties */}
+      <div className="bg-white/5 border border-white/10 rounded-lg p-6 space-y-4">
+        <h2 className="text-xl font-semibold text-white">📺 Recent Parties</h2>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center p-3 bg-white/5 rounded border border-white/10">
+            <div>
+              <h3 className="text-white font-medium">Movie Night #1</h3>
+              <p className="text-sm text-white/60">2 participants • Yesterday</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/60">Co-hosts</p>
-              <p className="mt-2 text-white/80">Amy leads Q&A; Ravi handles spoiler-safe chat moderation.</p>
+            <span className="text-xs bg-green-600/20 text-green-400 px-2 py-1 rounded">Completed</span>
+          </div>
+          
+          <div className="flex justify-between items-center p-3 bg-white/5 rounded border border-white/10">
+            <div>
+              <h3 className="text-white font-medium">Football Watch Party</h3>
+              <p className="text-sm text-white/60">5 participants • 3 days ago</p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/60">Sponsors</p>
-              <p className="mt-2 text-white/80">Upload new bumper loop before midnight premiere.</p>
-            </div>
-          </CardContent>
-        </Card>
-      </section>
+            <span className="text-xs bg-green-600/20 text-green-400 px-2 py-1 rounded">Completed</span>
+          </div>
+        </div>
+        
+        <Link 
+          href="/dashboard/parties" 
+          className="inline-block text-blue-400 hover:text-blue-300 text-sm"
+        >
+          View all parties →
+        </Link>
+      </div>
     </div>
   )
 }
