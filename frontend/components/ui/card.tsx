@@ -17,7 +17,7 @@ export function Card({ className, ...props }: CardProps) {
   return (
     <div
       className={cn(
-        "card-sheen rounded-[32px] border border-white/12 bg-[rgba(10,6,30,0.78)] p-8 text-[color:var(--color-text-primary)] shadow-[0_34px_90px_rgba(5,4,28,0.6)] backdrop-blur-2xl transition-transform duration-500 hover:-translate-y-1 hover:border-white/25 hover:bg-[rgba(16,10,44,0.82)]",
+        "rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-[color:var(--color-text-primary)] shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:border-white/20",
         className,
       )}
       {...props}
