@@ -1,0 +1,4 @@
+NAME                          IMAGE                       COMMAND                  SERVICE         CREATED          STATUS                            PORTS
+watch-party-backend-1         watchparty-backend:latest   "gunicorn --bind 0.0…"   backend         17 seconds ago   Up 17 seconds (healthy)           0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+watch-party-celery-beat-1     watchparty-backend:latest   "celery -A config be…"   celery-beat     13 seconds ago   Up 3 seconds (health: starting)   
+watch-party-celery-worker-1   watchparty-backend:latest   "celery -A config wo…"   celery-worker   13 seconds ago   Up 3 seconds (health: starting)   

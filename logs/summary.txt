@@ -1,0 +1,18 @@
+Log Collection Summary
+======================
+Date: Tue Sep 30 09:29:34 UTC 2025
+Server: ip-172-26-10-125
+Application Directory: /srv/watch-party
+
+All Services: backend
+celery-beat
+celery-worker
+Running Services: backend
+celery-beat
+celery-worker
+
+Docker Compose Version:
+Docker Compose version v2.39.4
+
+Docker Version:
+Docker version 27.5.1, build 27.5.1-0ubuntu3~22.04.2
