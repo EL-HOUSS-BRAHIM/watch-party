@@ -614,6 +614,48 @@ jobs:
             PUBLIC_IP=$(curl -s -m 10 http://checkip.amazonaws.com/ 2>/dev/null || echo "unknown")
             echo "Server public IP: $PUBLIC_IP"
             
+            # Test direct access to the server (bypassing Cloudflare)
+            echo "🌐 Testing direct server access (bypassing Cloudflare)..."
+            
+            # Test HTTP directly to public IP
+            if [ "$PUBLIC_IP" != "unknown" ] && [ -n "$PUBLIC_IP" ]; then
+              echo "Testing HTTP access to $PUBLIC_IP..."
+              if curl -f -s -m 10 -H "Host: be-watch-party.brahim-elhouss.me" "http://$PUBLIC_IP/health" > /dev/null 2>&1; then
+                echo "✅ Direct HTTP access to $PUBLIC_IP works"
+              else
+                echo "❌ Direct HTTP access to $PUBLIC_IP failed"
+                echo "Trying without Host header..."
+                if curl -f -s -m 10 "http://$PUBLIC_IP/health" > /dev/null 2>&1; then
+                  echo "✅ Direct HTTP access to $PUBLIC_IP works (without Host header)"
+                else
+                  echo "❌ Direct HTTP access to $PUBLIC_IP completely failed"
+                fi
+              fi
+              
+              echo "Testing HTTPS access to $PUBLIC_IP..."
+              if curl -f -s -m 10 -k -H "Host: be-watch-party.brahim-elhouss.me" "https://$PUBLIC_IP/health" > /dev/null 2>&1; then
+                echo "✅ Direct HTTPS access to $PUBLIC_IP works"
+              else
+                echo "❌ Direct HTTPS access to $PUBLIC_IP failed"
+                echo "Trying without Host header..."
+                if curl -f -s -m 10 -k "https://$PUBLIC_IP/health" > /dev/null 2>&1; then
+                  echo "✅ Direct HTTPS access to $PUBLIC_IP works (without Host header)"
+                else
+                  echo "❌ Direct HTTPS access to $PUBLIC_IP completely failed"
+                fi
+              fi
+              
+              # Test the actual website content
+              echo "Testing full website response..."
+              echo "HTTP Response from $PUBLIC_IP:"
+              curl -s -m 10 -H "Host: watch-party.brahim-elhouss.me" "http://$PUBLIC_IP/" | head -10 || echo "No HTTP response"
+              
+              echo "HTTPS Response from $PUBLIC_IP:"
+              curl -s -m 10 -k -H "Host: watch-party.brahim-elhouss.me" "https://$PUBLIC_IP/" | head -10 || echo "No HTTPS response"
+            else
+              echo "❌ Could not determine public IP address"
+            fi
+            
             # Check if firewall is blocking ports
             echo "📋 Checking firewall status..."
             if command -v ufw >/dev/null 2>&1; then
