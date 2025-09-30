@@ -367,6 +367,33 @@ jobs:
             
             echo "✅ All images built successfully"
             
+            # Ensure firewall allows HTTP and HTTPS traffic
+            echo "🔥 Configuring firewall for web traffic..."
+            if command -v ufw >/dev/null 2>&1; then
+              echo "📋 Current UFW status:"
+              sudo ufw status 2>/dev/null || echo "UFW not available or no sudo access"
+              
+              # Try to allow HTTP and HTTPS (will only work if user has sudo)
+              if sudo ufw allow 80/tcp 2>/dev/null; then
+                echo "✅ Allowed HTTP traffic (port 80)"
+              else
+                echo "⚠️  Could not configure UFW rule for port 80 (check manually)"
+              fi
+              
+              if sudo ufw allow 443/tcp 2>/dev/null; then
+                echo "✅ Allowed HTTPS traffic (port 443)"
+              else
+                echo "⚠️  Could not configure UFW rule for port 443 (check manually)"
+              fi
+            fi
+            
+            # Check if AWS security groups or other cloud firewalls might be blocking
+            echo "📋 Cloud firewall reminder:"
+            echo "   Make sure your AWS Lightsail instance allows:"
+            echo "   - HTTP traffic on port 80"
+            echo "   - HTTPS traffic on port 443"
+            echo "   - This can be configured in the Lightsail networking tab"
+            
             # Start services in optimized stages
             echo "🚀 Starting backend service..."
             docker-compose up -d backend
@@ -413,7 +440,41 @@ jobs:
             fi
             
             echo "🚀 Starting all services..."
-            docker-compose up -d
+            
+            # Start services with better orchestration
+            echo "📦 Starting backend and related services first..."
+            docker-compose up -d backend celery-worker celery-beat
+            
+            # Wait for backend to be fully ready
+            echo "⏳ Waiting for backend to be fully ready..."
+            sleep 10
+            
+            # Start frontend
+            echo "📦 Starting frontend..."
+            docker-compose up -d frontend
+            
+            # Wait for frontend to start
+            echo "⏳ Waiting for frontend to start..."
+            sleep 10
+            
+            # Finally start nginx (reverse proxy)
+            echo "📦 Starting nginx reverse proxy..."
+            docker-compose up -d nginx
+            
+            # Give nginx time to start and configure
+            echo "⏳ Waiting for nginx to configure..."
+            sleep 15
+            
+            # Verify all services are running
+            echo "📋 Verifying all services are running..."
+            if ! docker-compose ps | grep -q "Up"; then
+              echo "❌ Some services failed to start"
+              echo "📋 Container status:"
+              docker-compose ps
+              echo "📋 Recent logs:"
+              docker-compose logs --tail=20
+              exit 1
+            fi
             
             # Optimized health checking with shorter intervals
             echo "⏳ Waiting for services to be ready..."
@@ -495,14 +556,95 @@ jobs:
             
             # Final health check
             echo "🏥 Final health check..."
+            
+            # Check if all containers are running
+            echo "📋 Checking container status..."
+            docker-compose ps
+            
+            # Check if ports are listening
+            echo "📋 Checking port availability..."
+            if command -v netstat >/dev/null 2>&1; then
+              echo "Listening ports:"
+              netstat -tlnp | grep -E ':80|:443|:3000|:8000' || echo "No relevant ports found"
+            elif command -v ss >/dev/null 2>&1; then
+              echo "Listening ports:"
+              ss -tlnp | grep -E ':80|:443|:3000|:8000' || echo "No relevant ports found"
+            fi
+            
+            # Test local connectivity
+            echo "📋 Testing local connectivity..."
+            
+            # Test nginx (should be on port 80 and 443)
+            if curl -f -s -m 10 http://localhost:80/health > /dev/null 2>&1; then
+              echo "✅ Nginx HTTP (port 80) is responding"
+            else
+              echo "❌ Nginx HTTP (port 80) is not responding"
+              echo "📋 Nginx container logs:"
+              docker-compose logs --tail=20 nginx
+            fi
+            
+            if curl -f -s -m 10 -k https://localhost:443/health > /dev/null 2>&1; then
+              echo "✅ Nginx HTTPS (port 443) is responding"
+            else
+              echo "❌ Nginx HTTPS (port 443) is not responding"
+              echo "📋 Checking SSL certificate files:"
+              ls -la "$APP_DIR/nginx/ssl/" || echo "SSL directory not found"
+            fi
+            
+            # Test backend directly
+            if curl -f -s -m 10 http://localhost:8000/health/ > /dev/null 2>&1; then
+              echo "✅ Backend (port 8000) is responding"
+            else
+              echo "❌ Backend (port 8000) is not responding"
+              echo "📋 Backend container logs:"
+              docker-compose logs --tail=20 backend
+            fi
+            
+            # Test frontend directly
+            if curl -f -s -m 10 http://localhost:3000 > /dev/null 2>&1; then
+              echo "✅ Frontend (port 3000) is responding"
+            else
+              echo "❌ Frontend (port 3000) is not responding"
+              echo "📋 Frontend container logs:"
+              docker-compose logs --tail=20 frontend
+            fi
+            
+            # Test external connectivity (what Cloudflare sees)
+            echo "📋 Testing external connectivity..."
+            PUBLIC_IP=$(curl -s -m 10 http://checkip.amazonaws.com/ 2>/dev/null || echo "unknown")
+            echo "Server public IP: $PUBLIC_IP"
+            
+            # Check if firewall is blocking ports
+            echo "📋 Checking firewall status..."
+            if command -v ufw >/dev/null 2>&1; then
+              echo "UFW status:"
+              sudo ufw status 2>/dev/null || echo "Cannot check UFW status"
+            fi
+            
+            if command -v iptables >/dev/null 2>&1; then
+              echo "Iptables rules for HTTP/HTTPS:"
+              sudo iptables -L INPUT -n | grep -E ':80|:443' 2>/dev/null || echo "No specific iptables rules found"
+            fi
+            
+            # Final comprehensive test
             if curl -f http://localhost:8000/health/ > /dev/null 2>&1; then
               echo "🎉 Deployment successful!"
-              echo "   Frontend: https://${{ secrets.LIGHTSAIL_HOST }}/"
-              echo "   Backend API: https://${{ secrets.LIGHTSAIL_HOST }}/api/"
+              echo "   Server Public IP: $PUBLIC_IP"
+              echo "   Frontend: https://watch-party.brahim-elhouss.me/"
+              echo "   Backend API: https://be-watch-party.brahim-elhouss.me/api/"
               echo "   (HTTP requests will be automatically redirected to HTTPS)"
+              echo ""
+              echo "🔍 If you're still getting Cloudflare Error 521:"
+              echo "   1. Verify Cloudflare DNS points to: $PUBLIC_IP"
+              echo "   2. Check that ports 80 and 443 are open in your firewall"
+              echo "   3. Ensure SSL certificates are valid (check above)"
+              echo "   4. Wait a few minutes for DNS propagation"
             else
-              echo "❌ Final health check failed"
-              docker-compose logs --tail=20 backend
+              echo "❌ Final health check failed - services may not be accessible externally"
+              echo "📋 Container status:"
+              docker-compose ps
+              echo "📋 All container logs:"
+              docker-compose logs --tail=10
               exit 1
             fi
             
