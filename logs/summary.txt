@@ -1,15 +1,17 @@
 Log Collection Summary
 ======================
-Date: Tue Sep 30 09:29:34 UTC 2025
+Date: Tue Sep 30 13:21:31 UTC 2025
 Server: ip-172-26-10-125
 Application Directory: /srv/watch-party
 
 All Services: backend
 celery-beat
 celery-worker
+frontend
+nginx
 Running Services: backend
-celery-beat
-celery-worker
+frontend
+nginx
 
 Docker Compose Version:
 Docker Compose version v2.39.4

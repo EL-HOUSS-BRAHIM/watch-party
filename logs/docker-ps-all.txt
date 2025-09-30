@@ -1,5 +1,6 @@
-CONTAINER ID   IMAGE                        COMMAND                  CREATED          STATUS                            PORTS                                       NAMES
-65ebf8add43e   watchparty-frontend:latest   "docker-entrypoint.s…"   2 seconds ago    Created                                                                       watch-party-frontend-1
-05b0383cd822   watchparty-backend:latest    "celery -A config wo…"   14 seconds ago   Up 3 seconds (health: starting)                                               watch-party-celery-worker-1
-e9916e4f5255   watchparty-backend:latest    "celery -A config be…"   14 seconds ago   Up 3 seconds (health: starting)                                               watch-party-celery-beat-1
-50906d6267c5   watchparty-backend:latest    "gunicorn --bind 0.0…"   18 seconds ago   Up 17 seconds (healthy)           0.0.0.0:8000->8000/tcp, :::8000->8000/tcp   watch-party-backend-1
+CONTAINER ID   IMAGE                        COMMAND                  CREATED              STATUS                         PORTS                                                                      NAMES
+6e444a3a0737   nginx:alpine                 "/docker-entrypoint.…"   41 seconds ago       Up 40 seconds (healthy)        0.0.0.0:80->80/tcp, :::80->80/tcp, 0.0.0.0:443->443/tcp, :::443->443/tcp   watch-party-nginx-1
+092913676d4b   watchparty-frontend:latest   "docker-entrypoint.s…"   52 seconds ago       Up 51 seconds (unhealthy)      0.0.0.0:3000->3000/tcp, :::3000->3000/tcp                                  watch-party-frontend-1
+33b9d8c05a3f   watchparty-backend:latest    "celery -A config be…"   About a minute ago   Restarting (1) 2 seconds ago                                                                              watch-party-celery-beat-1
+0e5ebbeadf9c   watchparty-backend:latest    "celery -A config wo…"   About a minute ago   Restarting (1) 2 seconds ago                                                                              watch-party-celery-worker-1
+0d19e1bec350   watchparty-backend:latest    "gunicorn --bind 0.0…"   About a minute ago   Up About a minute (healthy)    0.0.0.0:8000->8000/tcp, :::8000->8000/tcp                                  watch-party-backend-1

@@ -1,4 +1,6 @@
-NAME                          IMAGE                       COMMAND                  SERVICE         CREATED          STATUS                            PORTS
-watch-party-backend-1         watchparty-backend:latest   "gunicorn --bind 0.0…"   backend         17 seconds ago   Up 17 seconds (healthy)           0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
-watch-party-celery-beat-1     watchparty-backend:latest   "celery -A config be…"   celery-beat     13 seconds ago   Up 3 seconds (health: starting)   
-watch-party-celery-worker-1   watchparty-backend:latest   "celery -A config wo…"   celery-worker   13 seconds ago   Up 3 seconds (health: starting)   
+NAME                          IMAGE                        COMMAND                  SERVICE         CREATED              STATUS                         PORTS
+watch-party-backend-1         watchparty-backend:latest    "gunicorn --bind 0.0…"   backend         About a minute ago   Up About a minute (healthy)    0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp
+watch-party-celery-beat-1     watchparty-backend:latest    "celery -A config be…"   celery-beat     About a minute ago   Restarting (1) 2 seconds ago   
+watch-party-celery-worker-1   watchparty-backend:latest    "celery -A config wo…"   celery-worker   About a minute ago   Restarting (1) 2 seconds ago   
+watch-party-frontend-1        watchparty-frontend:latest   "docker-entrypoint.s…"   frontend        52 seconds ago       Up 51 seconds (unhealthy)      0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+watch-party-nginx-1           nginx:alpine                 "/docker-entrypoint.…"   nginx           41 seconds ago       Up 39 seconds (healthy)        0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp
