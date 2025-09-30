@@ -16,10 +16,20 @@ jobs:
           rm -rf logs
           mkdir -p logs
 
-      - name: Start services
+      - name: Prepare environment files
         run: |
-          docker compose pull
-          docker compose up -d
+          if [ ! -f backend/.env ] && [ -f backend/.env.example ]; then
+            cp backend/.env.example backend/.env
+          fi
+          if [ ! -f frontend/.env.local ] && [ -f frontend/.env.example ]; then
+            cp frontend/.env.example frontend/.env.local
+          fi
+
+      - name: Build images
+        run: docker compose build backend frontend
+
+      - name: Start services
+        run: docker compose up -d
 
       - name: Capture service logs
         run: |
@@ -34,7 +44,7 @@ jobs:
         run: docker compose down
 
       - name: Upload logs archive
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: service-logs
           path: logs
