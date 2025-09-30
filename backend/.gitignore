@@ -119,7 +119,7 @@ ssl_certs/
 # Old structure (to be removed)
 watchparty/
 middleware/
-services/
+/services/
 utils/
 core/
 !shared/middleware/
