@@ -11,25 +11,190 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Prepare logs directory
+      - name: Collect logs from server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: deploy
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          script: |
+            set -e
+
+            APP_NAME="watch-party"
+            # Try multiple possible application directories
+            if [ -d "/srv/$APP_NAME" ]; then
+              APP_DIR="/srv/$APP_NAME"
+            elif [ -d "$HOME/watch-party" ]; then
+              APP_DIR="$HOME/watch-party"
+            else
+              echo "❌ Application directory not found"
+              echo "Tried: /srv/$APP_NAME and $HOME/watch-party"
+              exit 1
+            fi
+
+            echo "📁 Using application directory: $APP_DIR"
+            cd "$APP_DIR"
+
+            # Create logs directory
+            LOGS_DIR="/tmp/watch-party-logs-$(date +%Y%m%d-%H%M%S)"
+            mkdir -p "$LOGS_DIR"
+            echo "📁 Created logs directory: $LOGS_DIR"
+
+            # Determine docker compose command
+            if command -v docker-compose &> /dev/null; then
+              DOCKER_COMPOSE="docker-compose"
+            elif docker compose version &> /dev/null 2>&1; then
+              DOCKER_COMPOSE="docker compose"
+            else
+              echo "❌ Neither docker-compose nor docker compose found"
+              exit 1
+            fi
+
+            echo "🔍 Using Docker Compose command: $DOCKER_COMPOSE"
+
+            # Get list of services
+            echo "🔍 Checking for running services..."
+            if ! $DOCKER_COMPOSE ps > /dev/null 2>&1; then
+              echo "❌ Unable to check Docker Compose services"
+              echo "This might mean the application is not running"
+              exit 1
+            fi
+
+            # Get all services (running and stopped)
+            all_services=$($DOCKER_COMPOSE ps --services 2>/dev/null \
+              || echo "")
+            running_services=$($DOCKER_COMPOSE ps --services \
+              --filter "status=running" 2>/dev/null || echo "")
+
+            if [ -z "$all_services" ]; then
+              echo "❌ No services found in docker-compose project"
+              echo "Docker Compose status:"
+              $DOCKER_COMPOSE ps || true
+              exit 1
+            fi
+
+            echo "📋 All services: $all_services"
+            echo "✅ Running services: $running_services"
+
+            # Collect logs from all services (including stopped ones)
+            for service in $all_services; do
+              echo "📝 Collecting logs for service: $service"
+              log_file="$LOGS_DIR/${service}.log"
+
+              # Get logs with timestamps, limit to last 1000 lines
+              if $DOCKER_COMPOSE logs --no-color --timestamps \
+                --tail=1000 "$service" > "$log_file" 2>&1; then
+                lines=$(wc -l < "$log_file")
+                echo "✅ Collected logs for $service ($lines lines)"
+              else
+                echo "⚠️  Failed to collect logs for $service"
+                echo "Error: Could not collect logs" > "$log_file"
+              fi
+            done
+
+            # Also collect docker compose ps output
+            echo "📝 Collecting container status..."
+            $DOCKER_COMPOSE ps > "$LOGS_DIR/docker-compose-ps.txt" \
+              2>&1 || true
+
+            # Collect docker ps -a output
+            echo "📝 Collecting all container statuses..."
+            docker ps -a > "$LOGS_DIR/docker-ps-all.txt" 2>&1 || true
+
+            # Create a summary file
+            echo "📝 Creating summary file..."
+            cat > "$LOGS_DIR/summary.txt" << 'SUMMARY_EOF'
+            Log Collection Summary
+            ======================
+            SUMMARY_EOF
+
+            # Append dynamic content
+            {
+              echo "Date: $(date)"
+              echo "Server: $(hostname)"
+              echo "Application Directory: $APP_DIR"
+              echo ""
+              echo "All Services: $all_services"
+              echo "Running Services: $running_services"
+              echo ""
+              echo "Docker Compose Version:"
+              $DOCKER_COMPOSE version 2>&1 || echo "Version check failed"
+              echo ""
+              echo "Docker Version:"
+              docker --version 2>&1 || echo "Version check failed"
+            } >> "$LOGS_DIR/summary.txt"
+
+            # Create archive
+            echo "📦 Creating archive..."
+            ARCHIVE_FILE="/tmp/watch-party-logs-$(date +%Y%m%d-%H%M%S).tar.gz"
+            tar -czf "$ARCHIVE_FILE" -C "$LOGS_DIR" .
+
+            # Clean up logs directory but keep archive
+            rm -rf "$LOGS_DIR"
+
+            echo "✅ Logs collected successfully"
+            echo "Archive: $ARCHIVE_FILE"
+            echo "Archive size: $(du -h "$ARCHIVE_FILE" | cut -f1)"
+
+            # Store the archive path for the next step
+            echo "$ARCHIVE_FILE" > /tmp/watch-party-logs-latest.txt
+
+      - name: Download logs from server
         run: |
-          rm -rf logs
-          mkdir -p logs
-      - name: Collect logs from running services
-        run: |
-          services=$(docker compose ps --services --filter "status=running")
-          if [ -z "$services" ]; then
-            echo "No running services found for docker compose project"
+          set -e
+
+          # Setup SSH key
+          mkdir -p "$HOME/.ssh"
+          echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > "$HOME/.ssh/lightsail_key"
+          chmod 600 "$HOME/.ssh/lightsail_key"
+
+          # Add server to known hosts
+          HOST="${{ secrets.LIGHTSAIL_HOST }}"
+          ssh-keyscan -H "$HOST" >> "$HOME/.ssh/known_hosts"
+
+          # Get the archive filename from the server
+          ARCHIVE_PATH=$(ssh -i "$HOME/.ssh/lightsail_key" \
+            deploy@"$HOST" 'cat /tmp/watch-party-logs-latest.txt' \
+            2>/dev/null || echo "")
+
+          if [ -z "$ARCHIVE_PATH" ]; then
+            echo "❌ Could not determine archive path on server"
             exit 1
           fi
-          for service in $services; do
-            echo "Collecting logs for ${service}" \
-              && docker compose logs --no-color "$service" > "logs/${service}.log"
-          done
+
+          echo "📥 Downloading logs archive: $ARCHIVE_PATH"
+
+          # Create local logs directory
+          mkdir -p logs
+
+          # Download the archive
+          if scp -i "$HOME/.ssh/lightsail_key" \
+            "deploy@$HOST:$ARCHIVE_PATH" logs/service-logs.tar.gz; then
+            echo "✅ Downloaded logs archive"
+
+            # Extract for easier viewing
+            cd logs
+            tar -xzf service-logs.tar.gz
+            rm service-logs.tar.gz
+
+            echo "📋 Extracted log files:"
+            ls -lh
+
+            # Clean up the archive on the server
+            ssh -i "$HOME/.ssh/lightsail_key" deploy@"$HOST" \
+              "rm -f $ARCHIVE_PATH /tmp/watch-party-logs-latest.txt" \
+              || true
+          else
+            echo "❌ Failed to download logs archive"
+            exit 1
+          fi
+
+          # Clean up SSH key
+          rm -f "$HOME/.ssh/lightsail_key"
 
       - name: Upload logs archive
         uses: actions/upload-artifact@v4
         with:
-          name: service-logs
-          path: logs
+          name: service-logs-${{ github.run_number }}
+          path: logs/
           if-no-files-found: error
