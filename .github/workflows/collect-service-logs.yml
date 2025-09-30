@@ -15,7 +15,6 @@ jobs:
         run: |
           rm -rf logs
           mkdir -p logs
-
       - name: Collect logs from running services
         run: |
           services=$(docker compose ps --services --filter "status=running")
