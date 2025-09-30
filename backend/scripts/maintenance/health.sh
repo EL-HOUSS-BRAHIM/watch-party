@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2155  # Allow declaring and assigning variables in one line for readability
 
 # =============================================================================
 # WATCH PARTY BACKEND - HEALTH MONITORING SCRIPT
@@ -58,7 +59,8 @@ check_python_env() {
     
     # Python version
     if command -v python3 &> /dev/null; then
-        local python_version=$(python3 --version)
+        local python_version
+        python_version=$(python3 --version)
         log_success "Python: $python_version"
     else
         log_error "Python 3 not found"
@@ -82,7 +84,8 @@ check_python_env() {
     if [[ -f "venv/bin/activate" ]]; then
         source venv/bin/activate
         if python -c "import django" &> /dev/null; then
-            local django_version=$(python -c "import django; print(django.get_version())")
+            local django_version
+            django_version=$(python -c "import django; print(django.get_version())")
             log_success "Django: $django_version"
         else
             log_error "Django: Not installed"

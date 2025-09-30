@@ -34,7 +34,8 @@ log_error() { echo -e "${RED}${CROSS} $1${NC}"; }
 
 # Environment configuration
 VENV_DIR="$PROJECT_ROOT/venv"
-PYTHON_VERSION="3.11"
+# PYTHON_VERSION is reserved for future version checks
+# PYTHON_VERSION="3.11"
 REQUIREMENTS_FILE="$PROJECT_ROOT/requirements.txt"
 
 # =============================================================================
