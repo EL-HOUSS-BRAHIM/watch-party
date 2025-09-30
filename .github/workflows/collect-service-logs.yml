@@ -35,10 +35,11 @@ jobs:
             echo "📁 Using application directory: $APP_DIR"
             cd "$APP_DIR"
 
-            # Create logs directory
-            LOGS_DIR="/tmp/watch-party-logs-$(date +%Y%m%d-%H%M%S)"
+            # Create/clear logs directory in the project
+            LOGS_DIR="$APP_DIR/logs"
+            echo "📁 Preparing logs directory: $LOGS_DIR"
+            rm -rf "$LOGS_DIR"
             mkdir -p "$LOGS_DIR"
-            echo "📁 Created logs directory: $LOGS_DIR"
 
             # Determine docker compose command
             if command -v docker-compose &> /dev/null; then
@@ -124,20 +125,9 @@ jobs:
               docker --version 2>&1 || echo "Version check failed"
             } >> "$LOGS_DIR/summary.txt"
 
-            # Create archive
-            echo "📦 Creating archive..."
-            ARCHIVE_FILE="/tmp/watch-party-logs-$(date +%Y%m%d-%H%M%S).tar.gz"
-            tar -czf "$ARCHIVE_FILE" -C "$LOGS_DIR" .
-
-            # Clean up logs directory but keep archive
-            rm -rf "$LOGS_DIR"
-
-            echo "✅ Logs collected successfully"
-            echo "Archive: $ARCHIVE_FILE"
-            echo "Archive size: $(du -h "$ARCHIVE_FILE" | cut -f1)"
-
-            # Store the archive path for the next step
-            echo "$ARCHIVE_FILE" > /tmp/watch-party-logs-latest.txt
+            echo "✅ Logs collected successfully in $LOGS_DIR"
+            echo "📋 Log files created:"
+            ls -lh "$LOGS_DIR"
 
       - name: Download logs from server
         run: |
@@ -152,49 +142,49 @@ jobs:
           HOST="${{ secrets.LIGHTSAIL_HOST }}"
           ssh-keyscan -H "$HOST" >> "$HOME/.ssh/known_hosts"
 
-          # Get the archive filename from the server
-          ARCHIVE_PATH=$(ssh -i "$HOME/.ssh/lightsail_key" \
-            deploy@"$HOST" 'cat /tmp/watch-party-logs-latest.txt' \
-            2>/dev/null || echo "")
+          # Determine application directory on server
+          APP_DIR=$(ssh -i "$HOME/.ssh/lightsail_key" deploy@"$HOST" \
+            'if [ -d "/srv/watch-party" ]; then echo "/srv/watch-party"; elif [ -d "$HOME/watch-party" ]; then echo "$HOME/watch-party"; fi' \
+            2>/dev/null)
 
-          if [ -z "$ARCHIVE_PATH" ]; then
-            echo "❌ Could not determine archive path on server"
+          if [ -z "$APP_DIR" ]; then
+            echo "❌ Could not determine application directory on server"
             exit 1
           fi
 
-          echo "📥 Downloading logs archive: $ARCHIVE_PATH"
+          echo "📥 Downloading logs from $APP_DIR/logs/"
 
-          # Create local logs directory
-          mkdir -p logs
+          # Remove existing local logs directory
+          rm -rf logs
 
-          # Download the archive
-          if scp -i "$HOME/.ssh/lightsail_key" \
-            "deploy@$HOST:$ARCHIVE_PATH" logs/service-logs.tar.gz; then
-            echo "✅ Downloaded logs archive"
+          # Download the entire logs directory
+          if scp -r -i "$HOME/.ssh/lightsail_key" \
+            "deploy@$HOST:$APP_DIR/logs" .; then
+            echo "✅ Downloaded logs directory"
 
-            # Extract for easier viewing
-            cd logs
-            tar -xzf service-logs.tar.gz
-            rm service-logs.tar.gz
-
-            echo "📋 Extracted log files:"
-            ls -lh
-
-            # Clean up the archive on the server
-            ssh -i "$HOME/.ssh/lightsail_key" deploy@"$HOST" \
-              "rm -f $ARCHIVE_PATH /tmp/watch-party-logs-latest.txt" \
-              || true
+            echo "📋 Downloaded log files:"
+            ls -lh logs/
           else
-            echo "❌ Failed to download logs archive"
+            echo "❌ Failed to download logs directory"
             exit 1
           fi
 
           # Clean up SSH key
           rm -f "$HOME/.ssh/lightsail_key"
 
-      - name: Upload logs archive
-        uses: actions/upload-artifact@v4
-        with:
-          name: service-logs-${{ github.run_number }}
-          path: logs/
-          if-no-files-found: error
+      - name: Commit and push logs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Add logs directory
+          git add logs/
+
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "ℹ️  No changes to commit"
+          else
+            git commit -m "Update service logs [skip ci]"
+            git push
+            echo "✅ Logs committed and pushed to repository"
+          fi

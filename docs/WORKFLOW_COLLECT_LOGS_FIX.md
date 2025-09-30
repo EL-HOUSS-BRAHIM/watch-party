@@ -47,16 +47,11 @@ The workflow now collects:
   - List of all services and running services
   - Docker and Docker Compose versions
 
-### 5. Archive and Download
-- Creates a timestamped tar.gz archive on the server
-- Downloads the archive to the GitHub Actions runner via SCP
-- Extracts the logs for easy viewing in the workflow artifacts
-- Cleans up temporary files on both server and runner
-
-### 6. Upload as Artifact
-- Uploads logs as a GitHub Actions artifact with unique name
-- Name format: `service-logs-{run_number}`
-- Accessible from the workflow run page for download and review
+### 5. Save Logs to Repository
+- Saves logs directly to the `logs/` directory in the project on the server
+- Downloads the entire logs directory to the local repository
+- Commits and pushes the logs back to the repository
+- Replaces existing logs on each run (no timestamped archives)
 
 ## Usage
 
@@ -67,12 +62,14 @@ The workflow now collects:
 3. Select "Collect service logs" from the workflow list
 4. Click "Run workflow" button
 5. Wait for the workflow to complete (usually 1-2 minutes)
-6. Download the logs artifact from the workflow run page
+6. Check the `logs/` directory in the repository - it will be automatically updated with the latest logs
 
 ### What You'll Get:
 
+The `logs/` directory in your repository will contain:
+
 ```
-service-logs-{run_number}/
+logs/
 ├── backend.log              # Backend service logs
 ├── frontend.log             # Frontend service logs
 ├── nginx.log                # Nginx service logs
@@ -83,6 +80,8 @@ service-logs-{run_number}/
 ├── docker-ps-all.txt        # All Docker containers status
 └── summary.txt              # Summary with system information
 ```
+
+**Note**: Each run replaces the previous logs, so the directory always contains the most recent logs.
 
 ## Error Handling
 
@@ -98,10 +97,10 @@ The workflow includes comprehensive error handling:
 
 ✅ **Works correctly**: Connects to the actual server where services are running
 ✅ **Comprehensive**: Collects logs from all services in one go
-✅ **Efficient**: Creates a single archive for easy download
-✅ **Clean**: Automatically cleans up temporary files
+✅ **Always up-to-date**: Each run replaces old logs with fresh ones
+✅ **Easy access**: Logs are stored in the repository's `logs/` directory
 ✅ **Resilient**: Handles errors gracefully and continues where possible
-✅ **Timestamped**: Each collection has unique timestamps for tracking
+✅ **Timestamped**: Summary file includes collection timestamp for tracking
 ✅ **Informative**: Includes system status and version information
 
 ## Technical Details
@@ -113,15 +112,15 @@ The workflow includes comprehensive error handling:
 
 ### Steps:
 1. **Checkout repository**: Gets the workflow code
-2. **Collect logs from server**: Connects via SSH and collects logs
-3. **Download logs from server**: Uses SCP to download the archive
-4. **Upload logs archive**: Makes logs available as workflow artifact
+2. **Collect logs from server**: Connects via SSH and collects logs to `logs/` directory on server
+3. **Download logs from server**: Uses SCP to download the logs directory
+4. **Commit and push logs**: Commits the updated logs back to the repository
 
 ### Dependencies:
 - SSH access to Lightsail server
 - Docker and Docker Compose installed on server
 - Running services (or at least defined in docker-compose.yml)
-- Sufficient disk space in `/tmp` on server for log archive
+- Sufficient disk space in the project's `logs/` directory
 
 ## Testing
 
@@ -140,6 +139,7 @@ Possible improvements for future versions:
 - Include system resource usage (CPU, memory, disk)
 - Add option to collect logs from specific time range
 - Support for streaming logs in real-time
+- Add log rotation to keep historical snapshots
 
 ---
 
