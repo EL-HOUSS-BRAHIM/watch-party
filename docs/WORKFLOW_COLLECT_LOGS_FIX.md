@@ -141,6 +141,36 @@ Possible improvements for future versions:
 - Support for streaming logs in real-time
 - Add log rotation to keep historical snapshots
 
+## Recent Improvements (September 2025)
+
+### Issue: Service Logs Not Being Collected
+
+The workflow was only collecting Docker status files but not the actual service log files (backend.log, frontend.log, nginx.log, etc.).
+
+### Improvements Made:
+
+1. **Enhanced Error Handling**:
+   - Added verbose logging to track each step of log collection
+   - Added verification that log files are created and have content
+   - Force create error log files if collection fails
+
+2. **Fallback Mechanism**:
+   - If `docker compose logs` fails, automatically falls back to using `docker logs` directly
+   - Gets container ID for each service and collects logs from the container
+
+3. **Additional Container Detection**:
+   - Searches for all watch-party containers using `docker ps -a`
+   - Collects logs from containers that weren't in the compose services list
+   - Ensures frontend, nginx, db, and valkey logs are captured even if they don't show up in `docker compose ps --services`
+   - Extracts service names from container names (e.g., `watch-party-frontend-1` → `frontend`)
+
+4. **Better Visibility**:
+   - Lists directory contents after collection to verify files were created
+   - Shows line counts for each collected log file
+   - Clear error messages for each failure scenario
+
+These improvements ensure that **actual service logs are always collected**, not just Docker status information. The workflow now handles edge cases where containers are stopped, failed, or not showing up in the compose services list.
+
 ---
 
 **Fixed by**: GitHub Copilot Agent
