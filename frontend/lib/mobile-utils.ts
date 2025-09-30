@@ -3,7 +3,8 @@
  */
 
 import { useState, useEffect } from "react"
-import { cn } from "@/lib/utils"
+// cn utility available for conditional classnames
+// import { cn } from "@/lib/utils"
 
 // Device detection utilities
 export const isMobile = () => {
@@ -208,7 +209,8 @@ export const pwaHelpers = {
   }
 }
 
-export default {
+// Export mobile utilities as named exports
+export const mobileUtils = {
   isMobile,
   isTablet,
   isDesktop,

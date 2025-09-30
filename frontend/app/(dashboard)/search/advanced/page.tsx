@@ -31,13 +31,14 @@ interface AdvancedSearchPageProps {
   params: any
 }
 
-export default function AdvancedSearchPage({ params }: AdvancedSearchPageProps) {
+export default function AdvancedSearchPage({ params: _params }: AdvancedSearchPageProps) {
   const [results, setResults] = useState<SearchResult[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, _setLoading] = useState(false)
   const [currentQuery, setCurrentQuery] = useState("")
-  const [totalResults, setTotalResults] = useState(0)
-  const [searchTime, setSearchTime] = useState(0)
-  const [filters, setFilters] = useState<SearchFilters>({
+  const [totalResults, _setTotalResults] = useState(0)
+  const [searchTime, _setSearchTime] = useState(0)
+  // Filter state - will be used when backend filtering is implemented
+  const [_filters, setFilters] = useState<SearchFilters>({
     type: "all",
     visibility: undefined,
     status: undefined,

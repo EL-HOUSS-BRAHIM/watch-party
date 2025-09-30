@@ -313,7 +313,7 @@ interface GameInterfaceProps {
   onUpdate: () => void
 }
 
-function GameInterface({ game, partyId, currentUser, onUpdate }: GameInterfaceProps) {
+function GameInterface({ game, partyId, currentUser: _currentUser, onUpdate }: GameInterfaceProps) {
   const [answer, setAnswer] = useState("")
   const [submitting, setSubmitting] = useState(false)
 

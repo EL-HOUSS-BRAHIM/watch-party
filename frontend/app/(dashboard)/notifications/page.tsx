@@ -125,7 +125,8 @@ export default function NotificationsPage() {
     }
   }
 
-  const getNotificationColor = (type: string) => {
+  // Helper function for notification color (available for future use)
+  const _getNotificationColor = (type: string) => {
     switch (type) {
       case "party_invite": return "text-blue-400"
       case "friend_request": return "text-green-400"

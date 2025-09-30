@@ -1,7 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import api from "@/lib/api-client"
+// API client available for future feature loading
+// import api from "@/lib/api-client"
 
 interface PremiumFeature {
   id: string

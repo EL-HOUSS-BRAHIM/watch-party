@@ -47,7 +47,7 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
       const messagesList = Array.isArray(response) ? response : (response.results || [])
       setMessages(messagesList.reverse()) // Reverse to show oldest first
       setError("")
-    } catch (error) {
+    } catch (_error) {
       setError("Failed to load messages")
     } finally {
       setLoading(false)
@@ -90,7 +90,7 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
       const message = await chatApi.sendMessage(partyId, newMessage.trim())
       setMessages(prev => [...prev, message])
       setNewMessage("")
-    } catch (error) {
+    } catch (_error) {
       setError("Failed to send message")
     } finally {
       setSending(false)

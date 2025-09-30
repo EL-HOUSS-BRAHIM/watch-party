@@ -1,7 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { chatApi, ChatEmoji, User } from "@/lib/api-client"
+import { chatApi, ChatEmoji } from "@/lib/api-client"
+// User type available for future features
+// import { User } from "@/lib/api-client"
 
 interface EmojiPickerProps {
   onEmojiSelect: (emoji: string) => void

@@ -5,13 +5,14 @@ import { SwipeGesture } from "@/components/mobile"
 import api, { WatchParty as Party } from "@/lib/api-client"
 
 import { PullToRefresh } from "@/components/mobile"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+// Button and Card components available for future use
+// import { Button } from "@/components/ui/button"
+// import { Card } from "@/components/ui/card"
 
 export default function MobilePartiesPage() {
   const [parties, setParties] = useState<Party[]>([])
   const [loading, setLoading] = useState(true)
-  const [refreshing, setRefreshing] = useState(false)
+  const [_refreshing, setRefreshing] = useState(false)
   const [filter, setFilter] = useState<"all" | "joined" | "hosted">("all")
 
   useEffect(() => {
