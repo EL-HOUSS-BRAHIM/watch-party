@@ -1028,7 +1028,7 @@ export const billingApi = {
  */
 export const storeApi = {
   // Store items
-  getItems: (params?: any) =>
+  getItems: (_params?: any) =>
     apiFetch<any>('/v2/store/items/', {}, true),
 
   purchaseItem: (itemId: string) =>

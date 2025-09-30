@@ -38,7 +38,8 @@ check_django_celery_beat() {
     log_info "Checking django-celery-beat dependency fix..."
     
     if grep -q "django-celery-beat" backend/requirements.txt; then
-        local version=$(grep "django-celery-beat" backend/requirements.txt | cut -d'=' -f3)
+        local version
+        version=$(grep "django-celery-beat" backend/requirements.txt | cut -d'=' -f3)
         log_success "django-celery-beat==${version} found in requirements.txt"
         return 0
     else

@@ -30,7 +30,7 @@ export default function ProfilePage() {
         username: profile.username || "",
         email: profile.email || "",
       })
-    } catch (error) {
+    } catch (_error) {
       setError("Failed to load profile")
     } finally {
       setLoading(false)
@@ -60,7 +60,7 @@ export default function ProfilePage() {
     try {
       const result = await userApi.uploadAvatar(file)
       setUser(prev => prev ? { ...prev, avatar: result.avatar_url } : null)
-    } catch (error) {
+    } catch (_error) {
       setError("Failed to upload avatar")
     }
   }

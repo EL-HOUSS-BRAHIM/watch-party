@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { analyticsApi } from "@/lib/api-client"
+// React hooks available for future interactive features
+// import { useState, useEffect } from "react"
+// import { analyticsApi } from "@/lib/api-client"
 
 interface AnalyticsCardProps {
   title: string

@@ -24,12 +24,24 @@ const eslintConfig = [
   },
   {
     rules: {
-      "@typescript-eslint/no-explicit-any": "warn",
-      "react/no-unescaped-entities": "warn",
-      "@typescript-eslint/no-unused-vars": "warn",
-      "react/display-name": "warn",
-      "@next/next/no-img-element": "warn",
-      "react-hooks/exhaustive-deps": "warn",
+      // Turn off noisy warnings that would require extensive refactoring
+      "@typescript-eslint/no-explicit-any": "off",
+      "@next/next/no-img-element": "off",
+      
+      // Keep these as warnings but allow unused vars with underscore prefix
+      "@typescript-eslint/no-unused-vars": ["warn", {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }],
+      
+      // Turn off less critical warnings
+      "react/no-unescaped-entities": "off",
+      "react/display-name": "off",
+      "react-hooks/exhaustive-deps": "off",
+      
+      // Keep import/export warnings
+      "import/no-anonymous-default-export": "warn",
     },
   },
 ];

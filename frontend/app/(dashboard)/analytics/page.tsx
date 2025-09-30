@@ -6,7 +6,7 @@ import { analyticsApi } from "@/lib/api-client"
 import AnalyticsCard from "@/components/analytics/AnalyticsCard"
 import LineChart from "@/components/analytics/LineChart"
 import BarChart from "@/components/analytics/BarChart"
-import DonutChart from "@/components/analytics/DonutChart"
+// DonutChart component available but not currently used in this view
 import RealTimeActivityFeed from "@/components/analytics/RealTimeActivityFeed"
 
 export default function AnalyticsPage() {

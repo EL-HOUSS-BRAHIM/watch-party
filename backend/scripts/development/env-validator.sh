@@ -100,6 +100,7 @@ validate_required_vars() {
     
     # Load environment file
     set -a
+    # shellcheck source=/dev/null
     source "$env_file"
     set +a
     
@@ -339,6 +340,7 @@ fix_missing_vars() {
 EOF
     
     # Check and add missing variables
+    # shellcheck source=/dev/null
     source "$env_file" 2>/dev/null || true
     
     [[ -z "${DATABASE_URL:-}" ]] && echo "DATABASE_URL=sqlite:///db.sqlite3" >> "$env_file"
@@ -499,6 +501,7 @@ fix_environment() {
     fix_env_permissions "$env_file"
     
     # Check and fix weak SECRET_KEY
+    # shellcheck source=/dev/null
     source "$env_file" 2>/dev/null || true
     if [[ -z "${SECRET_KEY:-}" ]] || [[ "$SECRET_KEY" == *"your-secret-key"* ]] || [[ "${#SECRET_KEY}" -lt 32 ]]; then
         fix_weak_secret_key "$env_file"

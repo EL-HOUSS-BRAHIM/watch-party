@@ -1,6 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
+// useEffect available for future data loading features
+// import { useEffect } from "react"
 
 interface ChartData {
   label: string

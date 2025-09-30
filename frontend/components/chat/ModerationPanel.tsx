@@ -1,7 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { chatApi, adminApi, User, ModerationAction } from "@/lib/api-client"
+import { chatApi, User, ModerationAction } from "@/lib/api-client"
+// adminApi available for future admin features
+// import { adminApi } from "@/lib/api-client"
 
 interface ModerationPanelProps {
   partyId: string

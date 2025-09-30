@@ -31,7 +31,8 @@ log_error() { echo -e "${RED}${CROSS} $1${NC}"; }
 # Configuration
 MAX_WAIT_TIME=120  # Maximum time to wait for services (seconds)
 HEALTH_CHECK_URL="http://localhost:8000/health/"
-ADMIN_URL="http://localhost:8000/admin/"
+# ADMIN_URL is reserved for future admin health checks
+# ADMIN_URL="http://localhost:8000/admin/"
 
 verify_environment() {
     log_info "Verifying environment configuration..."
