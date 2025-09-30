@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { dashboardApi, partiesApi } from "@/lib/api-client"
+import {
+  dashboardApi,
+  partiesApi,
+  type DashboardStatsResponse,
+  type PartySummary,
+} from "@/lib/api-client"
 
 // Fallback mock data for when API is unavailable
 const mockHighlights = [
@@ -30,20 +35,17 @@ const mockTimeline = [
 ]
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState<any>(null)
-  const [recentParties, setRecentParties] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
+  const [stats, setStats] = useState<DashboardStatsResponse | null>(null)
+  const [recentParties, setRecentParties] = useState<PartySummary[]>([])
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function loadDashboardData() {
       try {
-        setLoading(true)
-        
         // Fetch dashboard stats and recent parties in parallel
         const [dashboardData, partiesData] = await Promise.allSettled([
           dashboardApi.getStats(),
-          partiesApi.getRecent()
+          partiesApi.getRecent(),
         ])
 
         if (dashboardData.status === 'fulfilled') {
@@ -51,15 +53,15 @@ export default function DashboardPage() {
         }
 
         if (partiesData.status === 'fulfilled') {
-          setRecentParties(partiesData.value?.results || partiesData.value || [])
+          const value = partiesData.value
+          const list = Array.isArray(value) ? value : value?.results ?? []
+          setRecentParties(list)
         }
 
         setError(null)
       } catch (err) {
         console.error('Failed to load dashboard data:', err)
         setError('Using demo data - API connection unavailable')
-      } finally {
-        setLoading(false)
       }
     }
 
@@ -86,15 +88,17 @@ export default function DashboardPage() {
   ] : mockHighlights
 
   // Map API parties to timeline format, fallback to mock data
-  const timeline = recentParties.length > 0 
-    ? recentParties.slice(0, 3).map(party => ({
-        time: party.scheduled_start ? new Date(party.scheduled_start).toLocaleTimeString('en-US', { 
-          hour: '2-digit', 
-          minute: '2-digit',
-          hour12: false 
-        }) : 'TBD',
-        title: party.title || 'Untitled Party',
-        description: party.description || `${party.participant_count || 0} participants • ${party.status}`,
+  const timeline = recentParties.length > 0
+    ? recentParties.slice(0, 3).map((party) => ({
+        time: party.scheduled_start
+          ? new Date(party.scheduled_start).toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+              hour12: false,
+            })
+          : "TBD",
+        title: party.title || "Untitled Party",
+        description: party.description || `${party.participant_count || 0} participants • ${party.status ?? "scheduled"}`,
       }))
     : mockTimeline
 
@@ -106,10 +110,10 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <section className="rounded-[36px] border border-white/12 bg-[rgba(16,9,46,0.75)] p-6 sm:p-10">
+      <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-3">
-            <p className="text-xs uppercase tracking-[0.4em] text-white/60">Today's focus</p>
+            <p className="text-xs uppercase tracking-[0.4em] text-white/60">Today&rsquo;s focus</p>
             <h1 className="text-3xl font-semibold text-white sm:text-4xl">Welcome back, host</h1>
             <p className="text-sm text-white/70">
               Dual ambience automation is standing by. Review your scheduled watch nights and confirm the cues you want to spotlight.
@@ -128,9 +132,9 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-3">
+      <section className="grid gap-5 lg:grid-cols-3">
         {highlights.map((item) => (
-          <Card key={item.label} className="border-white/12 bg-[rgba(15,9,44,0.75)]">
+          <Card key={item.label} className="border-white/10 bg-white/[0.02]">
             <CardHeader>
               <p className="text-xs uppercase tracking-[0.35em] text-white/60">{item.label}</p>
               <CardTitle className="text-3xl text-white">{item.value}</CardTitle>
@@ -142,17 +146,17 @@ export default function DashboardPage() {
         ))}
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-[1.4fr,1fr]">
-        <Card className="border-white/12 bg-[rgba(18,10,52,0.78)]">
+      <section className="grid gap-5 lg:grid-cols-[1.4fr,1fr]">
+        <Card className="border-white/10 bg-white/[0.02]">
           <CardHeader>
-            <CardTitle className="text-2xl text-white">Today's timeline</CardTitle>
+            <CardTitle className="text-2xl text-white">Today&rsquo;s timeline</CardTitle>
             <CardDescription className="text-sm text-white/70">
               All scheduled watch nights with ambience presets and spotlight notes.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {timeline.map((event) => (
-              <div key={event.time} className="flex items-start gap-4 rounded-3xl border border-white/12 bg-white/5 p-4">
+              <div key={event.time} className="flex items-start gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4">
                 <div className="rounded-2xl border border-white/15 bg-white/10 px-3 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-white/70">
                   {event.time}
                 </div>
@@ -164,7 +168,7 @@ export default function DashboardPage() {
             ))}
           </CardContent>
         </Card>
-        <Card className="border-white/12 bg-[rgba(15,9,44,0.75)]">
+    <Card className="border-white/10 bg-white/[0.02]">
           <CardHeader>
             <CardTitle className="text-2xl text-white">Crew notes</CardTitle>
             <CardDescription className="text-sm text-white/70">
@@ -172,15 +176,15 @@ export default function DashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-white/75">
-            <div className="rounded-3xl border border-white/12 bg-white/5 p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
               <p className="text-xs uppercase tracking-[0.35em] text-white/60">Lighting</p>
               <p className="mt-2 text-white/80">Check bedroom lamp automation for sunrise screening.</p>
             </div>
-            <div className="rounded-3xl border border-white/12 bg-white/5 p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
               <p className="text-xs uppercase tracking-[0.35em] text-white/60">Co-hosts</p>
               <p className="mt-2 text-white/80">Amy leads Q&A; Ravi handles spoiler-safe chat moderation.</p>
             </div>
-            <div className="rounded-3xl border border-white/12 bg-white/5 p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
               <p className="text-xs uppercase tracking-[0.35em] text-white/60">Sponsors</p>
               <p className="mt-2 text-white/80">Upload new bumper loop before midnight premiere.</p>
             </div>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { userApi } from "@/lib/api-client"
+import { userApi, type UserProfile } from "@/lib/api-client"
 
 // Fallback mock data for when API is unavailable
 const mockPreferences = [
@@ -21,22 +21,18 @@ const mockPreferences = [
 ]
 
 export default function SettingsPage() {
-  const [profile, setProfile] = useState<any>(null)
-  const [loading, setLoading] = useState(true)
+  const [profile, setProfile] = useState<UserProfile | null>(null)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function loadProfile() {
       try {
-        setLoading(true)
         const data = await userApi.getProfile()
         setProfile(data)
         setError(null)
       } catch (err) {
         console.error('Failed to load profile:', err)
         setError('Using demo data - API connection unavailable')
-      } finally {
-        setLoading(false)
       }
     }
 
@@ -56,7 +52,7 @@ export default function SettingsPage() {
         </div>
       )}
 
-      <section className="rounded-[36px] border border-white/12 bg-[rgba(16,9,46,0.75)] p-6 sm:p-10">
+  <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-10">
         <div className="space-y-3">
           <p className="text-xs uppercase tracking-[0.4em] text-white/60">Settings</p>
           <h1 className="text-3xl font-semibold text-white sm:text-4xl">Fine-tune your host preferences</h1>
@@ -79,9 +75,9 @@ export default function SettingsPage() {
         </div>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-3">
+      <section className="grid gap-5 lg:grid-cols-3">
         {mockPreferences.map((preference) => (
-          <Card key={preference.title} className="border-white/12 bg-[rgba(15,9,44,0.75)]">
+          <Card key={preference.title} className="border-white/10 bg-white/[0.02]">
             <CardHeader>
               <CardTitle className="text-lg text-white">{preference.title}</CardTitle>
             </CardHeader>
@@ -92,8 +88,8 @@ export default function SettingsPage() {
         ))}
       </section>
 
-      <section className="rounded-[36px] border border-white/12 bg-[rgba(15,9,44,0.75)] p-6 sm:p-10">
-        <Card className="border-white/12 bg-[rgba(18,10,52,0.8)]">
+      <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-10">
+        <Card className="border-white/10 bg-white/[0.02]">
           <CardHeader>
             <CardTitle className="text-2xl text-white">Integrations</CardTitle>
             <CardDescription className="text-sm text-white/70">
@@ -101,15 +97,15 @@ export default function SettingsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-white/75">
-            <div className="rounded-3xl border border-white/12 bg-white/5 p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
               <p className="text-xs uppercase tracking-[0.35em] text-white/60">Lighting</p>
               <p className="mt-2 text-white/80">Philips Hue · LIFX</p>
             </div>
-            <div className="rounded-3xl border border-white/12 bg-white/5 p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
               <p className="text-xs uppercase tracking-[0.35em] text-white/60">Streaming</p>
               <p className="mt-2 text-white/80">YouTube Live · Vimeo · RTMP</p>
             </div>
-            <div className="rounded-3xl border border-white/12 bg-white/5 p-4">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
               <p className="text-xs uppercase tracking-[0.35em] text-white/60">Community</p>
               <p className="mt-2 text-white/80">Discord · Slack · Custom webhooks</p>
             </div>
