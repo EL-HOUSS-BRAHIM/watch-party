@@ -1,6 +1,11 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+'use client'
 
-const media = [
+import { useEffect, useState } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { videosApi } from "@/lib/api-client"
+
+// Fallback mock data for when API is unavailable
+const mockMedia = [
   {
     title: "Festival premiere: Aurora Skies",
     type: "Feature film",
@@ -22,8 +27,46 @@ const media = [
 ]
 
 export default function LibraryPage() {
+  const [videos, setVideos] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function loadVideos() {
+      try {
+        setLoading(true)
+        const data = await videosApi.list()
+        setVideos(data?.results || data || [])
+        setError(null)
+      } catch (err) {
+        console.error('Failed to load videos:', err)
+        setError('Using demo data - API connection unavailable')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadVideos()
+  }, [])
+
+  // Map API data to media format, fallback to mock data
+  const media = videos.length > 0
+    ? videos.map(video => ({
+        title: video.title || 'Untitled Video',
+        type: video.source_type || 'Video',
+        duration: video.duration_formatted || 'Unknown',
+        ambience: video.visibility || 'private',
+      }))
+    : mockMedia
+
   return (
     <div className="space-y-10">
+      {error && (
+        <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm text-yellow-200">
+          ⚠️ {error}
+        </div>
+      )}
+
       <section className="rounded-[36px] border border-white/12 bg-[rgba(16,9,46,0.75)] p-6 sm:p-10">
         <div className="space-y-3">
           <p className="text-xs uppercase tracking-[0.4em] text-white/60">Library</p>
