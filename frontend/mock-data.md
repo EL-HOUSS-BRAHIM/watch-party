@@ -20,23 +20,30 @@
 - Hero section copy highlighting WatchParty's mission and CTA buttons.
 - Principle cards outlining ambience, host flow, and community rituals alongside a static metrics card of watch nights, rating, and countries.
 
-## frontend/app/(dashboard)/dashboard/page.tsx
-- `highlights`: dashboard stat cards for upcoming watch nights, RSVPs, automation cues.
-- `timeline`: daily schedule entries with time, title, and ambience notes.
-- Hero welcome text detailing ambience automation status indicators.
-- Crew notes card with three fixed reminders for lighting, co-hosts, and sponsors.
+## ~~frontend/app/(dashboard)/dashboard/page.tsx~~ ✅ NOW USING API
+- **API Integration**: Uses `/analytics/dashboard/` endpoint for real-time stats
+- Falls back to mock data if API unavailable: `mockHighlights`, `mockTimeline`
+- Displays total parties, total videos, and watch time from backend
+- Shows recent parties with scheduled times and participant counts
+- Static crew notes remain as placeholder content
 
-## frontend/app/(dashboard)/rooms/page.tsx
-- `rooms`: watch lounge cards with name, theme, status, and playlist details for three sample rooms.
-- Introductory copy encouraging hosts to manage ambience and co-host rosters.
+## ~~frontend/app/(dashboard)/rooms/page.tsx~~ ✅ NOW USING API
+- **API Integration**: Uses `/parties/` endpoint to list user's watch parties
+- Falls back to mock data if API unavailable: `mockRooms`
+- Displays actual party titles, participant counts, visibility settings, and status
+- Maps API party data to room card format for consistent UI
 
-## frontend/app/(dashboard)/settings/page.tsx
-- `preferences`: settings cards covering ambience defaults, crew permissions, notification messaging.
-- Integrations card listing static partner categories for lighting, streaming, and community tools.
+## ~~frontend/app/(dashboard)/settings/page.tsx~~ ✅ NOW USING API
+- **API Integration**: Uses `/auth/profile/` endpoint for user profile data
+- Falls back to mock data if API unavailable: `mockPreferences`
+- Displays user's name, email, and premium status from backend
+- Static preferences and integrations remain as placeholder content
 
-## frontend/app/(dashboard)/library/page.tsx
-- `media`: library entries for Aurora Skies, Rift Legends, Midnight Stories with type, duration, ambience tags.
-- Header description explaining how to curate watch night catalogues.
+## ~~frontend/app/(dashboard)/library/page.tsx~~ ✅ NOW USING API
+- **API Integration**: Uses `/videos/` endpoint to list user's uploaded videos
+- Falls back to mock data if API unavailable: `mockMedia`
+- Displays actual video titles, durations, source types, and visibility settings
+- Maps API video data to media card format for consistent UI
 
 ## frontend/components/dashboard/dashboard-layout.tsx
 - `navigation`: client-side menu definitions for overview, rooms, library, and settings routes.

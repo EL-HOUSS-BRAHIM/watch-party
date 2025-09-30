@@ -1,6 +1,11 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+'use client'
 
-const rooms = [
+import { useEffect, useState } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { partiesApi } from "@/lib/api-client"
+
+// Fallback mock data for when API is unavailable
+const mockRooms = [
   {
     name: "Sunrise salon",
     theme: "Daybreak",
@@ -22,14 +27,52 @@ const rooms = [
 ]
 
 export default function RoomsPage() {
+  const [parties, setParties] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function loadParties() {
+      try {
+        setLoading(true)
+        const data = await partiesApi.list()
+        setParties(data?.results || data || [])
+        setError(null)
+      } catch (err) {
+        console.error('Failed to load parties:', err)
+        setError('Using demo data - API connection unavailable')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadParties()
+  }, [])
+
+  // Map API data to rooms format, fallback to mock data
+  const rooms = parties.length > 0
+    ? parties.map(party => ({
+        name: party.title || 'Untitled Party',
+        theme: party.visibility || 'Private',
+        status: party.status || 'scheduled',
+        details: `${party.participant_count || 0} participants · ${party.video?.title || 'No video'}`,
+      }))
+    : mockRooms
+
   return (
     <div className="space-y-10">
+      {error && (
+        <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm text-yellow-200">
+          ⚠️ {error}
+        </div>
+      )}
+
       <section className="rounded-[36px] border border-white/12 bg-[rgba(16,9,46,0.75)] p-6 sm:p-10">
         <div className="space-y-3">
           <p className="text-xs uppercase tracking-[0.4em] text-white/60">Rooms</p>
           <h1 className="text-3xl font-semibold text-white sm:text-4xl">Manage your watch lounges</h1>
           <p className="text-sm text-white/70">
-            Preview ambience, adjust automation cues, and confirm who&apos;s on the co-host roster before doors open.
+            Preview ambience, adjust automation cues, and confirm who's on the co-host roster before doors open.
           </p>
         </div>
       </section>

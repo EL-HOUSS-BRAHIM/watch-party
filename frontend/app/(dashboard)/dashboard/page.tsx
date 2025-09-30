@@ -1,12 +1,17 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+'use client'
 
-const highlights = [
+import { useEffect, useState } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { dashboardApi, partiesApi } from "@/lib/api-client"
+
+// Fallback mock data for when API is unavailable
+const mockHighlights = [
   { label: "Upcoming watch nights", value: "3", description: "Brunch classics, esports finals, and midnight premiere" },
-  { label: "Guests RSVP’d", value: "482", description: "Across six time zones" },
+  { label: "Guests RSVP'd", value: "482", description: "Across six time zones" },
   { label: "Automation cues", value: "28", description: "Ready to trigger this week" },
 ]
 
-const timeline = [
+const mockTimeline = [
   {
     time: "08:30",
     title: "Brunch classics",
@@ -25,12 +30,86 @@ const timeline = [
 ]
 
 export default function DashboardPage() {
+  const [stats, setStats] = useState<any>(null)
+  const [recentParties, setRecentParties] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function loadDashboardData() {
+      try {
+        setLoading(true)
+        
+        // Fetch dashboard stats and recent parties in parallel
+        const [dashboardData, partiesData] = await Promise.allSettled([
+          dashboardApi.getStats(),
+          partiesApi.getRecent()
+        ])
+
+        if (dashboardData.status === 'fulfilled') {
+          setStats(dashboardData.value)
+        }
+
+        if (partiesData.status === 'fulfilled') {
+          setRecentParties(partiesData.value?.results || partiesData.value || [])
+        }
+
+        setError(null)
+      } catch (err) {
+        console.error('Failed to load dashboard data:', err)
+        setError('Using demo data - API connection unavailable')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadDashboardData()
+  }, [])
+
+  // Map API data to highlights, fallback to mock data
+  const highlights = stats ? [
+    { 
+      label: "Total parties", 
+      value: String(stats.stats?.total_parties || 0), 
+      description: `${stats.stats?.recent_parties || 0} in the last 30 days` 
+    },
+    { 
+      label: "Total videos", 
+      value: String(stats.stats?.total_videos || 0), 
+      description: `${stats.stats?.recent_videos || 0} uploaded recently` 
+    },
+    { 
+      label: "Watch time", 
+      value: `${stats.stats?.watch_time_minutes || 0}m`, 
+      description: "Total viewing time" 
+    },
+  ] : mockHighlights
+
+  // Map API parties to timeline format, fallback to mock data
+  const timeline = recentParties.length > 0 
+    ? recentParties.slice(0, 3).map(party => ({
+        time: party.scheduled_start ? new Date(party.scheduled_start).toLocaleTimeString('en-US', { 
+          hour: '2-digit', 
+          minute: '2-digit',
+          hour12: false 
+        }) : 'TBD',
+        title: party.title || 'Untitled Party',
+        description: party.description || `${party.participant_count || 0} participants • ${party.status}`,
+      }))
+    : mockTimeline
+
   return (
     <div className="space-y-10">
+      {error && (
+        <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm text-yellow-200">
+          ⚠️ {error}
+        </div>
+      )}
+
       <section className="rounded-[36px] border border-white/12 bg-[rgba(16,9,46,0.75)] p-6 sm:p-10">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="space-y-3">
-            <p className="text-xs uppercase tracking-[0.4em] text-white/60">Today&apos;s focus</p>
+            <p className="text-xs uppercase tracking-[0.4em] text-white/60">Today's focus</p>
             <h1 className="text-3xl font-semibold text-white sm:text-4xl">Welcome back, host</h1>
             <p className="text-sm text-white/70">
               Dual ambience automation is standing by. Review your scheduled watch nights and confirm the cues you want to spotlight.
@@ -66,7 +145,7 @@ export default function DashboardPage() {
       <section className="grid gap-6 lg:grid-cols-[1.4fr,1fr]">
         <Card className="border-white/12 bg-[rgba(18,10,52,0.78)]">
           <CardHeader>
-            <CardTitle className="text-2xl text-white">Today&apos;s timeline</CardTitle>
+            <CardTitle className="text-2xl text-white">Today's timeline</CardTitle>
             <CardDescription className="text-sm text-white/70">
               All scheduled watch nights with ambience presets and spotlight notes.
             </CardDescription>

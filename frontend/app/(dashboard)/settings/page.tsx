@@ -1,6 +1,11 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+'use client'
 
-const preferences = [
+import { useEffect, useState } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { userApi } from "@/lib/api-client"
+
+// Fallback mock data for when API is unavailable
+const mockPreferences = [
   {
     title: "Ambience defaults",
     description: "Start new rooms with daybreak ambience and auto-cycle to midnight during finale.",
@@ -16,8 +21,41 @@ const preferences = [
 ]
 
 export default function SettingsPage() {
+  const [profile, setProfile] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        setLoading(true)
+        const data = await userApi.getProfile()
+        setProfile(data)
+        setError(null)
+      } catch (err) {
+        console.error('Failed to load profile:', err)
+        setError('Using demo data - API connection unavailable')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadProfile()
+  }, [])
+
+  // Use profile data if available
+  const userName = profile ? `${profile.first_name} ${profile.last_name}` : 'Guest'
+  const userEmail = profile?.email || 'guest@example.com'
+  const isPremium = profile?.is_premium || false
+
   return (
     <div className="space-y-10">
+      {error && (
+        <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm text-yellow-200">
+          ⚠️ {error}
+        </div>
+      )}
+
       <section className="rounded-[36px] border border-white/12 bg-[rgba(16,9,46,0.75)] p-6 sm:p-10">
         <div className="space-y-3">
           <p className="text-xs uppercase tracking-[0.4em] text-white/60">Settings</p>
@@ -25,11 +63,24 @@ export default function SettingsPage() {
           <p className="text-sm text-white/70">
             Customize ambience defaults, crew permissions, and communication so every watch night stays on brand.
           </p>
+          {profile && (
+            <div className="mt-4 flex items-center gap-4">
+              <div className="rounded-full border border-white/12 bg-white/10 px-4 py-2 text-sm text-white">
+                {userName}
+              </div>
+              <div className="text-sm text-white/60">{userEmail}</div>
+              {isPremium && (
+                <div className="rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1 text-xs font-semibold text-yellow-300">
+                  ⭐ Premium
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </section>
 
       <section className="grid gap-6 lg:grid-cols-3">
-        {preferences.map((preference) => (
+        {mockPreferences.map((preference) => (
           <Card key={preference.title} className="border-white/12 bg-[rgba(15,9,44,0.75)]">
             <CardHeader>
               <CardTitle className="text-lg text-white">{preference.title}</CardTitle>
