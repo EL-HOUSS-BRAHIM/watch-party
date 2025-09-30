@@ -44,20 +44,38 @@ jobs:
             if [ "$(stat -c '%U' $APP_DIR 2>/dev/null)" != "deploy" ]; then
               echo "⚠️  Application directory not owned by deploy user"
               echo "   Attempting to fix permissions..."
-              sudo chown -R deploy:deploy $APP_DIR 2>/dev/null || {
-                echo "❌ Cannot change ownership. Trying alternative approach..."
+              if sudo chown -R deploy:deploy $APP_DIR 2>/dev/null; then
+                echo "✅ Fixed directory ownership"
+              else
+                echo "❌ Cannot change ownership. Using alternative approach..."
                 # Create a new directory in home instead
+                OLD_APP_DIR="$APP_DIR"
                 APP_DIR="$HOME/watch-party"
-                echo "📁 Using alternative directory: $APP_DIR"
-                if [ ! -d "$APP_DIR" ]; then
-                  git clone https://github.com/EL-HOUSS-BRAHIM/watch-party.git $APP_DIR
+                echo "📁 Switching to alternative directory: $APP_DIR"
+                
+                # Copy or clone to the new location
+                if [ -d "$OLD_APP_DIR" ]; then
+                  echo "📋 Copying application from $OLD_APP_DIR to $APP_DIR"
+                  rm -rf "$APP_DIR" 2>/dev/null || true
+                  cp -r "$OLD_APP_DIR" "$APP_DIR"
+                  cd "$APP_DIR"
+                  # Ensure we have the latest code
+                  git fetch origin 2>/dev/null || true
+                  git reset --hard origin/master 2>/dev/null || true
                 else
+                  if [ ! -d "$APP_DIR" ]; then
+                    git clone https://github.com/EL-HOUSS-BRAHIM/watch-party.git $APP_DIR
+                  else
+                    cd $APP_DIR
+                    git fetch origin
+                    git reset --hard origin/master
+                  fi
                   cd $APP_DIR
-                  git fetch origin
-                  git reset --hard origin/master
                 fi
-                cd $APP_DIR
-              }
+                echo "✅ Using writable directory: $APP_DIR"
+              fi
+            else
+              echo "✅ Directory ownership is correct"
             fi
             
             # Generate production environment files from templates
@@ -227,11 +245,43 @@ jobs:
               echo "   Directory owner: $(stat -c '%U:%G' $SSL_DIR 2>/dev/null || echo 'unknown')"
               echo "   Directory permissions: $(stat -c '%a' $SSL_DIR 2>/dev/null || echo 'unknown')"
               echo "   Current user: $(whoami)"
-              exit 1
-            else
-              rm -f "$SSL_DIR/.test_write"
-              echo "✅ SSL directory is writable"
+              echo "   Current APP_DIR: $APP_DIR"
+              
+              # Try to fix permissions one more time
+              if [ "$APP_DIR" != "$HOME/watch-party" ]; then
+                echo "🔄 Attempting to switch to home directory as final fallback..."
+                OLD_APP_DIR="$APP_DIR"
+                APP_DIR="$HOME/watch-party"
+                
+                # Copy application to home directory
+                if [ -d "$OLD_APP_DIR" ]; then
+                  rm -rf "$APP_DIR" 2>/dev/null || true
+                  cp -r "$OLD_APP_DIR" "$APP_DIR"
+                  cd "$APP_DIR"
+                else
+                  git clone https://github.com/EL-HOUSS-BRAHIM/watch-party.git "$APP_DIR"
+                  cd "$APP_DIR"
+                fi
+                
+                # Update SSL_DIR to new location
+                SSL_DIR="$APP_DIR/nginx/ssl"
+                mkdir -p "$SSL_DIR"
+                echo "📁 Updated SSL directory: $SSL_DIR"
+                
+                # Test write permissions again
+                if ! touch "$SSL_DIR/.test_write" 2>/dev/null; then
+                  echo "❌ Still cannot write to SSL directory, this is a critical error"
+                  exit 1
+                fi
+              else
+                echo "❌ Already using home directory but still cannot write, this is a critical error"
+                exit 1
+              fi
             fi
+            
+            # Remove test file
+            rm -f "$SSL_DIR/.test_write"
+            echo "✅ SSL directory is writable"
             
             # Check if SSL certificates already exist
             if [ -f "$SSL_DIR/origin.pem" ] && [ -f "$SSL_DIR/private.key" ]; then
