@@ -1,0 +1,41 @@
+name: Collect service logs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  collect-logs:
+    name: Collect Docker service logs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Prepare logs directory
+        run: |
+          rm -rf logs
+          mkdir -p logs
+
+      - name: Start services
+        run: |
+          docker compose pull
+          docker compose up -d
+
+      - name: Capture service logs
+        run: |
+          services=$(docker compose config --services)
+          for service in $services; do
+            echo "Collecting logs for ${service}"
+            docker compose logs --no-color "$service" > "logs/${service}.log"
+          done
+
+      - name: Shut down services
+        if: always()
+        run: docker compose down
+
+      - name: Upload logs archive
+        uses: actions/upload-artifact@v3
+        with:
+          name: service-logs
+          path: logs
+          if-no-files-found: error
