@@ -3,6 +3,9 @@ name: Collect service logs
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   collect-logs:
     name: Collect Docker service logs
@@ -173,6 +176,8 @@ jobs:
           rm -f "$HOME/.ssh/lightsail_key"
 
       - name: Commit and push logs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
