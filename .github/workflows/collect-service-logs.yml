@@ -16,25 +16,20 @@ jobs:
           rm -rf logs
           mkdir -p logs
 
-      - name: Start services
+      - name: Collect logs from running services
         run: |
-          docker compose pull
-          docker compose up -d
-
-      - name: Capture service logs
-        run: |
-          services=$(docker compose config --services)
+          services=$(docker compose ps --services --filter "status=running")
+          if [ -z "$services" ]; then
+            echo "No running services found for docker compose project"
+            exit 1
+          fi
           for service in $services; do
-            echo "Collecting logs for ${service}"
-            docker compose logs --no-color "$service" > "logs/${service}.log"
+            echo "Collecting logs for ${service}" \
+              && docker compose logs --no-color "$service" > "logs/${service}.log"
           done
 
-      - name: Shut down services
-        if: always()
-        run: docker compose down
-
       - name: Upload logs archive
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: service-logs
           path: logs
