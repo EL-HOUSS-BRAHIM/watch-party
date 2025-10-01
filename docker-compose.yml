@@ -16,7 +16,7 @@ services:
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
-      - ~/.aws:/root/.aws:ro
+      - ~/.aws:/home/appuser/.aws:ro
     ports:
       - "8000:8000"
     networks:
@@ -37,7 +37,7 @@ services:
       - ./backend/.env
     volumes:
       - media_volume:/app/media
-      - ~/.aws:/root/.aws:ro
+      - ~/.aws:/home/appuser/.aws:ro
     depends_on:
       backend:
         condition: service_healthy
@@ -52,7 +52,7 @@ services:
     env_file:
       - ./backend/.env
     volumes:
-      - ~/.aws:/root/.aws:ro
+      - ~/.aws:/home/appuser/.aws:ro
     depends_on:
       backend:
         condition: service_healthy
