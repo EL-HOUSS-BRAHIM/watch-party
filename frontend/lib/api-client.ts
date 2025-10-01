@@ -1241,10 +1241,15 @@ export const supportApi = {
   getFAQCategories: () =>
     apiFetch<any>('/api/support/faq/categories/', {}, true),
 
-  markFAQHelpful: (faqId: string, helpful: boolean) =>
-    apiFetch<any>(`/api/support/faq/${faqId}/helpful/`, {
+  viewFAQ: (faqId: string) =>
+    apiFetch<any>(`/api/support/faq/${faqId}/view/`, {
       method: 'POST',
-      body: JSON.stringify({ helpful }),
+    }, true),
+
+  voteFAQ: (faqId: string, vote: 'helpful' | 'unhelpful') =>
+    apiFetch<any>(`/api/support/faq/${faqId}/vote/`, {
+      method: 'POST',
+      body: JSON.stringify({ vote }),
     }, true),
 
   // Documentation
@@ -1269,6 +1274,33 @@ export const supportApi = {
     apiFetch<any>(`/api/support/docs/${docId}/helpful/`, {
       method: 'POST',
       body: JSON.stringify({ helpful }),
+    }, true),
+
+  search: (query: string) => {
+    const queryString = query ? '?' + new URLSearchParams({ q: query }).toString() : ''
+    return apiFetch<any>(`/api/support/search/${queryString}`, {}, true)
+  },
+
+  // Feedback
+  getFeedback: (params?: Record<string, string | number | boolean | null | undefined>) => {
+    const queryString = params ? '?' + new URLSearchParams(
+      Object.entries(params)
+        .filter(([, value]) => value !== undefined && value !== null && value !== '')
+        .map(([key, value]) => [key, String(value)])
+    ).toString() : ''
+    return apiFetch<any>(`/api/support/feedback/${queryString}`, {}, true)
+  },
+
+  submitFeedback: (feedbackData: { title: string; description: string; feedback_type: string }) =>
+    apiFetch<any>('/api/support/feedback/', {
+      method: 'POST',
+      body: JSON.stringify(feedbackData),
+    }, true),
+
+  voteFeedback: (feedbackId: string, vote: 'up' | 'down') =>
+    apiFetch<any>(`/api/support/feedback/${feedbackId}/vote/`, {
+      method: 'POST',
+      body: JSON.stringify({ vote }),
     }, true),
 
   // Community
