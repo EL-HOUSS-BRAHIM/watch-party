@@ -2,29 +2,29 @@ import Link from "next/link"
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-white/5 bg-[rgba(5,4,18,0.9)] backdrop-blur">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
-        <Link href="/" className="flex items-center gap-3" aria-label="WatchParty home">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-sm font-bold text-white">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-gray-950/80 backdrop-blur-xl supports-[backdrop-filter]:bg-gray-950/60">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+        <Link href="/" className="flex items-center gap-3 group" aria-label="WatchParty home">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 text-base font-bold text-white shadow-lg shadow-purple-500/25 group-hover:shadow-purple-500/40 transition-shadow">
             WP
           </span>
           <span className="hidden flex-col leading-tight sm:flex">
-            <span className="text-xs font-medium uppercase tracking-[0.35em] text-white/60">WatchParty</span>
-            <span className="text-base font-semibold text-white">Watch together</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-purple-400">WatchParty</span>
+            <span className="text-lg font-bold bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">Watch Together</span>
           </span>
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <Link 
             href="/join" 
-            className="text-white/80 hover:text-white text-sm font-medium transition-colors"
+            className="text-white/90 hover:text-white text-sm font-semibold transition-colors hover:underline underline-offset-4"
           >
             Join Party
           </Link>
           <Link 
             href="/auth/login" 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:-translate-y-0.5"
           >
-            Login
+            Get Started
           </Link>
         </div>
       </div>

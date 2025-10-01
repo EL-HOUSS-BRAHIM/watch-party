@@ -9,62 +9,63 @@ export default function HomePage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
         {/* Background Effects */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/10 rounded-full blur-2xl animate-pulse delay-500"></div>
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-cyan-500/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
         </div>
 
-        <div className="relative min-h-[90vh] flex flex-col items-center justify-center text-center space-y-8 px-6">
+        <div className="relative min-h-[92vh] flex flex-col items-center justify-center text-center space-y-10 px-6 py-20">
           {/* Hero Content */}
-          <div className="space-y-6 max-w-4xl">
-            <div className="flex items-center justify-center gap-2 text-sm font-medium text-purple-400 bg-purple-500/10 px-4 py-2 rounded-full border border-purple-500/20">
-              <span className="animate-pulse">✨</span>
-              <span>The future of social viewing is here</span>
+          <div className="space-y-8 max-w-5xl">
+            <div className="inline-flex items-center justify-center gap-2 text-sm font-semibold text-purple-300 bg-purple-500/10 px-5 py-2.5 rounded-full border border-purple-500/30 backdrop-blur-sm shadow-lg shadow-purple-500/10">
+              <span className="animate-pulse text-lg">✨</span>
+              <span>The Future of Social Viewing</span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight">
-              Watch
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent"> Together</span>
+            <h1 className="text-6xl md:text-8xl font-black text-white leading-[1.1] tracking-tight">
+              Watch{" "}
+              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">Together</span>
               <br />
-              <span className="text-3xl md:text-5xl text-white/80">Anywhere, Anytime</span>
+              <span className="text-4xl md:text-6xl text-white/90 font-bold">Anywhere, Anytime</span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-white/70 leading-relaxed max-w-3xl">
-              Create magical movie nights with friends across the globe. Share your screen, sync your vibes, 
-              and turn any video into an unforgettable social experience.
+            <p className="text-xl md:text-2xl text-white/80 leading-relaxed max-w-3xl mx-auto font-medium">
+              Create magical movie nights with friends across the globe. Perfect sync, live reactions, 
+              and an unforgettable social experience.
             </p>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-lg">
+          <div className="flex flex-col sm:flex-row gap-5 w-full max-w-xl">
             <Link
               href="/auth/register"
-              className="relative group overflow-hidden bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 flex-1 text-center shadow-lg hover:shadow-purple-500/25"
+              className="relative group overflow-hidden bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-5 px-10 rounded-2xl transition-all duration-300 flex-1 text-center text-lg shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50 hover:-translate-y-1"
             >
-              <span className="relative z-10">Start Your Journey 🚀</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-700 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                Start Your Journey <span className="text-2xl">🚀</span>
+              </span>
             </Link>
             <Link
               href="/join"
-              className="relative group border-2 border-white/20 hover:border-white/40 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 flex-1 text-center backdrop-blur-sm hover:bg-white/5"
+              className="relative group border-2 border-white/30 hover:border-white/50 text-white font-bold py-5 px-10 rounded-2xl transition-all duration-300 flex-1 text-center text-lg backdrop-blur-sm hover:bg-white/10 hover:-translate-y-1 shadow-lg"
             >
               <span className="flex items-center justify-center gap-2">
                 <span>Join a Party</span>
-                <span className="text-xl">🎉</span>
+                <span className="text-2xl">🎉</span>
               </span>
             </Link>
           </div>
 
           {/* Quick Demo */}
-          <div className="mt-8">
-            <p className="text-white/50 text-sm mb-2">Try it instantly:</p>
-            <div className="flex items-center justify-center gap-2 text-sm">
-              <span className="px-3 py-1 bg-white/10 rounded-full text-white/70">Party Code:</span>
-              <code className="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-lg font-mono tracking-wider">DEMO123</code>
-              <button className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-colors">
+          <div className="mt-6">
+            <p className="text-white/60 text-base font-semibold mb-3">Try it instantly:</p>
+            <div className="inline-flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm">
+              <span className="text-sm font-semibold text-white/70">Party Code:</span>
+              <code className="px-4 py-2 bg-purple-500/20 text-purple-300 rounded-xl font-mono text-lg font-bold tracking-wider border border-purple-500/30">DEMO123</code>
+              <button className="px-5 py-2 bg-blue-500/20 text-blue-300 rounded-xl hover:bg-blue-500/30 transition-all font-semibold border border-blue-500/30 hover:border-blue-500/50">
                 Join Demo
               </button>
             </div>
@@ -73,17 +74,24 @@ export default function HomePage() {
       </section>
 
       {/* Metrics Strip */}
-      <MetricStrip />
+      <div className="px-6 py-20">
+        <div className="max-w-7xl mx-auto">
+          <MetricStrip />
+        </div>
+      </div>
 
       {/* Features Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              Everything you need for the
-              <span className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent"> perfect watch party</span>
+      <section className="py-24 px-6 bg-gradient-to-b from-gray-950 to-gray-900">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <span className="inline-block mb-4 text-sm font-bold uppercase tracking-wider text-purple-400 bg-purple-500/10 px-4 py-2 rounded-full border border-purple-500/20">
+              Features
+            </span>
+            <h2 className="text-5xl md:text-6xl font-black text-white mb-6 leading-tight">
+              Everything you need for the{" "}
+              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">perfect watch party</span>
             </h2>
-            <p className="text-xl text-white/70 max-w-3xl mx-auto">
+            <p className="text-xl md:text-2xl text-white/70 max-w-4xl mx-auto leading-relaxed">
               From instant sync to interactive features, we've built every tool you need to create magical moments with friends.
             </p>
           </div>
@@ -92,10 +100,14 @@ export default function HomePage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 px-6 bg-white/5">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-16">
-            Start watching in <span className="text-purple-400">3 simple steps</span>
+      <section className="py-24 px-6 bg-gradient-to-b from-gray-900 to-gray-950">
+        <div className="max-w-6xl mx-auto text-center">
+          <span className="inline-block mb-4 text-sm font-bold uppercase tracking-wider text-cyan-400 bg-cyan-500/10 px-4 py-2 rounded-full border border-cyan-500/20">
+            How It Works
+          </span>
+          <h2 className="text-5xl md:text-6xl font-black text-white mb-20">
+            Start watching in{" "}
+            <span className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">3 simple steps</span>
           </h2>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -123,18 +135,18 @@ export default function HomePage() {
               }
             ].map((item, index) => (
               <div key={index} className="relative group">
-                <div className="relative z-10 bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all duration-300">
-                  <div className={`w-16 h-16 bg-gradient-to-r ${item.color} rounded-full flex items-center justify-center text-2xl mb-6 mx-auto group-hover:scale-110 transition-transform duration-300`}>
+                <div className="relative z-10 bg-gradient-to-br from-white/10 to-white/5 border-2 border-white/20 rounded-3xl p-10 hover:bg-white/15 hover:border-white/30 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2">
+                  <div className={`w-20 h-20 bg-gradient-to-r ${item.color} rounded-2xl flex items-center justify-center text-3xl mb-8 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
                     {item.icon}
                   </div>
-                  <div className="text-sm font-mono text-purple-400 mb-2">{item.step}</div>
-                  <h3 className="text-xl font-semibold text-white mb-4">{item.title}</h3>
-                  <p className="text-white/70">{item.description}</p>
+                  <div className="text-base font-bold text-purple-300 mb-3 tracking-wider">{item.step}</div>
+                  <h3 className="text-2xl font-black text-white mb-4">{item.title}</h3>
+                  <p className="text-white/80 text-lg leading-relaxed">{item.description}</p>
                 </div>
                 
                 {/* Connection line */}
                 {index < 2 && (
-                  <div className="hidden md:block absolute top-1/2 right-0 w-8 h-0.5 bg-gradient-to-r from-white/20 to-transparent transform translate-x-full -translate-y-1/2 z-0"></div>
+                  <div className="hidden md:block absolute top-1/2 right-0 w-12 h-1 bg-gradient-to-r from-purple-500/50 to-transparent transform translate-x-full -translate-y-1/2 z-0"></div>
                 )}
               </div>
             ))}
@@ -143,49 +155,58 @@ export default function HomePage() {
       </section>
 
       {/* Social Proof */}
-      <TestimonialGrid />
+      <section className="py-24 px-6 bg-gradient-to-b from-gray-950 to-gray-900">
+        <div className="max-w-7xl mx-auto">
+          <TestimonialGrid />
+        </div>
+      </section>
 
       {/* Interactive Demo Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-bold text-white mb-8">
-            See the magic in action
+      <section className="py-24 px-6 bg-gradient-to-b from-gray-900 to-gray-950">
+        <div className="max-w-5xl mx-auto text-center">
+          <span className="inline-block mb-4 text-sm font-bold uppercase tracking-wider text-pink-400 bg-pink-500/10 px-4 py-2 rounded-full border border-pink-500/20">
+            Live Demo
+          </span>
+          <h2 className="text-5xl md:text-6xl font-black text-white mb-12">
+            See the{" "}
+            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">magic</span>
+            {" "}in action
           </h2>
           
-          <div className="relative bg-white/5 border border-white/10 rounded-2xl p-8 overflow-hidden">
+          <div className="relative bg-gradient-to-br from-white/10 to-white/5 border-2 border-white/20 rounded-3xl p-10 overflow-hidden shadow-2xl">
             {/* Simulated Interface */}
             <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-3 mb-8 bg-black/30 px-4 py-3 rounded-xl">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <div className="ml-4 text-white/50 text-sm">watch-party.app/party/DEMO123</div>
+                <div className="ml-4 text-white/60 text-sm font-mono">watch-party.app/party/DEMO123</div>
               </div>
               
-              <div className="bg-black/20 rounded-lg p-6 mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-white font-semibold">Friday Night Movies 🍿</h3>
-                  <div className="flex items-center gap-2">
+              <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-8 mb-6 border border-white/10">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-white text-2xl font-bold">Friday Night Movies 🍿</h3>
+                  <div className="flex items-center gap-2 bg-red-500/20 px-4 py-2 rounded-full border border-red-500/30">
                     <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-                    <span className="text-red-400 text-sm">LIVE</span>
+                    <span className="text-red-300 text-sm font-bold">LIVE</span>
                   </div>
                 </div>
                 
-                <div className="aspect-video bg-gradient-to-br from-purple-900/50 to-blue-900/50 rounded-lg flex items-center justify-center mb-4">
+                <div className="aspect-video bg-gradient-to-br from-purple-900/60 to-blue-900/60 rounded-2xl flex items-center justify-center mb-6 border border-white/10 shadow-2xl">
                   <div className="text-center">
-                    <div className="text-4xl mb-2">▶️</div>
-                    <p className="text-white/70">Video playing in perfect sync</p>
+                    <div className="text-6xl mb-4 animate-pulse">▶️</div>
+                    <p className="text-white/80 text-lg font-semibold">Video playing in perfect sync</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-4">
-                    <span className="text-white/60">👥 4 watching</span>
-                    <span className="text-white/60">💬 12 messages</span>
+                <div className="flex items-center justify-between text-base">
+                  <div className="flex items-center gap-6">
+                    <span className="text-white/70 font-semibold">👥 4 watching</span>
+                    <span className="text-white/70 font-semibold">💬 12 messages</span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-3">
                     {["😂", "❤️", "🔥", "👏"].map((emoji, i) => (
-                      <button key={i} className="hover:scale-125 transition-transform">
+                      <button key={i} className="text-2xl hover:scale-125 transition-transform bg-white/10 p-2 rounded-lg hover:bg-white/20">
                         {emoji}
                       </button>
                     ))}
@@ -193,45 +214,54 @@ export default function HomePage() {
                 </div>
               </div>
               
-              <p className="text-white/60 text-sm">
+              <p className="text-white/70 text-lg font-semibold">
                 Real-time sync • Live reactions • Voice & video chat • And so much more
               </p>
             </div>
             
             {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl"></div>
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-blue-500/10 rounded-full blur-xl"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/20 rounded-full blur-2xl"></div>
           </div>
         </div>
       </section>
 
       {/* Call to Action */}
-      <CallToAction />
+      <div className="px-6 py-20">
+        <div className="max-w-7xl mx-auto">
+          <CallToAction />
+        </div>
+      </div>
 
       {/* Footer CTA */}
-      <section className="py-16 px-6">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-cyan-600/20 border border-purple-500/20 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Ready to revolutionize your movie nights?
-            </h3>
-            <p className="text-white/70 mb-6">
-              Join thousands of friends already creating magical moments together.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link
-                href="/auth/register"
-                className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200"
-              >
-                Get Started Free ✨
-              </Link>
-              <Link
-                href="/pricing"
-                className="px-8 py-3 text-white border border-white/20 rounded-xl font-medium hover:bg-white/5 transition-all duration-200"
-              >
-                View Pricing
-              </Link>
+      <section className="py-20 px-6 bg-gradient-to-b from-gray-950 to-gray-900">
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="relative bg-gradient-to-br from-purple-600/20 via-blue-600/20 to-cyan-600/20 border-2 border-purple-500/30 rounded-3xl p-12 shadow-2xl overflow-hidden">
+            <div className="relative z-10">
+              <h3 className="text-4xl md:text-5xl font-black text-white mb-6">
+                Ready to revolutionize your movie nights?
+              </h3>
+              <p className="text-xl text-white/80 mb-10 font-medium">
+                Join thousands of friends already creating magical moments together.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  href="/auth/register"
+                  className="px-10 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-2xl font-bold text-lg transition-all duration-200 shadow-xl hover:shadow-2xl hover:-translate-y-1"
+                >
+                  Get Started Free ✨
+                </Link>
+                <Link
+                  href="/pricing"
+                  className="px-10 py-4 text-white border-2 border-white/30 rounded-2xl font-bold text-lg hover:bg-white/10 transition-all duration-200 hover:-translate-y-1 backdrop-blur-sm"
+                >
+                  View Pricing
+                </Link>
+              </div>
             </div>
+            {/* Background decoration */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/20 rounded-full blur-2xl"></div>
           </div>
         </div>
       </section>
