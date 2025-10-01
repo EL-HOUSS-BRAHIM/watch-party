@@ -13,6 +13,9 @@ services:
     image: watchparty-backend:latest
     env_file:
       - ./backend/.env
+    environment:
+      - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
+      - AWS_CONFIG_FILE=/home/appuser/.aws/config
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
