@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { authApi } from "@/lib/api-client"
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -15,26 +16,25 @@ export default function LoginPage() {
     setLoading(true)
     
     try {
-      // TODO: Implement actual login API call
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-
-      const data = await response.json()
-
-      if (response.ok) {
+      const data = await authApi.login(formData)
+      
+      if (data.success) {
+        // Store tokens in localStorage
+        if (data.access_token) {
+          localStorage.setItem("access_token", data.access_token)
+        }
+        if (data.refresh_token) {
+          localStorage.setItem("refresh_token", data.refresh_token)
+        }
+        
         // Redirect to dashboard
         window.location.href = "/dashboard"
       } else {
-        alert(data.error || "Login failed. Please check your credentials.")
+        alert("Login failed. Please check your credentials.")
       }
     } catch (error) {
       console.error("Login error:", error)
-      alert("Something went wrong. Please try again.")
+      alert(error instanceof Error ? error.message : "Something went wrong. Please try again.")
     } finally {
       setLoading(false)
     }

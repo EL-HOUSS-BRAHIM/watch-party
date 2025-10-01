@@ -206,13 +206,13 @@ async function apiFetch<T>(
  */
 export const authApi = {
   login: (credentials: { email: string; password: string }) =>
-    apiFetch<{ access: string; refresh: string; user: User }>('/auth/login/', {
+    apiFetch<{ access_token: string; refresh_token: string; user: User; success: boolean }>('/auth/login/', {
       method: 'POST',
       body: JSON.stringify(credentials),
     }),
 
-  register: (data: { username: string; email: string; password: string }) =>
-    apiFetch<{ user: User }>('/auth/register/', {
+  register: (data: { first_name: string; last_name: string; email: string; password: string; confirm_password: string }) =>
+    apiFetch<{ user: User; access_token: string; refresh_token: string; success: boolean; message: string }>('/auth/register/', {
       method: 'POST',
       body: JSON.stringify(data),
     }),

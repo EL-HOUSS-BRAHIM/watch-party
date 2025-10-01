@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { authApi } from "@/lib/api-client"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -24,35 +25,26 @@ export default function RegisterPage() {
     setLoading(true)
     
     try {
-      // TODO: Implement actual registration API call
-      const response = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-          confirm_password: formData.confirmPassword,
-        }),
+      const data = await authApi.register({
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        confirm_password: formData.confirmPassword,
       })
 
-      const data = await response.json()
-
-      if (response.ok) {
+      if (data.success) {
         alert(
           data.message ||
             "Account created successfully! Please check your email to verify your account."
         )
         window.location.href = "/auth/login"
       } else {
-        alert(data.error || "Registration failed. Please try again.")
+        alert("Registration failed. Please try again.")
       }
     } catch (error) {
       console.error("Registration error:", error)
-      alert("Something went wrong. Please try again.")
+      alert(error instanceof Error ? error.message : "Something went wrong. Please try again.")
     } finally {
       setLoading(false)
     }

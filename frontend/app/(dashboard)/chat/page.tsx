@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import ChatComponent from "@/components/chat/ChatComponent"
 import ModerationPanel from "@/components/chat/ModerationPanel"
-import api, { Party, User } from "@/lib/api-client"
+import api, { Party, User, authApi } from "@/lib/api-client"
 
 export default function ChatPage() {
   const router = useRouter()
@@ -21,7 +21,7 @@ export default function ChatPage() {
   const loadData = async () => {
     try {
       // Load current user
-      const userResponse = await api.get("/auth/me/")
+      const userResponse = await authApi.getProfile()
       setCurrentUser(userResponse)
 
       // Load user's parties (both hosting and joined)

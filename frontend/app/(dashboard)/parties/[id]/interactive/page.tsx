@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { PollComponent, ReactionComponent, SyncControls, GameComponent } from "@/components/interactive"
+import { authApi } from "@/lib/api-client"
 
 interface InteractivePageProps {
   params: Promise<{
@@ -76,13 +77,8 @@ export default function InteractivePage({ params }: InteractivePageProps) {
 
   const loadCurrentUser = async () => {
     try {
-      const response = await fetch("/api/auth/user/", {
-        credentials: "include"
-      })
-      
-      if (response.ok) {
-        const userData = await response.json()
-        setCurrentUser(userData)
+      const userData = await authApi.getProfile()
+      setCurrentUser(userData)
       }
     } catch (error) {
       console.error("Failed to load user:", error)
