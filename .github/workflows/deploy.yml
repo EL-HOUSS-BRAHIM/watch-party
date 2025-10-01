@@ -199,7 +199,7 @@ jobs:
             # (these would be set from GitHub Actions secrets)
             if [ -n "${AWS_ACCESS_KEY_ID:-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY:-}" ]; then
               echo "🔧 Configuring AWS credentials from environment variables..."
-              cat > ~/.aws/credentials << 'AWSCREDS'
+              cat > ~/.aws/credentials << AWSCREDS
             [default]
             aws_access_key_id = ${AWS_ACCESS_KEY_ID}
             aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
