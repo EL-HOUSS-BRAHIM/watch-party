@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Forward request to Django backend
-    const response = await fetch(`${BACKEND_URL}/v2/parties/`, {
+    const response = await fetch(`${BACKEND_URL}/api/parties/`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${accessToken}`,
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Forward the create party request to Django backend
-    const response = await fetch(`${BACKEND_URL}/v2/parties/`, {
+    const response = await fetch(`${BACKEND_URL}/api/parties/`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${accessToken}`,

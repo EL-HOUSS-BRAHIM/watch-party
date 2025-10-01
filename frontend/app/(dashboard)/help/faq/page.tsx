@@ -1,22 +1,24 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import api from "@/lib/api-client"
+import { supportApi } from "@/lib/api-client"
 
 interface FAQItem {
   id: string
   question: string
   answer: string
-  category: string
-  tags: string[]
-  helpful_count: number
-  user_found_helpful?: boolean
+  category_name?: string
+  keywords?: string
+  helpful_votes?: number
+  unhelpful_votes?: number
+  view_count?: number
   created_at: string
   updated_at: string
+  user_vote?: "helpful" | "unhelpful" | null
 }
 
 interface FAQCategory {
-  id: string
+  slug: string
   name: string
   description: string
   icon: string
@@ -42,12 +44,12 @@ export default function FAQPage() {
   const loadData = async () => {
     try {
       const [faqResponse, categoryResponse] = await Promise.all([
-        api.get("/support/faq/"),
-        api.get("/support/faq/categories/")
+        supportApi.getFAQs(),
+        supportApi.getFAQCategories(),
       ])
-      
-      setFaqs(faqResponse.results || [])
-      setCategories(categoryResponse.results || [])
+
+      setFaqs(faqResponse?.faqs || [])
+      setCategories(categoryResponse?.categories || [])
     } catch (error) {
       console.error("Failed to load FAQ data:", error)
     } finally {
@@ -57,16 +59,16 @@ export default function FAQPage() {
 
   const filterFAQs = async () => {
     try {
-      const params = new URLSearchParams()
+      const params: Record<string, string> = {}
       if (selectedCategory !== "all") {
-        params.append("category", selectedCategory)
+        params.category = selectedCategory
       }
       if (searchQuery) {
-        params.append("search", searchQuery)
+        params.search = searchQuery
       }
 
-      const response = await api.get(`/support/faq/?${params.toString()}`)
-      setFaqs(response.results || [])
+      const response = await supportApi.getFAQs(params)
+      setFaqs(response?.faqs || [])
     } catch (error) {
       console.error("Failed to filter FAQs:", error)
     }
@@ -79,6 +81,7 @@ export default function FAQPage() {
         newSet.delete(id)
       } else {
         newSet.add(id)
+        supportApi.viewFAQ(id).catch(() => undefined)
       }
       return newSet
     })
@@ -86,17 +89,15 @@ export default function FAQPage() {
 
   const markAsHelpful = async (id: string, helpful: boolean) => {
     try {
-      await api.post(`/support/faq/${id}/helpful/`, { helpful })
-      
-      // Update local state
-      setFaqs(prev => prev.map(faq => 
-        faq.id === id 
-          ? { 
-              ...faq, 
-              helpful_count: helpful 
-                ? faq.helpful_count + (faq.user_found_helpful ? 0 : 1)
-                : faq.helpful_count - (faq.user_found_helpful ? 1 : 0),
-              user_found_helpful: helpful
+      const response = await supportApi.voteFAQ(id, helpful ? "helpful" : "unhelpful")
+
+      setFaqs(prev => prev.map(faq =>
+        faq.id === id
+          ? {
+              ...faq,
+              helpful_votes: response?.helpful_votes ?? faq.helpful_votes,
+              unhelpful_votes: response?.unhelpful_votes ?? faq.unhelpful_votes,
+              user_vote: helpful ? "helpful" : "unhelpful",
             }
           : faq
       ))
@@ -174,10 +175,10 @@ export default function FAQPage() {
 
               {categories.map((category) => (
                 <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
+                  key={category.slug}
+                  onClick={() => setSelectedCategory(category.slug)}
                   className={`p-4 border rounded-lg text-left transition-all ${
-                    selectedCategory === category.id
+                    selectedCategory === category.slug
                       ? "bg-blue-600/20 border-blue-600/30 text-blue-400"
                       : "bg-white/5 border-white/10 text-white hover:bg-white/10"
                   }`}
@@ -230,6 +231,18 @@ export default function FAQPage() {
 
               {faqs.map((faq) => {
                 const isExpanded = expandedItems.has(faq.id)
+                const normalizedKeywords = faq.keywords
+                  ? Array.from(
+                      new Set(
+                        faq.keywords
+                          .split(",")
+                          .map(keyword => keyword.trim())
+                          .filter(Boolean)
+                      )
+                    )
+                  : []
+                const isHelpfulSelected = faq.user_vote === "helpful"
+                const isUnhelpfulSelected = faq.user_vote === "unhelpful"
                 
                 return (
                   <div
@@ -242,30 +255,32 @@ export default function FAQPage() {
                     >
                       <div className="flex items-center justify-between">
                         <h3 className="font-medium text-white pr-4">{faq.question}</h3>
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          {faq.helpful_count > 0 && (
-                            <span className="text-green-400 text-sm">
-                              👍 {faq.helpful_count}
-                            </span>
+                        <div className="flex items-center gap-3 flex-shrink-0 text-xs text-white/50">
+                          {typeof faq.helpful_votes === 'number' && faq.helpful_votes > 0 && (
+                            <span className="text-green-400">👍 {faq.helpful_votes}</span>
+                          )}
+                          {typeof faq.view_count === 'number' && (
+                            <span>👁️ {faq.view_count}</span>
                           )}
                           <span className={`transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}>
                             ⌄
                           </span>
                         </div>
                       </div>
-                      
-                      {faq.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-3">
-                          {faq.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
+
+                      <div className="flex flex-wrap gap-2 mt-2 text-xs text-white/50">
+                        {faq.category_name && (
+                          <span className="px-2 py-1 bg-white/10 rounded-full">{faq.category_name}</span>
+                        )}
+                        {normalizedKeywords.slice(0, 3).map(keyword => (
+                          <span
+                            key={keyword}
+                            className="px-2 py-1 bg-blue-600/20 text-blue-300 rounded-full"
+                          >
+                            {keyword}
+                          </span>
+                        ))}
+                      </div>
                     </button>
 
                     {isExpanded && (
@@ -282,23 +297,25 @@ export default function FAQPage() {
                             <div className="flex gap-2">
                               <button
                                 onClick={() => markAsHelpful(faq.id, true)}
-                                className={`px-3 py-1 rounded text-sm transition-colors ${
-                                  faq.user_found_helpful === true
+                                disabled={isHelpfulSelected}
+                                className={`px-3 py-1 rounded text-sm transition-colors disabled:opacity-70 disabled:cursor-not-allowed ${
+                                  isHelpfulSelected
                                     ? "bg-green-600 text-white"
                                     : "bg-white/10 text-white/60 hover:bg-green-600/20 hover:text-green-400"
                                 }`}
                               >
-                                👍 Yes
+                                👍 Yes{typeof faq.helpful_votes === "number" ? ` (${faq.helpful_votes})` : ""}
                               </button>
                               <button
                                 onClick={() => markAsHelpful(faq.id, false)}
-                                className={`px-3 py-1 rounded text-sm transition-colors ${
-                                  faq.user_found_helpful === false
+                                disabled={isUnhelpfulSelected}
+                                className={`px-3 py-1 rounded text-sm transition-colors disabled:opacity-70 disabled:cursor-not-allowed ${
+                                  isUnhelpfulSelected
                                     ? "bg-red-600 text-white"
                                     : "bg-white/10 text-white/60 hover:bg-red-600/20 hover:text-red-400"
                                 }`}
                               >
-                                👎 No
+                                👎 No{typeof faq.unhelpful_votes === "number" ? ` (${faq.unhelpful_votes})` : ""}
                               </button>
                             </div>
                           </div>

@@ -218,97 +218,97 @@ export const authApi = {
     }),
 
   logout: () =>
-    apiFetch<{ message: string }>('/v2/auth/logout/', {
+    apiFetch<{ message: string }>('/api/auth/logout/', {
       method: 'POST',
     }, true),
 
   refreshToken: (refresh: string) =>
-    apiFetch<{ access: string }>('/v2/auth/refresh/', {
+    apiFetch<{ access: string }>('/api/auth/refresh/', {
       method: 'POST',
       body: JSON.stringify({ refresh }),
     }, true),
 
   forgotPassword: (email: string) =>
-    apiFetch<{ message: string }>('/v2/auth/forgot-password/', {
+    apiFetch<{ message: string }>('/api/auth/forgot-password/', {
       method: 'POST',
       body: JSON.stringify({ email }),
     }, true),
 
   resetPassword: (data: { token: string; password: string }) =>
-    apiFetch<{ message: string }>('/v2/auth/reset-password/', {
+    apiFetch<{ message: string }>('/api/auth/reset-password/', {
       method: 'POST',
       body: JSON.stringify(data),
     }, true),
 
   verifyEmail: (token: string) =>
-    apiFetch<{ message: string }>('/v2/auth/verify-email/', {
+    apiFetch<{ message: string }>('/api/auth/verify-email/', {
       method: 'POST',
       body: JSON.stringify({ token }),
     }, true),
 
   getProfile: () =>
-    apiFetch<User>('/v2/auth/profile/', {}, true),
+    apiFetch<User>('/api/auth/profile/', {}, true),
 
   updateProfile: (data: Partial<User>) =>
-    apiFetch<User>('/v2/auth/profile/', {
+    apiFetch<User>('/api/auth/profile/', {
       method: 'PATCH',
       body: JSON.stringify(data),
     }, true),
 
   changePassword: (data: { old_password: string; new_password: string }) =>
-    apiFetch<{ message: string }>('/v2/auth/change-password/', {
+    apiFetch<{ message: string }>('/api/auth/change-password/', {
       method: 'POST',
       body: JSON.stringify(data),
     }, true),
 
   // 2FA endpoints
   setup2FA: () =>
-    apiFetch<{ qr_code: string; secret: string }>('/v2/auth/2fa/setup/', {
+    apiFetch<{ qr_code: string; secret: string }>('/api/auth/2fa/setup/', {
       method: 'POST',
     }, true),
 
   verify2FA: (token: string) =>
-    apiFetch<{ message: string }>('/v2/auth/2fa/verify/', {
+    apiFetch<{ message: string }>('/api/auth/2fa/verify/', {
       method: 'POST',
       body: JSON.stringify({ token }),
     }, true),
 
   disable2FA: (token: string) =>
-    apiFetch<{ message: string }>('/v2/auth/2fa/disable/', {
+    apiFetch<{ message: string }>('/api/auth/2fa/disable/', {
       method: 'POST',
       body: JSON.stringify({ token }),
     }, true),
 
   // Social auth
   googleAuth: (access_token: string) =>
-    apiFetch<{ access: string; refresh: string; user: User }>('/v2/auth/social/google/', {
+    apiFetch<{ access: string; refresh: string; user: User }>('/api/auth/social/google/', {
       method: 'POST',
       body: JSON.stringify({ access_token }),
     }, true),
 
   githubAuth: (access_token: string) =>
-    apiFetch<{ access: string; refresh: string; user: User }>('/v2/auth/social/github/', {
+    apiFetch<{ access: string; refresh: string; user: User }>('/api/auth/social/github/', {
       method: 'POST',
       body: JSON.stringify({ access_token }),
     }, true),
 
   // Google Drive integration
   getGoogleDriveAuthUrl: () =>
-    apiFetch<{ auth_url: string }>('/v2/auth/google-drive/auth/', {}, true),
+    apiFetch<{ auth_url: string }>('/api/auth/google-drive/auth/', {}, true),
 
   connectGoogleDrive: (code: string) =>
-    apiFetch<{ message: string }>('/v2/auth/google-drive/auth/', {
+    apiFetch<{ message: string }>('/api/auth/google-drive/auth/', {
       method: 'POST',
       body: JSON.stringify({ code }),
     }, true),
 
   disconnectGoogleDrive: () =>
-    apiFetch<{ message: string }>('/v2/auth/google-drive/disconnect/', {
+    apiFetch<{ message: string }>('/api/auth/google-drive/disconnect/', {
       method: 'POST',
     }, true),
 
   getGoogleDriveStatus: () =>
-    apiFetch<{ connected: boolean }>('/v2/auth/google-drive/status/', {}, true),
+    apiFetch<{ connected: boolean }>('/api/auth/google-drive/status/', {}, true),
 }
 
 /**
@@ -329,7 +329,7 @@ export const partiesApi = {
         .filter(([, value]) => value !== undefined && value !== null)
         .map(([key, value]) => [key, String(value)])
     ).toString() : ''
-    return apiFetch<PaginatedResponse<WatchParty>>(`/v2/parties/${queryString}`, {}, true)
+    return apiFetch<PaginatedResponse<WatchParty>>(`/api/parties/${queryString}`, {}, true)
   },
 
   create: (data: { 
@@ -346,91 +346,91 @@ export const partiesApi = {
     }),
 
   getById: (id: string) =>
-    apiFetch<WatchParty>(`/v2/parties/${id}/`, {}, true),
+    apiFetch<WatchParty>(`/api/parties/${id}/`, {}, true),
 
   update: (id: string, data: Partial<WatchParty>) =>
-    apiFetch<WatchParty>(`/v2/parties/${id}/`, {
+    apiFetch<WatchParty>(`/api/parties/${id}/`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     }, true),
 
   delete: (id: string) =>
-    apiFetch<void>(`/v2/parties/${id}/`, {
+    apiFetch<void>(`/api/parties/${id}/`, {
       method: 'DELETE',
     }, true),
 
   join: (id: string) =>
-    apiFetch<{ message: string }>(`/v2/parties/${id}/join/`, {
+    apiFetch<{ message: string }>(`/api/parties/${id}/join/`, {
       method: 'POST',
     }, true),
 
   leave: (id: string) =>
-    apiFetch<{ message: string }>(`/v2/parties/${id}/leave/`, {
+    apiFetch<{ message: string }>(`/api/parties/${id}/leave/`, {
       method: 'POST',
     }, true),
 
   getParticipants: (id: string) =>
-    apiFetch<User[]>(`/v2/parties/${id}/participants/`, {}, true),
+    apiFetch<User[]>(`/api/parties/${id}/participants/`, {}, true),
 
   generateInvite: (id: string) =>
-    apiFetch<{ invite_code: string }>(`/v2/parties/${id}/generate-invite/`, {
+    apiFetch<{ invite_code: string }>(`/api/parties/${id}/generate-invite/`, {
       method: 'POST',
     }, true),
 
   joinByCode: (code: string) =>
-    apiFetch<{ party: WatchParty }>('/v2/parties/join-by-code/', {
+    apiFetch<{ party: WatchParty }>('/api/parties/join-by-code/', {
       method: 'POST',
       body: JSON.stringify({ code }),
     }, true),
 
   control: (id: string, action: { type: 'play' | 'pause' | 'seek'; timestamp?: number }) =>
-    apiFetch<{ message: string }>(`/v2/parties/${id}/control/`, {
+    apiFetch<{ message: string }>(`/api/parties/${id}/control/`, {
       method: 'POST',
       body: JSON.stringify(action),
     }, true),
 
   getSyncState: (id: string) =>
-    apiFetch<{ playing: boolean; current_time: number; last_update: string }>(`/v2/parties/${id}/sync_state/`, {}, true),
+    apiFetch<{ playing: boolean; current_time: number; last_update: string }>(`/api/parties/${id}/sync_state/`, {}, true),
 
   selectGDriveMovie: (id: string, fileId: string) =>
-    apiFetch<{ message: string }>(`/v2/parties/${id}/select_gdrive_movie/`, {
+    apiFetch<{ message: string }>(`/api/parties/${id}/select_gdrive_movie/`, {
       method: 'POST',
       body: JSON.stringify({ file_id: fileId }),
     }, true),
 
   start: (id: string) =>
-    apiFetch<{ message: string }>(`/v2/parties/${id}/start/`, {
+    apiFetch<{ message: string }>(`/api/parties/${id}/start/`, {
       method: 'POST',
     }, true),
 
   react: (id: string, reaction: string) =>
-    apiFetch<{ message: string }>(`/v2/parties/${id}/react/`, {
+    apiFetch<{ message: string }>(`/api/parties/${id}/react/`, {
       method: 'POST',
       body: JSON.stringify({ reaction }),
     }, true),
 
   // Party discovery
   getPublic: (params?: { page?: number; page_size?: number }) =>
-    apiFetch<PaginatedResponse<WatchParty>>('/v2/parties/public/' + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
+    apiFetch<PaginatedResponse<WatchParty>>('/api/parties/public/' + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
 
   getRecent: (params?: { page?: number; page_size?: number }) =>
-    apiFetch<PaginatedResponse<WatchParty>>('/v2/parties/recent/' + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
+    apiFetch<PaginatedResponse<WatchParty>>('/api/parties/recent/' + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
 
   getTrending: () =>
-    apiFetch<PaginatedResponse<WatchParty>>('/v2/parties/trending/', {}, true),
+    apiFetch<PaginatedResponse<WatchParty>>('/api/parties/trending/', {}, true),
 
   getRecommendations: () =>
-    apiFetch<PaginatedResponse<WatchParty>>('/v2/parties/recommendations/', {}, true),
+    apiFetch<PaginatedResponse<WatchParty>>('/api/parties/recommendations/', {}, true),
 
   search: (query: string, filters?: any) =>
-    apiFetch<PaginatedResponse<WatchParty>>('/v2/parties/search/?' + new URLSearchParams({ q: query, ...filters }).toString(), {}, true),
+    apiFetch<PaginatedResponse<WatchParty>>('/api/parties/search/?' + new URLSearchParams({ q: query, ...filters }).toString(), {}, true),
 
   // Party analytics
   getAnalytics: (id: string) =>
-    apiFetch<any>(`/v2/parties/${id}/analytics/`, {}, true),
+    apiFetch<any>(`/api/parties/${id}/analytics/`, {}, true),
 
   updateAnalytics: (id: string, data: any) =>
-    apiFetch<{ message: string }>(`/v2/parties/${id}/update-analytics/`, {
+    apiFetch<{ message: string }>(`/api/parties/${id}/update-analytics/`, {
       method: 'POST',
       body: JSON.stringify(data),
     }, true),
@@ -441,84 +441,84 @@ export const partiesApi = {
  */
 export const chatApi = {
   getMessages: (partyId: string, params?: { page?: number; page_size?: number; search?: string }) =>
-    apiFetch<PaginatedResponse<ChatMessage>>(`/v2/chat/${partyId}/messages/` + (params ? '?' + new URLSearchParams(Object.entries(params).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
+    apiFetch<PaginatedResponse<ChatMessage>>(`/api/chat/${partyId}/messages/` + (params ? '?' + new URLSearchParams(Object.entries(params).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
 
   sendMessage: (partyId: string, content: string) =>
-    apiFetch<ChatMessage>(`/v2/chat/${partyId}/messages/send/`, {
+    apiFetch<ChatMessage>(`/api/chat/${partyId}/messages/send/`, {
       method: 'POST',
       body: JSON.stringify({ content }),
     }, true),
 
   getActiveUsers: (roomId: string) =>
-    apiFetch<User[]>(`/v2/chat/${roomId}/active-users/`, {}, true),
+    apiFetch<User[]>(`/api/chat/${roomId}/active-users/`, {}, true),
 
   joinRoom: (roomId: string) =>
-    apiFetch<{ message: string }>(`/v2/chat/${roomId}/join/`, {
+    apiFetch<{ message: string }>(`/api/chat/${roomId}/join/`, {
       method: 'POST',
     }, true),
 
   leaveRoom: (roomId: string) =>
-    apiFetch<{ message: string }>(`/v2/chat/${roomId}/leave/`, {
+    apiFetch<{ message: string }>(`/api/chat/${roomId}/leave/`, {
       method: 'POST',
     }, true),
 
   banUser: (roomId: string, userId: string, reason?: string) =>
-    apiFetch<{ message: string }>(`/v2/chat/${roomId}/ban/`, {
+    apiFetch<{ message: string }>(`/api/chat/${roomId}/ban/`, {
       method: 'POST',
       body: JSON.stringify({ user_id: userId, reason }),
     }, true),
 
   unbanUser: (roomId: string, userId: string) =>
-    apiFetch<{ message: string }>(`/v2/chat/${roomId}/unban/`, {
+    apiFetch<{ message: string }>(`/api/chat/${roomId}/unban/`, {
       method: 'POST',
       body: JSON.stringify({ user_id: userId }),
     }, true),
 
   moderate: (roomId: string, action: any) =>
-    apiFetch<{ message: string }>(`/v2/chat/${roomId}/moderate/`, {
+    apiFetch<{ message: string }>(`/api/chat/${roomId}/moderate/`, {
       method: 'POST',
       body: JSON.stringify(action),
     }, true),
 
   getSettings: (roomId: string) =>
-    apiFetch<any>(`/v2/chat/${roomId}/settings/`, {}, true),
+    apiFetch<any>(`/api/chat/${roomId}/settings/`, {}, true),
 
   updateSettings: (roomId: string, settings: any) =>
-    apiFetch<any>(`/v2/chat/${roomId}/settings/`, {
+    apiFetch<any>(`/api/chat/${roomId}/settings/`, {
       method: 'PUT',
       body: JSON.stringify(settings),
     }, true),
 
   getStats: (roomId: string) =>
-    apiFetch<any>(`/v2/chat/${roomId}/stats/`, {}, true),
+    apiFetch<any>(`/api/chat/${roomId}/stats/`, {}, true),
 
   getModerationLog: (roomId: string, params?: { page?: number; page_size?: number }) =>
-    apiFetch<PaginatedResponse<any>>(`/v2/chat/${roomId}/moderation-log/` + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
+    apiFetch<PaginatedResponse<any>>(`/api/chat/${roomId}/moderation-log/` + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
 
   getHistory: (partyId: string, params?: { page?: number; page_size?: number }) =>
-    apiFetch<PaginatedResponse<ChatMessage>>(`/v2/chat/history/${partyId}/` + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
+    apiFetch<PaginatedResponse<ChatMessage>>(`/api/chat/history/${partyId}/` + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
 
   // Missing methods for ModerationPanel
   getBannedUsers: (partyId: string) =>
-    apiFetch<User[]>(`/v2/chat/${partyId}/banned-users/`, {}, true),
+    apiFetch<User[]>(`/api/chat/${partyId}/banned-users/`, {}, true),
 
   getModerationHistory: (partyId: string) =>
-    apiFetch<any[]>(`/v2/chat/${partyId}/moderation-history/`, {}, true),
+    apiFetch<any[]>(`/api/chat/${partyId}/moderation-history/`, {}, true),
 
   kickUser: (partyId: string, userId: string, reason?: string) =>
-    apiFetch<{ message: string }>(`/v2/chat/${partyId}/kick/`, {
+    apiFetch<{ message: string }>(`/api/chat/${partyId}/kick/`, {
       method: 'POST',
       body: JSON.stringify({ user_id: userId, reason }),
     }, true),
 
   clearChat: (partyId: string) =>
-    apiFetch<{ message: string }>(`/v2/chat/${partyId}/clear/`, {
+    apiFetch<{ message: string }>(`/api/chat/${partyId}/clear/`, {
       method: 'POST',
     }, true),
 
   // Missing method for EmojiPicker
   getCustomEmojis: () =>
-    apiFetch<ChatEmoji[]>('/v2/chat/emojis/', {}, true),
+    apiFetch<ChatEmoji[]>('/api/chat/emojis/', {}, true),
 }
 
 /**
@@ -537,7 +537,7 @@ export const videosApi = {
         .filter(([, value]) => value !== undefined && value !== null)
         .map(([key, value]) => [key, String(value)])
     ).toString() : ''
-    return apiFetch<PaginatedResponse<VideoSummary>>(`/v2/videos/${queryString}`, {}, true)
+    return apiFetch<PaginatedResponse<VideoSummary>>(`/api/videos/${queryString}`, {}, true)
   },
 
   create: (data: FormData | { 
@@ -548,13 +548,13 @@ export const videosApi = {
     visibility?: string;
   }) => {
     if (data instanceof FormData) {
-      return apiFetch<VideoSummary>('/v2/videos/', {
+      return apiFetch<VideoSummary>('/api/videos/', {
         method: 'POST',
         body: data,
         headers: {}, // Let browser set content-type for FormData
       }, true)
     } else {
-      return apiFetch<VideoSummary>('/v2/videos/', {
+      return apiFetch<VideoSummary>('/api/videos/', {
         method: 'POST',
         body: JSON.stringify(data),
       }, true)
@@ -562,83 +562,83 @@ export const videosApi = {
   },
 
   getById: (id: string) =>
-    apiFetch<VideoSummary>(`/v2/videos/${id}/`, {}, true),
+    apiFetch<VideoSummary>(`/api/videos/${id}/`, {}, true),
 
   update: (id: string, data: Partial<VideoSummary>) =>
-    apiFetch<VideoSummary>(`/v2/videos/${id}/`, {
+    apiFetch<VideoSummary>(`/api/videos/${id}/`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     }, true),
 
   delete: (id: string) =>
-    apiFetch<void>(`/v2/videos/${id}/`, {
+    apiFetch<void>(`/api/videos/${id}/`, {
       method: 'DELETE',
     }, true),
 
   getStreamUrl: (id: string) =>
-    apiFetch<{ stream_url: string }>(`/v2/videos/${id}/stream/`, {}, true),
+    apiFetch<{ stream_url: string }>(`/api/videos/${id}/stream/`, {}, true),
 
   download: (id: string) =>
-    apiFetch<{ download_url: string }>(`/v2/videos/${id}/download/`, {}, true),
+    apiFetch<{ download_url: string }>(`/api/videos/${id}/download/`, {}, true),
 
   like: (id: string) =>
-    apiFetch<{ message: string }>(`/v2/videos/${id}/like/`, {
+    apiFetch<{ message: string }>(`/api/videos/${id}/like/`, {
       method: 'POST',
     }, true),
 
   share: (id: string, platform: string) =>
-    apiFetch<{ share_url: string }>(`/v2/videos/${id}/share/`, {
+    apiFetch<{ share_url: string }>(`/api/videos/${id}/share/`, {
       method: 'POST',
       body: JSON.stringify({ platform }),
     }, true),
 
   getComments: (id: string, params?: { page?: number; page_size?: number }) =>
-    apiFetch<PaginatedResponse<any>>(`/v2/videos/${id}/comments/` + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
+    apiFetch<PaginatedResponse<any>>(`/api/videos/${id}/comments/` + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
 
   addComment: (id: string, content: string) =>
-    apiFetch<any>(`/v2/videos/${id}/comments/`, {
+    apiFetch<any>(`/api/videos/${id}/comments/`, {
       method: 'POST',
       body: JSON.stringify({ content }),
     }, true),
 
   getAnalytics: (id: string) =>
-    apiFetch<any>(`/v2/videos/${id}/analytics/`, {}, true),
+    apiFetch<any>(`/api/videos/${id}/analytics/`, {}, true),
 
   getProcessingStatus: (id: string) =>
-    apiFetch<{ status: string; progress: number }>(`/v2/videos/${id}/processing-status/`, {}, true),
+    apiFetch<{ status: string; progress: number }>(`/api/videos/${id}/processing-status/`, {}, true),
 
   getQualityVariants: (id: string) =>
-    apiFetch<{ variants: string[] }>(`/v2/videos/${id}/quality-variants/`, {}, true),
+    apiFetch<{ variants: string[] }>(`/api/videos/${id}/quality-variants/`, {}, true),
 
   regenerateThumbnail: (id: string) =>
-    apiFetch<{ message: string }>(`/v2/videos/${id}/regenerate-thumbnail/`, {
+    apiFetch<{ message: string }>(`/api/videos/${id}/regenerate-thumbnail/`, {
       method: 'POST',
     }, true),
 
   search: (query: string, filters?: any) =>
-    apiFetch<PaginatedResponse<VideoSummary>>('/v2/videos/search/?' + new URLSearchParams({ q: query, ...filters }).toString(), {}, true),
+    apiFetch<PaginatedResponse<VideoSummary>>('/api/videos/search/?' + new URLSearchParams({ q: query, ...filters }).toString(), {}, true),
 
   validateUrl: (url: string) =>
-    apiFetch<{ valid: boolean; metadata?: any }>('/v2/videos/validate-url/', {
+    apiFetch<{ valid: boolean; metadata?: any }>('/api/videos/validate-url/', {
       method: 'POST',
       body: JSON.stringify({ url }),
     }, true),
 
   // Google Drive videos
   getGDriveVideos: (params?: { page?: number; page_size?: number }) =>
-    apiFetch<PaginatedResponse<any>>('/v2/videos/gdrive/' + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
+    apiFetch<PaginatedResponse<any>>('/api/videos/gdrive/' + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
 
   uploadFromGDrive: (fileId: string) =>
-    apiFetch<VideoSummary>('/v2/videos/gdrive/upload/', {
+    apiFetch<VideoSummary>('/api/videos/gdrive/upload/', {
       method: 'POST',
       body: JSON.stringify({ file_id: fileId }),
     }, true),
 
   getGDriveStream: (id: string) =>
-    apiFetch<{ stream_url: string }>(`/v2/videos/gdrive/${id}/stream/`, {}, true),
+    apiFetch<{ stream_url: string }>(`/api/videos/gdrive/${id}/stream/`, {}, true),
 
   deleteGDriveVideo: (id: string) =>
-    apiFetch<void>(`/v2/videos/gdrive/${id}/delete/`, {
+    apiFetch<void>(`/api/videos/gdrive/${id}/delete/`, {
       method: 'DELETE',
     }, true),
 }
@@ -648,10 +648,10 @@ export const videosApi = {
  */
 export const dashboardApi = {
   getStats: (): Promise<DashboardStatsResponse> => 
-    apiFetch<DashboardStatsResponse>("/v2/analytics/dashboard/", {}, true),
+    apiFetch<DashboardStatsResponse>("/api/analytics/dashboard/", {}, true),
   
   getActivities: () => 
-    apiFetch<PaginatedResponse<any>>('/v2/dashboard/activities/', {}, true),
+    apiFetch<PaginatedResponse<any>>('/api/dashboard/activities/', {}, true),
 }
 
 /**
@@ -659,149 +659,149 @@ export const dashboardApi = {
  */
 export const userApi = {
   getProfile: (): Promise<User> => 
-    apiFetch<User>("/v2/auth/profile/", {}, true),
+    apiFetch<User>("/api/auth/profile/", {}, true),
 
   updateProfile: (data: Partial<User>): Promise<User> =>
-    apiFetch<User>("/v2/auth/profile/", {
+    apiFetch<User>("/api/auth/profile/", {
       method: "PATCH",
       body: JSON.stringify(data),
     }, true),
 
   getUserProfile: (userId: string) =>
-    apiFetch<User>(`/v2/users/${userId}/profile/`, {}, true),
+    apiFetch<User>(`/api/users/${userId}/profile/`, {}, true),
 
   getPublicProfile: (userId: string) =>
-    apiFetch<User>(`/v2/users/${userId}/public-profile/`, {}, true),
+    apiFetch<User>(`/api/users/${userId}/public-profile/`, {}, true),
 
   search: (query: string) =>
-    apiFetch<PaginatedResponse<User>>('/v2/users/search/?' + new URLSearchParams({ q: query }).toString(), {}, true),
+    apiFetch<PaginatedResponse<User>>('/api/users/search/?' + new URLSearchParams({ q: query }).toString(), {}, true),
 
   // Friends system
   getFriends: () =>
-    apiFetch<PaginatedResponse<User>>('/v2/users/friends/', {}, true),
+    apiFetch<PaginatedResponse<User>>('/api/users/friends/', {}, true),
 
   getFriendRequests: () =>
-    apiFetch<PaginatedResponse<any>>('/v2/users/friends/requests/', {}, true),
+    apiFetch<PaginatedResponse<any>>('/api/users/friends/requests/', {}, true),
 
   sendFriendRequest: (userId: string) =>
-    apiFetch<{ message: string }>('/v2/users/friends/request/', {
+    apiFetch<{ message: string }>('/api/users/friends/request/', {
       method: 'POST',
       body: JSON.stringify({ user_id: userId }),
     }, true),
 
   acceptFriendRequest: (requestId: string) =>
-    apiFetch<{ message: string }>(`/v2/users/friends/${requestId}/accept/`, {
+    apiFetch<{ message: string }>(`/api/users/friends/${requestId}/accept/`, {
       method: 'POST',
     }, true),
 
   declineFriendRequest: (requestId: string) =>
-    apiFetch<{ message: string }>(`/v2/users/friends/${requestId}/decline/`, {
+    apiFetch<{ message: string }>(`/api/users/friends/${requestId}/decline/`, {
       method: 'POST',
     }, true),
 
   removeFriend: (username: string) =>
-    apiFetch<void>(`/v2/users/friends/${username}/remove/`, {
+    apiFetch<void>(`/api/users/friends/${username}/remove/`, {
       method: 'DELETE',
     }, true),
 
   getFriendSuggestions: () =>
-    apiFetch<PaginatedResponse<User>>('/v2/users/friends/suggestions/', {}, true),
+    apiFetch<PaginatedResponse<User>>('/api/users/friends/suggestions/', {}, true),
 
   getMutualFriends: (userId: string) =>
-    apiFetch<PaginatedResponse<User>>(`/v2/users/${userId}/mutual-friends/`, {}, true),
+    apiFetch<PaginatedResponse<User>>(`/api/users/${userId}/mutual-friends/`, {}, true),
 
   // User settings and preferences
   getSettings: () =>
-    apiFetch<any>('/v2/users/settings/', {}, true),
+    apiFetch<any>('/api/users/settings/', {}, true),
 
   updateSettings: (settings: any) =>
-    apiFetch<any>('/v2/users/settings/', {
+    apiFetch<any>('/api/users/settings/', {
       method: 'PUT',
       body: JSON.stringify(settings),
     }, true),
 
   getNotificationSettings: () =>
-    apiFetch<any>('/v2/users/notifications/settings/', {}, true),
+    apiFetch<any>('/api/users/notifications/settings/', {}, true),
 
   updateNotificationSettings: (settings: any) =>
-    apiFetch<any>('/v2/users/notifications/settings/', {
+    apiFetch<any>('/api/users/notifications/settings/', {
       method: 'PUT',
       body: JSON.stringify(settings),
     }, true),
 
   getPrivacySettings: () =>
-    apiFetch<any>('/v2/users/privacy/settings/', {}, true),
+    apiFetch<any>('/api/users/privacy/settings/', {}, true),
 
   updatePrivacySettings: (settings: any) =>
-    apiFetch<any>('/v2/users/privacy/settings/', {
+    apiFetch<any>('/api/users/privacy/settings/', {
       method: 'PUT',
       body: JSON.stringify(settings),
     }, true),
 
   // User activity and stats
   getActivity: () =>
-    apiFetch<PaginatedResponse<any>>('/v2/users/activity/', {}, true),
+    apiFetch<PaginatedResponse<any>>('/api/users/activity/', {}, true),
 
   getStats: () =>
-    apiFetch<any>('/v2/users/stats/', {}, true),
+    apiFetch<any>('/api/users/stats/', {}, true),
 
   getDashboardStats: () =>
-    apiFetch<Analytics>('/v2/users/dashboard/stats/', {}, true),
+    apiFetch<Analytics>('/api/users/dashboard/stats/', {}, true),
 
   getWatchHistory: () =>
-    apiFetch<PaginatedResponse<any>>('/v2/users/watch-history/', {}, true),
+    apiFetch<PaginatedResponse<any>>('/api/users/watch-history/', {}, true),
 
   // User notifications
   getNotifications: (params?: { page?: number; page_size?: number }) =>
-    apiFetch<PaginatedResponse<Notification>>('/v2/users/notifications/' + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
+    apiFetch<PaginatedResponse<Notification>>('/api/users/notifications/' + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
 
   markNotificationAsRead: (notificationId: string) =>
-    apiFetch<{ message: string }>(`/v2/users/notifications/${notificationId}/read/`, {
+    apiFetch<{ message: string }>(`/api/users/notifications/${notificationId}/read/`, {
       method: 'POST',
     }, true),
 
   markAllNotificationsAsRead: () =>
-    apiFetch<{ message: string }>('/v2/users/notifications/mark-all-read/', {
+    apiFetch<{ message: string }>('/api/users/notifications/mark-all-read/', {
       method: 'POST',
     }, true),
 
   // User blocking
   blockUser: (userId: string) =>
-    apiFetch<{ message: string }>(`/v2/users/${userId}/block/`, {
+    apiFetch<{ message: string }>(`/api/users/${userId}/block/`, {
       method: 'POST',
     }, true),
 
   unblockUser: (userId: string) =>
-    apiFetch<{ message: string }>('/v2/users/unblock/', {
+    apiFetch<{ message: string }>('/api/users/unblock/', {
       method: 'POST',
       body: JSON.stringify({ user_id: userId }),
     }, true),
 
   // User favorites
   getFavorites: () =>
-    apiFetch<PaginatedResponse<any>>('/v2/users/favorites/', {}, true),
+    apiFetch<PaginatedResponse<any>>('/api/users/favorites/', {}, true),
 
   addFavorite: (itemId: string, itemType: string) =>
-    apiFetch<{ message: string }>('/v2/users/favorites/add/', {
+    apiFetch<{ message: string }>('/api/users/favorites/add/', {
       method: 'POST',
       body: JSON.stringify({ item_id: itemId, item_type: itemType }),
     }, true),
 
   removeFavorite: (favoriteId: string) =>
-    apiFetch<{ message: string }>(`/v2/users/favorites/${favoriteId}/remove/`, {
+    apiFetch<{ message: string }>(`/api/users/favorites/${favoriteId}/remove/`, {
       method: 'POST',
     }, true),
 
   // User achievements
   getAchievements: () =>
-    apiFetch<PaginatedResponse<any>>('/v2/users/achievements/', {}, true),
+    apiFetch<PaginatedResponse<any>>('/api/users/achievements/', {}, true),
 
   getInventory: () =>
-    apiFetch<PaginatedResponse<any>>('/v2/users/inventory/', {}, true),
+    apiFetch<PaginatedResponse<any>>('/api/users/inventory/', {}, true),
 
   // Account management
   changePassword: (data: { old_password: string; new_password: string }) =>
-    apiFetch<{ message: string }>('/v2/users/password/', {
+    apiFetch<{ message: string }>('/api/users/password/', {
       method: 'POST',
       body: JSON.stringify(data),
     }, true),
@@ -809,7 +809,7 @@ export const userApi = {
   uploadAvatar: (file: File) => {
     const formData = new FormData()
     formData.append('avatar', file)
-    return apiFetch<{ avatar_url: string }>('/v2/users/avatar/upload/', {
+    return apiFetch<{ avatar_url: string }>('/api/users/avatar/upload/', {
       method: 'POST',
       body: formData,
       headers: {}, // Let browser set content-type
@@ -817,20 +817,20 @@ export const userApi = {
   },
 
   exportData: () =>
-    apiFetch<{ download_url: string }>('/v2/users/export-data/', {}, true),
+    apiFetch<{ download_url: string }>('/api/users/export-data/', {}, true),
 
   deleteAccount: (password: string) =>
-    apiFetch<{ message: string }>('/v2/users/delete-account/', {
+    apiFetch<{ message: string }>('/api/users/delete-account/', {
       method: 'POST',
       body: JSON.stringify({ password }),
     }, true),
 
   getOnlineStatus: () =>
-    apiFetch<{ online: boolean; last_seen?: string }>('/v2/users/online-status/', {}, true),
+    apiFetch<{ online: boolean; last_seen?: string }>('/api/users/online-status/', {}, true),
 
   // User reports
   reportUser: (data: { user_id: string; report_type: string; reason: string }) =>
-    apiFetch<{ message: string }>('/v2/users/report/', {
+    apiFetch<{ message: string }>('/api/users/report/', {
       method: 'POST',
       body: JSON.stringify(data),
     }, true),
@@ -841,40 +841,40 @@ export const userApi = {
  */
 export const analyticsApi = {
   getUserStats: (): Promise<Record<string, unknown>> => 
-    apiFetch<Record<string, unknown>>("/v2/analytics/user-stats/", {}, true),
+    apiFetch<Record<string, unknown>>("/api/analytics/user-stats/", {}, true),
 
   getPartyStats: (partyId: string): Promise<Record<string, unknown>> => 
-    apiFetch<Record<string, unknown>>(`/v2/analytics/party-stats/${partyId}/`, {}, true),
+    apiFetch<Record<string, unknown>>(`/api/analytics/party-stats/${partyId}/`, {}, true),
 
   getDashboard: () =>
-    apiFetch<any>('/v2/analytics/dashboard/', {}, true),
+    apiFetch<any>('/api/analytics/dashboard/', {}, true),
 
   exportData: (params: any) =>
-    apiFetch<{ download_url: string }>('/v2/analytics/export/', {
+    apiFetch<{ download_url: string }>('/api/analytics/export/', {
       method: 'POST',
       body: JSON.stringify(params),
     }, true),
 
   getPersonal: () =>
-    apiFetch<any>('/v2/analytics/personal/', {}, true),
+    apiFetch<any>('/api/analytics/personal/', {}, true),
 
   getRealTime: () =>
-    apiFetch<any>('/v2/analytics/real-time/', {}, true),
+    apiFetch<any>('/api/analytics/real-time/', {}, true),
 
   getPlatformOverview: () =>
-    apiFetch<any>('/v2/analytics/platform-overview/', {}, true),
+    apiFetch<any>('/api/analytics/platform-overview/', {}, true),
 
   getRetention: () =>
-    apiFetch<any>('/v2/analytics/retention/', {}, true),
+    apiFetch<any>('/api/analytics/retention/', {}, true),
 
   getUserBehavior: () =>
-    apiFetch<any>('/v2/analytics/user-behavior/', {}, true),
+    apiFetch<any>('/api/analytics/user-behavior/', {}, true),
 
   getRevenue: () =>
-    apiFetch<any>('/v2/analytics/revenue/', {}, true),
+    apiFetch<any>('/api/analytics/revenue/', {}, true),
 
   trackEvent: (event: any) =>
-    apiFetch<any>('/v2/analytics/track/', {
+    apiFetch<any>('/api/analytics/track/', {
       method: 'POST',
       body: JSON.stringify(event),
     }, true),
@@ -886,56 +886,56 @@ export const analyticsApi = {
 export const adminApi = {
   // System stats and health
   getSystemStats: (): Promise<SystemStats> =>
-    apiFetch<SystemStats>('/v2/admin/system/stats/', {}, true),
+    apiFetch<SystemStats>('/api/admin/system/stats/', {}, true),
 
   getServerHealth: (): Promise<ServerHealth> =>
-    apiFetch<ServerHealth>('/v2/admin/system/health/', {}, true),
+    apiFetch<ServerHealth>('/api/admin/system/health/', {}, true),
 
   // User management
   getUsers: (params?: any) =>
-    apiFetch<PaginatedResponse<User>>('/v2/admin/users/', { 
+    apiFetch<PaginatedResponse<User>>('/api/admin/users/', { 
       method: 'GET',
       ...(params && { body: JSON.stringify(params) })
     }, true),
 
   banUser: (userId: string, reason: string) =>
-    apiFetch<{ message: string }>(`/v2/admin/users/${userId}/ban/`, {
+    apiFetch<{ message: string }>(`/api/admin/users/${userId}/ban/`, {
       method: 'POST',
       body: JSON.stringify({ reason }),
     }, true),
 
   unbanUser: (userId: string) =>
-    apiFetch<{ message: string }>(`/v2/admin/users/${userId}/unban/`, {
+    apiFetch<{ message: string }>(`/api/admin/users/${userId}/unban/`, {
       method: 'POST',
     }, true),
 
   verifyUser: (userId: string) =>
-    apiFetch<{ message: string }>(`/v2/admin/users/${userId}/verify/`, {
+    apiFetch<{ message: string }>(`/api/admin/users/${userId}/verify/`, {
       method: 'POST',
     }, true),
 
   // Content moderation
   getVideos: (params?: any) =>
-    apiFetch<PaginatedResponse<VideoSummary>>('/v2/admin/videos/', { 
+    apiFetch<PaginatedResponse<VideoSummary>>('/api/admin/videos/', { 
       method: 'GET',
       ...(params && { body: JSON.stringify(params) })
     }, true),
 
   moderateVideo: (videoId: string, action: "approve" | "reject", reason?: string) =>
-    apiFetch<{ message: string }>(`/v2/admin/videos/${videoId}/moderate/`, {
+    apiFetch<{ message: string }>(`/api/admin/videos/${videoId}/moderate/`, {
       method: 'POST',
       body: JSON.stringify({ action, reason }),
     }, true),
 
   // System operations
   restartService: (service: string) =>
-    apiFetch<{ message: string }>('/v2/admin/system/restart/', {
+    apiFetch<{ message: string }>('/api/admin/system/restart/', {
       method: 'POST',
       body: JSON.stringify({ service }),
     }, true),
 
   clearCache: () =>
-    apiFetch<{ message: string }>('/v2/admin/system/clear-cache/', {
+    apiFetch<{ message: string }>('/api/admin/system/clear-cache/', {
       method: 'POST',
     }, true),
 }
@@ -988,39 +988,39 @@ export interface ChatEmoji {
 export const billingApi = {
   // Subscription management
   getPlans: () =>
-    apiFetch<any>('/v2/billing/plans/', {}, true),
+    apiFetch<any>('/api/billing/plans/', {}, true),
 
   getCurrentSubscription: () =>
-    apiFetch<any>('/v2/billing/subscription/', {}, true),
+    apiFetch<any>('/api/billing/subscription/', {}, true),
 
   subscribe: (planId: string) =>
-    apiFetch<any>('/v2/billing/subscribe/', {
+    apiFetch<any>('/api/billing/subscribe/', {
       method: 'POST',
       body: JSON.stringify({ plan_id: planId }),
     }, true),
 
   cancelSubscription: () =>
-    apiFetch<any>('/v2/billing/cancel/', {
+    apiFetch<any>('/api/billing/cancel/', {
       method: 'POST',
     }, true),
 
   reactivateSubscription: () =>
-    apiFetch<any>('/v2/billing/reactivate/', {
+    apiFetch<any>('/api/billing/reactivate/', {
       method: 'POST',
     }, true),
 
   // Payment methods
   updatePaymentMethod: () =>
-    apiFetch<any>('/v2/billing/update-payment-method/', {
+    apiFetch<any>('/api/billing/update-payment-method/', {
       method: 'POST',
     }, true),
 
   // Billing history
   getBillingHistory: () =>
-    apiFetch<any>('/v2/billing/history/', {}, true),
+    apiFetch<any>('/api/billing/history/', {}, true),
 
   downloadInvoice: (invoiceId: string) =>
-    apiFetch<any>(`/v2/billing/invoice/${invoiceId}/download/`, {}, true),
+    apiFetch<any>(`/api/billing/invoice/${invoiceId}/download/`, {}, true),
 }
 
 /**
@@ -1029,17 +1029,17 @@ export const billingApi = {
 export const storeApi = {
   // Store items
   getItems: (_params?: any) =>
-    apiFetch<any>('/v2/store/items/', {}, true),
+    apiFetch<any>('/api/store/items/', {}, true),
 
   purchaseItem: (itemId: string) =>
-    apiFetch<any>('/v2/store/purchase/', {
+    apiFetch<any>('/api/store/purchase/', {
       method: 'POST',
       body: JSON.stringify({ item_id: itemId }),
     }, true),
 
   // Purchase history
   getPurchases: () =>
-    apiFetch<any>('/v2/store/purchases/', {}, true),
+    apiFetch<any>('/api/store/purchases/', {}, true),
 }
 
 /**
@@ -1048,78 +1048,78 @@ export const storeApi = {
 export const interactiveApi = {
   // Polls
   getPolls: (partyId: string) =>
-    apiFetch<any>(`/v2/parties/${partyId}/polls/`, {}, true),
+    apiFetch<any>(`/api/parties/${partyId}/polls/`, {}, true),
 
   createPoll: (partyId: string, data: any) =>
-    apiFetch<any>(`/v2/parties/${partyId}/polls/`, {
+    apiFetch<any>(`/api/parties/${partyId}/polls/`, {
       method: 'POST',
       body: JSON.stringify(data),
     }, true),
 
   deletePoll: (partyId: string, pollId: string) =>
-    apiFetch<any>(`/v2/parties/${partyId}/polls/${pollId}/`, {
+    apiFetch<any>(`/api/parties/${partyId}/polls/${pollId}/`, {
       method: 'DELETE',
     }, true),
 
   vote: (partyId: string, pollId: string, optionId: string) =>
-    apiFetch<any>(`/v2/parties/${partyId}/polls/${pollId}/vote/`, {
+    apiFetch<any>(`/api/parties/${partyId}/polls/${pollId}/vote/`, {
       method: 'POST',
       body: JSON.stringify({ option_id: optionId }),
     }, true),
 
   // Reactions
   getReactions: (partyId: string) =>
-    apiFetch<any>(`/v2/parties/${partyId}/reactions/`, {}, true),
+    apiFetch<any>(`/api/parties/${partyId}/reactions/`, {}, true),
 
   addReaction: (partyId: string, emoji: string) =>
-    apiFetch<any>(`/v2/parties/${partyId}/reactions/`, {
+    apiFetch<any>(`/api/parties/${partyId}/reactions/`, {
       method: 'POST',
       body: JSON.stringify({ emoji }),
     }, true),
 
   clearReactions: (partyId: string) =>
-    apiFetch<any>(`/v2/parties/${partyId}/reactions/`, {
+    apiFetch<any>(`/api/parties/${partyId}/reactions/`, {
       method: 'DELETE',
     }, true),
 
   // Sync Controls
   getSyncState: (partyId: string) =>
-    apiFetch<any>(`/v2/parties/${partyId}/sync/`, {}, true),
+    apiFetch<any>(`/api/parties/${partyId}/sync/`, {}, true),
 
   updateSyncState: (partyId: string, data: any) =>
-    apiFetch<any>(`/v2/parties/${partyId}/sync/`, {
+    apiFetch<any>(`/api/parties/${partyId}/sync/`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     }, true),
 
   // Games
   getCurrentGame: (partyId: string) =>
-    apiFetch<any>(`/v2/parties/${partyId}/games/current/`, {}, true),
+    apiFetch<any>(`/api/parties/${partyId}/games/current/`, {}, true),
 
   startGame: (partyId: string, gameType: string) =>
-    apiFetch<any>(`/v2/parties/${partyId}/games/`, {
+    apiFetch<any>(`/api/parties/${partyId}/games/`, {
       method: 'POST',
       body: JSON.stringify({ game_type: gameType }),
     }, true),
 
   endGame: (partyId: string, gameId: string) =>
-    apiFetch<any>(`/v2/parties/${partyId}/games/${gameId}/`, {
+    apiFetch<any>(`/api/parties/${partyId}/games/${gameId}/`, {
       method: 'PATCH',
       body: JSON.stringify({ is_active: false }),
     }, true),
 
   joinGame: (partyId: string, gameId: string) =>
-    apiFetch<any>(`/v2/parties/${partyId}/games/${gameId}/join/`, {
+    apiFetch<any>(`/api/parties/${partyId}/games/${gameId}/join/`, {
       method: 'POST',
     }, true),
 
   leaveGame: (partyId: string, gameId: string) =>
-    apiFetch<any>(`/v2/parties/${partyId}/games/${gameId}/leave/`, {
+    apiFetch<any>(`/api/parties/${partyId}/games/${gameId}/leave/`, {
       method: 'POST',
     }, true),
 
   submitAnswer: (partyId: string, gameId: string, answer: string) =>
-    apiFetch<any>(`/v2/parties/${partyId}/games/${gameId}/answer/`, {
+    apiFetch<any>(`/api/parties/${partyId}/games/${gameId}/answer/`, {
       method: 'POST',
       body: JSON.stringify({ answer }),
     }, true),
@@ -1136,19 +1136,19 @@ export const searchApi = {
         .filter(([, value]) => value !== undefined && value !== null && value !== '')
         .map(([key, value]) => [key, String(value)])
     ).toString()
-    return apiFetch<any>(`/v2/search/?${queryString}`, {}, true)
+    return apiFetch<any>(`/api/search/?${queryString}`, {}, true)
   },
 
   // Search suggestions
   getSuggestions: (query: string, scope?: string) => {
     const params = new URLSearchParams({ q: query })
     if (scope) params.append('scope', scope)
-    return apiFetch<any>(`/v2/search/suggestions/?${params.toString()}`, {}, true)
+    return apiFetch<any>(`/api/search/suggestions/?${params.toString()}`, {}, true)
   },
 
   // Advanced search
   advancedSearch: (searchData: any) =>
-    apiFetch<any>('/v2/search/advanced/', {
+    apiFetch<any>('/api/search/advanced/', {
       method: 'POST',
       body: JSON.stringify(searchData),
     }, true),
@@ -1160,7 +1160,7 @@ export const searchApi = {
         .filter(([, value]) => value !== undefined && value !== null && value !== '')
         .map(([key, value]) => [key, String(value)])
     ).toString()
-    return apiFetch<any>(`/v2/search/?${queryString}`, {}, true)
+    return apiFetch<any>(`/api/search/?${queryString}`, {}, true)
   },
 
   searchUsers: (params: any) => {
@@ -1169,7 +1169,7 @@ export const searchApi = {
         .filter(([, value]) => value !== undefined && value !== null && value !== '')
         .map(([key, value]) => [key, String(value)])
     ).toString()
-    return apiFetch<any>(`/v2/search/?${queryString}`, {}, true)
+    return apiFetch<any>(`/api/search/?${queryString}`, {}, true)
   },
 
   searchVideos: (params: any) => {
@@ -1178,23 +1178,23 @@ export const searchApi = {
         .filter(([, value]) => value !== undefined && value !== null && value !== '')
         .map(([key, value]) => [key, String(value)])
     ).toString()
-    return apiFetch<any>(`/v2/search/?${queryString}`, {}, true)
+    return apiFetch<any>(`/api/search/?${queryString}`, {}, true)
   },
 
   // Save search
   saveSearch: (searchQuery: string) =>
-    apiFetch<any>('/v2/search/save/', {
+    apiFetch<any>('/api/search/save/', {
       method: 'POST',
       body: JSON.stringify({ query: searchQuery }),
     }, true),
 
   // Get saved searches
   getSavedSearches: () =>
-    apiFetch<any>('/v2/search/saved/', {}, true),
+    apiFetch<any>('/api/search/saved/', {}, true),
 
   // Delete saved search
   deleteSavedSearch: (searchId: string) =>
-    apiFetch<any>(`/v2/search/saved/${searchId}/`, {
+    apiFetch<any>(`/api/search/saved/${searchId}/`, {
       method: 'DELETE',
     }, true),
 }
@@ -1205,25 +1205,25 @@ export const searchApi = {
 export const supportApi = {
   // Support Tickets
   getTickets: () =>
-    apiFetch<any>('/v2/support/tickets/', {}, true),
+    apiFetch<any>('/api/support/tickets/', {}, true),
 
   createTicket: (ticketData: any) =>
-    apiFetch<any>('/v2/support/tickets/', {
+    apiFetch<any>('/api/support/tickets/', {
       method: 'POST',
       body: JSON.stringify(ticketData),
     }, true),
 
   getTicket: (ticketId: string) =>
-    apiFetch<any>(`/v2/support/tickets/${ticketId}/`, {}, true),
+    apiFetch<any>(`/api/support/tickets/${ticketId}/`, {}, true),
 
   updateTicket: (ticketId: string, updates: any) =>
-    apiFetch<any>(`/v2/support/tickets/${ticketId}/`, {
+    apiFetch<any>(`/api/support/tickets/${ticketId}/`, {
       method: 'PATCH',
       body: JSON.stringify(updates),
     }, true),
 
   addTicketMessage: (ticketId: string, message: any) =>
-    apiFetch<any>(`/v2/support/tickets/${ticketId}/messages/`, {
+    apiFetch<any>(`/api/support/tickets/${ticketId}/messages/`, {
       method: 'POST',
       body: JSON.stringify(message),
     }, true),
@@ -1235,14 +1235,14 @@ export const supportApi = {
         .filter(([, value]) => value !== undefined && value !== null && value !== '')
         .map(([key, value]) => [key, String(value)])
     ).toString() : ''
-    return apiFetch<any>(`/v2/support/faq/${queryString}`, {}, true)
+    return apiFetch<any>(`/api/support/faq/${queryString}`, {}, true)
   },
 
   getFAQCategories: () =>
-    apiFetch<any>('/v2/support/faq/categories/', {}, true),
+    apiFetch<any>('/api/support/faq/categories/', {}, true),
 
   markFAQHelpful: (faqId: string, helpful: boolean) =>
-    apiFetch<any>(`/v2/support/faq/${faqId}/helpful/`, {
+    apiFetch<any>(`/api/support/faq/${faqId}/helpful/`, {
       method: 'POST',
       body: JSON.stringify({ helpful }),
     }, true),
@@ -1254,19 +1254,19 @@ export const supportApi = {
         .filter(([, value]) => value !== undefined && value !== null && value !== '')
         .map(([key, value]) => [key, String(value)])
     ).toString() : ''
-    return apiFetch<any>(`/v2/support/docs/${queryString}`, {}, true)
+    return apiFetch<any>(`/api/support/docs/${queryString}`, {}, true)
   },
 
   getDocsCategories: () =>
-    apiFetch<any>('/v2/support/docs/categories/', {}, true),
+    apiFetch<any>('/api/support/docs/categories/', {}, true),
 
   viewDoc: (docId: string) =>
-    apiFetch<any>(`/v2/support/docs/${docId}/view/`, {
+    apiFetch<any>(`/api/support/docs/${docId}/view/`, {
       method: 'POST',
     }, true),
 
   markDocHelpful: (docId: string, helpful: boolean) =>
-    apiFetch<any>(`/v2/support/docs/${docId}/helpful/`, {
+    apiFetch<any>(`/api/support/docs/${docId}/helpful/`, {
       method: 'POST',
       body: JSON.stringify({ helpful }),
     }, true),
@@ -1278,43 +1278,43 @@ export const supportApi = {
         .filter(([, value]) => value !== undefined && value !== null && value !== '')
         .map(([key, value]) => [key, String(value)])
     ).toString() : ''
-    return apiFetch<any>(`/v2/support/community/${queryString}`, {}, true)
+    return apiFetch<any>(`/api/support/community/${queryString}`, {}, true)
   },
 
   createCommunityPost: (postData: any) =>
-    apiFetch<any>('/v2/support/community/', {
+    apiFetch<any>('/api/support/community/', {
       method: 'POST',
       body: JSON.stringify(postData),
     }, true),
 
   viewCommunityPost: (postId: string) =>
-    apiFetch<any>(`/v2/support/community/${postId}/view/`, {
+    apiFetch<any>(`/api/support/community/${postId}/view/`, {
       method: 'POST',
     }, true),
 
   voteCommunityPost: (postId: string, vote: 'up' | 'down') =>
-    apiFetch<any>(`/v2/support/community/${postId}/vote/`, {
+    apiFetch<any>(`/api/support/community/${postId}/vote/`, {
       method: 'POST',
       body: JSON.stringify({ vote }),
     }, true),
 
   getCommunityReplies: (postId: string) =>
-    apiFetch<any>(`/v2/support/community/${postId}/replies/`, {}, true),
+    apiFetch<any>(`/api/support/community/${postId}/replies/`, {}, true),
 
   createCommunityReply: (postId: string, replyData: any) =>
-    apiFetch<any>(`/v2/support/community/${postId}/replies/`, {
+    apiFetch<any>(`/api/support/community/${postId}/replies/`, {
       method: 'POST',
       body: JSON.stringify(replyData),
     }, true),
 
   voteCommunityReply: (replyId: string, vote: 'up' | 'down') =>
-    apiFetch<any>(`/v2/support/community/replies/${replyId}/vote/`, {
+    apiFetch<any>(`/api/support/community/replies/${replyId}/vote/`, {
       method: 'POST',
       body: JSON.stringify({ vote }),
     }, true),
 
   markReplySolution: (replyId: string) =>
-    apiFetch<any>(`/v2/support/community/replies/${replyId}/solution/`, {
+    apiFetch<any>(`/api/support/community/replies/${replyId}/solution/`, {
       method: 'POST',
     }, true),
 }

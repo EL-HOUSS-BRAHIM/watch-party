@@ -63,11 +63,11 @@ The frontend connects to the Django backend via API routes:
 
 The backend provides extensive APIs (see `Watch_Party_API.yaml`):
 
-- Party management (`/v2/parties/`)
-- Video streaming (`/v2/videos/`)
-- Chat functionality (`/v2/chat/`)
-- Google Drive integration (`/v2/integrations/google-drive/`)
-- User analytics (`/v2/analytics/`)
+- Party management (`/api/parties/`)
+- Video streaming (`/api/videos/`)
+- Chat functionality (`/api/chat/`)
+- Google Drive integration (`/api/integrations/google-drive/`)
+- User analytics (`/api/analytics/`)
 
 ## 📱 User Flow
 
