@@ -1,9 +1,10 @@
 from datetime import timedelta
 
+from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APIClient
 
 from apps.analytics.models import AnalyticsEvent
 from apps.authentication.models import User
@@ -11,8 +12,10 @@ from apps.parties.models import WatchParty
 from apps.videos.models import Video
 
 
-class DashboardViewsTests(APITestCase):
+class DashboardViewsTests(TestCase):
     """Regression tests for analytics dashboard views."""
+
+    client_class = APIClient
 
     def setUp(self):
         self.user = User.objects.create_user(

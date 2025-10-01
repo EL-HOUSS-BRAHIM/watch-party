@@ -5,7 +5,8 @@ import Link from "next/link"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    username: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -30,18 +31,24 @@ export default function RegisterPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: formData.username,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
           email: formData.email,
           password: formData.password,
+          confirm_password: formData.confirmPassword,
         }),
       })
-      
+
+      const data = await response.json()
+
       if (response.ok) {
-        alert("Account created successfully! Please check your email to verify your account.")
+        alert(
+          data.message ||
+            "Account created successfully! Please check your email to verify your account."
+        )
         window.location.href = "/auth/login"
       } else {
-        const error = await response.json()
-        alert(error.message || "Registration failed. Please try again.")
+        alert(data.error || "Registration failed. Please try again.")
       }
     } catch (error) {
       console.error("Registration error:", error)
@@ -59,31 +66,49 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center">
-      <div className="w-full max-w-md space-y-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-white">Create Account</h1>
-          <p className="mt-2 text-white/70">Join the party and start watching together</p>
+    <div className="min-h-[80vh] px-4 py-12 sm:py-16 flex items-center justify-center">
+      <div className="w-full max-w-md space-y-10 rounded-2xl bg-white/5 p-6 shadow-lg backdrop-blur-sm sm:p-8">
+        <div className="space-y-2 text-center">
+          <h1 className="text-3xl font-bold text-white sm:text-4xl">Create Account</h1>
+          <p className="text-sm text-white/70 sm:text-base">
+            Join the party and start watching together
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="username" className="block text-sm font-medium text-white/90">
-              Username
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <label htmlFor="firstName" className="block text-sm font-medium text-white/90">
+              First Name
             </label>
             <input
-              id="username"
-              name="username"
+              id="firstName"
+              name="firstName"
               type="text"
               required
-              value={formData.username}
+              value={formData.firstName}
               onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Choose a username"
+              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your first name"
             />
           </div>
 
-          <div>
+          <div className="space-y-2">
+            <label htmlFor="lastName" className="block text-sm font-medium text-white/90">
+              Last Name
+            </label>
+            <input
+              id="lastName"
+              name="lastName"
+              type="text"
+              required
+              value={formData.lastName}
+              onChange={handleChange}
+              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your last name"
+            />
+          </div>
+
+          <div className="space-y-2">
             <label htmlFor="email" className="block text-sm font-medium text-white/90">
               Email
             </label>
@@ -94,12 +119,12 @@ export default function RegisterPage() {
               required
               value={formData.email}
               onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Enter your email"
             />
           </div>
 
-          <div>
+          <div className="space-y-2">
             <label htmlFor="password" className="block text-sm font-medium text-white/90">
               Password
             </label>
@@ -110,12 +135,12 @@ export default function RegisterPage() {
               required
               value={formData.password}
               onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Create a password"
             />
           </div>
 
-          <div>
+          <div className="space-y-2">
             <label htmlFor="confirmPassword" className="block text-sm font-medium text-white/90">
               Confirm Password
             </label>
@@ -126,7 +151,7 @@ export default function RegisterPage() {
               required
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Confirm your password"
             />
           </div>
@@ -134,19 +159,17 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+            className="w-full rounded-lg bg-blue-600 py-3 text-base font-semibold text-white transition-colors duration-200 hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-600/50"
           >
             {loading ? "Creating account..." : "Create Account"}
           </button>
         </form>
 
-        <div className="text-center">
-          <div className="text-white/70">
-            Already have an account?{" "}
-            <Link href="/auth/login" className="text-blue-400 hover:text-blue-300">
-              Sign in
-            </Link>
-          </div>
+        <div className="text-center text-sm text-white/70">
+          Already have an account?{" "}
+          <Link href="/auth/login" className="font-semibold text-blue-300 transition-colors hover:text-blue-200">
+            Sign in
+          </Link>
         </div>
       </div>
     </div>

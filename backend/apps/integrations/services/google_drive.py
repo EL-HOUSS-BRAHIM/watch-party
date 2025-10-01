@@ -4,6 +4,7 @@ from datetime import timedelta
 from typing import Dict, List, Optional, Callable, Any
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -145,9 +146,9 @@ class GoogleDriveService:
 def get_drive_service_for_user(user) -> GoogleDriveService:
     """Get Google Drive service instance for a user."""
     try:
-        profile = user.userprofile
-    except:
-        raise ValueError("User profile not found")
+        profile = user.profile
+    except ObjectDoesNotExist as exc:
+        raise ValueError("User profile not found") from exc
     
     if not profile.google_drive_connected:
         raise ValueError("User has not connected Google Drive")
