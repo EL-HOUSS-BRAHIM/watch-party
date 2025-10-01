@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     
     // Forward the login request to the Django backend
-    const response = await fetch(`${BACKEND_URL}/v2/auth/login/`, {
+    const response = await fetch(`${BACKEND_URL}/api/auth/login/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

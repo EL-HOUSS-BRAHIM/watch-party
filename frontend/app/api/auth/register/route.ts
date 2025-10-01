@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     
     // Forward the registration request to the Django backend
-    const response = await fetch(`${BACKEND_URL}/v2/auth/register/`, {
+    const response = await fetch(`${BACKEND_URL}/api/auth/register/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
