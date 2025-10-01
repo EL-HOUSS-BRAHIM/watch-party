@@ -1,10 +1,16 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { partiesApi, WatchParty } from "@/lib/api-client"
+import { GradientCard } from "@/components/ui/gradient-card"
+import { IconButton } from "@/components/ui/icon-button"
+import { LiveIndicator } from "@/components/ui/live-indicator"
+import { useDesignSystem } from "@/hooks/use-design-system"
 
 export default function RoomsPage() {
+  const router = useRouter()
+  const { formatNumber } = useDesignSystem()
   const [myParties, setMyParties] = useState<WatchParty[]>([])
   const [joinedParties, setJoinedParties] = useState<WatchParty[]>([])
   const [loading, setLoading] = useState(true)
@@ -70,12 +76,12 @@ export default function RoomsPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "live": return "text-green-400 bg-green-400/20"
-      case "scheduled": return "text-blue-400 bg-blue-400/20"
-      case "paused": return "text-yellow-400 bg-yellow-400/20"
-      case "ended": return "text-gray-400 bg-gray-400/20"
-      case "cancelled": return "text-red-400 bg-red-400/20"
-      default: return "text-white/60 bg-white/10"
+      case "live": return "bg-gradient-to-r from-green-500 to-emerald-500 text-white"
+      case "scheduled": return "bg-gradient-to-r from-blue-500 to-cyan-500 text-white"
+      case "paused": return "bg-gradient-to-r from-yellow-500 to-orange-500 text-white"
+      case "ended": return "bg-gradient-to-r from-gray-500 to-slate-500 text-white"
+      case "cancelled": return "bg-gradient-to-r from-red-500 to-pink-500 text-white"
+      default: return "bg-white/20 text-white/60"
     }
   }
 
@@ -88,167 +94,225 @@ export default function RoomsPage() {
     }
   }
 
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "live": return "🔴"
+      case "scheduled": return "⏰"
+      case "paused": return "⏸️"
+      case "ended": return "🏁"
+      case "cancelled": return "❌"
+      default: return "📺"
+    }
+  }
+
   const currentParties = activeTab === "hosting" ? myParties : joinedParties
 
-  return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-white">My Rooms</h1>
-          <p className="text-white/70">Manage your watch parties and joined sessions</p>
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-white/60">Loading your rooms...</p>
         </div>
-        <Link
-          href="/dashboard/create-party"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
-        >
-          Create New Party
-        </Link>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-8">
+      {/* Enhanced Header */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-red-600/20 rounded-3xl blur-xl"></div>
+        <GradientCard className="relative border-purple-500/30">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-4">
+                <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
+                  🏠 My Rooms
+                </h1>
+                <LiveIndicator 
+                  isLive={myParties.some(p => p.status === "live")} 
+                  count={myParties.filter(p => p.status === "live").length} 
+                  label="Live" 
+                />
+              </div>
+              <p className="text-white/80 text-lg">Manage your watch parties and joined sessions</p>
+              <div className="flex items-center gap-4 text-sm text-white/60">
+                <span>🎬 Host Parties</span>
+                <span>•</span>
+                <span>👥 Join Sessions</span>
+                <span>•</span>
+                <span>⚡ Live Controls</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+              <IconButton
+                onClick={() => router.push("/dashboard/parties/create")}
+                gradient="from-purple-600 to-pink-600"
+                className="shadow-lg hover:shadow-purple-500/25"
+              >
+                <span>🎬</span>
+                <span className="hidden sm:inline">Create Party</span>
+              </IconButton>
+              <IconButton
+                onClick={() => router.push("/dashboard/parties/join")}
+                variant="secondary"
+              >
+                <span>🔗</span>
+                <span className="hidden sm:inline">Join by Code</span>
+              </IconButton>
+            </div>
+          </div>
+        </GradientCard>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-white/5 p-1 rounded-lg w-fit">
-        <button
-          onClick={() => setActiveTab("hosting")}
-          className={`px-6 py-2 rounded-md font-medium transition-colors ${
-            activeTab === "hosting"
-              ? "bg-blue-600 text-white"
-              : "text-white/70 hover:text-white hover:bg-white/10"
-          }`}
-        >
-          Hosting ({myParties.length})
-        </button>
-        <button
-          onClick={() => setActiveTab("joined")}
-          className={`px-6 py-2 rounded-md font-medium transition-colors ${
-            activeTab === "joined"
-              ? "bg-blue-600 text-white"
-              : "text-white/70 hover:text-white hover:bg-white/10"
-          }`}
-        >
-          Joined ({joinedParties.length})
-        </button>
+      <div className="flex gap-1 bg-black/20 p-1 rounded-2xl border border-white/10 w-fit mx-auto">
+        {[
+          { id: "hosting", label: "Hosting", icon: "🎬", count: myParties.length },
+          { id: "joined", label: "Joined", icon: "👥", count: joinedParties.length }
+        ].map((tab) => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id as any)}
+            className={`flex items-center gap-3 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+              activeTab === tab.id
+                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
+                : "text-white/60 hover:text-white hover:bg-white/10"
+            }`}
+          >
+            <span className="text-lg">{tab.icon}</span>
+            <span>{tab.label}</span>
+            <span className="bg-white/20 text-xs px-2 py-1 rounded-full font-bold">{tab.count}</span>
+          </button>
+        ))}
       </div>
 
       {/* Error State */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-          <p className="text-red-400">{error}</p>
-          <button
-            onClick={loadParties}
-            className="mt-2 text-red-300 hover:text-red-200 underline"
-          >
-            Try again
-          </button>
-        </div>
-      )}
-
-      {/* Loading State */}
-      {loading && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white/5 border border-white/10 rounded-lg p-6 animate-pulse">
-              <div className="h-4 bg-white/20 rounded mb-3"></div>
-              <div className="h-3 bg-white/10 rounded mb-2"></div>
-              <div className="h-3 bg-white/10 rounded w-2/3 mb-4"></div>
-              <div className="h-8 bg-white/10 rounded"></div>
+        <GradientCard className="border-red-500/30">
+          <div className="flex items-center gap-4">
+            <div className="text-3xl">⚠️</div>
+            <div className="flex-1">
+              <p className="text-red-400 font-medium">{error}</p>
+              <button
+                onClick={loadParties}
+                className="mt-2 text-red-300 hover:text-red-200 underline text-sm"
+              >
+                Try again
+              </button>
             </div>
-          ))}
-        </div>
+          </div>
+        </GradientCard>
       )}
 
       {/* Parties Grid */}
-      {!loading && currentParties.length > 0 && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {currentParties.length > 0 ? (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {currentParties.map((party) => (
-            <div
-              key={party.id}
-              className="bg-white/5 border border-white/10 rounded-lg p-6 hover:bg-white/10 transition-colors"
-            >
-              <div className="flex justify-between items-start mb-3">
-                <h3 className="text-lg font-semibold text-white line-clamp-2">
-                  {party.title}
-                </h3>
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">{getVisibilityIcon(party.visibility)}</span>
-                  <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(party.status)}`}>
-                    {party.status}
+            <GradientCard key={party.id} className="hover:border-purple-400/40 transition-all duration-300">
+              {/* Header */}
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-lg font-bold text-white line-clamp-2 mb-1">
+                    {party.title}
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2 py-1 text-xs rounded-full font-medium ${getStatusColor(party.status)}`}>
+                      {getStatusIcon(party.status)} {party.status.toUpperCase()}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 ml-2">
+                  <span className="text-xl" title={`${party.visibility} party`}>
+                    {getVisibilityIcon(party.visibility)}
                   </span>
                 </div>
               </div>
 
               {party.description && (
-                <p className="text-white/70 text-sm mb-3 line-clamp-2">
+                <p className="text-white/70 text-sm mb-4 line-clamp-2">
                   {party.description}
                 </p>
               )}
 
+              {/* Party Info */}
               <div className="space-y-2 mb-4">
                 <div className="flex items-center text-sm text-white/60">
-                  <span>👥 {party.participant_count} participants</span>
+                  <span>👥 {formatNumber(party.participant_count)} participants</span>
                   {party.max_participants && (
-                    <span className="text-white/40"> / {party.max_participants}</span>
+                    <span className="text-white/40"> / {formatNumber(party.max_participants)}</span>
                   )}
                 </div>
+                
                 {party.video?.title && (
                   <div className="flex items-center text-sm text-white/60">
                     <span>🎬 {party.video.title}</span>
                   </div>
                 )}
+                
                 {party.scheduled_start && (
                   <div className="flex items-center text-sm text-white/60">
                     <span>🕒 {new Date(party.scheduled_start).toLocaleString()}</span>
                   </div>
                 )}
+                
                 <div className="flex items-center text-sm text-white/60">
                   <span>📅 Created {new Date(party.created_at).toLocaleDateString()}</span>
                 </div>
               </div>
 
-              <div className="flex gap-2">
-                <Link
-                  href={`/party/${party.id}`}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors text-center"
+              {/* Actions */}
+              <div className="flex gap-2 mb-4">
+                <IconButton
+                  onClick={() => router.push(`/party/${party.id}`)}
+                  variant="primary"
+                  className="flex-1"
                 >
-                  {party.status === "live" ? "Join" : "View"}
-                </Link>
+                  {party.status === "live" ? "🔴 Join Live" : "👀 View"}
+                </IconButton>
                 
                 {activeTab === "hosting" && (
                   <div className="flex gap-1">
-                    <Link
-                      href={`/dashboard/parties/${party.id}/edit`}
-                      className="px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors"
-                      title="Edit Party"
+                    <IconButton
+                      onClick={() => router.push(`/dashboard/parties/${party.id}/edit`)}
+                      variant="secondary"
+                      size="sm"
                     >
                       ✏️
-                    </Link>
-                    <button
+                    </IconButton>
+                    <IconButton
                       onClick={() => handleDeleteParty(party.id)}
-                      className="px-3 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-colors"
-                      title="Delete Party"
+                      variant="secondary"
+                      size="sm"
+                      className="hover:bg-red-600/20 hover:text-red-400"
                     >
                       🗑️
-                    </button>
+                    </IconButton>
                   </div>
                 )}
 
                 {activeTab === "joined" && (
-                  <button
+                  <IconButton
                     onClick={() => handleLeaveParty(party.id)}
-                    className="px-3 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-colors"
+                    variant="secondary"
+                    size="sm"
+                    className="hover:bg-red-600/20 hover:text-red-400"
                     title="Leave Party"
                   >
-                    Leave
-                  </button>
+                    🚪 Leave
+                  </IconButton>
                 )}
               </div>
 
+              {/* Invite Code (for hosted parties) */}
               {party.invite_code && activeTab === "hosting" && (
-                <div className="mt-3 pt-3 border-t border-white/10">
+                <div className="pt-3 border-t border-white/10">
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-white/60">Invite Code:</span>
                     <div className="flex items-center gap-2">
-                      <code className="bg-white/10 px-2 py-1 rounded text-sm text-white">
+                      <code className="bg-white/10 px-2 py-1 rounded text-sm text-white font-mono">
                         {party.invite_code}
                       </code>
                       <button
@@ -256,7 +320,7 @@ export default function RoomsPage() {
                           navigator.clipboard.writeText(party.invite_code!)
                           // Could add a toast notification here
                         }}
-                        className="text-blue-400 hover:text-blue-300 text-sm"
+                        className="text-blue-400 hover:text-blue-300 text-sm transition-colors"
                         title="Copy invite code"
                       >
                         📋
@@ -265,52 +329,90 @@ export default function RoomsPage() {
                   </div>
                 </div>
               )}
-            </div>
+            </GradientCard>
           ))}
         </div>
-      )}
-
-      {/* Empty State */}
-      {!loading && currentParties.length === 0 && (
-        <div className="text-center py-12">
+      ) : (
+        /* Empty State */
+        <GradientCard className="text-center py-16">
           <div className="text-6xl mb-4">
             {activeTab === "hosting" ? "🎬" : "👥"}
           </div>
-          <h3 className="text-xl font-semibold text-white mb-2">
+          <h3 className="text-2xl font-bold text-white mb-2">
             {activeTab === "hosting" ? "No parties hosted yet" : "No parties joined yet"}
           </h3>
-          <p className="text-white/70 mb-6">
+          <p className="text-white/60 mb-6 max-w-md mx-auto">
             {activeTab === "hosting" 
-              ? "Create your first watch party and invite friends to join!"
-              : "Join a party to start watching with others!"
+              ? "Create your first watch party and invite friends to join the fun!"
+              : "Join a party to start watching with others and make new connections!"
             }
           </p>
           
-          <div className="flex justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
             {activeTab === "hosting" ? (
-              <Link
-                href="/dashboard/create-party"
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+              <IconButton
+                onClick={() => router.push("/dashboard/parties/create")}
+                className="shadow-lg hover:shadow-purple-500/25"
               >
+                <span>🎬</span>
                 Create Your First Party
-              </Link>
+              </IconButton>
             ) : (
               <>
-                <Link
-                  href="/parties"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                <IconButton
+                  onClick={() => router.push("/dashboard/parties")}
+                  className="shadow-lg hover:shadow-blue-500/25"
                 >
+                  <span>🔍</span>
                   Browse Parties
-                </Link>
-                <Link
-                  href="/join"
-                  className="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                </IconButton>
+                <IconButton
+                  onClick={() => router.push("/dashboard/parties/join")}
+                  variant="secondary"
                 >
+                  <span>🔗</span>
                   Join by Code
-                </Link>
+                </IconButton>
               </>
             )}
           </div>
+        </GradientCard>
+      )}
+
+      {/* Stats Overview */}
+      {currentParties.length > 0 && (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <GradientCard gradient="from-green-500/20 to-emerald-500/20" className="text-center">
+            <div className="text-2xl mb-2">🔴</div>
+            <div className="text-2xl font-bold text-white">
+              {formatNumber(currentParties.filter(p => p.status === "live").length)}
+            </div>
+            <div className="text-white/60 text-sm">Live Now</div>
+          </GradientCard>
+
+          <GradientCard gradient="from-blue-500/20 to-cyan-500/20" className="text-center">
+            <div className="text-2xl mb-2">⏰</div>
+            <div className="text-2xl font-bold text-white">
+              {formatNumber(currentParties.filter(p => p.status === "scheduled").length)}
+            </div>
+            <div className="text-white/60 text-sm">Scheduled</div>
+          </GradientCard>
+
+          <GradientCard gradient="from-purple-500/20 to-pink-500/20" className="text-center">
+            <div className="text-2xl mb-2">👥</div>
+            <div className="text-2xl font-bold text-white">
+              {formatNumber(currentParties.reduce((sum, p) => sum + (p.participant_count || 0), 0))}
+            </div>
+            <div className="text-white/60 text-sm">Total Participants</div>
+          </GradientCard>
+
+          <GradientCard gradient="from-orange-500/20 to-red-500/20" className="text-center">
+            <div className="text-2xl mb-2">📺</div>
+            <div className="text-2xl font-bold text-white">
+              {formatNumber(currentParties.length)}
+            </div>
+            <div className="text-white/60 text-sm">Total {activeTab === "hosting" ? "Hosted" : "Joined"}</div>
+          </GradientCard>
         </div>
       )}
     </div>

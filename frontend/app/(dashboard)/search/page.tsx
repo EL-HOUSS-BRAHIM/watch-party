@@ -3,6 +3,10 @@
 import { useState, useEffect } from "react"
 import api from "@/lib/api-client"
 import { useRouter } from "next/navigation"
+import { GradientCard } from "@/components/ui/gradient-card"
+import { IconButton } from "@/components/ui/icon-button"
+import { LiveIndicator } from "@/components/ui/live-indicator"
+import { useDesignSystem } from "@/hooks/use-design-system"
 
 interface SearchResult {
   id: string
@@ -26,6 +30,7 @@ interface SearchFilters {
 
 export default function SearchPage() {
   const router = useRouter()
+  const { formatNumber } = useDesignSystem()
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<SearchResult[]>([])
   const [loading, setLoading] = useState(false)
@@ -150,322 +155,366 @@ export default function SearchPage() {
     }
   }
 
+  const quickSearchOptions = [
+    {
+      title: "Active Parties",
+      description: "Find parties currently live",
+      icon: "🎉",
+      gradient: "from-blue-500 to-purple-500",
+      action: () => {
+        setFilters(prev => ({ ...prev, type: "parties" }))
+        setQuery("active")
+        performSearch("active")
+      }
+    },
+    {
+      title: "Popular Videos", 
+      description: "Discover trending content",
+      icon: "🎬",
+      gradient: "from-purple-500 to-pink-500",
+      action: () => {
+        setFilters(prev => ({ ...prev, type: "videos" }))
+        setQuery("popular")
+        performSearch("popular")
+      }
+    },
+    {
+      title: "Active Users",
+      description: "Connect with the community", 
+      icon: "👥",
+      gradient: "from-green-500 to-blue-500",
+      action: () => {
+        setFilters(prev => ({ ...prev, type: "users" }))
+        setQuery("active")
+        performSearch("active")
+      }
+    }
+  ]
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 p-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Search</h1>
-          <p className="text-white/60">Find parties, users, videos, and more</p>
-        </div>
-
-        {/* Search Form */}
-        <div className="mb-8">
-          <div className="relative">
-            <div className="flex gap-4">
-              {/* Search Input */}
-              <div className="flex-1 relative">
-                <input
-                  type="text"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      performSearch()
-                    }
-                  }}
-                  placeholder="Search for parties, users, videos..."
-                  className="w-full px-4 py-3 pl-12 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-                <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
-                  <span className="text-white/50">🔍</span>
-                </div>
-                
-                {/* Search Suggestions */}
-                {suggestions.length > 0 && query.length > 2 && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-gray-800 border border-white/20 rounded-lg shadow-lg z-50">
-                    {suggestions.map((suggestion, index) => (
-                      <button
-                        key={index}
-                        onClick={() => {
-                          setQuery(suggestion)
-                          performSearch(suggestion)
-                        }}
-                        className="w-full px-4 py-2 text-left text-white hover:bg-white/10 first:rounded-t-lg last:rounded-b-lg transition-colors"
-                      >
-                        {suggestion}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Search Button */}
-              <button
-                onClick={() => performSearch()}
-                disabled={loading || !query.trim()}
-                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
-              >
-                {loading ? "Searching..." : "Search"}
-              </button>
+    <div className="space-y-8">
+      {/* Enhanced Header */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 via-blue-600/20 to-purple-600/20 rounded-3xl blur-xl"></div>
+        <GradientCard className="relative border-cyan-500/30">
+          <div className="text-center space-y-4">
+            <div className="text-6xl mb-4">🔍</div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-cyan-200 to-blue-200 bg-clip-text text-transparent">
+              Universal Search
+            </h1>
+            <p className="text-white/80 text-lg max-w-2xl mx-auto">
+              Find parties, users, videos, and more across the entire Watch Party platform
+            </p>
+            <div className="flex items-center justify-center gap-4 text-sm text-white/60">
+              <span>🎬 Movies & Shows</span>
+              <span>•</span>
+              <span>👥 Community</span>
+              <span>•</span>
+              <span>🎉 Live Parties</span>
             </div>
           </div>
+        </GradientCard>
+      </div>
 
-          {/* Filter Controls */}
-          <div className="mt-4 flex flex-wrap gap-4">
-            {/* Type Filter */}
-            <select
-              value={filters.type}
-              onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value as any }))}
-              className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All Types</option>
-              <option value="parties">Parties</option>
-              <option value="users">Users</option>
-              <option value="videos">Videos</option>
-            </select>
-
-            {/* Visibility Filter */}
-            <select
-              value={filters.visibility}
-              onChange={(e) => setFilters(prev => ({ ...prev, visibility: e.target.value as any }))}
-              className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All Visibility</option>
-              <option value="public">Public Only</option>
-              <option value="private">Private Only</option>
-            </select>
-
-            {/* Date Range Filter */}
-            <select
-              value={filters.date_range}
-              onChange={(e) => setFilters(prev => ({ ...prev, date_range: e.target.value as any }))}
-              className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All Time</option>
-              <option value="today">Today</option>
-              <option value="week">This Week</option>
-              <option value="month">This Month</option>
-              <option value="year">This Year</option>
-            </select>
-
-            {/* Sort Filter */}
-            <select
-              value={filters.sort_by}
-              onChange={(e) => setFilters(prev => ({ ...prev, sort_by: e.target.value as any }))}
-              className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="relevance">Most Relevant</option>
-              <option value="recent">Most Recent</option>
-              <option value="popular">Most Popular</option>
-              <option value="alphabetical">Alphabetical</option>
-            </select>
+      {/* Search Form */}
+      <div className="space-y-6">
+        {/* Main Search Bar */}
+        <div className="relative max-w-4xl mx-auto">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <span className="text-white/50 text-xl">🔍</span>
           </div>
-        </div>
-
-        {/* Recent Searches */}
-        {!query && recentSearches.length > 0 && (
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-white">Recent Searches</h3>
-              <button
-                onClick={clearRecentSearches}
-                className="text-red-400 hover:text-red-300 text-sm transition-colors"
-              >
-                Clear All
-              </button>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {recentSearches.map((search, index) => (
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                performSearch()
+              }
+            }}
+            placeholder="Search for parties, users, videos, or anything else..."
+            className="w-full pl-14 pr-24 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 backdrop-blur-sm transition-all text-lg"
+          />
+          <div className="absolute right-2 top-2">
+            <IconButton
+              onClick={() => performSearch()}
+              disabled={loading || !query.trim()}
+              gradient="from-cyan-600 to-blue-600"
+              className="shadow-lg"
+            >
+              {loading ? "🔄" : "🔍"}
+              <span className="hidden sm:inline">{loading ? "Searching..." : "Search"}</span>
+            </IconButton>
+          </div>
+          
+          {/* Search Suggestions */}
+          {suggestions.length > 0 && query.length > 2 && (
+            <div className="absolute top-full left-0 right-0 mt-2 bg-black/80 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl z-50">
+              {suggestions.map((suggestion, index) => (
                 <button
                   key={index}
                   onClick={() => {
-                    setQuery(search)
-                    performSearch(search)
+                    setQuery(suggestion)
+                    performSearch(suggestion)
                   }}
-                  className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm transition-colors"
+                  className="w-full px-4 py-3 text-left text-white hover:bg-white/10 first:rounded-t-xl last:rounded-b-xl transition-colors flex items-center gap-3"
                 >
-                  {search}
+                  <span className="text-white/50">🔍</span>
+                  {suggestion}
                 </button>
               ))}
             </div>
+          )}
+        </div>
+
+        {/* Filter Controls */}
+        <div className="flex flex-wrap justify-center gap-4">
+          {/* Type Filter */}
+          <div className="flex gap-1 bg-black/20 p-1 rounded-xl border border-white/10">
+            {[
+              { key: "all", label: "All", icon: "🔍" },
+              { key: "parties", label: "Parties", icon: "🎉" },
+              { key: "users", label: "Users", icon: "👥" },
+              { key: "videos", label: "Videos", icon: "🎬" }
+            ].map(({ key, label, icon }) => (
+              <button
+                key={key}
+                onClick={() => setFilters(prev => ({ ...prev, type: key as any }))}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  filters.type === key
+                    ? "bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg"
+                    : "text-white/60 hover:text-white hover:bg-white/10"
+                }`}
+              >
+                <span>{icon}</span>
+                <span>{label}</span>
+              </button>
+            ))}
           </div>
-        )}
 
-        {/* Search Results */}
-        {query && (
-          <div>
-            {/* Results Header */}
-            {totalResults > 0 && (
-              <div className="mb-6">
-                <p className="text-white/60 text-sm">
-                  Found {totalResults.toLocaleString()} results in {searchTime}ms
-                </p>
-              </div>
-            )}
+          {/* Additional Filters */}
+          <select
+            value={filters.sort_by}
+            onChange={(e) => setFilters(prev => ({ ...prev, sort_by: e.target.value as any }))}
+            className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+          >
+            <option value="relevance">Most Relevant</option>
+            <option value="recent">Most Recent</option>
+            <option value="popular">Most Popular</option>
+            <option value="alphabetical">Alphabetical</option>
+          </select>
+        </div>
+      </div>
 
-            {/* Loading State */}
-            {loading && (
-              <div className="space-y-4">
-                {[1, 2, 3, 4, 5].map(i => (
-                  <div key={i} className="bg-white/5 border border-white/10 rounded-lg p-6 animate-pulse">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 bg-white/10 rounded-lg"></div>
-                      <div className="flex-1 space-y-2">
-                        <div className="h-6 bg-white/10 rounded w-3/4"></div>
-                        <div className="h-4 bg-white/10 rounded w-1/2"></div>
-                        <div className="h-4 bg-white/10 rounded w-2/3"></div>
-                      </div>
+      {/* Recent Searches */}
+      {!query && recentSearches.length > 0 && (
+        <GradientCard>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+              <span>🕒</span>
+              Recent Searches
+            </h3>
+            <button
+              onClick={clearRecentSearches}
+              className="text-red-400 hover:text-red-300 text-sm transition-colors"
+            >
+              Clear All
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {recentSearches.map((search, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  setQuery(search)
+                  performSearch(search)
+                }}
+                className="px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm transition-all duration-200 hover:scale-105"
+              >
+                {search}
+              </button>
+            ))}
+          </div>
+        </GradientCard>
+      )}
+
+      {/* Search Results */}
+      {query && (
+        <div className="space-y-6">
+          {/* Results Header */}
+          {totalResults > 0 && !loading && (
+            <div className="flex items-center justify-between">
+              <p className="text-white/60 text-sm flex items-center gap-2">
+                <span>📊</span>
+                Found {formatNumber(totalResults)} results in {searchTime}ms
+              </p>
+              <LiveIndicator isLive={totalResults > 0} count={totalResults} label="Results" />
+            </div>
+          )}
+
+          {/* Loading State */}
+          {loading && (
+            <div className="space-y-4">
+              {[1, 2, 3, 4, 5].map(i => (
+                <GradientCard key={i} className="animate-pulse">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-white/10 rounded-lg"></div>
+                    <div className="flex-1 space-y-2">
+                      <div className="h-6 bg-white/10 rounded w-3/4"></div>
+                      <div className="h-4 bg-white/10 rounded w-1/2"></div>
+                      <div className="h-4 bg-white/10 rounded w-2/3"></div>
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
+                </GradientCard>
+              ))}
+            </div>
+          )}
 
-            {/* Results List */}
-            {!loading && results.length > 0 && (
-              <div className="space-y-4">
-                {results.map((result) => (
-                  <button
-                    key={`${result.type}-${result.id}`}
-                    onClick={() => handleResultClick(result)}
-                    className="w-full bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-6 text-left transition-colors"
-                  >
-                    <div className="flex items-start gap-4">
-                      {/* Thumbnail/Avatar */}
-                      <div className="w-12 h-12 bg-white/10 rounded-lg flex items-center justify-center overflow-hidden">
-                        {result.thumbnail || result.avatar ? (
-                          <img
-                            src={result.thumbnail || result.avatar}
-                            alt={result.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <span className="text-xl">{getResultIcon(result.type)}</span>
-                        )}
-                      </div>
-
-                      {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded">
-                            {getResultTypeLabel(result.type)}
-                          </span>
-                          {result.relevance_score && (
-                            <span className="text-white/40 text-xs">
-                              {Math.round(result.relevance_score * 100)}% match
-                            </span>
-                          )}
-                        </div>
-                        
-                        <h3 className="font-semibold text-white mb-1 truncate">{result.title}</h3>
-                        
-                        {result.subtitle && (
-                          <p className="text-white/60 text-sm mb-2">{result.subtitle}</p>
-                        )}
-                        
-                        {result.description && (
-                          <p className="text-white/60 text-sm line-clamp-2">{result.description}</p>
-                        )}
-                        
-                        {result.metadata && (
-                          <div className="mt-3 flex flex-wrap gap-2 text-xs text-white/40">
-                            {Object.entries(result.metadata).map(([key, value]) => (
-                              <span key={key}>
-                                {key}: {String(value)}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Arrow */}
-                      <div className="text-white/40">
-                        →
-                      </div>
+          {/* Results List */}
+          {!loading && results.length > 0 && (
+            <div className="space-y-4">
+              {results.map((result) => (
+                <div
+                  key={`${result.type}-${result.id}`}
+                  className="cursor-pointer"
+                  onClick={() => handleResultClick(result)}
+                >
+                  <GradientCard className="hover:border-cyan-400/40 transition-all duration-300">
+                  <div className="flex items-start gap-4">
+                    {/* Thumbnail/Avatar */}
+                    <div className="w-12 h-12 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-lg flex items-center justify-center overflow-hidden">
+                      {result.thumbnail || result.avatar ? (
+                        <img
+                          src={result.thumbnail || result.avatar}
+                          alt={result.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-xl">{getResultIcon(result.type)}</span>
+                      )}
                     </div>
-                  </button>
-                ))}
-              </div>
-            )}
 
-            {/* No Results */}
-            {!loading && query && results.length === 0 && (
-              <div className="text-center py-12">
-                <div className="text-6xl mb-4">🔍</div>
-                <h3 className="text-xl font-semibold text-white mb-2">No Results Found</h3>
-                <p className="text-white/60 mb-6">
-                  No results found for "{query}". Try adjusting your search terms or filters.
-                </p>
-                <div className="space-y-2 text-white/40 text-sm">
-                  <p>Suggestions:</p>
-                  <ul className="list-disc list-inside space-y-1">
-                    <li>Check your spelling</li>
-                    <li>Try different keywords</li>
-                    <li>Use broader search terms</li>
-                    <li>Remove filters to see more results</li>
-                  </ul>
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="px-2 py-1 bg-gradient-to-r from-cyan-600/20 to-blue-600/20 text-cyan-400 text-xs rounded border border-cyan-500/30">
+                          {getResultTypeLabel(result.type)}
+                        </span>
+                        {result.relevance_score && (
+                          <span className="text-white/40 text-xs">
+                            {Math.round(result.relevance_score * 100)}% match
+                          </span>
+                        )}
+                      </div>
+                      
+                      <h3 className="font-semibold text-white mb-1 truncate">{result.title}</h3>
+                      
+                      {result.subtitle && (
+                        <p className="text-white/60 text-sm mb-2">{result.subtitle}</p>
+                      )}
+                      
+                      {result.description && (
+                        <p className="text-white/60 text-sm line-clamp-2">{result.description}</p>
+                      )}
+                      
+                      {result.metadata && (
+                        <div className="mt-3 flex flex-wrap gap-2 text-xs text-white/40">
+                          {Object.entries(result.metadata).map(([key, value]) => (
+                            <span key={key} className="bg-white/5 px-2 py-1 rounded">
+                              {key}: {String(value)}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Arrow */}
+                    <div className="text-white/40 text-xl">→</div>
+                  </div>
+                </GradientCard>
                 </div>
+              ))}
+            </div>
+          )}
+
+          {/* No Results */}
+          {!loading && query && results.length === 0 && (
+            <GradientCard className="text-center py-12">
+              <div className="text-6xl mb-4">🔍</div>
+              <h3 className="text-xl font-semibold text-white mb-2">No Results Found</h3>
+              <p className="text-white/60 mb-6">
+                No results found for "{query}". Try adjusting your search terms or filters.
+              </p>
+              <div className="space-y-2 text-white/40 text-sm mb-6">
+                <p className="font-medium">Suggestions:</p>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>Check your spelling</li>
+                  <li>Try different keywords</li>
+                  <li>Use broader search terms</li>
+                  <li>Remove filters to see more results</li>
+                </ul>
               </div>
-            )}
+              <IconButton
+                onClick={() => {
+                  setQuery("")
+                  setFilters({
+                    type: "all",
+                    visibility: "all",
+                    status: "all", 
+                    date_range: "all",
+                    sort_by: "relevance"
+                  })
+                }}
+                variant="secondary"
+              >
+                <span>🔄</span>
+                Clear Search
+              </IconButton>
+            </GradientCard>
+          )}
+        </div>
+      )}
+
+      {/* Quick Search Shortcuts */}
+      {!query && (
+        <div>
+          <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <span>⚡</span>
+            Quick Search
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {quickSearchOptions.map((option, index) => (
+              <div
+                key={index}
+                className="cursor-pointer"
+                onClick={option.action}
+              >
+                <GradientCard
+                  gradient={`${option.gradient}/10`}
+                  className="text-center hover:border-cyan-400/40 transition-all duration-300"
+                >
+                <div className="space-y-4">
+                  <div className={`w-16 h-16 bg-gradient-to-br ${option.gradient} rounded-2xl flex items-center justify-center text-white text-2xl mx-auto`}>
+                    {option.icon}
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white mb-2">{option.title}</h4>
+                    <p className="text-white/60 text-sm">{option.description}</p>
+                  </div>
+                  <IconButton
+                    gradient={option.gradient}
+                    size="sm"
+                    className="w-full"
+                  >
+                    Search Now
+                  </IconButton>
+                </div>
+              </GradientCard>
+              </div>
+            ))}
           </div>
-        )}
-
-        {/* Quick Search Shortcuts */}
-        {!query && (
-          <div className="mt-12">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-semibold text-white">Quick Search</h3>
-              <a
-                href="/dashboard/search/advanced"
-                className="text-blue-400 hover:text-blue-300 text-sm transition-colors"
-              >
-                Advanced Search →
-              </a>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <button
-                onClick={() => {
-                  setFilters(prev => ({ ...prev, type: "parties" }))
-                  setQuery("active")
-                  performSearch("active")
-                }}
-                className="p-6 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-left transition-colors"
-              >
-                <div className="text-2xl mb-3">🎉</div>
-                <h4 className="font-medium text-white mb-1">Active Parties</h4>
-                <p className="text-white/60 text-sm">Find parties currently live</p>
-              </button>
-
-              <button
-                onClick={() => {
-                  setFilters(prev => ({ ...prev, type: "videos" }))
-                  setQuery("popular")
-                  performSearch("popular")
-                }}
-                className="p-6 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-left transition-colors"
-              >
-                <div className="text-2xl mb-3">🎬</div>
-                <h4 className="font-medium text-white mb-1">Popular Videos</h4>
-                <p className="text-white/60 text-sm">Discover trending content</p>
-              </button>
-
-              <button
-                onClick={() => {
-                  setFilters(prev => ({ ...prev, type: "users" }))
-                  setQuery("active")
-                  performSearch("active")
-                }}
-                className="p-6 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-left transition-colors"
-              >
-                <div className="text-2xl mb-3">👥</div>
-                <h4 className="font-medium text-white mb-1">Active Users</h4>
-                <p className="text-white/60 text-sm">Connect with the community</p>
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }

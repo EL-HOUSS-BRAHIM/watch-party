@@ -14,11 +14,16 @@ const menuItems = [
   { href: "/dashboard/parties", label: "Parties", icon: "🎉" },
   { href: "/dashboard/videos", label: "Videos", icon: "🎬" },
   { href: "/dashboard/friends", label: "Friends", icon: "👥" },
+  { href: "/dashboard/events", label: "Events", icon: "📅" },
+  { href: "/dashboard/social", label: "Social", icon: "👫" },
   { href: "/dashboard/search", label: "Search", icon: "🔍" },
   { href: "/dashboard/notifications", label: "Notifications", icon: "🔔" },
   { href: "/dashboard/analytics", label: "Analytics", icon: "📊" },
+  { href: "/dashboard/integrations", label: "Integrations", icon: "🔗" },
+  { href: "/dashboard/store", label: "Store", icon: "🛒" },
   { href: "/dashboard/billing", label: "Billing", icon: "💳" },
   { href: "/dashboard/support", label: "Support", icon: "🎫" },
+  { href: "/dashboard/admin", label: "Admin", icon: "⚙️" },
 ]
 
 export default function MobileMenu({ isOpen, onClose, currentUser }: MobileMenuProps) {
