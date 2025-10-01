@@ -77,7 +77,20 @@ export default function LibraryPage() {
   }
 
   // Map API data to media format, fallback to mock data
-  const media = videos.length > 0
+  type MediaItem = {
+    id: string;
+    title: string;
+    type: string;
+    duration: string;
+    ambience: string;
+    thumbnail: string | null | undefined;
+    visibility: "public" | "friends" | "private";
+    views: number;
+    likes: number;
+    upload_date: string;
+  };
+
+  const media: MediaItem[] = videos.length > 0
     ? videos.map(video => ({
         id: video.id || Math.random().toString(),
         title: video.title || 'Untitled Video',
@@ -85,12 +98,12 @@ export default function LibraryPage() {
         duration: video.duration_formatted || 'Unknown',
         ambience: video.visibility || 'private',
         thumbnail: video.thumbnail,
-        visibility: video.visibility || 'private',
+        visibility: (video.visibility || 'private') as "public" | "friends" | "private",
         views: (video as any).view_count || 0,
         likes: (video as any).like_count || 0,
         upload_date: video.created_at || new Date().toISOString()
       }))
-    : mockMedia
+    : mockMedia as MediaItem[];
 
   const getTypeIcon = (type: string) => {
     switch (type.toLowerCase()) {

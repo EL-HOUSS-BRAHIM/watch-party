@@ -299,7 +299,6 @@ export default function RoomsPage() {
                     variant="secondary"
                     size="sm"
                     className="hover:bg-red-600/20 hover:text-red-400"
-                    title="Leave Party"
                   >
                     🚪 Leave
                   </IconButton>
