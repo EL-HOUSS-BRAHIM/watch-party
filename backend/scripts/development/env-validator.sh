@@ -17,7 +17,7 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 # Colors and emojis
 readonly RED='\033[0;31m'
 readonly GREEN='\033[0;32m'
-readonly YIGHLIGHT='\033[1;33m'
+readonly YELLOW='\033[1;33m'
 readonly BLUE='\033[0;34m'
 readonly NC='\033[0m'
 readonly CHECK="✅"
@@ -29,7 +29,7 @@ readonly FIX="🔧"
 # Logging functions
 log_info() { echo -e "${BLUE}${INFO} $1${NC}"; }
 log_success() { echo -e "${GREEN}${CHECK} $1${NC}"; }
-log_warning() { echo -e "${YIGHLIGHT}${WARNING} $1${NC}"; }
+log_warning() { echo -e "${YELLOW}${WARNING} $1${NC}"; }
 log_error() { echo -e "${RED}${CROSS} $1${NC}"; }
 log_fix() { echo -e "${YELLOW}${FIX} $1${NC}"; }
 
