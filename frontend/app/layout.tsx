@@ -1,4 +1,4 @@
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import type { ReactNode } from "react"
 import "./globals.css"
 import "../styles/mobile.css"
@@ -13,14 +13,6 @@ export const metadata: Metadata = {
   },
   description:
     "Stage luminous watch parties from sunrise premieres to midnight marathons with WatchParty's day-and-night cinema toolkit.",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-    viewportFit: "cover"
-  },
-  themeColor: "#1f2937",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -33,6 +25,15 @@ export const metadata: Metadata = {
     email: false,
     url: false
   }
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+  themeColor: "#1f2937"
 }
 
 type RootLayoutProps = {
