@@ -79,7 +79,6 @@ export default function InteractivePage({ params }: InteractivePageProps) {
     try {
       const userData = await authApi.getProfile()
       setCurrentUser(userData)
-      }
     } catch (error) {
       console.error("Failed to load user:", error)
     }
