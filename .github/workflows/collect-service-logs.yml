@@ -119,7 +119,7 @@ jobs:
                   echo "Error: No container found for service $service" > "$log_file"
                 fi
               fi
-              
+
               # Verify file was created
               if [ -f "$log_file" ]; then
                 echo "✓ Log file created: $log_file ($(wc -l < "$log_file" 2>/dev/null || echo 0) lines)"
@@ -129,22 +129,22 @@ jobs:
                 echo "Error: Log file creation failed" > "$log_file" || echo "❌ Cannot write to $log_file"
               fi
             done
-            
+
             echo "✅ Log collection loop completed"
             echo "📋 Files in logs directory:"
             ls -lah "$LOGS_DIR" || echo "❌ Cannot list logs directory"
-            
+
             # Check for additional watch-party containers not in compose services
             echo "🔍 Checking for additional watch-party containers..."
             additional_containers=$(docker ps -a --format '{{.Names}}' | grep -i 'watch-party' || echo "")
-            
+
             if [ -n "$additional_containers" ]; then
               echo "📋 Found additional containers: $additional_containers"
               for container in $additional_containers; do
                 # Extract service name from container name (e.g., watch-party-frontend-1 -> frontend)
                 service_name=$(echo "$container" | sed 's/watch-party-//' | sed 's/-[0-9]*$//')
                 log_file="$LOGS_DIR/${service_name}.log"
-                
+
                 # Check if we already collected logs for this service
                 if [ -f "$log_file" ]; then
                   echo "⏩ Skipping $service_name - already collected"

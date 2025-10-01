@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -e
 
 # Watch Party Monorepo Development Setup Script

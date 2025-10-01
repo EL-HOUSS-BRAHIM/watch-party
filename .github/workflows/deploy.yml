@@ -2,7 +2,7 @@ name: Deploy to Lightsail
 
 on:
   push:
-    branches: [ "master", "main" ]
+    branches: ["master", "main"]
 
 jobs:
   deploy:
@@ -28,7 +28,7 @@ jobs:
             set -e
             APP_NAME=watch-party
             APP_DIR=/srv/$APP_NAME
-            
+
             # Clone or update repo
             if [ ! -d "$APP_DIR" ]; then
               git clone https://github.com/EL-HOUSS-BRAHIM/watch-party.git $APP_DIR
@@ -38,7 +38,7 @@ jobs:
               git fetch origin
               git reset --hard origin/master
             fi
-            
+
             # Ensure the deploy user has proper access to the application directory
             echo "🔧 Setting up directory permissions..."
             if [ "$(stat -c '%U' $APP_DIR 2>/dev/null)" != "deploy" ]; then
@@ -52,7 +52,7 @@ jobs:
                 OLD_APP_DIR="$APP_DIR"
                 APP_DIR="$HOME/watch-party"
                 echo "📁 Switching to alternative directory: $APP_DIR"
-                
+
                 # Copy or clone to the new location
                 if [ -d "$OLD_APP_DIR" ]; then
                   echo "📋 Copying application from $OLD_APP_DIR to $APP_DIR"
@@ -77,10 +77,10 @@ jobs:
             else
               echo "✅ Directory ownership is correct"
             fi
-            
+
             # Generate production environment files from templates
             echo "🔧 Setting up production environment files..."
-            
+
             # Generate backend .env for production
             echo "📝 Creating backend/.env for production..."
             cat > backend/.env << 'BACKEND_ENV'
@@ -89,7 +89,7 @@ jobs:
             SECRET_KEY=your-super-secret-key-here-change-in-production
             DJANGO_SETTINGS_MODULE=config.settings.production
             ALLOWED_HOSTS=35.181.116.57,be-watch-party.brahim-elhouss.me,watch-party.brahim-elhouss.me,localhost,127.0.0.1
-            
+
             # DATABASE CONFIGURATION (AWS RDS PostgreSQL)
             DATABASE_URL=postgresql://watchparty_admin:A)B8WK6~OTtE9cgxjF*ZzVRomLdG@all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com:5432/watchparty_prod?sslmode=require
             DB_NAME=watchparty_prod
@@ -98,12 +98,12 @@ jobs:
             DB_HOST=all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com
             DB_PORT=5432
             DB_SSL_MODE=require
-            
+
             # REDIS CONFIGURATION (AWS ElastiCache Valkey - using dynamic AWS Secrets Manager)
             REDIS_HOST=master.watch-party-valkey.2muo9f.euw3.cache.amazonaws.com
             REDIS_PORT=6379
             REDIS_USE_SSL=True
-            
+
             # SECURITY SETTINGS
             SECURE_SSL_REDIRECT=True
             SESSION_COOKIE_SECURE=True
@@ -111,54 +111,54 @@ jobs:
             SECURE_HSTS_SECONDS=31536000
             SECURE_HSTS_INCLUDE_SUBDOMAINS=True
             SECURE_HSTS_PRELOAD=True
-            
+
             # AWS S3 CONFIGURATION
             USE_S3=true
             AWS_STORAGE_BUCKET_NAME=your-s3-bucket-name
             AWS_S3_REGION_NAME=eu-west-3
-            
+
             # CORS CONFIGURATION
             CORS_ALLOWED_ORIGINS=https://watch-party.brahim-elhouss.me,https://be-watch-party.brahim-elhouss.me
-            
+
             # ENVIRONMENT
             ENVIRONMENT=production
-            
+
             # FEATURE FLAGS
             MAINTENANCE_MODE=False
             REGISTRATION_ENABLED=True
             GOOGLE_DRIVE_INTEGRATION_ENABLED=True
             YOUTUBE_INTEGRATION_ENABLED=True
             TWO_FACTOR_AUTH_ENABLED=True
-            
+
             # EMAIL CONFIGURATION
             EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
             DEFAULT_FROM_EMAIL=noreply@watchparty.com
-            
+
             # JWT AUTHENTICATION
             JWT_SECRET_KEY=your-jwt-secret-key-change-this
             JWT_REFRESH_SECRET_KEY=your-jwt-refresh-secret-key-change-this
             JWT_ACCESS_TOKEN_LIFETIME=60
             JWT_REFRESH_TOKEN_LIFETIME=7
-            
+
             # OTHER PRODUCTION SETTINGS
             RATE_LIMIT_LOGIN=5/min
             RATE_LIMIT_API=1000/hour
             RATE_LIMIT_UPLOAD=10/hour
             BACKEND_ENV
-            
+
             # Generate frontend .env.local for production
             echo "📝 Creating frontend/.env.local for production..."
             cat > frontend/.env.local << 'FRONTEND_ENV'
             # Production Frontend Environment Variables
             NEXT_PUBLIC_API_URL=https://be-watch-party.brahim-elhouss.me
             NEXT_PUBLIC_WS_URL=wss://be-watch-party.brahim-elhouss.me/ws
-            
+
             # Feature Flags
             NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE=true
             NEXT_PUBLIC_ENABLE_DISCORD=true
             NEXT_PUBLIC_ENABLE_ANALYTICS=true
             FRONTEND_ENV
-            
+
             echo "✅ Production environment files created"
             echo "🔍 Verifying Django settings module..."
             if grep -q "DJANGO_SETTINGS_MODULE=config.settings.production" backend/.env; then
@@ -166,27 +166,27 @@ jobs:
             else
               echo "⚠️  Warning: DJANGO_SETTINGS_MODULE configuration issue"
             fi
-            
+
             # Configure AWS CLI (required for AWS external services)
             if ! command -v aws &> /dev/null; then
               echo "📦 Installing AWS CLI..."
               curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
               unzip -o -q awscliv2.zip
-              
+
               # Install AWS CLI in user's home directory (no sudo needed)
               echo "Installing AWS CLI for current user (deploy)..."
               ./aws/install --install-dir $HOME/aws-cli --bin-dir $HOME/aws-cli-bin --update
-              
+
               # Add to PATH for this session
               export PATH="$HOME/aws-cli-bin:$PATH"
               echo 'export PATH="$HOME/aws-cli-bin:$PATH"' >> ~/.bashrc
-              
+
               rm -rf aws awscliv2.zip
               echo "✅ AWS CLI installed: $(aws --version)"
             else
               echo "✅ AWS CLI already installed: $(aws --version)"
             fi
-            
+
             # Configure AWS credentials and region for Secrets Manager access
             mkdir -p ~/.aws
             cat > ~/.aws/config << 'AWSCONFIG'
@@ -194,7 +194,7 @@ jobs:
             region = eu-west-3
             output = json
             AWSCONFIG
-            
+
             # Configure AWS credentials if provided via environment variables
             # (these would be set from GitHub Actions secrets)
             if [ -n "${AWS_ACCESS_KEY_ID:-}" ] && [ -n "${AWS_SECRET_ACCESS_KEY:-}" ]; then
@@ -208,7 +208,7 @@ jobs:
             else
               echo "🔧 Using IAM role for AWS access (no credentials file needed)"
             fi
-            
+
             # Test AWS connectivity
             echo "🔍 Testing AWS connectivity..."
             if ! aws sts get-caller-identity > /dev/null 2>&1; then
@@ -218,7 +218,7 @@ jobs:
               exit 1
             fi
             echo "✅ AWS connectivity confirmed"
-            
+
             # Test Secrets Manager access (required for app configuration)
             echo "🔍 Testing Secrets Manager access..."
             if aws secretsmanager get-secret-value --secret-id all-in-one-credentials --region eu-west-3 > /dev/null 2>&1; then
@@ -227,18 +227,18 @@ jobs:
               echo "⚠️  Secrets Manager access test failed - check permissions"
               echo "   The app needs access to secrets like 'all-in-one-credentials'"
             fi
-            
+
             # Configure SSL certificates for HTTPS
             echo "🔐 Setting up SSL certificates..."
-            
+
             # Create SSL directory in nginx/ssl (this will be mounted to nginx container)
             SSL_DIR="$APP_DIR/nginx/ssl"
             echo "📁 Creating SSL directory: $SSL_DIR"
-            
+
             # Ensure the parent directories exist with proper permissions
             mkdir -p "$APP_DIR/nginx"
             mkdir -p "$SSL_DIR"
-            
+
             # Test write permissions
             if ! touch "$SSL_DIR/.test_write" 2>/dev/null; then
               echo "❌ Cannot write to SSL directory: $SSL_DIR"
@@ -246,13 +246,13 @@ jobs:
               echo "   Directory permissions: $(stat -c '%a' $SSL_DIR 2>/dev/null || echo 'unknown')"
               echo "   Current user: $(whoami)"
               echo "   Current APP_DIR: $APP_DIR"
-              
+
               # Try to fix permissions one more time
               if [ "$APP_DIR" != "$HOME/watch-party" ]; then
                 echo "🔄 Attempting to switch to home directory as final fallback..."
                 OLD_APP_DIR="$APP_DIR"
                 APP_DIR="$HOME/watch-party"
-                
+
                 # Copy application to home directory
                 if [ -d "$OLD_APP_DIR" ]; then
                   rm -rf "$APP_DIR" 2>/dev/null || true
@@ -262,12 +262,12 @@ jobs:
                   git clone https://github.com/EL-HOUSS-BRAHIM/watch-party.git "$APP_DIR"
                   cd "$APP_DIR"
                 fi
-                
+
                 # Update SSL_DIR to new location
                 SSL_DIR="$APP_DIR/nginx/ssl"
                 mkdir -p "$SSL_DIR"
                 echo "📁 Updated SSL directory: $SSL_DIR"
-                
+
                 # Test write permissions again
                 if ! touch "$SSL_DIR/.test_write" 2>/dev/null; then
                   echo "❌ Still cannot write to SSL directory, this is a critical error"
@@ -278,17 +278,17 @@ jobs:
                 exit 1
               fi
             fi
-            
+
             # Remove test file
             rm -f "$SSL_DIR/.test_write"
             echo "✅ SSL directory is writable"
-            
+
             # Check if SSL certificates already exist
             if [ -f "$SSL_DIR/origin.pem" ] && [ -f "$SSL_DIR/private.key" ]; then
               echo "✅ SSL certificates already exist"
             else
               echo "📝 Creating SSL certificates from GitHub secrets..."
-              
+
               # Create origin certificate from SSL_ORIGIN secret
               if [ -n "${SSL_ORIGIN:-}" ]; then
                 if echo "$SSL_ORIGIN" > "$SSL_DIR/origin.pem" 2>/dev/null; then
@@ -301,7 +301,7 @@ jobs:
               else
                 echo "⚠️  SSL_ORIGIN secret not provided - HTTPS will not work"
               fi
-              
+
               # Create private key from SSL_PRIVATE secret
               if [ -n "${SSL_PRIVATE:-}" ]; then
                 if echo "$SSL_PRIVATE" > "$SSL_DIR/private.key" 2>/dev/null; then
@@ -314,7 +314,7 @@ jobs:
               else
                 echo "⚠️  SSL_PRIVATE secret not provided - HTTPS will not work"
               fi
-              
+
               # Verify SSL certificate files
               if [ -f "$SSL_DIR/origin.pem" ] && [ -f "$SSL_DIR/private.key" ]; then
                 echo "🔍 Verifying SSL certificate..."
@@ -325,18 +325,18 @@ jobs:
                 fi
               fi
             fi
-            
+
             # Build and deploy with Docker Compose (uses external AWS services)
             echo "🏗️  Building Docker images with optimizations..."
-            
+
             # Enable Docker BuildKit for better caching and parallel builds
             export DOCKER_BUILDKIT=1
             export COMPOSE_DOCKER_CLI_BUILD=1
             export BUILDKIT_PROGRESS=plain
-            
+
             # Clean up old containers first
             docker-compose down --remove-orphans || true
-            
+
             # Build images in parallel with optimized caching
             echo "📦 Building images in parallel..."
             export DOCKER_BUILDKIT=1
@@ -344,17 +344,17 @@ jobs:
             export BUILDKIT_PROGRESS=plain
             # Set environment variable to skip AWS calls during build
             export SKIP_AWS_DURING_BUILD=1
-            
+
             timeout 1200 docker-compose build --parallel --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg SKIP_AWS_DURING_BUILD=1 || {
               echo "⚠️ Parallel build failed, trying sequential build..."
-              
+
               # Build backend first (faster and required by others)
               echo "📦 Building backend image..."
               if ! timeout 600 docker-compose build backend --build-arg SKIP_AWS_DURING_BUILD=1; then
                 echo "❌ Backend build failed"
                 exit 1
               fi
-              
+
               # Build frontend with optimized settings and compatibility timeout
               echo "📦 Building frontend image..."
               if ! timeout 1200 docker-compose build frontend \
@@ -364,44 +364,44 @@ jobs:
                 exit 1
               fi
             }
-            
+
             echo "✅ All images built successfully"
-            
+
             # Ensure firewall allows HTTP and HTTPS traffic
             echo "🔥 Configuring firewall for web traffic..."
             if command -v ufw >/dev/null 2>&1; then
               echo "📋 Current UFW status:"
               sudo ufw status 2>/dev/null || echo "UFW not available or no sudo access"
-              
+
               # Try to allow HTTP and HTTPS (will only work if user has sudo)
               if sudo ufw allow 80/tcp 2>/dev/null; then
                 echo "✅ Allowed HTTP traffic (port 80)"
               else
                 echo "⚠️  Could not configure UFW rule for port 80 (check manually)"
               fi
-              
+
               if sudo ufw allow 443/tcp 2>/dev/null; then
                 echo "✅ Allowed HTTPS traffic (port 443)"
               else
                 echo "⚠️  Could not configure UFW rule for port 443 (check manually)"
               fi
             fi
-            
+
             # Check if AWS security groups or other cloud firewalls might be blocking
             echo "📋 Cloud firewall reminder:"
             echo "   Make sure your AWS Lightsail instance allows:"
             echo "   - HTTP traffic on port 80"
             echo "   - HTTPS traffic on port 443"
             echo "   - This can be configured in the Lightsail networking tab"
-            
+
             # Start services in optimized stages
             echo "🚀 Starting backend service..."
             docker-compose up -d backend
-            
+
             # Improved backend readiness checking with multiple fallbacks
             echo "⏳ Waiting for backend to be ready..."
             backend_ready=false
-            
+
             for i in {1..30}; do
               # Try multiple health check methods
               if docker-compose exec -T backend python manage.py check --deploy > /dev/null 2>&1; then
@@ -433,38 +433,38 @@ jobs:
                 sleep 3
               fi
             done
-            
+
             if [ "$backend_ready" = false ]; then
               echo "❌ Backend readiness check failed"
               exit 1
             fi
-            
+
             echo "🚀 Starting all services..."
-            
+
             # Start services with better orchestration
             echo "📦 Starting backend and related services first..."
             docker-compose up -d backend celery-worker celery-beat
-            
+
             # Wait for backend to be fully ready
             echo "⏳ Waiting for backend to be fully ready..."
             sleep 10
-            
+
             # Start frontend
             echo "📦 Starting frontend..."
             docker-compose up -d frontend
-            
+
             # Wait for frontend to start
             echo "⏳ Waiting for frontend to start..."
             sleep 10
-            
+
             # Finally start nginx (reverse proxy)
             echo "📦 Starting nginx reverse proxy..."
             docker-compose up -d nginx
-            
+
             # Give nginx time to start and configure
             echo "⏳ Waiting for nginx to configure..."
             sleep 15
-            
+
             # Verify all services are running
             echo "📋 Verifying all services are running..."
             if ! docker-compose ps | grep -q "Up"; then
@@ -475,15 +475,15 @@ jobs:
               docker-compose logs --tail=20
               exit 1
             fi
-            
+
             # Optimized health checking with shorter intervals
             echo "⏳ Waiting for services to be ready..."
             sleep 15
-            
+
             # Improved health checking with detailed diagnostics
             echo "🏥 Testing backend health..."
             backend_healthy=false
-            
+
             for i in {1..15}; do
               # Test different health endpoints
               if curl -f -s -m 5 http://localhost:8000/health/ > /dev/null 2>&1; then
@@ -518,12 +518,12 @@ jobs:
                 sleep 30
               fi
             done
-            
+
             if [ "$backend_healthy" = false ]; then
               echo "❌ Backend health check failed"
               exit 1
             fi
-            
+
             # Test frontend health with reduced wait time
             echo "🏥 Testing frontend health..."
             for i in {1..8}; do
@@ -540,7 +540,7 @@ jobs:
                 sleep 10
               fi
             done
-            
+
             # Run initial setup if this is first deployment
             if docker-compose exec -T backend python manage.py showmigrations --plan | grep -q "\[ \]"; then
               echo "🔧 Running initial Django setup..."
@@ -553,14 +553,14 @@ jobs:
               fi
               docker-compose exec -T backend python manage.py collectstatic --noinput
             fi
-            
+
             # Final health check
             echo "🏥 Final health check..."
-            
+
             # Check if all containers are running
             echo "📋 Checking container status..."
             docker-compose ps
-            
+
             # Check if ports are listening
             echo "📋 Checking port availability..."
             if command -v netstat >/dev/null 2>&1; then
@@ -570,10 +570,10 @@ jobs:
               echo "Listening ports:"
               ss -tlnp | grep -E ':80|:443|:3000|:8000' || echo "No relevant ports found"
             fi
-            
+
             # Test local connectivity
             echo "📋 Testing local connectivity..."
-            
+
             # Test nginx (should be on port 80 and 443)
             if curl -f -s -m 10 http://localhost:80/health > /dev/null 2>&1; then
               echo "✅ Nginx HTTP (port 80) is responding"
@@ -582,7 +582,7 @@ jobs:
               echo "📋 Nginx container logs:"
               docker-compose logs --tail=20 nginx
             fi
-            
+
             if curl -f -s -m 10 -k https://localhost:443/health > /dev/null 2>&1; then
               echo "✅ Nginx HTTPS (port 443) is responding"
             else
@@ -590,7 +590,7 @@ jobs:
               echo "📋 Checking SSL certificate files:"
               ls -la "$APP_DIR/nginx/ssl/" || echo "SSL directory not found"
             fi
-            
+
             # Test backend directly
             if curl -f -s -m 10 http://localhost:8000/health/ > /dev/null 2>&1; then
               echo "✅ Backend (port 8000) is responding"
@@ -599,7 +599,7 @@ jobs:
               echo "📋 Backend container logs:"
               docker-compose logs --tail=20 backend
             fi
-            
+
             # Test frontend directly
             if curl -f -s -m 10 http://localhost:3000 > /dev/null 2>&1; then
               echo "✅ Frontend (port 3000) is responding"
@@ -608,15 +608,15 @@ jobs:
               echo "📋 Frontend container logs:"
               docker-compose logs --tail=20 frontend
             fi
-            
+
             # Test external connectivity (what Cloudflare sees)
             echo "📋 Testing external connectivity..."
             PUBLIC_IP=$(curl -s -m 10 http://checkip.amazonaws.com/ 2>/dev/null || echo "unknown")
             echo "Server public IP: $PUBLIC_IP"
-            
+
             # Test direct access to the server (bypassing Cloudflare)
             echo "🌐 Testing direct server access (bypassing Cloudflare)..."
-            
+
             # Test HTTP directly to public IP
             if [ "$PUBLIC_IP" != "unknown" ] && [ -n "$PUBLIC_IP" ]; then
               echo "Testing HTTP access to $PUBLIC_IP..."
@@ -631,7 +631,7 @@ jobs:
                   echo "❌ Direct HTTP access to $PUBLIC_IP completely failed"
                 fi
               fi
-              
+
               echo "Testing HTTPS access to $PUBLIC_IP..."
               if curl -f -s -m 10 -k -H "Host: be-watch-party.brahim-elhouss.me" "https://$PUBLIC_IP/health" > /dev/null 2>&1; then
                 echo "✅ Direct HTTPS access to $PUBLIC_IP works"
@@ -644,30 +644,30 @@ jobs:
                   echo "❌ Direct HTTPS access to $PUBLIC_IP completely failed"
                 fi
               fi
-              
+
               # Test the actual website content
               echo "Testing full website response..."
               echo "HTTP Response from $PUBLIC_IP:"
               curl -s -m 10 -H "Host: watch-party.brahim-elhouss.me" "http://$PUBLIC_IP/" | head -10 || echo "No HTTP response"
-              
+
               echo "HTTPS Response from $PUBLIC_IP:"
               curl -s -m 10 -k -H "Host: watch-party.brahim-elhouss.me" "https://$PUBLIC_IP/" | head -10 || echo "No HTTPS response"
             else
               echo "❌ Could not determine public IP address"
             fi
-            
+
             # Check if firewall is blocking ports
             echo "📋 Checking firewall status..."
             if command -v ufw >/dev/null 2>&1; then
               echo "UFW status:"
               sudo ufw status 2>/dev/null || echo "Cannot check UFW status"
             fi
-            
+
             if command -v iptables >/dev/null 2>&1; then
               echo "Iptables rules for HTTP/HTTPS:"
               sudo iptables -L INPUT -n | grep -E ':80|:443' 2>/dev/null || echo "No specific iptables rules found"
             fi
-            
+
             # Final comprehensive test
             if curl -f http://localhost:8000/health/ > /dev/null 2>&1; then
               echo "🎉 Deployment successful!"
@@ -689,6 +689,6 @@ jobs:
               docker-compose logs --tail=10
               exit 1
             fi
-            
+
             # Cleanup
             docker system prune -f
