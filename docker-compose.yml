@@ -16,6 +16,7 @@ services:
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
+      - ~/.aws:/root/.aws:ro
     ports:
       - "8000:8000"
     networks:
@@ -36,6 +37,7 @@ services:
       - ./backend/.env
     volumes:
       - media_volume:/app/media
+      - ~/.aws:/root/.aws:ro
     depends_on:
       backend:
         condition: service_healthy
@@ -49,6 +51,8 @@ services:
     command: celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     env_file:
       - ./backend/.env
+    volumes:
+      - ~/.aws:/root/.aws:ro
     depends_on:
       backend:
         condition: service_healthy
