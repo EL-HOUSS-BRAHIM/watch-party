@@ -5,7 +5,8 @@ import Link from "next/link"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    username: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -30,18 +31,24 @@ export default function RegisterPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: formData.username,
+          first_name: formData.firstName,
+          last_name: formData.lastName,
           email: formData.email,
           password: formData.password,
+          confirm_password: formData.confirmPassword,
         }),
       })
-      
+
+      const data = await response.json()
+
       if (response.ok) {
-        alert("Account created successfully! Please check your email to verify your account.")
+        alert(
+          data.message ||
+            "Account created successfully! Please check your email to verify your account."
+        )
         window.location.href = "/auth/login"
       } else {
-        const error = await response.json()
-        alert(error.message || "Registration failed. Please try again.")
+        alert(data.error || "Registration failed. Please try again.")
       }
     } catch (error) {
       console.error("Registration error:", error)
@@ -68,18 +75,34 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="username" className="block text-sm font-medium text-white/90">
-              Username
+            <label htmlFor="firstName" className="block text-sm font-medium text-white/90">
+              First Name
             </label>
             <input
-              id="username"
-              name="username"
+              id="firstName"
+              name="firstName"
               type="text"
               required
-              value={formData.username}
+              value={formData.firstName}
               onChange={handleChange}
               className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Choose a username"
+              placeholder="Enter your first name"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="lastName" className="block text-sm font-medium text-white/90">
+              Last Name
+            </label>
+            <input
+              id="lastName"
+              name="lastName"
+              type="text"
+              required
+              value={formData.lastName}
+              onChange={handleChange}
+              className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Enter your last name"
             />
           </div>
 

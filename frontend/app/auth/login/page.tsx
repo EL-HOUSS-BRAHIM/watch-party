@@ -23,12 +23,14 @@ export default function LoginPage() {
         },
         body: JSON.stringify(formData),
       })
-      
+
+      const data = await response.json()
+
       if (response.ok) {
         // Redirect to dashboard
         window.location.href = "/dashboard"
       } else {
-        alert("Login failed. Please check your credentials.")
+        alert(data.error || "Login failed. Please check your credentials.")
       }
     } catch (error) {
       console.error("Login error:", error)
