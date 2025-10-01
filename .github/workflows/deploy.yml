@@ -91,11 +91,11 @@ jobs:
             ALLOWED_HOSTS=35.181.116.57,be-watch-party.brahim-elhouss.me,watch-party.brahim-elhouss.me,localhost,127.0.0.1
             
             # DATABASE CONFIGURATION (AWS RDS PostgreSQL)
-            DATABASE_URL=postgresql://watchparty_admin:your_secure_password@watch-party-postgres.cj6w0queklir.eu-west-3.rds.amazonaws.com:5432/watchparty_prod?sslmode=require
+            DATABASE_URL=postgresql://watchparty_admin:A)B8WK6~OTtE9cgxjF*ZzVRomLdG@all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com:5432/watchparty_prod?sslmode=require
             DB_NAME=watchparty_prod
             DB_USER=watchparty_admin
-            DB_PASSWORD=your_secure_password
-            DB_HOST=watch-party-postgres.cj6w0queklir.eu-west-3.rds.amazonaws.com
+            DB_PASSWORD=A)B8WK6~OTtE9cgxjF*ZzVRomLdG
+            DB_HOST=all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com
             DB_PORT=5432
             DB_SSL_MODE=require
             
