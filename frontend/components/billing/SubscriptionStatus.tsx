@@ -62,9 +62,9 @@ export default function SubscriptionStatus({ subscription, onCancel, onReactivat
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active": return "bg-brand-cyan/20 text-brand-cyan-light"
-      case "canceled": return "bg-red-500/20 text-brand-coral-light"
-      case "past_due": return "bg-yellow-500/20 text-brand-orange-light"
-      case "unpaid": return "bg-red-500/20 text-brand-coral-light"
+      case "canceled": return "bg-brand-coral/20 text-brand-coral-light"
+      case "past_due": return "bg-brand-orange/20 text-brand-orange-light"
+      case "unpaid": return "bg-brand-coral/20 text-brand-coral-light"
       default: return "bg-white/20 text-white/60"
     }
   }
@@ -144,7 +144,7 @@ export default function SubscriptionStatus({ subscription, onCancel, onReactivat
 
       {/* Status-specific messages */}
       {subscription.status === "past_due" && (
-        <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-6">
+        <div className="bg-brand-orange/10 border border-brand-orange/20 rounded-lg p-4 mb-6">
           <div className="flex items-center gap-2 text-brand-orange-light mb-2">
             <span>⚠️</span>
             <span className="font-medium">Payment Past Due</span>
@@ -156,7 +156,7 @@ export default function SubscriptionStatus({ subscription, onCancel, onReactivat
       )}
 
       {subscription.status === "unpaid" && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 mb-6">
+        <div className="bg-brand-coral/10 border border-brand-coral/20 rounded-lg p-4 mb-6">
           <div className="flex items-center gap-2 text-brand-coral-light mb-2">
             <span>💳</span>
             <span className="font-medium">Payment Failed</span>
@@ -168,7 +168,7 @@ export default function SubscriptionStatus({ subscription, onCancel, onReactivat
       )}
 
       {subscription.cancel_at_period_end && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 mb-6">
+        <div className="bg-brand-coral/10 border border-brand-coral/20 rounded-lg p-4 mb-6">
           <div className="flex items-center gap-2 text-brand-coral-light mb-2">
             <span>📅</span>
             <span className="font-medium">Subscription Ending</span>

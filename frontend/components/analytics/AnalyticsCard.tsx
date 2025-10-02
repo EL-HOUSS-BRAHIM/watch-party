@@ -26,9 +26,9 @@ export default function AnalyticsCard({
       case "purple":
         return "text-brand-purple-light bg-brand-purple/20"
       case "yellow":
-        return "text-brand-orange-light bg-yellow-500/20"
+        return "text-brand-orange-light bg-brand-orange/20"
       case "red":
-        return "text-brand-coral-light bg-red-500/20"
+        return "text-brand-coral-light bg-brand-coral/20"
       default:
         return "text-brand-blue-light bg-brand-blue/20"
     }

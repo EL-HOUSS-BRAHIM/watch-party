@@ -148,7 +148,7 @@ export default function SearchFilters({
             <select
               value={filters.type}
               onChange={(e) => updateFilter("type", e.target.value)}
-              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-brand-blue"
             >
               {availableTypes.map(type => (
                 <option key={type.value} value={type.value}>{type.label}</option>
@@ -162,7 +162,7 @@ export default function SearchFilters({
             <select
               value={filters.visibility}
               onChange={(e) => updateFilter("visibility", e.target.value)}
-              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-brand-blue"
             >
               {VISIBILITY_OPTIONS.map(option => (
                 <option key={option.value} value={option.value}>{option.label}</option>
@@ -176,7 +176,7 @@ export default function SearchFilters({
             <select
               value={filters.date_range}
               onChange={(e) => updateFilter("date_range", e.target.value)}
-              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-brand-blue"
             >
               {DATE_RANGE_OPTIONS.map(option => (
                 <option key={option.value} value={option.value}>{option.label}</option>
@@ -190,7 +190,7 @@ export default function SearchFilters({
             <select
               value={filters.sort_by}
               onChange={(e) => updateFilter("sort_by", e.target.value)}
-              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-brand-blue"
             >
               {SORT_OPTIONS.map(option => (
                 <option key={option.value} value={option.value}>{option.label}</option>
@@ -214,7 +214,7 @@ export default function SearchFilters({
                 }
               }}
               placeholder="Add tag..."
-              className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
             />
             <button
               onClick={addTag}
@@ -256,7 +256,7 @@ export default function SearchFilters({
                 <select
                   value={filters.status}
                   onChange={(e) => updateFilter("status", e.target.value)}
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-brand-blue"
                 >
                   {STATUS_OPTIONS.map(option => (
                     <option key={option.value} value={option.value}>{option.label}</option>
@@ -272,7 +272,7 @@ export default function SearchFilters({
                   value={filters.location || ""}
                   onChange={(e) => updateFilter("location", e.target.value)}
                   placeholder="Enter location..."
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
                 />
               </div>
 
@@ -285,7 +285,7 @@ export default function SearchFilters({
                     value={filters.min_members || ""}
                     onChange={(e) => updateFilter("min_members", e.target.value ? parseInt(e.target.value) : undefined)}
                     placeholder="Min"
-                    className="flex-1 px-2 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-2 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
                   />
                   <span className="text-white/60 self-center">-</span>
                   <input
@@ -293,7 +293,7 @@ export default function SearchFilters({
                     value={filters.max_members || ""}
                     onChange={(e) => updateFilter("max_members", e.target.value ? parseInt(e.target.value) : undefined)}
                     placeholder="Max"
-                    className="flex-1 px-2 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="flex-1 px-2 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
                   />
                 </div>
               </div>

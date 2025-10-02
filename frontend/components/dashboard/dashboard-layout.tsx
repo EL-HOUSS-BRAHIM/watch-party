@@ -309,7 +309,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="p-4 border-t border-white/10">
             {!isCollapsed ? (
               <div className="space-y-3">
-                <button className="w-full px-4 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25">
+                <button className="w-full px-4 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-brand-purple/25">
                   <span className="flex items-center justify-center gap-2">
                     <span>✨</span>
                     Create Party
@@ -359,7 +359,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
 
       {/* Floating Action Button */}
-      <button className="hidden md:flex fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-full shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 z-50 items-center justify-center text-xl">
+      <button className="hidden md:flex fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-full shadow-2xl hover:shadow-brand-purple/50 transition-all duration-300 z-50 items-center justify-center text-xl">
         ⚡
       </button>
 

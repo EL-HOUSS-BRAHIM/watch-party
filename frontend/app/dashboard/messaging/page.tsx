@@ -194,7 +194,7 @@ export default function MessagingPage() {
           
           <button
             onClick={() => router.push("/dashboard/messaging/new")}
-            className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25"
+            className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-brand-purple/25"
           >
             <span className="flex items-center justify-center gap-2">
               <span>✉️</span>
@@ -214,7 +214,7 @@ export default function MessagingPage() {
                   placeholder="Search conversations..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-4 py-3 pl-12 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  className="w-full px-4 py-3 pl-12 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50"
                 />
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50">🔍</span>
               </div>
@@ -383,7 +383,7 @@ export default function MessagingPage() {
                       onChange={(e) => setNewMessage(e.target.value)}
                       onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                       placeholder="Type a message..."
-                      className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                      className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50"
                     />
                     
                     <button className="p-3 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors">

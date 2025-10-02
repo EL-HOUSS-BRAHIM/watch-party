@@ -92,7 +92,7 @@ export default function StorePage() {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case "premium": return "bg-yellow-500/20 text-brand-orange-light"
+      case "premium": return "bg-brand-orange/20 text-brand-orange-light"
       case "cosmetic": return "bg-brand-purple/20 text-brand-purple-light"
       case "feature": return "bg-brand-blue/20 text-brand-blue-light"
       case "bundle": return "bg-brand-cyan/20 text-brand-cyan-light"
@@ -407,8 +407,8 @@ export default function StorePage() {
                       purchase.status === "completed"
                         ? "bg-brand-cyan/20 text-brand-cyan-light"
                         : purchase.status === "pending"
-                        ? "bg-yellow-500/20 text-brand-orange-light"
-                        : "bg-red-500/20 text-brand-coral-light"
+                        ? "bg-brand-orange/20 text-brand-orange-light"
+                        : "bg-brand-coral/20 text-brand-coral-light"
                     }`}>
                       {purchase.status.toUpperCase()}
                     </span>

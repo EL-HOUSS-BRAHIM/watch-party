@@ -178,7 +178,7 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
             )}
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+              <div className="bg-brand-coral/10 border border-brand-coral/20 rounded-lg p-3">
                 <p className="text-brand-coral-light text-sm">{error}</p>
               </div>
             )}
@@ -277,7 +277,7 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Type a message..."
                 disabled={sending}
-                className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue disabled:opacity-50"
                 maxLength={500}
               />
               <button

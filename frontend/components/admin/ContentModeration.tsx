@@ -187,7 +187,7 @@ export default function ContentModeration({ onBack }: ContentModerationProps) {
                   type="checkbox"
                   checked={selectedVideos.size === videos.length && videos.length > 0}
                   onChange={selectAllVideos}
-                  className="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-brand-blue"
                 />
                 <span className="text-white/60 text-sm">
                   {selectedVideos.size > 0 ? `${selectedVideos.size} selected` : "Select all"}
@@ -216,7 +216,7 @@ export default function ContentModeration({ onBack }: ContentModerationProps) {
                       type="checkbox"
                       checked={selectedVideos.has(video.id)}
                       onChange={() => toggleVideoSelection(video.id)}
-                      className="mt-1 rounded border-white/20 bg-white/10 text-blue-600 focus:ring-blue-500"
+                      className="mt-1 rounded border-white/20 bg-white/10 text-blue-600 focus:ring-brand-blue"
                     />
 
                     {/* Thumbnail */}
@@ -248,8 +248,8 @@ export default function ContentModeration({ onBack }: ContentModerationProps) {
                           video.moderation_status === "approved"
                             ? "bg-brand-cyan/20 text-brand-cyan-light"
                             : video.moderation_status === "rejected"
-                            ? "bg-red-500/20 text-brand-coral-light"
-                            : "bg-yellow-500/20 text-brand-orange-light"
+                            ? "bg-brand-coral/20 text-brand-coral-light"
+                            : "bg-brand-orange/20 text-brand-orange-light"
                         }`}>
                           {video.moderation_status?.toUpperCase() || "PENDING"}
                         </span>
@@ -258,7 +258,7 @@ export default function ContentModeration({ onBack }: ContentModerationProps) {
                           video.processing_status === "completed"
                             ? "bg-brand-cyan/20 text-brand-cyan-light"
                             : video.processing_status === "failed"
-                            ? "bg-red-500/20 text-brand-coral-light"
+                            ? "bg-brand-coral/20 text-brand-coral-light"
                             : "bg-brand-blue/20 text-brand-blue-light"
                         }`}>
                           {video.processing_status?.toUpperCase() || "PROCESSING"}
@@ -272,7 +272,7 @@ export default function ContentModeration({ onBack }: ContentModerationProps) {
                       )}
 
                       {video.moderation_reason && (
-                        <div className="bg-red-500/10 border border-red-500/20 rounded p-2 mb-3">
+                        <div className="bg-brand-coral/10 border border-brand-coral/20 rounded p-2 mb-3">
                           <p className="text-brand-coral-light text-sm">
                             <strong>Moderation Reason:</strong> {video.moderation_reason}
                           </p>

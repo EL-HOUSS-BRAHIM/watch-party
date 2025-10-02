@@ -31,7 +31,7 @@ export function LiveIndicator({
     <div className={cn(
       "inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium",
       isLive 
-        ? "bg-red-500/20 text-brand-coral-light border border-red-500/30" 
+        ? "bg-brand-coral/20 text-brand-coral-light border border-brand-coral/30" 
         : "bg-gray-500/20 text-gray-400 border border-gray-500/30",
       className
     )}>

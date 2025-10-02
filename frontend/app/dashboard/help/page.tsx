@@ -188,7 +188,7 @@ export default function HelpPage() {
           placeholder="Search for help articles, guides, or FAQs..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all"
+          className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all"
         />
       </div>
 
@@ -338,7 +338,7 @@ export default function HelpPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <IconButton
               gradient="from-brand-blue to-brand-purple"
-              className="shadow-lg hover:shadow-blue-500/25"
+              className="shadow-lg hover:shadow-brand-blue/25"
             >
               <span>💬</span>
               Start Live Chat

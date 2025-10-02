@@ -299,7 +299,7 @@ export default function AdminDashboard() {
 
                 <button
                   onClick={() => setActiveTab("system")}
-                  className="p-4 bg-green-600/20 hover:bg-green-600/30 text-brand-cyan-light rounded-lg transition-colors text-left"
+                  className="p-4 bg-green-600/20 hover:bg-brand-cyan/30 text-brand-cyan-light rounded-lg transition-colors text-left"
                 >
                   <div className="text-2xl mb-2">⚙️</div>
                   <h4 className="font-medium mb-1">System Settings</h4>

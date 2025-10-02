@@ -277,7 +277,7 @@ export default function SyncControls({ partyId, currentUser, isHost = false, onS
                     value={timeInput}
                     onChange={(e) => setTimeInput(e.target.value)}
                     placeholder="MM:SS or HH:MM:SS"
-                    className="px-2 py-1 bg-white/10 border border-white/20 rounded text-white text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="px-2 py-1 bg-white/10 border border-white/20 rounded text-white text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         handleTimeInputSubmit()

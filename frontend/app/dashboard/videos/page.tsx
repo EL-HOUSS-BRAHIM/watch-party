@@ -387,15 +387,15 @@ export default function VideosPage() {
               <IconButton
                 onClick={() => setUploadMode("file")}
                 gradient="from-green-600 to-brand-blue"
-                className="shadow-lg hover:shadow-green-500/25"
+                className="shadow-lg hover:shadow-brand-cyan/25"
               >
                 <span>📤</span>
                 <span className="hidden sm:inline">Upload</span>
               </IconButton>
               <IconButton
                 onClick={() => setUploadMode("gdrive")}
-                gradient="from-yellow-500 to-green-500"
-                className="shadow-lg hover:shadow-yellow-500/25"
+                gradient="from-brand-orange to-brand-cyan"
+                className="shadow-lg hover:shadow-brand-orange/25"
               >
                 <span>☁️</span>
                 <span className="hidden sm:inline">Google Drive</span>
@@ -473,7 +473,7 @@ export default function VideosPage() {
                     className={`inline-block px-8 py-4 rounded-xl font-bold transition-all cursor-pointer ${
                       uploading
                         ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                        : "bg-gradient-to-r from-green-600 to-brand-blue hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-green-500/25 hover:scale-105"
+                        : "bg-gradient-to-r from-green-600 to-brand-blue hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-brand-cyan/25 hover:scale-105"
                     }`}
                   >
                     {uploading ? (
@@ -496,7 +496,7 @@ export default function VideosPage() {
                     placeholder="Video title"
                     required
                     disabled={uploading}
-                    className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 backdrop-blur-sm"
+                    className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 backdrop-blur-sm"
                   />
                   <input
                     type="url"
@@ -504,7 +504,7 @@ export default function VideosPage() {
                     placeholder="Video URL (YouTube, Vimeo, etc.)"
                     required
                     disabled={uploading}
-                    className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 backdrop-blur-sm"
+                    className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 backdrop-blur-sm"
                   />
                 </div>
                 <IconButton
@@ -512,7 +512,7 @@ export default function VideosPage() {
                   disabled={uploading}
                   loading={uploading}
                   gradient="from-brand-blue to-brand-cyan"
-                  className="w-full shadow-lg hover:shadow-blue-500/25"
+                  className="w-full shadow-lg hover:shadow-brand-blue/25"
                 >
                   <span>🌐</span>
                   Add Video from URL
@@ -542,7 +542,7 @@ export default function VideosPage() {
                 </div>
 
                 {gdriveError && (
-                  <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+                  <div className="bg-brand-coral/10 border border-brand-coral/30 rounded-lg p-4">
                     <p className="text-red-300">{gdriveError}</p>
                     <button
                       onClick={() => loadGdriveVideos(true)}
@@ -664,7 +664,7 @@ export default function VideosPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search your video library..."
-                className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all"
+                className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all"
               />
             </div>
             
@@ -696,7 +696,7 @@ export default function VideosPage() {
 
       {/* Error State */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+        <div className="bg-brand-coral/10 border border-brand-coral/20 rounded-lg p-4">
           <p className="text-brand-coral-light">{error}</p>
           <button
             onClick={loadVideos}

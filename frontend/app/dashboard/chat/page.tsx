@@ -135,8 +135,8 @@ export default function ChatPage() {
                         party.status === "live" 
                           ? "bg-brand-cyan/20 text-brand-cyan-light"
                           : party.status === "scheduled"
-                          ? "bg-yellow-500/20 text-brand-orange-light"
-                          : "bg-red-500/20 text-brand-coral-light"
+                          ? "bg-brand-orange/20 text-brand-orange-light"
+                          : "bg-brand-coral/20 text-brand-coral-light"
                       }`}>
                         {party.status}
                       </span>

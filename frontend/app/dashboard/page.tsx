@@ -538,7 +538,7 @@ export default function DashboardPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => router.push(showWelcome ? "/dashboard/integrations" : "/dashboard/search")}
-                className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold rounded-xl transition-all duration-200 shadow-lg hover:shadow-yellow-500/25"
+                className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold rounded-xl transition-all duration-200 shadow-lg hover:shadow-brand-orange/25"
               >
                 {showWelcome ? "Connect Services" : "Explore AI Picks"}
               </button>

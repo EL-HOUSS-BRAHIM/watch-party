@@ -131,7 +131,7 @@ export default function SearchBar({
           }}
           placeholder={placeholder}
           autoFocus={autoFocus}
-          className={`w-full pl-10 pr-4 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all ${getSizeClasses()}`}
+          className={`w-full pl-10 pr-4 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition-all ${getSizeClasses()}`}
         />
 
         {/* Search Icon */}
@@ -183,7 +183,7 @@ export default function SearchBar({
           <select
             value={filters.type}
             onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value }))}
-            className="px-2 py-1 bg-white/10 border border-white/20 rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="px-2 py-1 bg-white/10 border border-white/20 rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-brand-blue"
           >
             <option value="all">All</option>
             <option value="parties">Parties</option>
@@ -194,7 +194,7 @@ export default function SearchBar({
           <select
             value={filters.sort_by}
             onChange={(e) => setFilters(prev => ({ ...prev, sort_by: e.target.value }))}
-            className="px-2 py-1 bg-white/10 border border-white/20 rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+            className="px-2 py-1 bg-white/10 border border-white/20 rounded text-white text-sm focus:outline-none focus:ring-1 focus:ring-brand-blue"
           >
             <option value="relevance">Relevance</option>
             <option value="recent">Recent</option>

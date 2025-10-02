@@ -182,7 +182,7 @@ export default function SearchPage() {
       title: "Active Users",
       description: "Connect with the community", 
       icon: "👥",
-      gradient: "from-green-500 to-blue-500",
+      gradient: "from-brand-cyan to-brand-blue",
       action: () => {
         setFilters(prev => ({ ...prev, type: "users" }))
         setQuery("active")
@@ -382,7 +382,7 @@ export default function SearchPage() {
                   <GradientCard className="hover:border-cyan-400/40 transition-all duration-300">
                   <div className="flex items-start gap-4">
                     {/* Thumbnail/Avatar */}
-                    <div className="w-12 h-12 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-lg flex items-center justify-center overflow-hidden">
+                    <div className="w-12 h-12 bg-gradient-to-br from-brand-cyan/20 to-brand-blue/20 rounded-lg flex items-center justify-center overflow-hidden">
                       {result.thumbnail || result.avatar ? (
                         <img
                           src={result.thumbnail || result.avatar}

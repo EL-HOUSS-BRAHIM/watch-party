@@ -175,7 +175,7 @@ export default function BillingPage() {
               <div className={`px-4 py-2 rounded-lg text-sm font-medium ${
                 currentSubscription.status === "active" 
                   ? "bg-brand-cyan/20 text-brand-cyan-light"
-                  : "bg-red-500/20 text-brand-coral-light"
+                  : "bg-brand-coral/20 text-brand-coral-light"
               }`}>
                 {currentSubscription.status.replace('_', ' ').toUpperCase()}
               </div>
@@ -262,7 +262,7 @@ export default function BillingPage() {
                 key={plan.id}
                 className={`relative bg-white/5 border rounded-lg p-6 ${
                   plan.is_popular 
-                    ? "border-brand-blue ring-2 ring-blue-500/20" 
+                    ? "border-brand-blue ring-2 ring-brand-blue/20" 
                     : "border-white/10"
                 } ${
                   currentSubscription?.plan.id === plan.id
@@ -366,8 +366,8 @@ export default function BillingPage() {
                           invoice.status === "paid"
                             ? "bg-brand-cyan/20 text-brand-cyan-light"
                             : invoice.status === "pending"
-                            ? "bg-yellow-500/20 text-brand-orange-light"
-                            : "bg-red-500/20 text-brand-coral-light"
+                            ? "bg-brand-orange/20 text-brand-orange-light"
+                            : "bg-brand-coral/20 text-brand-coral-light"
                         }`}>
                           {invoice.status.toUpperCase()}
                         </span>

@@ -86,7 +86,7 @@ export default function EventsPage() {
       case "upcoming": return "bg-brand-blue/20 text-brand-blue-light"
       case "live": return "bg-brand-cyan/20 text-brand-cyan-light"
       case "ended": return "bg-gray-500/20 text-gray-400"
-      case "cancelled": return "bg-red-500/20 text-brand-coral-light"
+      case "cancelled": return "bg-brand-coral/20 text-brand-coral-light"
       default: return "bg-gray-500/20 text-gray-400"
     }
   }
@@ -299,7 +299,7 @@ export default function EventsPage() {
                     ) : (
                       <button
                         onClick={() => handleJoinEvent(event.id)}
-                        className="flex-1 px-4 py-2 bg-green-600/20 hover:bg-green-600/30 text-brand-cyan-light rounded-lg font-medium transition-colors"
+                        className="flex-1 px-4 py-2 bg-green-600/20 hover:bg-brand-cyan/30 text-brand-cyan-light rounded-lg font-medium transition-colors"
                       >
                         Join Event
                       </button>

@@ -239,7 +239,7 @@ export default function MobileChat({ partyId, currentUser }: MobileChatProps) {
               }}
               placeholder="Type a message..."
               rows={1}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue"
               style={{
                 minHeight: "48px",
                 maxHeight: "120px"

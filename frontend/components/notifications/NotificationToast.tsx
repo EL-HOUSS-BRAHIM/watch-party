@@ -59,9 +59,9 @@ export default function NotificationToast({
     switch (type) {
       case "party_invite": return "border-brand-blue bg-brand-blue/10"
       case "friend_request": return "border-brand-cyan bg-brand-cyan/10"
-      case "message": return "border-brand-orange bg-yellow-500/10"
+      case "message": return "border-brand-orange bg-brand-orange/10"
       case "video_processed": return "border-brand-purple bg-brand-purple/10"
-      case "party_started": return "border-brand-coral bg-red-500/10"
+      case "party_started": return "border-brand-coral bg-brand-coral/10"
       case "system": return "border-gray-500 bg-gray-500/10"
       default: return "border-white/20 bg-white/10"
     }

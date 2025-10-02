@@ -185,7 +185,7 @@ export default function CreatePartyPage() {
                     value={partyData.title}
                     onChange={(e) => setPartyData(prev => ({ ...prev, title: e.target.value }))}
                     placeholder="Friday Night Movies, Horror Marathon, etc."
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-brand-purple/50"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50"
                   />
                 </div>
 
@@ -197,7 +197,7 @@ export default function CreatePartyPage() {
                     onChange={(e) => setPartyData(prev => ({ ...prev, description: e.target.value }))}
                     placeholder="Tell your friends what to expect..."
                     rows={3}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-brand-purple/50 resize-none"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50 resize-none"
                   />
                 </div>
 
@@ -233,7 +233,7 @@ export default function CreatePartyPage() {
                   <select
                     value={partyData.max_participants}
                     onChange={(e) => setPartyData(prev => ({ ...prev, max_participants: parseInt(e.target.value) }))}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-brand-purple/50"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50"
                   >
                     {[5, 10, 20, 50, 100].map(num => (
                       <option key={num} value={num} className="bg-gray-800">{num} people</option>
@@ -248,7 +248,7 @@ export default function CreatePartyPage() {
                     type="datetime-local"
                     value={partyData.scheduled_start}
                     onChange={(e) => setPartyData(prev => ({ ...prev, scheduled_start: e.target.value }))}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-brand-purple/50"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50"
                   />
                   <p className="text-sm text-white/60 mt-1">Leave empty to start immediately</p>
                 </div>
@@ -336,7 +336,7 @@ export default function CreatePartyPage() {
                     value={videoUrl}
                     onChange={(e) => setVideoUrl(e.target.value)}
                     placeholder="https://example.com/video.mp4"
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50"
                   />
                   <p className="text-sm text-white/60 mt-2">Supports most video streaming URLs</p>
                 </div>
@@ -429,7 +429,7 @@ export default function CreatePartyPage() {
                 <button
                   onClick={handleCreateParty}
                   disabled={loading}
-                  className="w-full py-4 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-purple-500/25 disabled:cursor-not-allowed"
+                  className="w-full py-4 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-brand-purple/25 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">

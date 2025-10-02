@@ -384,7 +384,7 @@ export default function SocialPage() {
                   <>
                     <button
                       onClick={() => handleJoinGroup(group.id)}
-                      className="flex-1 px-4 py-2 bg-green-600/20 hover:bg-green-600/30 text-brand-cyan-light rounded-lg font-medium transition-colors"
+                      className="flex-1 px-4 py-2 bg-green-600/20 hover:bg-brand-cyan/30 text-brand-cyan-light rounded-lg font-medium transition-colors"
                     >
                       Join Group
                     </button>

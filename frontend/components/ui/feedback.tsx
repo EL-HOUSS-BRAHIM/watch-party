@@ -12,8 +12,8 @@ interface ErrorMessageProps {
  */
 export function ErrorMessage({ message, onDismiss, type = 'error' }: ErrorMessageProps) {
   const styles = {
-    error: 'bg-red-500/10 border-red-500/30 text-red-300',
-    warning: 'bg-yellow-500/10 border-yellow-500/30 text-yellow-300',
+    error: 'bg-brand-coral/10 border-brand-coral/30 text-red-300',
+    warning: 'bg-brand-orange/10 border-brand-orange/30 text-brand-orange-light',
     info: 'bg-brand-blue/10 border-brand-blue/30 text-blue-300',
   }
 
@@ -126,7 +126,7 @@ export function FormError({ error }: FormErrorProps) {
   if (!error) return null
 
   return (
-    <div className="rounded-lg bg-red-500/10 border border-red-500/30 p-3">
+    <div className="rounded-lg bg-brand-coral/10 border border-brand-coral/30 p-3">
       <p className="text-sm text-red-300 flex items-center gap-2">
         <span>❌</span>
         {error}

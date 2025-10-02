@@ -144,7 +144,7 @@ export default function FAQPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search FAQ..."
-              className="w-full px-4 py-3 pl-12 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 pl-12 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
             />
             <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50">
               🔍
@@ -285,7 +285,7 @@ export default function FAQPage() {
                                 className={`px-3 py-1 rounded text-sm transition-colors ${
                                   faq.user_found_helpful === true
                                     ? "bg-brand-cyan text-white"
-                                    : "bg-white/10 text-white/60 hover:bg-green-600/20 hover:text-brand-cyan-light"
+                                    : "bg-white/10 text-white/60 hover:bg-brand-cyan/20 hover:text-brand-cyan-light"
                                 }`}
                               >
                                 👍 Yes

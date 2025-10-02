@@ -232,7 +232,7 @@ export default function CommunityPage() {
                     className={`p-2 rounded transition-colors ${
                       selectedPost.user_vote === "up"
                         ? "bg-brand-cyan text-white"
-                        : "bg-white/10 text-white/60 hover:bg-green-600/20"
+                        : "bg-white/10 text-white/60 hover:bg-brand-cyan/20"
                     }`}
                   >
                     ↑
@@ -324,7 +324,7 @@ export default function CommunityPage() {
                       className={`p-1 rounded transition-colors ${
                         reply.user_vote === "up"
                           ? "bg-brand-cyan text-white"
-                          : "bg-white/10 text-white/60 hover:bg-green-600/20"
+                          : "bg-white/10 text-white/60 hover:bg-brand-cyan/20"
                       }`}
                     >
                       ↑
@@ -369,7 +369,7 @@ export default function CommunityPage() {
                       {!reply.is_solution && !selectedPost.is_solved && (
                         <button
                           onClick={() => markAsSolution(reply.id)}
-                          className="px-3 py-1 bg-green-600/20 hover:bg-green-600/30 text-brand-cyan-light text-xs rounded transition-colors"
+                          className="px-3 py-1 bg-green-600/20 hover:bg-brand-cyan/30 text-brand-cyan-light text-xs rounded transition-colors"
                         >
                           Mark as Solution
                         </button>
@@ -394,7 +394,7 @@ export default function CommunityPage() {
                   onChange={(e) => setNewReply(e.target.value)}
                   placeholder="Share your thoughts or provide help..."
                   rows={5}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue resize-none"
                 />
                 <button
                   onClick={createReply}
@@ -462,7 +462,7 @@ export default function CommunityPage() {
                   value={newPost.title}
                   onChange={(e) => setNewPost(prev => ({ ...prev, title: e.target.value }))}
                   placeholder="What's your question or topic?"
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
                 />
               </div>
 
@@ -471,7 +471,7 @@ export default function CommunityPage() {
                 <select
                   value={newPost.category}
                   onChange={(e) => setNewPost(prev => ({ ...prev, category: e.target.value }))}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-brand-blue"
                 >
                   <option value="">Select a category</option>
                   {categories.map(cat => (
@@ -487,7 +487,7 @@ export default function CommunityPage() {
                   onChange={(e) => setNewPost(prev => ({ ...prev, content: e.target.value }))}
                   placeholder="Describe your question or share your thoughts in detail..."
                   rows={6}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue resize-none"
                 />
               </div>
 

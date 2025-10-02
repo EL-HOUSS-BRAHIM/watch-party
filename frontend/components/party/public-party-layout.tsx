@@ -59,7 +59,7 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
     statusTone === "live"
       ? "border-brand-cyan/30 bg-brand-cyan/15 text-green-300"
       : statusTone === "paused"
-        ? "border-yellow-500/30 bg-yellow-500/15 text-yellow-300"
+        ? "border-brand-orange/30 bg-brand-orange/15 text-brand-orange-light"
         : "border-white/20 bg-white/10 text-white/70"
 
   const chatDisabled = !party.allowChat
@@ -145,7 +145,7 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
             </div>
             <button
               onClick={handleLeaveParty}
-              className="rounded-lg bg-red-500/20 border border-red-500/30 px-4 py-2 text-sm font-medium text-red-300 hover:bg-red-500/30 transition-colors"
+              className="rounded-lg bg-brand-coral/20 border border-brand-coral/30 px-4 py-2 text-sm font-medium text-red-300 hover:bg-brand-coral/30 transition-colors"
             >
               Leave Party
             </button>
@@ -188,7 +188,7 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
                         </span>
                       )}
                     </div>
-                    <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/15 px-3 py-1.5 text-xs font-medium text-yellow-200">
+                    <div className="rounded-lg border border-brand-orange/30 bg-brand-orange/15 px-3 py-1.5 text-xs font-medium text-yellow-200">
                       🔒 Host controls playback
                     </div>
                   </div>
@@ -229,7 +229,7 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
           <div className="border-b border-white/10 p-4">
             <h2 className="text-lg font-bold text-white">💬 Chat</h2>
             {chatDisabled ? (
-              <p className="text-xs text-yellow-300">Chat is disabled by the host for guests.</p>
+              <p className="text-xs text-brand-orange-light">Chat is disabled by the host for guests.</p>
             ) : (
               <p className="text-xs text-white/50">Text messages only</p>
             )}
@@ -275,7 +275,7 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
                 maxLength={500}
                 aria-label="Chat message"
                 disabled={chatDisabled}
-                className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white placeholder-white/50 focus:border-brand-purple/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white placeholder-white/50 focus:border-brand-purple/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/20 disabled:cursor-not-allowed disabled:opacity-50"
               />
               <button
                 type="submit"

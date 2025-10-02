@@ -80,7 +80,7 @@ export default function SettingsPage() {
               </div>
               <div className="text-sm text-white/60">{userEmail}</div>
               {isPremium && (
-                <div className="rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1 text-xs font-semibold text-yellow-300">
+                <div className="rounded-full border border-brand-orange/30 bg-brand-orange/10 px-3 py-1 text-xs font-semibold text-brand-orange-light">
                   ⭐ Premium
                 </div>
               )}

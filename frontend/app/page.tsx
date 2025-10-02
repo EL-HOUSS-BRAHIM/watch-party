@@ -186,7 +186,7 @@ export default function HomePage() {
               <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-8 mb-6 border border-white/10">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-white text-2xl font-bold">Friday Night Movies 🍿</h3>
-                  <div className="flex items-center gap-2 bg-red-500/20 px-4 py-2 rounded-full border border-red-500/30">
+                  <div className="flex items-center gap-2 bg-brand-coral/20 px-4 py-2 rounded-full border border-brand-coral/30">
                     <span className="w-2 h-2 bg-brand-coral rounded-full animate-pulse"></span>
                     <span className="text-red-300 text-sm font-bold">LIVE</span>
                   </div>

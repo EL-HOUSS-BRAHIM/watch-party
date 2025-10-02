@@ -49,7 +49,7 @@ export default function JoinPartyPage() {
               required
               value={partyCode}
               onChange={(e) => setPartyCode(e.target.value.toUpperCase())}
-              className="block w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white text-center text-lg font-mono placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-brand-blue"
+              className="block w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white text-center text-lg font-mono placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
               placeholder="ABC123"
               maxLength={10}
             />

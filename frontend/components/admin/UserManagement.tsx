@@ -168,14 +168,14 @@ export default function UserManagement({ onBack }: UserManagementProps) {
               placeholder="Search users by username or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
             />
           </div>
           
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as any)}
-            className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-brand-blue"
           >
             <option value="all">All Users</option>
             <option value="verified">Verified Only</option>
@@ -196,7 +196,7 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                     type="checkbox"
                     checked={selectedUsers.size === users.length && users.length > 0}
                     onChange={selectAllUsers}
-                    className="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-brand-blue"
                   />
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-white/80">User</th>
@@ -228,7 +228,7 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                         type="checkbox"
                         checked={selectedUsers.has(user.id)}
                         onChange={() => toggleUserSelection(user.id)}
-                        className="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-blue-500"
+                        className="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-brand-blue"
                       />
                     </td>
                     <td className="px-6 py-4">
@@ -270,12 +270,12 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                         <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
                           user.is_active
                             ? "bg-brand-cyan/20 text-brand-cyan-light"
-                            : "bg-red-500/20 text-brand-coral-light"
+                            : "bg-brand-coral/20 text-brand-coral-light"
                         }`}>
                           {user.is_active ? "Active" : "Inactive"}
                         </span>
                         {(user as any).is_banned && (
-                          <span className="inline-flex px-2 py-1 bg-red-500/20 text-brand-coral-light rounded-full text-xs font-medium">
+                          <span className="inline-flex px-2 py-1 bg-brand-coral/20 text-brand-coral-light rounded-full text-xs font-medium">
                             Banned
                           </span>
                         )}

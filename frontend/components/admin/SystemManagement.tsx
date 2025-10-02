@@ -76,8 +76,8 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
   const getHealthStatusBg = (status: string) => {
     switch (status?.toLowerCase()) {
       case "healthy": return "bg-brand-cyan/20"
-      case "warning": return "bg-yellow-500/20"
-      case "critical": return "bg-red-500/20"
+      case "warning": return "bg-brand-orange/20"
+      case "critical": return "bg-brand-coral/20"
       default: return "bg-white/10"
     }
   }
@@ -311,7 +311,7 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
               </div>
             </div>
 
-            <div className="mt-8 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+            <div className="mt-8 p-4 bg-brand-coral/10 border border-brand-coral/20 rounded-lg">
               <h4 className="font-medium text-brand-coral-light mb-2">⚠️ Danger Zone</h4>
               <p className="text-brand-coral-light/80 text-sm mb-4">
                 These actions can significantly impact the system. Use with extreme caution.

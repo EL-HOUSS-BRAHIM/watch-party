@@ -188,8 +188,8 @@ export default function IntegrationsPage() {
     switch (status) {
       case "connected": return "bg-brand-cyan/20 text-brand-cyan-light"
       case "disconnected": return "bg-gray-500/20 text-gray-400"
-      case "pending": return "bg-yellow-500/20 text-brand-orange-light"
-      case "error": return "bg-red-500/20 text-brand-coral-light"
+      case "pending": return "bg-brand-orange/20 text-brand-orange-light"
+      case "error": return "bg-brand-coral/20 text-brand-coral-light"
       default: return "bg-gray-500/20 text-gray-400"
     }
   }
@@ -258,7 +258,7 @@ export default function IntegrationsPage() {
         </div>
         <button
           onClick={() => router.push("/dashboard/integrations/custom")}
-          className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25"
+          className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-brand-purple/25"
         >
           <span className="flex items-center gap-2">
             <span>🔧</span>
@@ -275,7 +275,7 @@ export default function IntegrationsPage() {
             placeholder="Search integrations..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 pl-12 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-brand-purple/50"
+            className="w-full px-4 py-3 pl-12 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50"
           />
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50">🔍</span>
         </div>
@@ -415,7 +415,7 @@ export default function IntegrationsPage() {
                         {getCategoryIcon(type.category)} {type.category}
                       </span>
                       {type.is_premium && (
-                        <span className="px-2 py-1 bg-yellow-500/20 text-brand-orange-light rounded-full text-xs font-medium">
+                        <span className="px-2 py-1 bg-brand-orange/20 text-brand-orange-light rounded-full text-xs font-medium">
                           ⭐ Premium
                         </span>
                       )}

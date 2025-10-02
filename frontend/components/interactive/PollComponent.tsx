@@ -191,7 +191,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
                 onChange={(e) => setNewPoll(prev => ({ ...prev, question: e.target.value }))}
                 placeholder="What's your question?"
                 maxLength={200}
-                className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
               />
             </div>
 
@@ -206,7 +206,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
                       onChange={(e) => updateOption(index, e.target.value)}
                       placeholder={`Option ${index + 1}`}
                       maxLength={100}
-                      className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
                     />
                     {newPoll.options.length > 2 && (
                       <button
@@ -235,7 +235,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
               <select
                 value={newPoll.duration}
                 onChange={(e) => setNewPoll(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
-                className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-brand-blue"
               >
                 <option value={60}>1 minute</option>
                 <option value={300}>5 minutes</option>

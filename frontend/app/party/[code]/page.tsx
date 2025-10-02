@@ -250,7 +250,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
 
           <div className="space-y-4">
             {joinError && (
-              <div className="rounded-lg border border-red-500/30 bg-red-500/10 p-3">
+              <div className="rounded-lg border border-brand-coral/30 bg-brand-coral/10 p-3">
                 <p className="flex items-center gap-2 text-sm text-red-300">
                   <span>❌</span>
                   {joinError}
@@ -272,7 +272,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
                 }}
                 placeholder="Guest123"
                 maxLength={20}
-                className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-white/50 focus:border-brand-purple/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-white/50 focus:border-brand-purple/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/20"
               />
             </div>
 

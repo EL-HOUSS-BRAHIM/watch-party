@@ -150,7 +150,7 @@ export default function RoomsPage() {
               <IconButton
                 onClick={() => router.push("/dashboard/parties/create")}
                 gradient="from-brand-purple to-brand-magenta"
-                className="shadow-lg hover:shadow-purple-500/25"
+                className="shadow-lg hover:shadow-brand-purple/25"
               >
                 <span>🎬</span>
                 <span className="hidden sm:inline">Create Party</span>
@@ -191,7 +191,7 @@ export default function RoomsPage() {
 
       {/* Error State */}
       {error && (
-        <GradientCard className="border-red-500/30">
+        <GradientCard className="border-brand-coral/30">
           <div className="flex items-center gap-4">
             <div className="text-3xl">⚠️</div>
             <div className="flex-1">
@@ -211,7 +211,7 @@ export default function RoomsPage() {
       {currentParties.length > 0 ? (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {currentParties.map((party) => (
-            <GradientCard key={party.id} className="hover:border-purple-400/40 transition-all duration-300">
+            <GradientCard key={party.id} className="hover:border-brand-purple-light/40 transition-all duration-300">
               {/* Header */}
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1 min-w-0">
@@ -351,7 +351,7 @@ export default function RoomsPage() {
             {activeTab === "hosting" ? (
               <IconButton
                 onClick={() => router.push("/dashboard/parties/create")}
-                className="shadow-lg hover:shadow-purple-500/25"
+                className="shadow-lg hover:shadow-brand-purple/25"
               >
                 <span>🎬</span>
                 Create Your First Party
@@ -360,7 +360,7 @@ export default function RoomsPage() {
               <>
                 <IconButton
                   onClick={() => router.push("/dashboard/parties")}
-                  className="shadow-lg hover:shadow-blue-500/25"
+                  className="shadow-lg hover:shadow-brand-blue/25"
                 >
                   <span>🔍</span>
                   Browse Parties

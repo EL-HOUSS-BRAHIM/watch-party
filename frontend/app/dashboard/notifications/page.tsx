@@ -270,7 +270,7 @@ export default function NotificationsPage() {
                     type="checkbox"
                     checked={selectedNotifications.size === filteredNotifications.length && filteredNotifications.length > 0}
                     onChange={selectAll}
-                    className="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-brand-blue"
                   />
                   <span className="text-white/80 text-sm">
                     {selectedNotifications.size > 0 
@@ -297,7 +297,7 @@ export default function NotificationsPage() {
                       : "bg-white/5 border-white/10 hover:bg-white/10"
                   } ${
                     selectedNotifications.has(notification.id)
-                      ? "ring-2 ring-blue-500/50"
+                      ? "ring-2 ring-brand-blue/50"
                       : ""
                   }`}
                 >
@@ -306,7 +306,7 @@ export default function NotificationsPage() {
                     type="checkbox"
                     checked={selectedNotifications.has(notification.id)}
                     onChange={() => toggleSelection(notification.id)}
-                    className="mt-1 rounded border-white/20 bg-white/10 text-blue-600 focus:ring-blue-500"
+                    className="mt-1 rounded border-white/20 bg-white/10 text-blue-600 focus:ring-brand-blue"
                   />
 
                   {/* Notification Icon */}

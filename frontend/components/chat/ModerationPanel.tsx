@@ -251,7 +251,7 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <h4 className="font-medium text-white">{user.username}</h4>
-                            <span className="px-2 py-1 bg-red-500/20 text-brand-coral-light rounded text-xs">
+                            <span className="px-2 py-1 bg-brand-coral/20 text-brand-coral-light rounded text-xs">
                               Banned
                             </span>
                           </div>
@@ -291,9 +291,9 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
                           <div className="flex items-center gap-3">
                             <span className={`px-2 py-1 rounded text-xs font-medium ${
                               action.action_type === "ban" 
-                                ? "bg-red-500/20 text-brand-coral-light"
+                                ? "bg-brand-coral/20 text-brand-coral-light"
                                 : action.action_type === "kick"
-                                ? "bg-yellow-500/20 text-brand-orange-light"
+                                ? "bg-brand-orange/20 text-brand-orange-light"
                                 : "bg-brand-cyan/20 text-brand-cyan-light"
                             }`}>
                               {action.action_type.toUpperCase()}

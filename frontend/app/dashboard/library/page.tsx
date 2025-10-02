@@ -133,7 +133,7 @@ export default function LibraryPage() {
               <IconButton
                 onClick={() => router.push("/dashboard/videos/upload")}
                 gradient="from-brand-purple to-brand-blue"
-                className="shadow-lg hover:shadow-purple-500/25"
+                className="shadow-lg hover:shadow-brand-purple/25"
               >
                 <span>📤</span>
                 <span className="hidden sm:inline">Upload Video</span>
@@ -179,7 +179,7 @@ export default function LibraryPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+            className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-purple/50"
           >
             <option value="recent">Recent</option>
             <option value="popular">Popular</option>
@@ -220,7 +220,7 @@ export default function LibraryPage() {
       ) : viewMode === "grid" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredAndSortedMedia.map((item) => (
-            <GradientCard key={item.id} className="hover:border-purple-400/40 transition-all duration-300">
+            <GradientCard key={item.id} className="hover:border-brand-purple-light/40 transition-all duration-300">
               {/* Thumbnail */}
               <div className="relative h-40 bg-gradient-to-br from-purple-900/30 to-blue-900/30 rounded-xl mb-4 overflow-hidden">
                 {item.thumbnail ? (
@@ -303,7 +303,7 @@ export default function LibraryPage() {
         /* List View */
         <div className="space-y-4">
           {filteredAndSortedMedia.map((item) => (
-            <GradientCard key={item.id} className="hover:border-purple-400/40 transition-all duration-300">
+            <GradientCard key={item.id} className="hover:border-brand-purple-light/40 transition-all duration-300">
               <div className="flex items-center gap-6">
                 {/* Thumbnail */}
                 <div className="w-24 h-16 bg-gradient-to-br from-purple-900/30 to-blue-900/30 rounded-lg overflow-hidden flex-shrink-0">

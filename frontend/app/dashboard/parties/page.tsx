@@ -125,7 +125,7 @@ export default function PartiesPage() {
               </div>
               <IconButton
                 onClick={() => router.push("/dashboard/parties/create")}
-                className="shadow-lg hover:shadow-purple-500/25"
+                className="shadow-lg hover:shadow-brand-purple/25"
               >
                 <span>✨</span>
                 <span className="hidden sm:inline">Host Party</span>
@@ -148,7 +148,7 @@ export default function PartiesPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search parties, hosts, or genres..."
-              className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-brand-purple/50 backdrop-blur-sm transition-all"
+              className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50 backdrop-blur-sm transition-all"
             />
             {searchQuery && (
               <button
@@ -188,7 +188,7 @@ export default function PartiesPage() {
 
       {/* Error State */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
+        <div className="bg-brand-coral/10 border border-brand-coral/20 rounded-lg p-4">
           <p className="text-brand-coral-light">{error}</p>
           <button
             onClick={loadParties}
@@ -225,7 +225,7 @@ export default function PartiesPage() {
           {parties.map((party) => (
             <GradientCard
               key={party.id}
-              className="group hover:border-purple-400/40 hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105"
+              className="group hover:border-brand-purple-light/40 hover:shadow-lg hover:shadow-brand-purple/25 transition-all duration-300 hover:scale-105"
               gradient="from-slate-900/40 via-purple-900/20 to-blue-900/40"
             >
               <div className="space-y-4">
@@ -347,7 +347,7 @@ export default function PartiesPage() {
               )}
               <IconButton
                 onClick={() => router.push("/dashboard/parties/create")}
-                className="shadow-lg hover:shadow-purple-500/25"
+                className="shadow-lg hover:shadow-brand-purple/25"
               >
                 <span>✨</span>
                 {searchQuery ? "Create New Party" : "Host Your First Party"}
