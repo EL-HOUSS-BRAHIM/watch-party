@@ -145,6 +145,12 @@ export interface ApiClientError extends Error {
   details?: Record<string, string[]>
 }
 
+export interface StandardResponse<T> {
+  success: boolean
+  message: string
+  data?: T
+}
+
 export type DashboardStatsResponse = {
   stats: Analytics
 }
@@ -455,11 +461,23 @@ export const partiesApi = {
   getRecent: (params?: { page?: number; page_size?: number }) =>
     apiFetch<PaginatedResponse<WatchParty>>('/api/parties/recent/' + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
 
-  getTrending: () =>
-    apiFetch<PaginatedResponse<WatchParty>>('/api/parties/trending/', {}, true),
+  getTrending: async () => {
+    const response = await apiFetch<StandardResponse<{
+      trending_parties?: WatchParty[]
+      generated_at?: string
+    }>>('/api/parties/trending/', {}, true)
 
-  getRecommendations: () =>
-    apiFetch<PaginatedResponse<WatchParty>>('/api/parties/recommendations/', {}, true),
+    return response.data?.trending_parties ?? []
+  },
+
+  getRecommendations: async () => {
+    const response = await apiFetch<StandardResponse<{
+      recommended_parties?: WatchParty[]
+      recommendation_basis?: string
+    }>>('/api/parties/recommendations/', {}, true)
+
+    return response.data?.recommended_parties ?? []
+  },
 
   search: (query: string, filters?: any) =>
     apiFetch<PaginatedResponse<WatchParty>>('/api/parties/search/?' + new URLSearchParams({ q: query, ...filters }).toString(), {}, true),

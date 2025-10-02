@@ -15,6 +15,7 @@ export default function PartiesPage() {
   const [parties, setParties] = useState<WatchParty[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [infoMessage, setInfoMessage] = useState("")
   const [filter, setFilter] = useState<"all" | "public" | "recent" | "trending">("all")
   const [searchQuery, setSearchQuery] = useState("")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -26,25 +27,34 @@ export default function PartiesPage() {
   const loadParties = async () => {
     setLoading(true)
     setError("")
+    setInfoMessage("")
 
     try {
-      let response
-      
+      let partiesList: WatchParty[] = []
+
       if (searchQuery.trim()) {
-        response = await partiesApi.search(searchQuery)
+        const response = await partiesApi.search(searchQuery)
+        partiesList = response.results
       } else if (filter === "public") {
-        response = await partiesApi.getPublic()
+        const response = await partiesApi.getPublic()
+        partiesList = response.results
       } else if (filter === "recent") {
-        response = await partiesApi.getRecent()
+        const response = await partiesApi.getRecent()
+        partiesList = response.results
       } else if (filter === "trending") {
-        response = await partiesApi.getTrending()
+        partiesList = await partiesApi.getTrending()
+
+        if (partiesList.length === 0) {
+          setInfoMessage("No trending parties are live right now. Check back soon or explore recent parties.")
+        }
       } else {
-        response = await partiesApi.list({ page_size: 20 })
+        const response = await partiesApi.list({ page_size: 20 })
+        partiesList = response.results
       }
 
-      const partiesList = Array.isArray(response) ? response : (response.results || [])
       setParties(partiesList)
     } catch (error) {
+      setInfoMessage("")
       setError(error instanceof Error ? error.message : "Failed to load parties")
     } finally {
       setLoading(false)
@@ -199,6 +209,13 @@ export default function PartiesPage() {
               <div className="h-3 bg-white/10 rounded w-2/3"></div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Informational State */}
+      {!loading && infoMessage && (
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+          <p className="text-blue-300">{infoMessage}</p>
         </div>
       )}
 
