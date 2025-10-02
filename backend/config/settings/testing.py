@@ -142,6 +142,7 @@ INSTALLED_APPS = [
     'shared',
     # Only include apps that don't have complex dependencies
     'apps.authentication',
+    'apps.users',
     'apps.integrations',
     'apps.analytics',
     'apps.moderation',
