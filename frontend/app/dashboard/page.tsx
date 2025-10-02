@@ -3,15 +3,40 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { dashboardApi, partiesApi, userApi, analyticsApi, WatchParty, Analytics, User } from "@/lib/api-client"
+import {
+  partiesApi,
+  userApi,
+  analyticsApi,
+  WatchParty,
+  Analytics,
+  User,
+  NormalizedRealTimeAnalytics
+} from "@/lib/api-client"
 
 interface QuickStat {
   label: string
   value: string | number
-  change?: string
   icon: string
-  trend?: "up" | "down" | "neutral"
   color?: string
+}
+
+const initialRealTimeStats: NormalizedRealTimeAnalytics = {
+  timestamp: "",
+  onlineUsers: 0,
+  activeParties: 0,
+  recentActivity: [],
+  engagement: {
+    concurrentViewers: 0,
+    messagesPerMinute: 0,
+    reactionsPerMinute: 0
+  },
+  systemHealth: {
+    systemLoad: 0,
+    cpuUsage: 0,
+    memoryUsage: 0,
+    diskUsage: 0,
+    networkTraffic: 0
+  }
 }
 
 export default function DashboardPage() {
@@ -24,12 +49,7 @@ export default function DashboardPage() {
   const [movieUrl, setMovieUrl] = useState("")
   const [showWelcome, setShowWelcome] = useState(false)
   const [activeView, setActiveView] = useState<"overview" | "quick-actions" | "analytics">("overview")
-  const [liveStats, setLiveStats] = useState({
-    onlineUsers: 0,
-    activeParties: 0,
-    totalWatchTime: 0,
-    newUsers: 0
-  })
+  const [liveStats, setLiveStats] = useState<NormalizedRealTimeAnalytics>(initialRealTimeStats)
 
   useEffect(() => {
     loadDashboardData()
@@ -46,14 +66,7 @@ export default function DashboardPage() {
   const loadRealTimeStats = async () => {
     try {
       const realTimeData = await analyticsApi.getRealTime()
-      if (realTimeData) {
-        setLiveStats({
-          onlineUsers: realTimeData.online_users || 0,
-          activeParties: realTimeData.active_parties || 0,
-          totalWatchTime: realTimeData.total_watch_time || 0,
-          newUsers: realTimeData.new_users || 0
-        })
-      }
+      setLiveStats(realTimeData)
     } catch (error) {
       console.error("Failed to load real-time stats:", error)
       // Keep existing values on error
@@ -132,35 +145,27 @@ export default function DashboardPage() {
 
   const quickStats: QuickStat[] = [
     {
-      label: "Watch Time Today",
-      value: stats?.watch_time_minutes ? `${Math.round(stats.watch_time_minutes / 60)}h` : "0h",
-      change: "+2.5h from yesterday",
-      icon: "⏱️",
-      trend: "up",
+      label: "Online Users",
+      value: liveStats.onlineUsers.toLocaleString(),
+      icon: "👥",
       color: "from-blue-500 to-cyan-500"
     },
     {
       label: "Active Parties",
       value: liveStats.activeParties.toString(),
-      change: `${stats?.recent_parties || 0} started today`,
       icon: "🎬",
-      trend: "up",
       color: "from-purple-500 to-pink-500"
     },
     {
-      label: "Your Library",
-      value: stats?.total_videos || 0,
-      change: `+${stats?.recent_videos || 0} this week`,
-      icon: "📹",
-      trend: "up",
+      label: "System Load",
+      value: `${liveStats.systemHealth.systemLoad.toFixed(1)}%`,
+      icon: "🖥️",
       color: "from-green-500 to-emerald-500"
     },
     {
-      label: "Community",
-      value: liveStats.onlineUsers.toLocaleString(),
-      change: "+156 new members",
-      icon: "👥",
-      trend: "up",
+      label: "Messages / min",
+      value: liveStats.engagement.messagesPerMinute.toLocaleString(),
+      icon: "💬",
       color: "from-orange-500 to-red-500"
     }
   ]
@@ -247,11 +252,6 @@ export default function DashboardPage() {
               <div className="space-y-1">
                 <div className="text-2xl font-bold text-white">{stat.value}</div>
                 <div className="text-sm text-white/60">{stat.label}</div>
-                {stat.change && (
-                  <div className={`text-xs ${stat.trend === "up" ? "text-green-400" : stat.trend === "down" ? "text-red-400" : "text-white/60"}`}>
-                    {stat.change}
-                  </div>
-                )}
               </div>
             </div>
           ))}
@@ -437,7 +437,7 @@ export default function DashboardPage() {
       )}
 
       {activeView === "analytics" && (
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
           {/* Watch Time Chart */}
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
@@ -464,7 +464,7 @@ export default function DashboardPage() {
           <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <span>🌍</span>
-              Global Stats
+              Platform Pulse
             </h3>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
@@ -476,8 +476,45 @@ export default function DashboardPage() {
                 <span className="text-purple-400 font-bold">{liveStats.activeParties}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-white/70">Total Watch Time</span>
-                <span className="text-blue-400 font-bold">{Math.round(liveStats.totalWatchTime / 60)}h</span>
+                <span className="text-white/70">Concurrent Viewers</span>
+                <span className="text-blue-400 font-bold">{liveStats.engagement.concurrentViewers.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Messages / Minute</span>
+                <span className="text-cyan-400 font-bold">{liveStats.engagement.messagesPerMinute.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Reactions / Minute</span>
+                <span className="text-amber-400 font-bold">{liveStats.engagement.reactionsPerMinute.toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+              <span>🛡️</span>
+              System Health
+            </h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">System Load</span>
+                <span className="text-emerald-400 font-bold">{liveStats.systemHealth.systemLoad.toFixed(1)}%</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">CPU Usage</span>
+                <span className="text-emerald-400 font-bold">{liveStats.systemHealth.cpuUsage.toFixed(1)}%</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Memory Usage</span>
+                <span className="text-emerald-400 font-bold">{liveStats.systemHealth.memoryUsage.toFixed(1)}%</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Disk Usage</span>
+                <span className="text-emerald-400 font-bold">{liveStats.systemHealth.diskUsage.toFixed(1)}%</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-white/70">Network Traffic</span>
+                <span className="text-emerald-400 font-bold">{liveStats.systemHealth.networkTraffic.toFixed(1)} MB/s</span>
               </div>
             </div>
           </div>

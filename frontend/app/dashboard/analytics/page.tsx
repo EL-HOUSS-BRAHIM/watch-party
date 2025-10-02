@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { analyticsApi } from "@/lib/api-client"
+import { analyticsApi, NormalizedRealTimeAnalytics } from "@/lib/api-client"
 import AnalyticsCard from "@/components/analytics/AnalyticsCard"
 import LineChart from "@/components/analytics/LineChart"
 import BarChart from "@/components/analytics/BarChart"
@@ -13,7 +13,7 @@ export default function AnalyticsPage() {
   const router = useRouter()
   const [dashboardData, setDashboardData] = useState<any>(null)
   const [personalData, setPersonalData] = useState<any>(null)
-  const [realtimeData, setRealtimeData] = useState<any>(null)
+  const [realtimeData, setRealtimeData] = useState<NormalizedRealTimeAnalytics | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<"overview" | "personal" | "realtime" | "platform">("overview")
 
@@ -67,6 +67,43 @@ export default function AnalyticsPage() {
   const formatPercentage = (num: number) => {
     return `${(num || 0).toFixed(1)}%`
   }
+
+  const mapRealtimeEventType = (
+    eventType: string
+  ): "user_joined" | "party_created" | "video_uploaded" | "message_sent" | "user_left" => {
+    const normalized = eventType.toLowerCase()
+
+    if (normalized.includes("leave") || normalized.includes("logout")) {
+      return "user_left"
+    }
+
+    if (normalized.includes("message") || normalized.includes("chat")) {
+      return "message_sent"
+    }
+
+    if (normalized.includes("video")) {
+      return "video_uploaded"
+    }
+
+    if (normalized.includes("party") || normalized.includes("watch")) {
+      return "party_created"
+    }
+
+    return "user_joined"
+  }
+
+  const realtimeFeed = (realtimeData?.recentActivity ?? []).map((activity, index) => {
+    const eventType = activity.eventType || "activity"
+    const count = activity.count ?? 0
+    const description = `${count.toLocaleString()} ${eventType.replace(/_/g, " ")} events in the last hour`
+
+    return {
+      id: `${eventType}-${index}`,
+      type: mapRealtimeEventType(eventType),
+      description,
+      timestamp: realtimeData?.timestamp || new Date().toISOString(),
+    }
+  })
 
   if (loading) {
     return (
@@ -301,28 +338,28 @@ export default function AnalyticsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <AnalyticsCard
                 title="Online Users"
-                value={realtimeData?.online_users || 0}
+                value={realtimeData?.onlineUsers || 0}
                 icon="🟢"
                 color="green"
               />
-              
+
               <AnalyticsCard
                 title="Active Parties"
-                value={realtimeData?.active_parties || 0}
+                value={realtimeData?.activeParties || 0}
                 icon="🎬"
                 color="blue"
               />
-              
+
               <AnalyticsCard
                 title="Live Messages"
-                value={`${realtimeData?.messages_per_minute || 0}/min`}
+                value={`${realtimeData?.engagement.messagesPerMinute || 0}/min`}
                 icon="💬"
                 color="purple"
               />
-              
+
               <AnalyticsCard
                 title="Server Load"
-                value={`${realtimeData?.server_load || 0}%`}
+                value={`${realtimeData ? realtimeData.systemHealth.systemLoad.toFixed(1) : 0}%`}
                 icon="⚡"
                 color="yellow"
               />
@@ -330,7 +367,7 @@ export default function AnalyticsPage() {
 
             {/* Live Activity Feed */}
             <RealTimeActivityFeed
-              activities={realtimeData?.live_activities || []}
+              activities={realtimeFeed}
               maxItems={15}
             />
           </div>
