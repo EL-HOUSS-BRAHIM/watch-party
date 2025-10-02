@@ -148,25 +148,25 @@ export default function DashboardPage() {
       label: "Online Users",
       value: liveStats.onlineUsers.toLocaleString(),
       icon: "👥",
-      color: "from-blue-500 to-cyan-500"
+      color: "from-brand-blue to-brand-cyan"
     },
     {
       label: "Active Parties",
       value: liveStats.activeParties.toString(),
       icon: "🎬",
-      color: "from-purple-500 to-pink-500"
+      color: "from-brand-purple to-brand-magenta"
     },
     {
       label: "System Load",
       value: `${liveStats.systemHealth.systemLoad.toFixed(1)}%`,
       icon: "🖥️",
-      color: "from-green-500 to-emerald-500"
+      color: "from-brand-cyan to-brand-blue"
     },
     {
       label: "Messages / min",
       value: liveStats.engagement.messagesPerMinute.toLocaleString(),
       icon: "💬",
-      color: "from-orange-500 to-red-500"
+      color: "from-brand-orange to-brand-coral"
     }
   ]
 
@@ -189,7 +189,7 @@ export default function DashboardPage() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <div className="animate-spin w-8 h-8 border-4 border-brand-purple border-t-transparent rounded-full mx-auto mb-4"></div>
           <p className="text-white/60">Loading your dashboard...</p>
         </div>
       </div>
@@ -202,12 +202,12 @@ export default function DashboardPage() {
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-3">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-brand-purple-light to-brand-blue-light bg-clip-text text-transparent">
               {getTimeOfDayGreeting()}, {user?.first_name || user?.username || "Cinephile"}!
             </h1>
             <div className="flex items-center gap-1">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-green-400 text-sm font-medium">Live</span>
+              <div className="w-2 h-2 bg-brand-cyan rounded-full animate-pulse"></div>
+              <span className="text-brand-cyan-light text-sm font-medium">Live</span>
             </div>
           </div>
           <p className="text-white/70 text-lg">
@@ -230,7 +230,7 @@ export default function DashboardPage() {
               onClick={() => setActiveView(key as any)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                 activeView === key
-                  ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg"
+                  ? "bg-gradient-to-r from-brand-purple to-brand-blue text-white shadow-lg"
                   : "text-white/60 hover:text-white hover:bg-white/10"
               }`}
             >
@@ -242,7 +242,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Global Stats Bar */}
-      <div className="bg-gradient-to-r from-black/20 via-purple-900/20 to-black/20 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+      <div className="bg-gradient-to-r from-black/20 via-brand-purple/20 to-black/20 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {quickStats.map((stat, index) => (
             <div key={index} className="text-center">
@@ -264,9 +264,9 @@ export default function DashboardPage() {
           {/* Featured Actions Grid */}
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Create Party - Enhanced */}
-            <div className="lg:col-span-1 bg-gradient-to-br from-purple-900/30 via-purple-800/20 to-blue-900/30 border border-purple-500/20 rounded-2xl p-8 backdrop-blur-sm hover:border-purple-400/40 transition-all duration-300">
+            <div className="lg:col-span-1 bg-gradient-to-br from-brand-purple/30 via-brand-purple/20 to-brand-blue/30 border border-brand-purple/20 rounded-2xl p-8 backdrop-blur-sm hover:border-brand-purple-light/40 transition-all duration-300">
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-blue-600 rounded-2xl flex items-center justify-center text-2xl shadow-lg">
+                <div className="w-16 h-16 bg-gradient-to-br from-brand-purple to-brand-blue rounded-2xl flex items-center justify-center text-2xl shadow-lg">
                   🎬
                 </div>
                 <div>
@@ -281,12 +281,12 @@ export default function DashboardPage() {
                   value={newPartyName}
                   onChange={(e) => setNewPartyName(e.target.value)}
                   placeholder="Give your party an epic name..."
-                  className="w-full px-6 py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 backdrop-blur-sm"
+                  className="w-full px-6 py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50 backdrop-blur-sm"
                 />
                 <button
                   type="submit"
                   disabled={!newPartyName.trim()}
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-purple-500/25"
+                  className="w-full bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-brand-purple/25"
                 >
                   {loading ? (
                     <div className="flex items-center justify-center gap-2">
@@ -304,7 +304,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Recent Activity */}
-            <div className="lg:col-span-2 bg-gradient-to-br from-blue-900/30 via-slate-800/20 to-gray-900/30 border border-blue-500/20 rounded-2xl p-8 backdrop-blur-sm">
+            <div className="lg:col-span-2 bg-gradient-to-br from-brand-blue/30 via-slate-800/20 to-gray-900/30 border border-brand-blue/20 rounded-2xl p-8 backdrop-blur-sm">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-2xl font-bold text-white flex items-center gap-3">
                   <span>📺</span>
@@ -312,7 +312,7 @@ export default function DashboardPage() {
                 </h3>
                 <Link 
                   href="/dashboard/parties" 
-                  className="text-blue-400 hover:text-blue-300 font-medium flex items-center gap-2 hover:bg-white/10 px-3 py-2 rounded-lg transition-all"
+                  className="text-brand-blue-light hover:text-brand-cyan-light font-medium flex items-center gap-2 hover:bg-white/10 px-3 py-2 rounded-lg transition-all"
                 >
                   View All
                   <span>→</span>
@@ -323,7 +323,7 @@ export default function DashboardPage() {
                 {recentParties.length > 0 ? (
                   recentParties.map((party) => (
                     <div key={party.id} className="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-200 group">
-                      <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold">
+                      <div className="w-12 h-12 bg-gradient-to-br from-brand-purple to-brand-magenta rounded-xl flex items-center justify-center text-white font-bold">
                         {party.title.charAt(0)}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -336,9 +336,9 @@ export default function DashboardPage() {
                       </div>
                       <div className="flex items-center gap-2">
                         <span className={`text-xs px-3 py-1 rounded-full font-medium ${
-                          party.status === "live" ? "bg-green-600/20 text-green-400 animate-pulse" :
+                          party.status === "live" ? "bg-brand-cyan/20 text-brand-cyan-light animate-pulse" :
                           party.status === "ended" ? "bg-gray-600/20 text-gray-400" :
-                          "bg-blue-600/20 text-blue-400"
+                          "bg-brand-blue/20 text-brand-blue-light"
                         }`}>
                           {party.status === "live" ? "🔴 Live" : 
                            party.status === "ended" ? "✅ Ended" : 
@@ -346,7 +346,7 @@ export default function DashboardPage() {
                         </span>
                         <button 
                           onClick={() => router.push(`/party/${party.id}`)}
-                          className="opacity-0 group-hover:opacity-100 px-3 py-1 bg-blue-600/20 text-blue-400 rounded-lg text-sm font-medium transition-all hover:bg-blue-600/30"
+                          className="opacity-0 group-hover:opacity-100 px-3 py-1 bg-brand-blue/20 text-brand-blue-light rounded-lg text-sm font-medium transition-all hover:bg-brand-blue/30"
                         >
                           Join
                         </button>
@@ -359,7 +359,7 @@ export default function DashboardPage() {
                     <p className="text-white/60 mb-6">No recent parties</p>
                     <button
                       onClick={() => router.push("/dashboard/parties/create")}
-                      className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200"
+                      className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
                     >
                       Create Your First Party
                     </button>
@@ -379,35 +379,35 @@ export default function DashboardPage() {
               title: "Upload Content",
               description: "Add videos to your library",
               icon: "📱",
-              color: "from-green-500 to-emerald-600",
+              color: "from-brand-cyan to-brand-blue",
               action: () => router.push("/dashboard/videos/upload")
             },
             {
               title: "Join Community",
               description: "Connect with other movie lovers",
               icon: "🌟",
-              color: "from-orange-500 to-red-600",
+              color: "from-brand-orange to-brand-coral",
               action: () => router.push("/dashboard/social")
             },
             {
               title: "Discover Events",
               description: "Find exciting watch events",
               icon: "📅",
-              color: "from-blue-500 to-cyan-600",
+              color: "from-brand-blue to-brand-cyan",
               action: () => router.push("/dashboard/events")
             },
             {
               title: "Browse Library",
               description: "Explore your video collection",
               icon: "📚",
-              color: "from-purple-500 to-pink-600",
+              color: "from-brand-purple to-brand-magenta",
               action: () => router.push("/dashboard/videos")
             },
             {
               title: "Find Friends",
               description: "Connect with other users",
               icon: "👥",
-              color: "from-indigo-500 to-purple-600",
+              color: "from-brand-purple to-brand-blue",
               action: () => router.push("/dashboard/friends")
             },
             {
