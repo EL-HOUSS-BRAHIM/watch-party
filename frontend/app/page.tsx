@@ -8,261 +8,137 @@ import { CallToAction } from "@/components/marketing/call-to-action"
 export default function HomePage() {
   return (
     <>
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-brand-navy-dark via-brand-navy to-brand-navy-dark">
-        {/* Background Effects */}
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-magenta/30 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-brand-blue/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-brand-cyan/20 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-        </div>
+      <section className="relative mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 lg:px-8">
+        <Hero />
+      </section>
 
-        <div className="relative min-h-[92vh] flex flex-col items-center justify-center text-center space-y-10 px-6 py-20">
-          {/* Hero Content */}
-          <div className="space-y-8 max-w-5xl">
-            <div className="inline-flex items-center justify-center gap-2 text-sm font-semibold text-brand-magenta-light bg-brand-magenta/10 px-5 py-2.5 rounded-full border border-brand-magenta/30 backdrop-blur-sm shadow-lg shadow-brand-magenta/10">
-              <span className="animate-pulse text-lg">✨</span>
-              <span>The Future of Social Viewing</span>
-            </div>
-            
-            <h1 className="text-6xl md:text-8xl font-black text-white leading-[1.1] tracking-tight">
-              Watch{" "}
-              <span className="bg-gradient-to-r from-brand-magenta via-brand-orange to-brand-cyan bg-clip-text text-transparent">Together</span>
-              <br />
-              <span className="text-4xl md:text-6xl text-white/90 font-bold">Anywhere, Anytime</span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-white/80 leading-relaxed max-w-3xl mx-auto font-medium">
-              Create magical movie nights with friends across the globe. Perfect sync, live reactions, 
-              and an unforgettable social experience.
-            </p>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-5 w-full max-w-xl">
-            <Link
-              href="/auth/register"
-              className="relative group overflow-hidden bg-gradient-to-r from-brand-magenta to-brand-orange hover:from-brand-magenta-dark hover:to-brand-orange-dark text-white font-bold py-5 px-10 rounded-2xl transition-all duration-300 flex-1 text-center text-lg shadow-2xl shadow-brand-magenta/30 hover:shadow-brand-magenta/50 hover:-translate-y-1"
-            >
-              <span className="relative z-10 flex items-center justify-center gap-2">
-                Start Your Journey <span className="text-2xl">🚀</span>
-              </span>
-            </Link>
-            <Link
-              href="/join"
-              className="relative group border-2 border-brand-cyan/30 hover:border-brand-cyan/50 text-white font-bold py-5 px-10 rounded-2xl transition-all duration-300 flex-1 text-center text-lg backdrop-blur-sm hover:bg-brand-cyan/10 hover:-translate-y-1 shadow-lg"
-            >
-              <span className="flex items-center justify-center gap-2">
-                <span>Join a Party</span>
-                <span className="text-2xl">🎉</span>
-              </span>
-            </Link>
-          </div>
-
-          {/* Quick Demo */}
-          <div className="mt-6">
-            <p className="text-white/60 text-base font-semibold mb-3">Try it instantly:</p>
-            <div className="inline-flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm">
-              <span className="text-sm font-semibold text-white/70">Party Code:</span>
-              <code className="px-4 py-2 bg-brand-purple/20 text-brand-purple-light rounded-xl font-mono text-lg font-bold tracking-wider border border-brand-purple/30">DEMO123</code>
-              <button className="px-5 py-2 bg-brand-cyan/20 text-brand-cyan-light rounded-xl hover:bg-brand-cyan/30 transition-all font-semibold border border-brand-cyan/30 hover:border-brand-cyan/50">
-                Join Demo
-              </button>
-            </div>
-          </div>
+      <section className="bg-gradient-to-b from-white to-brand-neutral/60 px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <MetricStrip />
         </div>
       </section>
 
-      {/* Metrics Strip */}
-      <div className="px-6 py-20">
-        <div className="max-w-7xl mx-auto">
-          <MetricStrip />
-        </div>
-      </div>
-
-      {/* Features Section */}
-      <section className="py-24 px-6 bg-gradient-to-b from-brand-navy-dark to-brand-navy">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-20">
-            <span className="inline-block mb-4 text-sm font-bold uppercase tracking-wider text-brand-magenta-light bg-brand-magenta/10 px-4 py-2 rounded-full border border-brand-magenta/20">
-              Features
-            </span>
-            <h2 className="text-5xl md:text-6xl font-black text-white mb-6 leading-tight">
-              Everything you need for the{" "}
-              <span className="bg-gradient-to-r from-brand-magenta via-brand-orange to-brand-cyan bg-clip-text text-transparent">perfect watch party</span>
-            </h2>
-            <p className="text-xl md:text-2xl text-white/70 max-w-4xl mx-auto leading-relaxed">
-              From instant sync to interactive features, we've built every tool you need to create magical moments with friends.
-            </p>
-          </div>
+      <section className="px-4 py-24 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl">
           <FeatureGrid />
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-24 px-6 bg-gradient-to-b from-brand-navy to-brand-navy-dark">
-        <div className="max-w-6xl mx-auto text-center">
-          <span className="inline-block mb-4 text-sm font-bold uppercase tracking-wider text-brand-cyan-light bg-brand-cyan/10 px-4 py-2 rounded-full border border-brand-cyan/20">
-            How It Works
+      <section className="bg-gradient-to-b from-brand-neutral/60 to-white px-4 py-24 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl text-center text-brand-navy">
+          <span className="inline-block rounded-full border border-brand-cyan/30 bg-brand-cyan/10 px-4 py-2 text-sm font-semibold uppercase tracking-wider text-brand-cyan-dark">
+            How it works
           </span>
-          <h2 className="text-5xl md:text-6xl font-black text-white mb-20">
-            Start watching in{" "}
-            <span className="bg-gradient-to-r from-brand-blue to-brand-cyan bg-clip-text text-transparent">3 simple steps</span>
+          <h2 className="mt-6 text-4xl font-black tracking-tight sm:text-5xl">
+            Start watching together in
+            <span className="bg-gradient-to-r from-brand-magenta via-brand-orange to-brand-cyan bg-clip-text text-transparent"> three simple steps</span>
           </h2>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                step: "01",
-                title: "Create or Join",
-                description: "Start a new party or join friends with a simple code",
-                icon: "🎬",
-                color: "from-brand-magenta to-brand-purple"
-              },
-              {
-                step: "02", 
-                title: "Add Your Content",
-                description: "Upload videos, paste URLs, or connect your cloud storage",
-                icon: "📱",
-                color: "from-brand-blue to-brand-cyan"
-              },
-              {
-                step: "03",
-                title: "Watch Together",
-                description: "Enjoy perfect sync, live chat, and interactive features",
-                icon: "✨",
-                color: "from-brand-orange to-brand-coral"
-              }
-            ].map((item, index) => (
-              <div key={index} className="relative group">
-                <div className="relative z-10 bg-gradient-to-br from-white/10 to-white/5 border-2 border-white/20 rounded-3xl p-10 hover:bg-white/15 hover:border-white/30 transition-all duration-300 shadow-xl hover:shadow-2xl hover:-translate-y-2">
-                  <div className={`w-20 h-20 bg-gradient-to-r ${item.color} rounded-2xl flex items-center justify-center text-3xl mb-8 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                    {item.icon}
-                  </div>
-                  <div className="text-base font-bold text-brand-magenta-light mb-3 tracking-wider">{item.step}</div>
-                  <h3 className="text-2xl font-black text-white mb-4">{item.title}</h3>
-                  <p className="text-white/80 text-lg leading-relaxed">{item.description}</p>
-                </div>
-                
-                {/* Connection line */}
-                {index < 2 && (
-                  <div className="hidden md:block absolute top-1/2 right-0 w-12 h-1 bg-gradient-to-r from-brand-magenta/50 to-transparent transform translate-x-full -translate-y-1/2 z-0"></div>
-                )}
+          <p className="mt-4 text-lg text-brand-navy/70">
+            Launch a room, add your content, and send a link—WatchParty keeps everyone perfectly in sync across every screen.
+          </p>
+        </div>
+        <div className="mx-auto mt-16 grid max-w-6xl gap-6 md:grid-cols-3">
+          {[{
+            step: "Step 1",
+            title: "Create or join",
+            description: "Spin up a new room or enter a party code to jump into the action.",
+            accent: "from-brand-magenta to-brand-purple",
+            icon: "🎬"
+          }, {
+            step: "Step 2",
+            title: "Add your content",
+            description: "Upload a file, paste a link, or connect cloud storage in seconds.",
+            accent: "from-brand-blue to-brand-cyan",
+            icon: "📁"
+          }, {
+            step: "Step 3",
+            title: "Watch together",
+            description: "Chat, react, and host like you're on the same couch—across any device.",
+            accent: "from-brand-orange to-brand-coral",
+            icon: "✨"
+          }].map((item) => (
+            <div key={item.step} className="relative overflow-hidden rounded-3xl border border-brand-purple/15 bg-white/90 p-8 text-brand-navy shadow-[0_24px_90px_rgba(28,28,46,0.12)]">
+              <div className={`mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent} text-3xl text-white shadow-lg`}>
+                {item.icon}
               </div>
-            ))}
-          </div>
+              <p className="text-xs font-semibold uppercase tracking-[0.45em] text-brand-navy/60">{item.step}</p>
+              <h3 className="mt-3 text-2xl font-bold text-brand-navy">{item.title}</h3>
+              <p className="mt-3 text-base text-brand-navy/70">{item.description}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Social Proof */}
-      <section className="py-24 px-6 bg-gradient-to-b from-brand-navy-dark to-brand-navy">
-        <div className="max-w-7xl mx-auto">
+      <section className="px-4 py-24 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl">
           <TestimonialGrid />
         </div>
       </section>
 
-      {/* Interactive Demo Section */}
-      <section className="py-24 px-6 bg-gradient-to-b from-brand-navy to-brand-navy-dark">
-        <div className="max-w-5xl mx-auto text-center">
-          <span className="inline-block mb-4 text-sm font-bold uppercase tracking-wider text-brand-coral-light bg-brand-coral/10 px-4 py-2 rounded-full border border-brand-coral/20">
-            Live Demo
-          </span>
-          <h2 className="text-5xl md:text-6xl font-black text-white mb-12">
-            See the{" "}
-            <span className="bg-gradient-to-r from-brand-magenta to-brand-coral bg-clip-text text-transparent">magic</span>
-            {" "}in action
-          </h2>
-          
-          <div className="relative bg-gradient-to-br from-white/10 to-white/5 border-2 border-white/20 rounded-3xl p-10 overflow-hidden shadow-2xl">
-            {/* Simulated Interface */}
-            <div className="relative z-10">
-              <div className="flex items-center gap-3 mb-8 bg-black/30 px-4 py-3 rounded-xl">
-                <div className="w-3 h-3 bg-brand-coral rounded-full"></div>
-                <div className="w-3 h-3 bg-brand-orange rounded-full"></div>
-                <div className="w-3 h-3 bg-brand-cyan rounded-full"></div>
-                <div className="ml-4 text-white/60 text-sm font-mono">watch-party.app/party/DEMO123</div>
+      <section className="bg-gradient-to-b from-white via-brand-neutral/70 to-white px-4 py-24 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="mx-auto mb-16 max-w-4xl rounded-[40px] border border-brand-blue/20 bg-white p-10 text-brand-navy shadow-[0_40px_120px_rgba(45,156,219,0.14)]">
+            <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+              <div className="space-y-4">
+                <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Peek at the live room</h2>
+                <p className="text-base text-brand-navy/70">
+                  Real-time sync, emoji bursts, polls, and spotlight controls keep the party vibrant. Explore the interface before you host your first screening.
+                </p>
               </div>
-              
-              <div className="bg-black/40 backdrop-blur-sm rounded-2xl p-8 mb-6 border border-white/10">
-                <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-white text-2xl font-bold">Friday Night Movies 🍿</h3>
-                  <div className="flex items-center gap-2 bg-brand-coral/20 px-4 py-2 rounded-full border border-brand-coral/30">
-                    <span className="w-2 h-2 bg-brand-coral rounded-full animate-pulse"></span>
-                    <span className="text-red-300 text-sm font-bold">LIVE</span>
-                  </div>
-                </div>
-                
-                <div className="aspect-video bg-gradient-to-br from-brand-purple/60 to-brand-blue/60 rounded-2xl flex items-center justify-center mb-6 border border-white/10 shadow-2xl">
-                  <div className="text-center">
-                    <div className="text-6xl mb-4 animate-pulse">▶️</div>
-                    <p className="text-white/80 text-lg font-semibold">Video playing in perfect sync</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between text-base">
-                  <div className="flex items-center gap-6">
-                    <span className="text-white/70 font-semibold">👥 4 watching</span>
-                    <span className="text-white/70 font-semibold">💬 12 messages</span>
-                  </div>
-                  <div className="flex gap-3">
-                    {["😂", "❤️", "🔥", "👏"].map((emoji, i) => (
-                      <button key={i} className="text-2xl hover:scale-125 transition-transform bg-white/10 p-2 rounded-lg hover:bg-white/20">
-                        {emoji}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+              <div className="flex gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-magenta/15 text-brand-magenta">🎧</div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-blue/15 text-brand-blue">💬</div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-orange/15 text-brand-orange-dark">⚡</div>
               </div>
-              
-              <p className="text-white/70 text-lg font-semibold">
-                Real-time sync • Live reactions • Voice & video chat • And so much more
-              </p>
             </div>
-            
-            {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-magenta/20 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-cyan/20 rounded-full blur-2xl"></div>
+            <div className="mt-10 grid gap-6 lg:grid-cols-[1.1fr,0.9fr]">
+              <div className="rounded-3xl border border-brand-purple/20 bg-brand-purple/5 p-6">
+                <div className="mb-4 flex items-center justify-between text-sm text-brand-navy/60">
+                  <span className="font-semibold text-brand-purple">Friday Night Movies</span>
+                  <span className="flex items-center gap-2 rounded-full bg-brand-coral/10 px-3 py-1 text-xs font-semibold text-brand-coral">🔴 Live</span>
+                </div>
+                <div className="aspect-video rounded-2xl border border-brand-navy/10 bg-white/60 shadow-inner shadow-brand-navy/10"></div>
+                <div className="mt-4 grid gap-3 text-sm text-brand-navy/70 sm:grid-cols-3">
+                  <div className="rounded-2xl border border-brand-magenta/20 bg-brand-magenta/5 p-4">
+                    <p className="text-xs uppercase tracking-[0.35em] text-brand-magenta-dark">Sync</p>
+                    <p className="mt-1 text-base font-semibold text-brand-navy">±18 ms drift</p>
+                  </div>
+                  <div className="rounded-2xl border border-brand-blue/20 bg-brand-blue/5 p-4">
+                    <p className="text-xs uppercase tracking-[0.35em] text-brand-blue-dark">Reactions</p>
+                    <p className="mt-1 text-base font-semibold text-brand-navy">1.8k cheering</p>
+                  </div>
+                  <div className="rounded-2xl border border-brand-orange/25 bg-brand-orange/5 p-4">
+                    <p className="text-xs uppercase tracking-[0.35em] text-brand-orange-dark">Hosts</p>
+                    <p className="mt-1 text-base font-semibold text-brand-navy">3 co-pilots</p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col justify-between gap-6">
+                <div className="rounded-3xl border border-brand-cyan/20 bg-white/90 p-6 shadow-[0_24px_80px_rgba(59,198,232,0.18)]">
+                  <p className="text-xs uppercase tracking-[0.35em] text-brand-cyan-dark">Party code</p>
+                  <div className="mt-3 inline-flex items-center gap-3 rounded-2xl border border-brand-blue/20 bg-brand-blue/5 px-4 py-3 font-mono text-lg font-semibold text-brand-blue-dark">
+                    DEMO123
+                  </div>
+                  <p className="mt-3 text-sm text-brand-navy/60">Share this link and guests join instantly—no downloads required.</p>
+                  <Link
+                    href="/join"
+                    className="mt-4 inline-flex items-center gap-2 rounded-full border border-brand-blue/30 bg-brand-blue/10 px-5 py-2 text-sm font-semibold text-brand-blue-dark transition-all hover:bg-brand-blue/20"
+                  >
+                    Join the demo →
+                  </Link>
+                </div>
+                <div className="rounded-3xl border border-brand-purple/20 bg-white/90 p-6 shadow-[0_24px_80px_rgba(74,46,160,0.18)]">
+                  <p className="text-xs uppercase tracking-[0.35em] text-brand-purple">Host checklist</p>
+                  <ul className="mt-4 space-y-3 text-sm text-brand-navy/70">
+                    <li>• Schedule lobby lighting and welcome soundtrack.</li>
+                    <li>• Enable spoiler-safe chat for first-time viewers.</li>
+                    <li>• Tap “Encore Mode” for bonus scenes after credits.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <div className="px-6 py-20">
-        <div className="max-w-7xl mx-auto">
           <CallToAction />
-        </div>
-      </div>
-
-      {/* Footer CTA */}
-      <section className="py-20 px-6 bg-gradient-to-b from-brand-navy-dark to-brand-navy">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="relative bg-gradient-to-br from-brand-magenta/20 via-brand-blue/20 to-brand-cyan/20 border-2 border-brand-magenta/30 rounded-3xl p-12 shadow-2xl overflow-hidden">
-            <div className="relative z-10">
-              <h3 className="text-4xl md:text-5xl font-black text-white mb-6">
-                Ready to revolutionize your movie nights?
-              </h3>
-              <p className="text-xl text-white/80 mb-10 font-medium">
-                Join thousands of friends already creating magical moments together.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/auth/register"
-                  className="px-10 py-4 bg-gradient-to-r from-brand-magenta to-brand-orange hover:from-brand-magenta-dark hover:to-brand-orange-dark text-white rounded-2xl font-bold text-lg transition-all duration-200 shadow-xl hover:shadow-2xl hover:-translate-y-1"
-                >
-                  Get Started Free ✨
-                </Link>
-                <Link
-                  href="/pricing"
-                  className="px-10 py-4 text-white border-2 border-brand-cyan/30 rounded-2xl font-bold text-lg hover:bg-brand-cyan/10 transition-all duration-200 hover:-translate-y-1 backdrop-blur-sm"
-                >
-                  View Pricing
-                </Link>
-              </div>
-            </div>
-            {/* Background decoration */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-brand-magenta/20 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-brand-cyan/20 rounded-full blur-2xl"></div>
-          </div>
         </div>
       </section>
     </>

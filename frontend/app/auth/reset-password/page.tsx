@@ -1,185 +1,118 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
+import { useState } from "react"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import { authApi } from "@/lib/api-client"
+import { FormError } from "@/components/ui/feedback"
 
 export default function ResetPasswordPage() {
-  const [formData, setFormData] = useState({
-    password: "",
-    confirmPassword: "",
-  })
-  const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [error, setError] = useState("")
-  
   const searchParams = useSearchParams()
-  const token = searchParams.get("token")
+  const token = searchParams.get("token") || ""
 
-  useEffect(() => {
-    if (!token) {
-      setError("Invalid or missing reset token")
-    }
-  }, [token])
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    if (!token) {
-      setError("Invalid or missing reset token")
-      return
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords don't match")
-      return
-    }
-
-    if (formData.password.length < 8) {
-      setError("Password must be at least 8 characters")
-      return
-    }
-
     setLoading(true)
-    setError("")
+    setError(null)
+    setSuccess(null)
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.")
+      setLoading(false)
+      return
+    }
 
     try {
-      await authApi.resetPassword({
-        token,
-        password: formData.password,
-      })
-      setSuccess(true)
+      const response = await authApi.resetPassword({ token, password })
+      if (response.success) {
+        setSuccess("Password updated! You can now sign in with your new credentials.")
+      } else {
+        setError(response.message || "We couldn’t update your password. Please try again.")
+      }
     } catch (error) {
-      setError(error instanceof Error ? error.message : "Failed to reset password")
+      console.error("Reset password error:", error)
+      setError(error instanceof Error ? error.message : "Something went wrong. Please try again.")
     } finally {
       setLoading(false)
     }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }))
-  }
-
-  if (success) {
-    return (
-      <div className="min-h-[80vh] flex items-center justify-center">
-        <div className="w-full max-w-md space-y-8 text-center">
-          <div>
-            <div className="text-6xl mb-4">✅</div>
-            <h1 className="text-3xl font-bold text-white">Password Reset</h1>
-            <p className="mt-4 text-white/70">
-              Your password has been successfully reset.
-            </p>
-          </div>
-          
-          <Link 
-            href="/auth/login"
-            className="inline-block bg-brand-blue hover:bg-brand-blue-dark text-white px-6 py-3 rounded-lg font-medium transition-colors"
-          >
-            Sign In
-          </Link>
-        </div>
-      </div>
-    )
-  }
-
-  if (!token || error.includes("Invalid or missing")) {
-    return (
-      <div className="min-h-[80vh] flex items-center justify-center">
-        <div className="w-full max-w-md space-y-8 text-center">
-          <div>
-            <h1 className="text-3xl font-bold text-white">Invalid Link</h1>
-            <p className="mt-4 text-white/70">
-              This password reset link is invalid or has expired.
-            </p>
-          </div>
-          
-          <div className="space-y-4">
-            <Link 
-              href="/auth/forgot-password"
-              className="inline-block bg-brand-blue hover:bg-brand-blue-dark text-white px-6 py-3 rounded-lg font-medium transition-colors"
-            >
-              Request New Link
-            </Link>
-            
-            <div>
-              <Link href="/auth/login" className="text-brand-blue-light hover:text-brand-blue-light text-sm">
-                Back to Login
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div className="min-h-[80vh] flex items-center justify-center">
-      <div className="w-full max-w-md space-y-8">
+    <div className="flex min-h-[70vh] items-center justify-center px-4 py-16">
+      <div className="w-full max-w-xl rounded-3xl border border-brand-purple/20 bg-white/95 p-8 text-brand-navy shadow-[0_32px_90px_rgba(28,28,46,0.14)] sm:p-10">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-white">Set New Password</h1>
-          <p className="mt-2 text-white/70">
-            Enter your new password below.
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/30 bg-brand-magenta/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-brand-magenta-dark">
+            Secure reset
+          </span>
+          <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Set a new password</h1>
+          <p className="mt-3 text-base text-brand-navy/70">
+            Choose a strong password you haven&apos;t used before to keep your watch parties safe.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <div className="bg-brand-coral/10 border border-brand-coral/20 rounded-lg p-4">
-              <p className="text-brand-coral-light text-sm">{error}</p>
-            </div>
-          )}
+        {error && (
+          <div className="mt-6">
+            <FormError error={error} />
+          </div>
+        )}
 
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-white/90">
-              New Password
+        {success && (
+          <div className="mt-6 rounded-2xl border border-brand-cyan/30 bg-brand-cyan/10 px-4 py-3 text-sm font-semibold text-brand-cyan-dark">
+            {success}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="mt-10 space-y-5">
+          <div className="space-y-2">
+            <label htmlFor="password" className="block text-sm font-semibold uppercase tracking-[0.25em] text-brand-navy/60">
+              New password
             </label>
             <input
               id="password"
               name="password"
               type="password"
               required
-              value={formData.password}
-              onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
-              placeholder="Enter new password"
-              minLength={8}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full rounded-2xl border border-brand-blue/25 bg-brand-blue/5 px-5 py-3 text-base text-brand-navy focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
+              placeholder="Create a secure password"
             />
           </div>
 
-          <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-white/90">
-              Confirm New Password
+          <div className="space-y-2">
+            <label htmlFor="confirmPassword" className="block text-sm font-semibold uppercase tracking-[0.25em] text-brand-navy/60">
+              Confirm password
             </label>
             <input
               id="confirmPassword"
               name="confirmPassword"
               type="password"
               required
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
-              placeholder="Confirm new password"
-              minLength={8}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full rounded-2xl border border-brand-blue/25 bg-brand-blue/5 px-5 py-3 text-base text-brand-navy focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
+              placeholder="Repeat your password"
             />
           </div>
 
           <button
             type="submit"
-            disabled={loading || !formData.password || !formData.confirmPassword}
-            className="w-full bg-brand-blue hover:bg-brand-blue-dark disabled:bg-blue-600/50 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+            disabled={loading}
+            className="w-full rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange px-6 py-4 text-lg font-semibold text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5 hover:from-brand-magenta-dark hover:to-brand-orange-dark disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? "Resetting..." : "Reset Password"}
+            {loading ? "Saving..." : "Save new password"}
           </button>
         </form>
 
-        <div className="text-center">
-          <Link href="/auth/login" className="text-brand-blue-light hover:text-brand-blue-light text-sm">
-            Back to Login
+        <div className="mt-8 text-center text-sm text-brand-navy/70">
+          <Link href="/auth/login" className="font-semibold text-brand-blue hover:text-brand-blue-dark">
+            Return to sign in
           </Link>
         </div>
       </div>

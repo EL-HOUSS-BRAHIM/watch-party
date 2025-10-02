@@ -34,7 +34,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#1f2937"
+  themeColor: "#F5F1EB"
 }
 
 type RootLayoutProps = {
@@ -46,13 +46,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
-        <meta name="theme-color" content="#1f2937" />
+        <meta name="theme-color" content="#F5F1EB" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Watch Party" />
         <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no" />
       </head>
-      <body className="bg-[var(--color-midnight-950)] font-sans text-[color:var(--color-text-primary)] mobile-optimized">
+      <body className="bg-brand-neutral font-sans text-brand-navy mobile-optimized">
         <Providers>
           <ConditionalLayout>
             {children}
