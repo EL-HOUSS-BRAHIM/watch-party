@@ -382,7 +382,12 @@ class StandardResponse:
     """
     
     @staticmethod
-    def success(data=None, message="Success", status_code=status.HTTP_200_OK):
+    def success(
+        data=None,
+        message="Success",
+        status_code=status.HTTP_200_OK,
+        meta=None,
+    ):
         """
         Standard success response format
         
@@ -402,6 +407,9 @@ class StandardResponse:
         if data is not None:
             response_data["data"] = data
             
+        if meta is not None:
+            response_data["meta"] = meta
+
         return Response(response_data, status=status_code)
     
     @staticmethod

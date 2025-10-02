@@ -10,17 +10,18 @@ Discovery endpoints continue to return a `StandardResponse` envelope:
 {
   "success": true,
   "message": "Trending parties retrieved successfully",
-  "data": {
-    "trending_parties": [/* WatchParty */],
-    "generated_at": "2024-03-15T12:30:00Z"
+  "data": [/* WatchParty */],
+  "meta": {
+    "generated_at": "2024-03-15T12:30:00Z",
+    "results": 5
   }
 }
 ```
 
 Key guidelines:
 
-- The payload MUST live inside the `data` key of the envelope.
-- Party collections should use a descriptive key (e.g. `trending_parties`, `recommended_parties`) and MAY include metadata (timestamps, scoring method, etc.).
+- The curated collection itself lives in the `data` key of the envelope as a plain array of `WatchParty` objects.
+- Use the optional `meta` object for supplemental information (timestamps, scoring method, result counts, etc.).
 - Avoid mixing paginated and non-paginated schemas—discovery surfaces return curated arrays, not `results` collections.
 
 ## Frontend Client Expectations
@@ -37,7 +38,7 @@ Consumers can rely on:
 - `partiesApi.getRecommendations()` resolving to a `WatchParty[]`.
 - Any future discovery helper following the same pattern: the client unwraps the `StandardResponse` and exposes the array directly.
 
-If additional metadata is required, extend the helper to return an object such as `{ parties, meta }` but maintain the StandardResponse envelope at the transport layer.
+If additional metadata is required, extend the helper to return an object such as `{ parties, meta }`, reading the `meta` property supplied by the backend while maintaining the `StandardResponse` envelope at the transport layer.
 
 ## UI Handling
 

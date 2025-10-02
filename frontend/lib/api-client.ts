@@ -149,6 +149,7 @@ export interface StandardResponse<T> {
   success: boolean
   message: string
   data?: T
+  meta?: Record<string, unknown>
 }
 
 export type DashboardStatsResponse = {
@@ -462,21 +463,35 @@ export const partiesApi = {
     apiFetch<PaginatedResponse<WatchParty>>('/api/parties/recent/' + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
 
   getTrending: async () => {
-    const response = await apiFetch<StandardResponse<{
+    const response = await apiFetch<StandardResponse<WatchParty[] | {
       trending_parties?: WatchParty[]
-      generated_at?: string
     }>>('/api/parties/trending/', {}, true)
 
-    return response.data?.trending_parties ?? []
+    if (Array.isArray(response.data)) {
+      return response.data
+    }
+
+    if (response.data && Array.isArray(response.data.trending_parties)) {
+      return response.data.trending_parties
+    }
+
+    return []
   },
 
   getRecommendations: async () => {
-    const response = await apiFetch<StandardResponse<{
+    const response = await apiFetch<StandardResponse<WatchParty[] | {
       recommended_parties?: WatchParty[]
-      recommendation_basis?: string
     }>>('/api/parties/recommendations/', {}, true)
 
-    return response.data?.recommended_parties ?? []
+    if (Array.isArray(response.data)) {
+      return response.data
+    }
+
+    if (response.data && Array.isArray(response.data.recommended_parties)) {
+      return response.data.recommended_parties
+    }
+
+    return []
   },
 
   search: (query: string, filters?: any) =>
