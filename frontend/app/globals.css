@@ -4,31 +4,57 @@
 
 :root {
   color-scheme: dark;
-  --color-midnight-950: #050118;
-  --color-midnight-900: #0a0724;
-  --color-midnight-700: #141039;
-  --color-twilight-500: #2a1f54;
-  --color-twilight-400: #3a2b6a;
-  --color-horizon-200: #f4edff;
-  --color-horizon-150: #fdf9ff;
-  --color-sunrise-amber: rgba(255, 204, 150, 0.75);
-  --color-sunrise-rose: rgba(255, 178, 178, 0.75);
-  --color-accent-600: color-mix(in oklab, oklch(42% .18 15) 110%, black 12%);
-  --color-accent-500: oklch(42% .18 15);
-  --color-accent-400: color-mix(in oklab, oklch(42% .18 15) 65%, white 35%);
+  
+  /* NEW LOGO-INSPIRED COLOR PALETTE */
+  /* Primary Accent Colors */
+  --color-magenta: #E9408A;
+  --color-magenta-dark: #d12975;
+  --color-magenta-light: #f56ba8;
+  
+  --color-purple: #4A2EA0;
+  --color-purple-dark: #391f7d;
+  --color-purple-light: #6341c4;
+  
+  --color-blue: #2D9CDB;
+  --color-blue-dark: #1d7fb8;
+  --color-blue-light: #4db1e8;
+  
+  --color-cyan: #3BC6E8;
+  --color-cyan-dark: #28a8c9;
+  --color-cyan-light: #5fd4f0;
+  
+  --color-orange: #F39C12;
+  --color-orange-dark: #d4850a;
+  --color-orange-light: #f7b345;
+  
+  --color-coral: #FF5E57;
+  --color-coral-dark: #e64540;
+  --color-coral-light: #ff7f79;
+  
+  /* Neutral & Text Colors */
+  --color-neutral-bg: #F5F1EB;
+  --color-neutral-light: #faf8f5;
+  --color-neutral-dark: #e8e2d8;
+  
+  --color-navy: #1C1C2E;
+  --color-navy-light: #2d2d45;
+  --color-navy-dark: #0f0f1a;
+  
+  /* Legacy compatibility - mapped to new colors */
   --color-text-primary: #f9f8ff;
   --color-text-muted: rgba(241, 238, 255, 0.72);
   --color-text-soft: rgba(241, 238, 255, 0.55);
-  --shadow-ambient: 0 60px 160px rgba(7, 5, 28, 0.65);
-  --shadow-elevated: 0 34px 120px rgba(9, 6, 36, 0.6);
+  --shadow-ambient: 0 60px 160px rgba(28, 28, 46, 0.65);
+  --shadow-elevated: 0 34px 120px rgba(28, 28, 46, 0.6);
   font-feature-settings: "ss01", "cv05";
   
-  /* New Design System Variables */
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  --gradient-warning: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-  --gradient-danger: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+  /* New Design System Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-purple) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--color-blue) 0%, var(--color-cyan) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--color-orange) 0%, var(--color-coral) 100%);
+  --gradient-success: linear-gradient(135deg, var(--color-cyan) 0%, var(--color-blue) 100%);
+  --gradient-warning: linear-gradient(135deg, var(--color-orange) 0%, #ffd700 100%);
+  --gradient-danger: linear-gradient(135deg, var(--color-coral) 0%, #ff3838 100%);
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-hover: rgba(255, 255, 255, 0.1);
@@ -37,7 +63,7 @@
 body {
   position: relative;
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f0f23 0%, #1a0d2e 25%, #2d1b3d 50%, #1a0d2e 75%, #0f0f23 100%);
+  background: linear-gradient(135deg, var(--color-navy-dark) 0%, var(--color-navy) 25%, var(--color-purple) 50%, var(--color-navy) 75%, var(--color-navy-dark) 100%);
   background-attachment: fixed;
   color: var(--color-text-primary);
   overflow-x: hidden;
@@ -55,12 +81,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, var(--color-magenta), var(--color-purple));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #764ba2, #667eea);
+  background: linear-gradient(135deg, var(--color-purple), var(--color-magenta));
 }
 
 ::selection {
@@ -130,7 +156,7 @@ a:hover {
 
 /* Gradient Text */
 .gradient-text {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-magenta) 0%, var(--color-cyan) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -138,14 +164,14 @@ a:hover {
 
 /* Enhanced Buttons */
 .btn-gradient {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--gradient-primary);
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(233, 64, 138, 0.4);
 }
 
 .btn-gradient:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8px 25px rgba(233, 64, 138, 0.6);
 }
 
 /* Loading States */

@@ -21,6 +21,49 @@ const config: Config = {
         sans: ["Inter", "system-ui", "sans-serif"],
       },
       colors: {
+        // New Logo-Inspired Brand Colors
+        brand: {
+          magenta: {
+            DEFAULT: "#E9408A",
+            dark: "#d12975",
+            light: "#f56ba8",
+          },
+          purple: {
+            DEFAULT: "#4A2EA0",
+            dark: "#391f7d",
+            light: "#6341c4",
+          },
+          blue: {
+            DEFAULT: "#2D9CDB",
+            dark: "#1d7fb8",
+            light: "#4db1e8",
+          },
+          cyan: {
+            DEFAULT: "#3BC6E8",
+            dark: "#28a8c9",
+            light: "#5fd4f0",
+          },
+          orange: {
+            DEFAULT: "#F39C12",
+            dark: "#d4850a",
+            light: "#f7b345",
+          },
+          coral: {
+            DEFAULT: "#FF5E57",
+            dark: "#e64540",
+            light: "#ff7f79",
+          },
+          neutral: {
+            DEFAULT: "#F5F1EB",
+            light: "#faf8f5",
+            dark: "#e8e2d8",
+          },
+          navy: {
+            DEFAULT: "#1C1C2E",
+            light: "#2d2d45",
+            dark: "#0f0f1a",
+          },
+        },
         glass: {
           light: "rgba(255, 255, 255, 0.05)",
           medium: "rgba(255, 255, 255, 0.1)",

@@ -4,9 +4,9 @@ const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:8000"
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { code: string } }
+  { params }: { params: Promise<{ code: string }> }
 ) {
-  const roomCode = params.code
+  const { code: roomCode } = await params
 
   try {
     const response = await fetch(

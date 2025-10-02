@@ -16,9 +16,9 @@ export function FeatureGrid() {
         </p>
       </div>
       <div className="grid gap-8 lg:grid-cols-[1.2fr,1fr]">
-        <Card className="relative overflow-hidden border-white/12 bg-[rgba(14,8,40,0.75)]">
+        <Card className="relative overflow-hidden border-brand-magenta/12 bg-brand-navy/75">
           <div className="absolute inset-0 opacity-70 [mask-image:linear-gradient(to_bottom,black,transparent)]">
-            <div className="h-full w-full bg-[conic-gradient(from_160deg_at_60%_0%,rgba(255,214,170,0.3),rgba(64,40,120,0.45),rgba(255,255,255,0.12))]" />
+            <div className="h-full w-full bg-[conic-gradient(from_160deg_at_60%_0%,rgba(243,156,18,0.3),rgba(74,46,160,0.45),rgba(255,255,255,0.12))]" />
           </div>
           <CardHeader>
             <CardTitle className="text-2xl">One schedule, two moods</CardTitle>
@@ -55,7 +55,7 @@ export function FeatureGrid() {
         </Card>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
           {features.map((feature) => (
-            <Card key={feature.title} className="border-white/12 bg-[rgba(12,7,36,0.78)]">
+            <Card key={feature.title} className="border-brand-purple/12 bg-brand-navy-light/78">
               <CardHeader>
                 <CardTitle className="flex items-start justify-between gap-3 text-xl text-white">
                   <span>{feature.title}</span>
