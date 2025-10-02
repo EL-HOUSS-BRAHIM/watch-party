@@ -75,9 +75,25 @@
 - **Placeholder Content**: Preferences cards marked as "Coming Soon" features
 - Uses LoadingState and ErrorMessage components for profile data
 
-## frontend/components/dashboard/dashboard-layout.tsx
-- `navigation`: client-side menu definitions for overview, rooms, library, and settings routes.
-- Sidebar tagline describing the "Host lounge" and dual ambience status pill.
+## ~~frontend/components/dashboard/dashboard-layout.tsx~~ ✅ NOW USING API - NO MOCK DATA
+- **API Integration**: Uses `/auth/profile/` for user profile data and `/analytics/real-time/` for platform stats
+- **NO FALLBACK**: Shows loading state while fetching data (no mock data)
+- Previously contained hardcoded user: "Alex Johnson", "@alexj", "Pro" plan
+- Previously contained simulated stats with random numbers: `onlineUsers: 1247`, `activeParties: 89`
+- Now fetches real user data: username, first_name, email, is_premium, is_staff, avatar
+- Now fetches real-time stats: online_users, active_parties from analytics API
+- **Mobile Responsive**: Sidebar hidden on mobile (`hidden md:block`), mobile navigation integrated
+- Navigation sections remain static (will require separate API for dynamic badges)
+
+## ~~frontend/components/layout/dashboard-header.tsx~~ ✅ NOW USING API - NO MOCK DATA
+- **API Integration**: Uses `/auth/profile/` for user data and `/api/notifications/unread-count` for notifications
+- **NO FALLBACK**: Shows loading state while fetching data (no mock data)
+- Previously contained hardcoded user: "Alex", "Alex Johnson", "@alexj", "Pro" plan
+- Previously contained hardcoded notification count: `5`
+- Previously contained hardcoded notification messages: "New party invite from Sarah"
+- Now fetches real user data: username, first_name, avatar, is_premium, is_staff
+- Now fetches real notification count from API
+- **Mobile Responsive**: Search bar hidden on mobile (`hidden md:flex`), username hidden on small screens
 
 ## frontend/components/layout/site-footer.tsx
 - `footerLinks`: footer sections with headings and navigation items for Platform, Guides, Product.
