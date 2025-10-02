@@ -85,7 +85,7 @@ export default function PartiesPage() {
       {/* Enhanced Header */}
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-brand-cyan/20 rounded-3xl blur-xl"></div>
-        <GradientCard className="relative border-purple-500/30">
+        <GradientCard className="relative border-brand-purple/30">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-4">
@@ -148,7 +148,7 @@ export default function PartiesPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search parties, hosts, or genres..."
-              className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 backdrop-blur-sm transition-all"
+              className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-brand-purple/50 backdrop-blur-sm transition-all"
             />
             {searchQuery && (
               <button
@@ -214,7 +214,7 @@ export default function PartiesPage() {
 
       {/* Informational State */}
       {!loading && infoMessage && (
-        <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+        <div className="bg-brand-blue/10 border border-brand-blue/20 rounded-lg p-4">
           <p className="text-blue-300">{infoMessage}</p>
         </div>
       )}

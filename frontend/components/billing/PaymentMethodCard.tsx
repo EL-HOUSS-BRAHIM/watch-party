@@ -79,7 +79,7 @@ export default function PaymentMethodCard({ paymentMethod, onUpdate, onRemove }:
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-white">Payment Method</h3>
         {paymentMethod.is_default && (
-          <span className="px-2 py-1 bg-green-500/20 text-brand-cyan-light rounded text-xs font-medium">
+          <span className="px-2 py-1 bg-brand-cyan/20 text-brand-cyan-light rounded text-xs font-medium">
             Default
           </span>
         )}

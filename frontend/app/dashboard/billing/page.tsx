@@ -174,7 +174,7 @@ export default function BillingPage() {
             {currentSubscription && (
               <div className={`px-4 py-2 rounded-lg text-sm font-medium ${
                 currentSubscription.status === "active" 
-                  ? "bg-green-500/20 text-brand-cyan-light"
+                  ? "bg-brand-cyan/20 text-brand-cyan-light"
                   : "bg-red-500/20 text-brand-coral-light"
               }`}>
                 {currentSubscription.status.replace('_', ' ').toUpperCase()}
@@ -266,7 +266,7 @@ export default function BillingPage() {
                     : "border-white/10"
                 } ${
                   currentSubscription?.plan.id === plan.id
-                    ? "bg-green-500/10 border-brand-cyan"
+                    ? "bg-brand-cyan/10 border-brand-cyan"
                     : ""
                 }`}
               >
@@ -364,7 +364,7 @@ export default function BillingPage() {
                       <td className="py-4">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                           invoice.status === "paid"
-                            ? "bg-green-500/20 text-brand-cyan-light"
+                            ? "bg-brand-cyan/20 text-brand-cyan-light"
                             : invoice.status === "pending"
                             ? "bg-yellow-500/20 text-brand-orange-light"
                             : "bg-red-500/20 text-brand-coral-light"

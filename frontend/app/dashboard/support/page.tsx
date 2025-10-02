@@ -72,9 +72,9 @@ export default function SupportPage() {
 
   const statusColor = (status: string) => {
     switch (status) {
-      case "open": return "bg-blue-500/20 text-brand-blue-light border-blue-500/30";
+      case "open": return "bg-brand-blue/20 text-brand-blue-light border-brand-blue/30";
       case "in_progress": return "bg-yellow-500/20 text-brand-orange-light border-yellow-500/30";
-      case "resolved": return "bg-green-500/20 text-brand-cyan-light border-green-500/30";
+      case "resolved": return "bg-brand-cyan/20 text-brand-cyan-light border-brand-cyan/30";
       case "closed": return "bg-gray-500/20 text-gray-400 border-gray-500/30";
       default: return "bg-gray-500/20 text-gray-400 border-gray-500/30";
     }
@@ -82,7 +82,7 @@ export default function SupportPage() {
 
   const priorityColor = (priority: string) => {
     switch (priority) {
-      case "low": return "bg-green-500/20 text-brand-cyan-light";
+      case "low": return "bg-brand-cyan/20 text-brand-cyan-light";
       case "medium": return "bg-yellow-500/20 text-brand-orange-light";
       case "high": return "bg-orange-500/20 text-orange-400";
       case "urgent": return "bg-red-500/20 text-brand-coral-light";
@@ -227,7 +227,7 @@ function TicketDetailModal({
         
         <div className="p-6 space-y-4">
           {ticket.messages.map((msg) => (
-            <div key={msg.id} className={`p-4 rounded-lg ${msg.author.is_staff ? 'bg-purple-500/10 border border-purple-500/20' : 'bg-gray-800'}`}>
+            <div key={msg.id} className={`p-4 rounded-lg ${msg.author.is_staff ? 'bg-brand-purple/10 border border-brand-purple/20' : 'bg-gray-800'}`}>
               <div className="flex items-center gap-2 mb-2">
                 <span className="font-semibold">{msg.author.username}</span>
                 {msg.author.is_staff && <span className="text-xs bg-brand-purple px-2 py-0.5 rounded">Staff</span>}

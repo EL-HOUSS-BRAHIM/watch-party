@@ -294,7 +294,7 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
                                 ? "bg-red-500/20 text-brand-coral-light"
                                 : action.action_type === "kick"
                                 ? "bg-yellow-500/20 text-brand-orange-light"
-                                : "bg-green-500/20 text-brand-cyan-light"
+                                : "bg-brand-cyan/20 text-brand-cyan-light"
                             }`}>
                               {action.action_type.toUpperCase()}
                             </span>

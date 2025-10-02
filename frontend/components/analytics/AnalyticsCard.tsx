@@ -22,15 +22,15 @@ export default function AnalyticsCard({
   const getColorClasses = (color: string) => {
     switch (color) {
       case "green":
-        return "text-brand-cyan-light bg-green-500/20"
+        return "text-brand-cyan-light bg-brand-cyan/20"
       case "purple":
-        return "text-brand-purple-light bg-purple-500/20"
+        return "text-brand-purple-light bg-brand-purple/20"
       case "yellow":
         return "text-brand-orange-light bg-yellow-500/20"
       case "red":
         return "text-brand-coral-light bg-red-500/20"
       default:
-        return "text-brand-blue-light bg-blue-500/20"
+        return "text-brand-blue-light bg-brand-blue/20"
     }
   }
 

@@ -83,8 +83,8 @@ export default function EventsPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "upcoming": return "bg-blue-500/20 text-brand-blue-light"
-      case "live": return "bg-green-500/20 text-brand-cyan-light"
+      case "upcoming": return "bg-brand-blue/20 text-brand-blue-light"
+      case "live": return "bg-brand-cyan/20 text-brand-cyan-light"
       case "ended": return "bg-gray-500/20 text-gray-400"
       case "cancelled": return "bg-red-500/20 text-brand-coral-light"
       default: return "bg-gray-500/20 text-gray-400"

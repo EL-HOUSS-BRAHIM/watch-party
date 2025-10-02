@@ -120,13 +120,13 @@ export default function NotificationDropdown({ isOpen, onClose, onSettingsClick 
                 <div
                   key={notification.id}
                   className={`p-4 hover:bg-white/5 transition-colors ${
-                    !notification.is_read ? "bg-blue-500/10" : ""
+                    !notification.is_read ? "bg-brand-blue/10" : ""
                   }`}
                 >
                   <div className="flex items-start gap-3">
                     {/* Icon */}
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      !notification.is_read ? "bg-blue-500/20" : "bg-white/10"
+                      !notification.is_read ? "bg-brand-blue/20" : "bg-white/10"
                     }`}>
                       <span className="text-sm">
                         {getNotificationIcon(notification.type)}

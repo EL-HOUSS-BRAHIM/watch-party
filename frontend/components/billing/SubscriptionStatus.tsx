@@ -61,7 +61,7 @@ export default function SubscriptionStatus({ subscription, onCancel, onReactivat
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-green-500/20 text-brand-cyan-light"
+      case "active": return "bg-brand-cyan/20 text-brand-cyan-light"
       case "canceled": return "bg-red-500/20 text-brand-coral-light"
       case "past_due": return "bg-yellow-500/20 text-brand-orange-light"
       case "unpaid": return "bg-red-500/20 text-brand-coral-light"

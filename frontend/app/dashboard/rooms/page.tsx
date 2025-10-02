@@ -123,7 +123,7 @@ export default function RoomsPage() {
       {/* Enhanced Header */}
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-brand-coral/20 rounded-3xl blur-xl"></div>
-        <GradientCard className="relative border-purple-500/30">
+        <GradientCard className="relative border-brand-purple/30">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-4">
@@ -397,7 +397,7 @@ export default function RoomsPage() {
             <div className="text-white/60 text-sm">Scheduled</div>
           </GradientCard>
 
-          <GradientCard gradient="from-purple-500/20 to-brand-magenta/20" className="text-center">
+          <GradientCard gradient="from-brand-purple/20 to-brand-magenta/20" className="text-center">
             <div className="text-2xl mb-2">👥</div>
             <div className="text-2xl font-bold text-white">
               {formatNumber(currentParties.reduce((sum, p) => sum + (p.participant_count || 0), 0))}

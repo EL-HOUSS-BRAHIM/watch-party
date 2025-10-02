@@ -522,7 +522,7 @@ export default function DashboardPage() {
       )}
 
       {/* Enhanced Pro Tip Section */}
-      <div className="bg-gradient-to-r from-purple-900/40 via-blue-900/40 to-purple-900/40 border border-purple-500/30 rounded-2xl p-8 backdrop-blur-sm">
+      <div className="bg-gradient-to-r from-purple-900/40 via-blue-900/40 to-purple-900/40 border border-brand-purple/30 rounded-2xl p-8 backdrop-blur-sm">
         <div className="flex items-start gap-6">
           <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">
             💡

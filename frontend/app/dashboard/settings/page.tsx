@@ -93,7 +93,7 @@ export default function SettingsPage() {
         {placeholderPreferences.map((preference) => (
           <Card key={preference.title} className="border-white/10 bg-white/[0.02] relative">
             {preference.comingSoon && (
-              <div className="absolute top-4 right-4 bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs font-medium">
+              <div className="absolute top-4 right-4 bg-brand-blue/20 text-blue-300 px-2 py-1 rounded text-xs font-medium">
                 Coming Soon
               </div>
             )}

@@ -269,7 +269,7 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                       <div className="flex flex-col gap-1">
                         <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
                           user.is_active
-                            ? "bg-green-500/20 text-brand-cyan-light"
+                            ? "bg-brand-cyan/20 text-brand-cyan-light"
                             : "bg-red-500/20 text-brand-coral-light"
                         }`}>
                           {user.is_active ? "Active" : "Inactive"}

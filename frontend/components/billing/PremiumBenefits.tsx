@@ -130,13 +130,13 @@ export default function PremiumBenefits({ userSubscription, userPurchases = [] }
             key={feature.id}
             className={`p-4 rounded-lg border transition-all ${
               feature.is_available
-                ? "bg-green-500/10 border-green-500/20"
+                ? "bg-brand-cyan/10 border-brand-cyan/20"
                 : "bg-white/5 border-white/10"
             }`}
           >
             <div className="flex items-start gap-3">
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                feature.is_available ? "bg-green-500/20" : "bg-white/10"
+                feature.is_available ? "bg-brand-cyan/20" : "bg-white/10"
               }`}>
                 <span className="text-xl">{feature.icon}</span>
               </div>
@@ -162,12 +162,12 @@ export default function PremiumBenefits({ userSubscription, userPurchases = [] }
                 {!feature.is_available && (
                   <div className="mt-2">
                     {feature.requires_subscription && (
-                      <span className="inline-block px-2 py-1 bg-blue-500/20 text-brand-blue-light rounded text-xs">
+                      <span className="inline-block px-2 py-1 bg-brand-blue/20 text-brand-blue-light rounded text-xs">
                         Requires Subscription
                       </span>
                     )}
                     {feature.requires_purchase && (
-                      <span className="inline-block px-2 py-1 bg-purple-500/20 text-brand-purple-light rounded text-xs">
+                      <span className="inline-block px-2 py-1 bg-brand-purple/20 text-brand-purple-light rounded text-xs">
                         Available in Store
                       </span>
                     )}

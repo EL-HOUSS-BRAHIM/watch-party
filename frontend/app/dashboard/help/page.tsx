@@ -158,7 +158,7 @@ export default function HelpPage() {
       {/* Enhanced Header */}
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-brand-blue/20 via-purple-600/20 to-green-600/20 rounded-3xl blur-xl"></div>
-        <GradientCard className="relative border-blue-500/30">
+        <GradientCard className="relative border-brand-blue/30">
           <div className="text-center space-y-4">
             <div className="text-6xl mb-4">🆘</div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
@@ -188,7 +188,7 @@ export default function HelpPage() {
           placeholder="Search for help articles, guides, or FAQs..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 backdrop-blur-sm transition-all"
+          className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all"
         />
       </div>
 

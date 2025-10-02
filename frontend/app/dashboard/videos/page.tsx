@@ -343,14 +343,14 @@ export default function VideosPage() {
       {/* Enhanced Header */}
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 via-blue-600/20 to-brand-purple/20 rounded-3xl blur-xl"></div>
-        <GradientCard className="relative border-green-500/30">
+        <GradientCard className="relative border-brand-cyan/30">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-4">
                 <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-green-200 to-blue-200 bg-clip-text text-transparent">
                   📹 Media Library
                 </h1>
-                <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 rounded-full border border-green-500/30">
+                <div className="flex items-center gap-2 px-3 py-1 bg-brand-cyan/20 rounded-full border border-brand-cyan/30">
                   <div className="w-2 h-2 bg-brand-cyan rounded-full animate-pulse"></div>
                   <span className="text-brand-cyan-light text-sm font-medium">{videos.length} Videos</span>
                 </div>
@@ -407,7 +407,7 @@ export default function VideosPage() {
 
       {/* Enhanced Upload Section */}
       {uploadMode && (
-        <GradientCard gradient="from-emerald-900/30 via-green-800/20 to-blue-900/30" className="border-green-500/30">
+        <GradientCard gradient="from-emerald-900/30 via-green-800/20 to-blue-900/30" className="border-brand-cyan/30">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-white flex items-center gap-3">
@@ -451,7 +451,7 @@ export default function VideosPage() {
             </div>
 
             {uploadMode === "file" ? (
-              <div className="border-2 border-dashed border-green-500/30 rounded-2xl p-8 text-center bg-green-500/5 hover:bg-green-500/10 transition-colors">
+              <div className="border-2 border-dashed border-brand-cyan/30 rounded-2xl p-8 text-center bg-brand-cyan/5 hover:bg-brand-cyan/10 transition-colors">
                 <div className="space-y-4">
                   <div className="w-16 h-16 mx-auto bg-gradient-to-br from-brand-cyan to-brand-blue rounded-2xl flex items-center justify-center text-2xl animate-float">
                     📁
@@ -593,7 +593,7 @@ export default function VideosPage() {
                             </span>
                           )}
                           {movie.in_database && (
-                            <span className="absolute top-2 right-2 bg-green-500/20 text-green-200 text-xs px-2 py-1 rounded-full">
+                            <span className="absolute top-2 right-2 bg-brand-cyan/20 text-green-200 text-xs px-2 py-1 rounded-full">
                               Imported
                             </span>
                           )}
@@ -664,7 +664,7 @@ export default function VideosPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search your video library..."
-                className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 backdrop-blur-sm transition-all"
+                className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all"
               />
             </div>
             

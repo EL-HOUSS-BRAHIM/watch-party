@@ -241,7 +241,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
             </div>
           </div>
 
-          <div className="mb-6 rounded-lg border border-blue-500/30 bg-blue-500/10 p-4">
+          <div className="mb-6 rounded-lg border border-brand-blue/30 bg-brand-blue/10 p-4">
             <p className="text-sm text-blue-300">
               <strong>👁️ Guest Mode:</strong> You can watch the synced stream and participate in text chat when enabled.
               Sign up for full features like voice chat and reactions!
@@ -272,7 +272,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
                 }}
                 placeholder="Guest123"
                 maxLength={20}
-                className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-white/50 focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                className="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-white placeholder-white/50 focus:border-brand-purple/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20"
               />
             </div>
 

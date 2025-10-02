@@ -75,7 +75,7 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
 
   const getHealthStatusBg = (status: string) => {
     switch (status?.toLowerCase()) {
-      case "healthy": return "bg-green-500/20"
+      case "healthy": return "bg-brand-cyan/20"
       case "warning": return "bg-yellow-500/20"
       case "critical": return "bg-red-500/20"
       default: return "bg-white/10"

@@ -94,8 +94,8 @@ export default function CreatePartyPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
       {/* Background Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-purple/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-brand-blue/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
       
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-8">
@@ -164,7 +164,7 @@ export default function CreatePartyPage() {
         </div>
 
         <GradientCard 
-          className="border-purple-500/30 backdrop-blur-xl" 
+          className="border-brand-purple/30 backdrop-blur-xl" 
           gradient="from-purple-900/40 via-blue-900/30 to-purple-900/40"
         >
           {/* Step 1: Party Details */}
@@ -185,7 +185,7 @@ export default function CreatePartyPage() {
                     value={partyData.title}
                     onChange={(e) => setPartyData(prev => ({ ...prev, title: e.target.value }))}
                     placeholder="Friday Night Movies, Horror Marathon, etc."
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-brand-purple/50"
                   />
                 </div>
 
@@ -197,7 +197,7 @@ export default function CreatePartyPage() {
                     onChange={(e) => setPartyData(prev => ({ ...prev, description: e.target.value }))}
                     placeholder="Tell your friends what to expect..."
                     rows={3}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 resize-none"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-brand-purple/50 resize-none"
                   />
                 </div>
 
@@ -215,7 +215,7 @@ export default function CreatePartyPage() {
                         onClick={() => setPartyData(prev => ({ ...prev, visibility: option.value as any }))}
                         className={`p-4 rounded-xl border transition-all duration-200 text-center ${
                           partyData.visibility === option.value
-                            ? "border-brand-purple bg-purple-500/20"
+                            ? "border-brand-purple bg-brand-purple/20"
                             : "border-white/20 bg-white/5 hover:border-white/30"
                         }`}
                       >
@@ -233,7 +233,7 @@ export default function CreatePartyPage() {
                   <select
                     value={partyData.max_participants}
                     onChange={(e) => setPartyData(prev => ({ ...prev, max_participants: parseInt(e.target.value) }))}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-brand-purple/50"
                   >
                     {[5, 10, 20, 50, 100].map(num => (
                       <option key={num} value={num} className="bg-gray-800">{num} people</option>
@@ -248,7 +248,7 @@ export default function CreatePartyPage() {
                     type="datetime-local"
                     value={partyData.scheduled_start}
                     onChange={(e) => setPartyData(prev => ({ ...prev, scheduled_start: e.target.value }))}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-brand-purple/50"
                   />
                   <p className="text-sm text-white/60 mt-1">Leave empty to start immediately</p>
                 </div>

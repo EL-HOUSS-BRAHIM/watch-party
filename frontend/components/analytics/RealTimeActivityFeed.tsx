@@ -74,7 +74,7 @@ export default function RealTimeActivityFeed({
             onClick={() => setIsLive(!isLive)}
             className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm transition-colors ${
               isLive 
-                ? "bg-green-500/20 text-brand-cyan-light" 
+                ? "bg-brand-cyan/20 text-brand-cyan-light" 
                 : "bg-white/10 text-white/60"
             }`}
           >

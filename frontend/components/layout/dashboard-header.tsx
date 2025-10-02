@@ -148,7 +148,7 @@ export function DashboardHeader() {
                   <p className="text-sm font-bold text-white">{user.first_name || user.username}</p>
                   <p className="text-xs text-white/50">@{user.username}</p>
                   {(user.is_premium || user.is_staff) && (
-                    <div className="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30">
+                    <div className="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gradient-to-r from-brand-purple/20 to-blue-500/20 border border-brand-purple/30">
                       <span className="text-xs font-bold text-brand-purple-light">
                         {user.is_premium ? "Premium" : "Pro"}
                       </span>

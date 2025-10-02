@@ -14,7 +14,7 @@ export function ErrorMessage({ message, onDismiss, type = 'error' }: ErrorMessag
   const styles = {
     error: 'bg-red-500/10 border-red-500/30 text-red-300',
     warning: 'bg-yellow-500/10 border-yellow-500/30 text-yellow-300',
-    info: 'bg-blue-500/10 border-blue-500/30 text-blue-300',
+    info: 'bg-brand-blue/10 border-brand-blue/30 text-blue-300',
   }
 
   const icons = {

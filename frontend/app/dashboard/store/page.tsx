@@ -93,9 +93,9 @@ export default function StorePage() {
   const getCategoryColor = (category: string) => {
     switch (category) {
       case "premium": return "bg-yellow-500/20 text-brand-orange-light"
-      case "cosmetic": return "bg-purple-500/20 text-brand-purple-light"
-      case "feature": return "bg-blue-500/20 text-brand-blue-light"
-      case "bundle": return "bg-green-500/20 text-brand-cyan-light"
+      case "cosmetic": return "bg-brand-purple/20 text-brand-purple-light"
+      case "feature": return "bg-brand-blue/20 text-brand-blue-light"
+      case "bundle": return "bg-brand-cyan/20 text-brand-cyan-light"
       default: return "bg-white/20 text-white/60"
     }
   }
@@ -196,7 +196,7 @@ export default function StorePage() {
               {storeItems.filter(item => item.is_featured).slice(0, 2).map((item) => (
                 <div
                   key={item.id}
-                  className="relative bg-gradient-to-r from-brand-blue/20 to-brand-purple/20 border border-blue-500/30 rounded-lg p-6 overflow-hidden"
+                  className="relative bg-gradient-to-r from-brand-blue/20 to-brand-purple/20 border border-brand-blue/30 rounded-lg p-6 overflow-hidden"
                 >
                   <div className="absolute top-4 right-4">
                     <span className="bg-brand-blue text-white px-3 py-1 rounded-full text-xs font-medium">
@@ -405,7 +405,7 @@ export default function StorePage() {
                     </div>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                       purchase.status === "completed"
-                        ? "bg-green-500/20 text-brand-cyan-light"
+                        ? "bg-brand-cyan/20 text-brand-cyan-light"
                         : purchase.status === "pending"
                         ? "bg-yellow-500/20 text-brand-orange-light"
                         : "bg-red-500/20 text-brand-coral-light"

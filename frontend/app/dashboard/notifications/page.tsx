@@ -293,7 +293,7 @@ export default function NotificationsPage() {
                   key={notification.id}
                   className={`flex items-start gap-4 p-4 rounded-lg border transition-all ${
                     !notification.is_read
-                      ? "bg-blue-500/10 border-blue-500/20"
+                      ? "bg-brand-blue/10 border-brand-blue/20"
                       : "bg-white/5 border-white/10 hover:bg-white/10"
                   } ${
                     selectedNotifications.has(notification.id)
@@ -311,7 +311,7 @@ export default function NotificationsPage() {
 
                   {/* Notification Icon */}
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                    !notification.is_read ? "bg-blue-500/20" : "bg-white/10"
+                    !notification.is_read ? "bg-brand-blue/20" : "bg-white/10"
                   }`}>
                     <span className="text-xl">
                       {getNotificationIcon(notification.type)}

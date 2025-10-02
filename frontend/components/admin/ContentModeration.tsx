@@ -206,7 +206,7 @@ export default function ContentModeration({ onBack }: ContentModerationProps) {
                   key={video.id}
                   className={`p-4 border rounded-lg transition-all ${
                     selectedVideos.has(video.id)
-                      ? "border-brand-blue bg-blue-500/10"
+                      ? "border-brand-blue bg-brand-blue/10"
                       : "border-white/10 bg-white/5 hover:bg-white/10"
                   }`}
                 >
@@ -246,7 +246,7 @@ export default function ContentModeration({ onBack }: ContentModerationProps) {
                       <div className="flex items-center gap-2 mb-3">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                           video.moderation_status === "approved"
-                            ? "bg-green-500/20 text-brand-cyan-light"
+                            ? "bg-brand-cyan/20 text-brand-cyan-light"
                             : video.moderation_status === "rejected"
                             ? "bg-red-500/20 text-brand-coral-light"
                             : "bg-yellow-500/20 text-brand-orange-light"
@@ -256,10 +256,10 @@ export default function ContentModeration({ onBack }: ContentModerationProps) {
                         
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                           video.processing_status === "completed"
-                            ? "bg-green-500/20 text-brand-cyan-light"
+                            ? "bg-brand-cyan/20 text-brand-cyan-light"
                             : video.processing_status === "failed"
                             ? "bg-red-500/20 text-brand-coral-light"
-                            : "bg-blue-500/20 text-brand-blue-light"
+                            : "bg-brand-blue/20 text-brand-blue-light"
                         }`}>
                           {video.processing_status?.toUpperCase() || "PROCESSING"}
                         </span>

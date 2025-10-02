@@ -133,7 +133,7 @@ export default function ChatPage() {
                       <span>👥 {party.participants_count || 0}</span>
                       <span className={`px-2 py-1 rounded ${
                         party.status === "live" 
-                          ? "bg-green-500/20 text-brand-cyan-light"
+                          ? "bg-brand-cyan/20 text-brand-cyan-light"
                           : party.status === "scheduled"
                           ? "bg-yellow-500/20 text-brand-orange-light"
                           : "bg-red-500/20 text-brand-coral-light"
