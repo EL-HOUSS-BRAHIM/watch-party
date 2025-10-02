@@ -46,6 +46,10 @@ urlpatterns = [
         'api/videos/',
         include(('apps.videos.urls', 'videos'), namespace='videos'),
     ),
+    path(
+        'api/integrations/',
+        include(('apps.integrations.urls', 'integrations'), namespace='integrations'),
+    ),
     path('api/analytics/', include(analytics_patterns)),
     path('health/', health_check, name='health'),
 ]
