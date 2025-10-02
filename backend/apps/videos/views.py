@@ -17,7 +17,10 @@ from rest_framework.exceptions import ValidationError
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 
-from apps.integrations.services.google_drive import get_drive_service
+from apps.integrations.services.google_drive import (
+    GoogleDriveServiceError,
+    get_drive_service,
+)
 
 from .models import Video, VideoLike, VideoComment, VideoView, VideoUpload
 from .serializers import (
@@ -581,13 +584,14 @@ class GoogleDriveMovieUploadView(APIView):
                     name=title or uploaded_file.name,
                     folder_id=folder_id
                 )
-                
+
                 # Create video record
                 video = Video.objects.create(
                     title=title or uploaded_file.name,
                     uploader=request.user,
                     source_type='gdrive',
                     gdrive_file_id=upload_result['id'],
+                    gdrive_download_url=upload_result.get('download_url', ''),
                     gdrive_mime_type=upload_result['mime_type'],
                     file_size=upload_result['size'],
                     visibility=visibility,
@@ -599,14 +603,21 @@ class GoogleDriveMovieUploadView(APIView):
                 return Response({
                     'success': True,
                     'message': 'Movie uploaded successfully',
-                    'video': serializer.data
+                    'video': serializer.data,
+                    'drive_file': upload_result,
                 }, status=status.HTTP_201_CREATED)
-                
+
             finally:
                 # Clean up temporary file
                 if os.path.exists(temp_file_path):
                     os.unlink(temp_file_path)
-            
+
+        except GoogleDriveServiceError as exc:
+            status_code = getattr(exc, 'status_code', status.HTTP_502_BAD_GATEWAY)
+            return Response({
+                'success': False,
+                'message': str(exc)
+            }, status=status_code)
         except Exception as e:
             return Response({
                 'success': False,
@@ -629,23 +640,25 @@ class GoogleDriveMovieDeleteView(APIView):
             # Get Drive service
             drive_service = get_drive_service(request.user)
             
-            # Delete from Google Drive
+            delete_payload = None
             if video.gdrive_file_id:
-                success = drive_service.delete_file(video.gdrive_file_id)
-                if not success:
-                    return Response({
-                        'success': False,
-                        'message': 'Failed to delete from Google Drive'
-                    }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            
+                delete_payload = drive_service.delete_file(video.gdrive_file_id)
+
             # Delete from our database
             video.delete()
-            
+
             return Response({
                 'success': True,
-                'message': 'Movie deleted successfully'
+                'message': 'Movie deleted successfully',
+                'drive_file': delete_payload,
             }, status=status.HTTP_200_OK)
-            
+
+        except GoogleDriveServiceError as exc:
+            status_code = getattr(exc, 'status_code', status.HTTP_502_BAD_GATEWAY)
+            return Response({
+                'success': False,
+                'message': str(exc)
+            }, status=status_code)
         except Exception as e:
             return Response({
                 'success': False,
@@ -689,8 +702,10 @@ class GoogleDriveMovieStreamView(APIView):
             drive_service = get_drive_service(video.uploader)
             
             # Get streaming URL
-            streaming_url = drive_service.generate_streaming_url(video.gdrive_file_id)
-            
+            streaming_payload = drive_service.generate_streaming_url(video.gdrive_file_id)
+            streaming_url = streaming_payload.get('streaming_url')
+            download_url = streaming_payload.get('download_url')
+
             # Record view
             VideoView.objects.create(
                 video=video,
@@ -705,9 +720,17 @@ class GoogleDriveMovieStreamView(APIView):
             return Response({
                 'success': True,
                 'streaming_url': streaming_url,
+                'download_url': download_url,
+                'drive_file': streaming_payload,
                 'video': VideoDetailSerializer(video, context={'request': request}).data
             }, status=status.HTTP_200_OK)
-            
+
+        except GoogleDriveServiceError as exc:
+            status_code = getattr(exc, 'status_code', status.HTTP_502_BAD_GATEWAY)
+            return Response({
+                'success': False,
+                'message': str(exc)
+            }, status=status_code)
         except Exception as e:
             return Response({
                 'success': False,
