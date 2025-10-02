@@ -85,8 +85,8 @@ export default function AnalyticsPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
       {/* Header */}
       <div className="bg-black/20 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
+        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => router.push("/dashboard")}
@@ -99,9 +99,9 @@ export default function AnalyticsPage() {
                 <p className="text-white/60 text-sm">Insights into platform performance and user engagement</p>
               </div>
             </div>
-            
-            <div className="flex items-center gap-3">
-              <span className="px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full text-sm font-medium">
+
+            <div className="flex items-center gap-3 md:self-end">
+              <span className="rounded-full bg-blue-600/20 px-3 py-1 text-sm font-medium text-blue-400">
                 📊 Live Data
               </span>
             </div>
@@ -111,8 +111,8 @@ export default function AnalyticsPage() {
 
       {/* Navigation Tabs */}
       <div className="bg-black/10 border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex space-x-8">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="-mx-4 flex gap-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
             {[
               { id: "overview", label: "Overview", icon: "📊" },
               { id: "personal", label: "Personal", icon: "👤" },
@@ -122,7 +122,7 @@ export default function AnalyticsPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center gap-2 px-4 py-4 text-sm font-medium border-b-2 transition-colors ${
+                className={`flex flex-shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-3 py-3 text-sm font-medium transition-colors sm:px-4 sm:py-4 ${
                   activeTab === tab.id
                     ? "text-blue-400 border-blue-400"
                     : "text-white/60 border-transparent hover:text-white"
@@ -137,7 +137,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
         {/* Overview Tab */}
         {activeTab === "overview" && (
           <div className="space-y-8">

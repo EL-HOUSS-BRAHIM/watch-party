@@ -131,7 +131,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Dashboard Header - hide duplicate header on mobile */}
       <div className="hidden md:block">
         <DashboardHeader />
@@ -147,7 +147,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Mobile Navigation - Shown only on mobile */}
       <MobileNavigation currentUser={user} />
 
-      <div className="relative z-10 flex min-h-screen pt-14 md:pt-16">
+      <div className="relative z-10 flex min-h-screen w-full flex-col pt-14 md:flex-row md:pt-16">
         {/* Enhanced Sidebar - Hidden on mobile, shown on desktop */}
         <aside className={cn(
           "hidden md:fixed left-0 top-0 h-full bg-black/20 backdrop-blur-xl border-r border-white/10 transition-all duration-300 z-50 md:block",
@@ -324,13 +324,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         {/* Main Content */}
         <main
           className={cn(
-            "flex-1 transition-all duration-300 mb-20 md:mb-0",
-            "md:" + (isCollapsed ? "ml-20" : "ml-80")
+            "flex-1 w-full overflow-x-hidden transition-all duration-300 pb-24 md:pb-0",
+            isCollapsed ? "md:ml-20" : "md:ml-80"
           )}
         >
           {/* Page Content */}
-          <div className="flex-1 p-6">
-            <div className="max-w-7xl mx-auto">
+          <div className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+            <div className="mx-auto w-full max-w-7xl">
               {children}
             </div>
           </div>
