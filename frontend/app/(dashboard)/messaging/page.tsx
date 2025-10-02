@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import api from "@/lib/api-client"
+import { LoadingState, ErrorMessage, EmptyState } from "@/components/ui/feedback"
 
 interface Conversation {
   id: string
@@ -54,6 +55,7 @@ export default function MessagingPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
   const [loadingMessages, setLoadingMessages] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [newMessage, setNewMessage] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
 
@@ -69,19 +71,19 @@ export default function MessagingPage() {
 
   const loadConversations = async () => {
     try {
+      setLoading(true)
+      setError(null)
       const response = await api.get('/api/messaging/conversations/')
-      setConversations(response.results || mockConversations)
+      setConversations(response.results || [])
       
       // Auto-select first conversation
       if (response.results?.length > 0) {
         setSelectedConversation(response.results[0])
       }
-    } catch (error) {
-      console.error("Failed to load conversations:", error)
-      setConversations(mockConversations)
-      if (mockConversations.length > 0) {
-        setSelectedConversation(mockConversations[0])
-      }
+    } catch (err) {
+      console.error("Failed to load conversations:", err)
+      setError(err instanceof Error ? err.message : 'Failed to load conversations from API')
+      setConversations([])
     } finally {
       setLoading(false)
     }
@@ -91,10 +93,10 @@ export default function MessagingPage() {
     try {
       setLoadingMessages(true)
       const response = await api.get(`/api/messaging/conversations/${conversationId}/messages/`)
-      setMessages(response.results || mockMessages)
-    } catch (error) {
-      console.error("Failed to load messages:", error)
-      setMessages(mockMessages)
+      setMessages(response.results || [])
+    } catch (err) {
+      console.error("Failed to load messages:", err)
+      setMessages([])
     } finally {
       setLoadingMessages(false)
     }
@@ -162,21 +164,19 @@ export default function MessagingPage() {
   )
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-white/60">Loading conversations...</p>
-          </div>
-        </div>
-      </div>
-    )
+    return <LoadingState message="Loading conversations..." />
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
       <div className="max-w-7xl mx-auto px-6 py-8">
+        {error && (
+          <ErrorMessage 
+            message={error} 
+            type="error"
+            onDismiss={() => setError(null)}
+          />
+        )}
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
@@ -419,95 +419,3 @@ export default function MessagingPage() {
     </div>
   )
 }
-
-// Mock data for fallback
-const mockConversations: Conversation[] = [
-  {
-    id: "1",
-    type: "direct",
-    participants: [
-      { id: "current-user", username: "you", is_online: true },
-      { id: "2", username: "alex_movie", is_online: true }
-    ],
-    last_message: {
-      id: "1",
-      content: "Hey! Ready for movie night tonight?",
-      sender: { id: "2", username: "alex_movie" },
-      timestamp: "2025-10-01T14:30:00Z"
-    },
-    unread_count: 2,
-    created_at: "2025-09-25T10:00:00Z"
-  },
-  {
-    id: "2",
-    type: "group",
-    name: "Horror Movie Fans",
-    participants: [
-      { id: "current-user", username: "you", is_online: true },
-      { id: "3", username: "sarah_scream", is_online: false },
-      { id: "4", username: "mike_thriller", is_online: true }
-    ],
-    last_message: {
-      id: "2",
-      content: "Anyone up for watching The Conjuring tonight?",
-      sender: { id: "3", username: "sarah_scream" },
-      timestamp: "2025-10-01T12:15:00Z"
-    },
-    unread_count: 0,
-    created_at: "2025-09-20T15:00:00Z"
-  },
-  {
-    id: "3",
-    type: "party",
-    name: "Friday Night Movies Party",
-    participants: [
-      { id: "current-user", username: "you", is_online: true },
-      { id: "5", username: "party_host", is_online: true },
-      { id: "6", username: "movie_buff", is_online: false }
-    ],
-    last_message: {
-      id: "3",
-      content: "Starting the movie in 5 minutes!",
-      sender: { id: "5", username: "party_host" },
-      timestamp: "2025-10-01T11:45:00Z"
-    },
-    unread_count: 1,
-    created_at: "2025-10-01T11:00:00Z"
-  }
-]
-
-const mockMessages: Message[] = [
-  {
-    id: "1",
-    content: "Hey! How's it going?",
-    sender: { id: "2", username: "alex_movie" },
-    timestamp: "2025-10-01T14:00:00Z",
-    message_type: "text"
-  },
-  {
-    id: "2",
-    content: "Great! Just getting ready for tonight's movie marathon. What do you think we should watch?",
-    sender: { id: "current-user", username: "you" },
-    timestamp: "2025-10-01T14:02:00Z",
-    message_type: "text"
-  },
-  {
-    id: "3",
-    content: "I was thinking maybe some classic sci-fi? Blade Runner or The Matrix?",
-    sender: { id: "2", username: "alex_movie" },
-    timestamp: "2025-10-01T14:05:00Z",
-    message_type: "text",
-    reply_to: {
-      id: "2",
-      content: "Great! Just getting ready for tonight's movie marathon. What do you think we should watch?",
-      sender: { username: "you" }
-    }
-  },
-  {
-    id: "4",
-    content: "The Matrix sounds perfect! I'll set up the party room.",
-    sender: { id: "current-user", username: "you" },
-    timestamp: "2025-10-01T14:30:00Z",
-    message_type: "text"
-  }
-]

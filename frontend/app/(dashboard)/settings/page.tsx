@@ -3,41 +3,53 @@
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { userApi, type UserProfile } from "@/lib/api-client"
+import { LoadingState, ErrorMessage } from "@/components/ui/feedback"
 
-// Fallback mock data for when API is unavailable
-const mockPreferences = [
+// Placeholder preferences for UI (not from API - coming soon feature)
+const placeholderPreferences = [
   {
     title: "Ambience defaults",
     description: "Start new rooms with daybreak ambience and auto-cycle to midnight during finale.",
+    comingSoon: true
   },
   {
     title: "Crew permissions",
     description: "Allow co-hosts to trigger reaction bursts and polls while keeping playback controls locked to hosts.",
+    comingSoon: true
   },
   {
     title: "Notifications",
     description: "Send guests SMS reminders 15 minutes before the room opens and highlight ambience theme in the message.",
+    comingSoon: true
   },
 ]
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     async function loadProfile() {
       try {
+        setLoading(true)
+        setError(null)
         const data = await userApi.getProfile()
         setProfile(data)
-        setError(null)
       } catch (err) {
         console.error('Failed to load profile:', err)
-        setError('Using demo data - API connection unavailable')
+        setError(err instanceof Error ? err.message : 'Failed to load profile from API')
+      } finally {
+        setLoading(false)
       }
     }
 
     loadProfile()
   }, [])
+
+  if (loading) {
+    return <LoadingState message="Loading your settings..." />
+  }
 
   // Use profile data if available
   const userName = profile ? `${profile.first_name} ${profile.last_name}` : 'Guest'
@@ -47,9 +59,11 @@ export default function SettingsPage() {
   return (
     <div className="space-y-10">
       {error && (
-        <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm text-yellow-200">
-          ⚠️ {error}
-        </div>
+        <ErrorMessage 
+          message={error} 
+          type="error"
+          onDismiss={() => setError(null)}
+        />
       )}
 
   <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-10">
@@ -76,8 +90,13 @@ export default function SettingsPage() {
       </section>
 
       <section className="grid gap-5 lg:grid-cols-3">
-        {mockPreferences.map((preference) => (
-          <Card key={preference.title} className="border-white/10 bg-white/[0.02]">
+        {placeholderPreferences.map((preference) => (
+          <Card key={preference.title} className="border-white/10 bg-white/[0.02] relative">
+            {preference.comingSoon && (
+              <div className="absolute top-4 right-4 bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs font-medium">
+                Coming Soon
+              </div>
+            )}
             <CardHeader>
               <CardTitle className="text-lg text-white">{preference.title}</CardTitle>
             </CardHeader>

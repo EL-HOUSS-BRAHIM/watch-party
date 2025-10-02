@@ -115,12 +115,12 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
               ? "This party doesn't allow guest access. Please ask the host for an invite."
               : "The party code might be incorrect or the party may have ended."}
           </p>
-          <a
-            href="/"
+          <button
+            onClick={() => window.location.href = '/'}
             className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3 font-semibold text-white hover:shadow-lg transition-all"
           >
             Go to Homepage
-          </a>
+          </button>
         </div>
       </div>
     )

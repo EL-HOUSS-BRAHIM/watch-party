@@ -39,11 +39,41 @@
 - Displays user's name, email, and premium status from backend
 - Static preferences and integrations remain as placeholder content
 
-## ~~frontend/app/(dashboard)/library/page.tsx~~ ✅ NOW USING API
+## ~~frontend/app/(dashboard)/library/page.tsx~~ ✅ NOW USING API - NO MOCK DATA
 - **API Integration**: Uses `/videos/` endpoint to list user's uploaded videos
-- Falls back to mock data if API unavailable: `mockMedia`
+- **NO FALLBACK**: Shows error message if API unavailable (no mock data)
 - Displays actual video titles, durations, source types, and visibility settings
 - Maps API video data to media card format for consistent UI
+- Uses LoadingState, ErrorMessage, and EmptyState components
+
+## ~~frontend/app/(dashboard)/events/page.tsx~~ ✅ NOW USING API - NO MOCK DATA
+- **API Integration**: Uses `/api/events/` endpoint to list events
+- **NO FALLBACK**: Shows error message if API unavailable (no mock data)
+- Displays upcoming, my-events, and past events
+- Uses LoadingState, ErrorMessage, and EmptyState components
+
+## ~~frontend/app/(dashboard)/messaging/page.tsx~~ ✅ NOW USING API - NO MOCK DATA
+- **API Integration**: Uses `/api/messaging/conversations/` and `/api/messaging/conversations/{id}/messages/`
+- **NO FALLBACK**: Shows error message if API unavailable (no mock data)
+- Displays real-time conversations and messages
+- Uses LoadingState and ErrorMessage components
+
+## ~~frontend/app/(dashboard)/social/page.tsx~~ ✅ NOW USING API - NO MOCK DATA
+- **API Integration**: Uses `/api/social/groups/` and `/api/users/friends/`
+- **NO FALLBACK**: Shows error message if API unavailable (no mock data)
+- Displays social groups and friends list
+- Uses LoadingState and ErrorMessage components
+
+## ~~frontend/app/(dashboard)/integrations/page.tsx~~ ✅ NOW USING API - NO MOCK DATA
+- **API Integration**: Uses `/api/integrations/connections/` and `/api/integrations/types/`
+- **NO FALLBACK**: Shows error message if API unavailable (no mock data)
+- Displays connected integrations and available integration types
+- Uses LoadingState and ErrorMessage components
+
+## ~~frontend/app/(dashboard)/settings/page.tsx~~ ✅ USING API WITH PLACEHOLDERS
+- **API Integration**: Uses `/auth/profile/` for user profile data
+- **Placeholder Content**: Preferences cards marked as "Coming Soon" features
+- Uses LoadingState and ErrorMessage components for profile data
 
 ## frontend/components/dashboard/dashboard-layout.tsx
 - `navigation`: client-side menu definitions for overview, rooms, library, and settings routes.
