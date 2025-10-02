@@ -139,6 +139,12 @@ export interface APIError {
   details?: Record<string, string[]>
 }
 
+export interface ApiClientError extends Error {
+  status?: number
+  code?: string
+  details?: Record<string, string[]>
+}
+
 export type DashboardStatsResponse = {
   stats: Analytics
 }
@@ -184,13 +190,23 @@ async function apiFetch<T>(
     const response = await fetch(url, config)
     
     if (!response.ok) {
-      const errorData: APIError = await response.json().catch(() => ({
+      const errorData: Partial<APIError> = await response.json().catch(() => ({
         success: false,
         error: "network_error",
         message: `HTTP ${response.status}: ${response.statusText}`,
       }))
-      
-      throw new Error(errorData.message || `API request failed: ${response.statusText}`)
+
+      const errorMessage = errorData.message || `API request failed: ${response.statusText}`
+      const apiError = new Error(errorMessage) as ApiClientError
+      apiError.status = response.status
+      if (errorData.error) {
+        apiError.code = errorData.error
+      }
+      if (errorData.details) {
+        apiError.details = errorData.details
+      }
+
+      throw apiError
     }
 
     const data = await response.json()
@@ -293,8 +309,31 @@ export const authApi = {
     }, true),
 
   // Google Drive integration
-  getGoogleDriveAuthUrl: () =>
-    apiFetch<{ auth_url: string }>('/api/auth/google-drive/auth/', {}, true),
+  getGoogleDriveAuthUrl: async () => {
+    const response = await apiFetch<{ data: { authorization_url: string; state?: string } }>(
+      '/api/auth/google-drive/auth/',
+      {},
+      true
+    )
+
+    const { authorization_url: authorizationUrl, state } = response.data || {}
+    if (!authorizationUrl) {
+      throw new Error('Authorization URL was not provided by the server.')
+    }
+
+    if (state && !authorizationUrl.includes('state=')) {
+      try {
+        const url = new URL(authorizationUrl)
+        url.searchParams.set('state', state)
+        return url.toString()
+      } catch {
+        const separator = authorizationUrl.includes('?') ? '&' : '?'
+        return `${authorizationUrl}${separator}state=${encodeURIComponent(state)}`
+      }
+    }
+
+    return authorizationUrl
+  },
 
   connectGoogleDrive: (code: string) =>
     apiFetch<{ message: string }>('/api/auth/google-drive/auth/', {

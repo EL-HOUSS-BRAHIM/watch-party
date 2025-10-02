@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import api from "@/lib/api-client"
-import { LoadingState, ErrorMessage, EmptyState } from "@/components/ui/feedback"
+import api, { type ApiClientError } from "@/lib/api-client"
+import { LoadingState, ErrorMessage } from "@/components/ui/feedback"
 
 interface Integration {
   id: string
@@ -48,27 +48,80 @@ export default function IntegrationsPage() {
     loadIntegrationTypes()
   }, [])
 
+  const formatErrorMessage = (err: unknown, fallback: string) => {
+    if (!err) return fallback
+    if (typeof err === "string") return err
+
+    if (err instanceof Error) {
+      const apiError = err as ApiClientError
+      let message = err.message || fallback
+      const detailParts: string[] = []
+
+      if (apiError.status) {
+        const codeSuffix = apiError.code ? ` (${apiError.code})` : ""
+        detailParts.push(`Error ${apiError.status}${codeSuffix}`)
+      }
+
+      if (apiError.details) {
+        const details = Object.entries(apiError.details)
+          .map(([field, messages]) => `${field}: ${messages.join(", ")}`)
+        if (details.length > 0) {
+          detailParts.push(details.join(" | "))
+        }
+      }
+
+      if (detailParts.length > 0) {
+        message = `${message} – ${detailParts.join(" – ")}`
+      }
+
+      return message
+    }
+
+    if (typeof err === "object" && "message" in (err as any)) {
+      const message = (err as { message?: string }).message
+      if (typeof message === "string" && message.trim().length > 0) {
+        return message
+      }
+    }
+
+    return fallback
+  }
+
+  const resolveAuthorizationUrl = (data?: { authorization_url?: string; state?: string }) => {
+    if (!data?.authorization_url) return null
+
+    if (data.state && !data.authorization_url.includes("state=")) {
+      try {
+        const url = new URL(data.authorization_url)
+        url.searchParams.set("state", data.state)
+        return url.toString()
+      } catch {
+        const separator = data.authorization_url.includes("?") ? "&" : "?"
+        return `${data.authorization_url}${separator}state=${encodeURIComponent(data.state)}`
+      }
+    }
+
+    return data.authorization_url
+  }
+
   const loadIntegrations = async () => {
     try {
-      const response = await api.get('/api/integrations/connections/')
-      setIntegrations(response.results || [])
+      const response = await api.get<{ data?: { connections?: Integration[] } }>('/api/integrations/connections/')
+      setIntegrations(response.data?.connections || [])
     } catch (err) {
       console.error("Failed to load integrations:", err)
-      setError(err instanceof Error ? err.message : 'Failed to load integrations from API')
+      setError(formatErrorMessage(err, 'Failed to load integrations from API'))
       setIntegrations([])
     }
   }
 
   const loadIntegrationTypes = async () => {
     try {
-      const response = await api.get('/api/integrations/types/')
-      setIntegrationTypes(response.results || [])
+      const response = await api.get<{ data?: { types?: IntegrationType[] } }>('/api/integrations/types/')
+      setIntegrationTypes(response.data?.types || [])
     } catch (err) {
       console.error("Failed to load integration types:", err)
-      // Keep existing error or set new one if not already set
-      if (!error) {
-        setError(err instanceof Error ? err.message : 'Failed to load integration types from API')
-      }
+      setError(formatErrorMessage(err, 'Failed to load integration types from API'))
       setIntegrationTypes([])
     } finally {
       setLoading(false)
@@ -79,11 +132,27 @@ export default function IntegrationsPage() {
     try {
       // Different connection flows for different integrations
       if (integrationType === 'google-drive') {
-        const authResponse = await api.get('/api/integrations/google-drive/auth-url/')
-        window.location.href = authResponse.auth_url
+        const authResponse = await api.get<{ data?: { authorization_url?: string; state?: string } }>(
+          '/api/integrations/google-drive/auth-url/'
+        )
+        const authorizationUrl = resolveAuthorizationUrl(authResponse.data)
+
+        if (!authorizationUrl) {
+          throw new Error('Authorization URL was not provided by the server. Please try again later.')
+        }
+
+        window.location.href = authorizationUrl
       } else if (integrationType === 'oauth') {
-        const authResponse = await api.get(`/api/integrations/oauth/${integrationType}/auth-url/`)
-        window.location.href = authResponse.auth_url
+        const authResponse = await api.get<{ data?: { authorization_url?: string; state?: string } }>(
+          `/api/integrations/oauth/${integrationType}/auth-url/`
+        )
+        const authorizationUrl = resolveAuthorizationUrl(authResponse.data)
+
+        if (!authorizationUrl) {
+          throw new Error('Authorization URL was not provided by the server. Please try again later.')
+        }
+
+        window.location.href = authorizationUrl
       } else {
         // Generic connection flow
         await api.post(`/api/integrations/${integrationType}/connect/`)
@@ -91,6 +160,7 @@ export default function IntegrationsPage() {
       }
     } catch (error) {
       console.error(`Failed to connect ${integrationType}:`, error)
+      setError(formatErrorMessage(error, `Failed to connect ${integrationType}. Please try again later.`))
     }
   }
 
@@ -100,6 +170,7 @@ export default function IntegrationsPage() {
       await loadIntegrations()
     } catch (error) {
       console.error("Failed to disconnect integration:", error)
+      setError(formatErrorMessage(error, 'Failed to disconnect integration. Please try again later.'))
     }
   }
 
@@ -109,6 +180,7 @@ export default function IntegrationsPage() {
       // Could show a success toast here
     } catch (error) {
       console.error("Connection test failed:", error)
+      setError(formatErrorMessage(error, 'Connection test failed. Please try again later.'))
     }
   }
 
