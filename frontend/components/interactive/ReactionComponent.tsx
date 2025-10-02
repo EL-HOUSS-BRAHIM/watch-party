@@ -202,7 +202,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
                 onClick={() => addReaction(reaction.emoji)}
                 className={`group relative p-3 rounded-lg border transition-all duration-200 ${
                   userReacted
-                    ? "bg-blue-600/20 border-blue-600/30 scale-105"
+                    ? "bg-brand-blue/20 border-brand-blue/30 scale-105"
                     : "bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20"
                 } ${isAnimating ? "animate-pulse scale-110" : ""}`}
                 title={reaction.label}

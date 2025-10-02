@@ -317,7 +317,7 @@ export default function FAQPage() {
         </div>
 
         {/* Contact Support */}
-        <div className="mt-12 bg-blue-600/10 border border-blue-600/20 rounded-lg p-6 text-center">
+        <div className="mt-12 bg-brand-blue/10 border border-brand-blue/20 rounded-lg p-6 text-center">
           <h3 className="text-xl font-semibold text-white mb-2">Still Need Help?</h3>
           <p className="text-white/60 mb-4">
             Can't find what you're looking for? Our support team is here to help.

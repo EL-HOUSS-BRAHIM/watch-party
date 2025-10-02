@@ -320,7 +320,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
                       disabled={!canVote}
                       className={`w-full text-left p-3 rounded-lg border transition-all ${
                         isVoted
-                          ? "bg-blue-600/20 border-blue-600/30"
+                          ? "bg-brand-blue/20 border-brand-blue/30"
                           : canVote
                           ? "bg-white/5 border-white/10 hover:bg-white/10"
                           : "bg-white/5 border-white/10 cursor-not-allowed"

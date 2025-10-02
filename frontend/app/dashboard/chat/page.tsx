@@ -112,7 +112,7 @@ export default function ChatPage() {
                     onClick={() => setSelectedParty(party)}
                     className={`w-full text-left p-4 rounded-lg border transition-all ${
                       selectedParty?.id === party.id
-                        ? "bg-blue-600/20 border-blue-600/30 text-white"
+                        ? "bg-brand-blue/20 border-brand-blue/30 text-white"
                         : "bg-white/5 border-white/10 text-white/80 hover:bg-white/10"
                     }`}
                   >

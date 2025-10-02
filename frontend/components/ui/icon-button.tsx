@@ -34,7 +34,7 @@ export function IconButton({
       : "bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white shadow-lg hover:shadow-brand-purple/25",
     secondary: "bg-white/10 hover:bg-white/20 text-white border border-white/20",
     ghost: "text-white/70 hover:text-white hover:bg-white/10",
-    danger: "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white"
+    danger: "bg-gradient-to-r from-brand-coral to-brand-coral-dark hover:from-brand-coral-dark hover:to-brand-coral-dark text-white"
   }
   
   const sizes = {

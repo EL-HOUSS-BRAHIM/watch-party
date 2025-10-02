@@ -78,7 +78,7 @@ export default function RoomsPage() {
     switch (status) {
       case "live": return "bg-gradient-to-r from-brand-cyan to-brand-blue text-white"
       case "scheduled": return "bg-gradient-to-r from-brand-blue to-brand-cyan text-white"
-      case "paused": return "bg-gradient-to-r from-yellow-500 to-orange-500 text-white"
+      case "paused": return "bg-gradient-to-r from-brand-orange to-brand-coral text-white"
       case "ended": return "bg-gradient-to-r from-gray-500 to-slate-500 text-white"
       case "cancelled": return "bg-gradient-to-r from-red-500 to-brand-magenta text-white"
       default: return "bg-white/20 text-white/60"

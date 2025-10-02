@@ -243,7 +243,7 @@ export default function CommunityPage() {
                     className={`p-2 rounded transition-colors ${
                       selectedPost.user_vote === "down"
                         ? "bg-brand-coral text-white"
-                        : "bg-white/10 text-white/60 hover:bg-red-600/20"
+                        : "bg-white/10 text-white/60 hover:bg-brand-coral/20"
                     }`}
                   >
                     ↓
@@ -314,7 +314,7 @@ export default function CommunityPage() {
               <div
                 key={reply.id}
                 className={`bg-white/5 border rounded-lg p-6 ${
-                  reply.is_solution ? "border-green-600/30 bg-green-600/5" : "border-white/10"
+                  reply.is_solution ? "border-brand-cyan/30 bg-brand-cyan/5" : "border-white/10"
                 }`}
               >
                 <div className="flex items-start gap-4">
@@ -335,7 +335,7 @@ export default function CommunityPage() {
                       className={`p-1 rounded transition-colors ${
                         reply.user_vote === "down"
                           ? "bg-brand-coral text-white"
-                          : "bg-white/10 text-white/60 hover:bg-red-600/20"
+                          : "bg-white/10 text-white/60 hover:bg-brand-coral/20"
                       }`}
                     >
                       ↓

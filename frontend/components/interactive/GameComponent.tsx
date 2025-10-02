@@ -338,7 +338,7 @@ function GameInterface({ game, partyId, currentUser, onUpdate }: GameInterfacePr
   switch (game.game_type) {
     case "trivia":
       return (
-        <div className="p-4 bg-purple-600/10 border border-purple-600/20 rounded-lg">
+        <div className="p-4 bg-brand-purple/10 border border-brand-purple/20 rounded-lg">
           <h5 className="text-white font-medium mb-3">Current Question</h5>
           {game.game_data?.current_question ? (
             <div className="space-y-4">

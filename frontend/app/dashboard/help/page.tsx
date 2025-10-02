@@ -60,7 +60,7 @@ export default function HelpPage() {
       description: "Manage your subscription",
       icon: "💳",
       articles: 6,
-      color: "from-yellow-500 to-orange-500"
+      color: "from-brand-orange to-brand-coral"
     },
     {
       id: "account",
