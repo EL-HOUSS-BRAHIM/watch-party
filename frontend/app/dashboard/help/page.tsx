@@ -36,7 +36,7 @@ export default function HelpPage() {
       description: "Learn the basics of Watch Party",
       icon: "🚀",
       articles: 12,
-      color: "from-blue-500 to-cyan-500"
+      color: "from-brand-blue to-brand-cyan"
     },
     {
       id: "hosting",
@@ -44,7 +44,7 @@ export default function HelpPage() {
       description: "Host amazing watch parties",
       icon: "🎬",
       articles: 8,
-      color: "from-purple-500 to-pink-500"
+      color: "from-brand-purple to-brand-magenta"
     },
     {
       id: "technical",
@@ -52,7 +52,7 @@ export default function HelpPage() {
       description: "Troubleshoot technical issues",
       icon: "⚙️",
       articles: 15,
-      color: "from-green-500 to-emerald-500"
+      color: "from-brand-cyan to-brand-blue"
     },
     {
       id: "billing",
@@ -68,7 +68,7 @@ export default function HelpPage() {
       description: "Manage your profile",
       icon: "👤",
       articles: 10,
-      color: "from-red-500 to-pink-500"
+      color: "from-red-500 to-brand-magenta"
     }
   ]
 
@@ -125,7 +125,7 @@ export default function HelpPage() {
       icon: "💬",
       action: "Start Chat",
       available: true,
-      gradient: "from-blue-600 to-purple-600"
+      gradient: "from-brand-blue to-brand-purple"
     },
     {
       title: "Email Support",
@@ -133,7 +133,7 @@ export default function HelpPage() {
       icon: "📧",
       action: "Send Email",
       available: true,
-      gradient: "from-green-600 to-blue-600"
+      gradient: "from-green-600 to-brand-blue"
     },
     {
       title: "Community Forum",
@@ -141,7 +141,7 @@ export default function HelpPage() {
       icon: "👥",
       action: "Visit Forum",
       available: true,
-      gradient: "from-purple-600 to-pink-600"
+      gradient: "from-brand-purple to-brand-magenta"
     },
     {
       title: "Video Tutorials",
@@ -149,7 +149,7 @@ export default function HelpPage() {
       icon: "📹",
       action: "Watch Now",
       available: true,
-      gradient: "from-orange-600 to-red-600"
+      gradient: "from-brand-orange to-brand-coral"
     }
   ]
 
@@ -157,7 +157,7 @@ export default function HelpPage() {
     <div className="space-y-8">
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 via-purple-600/20 to-green-600/20 rounded-3xl blur-xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-blue/20 via-purple-600/20 to-green-600/20 rounded-3xl blur-xl"></div>
         <GradientCard className="relative border-blue-500/30">
           <div className="text-center space-y-4">
             <div className="text-6xl mb-4">🆘</div>
@@ -226,7 +226,7 @@ export default function HelpPage() {
             onClick={() => setSelectedCategory("all")}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap ${
               selectedCategory === "all"
-                ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                ? "bg-gradient-to-r from-brand-blue to-brand-purple text-white"
                 : "bg-white/10 text-white/60 hover:text-white hover:bg-white/20"
             }`}
           >
@@ -239,7 +239,7 @@ export default function HelpPage() {
               onClick={() => setSelectedCategory(category.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap ${
                 selectedCategory === category.id
-                  ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                  ? "bg-gradient-to-r from-brand-blue to-brand-purple text-white"
                   : "bg-white/10 text-white/60 hover:text-white hover:bg-white/20"
               }`}
             >
@@ -305,8 +305,8 @@ export default function HelpPage() {
                     <div className="mt-3 flex items-center gap-4">
                       <span className="text-white/50 text-sm">Was this helpful?</span>
                       <div className="flex gap-2">
-                        <button className="text-green-400 hover:text-green-300 transition-colors">👍</button>
-                        <button className="text-red-400 hover:text-red-300 transition-colors">👎</button>
+                        <button className="text-brand-cyan-light hover:text-green-300 transition-colors">👍</button>
+                        <button className="text-brand-coral-light hover:text-red-300 transition-colors">👎</button>
                       </div>
                     </div>
                   </div>
@@ -337,7 +337,7 @@ export default function HelpPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <IconButton
-              gradient="from-blue-600 to-purple-600"
+              gradient="from-brand-blue to-brand-purple"
               className="shadow-lg hover:shadow-blue-500/25"
             >
               <span>💬</span>

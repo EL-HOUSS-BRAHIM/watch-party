@@ -39,7 +39,7 @@ export default function VerifyEmailPage() {
       <div className="min-h-[80vh] flex items-center justify-center">
         <div className="w-full max-w-md space-y-8 text-center">
           <div>
-            <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <div className="animate-spin w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
             <h1 className="text-3xl font-bold text-white">Verifying Email</h1>
             <p className="mt-4 text-white/70">
               Please wait while we verify your email address...
@@ -65,13 +65,13 @@ export default function VerifyEmailPage() {
           <div className="space-y-4">
             <Link 
               href="/dashboard"
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+              className="inline-block bg-brand-blue hover:bg-brand-blue-dark text-white px-6 py-3 rounded-lg font-medium transition-colors"
             >
               Go to Dashboard
             </Link>
             
             <div>
-              <Link href="/auth/login" className="text-blue-400 hover:text-blue-300 text-sm">
+              <Link href="/auth/login" className="text-brand-blue-light hover:text-brand-blue-light text-sm">
                 Sign In
               </Link>
             </div>
@@ -95,14 +95,14 @@ export default function VerifyEmailPage() {
         <div className="space-y-4">
           <Link 
             href="/auth/resend-verification"
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+            className="inline-block bg-brand-blue hover:bg-brand-blue-dark text-white px-6 py-3 rounded-lg font-medium transition-colors"
           >
             Resend Verification Email
           </Link>
           
           <div className="space-y-2">
             <div>
-              <Link href="/auth/login" className="text-blue-400 hover:text-blue-300 text-sm">
+              <Link href="/auth/login" className="text-brand-blue-light hover:text-brand-blue-light text-sm">
                 Back to Login
               </Link>
             </div>

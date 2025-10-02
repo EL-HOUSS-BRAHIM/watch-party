@@ -128,11 +128,11 @@ export default function NotificationsPage() {
   // Helper function for notification color (available for future use)
   const _getNotificationColor = (type: string) => {
     switch (type) {
-      case "party_invite": return "text-blue-400"
-      case "friend_request": return "text-green-400"
-      case "message": return "text-yellow-400"
-      case "video_processed": return "text-purple-400"
-      case "party_started": return "text-red-400"
+      case "party_invite": return "text-brand-blue-light"
+      case "friend_request": return "text-brand-cyan-light"
+      case "message": return "text-brand-orange-light"
+      case "video_processed": return "text-brand-purple-light"
+      case "party_started": return "text-brand-coral-light"
       case "system": return "text-gray-400"
       default: return "text-white/60"
     }
@@ -161,7 +161,7 @@ export default function NotificationsPage() {
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <div className="animate-spin w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-white/60">Loading notifications...</p>
           </div>
         </div>
@@ -194,7 +194,7 @@ export default function NotificationsPage() {
               {unreadCount > 0 && (
                 <button
                   onClick={markAllAsRead}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+                  className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm font-medium transition-colors"
                 >
                   Mark All Read
                 </button>
@@ -203,7 +203,7 @@ export default function NotificationsPage() {
               {selectedNotifications.size > 0 && (
                 <button
                   onClick={bulkDelete}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
+                  className="px-4 py-2 bg-brand-coral hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
                 >
                   Delete Selected ({selectedNotifications.size})
                 </button>
@@ -227,7 +227,7 @@ export default function NotificationsPage() {
                 onClick={() => setFilter(tab.id as any)}
                 className={`flex items-center gap-2 px-4 py-4 text-sm font-medium border-b-2 transition-colors ${
                   filter === tab.id
-                    ? "text-blue-400 border-blue-400"
+                    ? "text-brand-blue-light border-blue-400"
                     : "text-white/60 border-transparent hover:text-white"
                 }`}
               >
@@ -354,7 +354,7 @@ export default function NotificationsPage() {
                       {!notification.is_read && (
                         <button
                           onClick={() => markAsRead(notification.id)}
-                          className="text-blue-400 hover:text-blue-300 text-sm transition-colors"
+                          className="text-brand-blue-light hover:text-brand-blue-light text-sm transition-colors"
                         >
                           Mark as read
                         </button>
@@ -363,7 +363,7 @@ export default function NotificationsPage() {
                       {notification.action_url && (
                         <a
                           href={notification.action_url}
-                          className="text-green-400 hover:text-green-300 text-sm transition-colors"
+                          className="text-brand-cyan-light hover:text-green-300 text-sm transition-colors"
                         >
                           View
                         </a>
@@ -371,7 +371,7 @@ export default function NotificationsPage() {
                       
                       <button
                         onClick={() => deleteNotification(notification.id)}
-                        className="text-red-400 hover:text-red-300 text-sm transition-colors"
+                        className="text-brand-coral-light hover:text-red-300 text-sm transition-colors"
                       >
                         Delete
                       </button>
@@ -380,7 +380,7 @@ export default function NotificationsPage() {
 
                   {/* Unread Indicator */}
                   {!notification.is_read && (
-                    <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+                    <div className="w-2 h-2 bg-brand-blue rounded-full mt-2 flex-shrink-0"></div>
                   )}
                 </div>
               ))}

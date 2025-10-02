@@ -95,7 +95,7 @@ export default function MobilePartiesPage() {
               onClick={() => setFilter(tab.value as any)}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                 filter === tab.value
-                  ? "bg-blue-600 text-white"
+                  ? "bg-brand-blue text-white"
                   : "text-white/70 hover:text-white"
               }`}
             >
@@ -122,7 +122,7 @@ export default function MobilePartiesPage() {
               </p>
               <a
                 href="/dashboard/parties/create"
-                className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                className="inline-block px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg font-medium transition-colors"
               >
                 Create Party
               </a>
@@ -163,9 +163,9 @@ export default function MobilePartiesPage() {
                               <span className="w-2 h-2 bg-gray-400 rounded-full"></span>
                             )}
                             {party.is_public ? (
-                              <span className="text-green-400 text-xs">🌐</span>
+                              <span className="text-brand-cyan-light text-xs">🌐</span>
                             ) : (
-                              <span className="text-yellow-400 text-xs">🔒</span>
+                              <span className="text-brand-orange-light text-xs">🔒</span>
                             )}
                           </div>
                         </div>
@@ -207,7 +207,7 @@ export default function MobilePartiesPage() {
                               e.stopPropagation()
                               window.location.href = `/dashboard/parties/${party.id}`
                             }}
-                            className="flex-1 py-2 px-3 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg font-medium transition-colors"
+                            className="flex-1 py-2 px-3 bg-brand-blue hover:bg-brand-blue-dark text-white text-sm rounded-lg font-medium transition-colors"
                           >
                             View
                           </button>
@@ -237,7 +237,7 @@ export default function MobilePartiesPage() {
       {/* Floating Action Button */}
       <a
         href="/dashboard/parties/create"
-        className="fixed bottom-20 right-4 w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 z-20"
+        className="fixed bottom-20 right-4 w-14 h-14 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 z-20"
       >
         <span className="text-2xl">+</span>
       </a>

@@ -22,15 +22,15 @@ export default function AnalyticsCard({
   const getColorClasses = (color: string) => {
     switch (color) {
       case "green":
-        return "text-green-400 bg-green-500/20"
+        return "text-brand-cyan-light bg-green-500/20"
       case "purple":
-        return "text-purple-400 bg-purple-500/20"
+        return "text-brand-purple-light bg-purple-500/20"
       case "yellow":
-        return "text-yellow-400 bg-yellow-500/20"
+        return "text-brand-orange-light bg-yellow-500/20"
       case "red":
-        return "text-red-400 bg-red-500/20"
+        return "text-brand-coral-light bg-red-500/20"
       default:
-        return "text-blue-400 bg-blue-500/20"
+        return "text-brand-blue-light bg-blue-500/20"
     }
   }
 
@@ -38,7 +38,7 @@ export default function AnalyticsCard({
     const isPositive = change >= 0
     return (
       <span className={`text-sm flex items-center gap-1 ${
-        isPositive ? "text-green-400" : "text-red-400"
+        isPositive ? "text-brand-cyan-light" : "text-brand-coral-light"
       }`}>
         <span>{isPositive ? "↗" : "↘"}</span>
         {Math.abs(change).toFixed(1)}%

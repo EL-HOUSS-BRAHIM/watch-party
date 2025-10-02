@@ -76,11 +76,11 @@ export default function RoomsPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "live": return "bg-gradient-to-r from-green-500 to-emerald-500 text-white"
-      case "scheduled": return "bg-gradient-to-r from-blue-500 to-cyan-500 text-white"
+      case "live": return "bg-gradient-to-r from-brand-cyan to-brand-blue text-white"
+      case "scheduled": return "bg-gradient-to-r from-brand-blue to-brand-cyan text-white"
       case "paused": return "bg-gradient-to-r from-yellow-500 to-orange-500 text-white"
       case "ended": return "bg-gradient-to-r from-gray-500 to-slate-500 text-white"
-      case "cancelled": return "bg-gradient-to-r from-red-500 to-pink-500 text-white"
+      case "cancelled": return "bg-gradient-to-r from-red-500 to-brand-magenta text-white"
       default: return "bg-white/20 text-white/60"
     }
   }
@@ -111,7 +111,7 @@ export default function RoomsPage() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="animate-spin w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <div className="animate-spin w-12 h-12 border-4 border-brand-purple border-t-transparent rounded-full mx-auto mb-4"></div>
           <p className="text-white/60">Loading your rooms...</p>
         </div>
       </div>
@@ -122,7 +122,7 @@ export default function RoomsPage() {
     <div className="space-y-8">
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-red-600/20 rounded-3xl blur-xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-pink-600/20 to-brand-coral/20 rounded-3xl blur-xl"></div>
         <GradientCard className="relative border-purple-500/30">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
@@ -149,7 +149,7 @@ export default function RoomsPage() {
             <div className="flex items-center gap-3">
               <IconButton
                 onClick={() => router.push("/dashboard/parties/create")}
-                gradient="from-purple-600 to-pink-600"
+                gradient="from-brand-purple to-brand-magenta"
                 className="shadow-lg hover:shadow-purple-500/25"
               >
                 <span>🎬</span>
@@ -178,7 +178,7 @@ export default function RoomsPage() {
             onClick={() => setActiveTab(tab.id as any)}
             className={`flex items-center gap-3 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
               activeTab === tab.id
-                ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
+                ? "bg-gradient-to-r from-brand-purple to-brand-magenta text-white shadow-lg"
                 : "text-white/60 hover:text-white hover:bg-white/10"
             }`}
           >
@@ -195,7 +195,7 @@ export default function RoomsPage() {
           <div className="flex items-center gap-4">
             <div className="text-3xl">⚠️</div>
             <div className="flex-1">
-              <p className="text-red-400 font-medium">{error}</p>
+              <p className="text-brand-coral-light font-medium">{error}</p>
               <button
                 onClick={loadParties}
                 className="mt-2 text-red-300 hover:text-red-200 underline text-sm"
@@ -286,7 +286,7 @@ export default function RoomsPage() {
                       onClick={() => handleDeleteParty(party.id)}
                       variant="secondary"
                       size="sm"
-                      className="hover:bg-red-600/20 hover:text-red-400"
+                      className="hover:bg-red-600/20 hover:text-brand-coral-light"
                     >
                       🗑️
                     </IconButton>
@@ -298,7 +298,7 @@ export default function RoomsPage() {
                     onClick={() => handleLeaveParty(party.id)}
                     variant="secondary"
                     size="sm"
-                    className="hover:bg-red-600/20 hover:text-red-400"
+                    className="hover:bg-red-600/20 hover:text-brand-coral-light"
                   >
                     🚪 Leave
                   </IconButton>
@@ -319,7 +319,7 @@ export default function RoomsPage() {
                           navigator.clipboard.writeText(party.invite_code!)
                           // Could add a toast notification here
                         }}
-                        className="text-blue-400 hover:text-blue-300 text-sm transition-colors"
+                        className="text-brand-blue-light hover:text-brand-blue-light text-sm transition-colors"
                         title="Copy invite code"
                       >
                         📋
@@ -381,7 +381,7 @@ export default function RoomsPage() {
       {/* Stats Overview */}
       {currentParties.length > 0 && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <GradientCard gradient="from-green-500/20 to-emerald-500/20" className="text-center">
+          <GradientCard gradient="from-green-500/20 to-brand-blue/20" className="text-center">
             <div className="text-2xl mb-2">🔴</div>
             <div className="text-2xl font-bold text-white">
               {formatNumber(currentParties.filter(p => p.status === "live").length)}
@@ -389,7 +389,7 @@ export default function RoomsPage() {
             <div className="text-white/60 text-sm">Live Now</div>
           </GradientCard>
 
-          <GradientCard gradient="from-blue-500/20 to-cyan-500/20" className="text-center">
+          <GradientCard gradient="from-brand-blue/20 to-brand-cyan/20" className="text-center">
             <div className="text-2xl mb-2">⏰</div>
             <div className="text-2xl font-bold text-white">
               {formatNumber(currentParties.filter(p => p.status === "scheduled").length)}
@@ -397,7 +397,7 @@ export default function RoomsPage() {
             <div className="text-white/60 text-sm">Scheduled</div>
           </GradientCard>
 
-          <GradientCard gradient="from-purple-500/20 to-pink-500/20" className="text-center">
+          <GradientCard gradient="from-purple-500/20 to-brand-magenta/20" className="text-center">
             <div className="text-2xl mb-2">👥</div>
             <div className="text-2xl font-bold text-white">
               {formatNumber(currentParties.reduce((sum, p) => sum + (p.participant_count || 0), 0))}
@@ -405,7 +405,7 @@ export default function RoomsPage() {
             <div className="text-white/60 text-sm">Total Participants</div>
           </GradientCard>
 
-          <GradientCard gradient="from-orange-500/20 to-red-500/20" className="text-center">
+          <GradientCard gradient="from-brand-orange/20 to-brand-coral/20" className="text-center">
             <div className="text-2xl mb-2">📺</div>
             <div className="text-2xl font-bold text-white">
               {formatNumber(currentParties.length)}

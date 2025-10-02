@@ -82,7 +82,7 @@ export function DashboardHeader() {
             >
               <span className="text-xl">🔔</span>
               {notificationCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-coral text-[10px] font-bold text-white">
                   {notificationCount}
                 </span>
               )}
@@ -106,7 +106,7 @@ export function DashboardHeader() {
                   )}
                 </div>
                 <div className="p-3 border-t border-white/10">
-                  <Link href="/dashboard/notifications" className="text-xs text-purple-400 hover:text-purple-300 font-medium">
+                  <Link href="/dashboard/notifications" className="text-xs text-brand-purple-light hover:text-brand-purple-light font-medium">
                     View all notifications
                   </Link>
                 </div>
@@ -128,7 +128,7 @@ export function DashboardHeader() {
               onClick={() => setShowUserMenu(!showUserMenu)}
               className="flex items-center gap-3 px-3 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
             >
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-blue-500">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-brand-purple to-blue-500">
                 {user?.avatar ? (
                   <img src={user.avatar} alt={user.username} className="w-full h-full rounded-lg object-cover" />
                 ) : (
@@ -149,7 +149,7 @@ export function DashboardHeader() {
                   <p className="text-xs text-white/50">@{user.username}</p>
                   {(user.is_premium || user.is_staff) && (
                     <div className="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30">
-                      <span className="text-xs font-bold text-purple-400">
+                      <span className="text-xs font-bold text-brand-purple-light">
                         {user.is_premium ? "Premium" : "Pro"}
                       </span>
                     </div>
@@ -169,7 +169,7 @@ export function DashboardHeader() {
                     className="flex items-center gap-3 px-4 py-2 hover:bg-white/5 transition-colors w-full text-left"
                   >
                     <span className="text-sm">🚪</span>
-                    <span className="text-sm text-red-400">Sign Out</span>
+                    <span className="text-sm text-brand-coral-light">Sign Out</span>
                   </button>
                 </div>
               </div>

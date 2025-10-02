@@ -186,10 +186,10 @@ export default function IntegrationsPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "connected": return "bg-green-500/20 text-green-400"
+      case "connected": return "bg-green-500/20 text-brand-cyan-light"
       case "disconnected": return "bg-gray-500/20 text-gray-400"
-      case "pending": return "bg-yellow-500/20 text-yellow-400"
-      case "error": return "bg-red-500/20 text-red-400"
+      case "pending": return "bg-yellow-500/20 text-brand-orange-light"
+      case "error": return "bg-red-500/20 text-brand-coral-light"
       default: return "bg-gray-500/20 text-gray-400"
     }
   }
@@ -258,7 +258,7 @@ export default function IntegrationsPage() {
         </div>
         <button
           onClick={() => router.push("/dashboard/integrations/custom")}
-          className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25"
+          className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25"
         >
           <span className="flex items-center gap-2">
             <span>🔧</span>
@@ -363,12 +363,12 @@ export default function IntegrationsPage() {
                   <p className="text-sm text-white/70 mb-2">Features</p>
                   <div className="flex flex-wrap gap-1">
                     {integration.features.slice(0, 3).map((feature, index) => (
-                      <span key={index} className="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded-full">
+                      <span key={index} className="px-2 py-1 bg-blue-600/20 text-brand-blue-light text-xs rounded-full">
                         {feature}
                       </span>
                     ))}
                     {integration.features.length > 3 && (
-                      <span className="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded-full">
+                      <span className="px-2 py-1 bg-blue-600/20 text-brand-blue-light text-xs rounded-full">
                         +{integration.features.length - 3}
                       </span>
                     )}
@@ -380,7 +380,7 @@ export default function IntegrationsPage() {
               <div className="flex gap-2">
                 <button
                   onClick={() => handleTestConnection(integration.id)}
-                  className="flex-1 px-3 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-lg text-sm font-medium transition-colors"
+                  className="flex-1 px-3 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-brand-blue-light rounded-lg text-sm font-medium transition-colors"
                 >
                   Test
                 </button>
@@ -392,7 +392,7 @@ export default function IntegrationsPage() {
                 </button>
                 <button
                   onClick={() => handleDisconnect(integration.id)}
-                  className="px-3 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg text-sm font-medium transition-colors"
+                  className="px-3 py-2 bg-red-600/20 hover:bg-red-600/30 text-brand-coral-light rounded-lg text-sm font-medium transition-colors"
                 >
                   Disconnect
                 </button>
@@ -415,7 +415,7 @@ export default function IntegrationsPage() {
                         {getCategoryIcon(type.category)} {type.category}
                       </span>
                       {type.is_premium && (
-                        <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-xs font-medium">
+                        <span className="px-2 py-1 bg-yellow-500/20 text-brand-orange-light rounded-full text-xs font-medium">
                           ⭐ Premium
                         </span>
                       )}
@@ -432,12 +432,12 @@ export default function IntegrationsPage() {
                 <p className="text-sm text-white/70 mb-2">Features</p>
                 <div className="flex flex-wrap gap-1">
                   {type.features.slice(0, 3).map((feature, index) => (
-                    <span key={index} className="px-2 py-1 bg-purple-600/20 text-purple-400 text-xs rounded-full">
+                    <span key={index} className="px-2 py-1 bg-purple-600/20 text-brand-purple-light text-xs rounded-full">
                       {feature}
                     </span>
                   ))}
                   {type.features.length > 3 && (
-                    <span className="px-2 py-1 bg-purple-600/20 text-purple-400 text-xs rounded-full">
+                    <span className="px-2 py-1 bg-purple-600/20 text-brand-purple-light text-xs rounded-full">
                       +{type.features.length - 3}
                     </span>
                   )}
@@ -448,7 +448,7 @@ export default function IntegrationsPage() {
               <div className="flex gap-2">
                 <button
                   onClick={() => handleConnect(type.id)}
-                  className="flex-1 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-lg font-medium transition-all duration-200"
+                  className="flex-1 px-4 py-2 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-lg font-medium transition-all duration-200"
                 >
                   Connect
                 </button>
@@ -478,7 +478,7 @@ export default function IntegrationsPage() {
           {!searchQuery && (
             <button
               onClick={() => setActiveTab("available")}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200"
+              className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
             >
               Browse Available Integrations
             </button>

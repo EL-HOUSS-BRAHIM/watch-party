@@ -156,7 +156,7 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
         {isHost && !currentGame && (
           <button
             onClick={() => setShowGameSelection(!showGameSelection)}
-            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
+            className="px-4 py-2 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg text-sm font-medium transition-colors"
           >
             {showGameSelection ? "Cancel" : "Start Game"}
           </button>
@@ -209,11 +209,11 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
 
               <div className="flex items-center gap-2">
                 {currentGame.is_active ? (
-                  <span className="px-2 py-1 bg-green-600/20 text-green-400 text-xs rounded">
+                  <span className="px-2 py-1 bg-green-600/20 text-brand-cyan-light text-xs rounded">
                     Active
                   </span>
                 ) : (
-                  <span className="px-2 py-1 bg-red-600/20 text-red-400 text-xs rounded">
+                  <span className="px-2 py-1 bg-red-600/20 text-brand-coral-light text-xs rounded">
                     Ended
                   </span>
                 )}
@@ -255,14 +255,14 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
                 {!isParticipant ? (
                   <button
                     onClick={joinGame}
-                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm transition-colors"
+                    className="px-4 py-2 bg-brand-cyan hover:bg-green-700 text-white rounded-lg text-sm transition-colors"
                   >
                     Join Game
                   </button>
                 ) : (
                   <button
                     onClick={leaveGame}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm transition-colors"
+                    className="px-4 py-2 bg-brand-coral hover:bg-red-700 text-white rounded-lg text-sm transition-colors"
                   >
                     Leave Game
                   </button>
@@ -271,7 +271,7 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
                 {isHost && (
                   <button
                     onClick={endGame}
-                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm transition-colors"
+                    className="px-4 py-2 bg-brand-coral hover:bg-red-700 text-white rounded-lg text-sm transition-colors"
                   >
                     End Game
                   </button>
@@ -351,7 +351,7 @@ function GameInterface({ game, partyId, currentUser, onUpdate }: GameInterfacePr
                       onClick={() => setAnswer(option)}
                       className={`p-2 rounded border transition-colors ${
                         answer === option
-                          ? "bg-blue-600 border-blue-600 text-white"
+                          ? "bg-brand-blue border-brand-blue text-white"
                           : "bg-white/10 border-white/20 text-white/80 hover:bg-white/20"
                       }`}
                     >
@@ -363,7 +363,7 @@ function GameInterface({ game, partyId, currentUser, onUpdate }: GameInterfacePr
               <button
                 onClick={submitAnswer}
                 disabled={submitting || !answer}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm transition-colors"
+                className="px-4 py-2 bg-brand-cyan hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm transition-colors"
               >
                 {submitting ? "Submitting..." : "Submit Answer"}
               </button>
@@ -394,7 +394,7 @@ function GameInterface({ game, partyId, currentUser, onUpdate }: GameInterfacePr
             <button
               onClick={submitAnswer}
               disabled={submitting || !answer.trim()}
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm transition-colors"
+              className="px-4 py-2 bg-brand-cyan hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm transition-colors"
             >
               {submitting ? "Submitting..." : "Submit"}
             </button>

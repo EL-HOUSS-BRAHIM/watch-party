@@ -37,7 +37,7 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
         <div className="flex items-center justify-between px-4 py-3">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-brand-blue to-brand-purple rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">WP</span>
             </div>
             <span className="font-bold text-white">Watch Party</span>
@@ -52,7 +52,7 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
             >
               <span className="text-xl">🔔</span>
               {notificationCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-coral text-white text-xs rounded-full flex items-center justify-center">
                   {notificationCount > 9 ? "9+" : notificationCount}
                 </span>
               )}
@@ -102,9 +102,9 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
 
           <button
             onClick={() => window.location.href = "/dashboard/parties/create"}
-            className="flex flex-col items-center py-2 px-1 text-blue-400 hover:text-blue-300 transition-colors"
+            className="flex flex-col items-center py-2 px-1 text-brand-blue-light hover:text-brand-blue-light transition-colors"
           >
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center mb-1">
+            <div className="w-8 h-8 bg-brand-blue rounded-full flex items-center justify-center mb-1">
               <span className="text-white text-lg">+</span>
             </div>
             <span className="text-xs font-medium">Create</span>

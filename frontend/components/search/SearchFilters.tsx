@@ -131,7 +131,7 @@ export default function SearchFilters({
           {hasActiveFilters() && (
             <button
               onClick={resetFilters}
-              className="px-3 py-1 bg-red-600/20 hover:bg-red-600/30 text-red-400 text-sm rounded transition-colors"
+              className="px-3 py-1 bg-red-600/20 hover:bg-red-600/30 text-brand-coral-light text-sm rounded transition-colors"
             >
               Clear All
             </button>
@@ -219,7 +219,7 @@ export default function SearchFilters({
             <button
               onClick={addTag}
               disabled={!tagInput.trim()}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+              className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
             >
               Add
             </button>
@@ -229,12 +229,12 @@ export default function SearchFilters({
               {filters.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="flex items-center gap-1 px-2 py-1 bg-blue-600/20 text-blue-400 text-sm rounded"
+                  className="flex items-center gap-1 px-2 py-1 bg-blue-600/20 text-brand-blue-light text-sm rounded"
                 >
                   {tag}
                   <button
                     onClick={() => removeTag(tag)}
-                    className="hover:text-blue-300 transition-colors"
+                    className="hover:text-brand-blue-light transition-colors"
                   >
                     ✕
                   </button>
@@ -307,27 +307,27 @@ export default function SearchFilters({
             <p className="text-white/60 text-sm mb-2">Active filters:</p>
             <div className="flex flex-wrap gap-2">
               {filters.type !== "all" && (
-                <span className="px-2 py-1 bg-purple-600/20 text-purple-400 text-xs rounded">
+                <span className="px-2 py-1 bg-purple-600/20 text-brand-purple-light text-xs rounded">
                   Type: {availableTypes.find(t => t.value === filters.type)?.label}
                 </span>
               )}
               {filters.visibility !== "all" && (
-                <span className="px-2 py-1 bg-green-600/20 text-green-400 text-xs rounded">
+                <span className="px-2 py-1 bg-green-600/20 text-brand-cyan-light text-xs rounded">
                   Visibility: {VISIBILITY_OPTIONS.find(o => o.value === filters.visibility)?.label}
                 </span>
               )}
               {filters.date_range !== "all" && (
-                <span className="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded">
+                <span className="px-2 py-1 bg-blue-600/20 text-brand-blue-light text-xs rounded">
                   Date: {DATE_RANGE_OPTIONS.find(o => o.value === filters.date_range)?.label}
                 </span>
               )}
               {filters.sort_by !== "relevance" && (
-                <span className="px-2 py-1 bg-yellow-600/20 text-yellow-400 text-xs rounded">
+                <span className="px-2 py-1 bg-yellow-600/20 text-brand-orange-light text-xs rounded">
                   Sort: {SORT_OPTIONS.find(o => o.value === filters.sort_by)?.label}
                 </span>
               )}
               {filters.tags && filters.tags.length > 0 && (
-                <span className="px-2 py-1 bg-red-600/20 text-red-400 text-xs rounded">
+                <span className="px-2 py-1 bg-red-600/20 text-brand-coral-light text-xs rounded">
                   Tags: {filters.tags.length}
                 </span>
               )}

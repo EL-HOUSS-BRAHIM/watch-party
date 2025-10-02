@@ -70,15 +70,15 @@ export function ConfirmDialog({
   const variants = {
     danger: {
       icon: '⚠️',
-      confirmBg: 'bg-red-600 hover:bg-red-700',
+      confirmBg: 'bg-brand-coral hover:bg-red-700',
     },
     warning: {
       icon: '⚠️',
-      confirmBg: 'bg-yellow-600 hover:bg-yellow-700',
+      confirmBg: 'bg-brand-orange hover:bg-yellow-700',
     },
     info: {
       icon: 'ℹ️',
-      confirmBg: 'bg-blue-600 hover:bg-blue-700',
+      confirmBg: 'bg-brand-blue hover:bg-brand-blue-dark',
     },
   }
 
@@ -146,7 +146,7 @@ export function LoadingState({ message = 'Loading...' }: LoadingStateProps) {
   return (
     <div className="flex items-center justify-center py-12">
       <div className="text-center">
-        <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent"></div>
+        <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-brand-purple border-t-transparent"></div>
         <p className="text-white/70">{message}</p>
       </div>
     </div>
@@ -174,7 +174,7 @@ export function EmptyState({ icon, title, message, actionLabel, onAction }: Empt
         {actionLabel && onAction && (
           <button
             onClick={onAction}
-            className="rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3 font-semibold text-white hover:shadow-lg transition-all"
+            className="rounded-lg bg-gradient-to-r from-brand-purple to-brand-blue px-6 py-3 font-semibold text-white hover:shadow-lg transition-all"
           >
             {actionLabel}
           </button>

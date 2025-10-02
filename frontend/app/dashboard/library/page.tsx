@@ -76,7 +76,7 @@ export default function LibraryPage() {
   }
 
   const getVisibilityColor = (visibility: string) => {
-    return visibility === "public" ? "text-green-400" : "text-yellow-400"
+    return visibility === "public" ? "text-brand-cyan-light" : "text-brand-orange-light"
   }
 
   const filteredAndSortedMedia = media
@@ -109,7 +109,7 @@ export default function LibraryPage() {
 
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-cyan-600/20 rounded-3xl blur-xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-brand-cyan/20 rounded-3xl blur-xl"></div>
         <GradientCard className="relative border-purple-500/30">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
@@ -132,7 +132,7 @@ export default function LibraryPage() {
             <div className="flex items-center gap-3">
               <IconButton
                 onClick={() => router.push("/dashboard/videos/upload")}
-                gradient="from-purple-600 to-blue-600"
+                gradient="from-brand-purple to-brand-blue"
                 className="shadow-lg hover:shadow-purple-500/25"
               >
                 <span>📤</span>
@@ -165,7 +165,7 @@ export default function LibraryPage() {
                 onClick={() => setFilterBy(key as any)}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                   filterBy === key
-                    ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg"
+                    ? "bg-gradient-to-r from-brand-purple to-brand-blue text-white shadow-lg"
                     : "text-white/60 hover:text-white hover:bg-white/10"
                 }`}
               >
@@ -265,7 +265,7 @@ export default function LibraryPage() {
                 {/* Ambience Tag */}
                 <div className="flex items-center gap-2">
                   <span className="text-white/50 text-xs">Ambience:</span>
-                  <span className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 px-3 py-1 rounded-full text-xs text-white border border-white/10">
+                  <span className="bg-gradient-to-r from-purple-600/20 to-brand-blue/20 px-3 py-1 rounded-full text-xs text-white border border-white/10">
                     🎨 {item.ambience}
                   </span>
                 </div>

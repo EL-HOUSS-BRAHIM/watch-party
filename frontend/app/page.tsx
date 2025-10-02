@@ -177,9 +177,9 @@ export default function HomePage() {
             {/* Simulated Interface */}
             <div className="relative z-10">
               <div className="flex items-center gap-3 mb-8 bg-black/30 px-4 py-3 rounded-xl">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-brand-coral rounded-full"></div>
+                <div className="w-3 h-3 bg-brand-orange rounded-full"></div>
+                <div className="w-3 h-3 bg-brand-cyan rounded-full"></div>
                 <div className="ml-4 text-white/60 text-sm font-mono">watch-party.app/party/DEMO123</div>
               </div>
               
@@ -187,7 +187,7 @@ export default function HomePage() {
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-white text-2xl font-bold">Friday Night Movies 🍿</h3>
                   <div className="flex items-center gap-2 bg-red-500/20 px-4 py-2 rounded-full border border-red-500/30">
-                    <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                    <span className="w-2 h-2 bg-brand-coral rounded-full animate-pulse"></span>
                     <span className="text-red-300 text-sm font-bold">LIVE</span>
                   </div>
                 </div>

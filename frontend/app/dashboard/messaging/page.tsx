@@ -194,7 +194,7 @@ export default function MessagingPage() {
           
           <button
             onClick={() => router.push("/dashboard/messaging/new")}
-            className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25"
+            className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25"
           >
             <span className="flex items-center justify-center gap-2">
               <span>✉️</span>
@@ -239,7 +239,7 @@ export default function MessagingPage() {
                           className="w-12 h-12 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
+                        <div className="w-12 h-12 bg-gradient-to-br from-brand-purple to-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
                           {conversation.type === "direct" ? "👤" : 
                            conversation.type === "group" ? "👥" : "🎬"}
                         </div>
@@ -256,7 +256,7 @@ export default function MessagingPage() {
                           {getConversationName(conversation)}
                         </h3>
                         {conversation.unread_count > 0 && (
-                          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                          <span className="bg-brand-coral text-white text-xs px-2 py-1 rounded-full">
                             {conversation.unread_count}
                           </span>
                         )}
@@ -304,7 +304,7 @@ export default function MessagingPage() {
                           className="w-10 h-10 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white">
+                        <div className="w-10 h-10 bg-gradient-to-br from-brand-purple to-blue-500 rounded-full flex items-center justify-center text-white">
                           {selectedConversation.type === "direct" ? "👤" : 
                            selectedConversation.type === "group" ? "👥" : "🎬"}
                         </div>
@@ -338,12 +338,12 @@ export default function MessagingPage() {
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
                   {loadingMessages ? (
                     <div className="flex justify-center">
-                      <div className="animate-spin w-8 h-8 border-4 border-purple-600 border-t-transparent rounded-full"></div>
+                      <div className="animate-spin w-8 h-8 border-4 border-brand-purple border-t-transparent rounded-full"></div>
                     </div>
                   ) : (
                     messages.map((message) => (
                       <div key={message.id} className="flex gap-3">
-                        <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
+                        <div className="w-8 h-8 bg-gradient-to-br from-brand-purple to-blue-500 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
                           {message.sender.username.charAt(0).toUpperCase()}
                         </div>
                         
@@ -354,7 +354,7 @@ export default function MessagingPage() {
                           </div>
                           
                           {message.reply_to && (
-                            <div className="p-2 bg-white/5 border-l-2 border-purple-500 rounded mb-2">
+                            <div className="p-2 bg-white/5 border-l-2 border-brand-purple rounded mb-2">
                               <p className="text-xs text-white/60 mb-1">
                                 Replying to {message.reply_to.sender.username}
                               </p>
@@ -397,7 +397,7 @@ export default function MessagingPage() {
                     <button
                       onClick={handleSendMessage}
                       disabled={!newMessage.trim()}
-                      className="px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+                      className="px-6 py-3 bg-brand-purple hover:bg-brand-purple-dark disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
                     >
                       Send
                     </button>

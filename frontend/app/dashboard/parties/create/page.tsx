@@ -136,12 +136,12 @@ export default function CreatePartyPage() {
                 <div className="flex flex-col items-center gap-3">
                   <div className={`relative w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-lg transition-all duration-300 ${
                     step >= item.step 
-                      ? "bg-gradient-to-br from-purple-500 to-blue-600 text-white shadow-lg scale-110" 
+                      ? "bg-gradient-to-br from-brand-purple to-brand-blue text-white shadow-lg scale-110" 
                       : "bg-white/10 text-white/50 border-2 border-white/20"
                   }`}>
                     {step > item.step ? "✓" : item.icon}
                     {step === item.step && (
-                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-600 animate-pulse opacity-50"></div>
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-brand-purple to-brand-blue animate-pulse opacity-50"></div>
                     )}
                   </div>
                   <div className="text-center">
@@ -155,7 +155,7 @@ export default function CreatePartyPage() {
                 </div>
                 {index < 2 && (
                   <div className={`w-16 h-1 rounded-full transition-all duration-300 ${
-                    step > item.step ? "bg-gradient-to-r from-purple-500 to-blue-600" : "bg-white/20"
+                    step > item.step ? "bg-gradient-to-r from-brand-purple to-brand-blue" : "bg-white/20"
                   }`}></div>
                 )}
               </div>
@@ -215,7 +215,7 @@ export default function CreatePartyPage() {
                         onClick={() => setPartyData(prev => ({ ...prev, visibility: option.value as any }))}
                         className={`p-4 rounded-xl border transition-all duration-200 text-center ${
                           partyData.visibility === option.value
-                            ? "border-purple-500 bg-purple-500/20"
+                            ? "border-brand-purple bg-purple-500/20"
                             : "border-white/20 bg-white/5 hover:border-white/30"
                         }`}
                       >
@@ -320,10 +320,10 @@ export default function CreatePartyPage() {
                     type="file"
                     accept="video/*"
                     onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-purple-600 file:text-white"
+                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-brand-purple file:text-white"
                   />
                   {videoFile && (
-                    <p className="text-green-400 text-sm mt-2">✓ {videoFile.name} selected</p>
+                    <p className="text-brand-cyan-light text-sm mt-2">✓ {videoFile.name} selected</p>
                   )}
                 </div>
               )}
@@ -346,7 +346,7 @@ export default function CreatePartyPage() {
                 <div className="max-w-2xl mx-auto mt-8 p-6 bg-white/5 rounded-xl border border-white/10 text-center">
                   <h3 className="text-white font-medium mb-4">Choose from Library</h3>
                   <p className="text-white/60 mb-4">Browse your existing videos in the next step</p>
-                  <button className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors">
+                  <button className="px-6 py-3 bg-brand-cyan hover:bg-green-700 text-white rounded-lg font-medium transition-colors">
                     Browse Library
                   </button>
                 </div>
@@ -429,7 +429,7 @@ export default function CreatePartyPage() {
                 <button
                   onClick={handleCreateParty}
                   disabled={loading}
-                  className="w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-purple-500/25 disabled:cursor-not-allowed"
+                  className="w-full py-4 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-purple-500/25 disabled:cursor-not-allowed"
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
@@ -461,7 +461,7 @@ export default function CreatePartyPage() {
               <button
                 onClick={nextStep}
                 disabled={!isStepValid()}
-                className="px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+                className="px-6 py-3 bg-brand-purple hover:bg-brand-purple-dark disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
               >
                 Next
               </button>

@@ -120,7 +120,7 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
           {/* Party Info */}
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-blue-600">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple to-brand-blue">
                 <span className="text-xl">🎬</span>
               </div>
               <div>
@@ -249,7 +249,7 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
                       {msg.user}
                     </span>
                     {msg.isGuest && (
-                      <span className="rounded bg-blue-500/20 px-1.5 py-0.5 text-[10px] font-bold text-blue-400">
+                      <span className="rounded bg-blue-500/20 px-1.5 py-0.5 text-[10px] font-bold text-brand-blue-light">
                         GUEST
                       </span>
                     )}
@@ -280,7 +280,7 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
               <button
                 type="submit"
                 disabled={chatDisabled || !newMessage.trim()}
-                className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-lg bg-brand-purple px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-purple-dark disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Send
               </button>

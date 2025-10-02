@@ -186,7 +186,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="text-center">
-          <div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-purple-500 border-t-transparent"></div>
+          <div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-brand-purple border-t-transparent"></div>
           <p className="text-white/70">Loading party...</p>
         </div>
       </div>
@@ -209,7 +209,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
           </p>
           <button
             onClick={() => (window.location.href = "/")}
-            className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 px-6 py-3 font-semibold text-white transition-all hover:shadow-lg"
+            className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-brand-purple to-brand-blue px-6 py-3 font-semibold text-white transition-all hover:shadow-lg"
           >
             Go to Homepage
           </button>
@@ -226,7 +226,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
             <div className="mb-4 text-6xl">🎬</div>
             <h1 className="mb-2 text-3xl font-bold text-white">{party.title}</h1>
             <p className="text-white/70">
-              Hosted by <span className="font-semibold text-purple-400">{party.host.name}</span>
+              Hosted by <span className="font-semibold text-brand-purple-light">{party.host.name}</span>
             </p>
             <p className="mt-2 text-sm text-white/50">
               Room code: <span className="font-mono text-white/80">{party.roomCode}</span>
@@ -278,14 +278,14 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
 
             <button
               onClick={handleJoinParty}
-              className="w-full rounded-lg bg-gradient-to-r from-purple-600 to-blue-600 py-3 font-semibold text-white transition-all hover:shadow-lg"
+              className="w-full rounded-lg bg-gradient-to-r from-brand-purple to-brand-blue py-3 font-semibold text-white transition-all hover:shadow-lg"
             >
               Join Party
             </button>
 
             <a
               href="/auth/register"
-              className="block text-center text-sm text-purple-400 transition-colors hover:text-purple-300"
+              className="block text-center text-sm text-brand-purple-light transition-colors hover:text-brand-purple-light"
             >
               Create an account for full features →
             </a>

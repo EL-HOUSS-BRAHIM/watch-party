@@ -150,7 +150,7 @@ export default function DocumentationPage() {
           <div className="flex items-center gap-4 mb-6">
             <button
               onClick={() => setSelectedDoc(null)}
-              className="text-blue-400 hover:text-blue-300 transition-colors"
+              className="text-brand-blue-light hover:text-brand-blue-light transition-colors"
             >
               ← Back to Documentation
             </button>
@@ -185,7 +185,7 @@ export default function DocumentationPage() {
                     {selectedDoc.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded"
+                        className="px-2 py-1 bg-blue-600/20 text-brand-blue-light text-xs rounded"
                       >
                         {tag}
                       </span>
@@ -213,8 +213,8 @@ export default function DocumentationPage() {
                       onClick={() => markAsHelpful(selectedDoc.id, true)}
                       className={`px-4 py-2 rounded text-sm transition-colors ${
                         selectedDoc.user_found_helpful === true
-                          ? "bg-green-600 text-white"
-                          : "bg-white/10 text-white/60 hover:bg-green-600/20 hover:text-green-400"
+                          ? "bg-brand-cyan text-white"
+                          : "bg-white/10 text-white/60 hover:bg-green-600/20 hover:text-brand-cyan-light"
                       }`}
                     >
                       👍 Yes ({selectedDoc.helpful_count})
@@ -223,8 +223,8 @@ export default function DocumentationPage() {
                       onClick={() => markAsHelpful(selectedDoc.id, false)}
                       className={`px-4 py-2 rounded text-sm transition-colors ${
                         selectedDoc.user_found_helpful === false
-                          ? "bg-red-600 text-white"
-                          : "bg-white/10 text-white/60 hover:bg-red-600/20 hover:text-red-400"
+                          ? "bg-brand-coral text-white"
+                          : "bg-white/10 text-white/60 hover:bg-red-600/20 hover:text-brand-coral-light"
                       }`}
                     >
                       👎 No
@@ -234,7 +234,7 @@ export default function DocumentationPage() {
 
                 <a
                   href="/dashboard/support"
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition-colors"
+                  className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded text-sm transition-colors"
                 >
                   Need More Help?
                 </a>
@@ -282,7 +282,7 @@ export default function DocumentationPage() {
                   onClick={() => setSelectedCategory("all")}
                   className={`w-full text-left px-3 py-2 rounded transition-colors ${
                     selectedCategory === "all"
-                      ? "bg-blue-600/20 text-blue-400"
+                      ? "bg-blue-600/20 text-brand-blue-light"
                       : "text-white/70 hover:text-white hover:bg-white/10"
                   }`}
                 >
@@ -294,7 +294,7 @@ export default function DocumentationPage() {
                     onClick={() => setSelectedCategory(category.id)}
                     className={`w-full text-left px-3 py-2 rounded transition-colors ${
                       selectedCategory === category.id
-                        ? "bg-blue-600/20 text-blue-400"
+                        ? "bg-blue-600/20 text-brand-blue-light"
                         : "text-white/70 hover:text-white hover:bg-white/10"
                     }`}
                   >
@@ -325,7 +325,7 @@ export default function DocumentationPage() {
                   <div className="space-x-4">
                     <button
                       onClick={() => setSearchQuery("")}
-                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                      className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg transition-colors"
                     >
                       Clear Search
                     </button>
@@ -354,7 +354,7 @@ export default function DocumentationPage() {
                       <h3 className="font-semibold text-white mb-2 pr-4">{doc.title}</h3>
                       <div className="flex items-center gap-2 text-sm text-white/60 flex-shrink-0">
                         {doc.helpful_count > 0 && (
-                          <span className="text-green-400">
+                          <span className="text-brand-cyan-light">
                             👍 {doc.helpful_count}
                           </span>
                         )}
@@ -383,7 +383,7 @@ export default function DocumentationPage() {
                           {doc.tags.slice(0, 3).map((tag) => (
                             <span
                               key={tag}
-                              className="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded"
+                              className="px-2 py-1 bg-blue-600/20 text-brand-blue-light text-xs rounded"
                             >
                               {tag}
                             </span>

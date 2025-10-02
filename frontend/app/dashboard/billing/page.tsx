@@ -144,7 +144,7 @@ export default function BillingPage() {
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <div className="animate-spin w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-white/60">Loading billing information...</p>
           </div>
         </div>
@@ -174,8 +174,8 @@ export default function BillingPage() {
             {currentSubscription && (
               <div className={`px-4 py-2 rounded-lg text-sm font-medium ${
                 currentSubscription.status === "active" 
-                  ? "bg-green-500/20 text-green-400"
-                  : "bg-red-500/20 text-red-400"
+                  ? "bg-green-500/20 text-brand-cyan-light"
+                  : "bg-red-500/20 text-brand-coral-light"
               }`}>
                 {currentSubscription.status.replace('_', ' ').toUpperCase()}
               </div>
@@ -225,7 +225,7 @@ export default function BillingPage() {
               <div className="space-y-3">
                 <button
                   onClick={updatePaymentMethod}
-                  className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+                  className="w-full px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm font-medium transition-colors"
                 >
                   Update Payment Method
                 </button>
@@ -233,14 +233,14 @@ export default function BillingPage() {
                 {currentSubscription.cancel_at_period_end ? (
                   <button
                     onClick={reactivateSubscription}
-                    className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
+                    className="w-full px-4 py-2 bg-brand-cyan hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
                   >
                     Reactivate Subscription
                   </button>
                 ) : (
                   <button
                     onClick={cancelSubscription}
-                    className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
+                    className="w-full px-4 py-2 bg-brand-coral hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
                   >
                     Cancel Subscription
                   </button>
@@ -262,17 +262,17 @@ export default function BillingPage() {
                 key={plan.id}
                 className={`relative bg-white/5 border rounded-lg p-6 ${
                   plan.is_popular 
-                    ? "border-blue-500 ring-2 ring-blue-500/20" 
+                    ? "border-brand-blue ring-2 ring-blue-500/20" 
                     : "border-white/10"
                 } ${
                   currentSubscription?.plan.id === plan.id
-                    ? "bg-green-500/10 border-green-500"
+                    ? "bg-green-500/10 border-brand-cyan"
                     : ""
                 }`}
               >
                 {plan.is_popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                    <span className="bg-brand-blue text-white px-3 py-1 rounded-full text-xs font-medium">
                       Most Popular
                     </span>
                   </div>
@@ -280,7 +280,7 @@ export default function BillingPage() {
                 
                 {currentSubscription?.plan.id === plan.id && (
                   <div className="absolute -top-3 right-4">
-                    <span className="bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                    <span className="bg-brand-cyan text-white px-3 py-1 rounded-full text-xs font-medium">
                       Current Plan
                     </span>
                   </div>
@@ -298,7 +298,7 @@ export default function BillingPage() {
                 <ul className="space-y-3 mb-6">
                   {plan.features.map((feature, index) => (
                     <li key={index} className="flex items-center gap-3 text-white/80 text-sm">
-                      <span className="text-green-400">✓</span>
+                      <span className="text-brand-cyan-light">✓</span>
                       {feature}
                     </li>
                   ))}
@@ -309,9 +309,9 @@ export default function BillingPage() {
                   disabled={processing === plan.id || currentSubscription?.plan.id === plan.id}
                   className={`w-full px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     currentSubscription?.plan.id === plan.id
-                      ? "bg-green-600/20 text-green-400 cursor-not-allowed"
+                      ? "bg-green-600/20 text-brand-cyan-light cursor-not-allowed"
                       : plan.is_popular
-                      ? "bg-blue-600 hover:bg-blue-700 text-white"
+                      ? "bg-brand-blue hover:bg-brand-blue-dark text-white"
                       : "bg-white/10 hover:bg-white/20 text-white"
                   }`}
                 >
@@ -364,10 +364,10 @@ export default function BillingPage() {
                       <td className="py-4">
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                           invoice.status === "paid"
-                            ? "bg-green-500/20 text-green-400"
+                            ? "bg-green-500/20 text-brand-cyan-light"
                             : invoice.status === "pending"
-                            ? "bg-yellow-500/20 text-yellow-400"
-                            : "bg-red-500/20 text-red-400"
+                            ? "bg-yellow-500/20 text-brand-orange-light"
+                            : "bg-red-500/20 text-brand-coral-light"
                         }`}>
                           {invoice.status.toUpperCase()}
                         </span>
@@ -376,7 +376,7 @@ export default function BillingPage() {
                         {invoice.status === "paid" && (
                           <button
                             onClick={() => downloadInvoice(invoice.id)}
-                            className="text-blue-400 hover:text-blue-300 text-sm transition-colors"
+                            className="text-brand-blue-light hover:text-brand-blue-light text-sm transition-colors"
                           >
                             Download
                           </button>
@@ -407,7 +407,7 @@ export default function BillingPage() {
             
             <button
               onClick={updatePaymentMethod}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+              className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm font-medium transition-colors"
             >
               Update
             </button>

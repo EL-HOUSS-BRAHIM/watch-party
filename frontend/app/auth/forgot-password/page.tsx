@@ -42,7 +42,7 @@ export default function ForgotPasswordPage() {
           <div className="space-y-4">
             <Link 
               href="/auth/login"
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+              className="inline-block bg-brand-blue hover:bg-brand-blue-dark text-white px-6 py-3 rounded-lg font-medium transition-colors"
             >
               Back to Login
             </Link>
@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
                   setSent(false)
                   setEmail("")
                 }}
-                className="text-blue-400 hover:text-blue-300 text-sm"
+                className="text-brand-blue-light hover:text-brand-blue-light text-sm"
               >
                 Try a different email
               </button>
@@ -77,7 +77,7 @@ export default function ForgotPasswordPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-              <p className="text-red-400 text-sm">{error}</p>
+              <p className="text-brand-coral-light text-sm">{error}</p>
             </div>
           )}
 
@@ -92,7 +92,7 @@ export default function ForgotPasswordPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-brand-blue"
               placeholder="Enter your email"
             />
           </div>
@@ -100,7 +100,7 @@ export default function ForgotPasswordPage() {
           <button
             type="submit"
             disabled={loading || !email.trim()}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+            className="w-full bg-brand-blue hover:bg-brand-blue-dark disabled:bg-blue-600/50 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
           >
             {loading ? "Sending..." : "Send Reset Link"}
           </button>
@@ -109,7 +109,7 @@ export default function ForgotPasswordPage() {
         <div className="text-center">
           <div className="text-white/70">
             Remember your password?{" "}
-            <Link href="/auth/login" className="text-blue-400 hover:text-blue-300">
+            <Link href="/auth/login" className="text-brand-blue-light hover:text-brand-blue-light">
               Sign in
             </Link>
           </div>

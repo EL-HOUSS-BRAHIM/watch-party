@@ -110,7 +110,7 @@ export default function AnalyticsPage() {
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <div className="animate-spin w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-white/60">Loading analytics...</p>
           </div>
         </div>
@@ -138,7 +138,7 @@ export default function AnalyticsPage() {
             </div>
 
             <div className="flex items-center gap-3 md:self-end">
-              <span className="rounded-full bg-blue-600/20 px-3 py-1 text-sm font-medium text-blue-400">
+              <span className="rounded-full bg-blue-600/20 px-3 py-1 text-sm font-medium text-brand-blue-light">
                 📊 Live Data
               </span>
             </div>
@@ -161,7 +161,7 @@ export default function AnalyticsPage() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex flex-shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-3 py-3 text-sm font-medium transition-colors sm:px-4 sm:py-4 ${
                   activeTab === tab.id
-                    ? "text-blue-400 border-blue-400"
+                    ? "text-brand-blue-light border-blue-400"
                     : "text-white/60 border-transparent hover:text-white"
                 }`}
               >
@@ -242,21 +242,21 @@ export default function AnalyticsPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-400 mb-2">
+                  <div className="text-3xl font-bold text-brand-blue-light mb-2">
                     {formatNumber(dashboardData?.total_messages || 0)}
                   </div>
                   <p className="text-white/60">Total Messages</p>
                 </div>
                 
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-green-400 mb-2">
+                  <div className="text-3xl font-bold text-brand-cyan-light mb-2">
                     {formatNumber(dashboardData?.total_videos || 0)}
                   </div>
                   <p className="text-white/60">Videos Uploaded</p>
                 </div>
                 
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-400 mb-2">
+                  <div className="text-3xl font-bold text-brand-purple-light mb-2">
                     {formatNumber(dashboardData?.total_parties_created || 0)}
                   </div>
                   <p className="text-white/60">Parties Created</p>
@@ -385,7 +385,7 @@ export default function AnalyticsPage() {
             </p>
             <button
               onClick={() => setActiveTab("overview")}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              className="px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg font-medium transition-colors"
             >
               Back to Overview
             </button>

@@ -19,13 +19,13 @@ export function StatsCard({
   change, 
   icon, 
   trend = "neutral",
-  gradient = "from-blue-500 to-cyan-500",
+  gradient = "from-brand-blue to-brand-cyan",
   className 
 }: StatsCardProps) {
   const getTrendColor = (trend: string) => {
     switch (trend) {
-      case "up": return "text-green-400"
-      case "down": return "text-red-400"
+      case "up": return "text-brand-cyan-light"
+      case "down": return "text-brand-coral-light"
       default: return "text-white/60"
     }
   }

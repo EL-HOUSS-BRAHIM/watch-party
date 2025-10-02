@@ -115,7 +115,7 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
             onClick={() => setActiveTab("users")}
             className={`px-6 py-3 text-sm font-medium transition-colors ${
               activeTab === "users"
-                ? "text-blue-400 border-b-2 border-blue-400"
+                ? "text-brand-blue-light border-b-2 border-blue-400"
                 : "text-white/60 hover:text-white"
             }`}
           >
@@ -125,7 +125,7 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
             onClick={() => setActiveTab("banned")}
             className={`px-6 py-3 text-sm font-medium transition-colors ${
               activeTab === "banned"
-                ? "text-blue-400 border-b-2 border-blue-400"
+                ? "text-brand-blue-light border-b-2 border-blue-400"
                 : "text-white/60 hover:text-white"
             }`}
           >
@@ -135,7 +135,7 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
             onClick={() => setActiveTab("history")}
             className={`px-6 py-3 text-sm font-medium transition-colors ${
               activeTab === "history"
-                ? "text-blue-400 border-b-2 border-blue-400"
+                ? "text-brand-blue-light border-b-2 border-blue-400"
                 : "text-white/60 hover:text-white"
             }`}
           >
@@ -147,7 +147,7 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
         <div className="flex-1 overflow-y-auto p-6">
           {loading ? (
             <div className="flex items-center justify-center py-12">
-              <div className="animate-spin w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+              <div className="animate-spin w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full"></div>
             </div>
           ) : (
             <>
@@ -158,7 +158,7 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
                     <h3 className="text-lg font-semibold text-white">Active Users</h3>
                     <button
                       onClick={clearChat}
-                      className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
+                      className="px-4 py-2 bg-brand-coral hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
                     >
                       Clear Chat
                     </button>
@@ -188,10 +188,10 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
                           <div className="flex items-center gap-2">
                             <h4 className="font-medium text-white">{user.username}</h4>
                             {user.is_verified && (
-                              <span className="text-green-400 text-sm">✓</span>
+                              <span className="text-brand-cyan-light text-sm">✓</span>
                             )}
                             {user.is_premium && (
-                              <span className="text-yellow-400 text-sm">⭐</span>
+                              <span className="text-brand-orange-light text-sm">⭐</span>
                             )}
                           </div>
                           <p className="text-white/60 text-sm">{user.email}</p>
@@ -200,13 +200,13 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => kickUser(user.id, user.username)}
-                            className="px-3 py-1 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-sm transition-colors"
+                            className="px-3 py-1 bg-brand-orange hover:bg-yellow-700 text-white rounded text-sm transition-colors"
                           >
                             Kick
                           </button>
                           <button
                             onClick={() => banUser(user.id, user.username)}
-                            className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm transition-colors"
+                            className="px-3 py-1 bg-brand-coral hover:bg-red-700 text-white rounded text-sm transition-colors"
                           >
                             Ban
                           </button>
@@ -251,7 +251,7 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <h4 className="font-medium text-white">{user.username}</h4>
-                            <span className="px-2 py-1 bg-red-500/20 text-red-400 rounded text-xs">
+                            <span className="px-2 py-1 bg-red-500/20 text-brand-coral-light rounded text-xs">
                               Banned
                             </span>
                           </div>
@@ -260,7 +260,7 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
 
                         <button
                           onClick={() => unbanUser(user.id, user.username)}
-                          className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-sm transition-colors"
+                          className="px-3 py-1 bg-brand-cyan hover:bg-green-700 text-white rounded text-sm transition-colors"
                         >
                           Unban
                         </button>
@@ -291,10 +291,10 @@ export default function ModerationPanel({ partyId, isHost, onClose }: Moderation
                           <div className="flex items-center gap-3">
                             <span className={`px-2 py-1 rounded text-xs font-medium ${
                               action.action_type === "ban" 
-                                ? "bg-red-500/20 text-red-400"
+                                ? "bg-red-500/20 text-brand-coral-light"
                                 : action.action_type === "kick"
-                                ? "bg-yellow-500/20 text-yellow-400"
-                                : "bg-green-500/20 text-green-400"
+                                ? "bg-yellow-500/20 text-brand-orange-light"
+                                : "bg-green-500/20 text-brand-cyan-light"
                             }`}>
                               {action.action_type.toUpperCase()}
                             </span>

@@ -65,7 +65,7 @@ export default function PaymentMethodCard({ paymentMethod, onUpdate, onRemove }:
           </p>
           <button
             onClick={onUpdate}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            className="px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg font-medium transition-colors"
           >
             Add Payment Method
           </button>
@@ -79,14 +79,14 @@ export default function PaymentMethodCard({ paymentMethod, onUpdate, onRemove }:
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-white">Payment Method</h3>
         {paymentMethod.is_default && (
-          <span className="px-2 py-1 bg-green-500/20 text-green-400 rounded text-xs font-medium">
+          <span className="px-2 py-1 bg-green-500/20 text-brand-cyan-light rounded text-xs font-medium">
             Default
           </span>
         )}
       </div>
 
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-12 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded flex items-center justify-center">
+        <div className="w-12 h-8 bg-gradient-to-r from-brand-blue to-brand-purple rounded flex items-center justify-center">
           <span className="text-white text-xs font-bold">
             {formatCardBrand(paymentMethod.card.brand).slice(0, 4).toUpperCase()}
           </span>
@@ -108,7 +108,7 @@ export default function PaymentMethodCard({ paymentMethod, onUpdate, onRemove }:
       <div className="flex gap-3">
         <button
           onClick={onUpdate}
-          className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+          className="flex-1 px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm font-medium transition-colors"
         >
           Update
         </button>
@@ -117,7 +117,7 @@ export default function PaymentMethodCard({ paymentMethod, onUpdate, onRemove }:
           <button
             onClick={handleRemove}
             disabled={removing}
-            className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors"
+            className="px-4 py-2 bg-brand-coral hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors"
           >
             {removing ? "Removing..." : "Remove"}
           </button>

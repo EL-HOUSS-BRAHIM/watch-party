@@ -43,11 +43,11 @@ export default function RealTimeActivityFeed({
 
   const getActivityColor = (type: string) => {
     switch (type) {
-      case "user_joined": return "text-green-400"
-      case "party_created": return "text-blue-400"
-      case "video_uploaded": return "text-purple-400"
-      case "message_sent": return "text-yellow-400"
-      case "user_left": return "text-red-400"
+      case "user_joined": return "text-brand-cyan-light"
+      case "party_created": return "text-brand-blue-light"
+      case "video_uploaded": return "text-brand-purple-light"
+      case "message_sent": return "text-brand-orange-light"
+      case "user_left": return "text-brand-coral-light"
       default: return "text-white/60"
     }
   }
@@ -74,7 +74,7 @@ export default function RealTimeActivityFeed({
             onClick={() => setIsLive(!isLive)}
             className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm transition-colors ${
               isLive 
-                ? "bg-green-500/20 text-green-400" 
+                ? "bg-green-500/20 text-brand-cyan-light" 
                 : "bg-white/10 text-white/60"
             }`}
           >
@@ -155,28 +155,28 @@ export default function RealTimeActivityFeed({
       <div className="mt-6 pt-4 border-t border-white/10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           <div>
-            <div className="text-lg font-bold text-green-400">
+            <div className="text-lg font-bold text-brand-cyan-light">
               {activities.filter(a => a.type === "user_joined").length}
             </div>
             <div className="text-white/60 text-xs">Users Joined</div>
           </div>
           
           <div>
-            <div className="text-lg font-bold text-blue-400">
+            <div className="text-lg font-bold text-brand-blue-light">
               {activities.filter(a => a.type === "party_created").length}
             </div>
             <div className="text-white/60 text-xs">Parties Created</div>
           </div>
           
           <div>
-            <div className="text-lg font-bold text-purple-400">
+            <div className="text-lg font-bold text-brand-purple-light">
               {activities.filter(a => a.type === "video_uploaded").length}
             </div>
             <div className="text-white/60 text-xs">Videos Uploaded</div>
           </div>
           
           <div>
-            <div className="text-lg font-bold text-yellow-400">
+            <div className="text-lg font-bold text-brand-orange-light">
               {activities.filter(a => a.type === "message_sent").length}
             </div>
             <div className="text-white/60 text-xs">Messages Sent</div>

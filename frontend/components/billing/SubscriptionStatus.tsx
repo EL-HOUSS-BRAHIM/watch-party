@@ -61,10 +61,10 @@ export default function SubscriptionStatus({ subscription, onCancel, onReactivat
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active": return "bg-green-500/20 text-green-400"
-      case "canceled": return "bg-red-500/20 text-red-400"
-      case "past_due": return "bg-yellow-500/20 text-yellow-400"
-      case "unpaid": return "bg-red-500/20 text-red-400"
+      case "active": return "bg-green-500/20 text-brand-cyan-light"
+      case "canceled": return "bg-red-500/20 text-brand-coral-light"
+      case "past_due": return "bg-yellow-500/20 text-brand-orange-light"
+      case "unpaid": return "bg-red-500/20 text-brand-coral-light"
       default: return "bg-white/20 text-white/60"
     }
   }
@@ -92,7 +92,7 @@ export default function SubscriptionStatus({ subscription, onCancel, onReactivat
           </p>
           <a
             href="/dashboard/billing"
-            className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            className="inline-block px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg font-medium transition-colors"
           >
             View Plans
           </a>
@@ -145,11 +145,11 @@ export default function SubscriptionStatus({ subscription, onCancel, onReactivat
       {/* Status-specific messages */}
       {subscription.status === "past_due" && (
         <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4 mb-6">
-          <div className="flex items-center gap-2 text-yellow-400 mb-2">
+          <div className="flex items-center gap-2 text-brand-orange-light mb-2">
             <span>⚠️</span>
             <span className="font-medium">Payment Past Due</span>
           </div>
-          <p className="text-yellow-400/80 text-sm">
+          <p className="text-brand-orange-light/80 text-sm">
             Your payment is overdue. Please update your payment method to continue your subscription.
           </p>
         </div>
@@ -157,11 +157,11 @@ export default function SubscriptionStatus({ subscription, onCancel, onReactivat
 
       {subscription.status === "unpaid" && (
         <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 mb-6">
-          <div className="flex items-center gap-2 text-red-400 mb-2">
+          <div className="flex items-center gap-2 text-brand-coral-light mb-2">
             <span>💳</span>
             <span className="font-medium">Payment Failed</span>
           </div>
-          <p className="text-red-400/80 text-sm">
+          <p className="text-brand-coral-light/80 text-sm">
             Your subscription payment failed. Please update your payment method to reactivate your subscription.
           </p>
         </div>
@@ -169,11 +169,11 @@ export default function SubscriptionStatus({ subscription, onCancel, onReactivat
 
       {subscription.cancel_at_period_end && (
         <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 mb-6">
-          <div className="flex items-center gap-2 text-red-400 mb-2">
+          <div className="flex items-center gap-2 text-brand-coral-light mb-2">
             <span>📅</span>
             <span className="font-medium">Subscription Ending</span>
           </div>
-          <p className="text-red-400/80 text-sm">
+          <p className="text-brand-coral-light/80 text-sm">
             Your subscription will end on {formatDate(subscription.current_period_end)}. You can reactivate it anytime before then.
           </p>
         </div>
@@ -185,7 +185,7 @@ export default function SubscriptionStatus({ subscription, onCancel, onReactivat
           <button
             onClick={handleReactivate}
             disabled={actionLoading}
-            className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors"
+            className="flex-1 px-4 py-2 bg-brand-cyan hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors"
           >
             {actionLoading ? "Processing..." : "Reactivate Subscription"}
           </button>
@@ -193,14 +193,14 @@ export default function SubscriptionStatus({ subscription, onCancel, onReactivat
           <>
             <a
               href="/dashboard/billing"
-              className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors text-center"
+              className="flex-1 px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm font-medium transition-colors text-center"
             >
               Change Plan
             </a>
             <button
               onClick={handleCancel}
               disabled={actionLoading}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors"
+              className="px-4 py-2 bg-brand-coral hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg text-sm font-medium transition-colors"
             >
               {actionLoading ? "Processing..." : "Cancel"}
             </button>

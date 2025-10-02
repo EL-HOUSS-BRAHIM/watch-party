@@ -107,7 +107,7 @@ export default function AdvancedSearchPage({ params }: AdvancedSearchPageProps) 
                   onClick={() => setLayout("list")}
                   className={`p-2 rounded transition-colors ${
                     layout === "list"
-                      ? "bg-blue-600 text-white"
+                      ? "bg-brand-blue text-white"
                       : "bg-white/10 text-white/60 hover:text-white hover:bg-white/20"
                   }`}
                   title="List view"
@@ -118,7 +118,7 @@ export default function AdvancedSearchPage({ params }: AdvancedSearchPageProps) 
                   onClick={() => setLayout("grid")}
                   className={`p-2 rounded transition-colors ${
                     layout === "grid"
-                      ? "bg-blue-600 text-white"
+                      ? "bg-brand-blue text-white"
                       : "bg-white/10 text-white/60 hover:text-white hover:bg-white/20"
                   }`}
                   title="Grid view"
@@ -153,25 +153,25 @@ export default function AdvancedSearchPage({ params }: AdvancedSearchPageProps) 
                   <h4 className="font-medium text-white mb-4">Search Tips</h4>
                   <div className="space-y-3 text-white/80 text-sm">
                     <div className="flex items-start gap-3">
-                      <span className="text-blue-400">💡</span>
+                      <span className="text-brand-blue-light">💡</span>
                       <div>
                         <strong>Use quotes</strong> for exact phrases: "watch party tonight"
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="text-green-400">💡</span>
+                      <span className="text-brand-cyan-light">💡</span>
                       <div>
                         <strong>Filter by type</strong> to narrow results to parties, users, or videos
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="text-purple-400">💡</span>
+                      <span className="text-brand-purple-light">💡</span>
                       <div>
                         <strong>Use date filters</strong> to find recent or older content
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <span className="text-yellow-400">💡</span>
+                      <span className="text-brand-orange-light">💡</span>
                       <div>
                         <strong>Add tags</strong> to find content with specific topics or themes
                       </div>

@@ -106,7 +106,7 @@ export default function InteractivePage({ params }: InteractivePageProps) {
           <p className="text-white/60 mb-6">{error || "This party doesn't exist or you don't have access to it."}</p>
           <a
             href="/dashboard"
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            className="px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg font-medium transition-colors"
           >
             Back to Dashboard
           </a>
@@ -160,7 +160,7 @@ export default function InteractivePage({ params }: InteractivePageProps) {
                   onClick={() => setActiveTab(tab.id)}
                   className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
                     activeTab === tab.id
-                      ? "bg-blue-600 text-white shadow-lg"
+                      ? "bg-brand-blue text-white shadow-lg"
                       : "text-white/70 hover:text-white hover:bg-white/10"
                   }`}
                 >
@@ -182,7 +182,7 @@ export default function InteractivePage({ params }: InteractivePageProps) {
             </p>
             <a
               href={`/dashboard/parties/${party.id}`}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              className="px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg font-medium transition-colors"
             >
               Back to Party
             </a>

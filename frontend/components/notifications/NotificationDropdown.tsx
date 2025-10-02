@@ -89,7 +89,7 @@ export default function NotificationDropdown({ isOpen, onClose, onSettingsClick 
           <h3 className="font-semibold text-white">Notifications</h3>
           <div className="flex items-center gap-2">
             {unreadCount > 0 && (
-              <span className="px-2 py-1 bg-blue-600 text-white text-xs rounded-full">
+              <span className="px-2 py-1 bg-brand-blue text-white text-xs rounded-full">
                 {unreadCount}
               </span>
             )}
@@ -107,7 +107,7 @@ export default function NotificationDropdown({ isOpen, onClose, onSettingsClick 
         <div className="max-h-96 overflow-y-auto">
           {loading ? (
             <div className="flex items-center justify-center py-8">
-              <div className="animate-spin w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+              <div className="animate-spin w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full"></div>
             </div>
           ) : notifications.length === 0 ? (
             <div className="text-center py-8">
@@ -157,7 +157,7 @@ export default function NotificationDropdown({ isOpen, onClose, onSettingsClick 
                               e.stopPropagation()
                               markAsRead(notification.id)
                             }}
-                            className="text-blue-400 hover:text-blue-300 text-xs transition-colors"
+                            className="text-brand-blue-light hover:text-brand-blue-light text-xs transition-colors"
                           >
                             Mark read
                           </button>
@@ -167,7 +167,7 @@ export default function NotificationDropdown({ isOpen, onClose, onSettingsClick 
 
                     {/* Unread indicator */}
                     {!notification.is_read && (
-                      <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1"></div>
+                      <div className="w-2 h-2 bg-brand-blue rounded-full flex-shrink-0 mt-1"></div>
                     )}
                   </div>
                 </div>
@@ -180,7 +180,7 @@ export default function NotificationDropdown({ isOpen, onClose, onSettingsClick 
         <div className="p-4 border-t border-white/10">
           <a
             href="/dashboard/notifications"
-            className="block w-full text-center text-blue-400 hover:text-blue-300 text-sm transition-colors"
+            className="block w-full text-center text-brand-blue-light hover:text-brand-blue-light text-sm transition-colors"
             onClick={onClose}
           >
             View all notifications

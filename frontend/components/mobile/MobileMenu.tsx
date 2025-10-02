@@ -102,7 +102,7 @@ export default function MobileMenu({ isOpen, onClose, currentUser }: MobileMenuP
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                  <div className="w-12 h-12 bg-brand-blue rounded-full flex items-center justify-center">
                     <span className="text-white font-semibold">
                       {currentUser.username?.[0]?.toUpperCase() || "U"}
                     </span>
@@ -167,7 +167,7 @@ export default function MobileMenu({ isOpen, onClose, currentUser }: MobileMenuP
           <div className="p-6 border-t border-white/10">
             <button
               onClick={handleLogout}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-brand-coral hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
             >
               <span>🚪</span>
               <span>Logout</span>

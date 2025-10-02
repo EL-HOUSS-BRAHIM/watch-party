@@ -65,7 +65,7 @@ export default function EmojiPicker({ onEmojiSelect, onClose }: EmojiPickerProps
             onClick={() => setActiveCategory("default")}
             className={`px-4 py-2 text-sm font-medium transition-colors ${
               activeCategory === "default"
-                ? "text-blue-400 border-b-2 border-blue-400"
+                ? "text-brand-blue-light border-b-2 border-blue-400"
                 : "text-white/60 hover:text-white"
             }`}
           >
@@ -75,7 +75,7 @@ export default function EmojiPicker({ onEmojiSelect, onClose }: EmojiPickerProps
             onClick={() => setActiveCategory("custom")}
             className={`px-4 py-2 text-sm font-medium transition-colors ${
               activeCategory === "custom"
-                ? "text-blue-400 border-b-2 border-blue-400"
+                ? "text-brand-blue-light border-b-2 border-blue-400"
                 : "text-white/60 hover:text-white"
             }`}
           >
@@ -87,7 +87,7 @@ export default function EmojiPicker({ onEmojiSelect, onClose }: EmojiPickerProps
         <div className="flex-1 overflow-y-auto p-4">
           {loading && activeCategory === "custom" ? (
             <div className="flex items-center justify-center py-8">
-              <div className="animate-spin w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+              <div className="animate-spin w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full"></div>
             </div>
           ) : (
             <>

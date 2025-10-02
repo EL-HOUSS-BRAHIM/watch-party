@@ -111,24 +111,24 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const getBadgeColor = (badge: string | null) => {
     if (!badge) return ""
-    if (badge === "live") return "bg-red-500 text-white animate-pulse"
-    if (badge === "new") return "bg-green-500 text-white"
-    if (Number(badge)) return "bg-blue-500 text-white"
-    return "bg-purple-500 text-white"
+    if (badge === "live") return "bg-brand-coral text-white animate-pulse"
+    if (badge === "new") return "bg-brand-cyan text-white"
+    if (Number(badge)) return "bg-brand-blue text-white"
+    return "bg-brand-purple text-white"
   }
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "online": return "bg-green-500"
-      case "away": return "bg-yellow-500"
-      case "busy": return "bg-red-500"
+      case "online": return "bg-brand-cyan"
+      case "away": return "bg-brand-orange"
+      case "busy": return "bg-brand-coral"
       default: return "bg-gray-500"
     }
   }
 
   const getPlanColor = () => {
-    if (user?.is_premium) return "from-yellow-400 to-orange-500"
-    if (user?.is_staff) return "from-purple-400 to-blue-500"
+    if (user?.is_premium) return "from-brand-orange to-brand-coral"
+    if (user?.is_staff) return "from-brand-purple to-brand-blue"
     return "from-gray-400 to-gray-600"
   }
 
@@ -144,7 +144,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-slate-900 via-brand-purple/20 to-slate-900">
       {/* Dashboard Header - hide duplicate header on mobile */}
       <div className="hidden md:block">
         <DashboardHeader />
@@ -152,9 +152,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       {/* Background Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-purple-500/5 to-transparent rounded-full"></div>
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-purple/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-brand-blue/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-brand-purple/5 to-transparent rounded-full"></div>
       </div>
 
       {/* Mobile Navigation - Shown only on mobile */}
@@ -170,7 +170,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="p-6 border-b border-white/10">
             <div className="flex items-center justify-between">
               <div className={cn("flex items-center gap-3", isCollapsed && "justify-center")}>
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                <div className="w-10 h-10 bg-gradient-to-br from-brand-purple to-brand-blue rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
                   W
                 </div>
                 {!isCollapsed && (
@@ -194,7 +194,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="p-6 border-b border-white/10">
               <div className="flex items-center gap-3 mb-4">
                 <div className="relative">
-                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                  <div className="w-12 h-12 bg-gradient-to-br from-brand-purple to-brand-magenta rounded-full flex items-center justify-center text-white font-semibold">
                     {user.avatar ? (
                       <img src={user.avatar} alt={user.username} className="w-full h-full rounded-full object-cover" />
                     ) : (
@@ -259,14 +259,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                         className={cn(
                           "group flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 relative overflow-hidden",
                           isActive
-                            ? "bg-gradient-to-r from-purple-500/20 to-blue-500/20 text-white border border-purple-500/30 shadow-lg"
+                            ? "bg-gradient-to-r from-brand-purple/20 to-brand-blue/20 text-white border border-brand-purple/30 shadow-lg"
                             : "text-white/70 hover:text-white hover:bg-white/10"
                         )}
                         title={isCollapsed ? item.label : ""}
                       >
                         {/* Active indicator */}
                         {isActive && (
-                          <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-purple-500 to-blue-500 rounded-r"></div>
+                          <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-brand-purple to-brand-blue rounded-r"></div>
                         )}
                         
                         <span className="text-lg flex-shrink-0">{item.icon}</span>
@@ -309,7 +309,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="p-4 border-t border-white/10">
             {!isCollapsed ? (
               <div className="space-y-3">
-                <button className="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25">
+                <button className="w-full px-4 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25">
                   <span className="flex items-center justify-center gap-2">
                     <span>✨</span>
                     Create Party
@@ -326,7 +326,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </div>
             ) : (
               <div className="space-y-2">
-                <button className="w-full p-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl transition-all duration-200 shadow-lg">
+                <button className="w-full p-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl transition-all duration-200 shadow-lg">
                   ✨
                 </button>
                 <div className="grid grid-cols-2 gap-1">
@@ -359,14 +359,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
 
       {/* Floating Action Button */}
-      <button className="hidden md:flex fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 z-50 items-center justify-center text-xl">
+      <button className="hidden md:flex fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-full shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 z-50 items-center justify-center text-xl">
         ⚡
       </button>
 
       {/* Live Status Indicator */}
       <div className="hidden md:flex fixed bottom-6 left-6 bg-black/40 backdrop-blur-lg rounded-full px-4 py-2 border border-white/20 z-40">
         <div className="flex items-center gap-2 text-white text-sm">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <div className="w-2 h-2 bg-brand-cyan rounded-full animate-pulse"></div>
           <span>System Online</span>
         </div>
       </div>

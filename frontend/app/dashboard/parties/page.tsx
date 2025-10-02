@@ -72,11 +72,11 @@ export default function PartiesPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "live": return "text-green-400 bg-green-400/20"
-      case "scheduled": return "text-blue-400 bg-blue-400/20"
+      case "live": return "text-brand-cyan-light bg-green-400/20"
+      case "scheduled": return "text-brand-blue-light bg-blue-400/20"
       case "ended": return "text-gray-400 bg-gray-400/20"
-      case "cancelled": return "text-red-400 bg-red-400/20"
-      default: return "text-yellow-400 bg-yellow-400/20"
+      case "cancelled": return "text-brand-coral-light bg-red-400/20"
+      default: return "text-brand-orange-light bg-yellow-400/20"
     }
   }
 
@@ -84,7 +84,7 @@ export default function PartiesPage() {
     <div className="space-y-8">
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-cyan-600/20 rounded-3xl blur-xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-brand-cyan/20 rounded-3xl blur-xl"></div>
         <GradientCard className="relative border-purple-500/30">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
@@ -173,7 +173,7 @@ export default function PartiesPage() {
                 onClick={() => setFilter(key as any)}
                 className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
                   filter === key
-                    ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg scale-105"
+                    ? "bg-gradient-to-r from-brand-purple to-brand-blue text-white shadow-lg scale-105"
                     : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white hover:scale-105"
                 }`}
               >
@@ -189,7 +189,7 @@ export default function PartiesPage() {
       {/* Error State */}
       {error && (
         <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-          <p className="text-red-400">{error}</p>
+          <p className="text-brand-coral-light">{error}</p>
           <button
             onClick={loadParties}
             className="mt-2 text-red-300 hover:text-red-200 underline"
@@ -233,7 +233,7 @@ export default function PartiesPage() {
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                      <div className="w-8 h-8 bg-gradient-to-br from-brand-purple to-brand-blue rounded-lg flex items-center justify-center text-white font-bold text-sm">
                         {party.title.charAt(0)}
                       </div>
                       <h3 className="text-lg font-bold text-white line-clamp-1 group-hover:text-purple-200 transition-colors">
@@ -270,7 +270,7 @@ export default function PartiesPage() {
 
                 {/* Host Info */}
                 <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl">
-                  <div className="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                  <div className="w-8 h-8 bg-gradient-to-br from-brand-purple to-brand-purple rounded-full flex items-center justify-center text-white font-semibold text-sm">
                     {party.host?.username?.charAt(0).toUpperCase() || "?"}
                   </div>
                   <div className="flex-1">
@@ -320,7 +320,7 @@ export default function PartiesPage() {
       {!loading && parties.length === 0 && (
         <GradientCard className="text-center py-16" gradient="from-purple-900/20 via-blue-900/20 to-purple-900/20">
           <div className="space-y-6">
-            <div className="w-24 h-24 mx-auto bg-gradient-to-br from-purple-500 to-blue-600 rounded-3xl flex items-center justify-center text-4xl animate-float">
+            <div className="w-24 h-24 mx-auto bg-gradient-to-br from-brand-purple to-brand-blue rounded-3xl flex items-center justify-center text-4xl animate-float">
               🎬
             </div>
             <div className="space-y-2">
