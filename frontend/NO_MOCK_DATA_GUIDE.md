@@ -403,7 +403,7 @@ export default function YourPage() {
 - ✅ `app/auth/login/page.tsx` - Inline errors
 - ✅ `app/party/[code]/page.tsx` - Inline errors + dialog
 - ✅ `components/party/public-party-layout.tsx` - ConfirmDialog
-- ✅ `app/(dashboard)/library/page.tsx` - No mock data
+- ✅ `app/dashboard/library/page.tsx` - No mock data
 
 ---
 

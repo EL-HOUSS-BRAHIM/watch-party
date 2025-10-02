@@ -10,9 +10,9 @@ This audit covers every Next.js page, layout, and loading state under `frontend/
 
 Shared marketing chrome (`app/layout.tsx`, `components/layout/site-header.tsx`, `components/layout/site-footer.tsx`, and `components/providers.tsx`) also avoids API calls. Navigation links and hero copy are statically defined.
 
-## Dashboard routes (`app/(dashboard)`) - NOW WITH API INTEGRATION ✅
+## Dashboard routes (`app/dashboard`) - NOW WITH API INTEGRATION ✅
 
-### ✅ `/dashboard` – `app/(dashboard)/dashboard/page.tsx` 
+### ✅ `/dashboard` – `app/dashboard/page.tsx`
 **API Integration Complete**
 - **Endpoints Used**:
   - `/analytics/dashboard/` - Fetches user dashboard statistics
@@ -24,7 +24,7 @@ Shared marketing chrome (`app/layout.tsx`, `components/layout/site-header.tsx`, 
   - Includes error notification banner when using fallback data
 - **Mock Data Retained**: Crew notes section (lighting, co-hosts, sponsors reminders)
 
-### ✅ `/rooms` – `app/(dashboard)/rooms/page.tsx`
+### ✅ `/rooms` – `app/dashboard/rooms/page.tsx`
 **API Integration Complete**
 - **Endpoints Used**:
   - `/parties/` - Lists all user's watch parties
@@ -34,7 +34,7 @@ Shared marketing chrome (`app/layout.tsx`, `components/layout/site-header.tsx`, 
   - Falls back gracefully to mock data if API unavailable
   - Includes error notification banner when using fallback data
 
-### ✅ `/library` – `app/(dashboard)/library/page.tsx`
+### ✅ `/library` – `app/dashboard/library/page.tsx`
 **API Integration Complete**
 - **Endpoints Used**:
   - `/videos/` - Lists all user's uploaded videos
@@ -44,7 +44,7 @@ Shared marketing chrome (`app/layout.tsx`, `components/layout/site-header.tsx`, 
   - Falls back gracefully to mock data if API unavailable
   - Includes error notification banner when using fallback data
 
-### ✅ `/settings` – `app/(dashboard)/settings/page.tsx`
+### ✅ `/settings` – `app/dashboard/settings/page.tsx`
 **API Integration Complete**
 - **Endpoints Used**:
   - `/auth/profile/` - Fetches current user profile
@@ -55,7 +55,7 @@ Shared marketing chrome (`app/layout.tsx`, `components/layout/site-header.tsx`, 
   - Includes error notification banner when using fallback data
 - **Mock Data Retained**: Preferences cards and integrations section
 
-The dashboard route group layout (`app/(dashboard)/layout.tsx` and `components/dashboard/dashboard-layout.tsx`) determines active navigation with `usePathname` but does not perform any data fetching.
+The dashboard layout (`app/dashboard/layout.tsx` and `components/dashboard/dashboard-layout.tsx`) determines active navigation with `usePathname` but does not perform any data fetching.
 
 ## Global loading state
 - `app/loading.tsx` renders a branded loading screen without performing network activity.

@@ -168,7 +168,7 @@ User visits /dashboard → Check auth → No token? → Redirect to /auth/login
 
 ### Modified Files
 
-1. **`app/(dashboard)/layout.tsx`** - Added `ProtectedRoute` wrapper
+1. **`app/dashboard/layout.tsx`** - Added `ProtectedRoute` wrapper
 2. **`components/layout/dashboard-header.tsx`** - Added working logout
 3. **`components/layout/conditional-layout.tsx`** - Added party route handling
 
