@@ -5,6 +5,7 @@ Party views for Watch Party Backend
 from datetime import timedelta
 from django.utils import timezone
 from django.db.models import Q, F, Count
+from django.http import Http404
 from django.core.cache import cache
 from rest_framework import status, generics, permissions, filters
 from rest_framework.decorators import action
@@ -703,7 +704,7 @@ class PartyReportView(generics.CreateAPIView):
 
 class RecentPartiesView(generics.ListAPIView):
     """Get recently created/joined parties for a user"""
-    
+
     serializer_class = WatchPartySerializer
     permission_classes = [permissions.IsAuthenticated]
     
@@ -718,6 +719,41 @@ class RecentPartiesView(generics.ListAPIView):
             Q(host=user) | Q(participants__user=user, participants__is_active=True),
             created_at__gte=thirty_days_ago
         ).distinct().order_by('-created_at')[:10]
+
+
+class PublicPartyDetailView(generics.RetrieveAPIView):
+    """Read-only view for anonymous access to public parties by room code"""
+
+    serializer_class = WatchPartyDetailSerializer
+    permission_classes = [permissions.AllowAny]
+    lookup_field = 'room_code'
+
+    def get_queryset(self):
+        """Limit to publicly discoverable parties that allow joining by code"""
+        if getattr(self, 'swagger_fake_view', False):
+            return WatchParty.objects.none()
+
+        return (
+            WatchParty.objects.filter(
+                visibility='public',
+                allow_join_by_code=True,
+            )
+            .select_related('host', 'video')
+            .prefetch_related('participants__user')
+        )
+
+    def get_object(self):
+        party = super().get_object()
+
+        # Respect guest chat specific flag if present, otherwise fall back to allow_chat
+        guest_chat_enabled = getattr(party, 'allow_guest_chat', None)
+        if guest_chat_enabled is None:
+            guest_chat_enabled = party.allow_chat
+
+        if not guest_chat_enabled:
+            raise Http404('Party not found')
+
+        return party
 
 
 class PublicPartiesView(generics.ListAPIView):

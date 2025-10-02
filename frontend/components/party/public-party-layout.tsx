@@ -3,23 +3,29 @@
 import { useState, useEffect, useRef } from "react"
 import { ConfirmDialog } from "@/components/ui/feedback"
 
-interface PartyData {
+export interface PublicPartyViewModel {
   id: string
-  code: string
-  name: string
+  title: string
+  description?: string
+  roomCode: string
   host: {
-    username: string
+    id: string
+    name: string
+    avatar?: string | null
+    isPremium?: boolean
   }
-  member_count: number
-  current_video?: {
+  participantCount: number
+  allowChat: boolean
+  allowReactions: boolean
+  status: string
+  statusLabel: string
+  isPlaying: boolean
+  playbackPosition: string
+  lastSyncAt?: string
+  video?: {
     id: string
     title: string
-    url: string
-    duration: number
-  }
-  settings: {
-    is_public: boolean
-    allow_guest_chat: boolean
+    durationLabel?: string
   }
 }
 
@@ -32,7 +38,7 @@ interface Message {
 }
 
 interface PublicPartyLayoutProps {
-  party: PartyData
+  party: PublicPartyViewModel
   guestName: string
   onLeave: () => void
 }
@@ -45,10 +51,21 @@ interface PublicPartyLayoutProps {
 export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayoutProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState("")
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
   const [showLeaveDialog, setShowLeaveDialog] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  const statusTone = party.status.toLowerCase()
+  const statusBadgeStyles =
+    statusTone === "live"
+      ? "border-green-500/30 bg-green-500/15 text-green-300"
+      : statusTone === "paused"
+        ? "border-yellow-500/30 bg-yellow-500/15 text-yellow-300"
+        : "border-white/20 bg-white/10 text-white/70"
+
+  const chatDisabled = !party.allowChat
+  const lastSyncLabel = party.lastSyncAt
+    ? new Date(party.lastSyncAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    : null
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -95,12 +112,6 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
     onLeave()
   }
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = Math.floor(seconds % 60)
-    return `${mins}:${secs.toString().padStart(2, '0')}`
-  }
-
   return (
     <div className="flex h-screen flex-col bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Simple Header */}
@@ -113,13 +124,17 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
                 <span className="text-xl">🎬</span>
               </div>
               <div>
-                <h1 className="text-lg font-bold text-white">{party.name}</h1>
-                <p className="text-xs text-white/50">Code: {party.code}</p>
+                <h1 className="text-lg font-bold text-white">{party.title}</h1>
+                <p className="text-xs text-white/50">Code: {party.roomCode}</p>
+                <p className="text-[11px] text-white/40">Hosted by {party.host.name}</p>
               </div>
             </div>
             <div className="flex items-center gap-2 rounded-lg bg-white/5 px-3 py-1.5">
               <span className="text-sm">👥</span>
-              <span className="text-sm font-medium text-white">{party.member_count}</span>
+              <span className="text-sm font-medium text-white">{party.participantCount}</span>
+            </div>
+            <div className={`rounded-lg border px-3 py-1.5 text-xs font-semibold ${statusBadgeStyles}`}>
+              Status: {party.statusLabel}
             </div>
           </div>
 
@@ -143,48 +158,56 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
         {/* Video Player Section */}
         <div className="flex flex-1 flex-col p-6">
           <div className="flex-1 rounded-2xl bg-black/40 border border-white/10 overflow-hidden">
-            {party.current_video ? (
+            {party.video ? (
               <div className="flex h-full flex-col">
                 {/* Video Player Placeholder */}
                 <div className="relative flex-1 bg-black">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
                       <div className="mb-4 text-6xl">📹</div>
-                      <p className="text-2xl font-bold text-white mb-2">{party.current_video.title}</p>
+                      <p className="mb-2 text-2xl font-bold text-white">{party.video.title}</p>
                       <p className="text-white/50">Video player would render here</p>
-                      <p className="text-sm text-white/30 mt-2">Synced with host</p>
+                      <p className="mt-2 text-sm text-white/30">Synced with host</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Simple Controls */}
                 <div className="border-t border-white/10 bg-gray-900/50 p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <button
-                        onClick={() => setIsPlaying(!isPlaying)}
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-600 hover:bg-purple-700 transition-colors"
-                      >
-                        <span className="text-xl">{isPlaying ? '⏸️' : '▶️'}</span>
-                      </button>
-                      <span className="text-sm text-white/70">
-                        {formatTime(currentTime)} / {formatTime(party.current_video.duration)}
+                  <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-white/70">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <span data-testid="playback-status">
+                        Playback: <span className="font-semibold text-white">{party.isPlaying ? "Playing" : "Paused"}</span>
                       </span>
+                      <span data-testid="playback-position">
+                        Position: <span className="font-semibold text-white">{party.playbackPosition}</span>
+                      </span>
+                      {party.video.durationLabel && (
+                        <span data-testid="playback-duration">
+                          Duration: <span className="font-semibold text-white">{party.video.durationLabel}</span>
+                        </span>
+                      )}
                     </div>
-                    <div className="rounded-lg bg-yellow-500/20 border border-yellow-500/30 px-3 py-1.5">
-                      <span className="text-xs font-medium text-yellow-300">
-                        🔒 Host controls playback
-                      </span>
+                    <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/15 px-3 py-1.5 text-xs font-medium text-yellow-200">
+                      🔒 Host controls playback
                     </div>
                   </div>
+                  {lastSyncLabel && (
+                    <p className="mt-2 text-xs text-white/40">Last synced at {lastSyncLabel}</p>
+                  )}
                 </div>
               </div>
             ) : (
               <div className="flex h-full items-center justify-center">
                 <div className="text-center">
                   <div className="mb-4 text-6xl">🎬</div>
-                  <p className="text-xl font-semibold text-white mb-2">No video playing</p>
+                  <p className="mb-2 text-xl font-semibold text-white">No video playing</p>
                   <p className="text-white/50">Waiting for host to start a video...</p>
+                  <div className="mt-4 flex flex-col items-center gap-1 text-xs text-white/60">
+                    <span>Status: {party.statusLabel}</span>
+                    <span data-testid="playback-status-fallback">Playback: {party.isPlaying ? "Playing" : "Paused"}</span>
+                    <span data-testid="playback-position-fallback">Position: {party.playbackPosition}</span>
+                  </div>
                 </div>
               </div>
             )}
@@ -205,7 +228,11 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
           {/* Chat Header */}
           <div className="border-b border-white/10 p-4">
             <h2 className="text-lg font-bold text-white">💬 Chat</h2>
-            <p className="text-xs text-white/50">Text messages only</p>
+            {chatDisabled ? (
+              <p className="text-xs text-yellow-300">Chat is disabled by the host for guests.</p>
+            ) : (
+              <p className="text-xs text-white/50">Text messages only</p>
+            )}
           </div>
 
           {/* Messages */}
@@ -246,18 +273,20 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Type a message..."
                 maxLength={500}
-                className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white placeholder-white/50 focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20"
+                aria-label="Chat message"
+                disabled={chatDisabled}
+                className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white placeholder-white/50 focus:border-purple-500/50 focus:outline-none focus:ring-2 focus:ring-purple-500/20 disabled:cursor-not-allowed disabled:opacity-50"
               />
               <button
                 type="submit"
-                disabled={!newMessage.trim()}
-                className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                disabled={chatDisabled || !newMessage.trim()}
+                className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Send
               </button>
             </div>
             <p className="mt-2 text-xs text-white/40">
-              {newMessage.length}/500 characters
+              {chatDisabled ? "Chat is currently disabled." : `${newMessage.length}/500 characters`}
             </p>
           </form>
         </div>
