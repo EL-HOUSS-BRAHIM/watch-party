@@ -2,14 +2,26 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { videosApi, VideoSummary } from "@/lib/api-client"
 import { GradientCard } from "@/components/ui/gradient-card"
 import { IconButton } from "@/components/ui/icon-button"
 import { useDesignSystem } from "@/hooks/use-design-system"
 
+type GDriveMovie = {
+  gdrive_file_id: string
+  title: string
+  size?: number
+  mime_type?: string
+  thumbnail_url?: string
+  duration?: number
+  resolution?: string
+  created_time?: string
+  modified_time?: string
+  in_database?: boolean
+  video_id?: string | null
+}
+
 export default function VideosPage() {
-  const router = useRouter()
   const { formatNumber } = useDesignSystem()
   const [videos, setVideos] = useState<VideoSummary[]>([])
   const [loading, setLoading] = useState(true)
@@ -18,11 +30,24 @@ export default function VideosPage() {
   const [filter, setFilter] = useState<"all" | "ready" | "processing" | "failed">("all")
   const [uploading, setUploading] = useState(false)
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [uploadMode, setUploadMode] = useState<"file" | "url" | null>(null)
+  const [uploadMode, setUploadMode] = useState<"file" | "url" | "gdrive" | null>(null)
+  const [gdriveFiles, setGdriveFiles] = useState<GDriveMovie[]>([])
+  const [gdriveLoading, setGdriveLoading] = useState(false)
+  const [gdriveError, setGdriveError] = useState("")
+  const [gdriveLoaded, setGdriveLoaded] = useState(false)
+  const [importingIds, setImportingIds] = useState<string[]>([])
+  const [streamingIds, setStreamingIds] = useState<string[]>([])
+  const [deletingIds, setDeletingIds] = useState<string[]>([])
 
   useEffect(() => {
     loadVideos()
   }, [filter, searchQuery])
+
+  useEffect(() => {
+    if (uploadMode === "gdrive") {
+      loadGdriveVideos()
+    }
+  }, [uploadMode])
 
   const loadVideos = async () => {
     setLoading(true)
@@ -56,6 +81,69 @@ export default function VideosPage() {
     }
   }
 
+  const loadGdriveVideos = async (force = false) => {
+    if (gdriveLoading || (!force && gdriveLoaded)) {
+      return
+    }
+
+    setGdriveLoading(true)
+    setGdriveError("")
+
+    try {
+      const response = await videosApi.getGDriveVideos({ page_size: 50 })
+      const rawMovies =
+        (response as any)?.movies ??
+        (response as any)?.results ??
+        (Array.isArray(response) ? response : [])
+
+      const normalized: GDriveMovie[] = Array.isArray(rawMovies)
+        ? rawMovies
+            .map((movie: any) => {
+              const rawSize = movie.size ?? movie.file_size
+              const parsedSize =
+                typeof rawSize === "string"
+                  ? Number.parseInt(rawSize, 10)
+                  : typeof rawSize === "number"
+                    ? rawSize
+                    : undefined
+
+              const rawDuration = movie.duration ?? movie.duration_seconds
+              const parsedDuration =
+                typeof rawDuration === "string"
+                  ? Number.parseFloat(rawDuration)
+                  : typeof rawDuration === "number"
+                    ? rawDuration
+                    : undefined
+
+              const fileId = movie.gdrive_file_id ?? movie.gdriveId ?? movie.id ?? movie.file_id
+
+              return {
+                gdrive_file_id: fileId,
+                title: movie.title ?? movie.name ?? "Untitled file",
+                size: Number.isFinite(parsedSize) ? parsedSize : undefined,
+                mime_type: movie.mime_type,
+                thumbnail_url: movie.thumbnail_url ?? movie.thumbnail,
+                duration: Number.isFinite(parsedDuration) ? parsedDuration : undefined,
+                resolution: movie.resolution,
+                created_time: movie.created_time ?? movie.createdAt,
+                modified_time: movie.modified_time ?? movie.modifiedAt,
+                in_database: movie.in_database ?? Boolean(movie.video_id),
+                video_id: movie.video_id ?? movie.library_id ?? null,
+              } as GDriveMovie
+            })
+            .filter((movie: GDriveMovie) => Boolean(movie.gdrive_file_id))
+        : []
+
+      setGdriveFiles(normalized)
+      setGdriveLoaded(true)
+    } catch (error) {
+      setGdriveError(error instanceof Error ? error.message : "Failed to load Google Drive videos")
+      setGdriveLoaded(false)
+    } finally {
+      setGdriveLoading(false)
+    }
+  }
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
@@ -77,6 +165,38 @@ export default function VideosPage() {
       alert("Upload failed: " + (error instanceof Error ? error.message : "Unknown error"))
     } finally {
       setUploading(false)
+    }
+  }
+
+  const handleImportFromGDrive = async (movie: GDriveMovie) => {
+    if (!movie.gdrive_file_id || importingIds.includes(movie.gdrive_file_id)) {
+      return
+    }
+
+    setImportingIds(prev => (prev.includes(movie.gdrive_file_id) ? prev : [...prev, movie.gdrive_file_id]))
+
+    try {
+      const response = await videosApi.uploadFromGDrive(movie.gdrive_file_id)
+      const importedVideo: VideoSummary = (response as any)?.video ?? response
+
+      if (importedVideo) {
+        setVideos(prev => [importedVideo, ...prev])
+        setGdriveFiles(prev =>
+          prev.map(file =>
+            file.gdrive_file_id === movie.gdrive_file_id
+              ? {
+                  ...file,
+                  in_database: true,
+                  video_id: importedVideo.id,
+                }
+              : file
+          )
+        )
+      }
+    } catch (error) {
+      alert("Failed to import from Google Drive: " + (error instanceof Error ? error.message : "Unknown error"))
+    } finally {
+      setImportingIds(prev => prev.filter(id => id !== movie.gdrive_file_id))
     }
   }
 
@@ -116,6 +236,58 @@ export default function VideosPage() {
     }
   }
 
+  const handleStreamGDriveVideo = async (videoId: string | null | undefined) => {
+    if (!videoId || streamingIds.includes(videoId)) {
+      return
+    }
+
+    setStreamingIds(prev => (prev.includes(videoId) ? prev : [...prev, videoId]))
+
+    try {
+      const response = await videosApi.getGDriveStream(videoId)
+      const streamUrl = (response as any)?.stream_url ?? (response as any)?.url
+      if (streamUrl) {
+        window.open(streamUrl, "_blank")
+      }
+    } catch (error) {
+      alert("Failed to start streaming: " + (error instanceof Error ? error.message : "Unknown error"))
+    } finally {
+      setStreamingIds(prev => prev.filter(id => id !== videoId))
+    }
+  }
+
+  const handleDeleteGDriveVideo = async (videoId: string | null | undefined, movie: GDriveMovie) => {
+    if (!videoId || deletingIds.includes(videoId)) {
+      return
+    }
+
+    if (!confirm("Delete this Google Drive video from your library and Drive?")) {
+      return
+    }
+
+    setDeletingIds(prev => (prev.includes(videoId) ? prev : [...prev, videoId]))
+
+    try {
+      await videosApi.deleteGDriveVideo(videoId)
+      setVideos(prev => prev.filter(video => video.id !== videoId))
+      setGdriveFiles(prev =>
+        prev.map(file =>
+          file.gdrive_file_id === movie.gdrive_file_id
+            ? {
+                ...file,
+                in_database: false,
+                video_id: null,
+              }
+            : file
+        )
+      )
+    } catch (error) {
+      alert("Failed to delete Google Drive video: " + (error instanceof Error ? error.message : "Unknown error"))
+    } finally {
+      setDeletingIds(prev => prev.filter(id => id !== videoId))
+    }
+  }
+
   const handleDeleteVideo = async (videoId: string) => {
     if (!confirm("Are you sure you want to delete this video? This action cannot be undone.")) {
       return
@@ -139,12 +311,13 @@ export default function VideosPage() {
     }
   }
 
-  const formatFileSize = (bytes?: number) => {
+  const formatFileSize = (bytes?: number | string) => {
     if (!bytes) return "Unknown size"
     const units = ['B', 'KB', 'MB', 'GB']
-    let size = bytes
+    let size = typeof bytes === "string" ? Number.parseFloat(bytes) : bytes
+    if (!Number.isFinite(size)) return "Unknown size"
     let unitIndex = 0
-    
+
     while (size >= 1024 && unitIndex < units.length - 1) {
       size /= 1024
       unitIndex++
@@ -219,6 +392,14 @@ export default function VideosPage() {
                 <span>📤</span>
                 <span className="hidden sm:inline">Upload</span>
               </IconButton>
+              <IconButton
+                onClick={() => setUploadMode("gdrive")}
+                gradient="from-yellow-500 to-green-500"
+                className="shadow-lg hover:shadow-yellow-500/25"
+              >
+                <span>☁️</span>
+                <span className="hidden sm:inline">Google Drive</span>
+              </IconButton>
             </div>
           </div>
         </GradientCard>
@@ -259,8 +440,16 @@ export default function VideosPage() {
               >
                 🔗 Add URL
               </button>
+              <button
+                onClick={() => setUploadMode("gdrive")}
+                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                  uploadMode === "gdrive" ? "bg-yellow-600 text-white" : "text-white/60 hover:text-white"
+                }`}
+              >
+                ☁️ Google Drive
+              </button>
             </div>
-            
+
             {uploadMode === "file" ? (
               <div className="border-2 border-dashed border-green-500/30 rounded-2xl p-8 text-center bg-green-500/5 hover:bg-green-500/10 transition-colors">
                 <div className="space-y-4">
@@ -298,7 +487,7 @@ export default function VideosPage() {
                   </label>
                 </div>
               </div>
-            ) : (
+            ) : uploadMode === "url" ? (
               <form onSubmit={handleUrlSubmit} className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                   <input
@@ -329,7 +518,135 @@ export default function VideosPage() {
                   Add Video from URL
                 </IconButton>
               </form>
-            )}
+            ) : uploadMode === "gdrive" ? (
+              <div className="space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div>
+                    <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+                      <span>☁️</span>
+                      Browse Google Drive Library
+                    </h3>
+                    <p className="text-white/60 text-sm">
+                      Import videos stored in your connected Google Drive account directly into Watch Party.
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <IconButton
+                      onClick={() => loadGdriveVideos(true)}
+                      variant="secondary"
+                      disabled={gdriveLoading}
+                    >
+                      🔄 Refresh
+                    </IconButton>
+                  </div>
+                </div>
+
+                {gdriveError && (
+                  <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+                    <p className="text-red-300">{gdriveError}</p>
+                    <button
+                      onClick={() => loadGdriveVideos(true)}
+                      className="mt-2 text-red-200 hover:text-red-100 underline"
+                    >
+                      Try again
+                    </button>
+                  </div>
+                )}
+
+                {gdriveLoading ? (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-4 animate-pulse space-y-4">
+                        <div className="aspect-video bg-white/10 rounded-lg"></div>
+                        <div className="h-4 bg-white/10 rounded"></div>
+                        <div className="h-3 bg-white/5 rounded w-2/3"></div>
+                        <div className="h-3 bg-white/5 rounded w-1/3"></div>
+                      </div>
+                    ))}
+                  </div>
+                ) : gdriveFiles.length === 0 ? (
+                  <div className="text-center text-white/60 bg-white/5 border border-white/10 rounded-xl py-10">
+                    <div className="text-4xl mb-3">📁</div>
+                    <p>No compatible videos found in your Google Drive.</p>
+                    <p className="text-sm mt-1">Upload a video to Drive and refresh to see it here.</p>
+                  </div>
+                ) : (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {gdriveFiles.map((movie) => (
+                      <div
+                        key={movie.gdrive_file_id}
+                        className="bg-white/5 border border-white/10 rounded-xl overflow-hidden flex flex-col"
+                      >
+                        <div className="aspect-video bg-black/50 flex items-center justify-center relative">
+                          {movie.thumbnail_url ? (
+                            <img
+                              src={movie.thumbnail_url}
+                              alt={movie.title}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="text-4xl">🎞️</div>
+                          )}
+                          {movie.duration && (
+                            <span className="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-xs">
+                              {formatDuration(movie.duration)}
+                            </span>
+                          )}
+                          {movie.in_database && (
+                            <span className="absolute top-2 right-2 bg-green-500/20 text-green-200 text-xs px-2 py-1 rounded-full">
+                              Imported
+                            </span>
+                          )}
+                        </div>
+                        <div className="p-4 space-y-3 flex-1 flex flex-col">
+                          <div className="flex items-start justify-between gap-2">
+                            <h4 className="text-lg font-semibold text-white line-clamp-2">{movie.title}</h4>
+                          </div>
+                          <div className="text-xs text-white/60 space-y-1">
+                            {movie.size && <div>Size: {formatFileSize(movie.size)}</div>}
+                            {movie.duration && <div>Duration: {formatDuration(movie.duration)}</div>}
+                            {movie.modified_time && (
+                              <div>Updated: {new Date(movie.modified_time).toLocaleDateString()}</div>
+                            )}
+                            {movie.resolution && <div>Resolution: {movie.resolution}</div>}
+                          </div>
+                          <div className="mt-auto flex flex-wrap gap-2">
+                            {movie.in_database && movie.video_id ? (
+                              <>
+                                <IconButton
+                                  onClick={() => handleStreamGDriveVideo(movie.video_id!)}
+                                  loading={streamingIds.includes(movie.video_id!)}
+                                  className="flex-1"
+                                >
+                                  ▶️ Stream
+                                </IconButton>
+                                <IconButton
+                                  onClick={() => handleDeleteGDriveVideo(movie.video_id!, movie)}
+                                  loading={deletingIds.includes(movie.video_id!)}
+                                  variant="danger"
+                                  className="flex-1"
+                                >
+                                  🗑️ Delete
+                                </IconButton>
+                              </>
+                            ) : (
+                              <IconButton
+                                onClick={() => handleImportFromGDrive(movie)}
+                                loading={importingIds.includes(movie.gdrive_file_id)}
+                                gradient="from-green-600 to-emerald-600"
+                                className="w-full"
+                              >
+                                📥 Import to Library
+                              </IconButton>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : null}
           </div>
         </GradientCard>
       )}
