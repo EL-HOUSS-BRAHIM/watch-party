@@ -5,8 +5,8 @@ Integration management views for admin panel
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAdminUser, IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework import serializers
-from .serializers import IntegrationStatusResponseSerializer, IntegrationManagementResponseSerializer
+from rest_framework import serializers, status
+from django.urls import reverse
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema
 import asyncio
@@ -14,6 +14,9 @@ import asyncio
 from shared.responses import StandardResponse
 from shared.api_documentation import api_response_documentation
 from shared.integrations import integration_manager, IntegrationType
+from apps.authentication.views import GoogleDriveAuthView
+from apps.integrations.services import GoogleDriveService, get_drive_service_for_user
+from .serializers import IntegrationStatusResponseSerializer, IntegrationManagementResponseSerializer
 
 
 @api_view(['GET'])
@@ -229,32 +232,234 @@ def integration_types(request):
 @permission_classes([IsAuthenticated])
 def google_drive_auth_url(request):
     """Get Google Drive OAuth authorization URL"""
-    # TODO: Implement Google Drive OAuth authorization URL generation
-    return StandardResponse.error("Google Drive integration not implemented yet", status_code=501)
+    try:
+        from google_auth_oauthlib.flow import Flow
+
+        client_config = GoogleDriveAuthView._build_client_config()
+
+        flow = Flow.from_client_config(
+            client_config,
+            scopes=[
+                'https://www.googleapis.com/auth/drive.readonly',
+                'https://www.googleapis.com/auth/drive.file'
+            ]
+        )
+
+        redirect_uri = request.build_absolute_uri(
+            reverse('integrations:google_drive_oauth_callback')
+        )
+        flow.redirect_uri = redirect_uri
+
+        authorization_url, state = flow.authorization_url(
+            access_type='offline',
+            include_granted_scopes='true',
+            prompt='consent'
+        )
+
+        request.session['google_drive_oauth_state'] = state
+
+        connected = False
+        folder_id = None
+        if hasattr(request.user, 'profile'):
+            connected = request.user.profile.google_drive_connected
+            folder_id = request.user.profile.google_drive_folder_id
+
+        data = {
+            'authorization_url': authorization_url,
+            'state': state,
+            'redirect_uri': redirect_uri,
+            'connected': connected,
+            'folder_id': folder_id,
+        }
+
+        return StandardResponse.success(
+            data,
+            "Google Drive authorization URL generated"
+        )
+    except ValueError as exc:
+        return StandardResponse.error(
+            message=str(exc),
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    except Exception as exc:
+        return StandardResponse.error(
+            message=f"Failed to generate authorization URL: {exc}",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def google_drive_oauth_callback(request):
     """Handle Google Drive OAuth callback"""
-    # TODO: Implement Google Drive OAuth callback handling
-    return StandardResponse.error("Google Drive integration not implemented yet", status_code=501)
+    try:
+        from google_auth_oauthlib.flow import Flow
+
+        code = request.query_params.get('code')
+        state = request.query_params.get('state')
+
+        if not code:
+            return StandardResponse.error(
+                message='Authorization code is required',
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+
+        stored_state = request.session.get('google_drive_oauth_state')
+        if not stored_state or stored_state != state:
+            return StandardResponse.error(
+                message='Invalid state parameter',
+                status_code=status.HTTP_400_BAD_REQUEST
+            )
+
+        client_config = GoogleDriveAuthView._build_client_config()
+
+        flow = Flow.from_client_config(
+            client_config,
+            scopes=[
+                'https://www.googleapis.com/auth/drive.readonly',
+                'https://www.googleapis.com/auth/drive.file'
+            ]
+        )
+
+        redirect_uri = request.build_absolute_uri(
+            reverse('integrations:google_drive_oauth_callback')
+        )
+        flow.redirect_uri = redirect_uri
+        flow.fetch_token(code=code)
+
+        credentials = flow.credentials
+
+        drive_service = GoogleDriveService(
+            access_token=getattr(credentials, 'token', None),
+            refresh_token=getattr(credentials, 'refresh_token', None),
+            token_expiry=getattr(credentials, 'expiry', None)
+        )
+
+        folder_id = drive_service.get_or_create_watch_party_folder()
+
+        user = request.user
+        profile = getattr(user, 'profile', None)
+        if profile is None:
+            from apps.authentication.models import UserProfile
+            profile = UserProfile.objects.create(user=user)
+
+        profile.google_drive_token = getattr(credentials, 'token', '') or ''
+        refresh_token = getattr(credentials, 'refresh_token', None)
+        if refresh_token:
+            profile.google_drive_refresh_token = refresh_token
+        expiry = getattr(credentials, 'expiry', None)
+        if expiry and timezone.is_naive(expiry):
+            expiry = timezone.make_aware(expiry)
+        profile.google_drive_token_expires_at = expiry
+        profile.google_drive_connected = True
+        profile.google_drive_folder_id = folder_id or ''
+        profile.save()
+
+        if 'google_drive_oauth_state' in request.session:
+            del request.session['google_drive_oauth_state']
+
+        data = {
+            'connected': profile.google_drive_connected,
+            'folder_id': profile.google_drive_folder_id,
+            'token_expires_at': (
+                profile.google_drive_token_expires_at.isoformat()
+                if profile.google_drive_token_expires_at
+                else None
+            ),
+        }
+
+        return StandardResponse.success(
+            data,
+            "Google Drive connected successfully"
+        )
+    except ValueError as exc:
+        return StandardResponse.error(
+            message=str(exc),
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+    except Exception as exc:
+        return StandardResponse.error(
+            message=f"Failed to connect Google Drive: {exc}",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def google_drive_list_files(request):
     """List files from Google Drive"""
-    # TODO: Implement Google Drive file listing
-    return StandardResponse.error("Google Drive integration not implemented yet", status_code=501)
+    folder_id = request.query_params.get('folder_id')
+    mime_type = request.query_params.get('mime_type')
+
+    if not folder_id and hasattr(request.user, 'profile'):
+        folder_id = request.user.profile.google_drive_folder_id or None
+
+    try:
+        drive_service = get_drive_service_for_user(request.user)
+    except ValueError as exc:
+        return StandardResponse.error(
+            message=str(exc),
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    except Exception as exc:
+        return StandardResponse.error(
+            message=f"Failed to load Google Drive credentials: {exc}",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+    try:
+        results = drive_service.list_files(folder_id=folder_id, mime_type=mime_type)
+        files = results.get('files', [])
+        data = {
+            'files': files,
+            'total': len(files),
+            'folder_id': folder_id,
+        }
+        return StandardResponse.success(
+            data,
+            "Google Drive files retrieved"
+        )
+    except Exception as exc:
+        return StandardResponse.error(
+            message=f"Failed to list Google Drive files: {exc}",
+            status_code=status.HTTP_502_BAD_GATEWAY
+        )
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def google_drive_streaming_url(request, file_id):
     """Get streaming URL for Google Drive file"""
-    # TODO: Implement Google Drive streaming URL generation
-    return StandardResponse.error("Google Drive integration not implemented yet", status_code=501)
+    try:
+        drive_service = get_drive_service_for_user(request.user)
+    except ValueError as exc:
+        return StandardResponse.error(
+            message=str(exc),
+            status_code=status.HTTP_400_BAD_REQUEST
+        )
+    except Exception as exc:
+        return StandardResponse.error(
+            message=f"Failed to load Google Drive credentials: {exc}",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+    try:
+        streaming_url = drive_service.get_streaming_url(file_id)
+        download_url = drive_service.get_download_url(file_id)
+        data = {
+            'file_id': file_id,
+            'streaming_url': streaming_url,
+            'download_url': download_url,
+        }
+        return StandardResponse.success(
+            data,
+            "Google Drive streaming URL generated"
+        )
+    except Exception as exc:
+        return StandardResponse.error(
+            message=f"Failed to generate streaming URL: {exc}",
+            status_code=status.HTTP_502_BAD_GATEWAY
+        )
 
 
 # AWS S3 Integration Views
