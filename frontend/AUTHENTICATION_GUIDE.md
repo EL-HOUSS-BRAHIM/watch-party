@@ -137,7 +137,7 @@ logout()
 ```
 frontend/
 ├── app/
-│   ├── (dashboard)/
+│   ├── dashboard/
 │   │   └── layout.tsx              # ✅ Protected with ProtectedRoute
 │   ├── auth/
 │   │   └── login/page.tsx          # Login page (stores tokens)

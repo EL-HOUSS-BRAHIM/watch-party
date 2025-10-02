@@ -49,7 +49,7 @@ The application now uses **context-aware layouts** with different headers for di
 frontend/
 ├── app/
 │   ├── layout.tsx                     # Root layout - conditional rendering
-│   ├── (dashboard)/
+│   ├── dashboard/
 │   │   └── layout.tsx                 # Dashboard layout wrapper
 │   └── auth/
 │       └── login/page.tsx             # Auth pages (minimal layout)

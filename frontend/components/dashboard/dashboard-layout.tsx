@@ -132,9 +132,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Dashboard Header */}
-      <DashboardHeader />
-      
+      {/* Dashboard Header - hide duplicate header on mobile */}
+      <div className="hidden md:block">
+        <DashboardHeader />
+      </div>
+
       {/* Background Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -145,7 +147,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Mobile Navigation - Shown only on mobile */}
       <MobileNavigation currentUser={user} />
 
-      <div className="relative z-10 flex min-h-screen pt-16">
+      <div className="relative z-10 flex min-h-screen pt-14 md:pt-16">
         {/* Enhanced Sidebar - Hidden on mobile, shown on desktop */}
         <aside className={cn(
           "hidden md:fixed left-0 top-0 h-full bg-black/20 backdrop-blur-xl border-r border-white/10 transition-all duration-300 z-50 md:block",
@@ -320,52 +322,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </aside>
 
         {/* Main Content */}
-        <main className={cn(
-          "flex-1 transition-all duration-300 mb-16 md:mb-0",
-          "md:" + (isCollapsed ? "ml-20" : "ml-80")
-        )}>
-          {/* Top Navigation Bar - Hidden on mobile */}
-          <header className="hidden md:block sticky top-0 z-40 bg-black/20 backdrop-blur-xl border-b border-white/10">
-            <div className="px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2 text-white/60">
-                    <span>🌍</span>
-                    <span className="text-sm">Global Community</span>
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-4">
-                  {/* Quick Search */}
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Quick search..."
-                      className="w-64 px-4 py-2 pl-10 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
-                    />
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50">🔍</span>
-                  </div>
-                  
-                  {/* Action Buttons */}
-                  <div className="flex items-center gap-2">
-                    <button className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-white/70 hover:text-white relative">
-                      <span>💬</span>
-                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full"></div>
-                    </button>
-                    <button className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-white/70 hover:text-white relative">
-                      <span>🔔</span>
-                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full"></div>
-                    </button>
-                    <button className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-white/70 hover:text-white">
-                      <span>⚙️</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </header>
-
+        <main
+          className={cn(
+            "flex-1 transition-all duration-300 mb-20 md:mb-0",
+            "md:" + (isCollapsed ? "ml-20" : "ml-80")
+          )}
+        >
           {/* Page Content */}
           <div className="flex-1 p-6">
             <div className="max-w-7xl mx-auto">
@@ -376,12 +338,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
 
       {/* Floating Action Button */}
-      <button className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 z-50 flex items-center justify-center text-xl">
+      <button className="hidden md:flex fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-full shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 z-50 items-center justify-center text-xl">
         ⚡
       </button>
 
       {/* Live Status Indicator */}
-      <div className="fixed bottom-6 left-6 bg-black/40 backdrop-blur-lg rounded-full px-4 py-2 border border-white/20 z-40">
+      <div className="hidden md:flex fixed bottom-6 left-6 bg-black/40 backdrop-blur-lg rounded-full px-4 py-2 border border-white/20 z-40">
         <div className="flex items-center gap-2 text-white text-sm">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
           <span>System Online</span>
