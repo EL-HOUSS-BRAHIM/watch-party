@@ -205,10 +205,14 @@ def trending_parties(request):
         
         serializer = WatchPartySerializer(trending, many=True, context={'request': request})
         
-        return StandardResponse.success({
-            'trending_parties': serializer.data,
-            'generated_at': timezone.now(),
-        }, "Trending parties retrieved successfully")
+        return StandardResponse.success(
+            serializer.data,
+            "Trending parties retrieved successfully",
+            meta={
+                'generated_at': timezone.now().isoformat(),
+                'results': len(serializer.data),
+            },
+        )
         
     except Exception as e:
         return StandardResponse.error(f"Error retrieving trending parties: {str(e)}")
@@ -291,10 +295,14 @@ def party_recommendations(request):
         
         serializer = WatchPartySerializer(recommended_parties, many=True, context={'request': request})
         
-        return StandardResponse.success({
-            'recommended_parties': serializer.data,
-            'recommendation_basis': 'collaborative_filtering',
-        }, "Party recommendations retrieved successfully")
+        return StandardResponse.success(
+            serializer.data,
+            "Party recommendations retrieved successfully",
+            meta={
+                'recommendation_basis': 'collaborative_filtering',
+                'results': len(serializer.data),
+            },
+        )
         
     except Exception as e:
         return StandardResponse.error(f"Error getting recommendations: {str(e)}")
