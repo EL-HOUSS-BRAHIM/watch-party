@@ -25,28 +25,40 @@ export default function DashboardPage() {
   const [showWelcome, setShowWelcome] = useState(false)
   const [activeView, setActiveView] = useState<"overview" | "quick-actions" | "analytics">("overview")
   const [liveStats, setLiveStats] = useState({
-    onlineUsers: 1247,
-    activeParties: 89,
-    totalWatchTime: 25620,
-    newUsers: 156
+    onlineUsers: 0,
+    activeParties: 0,
+    totalWatchTime: 0,
+    newUsers: 0
   })
 
   useEffect(() => {
     loadDashboardData()
+    loadRealTimeStats()
     
-    // Simulate real-time updates
+    // Fetch real-time stats every 30 seconds
     const interval = setInterval(() => {
-      setLiveStats(prev => ({
-        ...prev,
-        onlineUsers: prev.onlineUsers + Math.floor(Math.random() * 20) - 10,
-        activeParties: Math.max(0, prev.activeParties + Math.floor(Math.random() * 6) - 3),
-        totalWatchTime: prev.totalWatchTime + Math.floor(Math.random() * 100),
-        newUsers: prev.newUsers + Math.floor(Math.random() * 5)
-      }))
-    }, 15000)
+      loadRealTimeStats()
+    }, 30000)
     
     return () => clearInterval(interval)
   }, [])
+
+  const loadRealTimeStats = async () => {
+    try {
+      const realTimeData = await analyticsApi.getRealTime()
+      if (realTimeData) {
+        setLiveStats({
+          onlineUsers: realTimeData.online_users || 0,
+          activeParties: realTimeData.active_parties || 0,
+          totalWatchTime: realTimeData.total_watch_time || 0,
+          newUsers: realTimeData.new_users || 0
+        })
+      }
+    } catch (error) {
+      console.error("Failed to load real-time stats:", error)
+      // Keep existing values on error
+    }
+  }
 
   const loadDashboardData = async () => {
     try {

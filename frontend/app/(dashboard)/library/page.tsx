@@ -52,7 +52,7 @@ export default function LibraryPage() {
   };
 
   const media: MediaItem[] = videos.map(video => ({
-    id: video.id || Math.random().toString(),
+    id: video.id,
     title: video.title || 'Untitled Video',
     type: video.source_type || 'Video',
     duration: video.duration_formatted || 'Unknown',

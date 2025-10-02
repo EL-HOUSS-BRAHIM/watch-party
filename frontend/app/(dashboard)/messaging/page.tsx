@@ -178,7 +178,7 @@ export default function MessagingPage() {
           />
         )}
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-4">
             <button
               onClick={() => router.push("/dashboard")}
@@ -187,25 +187,25 @@ export default function MessagingPage() {
               ←
             </button>
             <div>
-              <h1 className="text-3xl font-bold text-white">Messages</h1>
-              <p className="text-white/70">Stay connected with your watch party friends</p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-white">Messages</h1>
+              <p className="text-sm sm:text-base text-white/70">Stay connected with your watch party friends</p>
             </div>
           </div>
           
           <button
             onClick={() => router.push("/dashboard/messaging/new")}
-            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25"
+            className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-purple-500/25"
           >
-            <span className="flex items-center gap-2">
+            <span className="flex items-center justify-center gap-2">
               <span>✉️</span>
               New Message
             </span>
           </button>
         </div>
 
-        <div className="flex gap-6 h-[calc(100vh-200px)]">
+        <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-200px)]">
           {/* Conversations Sidebar */}
-          <div className="w-1/3 bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+          <div className="w-full md:w-1/3 bg-white/5 border border-white/10 rounded-xl overflow-hidden">
             {/* Search */}
             <div className="p-4 border-b border-white/10">
               <div className="relative">
