@@ -45,6 +45,14 @@ class GoogleDriveIntegrationViewsTests(APITestCase):
         self.assertIn('redirect_uri', payload['data'])
         self.assertIn('google_drive_oauth_state', self.client.session)
 
+    def test_google_drive_auth_url_requires_authentication(self):
+        """Requests without authentication are rejected."""
+        self.client.force_authenticate(user=None)
+
+        response = self.client.get(reverse('integrations:google_drive_auth_url'))
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_google_drive_auth_url_handles_configuration_errors(self):
         """Configuration issues surface as server errors."""
         with patch('apps.authentication.views.GoogleDriveAuthView._build_client_config', side_effect=ValueError('bad config')):
@@ -117,6 +125,14 @@ class GoogleDriveIntegrationViewsTests(APITestCase):
         self.assertFalse(payload['success'])
         self.assertEqual(payload['message'], 'Authorization code is required')
 
+    def test_google_drive_callback_requires_authentication(self):
+        """Unauthenticated requests to the callback return 401."""
+        self.client.force_authenticate(user=None)
+
+        response = self.client.get(reverse('integrations:google_drive_oauth_callback'), {'code': 'abc', 'state': 'xyz'})
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_google_drive_list_files_returns_results(self):
         """The list files endpoint surfaces the Drive response."""
         drive_service = MagicMock()
@@ -136,6 +152,29 @@ class GoogleDriveIntegrationViewsTests(APITestCase):
         self.assertEqual(payload['data']['total'], 2)
         self.assertEqual(len(payload['data']['files']), 2)
 
+    def test_google_drive_list_files_requires_authentication(self):
+        """Unauthenticated requests are rejected with a 401."""
+        self.client.force_authenticate(user=None)
+
+        response = self.client.get(reverse('integrations:google_drive_list_files'))
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_google_drive_list_files_persists_folder_id_on_profile(self):
+        """Providing an explicit folder id persists it to the profile."""
+        drive_service = MagicMock()
+        drive_service.list_files.return_value = {'files': []}
+
+        with patch('apps.integrations.views.get_drive_service_for_user', return_value=drive_service):
+            response = self.client.get(
+                reverse('integrations:google_drive_list_files'),
+                {'folder_id': 'folder-xyz'}
+            )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.profile.refresh_from_db()
+        self.assertEqual(self.profile.google_drive_folder_id, 'folder-xyz')
+
     def test_google_drive_list_files_handles_missing_connection(self):
         """A user without a valid connection receives a 400 response."""
         with patch('apps.integrations.views.get_drive_service_for_user', side_effect=ValueError('not connected')):
@@ -145,6 +184,19 @@ class GoogleDriveIntegrationViewsTests(APITestCase):
         payload = response.json()
         self.assertFalse(payload['success'])
         self.assertEqual(payload['message'], 'not connected')
+
+    def test_google_drive_list_files_handles_upstream_errors(self):
+        """Unexpected Drive API errors surface as a 502 response."""
+        drive_service = MagicMock()
+        drive_service.list_files.side_effect = RuntimeError('boom')
+
+        with patch('apps.integrations.views.get_drive_service_for_user', return_value=drive_service):
+            response = self.client.get(reverse('integrations:google_drive_list_files'))
+
+        self.assertEqual(response.status_code, status.HTTP_502_BAD_GATEWAY)
+        payload = response.json()
+        self.assertFalse(payload['success'])
+        self.assertIn('Failed to list Google Drive files', payload['message'])
 
     def test_google_drive_streaming_url_returns_urls(self):
         """The streaming-url endpoint returns both streaming and download links."""
@@ -171,3 +223,25 @@ class GoogleDriveIntegrationViewsTests(APITestCase):
         payload = response.json()
         self.assertFalse(payload['success'])
         self.assertEqual(payload['message'], 'not connected')
+
+    def test_google_drive_streaming_url_handles_upstream_errors(self):
+        """Unexpected Drive API errors are returned as a 502."""
+        drive_service = MagicMock()
+        drive_service.get_streaming_url.side_effect = RuntimeError('boom')
+        drive_service.get_download_url.return_value = 'https://download.example.com/file'
+
+        with patch('apps.integrations.views.get_drive_service_for_user', return_value=drive_service):
+            response = self.client.get(reverse('integrations:google_drive_streaming_url', args=['file-123']))
+
+        self.assertEqual(response.status_code, status.HTTP_502_BAD_GATEWAY)
+        payload = response.json()
+        self.assertFalse(payload['success'])
+        self.assertIn('Failed to generate streaming URL', payload['message'])
+
+    def test_google_drive_streaming_url_requires_authentication(self):
+        """The streaming endpoint enforces authentication."""
+        self.client.force_authenticate(user=None)
+
+        response = self.client.get(reverse('integrations:google_drive_streaming_url', args=['file-123']))
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

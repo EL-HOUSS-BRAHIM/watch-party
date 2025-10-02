@@ -228,27 +228,60 @@ def integration_types(request):
 
 
 # Google Drive Integration Views
+GOOGLE_DRIVE_SCOPES = [
+    'https://www.googleapis.com/auth/drive.readonly',
+    'https://www.googleapis.com/auth/drive.file'
+]
+
+
+def _build_drive_flow(request):
+    """Create an OAuth flow configured for the integrations callback."""
+    from google_auth_oauthlib.flow import Flow  # Imported lazily for easier testing
+
+    client_config = GoogleDriveAuthView._build_client_config()
+    flow = Flow.from_client_config(client_config, scopes=GOOGLE_DRIVE_SCOPES)
+    redirect_uri = request.build_absolute_uri(
+        reverse('integrations:google_drive_oauth_callback')
+    )
+    flow.redirect_uri = redirect_uri
+    return flow, redirect_uri
+
+
+def _persist_profile_credentials(profile, credentials, folder_id=None):
+    """Persist credential details and folder information on the user profile."""
+    profile.google_drive_token = getattr(credentials, 'token', '') or ''
+    refresh_token = getattr(credentials, 'refresh_token', None)
+    if refresh_token:
+        profile.google_drive_refresh_token = refresh_token
+
+    expiry = getattr(credentials, 'expiry', None)
+    if expiry and timezone.is_naive(expiry):
+        expiry = timezone.make_aware(expiry)
+    profile.google_drive_token_expires_at = expiry
+
+    if folder_id is not None:
+        profile.google_drive_folder_id = folder_id or ''
+
+    profile.google_drive_connected = True
+    profile.save()
+
+
+def _get_or_create_profile(user):
+    """Ensure the authenticated user has an associated profile."""
+    profile = getattr(user, 'profile', None)
+    if profile is None:
+        from apps.authentication.models import UserProfile
+
+        profile = UserProfile.objects.create(user=user)
+    return profile
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def google_drive_auth_url(request):
     """Get Google Drive OAuth authorization URL"""
     try:
-        from google_auth_oauthlib.flow import Flow
-
-        client_config = GoogleDriveAuthView._build_client_config()
-
-        flow = Flow.from_client_config(
-            client_config,
-            scopes=[
-                'https://www.googleapis.com/auth/drive.readonly',
-                'https://www.googleapis.com/auth/drive.file'
-            ]
-        )
-
-        redirect_uri = request.build_absolute_uri(
-            reverse('integrations:google_drive_oauth_callback')
-        )
-        flow.redirect_uri = redirect_uri
+        flow, redirect_uri = _build_drive_flow(request)
 
         authorization_url, state = flow.authorization_url(
             access_type='offline',
@@ -293,8 +326,6 @@ def google_drive_auth_url(request):
 def google_drive_oauth_callback(request):
     """Handle Google Drive OAuth callback"""
     try:
-        from google_auth_oauthlib.flow import Flow
-
         code = request.query_params.get('code')
         state = request.query_params.get('state')
 
@@ -311,49 +342,26 @@ def google_drive_oauth_callback(request):
                 status_code=status.HTTP_400_BAD_REQUEST
             )
 
-        client_config = GoogleDriveAuthView._build_client_config()
-
-        flow = Flow.from_client_config(
-            client_config,
-            scopes=[
-                'https://www.googleapis.com/auth/drive.readonly',
-                'https://www.googleapis.com/auth/drive.file'
-            ]
-        )
-
-        redirect_uri = request.build_absolute_uri(
-            reverse('integrations:google_drive_oauth_callback')
-        )
-        flow.redirect_uri = redirect_uri
+        flow, _ = _build_drive_flow(request)
         flow.fetch_token(code=code)
 
         credentials = flow.credentials
 
+        profile = _get_or_create_profile(request.user)
+
+        def _update_credentials(updated_credentials):
+            _persist_profile_credentials(profile, updated_credentials)
+
         drive_service = GoogleDriveService(
             access_token=getattr(credentials, 'token', None),
             refresh_token=getattr(credentials, 'refresh_token', None),
-            token_expiry=getattr(credentials, 'expiry', None)
+            token_expiry=getattr(credentials, 'expiry', None),
+            on_credentials_updated=_update_credentials
         )
 
         folder_id = drive_service.get_or_create_watch_party_folder()
 
-        user = request.user
-        profile = getattr(user, 'profile', None)
-        if profile is None:
-            from apps.authentication.models import UserProfile
-            profile = UserProfile.objects.create(user=user)
-
-        profile.google_drive_token = getattr(credentials, 'token', '') or ''
-        refresh_token = getattr(credentials, 'refresh_token', None)
-        if refresh_token:
-            profile.google_drive_refresh_token = refresh_token
-        expiry = getattr(credentials, 'expiry', None)
-        if expiry and timezone.is_naive(expiry):
-            expiry = timezone.make_aware(expiry)
-        profile.google_drive_token_expires_at = expiry
-        profile.google_drive_connected = True
-        profile.google_drive_folder_id = folder_id or ''
-        profile.save()
+        _persist_profile_credentials(profile, credentials, folder_id=folder_id)
 
         if 'google_drive_oauth_state' in request.session:
             del request.session['google_drive_oauth_state']
@@ -410,6 +418,11 @@ def google_drive_list_files(request):
     try:
         results = drive_service.list_files(folder_id=folder_id, mime_type=mime_type)
         files = results.get('files', [])
+        if folder_id and hasattr(request.user, 'profile'):
+            profile = request.user.profile
+            if profile.google_drive_folder_id != folder_id:
+                profile.google_drive_folder_id = folder_id
+                profile.save(update_fields=['google_drive_folder_id'])
         data = {
             'files': files,
             'total': len(files),
