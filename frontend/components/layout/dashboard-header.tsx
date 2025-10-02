@@ -48,15 +48,15 @@ export function DashboardHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-gray-950/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-brand-navy-dark/80 backdrop-blur-xl">
       <div className="flex h-16 items-center justify-between px-6">
         {/* Logo & Brand */}
         <Link href="/dashboard" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-blue-600 shadow-lg">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-magenta to-brand-purple shadow-lg">
             <span className="text-xl">🎬</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-lg font-bold text-purple-400">WatchParty</span>
+            <span className="text-lg font-bold text-brand-magenta-light">WatchParty</span>
           </div>
         </Link>
 
@@ -67,7 +67,7 @@ export function DashboardHeader() {
             <input
               type="text"
               placeholder="Search parties, videos, friends..."
-              className="w-full h-11 pl-12 pr-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:border-purple-500/50 focus:bg-white/10 transition-all"
+              className="w-full h-11 pl-12 pr-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:border-brand-cyan/50 focus:bg-white/10 transition-all"
             />
           </div>
         </div>
