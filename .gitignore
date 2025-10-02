@@ -115,3 +115,6 @@ coverage.xml
 # Production secrets
 backend/.env.production
 frontend/.env.production
+
+# SSL certificates
+nginx/ssl/

@@ -21,11 +21,27 @@ log_info "Setting up SSL certificates..."
 mkdir -p "$APP_DIR/nginx"
 mkdir -p "$SSL_DIR"
 
+# Check and fix directory ownership if needed
+CURRENT_OWNER=$(stat -c '%U' "$SSL_DIR" 2>/dev/null || echo "unknown")
+CURRENT_USER=$(whoami)
+
+if [ "$CURRENT_OWNER" != "$CURRENT_USER" ]; then
+    log_warning "SSL directory owned by $CURRENT_OWNER, attempting to fix..."
+    
+    # Try to fix ownership with sudo
+    if sudo chown -R "$CURRENT_USER:$CURRENT_USER" "$SSL_DIR" 2>/dev/null; then
+        log_success "Fixed SSL directory ownership"
+    else
+        log_warning "Cannot change ownership with sudo, trying direct access..."
+    fi
+fi
+
 # Test write permissions
 if ! touch "$SSL_DIR/.test_write" 2>/dev/null; then
     log_error "Cannot write to SSL directory: $SSL_DIR"
     log_error "Directory owner: $(stat -c '%U:%G' $SSL_DIR 2>/dev/null || echo 'unknown')"
     log_error "Directory permissions: $(stat -c '%a' $SSL_DIR 2>/dev/null || echo 'unknown')"
+    log_error "Current user: $CURRENT_USER"
     exit_with_error "SSL directory not writable"
 fi
 
