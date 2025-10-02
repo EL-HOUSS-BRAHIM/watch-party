@@ -27,6 +27,21 @@ export SKIP_AWS_DURING_BUILD=1
 log_info "Cleaning up old containers..."
 docker-compose down --remove-orphans || true
 
+# Fix SSL directory ownership if it exists and is owned by root
+if [ -d "$APP_DIR/nginx/ssl" ]; then
+    SSL_OWNER=$(stat -c '%U' "$APP_DIR/nginx/ssl" 2>/dev/null || echo "unknown")
+    CURRENT_USER=$(whoami)
+    
+    if [ "$SSL_OWNER" = "root" ]; then
+        log_warning "SSL directory owned by root, attempting to fix..."
+        if sudo chown -R "$CURRENT_USER:$CURRENT_USER" "$APP_DIR/nginx/ssl" 2>/dev/null; then
+            log_success "Fixed SSL directory ownership"
+        else
+            log_warning "Cannot change SSL directory ownership, will use fallback location"
+        fi
+    fi
+fi
+
 # Try parallel build first
 log_info "Attempting parallel build..."
 if timeout 1200 docker-compose build --parallel \
