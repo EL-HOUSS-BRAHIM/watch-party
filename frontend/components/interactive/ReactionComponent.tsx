@@ -180,7 +180,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
         {reactions.length > 0 && (
           <button
             onClick={clearReactions}
-            className="text-red-400 hover:text-red-300 text-sm transition-colors"
+            className="text-brand-coral-light hover:text-red-300 text-sm transition-colors"
           >
             Clear All
           </button>
@@ -202,7 +202,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
                 onClick={() => addReaction(reaction.emoji)}
                 className={`group relative p-3 rounded-lg border transition-all duration-200 ${
                   userReacted
-                    ? "bg-blue-600/20 border-blue-600/30 scale-105"
+                    ? "bg-brand-blue/20 border-brand-blue/30 scale-105"
                     : "bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20"
                 } ${isAnimating ? "animate-pulse scale-110" : ""}`}
                 title={reaction.label}
@@ -219,7 +219,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
                 </div>
 
                 {userReacted && (
-                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-600 rounded-full"></div>
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-brand-blue rounded-full"></div>
                 )}
               </button>
             )
@@ -259,7 +259,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
                     onClick={() => addReaction(reaction.emoji)}
                     className={`px-3 py-1 text-sm rounded-lg transition-colors ${
                       reaction.user_reacted
-                        ? "bg-blue-600 text-white"
+                        ? "bg-brand-blue text-white"
                         : "bg-white/10 text-white/80 hover:bg-white/20"
                     }`}
                   >

@@ -66,18 +66,18 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
 
   const getHealthStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
-      case "healthy": return "text-green-400"
-      case "warning": return "text-yellow-400"
-      case "critical": return "text-red-400"
+      case "healthy": return "text-brand-cyan-light"
+      case "warning": return "text-brand-orange-light"
+      case "critical": return "text-brand-coral-light"
       default: return "text-white/60"
     }
   }
 
   const getHealthStatusBg = (status: string) => {
     switch (status?.toLowerCase()) {
-      case "healthy": return "bg-green-500/20"
-      case "warning": return "bg-yellow-500/20"
-      case "critical": return "bg-red-500/20"
+      case "healthy": return "bg-brand-cyan/20"
+      case "warning": return "bg-brand-orange/20"
+      case "critical": return "bg-brand-coral/20"
       default: return "bg-white/10"
     }
   }
@@ -86,7 +86,7 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
     return (
       <div className="flex items-center justify-center py-12">
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+          <div className="animate-spin w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
           <p className="text-white/60">Loading system data...</p>
         </div>
       </div>
@@ -133,7 +133,7 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded transition-colors ${
                 activeTab === tab.id
-                  ? "bg-blue-600 text-white"
+                  ? "bg-brand-blue text-white"
                   : "text-white/60 hover:text-white hover:bg-white/10"
               }`}
             >
@@ -162,8 +162,8 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
                 <div className="w-full bg-white/10 rounded-full h-2 mt-1">
                   <div 
                     className={`h-2 rounded-full ${
-                      (stats?.cpu_usage || 0) > 80 ? "bg-red-600" :
-                      (stats?.cpu_usage || 0) > 60 ? "bg-yellow-600" : "bg-green-600"
+                      (stats?.cpu_usage || 0) > 80 ? "bg-brand-coral" :
+                      (stats?.cpu_usage || 0) > 60 ? "bg-brand-orange" : "bg-brand-cyan"
                     }`}
                     style={{ width: `${stats?.cpu_usage || 0}%` }}
                   ></div>
@@ -184,8 +184,8 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
                 <div className="w-full bg-white/10 rounded-full h-2 mt-1">
                   <div 
                     className={`h-2 rounded-full ${
-                      (stats?.memory_usage || 0) > 80 ? "bg-red-600" :
-                      (stats?.memory_usage || 0) > 60 ? "bg-yellow-600" : "bg-green-600"
+                      (stats?.memory_usage || 0) > 80 ? "bg-brand-coral" :
+                      (stats?.memory_usage || 0) > 60 ? "bg-brand-orange" : "bg-brand-cyan"
                     }`}
                     style={{ width: `${stats?.memory_usage || 0}%` }}
                   ></div>
@@ -206,8 +206,8 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
                 <div className="w-full bg-white/10 rounded-full h-2 mt-1">
                   <div 
                     className={`h-2 rounded-full ${
-                      (stats?.storage_usage || 0) > 80 ? "bg-red-600" :
-                      (stats?.storage_usage || 0) > 60 ? "bg-yellow-600" : "bg-green-600"
+                      (stats?.storage_usage || 0) > 80 ? "bg-brand-coral" :
+                      (stats?.storage_usage || 0) > 60 ? "bg-brand-orange" : "bg-brand-cyan"
                     }`}
                     style={{ width: `${stats?.storage_usage || 0}%` }}
                   ></div>
@@ -251,7 +251,7 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
                   
                   <button
                     onClick={() => restartService(service.name)}
-                    className="w-full px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition-colors"
+                    className="w-full px-3 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded text-sm transition-colors"
                   >
                     Restart Service
                   </button>
@@ -283,7 +283,7 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
                     </div>
                     <button
                       onClick={clearCache}
-                      className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 text-white rounded text-sm transition-colors"
+                      className="px-4 py-2 bg-brand-orange hover:bg-yellow-700 text-white rounded text-sm transition-colors"
                     >
                       Clear Cache
                     </button>
@@ -302,7 +302,7 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
                     </div>
                     <button
                       onClick={() => alert("Backup feature coming soon")}
-                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm transition-colors"
+                      className="px-4 py-2 bg-brand-cyan hover:bg-green-700 text-white rounded text-sm transition-colors"
                     >
                       Backup Now
                     </button>
@@ -311,16 +311,16 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
               </div>
             </div>
 
-            <div className="mt-8 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-              <h4 className="font-medium text-red-400 mb-2">⚠️ Danger Zone</h4>
-              <p className="text-red-400/80 text-sm mb-4">
+            <div className="mt-8 p-4 bg-brand-coral/10 border border-brand-coral/20 rounded-lg">
+              <h4 className="font-medium text-brand-coral-light mb-2">⚠️ Danger Zone</h4>
+              <p className="text-brand-coral-light/80 text-sm mb-4">
                 These actions can significantly impact the system. Use with extreme caution.
               </p>
               
               <div className="flex gap-3">
                 <button
                   onClick={() => alert("System restart feature coming soon")}
-                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm transition-colors"
+                  className="px-4 py-2 bg-brand-coral hover:bg-red-700 text-white rounded text-sm transition-colors"
                 >
                   Restart System
                 </button>
@@ -348,7 +348,7 @@ export default function SystemManagement({ onBack }: SystemManagementProps) {
           </p>
           <button
             onClick={() => setActiveTab("overview")}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            className="px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg font-medium transition-colors"
           >
             Back to Overview
           </button>

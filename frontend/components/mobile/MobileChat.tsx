@@ -166,7 +166,7 @@ export default function MobileChat({ partyId, currentUser }: MobileChatProps) {
                 <div
                   className={`inline-block px-4 py-2 rounded-2xl ${
                     isOwnMessage
-                      ? "bg-blue-600 text-white"
+                      ? "bg-brand-blue text-white"
                       : "bg-white/10 text-white"
                   } ${message.type === "emoji" ? "text-2xl py-1" : ""}`}
                 >
@@ -179,7 +179,7 @@ export default function MobileChat({ partyId, currentUser }: MobileChatProps) {
               </div>
 
               {isOwnMessage && (
-                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 bg-brand-blue rounded-full flex items-center justify-center flex-shrink-0">
                   {currentUser?.avatar ? (
                     <img
                       src={currentUser.avatar}
@@ -221,7 +221,7 @@ export default function MobileChat({ partyId, currentUser }: MobileChatProps) {
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className={`p-3 rounded-full transition-colors ${
-              showEmojiPicker ? "bg-yellow-600 text-white" : "bg-white/10 text-white/70"
+              showEmojiPicker ? "bg-brand-orange text-white" : "bg-white/10 text-white/70"
             }`}
           >
             😊
@@ -239,7 +239,7 @@ export default function MobileChat({ partyId, currentUser }: MobileChatProps) {
               }}
               placeholder="Type a message..."
               rows={1}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue"
               style={{
                 minHeight: "48px",
                 maxHeight: "120px"
@@ -250,7 +250,7 @@ export default function MobileChat({ partyId, currentUser }: MobileChatProps) {
           <button
             onClick={sendMessage}
             disabled={sending || !newMessage.trim()}
-            className="p-3 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-full transition-colors"
+            className="p-3 bg-brand-blue hover:bg-brand-blue-dark disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-full transition-colors"
           >
             {sending ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>

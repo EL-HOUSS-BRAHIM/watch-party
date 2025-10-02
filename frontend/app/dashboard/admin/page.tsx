@@ -39,7 +39,7 @@ export default function AdminDashboard() {
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <div className="animate-spin w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-white/60">Loading admin dashboard...</p>
           </div>
         </div>
@@ -67,7 +67,7 @@ export default function AdminDashboard() {
             </div>
             
             <div className="flex items-center gap-3">
-              <span className="px-3 py-1 bg-red-600/20 text-red-400 rounded-full text-sm font-medium">
+              <span className="px-3 py-1 bg-red-600/20 text-brand-coral-light rounded-full text-sm font-medium">
                 🛡️ Admin Access
               </span>
             </div>
@@ -91,7 +91,7 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2 px-4 py-4 text-sm font-medium border-b-2 transition-colors ${
                   activeTab === tab.id
-                    ? "text-blue-400 border-blue-400"
+                    ? "text-brand-blue-light border-blue-400"
                     : "text-white/60 border-transparent hover:text-white"
                 }`}
               >
@@ -118,7 +118,7 @@ export default function AdminDashboard() {
                   <div className="text-3xl">👥</div>
                 </div>
                 <div className="mt-2">
-                  <span className="text-green-400 text-sm">
+                  <span className="text-brand-cyan-light text-sm">
                     +{stats?.new_users_today || 0} today
                   </span>
                 </div>
@@ -133,7 +133,7 @@ export default function AdminDashboard() {
                   <div className="text-3xl">🎬</div>
                 </div>
                 <div className="mt-2">
-                  <span className="text-blue-400 text-sm">
+                  <span className="text-brand-blue-light text-sm">
                     {stats?.parties_today || 0} created today
                   </span>
                 </div>
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
                   <div className="text-3xl">📹</div>
                 </div>
                 <div className="mt-2">
-                  <span className="text-purple-400 text-sm">
+                  <span className="text-brand-purple-light text-sm">
                     {stats?.videos_today || 0} uploaded today
                   </span>
                 </div>
@@ -158,7 +158,7 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-white/60 text-sm">System Health</p>
-                    <p className="text-2xl font-bold text-green-400">Healthy</p>
+                    <p className="text-2xl font-bold text-brand-cyan-light">Healthy</p>
                   </div>
                   <div className="text-3xl">💚</div>
                 </div>
@@ -178,7 +178,7 @@ export default function AdminDashboard() {
                   <h3 className="text-lg font-semibold text-white">Recent Users</h3>
                   <button
                     onClick={() => setActiveTab("users")}
-                    className="text-blue-400 hover:text-blue-300 text-sm"
+                    className="text-brand-blue-light hover:text-brand-blue-light text-sm"
                   >
                     View All →
                   </button>
@@ -204,10 +204,10 @@ export default function AdminDashboard() {
                         <div className="flex items-center gap-2">
                           <p className="font-medium text-white">{user.username}</p>
                           {user.is_verified && (
-                            <span className="text-green-400 text-sm">✓</span>
+                            <span className="text-brand-cyan-light text-sm">✓</span>
                           )}
                           {user.is_premium && (
-                            <span className="text-yellow-400 text-sm">⭐</span>
+                            <span className="text-brand-orange-light text-sm">⭐</span>
                           )}
                         </div>
                         <p className="text-white/60 text-sm">{user.email}</p>
@@ -232,7 +232,7 @@ export default function AdminDashboard() {
                     </div>
                     <div className="w-full bg-white/10 rounded-full h-2">
                       <div 
-                        className="bg-blue-600 h-2 rounded-full" 
+                        className="bg-brand-blue h-2 rounded-full" 
                         style={{ width: `${stats?.cpu_usage || 45}%` }}
                       ></div>
                     </div>
@@ -245,7 +245,7 @@ export default function AdminDashboard() {
                     </div>
                     <div className="w-full bg-white/10 rounded-full h-2">
                       <div 
-                        className="bg-green-600 h-2 rounded-full" 
+                        className="bg-brand-cyan h-2 rounded-full" 
                         style={{ width: `${stats?.memory_usage || 62}%` }}
                       ></div>
                     </div>
@@ -258,7 +258,7 @@ export default function AdminDashboard() {
                     </div>
                     <div className="w-full bg-white/10 rounded-full h-2">
                       <div 
-                        className="bg-yellow-600 h-2 rounded-full" 
+                        className="bg-brand-orange h-2 rounded-full" 
                         style={{ width: `${stats?.storage_usage || 78}%` }}
                       ></div>
                     </div>
@@ -281,29 +281,29 @@ export default function AdminDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <button
                   onClick={() => setActiveTab("users")}
-                  className="p-4 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-lg transition-colors text-left"
+                  className="p-4 bg-blue-600/20 hover:bg-blue-600/30 text-brand-blue-light rounded-lg transition-colors text-left"
                 >
                   <div className="text-2xl mb-2">👥</div>
                   <h4 className="font-medium mb-1">Manage Users</h4>
-                  <p className="text-sm text-blue-400/80">View, edit, and moderate users</p>
+                  <p className="text-sm text-brand-blue-light/80">View, edit, and moderate users</p>
                 </button>
 
                 <button
                   onClick={() => setActiveTab("content")}
-                  className="p-4 bg-purple-600/20 hover:bg-purple-600/30 text-purple-400 rounded-lg transition-colors text-left"
+                  className="p-4 bg-purple-600/20 hover:bg-purple-600/30 text-brand-purple-light rounded-lg transition-colors text-left"
                 >
                   <div className="text-2xl mb-2">📹</div>
                   <h4 className="font-medium mb-1">Content Review</h4>
-                  <p className="text-sm text-purple-400/80">Moderate videos and content</p>
+                  <p className="text-sm text-brand-purple-light/80">Moderate videos and content</p>
                 </button>
 
                 <button
                   onClick={() => setActiveTab("system")}
-                  className="p-4 bg-green-600/20 hover:bg-green-600/30 text-green-400 rounded-lg transition-colors text-left"
+                  className="p-4 bg-green-600/20 hover:bg-brand-cyan/30 text-brand-cyan-light rounded-lg transition-colors text-left"
                 >
                   <div className="text-2xl mb-2">⚙️</div>
                   <h4 className="font-medium mb-1">System Settings</h4>
-                  <p className="text-sm text-green-400/80">Configure system parameters</p>
+                  <p className="text-sm text-brand-cyan-light/80">Configure system parameters</p>
                 </button>
               </div>
             </div>
@@ -333,7 +333,7 @@ export default function AdminDashboard() {
             </p>
             <button
               onClick={() => setActiveTab("overview")}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              className="px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg font-medium transition-colors"
             >
               Back to Overview
             </button>

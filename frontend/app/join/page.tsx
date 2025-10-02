@@ -49,7 +49,7 @@ export default function JoinPartyPage() {
               required
               value={partyCode}
               onChange={(e) => setPartyCode(e.target.value.toUpperCase())}
-              className="block w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white text-center text-lg font-mono placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="block w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white text-center text-lg font-mono placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
               placeholder="ABC123"
               maxLength={10}
             />
@@ -58,7 +58,7 @@ export default function JoinPartyPage() {
           <button
             type="submit"
             disabled={loading || !partyCode.trim()}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+            className="w-full bg-brand-blue hover:bg-brand-blue-dark disabled:bg-blue-600/50 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
           >
             {loading ? "Joining..." : "Join Party"}
           </button>
@@ -71,7 +71,7 @@ export default function JoinPartyPage() {
           
           <Link 
             href="/auth/login" 
-            className="inline-block text-blue-400 hover:text-blue-300 text-sm"
+            className="inline-block text-brand-blue-light hover:text-brand-blue-light text-sm"
           >
             Login to create your own party
           </Link>

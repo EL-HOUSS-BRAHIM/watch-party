@@ -78,7 +78,7 @@ export default function ResetPasswordPage() {
           
           <Link 
             href="/auth/login"
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+            className="inline-block bg-brand-blue hover:bg-brand-blue-dark text-white px-6 py-3 rounded-lg font-medium transition-colors"
           >
             Sign In
           </Link>
@@ -101,13 +101,13 @@ export default function ResetPasswordPage() {
           <div className="space-y-4">
             <Link 
               href="/auth/forgot-password"
-              className="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+              className="inline-block bg-brand-blue hover:bg-brand-blue-dark text-white px-6 py-3 rounded-lg font-medium transition-colors"
             >
               Request New Link
             </Link>
             
             <div>
-              <Link href="/auth/login" className="text-blue-400 hover:text-blue-300 text-sm">
+              <Link href="/auth/login" className="text-brand-blue-light hover:text-brand-blue-light text-sm">
                 Back to Login
               </Link>
             </div>
@@ -129,8 +129,8 @@ export default function ResetPasswordPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-              <p className="text-red-400 text-sm">{error}</p>
+            <div className="bg-brand-coral/10 border border-brand-coral/20 rounded-lg p-4">
+              <p className="text-brand-coral-light text-sm">{error}</p>
             </div>
           )}
 
@@ -145,7 +145,7 @@ export default function ResetPasswordPage() {
               required
               value={formData.password}
               onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
               placeholder="Enter new password"
               minLength={8}
             />
@@ -162,7 +162,7 @@ export default function ResetPasswordPage() {
               required
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="mt-1 block w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
               placeholder="Confirm new password"
               minLength={8}
             />
@@ -171,14 +171,14 @@ export default function ResetPasswordPage() {
           <button
             type="submit"
             disabled={loading || !formData.password || !formData.confirmPassword}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+            className="w-full bg-brand-blue hover:bg-brand-blue-dark disabled:bg-blue-600/50 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
           >
             {loading ? "Resetting..." : "Reset Password"}
           </button>
         </form>
 
         <div className="text-center">
-          <Link href="/auth/login" className="text-blue-400 hover:text-blue-300 text-sm">
+          <Link href="/auth/login" className="text-brand-blue-light hover:text-brand-blue-light text-sm">
             Back to Login
           </Link>
         </div>

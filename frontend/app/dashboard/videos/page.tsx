@@ -303,10 +303,10 @@ export default function VideosPage() {
 
   const getStatusColor = (status?: string) => {
     switch (status) {
-      case "ready": return "text-green-400 bg-green-400/20"
-      case "processing": return "text-yellow-400 bg-yellow-400/20"
-      case "pending": return "text-blue-400 bg-blue-400/20"
-      case "failed": return "text-red-400 bg-red-400/20"
+      case "ready": return "text-brand-cyan-light bg-green-400/20"
+      case "processing": return "text-brand-orange-light bg-yellow-400/20"
+      case "pending": return "text-brand-blue-light bg-blue-400/20"
+      case "failed": return "text-brand-coral-light bg-red-400/20"
       default: return "text-white/60 bg-white/10"
     }
   }
@@ -342,17 +342,17 @@ export default function VideosPage() {
     <div className="space-y-8">
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 via-blue-600/20 to-purple-600/20 rounded-3xl blur-xl"></div>
-        <GradientCard className="relative border-green-500/30">
+        <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 via-blue-600/20 to-brand-purple/20 rounded-3xl blur-xl"></div>
+        <GradientCard className="relative border-brand-cyan/30">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-4">
                 <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-green-200 to-blue-200 bg-clip-text text-transparent">
                   📹 Media Library
                 </h1>
-                <div className="flex items-center gap-2 px-3 py-1 bg-green-500/20 rounded-full border border-green-500/30">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-green-400 text-sm font-medium">{videos.length} Videos</span>
+                <div className="flex items-center gap-2 px-3 py-1 bg-brand-cyan/20 rounded-full border border-brand-cyan/30">
+                  <div className="w-2 h-2 bg-brand-cyan rounded-full animate-pulse"></div>
+                  <span className="text-brand-cyan-light text-sm font-medium">{videos.length} Videos</span>
                 </div>
               </div>
               <p className="text-white/80 text-lg">Build your personal cinema collection with unlimited storage</p>
@@ -386,16 +386,16 @@ export default function VideosPage() {
               </div>
               <IconButton
                 onClick={() => setUploadMode("file")}
-                gradient="from-green-600 to-emerald-600"
-                className="shadow-lg hover:shadow-green-500/25"
+                gradient="from-green-600 to-brand-blue"
+                className="shadow-lg hover:shadow-brand-cyan/25"
               >
                 <span>📤</span>
                 <span className="hidden sm:inline">Upload</span>
               </IconButton>
               <IconButton
                 onClick={() => setUploadMode("gdrive")}
-                gradient="from-yellow-500 to-green-500"
-                className="shadow-lg hover:shadow-yellow-500/25"
+                gradient="from-brand-orange to-brand-cyan"
+                className="shadow-lg hover:shadow-brand-orange/25"
               >
                 <span>☁️</span>
                 <span className="hidden sm:inline">Google Drive</span>
@@ -407,7 +407,7 @@ export default function VideosPage() {
 
       {/* Enhanced Upload Section */}
       {uploadMode && (
-        <GradientCard gradient="from-emerald-900/30 via-green-800/20 to-blue-900/30" className="border-green-500/30">
+        <GradientCard gradient="from-emerald-900/30 via-green-800/20 to-blue-900/30" className="border-brand-cyan/30">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-white flex items-center gap-3">
@@ -427,7 +427,7 @@ export default function VideosPage() {
               <button
                 onClick={() => setUploadMode("file")}
                 className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                  uploadMode === "file" ? "bg-green-600 text-white" : "text-white/60 hover:text-white"
+                  uploadMode === "file" ? "bg-brand-cyan text-white" : "text-white/60 hover:text-white"
                 }`}
               >
                 📁 Upload File
@@ -435,7 +435,7 @@ export default function VideosPage() {
               <button
                 onClick={() => setUploadMode("url")}
                 className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                  uploadMode === "url" ? "bg-blue-600 text-white" : "text-white/60 hover:text-white"
+                  uploadMode === "url" ? "bg-brand-blue text-white" : "text-white/60 hover:text-white"
                 }`}
               >
                 🔗 Add URL
@@ -443,7 +443,7 @@ export default function VideosPage() {
               <button
                 onClick={() => setUploadMode("gdrive")}
                 className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                  uploadMode === "gdrive" ? "bg-yellow-600 text-white" : "text-white/60 hover:text-white"
+                  uploadMode === "gdrive" ? "bg-brand-orange text-white" : "text-white/60 hover:text-white"
                 }`}
               >
                 ☁️ Google Drive
@@ -451,9 +451,9 @@ export default function VideosPage() {
             </div>
 
             {uploadMode === "file" ? (
-              <div className="border-2 border-dashed border-green-500/30 rounded-2xl p-8 text-center bg-green-500/5 hover:bg-green-500/10 transition-colors">
+              <div className="border-2 border-dashed border-brand-cyan/30 rounded-2xl p-8 text-center bg-brand-cyan/5 hover:bg-brand-cyan/10 transition-colors">
                 <div className="space-y-4">
-                  <div className="w-16 h-16 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center text-2xl animate-float">
+                  <div className="w-16 h-16 mx-auto bg-gradient-to-br from-brand-cyan to-brand-blue rounded-2xl flex items-center justify-center text-2xl animate-float">
                     📁
                   </div>
                   <div>
@@ -473,7 +473,7 @@ export default function VideosPage() {
                     className={`inline-block px-8 py-4 rounded-xl font-bold transition-all cursor-pointer ${
                       uploading
                         ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                        : "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-green-500/25 hover:scale-105"
+                        : "bg-gradient-to-r from-green-600 to-brand-blue hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-brand-cyan/25 hover:scale-105"
                     }`}
                   >
                     {uploading ? (
@@ -496,7 +496,7 @@ export default function VideosPage() {
                     placeholder="Video title"
                     required
                     disabled={uploading}
-                    className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 backdrop-blur-sm"
+                    className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 backdrop-blur-sm"
                   />
                   <input
                     type="url"
@@ -504,15 +504,15 @@ export default function VideosPage() {
                     placeholder="Video URL (YouTube, Vimeo, etc.)"
                     required
                     disabled={uploading}
-                    className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 backdrop-blur-sm"
+                    className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 backdrop-blur-sm"
                   />
                 </div>
                 <IconButton
                   type="submit"
                   disabled={uploading}
                   loading={uploading}
-                  gradient="from-blue-600 to-cyan-600"
-                  className="w-full shadow-lg hover:shadow-blue-500/25"
+                  gradient="from-brand-blue to-brand-cyan"
+                  className="w-full shadow-lg hover:shadow-brand-blue/25"
                 >
                   <span>🌐</span>
                   Add Video from URL
@@ -542,7 +542,7 @@ export default function VideosPage() {
                 </div>
 
                 {gdriveError && (
-                  <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+                  <div className="bg-brand-coral/10 border border-brand-coral/30 rounded-lg p-4">
                     <p className="text-red-300">{gdriveError}</p>
                     <button
                       onClick={() => loadGdriveVideos(true)}
@@ -593,7 +593,7 @@ export default function VideosPage() {
                             </span>
                           )}
                           {movie.in_database && (
-                            <span className="absolute top-2 right-2 bg-green-500/20 text-green-200 text-xs px-2 py-1 rounded-full">
+                            <span className="absolute top-2 right-2 bg-brand-cyan/20 text-green-200 text-xs px-2 py-1 rounded-full">
                               Imported
                             </span>
                           )}
@@ -633,7 +633,7 @@ export default function VideosPage() {
                               <IconButton
                                 onClick={() => handleImportFromGDrive(movie)}
                                 loading={importingIds.includes(movie.gdrive_file_id)}
-                                gradient="from-green-600 to-emerald-600"
+                                gradient="from-green-600 to-brand-blue"
                                 className="w-full"
                               >
                                 📥 Import to Library
@@ -664,7 +664,7 @@ export default function VideosPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search your video library..."
-                className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 backdrop-blur-sm transition-all"
+                className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all"
               />
             </div>
             
@@ -680,7 +680,7 @@ export default function VideosPage() {
                   onClick={() => setFilter(key as any)}
                   className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
                     filter === key
-                      ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105"
+                      ? "bg-gradient-to-r from-brand-blue to-brand-purple text-white shadow-lg scale-105"
                       : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white hover:scale-105"
                   }`}
                 >
@@ -696,8 +696,8 @@ export default function VideosPage() {
 
       {/* Error State */}
       {error && (
-        <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-          <p className="text-red-400">{error}</p>
+        <div className="bg-brand-coral/10 border border-brand-coral/20 rounded-lg p-4">
+          <p className="text-brand-coral-light">{error}</p>
           <button
             onClick={loadVideos}
             className="mt-2 text-red-300 hover:text-red-200 underline"
@@ -780,7 +780,7 @@ export default function VideosPage() {
                   {video.upload_status === "ready" && (
                     <Link
                       href={`/dashboard/videos/${video.id}/preview`}
-                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors text-center"
+                      className="flex-1 bg-brand-blue hover:bg-brand-blue-dark text-white py-2 px-3 rounded-lg text-sm font-medium transition-colors text-center"
                     >
                       Preview
                     </Link>
@@ -796,7 +796,7 @@ export default function VideosPage() {
                   
                   <button
                     onClick={() => handleDeleteVideo(video.id)}
-                    className="px-3 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg transition-colors text-sm"
+                    className="px-3 py-2 bg-red-600/20 hover:bg-red-600/30 text-brand-coral-light rounded-lg transition-colors text-sm"
                     title="Delete Video"
                   >
                     🗑️

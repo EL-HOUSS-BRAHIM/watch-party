@@ -92,10 +92,10 @@ export default function StorePage() {
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case "premium": return "bg-yellow-500/20 text-yellow-400"
-      case "cosmetic": return "bg-purple-500/20 text-purple-400"
-      case "feature": return "bg-blue-500/20 text-blue-400"
-      case "bundle": return "bg-green-500/20 text-green-400"
+      case "premium": return "bg-brand-orange/20 text-brand-orange-light"
+      case "cosmetic": return "bg-brand-purple/20 text-brand-purple-light"
+      case "feature": return "bg-brand-blue/20 text-brand-blue-light"
+      case "bundle": return "bg-brand-cyan/20 text-brand-cyan-light"
       default: return "bg-white/20 text-white/60"
     }
   }
@@ -123,7 +123,7 @@ export default function StorePage() {
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <div className="animate-spin w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-white/60">Loading store...</p>
           </div>
         </div>
@@ -152,7 +152,7 @@ export default function StorePage() {
             
             <button
               onClick={() => router.push("/dashboard/billing")}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+              className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm font-medium transition-colors"
             >
               View Billing
             </button>
@@ -170,7 +170,7 @@ export default function StorePage() {
                 onClick={() => setSelectedCategory(category.id)}
                 className={`flex items-center gap-2 px-4 py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
                   selectedCategory === category.id
-                    ? "text-blue-400 border-blue-400"
+                    ? "text-brand-blue-light border-blue-400"
                     : "text-white/60 border-transparent hover:text-white"
                 }`}
               >
@@ -196,10 +196,10 @@ export default function StorePage() {
               {storeItems.filter(item => item.is_featured).slice(0, 2).map((item) => (
                 <div
                   key={item.id}
-                  className="relative bg-gradient-to-r from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-lg p-6 overflow-hidden"
+                  className="relative bg-gradient-to-r from-brand-blue/20 to-brand-purple/20 border border-brand-blue/30 rounded-lg p-6 overflow-hidden"
                 >
                   <div className="absolute top-4 right-4">
-                    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                    <span className="bg-brand-blue text-white px-3 py-1 rounded-full text-xs font-medium">
                       Featured
                     </span>
                   </div>
@@ -225,7 +225,7 @@ export default function StorePage() {
                         <div className="text-2xl font-bold text-white">
                           {item.discount_percentage ? (
                             <>
-                              <span className="text-green-400">{formatPrice(item.price)}</span>
+                              <span className="text-brand-cyan-light">{formatPrice(item.price)}</span>
                               <span className="text-lg text-white/60 line-through ml-2">
                                 {formatPrice(item.original_price || item.price)}
                               </span>
@@ -240,8 +240,8 @@ export default function StorePage() {
                           disabled={purchasing === item.id || isPurchased(item.id)}
                           className={`px-6 py-2 rounded-lg text-sm font-medium transition-colors ${
                             isPurchased(item.id)
-                              ? "bg-green-600/20 text-green-400 cursor-not-allowed"
-                              : "bg-blue-600 hover:bg-blue-700 text-white"
+                              ? "bg-green-600/20 text-brand-cyan-light cursor-not-allowed"
+                              : "bg-brand-blue hover:bg-brand-blue-dark text-white"
                           }`}
                         >
                           {purchasing === item.id 
@@ -313,7 +313,7 @@ export default function StorePage() {
                     <ul className="space-y-1 mb-4">
                       {item.features.slice(0, 3).map((feature, index) => (
                         <li key={index} className="flex items-center gap-2 text-white/80 text-xs">
-                          <span className="text-green-400">✓</span>
+                          <span className="text-brand-cyan-light">✓</span>
                           {feature}
                         </li>
                       ))}
@@ -330,7 +330,7 @@ export default function StorePage() {
                     <div>
                       {item.discount_percentage ? (
                         <div>
-                          <div className="text-lg font-bold text-green-400">
+                          <div className="text-lg font-bold text-brand-cyan-light">
                             {formatPrice(item.price)}
                           </div>
                           <div className="text-sm text-white/60 line-through">
@@ -349,8 +349,8 @@ export default function StorePage() {
                       disabled={purchasing === item.id || isPurchased(item.id)}
                       className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                         isPurchased(item.id)
-                          ? "bg-green-600/20 text-green-400 cursor-not-allowed"
-                          : "bg-blue-600 hover:bg-blue-700 text-white"
+                          ? "bg-green-600/20 text-brand-cyan-light cursor-not-allowed"
+                          : "bg-brand-blue hover:bg-brand-blue-dark text-white"
                       }`}
                     >
                       {purchasing === item.id 
@@ -365,7 +365,7 @@ export default function StorePage() {
                   {/* Discount Badge */}
                   {item.discount_percentage && (
                     <div className="absolute top-2 left-2">
-                      <span className="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">
+                      <span className="bg-brand-coral text-white px-2 py-1 rounded text-xs font-bold">
                         -{item.discount_percentage}%
                       </span>
                     </div>
@@ -405,10 +405,10 @@ export default function StorePage() {
                     </div>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                       purchase.status === "completed"
-                        ? "bg-green-500/20 text-green-400"
+                        ? "bg-brand-cyan/20 text-brand-cyan-light"
                         : purchase.status === "pending"
-                        ? "bg-yellow-500/20 text-yellow-400"
-                        : "bg-red-500/20 text-red-400"
+                        ? "bg-brand-orange/20 text-brand-orange-light"
+                        : "bg-brand-coral/20 text-brand-coral-light"
                     }`}>
                       {purchase.status.toUpperCase()}
                     </span>
@@ -418,7 +418,7 @@ export default function StorePage() {
               
               {purchases.length > 5 && (
                 <div className="text-center pt-4">
-                  <button className="text-blue-400 hover:text-blue-300 text-sm transition-colors">
+                  <button className="text-brand-blue-light hover:text-brand-blue-light text-sm transition-colors">
                     View All Purchases ({purchases.length})
                   </button>
                 </div>

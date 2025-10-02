@@ -108,7 +108,7 @@ export default function SocialPage() {
 
   const getOnlineStatus = (isOnline: boolean, lastSeen?: string) => {
     if (isOnline) {
-      return { text: "Online", color: "text-green-400", dot: "bg-green-400" }
+      return { text: "Online", color: "text-brand-cyan-light", dot: "bg-green-400" }
     }
     if (lastSeen) {
       const lastSeenDate = new Date(lastSeen)
@@ -116,7 +116,7 @@ export default function SocialPage() {
       const diffHours = Math.floor((now.getTime() - lastSeenDate.getTime()) / (1000 * 60 * 60))
       
       if (diffHours < 24) {
-        return { text: `${diffHours}h ago`, color: "text-yellow-400", dot: "bg-yellow-400" }
+        return { text: `${diffHours}h ago`, color: "text-brand-orange-light", dot: "bg-yellow-400" }
       } else {
         const diffDays = Math.floor(diffHours / 24)
         return { text: `${diffDays}d ago`, color: "text-gray-400", dot: "bg-gray-400" }
@@ -151,7 +151,7 @@ export default function SocialPage() {
       )}
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-600/20 via-pink-600/20 to-purple-600/20 rounded-3xl blur-xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-orange/20 via-pink-600/20 to-brand-purple/20 rounded-3xl blur-xl"></div>
         <GradientCard className="relative border-orange-500/30">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
@@ -196,7 +196,7 @@ export default function SocialPage() {
               </div>
               <IconButton
                 onClick={() => router.push("/dashboard/social/groups/create")}
-                gradient="from-orange-600 to-pink-600"
+                gradient="from-brand-orange to-brand-magenta"
                 className="shadow-lg hover:shadow-orange-500/25"
               >
                 <span>✨</span>
@@ -248,7 +248,7 @@ export default function SocialPage() {
             onClick={() => setActiveTab(tab.id as any)}
             className={`flex items-center gap-3 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
               activeTab === tab.id
-                ? "bg-gradient-to-r from-orange-600 to-pink-600 text-white shadow-lg scale-105"
+                ? "bg-gradient-to-r from-brand-orange to-brand-magenta text-white shadow-lg scale-105"
                 : "text-white/60 hover:text-white hover:bg-white/10"
             }`}
           >
@@ -268,7 +268,7 @@ export default function SocialPage() {
               <div key={friend.id} className="bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-200">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="relative">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
+                    <div className="w-12 h-12 bg-gradient-to-br from-brand-purple to-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
                       {friend.avatar ? (
                         <img src={friend.avatar} alt={friend.username} className="w-full h-full rounded-full object-cover" />
                       ) : (
@@ -304,7 +304,7 @@ export default function SocialPage() {
                   </button>
                   <button
                     onClick={() => router.push(`/dashboard/chat/direct/${friend.id}`)}
-                    className="px-3 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-lg text-sm font-medium transition-colors"
+                    className="px-3 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-brand-blue-light rounded-lg text-sm font-medium transition-colors"
                   >
                     💬
                   </button>
@@ -321,7 +321,7 @@ export default function SocialPage() {
             <div key={group.id} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all duration-200">
               {/* Group Header */}
               <div className="flex items-start gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-lg flex items-center justify-center text-white font-semibold">
+                <div className="w-12 h-12 bg-gradient-to-br from-brand-purple to-blue-500 rounded-lg flex items-center justify-center text-white font-semibold">
                   {group.avatar ? (
                     <img src={group.avatar} alt={group.name} className="w-full h-full rounded-lg object-cover" />
                   ) : (
@@ -369,13 +369,13 @@ export default function SocialPage() {
                   <>
                     <button
                       onClick={() => router.push(`/dashboard/social/groups/${group.id}`)}
-                      className="flex-1 px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-lg font-medium transition-colors"
+                      className="flex-1 px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-brand-blue-light rounded-lg font-medium transition-colors"
                     >
                       Open Group
                     </button>
                     <button
                       onClick={() => handleLeaveGroup(group.id)}
-                      className="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg font-medium transition-colors"
+                      className="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-brand-coral-light rounded-lg font-medium transition-colors"
                     >
                       Leave
                     </button>
@@ -384,7 +384,7 @@ export default function SocialPage() {
                   <>
                     <button
                       onClick={() => handleJoinGroup(group.id)}
-                      className="flex-1 px-4 py-2 bg-green-600/20 hover:bg-green-600/30 text-green-400 rounded-lg font-medium transition-colors"
+                      className="flex-1 px-4 py-2 bg-green-600/20 hover:bg-brand-cyan/30 text-brand-cyan-light rounded-lg font-medium transition-colors"
                     >
                       Join Group
                     </button>
@@ -432,7 +432,7 @@ export default function SocialPage() {
               {activeTab === "friends" && (
                 <button
                   onClick={() => router.push("/dashboard/friends/find")}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200"
+                  className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
                 >
                   Find Friends
                 </button>
@@ -440,7 +440,7 @@ export default function SocialPage() {
               {activeTab === "groups" && (
                 <button
                   onClick={() => router.push("/dashboard/social/groups/create")}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200"
+                  className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
                 >
                   Create Group
                 </button>
@@ -448,7 +448,7 @@ export default function SocialPage() {
               {activeTab === "discover" && (
                 <button
                   onClick={() => setActiveTab("groups")}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200"
+                  className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
                 >
                   View My Groups
                 </button>

@@ -80,7 +80,7 @@ export default function SettingsPage() {
               </div>
               <div className="text-sm text-white/60">{userEmail}</div>
               {isPremium && (
-                <div className="rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1 text-xs font-semibold text-yellow-300">
+                <div className="rounded-full border border-brand-orange/30 bg-brand-orange/10 px-3 py-1 text-xs font-semibold text-brand-orange-light">
                   ⭐ Premium
                 </div>
               )}
@@ -93,7 +93,7 @@ export default function SettingsPage() {
         {placeholderPreferences.map((preference) => (
           <Card key={preference.title} className="border-white/10 bg-white/[0.02] relative">
             {preference.comingSoon && (
-              <div className="absolute top-4 right-4 bg-blue-500/20 text-blue-300 px-2 py-1 rounded text-xs font-medium">
+              <div className="absolute top-4 right-4 bg-brand-blue/20 text-blue-300 px-2 py-1 rounded text-xs font-medium">
                 Coming Soon
               </div>
             )}

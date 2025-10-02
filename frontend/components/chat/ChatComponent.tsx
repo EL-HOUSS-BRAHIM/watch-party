@@ -154,7 +154,7 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
           {isHost && (
             <button
               onClick={() => {/* TODO: Open moderation panel */}}
-              className="px-3 py-1 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded text-sm transition-colors"
+              className="px-3 py-1 bg-blue-600/20 hover:bg-blue-600/30 text-brand-blue-light rounded text-sm transition-colors"
             >
               🛡️ Moderate
             </button>
@@ -172,14 +172,14 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
           >
             {loading && (
               <div className="text-center py-8">
-                <div className="animate-spin w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-2"></div>
+                <div className="animate-spin w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full mx-auto mb-2"></div>
                 <p className="text-white/60 text-sm">Loading messages...</p>
               </div>
             )}
 
             {error && (
-              <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
-                <p className="text-red-400 text-sm">{error}</p>
+              <div className="bg-brand-coral/10 border border-brand-coral/20 rounded-lg p-3">
+                <p className="text-brand-coral-light text-sm">{error}</p>
               </div>
             )}
 
@@ -222,10 +222,10 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
                         {message.user.username}
                       </span>
                       {message.user.is_verified && (
-                        <span className="text-green-400 text-xs">✓</span>
+                        <span className="text-brand-cyan-light text-xs">✓</span>
                       )}
                       {message.user.is_premium && (
-                        <span className="text-yellow-400 text-xs">⭐</span>
+                        <span className="text-brand-orange-light text-xs">⭐</span>
                       )}
                       <span className="text-white/40 text-xs">
                         {formatTime(message.timestamp)}
@@ -234,7 +234,7 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
                       {isHost && message.user.id !== currentUser?.id && (
                         <button
                           onClick={() => banUser(message.user.id, message.user.username)}
-                          className="text-red-400 hover:text-red-300 text-xs ml-2"
+                          className="text-brand-coral-light hover:text-red-300 text-xs ml-2"
                           title="Ban user"
                         >
                           🚫
@@ -277,13 +277,13 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Type a message..."
                 disabled={sending}
-                className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue disabled:opacity-50"
                 maxLength={500}
               />
               <button
                 type="submit"
                 disabled={sending || !newMessage.trim()}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-600/50 text-white rounded-lg text-sm font-medium transition-colors"
+                className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark disabled:bg-blue-600/50 text-white rounded-lg text-sm font-medium transition-colors"
               >
                 {sending ? "..." : "Send"}
               </button>
@@ -330,10 +330,10 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
                         {user.username}
                       </span>
                       {user.is_verified && (
-                        <span className="text-green-400 text-xs">✓</span>
+                        <span className="text-brand-cyan-light text-xs">✓</span>
                       )}
                       {user.is_premium && (
-                        <span className="text-yellow-400 text-xs">⭐</span>
+                        <span className="text-brand-orange-light text-xs">⭐</span>
                       )}
                     </div>
                   </div>
@@ -341,7 +341,7 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
                   {isHost && user.id !== currentUser?.id && (
                     <button
                       onClick={() => banUser(user.id, user.username)}
-                      className="text-red-400 hover:text-red-300 text-xs"
+                      className="text-brand-coral-light hover:text-red-300 text-xs"
                       title="Ban user"
                     >
                       🚫

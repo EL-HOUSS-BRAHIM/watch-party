@@ -222,7 +222,7 @@ export default function SyncControls({ partyId, currentUser, isHost = false, onS
             disabled={!isHost || updating}
             className={`p-4 text-2xl rounded-lg transition-all ${
               isHost
-                ? "bg-blue-600 hover:bg-blue-700 text-white"
+                ? "bg-brand-blue hover:bg-brand-blue-dark text-white"
                 : "bg-white/10 text-white/60 cursor-not-allowed"
             } ${updating ? "opacity-50 cursor-not-allowed" : ""}`}
             title={isHost ? (localPlaying ? "Pause" : "Play") : "Host controls only"}
@@ -277,7 +277,7 @@ export default function SyncControls({ partyId, currentUser, isHost = false, onS
                     value={timeInput}
                     onChange={(e) => setTimeInput(e.target.value)}
                     placeholder="MM:SS or HH:MM:SS"
-                    className="px-2 py-1 bg-white/10 border border-white/20 rounded text-white text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="px-2 py-1 bg-white/10 border border-white/20 rounded text-white text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         handleTimeInputSubmit()
@@ -290,7 +290,7 @@ export default function SyncControls({ partyId, currentUser, isHost = false, onS
                   />
                   <button
                     onClick={handleTimeInputSubmit}
-                    className="px-2 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors"
+                    className="px-2 py-1 bg-brand-cyan hover:bg-green-700 text-white text-sm rounded transition-colors"
                   >
                     Go
                   </button>
@@ -299,7 +299,7 @@ export default function SyncControls({ partyId, currentUser, isHost = false, onS
                       setTimeInput("")
                       setShowTimeInput(false)
                     }}
-                    className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white text-sm rounded transition-colors"
+                    className="px-2 py-1 bg-brand-coral hover:bg-red-700 text-white text-sm rounded transition-colors"
                   >
                     Cancel
                   </button>
@@ -338,7 +338,7 @@ export default function SyncControls({ partyId, currentUser, isHost = false, onS
 
         {/* Status */}
         <div className="text-center space-y-1">
-          <div className={`text-sm ${localPlaying ? "text-green-400" : "text-red-400"}`}>
+          <div className={`text-sm ${localPlaying ? "text-brand-cyan-light" : "text-brand-coral-light"}`}>
             {localPlaying ? "▶️ Playing" : "⏸️ Paused"}
           </div>
           {!isHost && (
@@ -347,7 +347,7 @@ export default function SyncControls({ partyId, currentUser, isHost = false, onS
             </div>
           )}
           {updating && (
-            <div className="text-xs text-yellow-400">
+            <div className="text-xs text-brand-orange-light">
               Updating...
             </div>
           )}

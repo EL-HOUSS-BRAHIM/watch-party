@@ -61,7 +61,7 @@ export default function ChatPage() {
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <div className="animate-spin w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
             <p className="text-white/60">Loading chat...</p>
           </div>
         </div>
@@ -99,7 +99,7 @@ export default function ChatPage() {
                 <p className="text-white/60 mb-4">No active parties</p>
                 <button
                   onClick={() => router.push("/parties")}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors"
+                  className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm transition-colors"
                 >
                   Browse Parties
                 </button>
@@ -112,14 +112,14 @@ export default function ChatPage() {
                     onClick={() => setSelectedParty(party)}
                     className={`w-full text-left p-4 rounded-lg border transition-all ${
                       selectedParty?.id === party.id
-                        ? "bg-blue-600/20 border-blue-600/30 text-white"
+                        ? "bg-brand-blue/20 border-brand-blue/30 text-white"
                         : "bg-white/5 border-white/10 text-white/80 hover:bg-white/10"
                     }`}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <h3 className="font-medium truncate">{party.name}</h3>
                       {isHost(party) && (
-                        <span className="px-2 py-1 bg-purple-600/20 text-purple-400 rounded text-xs ml-2">
+                        <span className="px-2 py-1 bg-purple-600/20 text-brand-purple-light rounded text-xs ml-2">
                           Host
                         </span>
                       )}
@@ -133,10 +133,10 @@ export default function ChatPage() {
                       <span>👥 {party.participants_count || 0}</span>
                       <span className={`px-2 py-1 rounded ${
                         party.status === "live" 
-                          ? "bg-green-500/20 text-green-400"
+                          ? "bg-brand-cyan/20 text-brand-cyan-light"
                           : party.status === "scheduled"
-                          ? "bg-yellow-500/20 text-yellow-400"
-                          : "bg-red-500/20 text-red-400"
+                          ? "bg-brand-orange/20 text-brand-orange-light"
+                          : "bg-brand-coral/20 text-brand-coral-light"
                       }`}>
                         {party.status}
                       </span>
@@ -158,7 +158,7 @@ export default function ChatPage() {
               </button>
               <button
                 onClick={() => router.push("/parties")}
-                className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm transition-colors"
+                className="w-full px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm transition-colors"
               >
                 Find More Parties
               </button>
@@ -184,7 +184,7 @@ export default function ChatPage() {
                     {isHost(selectedParty) && (
                       <button
                         onClick={() => setShowModeration(true)}
-                        className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-lg text-sm font-medium transition-colors"
+                        className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-brand-blue-light rounded-lg text-sm font-medium transition-colors"
                       >
                         🛡️ Moderation
                       </button>
@@ -192,7 +192,7 @@ export default function ChatPage() {
                     
                     <button
                       onClick={() => router.push(`/room/${selectedParty.id}`)}
-                      className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
+                      className="px-4 py-2 bg-brand-cyan hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
                     >
                       🎬 Join Room
                     </button>
@@ -223,7 +223,7 @@ export default function ChatPage() {
                 {parties.length === 0 && (
                   <button
                     onClick={() => router.push("/parties")}
-                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                    className="px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg font-medium transition-colors"
                   >
                     Find Parties to Chat
                   </button>

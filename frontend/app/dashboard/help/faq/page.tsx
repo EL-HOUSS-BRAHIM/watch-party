@@ -144,7 +144,7 @@ export default function FAQPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search FAQ..."
-              className="w-full px-4 py-3 pl-12 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 pl-12 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
             />
             <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50">
               🔍
@@ -161,7 +161,7 @@ export default function FAQPage() {
                 onClick={() => setSelectedCategory("all")}
                 className={`p-4 border rounded-lg text-left transition-all ${
                   selectedCategory === "all"
-                    ? "bg-blue-600/20 border-blue-600/30 text-blue-400"
+                    ? "bg-blue-600/20 border-blue-600/30 text-brand-blue-light"
                     : "bg-white/5 border-white/10 text-white hover:bg-white/10"
                 }`}
               >
@@ -178,7 +178,7 @@ export default function FAQPage() {
                   onClick={() => setSelectedCategory(category.id)}
                   className={`p-4 border rounded-lg text-left transition-all ${
                     selectedCategory === category.id
-                      ? "bg-blue-600/20 border-blue-600/30 text-blue-400"
+                      ? "bg-blue-600/20 border-blue-600/30 text-brand-blue-light"
                       : "bg-white/5 border-white/10 text-white hover:bg-white/10"
                   }`}
                 >
@@ -209,7 +209,7 @@ export default function FAQPage() {
                 <div className="space-x-4">
                   <button
                     onClick={() => setSearchQuery("")}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                    className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg transition-colors"
                   >
                     Clear Search
                   </button>
@@ -244,7 +244,7 @@ export default function FAQPage() {
                         <h3 className="font-medium text-white pr-4">{faq.question}</h3>
                         <div className="flex items-center gap-2 flex-shrink-0">
                           {faq.helpful_count > 0 && (
-                            <span className="text-green-400 text-sm">
+                            <span className="text-brand-cyan-light text-sm">
                               👍 {faq.helpful_count}
                             </span>
                           )}
@@ -259,7 +259,7 @@ export default function FAQPage() {
                           {faq.tags.map((tag) => (
                             <span
                               key={tag}
-                              className="px-2 py-1 bg-blue-600/20 text-blue-400 text-xs rounded"
+                              className="px-2 py-1 bg-blue-600/20 text-brand-blue-light text-xs rounded"
                             >
                               {tag}
                             </span>
@@ -284,8 +284,8 @@ export default function FAQPage() {
                                 onClick={() => markAsHelpful(faq.id, true)}
                                 className={`px-3 py-1 rounded text-sm transition-colors ${
                                   faq.user_found_helpful === true
-                                    ? "bg-green-600 text-white"
-                                    : "bg-white/10 text-white/60 hover:bg-green-600/20 hover:text-green-400"
+                                    ? "bg-brand-cyan text-white"
+                                    : "bg-white/10 text-white/60 hover:bg-brand-cyan/20 hover:text-brand-cyan-light"
                                 }`}
                               >
                                 👍 Yes
@@ -294,8 +294,8 @@ export default function FAQPage() {
                                 onClick={() => markAsHelpful(faq.id, false)}
                                 className={`px-3 py-1 rounded text-sm transition-colors ${
                                   faq.user_found_helpful === false
-                                    ? "bg-red-600 text-white"
-                                    : "bg-white/10 text-white/60 hover:bg-red-600/20 hover:text-red-400"
+                                    ? "bg-brand-coral text-white"
+                                    : "bg-white/10 text-white/60 hover:bg-red-600/20 hover:text-brand-coral-light"
                                 }`}
                               >
                                 👎 No
@@ -317,14 +317,14 @@ export default function FAQPage() {
         </div>
 
         {/* Contact Support */}
-        <div className="mt-12 bg-blue-600/10 border border-blue-600/20 rounded-lg p-6 text-center">
+        <div className="mt-12 bg-brand-blue/10 border border-brand-blue/20 rounded-lg p-6 text-center">
           <h3 className="text-xl font-semibold text-white mb-2">Still Need Help?</h3>
           <p className="text-white/60 mb-4">
             Can't find what you're looking for? Our support team is here to help.
           </p>
           <a
             href="/dashboard/support"
-            className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            className="inline-block px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg font-medium transition-colors"
           >
             Contact Support
           </a>

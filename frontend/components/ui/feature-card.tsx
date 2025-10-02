@@ -19,7 +19,7 @@ export function FeatureCard({
   description, 
   icon, 
   onClick, 
-  gradient = "from-purple-500 to-pink-600",
+  gradient = "from-brand-purple to-brand-magenta",
   className,
   disabled = false,
   badge
@@ -52,7 +52,7 @@ export function FeatureCard({
       <p className="text-white/60 mb-4 leading-relaxed">{description}</p>
       
       {onClick && !disabled && (
-        <div className="text-blue-400 font-medium group-hover:text-blue-300 transition-colors flex items-center gap-2">
+        <div className="text-brand-blue-light font-medium group-hover:text-brand-blue-light transition-colors flex items-center gap-2">
           Get Started
           <span className="transform group-hover:translate-x-1 transition-transform">→</span>
         </div>

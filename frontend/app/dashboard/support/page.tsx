@@ -72,9 +72,9 @@ export default function SupportPage() {
 
   const statusColor = (status: string) => {
     switch (status) {
-      case "open": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
-      case "in_progress": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
-      case "resolved": return "bg-green-500/20 text-green-400 border-green-500/30";
+      case "open": return "bg-brand-blue/20 text-brand-blue-light border-brand-blue/30";
+      case "in_progress": return "bg-brand-orange/20 text-brand-orange-light border-brand-orange/30";
+      case "resolved": return "bg-brand-cyan/20 text-brand-cyan-light border-brand-cyan/30";
       case "closed": return "bg-gray-500/20 text-gray-400 border-gray-500/30";
       default: return "bg-gray-500/20 text-gray-400 border-gray-500/30";
     }
@@ -82,10 +82,10 @@ export default function SupportPage() {
 
   const priorityColor = (priority: string) => {
     switch (priority) {
-      case "low": return "bg-green-500/20 text-green-400";
-      case "medium": return "bg-yellow-500/20 text-yellow-400";
+      case "low": return "bg-brand-cyan/20 text-brand-cyan-light";
+      case "medium": return "bg-brand-orange/20 text-brand-orange-light";
       case "high": return "bg-orange-500/20 text-orange-400";
-      case "urgent": return "bg-red-500/20 text-red-400";
+      case "urgent": return "bg-brand-coral/20 text-brand-coral-light";
       default: return "bg-gray-500/20 text-gray-400";
     }
   };
@@ -113,19 +113,19 @@ export default function SupportPage() {
               placeholder="Title"
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-purple-500 focus:outline-none"
+              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-brand-purple focus:outline-none"
             />
             <textarea
               placeholder="Description"
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               rows={4}
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-purple-500 focus:outline-none"
+              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-brand-purple focus:outline-none"
             />
             <select
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-purple-500 focus:outline-none"
+              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-brand-purple focus:outline-none"
             >
               <option value="">Select Category</option>
               {categories.map((cat) => (
@@ -135,7 +135,7 @@ export default function SupportPage() {
             <select
               value={form.priority}
               onChange={(e) => setForm({ ...form, priority: e.target.value as any })}
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-purple-500 focus:outline-none"
+              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-brand-purple focus:outline-none"
             >
               <option value="low">Low</option>
               <option value="medium">Medium</option>
@@ -227,10 +227,10 @@ function TicketDetailModal({
         
         <div className="p-6 space-y-4">
           {ticket.messages.map((msg) => (
-            <div key={msg.id} className={`p-4 rounded-lg ${msg.author.is_staff ? 'bg-purple-500/10 border border-purple-500/20' : 'bg-gray-800'}`}>
+            <div key={msg.id} className={`p-4 rounded-lg ${msg.author.is_staff ? 'bg-brand-purple/10 border border-brand-purple/20' : 'bg-gray-800'}`}>
               <div className="flex items-center gap-2 mb-2">
                 <span className="font-semibold">{msg.author.username}</span>
-                {msg.author.is_staff && <span className="text-xs bg-purple-500 px-2 py-0.5 rounded">Staff</span>}
+                {msg.author.is_staff && <span className="text-xs bg-brand-purple px-2 py-0.5 rounded">Staff</span>}
                 <span className="text-xs text-gray-400">{new Date(msg.created_at).toLocaleString()}</span>
               </div>
               <p className="text-gray-300">{msg.content}</p>
@@ -244,7 +244,7 @@ function TicketDetailModal({
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type your reply..."
             rows={3}
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-purple-500 focus:outline-none mb-3"
+            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-brand-purple focus:outline-none mb-3"
           />
           <IconButton onClick={send} disabled={sending || !message.trim()} variant="primary" size="md">
             {sending ? "Sending..." : "Send Reply"}

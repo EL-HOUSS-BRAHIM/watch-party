@@ -83,10 +83,10 @@ export default function EventsPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "upcoming": return "bg-blue-500/20 text-blue-400"
-      case "live": return "bg-green-500/20 text-green-400"
+      case "upcoming": return "bg-brand-blue/20 text-brand-blue-light"
+      case "live": return "bg-brand-cyan/20 text-brand-cyan-light"
       case "ended": return "bg-gray-500/20 text-gray-400"
-      case "cancelled": return "bg-red-500/20 text-red-400"
+      case "cancelled": return "bg-brand-coral/20 text-brand-coral-light"
       default: return "bg-gray-500/20 text-gray-400"
     }
   }
@@ -136,7 +136,7 @@ export default function EventsPage() {
       )}
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 via-blue-600/20 to-purple-600/20 rounded-3xl blur-xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 via-blue-600/20 to-brand-purple/20 rounded-3xl blur-xl"></div>
         <GradientCard className="relative border-cyan-500/30">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
@@ -181,7 +181,7 @@ export default function EventsPage() {
               </div>
               <IconButton
                 onClick={() => router.push("/dashboard/events/create")}
-                gradient="from-cyan-600 to-blue-600"
+                gradient="from-cyan-600 to-brand-blue"
                 className="shadow-lg hover:shadow-cyan-500/25"
               >
                 <span>✨</span>
@@ -226,7 +226,7 @@ export default function EventsPage() {
             onClick={() => setActiveTab(tab.id as any)}
             className={`flex items-center gap-3 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
               activeTab === tab.id
-                ? "bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg scale-105"
+                ? "bg-gradient-to-r from-cyan-600 to-brand-blue text-white shadow-lg scale-105"
                 : "text-white/60 hover:text-white hover:bg-white/10"
             }`}
           >
@@ -292,14 +292,14 @@ export default function EventsPage() {
                     {event.is_attending ? (
                       <button
                         onClick={() => handleLeaveEvent(event.id)}
-                        className="flex-1 px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-lg font-medium transition-colors"
+                        className="flex-1 px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-brand-coral-light rounded-lg font-medium transition-colors"
                       >
                         Leave Event
                       </button>
                     ) : (
                       <button
                         onClick={() => handleJoinEvent(event.id)}
-                        className="flex-1 px-4 py-2 bg-green-600/20 hover:bg-green-600/30 text-green-400 rounded-lg font-medium transition-colors"
+                        className="flex-1 px-4 py-2 bg-green-600/20 hover:bg-brand-cyan/30 text-brand-cyan-light rounded-lg font-medium transition-colors"
                       >
                         Join Event
                       </button>

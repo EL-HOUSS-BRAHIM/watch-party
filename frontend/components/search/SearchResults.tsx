@@ -78,9 +78,9 @@ export default function SearchResults({
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case "party": return "bg-purple-600/20 text-purple-400"
-      case "user": return "bg-green-600/20 text-green-400"
-      case "video": return "bg-blue-600/20 text-blue-400"
+      case "party": return "bg-purple-600/20 text-brand-purple-light"
+      case "user": return "bg-green-600/20 text-brand-cyan-light"
+      case "video": return "bg-blue-600/20 text-brand-blue-light"
       default: return "bg-gray-600/20 text-gray-400"
     }
   }

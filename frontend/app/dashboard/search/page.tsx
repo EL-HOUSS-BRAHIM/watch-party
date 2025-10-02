@@ -160,7 +160,7 @@ export default function SearchPage() {
       title: "Active Parties",
       description: "Find parties currently live",
       icon: "🎉",
-      gradient: "from-blue-500 to-purple-500",
+      gradient: "from-brand-blue to-purple-500",
       action: () => {
         setFilters(prev => ({ ...prev, type: "parties" }))
         setQuery("active")
@@ -171,7 +171,7 @@ export default function SearchPage() {
       title: "Popular Videos", 
       description: "Discover trending content",
       icon: "🎬",
-      gradient: "from-purple-500 to-pink-500",
+      gradient: "from-brand-purple to-brand-magenta",
       action: () => {
         setFilters(prev => ({ ...prev, type: "videos" }))
         setQuery("popular")
@@ -182,7 +182,7 @@ export default function SearchPage() {
       title: "Active Users",
       description: "Connect with the community", 
       icon: "👥",
-      gradient: "from-green-500 to-blue-500",
+      gradient: "from-brand-cyan to-brand-blue",
       action: () => {
         setFilters(prev => ({ ...prev, type: "users" }))
         setQuery("active")
@@ -195,7 +195,7 @@ export default function SearchPage() {
     <div className="space-y-8">
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 via-blue-600/20 to-purple-600/20 rounded-3xl blur-xl"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 via-blue-600/20 to-brand-purple/20 rounded-3xl blur-xl"></div>
         <GradientCard className="relative border-cyan-500/30">
           <div className="text-center space-y-4">
             <div className="text-6xl mb-4">🔍</div>
@@ -239,7 +239,7 @@ export default function SearchPage() {
             <IconButton
               onClick={() => performSearch()}
               disabled={loading || !query.trim()}
-              gradient="from-cyan-600 to-blue-600"
+              gradient="from-cyan-600 to-brand-blue"
               className="shadow-lg"
             >
               {loading ? "🔄" : "🔍"}
@@ -282,7 +282,7 @@ export default function SearchPage() {
                 onClick={() => setFilters(prev => ({ ...prev, type: key as any }))}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                   filters.type === key
-                    ? "bg-gradient-to-r from-cyan-600 to-blue-600 text-white shadow-lg"
+                    ? "bg-gradient-to-r from-cyan-600 to-brand-blue text-white shadow-lg"
                     : "text-white/60 hover:text-white hover:bg-white/10"
                 }`}
               >
@@ -316,7 +316,7 @@ export default function SearchPage() {
             </h3>
             <button
               onClick={clearRecentSearches}
-              className="text-red-400 hover:text-red-300 text-sm transition-colors"
+              className="text-brand-coral-light hover:text-red-300 text-sm transition-colors"
             >
               Clear All
             </button>
@@ -382,7 +382,7 @@ export default function SearchPage() {
                   <GradientCard className="hover:border-cyan-400/40 transition-all duration-300">
                   <div className="flex items-start gap-4">
                     {/* Thumbnail/Avatar */}
-                    <div className="w-12 h-12 bg-gradient-to-br from-cyan-500/20 to-blue-500/20 rounded-lg flex items-center justify-center overflow-hidden">
+                    <div className="w-12 h-12 bg-gradient-to-br from-brand-cyan/20 to-brand-blue/20 rounded-lg flex items-center justify-center overflow-hidden">
                       {result.thumbnail || result.avatar ? (
                         <img
                           src={result.thumbnail || result.avatar}
@@ -397,7 +397,7 @@ export default function SearchPage() {
                     {/* Content */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="px-2 py-1 bg-gradient-to-r from-cyan-600/20 to-blue-600/20 text-cyan-400 text-xs rounded border border-cyan-500/30">
+                        <span className="px-2 py-1 bg-gradient-to-r from-cyan-600/20 to-brand-blue/20 text-cyan-400 text-xs rounded border border-cyan-500/30">
                           {getResultTypeLabel(result.type)}
                         </span>
                         {result.relevance_score && (

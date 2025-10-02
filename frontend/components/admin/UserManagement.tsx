@@ -145,13 +145,13 @@ export default function UserManagement({ onBack }: UserManagementProps) {
             <span className="text-white/60">{selectedUsers.size} selected</span>
             <button
               onClick={() => bulkAction("verify")}
-              className="px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded text-sm transition-colors"
+              className="px-3 py-2 bg-brand-cyan hover:bg-green-700 text-white rounded text-sm transition-colors"
             >
               Verify Selected
             </button>
             <button
               onClick={() => bulkAction("ban")}
-              className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm transition-colors"
+              className="px-3 py-2 bg-brand-coral hover:bg-red-700 text-white rounded text-sm transition-colors"
             >
               Ban Selected
             </button>
@@ -168,14 +168,14 @@ export default function UserManagement({ onBack }: UserManagementProps) {
               placeholder="Search users by username or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
             />
           </div>
           
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as any)}
-            className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-brand-blue"
           >
             <option value="all">All Users</option>
             <option value="verified">Verified Only</option>
@@ -196,7 +196,7 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                     type="checkbox"
                     checked={selectedUsers.size === users.length && users.length > 0}
                     onChange={selectAllUsers}
-                    className="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-brand-blue"
                   />
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-white/80">User</th>
@@ -210,7 +210,7 @@ export default function UserManagement({ onBack }: UserManagementProps) {
               {loading ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center">
-                    <div className="animate-spin w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+                    <div className="animate-spin w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
                     <p className="text-white/60">Loading users...</p>
                   </td>
                 </tr>
@@ -228,7 +228,7 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                         type="checkbox"
                         checked={selectedUsers.has(user.id)}
                         onChange={() => toggleUserSelection(user.id)}
-                        className="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-blue-500"
+                        className="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-brand-blue"
                       />
                     </td>
                     <td className="px-6 py-4">
@@ -250,13 +250,13 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                           <div className="flex items-center gap-2">
                             <p className="font-medium text-white">{user.username}</p>
                             {user.is_verified && (
-                              <span className="text-green-400 text-sm">✓</span>
+                              <span className="text-brand-cyan-light text-sm">✓</span>
                             )}
                             {user.is_premium && (
-                              <span className="text-yellow-400 text-sm">⭐</span>
+                              <span className="text-brand-orange-light text-sm">⭐</span>
                             )}
                             {user.is_staff && (
-                              <span className="px-2 py-1 bg-purple-600/20 text-purple-400 rounded text-xs">
+                              <span className="px-2 py-1 bg-purple-600/20 text-brand-purple-light rounded text-xs">
                                 Staff
                               </span>
                             )}
@@ -269,13 +269,13 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                       <div className="flex flex-col gap-1">
                         <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
                           user.is_active
-                            ? "bg-green-500/20 text-green-400"
-                            : "bg-red-500/20 text-red-400"
+                            ? "bg-brand-cyan/20 text-brand-cyan-light"
+                            : "bg-brand-coral/20 text-brand-coral-light"
                         }`}>
                           {user.is_active ? "Active" : "Inactive"}
                         </span>
                         {(user as any).is_banned && (
-                          <span className="inline-flex px-2 py-1 bg-red-500/20 text-red-400 rounded-full text-xs font-medium">
+                          <span className="inline-flex px-2 py-1 bg-brand-coral/20 text-brand-coral-light rounded-full text-xs font-medium">
                             Banned
                           </span>
                         )}
@@ -296,7 +296,7 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                         {!user.is_verified && (
                           <button
                             onClick={() => verifyUser(user.id, user.username)}
-                            className="px-2 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-xs transition-colors"
+                            className="px-2 py-1 bg-brand-cyan hover:bg-green-700 text-white rounded text-xs transition-colors"
                           >
                             Verify
                           </button>
@@ -305,14 +305,14 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                         {(user as any).is_banned ? (
                           <button
                             onClick={() => unbanUser(user.id, user.username)}
-                            className="px-2 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs transition-colors"
+                            className="px-2 py-1 bg-brand-blue hover:bg-brand-blue-dark text-white rounded text-xs transition-colors"
                           >
                             Unban
                           </button>
                         ) : (
                           <button
                             onClick={() => banUser(user.id, user.username)}
-                            className="px-2 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs transition-colors"
+                            className="px-2 py-1 bg-brand-coral hover:bg-red-700 text-white rounded text-xs transition-colors"
                           >
                             Ban
                           </button>

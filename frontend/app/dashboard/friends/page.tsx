@@ -156,8 +156,8 @@ export default function FriendsPage() {
                 : user.username
               }
             </h3>
-            {user.is_verified && <span className="text-green-400 text-sm">✓</span>}
-            {user.is_premium && <span className="text-yellow-400 text-sm">⭐</span>}
+            {user.is_verified && <span className="text-brand-cyan-light text-sm">✓</span>}
+            {user.is_premium && <span className="text-brand-orange-light text-sm">⭐</span>}
           </div>
           <p className="text-white/60 text-sm">@{user.username}</p>
         </div>
@@ -184,7 +184,7 @@ export default function FriendsPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search for users by username or email..."
-          className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
         />
       </div>
 
@@ -201,7 +201,7 @@ export default function FriendsPage() {
             onClick={() => setActiveTab(key as any)}
             className={`px-4 py-2 rounded-md font-medium transition-colors ${
               activeTab === key
-                ? "bg-blue-600 text-white"
+                ? "bg-brand-blue text-white"
                 : "text-white/70 hover:text-white hover:bg-white/10"
             }`}
           >
@@ -243,13 +243,13 @@ export default function FriendsPage() {
                         <>
                           <Link
                             href={`/dashboard/users/${friend.id}`}
-                            className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition-colors"
+                            className="px-3 py-1 bg-brand-blue hover:bg-brand-blue-dark text-white rounded text-sm transition-colors"
                           >
                             View
                           </Link>
                           <button
                             onClick={() => removeFriend(friend.username)}
-                            className="px-3 py-1 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded text-sm transition-colors"
+                            className="px-3 py-1 bg-red-600/20 hover:bg-red-600/30 text-brand-coral-light rounded text-sm transition-colors"
                           >
                             Remove
                           </button>
@@ -267,7 +267,7 @@ export default function FriendsPage() {
                   </p>
                   <button
                     onClick={() => setActiveTab("suggestions")}
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                    className="bg-brand-blue hover:bg-brand-blue-dark text-white px-6 py-3 rounded-lg font-medium transition-colors"
                   >
                     Find Friends
                   </button>
@@ -289,13 +289,13 @@ export default function FriendsPage() {
                         <>
                           <button
                             onClick={() => acceptFriendRequest(request.id)}
-                            className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded text-sm transition-colors"
+                            className="px-3 py-1 bg-brand-cyan hover:bg-green-700 text-white rounded text-sm transition-colors"
                           >
                             Accept
                           </button>
                           <button
                             onClick={() => declineFriendRequest(request.id)}
-                            className="px-3 py-1 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded text-sm transition-colors"
+                            className="px-3 py-1 bg-red-600/20 hover:bg-red-600/30 text-brand-coral-light rounded text-sm transition-colors"
                           >
                             Decline
                           </button>
@@ -329,7 +329,7 @@ export default function FriendsPage() {
                         <>
                           <button
                             onClick={() => sendFriendRequest(suggestion.id)}
-                            className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition-colors"
+                            className="px-3 py-1 bg-brand-blue hover:bg-brand-blue-dark text-white rounded text-sm transition-colors"
                           >
                             Add Friend
                           </button>
@@ -369,7 +369,7 @@ export default function FriendsPage() {
                         <>
                           <button
                             onClick={() => sendFriendRequest(user.id)}
-                            className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm transition-colors"
+                            className="px-3 py-1 bg-brand-blue hover:bg-brand-blue-dark text-white rounded text-sm transition-colors"
                           >
                             Add Friend
                           </button>

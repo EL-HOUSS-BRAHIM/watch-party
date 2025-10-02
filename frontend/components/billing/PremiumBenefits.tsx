@@ -130,13 +130,13 @@ export default function PremiumBenefits({ userSubscription, userPurchases = [] }
             key={feature.id}
             className={`p-4 rounded-lg border transition-all ${
               feature.is_available
-                ? "bg-green-500/10 border-green-500/20"
+                ? "bg-brand-cyan/10 border-brand-cyan/20"
                 : "bg-white/5 border-white/10"
             }`}
           >
             <div className="flex items-start gap-3">
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                feature.is_available ? "bg-green-500/20" : "bg-white/10"
+                feature.is_available ? "bg-brand-cyan/20" : "bg-white/10"
               }`}>
                 <span className="text-xl">{feature.icon}</span>
               </div>
@@ -149,7 +149,7 @@ export default function PremiumBenefits({ userSubscription, userPurchases = [] }
                     {feature.name}
                   </h4>
                   {feature.is_available && (
-                    <span className="text-green-400 text-sm">✓</span>
+                    <span className="text-brand-cyan-light text-sm">✓</span>
                   )}
                 </div>
                 
@@ -162,12 +162,12 @@ export default function PremiumBenefits({ userSubscription, userPurchases = [] }
                 {!feature.is_available && (
                   <div className="mt-2">
                     {feature.requires_subscription && (
-                      <span className="inline-block px-2 py-1 bg-blue-500/20 text-blue-400 rounded text-xs">
+                      <span className="inline-block px-2 py-1 bg-brand-blue/20 text-brand-blue-light rounded text-xs">
                         Requires Subscription
                       </span>
                     )}
                     {feature.requires_purchase && (
-                      <span className="inline-block px-2 py-1 bg-purple-500/20 text-purple-400 rounded text-xs">
+                      <span className="inline-block px-2 py-1 bg-brand-purple/20 text-brand-purple-light rounded text-xs">
                         Available in Store
                       </span>
                     )}
@@ -189,19 +189,19 @@ export default function PremiumBenefits({ userSubscription, userPurchases = [] }
               </p>
               <a
                 href="/dashboard/billing"
-                className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                className="inline-block px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg font-medium transition-colors"
               >
                 View Subscription Plans
               </a>
             </div>
           ) : (
             <div>
-              <p className="text-green-400 text-sm mb-2">
+              <p className="text-brand-cyan-light text-sm mb-2">
                 ✓ You have access to all subscription features!
               </p>
               <a
                 href="/dashboard/store"
-                className="inline-block px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors"
+                className="inline-block px-6 py-3 bg-brand-purple hover:bg-brand-purple-dark text-white rounded-lg font-medium transition-colors"
               >
                 Browse Store Items
               </a>

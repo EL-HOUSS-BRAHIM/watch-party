@@ -57,11 +57,11 @@ export default function NotificationToast({
 
   const getNotificationColor = (type: string) => {
     switch (type) {
-      case "party_invite": return "border-blue-500 bg-blue-500/10"
-      case "friend_request": return "border-green-500 bg-green-500/10"
-      case "message": return "border-yellow-500 bg-yellow-500/10"
-      case "video_processed": return "border-purple-500 bg-purple-500/10"
-      case "party_started": return "border-red-500 bg-red-500/10"
+      case "party_invite": return "border-brand-blue bg-brand-blue/10"
+      case "friend_request": return "border-brand-cyan bg-brand-cyan/10"
+      case "message": return "border-brand-orange bg-brand-orange/10"
+      case "video_processed": return "border-brand-purple bg-brand-purple/10"
+      case "party_started": return "border-brand-coral bg-brand-coral/10"
       case "system": return "border-gray-500 bg-gray-500/10"
       default: return "border-white/20 bg-white/10"
     }
@@ -101,7 +101,7 @@ export default function NotificationToast({
                 {onAction && (
                   <button
                     onClick={onAction}
-                    className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors"
+                    className="text-brand-blue-light hover:text-brand-blue-light text-sm font-medium transition-colors"
                   >
                     View
                   </button>
