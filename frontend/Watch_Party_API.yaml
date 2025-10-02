@@ -23,7 +23,11 @@ paths:
       - {}
       responses:
         '200':
-          description: No response body
+          description: Real-time analytics metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RealTimeAnalyticsResponse'
       x-authentication:
         types:
         - JWTAuthentication
@@ -10178,6 +10182,118 @@ components:
         data:
           type: object
           additionalProperties: {}
+    RealTimeAnalyticsActivity:
+      type: object
+      description: Aggregated count of events observed in the last hour
+      properties:
+        event_type:
+          type: string
+          description: Event category (e.g., user_login, party_join)
+        count:
+          type: integer
+          description: Number of events recorded in the window
+          minimum: 0
+      required:
+      - count
+      - event_type
+    RealTimeAnalyticsEngagement:
+      type: object
+      description: Live engagement metrics sampled from active watch parties
+      properties:
+        concurrent_viewers:
+          type: integer
+          description: Number of active viewers in the last 5 minutes
+          minimum: 0
+        messages_per_minute:
+          type: integer
+          description: Chat messages sent per minute across live parties
+          minimum: 0
+        reactions_per_minute:
+          type: integer
+          description: Reactions submitted per minute across live parties
+          minimum: 0
+      required:
+      - concurrent_viewers
+      - messages_per_minute
+      - reactions_per_minute
+    RealTimeAnalyticsSystemHealth:
+      type: object
+      description: Snapshot of system resource consumption
+      properties:
+        system_load:
+          type: number
+          format: float
+          description: Overall platform load (mirrors CPU usage)
+        cpu_usage:
+          type: number
+          format: float
+          description: Current CPU usage percentage
+        memory_usage:
+          type: number
+          format: float
+          description: Current memory usage percentage
+        disk_usage:
+          type: number
+          format: float
+          description: Current disk usage percentage
+        network_traffic:
+          type: number
+          format: float
+          description: Network throughput in MB/s
+      required:
+      - cpu_usage
+      - disk_usage
+      - memory_usage
+      - network_traffic
+      - system_load
+    RealTimeAnalytics:
+      type: object
+      description: Canonical payload returned by the real-time analytics endpoint
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: ISO timestamp of when the snapshot was generated
+        online_users:
+          type: integer
+          description: Users active in the last 30 minutes
+          minimum: 0
+        active_parties:
+          type: integer
+          description: Parties currently marked as live
+          minimum: 0
+        recent_activity:
+          type: array
+          description: Top events from the previous hour
+          items:
+            $ref: '#/components/schemas/RealTimeAnalyticsActivity'
+        engagement:
+          $ref: '#/components/schemas/RealTimeAnalyticsEngagement'
+        system_health:
+          $ref: '#/components/schemas/RealTimeAnalyticsSystemHealth'
+      required:
+      - active_parties
+      - engagement
+      - online_users
+      - recent_activity
+      - system_health
+      - timestamp
+    RealTimeAnalyticsResponse:
+      type: object
+      description: Standard success envelope for real-time analytics
+      properties:
+        success:
+          type: boolean
+          description: Indicates whether the request succeeded
+        message:
+          type: string
+          description: Human-friendly status message
+        data:
+          $ref: '#/components/schemas/RealTimeAnalytics'
+      required:
+      - data
+      - message
+      - success
           description: Additional data
       required:
       - message

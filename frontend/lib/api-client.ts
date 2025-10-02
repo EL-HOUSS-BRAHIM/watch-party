@@ -92,6 +92,52 @@ export interface Analytics {
   recent_videos?: number
 }
 
+export interface StandardApiResponse<T> {
+  success: boolean
+  message: string
+  data?: T
+  status?: string
+  timestamp?: string
+}
+
+export interface RealTimeAnalyticsResponse {
+  timestamp?: string
+  online_users?: number
+  active_parties?: number
+  recent_activity?: { event_type?: string; count?: number }[]
+  engagement?: {
+    concurrent_viewers?: number
+    messages_per_minute?: number
+    reactions_per_minute?: number
+  }
+  system_health?: {
+    system_load?: number
+    cpu_usage?: number
+    memory_usage?: number
+    disk_usage?: number
+    network_traffic?: number
+  }
+}
+
+export interface NormalizedRealTimeAnalytics {
+  timestamp: string
+  onlineUsers: number
+  activeParties: number
+  recentActivity: { eventType: string; count: number }[]
+  engagement: {
+    concurrentViewers: number
+    messagesPerMinute: number
+    reactionsPerMinute: number
+  }
+  systemHealth: {
+    systemLoad: number
+    cpuUsage: number
+    memoryUsage: number
+    diskUsage: number
+    networkTraffic: number
+  }
+}
+
 export interface Notification {
   id: string
   title: string
@@ -897,8 +943,43 @@ export const analyticsApi = {
   getPersonal: () =>
     apiFetch<any>('/api/analytics/personal/', {}, true),
 
-  getRealTime: () =>
-    apiFetch<any>('/api/analytics/real-time/', {}, true),
+  getRealTime: async (): Promise<NormalizedRealTimeAnalytics> => {
+    const response = await apiFetch<
+      StandardApiResponse<RealTimeAnalyticsResponse> | RealTimeAnalyticsResponse
+    >('/api/analytics/real-time/', {}, true)
+
+    const payload: RealTimeAnalyticsResponse =
+      response && typeof response === 'object' && 'success' in response
+        ? (response.data ?? {})
+        : (response as RealTimeAnalyticsResponse)
+
+    const engagement = payload.engagement ?? {}
+    const systemHealth = payload.system_health ?? {}
+
+    const normalized: NormalizedRealTimeAnalytics = {
+      timestamp: payload.timestamp ?? new Date().toISOString(),
+      onlineUsers: payload.online_users ?? 0,
+      activeParties: payload.active_parties ?? 0,
+      recentActivity: (payload.recent_activity ?? []).map((activity) => ({
+        eventType: activity?.event_type ?? 'unknown',
+        count: activity?.count ?? 0,
+      })),
+      engagement: {
+        concurrentViewers: engagement.concurrent_viewers ?? 0,
+        messagesPerMinute: engagement.messages_per_minute ?? 0,
+        reactionsPerMinute: engagement.reactions_per_minute ?? 0,
+      },
+      systemHealth: {
+        systemLoad: systemHealth.system_load ?? systemHealth.cpu_usage ?? 0,
+        cpuUsage: systemHealth.cpu_usage ?? 0,
+        memoryUsage: systemHealth.memory_usage ?? 0,
+        diskUsage: systemHealth.disk_usage ?? 0,
+        networkTraffic: systemHealth.network_traffic ?? 0,
+      },
+    }
+
+    return normalized
+  },
 
   getPlatformOverview: () =>
     apiFetch<any>('/api/analytics/platform-overview/', {}, true),

@@ -411,9 +411,9 @@ def real_time_analytics(request):
         
         # System performance metrics
         system_metrics = _get_real_time_system_metrics()
-        
-        # Live engagement metrics
-        live_engagement = {
+
+        # Normalized live engagement metrics
+        engagement_metrics = {
             'concurrent_viewers': PartyParticipant.objects.filter(
                 is_active=True,
                 last_seen__gte=timezone.now() - timedelta(minutes=5)
@@ -421,15 +421,33 @@ def real_time_analytics(request):
             'messages_per_minute': _calculate_messages_per_minute(),
             'reactions_per_minute': _calculate_reactions_per_minute()
         }
-        
-        return StandardResponse.success({
+
+        # Canonical real-time analytics payload
+        normalized_payload = {
             'timestamp': timezone.now().isoformat(),
-            'active_users': active_users,
+            'online_users': active_users,
             'active_parties': active_parties,
-            'recent_activity': list(recent_activity),
-            'system_metrics': system_metrics,
-            'live_engagement': live_engagement
-        }, "Real-time analytics retrieved successfully")
+            'recent_activity': [
+                {
+                    'event_type': activity.get('event_type'),
+                    'count': activity.get('count', 0)
+                }
+                for activity in recent_activity
+            ],
+            'engagement': engagement_metrics,
+            'system_health': {
+                'system_load': round(system_metrics.get('cpu_usage', 0), 2),
+                'cpu_usage': system_metrics.get('cpu_usage', 0),
+                'memory_usage': system_metrics.get('memory_usage', 0),
+                'disk_usage': system_metrics.get('disk_usage', 0),
+                'network_traffic': system_metrics.get('network_traffic', 0)
+            }
+        }
+
+        return StandardResponse.success(
+            normalized_payload,
+            "Real-time analytics retrieved successfully"
+        )
         
     except Exception as e:
         return StandardResponse.error(f"Error retrieving real-time analytics: {str(e)}")

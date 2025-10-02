@@ -7,7 +7,7 @@ import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import { DashboardHeader } from "@/components/layout/dashboard-header"
 import MobileNavigation from "@/components/mobile/MobileNavigation"
-import { userApi, analyticsApi, User } from "@/lib/api-client"
+import { userApi, analyticsApi, User, NormalizedRealTimeAnalytics } from "@/lib/api-client"
 
 // Enhanced navigation with categories, icons, and metadata
 const navigationSections = [
@@ -56,8 +56,24 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [user, setUser] = useState<User | null>(null)
-  const [onlineUsers, setOnlineUsers] = useState(0)
-  const [activeParties, setActiveParties] = useState(0)
+  const [liveStats, setLiveStats] = useState<NormalizedRealTimeAnalytics>({
+    timestamp: "",
+    onlineUsers: 0,
+    activeParties: 0,
+    recentActivity: [],
+    engagement: {
+      concurrentViewers: 0,
+      messagesPerMinute: 0,
+      reactionsPerMinute: 0
+    },
+    systemHealth: {
+      systemLoad: 0,
+      cpuUsage: 0,
+      memoryUsage: 0,
+      diskUsage: 0,
+      networkTraffic: 0
+    }
+  })
   const [loading, setLoading] = useState(true)
 
   // Load user data and real-time stats
@@ -87,10 +103,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const loadRealTimeStats = async () => {
     try {
       const realTimeData = await analyticsApi.getRealTime()
-      if (realTimeData) {
-        setOnlineUsers(realTimeData.online_users || 0)
-        setActiveParties(realTimeData.active_parties || 0)
-      }
+      setLiveStats(realTimeData)
     } catch (error) {
       console.error("Failed to load real-time stats:", error)
     }
@@ -208,12 +221,20 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               {/* Quick Stats */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="bg-white/5 rounded-lg p-3 text-center">
-                  <div className="text-lg font-bold text-white">{onlineUsers.toLocaleString()}</div>
+                  <div className="text-lg font-bold text-white">{liveStats.onlineUsers.toLocaleString()}</div>
                   <div className="text-xs text-white/60">Online Users</div>
                 </div>
                 <div className="bg-white/5 rounded-lg p-3 text-center">
-                  <div className="text-lg font-bold text-white">{activeParties}</div>
+                  <div className="text-lg font-bold text-white">{liveStats.activeParties}</div>
                   <div className="text-xs text-white/60">Live Parties</div>
+                </div>
+                <div className="bg-white/5 rounded-lg p-3 text-center">
+                  <div className="text-lg font-bold text-white">{liveStats.systemHealth.systemLoad.toFixed(1)}%</div>
+                  <div className="text-xs text-white/60">System Load</div>
+                </div>
+                <div className="bg-white/5 rounded-lg p-3 text-center">
+                  <div className="text-lg font-bold text-white">{liveStats.engagement.messagesPerMinute.toLocaleString()}</div>
+                  <div className="text-xs text-white/60">Messages / min</div>
                 </div>
               </div>
             </div>
