@@ -218,15 +218,21 @@ class GoogleDriveService:
             )
         ).execute()
 
+        download_url = file_info.get('webContentLink')
+        if not download_url:
+            download_url = self.get_download_url(file_info.get('id', file_id))
+
+        video_metadata = file_info.get('videoMediaMetadata') or {}
+
         return {
             'id': file_info['id'],
             'name': file_info['name'],
             'mime_type': file_info['mimeType'],
             'size': int(file_info.get('size', 0)),
             'thumbnail_url': file_info.get('thumbnailLink', ''),
-            'download_url': file_info.get('webContentLink') or self.get_download_url(file_id),
+            'download_url': download_url,
             'web_view_link': file_info.get('webViewLink', ''),
-            'video_metadata': file_info.get('videoMediaMetadata', {}),
+            'video_metadata': video_metadata,
         }
 
     def get_download_url(self, file_id: str) -> str:

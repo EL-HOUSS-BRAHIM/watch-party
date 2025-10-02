@@ -324,6 +324,32 @@ class GoogleDriveServiceUnitTests(TestCase):
         self.assertEqual(info['download_url'], 'content')
         self.assertEqual(info['video_metadata']['width'], 1280)
 
+    def test_get_file_info_falls_back_to_generated_download_url(self):
+        files_api = MagicMock()
+        files_api.get.return_value.execute.return_value = {
+            'id': 'file-654',
+            'name': 'Fallback.mp4',
+            'mimeType': 'video/mp4',
+            'size': '2048',
+            'thumbnailLink': 'thumb',
+            'webContentLink': None,
+            'webViewLink': 'view',
+        }
+
+        drive_service = MagicMock()
+        drive_service.files.return_value = files_api
+
+        service = GoogleDriveService(drive_service=drive_service, credentials=MagicMock())
+
+        with patch.object(service, '_refresh_credentials_if_needed') as refresh_mock, \
+                patch.object(service, 'get_download_url', return_value='generated-url') as url_mock:
+            info = service.get_file_info('file-654')
+
+        refresh_mock.assert_called_once()
+        url_mock.assert_called_once_with('file-654')
+        self.assertEqual(info['download_url'], 'generated-url')
+        self.assertEqual(info['video_metadata'], {})
+
     def test_generate_streaming_url_error_raises(self):
         files_api = MagicMock()
         files_api.get.return_value.execute.side_effect = RuntimeError('fail')
