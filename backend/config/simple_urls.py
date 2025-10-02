@@ -42,6 +42,10 @@ urlpatterns = [
         'api/auth/',
         include(('apps.authentication.urls', 'authentication'), namespace='authentication'),
     ),
+    path(
+        'api/videos/',
+        include(('apps.videos.urls', 'videos'), namespace='videos'),
+    ),
     path('api/analytics/', include(analytics_patterns)),
     path('health/', health_check, name='health'),
 ]
