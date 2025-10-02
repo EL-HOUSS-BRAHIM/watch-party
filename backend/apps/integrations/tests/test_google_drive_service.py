@@ -1,5 +1,16 @@
+import os
 from datetime import timedelta
 from unittest.mock import MagicMock, patch
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.testing")
+
+import django
+
+django.setup()
+
+from django.core.management import call_command
+
+call_command('migrate', run_syncdb=True, verbosity=0)
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
@@ -137,13 +148,159 @@ class GoogleDriveServiceUnitTests(TestCase):
         self.assertEqual(video['size'], 123)
         self.assertEqual(video['thumbnail_url'], 'thumb.jpg')
 
-    def test_get_streaming_url_uses_download_link(self):
-        service = GoogleDriveService(drive_service=MagicMock(), credentials=MagicMock())
+    @patch("apps.integrations.services.google_drive.MediaFileUpload")
+    def test_upload_file_success(self, media_upload_cls):
+        files_api = MagicMock()
+        files_api.create.return_value.execute.return_value = {
+            'id': 'file-001',
+            'name': 'Movie.mp4',
+            'mimeType': 'video/mp4',
+            'size': '2048',
+            'webContentLink': 'https://drive.google.com/file/d/file-001/view',
+        }
 
-        with patch.object(service, 'get_file_info', return_value={'name': 'Movie', 'mime_type': 'video/mp4'}):
-            url = service.get_streaming_url('file-456', force_refresh=True)
+        drive_service = MagicMock()
+        drive_service.files.return_value = files_api
 
-        self.assertEqual(url, service.get_download_url('file-456'))
+        credentials = MagicMock()
+        credentials.expired = False
+        service = GoogleDriveService(drive_service=drive_service, credentials=credentials)
+
+        with patch.object(service, '_refresh_credentials_if_needed') as refresh_mock:
+            result = service.upload_file(
+                file_path='/tmp/movie.mp4',
+                name='Movie.mp4',
+                folder_id='folder-123',
+                mime_type='video/mp4',
+            )
+
+        refresh_mock.assert_called_once()
+        media_upload_cls.assert_called_once_with('/tmp/movie.mp4', mimetype='video/mp4', resumable=True)
+        files_api.create.assert_called_once()
+        self.assertEqual(result['id'], 'file-001')
+        self.assertEqual(result['download_url'], 'https://drive.google.com/file/d/file-001/view')
+
+    @patch("apps.integrations.services.google_drive.MediaFileUpload")
+    def test_upload_file_failure_raises(self, media_upload_cls):
+        files_api = MagicMock()
+        files_api.create.return_value.execute.side_effect = RuntimeError('boom')
+
+        drive_service = MagicMock()
+        drive_service.files.return_value = files_api
+
+        service = GoogleDriveService(drive_service=drive_service, credentials=MagicMock())
+
+        with self.assertRaises(RuntimeError):
+            service.upload_file(file_path='/tmp/movie.mp4')
+
+    def test_delete_file_success(self):
+        files_api = MagicMock()
+        drive_service = MagicMock()
+        drive_service.files.return_value = files_api
+
+        service = GoogleDriveService(drive_service=drive_service, credentials=MagicMock())
+
+        self.assertTrue(service.delete_file('file-123'))
+        files_api.delete.assert_called_once_with(fileId='file-123')
+        files_api.delete.return_value.execute.assert_called_once()
+
+    def test_delete_file_failure_returns_false(self):
+        files_api = MagicMock()
+        files_api.delete.return_value.execute.side_effect = RuntimeError('nope')
+
+        drive_service = MagicMock()
+        drive_service.files.return_value = files_api
+
+        service = GoogleDriveService(drive_service=drive_service, credentials=MagicMock())
+
+        self.assertFalse(service.delete_file('file-123'))
+
+    def test_generate_streaming_url_uses_web_content_link(self):
+        files_api = MagicMock()
+        files_api.get.return_value.execute.return_value = {
+            'id': 'file-456',
+            'webContentLink': 'https://drive.google.com/file/d/file-456/view',
+        }
+
+        drive_service = MagicMock()
+        drive_service.files.return_value = files_api
+
+        credentials = MagicMock(refresh_token='refresh-token', expired=False)
+        service = GoogleDriveService(drive_service=drive_service, credentials=credentials)
+
+        with patch.object(service, '_refresh_credentials_if_needed') as refresh_mock:
+            url = service.generate_streaming_url('file-456')
+
+        refresh_mock.assert_called_once()
+        self.assertEqual(url, 'https://drive.google.com/file/d/file-456/view')
+
+    def test_generate_streaming_url_force_refresh(self):
+        files_api = MagicMock()
+        files_api.get.return_value.execute.return_value = {'id': 'file-789', 'webContentLink': 'link'}
+
+        drive_service = MagicMock()
+        drive_service.files.return_value = files_api
+
+        credentials = MagicMock(refresh_token='refresh-token', expired=False)
+        credentials.refresh = MagicMock()
+        service = GoogleDriveService(drive_service=drive_service, credentials=credentials)
+
+        with patch.object(service, '_refresh_credentials_if_needed') as refresh_mock:
+            service.generate_streaming_url('file-789', force_refresh=True)
+
+        credentials.refresh.assert_called_once()
+        refresh_mock.assert_called_once()
+
+    def test_generate_streaming_url_missing_link_falls_back(self):
+        files_api = MagicMock()
+        files_api.get.return_value.execute.return_value = {'id': 'file-111'}
+
+        drive_service = MagicMock()
+        drive_service.files.return_value = files_api
+
+        credentials = MagicMock()
+        credentials.refresh_token = None
+        service = GoogleDriveService(drive_service=drive_service, credentials=credentials)
+
+        url = service.generate_streaming_url('file-111')
+        self.assertEqual(url, service.get_download_url('file-111'))
+
+    def test_get_file_info_returns_extended_metadata(self):
+        files_api = MagicMock()
+        files_api.get.return_value.execute.return_value = {
+            'id': 'file-321',
+            'name': 'Sample.mp4',
+            'mimeType': 'video/mp4',
+            'size': '1024',
+            'thumbnailLink': 'thumb',
+            'webContentLink': 'content',
+            'webViewLink': 'view',
+            'videoMediaMetadata': {'durationMillis': '5000', 'width': 1280, 'height': 720},
+        }
+
+        drive_service = MagicMock()
+        drive_service.files.return_value = files_api
+
+        service = GoogleDriveService(drive_service=drive_service, credentials=MagicMock())
+
+        with patch.object(service, '_refresh_credentials_if_needed') as refresh_mock:
+            info = service.get_file_info('file-321')
+
+        refresh_mock.assert_called_once()
+        self.assertEqual(info['download_url'], 'content')
+        self.assertEqual(info['video_metadata']['width'], 1280)
+
+    def test_generate_streaming_url_error_raises(self):
+        files_api = MagicMock()
+        files_api.get.return_value.execute.side_effect = RuntimeError('fail')
+
+        drive_service = MagicMock()
+        drive_service.files.return_value = files_api
+
+        service = GoogleDriveService(drive_service=drive_service, credentials=MagicMock())
+
+        with self.assertRaises(RuntimeError):
+            service.generate_streaming_url('file-000')
 
     def test_refresh_credentials_triggers_callback_updates_tokens(self):
         refreshed_expiry = timezone.now() + timedelta(hours=2)
