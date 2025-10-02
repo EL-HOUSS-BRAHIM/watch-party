@@ -1,9 +1,11 @@
 """Google Drive integration service."""
+
 import logging
 import mimetypes
 import os
 from datetime import timedelta
-from typing import Dict, List, Optional, Callable, Any
+from http import HTTPStatus
+from typing import Any, Callable, Dict, List, Optional
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -11,7 +13,16 @@ from django.utils import timezone
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
+
+
+class GoogleDriveServiceError(Exception):
+    """Raised when an interaction with Google Drive fails."""
+
+    def __init__(self, message: str, status_code: int = HTTPStatus.INTERNAL_SERVER_ERROR):
+        super().__init__(message)
+        self.status_code = int(status_code)
 
 logger = logging.getLogger(__name__)
 
@@ -69,8 +80,74 @@ class GoogleDriveService:
                     self.on_credentials_updated(self.credentials)
                 logger.info("Google Drive credentials refreshed successfully")
             except Exception as e:
-                logger.error(f"Failed to refresh Google Drive credentials: {e}")
+                logger.error("Failed to refresh Google Drive credentials: %s", e)
                 raise
+
+    @staticmethod
+    def _extract_status_code(exc: Exception) -> int:
+        """Best-effort extraction of an HTTP status code from Drive errors."""
+        if isinstance(exc, GoogleDriveServiceError):
+            return exc.status_code
+
+        if isinstance(exc, HttpError):
+            response = getattr(exc, 'resp', None)
+            if response is not None:
+                status = getattr(response, 'status', None)
+                if status:
+                    return int(status)
+
+        status_code = getattr(exc, 'status_code', None)
+        if status_code:
+            return int(status_code)
+
+        response = getattr(exc, 'resp', None)
+        if response is not None:
+            status = getattr(response, 'status', None)
+            if status:
+                return int(status)
+
+        return HTTPStatus.INTERNAL_SERVER_ERROR
+
+    def _build_file_payload(
+        self,
+        file_resource: Dict[str, Any],
+        *,
+        streaming_url: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Format a Drive file resource into the payload expected by consumers."""
+
+        file_id = file_resource.get('id') or ''
+        download_url = file_resource.get('webContentLink') or self.get_download_url(file_id)
+        resolved_streaming = streaming_url or file_resource.get('webContentLink')
+        if not resolved_streaming:
+            resolved_streaming = file_resource.get('webViewLink') or download_url
+
+        return {
+            'id': file_id,
+            'name': file_resource.get('name', ''),
+            'mime_type': file_resource.get('mimeType', ''),
+            'size': int(file_resource.get('size', 0) or 0),
+            'download_url': download_url,
+            'streaming_url': resolved_streaming,
+        }
+
+    def _fetch_file_metadata(self, file_id: str, fields: Optional[str] = None) -> Dict[str, Any]:
+        """Retrieve file metadata from Drive for subsequent processing."""
+
+        metadata_fields = fields or "id,name,mimeType,size,webContentLink,webViewLink"
+        try:
+            request = self.drive_service.files().get(
+                fileId=file_id,
+                fields=metadata_fields,
+            )
+            return request.execute()
+        except Exception as exc:  # pragma: no cover - defensive logging
+            logger.error("Failed to fetch metadata for Google Drive file %s: %s", file_id, exc)
+            status_code = self._extract_status_code(exc)
+            raise GoogleDriveServiceError(
+                f"Unable to retrieve metadata for file '{file_id}'",
+                status_code=status_code,
+            ) from exc
     
     def get_or_create_watch_party_folder(self, folder_name: str = 'Watch Party') -> str:
         """Get or create the Watch Party folder in Google Drive."""
@@ -179,36 +256,46 @@ class GoogleDriveService:
             request = self.drive_service.files().create(
                 body=metadata,
                 media_body=media,
-                fields="id,name,mimeType,size,webContentLink",
+                fields="id",
             )
             result = request.execute()
         except Exception as exc:  # pragma: no cover - defensive logging
             logger.error("Failed to upload file to Google Drive: %s", exc)
-            raise
+            status_code = self._extract_status_code(exc)
+            raise GoogleDriveServiceError(
+                f"Failed to upload file '{resolved_name}' to Google Drive",
+                status_code=status_code,
+            ) from exc
 
         file_id = result.get('id')
+        if not file_id:
+            raise GoogleDriveServiceError(
+                "Google Drive did not return a file identifier for the upload",
+                status_code=HTTPStatus.BAD_GATEWAY,
+            )
 
-        return {
-            'id': file_id,
-            'name': result.get('name', resolved_name),
-            'mime_type': result.get('mimeType', resolved_mime),
-            'size': int(result.get('size', 0)),
-            'download_url': result.get('webContentLink') or (
-                self.get_download_url(file_id) if file_id else ''
-            ),
-        }
+        metadata = self._fetch_file_metadata(file_id)
+        return self._build_file_payload(metadata)
 
-    def delete_file(self, file_id: str) -> bool:
+    def delete_file(self, file_id: str) -> Dict[str, Any]:
         """Delete a file from Google Drive."""
         self._refresh_credentials_if_needed()
+        metadata = self._fetch_file_metadata(file_id)
         try:
             self.drive_service.files().delete(fileId=file_id).execute()
-            return True
         except Exception as exc:  # pragma: no cover - defensive logging
             logger.error("Failed to delete file %s from Google Drive: %s", file_id, exc)
-            return False
+            status_code = self._extract_status_code(exc)
+            raise GoogleDriveServiceError(
+                f"Failed to delete Google Drive file '{file_id}'",
+                status_code=status_code,
+            ) from exc
 
-    def generate_streaming_url(self, file_id: str, force_refresh: bool = False) -> str:
+        payload = self._build_file_payload(metadata)
+        payload['deleted'] = True
+        return payload
+
+    def generate_streaming_url(self, file_id: str, force_refresh: bool = False) -> Dict[str, Any]:
         """Generate a streaming URL for a file."""
         if force_refresh and self.credentials and self.credentials.refresh_token:
             try:
@@ -221,23 +308,19 @@ class GoogleDriveService:
 
         self._refresh_credentials_if_needed()
 
-        try:
-            file_info = self.drive_service.files().get(
-                fileId=file_id,
-                fields="id,webContentLink",
-            ).execute()
-        except Exception as exc:  # pragma: no cover - defensive logging
-            logger.error("Failed to generate streaming URL for %s: %s", file_id, exc)
-            raise
+        metadata = self._fetch_file_metadata(file_id)
 
-        streaming_url = file_info.get('webContentLink')
+        streaming_url = metadata.get('webContentLink') or metadata.get('webViewLink')
         if not streaming_url:
             streaming_url = self.get_download_url(file_id)
 
         if not streaming_url:
-            raise ValueError("Streaming URL not available")
+            raise GoogleDriveServiceError(
+                f"Streaming URL not available for file '{file_id}'",
+                status_code=HTTPStatus.NOT_FOUND,
+            )
 
-        return streaming_url
+        return self._build_file_payload(metadata, streaming_url=streaming_url)
 
 
 def get_drive_service_for_user(user) -> GoogleDriveService:
