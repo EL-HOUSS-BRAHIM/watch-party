@@ -6,7 +6,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (
     WatchPartyViewSet, JoinByCodeView, PartySearchView,
-    PartyInvitationViewSet, PartyReportView, RecentPartiesView, PublicPartiesView
+    PartyInvitationViewSet, PartyReportView, RecentPartiesView, PublicPartiesView,
+    PublicPartyDetailView
 )
 from .views_enhanced import (
     generate_party_invite_code, join_by_invite_code, party_analytics,
@@ -23,6 +24,7 @@ router.register(r'invitations', PartyInvitationViewSet, basename='invitation')
 urlpatterns = [
     # Special endpoints first (before router includes)
     path('recent/', RecentPartiesView.as_view(), name='recent'),
+    path('public/<str:room_code>/', PublicPartyDetailView.as_view(), name='public-detail'),
     path('public/', PublicPartiesView.as_view(), name='public'),
     path('trending/', trending_parties, name='trending'),
     path('recommendations/', party_recommendations, name='recommendations'),
