@@ -4,7 +4,8 @@ import "./globals.css"
 import "../styles/mobile.css"
 import { Providers } from "@/components/providers"
 import { SiteFooter } from "@/components/layout/site-footer"
-import { SiteHeader } from "@/components/layout/site-header"
+import { MarketingHeader } from "@/components/layout/marketing-header"
+import { ConditionalLayout } from "@/components/layout/conditional-layout"
 
 export const metadata: Metadata = {
   title: {
@@ -53,15 +54,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
       </head>
       <body className="bg-[var(--color-midnight-950)] font-sans text-[color:var(--color-text-primary)] mobile-optimized">
         <Providers>
-          <div className="flex min-h-screen flex-col">
-            <SiteHeader />
-            <main className="flex-1">
-              <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-16 sm:px-8 mobile-content">
-                {children}
-              </div>
-            </main>
-            <SiteFooter />
-          </div>
+          <ConditionalLayout>
+            {children}
+          </ConditionalLayout>
         </Providers>
       </body>
     </html>

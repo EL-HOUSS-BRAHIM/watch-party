@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
+import { DashboardHeader } from "@/components/layout/dashboard-header"
 
 // Enhanced navigation with categories, icons, and metadata
 const navigationSections = [
@@ -98,6 +99,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* Dashboard Header */}
+      <DashboardHeader />
+      
       {/* Background Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
@@ -105,7 +109,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-purple-500/5 to-transparent rounded-full"></div>
       </div>
 
-      <div className="relative z-10 flex min-h-screen">
+      <div className="relative z-10 flex min-h-screen pt-16">
         {/* Enhanced Sidebar */}
         <aside className={cn(
           "fixed left-0 top-0 h-full bg-black/20 backdrop-blur-xl border-r border-white/10 transition-all duration-300 z-50",

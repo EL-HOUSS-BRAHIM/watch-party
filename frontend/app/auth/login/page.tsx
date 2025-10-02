@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { authApi } from "@/lib/api-client"
+import { FormError } from "@/components/ui/feedback"
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -10,10 +11,12 @@ export default function LoginPage() {
     password: "",
   })
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setError(null)
     
     try {
       const data = await authApi.login(formData)
@@ -27,14 +30,18 @@ export default function LoginPage() {
           localStorage.setItem("refresh_token", data.refresh_token)
         }
         
-        // Redirect to dashboard
-        window.location.href = "/dashboard"
+        // Check for redirect parameter
+        const urlParams = new URLSearchParams(window.location.search)
+        const redirect = urlParams.get('redirect') || '/dashboard'
+        
+        // Redirect to dashboard or intended page
+        window.location.href = decodeURIComponent(redirect)
       } else {
-        alert("Login failed. Please check your credentials.")
+        setError("Login failed. Please check your credentials.")
       }
     } catch (error) {
       console.error("Login error:", error)
-      alert(error instanceof Error ? error.message : "Something went wrong. Please try again.")
+      setError(error instanceof Error ? error.message : "Something went wrong. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -56,6 +63,12 @@ export default function LoginPage() {
             Sign in to start hosting watch parties
           </p>
         </div>
+
+        {error && (
+          <div className="mb-4">
+            <FormError error={error} />
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
