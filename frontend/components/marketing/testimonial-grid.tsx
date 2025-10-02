@@ -16,9 +16,9 @@ export function TestimonialGrid() {
         </p>
       </div>
       <div className="grid gap-8 lg:grid-cols-[1.2fr,1fr]">
-        <Card className="relative overflow-hidden border-white/12 bg-[rgba(14,8,40,0.78)]">
+        <Card className="relative overflow-hidden border-brand-magenta/12 bg-brand-navy/78">
           <div className="absolute inset-0 opacity-80 [mask-image:linear-gradient(to_bottom,black,transparent)]">
-            <div className="h-full w-full bg-[conic-gradient(from_180deg_at_70%_0%,rgba(255,214,170,0.28),rgba(54,32,112,0.45),rgba(255,255,255,0.12))]" />
+            <div className="h-full w-full bg-[conic-gradient(from_180deg_at_70%_0%,rgba(243,156,18,0.28),rgba(74,46,160,0.45),rgba(59,198,232,0.12))]" />
           </div>
           <CardHeader>
             <CardTitle className="text-2xl">“We stopped troubleshooting and started hosting”</CardTitle>
@@ -39,7 +39,7 @@ export function TestimonialGrid() {
         </Card>
         <div className="grid gap-6">
           {testimonials.map((testimonial) => (
-            <Card key={testimonial.author} className="border-white/12 bg-[rgba(12,7,36,0.78)]">
+            <Card key={testimonial.author} className="border-brand-purple/12 bg-brand-navy-light/78">
               <CardHeader>
                 <CardTitle className="text-lg text-white">{testimonial.author}</CardTitle>
                 <p className="text-xs uppercase tracking-[0.42em] text-white/60">{testimonial.role}</p>
