@@ -6,6 +6,8 @@ import { useState, useEffect } from "react"
 import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import { DashboardHeader } from "@/components/layout/dashboard-header"
+import MobileNavigation from "@/components/mobile/MobileNavigation"
+import { userApi, analyticsApi, User } from "@/lib/api-client"
 
 // Enhanced navigation with categories, icons, and metadata
 const navigationSections = [
@@ -53,24 +55,46 @@ type DashboardLayoutProps = {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const [user, setUser] = useState({
-    name: "Alex Johnson",
-    username: "@alexj",
-    avatar: null,
-    status: "online" as "online" | "away" | "busy" | "offline",
-    plan: "Pro" as "Free" | "Pro" | "Premium"
-  })
-  const [onlineUsers, setOnlineUsers] = useState(1247)
-  const [activeParties, setActiveParties] = useState(89)
+  const [user, setUser] = useState<User | null>(null)
+  const [onlineUsers, setOnlineUsers] = useState(0)
+  const [activeParties, setActiveParties] = useState(0)
+  const [loading, setLoading] = useState(true)
 
-  // Simulate real-time updates
+  // Load user data and real-time stats
   useEffect(() => {
+    loadUserData()
+    loadRealTimeStats()
+    
+    // Fetch real-time stats every 30 seconds
     const interval = setInterval(() => {
-      setOnlineUsers(prev => prev + Math.floor(Math.random() * 10) - 5)
-      setActiveParties(prev => Math.max(0, prev + Math.floor(Math.random() * 6) - 3))
+      loadRealTimeStats()
     }, 30000)
+    
     return () => clearInterval(interval)
   }, [])
+
+  const loadUserData = async () => {
+    try {
+      const userData = await userApi.getProfile()
+      setUser(userData)
+    } catch (error) {
+      console.error("Failed to load user data:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const loadRealTimeStats = async () => {
+    try {
+      const realTimeData = await analyticsApi.getRealTime()
+      if (realTimeData) {
+        setOnlineUsers(realTimeData.online_users || 0)
+        setActiveParties(realTimeData.active_parties || 0)
+      }
+    } catch (error) {
+      console.error("Failed to load real-time stats:", error)
+    }
+  }
 
   const getBadgeColor = (badge: string | null) => {
     if (!badge) return ""
@@ -89,12 +113,21 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     }
   }
 
-  const getPlanColor = (plan: string) => {
-    switch (plan) {
-      case "Premium": return "from-yellow-400 to-orange-500"
-      case "Pro": return "from-purple-400 to-blue-500"
-      default: return "from-gray-400 to-gray-600"
-    }
+  const getPlanColor = () => {
+    if (user?.is_premium) return "from-yellow-400 to-orange-500"
+    if (user?.is_staff) return "from-purple-400 to-blue-500"
+    return "from-gray-400 to-gray-600"
+  }
+
+  const getPlanLabel = () => {
+    if (user?.is_premium) return "Premium"
+    if (user?.is_staff) return "Pro"
+    return "Free"
+  }
+
+  const getUserStatus = (): "online" | "away" | "busy" | "offline" => {
+    if (user?.is_active) return "online"
+    return "offline"
   }
 
   return (
@@ -109,10 +142,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-purple-500/5 to-transparent rounded-full"></div>
       </div>
 
+      {/* Mobile Navigation - Shown only on mobile */}
+      <MobileNavigation currentUser={user} />
+
       <div className="relative z-10 flex min-h-screen pt-16">
-        {/* Enhanced Sidebar */}
+        {/* Enhanced Sidebar - Hidden on mobile, shown on desktop */}
         <aside className={cn(
-          "fixed left-0 top-0 h-full bg-black/20 backdrop-blur-xl border-r border-white/10 transition-all duration-300 z-50",
+          "hidden md:fixed left-0 top-0 h-full bg-black/20 backdrop-blur-xl border-r border-white/10 transition-all duration-300 z-50 md:block",
           isCollapsed ? "w-20" : "w-80"
         )}>
           {/* Sidebar Header */}
@@ -139,30 +175,30 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
 
           {/* User Profile Section */}
-          {!isCollapsed && (
+          {!isCollapsed && user && (
             <div className="p-6 border-b border-white/10">
               <div className="flex items-center gap-3 mb-4">
                 <div className="relative">
                   <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
                     {user.avatar ? (
-                      <img src={user.avatar} alt={user.name} className="w-full h-full rounded-full object-cover" />
+                      <img src={user.avatar} alt={user.username} className="w-full h-full rounded-full object-cover" />
                     ) : (
-                      user.name.split(' ').map(n => n[0]).join('')
+                      user.username?.[0]?.toUpperCase() || "U"
                     )}
                   </div>
                   <div className={cn(
                     "absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-black",
-                    getStatusColor(user.status)
+                    getStatusColor(getUserStatus())
                   )}></div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium truncate">{user.name}</p>
-                  <p className="text-white/60 text-sm truncate">{user.username}</p>
+                  <p className="text-white font-medium truncate">{user.first_name || user.username}</p>
+                  <p className="text-white/60 text-sm truncate">@{user.username}</p>
                   <div className={cn(
                     "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gradient-to-r",
-                    getPlanColor(user.plan)
+                    getPlanColor()
                   )}>
-                    ✨ {user.plan}
+                    ✨ {getPlanLabel()}
                   </div>
                 </div>
               </div>
@@ -285,11 +321,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
         {/* Main Content */}
         <main className={cn(
-          "flex-1 transition-all duration-300",
-          isCollapsed ? "ml-20" : "ml-80"
+          "flex-1 transition-all duration-300 mb-16 md:mb-0",
+          "md:" + (isCollapsed ? "ml-20" : "ml-80")
         )}>
-          {/* Top Navigation Bar */}
-          <header className="sticky top-0 z-40 bg-black/20 backdrop-blur-xl border-b border-white/10">
+          {/* Top Navigation Bar - Hidden on mobile */}
+          <header className="hidden md:block sticky top-0 z-40 bg-black/20 backdrop-blur-xl border-b border-white/10">
             <div className="px-6 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">

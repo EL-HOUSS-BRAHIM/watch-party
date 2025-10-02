@@ -1,8 +1,9 @@
 'use client'
 
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth"
+import { userApi, User } from "@/lib/api-client"
 
 /**
  * DashboardHeader - Header for authenticated dashboard pages
@@ -11,8 +12,40 @@ import { useAuth } from "@/lib/auth"
 export function DashboardHeader() {
   const [showNotifications, setShowNotifications] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
-  const [notificationCount, setNotificationCount] = useState(5)
+  const [notificationCount, setNotificationCount] = useState(0)
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
   const { logout } = useAuth()
+
+  useEffect(() => {
+    loadUserData()
+    loadNotificationCount()
+  }, [])
+
+  const loadUserData = async () => {
+    try {
+      const userData = await userApi.getProfile()
+      setUser(userData)
+    } catch (error) {
+      console.error("Failed to load user data:", error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const loadNotificationCount = async () => {
+    try {
+      const response = await fetch("/api/notifications/unread-count", {
+        credentials: "include"
+      })
+      if (response.ok) {
+        const data = await response.json()
+        setNotificationCount(data.count || 0)
+      }
+    } catch (error) {
+      console.error("Failed to load notification count:", error)
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-gray-950/80 backdrop-blur-xl">
@@ -27,9 +60,9 @@ export function DashboardHeader() {
           </div>
         </Link>
 
-        {/* Search Bar */}
-        <div className="flex-1 max-w-2xl mx-8">
-          <div className="relative">
+        {/* Search Bar - Hidden on mobile */}
+        <div className="hidden md:flex flex-1 max-w-2xl mx-8">
+          <div className="relative w-full">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">🔍</span>
             <input
               type="text"
@@ -62,17 +95,20 @@ export function DashboardHeader() {
                   <h3 className="text-sm font-bold text-white">Notifications</h3>
                 </div>
                 <div className="max-h-96 overflow-y-auto">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="p-4 border-b border-white/5 hover:bg-white/5 transition-colors cursor-pointer">
-                      <p className="text-sm text-white/90">New party invite from Sarah</p>
-                      <p className="text-xs text-white/50 mt-1">2 minutes ago</p>
+                  {notificationCount === 0 ? (
+                    <div className="p-8 text-center">
+                      <p className="text-sm text-white/60">No new notifications</p>
                     </div>
-                  ))}
+                  ) : (
+                    <div className="p-4 text-center">
+                      <p className="text-sm text-white/60">You have {notificationCount} unread notifications</p>
+                    </div>
+                  )}
                 </div>
                 <div className="p-3 border-t border-white/10">
-                  <button className="text-xs text-purple-400 hover:text-purple-300 font-medium">
+                  <Link href="/dashboard/notifications" className="text-xs text-purple-400 hover:text-purple-300 font-medium">
                     View all notifications
-                  </button>
+                  </Link>
                 </div>
               </div>
             )}
@@ -93,21 +129,31 @@ export function DashboardHeader() {
               className="flex items-center gap-3 px-3 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
             >
               <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-blue-500">
-                <span className="text-sm">👤</span>
+                {user?.avatar ? (
+                  <img src={user.avatar} alt={user.username} className="w-full h-full rounded-lg object-cover" />
+                ) : (
+                  <span className="text-sm">👤</span>
+                )}
               </div>
-              <span className="text-sm font-medium text-white/90">Alex</span>
+              <span className="hidden sm:inline text-sm font-medium text-white/90">
+                {user?.first_name || user?.username || "User"}
+              </span>
               <span className="text-xs text-white/50">▼</span>
             </button>
 
             {/* User Dropdown */}
-            {showUserMenu && (
+            {showUserMenu && user && (
               <div className="absolute right-0 mt-2 w-56 rounded-xl bg-gray-900/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden">
                 <div className="p-4 border-b border-white/10">
-                  <p className="text-sm font-bold text-white">Alex Johnson</p>
-                  <p className="text-xs text-white/50">@alexj</p>
-                  <div className="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30">
-                    <span className="text-xs font-bold text-purple-400">Pro</span>
-                  </div>
+                  <p className="text-sm font-bold text-white">{user.first_name || user.username}</p>
+                  <p className="text-xs text-white/50">@{user.username}</p>
+                  {(user.is_premium || user.is_staff) && (
+                    <div className="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30">
+                      <span className="text-xs font-bold text-purple-400">
+                        {user.is_premium ? "Premium" : "Pro"}
+                      </span>
+                    </div>
+                  )}
                 </div>
                 <div className="py-2">
                   <Link href="/profile" className="flex items-center gap-3 px-4 py-2 hover:bg-white/5 transition-colors">
