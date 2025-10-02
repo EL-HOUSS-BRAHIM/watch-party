@@ -23,6 +23,10 @@ source "$SCRIPT_DIR/common-functions.sh"
 # Export APP_DIR for child scripts
 export APP_DIR
 
+# Initialize deployment variables file
+echo "# Deployment variables" > /tmp/deployment-vars.sh
+echo "export APP_DIR=\"$APP_DIR\"" >> /tmp/deployment-vars.sh
+
 # Step 1: Setup repository and permissions
 log_step "Step 1: Repository Setup"
 bash "$SCRIPT_DIR/setup-repository.sh" || exit_with_error "Repository setup failed"

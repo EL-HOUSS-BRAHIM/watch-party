@@ -13,49 +13,67 @@ source "$SCRIPT_DIR/common-functions.sh"
 [ -f /tmp/deployment-vars.sh ] && source /tmp/deployment-vars.sh
 
 APP_DIR="${APP_DIR:-$HOME/watch-party}"
-SSL_DIR="$APP_DIR/nginx/ssl"
+CURRENT_USER=$(whoami)
 
 log_info "Setting up SSL certificates..."
 
-# Create SSL directory structure
-mkdir -p "$APP_DIR/nginx"
-mkdir -p "$SSL_DIR"
-
-# Check and fix directory ownership if needed
-CURRENT_OWNER=$(stat -c '%U' "$SSL_DIR" 2>/dev/null || echo "unknown")
-CURRENT_USER=$(whoami)
-
-if [ "$CURRENT_OWNER" != "$CURRENT_USER" ] && [ "$CURRENT_OWNER" != "unknown" ]; then
-    log_warning "SSL directory owned by $CURRENT_OWNER, attempting to fix..."
+# Function to setup SSL directory with fallback
+setup_ssl_directory() {
+    local base_dir="$1"
+    local ssl_path="$base_dir/nginx/ssl"
     
-    # Try to fix ownership with sudo
-    if sudo chown -R "$CURRENT_USER:$CURRENT_USER" "$SSL_DIR" 2>/dev/null; then
-        log_success "Fixed SSL directory ownership"
+    # Create directory structure
+    mkdir -p "$base_dir/nginx" 2>/dev/null || true
+    mkdir -p "$ssl_path" 2>/dev/null || true
+    
+    # Check and fix ownership if directory exists but not writable
+    if [ -d "$ssl_path" ]; then
+        local dir_owner=$(stat -c '%U' "$ssl_path" 2>/dev/null || echo "unknown")
+        
+        if [ "$dir_owner" != "$CURRENT_USER" ] && [ "$dir_owner" != "unknown" ]; then
+            log_warning "SSL directory owned by $dir_owner, attempting to fix..."
+            
+            # Try to fix ownership with sudo
+            if sudo chown -R "$CURRENT_USER:$CURRENT_USER" "$ssl_path" 2>/dev/null; then
+                log_success "Fixed SSL directory ownership"
+            else
+                log_warning "Cannot change ownership with sudo"
+            fi
+        fi
+    fi
+    
+    # Test write permissions
+    if touch "$ssl_path/.test_write" 2>/dev/null; then
+        rm -f "$ssl_path/.test_write"
+        echo "$ssl_path"
+        return 0
     else
-        log_warning "Cannot change ownership with sudo, trying direct access..."
+        return 1
+    fi
+}
+
+# Try primary location first
+if SSL_DIR=$(setup_ssl_directory "$APP_DIR"); then
+    log_success "Using SSL directory: $SSL_DIR"
+else
+    log_warning "Cannot write to $APP_DIR/nginx/ssl, trying fallback location..."
+    
+    # Fallback to home directory
+    if SSL_DIR=$(setup_ssl_directory "$HOME/watch-party"); then
+        log_success "Using fallback SSL directory: $SSL_DIR"
+        APP_DIR="$HOME/watch-party"
+        # Export for other scripts
+        export APP_DIR
+        echo "export APP_DIR=\"$APP_DIR\"" >> /tmp/deployment-vars.sh 2>/dev/null || true
+    else
+        log_error "Cannot write to SSL directory in either location"
+        log_error "Attempted: $APP_DIR/nginx/ssl and $HOME/watch-party/nginx/ssl"
+        log_error "Current user: $CURRENT_USER"
+        exit_with_error "No writable SSL directory available"
     fi
 fi
 
-# Also ensure parent nginx directory is writable
-NGINX_OWNER=$(stat -c '%U' "$APP_DIR/nginx" 2>/dev/null || echo "unknown")
-if [ "$NGINX_OWNER" != "$CURRENT_USER" ] && [ "$NGINX_OWNER" != "unknown" ]; then
-    log_warning "Nginx directory owned by $NGINX_OWNER, attempting to fix..."
-    if sudo chown -R "$CURRENT_USER:$CURRENT_USER" "$APP_DIR/nginx" 2>/dev/null; then
-        log_success "Fixed nginx directory ownership"
-    fi
-fi
-
-# Test write permissions
-if ! touch "$SSL_DIR/.test_write" 2>/dev/null; then
-    log_error "Cannot write to SSL directory: $SSL_DIR"
-    log_error "Directory owner: $(stat -c '%U:%G' $SSL_DIR 2>/dev/null || echo 'unknown')"
-    log_error "Directory permissions: $(stat -c '%a' $SSL_DIR 2>/dev/null || echo 'unknown')"
-    log_error "Current user: $CURRENT_USER"
-    exit_with_error "SSL directory not writable"
-fi
-
-rm -f "$SSL_DIR/.test_write"
-log_success "SSL directory is writable"
+log_success "SSL directory is writable: $SSL_DIR"
 
 # Check if SSL certificates already exist
 if [ -f "$SSL_DIR/origin.pem" ] && [ -f "$SSL_DIR/private.key" ]; then
