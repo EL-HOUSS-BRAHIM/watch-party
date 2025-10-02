@@ -150,7 +150,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
 
         if (!isActive) return
 
-        setParty(mapPartyResponse(payload as PublicPartyApiResponse))
+        setParty(mapPartyResponse(payload as unknown as PublicPartyApiResponse))
       } catch (err) {
         if (!isActive) return
         console.error("Failed to load party:", err)

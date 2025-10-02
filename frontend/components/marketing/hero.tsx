@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button"
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden rounded-[56px] border border-white/12 bg-[rgba(12,7,34,0.7)] px-7 py-16 shadow-[0_60px_160px_rgba(5,3,22,0.65)] sm:px-12 lg:px-16">
+    <section className="relative overflow-hidden rounded-[56px] border border-brand-magenta/12 bg-brand-navy/70 px-7 py-16 shadow-[0_60px_160px_rgba(28,28,46,0.65)] sm:px-12 lg:px-16">
       <div className="absolute inset-0 -z-10 opacity-80">
-        <div className="absolute inset-0 bg-[conic-gradient(from_120deg_at_65%_35%,rgba(255,255,255,0.2),rgba(255,204,164,0.35),rgba(58,34,108,0.45),rgba(255,255,255,0.12))]" />
+        <div className="absolute inset-0 bg-[conic-gradient(from_120deg_at_65%_35%,rgba(233,64,138,0.2),rgba(243,156,18,0.35),rgba(74,46,160,0.45),rgba(59,198,232,0.12))]" />
         <div className="grid-overlay" />
       </div>
       <div className="relative grid gap-14 lg:grid-cols-[1.45fr,1fr] lg:items-center">
@@ -63,16 +63,16 @@ export function Hero() {
             </header>
             <div className="mt-7 space-y-6">
               <div className="grid gap-5 sm:grid-cols-2">
-                <div className="relative overflow-hidden rounded-[28px] border border-white/15 bg-white text-[#1c1035] shadow-[0_20px_55px_rgba(255,255,255,0.28)]">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,rgba(255,204,164,0.55),transparent_60%)]" />
+                <div className="relative overflow-hidden rounded-[28px] border border-white/15 bg-white text-brand-navy shadow-[0_20px_55px_rgba(255,255,255,0.28)]">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,rgba(243,156,18,0.55),transparent_60%)]" />
                   <div className="relative space-y-3 p-5">
                     <p className="text-xs font-semibold uppercase tracking-[0.32em]">08:15</p>
-                    <p className="text-sm font-medium text-[#4b366c]">Sunrise premiere lobby</p>
-                    <p className="text-xs text-[#5f4983]">Warm white lighting, stretch goals board, ambient vinyl.</p>
+                    <p className="text-sm font-medium text-brand-purple">Sunrise premiere lobby</p>
+                    <p className="text-xs text-brand-purple-light">Warm white lighting, stretch goals board, ambient vinyl.</p>
                   </div>
                 </div>
-                <div className="relative overflow-hidden rounded-[28px] border border-white/15 bg-[radial-gradient(circle_at_top,rgba(27,16,72,0.85),rgba(5,3,20,0.95))] text-white shadow-[0_28px_65px_rgba(16,10,60,0.6)]">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(111,82,255,0.4),transparent_60%)]" />
+                <div className="relative overflow-hidden rounded-[28px] border border-white/15 bg-[radial-gradient(circle_at_top,rgba(74,46,160,0.85),rgba(28,28,46,0.95))] text-white shadow-[0_28px_65px_rgba(74,46,160,0.6)]">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(233,64,138,0.4),transparent_60%)]" />
                   <div className="relative space-y-3 p-5">
                     <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/70">23:45</p>
                     <p className="text-sm font-medium text-white/85">Midnight encore</p>
@@ -96,7 +96,7 @@ export function Hero() {
                   <span className="text-white">Ready</span>
                 </div>
                 <div className="h-2 rounded-full bg-white/10">
-                  <div className="h-full rounded-full bg-[var(--color-accent-500)]" style={{ width: "86%" }} />
+                  <div className="h-full rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange" style={{ width: "86%" }} />
                 </div>
               </div>
             </div>

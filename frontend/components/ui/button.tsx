@@ -13,9 +13,9 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "relative overflow-hidden bg-[var(--color-accent-500)] text-[#1c0c06] shadow-[0_20px_60px_rgba(255,194,140,0.55)] transition-transform duration-300 before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.4),transparent_60%)] before:opacity-0 before:transition-opacity before:duration-300 hover:-translate-y-0.5 hover:shadow-[0_26px_70px_rgba(255,194,140,0.65)] hover:before:opacity-100 focus-visible:ring-white/70",
+          "relative overflow-hidden bg-gradient-to-r from-brand-magenta to-brand-orange text-white shadow-[0_20px_60px_rgba(233,64,138,0.55)] transition-transform duration-300 before:absolute before:inset-0 before:bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.4),transparent_60%)] before:opacity-0 before:transition-opacity before:duration-300 hover:-translate-y-0.5 hover:shadow-[0_26px_70px_rgba(233,64,138,0.65)] hover:before:opacity-100 focus-visible:ring-brand-magenta/70",
         secondary:
-          "border border-white/20 bg-white/10 text-white shadow-[0_14px_40px_rgba(12,8,45,0.45)] backdrop-blur-md hover:border-white/35 hover:bg-white/14",
+          "border border-brand-cyan/20 bg-brand-cyan/10 text-white shadow-[0_14px_40px_rgba(28,28,46,0.45)] backdrop-blur-md hover:border-brand-cyan/35 hover:bg-brand-cyan/14",
         ghost:
           "bg-transparent text-white/70 hover:bg-white/10 hover:text-white",
       },

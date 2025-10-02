@@ -16,19 +16,19 @@
   :root {
     /* === WATCH PARTY 2025 DESIGN SYSTEM === */
     
-    /* Core Brand Colors - Cinema-inspired */
-    --cinema-deep: 8 12% 8%;        /* Deep theater black */
-    --cinema-dark: 12 15% 12%;      /* Rich charcoal */
-    --cinema-medium: 15 18% 18%;    /* Theater seating */
-    --cinema-surface: 20 20% 22%;   /* Control surfaces */
-    --cinema-elevated: 25 22% 26%;  /* Elevated elements */
+    /* Core Brand Colors - Logo-inspired Design System */
+    --cinema-deep: 28 28% 9%;        /* Navy dark */
+    --cinema-dark: 28 28% 11%;       /* Navy base */
+    --cinema-medium: 28 25% 18%;     /* Navy light */
+    --cinema-surface: 28 22% 22%;    /* Control surfaces */
+    --cinema-elevated: 28 20% 26%;   /* Elevated elements */
     
-    /* Accent & Brand */
-    --neon-red: 0 85% 60%;          /* Netflix-inspired red */
-    --neon-blue: 210 100% 65%;      /* Streaming blue */
-    --neon-purple: 270 85% 70%;     /* Premium purple */
-    --neon-gold: 45 95% 65%;        /* VIP gold */
-    --neon-green: 125 75% 55%;      /* Live indicator */
+    /* Accent & Brand - New Logo Colors */
+    --neon-red: 338 78% 59%;         /* Magenta #E9408A */
+    --neon-blue: 200 66% 52%;        /* Bright Blue #2D9CDB */
+    --neon-purple: 256 56% 41%;      /* Deep Purple #4A2EA0 */
+    --neon-gold: 36 89% 52%;         /* Orange #F39C12 */
+    --neon-green: 185 71% 58%;       /* Cyan-Teal #3BC6E8 */
     
     /* Text System */
     --text-primary: 0 0% 95%;       /* Pure white text */
@@ -148,8 +148,8 @@
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     background: hsl(var(--cinema-deep));
     background-image: 
-      radial-gradient(circle at 20% 80%, hsla(0, 85%, 60%, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, hsla(210, 100%, 65%, 0.1) 0%, transparent 50%);
+      radial-gradient(circle at 20% 80%, hsla(338, 78%, 59%, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, hsla(185, 71%, 58%, 0.1) 0%, transparent 50%);
     background-attachment: fixed;
     overflow-x: hidden;
   }
@@ -200,32 +200,41 @@
   }
   
   /* Glow Effects */
-  .glow-red {
-    box-shadow: 0 0 20px hsla(var(--neon-red), 0.5);
+  .glow-magenta {
+    box-shadow: 0 0 20px rgba(233, 64, 138, 0.5);
   }
   
   .glow-blue {
-    box-shadow: 0 0 20px hsla(var(--neon-blue), 0.5);
+    box-shadow: 0 0 20px rgba(45, 156, 219, 0.5);
   }
   
   .glow-purple {
-    box-shadow: 0 0 20px hsla(var(--neon-purple), 0.5);
+    box-shadow: 0 0 20px rgba(74, 46, 160, 0.5);
   }
   
-  .glow-gold {
-    box-shadow: 0 0 20px hsla(var(--neon-gold), 0.5);
+  .glow-orange {
+    box-shadow: 0 0 20px rgba(243, 156, 18, 0.5);
+  }
+  
+  .glow-cyan {
+    box-shadow: 0 0 20px rgba(59, 198, 232, 0.5);
+  }
+  
+  .glow-coral {
+    box-shadow: 0 0 20px rgba(255, 94, 87, 0.5);
   }
   
   /* Interactive Elements */
   .btn-primary {
-    @apply bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 
+    @apply bg-gradient-to-r from-[#E9408A] to-[#F39C12] hover:from-[#d12975] hover:to-[#d4850a] 
            text-white font-medium px-6 py-3 rounded-lg transition-all duration-300 
-           shadow-lg hover:shadow-xl hover:scale-105 glow-red;
+           shadow-lg hover:shadow-xl hover:scale-105;
+    box-shadow: 0 0 20px rgba(233, 64, 138, 0.4);
   }
   
   .btn-secondary {
     @apply glass-card hover:bg-white/10 text-white font-medium px-6 py-3 rounded-lg 
-           transition-all duration-300 hover:scale-105 border-white/20;
+           transition-all duration-300 hover:scale-105 border-[#3BC6E8]/20;
   }
   
   .btn-ghost {

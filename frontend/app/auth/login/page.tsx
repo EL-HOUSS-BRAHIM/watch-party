@@ -82,7 +82,7 @@ export default function LoginPage() {
               required
               value={formData.email}
               onChange={handleChange}
-              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan"
               placeholder="Enter your email"
             />
           </div>
@@ -98,7 +98,7 @@ export default function LoginPage() {
               required
               value={formData.password}
               onChange={handleChange}
-              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan"
               placeholder="Enter your password"
             />
           </div>
@@ -106,20 +106,20 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-blue-600 py-3 text-base font-semibold text-white transition-colors duration-200 hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-600/50"
+            className="w-full rounded-lg bg-gradient-to-r from-brand-magenta to-brand-orange hover:from-brand-magenta-dark hover:to-brand-orange-dark py-3 text-base font-semibold text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
         <div className="space-y-4 text-center">
-          <Link href="/auth/forgot-password" className="text-sm text-blue-300 transition-colors hover:text-blue-200">
+          <Link href="/auth/forgot-password" className="text-sm text-brand-cyan-light transition-colors hover:text-brand-cyan">
             Forgot your password?
           </Link>
 
           <p className="text-sm text-white/70">
             Don't have an account?{" "}
-            <Link href="/auth/register" className="font-semibold text-blue-300 transition-colors hover:text-blue-200">
+            <Link href="/auth/register" className="font-semibold text-brand-cyan-light transition-colors hover:text-brand-cyan">
               Sign up
             </Link>
           </p>
