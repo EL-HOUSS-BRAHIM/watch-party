@@ -3,48 +3,35 @@
 import { useState } from "react"
 import Link from "next/link"
 import { authApi } from "@/lib/api-client"
+import { FormError } from "@/components/ui/feedback"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
     email: "",
+    username: "",
     password: "",
-    confirmPassword: "",
   })
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords don't match")
-      return
-    }
-    
     setLoading(true)
-    
-    try {
-      const data = await authApi.register({
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        password: formData.password,
-        confirm_password: formData.confirmPassword,
-      })
+    setError(null)
+    setSuccess(null)
 
-      if (data.success) {
-        alert(
-          data.message ||
-            "Account created successfully! Please check your email to verify your account."
-        )
-        window.location.href = "/auth/login"
+    try {
+      const response = await authApi.register(formData)
+
+      if (response.success) {
+        setSuccess("Account created! Check your inbox to verify your email.")
       } else {
-        alert("Registration failed. Please try again.")
+        setError(response.message || "Registration failed. Please try again.")
       }
     } catch (error) {
-      console.error("Registration error:", error)
-      alert(error instanceof Error ? error.message : "Something went wrong. Please try again.")
+      console.error("Register error:", error)
+      setError(error instanceof Error ? error.message : "Something went wrong. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -58,50 +45,33 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-[80vh] px-4 py-12 sm:py-16 flex items-center justify-center">
-      <div className="w-full max-w-md space-y-10 rounded-2xl bg-white/5 p-6 shadow-lg backdrop-blur-sm sm:p-8">
-        <div className="space-y-2 text-center">
-          <h1 className="text-3xl font-bold text-white sm:text-4xl">Create Account</h1>
-          <p className="text-sm text-white/70 sm:text-base">
-            Join the party and start watching together
+    <div className="flex min-h-[80vh] items-center justify-center px-4 py-16">
+      <div className="w-full max-w-xl rounded-3xl border border-brand-purple/20 bg-white/95 p-8 text-brand-navy shadow-[0_32px_90px_rgba(28,28,46,0.14)] sm:p-10">
+        <div className="text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/30 bg-brand-magenta/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-brand-magenta-dark">
+            Create your account
+          </span>
+          <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Host with WatchParty</h1>
+          <p className="mt-3 text-base text-brand-navy/70">
+            Bring friends together in vibrant watch rooms with live chat, reactions, and co-host controls.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-2">
-            <label htmlFor="firstName" className="block text-sm font-medium text-white/90">
-              First Name
-            </label>
-            <input
-              id="firstName"
-              name="firstName"
-              type="text"
-              required
-              value={formData.firstName}
-              onChange={handleChange}
-              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan"
-              placeholder="Enter your first name"
-            />
+        {error && (
+          <div className="mt-6">
+            <FormError error={error} />
           </div>
+        )}
 
-          <div className="space-y-2">
-            <label htmlFor="lastName" className="block text-sm font-medium text-white/90">
-              Last Name
-            </label>
-            <input
-              id="lastName"
-              name="lastName"
-              type="text"
-              required
-              value={formData.lastName}
-              onChange={handleChange}
-              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan"
-              placeholder="Enter your last name"
-            />
+        {success && (
+          <div className="mt-6 rounded-2xl border border-brand-cyan/30 bg-brand-cyan/10 px-4 py-3 text-sm font-semibold text-brand-cyan-dark">
+            {success}
           </div>
+        )}
 
+        <form onSubmit={handleSubmit} className="mt-10 space-y-5">
           <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium text-white/90">
+            <label htmlFor="email" className="block text-sm font-semibold uppercase tracking-[0.25em] text-brand-navy/60">
               Email
             </label>
             <input
@@ -111,13 +81,28 @@ export default function RegisterPage() {
               required
               value={formData.email}
               onChange={handleChange}
-              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan"
-              placeholder="Enter your email"
+              className="w-full rounded-2xl border border-brand-blue/25 bg-brand-blue/5 px-5 py-3 text-base text-brand-navy focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
+              placeholder="you@example.com"
             />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="password" className="block text-sm font-medium text-white/90">
+            <label htmlFor="username" className="block text-sm font-semibold uppercase tracking-[0.25em] text-brand-navy/60">
+              Username
+            </label>
+            <input
+              id="username"
+              name="username"
+              required
+              value={formData.username}
+              onChange={handleChange}
+              className="w-full rounded-2xl border border-brand-blue/25 bg-brand-blue/5 px-5 py-3 text-base text-brand-navy focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
+              placeholder="movienight"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="password" className="block text-sm font-semibold uppercase tracking-[0.25em] text-brand-navy/60">
               Password
             </label>
             <input
@@ -127,40 +112,24 @@ export default function RegisterPage() {
               required
               value={formData.password}
               onChange={handleChange}
-              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan"
-              placeholder="Create a password"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-white/90">
-              Confirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              required
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan"
-              placeholder="Confirm your password"
+              className="w-full rounded-2xl border border-brand-blue/25 bg-brand-blue/5 px-5 py-3 text-base text-brand-navy focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
+              placeholder="Create a secure password"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-gradient-to-r from-brand-magenta to-brand-orange hover:from-brand-magenta-dark hover:to-brand-orange-dark py-3 text-base font-semibold text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange px-6 py-4 text-lg font-semibold text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5 hover:from-brand-magenta-dark hover:to-brand-orange-dark disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? "Creating account..." : "Create Account"}
+            {loading ? "Creating..." : "Create account"}
           </button>
         </form>
 
-        <div className="text-center text-sm text-white/70">
-          Already have an account?{" "}
-          <Link href="/auth/login" className="font-semibold text-brand-cyan-light transition-colors hover:text-brand-cyan">
-            Sign in
+        <div className="mt-8 text-center text-sm text-brand-navy/70">
+          Already part of the party?{" "}
+          <Link href="/auth/login" className="font-semibold text-brand-blue hover:text-brand-blue-dark">
+            Sign in instead
           </Link>
         </div>
       </div>

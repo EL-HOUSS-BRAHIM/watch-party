@@ -46,7 +46,6 @@ export default function DashboardPage() {
   const [recentParties, setRecentParties] = useState<WatchParty[]>([])
   const [loading, setLoading] = useState(true)
   const [newPartyName, setNewPartyName] = useState("")
-  const [movieUrl, setMovieUrl] = useState("")
   const [showWelcome, setShowWelcome] = useState(false)
   const [activeView, setActiveView] = useState<"overview" | "quick-actions" | "analytics">("overview")
   const [liveStats, setLiveStats] = useState<NormalizedRealTimeAnalytics>(initialRealTimeStats)
@@ -54,12 +53,11 @@ export default function DashboardPage() {
   useEffect(() => {
     loadDashboardData()
     loadRealTimeStats()
-    
-    // Fetch real-time stats every 30 seconds
+
     const interval = setInterval(() => {
       loadRealTimeStats()
     }, 30000)
-    
+
     return () => clearInterval(interval)
   }, [])
 
@@ -69,7 +67,6 @@ export default function DashboardPage() {
       setLiveStats(realTimeData)
     } catch (error) {
       console.error("Failed to load real-time stats:", error)
-      // Keep existing values on error
     }
   }
 
@@ -80,12 +77,11 @@ export default function DashboardPage() {
         analyticsApi.getUserStats(),
         partiesApi.getRecent({ page_size: 5 })
       ])
-      
+
       setUser(userResponse)
       setStats(statsResponse as Analytics)
       setRecentParties(partiesResponse.results || [])
-      
-      // Show welcome message for new users
+
       if (userResponse.date_joined) {
         const joinedDate = new Date(userResponse.date_joined)
         const daysSinceJoined = Math.floor((Date.now() - joinedDate.getTime()) / (1000 * 60 * 60 * 24))
@@ -100,7 +96,7 @@ export default function DashboardPage() {
 
   const handleCreateParty = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!newPartyName.trim()) {
       return
     }
@@ -111,35 +107,11 @@ export default function DashboardPage() {
         description: "Created from dashboard",
         visibility: "public"
       })
-      
+
       setNewPartyName("")
       router.push(`/party/${party.id}`)
     } catch (error) {
       console.error("Failed to create party:", error)
-    }
-  }
-
-  const handleAddMovie = async () => {
-    if (!movieUrl.trim()) {
-      return
-    }
-
-    try {
-      // TODO: Add video validation and creation
-      setMovieUrl("")
-      // Could show success toast here
-    } catch (error) {
-      console.error("Failed to add movie:", error)
-    }
-  }
-
-  const handleConnectDrive = async () => {
-    try {
-      const response = await userApi.getProfile() // Check if already connected via profile
-      // Redirect to Google Drive auth
-      router.push("/dashboard/integrations")
-    } catch (error) {
-      console.error("Failed to connect drive:", error)
     }
   }
 
@@ -170,14 +142,6 @@ export default function DashboardPage() {
     }
   ]
 
-  const getTrendIcon = (trend?: string) => {
-    switch (trend) {
-      case "up": return "📈"
-      case "down": return "📉"
-      default: return "➡️"
-    }
-  }
-
   const getTimeOfDayGreeting = () => {
     const hour = new Date().getHours()
     if (hour < 12) return "Good morning"
@@ -187,365 +151,333 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex items-center justify-center min-h-[400px] text-brand-navy/60">
         <div className="text-center">
-          <div className="animate-spin w-8 h-8 border-4 border-brand-purple border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-white/60">Loading your dashboard...</p>
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-brand-purple border-t-transparent"></div>
+          <p>Loading your dashboard...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-8">
-      {/* Enhanced Header with Navigation Pills */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-brand-purple-light to-brand-blue-light bg-clip-text text-transparent">
-              {getTimeOfDayGreeting()}, {user?.first_name || user?.username || "Cinephile"}!
-            </h1>
-            <div className="flex items-center gap-1">
-              <div className="w-2 h-2 bg-brand-cyan rounded-full animate-pulse"></div>
-              <span className="text-brand-cyan-light text-sm font-medium">Live</span>
+    <div className="space-y-8 text-brand-navy">
+      <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
+        <div className="rounded-3xl border border-brand-navy/10 bg-white p-8 shadow-[0_28px_80px_rgba(28,28,46,0.12)]">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.35em] text-brand-purple/70">{getTimeOfDayGreeting()}</p>
+              <h1 className="mt-3 text-4xl font-bold tracking-tight">
+                Welcome back, {user?.first_name || user?.username || "Cinephile"}!
+              </h1>
+              <p className="mt-3 text-brand-navy/70">
+                {showWelcome
+                  ? "You’re days away from your first unforgettable watch party—set the mood and invite your crew."
+                  : "Pick up where you left off, schedule your next event, or explore what’s trending."}
+              </p>
+            </div>
+            <div className="flex items-center gap-3 rounded-full border border-brand-cyan/30 bg-brand-cyan/10 px-4 py-2 text-sm font-semibold text-brand-cyan">
+              <span className="h-2 w-2 rounded-full bg-brand-coral animate-pulse" />
+              Live sync online
             </div>
           </div>
-          <p className="text-white/70 text-lg">
-            {showWelcome 
-              ? "Welcome to the ultimate movie experience! Let's create some magic ✨"
-              : "Ready to dive into today's cinematic adventures?"
-            }
-          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            {[{ key: "overview", label: "Overview", icon: "🏠" }, { key: "quick-actions", label: "Quick actions", icon: "⚡" }, { key: "analytics", label: "Analytics", icon: "📊" }].map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setActiveView(tab.key as typeof activeView)}
+                className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-all ${
+                  activeView === tab.key
+                    ? "border-brand-purple bg-brand-purple/10 text-brand-purple"
+                    : "border-transparent bg-brand-neutral/60 text-brand-navy/60 hover:border-brand-navy/20"
+                }`}
+              >
+                <span>{tab.icon}</span>
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
-        
-        {/* View Toggle Pills */}
-        <div className="flex items-center gap-2 bg-black/20 p-1 rounded-xl border border-white/10">
-          {[
-            { key: "overview", label: "Overview", icon: "🏠" },
-            { key: "quick-actions", label: "Quick Actions", icon: "⚡" },
-            { key: "analytics", label: "Analytics", icon: "📊" }
-          ].map(({ key, label, icon }) => (
-            <button
-              key={key}
-              onClick={() => setActiveView(key as any)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                activeView === key
-                  ? "bg-gradient-to-r from-brand-purple to-brand-blue text-white shadow-lg"
-                  : "text-white/60 hover:text-white hover:bg-white/10"
-              }`}
-            >
-              <span>{icon}</span>
-              <span className="hidden sm:inline">{label}</span>
-            </button>
-          ))}
+        <div className="rounded-3xl border border-brand-navy/10 bg-white p-6 shadow-[0_28px_80px_rgba(28,28,46,0.1)]">
+          <h2 className="text-lg font-semibold">Today’s highlights</h2>
+          <div className="mt-4 space-y-3 text-sm text-brand-navy/70">
+            <div className="flex items-center justify-between rounded-2xl border border-brand-blue/15 bg-brand-blue/5 px-4 py-3">
+              <span>Guests waiting in lobby</span>
+              <span className="font-semibold text-brand-blue">{liveStats.engagement.concurrentViewers.toLocaleString()}</span>
+            </div>
+            <div className="flex items-center justify-between rounded-2xl border border-brand-magenta/15 bg-brand-magenta/5 px-4 py-3">
+              <span>New reactions in last hour</span>
+              <span className="font-semibold text-brand-magenta">{liveStats.engagement.reactionsPerMinute.toLocaleString()}</span>
+            </div>
+            <div className="flex items-center justify-between rounded-2xl border border-brand-orange/20 bg-brand-orange/5 px-4 py-3">
+              <span>Messages flying per minute</span>
+              <span className="font-semibold text-brand-orange-dark">{liveStats.engagement.messagesPerMinute.toLocaleString()}</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Global Stats Bar */}
-      <div className="bg-gradient-to-r from-black/20 via-brand-purple/20 to-black/20 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="rounded-3xl border border-brand-navy/10 bg-white p-6 shadow-[0_28px_80px_rgba(28,28,46,0.1)]">
+        <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
           {quickStats.map((stat, index) => (
-            <div key={index} className="text-center">
-              <div className={`w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-br ${stat.color || 'from-gray-500 to-gray-600'} flex items-center justify-center text-2xl shadow-lg`}>
+            <div key={index} className="flex flex-col items-center justify-center gap-3 text-center">
+              <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${stat.color} text-2xl text-white shadow-lg`}>
                 {stat.icon}
               </div>
-              <div className="space-y-1">
-                <div className="text-2xl font-bold text-white">{stat.value}</div>
-                <div className="text-sm text-white/60">{stat.label}</div>
+              <div>
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <div className="text-sm text-brand-navy/60">{stat.label}</div>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Dynamic Content Based on Active View */}
       {activeView === "overview" && (
-        <>
-          {/* Featured Actions Grid */}
-          <div className="grid lg:grid-cols-3 gap-6">
-            {/* Create Party - Enhanced */}
-            <div className="lg:col-span-1 bg-gradient-to-br from-brand-purple/30 via-brand-purple/20 to-brand-blue/30 border border-brand-purple/20 rounded-2xl p-8 backdrop-blur-sm hover:border-brand-purple-light/40 transition-all duration-300">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-brand-purple to-brand-blue rounded-2xl flex items-center justify-center text-2xl shadow-lg">
-                  🎬
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-white">Host a Party</h3>
-                  <p className="text-white/60">Start watching in seconds</p>
-                </div>
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="rounded-3xl border border-brand-purple/20 bg-white p-8 shadow-[0_28px_90px_rgba(74,46,160,0.15)] lg:col-span-1">
+            <div className="mb-6 flex items-center gap-4">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-purple to-brand-blue text-2xl text-white shadow-lg">🎬</div>
+              <div>
+                <h3 className="text-2xl font-bold">Host a party</h3>
+                <p className="text-sm text-brand-navy/60">Name it, invite friends, go live.</p>
               </div>
-              
-              <form onSubmit={handleCreateParty} className="space-y-4">
-                <input
-                  type="text"
-                  value={newPartyName}
-                  onChange={(e) => setNewPartyName(e.target.value)}
-                  placeholder="Give your party an epic name..."
-                  className="w-full px-6 py-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50 backdrop-blur-sm"
-                />
-                <button
-                  type="submit"
-                  disabled={!newPartyName.trim()}
-                  className="w-full bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-brand-purple/25"
-                >
-                  {loading ? (
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
-                      Creating...
-                    </div>
-                  ) : (
-                    <div className="flex items-center justify-center gap-2">
-                      <span>✨</span>
-                      Create & Launch Party
-                    </div>
-                  )}
-                </button>
-              </form>
             </div>
-
-            {/* Recent Activity */}
-            <div className="lg:col-span-2 bg-gradient-to-br from-brand-blue/30 via-slate-800/20 to-gray-900/30 border border-brand-blue/20 rounded-2xl p-8 backdrop-blur-sm">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-white flex items-center gap-3">
-                  <span>📺</span>
-                  Recent Parties
-                </h3>
-                <Link 
-                  href="/dashboard/parties" 
-                  className="text-brand-blue-light hover:text-brand-cyan-light font-medium flex items-center gap-2 hover:bg-white/10 px-3 py-2 rounded-lg transition-all"
-                >
-                  View All
-                  <span>→</span>
-                </Link>
-              </div>
-              
-              <div className="space-y-4 max-h-80 overflow-y-auto">
-                {recentParties.length > 0 ? (
-                  recentParties.map((party) => (
-                    <div key={party.id} className="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-200 group">
-                      <div className="w-12 h-12 bg-gradient-to-br from-brand-purple to-brand-magenta rounded-xl flex items-center justify-center text-white font-bold">
-                        {party.title.charAt(0)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-white font-semibold truncate">{party.title}</h4>
-                        <div className="flex items-center gap-3 text-sm text-white/60">
-                          <span>👥 {party.participant_count} watching</span>
-                          <span>•</span>
-                          <span>{new Date(party.created_at).toLocaleDateString()}</span>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs px-3 py-1 rounded-full font-medium ${
-                          party.status === "live" ? "bg-brand-cyan/20 text-brand-cyan-light animate-pulse" :
-                          party.status === "ended" ? "bg-gray-600/20 text-gray-400" :
-                          "bg-brand-blue/20 text-brand-blue-light"
-                        }`}>
-                          {party.status === "live" ? "🔴 Live" : 
-                           party.status === "ended" ? "✅ Ended" : 
-                           "📅 Scheduled"}
-                        </span>
-                        <button 
-                          onClick={() => router.push(`/party/${party.id}`)}
-                          className="opacity-0 group-hover:opacity-100 px-3 py-1 bg-brand-blue/20 text-brand-blue-light rounded-lg text-sm font-medium transition-all hover:bg-brand-blue/30"
-                        >
-                          Join
-                        </button>
+            <form onSubmit={handleCreateParty} className="space-y-4">
+              <input
+                type="text"
+                value={newPartyName}
+                onChange={(e) => setNewPartyName(e.target.value)}
+                placeholder="Movie night with friends"
+                className="w-full rounded-2xl border border-brand-purple/30 bg-brand-purple/5 px-5 py-3 text-base text-brand-navy focus:border-brand-purple focus:outline-none focus:ring-2 focus:ring-brand-purple/30"
+              />
+              <button
+                type="submit"
+                disabled={!newPartyName.trim()}
+                className="w-full rounded-full bg-gradient-to-r from-brand-purple to-brand-blue px-6 py-3 text-sm font-semibold text-white shadow-lg transition-all hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {loading ? "Creating..." : "Create & launch"}
+              </button>
+            </form>
+          </div>
+          <div className="rounded-3xl border border-brand-blue/20 bg-white p-8 shadow-[0_28px_90px_rgba(45,156,219,0.15)] lg:col-span-2">
+            <div className="mb-6 flex items-center justify-between">
+              <h3 className="text-2xl font-bold">Recent parties</h3>
+              <Link href="/dashboard/parties" className="inline-flex items-center gap-2 rounded-full border border-brand-blue/30 px-4 py-2 text-sm font-semibold text-brand-blue hover:bg-brand-blue/10">
+                View all →
+              </Link>
+            </div>
+            <div className="space-y-4">
+              {recentParties.length > 0 ? (
+                recentParties.map((party) => (
+                  <div key={party.id} className="flex items-center gap-4 rounded-2xl border border-brand-navy/10 bg-brand-neutral px-4 py-4">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-purple to-brand-magenta text-lg font-bold text-white">
+                      {party.title.charAt(0)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="truncate text-lg font-semibold">{party.title}</h4>
+                      <div className="mt-1 flex flex-wrap items-center gap-3 text-sm text-brand-navy/60">
+                        <span>👥 {party.participant_count} watching</span>
+                        <span>•</span>
+                        <span>{new Date(party.created_at).toLocaleDateString()}</span>
                       </div>
                     </div>
-                  ))
-                ) : (
-                  <div className="text-center py-12">
-                    <div className="text-6xl mb-4">🎬</div>
-                    <p className="text-white/60 mb-6">No recent parties</p>
-                    <button
-                      onClick={() => router.push("/dashboard/parties/create")}
-                      className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
-                    >
-                      Create Your First Party
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                          party.status === "live"
+                            ? "bg-brand-cyan/15 text-brand-cyan"
+                            : party.status === "ended"
+                              ? "bg-brand-orange/10 text-brand-orange-dark"
+                              : "bg-brand-purple/10 text-brand-purple"
+                        }`}
+                      >
+                        {party.status === "live" ? "🔴 Live" : party.status === "ended" ? "Ended" : "Scheduled"}
+                      </span>
+                      <button
+                        onClick={() => router.push(`/party/${party.id}`)}
+                        className="rounded-full border border-brand-blue/30 px-4 py-2 text-xs font-semibold text-brand-blue hover:bg-brand-blue/10"
+                      >
+                        Join
+                      </button>
+                    </div>
                   </div>
-                )}
-              </div>
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-brand-navy/20 bg-brand-neutral px-6 py-16 text-center">
+                  <div className="text-5xl">🎬</div>
+                  <p className="mt-4 text-brand-navy/70">No parties yet—start your first watch night!</p>
+                  <button
+                    onClick={() => router.push("/dashboard/parties/create")}
+                    className="mt-6 rounded-full bg-gradient-to-r from-brand-purple to-brand-blue px-6 py-3 text-sm font-semibold text-white shadow-lg hover:-translate-y-0.5"
+                  >
+                    Create a party
+                  </button>
+                </div>
+              )}
             </div>
           </div>
-        </>
+        </div>
       )}
 
       {activeView === "quick-actions" && (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Quick Actions */}
-          {[
-            {
-              title: "Upload Content",
-              description: "Add videos to your library",
-              icon: "📱",
-              color: "from-brand-cyan to-brand-blue",
-              action: () => router.push("/dashboard/videos/upload")
-            },
-            {
-              title: "Join Community",
-              description: "Connect with other movie lovers",
-              icon: "🌟",
-              color: "from-brand-orange to-brand-coral",
-              action: () => router.push("/dashboard/social")
-            },
-            {
-              title: "Discover Events",
-              description: "Find exciting watch events",
-              icon: "📅",
-              color: "from-brand-blue to-brand-cyan",
-              action: () => router.push("/dashboard/events")
-            },
-            {
-              title: "Browse Library",
-              description: "Explore your video collection",
-              icon: "📚",
-              color: "from-brand-purple to-brand-magenta",
-              action: () => router.push("/dashboard/videos")
-            },
-            {
-              title: "Find Friends",
-              description: "Connect with other users",
-              icon: "👥",
-              color: "from-brand-purple to-brand-blue",
-              action: () => router.push("/dashboard/friends")
-            },
-            {
-              title: "Get Support",
-              description: "Help when you need it",
-              icon: "🎫",
-              color: "from-gray-500 to-slate-600",
-              action: () => router.push("/dashboard/support")
-            }
-          ].map((item, index) => (
-            <div
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {[{
+            title: "Upload content",
+            description: "Add new videos to your library",
+            icon: "📱",
+            color: "from-brand-cyan to-brand-blue",
+            action: () => router.push("/dashboard/videos/upload")
+          }, {
+            title: "Join community",
+            description: "Meet other hosts and viewers",
+            icon: "🌟",
+            color: "from-brand-orange to-brand-coral",
+            action: () => router.push("/dashboard/social")
+          }, {
+            title: "Discover events",
+            description: "Browse upcoming public watch parties",
+            icon: "📅",
+            color: "from-brand-blue to-brand-cyan",
+            action: () => router.push("/dashboard/events")
+          }, {
+            title: "Browse library",
+            description: "Organise everything you’ve uploaded",
+            icon: "📚",
+            color: "from-brand-purple to-brand-magenta",
+            action: () => router.push("/dashboard/videos")
+          }, {
+            title: "Find friends",
+            description: "Invite co-hosts and regulars",
+            icon: "👥",
+            color: "from-brand-purple to-brand-blue",
+            action: () => router.push("/dashboard/friends")
+          }, {
+            title: "Get support",
+            description: "Reach our crew any time",
+            icon: "🎫",
+            color: "from-brand-blue to-brand-cyan",
+            action: () => router.push("/dashboard/support")
+          }].map((item, index) => (
+            <button
               key={index}
               onClick={item.action}
-              className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 cursor-pointer group hover:border-white/20 hover:shadow-lg"
+              className="flex h-full flex-col rounded-3xl border border-brand-navy/10 bg-white p-6 text-left shadow-[0_24px_80px_rgba(28,28,46,0.12)] transition-all hover:-translate-y-1 hover:shadow-[0_32px_110px_rgba(28,28,46,0.16)]"
             >
-              <div className={`w-16 h-16 bg-gradient-to-br ${item.color} rounded-2xl flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-200 shadow-lg`}>
+              <div className={`mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${item.color} text-2xl text-white shadow-lg`}>
                 {item.icon}
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-              <p className="text-white/60 mb-4">{item.description}</p>
-              <div className="text-blue-400 font-medium group-hover:text-blue-300 transition-colors">
-                Get Started →
-              </div>
-            </div>
+              <h3 className="text-xl font-semibold">{item.title}</h3>
+              <p className="mt-2 flex-1 text-sm text-brand-navy/60">{item.description}</p>
+              <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-blue">
+                Get started →
+              </span>
+            </button>
           ))}
         </div>
       )}
 
       {activeView === "analytics" && (
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-6">
-          {/* Watch Time Chart */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          <div className="rounded-3xl border border-brand-navy/10 bg-white p-6 shadow-[0_24px_80px_rgba(28,28,46,0.12)]">
+            <h3 className="flex items-center gap-2 text-xl font-bold">
               <span>📊</span>
-              Your Activity
+              Your activity
             </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Total Watch Time</span>
-                <span className="text-white font-bold">{Math.round((stats?.watch_time_minutes || 0) / 60)}h</span>
+            <div className="mt-5 space-y-4 text-sm text-brand-navy/70">
+              <div className="flex items-center justify-between">
+                <span>Total watch time</span>
+                <span className="font-semibold text-brand-purple">{Math.round((stats?.watch_time_minutes || 0) / 60)}h</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Parties Hosted</span>
-                <span className="text-white font-bold">{stats?.total_parties || 0}</span>
+              <div className="flex items-center justify-between">
+                <span>Parties hosted</span>
+                <span className="font-semibold text-brand-purple">{stats?.total_parties || 0}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Videos Uploaded</span>
-                <span className="text-white font-bold">{stats?.total_videos || 0}</span>
+              <div className="flex items-center justify-between">
+                <span>Videos uploaded</span>
+                <span className="font-semibold text-brand-purple">{stats?.total_videos || 0}</span>
               </div>
             </div>
           </div>
-
-          {/* Community Stats */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <div className="rounded-3xl border border-brand-navy/10 bg-white p-6 shadow-[0_24px_80px_rgba(28,28,46,0.12)]">
+            <h3 className="flex items-center gap-2 text-xl font-bold">
               <span>🌍</span>
-              Platform Pulse
+              Platform pulse
             </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Online Users</span>
-                <span className="text-green-400 font-bold">{liveStats.onlineUsers.toLocaleString()}</span>
+            <div className="mt-5 space-y-4 text-sm text-brand-navy/70">
+              <div className="flex items-center justify-between">
+                <span>Online users</span>
+                <span className="font-semibold text-brand-blue">{liveStats.onlineUsers.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Active Parties</span>
-                <span className="text-purple-400 font-bold">{liveStats.activeParties}</span>
+              <div className="flex items-center justify-between">
+                <span>Active parties</span>
+                <span className="font-semibold text-brand-purple">{liveStats.activeParties}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Concurrent Viewers</span>
-                <span className="text-blue-400 font-bold">{liveStats.engagement.concurrentViewers.toLocaleString()}</span>
+              <div className="flex items-center justify-between">
+                <span>Concurrent viewers</span>
+                <span className="font-semibold text-brand-blue">{liveStats.engagement.concurrentViewers.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Messages / Minute</span>
-                <span className="text-cyan-400 font-bold">{liveStats.engagement.messagesPerMinute.toLocaleString()}</span>
+              <div className="flex items-center justify-between">
+                <span>Messages per minute</span>
+                <span className="font-semibold text-brand-cyan">{liveStats.engagement.messagesPerMinute.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Reactions / Minute</span>
-                <span className="text-amber-400 font-bold">{liveStats.engagement.reactionsPerMinute.toLocaleString()}</span>
+              <div className="flex items-center justify-between">
+                <span>Reactions per minute</span>
+                <span className="font-semibold text-brand-orange-dark">{liveStats.engagement.reactionsPerMinute.toLocaleString()}</span>
               </div>
             </div>
           </div>
-
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
-            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+          <div className="rounded-3xl border border-brand-navy/10 bg-white p-6 shadow-[0_24px_80px_rgba(28,28,46,0.12)]">
+            <h3 className="flex items-center gap-2 text-xl font-bold">
               <span>🛡️</span>
-              System Health
+              System health
             </h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">System Load</span>
-                <span className="text-emerald-400 font-bold">{liveStats.systemHealth.systemLoad.toFixed(1)}%</span>
+            <div className="mt-5 space-y-4 text-sm text-brand-navy/70">
+              <div className="flex items-center justify-between">
+                <span>System load</span>
+                <span className="font-semibold text-brand-cyan">{liveStats.systemHealth.systemLoad.toFixed(1)}%</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">CPU Usage</span>
-                <span className="text-emerald-400 font-bold">{liveStats.systemHealth.cpuUsage.toFixed(1)}%</span>
+              <div className="flex items-center justify-between">
+                <span>CPU usage</span>
+                <span className="font-semibold text-brand-cyan">{liveStats.systemHealth.cpuUsage.toFixed(1)}%</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Memory Usage</span>
-                <span className="text-emerald-400 font-bold">{liveStats.systemHealth.memoryUsage.toFixed(1)}%</span>
+              <div className="flex items-center justify-between">
+                <span>Memory usage</span>
+                <span className="font-semibold text-brand-cyan">{liveStats.systemHealth.memoryUsage.toFixed(1)}%</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Disk Usage</span>
-                <span className="text-emerald-400 font-bold">{liveStats.systemHealth.diskUsage.toFixed(1)}%</span>
+              <div className="flex items-center justify-between">
+                <span>Disk usage</span>
+                <span className="font-semibold text-brand-cyan">{liveStats.systemHealth.diskUsage.toFixed(1)}%</span>
               </div>
-              <div className="flex justify-between items-center">
-                <span className="text-white/70">Network Traffic</span>
-                <span className="text-emerald-400 font-bold">{liveStats.systemHealth.networkTraffic.toFixed(1)} MB/s</span>
+              <div className="flex items-center justify-between">
+                <span>Network traffic</span>
+                <span className="font-semibold text-brand-cyan">{liveStats.systemHealth.networkTraffic.toFixed(1)} MB/s</span>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Enhanced Pro Tip Section */}
-      <div className="bg-gradient-to-r from-purple-900/40 via-blue-900/40 to-purple-900/40 border border-brand-purple/30 rounded-2xl p-8 backdrop-blur-sm">
-        <div className="flex items-start gap-6">
-          <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-2xl flex items-center justify-center text-2xl shadow-lg">
-            💡
-          </div>
-          <div className="flex-1">
-            <h3 className="text-2xl font-bold text-white mb-3">Pro Tip</h3>
-            <p className="text-white/80 text-lg mb-4 leading-relaxed">
-              {showWelcome 
-                ? "Start by connecting your streaming services and invite friends to create the ultimate synchronized watch experience!"
-                : "Use our AI-powered recommendations to discover content that matches your group's mood and preferences perfectly."
-              }
+      <div className="rounded-3xl border border-brand-navy/10 bg-white p-8 shadow-[0_24px_80px_rgba(28,28,46,0.12)]">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h3 className="text-2xl font-bold">Pro tip</h3>
+            <p className="mt-2 text-brand-navy/70">
+              {showWelcome
+                ? "Connect your storage to preload trailers, playlists, and host notes before guests arrive."
+                : "Let WatchParty curate your next marathon with AI-powered recommendations tuned to your crew."}
             </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => router.push(showWelcome ? "/dashboard/integrations" : "/dashboard/search")}
-                className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold rounded-xl transition-all duration-200 shadow-lg hover:shadow-brand-orange/25"
-              >
-                {showWelcome ? "Connect Services" : "Explore AI Picks"}
-              </button>
-              <button className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl font-medium transition-all duration-200">
-                Learn More
-              </button>
-            </div>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => router.push(showWelcome ? "/dashboard/integrations" : "/dashboard/search")}
+              className="rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange px-6 py-3 text-sm font-semibold text-white shadow-lg hover:-translate-y-0.5"
+            >
+              {showWelcome ? "Connect services" : "Explore AI picks"}
+            </button>
+            <button className="rounded-full border border-brand-navy/15 px-6 py-3 text-sm font-semibold text-brand-navy hover:bg-brand-neutral">
+              Learn more
+            </button>
           </div>
         </div>
       </div>
