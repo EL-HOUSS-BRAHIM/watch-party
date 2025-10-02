@@ -144,6 +144,7 @@ INSTALLED_APPS = [
     'apps.authentication',
     'apps.integrations',
     'apps.analytics',
+    'apps.moderation',
     'apps.parties',
     'apps.videos',
 ]
