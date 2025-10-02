@@ -6,6 +6,7 @@ import api from "@/lib/api-client"
 import { GradientCard } from "@/components/ui/gradient-card"
 import { IconButton } from "@/components/ui/icon-button"
 import { LiveIndicator } from "@/components/ui/live-indicator"
+import { LoadingState, ErrorMessage, EmptyState } from "@/components/ui/feedback"
 import { useDesignSystem } from "@/hooks/use-design-system"
 
 interface SocialGroup {
@@ -39,10 +40,11 @@ interface Friend {
 
 export default function SocialPage() {
   const router = useRouter()
-  const { getStatusColor, formatNumber } = useDesignSystem()
+  const { formatNumber } = useDesignSystem()
   const [groups, setGroups] = useState<SocialGroup[]>([])
   const [friends, setFriends] = useState<Friend[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<"groups" | "friends" | "discover">("groups")
   const [searchQuery, setSearchQuery] = useState("")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -54,23 +56,24 @@ export default function SocialPage() {
   const loadSocialData = async () => {
     try {
       setLoading(true)
+      setError(null)
       
       if (activeTab === "groups" || activeTab === "discover") {
         // Load social groups
         const groupsResponse = await api.get('/api/social/groups/')
-        setGroups(groupsResponse.results || mockGroups)
+        setGroups(groupsResponse.results || [])
       }
       
       if (activeTab === "friends") {
         // Load friends
         const friendsResponse = await api.get('/api/users/friends/')
-        setFriends(friendsResponse.results || mockFriends)
+        setFriends(friendsResponse.results || [])
       }
-    } catch (error) {
-      console.error("Failed to load social data:", error)
-      // Fallback to mock data
-      setGroups(mockGroups)
-      setFriends(mockFriends)
+    } catch (err) {
+      console.error("Failed to load social data:", err)
+      setError(err instanceof Error ? err.message : 'Failed to load social data from API')
+      setGroups([])
+      setFriends([])
     } finally {
       setLoading(false)
     }
@@ -134,20 +137,18 @@ export default function SocialPage() {
   )
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-white/60">Loading social content...</p>
-          </div>
-        </div>
-      </div>
-    )
+    return <LoadingState message="Loading social content..." />
   }
 
   return (
     <div className="space-y-8">
+      {error && (
+        <ErrorMessage 
+          message={error} 
+          type="error"
+          onDismiss={() => setError(null)}
+        />
+      )}
       {/* Enhanced Header */}
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-orange-600/20 via-pink-600/20 to-purple-600/20 rounded-3xl blur-xl"></div>
@@ -459,70 +460,3 @@ export default function SocialPage() {
     </div>
   )
 }
-
-// Mock data for fallback
-const mockGroups: SocialGroup[] = [
-  {
-    id: "1",
-    name: "Movie Buffs",
-    description: "For lovers of cinema from all eras and genres",
-    member_count: 156,
-    max_members: 500,
-    is_member: true,
-    is_public: true,
-    created_by: { id: "1", username: "cinephile_sam" },
-    created_at: "2025-09-01T10:00:00Z",
-    tags: ["movies", "cinema", "reviews"]
-  },
-  {
-    id: "2",
-    name: "Anime Watch Club",
-    description: "Weekly anime viewing sessions and discussions",
-    member_count: 89,
-    is_member: false,
-    is_public: true,
-    created_by: { id: "2", username: "anime_master" },
-    created_at: "2025-09-15T14:00:00Z",
-    tags: ["anime", "manga", "japanese"]
-  },
-  {
-    id: "3",
-    name: "Horror Night",
-    description: "For those who love a good scare",
-    member_count: 67,
-    is_member: true,
-    is_public: true,
-    created_by: { id: "3", username: "scream_queen" },
-    created_at: "2025-08-20T19:00:00Z",
-    tags: ["horror", "thriller", "suspense"]
-  }
-]
-
-const mockFriends: Friend[] = [
-  {
-    id: "1",
-    username: "movie_lover",
-    first_name: "Alex",
-    last_name: "Johnson",
-    is_online: true,
-    mutual_friends_count: 5
-  },
-  {
-    id: "2",
-    username: "film_critic",
-    first_name: "Sarah",
-    last_name: "Williams",
-    is_online: false,
-    last_seen: "2025-10-01T12:00:00Z",
-    mutual_friends_count: 3
-  },
-  {
-    id: "3",
-    username: "netflix_binger",
-    first_name: "Mike",
-    last_name: "Davis",
-    is_online: false,
-    last_seen: "2025-09-30T08:00:00Z",
-    mutual_friends_count: 12
-  }
-]

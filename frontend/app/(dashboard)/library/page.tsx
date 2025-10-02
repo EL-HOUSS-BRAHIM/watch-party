@@ -6,47 +6,8 @@ import { videosApi, type VideoSummary } from "@/lib/api-client"
 import { GradientCard } from "@/components/ui/gradient-card"
 import { IconButton } from "@/components/ui/icon-button"
 import { LiveIndicator } from "@/components/ui/live-indicator"
+import { LoadingState, ErrorMessage, EmptyState } from "@/components/ui/feedback"
 import { useDesignSystem } from "@/hooks/use-design-system"
-
-// Fallback mock data for when API is unavailable
-const mockMedia = [
-  {
-    id: "1",
-    title: "Festival premiere: Aurora Skies",
-    type: "Feature film",
-    duration: "122 min",
-    ambience: "Sunset gold",
-    thumbnail: null,
-    visibility: "public",
-    views: 1250,
-    likes: 89,
-    upload_date: "2024-01-15"
-  },
-  {
-    id: "2", 
-    title: "Esports finals: Rift Legends",
-    type: "Live event",
-    duration: "2h 30m",
-    ambience: "Neon pulse",
-    thumbnail: null,
-    visibility: "public",
-    views: 3420,
-    likes: 156,
-    upload_date: "2024-01-10"
-  },
-  {
-    id: "3",
-    title: "Indie shorts: Midnight Stories",
-    type: "Anthology",
-    duration: "68 min",
-    ambience: "Indigo hush",
-    thumbnail: null,
-    visibility: "private",
-    views: 890,
-    likes: 67,
-    upload_date: "2024-01-08"
-  },
-]
 
 export default function LibraryPage() {
   const router = useRouter()
@@ -65,18 +26,18 @@ export default function LibraryPage() {
   const loadVideos = async () => {
     try {
       setLoading(true)
+      setError(null)
       const data = await videosApi.list()
       setVideos(data?.results ?? [])
-      setError(null)
     } catch (err) {
       console.error('Failed to load videos:', err)
-      setError('Using demo data - API connection unavailable')
+      setError(err instanceof Error ? err.message : 'Failed to load videos from API')
     } finally {
       setLoading(false)
     }
   }
 
-  // Map API data to media format, fallback to mock data
+  // Map API data to media format
   type MediaItem = {
     id: string;
     title: string;
@@ -90,20 +51,18 @@ export default function LibraryPage() {
     upload_date: string;
   };
 
-  const media: MediaItem[] = videos.length > 0
-    ? videos.map(video => ({
-        id: video.id || Math.random().toString(),
-        title: video.title || 'Untitled Video',
-        type: video.source_type || 'Video',
-        duration: video.duration_formatted || 'Unknown',
-        ambience: video.visibility || 'private',
-        thumbnail: video.thumbnail,
-        visibility: (video.visibility || 'private') as "public" | "friends" | "private",
-        views: (video as any).view_count || 0,
-        likes: (video as any).like_count || 0,
-        upload_date: video.created_at || new Date().toISOString()
-      }))
-    : mockMedia as MediaItem[];
+  const media: MediaItem[] = videos.map(video => ({
+    id: video.id || Math.random().toString(),
+    title: video.title || 'Untitled Video',
+    type: video.source_type || 'Video',
+    duration: video.duration_formatted || 'Unknown',
+    ambience: video.visibility || 'private',
+    thumbnail: video.thumbnail,
+    visibility: (video.visibility || 'private') as "public" | "friends" | "private",
+    views: (video as any).view_count || 0,
+    likes: (video as any).like_count || 0,
+    upload_date: video.created_at || new Date().toISOString()
+  }));
 
   const getTypeIcon = (type: string) => {
     switch (type.toLowerCase()) {
@@ -135,22 +94,17 @@ export default function LibraryPage() {
     })
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="animate-spin w-12 h-12 border-4 border-purple-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-white/60">Loading your library...</p>
-        </div>
-      </div>
-    )
+    return <LoadingState message="Loading your library..." />
   }
 
   return (
     <div className="space-y-8">
       {error && (
-        <div className="rounded-lg border border-yellow-500/20 bg-yellow-500/10 p-4 text-sm text-yellow-200">
-          ⚠️ {error}
-        </div>
+        <ErrorMessage 
+          message={error} 
+          type="error"
+          onDismiss={() => setError(null)}
+        />
       )}
 
       {/* Enhanced Header */}
@@ -256,18 +210,13 @@ export default function LibraryPage() {
 
       {/* Media Grid/List */}
       {filteredAndSortedMedia.length === 0 ? (
-        <GradientCard className="text-center py-16">
-          <div className="text-6xl mb-4">📚</div>
-          <h3 className="text-2xl font-bold text-white mb-2">Your Library is Empty</h3>
-          <p className="text-white/60 mb-6">Upload your first video to start building your collection</p>
-          <IconButton
-            onClick={() => router.push("/dashboard/videos/upload")}
-            className="shadow-lg hover:shadow-purple-500/25"
-          >
-            <span>📤</span>
-            Upload First Video
-          </IconButton>
-        </GradientCard>
+        <EmptyState
+          icon="📚"
+          title="Your Library is Empty"
+          message="Upload your first video to start building your collection"
+          actionLabel="📤 Upload First Video"
+          onAction={() => router.push("/dashboard/videos/upload")}
+        />
       ) : viewMode === "grid" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredAndSortedMedia.map((item) => (

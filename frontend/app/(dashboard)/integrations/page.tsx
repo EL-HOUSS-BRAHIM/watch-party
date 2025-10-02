@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import api from "@/lib/api-client"
+import { LoadingState, ErrorMessage, EmptyState } from "@/components/ui/feedback"
 
 interface Integration {
   id: string
@@ -37,6 +38,7 @@ export default function IntegrationsPage() {
   const [integrations, setIntegrations] = useState<Integration[]>([])
   const [integrationTypes, setIntegrationTypes] = useState<IntegrationType[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<"connected" | "available">("connected")
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
@@ -49,20 +51,25 @@ export default function IntegrationsPage() {
   const loadIntegrations = async () => {
     try {
       const response = await api.get('/api/integrations/connections/')
-      setIntegrations(response.results || mockIntegrations)
-    } catch (error) {
-      console.error("Failed to load integrations:", error)
-      setIntegrations(mockIntegrations)
+      setIntegrations(response.results || [])
+    } catch (err) {
+      console.error("Failed to load integrations:", err)
+      setError(err instanceof Error ? err.message : 'Failed to load integrations from API')
+      setIntegrations([])
     }
   }
 
   const loadIntegrationTypes = async () => {
     try {
       const response = await api.get('/api/integrations/types/')
-      setIntegrationTypes(response.results || mockIntegrationTypes)
-    } catch (error) {
-      console.error("Failed to load integration types:", error)
-      setIntegrationTypes(mockIntegrationTypes)
+      setIntegrationTypes(response.results || [])
+    } catch (err) {
+      console.error("Failed to load integration types:", err)
+      // Keep existing error or set new one if not already set
+      if (!error) {
+        setError(err instanceof Error ? err.message : 'Failed to load integration types from API')
+      }
+      setIntegrationTypes([])
     } finally {
       setLoading(false)
     }
@@ -159,20 +166,18 @@ export default function IntegrationsPage() {
   )
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-white/60">Loading integrations...</p>
-          </div>
-        </div>
-      </div>
-    )
+    return <LoadingState message="Loading integrations..." />
   }
 
   return (
     <div className="space-y-6">
+      {error && (
+        <ErrorMessage 
+          message={error} 
+          type="error"
+          onDismiss={() => setError(null)}
+        />
+      )}
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
@@ -440,85 +445,3 @@ export default function IntegrationsPage() {
     </div>
   )
 }
-
-// Mock data for fallback
-const mockIntegrations: Integration[] = [
-  {
-    id: "1",
-    type: "google-drive",
-    name: "Google Drive",
-    status: "connected",
-    connected_at: "2025-09-15T10:00:00Z",
-    last_sync: "2025-10-01T08:00:00Z",
-    account_info: {
-      email: "user@gmail.com"
-    },
-    features: ["File Storage", "Video Streaming", "Auto Sync"],
-    icon: "📁"
-  },
-  {
-    id: "2",
-    type: "spotify",
-    name: "Spotify",
-    status: "connected",
-    connected_at: "2025-09-20T14:00:00Z",
-    last_sync: "2025-10-01T12:00:00Z",
-    account_info: {
-      username: "musiclover123"
-    },
-    features: ["Music Sync", "Playlist Sharing"],
-    icon: "🎵"
-  }
-]
-
-const mockIntegrationTypes: IntegrationType[] = [
-  {
-    id: "google-drive",
-    name: "Google Drive",
-    description: "Stream videos directly from your Google Drive",
-    icon: "📁",
-    features: ["File Storage", "Video Streaming", "Auto Sync", "Sharing"],
-    category: "storage"
-  },
-  {
-    id: "netflix",
-    name: "Netflix",
-    description: "Sync with Netflix watch parties",
-    icon: "📺",
-    features: ["Watch Parties", "Content Sync", "Progress Tracking"],
-    category: "streaming",
-    is_premium: true
-  },
-  {
-    id: "spotify",
-    name: "Spotify",
-    description: "Add music to your watch parties",
-    icon: "🎵",
-    features: ["Music Sync", "Playlist Sharing", "Audio Controls"],
-    category: "social"
-  },
-  {
-    id: "discord",
-    name: "Discord",
-    description: "Connect Discord voice channels to watch parties",
-    icon: "🎮",
-    features: ["Voice Chat", "Screen Share", "Bot Integration"],
-    category: "social"
-  },
-  {
-    id: "notion",
-    name: "Notion",
-    description: "Create watch party notes and planning docs",
-    icon: "📝",
-    features: ["Note Taking", "Planning", "Templates"],
-    category: "productivity"
-  },
-  {
-    id: "trello",
-    name: "Trello",
-    description: "Organize your movie watchlists",
-    icon: "📋",
-    features: ["Task Management", "Watchlists", "Collaboration"],
-    category: "productivity"
-  }
-]

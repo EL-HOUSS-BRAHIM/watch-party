@@ -6,7 +6,7 @@ import api from "@/lib/api-client"
 import { GradientCard } from "@/components/ui/gradient-card"
 import { IconButton } from "@/components/ui/icon-button"
 import { LiveIndicator } from "@/components/ui/live-indicator"
-import { FeatureCard } from "@/components/ui/feature-card"
+import { LoadingState, ErrorMessage, EmptyState } from "@/components/ui/feedback"
 import { useDesignSystem } from "@/hooks/use-design-system"
 
 interface Event {
@@ -30,9 +30,10 @@ interface Event {
 
 export default function EventsPage() {
   const router = useRouter()
-  const { formatNumber, liveStats } = useDesignSystem()
+  const { formatNumber } = useDesignSystem()
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<"upcoming" | "my-events" | "past">("upcoming")
   const [searchQuery, setSearchQuery] = useState("")
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
@@ -44,6 +45,7 @@ export default function EventsPage() {
   const loadEvents = async () => {
     try {
       setLoading(true)
+      setError(null)
       // Since events API endpoints exist in backend, we'll implement them
       const response = await api.get('/api/events/', {
         params: {
@@ -52,10 +54,10 @@ export default function EventsPage() {
         }
       })
       setEvents(response.results || [])
-    } catch (error) {
-      console.error("Failed to load events:", error)
-      // Fallback to mock data for now
-      setEvents(mockEvents)
+    } catch (err) {
+      console.error("Failed to load events:", err)
+      setError(err instanceof Error ? err.message : 'Failed to load events from API')
+      setEvents([])
     } finally {
       setLoading(false)
     }
@@ -120,20 +122,18 @@ export default function EventsPage() {
   )
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-white/60">Loading events...</p>
-          </div>
-        </div>
-      </div>
-    )
+    return <LoadingState message="Loading events..." />
   }
 
   return (
     <div className="space-y-8">
+      {error && (
+        <ErrorMessage 
+          message={error} 
+          type="error"
+          onDismiss={() => setError(null)}
+        />
+      )}
       {/* Enhanced Header */}
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 via-blue-600/20 to-purple-600/20 rounded-3xl blur-xl"></div>
@@ -319,68 +319,22 @@ export default function EventsPage() {
       </div>
 
       {filteredEvents.length === 0 && (
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">🎭</div>
-          <h3 className="text-xl font-semibold text-white mb-2">No events found</h3>
-          <p className="text-white/60 mb-6">
-            {searchQuery
+        <EmptyState
+          icon="🎭"
+          title="No events found"
+          message={
+            searchQuery
               ? "Try adjusting your search criteria"
               : activeTab === "upcoming"
               ? "No upcoming events at the moment"
               : activeTab === "my-events"
               ? "You haven't joined any events yet"
               : "No past events to show"
-            }
-          </p>
-          {activeTab === "upcoming" && !searchQuery && (
-            <button
-              onClick={() => router.push("/dashboard/events/create")}
-              className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white rounded-xl font-medium transition-all duration-200"
-            >
-              Create First Event
-            </button>
-          )}
-        </div>
+          }
+          actionLabel={activeTab === "upcoming" && !searchQuery ? "Create First Event" : undefined}
+          onAction={activeTab === "upcoming" && !searchQuery ? () => router.push("/dashboard/events/create") : undefined}
+        />
       )}
     </div>
   )
 }
-
-// Mock data for fallback
-const mockEvents: Event[] = [
-  {
-    id: "1",
-    title: "Movie Marathon Night",
-    description: "Join us for an epic movie marathon featuring the best sci-fi films!",
-    start_time: "2025-10-15T20:00:00Z",
-    organizer: { id: "1", username: "filmmaker_alex", avatar: "" },
-    attendee_count: 42,
-    max_attendees: 100,
-    status: "upcoming",
-    created_at: "2025-10-01T10:00:00Z",
-    is_attending: false
-  },
-  {
-    id: "2",
-    title: "Horror Movie Night",
-    description: "Get ready for some scares! Classic horror movies all night long.",
-    start_time: "2025-10-31T19:00:00Z",
-    organizer: { id: "2", username: "horror_fan", avatar: "" },
-    attendee_count: 28,
-    max_attendees: 50,
-    status: "upcoming",
-    created_at: "2025-10-01T15:00:00Z",
-    is_attending: true
-  },
-  {
-    id: "3",
-    title: "Anime Watch Party",
-    description: "Let's watch the latest anime episodes together!",
-    start_time: "2025-09-20T18:00:00Z",
-    organizer: { id: "3", username: "anime_lover", avatar: "" },
-    attendee_count: 67,
-    status: "ended",
-    created_at: "2025-09-15T12:00:00Z",
-    is_attending: true
-  }
-]
