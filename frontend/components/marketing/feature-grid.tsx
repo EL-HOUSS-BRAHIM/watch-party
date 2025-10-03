@@ -70,8 +70,8 @@ export function FeatureGrid() {
                 Keep viewers synced with spoiler-safe chat, timed reactions, and polls that inherit the room lighting.
               </p>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
           {features.map((feature) => (
             <Card key={feature.title} className="border-brand-purple/15 bg-white/85 text-brand-navy shadow-[0_20px_60px_rgba(28,28,46,0.1)]">

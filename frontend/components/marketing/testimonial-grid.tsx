@@ -47,8 +47,8 @@ export function TestimonialGrid() {
                 <p className="mt-2">Crews come back weekly for the ritual and community.</p>
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
         <div className="grid gap-6">
           {testimonials.map((testimonial) => (
             <Card key={testimonial.author} className="border-brand-purple/15 bg-white/85 text-brand-navy shadow-[0_24px_80px_rgba(28,28,46,0.12)]">
