@@ -1,4 +1,5 @@
 import { testimonials } from "@/lib/data/home"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export function TestimonialGrid() {
   return (
