@@ -17,24 +17,21 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError(null)
-    
+
     try {
       const data = await authApi.login(formData)
-      
+
       if (data.success) {
-        // Store tokens in localStorage
         if (data.access_token) {
           localStorage.setItem("access_token", data.access_token)
         }
         if (data.refresh_token) {
           localStorage.setItem("refresh_token", data.refresh_token)
         }
-        
-        // Check for redirect parameter
+
         const urlParams = new URLSearchParams(window.location.search)
-        const redirect = urlParams.get('redirect') || '/dashboard'
-        
-        // Redirect to dashboard or intended page
+        const redirect = urlParams.get("redirect") || "/dashboard"
+
         window.location.href = decodeURIComponent(redirect)
       } else {
         setError("Login failed. Please check your credentials.")
@@ -55,24 +52,25 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-[80vh] px-4 py-12 sm:py-16 flex items-center justify-center">
-      <div className="w-full max-w-md space-y-10 rounded-2xl bg-white/5 p-6 shadow-lg backdrop-blur-sm sm:p-8">
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold text-white sm:text-4xl">Welcome Back</h1>
-          <p className="text-sm text-white/70 sm:text-base">
-            Sign in to start hosting watch parties
-          </p>
+    <div className="flex min-h-[80vh] items-center justify-center px-4 py-16">
+      <div className="w-full max-w-xl rounded-3xl border border-brand-purple/20 bg-white/95 p-8 text-brand-navy shadow-[0_32px_90px_rgba(28,28,46,0.14)] sm:p-10">
+        <div className="text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/30 bg-brand-magenta/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-brand-magenta-dark">
+            Welcome back
+          </span>
+          <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Sign in to WatchParty</h1>
+          <p className="mt-3 text-base text-brand-navy/70">Host cinematic nights, collaborate with friends, and keep every screening on schedule.</p>
         </div>
 
         {error && (
-          <div className="mb-4">
+          <div className="mt-6">
             <FormError error={error} />
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="mt-10 space-y-5">
           <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium text-white/90">
+            <label htmlFor="email" className="block text-sm font-semibold uppercase tracking-[0.25em] text-brand-navy/60">
               Email
             </label>
             <input
@@ -82,13 +80,13 @@ export default function LoginPage() {
               required
               value={formData.email}
               onChange={handleChange}
-              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan"
-              placeholder="Enter your email"
+              className="w-full rounded-2xl border border-brand-blue/25 bg-brand-blue/5 px-5 py-3 text-base text-brand-navy focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
+              placeholder="you@example.com"
             />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="password" className="block text-sm font-medium text-white/90">
+            <label htmlFor="password" className="block text-sm font-semibold uppercase tracking-[0.25em] text-brand-navy/60">
               Password
             </label>
             <input
@@ -98,29 +96,28 @@ export default function LoginPage() {
               required
               value={formData.password}
               onChange={handleChange}
-              className="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-3 text-base text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-brand-cyan"
-              placeholder="Enter your password"
+              className="w-full rounded-2xl border border-brand-blue/25 bg-brand-blue/5 px-5 py-3 text-base text-brand-navy focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
+              placeholder="••••••••"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-gradient-to-r from-brand-magenta to-brand-orange hover:from-brand-magenta-dark hover:to-brand-orange-dark py-3 text-base font-semibold text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50"
+            className="w-full rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange px-6 py-4 text-lg font-semibold text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5 hover:from-brand-magenta-dark hover:to-brand-orange-dark disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? "Signing in..." : "Sign In"}
+            {loading ? "Signing in..." : "Sign in"}
           </button>
         </form>
 
-        <div className="space-y-4 text-center">
-          <Link href="/auth/forgot-password" className="text-sm text-brand-cyan-light transition-colors hover:text-brand-cyan">
+        <div className="mt-8 flex flex-col gap-3 text-center text-sm text-brand-navy/70">
+          <Link href="/auth/forgot-password" className="font-semibold text-brand-blue hover:text-brand-blue-dark">
             Forgot your password?
           </Link>
-
-          <p className="text-sm text-white/70">
-            Don't have an account?{" "}
-            <Link href="/auth/register" className="font-semibold text-brand-cyan-light transition-colors hover:text-brand-cyan">
-              Sign up
+          <p>
+            Don&apos;t have an account?{" "}
+            <Link href="/auth/register" className="font-semibold text-brand-magenta hover:text-brand-magenta-dark">
+              Create one for free
             </Link>
           </p>
         </div>

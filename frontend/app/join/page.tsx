@@ -9,17 +9,15 @@ export default function JoinPartyPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!partyCode.trim()) {
       alert("Please enter a party code")
       return
     }
-    
+
     setLoading(true)
-    
+
     try {
-      // TODO: Implement party joining logic
-      // For now, just redirect to a party room
       window.location.href = `/party/${partyCode}`
     } catch (error) {
       console.error("Join party error:", error)
@@ -30,16 +28,21 @@ export default function JoinPartyPage() {
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center">
-      <div className="w-full max-w-md space-y-8">
+    <div className="flex min-h-[70vh] items-center justify-center px-4 py-16">
+      <div className="w-full max-w-xl rounded-3xl border border-brand-purple/20 bg-white/95 p-8 text-brand-navy shadow-[0_32px_90px_rgba(28,28,46,0.14)] sm:p-10">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-white">Join a Party</h1>
-          <p className="mt-2 text-white/70">Enter the party code to join your friends</p>
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/30 bg-brand-magenta/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-brand-magenta-dark">
+            Join a party
+          </span>
+          <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Enter your party code</h1>
+          <p className="mt-3 text-base text-brand-navy/70">
+            Watch together in seconds—no downloads or setup required.
+          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="partyCode" className="block text-sm font-medium text-white/90 mb-2">
+        <form onSubmit={handleSubmit} className="mt-10 space-y-6">
+          <div className="space-y-2">
+            <label htmlFor="partyCode" className="block text-sm font-semibold uppercase tracking-[0.3em] text-brand-navy/60">
               Party Code
             </label>
             <input
@@ -49,7 +52,7 @@ export default function JoinPartyPage() {
               required
               value={partyCode}
               onChange={(e) => setPartyCode(e.target.value.toUpperCase())}
-              className="block w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white text-center text-lg font-mono placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
+              className="w-full rounded-2xl border border-brand-blue/25 bg-brand-blue/5 px-5 py-4 text-center text-2xl font-semibold tracking-[0.3em] text-brand-blue-dark focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
               placeholder="ABC123"
               maxLength={10}
             />
@@ -58,22 +61,16 @@ export default function JoinPartyPage() {
           <button
             type="submit"
             disabled={loading || !partyCode.trim()}
-            className="w-full bg-brand-blue hover:bg-brand-blue-dark disabled:bg-blue-600/50 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+            className="w-full rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange px-6 py-4 text-lg font-semibold text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5 hover:from-brand-magenta-dark hover:to-brand-orange-dark disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? "Joining..." : "Join Party"}
+            {loading ? "Joining..." : "Join WatchParty"}
           </button>
         </form>
 
-        <div className="text-center space-y-4">
-          <div className="text-white/50 text-sm">
-            Don't have a party code?
-          </div>
-          
-          <Link 
-            href="/auth/login" 
-            className="inline-block text-brand-blue-light hover:text-brand-blue-light text-sm"
-          >
-            Login to create your own party
+        <div className="mt-10 space-y-3 text-center text-sm text-brand-navy/70">
+          <p>Need to host your own movie night?</p>
+          <Link href="/auth/login" className="font-semibold text-brand-blue hover:text-brand-blue-dark">
+            Sign in to create a party
           </Link>
         </div>
       </div>

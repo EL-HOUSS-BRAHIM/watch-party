@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
   
   /* NEW LOGO-INSPIRED COLOR PALETTE */
   /* Primary Accent Colors */
@@ -41,11 +41,11 @@
   --color-navy-dark: #0f0f1a;
   
   /* Legacy compatibility - mapped to new colors */
-  --color-text-primary: #f9f8ff;
-  --color-text-muted: rgba(241, 238, 255, 0.72);
-  --color-text-soft: rgba(241, 238, 255, 0.55);
-  --shadow-ambient: 0 60px 160px rgba(28, 28, 46, 0.65);
-  --shadow-elevated: 0 34px 120px rgba(28, 28, 46, 0.6);
+  --color-text-primary: #1c1c2e;
+  --color-text-muted: rgba(28, 28, 46, 0.65);
+  --color-text-soft: rgba(28, 28, 46, 0.45);
+  --shadow-ambient: 0 60px 120px rgba(28, 28, 46, 0.18);
+  --shadow-elevated: 0 34px 90px rgba(28, 28, 46, 0.16);
   font-feature-settings: "ss01", "cv05";
   
   /* New Design System Gradients */
@@ -55,19 +55,30 @@
   --gradient-success: linear-gradient(135deg, var(--color-cyan) 0%, var(--color-blue) 100%);
   --gradient-warning: linear-gradient(135deg, var(--color-orange) 0%, #ffd700 100%);
   --gradient-danger: linear-gradient(135deg, var(--color-coral) 0%, #ff3838 100%);
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --glass-hover: rgba(255, 255, 255, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(233, 233, 240, 0.75);
+  --glass-hover: rgba(255, 255, 255, 0.95);
 }
 
 body {
   position: relative;
   min-height: 100vh;
-  background: linear-gradient(135deg, var(--color-navy-dark) 0%, var(--color-navy) 25%, var(--color-purple) 50%, var(--color-navy) 75%, var(--color-navy-dark) 100%);
-  background-attachment: fixed;
+  background: var(--color-neutral-bg);
   color: var(--color-text-primary);
   overflow-x: hidden;
   @apply antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top left, rgba(233, 64, 138, 0.16), transparent 55%),
+    radial-gradient(circle at top right, rgba(45, 156, 219, 0.18), transparent 50%),
+    radial-gradient(circle at bottom, rgba(243, 156, 18, 0.16), transparent 55%);
+  z-index: -1;
 }
 
 /* Enhanced Scrollbar */
@@ -90,20 +101,20 @@ body {
 }
 
 ::selection {
-  background-color: color-mix(in oklab, var(--color-accent-400) 40%, transparent);
-  color: #1c0f33;
+  background-color: rgba(233, 64, 138, 0.35);
+  color: var(--color-navy);
 }
 
 a {
   color: inherit;
-  text-decoration-color: rgba(255, 255, 255, 0.32);
+  text-decoration-color: rgba(28, 28, 46, 0.25);
   text-underline-offset: 6px;
   transition: color 200ms ease, text-decoration-color 200ms ease;
 }
 
 a:hover {
-  color: var(--color-horizon-150);
-  text-decoration-color: rgba(255, 255, 255, 0.6);
+  color: var(--color-blue);
+  text-decoration-color: rgba(45, 156, 219, 0.65);
 }
 
 /* Custom Components */

@@ -144,45 +144,48 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-gradient-to-br from-slate-900 via-brand-purple/20 to-slate-900">
+    <div className="relative min-h-screen overflow-x-hidden bg-gradient-to-br from-brand-neutral via-white to-brand-neutral-light text-brand-navy">
       {/* Dashboard Header - hide duplicate header on mobile */}
       <div className="hidden md:block">
         <DashboardHeader />
       </div>
 
       {/* Background Effects */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-purple/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-brand-blue/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-radial from-brand-purple/5 to-transparent rounded-full"></div>
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -left-20 top-20 h-80 w-80 rounded-full bg-brand-magenta/10 blur-3xl" />
+        <div className="absolute -right-16 bottom-32 h-96 w-96 rounded-full bg-brand-blue/10 blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-radial from-brand-purple/8 via-transparent to-transparent" />
       </div>
 
       {/* Mobile Navigation - Shown only on mobile */}
       <MobileNavigation currentUser={user} />
 
-      <div className="relative z-10 flex min-h-screen w-full flex-col pt-14 md:flex-row md:pt-16">
+      <div className="relative z-10 flex min-h-screen w-full flex-col pt-16 md:flex-row">
         {/* Enhanced Sidebar - Hidden on mobile, shown on desktop */}
-        <aside className={cn(
-          "hidden md:fixed left-0 top-0 h-full bg-black/20 backdrop-blur-xl border-r border-white/10 transition-all duration-300 z-50 md:block",
-          isCollapsed ? "w-20" : "w-80"
-        )}>
+        <aside
+          className={cn(
+            "hidden border-r border-brand-navy/10 bg-white/80 backdrop-blur-xl transition-all duration-300 md:fixed md:left-0 md:top-0 md:block md:h-full",
+            isCollapsed ? "w-20" : "w-80"
+          )}
+        >
           {/* Sidebar Header */}
-          <div className="p-6 border-b border-white/10">
+          <div className="border-b border-brand-navy/10 p-6">
             <div className="flex items-center justify-between">
-              <div className={cn("flex items-center gap-3", isCollapsed && "justify-center")}>
-                <div className="w-10 h-10 bg-gradient-to-br from-brand-purple to-brand-blue rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
+              <div className={cn("flex items-center gap-3", isCollapsed && "justify-center")}> 
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-magenta to-brand-purple text-lg font-bold text-white shadow-lg">
                   W
                 </div>
                 {!isCollapsed && (
                   <div>
-                    <h1 className="text-xl font-bold text-white">WatchParty</h1>
-                    <p className="text-xs text-white/60 uppercase tracking-wider">Cinema Hub</p>
+                    <h1 className="text-lg font-semibold text-brand-navy">WatchParty</h1>
+                    <p className="text-xs uppercase tracking-[0.3em] text-brand-navy/50">Cinema hub</p>
                   </div>
                 )}
               </div>
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-white/70 hover:text-white"
+                className="rounded-lg border border-brand-navy/10 bg-white/70 p-2 text-brand-navy/60 transition-colors hover:border-brand-navy/30 hover:text-brand-navy"
+                aria-label={isCollapsed ? "Expand navigation" : "Collapse navigation"}
               >
                 {isCollapsed ? "→" : "←"}
               </button>
@@ -191,61 +194,65 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
           {/* User Profile Section */}
           {!isCollapsed && user && (
-            <div className="p-6 border-b border-white/10">
-              <div className="flex items-center gap-3 mb-4">
+            <div className="border-b border-brand-navy/10 p-6">
+              <div className="mb-4 flex items-center gap-3">
                 <div className="relative">
-                  <div className="w-12 h-12 bg-gradient-to-br from-brand-purple to-brand-magenta rounded-full flex items-center justify-center text-white font-semibold">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-magenta text-base font-semibold text-white">
                     {user.avatar ? (
-                      <img src={user.avatar} alt={user.username} className="w-full h-full rounded-full object-cover" />
+                      <img src={user.avatar} alt={user.username} className="h-full w-full rounded-full object-cover" />
                     ) : (
                       user.username?.[0]?.toUpperCase() || "U"
                     )}
                   </div>
-                  <div className={cn(
-                    "absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-black",
-                    getStatusColor(getUserStatus())
-                  )}></div>
+                  <div
+                    className={cn(
+                      "absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white",
+                      getStatusColor(getUserStatus())
+                    )}
+                  />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium truncate">{user.first_name || user.username}</p>
-                  <p className="text-white/60 text-sm truncate">@{user.username}</p>
-                  <div className={cn(
-                    "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gradient-to-r",
-                    getPlanColor()
-                  )}>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold text-brand-navy">{user.first_name || user.username}</p>
+                  <p className="truncate text-xs text-brand-navy/60">@{user.username}</p>
+                  <div
+                    className={cn(
+                      "mt-2 inline-flex items-center gap-1 rounded-full border border-brand-navy/10 px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-brand-navy",
+                      `bg-gradient-to-r ${getPlanColor()}`
+                    )}
+                  >
                     ✨ {getPlanLabel()}
                   </div>
                 </div>
               </div>
-              
+
               {/* Quick Stats */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-white/5 rounded-lg p-3 text-center">
-                  <div className="text-lg font-bold text-white">{liveStats.onlineUsers.toLocaleString()}</div>
-                  <div className="text-xs text-white/60">Online Users</div>
+              <div className="grid grid-cols-2 gap-3 text-center">
+                <div className="rounded-2xl border border-brand-blue/20 bg-brand-blue/5 p-3">
+                  <div className="text-lg font-semibold text-brand-blue-dark">{liveStats.onlineUsers.toLocaleString()}</div>
+                  <div className="text-xs uppercase tracking-[0.3em] text-brand-navy/50">Online</div>
                 </div>
-                <div className="bg-white/5 rounded-lg p-3 text-center">
-                  <div className="text-lg font-bold text-white">{liveStats.activeParties}</div>
-                  <div className="text-xs text-white/60">Live Parties</div>
+                <div className="rounded-2xl border border-brand-magenta/20 bg-brand-magenta/5 p-3">
+                  <div className="text-lg font-semibold text-brand-magenta-dark">{liveStats.activeParties}</div>
+                  <div className="text-xs uppercase tracking-[0.3em] text-brand-navy/50">Parties</div>
                 </div>
-                <div className="bg-white/5 rounded-lg p-3 text-center">
-                  <div className="text-lg font-bold text-white">{liveStats.systemHealth.systemLoad.toFixed(1)}%</div>
-                  <div className="text-xs text-white/60">System Load</div>
+                <div className="rounded-2xl border border-brand-cyan/25 bg-brand-cyan/5 p-3">
+                  <div className="text-lg font-semibold text-brand-cyan-dark">{liveStats.systemHealth.systemLoad.toFixed(1)}%</div>
+                  <div className="text-xs uppercase tracking-[0.3em] text-brand-navy/50">Load</div>
                 </div>
-                <div className="bg-white/5 rounded-lg p-3 text-center">
-                  <div className="text-lg font-bold text-white">{liveStats.engagement.messagesPerMinute.toLocaleString()}</div>
-                  <div className="text-xs text-white/60">Messages / min</div>
+                <div className="rounded-2xl border border-brand-orange/25 bg-brand-orange/5 p-3">
+                  <div className="text-lg font-semibold text-brand-orange-dark">{liveStats.engagement.messagesPerMinute.toLocaleString()}</div>
+                  <div className="text-xs uppercase tracking-[0.3em] text-brand-navy/50">Msgs/min</div>
                 </div>
               </div>
             </div>
           )}
 
           {/* Navigation */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-6">
+          <div className="flex-1 space-y-6 overflow-y-auto p-4">
             {navigationSections.map((section) => (
               <div key={section.title}>
                 {!isCollapsed && (
-                  <h3 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-3 px-3">
+                  <h3 className="mb-3 px-3 text-xs font-semibold uppercase tracking-[0.4em] text-brand-navy/50">
                     {section.title}
                   </h3>
                 )}
@@ -257,41 +264,37 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                         key={item.href}
                         href={item.href}
                         className={cn(
-                          "group flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200 relative overflow-hidden",
+                          "group relative flex items-center gap-3 overflow-hidden rounded-2xl px-3 py-3 text-sm font-medium transition-all",
                           isActive
-                            ? "bg-gradient-to-r from-brand-purple/20 to-brand-blue/20 text-white border border-brand-purple/30 shadow-lg"
-                            : "text-white/70 hover:text-white hover:bg-white/10"
+                            ? "border border-brand-purple/25 bg-white text-brand-navy shadow-[0_14px_40px_rgba(74,46,160,0.12)]"
+                            : "text-brand-navy/70 hover:border hover:border-brand-navy/10 hover:bg-white/70 hover:text-brand-navy"
                         )}
                         title={isCollapsed ? item.label : ""}
                       >
-                        {/* Active indicator */}
                         {isActive && (
-                          <div className="absolute left-0 top-0 w-1 h-full bg-gradient-to-b from-brand-purple to-brand-blue rounded-r"></div>
+                          <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-brand-magenta to-brand-blue" />
                         )}
-                        
-                        <span className="text-lg flex-shrink-0">{item.icon}</span>
-                        
+
+                        <span className="flex-shrink-0 text-lg">{item.icon}</span>
+
                         {!isCollapsed && (
                           <>
-                            <div className="flex-1 min-w-0">
-                              <div className="font-medium truncate">{item.label}</div>
-                              <div className="text-xs text-white/50 truncate">{item.description}</div>
+                            <div className="min-w-0 flex-1">
+                              <div className="truncate text-sm font-semibold">{item.label}</div>
+                              <div className="truncate text-xs text-brand-navy/50">{item.description}</div>
                             </div>
-                            
+
                             {item.badge && (
-                              <span className={cn(
-                                "px-2 py-1 text-xs font-bold rounded-full",
-                                getBadgeColor(item.badge)
-                              )}>
+                              <span className={cn("rounded-full px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.3em]", getBadgeColor(item.badge))}>
                                 {item.badge}
                               </span>
                             )}
                           </>
                         )}
-                        
+
                         {isCollapsed && item.badge && (
                           <div className={cn(
-                            "absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold",
+                            "absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-semibold uppercase tracking-[0.2em]",
                             getBadgeColor(item.badge)
                           )}>
                             {Number(item.badge) ? item.badge : "!"}
@@ -306,36 +309,28 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
 
           {/* Footer Actions */}
-          <div className="p-4 border-t border-white/10">
+          <div className="border-t border-brand-navy/10 p-4">
             {!isCollapsed ? (
               <div className="space-y-3">
-                <button className="w-full px-4 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-brand-purple/25">
+                <button className="w-full rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange px-4 py-3 font-semibold text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5">
                   <span className="flex items-center justify-center gap-2">
                     <span>✨</span>
-                    Create Party
+                    Create party
                   </span>
                 </button>
                 <div className="flex gap-2">
-                  <button className="flex-1 px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors text-sm">
-                    🎧 Audio
-                  </button>
-                  <button className="flex-1 px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors text-sm">
-                    🌙 Theme
-                  </button>
+                  <button className="flex-1 rounded-xl border border-brand-navy/10 bg-white/70 px-3 py-2 text-sm font-semibold text-brand-navy transition-colors hover:border-brand-navy/30">🎧 Audio</button>
+                  <button className="flex-1 rounded-xl border border-brand-navy/10 bg-white/70 px-3 py-2 text-sm font-semibold text-brand-navy transition-colors hover:border-brand-navy/30">🌙 Theme</button>
                 </div>
               </div>
             ) : (
               <div className="space-y-2">
-                <button className="w-full p-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl transition-all duration-200 shadow-lg">
+                <button className="w-full rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange p-3 text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5">
                   ✨
                 </button>
                 <div className="grid grid-cols-2 gap-1">
-                  <button className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors text-sm">
-                    🎧
-                  </button>
-                  <button className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors text-sm">
-                    🌙
-                  </button>
+                  <button className="rounded-xl border border-brand-navy/10 bg-white/70 p-2 text-sm text-brand-navy transition-colors hover:border-brand-navy/30">🎧</button>
+                  <button className="rounded-xl border border-brand-navy/10 bg-white/70 p-2 text-sm text-brand-navy transition-colors hover:border-brand-navy/30">🌙</button>
                 </div>
               </div>
             )}
@@ -350,8 +345,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           )}
         >
           {/* Page Content */}
-          <div className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-            <div className="mx-auto w-full max-w-7xl">
+          <div className="flex-1 px-4 py-6 sm:px-8 lg:px-12 xl:px-16">
+            <div className="mx-auto w-full max-w-[min(100%,1440px)] space-y-8">
               {children}
             </div>
           </div>
@@ -359,16 +354,14 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
 
       {/* Floating Action Button */}
-      <button className="hidden md:flex fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-full shadow-2xl hover:shadow-brand-purple/50 transition-all duration-300 z-50 items-center justify-center text-xl">
+      <button className="fixed bottom-6 right-6 hidden h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-xl text-white shadow-2xl shadow-brand-purple/30 transition-all hover:-translate-y-1 hover:shadow-brand-purple/45 md:flex">
         ⚡
       </button>
 
       {/* Live Status Indicator */}
-      <div className="hidden md:flex fixed bottom-6 left-6 bg-black/40 backdrop-blur-lg rounded-full px-4 py-2 border border-white/20 z-40">
-        <div className="flex items-center gap-2 text-white text-sm">
-          <div className="w-2 h-2 bg-brand-cyan rounded-full animate-pulse"></div>
-          <span>System Online</span>
-        </div>
+      <div className="fixed bottom-6 left-6 hidden items-center gap-2 rounded-full border border-brand-navy/10 bg-white/70 px-4 py-2 text-sm font-semibold text-brand-navy shadow-md shadow-brand-navy/5 md:flex">
+        <div className="h-2 w-2 animate-pulse rounded-full bg-brand-cyan" />
+        <span>System online</span>
       </div>
     </div>
   )

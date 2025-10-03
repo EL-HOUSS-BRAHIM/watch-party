@@ -1,117 +1,93 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useSearchParams } from "next/navigation"
+import { useState } from "react"
 import Link from "next/link"
 import { authApi } from "@/lib/api-client"
+import { FormError } from "@/components/ui/feedback"
 
 export default function VerifyEmailPage() {
-  const [loading, setLoading] = useState(true)
-  const [success, setSuccess] = useState(false)
-  const [error, setError] = useState("")
-  
-  const searchParams = useSearchParams()
-  const token = searchParams.get("token")
+  const [email, setEmail] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (!token) {
-      setError("Invalid or missing verification token")
-      setLoading(false)
-      return
-    }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
+    setSuccess(null)
 
-    const verifyEmail = async () => {
-      try {
-        await authApi.verifyEmail(token)
-        setSuccess(true)
-      } catch (error) {
-        setError(error instanceof Error ? error.message : "Email verification failed")
-      } finally {
-        setLoading(false)
+    try {
+      const response = await authApi.resendVerification({ email })
+      if (response.success) {
+        setSuccess("Verification email sent! Check your inbox for the latest link.")
+      } else {
+        setError(response.message || "We couldn’t send the email. Please try again.")
       }
+    } catch (error) {
+      console.error("Verify email error:", error)
+      setError(error instanceof Error ? error.message : "Something went wrong. Please try again.")
+    } finally {
+      setLoading(false)
     }
-
-    verifyEmail()
-  }, [token])
-
-  if (loading) {
-    return (
-      <div className="min-h-[80vh] flex items-center justify-center">
-        <div className="w-full max-w-md space-y-8 text-center">
-          <div>
-            <div className="animate-spin w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
-            <h1 className="text-3xl font-bold text-white">Verifying Email</h1>
-            <p className="mt-4 text-white/70">
-              Please wait while we verify your email address...
-            </p>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  if (success) {
-    return (
-      <div className="min-h-[80vh] flex items-center justify-center">
-        <div className="w-full max-w-md space-y-8 text-center">
-          <div>
-            <div className="text-6xl mb-4">✅</div>
-            <h1 className="text-3xl font-bold text-white">Email Verified!</h1>
-            <p className="mt-4 text-white/70">
-              Your email address has been successfully verified. You can now access all features of WatchParty.
-            </p>
-          </div>
-          
-          <div className="space-y-4">
-            <Link 
-              href="/dashboard"
-              className="inline-block bg-brand-blue hover:bg-brand-blue-dark text-white px-6 py-3 rounded-lg font-medium transition-colors"
-            >
-              Go to Dashboard
-            </Link>
-            
-            <div>
-              <Link href="/auth/login" className="text-brand-blue-light hover:text-brand-blue-light text-sm">
-                Sign In
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center">
-      <div className="w-full max-w-md space-y-8 text-center">
-        <div>
-          <div className="text-6xl mb-4">❌</div>
-          <h1 className="text-3xl font-bold text-white">Verification Failed</h1>
-          <p className="mt-4 text-white/70">
-            {error || "This verification link is invalid or has expired."}
+    <div className="flex min-h-[70vh] items-center justify-center px-4 py-16">
+      <div className="w-full max-w-xl rounded-3xl border border-brand-purple/20 bg-white/95 p-8 text-brand-navy shadow-[0_32px_90px_rgba(28,28,46,0.14)] sm:p-10">
+        <div className="text-center">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/30 bg-brand-magenta/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-brand-magenta-dark">
+            Verify your email
+          </span>
+          <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Resend verification link</h1>
+          <p className="mt-3 text-base text-brand-navy/70">
+            Didn&apos;t receive your confirmation email? Enter your address and we&apos;ll send a new one.
           </p>
         </div>
-        
-        <div className="space-y-4">
-          <Link 
-            href="/auth/resend-verification"
-            className="inline-block bg-brand-blue hover:bg-brand-blue-dark text-white px-6 py-3 rounded-lg font-medium transition-colors"
-          >
-            Resend Verification Email
-          </Link>
-          
-          <div className="space-y-2">
-            <div>
-              <Link href="/auth/login" className="text-brand-blue-light hover:text-brand-blue-light text-sm">
-                Back to Login
-              </Link>
-            </div>
-            <div>
-              <Link href="/support" className="text-white/70 hover:text-white text-xs">
-                Need help? Contact Support
-              </Link>
-            </div>
+
+        {error && (
+          <div className="mt-6">
+            <FormError error={error} />
           </div>
+        )}
+
+        {success && (
+          <div className="mt-6 rounded-2xl border border-brand-cyan/30 bg-brand-cyan/10 px-4 py-3 text-sm font-semibold text-brand-cyan-dark">
+            {success}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="mt-10 space-y-5">
+          <div className="space-y-2">
+            <label htmlFor="email" className="block text-sm font-semibold uppercase tracking-[0.25em] text-brand-navy/60">
+              Email address
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full rounded-2xl border border-brand-blue/25 bg-brand-blue/5 px-5 py-3 text-base text-brand-navy focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
+              placeholder="you@example.com"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange px-6 py-4 text-lg font-semibold text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5 hover:from-brand-magenta-dark hover:to-brand-orange-dark disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loading ? "Sending..." : "Resend email"}
+          </button>
+        </form>
+
+        <div className="mt-8 text-center text-sm text-brand-navy/70">
+          Already confirmed?{" "}
+          <Link href="/auth/login" className="font-semibold text-brand-blue hover:text-brand-blue-dark">
+            Sign in now
+          </Link>
         </div>
       </div>
     </div>

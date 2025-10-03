@@ -75,8 +75,7 @@ export default function MessagingPage() {
       setError(null)
       const response = await api.get('/api/messaging/conversations/')
       setConversations(response.results || [])
-      
-      // Auto-select first conversation
+
       if (response.results?.length > 0) {
         setSelectedConversation(response.results[0])
       }
@@ -110,19 +109,21 @@ export default function MessagingPage() {
         content: newMessage,
         message_type: "text"
       })
-      
+
       setMessages(prev => [...prev, message])
       setNewMessage("")
-      
-      // Update conversation last message
-      setConversations(prev => prev.map(conv => 
-        conv.id === selectedConversation.id 
-          ? { ...conv, last_message: { 
-              id: message.id, 
-              content: message.content, 
-              sender: message.sender, 
-              timestamp: message.timestamp 
-            }} 
+
+      setConversations(prev => prev.map(conv =>
+        conv.id === selectedConversation.id
+          ? {
+            ...conv,
+            last_message: {
+              id: message.id,
+              content: message.content,
+              sender: message.sender,
+              timestamp: message.timestamp
+            }
+          }
           : conv
       ))
     } catch (error) {
@@ -134,7 +135,7 @@ export default function MessagingPage() {
     if (conversation.name) return conversation.name
     if (conversation.type === "direct") {
       return conversation.participants
-        .filter(p => p.id !== "current-user") // In real app, filter current user
+        .filter(p => p.id !== "current-user")
         .map(p => p.username)
         .join(", ")
     }
@@ -153,7 +154,7 @@ export default function MessagingPage() {
     const date = new Date(timestamp)
     const now = new Date()
     const diffHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60))
-    
+
     if (diffHours < 1) return "now"
     if (diffHours < 24) return `${diffHours}h ago`
     return date.toLocaleDateString()
@@ -168,253 +169,212 @@ export default function MessagingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {error && (
-          <ErrorMessage 
-            message={error} 
-            type="error"
-            onDismiss={() => setError(null)}
-          />
-        )}
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-          <div className="flex items-center gap-4">
+    <div className="space-y-8">
+      {error && (
+        <ErrorMessage
+          message={error}
+          type="error"
+          onDismiss={() => setError(null)}
+        />
+      )}
+
+      <header className="rounded-3xl border border-brand-navy/10 bg-white/90 p-6 shadow-[0_24px_70px_rgba(28,28,46,0.12)]">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
             <button
               onClick={() => router.push("/dashboard")}
-              className="text-white/60 hover:text-white transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-blue transition-colors hover:text-brand-blue-dark"
             >
-              ←
+              ← Back to dashboard
             </button>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-white">Messages</h1>
-              <p className="text-sm sm:text-base text-white/70">Stay connected with your watch party friends</p>
-            </div>
+            <h1 className="mt-3 text-3xl font-bold text-brand-navy">Messages</h1>
+            <p className="mt-1 text-sm text-brand-navy/70">
+              Stay connected with co-hosts and guests. Continue conversations across watch parties and private groups.
+            </p>
           </div>
-          
           <button
             onClick={() => router.push("/dashboard/messaging/new")}
-            className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-brand-purple/25"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5"
           >
-            <span className="flex items-center justify-center gap-2">
-              <span>✉️</span>
-              New Message
-            </span>
+            ✉️ Start new chat
           </button>
         </div>
+      </header>
 
-        <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-200px)]">
-          {/* Conversations Sidebar */}
-          <div className="w-full md:w-1/3 bg-white/5 border border-white/10 rounded-xl overflow-hidden">
-            {/* Search */}
-            <div className="p-4 border-b border-white/10">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search conversations..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-4 py-3 pl-12 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50"
-                />
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50">🔍</span>
-              </div>
+      <div className="grid gap-6 lg:grid-cols-[0.38fr,0.62fr]">
+        <aside className="flex h-full flex-col gap-4 rounded-3xl border border-brand-navy/10 bg-white/90 p-5 shadow-[0_18px_55px_rgba(28,28,46,0.1)]">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-brand-navy">Conversations</h2>
+              <p className="text-xs uppercase tracking-[0.35em] text-brand-navy/40">{conversations.length} threads</p>
             </div>
+            <button
+              onClick={loadConversations}
+              className="rounded-full border border-brand-blue/20 bg-brand-blue/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-brand-blue-dark hover:border-brand-blue/40"
+            >
+              Refresh
+            </button>
+          </div>
 
-            {/* Conversations List */}
-            <div className="overflow-y-auto h-full">
-              {filteredConversations.map((conversation) => (
+          <div className="relative">
+            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-brand-navy/30">🔍</span>
+            <input
+              type="text"
+              placeholder="Search conversations"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full rounded-full border border-brand-navy/10 bg-white/70 py-2 pl-10 pr-4 text-sm font-medium text-brand-navy placeholder:text-brand-navy/40 focus:border-brand-blue/40 focus:outline-none focus:ring-2 focus:ring-brand-blue/20"
+            />
+          </div>
+
+          <div className="space-y-2 overflow-y-auto pr-1">
+            {filteredConversations.length === 0 ? (
+              <EmptyState
+                title="No conversations"
+                description="Start a new chat to see it listed here."
+                icon="💬"
+              />
+            ) : (
+              filteredConversations.map((conversation) => (
                 <button
                   key={conversation.id}
                   onClick={() => setSelectedConversation(conversation)}
-                  className={`w-full p-4 border-b border-white/5 hover:bg-white/10 transition-colors text-left ${
-                    selectedConversation?.id === conversation.id ? "bg-white/10" : ""
-                  }`}
+                  className={`w-full rounded-2xl border px-4 py-3 text-left transition-all ${selectedConversation?.id === conversation.id
+                    ? "border-brand-purple/30 bg-brand-purple/10 text-brand-purple"
+                    : "border-brand-navy/10 bg-white/70 text-brand-navy/70 hover:border-brand-navy/20 hover:text-brand-navy"}`}
                 >
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="relative">
-                      {getConversationAvatar(conversation) ? (
-                        <img
-                          src={getConversationAvatar(conversation)!}
-                          alt=""
-                          className="w-12 h-12 rounded-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 bg-gradient-to-br from-brand-purple to-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
-                          {conversation.type === "direct" ? "👤" : 
-                           conversation.type === "group" ? "👥" : "🎬"}
-                        </div>
-                      )}
-                      
-                      {conversation.type === "direct" && (
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-gray-900"></div>
-                      )}
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-neutral text-lg">
+                      {getConversationAvatar(conversation)
+                        ? <img src={getConversationAvatar(conversation)!} alt={getConversationName(conversation)} className="h-full w-full rounded-2xl object-cover" />
+                        : conversation.type === "group"
+                          ? "👥"
+                          : conversation.type === "party"
+                            ? "🎬"
+                            : "💬"}
                     </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-medium text-white truncate">
-                          {getConversationName(conversation)}
-                        </h3>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between gap-2">
+                        <h3 className="truncate text-sm font-semibold text-brand-navy">{getConversationName(conversation)}</h3>
+                        <span className="text-[11px] uppercase tracking-[0.3em] text-brand-navy/40">{formatTime(conversation.last_message?.timestamp || conversation.created_at)}</span>
+                      </div>
+                      <p className="mt-1 truncate text-xs text-brand-navy/50">
+                        {conversation.last_message
+                          ? `${conversation.last_message.sender.username}: ${conversation.last_message.content}`
+                          : "No messages yet"}
+                      </p>
+                      <div className="mt-3 flex items-center gap-2">
+                        {conversation.participants.slice(0, 3).map(participant => (
+                          <span
+                            key={participant.id}
+                            className={`h-2 w-2 rounded-full ${participant.is_online ? 'bg-brand-cyan' : 'bg-brand-navy/20'}`}
+                          />
+                        ))}
                         {conversation.unread_count > 0 && (
-                          <span className="bg-brand-coral text-white text-xs px-2 py-1 rounded-full">
-                            {conversation.unread_count}
+                          <span className="ml-auto inline-flex items-center gap-1 rounded-full border border-brand-blue/20 bg-brand-blue/10 px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.3em] text-brand-blue-dark">
+                            {conversation.unread_count} new
                           </span>
                         )}
                       </div>
-                      
-                      {conversation.last_message && (
-                        <div className="flex items-center justify-between mt-1">
-                          <p className="text-sm text-white/60 truncate">
-                            {conversation.last_message.sender.username}: {conversation.last_message.content}
-                          </p>
-                          <span className="text-xs text-white/40 ml-2">
-                            {formatTime(conversation.last_message.timestamp)}
-                          </span>
-                        </div>
-                      )}
                     </div>
                   </div>
                 </button>
-              ))}
-              
-              {filteredConversations.length === 0 && (
-                <div className="p-8 text-center">
-                  <div className="text-4xl mb-4">💬</div>
-                  <h3 className="text-white font-medium mb-2">No conversations found</h3>
-                  <p className="text-white/60 text-sm">
-                    {searchQuery ? "Try a different search term" : "Start a new conversation!"}
+              ))
+            )}
+          </div>
+        </aside>
+
+        <section className="flex min-h-[520px] flex-col rounded-3xl border border-brand-navy/10 bg-white/90 p-6 text-brand-navy shadow-[0_18px_55px_rgba(28,28,46,0.1)]">
+          {selectedConversation ? (
+            <>
+              <div className="flex flex-col gap-3 border-b border-brand-navy/10 pb-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold text-brand-navy">{getConversationName(selectedConversation)}</h2>
+                  <p className="text-xs uppercase tracking-[0.3em] text-brand-navy/40">
+                    {selectedConversation.participants.length} participants · {selectedConversation.unread_count} unread
                   </p>
                 </div>
-              )}
-            </div>
-          </div>
+                <button
+                  onClick={() => router.push(`/dashboard/messaging/${selectedConversation.id}`)}
+                  className="inline-flex items-center gap-2 rounded-full border border-brand-blue/20 bg-brand-blue/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-blue-dark hover:border-brand-blue/40"
+                >
+                  Open full view
+                </button>
+              </div>
 
-          {/* Chat Area */}
-          <div className="flex-1 bg-white/5 border border-white/10 rounded-xl flex flex-col">
-            {selectedConversation ? (
-              <>
-                {/* Chat Header */}
-                <div className="p-4 border-b border-white/10">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      {getConversationAvatar(selectedConversation) ? (
-                        <img
-                          src={getConversationAvatar(selectedConversation)!}
-                          alt=""
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-10 h-10 bg-gradient-to-br from-brand-purple to-blue-500 rounded-full flex items-center justify-center text-white">
-                          {selectedConversation.type === "direct" ? "👤" : 
-                           selectedConversation.type === "group" ? "👥" : "🎬"}
+              <div className="flex-1 space-y-4 overflow-y-auto pr-1">
+                {loadingMessages ? (
+                  <LoadingState message="Loading messages..." />
+                ) : messages.length === 0 ? (
+                  <EmptyState
+                    title="No messages yet"
+                    description="Start the conversation with a friendly hello."
+                    icon="💬"
+                  />
+                ) : (
+                  messages.map(message => (
+                    <div
+                      key={message.id}
+                      className={`max-w-[85%] rounded-2xl border px-4 py-3 text-sm shadow-sm ${message.sender.username === "You"
+                        ? "ml-auto border-brand-purple/20 bg-brand-purple/10 text-brand-purple-dark"
+                        : "border-brand-navy/10 bg-white/80 text-brand-navy"}`}
+                    >
+                      <div className="mb-1 flex items-center justify-between">
+                        <span className="font-semibold">{message.sender.username}</span>
+                        <span className="text-[11px] uppercase tracking-[0.3em] text-brand-navy/40">{formatTime(message.timestamp)}</span>
+                      </div>
+                      <p className="whitespace-pre-wrap">{message.content}</p>
+                      {message.edited_at && (
+                        <span className="mt-2 block text-[10px] uppercase tracking-[0.3em] text-brand-navy/40">
+                          Edited {formatTime(message.edited_at)}
+                        </span>
+                      )}
+                      {message.reply_to && (
+                        <div className="mt-2 rounded-xl border border-brand-navy/10 bg-white/70 px-3 py-2 text-xs text-brand-navy/60">
+                          Replying to {message.reply_to.sender.username}: {message.reply_to.content}
                         </div>
                       )}
-                      
-                      <div>
-                        <h2 className="font-semibold text-white">
-                          {getConversationName(selectedConversation)}
-                        </h2>
-                        <p className="text-sm text-white/60">
-                          {selectedConversation.participants.length} participants
-                        </p>
-                      </div>
                     </div>
-                    
-                    <div className="flex gap-2">
-                      <button className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
-                        📞
-                      </button>
-                      <button className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
-                        📹
-                      </button>
-                      <button className="p-2 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
-                        ⚙️
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                  ))
+                )}
+              </div>
 
-                {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                  {loadingMessages ? (
-                    <div className="flex justify-center">
-                      <div className="animate-spin w-8 h-8 border-4 border-brand-purple border-t-transparent rounded-full"></div>
+              <div className="mt-4 border-t border-brand-navy/10 pt-4">
+                <div className="flex flex-col gap-3">
+                  <textarea
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                    placeholder="Type your message..."
+                    className="w-full rounded-2xl border border-brand-navy/10 bg-white/75 px-4 py-3 text-sm text-brand-navy placeholder:text-brand-navy/40 focus:border-brand-purple/40 focus:outline-none focus:ring-2 focus:ring-brand-purple/20"
+                    rows={3}
+                  />
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-2 text-brand-navy/50">
+                      <button className="rounded-xl border border-brand-navy/10 bg-white/70 px-3 py-2 text-sm">📎</button>
+                      <button className="rounded-xl border border-brand-navy/10 bg-white/70 px-3 py-2 text-sm">😊</button>
+                      <button className="rounded-xl border border-brand-navy/10 bg-white/70 px-3 py-2 text-sm">🎙️</button>
                     </div>
-                  ) : (
-                    messages.map((message) => (
-                      <div key={message.id} className="flex gap-3">
-                        <div className="w-8 h-8 bg-gradient-to-br from-brand-purple to-blue-500 rounded-full flex items-center justify-center text-white text-sm font-semibold flex-shrink-0">
-                          {message.sender.username.charAt(0).toUpperCase()}
-                        </div>
-                        
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-medium text-white">{message.sender.username}</span>
-                            <span className="text-xs text-white/40">{formatTime(message.timestamp)}</span>
-                          </div>
-                          
-                          {message.reply_to && (
-                            <div className="p-2 bg-white/5 border-l-2 border-brand-purple rounded mb-2">
-                              <p className="text-xs text-white/60 mb-1">
-                                Replying to {message.reply_to.sender.username}
-                              </p>
-                              <p className="text-sm text-white/80">{message.reply_to.content}</p>
-                            </div>
-                          )}
-                          
-                          <div className="bg-white/10 rounded-lg px-4 py-2 max-w-lg">
-                            <p className="text-white">{message.content}</p>
-                            {message.edited_at && (
-                              <p className="text-xs text-white/40 mt-1">(edited)</p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                </div>
-
-                {/* Message Input */}
-                <div className="p-4 border-t border-white/10">
-                  <div className="flex gap-3">
-                    <input
-                      type="text"
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                      placeholder="Type a message..."
-                      className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50"
-                    />
-                    
-                    <button className="p-3 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
-                      📎
-                    </button>
-                    
-                    <button className="p-3 text-white/60 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
-                      😊
-                    </button>
-                    
                     <button
                       onClick={handleSendMessage}
                       disabled={!newMessage.trim()}
-                      className="px-6 py-3 bg-brand-purple hover:bg-brand-purple-dark disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+                      className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      Send
+                      Send message
                     </button>
                   </div>
                 </div>
-              </>
-            ) : (
-              <div className="flex-1 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="text-6xl mb-4">💬</div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Select a conversation</h3>
-                  <p className="text-white/60">Choose a conversation from the sidebar to start chatting</p>
-                </div>
               </div>
-            )}
-          </div>
-        </div>
+            </>
+          ) : (
+            <div className="flex flex-1 items-center justify-center">
+              <EmptyState
+                title="Select a conversation"
+                description="Choose a thread from the list to see the messages."
+                icon="💬"
+              />
+            </div>
+          )}
+        </section>
       </div>
     </div>
   )

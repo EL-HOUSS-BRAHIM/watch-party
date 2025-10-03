@@ -1,5 +1,6 @@
-'use client'
+"use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth"
@@ -48,26 +49,27 @@ export function DashboardHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-brand-navy-dark/80 backdrop-blur-xl">
-      <div className="flex h-16 items-center justify-between px-6">
+    <header className="sticky top-0 z-50 w-full border-b border-brand-navy/10 bg-white/80 backdrop-blur-xl">
+      <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Logo & Brand */}
-        <Link href="/dashboard" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-magenta to-brand-purple shadow-lg">
-            <span className="text-xl">🎬</span>
-          </div>
+        <Link href="/dashboard" className="flex items-center gap-3 transition-opacity hover:opacity-80">
+          <span className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white shadow-[0_10px_28px_rgba(28,28,46,0.18)]">
+            <Image src="/watchparty-logo.svg" alt="WatchParty logo" width={40} height={40} className="h-full w-full object-contain" priority />
+          </span>
           <div className="flex flex-col">
-            <span className="text-lg font-bold text-brand-magenta-light">WatchParty</span>
+            <span className="text-sm font-semibold uppercase tracking-[0.35em] text-brand-purple">WatchParty</span>
+            <span className="text-base font-semibold text-brand-navy">Control room</span>
           </div>
         </Link>
 
         {/* Search Bar - Hidden on mobile */}
-        <div className="hidden md:flex flex-1 max-w-2xl mx-8">
+        <div className="mx-6 hidden w-full max-w-xl flex-1 md:flex">
           <div className="relative w-full">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">🔍</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-navy/40">🔍</span>
             <input
               type="text"
               placeholder="Search parties, videos, friends..."
-              className="w-full h-11 pl-12 pr-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:border-brand-cyan/50 focus:bg-white/10 transition-all"
+              className="h-11 w-full rounded-xl border border-brand-navy/10 bg-white/80 pl-12 pr-4 text-sm font-medium text-brand-navy placeholder:text-brand-navy/40 transition-all focus:border-brand-blue/40 focus:outline-none focus:ring-2 focus:ring-brand-blue/20"
             />
           </div>
         </div>
@@ -78,11 +80,11 @@ export function DashboardHeader() {
           <div className="relative">
             <button
               onClick={() => setShowNotifications(!showNotifications)}
-              className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
+              className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-brand-navy/10 bg-white/80 text-brand-navy transition-all hover:border-brand-navy/30 hover:text-brand-navy"
             >
               <span className="text-xl">🔔</span>
               {notificationCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-coral text-[10px] font-bold text-white">
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-coral text-[10px] font-bold text-white shadow-lg">
                   {notificationCount}
                 </span>
               )}
@@ -90,23 +92,23 @@ export function DashboardHeader() {
 
             {/* Notifications Dropdown */}
             {showNotifications && (
-              <div className="absolute right-0 mt-2 w-80 rounded-xl bg-gray-900/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden">
-                <div className="p-4 border-b border-white/10">
-                  <h3 className="text-sm font-bold text-white">Notifications</h3>
+              <div className="absolute right-0 mt-2 w-80 overflow-hidden rounded-2xl border border-brand-navy/10 bg-white/95 shadow-[0_24px_60px_rgba(28,28,46,0.15)]">
+                <div className="border-b border-brand-navy/10 p-4">
+                  <h3 className="text-sm font-semibold text-brand-navy">Notifications</h3>
                 </div>
                 <div className="max-h-96 overflow-y-auto">
                   {notificationCount === 0 ? (
-                    <div className="p-8 text-center">
-                      <p className="text-sm text-white/60">No new notifications</p>
+                    <div className="p-8 text-center text-sm text-brand-navy/60">
+                      No new notifications
                     </div>
                   ) : (
-                    <div className="p-4 text-center">
-                      <p className="text-sm text-white/60">You have {notificationCount} unread notifications</p>
+                    <div className="p-4 text-center text-sm text-brand-navy/70">
+                      You have {notificationCount} unread notifications
                     </div>
                   )}
                 </div>
-                <div className="p-3 border-t border-white/10">
-                  <Link href="/dashboard/notifications" className="text-xs text-brand-purple-light hover:text-brand-purple-light font-medium">
+                <div className="border-t border-brand-navy/10 p-3 text-right">
+                  <Link href="/dashboard/notifications" className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-purple transition-colors hover:text-brand-purple-dark">
                     View all notifications
                   </Link>
                 </div>
@@ -117,7 +119,7 @@ export function DashboardHeader() {
           {/* Settings */}
           <Link
             href="/settings"
-            className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-brand-navy/10 bg-white/80 text-brand-navy transition-all hover:border-brand-navy/30 hover:text-brand-navy"
           >
             <span className="text-xl">⚙️</span>
           </Link>
@@ -126,50 +128,50 @@ export function DashboardHeader() {
           <div className="relative">
             <button
               onClick={() => setShowUserMenu(!showUserMenu)}
-              className="flex items-center gap-3 px-3 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
+              className="flex h-10 items-center gap-3 rounded-xl border border-brand-navy/10 bg-white/80 px-3 text-sm font-semibold text-brand-navy transition-all hover:border-brand-navy/30"
             >
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-brand-purple to-blue-500">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-purple to-brand-blue text-white">
                 {user?.avatar ? (
-                  <img src={user.avatar} alt={user.username} className="w-full h-full rounded-lg object-cover" />
+                  <img src={user.avatar} alt={user.username} className="h-full w-full rounded-lg object-cover" />
                 ) : (
-                  <span className="text-sm">👤</span>
+                  <span className="text-base">👤</span>
                 )}
               </div>
-              <span className="hidden sm:inline text-sm font-medium text-white/90">
+              <span className="hidden sm:inline text-sm font-semibold text-brand-navy">
                 {user?.first_name || user?.username || "User"}
               </span>
-              <span className="text-xs text-white/50">▼</span>
+              <span className="text-xs text-brand-navy/50">▼</span>
             </button>
 
             {/* User Dropdown */}
             {showUserMenu && user && (
-              <div className="absolute right-0 mt-2 w-56 rounded-xl bg-gray-900/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden">
-                <div className="p-4 border-b border-white/10">
-                  <p className="text-sm font-bold text-white">{user.first_name || user.username}</p>
-                  <p className="text-xs text-white/50">@{user.username}</p>
+              <div className="absolute right-0 mt-2 w-56 overflow-hidden rounded-2xl border border-brand-navy/10 bg-white/95 shadow-[0_24px_60px_rgba(28,28,46,0.16)]">
+                <div className="border-b border-brand-navy/10 p-4">
+                  <p className="text-sm font-semibold text-brand-navy">{user.first_name || user.username}</p>
+                  <p className="text-xs text-brand-navy/50">@{user.username}</p>
                   {(user.is_premium || user.is_staff) && (
-                    <div className="mt-2 inline-flex items-center gap-1 px-2 py-1 rounded-md bg-gradient-to-r from-brand-purple/20 to-blue-500/20 border border-brand-purple/30">
-                      <span className="text-xs font-bold text-brand-purple-light">
+                    <div className="mt-2 inline-flex items-center gap-1 rounded-full border border-brand-purple/20 bg-brand-purple/5 px-2 py-1">
+                      <span className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-purple">
                         {user.is_premium ? "Premium" : "Pro"}
                       </span>
                     </div>
                   )}
                 </div>
                 <div className="py-2">
-                  <Link href="/profile" className="flex items-center gap-3 px-4 py-2 hover:bg-white/5 transition-colors">
-                    <span className="text-sm">👤</span>
-                    <span className="text-sm text-white/90">Profile</span>
+                  <Link href="/profile" className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-brand-navy transition-colors hover:bg-brand-neutral/60">
+                    <span>👤</span>
+                    <span>Profile</span>
                   </Link>
-                  <Link href="/settings" className="flex items-center gap-3 px-4 py-2 hover:bg-white/5 transition-colors">
-                    <span className="text-sm">⚙️</span>
-                    <span className="text-sm text-white/90">Settings</span>
+                  <Link href="/settings" className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-brand-navy transition-colors hover:bg-brand-neutral/60">
+                    <span>⚙️</span>
+                    <span>Settings</span>
                   </Link>
-                  <button 
+                  <button
                     onClick={logout}
-                    className="flex items-center gap-3 px-4 py-2 hover:bg-white/5 transition-colors w-full text-left"
+                    className="flex w-full items-center gap-3 px-4 py-2 text-sm font-semibold text-brand-coral transition-colors hover:bg-brand-neutral/60"
                   >
-                    <span className="text-sm">🚪</span>
-                    <span className="text-sm text-brand-coral-light">Sign Out</span>
+                    <span>🚪</span>
+                    <span>Sign out</span>
                   </button>
                 </div>
               </div>
