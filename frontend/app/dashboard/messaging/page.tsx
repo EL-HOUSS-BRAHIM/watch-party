@@ -231,7 +231,7 @@ export default function MessagingPage() {
             {filteredConversations.length === 0 ? (
               <EmptyState
                 title="No conversations"
-                description="Start a new chat to see it listed here."
+                message="Start a new chat to see it listed here."
                 icon="💬"
               />
             ) : (
@@ -308,7 +308,7 @@ export default function MessagingPage() {
                 ) : messages.length === 0 ? (
                   <EmptyState
                     title="No messages yet"
-                    description="Start the conversation with a friendly hello."
+                    message="Start the conversation with a friendly hello."
                     icon="💬"
                   />
                 ) : (
@@ -369,7 +369,7 @@ export default function MessagingPage() {
             <div className="flex flex-1 items-center justify-center">
               <EmptyState
                 title="Select a conversation"
-                description="Choose a thread from the list to see the messages."
+                message="Choose a thread from the list to see the messages."
                 icon="💬"
               />
             </div>

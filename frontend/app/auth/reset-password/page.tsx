@@ -29,12 +29,8 @@ export default function ResetPasswordPage() {
     }
 
     try {
-      const response = await authApi.resetPassword({ token, password })
-      if (response.success) {
-        setSuccess("Password updated! You can now sign in with your new credentials.")
-      } else {
-        setError(response.message || "We couldn’t update your password. Please try again.")
-      }
+      await authApi.resetPassword({ token, password })
+      setSuccess("Password updated! You can now sign in with your new credentials.")
     } catch (error) {
       console.error("Reset password error:", error)
       setError(error instanceof Error ? error.message : "Something went wrong. Please try again.")
