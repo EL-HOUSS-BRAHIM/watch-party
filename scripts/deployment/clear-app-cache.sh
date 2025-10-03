@@ -74,4 +74,11 @@ if [ "$TARGET" = "backend" ] || [ "$TARGET" = "all" ]; then
     clear_backend_cache
 fi
 
+# Clear Docker build cache to ensure fresh builds
+if [ "$TARGET" = "all" ]; then
+    log_info "Clearing Docker build cache"
+    docker builder prune -f 2>/dev/null || true
+    log_success "Docker build cache cleared"
+fi
+
 log_success "Cache cleanup complete"
