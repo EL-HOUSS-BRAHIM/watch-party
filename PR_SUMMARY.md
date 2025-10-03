@@ -23,39 +23,9 @@ Two issues were identified:
 
 ## Solution
 
-A comprehensive three-part fix:
+Enhanced the existing cache-clearing workflow to provide manual control:
 
-### 1. Remove BUILDKIT_INLINE_CACHE (docker-compose.yml)
-
-```diff
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
--      args:
--        BUILDKIT_INLINE_CACHE: 1
-    image: watchparty-backend:latest
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
--        BUILDKIT_INLINE_CACHE: 1
-        NODE_OPTIONS: "--max-old-space-size=2048"
-    image: watchparty-frontend:latest
-```
-
-### 2. Prune Build Cache Before Builds (build-docker-images.sh)
-
-```bash
-# Prune Docker build cache to ensure fresh builds
-log_info "Pruning Docker build cache..."
-docker builder prune -f || true
-log_success "Docker build cache cleared"
-```
-
-### 3. Enhanced Cache Clearing (clear-app-cache.sh)
+### Enhanced Cache Clearing (clear-app-cache.sh)
 
 ```bash
 # Clear Docker build cache to ensure fresh builds
@@ -70,14 +40,12 @@ fi
 
 | File | Lines Changed | Description |
 |------|---------------|-------------|
-| docker-compose.yml | -3 | Removed BUILDKIT_INLINE_CACHE |
-| scripts/deployment/build-docker-images.sh | +6 | Added cache pruning before builds |
 | scripts/deployment/clear-app-cache.sh | +7 | Added Docker cache clearing |
 | DOCKER_CACHE_FIX.md | +187 (new) | Technical documentation |
 | CACHE_FIX_VALIDATION.md | +261 (new) | Validation report |
 | WHAT_CHANGED.md | +144 (new) | User-friendly summary |
 
-**Total**: 6 files changed, 604 insertions(+), 4 deletions(-)
+**Total**: 4 files changed, 599 insertions(+)
 
 ## Test Results
 
@@ -106,56 +74,55 @@ All validation tests pass:
 ## Impact
 
 ### Benefits
-- ✅ **Guaranteed fresh builds**: Every deployment uses the latest code
-- ✅ **No stale deployments**: Changes always appear on the website
-- ✅ **Predictable behavior**: No mystery cache issues
-- ✅ **Enhanced workflow**: Manual cache clearing also clears Docker cache
+- ✅ **Manual control**: Clear cache only when needed
+- ✅ **Fast normal deployments**: Regular builds use cache for speed
+- ✅ **Fresh when needed**: Run workflow to force fresh build
+- ✅ **Flexible**: You choose when to rebuild
 
 ### Trade-offs
-- ⚠️ **Longer build times**: Builds may take 2-5 minutes longer without layer cache
-- ⚠️ **More network usage**: Dependencies downloaded fresh each build
-- ⚠️ **More disk I/O**: Full rebuilds instead of incremental
+- ⚠️ **Manual action required**: Need to run workflow if cache issues occur
+- ⚠️ **Not automatic**: Regular deployments may use stale cache
 
-**Why Acceptable**: Correctness (deploying fresh code) is more important than speed. The previous issue completely blocked deployments.
+**Why This Approach**: Gives you control over when to take the performance hit of clearing cache, while keeping normal deployments fast.
 
 ## Deployment Flow
 
-### Before This Fix
+### Normal Deployments (Fast)
 ```
-Push → Git Pull → Docker Build
+Push → Git Pull → Docker Build with GIT_COMMIT_HASH
                   ↓
-                  Cache HIT (BUILDKIT_INLINE_CACHE)
+                  May use cached layers
                   ↓
-                  COPY operations use CACHED layers
-                  ↓
-                  Old code deployed ❌
+                  Deploy (Fast) ✅
 ```
 
-### After This Fix
+### When You Clear Cache
 ```
-Push → Git Pull → Prune Docker Cache
+Run "Clear Caches" Workflow
                   ↓
-                  All cached layers removed
+                  Removes Docker build cache
                   ↓
-                  Docker Build with GIT_COMMIT_HASH
+Next Push → Docker Build
                   ↓
-                  No inline cache
+                  All layers built fresh
                   ↓
-                  COPY operations run fresh
-                  ↓
-                  New code deployed ✅
+                  New code guaranteed ✅
 ```
 
 ## What to Look For
 
-### In Next Deployment Logs
+### In Cache Clearing Workflow Logs
 
-**✅ Good Indicators:**
 ```bash
-INFO: Pruning Docker build cache...
+INFO: Clearing Docker build cache
 Total reclaimed space: 1.2GB
 SUCCESS: Docker build cache cleared
+```
 
+### In Deployment After Clearing
+
+**Fresh build (what you want when clearing):**
+```bash
 Building from commit: abc1234...
 
 #7 [backend stage-1 6/9] COPY . /app/
@@ -165,26 +132,29 @@ Building from commit: abc1234...
 #30 0.456s    ← Shows time, not "CACHED"
 ```
 
-**❌ Bad Indicators (Should Not See):**
+**Cached build (normal, fast):**
 ```bash
-#30 CACHED    ← Should never happen now
+#30 CACHED    ← Using cache (this is OK for speed)
 ```
 
-### On Website
-- Changes should appear immediately after deployment
-- No need to clear browser cache
-- All new features/fixes visible
+### When to Clear
+- If changes don't appear after deployment
+- When troubleshooting deployment issues
+- After major updates
 
 ## How to Use
 
-### Automatic (Every Deployment)
-Docker cache is automatically cleared before every build. No action needed!
+### Normal Deployments
+Just push code as usual. Deployments will be fast.
 
-### Manual Cache Clearing
+### When Changes Don't Appear
+Run the cache clearing workflow:
+
 Via GitHub Actions:
 1. Go to Actions → "Clear Application Caches"
 2. Run workflow → Select "all"
 3. Docker cache + application caches cleared
+4. Next deployment will build fresh
 
 Via SSH:
 ```bash

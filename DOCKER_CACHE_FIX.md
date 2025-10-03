@@ -6,52 +6,13 @@ Despite having the GIT_COMMIT_HASH cache-busting mechanism in place, deployments
 
 ## Root Cause
 
-The issue had two components:
-
-1. **BUILDKIT_INLINE_CACHE=1**: This flag in `docker-compose.yml` tells Docker to store cache metadata in the built images. This cache persists between builds and can prevent fresh code from being used.
-
-2. **Docker Builder Cache**: Docker BuildKit maintains a build cache on disk that persists between builds. Even with the GIT_COMMIT_HASH mechanism, if the build cache exists, Docker may still reference old cached layers.
+**Docker Builder Cache**: Docker BuildKit maintains a build cache on disk that persists between builds. Even with the GIT_COMMIT_HASH mechanism, if the build cache exists, Docker may still reference old cached layers.
 
 ## Solution
 
-The fix involves three changes:
+The fix provides **manual control** over Docker cache clearing:
 
-### 1. Remove BUILDKIT_INLINE_CACHE
-
-Removed `BUILDKIT_INLINE_CACHE: 1` from both frontend and backend service definitions in `docker-compose.yml`. This prevents Docker from embedding cache metadata in images.
-
-**Before:**
-```yaml
-backend:
-  build:
-    context: ./backend
-    dockerfile: Dockerfile
-    args:
-      BUILDKIT_INLINE_CACHE: 1
-```
-
-**After:**
-```yaml
-backend:
-  build:
-    context: ./backend
-    dockerfile: Dockerfile
-```
-
-### 2. Prune Docker Build Cache Before Building
-
-Added `docker builder prune -f` to `scripts/deployment/build-docker-images.sh` to clear Docker's build cache before every build.
-
-```bash
-# Prune Docker build cache to ensure fresh builds
-log_info "Pruning Docker build cache..."
-docker builder prune -f || true
-log_success "Docker build cache cleared"
-```
-
-This ensures that every deployment starts with a clean build cache, forcing Docker to rebuild all layers with fresh code.
-
-### 3. Enhanced Cache Clearing Script
+### Enhanced Cache Clearing Script
 
 Updated `scripts/deployment/clear-app-cache.sh` to also clear Docker build cache when running with `--target all`.
 
@@ -66,78 +27,77 @@ fi
 
 ## How It Works
 
-### Complete Cache-Busting Flow
+### Manual Cache Clearing Flow
+
+When you need to clear Docker cache (e.g., when deployments seem stale):
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      DEPLOYMENT FLOW                         │
+│                   MANUAL CACHE CLEARING                      │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
-│  1. Git Pull (Fresh Code)                                   │
-│     └─ git reset --hard origin/master                       │
+│  1. Trigger Workflow                                         │
+│     └─ GitHub Actions → Clear Application Caches → Run      │
+│         └─ Select target: "all"                             │
 │                                                              │
-│  2. Extract Commit Hash                                     │
-│     └─ GIT_COMMIT_HASH=$(git rev-parse HEAD)               │
+│  2. Clear Application Caches                                 │
+│     └─ Frontend: .next, .turbo, node_modules/.cache         │
+│     └─ Backend: __pycache__, staticfiles                    │
 │                                                              │
-│  3. Clean Containers                                         │
-│     └─ docker-compose down --remove-orphans                 │
-│                                                              │
-│  4. Prune Build Cache (NEW!)                                │
+│  3. Clear Docker Build Cache (NEW!)                          │
 │     └─ docker builder prune -f                              │
 │         ├─ Removes all cached build layers                  │
-│         └─ Forces fresh rebuild from scratch                │
+│         └─ Next build will be completely fresh              │
 │                                                              │
-│  5. Docker Build                                             │
-│     └─ docker-compose build --build-arg GIT_COMMIT_HASH=... │
-│         ├─ No BUILDKIT_INLINE_CACHE (NEW!)                  │
-│         ├─ ARG GIT_COMMIT_HASH in Dockerfile                │
-│         ├─ RUN echo "Building from commit: ${HASH}"         │
-│         └─ COPY . . (Fresh code guaranteed!)                │
-│                                                              │
-│  6. Deploy Services                                          │
-│     └─ docker-compose up -d                                 │
+│  4. Next Deployment Will Build Fresh                         │
+│     └─ Regular deployment workflow runs                     │
+│         └─ Uses GIT_COMMIT_HASH cache-busting               │
+│         └─ Builds with fresh layers                         │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ## Benefits
 
-1. **Guaranteed Fresh Builds**: Every deployment now starts with a clean Docker build cache
-2. **No Stale Code**: The combination of cache pruning + GIT_COMMIT_HASH ensures fresh code
-3. **Manual Cache Clearing**: The `clear-caches.yml` workflow now also clears Docker build cache
-4. **Performance Balance**: While builds may take slightly longer (no layer cache reuse), they are guaranteed to use fresh code
+1. **Manual Control**: Clear Docker cache only when needed, not on every deployment
+2. **Faster Regular Deployments**: Normal deployments use cache for speed
+3. **Clear When Needed**: Use the workflow when deployments seem stale
+4. **GIT_COMMIT_HASH Still Works**: Cache-busting mechanism remains active for code changes
 
 ## Trade-offs
 
-- **Slightly Longer Build Times**: Without cached layers, Docker must rebuild everything from scratch each time
-- **More Disk I/O**: Pruning and rebuilding uses more disk I/O
-- **Network Usage**: Dependencies (npm packages, pip packages) must be downloaded fresh each time
+- **Manual Action Required**: You need to run the workflow when cache issues occur
+- **No Automatic Cache Clearing**: Regular deployments keep using cache (faster but may be stale)
 
-However, these trade-offs are acceptable because:
-- Build times are still reasonable (~5-10 minutes total)
-- Correctness (deploying fresh code) is more important than speed
-- The previous issue (cached stale code) was blocking all deployments
+However, this approach gives you:
+- **Control**: Clear cache only when you need to
+- **Speed**: Normal deployments are faster with cache
+- **Flexibility**: Choose when to take the performance hit of a full rebuild
 
 ## Verification
 
-After deployment, check logs for these indicators:
+After running the cache clearing workflow:
 
-### ✅ Good (Cache Cleared)
+### In Workflow Logs
 ```bash
-INFO: Pruning Docker build cache...
+INFO: Clearing Docker build cache
 Total reclaimed space: 2.5GB
 SUCCESS: Docker build cache cleared
+```
 
+### In Next Deployment
+After clearing cache, the next deployment will build fresh:
+```bash
 Building from commit: abc1234...
 
 #30 [frontend builder 3/4] COPY . .
 #30 0.234s    ← Time shown = actually copied!
 ```
 
-### ❌ Bad (Would indicate reversion)
+Without clearing cache, deployments may show:
 ```bash
 #30 [frontend builder 3/4] COPY . .
-#30 CACHED    ← Should never happen now!
+#30 CACHED    ← Using cached layers (faster but may be stale)
 ```
 
 ## Testing Locally
@@ -161,24 +121,31 @@ bash scripts/deployment/build-docker-images.sh
 # - No "CACHED" on COPY operations
 ```
 
-## Manual Cache Clearing
+## When to Clear Cache
 
-Use the GitHub Actions workflow or run manually:
+Clear Docker cache when:
+- Deployments complete but changes don't appear
+- You suspect stale cached layers
+- After major dependency updates
+- When troubleshooting deployment issues
 
+### Via GitHub Actions
+1. Go to Actions → "Clear Application Caches"
+2. Click "Run workflow"
+3. Select target: "all"
+4. Click "Run workflow"
+
+### Via SSH
 ```bash
-# Via GitHub Actions
-# Go to Actions → Clear Application Caches → Run workflow → Select "all"
-
-# Or manually via SSH
 cd /srv/watch-party  # or ~/watch-party
 bash scripts/deployment/clear-app-cache.sh all
 ```
 
+Then trigger a new deployment to rebuild with fresh cache.
+
 ## Files Modified
 
-1. `docker-compose.yml` - Removed BUILDKIT_INLINE_CACHE from backend and frontend
-2. `scripts/deployment/build-docker-images.sh` - Added docker builder prune before build
-3. `scripts/deployment/clear-app-cache.sh` - Added Docker cache clearing to "all" target
+1. `scripts/deployment/clear-app-cache.sh` - Added Docker cache clearing to "all" target
 
 ## References
 

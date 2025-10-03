@@ -11,32 +11,11 @@ Even though you had:
 - A cache-busting script (`clear-app-cache.sh`)
 - A GIT_COMMIT_HASH mechanism in Dockerfiles
 
-Docker was **still using cached layers** because:
-1. `BUILDKIT_INLINE_CACHE=1` was enabled in `docker-compose.yml`
-2. Docker's BuildKit cache persisted on disk between deployments
-3. Your cache clearing only removed application caches (`.next`, `__pycache__`), not Docker's build cache
+Docker was **still using cached layers** because your cache clearing only removed application caches (`.next`, `__pycache__`), not Docker's build cache.
 
 ## What We Fixed
 
-### 1. Removed Cache Persistence
-**File**: `docker-compose.yml`
-
-Removed `BUILDKIT_INLINE_CACHE: 1` from both frontend and backend services. This stops Docker from storing and reusing cache metadata.
-
-### 2. Clear Docker Cache Before Every Build
-**File**: `scripts/deployment/build-docker-images.sh`
-
-Added automatic Docker cache clearing:
-```bash
-# Prune Docker build cache to ensure fresh builds
-log_info "Pruning Docker build cache..."
-docker builder prune -f || true
-log_success "Docker build cache cleared"
-```
-
-This runs **before** Docker starts building, ensuring a clean slate.
-
-### 3. Enhanced Your Cache Clearing Workflow
+### Enhanced Your Cache Clearing Workflow
 **File**: `scripts/deployment/clear-app-cache.sh`
 
 Your existing workflow now also clears Docker cache:
@@ -49,16 +28,21 @@ if [ "$TARGET" = "all" ]; then
 fi
 ```
 
-## What You'll See in Next Deployment
+## What You'll See
 
-### In GitHub Actions Logs
+### When You Run "Clear Caches" Workflow
 
-Look for these new lines:
+In the workflow logs:
 ```
-INFO: Pruning Docker build cache...
+INFO: Clearing Docker build cache
 Total reclaimed space: 1.2GB (or similar)
 SUCCESS: Docker build cache cleared
+```
 
+### In Next Deployment After Clearing
+
+The deployment will build fresh:
+```
 Building from commit: abc1234...
 
 #7 [backend stage-1 6/9] COPY . /app/
@@ -68,77 +52,82 @@ Building from commit: abc1234...
 #30 0.456s    ← Time shown, NOT "CACHED"
 ```
 
-If you see times (like `0.234s`) instead of `CACHED`, it means fresh code is being used! ✅
+### In Regular Deployments (Without Clearing)
 
-### Build Time Changes
+May show cached layers (faster):
+```
+#7 CACHED    ← Using cache for speed
+```
 
-- **Before**: ~5-7 minutes (with cache)
-- **After**: ~8-12 minutes (without cache, but FRESH CODE)
+**When to clear**: If changes don't appear, run the "Clear Caches" workflow!
 
-The extra few minutes are worth it because your changes will actually appear!
+## How to Use
 
-## How to Test It
+### Regular Deployments
+Just push code normally. Deployments will be fast (using cache).
 
-1. **Make a small change** (like adding a comment to a file)
-2. **Commit and push** to master
-3. **Watch the deployment logs** for "Pruning Docker build cache..."
-4. **Check your website** - the change should appear!
+### If Changes Don't Appear
+1. Go to GitHub → Actions
+2. Click "Clear Application Caches"
+3. Run workflow → Select "all"
+4. Wait for it to complete
+5. Push a new commit or re-run the deployment
 
-## Your Clear Caches Workflow
-
-The GitHub Actions workflow you created (`Clear Application Caches`) now clears:
+The workflow now clears:
 - ✅ Frontend build artifacts (`.next`, `.turbo`)
 - ✅ Backend Python caches (`__pycache__`)
 - ✅ Docker build cache (NEW!)
 
-To use it:
-1. Go to GitHub → Actions
-2. Click "Clear Application Caches"
-3. Run workflow → Select "all"
-4. It will clear everything including Docker cache
-
 ## Why This Works
 
 ```
-OLD FLOW (Was Broken):
-Push → Git Pull → Docker Build → Cache HIT → Old Code ❌
+NORMAL FLOW (Fast):
+Push → Git Pull → Docker Build → May use Cache → Deploy ✅
 
-NEW FLOW (Fixed):
-Push → Git Pull → Clear Docker Cache → Docker Build → Cache MISS → Fresh Code ✅
+WHEN YOU CLEAR CACHE:
+Clear Cache Workflow → Removes Docker Cache →
+Next Build → Fresh Layers → Guaranteed Fresh Code ✅
 ```
 
 ## Trade-off
 
-**Slower builds, but correct deployments.**
+**Manual control over fresh builds.**
 
-We chose correctness over speed because:
-- Your changes were not appearing at all (unacceptable)
-- A few extra minutes per deployment is acceptable
-- You can still use cached dependencies (npm, pip) - only code cache is cleared
+Benefits:
+- Fast deployments normally (using cache)
+- Clear cache only when needed
+- You control when to take the performance hit
+- GIT_COMMIT_HASH still provides some cache busting
 
 ## Bottom Line
 
-**Your deployments will now work correctly!** 
+**You now have control over cache clearing!** 
 
-Every time you push:
-1. Docker cache is cleared automatically
-2. Fresh code is copied into images
-3. Your changes appear on the website
+Normal workflow:
+1. Push code normally
+2. Deployments are fast (using cache)
+3. If changes don't appear, run "Clear Caches" workflow
+4. Next deployment will be fresh
 
-No more mystery cache issues! 🎉
+Benefits:
+- Fast deployments normally
+- Manual cache clearing when needed
+- Full control over when to rebuild fresh
 
 ## Files We Changed
 
-- `docker-compose.yml` (-3 lines)
-- `scripts/deployment/build-docker-images.sh` (+6 lines)
 - `scripts/deployment/clear-app-cache.sh` (+7 lines)
-- Added documentation: `DOCKER_CACHE_FIX.md`, `CACHE_FIX_VALIDATION.md`
+- Added documentation: `DOCKER_CACHE_FIX.md`, `CACHE_FIX_VALIDATION.md`, `WHAT_CHANGED.md`
 
-**Total code changes: ~12 lines**
+**Total code changes: ~7 lines**
 **Total new documentation: ~450 lines**
 
-## Questions?
+## When to Use Clear Caches
 
-If you see `CACHED` in your COPY operations after this fix, that would be unexpected. Please report it!
+Run the workflow when:
+- Changes don't appear after deployment
+- You suspect stale cached layers
+- After major updates
+- Troubleshooting deployment issues
 
-Otherwise, enjoy working deployments! 🚀
+Then your next deployment will build fresh! 🚀
