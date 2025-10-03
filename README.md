@@ -85,7 +85,9 @@ GitHub Actions automatically deploy to production:
 
 - **Trigger:** Push to `master` branch
 - **Target:** Lightsail server via SSH
-- **Process:** Git pull → Docker build → Container restart
+- **Process:** Git pull → Docker build (with cache-busting) → Container restart
+
+> **Note:** Deployments use git commit hash-based cache busting to ensure all code changes are included in Docker builds. See [DEPLOYMENT_CACHE_FIX.md](./DEPLOYMENT_CACHE_FIX.md) for details.
 
 ### Server Setup
 
