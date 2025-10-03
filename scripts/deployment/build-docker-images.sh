@@ -4,6 +4,10 @@
 # DOCKER BUILD SCRIPT
 # =============================================================================
 # Builds Docker images with optimization
+# 
+# Options:
+#   FORCE_REBUILD=1  - Build without using cache (forces fresh build)
+#   REMOVE_OLD_IMAGES=1 - Remove old images before building
 
 set -e
 
@@ -14,6 +18,18 @@ source "$SCRIPT_DIR/common-functions.sh"
 
 APP_DIR="${APP_DIR:-$HOME/watch-party}"
 cd "$APP_DIR"
+
+# Parse environment options
+FORCE_REBUILD="${FORCE_REBUILD:-0}"
+REMOVE_OLD_IMAGES="${REMOVE_OLD_IMAGES:-0}"
+
+if [ "$FORCE_REBUILD" = "1" ]; then
+    log_warning "FORCE_REBUILD enabled - building without cache"
+fi
+
+if [ "$REMOVE_OLD_IMAGES" = "1" ]; then
+    log_warning "REMOVE_OLD_IMAGES enabled - removing old images before build"
+fi
 
 log_info "Building Docker images..."
 
@@ -31,6 +47,15 @@ export SKIP_AWS_DURING_BUILD=1
 log_info "Cleaning up old containers..."
 docker-compose down --remove-orphans || true
 
+# Remove old images if requested (for complete fresh build)
+if [ "$REMOVE_OLD_IMAGES" = "1" ]; then
+    log_info "Removing old Docker images..."
+    docker image rm watchparty-backend:latest 2>/dev/null && log_success "Removed old backend image" || log_info "No old backend image to remove"
+    docker image rm watchparty-frontend:latest 2>/dev/null && log_success "Removed old frontend image" || log_info "No old frontend image to remove"
+    # Also prune dangling images
+    docker image prune -f 2>/dev/null || true
+fi
+
 # Fix SSL directory ownership if it exists and is owned by root
 if [ -d "$APP_DIR/nginx/ssl" ]; then
     SSL_OWNER=$(stat -c '%U' "$APP_DIR/nginx/ssl" 2>/dev/null || echo "unknown")
@@ -46,9 +71,16 @@ if [ -d "$APP_DIR/nginx/ssl" ]; then
     fi
 fi
 
+# Prepare build flags
+BUILD_FLAGS=""
+if [ "$FORCE_REBUILD" = "1" ]; then
+    BUILD_FLAGS="$BUILD_FLAGS --no-cache --pull"
+    log_info "Build flags: --no-cache --pull (forcing fresh build)"
+fi
+
 # Try parallel build first
 log_info "Attempting parallel build..."
-if timeout 1200 docker-compose build --parallel \
+if timeout 1200 docker-compose build --parallel $BUILD_FLAGS \
     --build-arg SKIP_AWS_DURING_BUILD=1 \
     --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH" 2>&1; then
     log_success "Parallel build successful"
@@ -57,7 +89,7 @@ else
     
     # Build backend
     log_info "Building backend image..."
-    if ! timeout 600 docker-compose build backend \
+    if ! timeout 600 docker-compose build $BUILD_FLAGS backend \
         --build-arg SKIP_AWS_DURING_BUILD=1 \
         --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH"; then
         exit_with_error "Backend build failed"
@@ -66,7 +98,7 @@ else
     
     # Build frontend
     log_info "Building frontend image..."
-    if ! timeout 1200 docker-compose build frontend \
+    if ! timeout 1200 docker-compose build $BUILD_FLAGS frontend \
         --build-arg NODE_OPTIONS="--max-old-space-size=2048" \
         --build-arg SKIP_AWS_DURING_BUILD=1 \
         --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH"; then

@@ -3,6 +3,13 @@ name: Deploy to Lightsail
 on:
   push:
     branches: ["master", "main"]
+  workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: 'Force rebuild without cache'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   deploy:
@@ -19,11 +26,12 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SSL_ORIGIN: ${{ secrets.SSL_ORIGIN }}
           SSL_PRIVATE: ${{ secrets.SSL_PRIVATE }}
+          FORCE_REBUILD: ${{ github.event.inputs.force_rebuild == 'true' && '1' || '0' }}
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: deploy
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,SSL_ORIGIN,SSL_PRIVATE
+          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,SSL_ORIGIN,SSL_PRIVATE,FORCE_REBUILD
           script: |
             set -e
             
@@ -62,5 +70,6 @@ jobs:
             export AWS_SECRET_ACCESS_KEY
             export SSL_ORIGIN
             export SSL_PRIVATE
+            export FORCE_REBUILD
             
             bash scripts/deployment/deploy-main.sh

@@ -79,6 +79,15 @@ if [ "$TARGET" = "all" ]; then
     log_info "Clearing Docker build cache"
     docker builder prune -f 2>/dev/null || true
     log_success "Docker build cache cleared"
+    
+    log_info "Removing old Docker images to force fresh builds"
+    docker image rm watchparty-backend:latest 2>/dev/null && log_success "Removed backend image" || log_info "No backend image to remove"
+    docker image rm watchparty-frontend:latest 2>/dev/null && log_success "Removed frontend image" || log_info "No frontend image to remove"
+    
+    log_info "Pruning dangling images"
+    docker image prune -f 2>/dev/null || true
+    log_success "Docker images cleaned"
 fi
 
 log_success "Cache cleanup complete"
+log_info "Next deployment will build completely fresh (no cached layers)"
