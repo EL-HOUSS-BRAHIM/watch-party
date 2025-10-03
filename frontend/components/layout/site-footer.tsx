@@ -39,7 +39,7 @@ export function SiteFooter() {
             <div className="flex items-center gap-3 mb-2">
               <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden">
                 <Image 
-                  src="/watchparty-logo.png" 
+                  src="/watchparty-logo.webp" 
                   alt="WatchParty logo" 
                   width={48} 
                   height={48} 

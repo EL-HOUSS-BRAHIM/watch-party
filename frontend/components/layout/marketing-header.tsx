@@ -15,7 +15,7 @@ export function MarketingHeader() {
         <Link href="/" className="flex items-center gap-3 group" aria-label="WatchParty home">
           <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden transition-all group-hover:-translate-y-0.5">
             <Image 
-              src="/watchparty-logo.png" 
+              src="/watchparty-logo.webp" 
               alt="WatchParty logo" 
               width={48} 
               height={48} 
