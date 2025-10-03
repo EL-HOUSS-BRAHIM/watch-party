@@ -305,24 +305,55 @@ REDIS_URL=redis://:password@127.0.0.1:6379/0
 
 ### GitHub Actions Destroy Workflow
 
-When you need to completely remove the Watch Party deployment from the Lightsail
-server, use the **Destroy Lightsail Deployment** workflow:
+When you need to remove the Watch Party deployment from the Lightsail server,
+use the **Destroy Lightsail Deployment** workflow with selective destruction options:
 
 1. Open your repository on GitHub and navigate to **Actions → Destroy Lightsail Deployment**.
-2. Click **Run workflow** and type `destroy` to confirm.
+2. Click **Run workflow** and:
+   - Type `destroy` to confirm the action
+   - Select what to destroy:
+     - **both**: Complete teardown (default) - removes all services and application directory
+     - **backend**: Backend services only (backend, celery-worker, celery-beat)
+     - **frontend**: Frontend service only
 3. The workflow will automatically:
-   - Archive the `/srv/watch-party` directory and any detected Docker volumes
-     (`static_volume`, `media_volume`, `postgres_data`, `redis_data`,
-     `valkey_data`).
-   - Stop and remove Docker containers, volumes, and networks tied to the stack.
-   - Delete `/srv/watch-party` from the server.
-   - Attempt to remove nginx site configuration and reload nginx when passwordless
-     sudo access is available.
-   - Upload the backup archive as a workflow artifact so you can download and
-     restore it later if needed.
+   - Create a backup archive of the application directory and Docker volumes
+   - Stop and remove the selected services
+   - For "both" target:
+     - Stop and remove all Docker containers, volumes, and networks
+     - Delete `/srv/watch-party` from the server
+     - Remove nginx site configuration (when sudo access available)
+     - Prune Docker resources
+   - For "backend" or "frontend" target:
+     - Stop and remove only the specified services
+     - Keep other services running
+     - Preserve application directory and volumes
+   - Upload the backup archive as a workflow artifact
+
+**Use Cases:**
+- **both**: Complete deployment removal or fresh start
+- **backend**: Redeploy backend with different configuration while keeping frontend
+- **frontend**: Redeploy frontend while keeping backend services running
 
 Download the artifact immediately after the workflow completes if you want an
 off-site copy of the backup before server resources are wiped.
+
+### Manual Selective Destroy
+
+You can also run the destroy script manually on the server:
+
+```bash
+# Destroy both (complete teardown)
+cd /srv/watch-party
+DESTROY_TARGET=both bash scripts/deployment/destroy-services.sh
+
+# Destroy backend only
+cd /srv/watch-party
+DESTROY_TARGET=backend bash scripts/deployment/destroy-services.sh
+
+# Destroy frontend only
+cd /srv/watch-party
+DESTROY_TARGET=frontend bash scripts/deployment/destroy-services.sh
+```
 
 ## 📞 Support
 

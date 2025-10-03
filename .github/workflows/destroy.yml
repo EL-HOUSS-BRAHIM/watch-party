@@ -7,6 +7,15 @@ on:
         description: 'Type "destroy" to confirm tearing down the Lightsail environment'
         required: true
         default: 'no'
+      target:
+        description: 'What to destroy'
+        required: true
+        type: choice
+        default: 'both'
+        options:
+          - 'both'
+          - 'backend'
+          - 'frontend'
 
 jobs:
   destroy:
@@ -18,22 +27,27 @@ jobs:
 
       - name: Tear down Lightsail deployment
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          DESTROY_TARGET: ${{ github.event.inputs.target }}
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: deploy
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          envs: DESTROY_TARGET
           script: |
             set -euo pipefail
 
             APP_NAME="watch-party"
             APP_DIR="/srv/$APP_NAME"
             TIMESTAMP="$(date -u +"%Y%m%d%H%M%S")"
+            DESTROY_TARGET="${DESTROY_TARGET:-both}"
             WORK_DIR="/tmp/${APP_NAME}-destroy-${TIMESTAMP}"
             BACKUP_ARCHIVE="/tmp/${APP_NAME}-destroy-${TIMESTAMP}.tar.gz"
             LATEST_ARCHIVE="/tmp/${APP_NAME}-destroy-latest.tar.gz"
             INFO_FILE="/tmp/${APP_NAME}-destroy-latest.txt"
 
             echo "Preparing destroy workflow (${TIMESTAMP})"
+            echo "Target: ${DESTROY_TARGET}"
 
             rm -f /tmp/${APP_NAME}-destroy-*.tar.gz "$INFO_FILE"
             mkdir -p "$WORK_DIR"
@@ -70,37 +84,72 @@ jobs:
             ln -sf "$BACKUP_ARCHIVE" "$LATEST_ARCHIVE"
             echo "$BACKUP_ARCHIVE" > "$INFO_FILE"
 
+            # Determine Docker Compose command
+            DOCKER_COMPOSE=""
             if [ -d "$APP_DIR" ]; then
               if command -v docker-compose >/dev/null 2>&1; then
-                echo "Stopping Docker services..."
-                (cd "$APP_DIR" && docker-compose down --volumes --remove-orphans) || true
-              elif command -v docker >/dev/null 2>&1; then
-                echo "docker-compose not found; attempting docker compose"
-                (cd "$APP_DIR" && docker compose down --volumes --remove-orphans) || true
+                DOCKER_COMPOSE="docker-compose"
+              elif command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then
+                DOCKER_COMPOSE="docker compose"
               fi
             fi
 
-            if command -v docker >/dev/null 2>&1; then
+            # Stop and remove services based on target
+            if [ -n "$DOCKER_COMPOSE" ] && [ -d "$APP_DIR" ]; then
+              cd "$APP_DIR"
+              
+              case "$DESTROY_TARGET" in
+                backend)
+                  echo "Stopping backend services only..."
+                  $DOCKER_COMPOSE stop backend celery-worker celery-beat || true
+                  $DOCKER_COMPOSE rm -f backend celery-worker celery-beat || true
+                  echo "Backend services stopped and removed"
+                  ;;
+                frontend)
+                  echo "Stopping frontend service only..."
+                  $DOCKER_COMPOSE stop frontend || true
+                  $DOCKER_COMPOSE rm -f frontend || true
+                  echo "Frontend service stopped and removed"
+                  ;;
+                both)
+                  echo "Stopping all Docker services..."
+                  $DOCKER_COMPOSE down --volumes --remove-orphans || true
+                  echo "All services stopped and removed"
+                  ;;
+                *)
+                  echo "Unknown target: $DESTROY_TARGET, defaulting to 'both'"
+                  $DOCKER_COMPOSE down --volumes --remove-orphans || true
+                  ;;
+              esac
+            fi
+
+            # Prune Docker resources only if destroying both
+            if [ "$DESTROY_TARGET" = "both" ] && command -v docker >/dev/null 2>&1; then
               echo "Pruning Docker resources..."
               docker system prune -af || true
               docker volume prune -f || true
               docker network prune -f || true
             fi
 
-            if [ -d "$APP_DIR" ]; then
+            # Remove application directory only if destroying both
+            if [ "$DESTROY_TARGET" = "both" ] && [ -d "$APP_DIR" ]; then
               echo "Removing application directory..."
               rm -rf "$APP_DIR"
             fi
 
-            if command -v systemctl >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
-              echo "Attempting to clean nginx configuration..."
-              sudo rm -f /etc/nginx/conf.d/watch-party.conf /etc/nginx/sites-enabled/watch-party.conf
-              sudo systemctl reload nginx || sudo systemctl restart nginx || true
-            else
-              echo "Skipping nginx cleanup (sudo without password not available)"
+            # Clean nginx configuration only if destroying both
+            if [ "$DESTROY_TARGET" = "both" ]; then
+              if command -v systemctl >/dev/null 2>&1 && sudo -n true 2>/dev/null; then
+                echo "Attempting to clean nginx configuration..."
+                sudo rm -f /etc/nginx/conf.d/watch-party.conf /etc/nginx/sites-enabled/watch-party.conf
+                sudo systemctl reload nginx || sudo systemctl restart nginx || true
+              else
+                echo "Skipping nginx cleanup (sudo without password not available)"
+              fi
             fi
 
-            echo "Destroy workflow complete. Backup stored at $BACKUP_ARCHIVE"
+            echo "Destroy workflow complete for target: $DESTROY_TARGET"
+            echo "Backup stored at $BACKUP_ARCHIVE"
 
       - name: Fetch backup archive
         id: fetch-backup
@@ -124,6 +173,6 @@ jobs:
         if: steps.fetch-backup.outputs.found == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: lightsail-destroy-backup
+          name: lightsail-destroy-backup-${{ github.event.inputs.target }}
           path: destroy-artifacts/*.tar.gz
           if-no-files-found: error
