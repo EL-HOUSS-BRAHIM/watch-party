@@ -1,0 +1,64 @@
+name: Clear Application Caches
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Which application caches should be cleared?"
+        required: true
+        default: all
+        type: choice
+        options:
+          - frontend
+          - backend
+          - all
+
+jobs:
+  clear-cache:
+    name: Clear caches on Lightsail instance
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TARGET: ${{ github.event.inputs.target }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Remove caches over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          TARGET: ${{ env.TARGET }}
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: deploy
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          envs: TARGET
+          script: |
+            set -e
+
+            APP_NAME=watch-party
+            APP_DIR=/srv/$APP_NAME
+
+            if [ ! -d "$APP_DIR" ]; then
+              git clone https://github.com/EL-HOUSS-BRAHIM/watch-party.git "$APP_DIR"
+            fi
+
+            cd "$APP_DIR"
+
+            if [ -f scripts/deployment/setup-repository.sh ]; then
+              bash scripts/deployment/setup-repository.sh
+              if [ -f /tmp/deployment-vars.sh ]; then
+                source /tmp/deployment-vars.sh
+                cd "$APP_DIR"
+              fi
+            else
+              git fetch origin
+              git checkout master 2>/dev/null || git checkout main
+              git reset --hard origin/$(git rev-parse --abbrev-ref HEAD)
+            fi
+
+            if [ ! -f scripts/deployment/clear-app-cache.sh ]; then
+              echo "Cache clearing script not found" >&2
+              exit 1
+            fi
+
+            bash scripts/deployment/clear-app-cache.sh "${TARGET:-all}"
