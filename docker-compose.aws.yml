@@ -63,6 +63,15 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    environment:
+      # Backend URL for server-side API calls (CRITICAL: Must use real domain, not docker service name)
+      - BACKEND_URL=https://be-watch-party.brahim-elhouss.me
+      # Public API URLs for client-side calls
+      - NEXT_PUBLIC_API_URL=https://be-watch-party.brahim-elhouss.me
+      - NEXT_PUBLIC_WS_URL=wss://be-watch-party.brahim-elhouss.me/ws
+      - NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE=true
+      - NEXT_PUBLIC_ENABLE_DISCORD=true
+      - NEXT_PUBLIC_ENABLE_ANALYTICS=true
     env_file:
       - ./frontend/.env.local
     ports:
