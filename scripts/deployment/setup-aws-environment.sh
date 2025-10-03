@@ -123,8 +123,8 @@ BACKEND_ENV
 
 # Frontend .env.local
 cat > "$APP_DIR/frontend/.env.local" << 'FRONTEND_ENV'
-# Backend URL for server-side API calls (internal Docker network)
-BACKEND_URL=http://backend:8000
+# Backend URL for server-side API calls (should use the real domain)
+BACKEND_URL=https://be-watch-party.brahim-elhouss.me
 
 # Public API URLs for client-side calls
 NEXT_PUBLIC_API_URL=https://be-watch-party.brahim-elhouss.me
