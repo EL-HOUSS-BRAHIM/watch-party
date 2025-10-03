@@ -1,4 +1,4 @@
-# 🎬 Watch Party Monorepo
+# 🎬 Watch Party
 
 A unified repository containing both frontend and backend for the Watch Party application - a next-generation platform for synchronized video watching with friends.
 
