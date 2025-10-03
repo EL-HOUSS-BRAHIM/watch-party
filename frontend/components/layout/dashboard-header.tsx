@@ -53,8 +53,8 @@ export function DashboardHeader() {
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Logo & Brand */}
         <Link href="/dashboard" className="flex items-center gap-3 transition-opacity hover:opacity-80">
-          <span className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white shadow-[0_10px_28px_rgba(28,28,46,0.18)]">
-            <Image src="/watchparty-logo.svg" alt="WatchParty logo" width={40} height={40} className="h-full w-full object-contain" priority />
+          <span className="relative flex h-10 w-10 items-center justify-center overflow-hidden">
+            <Image src="/watchparty-logo.png" alt="WatchParty logo" width={40} height={40} className="h-full w-full object-contain" priority />
           </span>
           <div className="flex flex-col">
             <span className="text-sm font-semibold uppercase tracking-[0.35em] text-brand-purple">WatchParty</span>

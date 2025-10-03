@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 
 const _navigation = [
   { href: "/#features", label: "Features" },
@@ -12,8 +13,15 @@ export function MarketingHeader() {
     <header className="sticky top-0 z-50 border-b border-brand-navy/10 bg-brand-neutral/80 backdrop-blur-xl supports-[backdrop-filter]:bg-brand-neutral/70">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 text-brand-navy lg:px-8">
         <Link href="/" className="flex items-center gap-3 group" aria-label="WatchParty home">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-magenta to-brand-purple text-base font-bold text-white shadow-lg shadow-brand-magenta/20 group-hover:shadow-brand-magenta/40 transition-all group-hover:-translate-y-0.5">
-            WP
+          <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden transition-all group-hover:-translate-y-0.5">
+            <Image 
+              src="/watchparty-logo.png" 
+              alt="WatchParty logo" 
+              width={48} 
+              height={48} 
+              className="h-full w-full object-contain" 
+              priority 
+            />
           </span>
           <span className="hidden flex-col leading-tight sm:flex">
             <span className="text-xs font-bold uppercase tracking-wider text-brand-purple">WatchParty</span>
