@@ -31,6 +31,11 @@ export SKIP_AWS_DURING_BUILD=1
 log_info "Cleaning up old containers..."
 docker-compose down --remove-orphans || true
 
+# Prune Docker build cache to ensure fresh builds
+log_info "Pruning Docker build cache..."
+docker builder prune -f || true
+log_success "Docker build cache cleared"
+
 # Fix SSL directory ownership if it exists and is owned by root
 if [ -d "$APP_DIR/nginx/ssl" ]; then
     SSL_OWNER=$(stat -c '%U' "$APP_DIR/nginx/ssl" 2>/dev/null || echo "unknown")
@@ -49,7 +54,6 @@ fi
 # Try parallel build first
 log_info "Attempting parallel build..."
 if timeout 1200 docker-compose build --parallel \
-    --build-arg BUILDKIT_INLINE_CACHE=1 \
     --build-arg SKIP_AWS_DURING_BUILD=1 \
     --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH" 2>&1; then
     log_success "Parallel build successful"
