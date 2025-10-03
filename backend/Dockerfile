@@ -40,6 +40,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 ARG SKIP_AWS_DURING_BUILD=0
 ENV SKIP_AWS_DURING_BUILD=${SKIP_AWS_DURING_BUILD}
 
+# Git commit hash for cache busting - changes on every commit
+ARG GIT_COMMIT_HASH=unknown
+RUN echo "Building from commit: ${GIT_COMMIT_HASH}"
+
 # Install runtime dependencies only
 RUN apt-get update && apt-get install -y \
     curl \

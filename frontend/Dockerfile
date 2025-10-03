@@ -26,6 +26,10 @@ WORKDIR /app
 ARG NODE_OPTIONS="--max-old-space-size=2048"
 ENV NODE_OPTIONS=$NODE_OPTIONS
 
+# Git commit hash for cache busting - changes on every commit
+ARG GIT_COMMIT_HASH=unknown
+RUN echo "Building from commit: ${GIT_COMMIT_HASH}"
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
