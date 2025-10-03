@@ -17,6 +17,10 @@ cd "$APP_DIR"
 
 log_info "Building Docker images..."
 
+# Get current git commit hash for cache busting
+GIT_COMMIT_HASH=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
+log_info "Building from commit: $GIT_COMMIT_HASH"
+
 # Enable Docker BuildKit
 export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
@@ -46,7 +50,8 @@ fi
 log_info "Attempting parallel build..."
 if timeout 1200 docker-compose build --parallel \
     --build-arg BUILDKIT_INLINE_CACHE=1 \
-    --build-arg SKIP_AWS_DURING_BUILD=1 2>&1; then
+    --build-arg SKIP_AWS_DURING_BUILD=1 \
+    --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH" 2>&1; then
     log_success "Parallel build successful"
 else
     log_warning "Parallel build failed, trying sequential build..."
@@ -54,7 +59,8 @@ else
     # Build backend
     log_info "Building backend image..."
     if ! timeout 600 docker-compose build backend \
-        --build-arg SKIP_AWS_DURING_BUILD=1; then
+        --build-arg SKIP_AWS_DURING_BUILD=1 \
+        --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH"; then
         exit_with_error "Backend build failed"
     fi
     log_success "Backend image built"
@@ -63,7 +69,8 @@ else
     log_info "Building frontend image..."
     if ! timeout 1200 docker-compose build frontend \
         --build-arg NODE_OPTIONS="--max-old-space-size=2048" \
-        --build-arg SKIP_AWS_DURING_BUILD=1; then
+        --build-arg SKIP_AWS_DURING_BUILD=1 \
+        --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH"; then
         exit_with_error "Frontend build failed"
     fi
     log_success "Frontend image built"
