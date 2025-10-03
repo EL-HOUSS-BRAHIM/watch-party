@@ -32,27 +32,13 @@ export function SiteFooter() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="mt-auto border-t border-brand-navy/10 bg-white/75 backdrop-blur-xl">
-      <div className="mx-auto w-full max-w-[min(100%,1440px)] px-6 py-12 text-sm text-brand-navy/80 sm:px-8 xl:px-12">
-        <div className="grid gap-12 lg:grid-cols-[1.2fr,1fr]">
-          <div className="space-y-6">
-            <div className="flex items-center gap-4">
-              <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-2xl bg-white shadow-[0_12px_32px_rgba(28,28,46,0.12)]">
-                <Image
-                  src="/watchparty-logo.svg"
-                  alt="WatchParty"
-                  width={48}
-                  height={48}
-                  className="h-full w-full object-contain"
-                />
-              </span>
-              <div>
-                <p className="text-base font-semibold text-brand-navy">WatchParty</p>
-                <p className="text-xs uppercase tracking-[0.35em] text-brand-navy/50">Cinematic connection platform</p>
-              </div>
-            </div>
-            <p className="max-w-xl text-base text-brand-navy/70">
-              Build rituals before, during, and after the feature. WatchParty blends sync, ambience, and conversation so your crew feels together—no matter the distance.
+    <footer className="mt-auto border-t border-brand-navy/10 bg-white/70 backdrop-blur-md">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-5 py-10 text-sm text-brand-navy/80 sm:px-8 sm:py-12">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-base font-semibold text-brand-navy">WatchParty</p>
+            <p className="mt-1 max-w-md text-sm text-brand-navy/70">
+              A lightweight watch room for friends to stream movies, episodes, and live matches together.
             </p>
             <div className="flex flex-wrap gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-brand-navy/50">
               <Link href="/auth/register" className="rounded-full border border-brand-magenta/30 px-4 py-2 text-brand-magenta-dark transition-all hover:border-brand-magenta/60 hover:text-brand-magenta">
@@ -79,21 +65,16 @@ export function SiteFooter() {
               </div>
             ))}
           </div>
-        </div>
-        <div className="mt-12 flex flex-col gap-3 border-t border-brand-navy/10 pt-8 text-xs text-brand-navy/50 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} WatchParty. Crafted for crews that live for shared stories.</p>
-          <div className="flex flex-wrap gap-4">
-            <Link href="/terms" className="transition-colors hover:text-brand-navy">
-              Terms
+          <div className="flex flex-wrap gap-2 text-xs uppercase tracking-[0.35em] text-brand-navy/60">
+            <Link href="/dashboard/rooms" className="rounded-full border border-brand-navy/20 px-3 py-1 transition-colors duration-200 hover:border-brand-purple/40 hover:text-brand-purple">
+              Join
             </Link>
-            <Link href="/privacy" className="transition-colors hover:text-brand-navy">
-              Privacy
-            </Link>
-            <Link href="mailto:hello@watchparty.tv" className="transition-colors hover:text-brand-navy">
-              Contact
+            <Link href="/dashboard" className="rounded-full border border-brand-navy/20 px-3 py-1 transition-colors duration-200 hover:border-brand-purple/40 hover:text-brand-purple">
+              Log in
             </Link>
           </div>
         </div>
+        <div className="text-xs text-brand-navy/50">© {year} WatchParty. Built for crews that never miss a scene.</div>
       </div>
     </footer>
   )
