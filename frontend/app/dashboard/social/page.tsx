@@ -6,7 +6,7 @@ import api from "@/lib/api-client"
 import { GradientCard } from "@/components/ui/gradient-card"
 import { IconButton } from "@/components/ui/icon-button"
 import { LiveIndicator } from "@/components/ui/live-indicator"
-import { LoadingState, ErrorMessage, EmptyState } from "@/components/ui/feedback"
+import { LoadingState, ErrorMessage } from "@/components/ui/feedback"
 import { useDesignSystem } from "@/hooks/use-design-system"
 
 interface SocialGroup {
@@ -97,7 +97,7 @@ export default function SocialPage() {
     }
   }
 
-  const handleAddFriend = async (userId: string) => {
+  const _handleAddFriend = async (userId: string) => {
     try {
       await api.post('/api/users/friends/request/', { user_id: userId })
       // Could show a toast notification here

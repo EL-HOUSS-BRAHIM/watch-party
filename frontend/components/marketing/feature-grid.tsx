@@ -1,7 +1,7 @@
 import { features } from "@/lib/data/home"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-const phases = [
+const _phases = [
   {
     title: "Before show",
     description: "Design arrivals with branded invites, lobby music, and countdown lighting that shifts as guests join.",

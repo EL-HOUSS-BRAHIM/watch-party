@@ -5,13 +5,10 @@ import { SwipeGesture } from "@/components/mobile"
 import api, { WatchParty as Party } from "@/lib/api-client"
 
 import { PullToRefresh } from "@/components/mobile"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 
 export default function MobilePartiesPage() {
   const [parties, setParties] = useState<Party[]>([])
   const [loading, setLoading] = useState(true)
-  const [refreshing, setRefreshing] = useState(false)
   const [filter, setFilter] = useState<"all" | "joined" | "hosted">("all")
 
   useEffect(() => {
@@ -29,12 +26,10 @@ export default function MobilePartiesPage() {
       console.error("Failed to load parties:", error)
     } finally {
       setLoading(false)
-      if (isRefresh) setRefreshing(false)
     }
   }
 
   const handleRefresh = async () => {
-    setRefreshing(true)
     await loadParties(true)
   }
 

@@ -22,7 +22,7 @@ type GDriveMovie = {
 }
 
 export default function VideosPage() {
-  const { formatNumber } = useDesignSystem()
+  const { formatNumber: _formatNumber } = useDesignSystem()
   const [videos, setVideos] = useState<VideoSummary[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")

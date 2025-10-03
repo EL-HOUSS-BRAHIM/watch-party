@@ -5,7 +5,7 @@ import { MetricStrip } from "@/components/marketing/metric-strip"
 import { TestimonialGrid } from "@/components/marketing/testimonial-grid"
 import { CallToAction } from "@/components/marketing/call-to-action"
 
-const blueprint = [
+const _blueprint = [
   {
     label: "Storyboard",
     title: "Plan every beat",
@@ -26,7 +26,7 @@ const blueprint = [
   }
 ]
 
-const deviceHighlights = [
+const _deviceHighlights = [
   {
     title: "Living room TV",
     body: "Hosts project the screening while WatchParty syncs captions and audio for every guest.",
