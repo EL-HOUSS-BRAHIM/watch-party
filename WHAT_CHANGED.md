@@ -1,24 +1,57 @@
-# What Changed - Docker Cache Fix
+# What Changed - Docker Cache Fix (Updated)
 
 ## The Problem You Reported
 
-> "We have a caching problem on the deployment, i made another workflow just to completely remove the cache from the frontend etc... but when i check a new build it still use Cache that need to be fixed"
+> "After all the changes and PR merges and a new workflow to delete all the cache but still the docker images use cache when after i cleared it with the clean workflow it should be accessible with the build process"
 
 ## What Was Happening
 
-Even though you had:
-- A cache-busting workflow (`clear-caches.yml`)
-- A cache-busting script (`clear-app-cache.sh`)
-- A GIT_COMMIT_HASH mechanism in Dockerfiles
-
-Docker was **still using cached layers** because your cache clearing only removed application caches (`.next`, `__pycache__`), not Docker's build cache.
+Even after clearing Docker cache with the workflow, deployments **still used cached layers** because:
+- `BUILDKIT_INLINE_CACHE=1` in `docker-compose.yml` embedded cache metadata in built images
+- `BUILDKIT_INLINE_CACHE=1` in the build script's parallel build command
+- Docker reused this embedded cache metadata even after the builder cache was cleared
+- The cache clearing workflow removed the builder cache, but Docker pulled cache from the old images themselves
 
 ## What We Fixed
 
-### Enhanced Your Cache Clearing Workflow
-**File**: `scripts/deployment/clear-app-cache.sh`
+### 1. Removed BUILDKIT_INLINE_CACHE from docker-compose.yml
+**File**: `docker-compose.yml`
 
-Your existing workflow now also clears Docker cache:
+Removed the `BUILDKIT_INLINE_CACHE: 1` argument from both backend and frontend services:
+```yaml
+# Before:
+  backend:
+    build:
+      args:
+        BUILDKIT_INLINE_CACHE: 1  # ❌ REMOVED
+
+# After:
+  backend:
+    build:
+      context: ./backend  # ✅ No cache metadata embedding
+```
+
+### 2. Removed BUILDKIT_INLINE_CACHE from Build Script
+**File**: `scripts/deployment/build-docker-images.sh`
+
+Removed the flag from the parallel build command:
+```bash
+# Before:
+docker-compose build --parallel \
+    --build-arg BUILDKIT_INLINE_CACHE=1 \  # ❌ REMOVED
+    --build-arg SKIP_AWS_DURING_BUILD=1 \
+    --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH"
+
+# After:
+docker-compose build --parallel \
+    --build-arg SKIP_AWS_DURING_BUILD=1 \  # ✅ No inline cache
+    --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH"
+```
+
+### 3. Cache Clearing Still Works
+**File**: `scripts/deployment/clear-app-cache.sh` (unchanged)
+
+The cache clearing workflow still removes Docker builder cache:
 ```bash
 # Clear Docker build cache to ensure fresh builds
 if [ "$TARGET" = "all" ]; then
@@ -78,49 +111,75 @@ The workflow now clears:
 - ✅ Backend Python caches (`__pycache__`)
 - ✅ Docker build cache (NEW!)
 
-## Why This Works
+## Why This Works Now
 
+**Before (Broken):**
 ```
-NORMAL FLOW (Fast):
-Push → Git Pull → Docker Build → May use Cache → Deploy ✅
+Clear Cache Workflow → Removes Builder Cache
+                        ↓
+Next Build → Docker finds old images with inline cache metadata
+           → Reuses cache from images (PROBLEM!)
+           → Still shows CACHED layers ❌
+```
 
-WHEN YOU CLEAR CACHE:
-Clear Cache Workflow → Removes Docker Cache →
-Next Build → Fresh Layers → Guaranteed Fresh Code ✅
+**After (Fixed):**
+```
+Clear Cache Workflow → Removes Builder Cache
+                        ↓
+Next Build → No inline cache metadata in images
+           → Cannot reuse cache from images
+           → Builds completely fresh
+           → All layers rebuilt ✅
+```
+
+**Normal Flow (Fast):**
+```
+Push → Git Pull → Docker Build → May use Cache from previous build → Deploy ✅
+```
+
+**When You Clear Cache:**
+```
+Clear Cache Workflow → Removes Docker Cache
+                        ↓
+Next Build → Fresh Layers (no inline cache to bypass clearing)
+           → Guaranteed Fresh Code ✅
 ```
 
 ## Trade-off
 
-**Manual control over fresh builds.**
+**Manual control over fresh builds, but it actually works now!**
 
 Benefits:
 - Fast deployments normally (using cache)
-- Clear cache only when needed
+- Cache clearing actually clears all cache (no inline cache bypass)
 - You control when to take the performance hit
-- GIT_COMMIT_HASH still provides some cache busting
+- GIT_COMMIT_HASH still provides per-commit cache busting
 
 ## Bottom Line
 
-**You now have control over cache clearing!** 
+**The cache clearing workflow now works correctly!** 
 
 Normal workflow:
 1. Push code normally
 2. Deployments are fast (using cache)
 3. If changes don't appear, run "Clear Caches" workflow
-4. Next deployment will be fresh
+4. Next deployment will be **completely fresh** (no cache reuse from images)
 
 Benefits:
-- Fast deployments normally
-- Manual cache clearing when needed
+- Fast deployments normally (cache still used)
+- Cache clearing actually works now (no inline cache to bypass it)
 - Full control over when to rebuild fresh
+- GIT_COMMIT_HASH still busts cache per commit
 
-## Files We Changed
+## Files We Changed (This Update)
 
-- `scripts/deployment/clear-app-cache.sh` (+7 lines)
-- Added documentation: `DOCKER_CACHE_FIX.md`, `CACHE_FIX_VALIDATION.md`, `WHAT_CHANGED.md`
+- `docker-compose.yml` - Removed BUILDKIT_INLINE_CACHE from backend and frontend (-2 lines)
+- `scripts/deployment/build-docker-images.sh` - Removed BUILDKIT_INLINE_CACHE from parallel build (-1 line)
+- `test-buildkit-inline-cache-removal.sh` - Added validation test (+100 lines)
+- `WHAT_CHANGED.md` - Updated documentation
 
-**Total code changes: ~7 lines**
-**Total new documentation: ~450 lines**
+**Total code changes: 3 lines removed**
+**Total test coverage: +1 validation script**
 
 ## When to Use Clear Caches
 

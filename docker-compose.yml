@@ -8,8 +8,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      args:
-        BUILDKIT_INLINE_CACHE: 1
     image: watchparty-backend:latest
     env_file:
       - ./backend/.env
@@ -69,7 +67,6 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        BUILDKIT_INLINE_CACHE: 1
         NODE_OPTIONS: "--max-old-space-size=2048"
       target: runner
     image: watchparty-frontend:latest

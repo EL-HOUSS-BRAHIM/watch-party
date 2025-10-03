@@ -49,7 +49,6 @@ fi
 # Try parallel build first
 log_info "Attempting parallel build..."
 if timeout 1200 docker-compose build --parallel \
-    --build-arg BUILDKIT_INLINE_CACHE=1 \
     --build-arg SKIP_AWS_DURING_BUILD=1 \
     --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH" 2>&1; then
     log_success "Parallel build successful"
