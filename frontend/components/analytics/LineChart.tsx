@@ -27,10 +27,10 @@ export default function LineChart({
 
   if (!data || data.length === 0) {
     return (
-      <div className="bg-white/5 border border-white/10 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
-        <div className="flex items-center justify-center h-48">
-          <p className="text-white/60">No data available</p>
+      <div className="rounded-3xl border border-brand-navy/10 bg-white/90 p-6 text-brand-navy shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+        <h3 className="mb-4 text-lg font-semibold">{title}</h3>
+        <div className="flex h-48 items-center justify-center text-brand-navy/60">
+          No data available
         </div>
       </div>
     )
@@ -52,9 +52,9 @@ export default function LineChart({
   }).join(' ')
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-lg p-6">
-      <h3 className="text-lg font-semibold text-white mb-6">{title}</h3>
-      
+    <div className="rounded-3xl border border-brand-navy/10 bg-white/95 p-6 text-brand-navy shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+      <h3 className="mb-6 text-lg font-semibold">{title}</h3>
+
       <div className="relative" style={{ height: `${height}px` }}>
         <svg
           width="100%"
@@ -71,7 +71,7 @@ export default function LineChart({
               y1={y}
               x2="100"
               y2={y}
-              stroke="rgba(255,255,255,0.1)"
+              stroke="rgba(28,28,46,0.08)"
               strokeWidth="0.1"
             />
           ))}
@@ -127,7 +127,7 @@ export default function LineChart({
         {/* Hover tooltip */}
         {hoveredPoint !== null && (
           <div
-            className="absolute bg-gray-900 border border-white/20 rounded-lg px-3 py-2 text-sm text-white z-10 pointer-events-none"
+            className="pointer-events-none absolute rounded-2xl border border-brand-navy/10 bg-white/95 px-3 py-2 text-xs font-semibold text-brand-navy shadow-[0_12px_30px_rgba(28,28,46,0.12)]"
             style={{
               left: `${getPointPosition(hoveredPoint, data[hoveredPoint].value).x}%`,
               top: `${getPointPosition(hoveredPoint, data[hoveredPoint].value).y}%`,
@@ -136,7 +136,7 @@ export default function LineChart({
             }}
           >
             <div className="font-medium">{data[hoveredPoint].value.toLocaleString()}</div>
-            <div className="text-white/60 text-xs">
+            <div className="text-[11px] text-brand-navy/60">
               {data[hoveredPoint].date || data[hoveredPoint].label}
             </div>
           </div>
@@ -144,7 +144,7 @@ export default function LineChart({
       </div>
 
       {/* X-axis labels */}
-      <div className="flex justify-between mt-4 text-xs text-white/60">
+      <div className="mt-4 flex justify-between text-[11px] uppercase tracking-[0.3em] text-brand-navy/40">
         {data.map((point, index) => {
           if (index === 0 || index === data.length - 1 || index % Math.ceil(data.length / 4) === 0) {
             return (

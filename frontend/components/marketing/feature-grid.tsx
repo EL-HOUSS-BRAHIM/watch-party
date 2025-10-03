@@ -1,5 +1,22 @@
 import { features } from "@/lib/data/home"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+
+const phases = [
+  {
+    title: "Before show",
+    description: "Design arrivals with branded invites, lobby music, and countdown lighting that shifts as guests join.",
+    accent: "from-brand-magenta/20 via-brand-orange/20 to-brand-coral/30"
+  },
+  {
+    title: "During",
+    description: "Automate cues, reactions, and spoiler-safe chat lanes while WatchParty maintains flawless sync for everyone.",
+    accent: "from-brand-blue/20 via-brand-cyan/20 to-brand-purple/30"
+  },
+  {
+    title: "After",
+    description: "Spin up encore highlights, polls, and replay links instantly. Memories and analytics are saved to the dashboard.",
+    accent: "from-brand-purple/20 via-brand-magenta/20 to-brand-orange/25"
+  }
+]
 
 export function FeatureGrid() {
   return (
@@ -52,8 +69,8 @@ export function FeatureGrid() {
                 Keep viewers synced with spoiler-safe chat, timed reactions, and polls that inherit the room lighting.
               </p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
           {features.map((feature) => (
             <Card key={feature.title} className="border-brand-purple/15 bg-white/85 text-brand-navy shadow-[0_20px_60px_rgba(28,28,46,0.1)]">

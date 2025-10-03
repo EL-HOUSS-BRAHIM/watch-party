@@ -1,5 +1,4 @@
 import { testimonials } from "@/lib/data/home"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export function TestimonialGrid() {
   return (
@@ -35,8 +34,20 @@ export function TestimonialGrid() {
               <span className="rounded-full border border-brand-blue/25 bg-brand-blue/10 px-3 py-1">Campus clubs</span>
               <span className="rounded-full border border-brand-orange/25 bg-brand-orange/10 px-3 py-1">Creator premieres</span>
             </div>
-          </CardContent>
-        </Card>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="rounded-3xl border border-brand-blue/20 bg-white/90 p-5 text-sm text-brand-navy/70">
+                <p className="text-xs uppercase tracking-[0.32em] text-brand-blue-dark">Saved per event</p>
+                <p className="mt-2 text-2xl font-semibold text-brand-navy">3 hrs</p>
+                <p className="mt-2">No more last-minute overlays or audio troubleshooting.</p>
+              </div>
+              <div className="rounded-3xl border border-brand-magenta/20 bg-brand-magenta/10 p-5 text-sm text-brand-navy/75">
+                <p className="text-xs uppercase tracking-[0.32em] text-brand-magenta-dark">Audience return</p>
+                <p className="mt-2 text-2xl font-semibold text-brand-navy">92%</p>
+                <p className="mt-2">Crews come back weekly for the ritual and community.</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="grid gap-6">
           {testimonials.map((testimonial) => (
             <Card key={testimonial.author} className="border-brand-purple/15 bg-white/85 text-brand-navy shadow-[0_24px_80px_rgba(28,28,46,0.12)]">

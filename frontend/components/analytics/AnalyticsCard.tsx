@@ -22,24 +22,26 @@ export default function AnalyticsCard({
   const getColorClasses = (color: string) => {
     switch (color) {
       case "green":
-        return "text-brand-cyan-light bg-brand-cyan/20"
+        return "text-brand-cyan-dark bg-brand-cyan/10"
       case "purple":
-        return "text-brand-purple-light bg-brand-purple/20"
+        return "text-brand-purple-dark bg-brand-purple/10"
       case "yellow":
-        return "text-brand-orange-light bg-brand-orange/20"
+        return "text-brand-orange-dark bg-brand-orange/10"
       case "red":
-        return "text-brand-coral-light bg-brand-coral/20"
+        return "text-brand-coral-dark bg-brand-coral/10"
       default:
-        return "text-brand-blue-light bg-brand-blue/20"
+        return "text-brand-blue-dark bg-brand-blue/10"
     }
   }
 
   const formatChange = (change: number) => {
     const isPositive = change >= 0
     return (
-      <span className={`text-sm flex items-center gap-1 ${
-        isPositive ? "text-brand-cyan-light" : "text-brand-coral-light"
-      }`}>
+      <span
+        className={`flex items-center gap-2 rounded-full px-2 py-1 text-xs font-semibold uppercase tracking-[0.3em] ${
+          isPositive ? "bg-brand-cyan/10 text-brand-cyan-dark" : "bg-brand-coral/10 text-brand-coral-dark"
+        }`}
+      >
         <span>{isPositive ? "↗" : "↘"}</span>
         {Math.abs(change).toFixed(1)}%
       </span>
@@ -47,21 +49,21 @@ export default function AnalyticsCard({
   }
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-lg p-6 hover:bg-white/10 transition-colors">
-      <div className="flex items-center justify-between mb-4">
+    <div className="rounded-3xl border border-brand-navy/10 bg-white/90 p-6 shadow-[0_18px_45px_rgba(28,28,46,0.08)] transition-all hover:-translate-y-0.5 hover:shadow-[0_28px_60px_rgba(28,28,46,0.12)]">
+      <div className="mb-4 flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-white/60 text-sm mb-1">{title}</p>
-          <p className="text-2xl font-bold text-white">{value}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-navy/50">{title}</p>
+          <p className="mt-2 text-3xl font-bold text-brand-navy">{value}</p>
         </div>
-        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${getColorClasses(color)}`}>
-          <span className="text-2xl">{icon}</span>
+        <div className={`flex h-12 w-12 items-center justify-center rounded-2xl shadow-[0_12px_30px_rgba(74,46,160,0.12)] ${getColorClasses(color)}`}>
+          <span className="text-xl">{icon}</span>
         </div>
       </div>
-      
+
       {change !== undefined && (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between text-xs text-brand-navy/50">
           {formatChange(change)}
-          <span className="text-white/40 text-xs">vs last period</span>
+          <span className="font-medium">vs last period</span>
         </div>
       )}
     </div>

@@ -21,10 +21,10 @@ export default function BarChart({
 }: BarChartProps) {
   if (!data || data.length === 0) {
     return (
-      <div className="bg-white/5 border border-white/10 rounded-lg p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
-        <div className="flex items-center justify-center h-48">
-          <p className="text-white/60">No data available</p>
+      <div className="rounded-3xl border border-brand-navy/10 bg-white/90 p-6 text-brand-navy shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+        <h3 className="mb-4 text-lg font-semibold">{title}</h3>
+        <div className="flex h-48 items-center justify-center text-brand-navy/60">
+          No data available
         </div>
       </div>
     )
@@ -43,10 +43,10 @@ export default function BarChart({
   ]
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-lg p-6">
-      <h3 className="text-lg font-semibold text-white mb-6">{title}</h3>
-      
-      <div className={`space-y-4 ${horizontal ? '' : 'flex items-end justify-between h-48'}`}>
+    <div className="rounded-3xl border border-brand-navy/10 bg-white/95 p-6 text-brand-navy shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+      <h3 className="mb-6 text-lg font-semibold">{title}</h3>
+
+      <div className={`space-y-4 ${horizontal ? '' : 'flex h-48 items-end justify-between'}`}>
         {data.map((item, index) => {
           const percentage = maxValue > 0 ? (item.value / maxValue) * 100 : 0
           const color = item.color || colors[index % colors.length]
@@ -54,13 +54,13 @@ export default function BarChart({
           if (horizontal) {
             return (
               <div key={index} className="flex items-center gap-4">
-                <div className="w-24 text-white/80 text-sm truncate">
+                <div className="w-28 truncate text-sm font-medium text-brand-navy/70">
                   {item.label}
                 </div>
                 <div className="flex-1 relative">
-                  <div className="w-full bg-white/10 rounded-full h-6">
+                  <div className="h-6 w-full rounded-full border border-brand-navy/10 bg-brand-neutral">
                     <div
-                      className="h-6 rounded-full flex items-center justify-end pr-2 transition-all duration-500 ease-out"
+                      className="flex h-6 items-center justify-end rounded-full pr-3 text-[11px] font-semibold uppercase tracking-[0.25em] text-white transition-all duration-500 ease-out"
                       style={{
                         backgroundColor: color,
                         width: `${percentage}%`,
@@ -68,9 +68,7 @@ export default function BarChart({
                       }}
                     >
                       {showValues && (
-                        <span className="text-white text-xs font-medium">
-                          {item.value.toLocaleString()}
-                        </span>
+                        <span>{item.value.toLocaleString()}</span>
                       )}
                     </div>
                   </div>
@@ -82,7 +80,7 @@ export default function BarChart({
           return (
             <div key={index} className="flex flex-col items-center group">
               <div
-                className="w-8 rounded-t transition-all duration-500 ease-out hover:opacity-80 relative"
+                className="relative w-10 rounded-t-full transition-all duration-500 ease-out hover:opacity-90"
                 style={{
                   backgroundColor: color,
                   height: `${percentage}%`,
@@ -90,12 +88,12 @@ export default function BarChart({
                 }}
               >
                 {showValues && (
-                  <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 text-white text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 px-2 py-1 rounded whitespace-nowrap">
+                  <div className="absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-brand-navy/10 bg-white/95 px-3 py-1 text-xs font-semibold text-brand-navy opacity-0 shadow-[0_12px_30px_rgba(28,28,46,0.12)] transition-opacity group-hover:opacity-100">
                     {item.value.toLocaleString()}
                   </div>
                 )}
               </div>
-              <div className="text-white/60 text-xs mt-2 text-center max-w-16 truncate">
+              <div className="mt-2 max-w-20 truncate text-center text-xs font-semibold uppercase tracking-[0.3em] text-brand-navy/50">
                 {item.label}
               </div>
             </div>
@@ -105,14 +103,14 @@ export default function BarChart({
 
       {/* Legend for horizontal bars */}
       {horizontal && data.length > 5 && (
-        <div className="flex flex-wrap gap-4 mt-6 pt-4 border-t border-white/10">
+        <div className="mt-6 flex flex-wrap gap-4 border-t border-brand-navy/10 pt-4">
           {data.map((item, index) => (
             <div key={index} className="flex items-center gap-2">
               <div
                 className="w-3 h-3 rounded"
                 style={{ backgroundColor: item.color || colors[index % colors.length] }}
               />
-              <span className="text-white/80 text-sm">{item.label}</span>
+              <span className="text-sm font-medium text-brand-navy/70">{item.label}</span>
             </div>
           ))}
         </div>

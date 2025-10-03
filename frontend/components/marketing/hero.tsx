@@ -1,13 +1,52 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
+const highlights = [
+  {
+    label: "Sync precision",
+    value: "±18 ms",
+    description: "Streamline lag across continents with adaptive sync."
+  },
+  {
+    label: "Scene palettes",
+    value: "42 presets",
+    description: "Shift lighting, chat, and overlays with one cue."
+  },
+  {
+    label: "Hosts onboarded",
+    value: "11K/mo",
+    description: "Communities, classrooms, and creators worldwide."
+  }
+]
+
+const timeline = [
+  {
+    time: "18:30",
+    title: "Welcome lobby",
+    description: "Set the mood with warm lighting, intros, and RSVP roll call.",
+    accent: "from-brand-magenta via-brand-orange to-brand-coral"
+  },
+  {
+    time: "19:05",
+    title: "Feature screening",
+    description: "Perfect sync, live captions, and emoji-led reactions in real time.",
+    accent: "from-brand-blue via-brand-cyan to-brand-purple"
+  },
+  {
+    time: "21:10",
+    title: "Encore lounge",
+    description: "After-credits poll, highlight reels, and saved chat memories.",
+    accent: "from-brand-purple via-brand-magenta to-brand-orange"
+  }
+]
+
 export function Hero() {
   return (
     <section className="relative overflow-hidden rounded-[48px] border border-brand-purple/15 bg-white/90 px-7 py-16 text-brand-navy shadow-[0_40px_120px_rgba(28,28,46,0.18)] sm:px-12 lg:px-16">
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(233,64,138,0.18),transparent_55%),radial-gradient(circle_at_bottom_right,rgba(45,156,219,0.22),transparent_60%),radial-gradient(circle_at_top_right,rgba(243,156,18,0.16),transparent_60%)]" />
       </div>
-      <div className="relative grid gap-14 lg:grid-cols-[1.45fr,1fr] lg:items-center">
+      <div className="relative grid gap-14 lg:grid-cols-[1.5fr,1fr] lg:items-center">
         <div className="space-y-10">
           <div className="flex flex-wrap items-center gap-4">
             <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/30 bg-brand-magenta/10 px-4 py-1 text-[11px] uppercase tracking-[0.45em] text-brand-magenta-dark">

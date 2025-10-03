@@ -5,6 +5,45 @@ import { MetricStrip } from "@/components/marketing/metric-strip"
 import { TestimonialGrid } from "@/components/marketing/testimonial-grid"
 import { CallToAction } from "@/components/marketing/call-to-action"
 
+const blueprint = [
+  {
+    label: "Storyboard",
+    title: "Plan every beat",
+    copy: "Craft arrivals, intermissions, and encores with reusable cues and templates.",
+    accent: "from-brand-magenta via-brand-orange to-brand-coral"
+  },
+  {
+    label: "Host",
+    title: "Control the moment",
+    copy: "Switch scenes, spotlight commentary, and launch polls without leaving the stream.",
+    accent: "from-brand-blue via-brand-cyan to-brand-purple"
+  },
+  {
+    label: "Celebrate",
+    title: "Save the memories",
+    copy: "Share highlight reels, recap reactions, and deliver follow-up invites automatically.",
+    accent: "from-brand-purple via-brand-magenta to-brand-orange"
+  }
+]
+
+const deviceHighlights = [
+  {
+    title: "Living room TV",
+    body: "Hosts project the screening while WatchParty syncs captions and audio for every guest.",
+    color: "border-brand-purple/20 bg-brand-purple/10"
+  },
+  {
+    title: "Creator studio",
+    body: "Stream deck-friendly shortcuts trigger lighting, overlays, and chat prompts instantly.",
+    color: "border-brand-blue/20 bg-brand-blue/10"
+  },
+  {
+    title: "Mobile watch",
+    body: "Travelers stay in perfect sync with low-data mode, haptics, and emoji-led reactions.",
+    color: "border-brand-magenta/20 bg-brand-magenta/10"
+  }
+]
+
 export default function HomePage() {
   return (
     <>

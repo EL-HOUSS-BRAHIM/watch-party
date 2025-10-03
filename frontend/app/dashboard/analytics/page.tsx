@@ -6,7 +6,6 @@ import { analyticsApi, NormalizedRealTimeAnalytics } from "@/lib/api-client"
 import AnalyticsCard from "@/components/analytics/AnalyticsCard"
 import LineChart from "@/components/analytics/LineChart"
 import BarChart from "@/components/analytics/BarChart"
-// DonutChart component available but not currently used in this view
 import RealTimeActivityFeed from "@/components/analytics/RealTimeActivityFeed"
 
 export default function AnalyticsPage() {
@@ -19,14 +18,13 @@ export default function AnalyticsPage() {
 
   useEffect(() => {
     loadAnalyticsData()
-    
-    // Auto-refresh realtime data every 30 seconds
+
     const interval = setInterval(() => {
       if (activeTab === "realtime") {
         loadRealtimeData()
       }
     }, 30000)
-    
+
     return () => clearInterval(interval)
   }, [activeTab])
 
@@ -38,7 +36,7 @@ export default function AnalyticsPage() {
         analyticsApi.getPersonal(),
         analyticsApi.getRealTime()
       ])
-      
+
       setDashboardData(dashboard)
       setPersonalData(personal)
       setRealtimeData(realtime)
@@ -59,13 +57,9 @@ export default function AnalyticsPage() {
   }
 
   const formatNumber = (num: number) => {
-    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M'
-    if (num >= 1000) return (num / 1000).toFixed(1) + 'K'
-    return num?.toString() || '0'
-  }
-
-  const formatPercentage = (num: number) => {
-    return `${(num || 0).toFixed(1)}%`
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + "M"
+    if (num >= 1000) return (num / 1000).toFixed(1) + "K"
+    return num?.toString() || "0"
   }
 
   const mapRealtimeEventType = (
@@ -101,297 +95,358 @@ export default function AnalyticsPage() {
       id: `${eventType}-${index}`,
       type: mapRealtimeEventType(eventType),
       description,
-      timestamp: realtimeData?.timestamp || new Date().toISOString(),
+      timestamp: realtimeData?.timestamp || new Date().toISOString()
     }
   })
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-white/60">Loading analytics...</p>
-          </div>
+      <div className="flex min-h-[420px] items-center justify-center text-brand-navy/60">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-brand-purple border-t-transparent" />
+          <p className="text-sm font-semibold uppercase tracking-[0.3em]">Loading analytics…</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
-      {/* Header */}
-      <div className="bg-black/20 border-b border-white/10">
-        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => router.push("/dashboard")}
-                className="text-white/60 hover:text-white transition-colors"
-              >
-                ←
-              </button>
-              <div>
-                <h1 className="text-2xl font-bold text-white">Analytics Dashboard</h1>
-                <p className="text-white/60 text-sm">Insights into platform performance and user engagement</p>
-              </div>
+    <div className="space-y-10">
+      <header className="rounded-3xl border border-brand-navy/10 bg-white/90 p-8 shadow-[0_28px_80px_rgba(28,28,46,0.12)]">
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-3">
+            <button
+              onClick={() => router.push("/dashboard")}
+              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-blue transition-colors hover:text-brand-blue-dark"
+            >
+              ← Back to overview
+            </button>
+            <div>
+              <h1 className="text-3xl font-bold text-brand-navy">Analytics control room</h1>
+              <p className="mt-2 max-w-2xl text-sm text-brand-navy/70">
+                Monitor growth, engagement, and reliability across WatchParty. Switch between tabs to explore your personal impact or global platform momentum.
+              </p>
             </div>
-
-            <div className="flex items-center gap-3 md:self-end">
-              <span className="rounded-full bg-blue-600/20 px-3 py-1 text-sm font-medium text-brand-blue-light">
-                📊 Live Data
-              </span>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center gap-2 rounded-full border border-brand-blue/20 bg-brand-blue/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-blue-dark">
+              📊 Live data synced
+            </span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-brand-navy/10 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-navy/60">
+              Updated {realtimeData?.timestamp ? new Date(realtimeData.timestamp).toLocaleTimeString() : "recently"}
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Navigation Tabs */}
-      <div className="bg-black/10 border-b border-white/10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="-mx-4 flex gap-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
-            {[
-              { id: "overview", label: "Overview", icon: "📊" },
-              { id: "personal", label: "Personal", icon: "👤" },
-              { id: "realtime", label: "Real-time", icon: "⚡" },
-              { id: "platform", label: "Platform", icon: "🌐" }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`flex flex-shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-3 py-3 text-sm font-medium transition-colors sm:px-4 sm:py-4 ${
-                  activeTab === tab.id
-                    ? "text-brand-blue-light border-blue-400"
-                    : "text-white/60 border-transparent hover:text-white"
-                }`}
-              >
-                <span>{tab.icon}</span>
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+        <nav className="mt-8 flex flex-wrap gap-3">
+          {[
+            { id: "overview", label: "Overview", icon: "📊" },
+            { id: "personal", label: "Your impact", icon: "👤" },
+            { id: "realtime", label: "Live pulse", icon: "⚡" },
+            { id: "platform", label: "Platform", icon: "🌐" }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-all ${
+                activeTab === tab.id
+                  ? "border-brand-purple/30 bg-brand-purple/10 text-brand-purple"
+                  : "border-brand-navy/10 bg-white/60 text-brand-navy/60 hover:border-brand-navy/20 hover:text-brand-navy"
+              }`}
+            >
+              <span>{tab.icon}</span>
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+      </header>
 
-      {/* Content */}
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-        {/* Overview Tab */}
-        {activeTab === "overview" && (
-          <div className="space-y-8">
-            {/* Key Metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <AnalyticsCard
-                title="Total Users"
-                value={formatNumber(dashboardData?.total_users || 0)}
-                change={dashboardData?.user_growth}
-                icon="👥"
-                color="blue"
-              />
-              
-              <AnalyticsCard
-                title="Active Parties"
-                value={formatNumber(dashboardData?.active_parties || 0)}
-                change={dashboardData?.party_growth}
-                icon="🎬"
-                color="green"
-              />
-              
-              <AnalyticsCard
-                title="Watch Time"
-                value={`${formatNumber(dashboardData?.total_watch_time || 0)}h`}
-                change={dashboardData?.watch_time_growth}
-                icon="⏱️"
-                color="purple"
-              />
-              
-              <AnalyticsCard
-                title="Engagement Rate"
-                value={formatPercentage(dashboardData?.engagement_rate || 0)}
-                icon="💬"
-                color="yellow"
-              />
-            </div>
-
-            {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* User Activity Chart */}
-              <LineChart
-                data={dashboardData?.daily_activity?.map((day: any) => ({
-                  label: new Date(day.date).toLocaleDateString('en-US', { weekday: 'short' }),
-                  value: day.active_users || 0,
-                  date: day.date
-                })) || []}
-                title="User Activity (Last 7 Days)"
-                color="#3b82f6"
-              />
-
-              {/* Popular Content */}
-              <BarChart
-                data={dashboardData?.popular_videos?.map((video: any, index: number) => ({
-                  label: video.title?.substring(0, 15) + (video.title?.length > 15 ? '...' : '') || `Video ${index + 1}`,
-                  value: video.view_count || 0
-                })) || []}
-                title="Popular Videos"
-                horizontal={true}
-              />
-            </div>
-
-            {/* Platform Stats */}
-            <div className="bg-white/5 border border-white/10 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-6">Platform Statistics</h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-brand-blue-light mb-2">
-                    {formatNumber(dashboardData?.total_messages || 0)}
-                  </div>
-                  <p className="text-white/60">Total Messages</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-brand-cyan-light mb-2">
-                    {formatNumber(dashboardData?.total_videos || 0)}
-                  </div>
-                  <p className="text-white/60">Videos Uploaded</p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-brand-purple-light mb-2">
-                    {formatNumber(dashboardData?.total_parties_created || 0)}
-                  </div>
-                  <p className="text-white/60">Parties Created</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Personal Tab */}
-        {activeTab === "personal" && (
-          <div className="space-y-8">
-            {/* Personal Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <AnalyticsCard
-                title="Parties Hosted"
-                value={personalData?.parties_hosted || 0}
-                icon="🎬"
-                color="blue"
-              />
-              
-              <AnalyticsCard
-                title="Parties Joined"
-                value={personalData?.parties_joined || 0}
-                icon="👥"
-                color="green"
-              />
-              
-              <AnalyticsCard
-                title="Watch Time"
-                value={`${formatNumber(personalData?.total_watch_time || 0)}h`}
-                icon="⏱️"
-                color="purple"
-              />
-              
-              <AnalyticsCard
-                title="Messages Sent"
-                value={formatNumber(personalData?.messages_sent || 0)}
-                icon="💬"
-                color="yellow"
-              />
-            </div>
-
-            {/* Recent Activity */}
-            <div className="bg-white/5 border border-white/10 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-white mb-6">Your Recent Activity</h3>
-              
-              <div className="space-y-4">
-                {personalData?.recent_activities?.map((activity: any, index: number) => (
-                  <div key={index} className="flex items-center gap-4 p-3 bg-white/5 rounded-lg">
-                    <div className="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
-                      <span className="text-xl">
-                        {activity.type === "party_created" ? "🎬" :
-                         activity.type === "party_joined" ? "👥" :
-                         activity.type === "video_uploaded" ? "📹" : "💬"}
-                      </span>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-white font-medium">{activity.description}</p>
-                      <p className="text-white/60 text-sm">
-                        {new Date(activity.timestamp).toLocaleString()}
-                      </p>
-                    </div>
-                  </div>
-                )) || (
-                  <div className="text-center py-8">
-                    <p className="text-white/60">No recent activity</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Real-time Tab */}
-        {activeTab === "realtime" && (
-          <div className="space-y-8">
-            {/* Live Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <AnalyticsCard
-                title="Online Users"
-                value={realtimeData?.onlineUsers || 0}
-                icon="🟢"
-                color="green"
-              />
-
-              <AnalyticsCard
-                title="Active Parties"
-                value={realtimeData?.activeParties || 0}
-                icon="🎬"
-                color="blue"
-              />
-
-              <AnalyticsCard
-                title="Live Messages"
-                value={`${realtimeData?.engagement.messagesPerMinute || 0}/min`}
-                icon="💬"
-                color="purple"
-              />
-
-              <AnalyticsCard
-                title="Server Load"
-                value={`${realtimeData ? realtimeData.systemHealth.systemLoad.toFixed(1) : 0}%`}
-                icon="⚡"
-                color="yellow"
-              />
-            </div>
-
-            {/* Live Activity Feed */}
-            <RealTimeActivityFeed
-              activities={realtimeFeed}
-              maxItems={15}
+      {activeTab === "overview" && (
+        <section className="space-y-10">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            <AnalyticsCard
+              title="Total users"
+              value={formatNumber(dashboardData?.total_users || 0)}
+              change={dashboardData?.user_growth}
+              icon="👥"
+              color="blue"
+            />
+            <AnalyticsCard
+              title="Active parties"
+              value={formatNumber(dashboardData?.active_parties || 0)}
+              change={dashboardData?.party_growth}
+              icon="🎬"
+              color="green"
+            />
+            <AnalyticsCard
+              title="Watch time"
+              value={`${formatNumber(dashboardData?.total_watch_time || 0)} hrs`}
+              change={dashboardData?.watch_time_growth}
+              icon="⏱️"
+              color="purple"
+            />
+            <AnalyticsCard
+              title="New subscriptions"
+              value={formatNumber(dashboardData?.new_subscriptions || 0)}
+              change={dashboardData?.subscription_growth}
+              icon="⭐"
+              color="yellow"
             />
           </div>
-        )}
 
-        {/* Platform Tab */}
-        {activeTab === "platform" && (
-          <div className="bg-white/5 border border-white/10 rounded-lg p-8 text-center">
-            <div className="text-6xl mb-4">🚧</div>
-            <h3 className="text-xl font-semibold text-white mb-2">
-              Platform Analytics
-            </h3>
-            <p className="text-white/60 mb-6">
-              Advanced platform analytics and insights coming soon.
-            </p>
-            <button
-              onClick={() => setActiveTab("overview")}
-              className="px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg font-medium transition-colors"
-            >
-              Back to Overview
-            </button>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <LineChart
+              title="Engagement over time"
+              data={(dashboardData?.engagement_over_time || []).map((item: any) => ({
+                label: item.label,
+                value: item.value,
+                date: item.date
+              }))}
+              color="#3B82F6"
+              height={260}
+            />
+
+            <BarChart
+              title="Top party categories"
+              data={(dashboardData?.top_categories || []).map((item: any) => ({
+                label: item.category,
+                value: item.value
+              }))}
+            />
           </div>
-        )}
-      </div>
+
+          <div className="grid gap-6 lg:grid-cols-[1.1fr,0.9fr]">
+            <RealTimeActivityFeed activities={realtimeFeed} maxItems={8} />
+
+            <div className="rounded-3xl border border-brand-navy/10 bg-white/90 p-6 shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+              <h3 className="text-lg font-semibold text-brand-navy">Platform highlights</h3>
+              <div className="mt-5 space-y-4 text-sm text-brand-navy/70">
+                <div className="flex items-center justify-between">
+                  <span>Total watch parties hosted</span>
+                  <span className="rounded-full border border-brand-purple/20 bg-brand-purple/5 px-3 py-1 text-sm font-semibold text-brand-purple">
+                    {formatNumber(dashboardData?.total_parties || 0)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Average party duration</span>
+                  <span className="rounded-full border border-brand-blue/20 bg-brand-blue/5 px-3 py-1 text-sm font-semibold text-brand-blue-dark">
+                    {Math.round((dashboardData?.average_party_duration || 0) / 60)} mins
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Peak concurrency</span>
+                  <span className="rounded-full border border-brand-cyan/20 bg-brand-cyan/5 px-3 py-1 text-sm font-semibold text-brand-cyan-dark">
+                    {formatNumber(dashboardData?.peak_concurrent_users || 0)}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Engagement score</span>
+                  <span className="rounded-full border border-brand-orange/20 bg-brand-orange/5 px-3 py-1 text-sm font-semibold text-brand-orange-dark">
+                    {(dashboardData?.average_engagement_score || 0).toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {activeTab === "personal" && (
+        <section className="space-y-10">
+          <div className="grid gap-6 lg:grid-cols-[1fr,1.2fr,1fr]">
+            <div className="rounded-3xl border border-brand-navy/10 bg-white/90 p-6 shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+              <h3 className="text-lg font-semibold text-brand-navy">Personal overview</h3>
+              <div className="mt-5 space-y-4 text-sm text-brand-navy/70">
+                <div className="flex items-center justify-between">
+                  <span>Parties hosted</span>
+                  <span className="font-semibold text-brand-purple">{personalData?.parties_hosted || 0}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Average attendance</span>
+                  <span className="font-semibold text-brand-blue-dark">{personalData?.average_attendance || 0}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Total watch time</span>
+                  <span className="font-semibold text-brand-magenta-dark">{formatNumber(personalData?.watch_time || 0)} hrs</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Engagement score</span>
+                  <span className="font-semibold text-brand-orange-dark">{personalData?.engagement_score || 0}%</span>
+                </div>
+              </div>
+            </div>
+
+            <BarChart
+              title="Top performing parties"
+              data={(personalData?.top_parties || []).map((party: any) => ({
+                label: party.title,
+                value: party.attendance
+              }))}
+              horizontal
+            />
+
+            <LineChart
+              title="Messages & reactions"
+              data={(personalData?.engagement_trends || []).map((trend: any) => ({
+                label: trend.label,
+                value: trend.value
+              }))}
+              color="#8B5CF6"
+              height={220}
+            />
+          </div>
+
+          <div className="rounded-3xl border border-brand-navy/10 bg-white/90 p-6 shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+            <h3 className="text-lg font-semibold text-brand-navy">Milestones unlocked</h3>
+            <div className="mt-5 space-y-4">
+              {["First 100 viewers", "Highest rated party", "Top community host"].map((milestone, index) => (
+                <div key={index} className="flex items-center gap-4 rounded-2xl border border-brand-navy/10 bg-white/70 p-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-magenta text-white">
+                    {index + 1}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-brand-navy">{milestone}</p>
+                    <p className="text-xs uppercase tracking-[0.3em] text-brand-navy/40">Unlocked milestone badge</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {activeTab === "realtime" && realtimeData && (
+        <section className="space-y-10">
+          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {[
+              { label: "Online users", value: realtimeData.onlineUsers, icon: "👥" },
+              { label: "Active parties", value: realtimeData.activeParties, icon: "🎬" },
+              { label: "Messages per min", value: realtimeData.engagement.messagesPerMinute, icon: "💬" },
+              { label: "Reactions per min", value: realtimeData.engagement.reactionsPerMinute, icon: "🎉" }
+            ].map((stat, index) => (
+              <div
+                key={index}
+                className="rounded-3xl border border-brand-navy/10 bg-white/90 p-6 text-brand-navy shadow-[0_18px_45px_rgba(28,28,46,0.08)]"
+              >
+                <div className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-navy/50">{stat.label}</div>
+                <div className="mt-3 flex items-baseline gap-2 text-3xl font-bold text-brand-navy">
+                  {formatNumber(stat.value)}
+                  <span className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-navy/40">Now</span>
+                </div>
+                <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-brand-cyan/20 bg-brand-cyan/5 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-brand-cyan-dark">
+                  {stat.icon} Live feed
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="grid gap-6 lg:grid-cols-[1.2fr,0.8fr]">
+            <LineChart
+              title="Concurrent viewers"
+              data={(realtimeData.engagementHistory || []).map((item: any) => ({
+                label: item.label,
+                value: item.value,
+                date: item.timestamp
+              }))}
+              color="#06B6D4"
+              height={240}
+            />
+
+            <div className="rounded-3xl border border-brand-navy/10 bg-white/90 p-6 text-brand-navy shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+              <h3 className="text-lg font-semibold">System health</h3>
+              <div className="mt-5 space-y-4 text-sm text-brand-navy/70">
+                <div className="flex items-center justify-between">
+                  <span>System load</span>
+                  <span className="font-semibold text-brand-cyan-dark">{realtimeData.systemHealth.systemLoad.toFixed(1)}%</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>CPU usage</span>
+                  <span className="font-semibold text-brand-cyan-dark">{realtimeData.systemHealth.cpuUsage.toFixed(1)}%</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Memory usage</span>
+                  <span className="font-semibold text-brand-cyan-dark">{realtimeData.systemHealth.memoryUsage.toFixed(1)}%</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Disk usage</span>
+                  <span className="font-semibold text-brand-cyan-dark">{realtimeData.systemHealth.diskUsage.toFixed(1)}%</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Network traffic</span>
+                  <span className="font-semibold text-brand-cyan-dark">{realtimeData.systemHealth.networkTraffic.toFixed(1)} MB/s</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {activeTab === "platform" && (
+        <section className="space-y-10">
+          <div className="grid gap-6 lg:grid-cols-[1fr,1.2fr,1fr]">
+            <div className="rounded-3xl border border-brand-navy/10 bg-white/90 p-6 shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+              <h3 className="text-lg font-semibold text-brand-navy">Growth snapshot</h3>
+              <div className="mt-5 space-y-4 text-sm text-brand-navy/70">
+                <div className="flex items-center justify-between">
+                  <span>New users (30d)</span>
+                  <span className="font-semibold text-brand-blue-dark">{formatNumber(dashboardData?.new_users_30d || 0)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Returning users</span>
+                  <span className="font-semibold text-brand-magenta-dark">{formatNumber(dashboardData?.returning_users || 0)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Conversion rate</span>
+                  <span className="font-semibold text-brand-orange-dark">{(dashboardData?.conversion_rate || 0).toFixed(1)}%</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span>Churn rate</span>
+                  <span className="font-semibold text-brand-coral-dark">{(dashboardData?.churn_rate || 0).toFixed(1)}%</span>
+                </div>
+              </div>
+            </div>
+
+            <BarChart
+              title="Top regions"
+              data={(dashboardData?.top_regions || []).map((region: any) => ({
+                label: region.region,
+                value: region.users
+              }))}
+              horizontal
+            />
+
+            <LineChart
+              title="Feature adoption"
+              data={(dashboardData?.feature_adoption || []).map((item: any) => ({
+                label: item.label,
+                value: item.value
+              }))}
+              color="#F59E0B"
+              height={220}
+            />
+          </div>
+
+          <div className="rounded-3xl border border-brand-navy/10 bg-white/90 p-6 shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+            <h3 className="text-lg font-semibold text-brand-navy">Top performing hosts</h3>
+            <div className="mt-5 space-y-4">
+              {(dashboardData?.top_hosts || []).map((host: any, index: number) => (
+                <div key={host.username} className="flex items-center gap-4 rounded-2xl border border-brand-navy/10 bg-white/70 p-4">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-neutral/70 text-xs font-semibold text-brand-navy">
+                    #{index + 1}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-brand-navy">{host.username}</p>
+                    <p className="text-xs uppercase tracking-[0.3em] text-brand-navy/40">{formatNumber(host.watch_time || 0)} hrs watched</p>
+                  </div>
+                  <div className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-navy/40">
+                    {formatNumber(host.parties_hosted || 0)} parties
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   )
 }

@@ -1,9 +1,13 @@
+import Image from "next/image"
 import Link from "next/link"
 
-/**
- * MarketingHeader - Header for landing page and public marketing pages
- * Features gradient logo, "Get Started" CTA, minimalist design
- */
+const navigation = [
+  { href: "/#features", label: "Features" },
+  { href: "/#experience", label: "Experience" },
+  { href: "/#testimonials", label: "Stories" },
+  { href: "/join", label: "Join" }
+]
+
 export function MarketingHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-brand-navy/10 bg-brand-neutral/80 backdrop-blur-xl supports-[backdrop-filter]:bg-brand-neutral/70">
@@ -22,13 +26,13 @@ export function MarketingHeader() {
             href="/join"
             className="text-sm font-semibold text-brand-navy/80 transition-colors hover:text-brand-navy underline-offset-4 hover:underline"
           >
-            Join Party
+            Sign in
           </Link>
           <Link
             href="/auth/login"
             className="rounded-xl bg-gradient-to-r from-brand-magenta to-brand-orange px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-magenta/30 transition-all hover:-translate-y-0.5 hover:from-brand-magenta-dark hover:to-brand-orange-dark hover:shadow-brand-magenta/40"
           >
-            Get Started
+            Start hosting
           </Link>
         </div>
       </div>

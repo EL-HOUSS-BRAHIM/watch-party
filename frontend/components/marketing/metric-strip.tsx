@@ -25,6 +25,16 @@ export function MetricStrip() {
           <p className="text-base text-brand-navy/70">
             WatchParty&apos;s sync engine and ambience presets power film festivals, esports leagues, and classroom screenings. Here&apos;s what crews experience after switching from DIY setups.
           </p>
+          <div className="grid gap-4 text-sm text-brand-navy/70 sm:grid-cols-2">
+            <div className="rounded-3xl border border-brand-purple/20 bg-brand-purple/5 p-5">
+              <p className="text-xs uppercase tracking-[0.32em] text-brand-purple">Festival-ready</p>
+              <p className="mt-2 leading-relaxed">Multi-night events schedule cues once and reuse them across screens and locations.</p>
+            </div>
+            <div className="rounded-3xl border border-brand-orange/25 bg-brand-orange/10 p-5">
+              <p className="text-xs uppercase tracking-[0.32em] text-brand-orange-dark">Global friendly</p>
+              <p className="mt-2 leading-relaxed">Auto-translated chat, caption sync, and timezone smart invites keep everyone aligned.</p>
+            </div>
+          </div>
         </div>
         <div className="grid gap-6 sm:grid-cols-3">
           {metrics.map((metric) => (

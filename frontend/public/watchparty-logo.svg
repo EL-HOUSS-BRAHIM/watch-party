@@ -1,0 +1,27 @@
+<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="watchpartyGradient" x1="18" y1="18" x2="146" y2="146" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E9408A" />
+      <stop offset="0.5" stop-color="#4A2EA0" />
+      <stop offset="1" stop-color="#2D9CDB" />
+    </linearGradient>
+    <linearGradient id="watchpartyAccent" x1="44" y1="40" x2="128" y2="124" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F39C12" />
+      <stop offset="1" stop-color="#FF5E57" />
+    </linearGradient>
+    <filter id="shadow" x="0" y="0" width="160" height="160" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="rgba(28,28,46,0.18)" />
+    </filter>
+  </defs>
+  <rect x="14" y="14" width="132" height="132" rx="36" fill="url(#watchpartyGradient)" filter="url(#shadow)" />
+  <path
+    d="M40 48H55.6L66 90.8L76.8 48H92L106.8 110.4H92.4L84.6 72L73.4 110.4H58.4L48 71.6L40.4 110.4H26L40 48Z"
+    fill="white"
+    opacity="0.95"
+  />
+  <path
+    d="M102 52H122C133.6 52 142.8 61.2 142.8 72.8C142.8 84.4 133.6 93.6 122 93.6H112V110.4H97.6V65.6C97.6 58.4 103.2 52 110.4 52H102Z"
+    fill="url(#watchpartyAccent)"
+  />
+  <circle cx="119" cy="72" r="11" fill="white" opacity="0.9" />
+</svg>

@@ -18,108 +18,108 @@ export type Testimonial = {
 
 export const features: Feature[] = [
   {
-    title: "Real-time Sync Engine",
+    title: "Cinematic templates",
     description:
-      "Experience perfect synchronization across all devices. Our advanced sync technology ensures everyone watches together with minimal latency, even with network interruptions.",
-    highlight: "±18ms precision",
+      "Start with sunrise lobbies, midnight encores, or festival premieres preloaded with lighting, chat, and overlay cues.",
+    highlight: "Sunrise → encore",
   },
   {
-    title: "Interactive Watch Parties",
+    title: "Adaptive sync engine",
     description:
-      "Live reactions, polls, games, and voice chat create an immersive social experience. Express yourself with emoji reactions and participate in real-time trivia.",
-    highlight: "Live engagement",
+      "Keep every device within theatre-grade timing. Our adaptive mesh keeps drift below a frame even when networks fluctuate.",
+    highlight: "±18 ms drift",
   },
   {
-    title: "Multi-Source Content",
+    title: "Atmosphere automation",
     description:
-      "Upload videos, paste streaming URLs, or connect your Google Drive. Support for all major video formats with automatic quality optimization and transcoding.",
-    highlight: "Universal support",
+      "Trigger lighting scenes, soundscapes, and spoiler-safe chat modes exactly when your storyboard calls for them.",
+    highlight: "Lighting + chat",
   },
   {
-    title: "Smart Moderation Tools",
+    title: "Collaborative hosting",
     description:
-      "AI-powered content moderation, user reporting, and customizable chat filters keep your watch parties safe and enjoyable for everyone.",
-    highlight: "AI-powered safety",
+      "Assign co-host lanes, delegate polls, and spotlight commentary so your community feels curated—not chaotic.",
+    highlight: "Multi-host",
   },
   {
-    title: "Event Scheduling",
+    title: "Interactive layers",
     description:
-      "Plan movie marathons, create recurring events, and send automated invitations. RSVP tracking and calendar integration make organizing effortless.",
-    highlight: "Auto-scheduling",
+      "Stack reactions, trivia, and polls that inherit your room ambience and keep audiences participating between scenes.",
+    highlight: "Polls & reactions",
   },
   {
-    title: "Social Communities",
+    title: "Encore replays",
     description:
-      "Join groups, make friends, and discover new content together. Build lasting connections around shared interests and favorite genres.",
-    highlight: "Community-first",
+      "Save highlight reels, chat moments, and time-coded notes for guests who want to relive the experience or catch up later.",
+    highlight: "Auto highlight",
   },
   {
-    title: "Analytics & Insights",
+    title: "Insight dashboard",
     description:
-      "Track engagement, watch time, and party metrics. Understand your audience and optimize your content for maximum engagement.",
-    highlight: "Data-driven",
+      "Understand who stayed for the encore, what reactions landed, and which cues you should reuse next screening.",
+    highlight: "Engagement pulse",
   },
   {
-    title: "Cross-Platform Access",
+    title: "Device continuum",
     description:
-      "Seamless experience across desktop, mobile, and tablet. Native apps with offline sync and push notifications keep you connected.",
-    highlight: "Mobile-ready",
+      "Deliver the same cinematic feel on theatre screens, laptops, and phones thanks to responsive layouts and sensory cues.",
+    highlight: "Every screen",
   },
 ]
 
 export const metrics: Metric[] = [
   {
-    label: "Active Communities",
-    value: "50K+ users",
-    description: "Movie clubs, friend groups, and content creators hosting watch parties daily across the globe.",
+    label: "Communities hosted",
+    value: "52K crews",
+    description: "Film clubs, creator collectives, and classrooms run their rituals nightly across 143 countries.",
   },
   {
-    label: "Sync Precision",
+    label: "Average sync drift",
     value: "±18 ms",
-    description: "Industry-leading synchronization accuracy ensures everyone stays perfectly in sync, even with network variations.",
+    description: "Adaptive playback maintains frame-perfect timing even when guests swap devices mid-show.",
   },
   {
-    label: "Content Library",
-    value: "1M+ videos",
-    description: "Massive collection of user-uploaded content, streaming links, and integrated cloud storage from Google Drive.",
+    label: "Scenes scheduled",
+    value: "120K/night",
+    description: "Automated cues orchestrate lighting, overlays, and guest permissions without manual juggling.",
   },
 ]
 
 export const testimonials: Testimonial[] = [
   {
     author: "Alex Chen",
-    role: "Film Club President",
+    role: "Film Society Curator",
     message:
-      "WatchParty transformed our weekly movie nights. The sync is flawless, reactions are hilarious, and managing our 200+ members is actually fun now!",
+      "Our 300-seat virtual cinema finally feels intentional. Guests rave about the ambience shifts and we end every screening with an encore poll that actually works.",
   },
   {
-    author: "Maria Rodriguez",
-    role: "Content Creator",
+    author: "María Rodriguez",
+    role: "Creator & Streamer",
     message:
-      "I host watch parties for my 10K followers and the engagement is incredible. Built-in polls, reactions, and analytics help me understand what my audience loves.",
+      "WatchParty lets me run premieres with zero tech anxiety. I drag scenes into place and the platform handles sync, overlays, and highlight reels for my members.",
   },
   {
     author: "David Kim",
-    role: "Long-distance Couple",
+    role: "Long-distance partner",
     message:
-      "Living in different time zones, WatchParty lets us share movie nights together. It feels like we're in the same room - the experience is magical.",
+      "We live 5,000 miles apart but the lighting cues, synced captions, and shared reactions make it feel like the same couch. It turned movie night into a ritual again.",
   },
   {
     author: "Sarah Johnson",
-    role: "Educator",
+    role: "Media Studies Professor",
     message:
-      "Perfect for virtual film studies classes. Students engage through reactions and discussions while staying perfectly synced. Game-changing for remote education.",
+      "I can orchestrate lectures, screenings, and debates in one flow. Students stay engaged because WatchParty pairs every scene with discussion prompts and polls.",
   },
   {
     author: "Mike Thompson",
-    role: "Gaming Community Leader",
+    role: "Esports community lead",
     message:
-      "We use WatchParty for esports viewing parties. 500+ members watching tournaments together with live chat creates an electric atmosphere.",
+      "We host finals with 800 viewers and never miss a beat. Sync holds, reactions explode, and the encore recap is ready to post minutes after the match.",
   },
   {
     author: "Emily Davis",
-    role: "Family Organizer",
+    role: "Family archivist",
     message:
-      "Keeps our scattered family connected. Grandparents, cousins, everyone joins our Sunday movie tradition no matter where they are in the world.",
+      "Grandparents on tablets, cousins on TVs, siblings on phones—WatchParty keeps everyone synced and saves the highlights for our family archive.",
   },
 ]
