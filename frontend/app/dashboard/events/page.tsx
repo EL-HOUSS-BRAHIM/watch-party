@@ -30,7 +30,7 @@ interface Event {
 
 export default function EventsPage() {
   const router = useRouter()
-  const { formatNumber } = useDesignSystem()
+  const { formatNumber: _formatNumber } = useDesignSystem()
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

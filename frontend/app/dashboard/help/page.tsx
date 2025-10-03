@@ -24,7 +24,7 @@ interface HelpCategory {
 
 export default function HelpPage() {
   const router = useRouter()
-  const { formatNumber } = useDesignSystem()
+  const { formatNumber: _formatNumber } = useDesignSystem()
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
   const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null)

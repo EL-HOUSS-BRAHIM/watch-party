@@ -74,7 +74,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       networkTraffic: 0
     }
   })
-  const [loading, setLoading] = useState(true)
+  const [_loading, setLoading] = useState(true)
 
   // Load user data and real-time stats
   useEffect(() => {

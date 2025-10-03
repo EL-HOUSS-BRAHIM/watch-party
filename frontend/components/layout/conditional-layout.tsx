@@ -28,9 +28,6 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   // Public party pages handle their own complete layout (no header/footer wrapper)
   const isPublicParty = pathname?.startsWith('/party/')
   
-  // Marketing pages (landing, about, pricing, etc.)
-  const isMarketing = !isDashboard && !isAuth && !isPublicParty
-
   if (isDashboard) {
     // Dashboard handles its own complete layout
     return <>{children}</>

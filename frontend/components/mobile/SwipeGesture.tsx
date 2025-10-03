@@ -88,7 +88,7 @@ export default function SwipeGesture({
     }
   }
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
+  const handleTouchEnd = (_e: React.TouchEvent) => {
     if (!gesture) return
 
     // Clear long press timeout

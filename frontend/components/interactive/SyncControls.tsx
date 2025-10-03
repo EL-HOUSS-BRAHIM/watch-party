@@ -23,7 +23,7 @@ interface SyncControlsProps {
   onSyncUpdate?: (controls: SyncControls) => void
 }
 
-export default function SyncControls({ partyId, currentUser, isHost = false, onSyncUpdate }: SyncControlsProps) {
+export default function SyncControls({ partyId, currentUser: _currentUser, isHost = false, onSyncUpdate }: SyncControlsProps) {
   const [syncState, setSyncState] = useState<SyncControls | null>(null)
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(false)

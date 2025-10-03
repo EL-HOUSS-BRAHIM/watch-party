@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { partiesApi, WatchParty } from "@/lib/api-client"
 import { GradientCard } from "@/components/ui/gradient-card"
@@ -70,7 +69,7 @@ export default function PartiesPage() {
     }
   }
 
-  const getStatusColor = (status: string) => {
+  const _getStatusColor = (status: string) => {
     switch (status) {
       case "live": return "text-brand-cyan-light bg-green-400/20"
       case "scheduled": return "text-brand-blue-light bg-blue-400/20"

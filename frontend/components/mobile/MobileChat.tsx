@@ -26,7 +26,7 @@ export default function MobileChat({ partyId, currentUser }: MobileChatProps) {
   const [sending, setSending] = useState(false)
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   
-  const { keyboardHeight, isKeyboardVisible, getContainerStyle } = useVirtualKeyboard()
+  const { keyboardHeight: _keyboardHeight, isKeyboardVisible: _isKeyboardVisible, getContainerStyle } = useVirtualKeyboard()
 
   const commonEmojis = [
     "😀", "😂", "😍", "🤔", "😭", "😱", "👍", "👎", 

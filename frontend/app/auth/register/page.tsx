@@ -22,7 +22,15 @@ export default function RegisterPage() {
     setSuccess(null)
 
     try {
-      const response = await authApi.register(formData)
+      // Map form data to API expected format
+      const registrationData = {
+        first_name: formData.username,
+        last_name: "",
+        email: formData.email,
+        password: formData.password,
+        confirm_password: formData.password
+      }
+      const response = await authApi.register(registrationData)
 
       if (response.success) {
         setSuccess("Account created! Check your inbox to verify your email.")

@@ -3,8 +3,6 @@ import type { ReactNode } from "react"
 import "./globals.css"
 import "../styles/mobile.css"
 import { Providers } from "@/components/providers"
-import { SiteFooter } from "@/components/layout/site-footer"
-import { MarketingHeader } from "@/components/layout/marketing-header"
 import { ConditionalLayout } from "@/components/layout/conditional-layout"
 
 export const metadata: Metadata = {

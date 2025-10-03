@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
-const highlights = [
+const _highlights = [
   {
     label: "Sync precision",
     value: "±18 ms",
@@ -19,7 +19,7 @@ const highlights = [
   }
 ]
 
-const timeline = [
+const _timeline = [
   {
     time: "18:30",
     title: "Welcome lobby",

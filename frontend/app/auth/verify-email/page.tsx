@@ -18,12 +18,8 @@ export default function VerifyEmailPage() {
     setSuccess(null)
 
     try {
-      const response = await authApi.resendVerification({ email })
-      if (response.success) {
-        setSuccess("Verification email sent! Check your inbox for the latest link.")
-      } else {
-        setError(response.message || "We couldn’t send the email. Please try again.")
-      }
+      await authApi.resendVerification({ email })
+      setSuccess("Verification email sent! Check your inbox for the latest link.")
     } catch (error) {
       console.error("Verify email error:", error)
       setError(error instanceof Error ? error.message : "Something went wrong. Please try again.")

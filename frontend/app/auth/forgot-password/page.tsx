@@ -18,12 +18,8 @@ export default function ForgotPasswordPage() {
     setSuccess(null)
 
     try {
-      const response = await authApi.requestPasswordReset({ email })
-      if (response.success) {
-        setSuccess("Check your inbox for a reset link. It expires in 30 minutes.")
-      } else {
-        setError(response.message || "We couldn’t send the reset email. Please try again.")
-      }
+      await authApi.forgotPassword(email)
+      setSuccess("Check your inbox for a reset link. It expires in 30 minutes.")
     } catch (error) {
       console.error("Forgot password error:", error)
       setError(error instanceof Error ? error.message : "Something went wrong. Please try again.")

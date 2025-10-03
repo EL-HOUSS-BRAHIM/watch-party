@@ -3,7 +3,6 @@
  */
 
 import { useState, useEffect } from "react"
-import { cn } from "@/lib/utils"
 
 // Device detection utilities
 export const isMobile = () => {
@@ -208,7 +207,7 @@ export const pwaHelpers = {
   }
 }
 
-export default {
+const mobileUtils = {
   isMobile,
   isTablet,
   isDesktop,
@@ -226,3 +225,5 @@ export default {
   hapticFeedback,
   pwaHelpers
 }
+
+export default mobileUtils

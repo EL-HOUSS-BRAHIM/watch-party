@@ -129,6 +129,7 @@ export interface NormalizedRealTimeAnalytics {
     messagesPerMinute: number
     reactionsPerMinute: number
   }
+  engagementHistory?: { label: string; value: number; timestamp: string }[]
   systemHealth: {
     systemLoad: number
     cpuUsage: number
@@ -313,6 +314,12 @@ export const authApi = {
     apiFetch<{ message: string }>('/api/auth/verify-email/', {
       method: 'POST',
       body: JSON.stringify({ token }),
+    }, true),
+
+  resendVerification: (data: { email: string }) =>
+    apiFetch<{ message: string }>('/api/auth/resend-verification/', {
+      method: 'POST',
+      body: JSON.stringify(data),
     }, true),
 
   getProfile: () =>

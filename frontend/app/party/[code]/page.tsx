@@ -129,7 +129,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
         let payload: unknown = null
         try {
           payload = await response.json()
-        } catch (parseError) {
+        } catch (_parseError) {
           payload = null
         }
 
