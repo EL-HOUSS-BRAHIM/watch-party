@@ -128,6 +128,7 @@ BACKEND_URL=https://be-watch-party.brahim-elhouss.me
 
 # Public API URLs for client-side calls
 NEXT_PUBLIC_API_URL=https://be-watch-party.brahim-elhouss.me
+NEXT_PUBLIC_FRONTEND_API=https://be-watch-party.brahim-elhouss.me/api
 NEXT_PUBLIC_WS_URL=wss://be-watch-party.brahim-elhouss.me/ws
 NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE=true
 NEXT_PUBLIC_ENABLE_DISCORD=true

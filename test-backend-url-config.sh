@@ -31,6 +31,20 @@ else
     ERRORS=$((ERRORS + 1))
 fi
 
+if grep -q "ARG NEXT_PUBLIC_FRONTEND_API=" frontend/Dockerfile; then
+    echo -e "${GREEN}✓${NC} Dockerfile has NEXT_PUBLIC_FRONTEND_API build arg"
+else
+    echo -e "${RED}✗${NC} Dockerfile missing NEXT_PUBLIC_FRONTEND_API build arg"
+    ERRORS=$((ERRORS + 1))
+fi
+
+if grep -q "ENV NEXT_PUBLIC_FRONTEND_API=" frontend/Dockerfile; then
+    echo -e "${GREEN}✓${NC} Dockerfile sets NEXT_PUBLIC_FRONTEND_API environment variable"
+else
+    echo -e "${RED}✗${NC} Dockerfile missing NEXT_PUBLIC_FRONTEND_API environment variable"
+    ERRORS=$((ERRORS + 1))
+fi
+
 # Test 2: Check docker-compose.yml has build args
 echo ""
 echo "Test 2: Checking docker-compose.yml..."
@@ -41,11 +55,20 @@ else
     ERRORS=$((ERRORS + 1))
 fi
 
+if grep -A 15 "frontend:" docker-compose.yml | grep -q "NEXT_PUBLIC_FRONTEND_API:"; then
+    echo -e "${GREEN}✓${NC} docker-compose.yml passes NEXT_PUBLIC_FRONTEND_API as build arg"
+else
+    echo -e "${RED}✗${NC} docker-compose.yml missing NEXT_PUBLIC_FRONTEND_API build arg"
+    ERRORS=$((ERRORS + 1))
+fi
+
 # Test 3: Check the value is correct
 echo ""
 echo "Test 3: Checking URL values..."
 DOCKERFILE_URL=$(grep "ARG NEXT_PUBLIC_API_URL=" frontend/Dockerfile | cut -d'=' -f2)
+DOCKERFILE_FRONTEND_API=$(grep "ARG NEXT_PUBLIC_FRONTEND_API=" frontend/Dockerfile | cut -d'=' -f2)
 COMPOSE_URL=$(grep -A 15 "frontend:" docker-compose.yml | grep "NEXT_PUBLIC_API_URL:" | cut -d'"' -f2)
+COMPOSE_FRONTEND_API=$(grep -A 15 "frontend:" docker-compose.yml | grep "NEXT_PUBLIC_FRONTEND_API:" | cut -d'"' -f2)
 
 if [[ "$DOCKERFILE_URL" == *"be-watch-party.brahim-elhouss.me"* ]]; then
     echo -e "${GREEN}✓${NC} Dockerfile default URL is correct: $DOCKERFILE_URL"
@@ -54,10 +77,24 @@ else
     ERRORS=$((ERRORS + 1))
 fi
 
+if [[ "$DOCKERFILE_FRONTEND_API" == *"be-watch-party.brahim-elhouss.me/api"* ]]; then
+    echo -e "${GREEN}✓${NC} Dockerfile NEXT_PUBLIC_FRONTEND_API is correct: $DOCKERFILE_FRONTEND_API"
+else
+    echo -e "${RED}✗${NC} Dockerfile NEXT_PUBLIC_FRONTEND_API is incorrect: $DOCKERFILE_FRONTEND_API"
+    ERRORS=$((ERRORS + 1))
+fi
+
 if [[ "$COMPOSE_URL" == *"be-watch-party.brahim-elhouss.me"* ]]; then
     echo -e "${GREEN}✓${NC} docker-compose.yml URL is correct: $COMPOSE_URL"
 else
     echo -e "${RED}✗${NC} docker-compose.yml URL is incorrect: $COMPOSE_URL"
+    ERRORS=$((ERRORS + 1))
+fi
+
+if [[ "$COMPOSE_FRONTEND_API" == *"be-watch-party.brahim-elhouss.me/api"* ]]; then
+    echo -e "${GREEN}✓${NC} docker-compose.yml NEXT_PUBLIC_FRONTEND_API is correct: $COMPOSE_FRONTEND_API"
+else
+    echo -e "${RED}✗${NC} docker-compose.yml NEXT_PUBLIC_FRONTEND_API is incorrect: $COMPOSE_FRONTEND_API"
     ERRORS=$((ERRORS + 1))
 fi
 
@@ -71,6 +108,13 @@ else
     ERRORS=$((ERRORS + 1))
 fi
 
+if grep -q "NEXT_PUBLIC_FRONTEND_API=https://be-watch-party.brahim-elhouss.me/api" frontend/.env.example; then
+    echo -e "${GREEN}✓${NC} .env.example has correct production NEXT_PUBLIC_FRONTEND_API"
+else
+    echo -e "${RED}✗${NC} .env.example NEXT_PUBLIC_FRONTEND_API is incorrect"
+    ERRORS=$((ERRORS + 1))
+fi
+
 # Test 5: Check docker-compose.aws.yml
 echo ""
 echo "Test 5: Checking docker-compose.aws.yml..."
@@ -81,6 +125,13 @@ else
     ERRORS=$((ERRORS + 1))
 fi
 
+if grep -A 15 "frontend:" docker-compose.aws.yml | grep -q "NEXT_PUBLIC_FRONTEND_API:"; then
+    echo -e "${GREEN}✓${NC} docker-compose.aws.yml passes NEXT_PUBLIC_FRONTEND_API as build arg"
+else
+    echo -e "${RED}✗${NC} docker-compose.aws.yml missing NEXT_PUBLIC_FRONTEND_API build arg"
+    ERRORS=$((ERRORS + 1))
+fi
+
 # Test 6: Check setup script
 echo ""
 echo "Test 6: Checking deployment script..."
@@ -88,6 +139,13 @@ if grep -q "BACKEND_URL=https://be-watch-party.brahim-elhouss.me" scripts/deploy
     echo -e "${GREEN}✓${NC} setup-aws-environment.sh creates .env.local with correct URL"
 else
     echo -e "${RED}✗${NC} setup-aws-environment.sh has incorrect URL"
+    ERRORS=$((ERRORS + 1))
+fi
+
+if grep -q "NEXT_PUBLIC_FRONTEND_API=https://be-watch-party.brahim-elhouss.me/api" scripts/deployment/setup-aws-environment.sh; then
+    echo -e "${GREEN}✓${NC} setup-aws-environment.sh sets NEXT_PUBLIC_FRONTEND_API correctly"
+else
+    echo -e "${RED}✗${NC} setup-aws-environment.sh missing NEXT_PUBLIC_FRONTEND_API"
     ERRORS=$((ERRORS + 1))
 fi
 
