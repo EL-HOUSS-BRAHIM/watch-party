@@ -8,6 +8,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      cache_from:
+        - watchparty-backend:latest
     image: watchparty-backend:latest
     env_file:
       - ./backend/.env
@@ -75,6 +77,8 @@ services:
         NEXT_PUBLIC_ENABLE_DISCORD: "true"
         NEXT_PUBLIC_ENABLE_ANALYTICS: "true"
       target: runner
+      cache_from:
+        - watchparty-frontend:latest
     image: watchparty-frontend:latest
     environment:
       # Backend URL for server-side API calls (CRITICAL: Must use real domain, not docker service name)
