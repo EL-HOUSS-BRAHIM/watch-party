@@ -11,6 +11,11 @@ on:
         required: false
         type: boolean
         default: false
+      remove_old_images:
+        description: 'Remove old images before building'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   deploy:
@@ -28,11 +33,12 @@ jobs:
           SSL_ORIGIN: ${{ secrets.SSL_ORIGIN }}
           SSL_PRIVATE: ${{ secrets.SSL_PRIVATE }}
           FORCE_REBUILD: ${{ github.event.inputs.force_rebuild == 'true' && '1' || '0' }}
+          REMOVE_OLD_IMAGES: ${{ github.event.inputs.remove_old_images == 'true' && '1' || '0' }}
         with:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: deploy
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
-          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,SSL_ORIGIN,SSL_PRIVATE,FORCE_REBUILD
+          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,SSL_ORIGIN,SSL_PRIVATE,FORCE_REBUILD,REMOVE_OLD_IMAGES
           script: |
             set -e
             
@@ -72,5 +78,6 @@ jobs:
             export SSL_ORIGIN
             export SSL_PRIVATE
             export FORCE_REBUILD
+            export REMOVE_OLD_IMAGES
             
             bash scripts/deployment/deploy-main.sh
