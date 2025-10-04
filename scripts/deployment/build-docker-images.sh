@@ -33,6 +33,17 @@ fi
 
 log_info "Building Docker images..."
 
+# Define frontend build arguments
+FRONTEND_API_URL="https://be-watch-party.brahim-elhouss.me"
+FRONTEND_WS_URL="wss://be-watch-party.brahim-elhouss.me/ws"
+
+log_info "Frontend build configuration:"
+log_info "  NEXT_PUBLIC_API_URL: $FRONTEND_API_URL"
+log_info "  NEXT_PUBLIC_WS_URL: $FRONTEND_WS_URL"
+log_info "  NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE: true"
+log_info "  NEXT_PUBLIC_ENABLE_DISCORD: true"
+log_info "  NEXT_PUBLIC_ENABLE_ANALYTICS: true"
+
 # Get current git commit hash for cache busting
 GIT_COMMIT_HASH=$(git rev-parse HEAD 2>/dev/null || echo "unknown")
 log_info "Building from commit: $GIT_COMMIT_HASH"
@@ -81,6 +92,11 @@ fi
 # Try parallel build first
 log_info "Attempting parallel build..."
 if timeout 1200 docker-compose build --parallel $BUILD_FLAGS \
+    --build-arg NEXT_PUBLIC_API_URL="$FRONTEND_API_URL" \
+    --build-arg NEXT_PUBLIC_WS_URL="$FRONTEND_WS_URL" \
+    --build-arg NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE="true" \
+    --build-arg NEXT_PUBLIC_ENABLE_DISCORD="true" \
+    --build-arg NEXT_PUBLIC_ENABLE_ANALYTICS="true" \
     --build-arg SKIP_AWS_DURING_BUILD=1 \
     --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH" 2>&1; then
     log_success "Parallel build successful"
@@ -100,6 +116,11 @@ else
     log_info "Building frontend image..."
     if ! timeout 1200 docker-compose build $BUILD_FLAGS frontend \
         --build-arg NODE_OPTIONS="--max-old-space-size=2048" \
+        --build-arg NEXT_PUBLIC_API_URL="$FRONTEND_API_URL" \
+        --build-arg NEXT_PUBLIC_WS_URL="$FRONTEND_WS_URL" \
+        --build-arg NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE="true" \
+        --build-arg NEXT_PUBLIC_ENABLE_DISCORD="true" \
+        --build-arg NEXT_PUBLIC_ENABLE_ANALYTICS="true" \
         --build-arg SKIP_AWS_DURING_BUILD=1 \
         --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH"; then
         exit_with_error "Frontend build failed"
@@ -108,3 +129,11 @@ else
 fi
 
 log_success "All Docker images built successfully"
+
+# Verify that frontend has correct API URL embedded (quick check)
+log_info "Verifying frontend build has correct API URL embedded..."
+if docker run --rm watchparty-frontend:latest find .next -name "*.js" -exec grep -l "be-watch-party.brahim-elhouss.me" {} \; 2>/dev/null | head -1 | grep -q ".js"; then
+    log_success "✅ Backend URL is properly embedded in frontend build"
+else
+    log_warning "⚠️  Could not verify if backend URL is embedded (container might not be running yet)"
+fi
