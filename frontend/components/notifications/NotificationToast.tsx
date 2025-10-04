@@ -1,15 +1,10 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import type { Notification } from "@/lib/api-client"
 
 interface NotificationToastProps {
-  notification: {
-    id: string
-    title: string
-    message: string
-    type: string
-    created_at: string
-  }
+  notification: Notification & { toastId?: string }
   onClose: () => void
   onAction?: () => void
   duration?: number
@@ -43,6 +38,8 @@ export default function NotificationToast({
     }, 300)
   }
 
+  const notificationType = notification.template_type || notification.type
+
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case "party_invite": return "🎬"
@@ -70,20 +67,20 @@ export default function NotificationToast({
   return (
     <div
       className={`fixed top-4 right-4 w-80 z-50 transition-all duration-300 ${
-        isVisible && !isLeaving 
-          ? "transform translate-x-0 opacity-100" 
+        isVisible && !isLeaving
+          ? "transform translate-x-0 opacity-100"
           : "transform translate-x-full opacity-0"
       }`}
     >
       <div className={`bg-gray-900 border rounded-lg shadow-lg backdrop-blur-sm ${
-        getNotificationColor(notification.type)
+        getNotificationColor(notificationType)
       }`}>
         <div className="p-4">
           <div className="flex items-start gap-3">
             {/* Icon */}
             <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
               <span className="text-lg">
-                {getNotificationIcon(notification.type)}
+                {getNotificationIcon(notificationType)}
               </span>
             </div>
 
@@ -93,7 +90,7 @@ export default function NotificationToast({
                 {notification.title}
               </h4>
               <p className="text-white/80 text-sm mb-3 line-clamp-2">
-                {notification.message}
+                {notification.content ?? notification.message}
               </p>
               
               {/* Actions */}

@@ -162,12 +162,96 @@ export interface NormalizedRealTimeAnalytics {
 export interface Notification {
   id: string
   title: string
+  content: string
   message: string
+  template_type: string
   type: string
+  status: string
   is_read: boolean
   created_at: string
+  read_at?: string | null
   action_url?: string
+  action_text?: string
+  icon?: string
+  color?: string
+  priority?: string
+  requires_action?: boolean
+  metadata?: Record<string, any>
   data?: Record<string, any>
+  html_content?: string
+  expires_at?: string | null
+  time_since_created?: string
+  [key: string]: unknown
+}
+
+const normalizeNotification = (notification: any): Notification => {
+  if (!notification || typeof notification !== "object") {
+    return {
+      id: "",
+      title: "",
+      content: "",
+      message: "",
+      template_type: "system",
+      type: "system",
+      status: "delivered",
+      is_read: false,
+      created_at: new Date().toISOString(),
+    }
+  }
+
+  const raw = notification as Record<string, any>
+  const content = raw.content ?? raw.message ?? raw.body ?? ""
+  const templateType = raw.template_type ?? raw.type ?? raw.notification_type ?? "system"
+  const status = raw.status ?? (raw.is_read ? "read" : "delivered")
+  const isRead = typeof raw.is_read === "boolean" ? raw.is_read : status === "read"
+  const metadata = raw.metadata ?? raw.data
+
+  return {
+    ...raw,
+    id: raw.id ?? "",
+    title: raw.title ?? "",
+    created_at: raw.created_at ?? new Date().toISOString(),
+    content,
+    message: content,
+    template_type: templateType,
+    type: templateType,
+    status,
+    is_read: isRead,
+    metadata: metadata ?? undefined,
+    data: raw.data ?? raw.metadata ?? undefined,
+  }
+}
+
+const normalizeNotificationPayload = <T>(payload: T): any => {
+  if (!payload) {
+    return payload
+  }
+
+  if (Array.isArray(payload)) {
+    return payload.map(normalizeNotification)
+  }
+
+  if (typeof payload === "object") {
+    const typedPayload = payload as Record<string, any>
+
+    if (Array.isArray(typedPayload.results)) {
+      return {
+        ...typedPayload,
+        results: typedPayload.results.map(normalizeNotification),
+      }
+    }
+
+    if (typedPayload.notification) {
+      return {
+        ...typedPayload,
+        notification: normalizeNotification(typedPayload.notification),
+      }
+    }
+
+    return normalizeNotification(typedPayload)
+  }
+
+  return payload
 }
 
 export interface Integration {
@@ -283,8 +367,17 @@ async function apiFetch<T>(
       throw apiError
     }
 
-    const data = await response.json()
-    return data as T
+    const responseText = await response.text()
+
+    if (!responseText) {
+      return undefined as T
+    }
+
+    try {
+      return JSON.parse(responseText) as T
+    } catch (_parseError) {
+      return responseText as unknown as T
+    }
   } catch (error) {
     console.error(`API Error (${endpoint}):`, error)
     throw error
@@ -898,15 +991,15 @@ export const userApi = {
 
   // User notifications
   getNotifications: (params?: { page?: number; page_size?: number }) =>
-    apiFetch<PaginatedResponse<Notification>>('/api/users/notifications/' + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true),
+    apiFetch<any>('/api/users/notifications/' + (params ? '?' + new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)])).toString() : ''), {}, true).then(normalizeNotificationPayload),
 
   markNotificationAsRead: (notificationId: string) =>
-    apiFetch<{ message: string }>(`/api/users/notifications/${notificationId}/read/`, {
+    apiFetch<void>(`/api/notifications/${notificationId}/mark-read/`, {
       method: 'POST',
     }, true),
 
   markAllNotificationsAsRead: () =>
-    apiFetch<{ message: string }>('/api/users/notifications/mark-all-read/', {
+    apiFetch<void>('/api/notifications/mark-all-read/', {
       method: 'POST',
     }, true),
 
@@ -1259,30 +1352,33 @@ export const storeApi = {
  */
 export const notificationsApi = {
   list: (params?: Record<string, string | number | boolean>) => {
-    const queryString = params ? '?' + new URLSearchParams(
-      Object.entries(params)
-        .filter(([, value]) => value !== undefined && value !== null)
-        .map(([key, value]) => [key, String(value)])
-    ).toString() : ''
+    const queryString = params
+      ? '?' + new URLSearchParams(
+        Object.entries(params)
+          .filter(([, value]) => value !== undefined && value !== null)
+          .map(([key, value]) => [key, String(value)])
+      ).toString()
+      : ''
 
-    return apiFetch<PaginatedResponse<Notification>>(`/api/notifications/${queryString}`, {}, true)
+    return apiFetch<any>(`/api/notifications/${queryString}`, {}, true).then(normalizeNotificationPayload)
   },
 
   markAsRead: (notificationId: string) =>
-    apiFetch<Notification>(`/api/notifications/${notificationId}/`, {
-      method: 'PATCH',
-      body: JSON.stringify({ is_read: true }),
-    }, true),
-
-  markAllAsRead: () =>
-    apiFetch<{ message: string }>(`/api/notifications/mark-all-read/`, {
+    apiFetch<void>(`/api/notifications/${notificationId}/mark-read/`, {
       method: 'POST',
     }, true),
 
-  delete: (notificationId: string) =>
-    apiFetch<{ message: string }>(`/api/notifications/${notificationId}/`, {
+  markAllAsRead: () =>
+    apiFetch<void>(`/api/notifications/mark-all-read/`, {
+      method: 'POST',
+    }, true),
+
+  dismiss: (notificationId: string) =>
+    apiFetch<void>(`/api/notifications/${notificationId}/`, {
       method: 'DELETE',
     }, true),
+
+  delete: (notificationId: string) => notificationsApi.dismiss(notificationId),
 
   getSettings: () =>
     apiFetch<Record<string, boolean>>('/api/notifications/settings/', {}, true),

@@ -10,7 +10,7 @@ interface NotificationContextType {
   showToast: (notification: Omit<Notification, "id">) => void
   markAsRead: (id: string) => void
   markAllAsRead: () => void
-  deleteNotification: (id: string) => void
+  dismissNotification: (id: string) => void
   refreshNotifications: () => void
 }
 
@@ -33,6 +33,9 @@ export default function NotificationProvider({ children }: NotificationProviderP
   const [unreadCount, setUnreadCount] = useState(0)
   const [toasts, setToasts] = useState<Array<Notification & { toastId: string }>>([])
 
+  const computeUnreadCount = (items: Notification[]) =>
+    items.filter(notification => !notification.is_read && notification.status !== "dismissed").length
+
   useEffect(() => {
     loadNotifications()
     
@@ -51,7 +54,7 @@ export default function NotificationProvider({ children }: NotificationProviderP
       const notificationsList = Array.isArray(response)
         ? response
         : (response.results || [])
-      
+
       // Check for new notifications
       const currentIds = new Set(notifications.map(n => n.id))
       const newNotifications = notificationsList.filter((n: Notification) => !currentIds.has(n.id))
@@ -62,7 +65,7 @@ export default function NotificationProvider({ children }: NotificationProviderP
       })
       
       setNotifications(notificationsList)
-      setUnreadCount(notificationsList.filter((n: Notification) => !n.is_read).length)
+      setUnreadCount(computeUnreadCount(notificationsList))
     } catch (error) {
       console.error("Failed to load notifications:", error)
     }
@@ -76,7 +79,14 @@ export default function NotificationProvider({ children }: NotificationProviderP
 
   const showToast = (notification: Omit<Notification, "id">) => {
     const toastId = Math.random().toString(36).substr(2, 9)
-    const fullNotification = { ...notification, id: toastId }
+    const fullNotification = {
+      ...notification,
+      id: toastId,
+      content: notification.content ?? notification.message,
+      message: notification.message ?? notification.content ?? "",
+      template_type: notification.template_type ?? notification.type ?? "system",
+      type: notification.type ?? notification.template_type ?? "system",
+    }
     const toastNotification = { ...fullNotification, toastId }
     
     setToasts(prev => [...prev, toastNotification])
@@ -85,7 +95,7 @@ export default function NotificationProvider({ children }: NotificationProviderP
     if ("Notification" in window && window.Notification.permission === "granted") {
       try {
         const browserNotification = new window.Notification(notification.title, {
-          body: notification.message,
+          body: notification.content ?? notification.message,
           icon: "/favicon.ico",
           tag: toastId
         })
@@ -112,10 +122,15 @@ export default function NotificationProvider({ children }: NotificationProviderP
   const markAsRead = async (id: string) => {
     try {
       await notificationsApi.markAsRead(id)
-      setNotifications(prev => prev.map(n => 
-        n.id === id ? { ...n, is_read: true } : n
-      ))
-      setUnreadCount(prev => Math.max(0, prev - 1))
+      setNotifications(prev => {
+        const next = prev.map(n =>
+          n.id === id
+            ? { ...n, is_read: true, status: "read", read_at: n.read_at ?? new Date().toISOString() }
+            : n
+        )
+        setUnreadCount(computeUnreadCount(next))
+        return next
+      })
     } catch (error) {
       console.error("Failed to mark notification as read:", error)
     }
@@ -124,19 +139,26 @@ export default function NotificationProvider({ children }: NotificationProviderP
   const markAllAsRead = async () => {
     try {
       await notificationsApi.markAllAsRead()
-      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
-      setUnreadCount(0)
+      setNotifications(prev => {
+        const next = prev.map(n => ({ ...n, is_read: true, status: "read", read_at: n.read_at ?? new Date().toISOString() }))
+        setUnreadCount(computeUnreadCount(next))
+        return next
+      })
     } catch (error) {
       console.error("Failed to mark all notifications as read:", error)
     }
   }
 
-  const deleteNotification = async (id: string) => {
+  const dismissNotification = async (id: string) => {
     try {
-      await notificationsApi.delete(id)
-      setNotifications(prev => prev.filter(n => n.id !== id))
+      await notificationsApi.dismiss(id)
+      setNotifications(prev => {
+        const next = prev.filter(n => n.id !== id)
+        setUnreadCount(computeUnreadCount(next))
+        return next
+      })
     } catch (error) {
-      console.error("Failed to delete notification:", error)
+      console.error("Failed to dismiss notification:", error)
     }
   }
 
@@ -152,7 +174,7 @@ export default function NotificationProvider({ children }: NotificationProviderP
         showToast,
         markAsRead,
         markAllAsRead,
-        deleteNotification,
+        dismissNotification,
         refreshNotifications
       }}
     >
