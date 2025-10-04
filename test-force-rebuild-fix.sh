@@ -103,7 +103,7 @@ fi
 
 # Test 9: Check documentation exists
 echo -e "\n${BLUE}Test 9: Checking for documentation...${NC}"
-if [ -f "FRONTEND_CACHE_FIX_FINAL.md" ]; then
+if [ -f "docs/DOCKER_CACHE_OPTIMIZATION.md" ] || [ -f "SOLUTION_SUMMARY.md" ]; then
     echo -e "${GREEN}✅ Documentation file exists${NC}"
 else
     echo -e "${RED}❌ Documentation file missing${NC}"
