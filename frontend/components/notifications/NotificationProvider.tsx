@@ -7,7 +7,7 @@ import NotificationToast from "./NotificationToast"
 interface NotificationContextType {
   notifications: Notification[]
   unreadCount: number
-  showToast: (notification: Omit<Notification, "id">) => void
+  showToast: (notification: Partial<Notification> & { title: string }) => void
   markAsRead: (id: string) => void
   markAllAsRead: () => void
   dismissNotification: (id: string) => void
@@ -77,15 +77,25 @@ export default function NotificationProvider({ children }: NotificationProviderP
     }
   }
 
-  const showToast = (notification: Omit<Notification, "id">) => {
+  const showToast = (notification: Partial<Notification> & { title: string }) => {
     const toastId = Math.random().toString(36).substr(2, 9)
-    const fullNotification = {
-      ...notification,
-      id: toastId,
-      content: notification.content ?? notification.message,
+    const now = new Date().toISOString()
+    const fullNotification: Notification = {
+      id: notification.id ?? toastId,
+      title: notification.title,
+      content: notification.content ?? notification.message ?? "",
       message: notification.message ?? notification.content ?? "",
       template_type: notification.template_type ?? notification.type ?? "system",
       type: notification.type ?? notification.template_type ?? "system",
+      status: notification.status ?? "unread",
+      is_read: notification.is_read ?? false,
+      created_at: notification.created_at ?? now,
+      read_at: notification.read_at,
+      action_url: notification.action_url,
+      action_text: notification.action_text,
+      icon: notification.icon,
+      color: notification.color,
+      priority: notification.priority,
     }
     const toastNotification = { ...fullNotification, toastId }
     
@@ -94,8 +104,8 @@ export default function NotificationProvider({ children }: NotificationProviderP
     // Show browser notification if permission granted
     if ("Notification" in window && window.Notification.permission === "granted") {
       try {
-        const browserNotification = new window.Notification(notification.title, {
-          body: notification.content ?? notification.message,
+        const browserNotification = new window.Notification(fullNotification.title, {
+          body: fullNotification.content || fullNotification.message,
           icon: "/favicon.ico",
           tag: toastId
         })
@@ -105,8 +115,8 @@ export default function NotificationProvider({ children }: NotificationProviderP
           browserNotification.close()
           
           // Navigate to notification action URL if available
-          if (notification.action_url) {
-            window.location.href = notification.action_url
+          if (fullNotification.action_url) {
+            window.location.href = fullNotification.action_url
           }
         }
       } catch (error) {

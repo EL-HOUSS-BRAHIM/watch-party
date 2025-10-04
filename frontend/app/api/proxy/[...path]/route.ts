@@ -32,7 +32,7 @@ function copyHeaders(source: Headers, target: Headers) {
   })
 }
 
-export async function handler(
+async function handleRequest(
   request: NextRequest,
   context: { params: Promise<{ path: string[] }> }
 ) {
@@ -134,13 +134,11 @@ export async function handler(
   }
 }
 
-export {
-  handler as DELETE,
-  handler as GET,
-  handler as HEAD,
-  handler as OPTIONS,
-  handler as PATCH,
-  handler as POST,
-  handler as PUT,
-}
+export const GET = handleRequest
+export const POST = handleRequest
+export const PUT = handleRequest
+export const PATCH = handleRequest
+export const DELETE = handleRequest
+export const HEAD = handleRequest
+export const OPTIONS = handleRequest
 
