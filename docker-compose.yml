@@ -68,6 +68,12 @@ services:
       dockerfile: Dockerfile
       args:
         NODE_OPTIONS: "--max-old-space-size=2048"
+        # Pass NEXT_PUBLIC_* variables as build args so they're embedded at build time
+        NEXT_PUBLIC_API_URL: "https://be-watch-party.brahim-elhouss.me"
+        NEXT_PUBLIC_WS_URL: "wss://be-watch-party.brahim-elhouss.me/ws"
+        NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE: "true"
+        NEXT_PUBLIC_ENABLE_DISCORD: "true"
+        NEXT_PUBLIC_ENABLE_ANALYTICS: "true"
       target: runner
     image: watchparty-frontend:latest
     environment:
