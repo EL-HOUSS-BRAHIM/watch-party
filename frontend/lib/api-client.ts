@@ -4,14 +4,14 @@
  * Handles authentication, error handling, and type safety
  */
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://be-watch-party.brahim-elhouss.me"
-
 const normalizeBase = (value: string) => value.replace(/\/+$/, "")
 
 const FRONTEND_API_BASE =
   process.env.NEXT_PUBLIC_FRONTEND_API && process.env.NEXT_PUBLIC_FRONTEND_API.trim().length > 0
     ? process.env.NEXT_PUBLIC_FRONTEND_API
-    : `${normalizeBase(API_BASE_URL)}/api`
+    : "/api"
+
+const BACKEND_PROXY_BASE = "/api/proxy"
 
 const buildUrl = (base: string, endpoint: string) => {
   if (/^https?:\/\//i.test(endpoint)) {
@@ -236,19 +236,11 @@ async function apiFetch<T>(
   options: RequestInit = {},
   useBackend = false
 ): Promise<T> {
-  const baseUrl = useBackend ? API_BASE_URL : FRONTEND_API_BASE
+  const baseUrl = useBackend ? BACKEND_PROXY_BASE : FRONTEND_API_BASE
   const url = buildUrl(baseUrl, endpoint)
   
   const defaultHeaders: HeadersInit = {
     "Content-Type": "application/json",
-  }
-
-  // Get JWT token from localStorage or cookies
-  if (typeof window !== "undefined") {
-    const token = localStorage.getItem("access_token")
-    if (token) {
-      defaultHeaders["Authorization"] = `Bearer ${token}`
-    }
   }
 
   const config: RequestInit = {
@@ -296,7 +288,7 @@ async function apiFetch<T>(
  */
 export const authApi = {
   login: (credentials: { email: string; password: string }) =>
-    apiFetch<{ access_token: string; refresh_token: string; user: User; success: boolean }>('/auth/login/', {
+    apiFetch<{ success: boolean; user?: User; message?: string; error?: string }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     }),
@@ -308,15 +300,17 @@ export const authApi = {
     }),
 
   logout: () =>
-    apiFetch<{ message: string }>('/api/auth/logout/', {
+    apiFetch<{ success: boolean; message?: string }>('/auth/logout', {
       method: 'POST',
-    }, true),
+    }),
 
-  refreshToken: (refresh: string) =>
-    apiFetch<{ access: string }>('/api/auth/refresh/', {
-      method: 'POST',
-      body: JSON.stringify({ refresh }),
-    }, true),
+  refreshToken: (_refresh?: string) =>
+    apiFetch<{ access?: string; access_token?: string; refresh?: string; refresh_token?: string; success?: boolean; message?: string; error?: string }>(
+      '/auth/refresh',
+      {
+        method: 'POST',
+      }
+    ),
 
   forgotPassword: (email: string) =>
     apiFetch<{ message: string }>('/api/auth/forgot-password/', {

@@ -22,19 +22,12 @@ export default function LoginPage() {
       const data = await authApi.login(formData)
 
       if (data.success) {
-        if (data.access_token) {
-          localStorage.setItem("access_token", data.access_token)
-        }
-        if (data.refresh_token) {
-          localStorage.setItem("refresh_token", data.refresh_token)
-        }
-
         const urlParams = new URLSearchParams(window.location.search)
         const redirect = urlParams.get("redirect") || "/dashboard"
 
         window.location.href = decodeURIComponent(redirect)
       } else {
-        setError("Login failed. Please check your credentials.")
+        setError(data.message || "Login failed. Please check your credentials.")
       }
     } catch (error) {
       console.error("Login error:", error)
