@@ -288,7 +288,7 @@ CELERY_TASK_ROUTES = {
 # Channels Configuration with support for AWS ElastiCache Valkey
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels_redis.shared.RedisChannelLayer',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             "hosts": [config('CHANNEL_LAYERS_CONFIG_HOSTS', default=config('REDIS_URL', default='redis://127.0.0.1:6379/1'))],
             # SSL/TLS configuration for AWS ElastiCache
