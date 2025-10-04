@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import api, { Notification } from "@/lib/api-client"
+import { notificationsApi, type Notification } from "@/lib/api-client"
 
 interface NotificationDropdownProps {
   isOpen: boolean
@@ -23,10 +23,10 @@ export default function NotificationDropdown({ isOpen, onClose, onSettingsClick 
   const loadRecentNotifications = async () => {
     setLoading(true)
     try {
-      const response = await api.get("/notifications/", { 
-        params: { page_size: 5, ordering: "-created_at" } 
-      })
-      const notificationsList = Array.isArray(response) ? response : (response.results || [])
+      const response = await notificationsApi.list({ page_size: 5, ordering: "-created_at" })
+      const notificationsList = Array.isArray(response)
+        ? response
+        : (response.results || [])
       
       setNotifications(notificationsList)
       setUnreadCount(notificationsList.filter((n: any) => !n.is_read).length)
@@ -39,7 +39,7 @@ export default function NotificationDropdown({ isOpen, onClose, onSettingsClick 
 
   const markAsRead = async (notificationId: string) => {
     try {
-      await api.patch(`/notifications/${notificationId}/`, { is_read: true })
+      await notificationsApi.markAsRead(notificationId)
       setNotifications(prev => prev.map(n => 
         n.id === notificationId ? { ...n, is_read: true } : n
       ))
