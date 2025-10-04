@@ -86,12 +86,20 @@ export async function POST(request: NextRequest) {
 
       return nextResponse
     } else {
-      return NextResponse.json({ error: extractErrorMessage(data) }, { status: response.status })
+      const message = extractErrorMessage(data)
+      return NextResponse.json(
+        {
+          success: false,
+          error: message,
+          message,
+        },
+        { status: response.status }
+      )
     }
   } catch (error) {
     console.error("Login API error:", error)
     return NextResponse.json(
-      { error: "Internal server error" },
+      { success: false, error: "Internal server error", message: "Internal server error" },
       { status: 500 }
     )
   }

@@ -1,123 +1,111 @@
-'use client'
+"use client"
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 
-/**
- * Authentication utility functions
- */
-export const auth = {
-  /**
-   * Check if user is authenticated (has valid access token)
-   */
-  isAuthenticated: (): boolean => {
-    if (typeof window === 'undefined') return false
-    const token = localStorage.getItem('access_token')
-    return !!token
-  },
+import type { User } from "@/lib/api-client"
 
-  /**
-   * Get access token
-   */
-  getAccessToken: (): string | null => {
-    if (typeof window === 'undefined') return null
-    return localStorage.getItem('access_token')
-  },
+interface SessionResponse {
+  isAuthenticated: boolean
+  user: User | null
+}
 
-  /**
-   * Get refresh token
-   */
-  getRefreshToken: (): string | null => {
-    if (typeof window === 'undefined') return null
-    return localStorage.getItem('refresh_token')
-  },
+async function fetchSession(): Promise<SessionResponse> {
+  try {
+    const response = await fetch("/api/auth/session", {
+      method: "GET",
+      credentials: "include",
+      cache: "no-store",
+    })
 
-  /**
-   * Clear all auth tokens (logout)
-   */
-  clearTokens: (): void => {
-    if (typeof window === 'undefined') return
-    localStorage.removeItem('access_token')
-    localStorage.removeItem('refresh_token')
-  },
+    if (!response.ok) {
+      if (response.status === 401) {
+        return { isAuthenticated: false, user: null }
+      }
 
-  /**
-   * Set auth tokens (login)
-   */
-  setTokens: (accessToken: string, refreshToken?: string): void => {
-    if (typeof window === 'undefined') return
-    localStorage.setItem('access_token', accessToken)
-    if (refreshToken) {
-      localStorage.setItem('refresh_token', refreshToken)
+      throw new Error("Unable to verify authentication status")
     }
+
+    const data = await response.json()
+    return {
+      isAuthenticated: Boolean(data.authenticated),
+      user: data.user ?? null,
+    }
+  } catch (error) {
+    console.error("Failed to load session", error)
+    return { isAuthenticated: false, user: null }
   }
 }
 
-/**
- * Hook for authentication state
- */
+async function performLogout(): Promise<void> {
+  const response = await fetch("/api/auth/logout", {
+    method: "POST",
+    credentials: "include",
+  })
+
+  if (!response.ok) {
+    throw new Error("Failed to sign out")
+  }
+}
+
+export const session = {
+  get: fetchSession,
+  logout: performLogout,
+}
+
 export function useAuth() {
+  const [user, setUser] = useState<User | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
 
-  useEffect(() => {
-    // Check authentication on mount and when storage changes
-    const checkAuth = () => {
-      const authenticated = auth.isAuthenticated()
-      setIsAuthenticated(authenticated)
-      setIsLoading(false)
-    }
+  const loadSession = useCallback(async () => {
+    setIsLoading(true)
 
-    checkAuth()
+    const sessionData = await fetchSession()
+    setIsAuthenticated(sessionData.isAuthenticated)
+    setUser(sessionData.user)
 
-    // Listen for storage changes (logout from another tab)
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'access_token') {
-        checkAuth()
-      }
-    }
-
-    window.addEventListener('storage', handleStorageChange)
-    return () => window.removeEventListener('storage', handleStorageChange)
+    setIsLoading(false)
   }, [])
 
-  const login = (accessToken: string, refreshToken?: string) => {
-    auth.setTokens(accessToken, refreshToken)
-    setIsAuthenticated(true)
-  }
+  useEffect(() => {
+    void loadSession()
+  }, [loadSession])
 
-  const logout = () => {
-    auth.clearTokens()
-    setIsAuthenticated(false)
-    router.push('/auth/login')
-  }
+  const logout = useCallback(async () => {
+    try {
+      await performLogout()
+    } catch (error) {
+      console.error("Failed to log out", error)
+    } finally {
+      setIsAuthenticated(false)
+      setUser(null)
+      router.push("/auth/login")
+    }
+  }, [router])
 
   return {
+    user,
     isAuthenticated,
     isLoading,
-    login,
+    refresh: loadSession,
     logout,
-    getAccessToken: auth.getAccessToken,
-    getRefreshToken: auth.getRefreshToken,
   }
 }
 
-/**
- * Hook for protected routes - redirects to login if not authenticated
- */
-export function useRequireAuth(redirectUrl: string = '/auth/login') {
+export function useRequireAuth(redirectUrl: string = "/auth/login") {
   const { isAuthenticated, isLoading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
-      // Store the attempted URL to redirect back after login
-      const currentPath = window.location.pathname
+      const currentPath = `${window.location.pathname}${window.location.search}`
       const redirectTo = encodeURIComponent(currentPath)
       router.push(`${redirectUrl}?redirect=${redirectTo}`)
     }
-  }, [isAuthenticated, isLoading, router, redirectUrl])
+  }, [isAuthenticated, isLoading, redirectUrl, router])
 
   return { isAuthenticated, isLoading }
 }
+
