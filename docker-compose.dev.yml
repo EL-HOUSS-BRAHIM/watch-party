@@ -46,6 +46,20 @@ services:
       dockerfile: Dockerfile
     env_file:
       - ./backend/.env
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.development
+      DATABASE_URL: postgresql://watchparty:watchparty123@db:5432/watchparty
+      DB_NAME: watchparty
+      DB_USER: watchparty
+      DB_PASSWORD: watchparty123
+      DB_HOST: db
+      DB_PORT: "5432"
+      REDIS_URL: redis://valkey:6379/0
+      REDIS_USE_SSL: "false"
+      CELERY_BROKER_URL: redis://valkey:6379/2
+      CELERY_RESULT_BACKEND: redis://valkey:6379/3
+      CHANNEL_LAYERS_CONFIG_HOSTS: redis://valkey:6379/4
+      USE_S3: "false"
     volumes:
       - ./backend:/app
       - static_volume:/app/staticfiles
@@ -74,6 +88,20 @@ services:
     command: celery -A config worker --loglevel=info --concurrency=2
     env_file:
       - ./backend/.env
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.development
+      DATABASE_URL: postgresql://watchparty:watchparty123@db:5432/watchparty
+      DB_NAME: watchparty
+      DB_USER: watchparty
+      DB_PASSWORD: watchparty123
+      DB_HOST: db
+      DB_PORT: "5432"
+      REDIS_URL: redis://valkey:6379/0
+      REDIS_USE_SSL: "false"
+      CELERY_BROKER_URL: redis://valkey:6379/2
+      CELERY_RESULT_BACKEND: redis://valkey:6379/3
+      CHANNEL_LAYERS_CONFIG_HOSTS: redis://valkey:6379/4
+      USE_S3: "false"
     volumes:
       - ./backend:/app
       - media_volume:/app/media
@@ -93,6 +121,20 @@ services:
     command: celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     env_file:
       - ./backend/.env
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.development
+      DATABASE_URL: postgresql://watchparty:watchparty123@db:5432/watchparty
+      DB_NAME: watchparty
+      DB_USER: watchparty
+      DB_PASSWORD: watchparty123
+      DB_HOST: db
+      DB_PORT: "5432"
+      REDIS_URL: redis://valkey:6379/0
+      REDIS_USE_SSL: "false"
+      CELERY_BROKER_URL: redis://valkey:6379/2
+      CELERY_RESULT_BACKEND: redis://valkey:6379/3
+      CHANNEL_LAYERS_CONFIG_HOSTS: redis://valkey:6379/4
+      USE_S3: "false"
     volumes:
       - ./backend:/app
     depends_on:
@@ -110,6 +152,14 @@ services:
       dockerfile: Dockerfile
     env_file:
       - ./frontend/.env.local
+    environment:
+      BACKEND_URL: http://backend:8000
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_FRONTEND_API: http://localhost:8000/api
+      NEXT_PUBLIC_WS_URL: ws://localhost:8000/ws
+      NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE: "true"
+      NEXT_PUBLIC_ENABLE_DISCORD: "true"
+      NEXT_PUBLIC_ENABLE_ANALYTICS: "false"
     ports:
       - "3000:3000"
     depends_on:
