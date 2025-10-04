@@ -1063,6 +1063,34 @@ export const analyticsApi = {
 /**
  * Admin API - Complete implementation
  */
+const appendQueryParams = (endpoint: string, params?: Record<string, any>) => {
+  if (!params || Object.keys(params).length === 0) {
+    return endpoint
+  }
+
+  const searchParams = new URLSearchParams()
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value === undefined || value === null) {
+      return
+    }
+
+    if (Array.isArray(value)) {
+      value.forEach((item) => searchParams.append(key, String(item)))
+      return
+    }
+
+    searchParams.append(key, String(value))
+  })
+
+  const queryString = searchParams.toString()
+  if (!queryString) {
+    return endpoint
+  }
+
+  return `${endpoint}${endpoint.includes('?') ? '&' : '?'}${queryString}`
+}
+
 export const adminApi = {
   // System stats and health
   getSystemStats: (): Promise<SystemStats> =>
@@ -1072,11 +1100,13 @@ export const adminApi = {
     apiFetch<ServerHealth>('/api/admin/system/health/', {}, true),
 
   // User management
-  getUsers: (params?: any) =>
-    apiFetch<PaginatedResponse<User>>('/api/admin/users/', { 
+  getUsers: (params?: Record<string, any>) => {
+    const endpoint = appendQueryParams('/api/admin/users/', params)
+
+    return apiFetch<PaginatedResponse<User>>(endpoint, {
       method: 'GET',
-      ...(params && { body: JSON.stringify(params) })
-    }, true),
+    }, true)
+  },
 
   banUser: (userId: string, reason: string) =>
     apiFetch<{ message: string }>(`/api/admin/users/${userId}/ban/`, {
@@ -1095,11 +1125,13 @@ export const adminApi = {
     }, true),
 
   // Content moderation
-  getVideos: (params?: any) =>
-    apiFetch<PaginatedResponse<VideoSummary>>('/api/admin/videos/', { 
+  getVideos: (params?: Record<string, any>) => {
+    const endpoint = appendQueryParams('/api/admin/videos/', params)
+
+    return apiFetch<PaginatedResponse<VideoSummary>>(endpoint, {
       method: 'GET',
-      ...(params && { body: JSON.stringify(params) })
-    }, true),
+    }, true)
+  },
 
   moderateVideo: (videoId: string, action: "approve" | "reject", reason?: string) =>
     apiFetch<{ message: string }>(`/api/admin/videos/${videoId}/moderate/`, {
