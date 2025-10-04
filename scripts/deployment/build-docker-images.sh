@@ -35,10 +35,12 @@ log_info "Building Docker images..."
 
 # Define frontend build arguments
 FRONTEND_API_URL="https://be-watch-party.brahim-elhouss.me"
+FRONTEND_API_BASE="https://be-watch-party.brahim-elhouss.me/api"
 FRONTEND_WS_URL="wss://be-watch-party.brahim-elhouss.me/ws"
 
 log_info "Frontend build configuration:"
 log_info "  NEXT_PUBLIC_API_URL: $FRONTEND_API_URL"
+log_info "  NEXT_PUBLIC_FRONTEND_API: $FRONTEND_API_BASE"
 log_info "  NEXT_PUBLIC_WS_URL: $FRONTEND_WS_URL"
 log_info "  NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE: true"
 log_info "  NEXT_PUBLIC_ENABLE_DISCORD: true"
@@ -93,6 +95,7 @@ fi
 log_info "Attempting parallel build..."
 if timeout 1200 docker-compose build --parallel $BUILD_FLAGS \
     --build-arg NEXT_PUBLIC_API_URL="$FRONTEND_API_URL" \
+    --build-arg NEXT_PUBLIC_FRONTEND_API="$FRONTEND_API_BASE" \
     --build-arg NEXT_PUBLIC_WS_URL="$FRONTEND_WS_URL" \
     --build-arg NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE="true" \
     --build-arg NEXT_PUBLIC_ENABLE_DISCORD="true" \
@@ -117,6 +120,7 @@ else
     if ! timeout 1200 docker-compose build $BUILD_FLAGS frontend \
         --build-arg NODE_OPTIONS="--max-old-space-size=2048" \
         --build-arg NEXT_PUBLIC_API_URL="$FRONTEND_API_URL" \
+        --build-arg NEXT_PUBLIC_FRONTEND_API="$FRONTEND_API_BASE" \
         --build-arg NEXT_PUBLIC_WS_URL="$FRONTEND_WS_URL" \
         --build-arg NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE="true" \
         --build-arg NEXT_PUBLIC_ENABLE_DISCORD="true" \

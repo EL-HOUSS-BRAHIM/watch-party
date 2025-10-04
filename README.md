@@ -162,6 +162,7 @@ cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env.local
 # Already configured with correct API URLs:
 # - NEXT_PUBLIC_API_URL=https://be-watch-party.brahim-elhouss.me
+# - NEXT_PUBLIC_FRONTEND_API=https://be-watch-party.brahim-elhouss.me/api
 # - NEXT_PUBLIC_WS_URL=wss://be-watch-party.brahim-elhouss.me/ws
 # - Analytics and feature flags
 ```
@@ -181,7 +182,8 @@ Key environment variables in `backend/.env`:
 
 Key environment variables in `frontend/.env.local`:
 
-- `NEXT_PUBLIC_API_URL`: Backend API URL
+- `NEXT_PUBLIC_API_URL`: Backend base URL (used by server components)
+- `NEXT_PUBLIC_FRONTEND_API`: Public API base (browser requests)
 - `NEXT_PUBLIC_APP_URL`: Frontend application URL
 
 ## 📚 API Documentation

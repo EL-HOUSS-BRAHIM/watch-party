@@ -5,7 +5,27 @@
  */
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://be-watch-party.brahim-elhouss.me"
-const FRONTEND_API_BASE = process.env.NEXT_PUBLIC_FRONTEND_API || '/api'
+
+const normalizeBase = (value: string) => value.replace(/\/+$/, "")
+
+const FRONTEND_API_BASE =
+  process.env.NEXT_PUBLIC_FRONTEND_API && process.env.NEXT_PUBLIC_FRONTEND_API.trim().length > 0
+    ? process.env.NEXT_PUBLIC_FRONTEND_API
+    : `${normalizeBase(API_BASE_URL)}/api`
+
+const buildUrl = (base: string, endpoint: string) => {
+  if (/^https?:\/\//i.test(endpoint)) {
+    return endpoint
+  }
+
+  const normalizedBase = normalizeBase(base)
+
+  if (endpoint.startsWith('/')) {
+    return `${normalizedBase}${endpoint}`
+  }
+
+  return `${normalizedBase}/${endpoint}`
+}
 
 // Core Types (matching the API schema)
 export interface User {
@@ -217,7 +237,7 @@ async function apiFetch<T>(
   useBackend = false
 ): Promise<T> {
   const baseUrl = useBackend ? API_BASE_URL : FRONTEND_API_BASE
-  const url = `${baseUrl}${endpoint}`
+  const url = buildUrl(baseUrl, endpoint)
   
   const defaultHeaders: HeadersInit = {
     "Content-Type": "application/json",
