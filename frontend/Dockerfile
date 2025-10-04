@@ -30,6 +30,21 @@ ENV NODE_OPTIONS=$NODE_OPTIONS
 ARG GIT_COMMIT_HASH=unknown
 RUN echo "Building from commit: ${GIT_COMMIT_HASH}"
 
+# Accept NEXT_PUBLIC_* environment variables as build args
+# These are embedded into the JavaScript bundle at build time
+ARG NEXT_PUBLIC_API_URL=https://be-watch-party.brahim-elhouss.me
+ARG NEXT_PUBLIC_WS_URL=wss://be-watch-party.brahim-elhouss.me/ws
+ARG NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE=true
+ARG NEXT_PUBLIC_ENABLE_DISCORD=true
+ARG NEXT_PUBLIC_ENABLE_ANALYTICS=true
+
+# Convert build args to environment variables for Next.js build
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_WS_URL=$NEXT_PUBLIC_WS_URL
+ENV NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE=$NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE
+ENV NEXT_PUBLIC_ENABLE_DISCORD=$NEXT_PUBLIC_ENABLE_DISCORD
+ENV NEXT_PUBLIC_ENABLE_ANALYTICS=$NEXT_PUBLIC_ENABLE_ANALYTICS
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
