@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import api, { Notification } from "@/lib/api-client"
+import { notificationsApi, type Notification } from "@/lib/api-client"
 
 const filters: { id: "all" | "unread" | "read"; label: string; icon: string }[] = [
   { id: "all", label: "All", icon: "🌐" },
@@ -31,8 +31,10 @@ export default function NotificationsPage() {
       if (filter === "unread") params.is_read = false
       if (filter === "read") params.is_read = true
 
-      const response = await api.get("/notifications/", { params })
-      const notificationsList = Array.isArray(response) ? response : (response.results || [])
+      const response = await notificationsApi.list(params)
+      const notificationsList = Array.isArray(response)
+        ? response
+        : (response.results || [])
 
       setNotifications(notificationsList)
       setUnreadCount(notificationsList.filter((n: any) => !n.is_read).length)
@@ -45,7 +47,7 @@ export default function NotificationsPage() {
 
   const markAsRead = async (notificationId: string) => {
     try {
-      await api.patch(`/notifications/${notificationId}/`, { is_read: true })
+      await notificationsApi.markAsRead(notificationId)
       setNotifications(prev => prev.map(n => n.id === notificationId ? { ...n, is_read: true } : n))
       setUnreadCount(prev => Math.max(0, prev - 1))
     } catch (error) {
@@ -55,7 +57,7 @@ export default function NotificationsPage() {
 
   const markAllAsRead = async () => {
     try {
-      await api.post("/notifications/mark-all-read/")
+      await notificationsApi.markAllAsRead()
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
       setUnreadCount(0)
     } catch (error) {
@@ -65,7 +67,7 @@ export default function NotificationsPage() {
 
   const deleteNotification = async (notificationId: string) => {
     try {
-      await api.delete(`/notifications/${notificationId}/`)
+      await notificationsApi.delete(notificationId)
       setNotifications(prev => prev.filter(n => n.id !== notificationId))
       setSelectedNotifications(prev => {
         const newSet = new Set(prev)
@@ -81,7 +83,7 @@ export default function NotificationsPage() {
     if (selectedNotifications.size === 0) return
 
     try {
-      await Promise.all(Array.from(selectedNotifications).map(id => api.delete(`/notifications/${id}/`)))
+      await Promise.all(Array.from(selectedNotifications).map(id => notificationsApi.delete(id)))
       setNotifications(prev => prev.filter(n => !selectedNotifications.has(n.id)))
       setSelectedNotifications(new Set())
     } catch (error) {

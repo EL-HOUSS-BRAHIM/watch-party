@@ -1223,6 +1223,52 @@ export const storeApi = {
 }
 
 /**
+ * Notifications API - dedicated helper for dashboard notification flows
+ */
+export const notificationsApi = {
+  list: (params?: Record<string, string | number | boolean>) => {
+    const queryString = params ? '?' + new URLSearchParams(
+      Object.entries(params)
+        .filter(([, value]) => value !== undefined && value !== null)
+        .map(([key, value]) => [key, String(value)])
+    ).toString() : ''
+
+    return apiFetch<PaginatedResponse<Notification>>(`/api/notifications/${queryString}`, {}, true)
+  },
+
+  markAsRead: (notificationId: string) =>
+    apiFetch<Notification>(`/api/notifications/${notificationId}/`, {
+      method: 'PATCH',
+      body: JSON.stringify({ is_read: true }),
+    }, true),
+
+  markAllAsRead: () =>
+    apiFetch<{ message: string }>(`/api/notifications/mark-all-read/`, {
+      method: 'POST',
+    }, true),
+
+  delete: (notificationId: string) =>
+    apiFetch<{ message: string }>(`/api/notifications/${notificationId}/`, {
+      method: 'DELETE',
+    }, true),
+
+  getSettings: () =>
+    apiFetch<Record<string, boolean>>('/api/notifications/settings/', {}, true),
+
+  updateSettings: (settings: Record<string, boolean>) =>
+    apiFetch<{ message?: string }>('/api/notifications/settings/', {
+      method: 'PUT',
+      body: JSON.stringify(settings),
+    }, true),
+
+  sendTestNotification: (data: { type: string; title: string; message: string }) =>
+    apiFetch<{ message: string }>('/api/notifications/test/', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }, true),
+}
+
+/**
  * Interactive API - Complete implementation
  */
 export const interactiveApi = {
@@ -1539,6 +1585,7 @@ const apiClient = {
   videos: videosApi,
   user: userApi,
   analytics: analyticsApi,
+  notifications: notificationsApi,
   chat: chatApi,
   admin: adminApi,
   billing: billingApi,
@@ -1583,7 +1630,7 @@ export default apiClient
 export const api = apiClient
 
 // Export individual modules for convenience
-export { authApi as auth, partiesApi as parties, videosApi as videos, userApi as users, chatApi as chat, adminApi as admin, billingApi as billing, storeApi as store, interactiveApi as interactive, searchApi as search, supportApi as support, analyticsApi as analytics }
+export { authApi as auth, partiesApi as parties, videosApi as videos, userApi as users, chatApi as chat, adminApi as admin, billingApi as billing, storeApi as store, notificationsApi as notifications, interactiveApi as interactive, searchApi as search, supportApi as support, analyticsApi as analytics }
 
 // Export types for convenience  
 export type Video = VideoSummary

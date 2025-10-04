@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import api from "@/lib/api-client"
+import { storeApi } from "@/lib/api-client"
 
 interface StoreItem {
   id: string
@@ -40,8 +40,8 @@ export default function StorePage() {
   const loadStoreData = async () => {
     try {
       const [itemsResponse, purchasesResponse] = await Promise.all([
-        api.get("/store/items/"),
-        api.get("/store/purchases/").catch(() => ({ results: [] }))
+        storeApi.getItems(),
+        storeApi.getPurchases().catch(() => ({ results: [] }))
       ])
 
       setStoreItems(itemsResponse.results || itemsResponse || [])
@@ -56,7 +56,7 @@ export default function StorePage() {
   const purchaseItem = async (itemId: string) => {
     setPurchasing(itemId)
     try {
-      const response = await api.post("/store/purchase/", { item_id: itemId })
+      const response = await storeApi.purchaseItem(itemId)
       
       if (response.checkout_url) {
         // Redirect to payment processor

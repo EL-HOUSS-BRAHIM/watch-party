@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import ChatComponent from "@/components/chat/ChatComponent"
 import ModerationPanel from "@/components/chat/ModerationPanel"
-import api, { Party, User, authApi } from "@/lib/api-client"
+import { partiesApi, type Party, type User, authApi } from "@/lib/api-client"
 
 export default function ChatPage() {
   const router = useRouter()
@@ -24,26 +24,17 @@ export default function ChatPage() {
       const userResponse = await authApi.getProfile()
       setCurrentUser(userResponse)
 
-      // Load user's parties (both hosting and joined)
-      const [hostingResponse, joinedResponse] = await Promise.all([
-        api.get("/parties/", { params: { hosting: true } }),
-        api.get("/parties/joined/")
-      ])
+      // Load accessible parties for the current user
+      const partiesResponse = await partiesApi.list({ page_size: 100 })
+      const partiesList = Array.isArray(partiesResponse)
+        ? partiesResponse
+        : (partiesResponse.results || [])
 
-      const hostingParties = Array.isArray(hostingResponse) ? hostingResponse : (hostingResponse.results || [])
-      const joinedParties = Array.isArray(joinedResponse) ? joinedResponse : (joinedResponse.results || [])
-
-      // Combine and deduplicate parties
-      const allParties = [...hostingParties, ...joinedParties]
-      const uniqueParties = allParties.filter((party, index, self) => 
-        index === self.findIndex(p => p.id === party.id)
-      )
-
-      setParties(uniqueParties)
+      setParties(partiesList)
 
       // Auto-select first party if available
-      if (uniqueParties.length > 0 && !selectedParty) {
-        setSelectedParty(uniqueParties[0])
+      if (partiesList.length > 0 && !selectedParty) {
+        setSelectedParty(partiesList[0])
       }
     } catch (error) {
       console.error("Failed to load data:", error)

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import api from "@/lib/api-client"
+import { notificationsApi } from "@/lib/api-client"
 
 interface NotificationSettingsProps {
   onClose: () => void
@@ -32,7 +32,7 @@ export default function NotificationSettings({ onClose }: NotificationSettingsPr
 
   const loadSettings = async () => {
     try {
-      const response = await api.get("/notifications/settings/")
+      const response = await notificationsApi.getSettings()
       setSettings({ ...settings, ...response })
     } catch (error) {
       console.error("Failed to load notification settings:", error)
@@ -44,7 +44,7 @@ export default function NotificationSettings({ onClose }: NotificationSettingsPr
   const saveSettings = async () => {
     setSaving(true)
     try {
-      await api.put("/notifications/settings/", settings)
+      await notificationsApi.updateSettings(settings)
       alert("Settings saved successfully!")
     } catch (error) {
       alert("Failed to save settings: " + (error instanceof Error ? error.message : "Unknown error"))
@@ -59,7 +59,7 @@ export default function NotificationSettings({ onClose }: NotificationSettingsPr
 
   const testNotification = async () => {
     try {
-      await api.post("/notifications/test/", {
+      await notificationsApi.sendTestNotification({
         type: "system",
         title: "Test Notification",
         message: "This is a test notification to verify your settings."

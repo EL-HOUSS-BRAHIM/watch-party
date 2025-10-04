@@ -1,7 +1,7 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react"
-import api, { type Notification } from "@/lib/api-client"
+import { notificationsApi, type Notification } from "@/lib/api-client"
 import NotificationToast from "./NotificationToast"
 
 interface NotificationContextType {
@@ -47,10 +47,10 @@ export default function NotificationProvider({ children }: NotificationProviderP
 
   const loadNotifications = async () => {
     try {
-      const response = await api.get("/notifications/", { 
-        params: { page_size: 50 } 
-      })
-      const notificationsList = Array.isArray(response) ? response : (response.results || [])
+      const response = await notificationsApi.list({ page_size: 50 })
+      const notificationsList = Array.isArray(response)
+        ? response
+        : (response.results || [])
       
       // Check for new notifications
       const currentIds = new Set(notifications.map(n => n.id))
@@ -111,7 +111,7 @@ export default function NotificationProvider({ children }: NotificationProviderP
 
   const markAsRead = async (id: string) => {
     try {
-      await api.patch(`/notifications/${id}/`, { is_read: true })
+      await notificationsApi.markAsRead(id)
       setNotifications(prev => prev.map(n => 
         n.id === id ? { ...n, is_read: true } : n
       ))
@@ -123,7 +123,7 @@ export default function NotificationProvider({ children }: NotificationProviderP
 
   const markAllAsRead = async () => {
     try {
-      await api.post("/notifications/mark-all-read/")
+      await notificationsApi.markAllAsRead()
       setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
       setUnreadCount(0)
     } catch (error) {
@@ -133,7 +133,7 @@ export default function NotificationProvider({ children }: NotificationProviderP
 
   const deleteNotification = async (id: string) => {
     try {
-      await api.delete(`/notifications/${id}/`)
+      await notificationsApi.delete(id)
       setNotifications(prev => prev.filter(n => n.id !== id))
     } catch (error) {
       console.error("Failed to delete notification:", error)

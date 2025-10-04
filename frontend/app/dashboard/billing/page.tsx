@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import api from "@/lib/api-client"
+import { billingApi } from "@/lib/api-client"
 
 interface BillingPlan {
   id: string
@@ -39,9 +39,9 @@ export default function BillingPage() {
   const loadBillingData = async () => {
     try {
       const [plansResponse, subscriptionResponse, historyResponse] = await Promise.all([
-        api.get("/billing/plans/"),
-        api.get("/billing/subscription/").catch(() => null),
-        api.get("/billing/history/").catch(() => ({ results: [] }))
+        billingApi.getPlans(),
+        billingApi.getCurrentSubscription().catch(() => null),
+        billingApi.getBillingHistory().catch(() => ({ results: [] }))
       ])
 
       setPlans(plansResponse.results || plansResponse || [])
@@ -57,7 +57,7 @@ export default function BillingPage() {
   const subscribeToPlan = async (planId: string) => {
     setProcessing(planId)
     try {
-      const response = await api.post("/billing/subscribe/", { plan_id: planId })
+      const response = await billingApi.subscribe(planId)
       
       if (response.checkout_url) {
         // Redirect to Stripe Checkout
@@ -82,7 +82,7 @@ export default function BillingPage() {
     }
 
     try {
-      await api.post("/billing/cancel/")
+      await billingApi.cancelSubscription()
       await loadBillingData()
       alert("Subscription will be canceled at the end of your current billing period.")
     } catch (error) {
@@ -94,7 +94,7 @@ export default function BillingPage() {
     if (!currentSubscription) return
 
     try {
-      await api.post("/billing/reactivate/")
+      await billingApi.reactivateSubscription()
       await loadBillingData()
       alert("Subscription reactivated successfully!")
     } catch (error) {
@@ -104,7 +104,7 @@ export default function BillingPage() {
 
   const updatePaymentMethod = async () => {
     try {
-      const response = await api.post("/billing/update-payment-method/")
+      const response = await billingApi.updatePaymentMethod()
       if (response.setup_url) {
         window.location.href = response.setup_url
       }
@@ -115,7 +115,7 @@ export default function BillingPage() {
 
   const downloadInvoice = async (invoiceId: string) => {
     try {
-      const response = await api.get(`/billing/invoice/${invoiceId}/download/`)
+      const response = await billingApi.downloadInvoice(invoiceId)
       if (response.download_url) {
         window.open(response.download_url, '_blank')
       }
