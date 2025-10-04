@@ -14,6 +14,9 @@ export default function NotificationDropdown({ isOpen, onClose, onSettingsClick 
   const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(false)
 
+  const computeUnreadCount = (items: Notification[]) =>
+    items.filter(notification => !notification.is_read && notification.status !== "dismissed").length
+
   useEffect(() => {
     if (isOpen) {
       loadRecentNotifications()
@@ -27,9 +30,9 @@ export default function NotificationDropdown({ isOpen, onClose, onSettingsClick 
       const notificationsList = Array.isArray(response)
         ? response
         : (response.results || [])
-      
+
       setNotifications(notificationsList)
-      setUnreadCount(notificationsList.filter((n: any) => !n.is_read).length)
+      setUnreadCount(computeUnreadCount(notificationsList))
     } catch (error) {
       console.error("Failed to load notifications:", error)
     } finally {
@@ -40,10 +43,15 @@ export default function NotificationDropdown({ isOpen, onClose, onSettingsClick 
   const markAsRead = async (notificationId: string) => {
     try {
       await notificationsApi.markAsRead(notificationId)
-      setNotifications(prev => prev.map(n => 
-        n.id === notificationId ? { ...n, is_read: true } : n
-      ))
-      setUnreadCount(prev => Math.max(0, prev - 1))
+      setNotifications(prev => {
+        const next = prev.map(n =>
+          n.id === notificationId
+            ? { ...n, is_read: true, status: "read", read_at: n.read_at ?? new Date().toISOString() }
+            : n
+        )
+        setUnreadCount(computeUnreadCount(next))
+        return next
+      })
     } catch (error) {
       console.error("Failed to mark notification as read:", error)
     }
@@ -129,7 +137,7 @@ export default function NotificationDropdown({ isOpen, onClose, onSettingsClick 
                       !notification.is_read ? "bg-brand-blue/20" : "bg-white/10"
                     }`}>
                       <span className="text-sm">
-                        {getNotificationIcon(notification.type)}
+                        {getNotificationIcon(notification.template_type || notification.type)}
                       </span>
                     </div>
 
@@ -143,7 +151,7 @@ export default function NotificationDropdown({ isOpen, onClose, onSettingsClick 
                       <p className={`text-xs mb-2 line-clamp-2 ${
                         !notification.is_read ? "text-white/80" : "text-white/60"
                       }`}>
-                        {notification.message}
+                        {notification.content ?? notification.message}
                       </p>
                       
                       <div className="flex items-center justify-between">

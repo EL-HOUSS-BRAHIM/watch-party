@@ -18,6 +18,9 @@ export default function NotificationsPage() {
   const [filter, setFilter] = useState<"all" | "unread" | "read">("all")
   const [selectedNotifications, setSelectedNotifications] = useState<Set<string>>(new Set())
 
+  const computeUnreadCount = (items: Notification[]) =>
+    items.filter(notification => !notification.is_read && notification.status !== "dismissed").length
+
   useEffect(() => {
     loadNotifications()
 
@@ -37,7 +40,7 @@ export default function NotificationsPage() {
         : (response.results || [])
 
       setNotifications(notificationsList)
-      setUnreadCount(notificationsList.filter((n: any) => !n.is_read).length)
+      setUnreadCount(computeUnreadCount(notificationsList))
     } catch (error) {
       console.error("Failed to load notifications:", error)
     } finally {
@@ -48,8 +51,15 @@ export default function NotificationsPage() {
   const markAsRead = async (notificationId: string) => {
     try {
       await notificationsApi.markAsRead(notificationId)
-      setNotifications(prev => prev.map(n => n.id === notificationId ? { ...n, is_read: true } : n))
-      setUnreadCount(prev => Math.max(0, prev - 1))
+      setNotifications(prev => {
+        const next = prev.map(n =>
+          n.id === notificationId
+            ? { ...n, is_read: true, status: "read", read_at: n.read_at ?? new Date().toISOString() }
+            : n
+        )
+        setUnreadCount(computeUnreadCount(next))
+        return next
+      })
     } catch (error) {
       console.error("Failed to mark notification as read:", error)
     }
@@ -58,36 +68,47 @@ export default function NotificationsPage() {
   const markAllAsRead = async () => {
     try {
       await notificationsApi.markAllAsRead()
-      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })))
-      setUnreadCount(0)
+      setNotifications(prev => {
+        const next = prev.map(n => ({ ...n, is_read: true, status: "read", read_at: n.read_at ?? new Date().toISOString() }))
+        setUnreadCount(computeUnreadCount(next))
+        return next
+      })
     } catch (error) {
       console.error("Failed to mark all notifications as read:", error)
     }
   }
 
-  const deleteNotification = async (notificationId: string) => {
+  const dismissNotification = async (notificationId: string) => {
     try {
-      await notificationsApi.delete(notificationId)
-      setNotifications(prev => prev.filter(n => n.id !== notificationId))
+      await notificationsApi.dismiss(notificationId)
+      setNotifications(prev => {
+        const next = prev.filter(n => n.id !== notificationId)
+        setUnreadCount(computeUnreadCount(next))
+        return next
+      })
       setSelectedNotifications(prev => {
         const newSet = new Set(prev)
         newSet.delete(notificationId)
         return newSet
       })
     } catch (error) {
-      console.error("Failed to delete notification:", error)
+      console.error("Failed to dismiss notification:", error)
     }
   }
 
-  const bulkDelete = async () => {
+  const bulkDismiss = async () => {
     if (selectedNotifications.size === 0) return
 
     try {
-      await Promise.all(Array.from(selectedNotifications).map(id => notificationsApi.delete(id)))
-      setNotifications(prev => prev.filter(n => !selectedNotifications.has(n.id)))
+      await Promise.all(Array.from(selectedNotifications).map(id => notificationsApi.dismiss(id)))
+      setNotifications(prev => {
+        const next = prev.filter(n => !selectedNotifications.has(n.id))
+        setUnreadCount(computeUnreadCount(next))
+        return next
+      })
       setSelectedNotifications(new Set())
     } catch (error) {
-      console.error("Failed to delete notifications:", error)
+      console.error("Failed to dismiss notifications:", error)
     }
   }
 
@@ -179,10 +200,10 @@ export default function NotificationsPage() {
             )}
             {selectedNotifications.size > 0 && (
               <button
-                onClick={bulkDelete}
+                onClick={bulkDismiss}
                 className="inline-flex items-center gap-2 rounded-full border border-brand-coral/20 bg-brand-coral/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-coral-dark"
               >
-                🗑️ Delete selected ({selectedNotifications.size})
+                🗑️ Dismiss selected ({selectedNotifications.size})
               </button>
             )}
           </div>
@@ -255,11 +276,11 @@ export default function NotificationsPage() {
                         {isSelected ? "✓" : ""}
                       </button>
                       <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-neutral text-lg">
-                        {getNotificationIcon(notification.type || "system")}
+                        {getNotificationIcon(notification.template_type || notification.type || "system")}
                       </div>
                       <div>
                         <h2 className="text-base font-semibold text-brand-navy">{notification.title || "Notification"}</h2>
-                        <p className="text-sm text-brand-navy/70">{notification.message}</p>
+                        <p className="text-sm text-brand-navy/70">{notification.content ?? notification.message}</p>
                       </div>
                     </div>
                     <div className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-navy/40">
@@ -296,10 +317,10 @@ export default function NotificationsPage() {
                         </button>
                       )}
                       <button
-                        onClick={() => deleteNotification(notification.id)}
+                        onClick={() => dismissNotification(notification.id)}
                         className="rounded-full border border-brand-coral/20 bg-brand-coral/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-brand-coral-dark hover:border-brand-coral/40"
                       >
-                        Delete
+                        Dismiss
                       </button>
                     </div>
                   </div>
