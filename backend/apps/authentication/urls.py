@@ -33,6 +33,7 @@ urlpatterns = [
     # User Registration & Login
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', LoginView.as_view(), name='login'),
+    path('login', LoginView.as_view(), name='login_no_slash'),  # Accept login without trailing slash
     path('logout/', LogoutView.as_view(), name='logout'),
     path('refresh/', CustomTokenRefreshView.as_view(), name='token_refresh'),
     
