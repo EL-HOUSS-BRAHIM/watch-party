@@ -57,13 +57,13 @@ get_rds_credentials() {
         return 1
     fi
     
-    # Parse the JSON and extract credentials
+    # Parse the JSON and extract credentials using Python instead of jq
     local username password host port dbname
-    username=$(echo "$secret_json" | jq -r '.username // "watchparty_admin"')
-    password=$(echo "$secret_json" | jq -r '.password')
-    host=$(echo "$secret_json" | jq -r '.host // "all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com"')
-    port=$(echo "$secret_json" | jq -r '.port // "5432"')
-    dbname=$(echo "$secret_json" | jq -r '.dbname // "watchparty_prod"')
+    username=$(echo "$secret_json" | python3 -c "import json, sys; data = json.load(sys.stdin); print(data.get('username', 'watchparty_admin'))")
+    password=$(echo "$secret_json" | python3 -c "import json, sys; data = json.load(sys.stdin); print(data.get('password', ''))")
+    host=$(echo "$secret_json" | python3 -c "import json, sys; data = json.load(sys.stdin); print(data.get('host', 'all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com'))")
+    port=$(echo "$secret_json" | python3 -c "import json, sys; data = json.load(sys.stdin); print(data.get('port', '5432'))")
+    dbname=$(echo "$secret_json" | python3 -c "import json, sys; data = json.load(sys.stdin); print(data.get('dbname', 'watchparty_prod'))")
     
     if [[ -z "$password" || "$password" == "null" ]]; then
         error "Invalid password retrieved from secret"
@@ -160,7 +160,7 @@ main() {
     log "Starting RDS password sync..."
     
     # Check if required tools are available
-    for tool in jq python3; do
+    for tool in python3; do
         if ! command -v "$tool" &> /dev/null; then
             error "Required tool not found: $tool"
             exit 1
