@@ -16,6 +16,9 @@ services:
     environment:
       - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
       - AWS_CONFIG_FILE=/home/appuser/.aws/config
+      - AWS_EC2_METADATA_DISABLED=true
+      - AWS_METADATA_SERVICE_TIMEOUT=1
+      - AWS_METADATA_SERVICE_NUM_ATTEMPTS=1
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
@@ -38,6 +41,12 @@ services:
     command: celery -A config worker --loglevel=info --concurrency=2
     env_file:
       - ./backend/.env
+    environment:
+      - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
+      - AWS_CONFIG_FILE=/home/appuser/.aws/config
+      - AWS_EC2_METADATA_DISABLED=true
+      - AWS_METADATA_SERVICE_TIMEOUT=1
+      - AWS_METADATA_SERVICE_NUM_ATTEMPTS=1
     volumes:
       - media_volume:/app/media
       - ~/.aws:/home/appuser/.aws:ro
@@ -54,6 +63,12 @@ services:
     command: celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
     env_file:
       - ./backend/.env
+    environment:
+      - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
+      - AWS_CONFIG_FILE=/home/appuser/.aws/config
+      - AWS_EC2_METADATA_DISABLED=true
+      - AWS_METADATA_SERVICE_TIMEOUT=1
+      - AWS_METADATA_SERVICE_NUM_ATTEMPTS=1
     volumes:
       - ~/.aws:/home/appuser/.aws:ro
     depends_on:
