@@ -210,6 +210,21 @@ CORS_ALLOWED_ORIGINS = config(
     cast=lambda v: [s.strip() for s in v.split(',')]
 )
 
+# Additional CORS settings for proper preflight handling
+CORS_ALLOW_HEADERS = config(
+    'CORS_ALLOW_HEADERS',
+    default='accept,authorization,content-type,user-agent,x-csrftoken,x-requested-with',
+    cast=lambda v: [s.strip() for s in v.split(',')]
+)
+
+CORS_ALLOW_METHODS = config(
+    'CORS_ALLOW_METHODS', 
+    default='GET,POST,PUT,PATCH,DELETE,OPTIONS',
+    cast=lambda v: [s.strip() for s in v.split(',')]
+)
+
+CORS_PREFLIGHT_MAX_AGE = config('CORS_PREFLIGHT_MAX_AGE', default=86400, cast=int)
+
 # Static files - Use WhiteNoise with compression
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 

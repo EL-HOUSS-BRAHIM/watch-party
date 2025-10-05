@@ -111,6 +111,11 @@ GOOGLE_DRIVE_INTEGRATION_ENABLED=True
 YOUTUBE_INTEGRATION_ENABLED=True
 TWO_FACTOR_AUTH_ENABLED=True
 
+# Additional CORS headers for proper preflight handling
+CORS_ALLOW_HEADERS=accept,authorization,content-type,user-agent,x-csrftoken,x-requested-with
+CORS_ALLOW_METHODS=GET,POST,PUT,PATCH,DELETE,OPTIONS
+CORS_PREFLIGHT_MAX_AGE=86400
+
 EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
 DEFAULT_FROM_EMAIL=noreply@watchparty.com
 
