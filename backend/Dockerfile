@@ -36,9 +36,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     DEBIAN_FRONTEND=noninteractive \
     DJANGO_SETTINGS_MODULE=config.settings.production
 
-# Accept build argument to skip AWS during build
+# Accept build argument to skip AWS during build (build-time only)
 ARG SKIP_AWS_DURING_BUILD=0
-ENV SKIP_AWS_DURING_BUILD=${SKIP_AWS_DURING_BUILD}
 
 # Git commit hash for cache busting - changes on every commit
 ARG GIT_COMMIT_HASH=unknown
