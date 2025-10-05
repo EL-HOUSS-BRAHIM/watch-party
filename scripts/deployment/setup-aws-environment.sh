@@ -77,12 +77,10 @@ SECRET_KEY=your-super-secret-key-here-change-in-production
 DJANGO_SETTINGS_MODULE=config.settings.production
 ALLOWED_HOSTS=35.181.116.57,be-watch-party.brahim-elhouss.me,watch-party.brahim-elhouss.me,localhost,127.0.0.1
 
-DATABASE_URL=postgresql://watchparty_admin:A)B8WK6~OTtE9cgxjF*ZzVRomLdG@all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com:5432/watchparty_prod?sslmode=require
+# Database configuration will be dynamically loaded from AWS Secrets Manager
+# No hardcoded DATABASE_URL - using get_database_config() function
+# AWS credentials will be loaded from ~/.aws/credentials mounted in container
 DB_NAME=watchparty_prod
-DB_USER=watchparty_admin
-DB_PASSWORD=A)B8WK6~OTtE9cgxjF*ZzVRomLdG
-DB_HOST=all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com
-DB_PORT=5432
 DB_SSL_MODE=require
 
 REDIS_HOST=master.watch-party-valkey.2muo9f.euw3.cache.amazonaws.com
