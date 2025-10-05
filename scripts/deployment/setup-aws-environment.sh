@@ -47,6 +47,11 @@ aws_access_key_id = ${AWS_ACCESS_KEY_ID}
 aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
 AWSCREDS
     chmod 600 ~/.aws/credentials
+    
+    # Fix permissions for container access (container runs as UID 1000, host is UID 1001)
+    log_info "Setting AWS credentials permissions for container access..."
+    chmod 644 ~/.aws/credentials ~/.aws/config
+    
     log_success "AWS credentials configured"
 else
     log_info "Using IAM role for AWS access"
