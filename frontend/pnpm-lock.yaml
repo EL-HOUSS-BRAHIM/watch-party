@@ -39,9 +39,6 @@ importers:
       '@eslint/eslintrc':
         specifier: ^3.3.1
         version: 3.3.1
-      '@playwright/test':
-        specifier: 1.54.2
-        version: 1.54.2
       '@testing-library/dom':
         specifier: 10.4.1
         version: 10.4.1
@@ -4156,6 +4153,7 @@ snapshots:
   '@playwright/test@1.54.2':
     dependencies:
       playwright: 1.54.2
+    optional: true
 
   '@radix-ui/number@1.1.1': {}
 
@@ -6550,13 +6548,15 @@ snapshots:
     dependencies:
       find-up: 4.1.0
 
-  playwright-core@1.54.2: {}
+  playwright-core@1.54.2:
+    optional: true
 
   playwright@1.54.2:
     dependencies:
       playwright-core: 1.54.2
     optionalDependencies:
       fsevents: 2.3.2
+    optional: true
 
   possible-typed-array-names@1.1.0: {}
 
