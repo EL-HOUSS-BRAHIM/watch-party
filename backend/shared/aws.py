@@ -23,33 +23,30 @@ LOGGER = logging.getLogger(__name__)
 
 @lru_cache(maxsize=1)
 def get_boto3_session() -> boto3.Session:
-    """Return a cached boto3 session that assumes MyAppRole for enhanced permissions."""
+    """Return a cached boto3 session using mounted AWS credentials file."""
     
     try:
-        # First, create a session with the default Lightsail credentials
-        default_session = boto3.Session()
-        sts_client = default_session.client('sts')
+        # Force boto3 to use the mounted credentials file by setting environment
+        import os
         
-        # Assume the MyAppRole which has Secrets Manager permissions
-        role_arn = "arn:aws:iam::211125363745:role/MyAppRole"
+        # Temporarily disable instance metadata to force file-based credentials
+        original_metadata_disabled = os.environ.get('AWS_EC2_METADATA_DISABLED')
+        os.environ['AWS_EC2_METADATA_DISABLED'] = 'true'
         
-        response = sts_client.assume_role(
-            RoleArn=role_arn,
-            RoleSessionName='WatchPartyBackend'
-        )
+        # Create session which will now use the mounted credentials file
+        session = boto3.Session()
         
-        credentials = response['Credentials']
-        
-        # Create a new session with the assumed role credentials
-        return boto3.Session(
-            aws_access_key_id=credentials['AccessKeyId'],
-            aws_secret_access_key=credentials['SecretAccessKey'],
-            aws_session_token=credentials['SessionToken']
-        )
+        # Restore original metadata setting
+        if original_metadata_disabled is not None:
+            os.environ['AWS_EC2_METADATA_DISABLED'] = original_metadata_disabled
+        else:
+            os.environ.pop('AWS_EC2_METADATA_DISABLED', None)
+            
+        return session
         
     except Exception as e:
-        LOGGER.warning(f"Could not assume MyAppRole, falling back to default session: {e}")
-        # Fall back to default session if role assumption fails
+        LOGGER.warning(f"Could not create AWS session with mounted credentials: {e}")
+        # Fall back to default session if mounted credentials fail
         return boto3.Session()
 
 
