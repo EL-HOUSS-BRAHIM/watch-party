@@ -34,7 +34,7 @@ RUN echo "Building from commit: ${GIT_COMMIT_HASH}"
 # These are embedded into the JavaScript bundle at build time
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_WS_URL=wss://be-watch-party.brahim-elhouss.me/ws
-ARG NEXT_PUBLIC_FRONTEND_API=https://be-watch-party.brahim-elhouss.me/api
+ARG NEXT_PUBLIC_FRONTEND_API
 ARG NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE=true
 ARG NEXT_PUBLIC_ENABLE_DISCORD=true
 ARG NEXT_PUBLIC_ENABLE_ANALYTICS=true
