@@ -23,9 +23,34 @@ LOGGER = logging.getLogger(__name__)
 
 @lru_cache(maxsize=1)
 def get_boto3_session() -> boto3.Session:
-    """Return a cached boto3 session that relies on the IAM role credentials."""
-
-    return boto3.Session()
+    """Return a cached boto3 session that assumes MyAppRole for enhanced permissions."""
+    
+    try:
+        # First, create a session with the default Lightsail credentials
+        default_session = boto3.Session()
+        sts_client = default_session.client('sts')
+        
+        # Assume the MyAppRole which has Secrets Manager permissions
+        role_arn = "arn:aws:iam::211125363745:role/MyAppRole"
+        
+        response = sts_client.assume_role(
+            RoleArn=role_arn,
+            RoleSessionName='WatchPartyBackend'
+        )
+        
+        credentials = response['Credentials']
+        
+        # Create a new session with the assumed role credentials
+        return boto3.Session(
+            aws_access_key_id=credentials['AccessKeyId'],
+            aws_secret_access_key=credentials['SecretAccessKey'],
+            aws_session_token=credentials['SessionToken']
+        )
+        
+    except Exception as e:
+        LOGGER.warning(f"Could not assume MyAppRole, falling back to default session: {e}")
+        # Fall back to default session if role assumption fails
+        return boto3.Session()
 
 
 def _decode_secret_payload(response: Dict[str, Any]) -> Dict[str, Any]:
