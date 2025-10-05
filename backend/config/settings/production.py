@@ -27,13 +27,48 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
-DATABASES = {
-    'default': dj_database_url.config(
-        conn_max_age=0,
-        conn_health_checks=True,
-        ssl_require=True,
-    )
-}
+
+# Dynamic Database Configuration from AWS Secrets Manager
+def get_database_config():
+    """Get RDS database configuration from AWS Secrets Manager with fallback to environment."""
+    try:
+        # Try to get the RDS credentials from AWS Secrets Manager
+        rds_secret = get_optional_secret('rds!db-44fd826c-d576-4afd-8bf3-38f59d5cd4ae')
+        if rds_secret:
+            username = rds_secret.get('username')
+            password = rds_secret.get('password')
+            host = rds_secret.get('host')
+            port = rds_secret.get('port', 5432)
+            dbname = rds_secret.get('dbname', 'watchparty_prod')
+            
+            if username and password and host:
+                database_url = f'postgresql://{username}:{password}@{host}:{port}/{dbname}?sslmode=require'
+                logger.info(f"Using RDS credentials from AWS Secrets Manager for host: {host}")
+                return {
+                    'default': dj_database_url.parse(
+                        database_url,
+                        conn_max_age=0,
+                        conn_health_checks=True,
+                        ssl_require=True,
+                    )
+                }
+            else:
+                logger.warning("RDS secret incomplete, missing required fields")
+        else:
+            logger.info("RDS secret not found in Secrets Manager, using environment fallback")
+    except Exception as e:
+        logger.warning(f"Failed to fetch RDS credentials from AWS Secrets Manager: {e}")
+    
+    # Fallback to environment variable DATABASE_URL
+    return {
+        'default': dj_database_url.config(
+            conn_max_age=0,
+            conn_health_checks=True,
+            ssl_require=True,
+        )
+    }
+
+DATABASES = get_database_config()
 
 # Dynamic Redis/Valkey Configuration from AWS Secrets Manager
 def get_valkey_config():
