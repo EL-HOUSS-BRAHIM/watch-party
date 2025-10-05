@@ -40,12 +40,17 @@ def get_database_config():
         if rds_secret:
             username = rds_secret.get('username')
             password = rds_secret.get('password')
-            host = rds_secret.get('host')
+            
+            # RDS secret may not include host/port/dbname, so use hardcoded values for this RDS instance
+            host = rds_secret.get('host', 'all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com')
             port = rds_secret.get('port', 5432)
             dbname = rds_secret.get('dbname', 'watchparty_prod')
             
-            if username and password and host:
-                database_url = f'postgresql://{username}:{password}@{host}:{port}/{dbname}?sslmode=require'
+            if username and password:
+                # URL-encode the password to handle special characters
+                import urllib.parse
+                encoded_password = urllib.parse.quote(password, safe='')
+                database_url = f'postgresql://{username}:{encoded_password}@{host}:{port}/{dbname}?sslmode=require'
                 logger.info(f"Using RDS credentials from AWS Secrets Manager for host: {host}")
                 return {
                     'default': dj_database_url.parse(
@@ -56,7 +61,7 @@ def get_database_config():
                     )
                 }
             else:
-                logger.warning("RDS secret incomplete, missing required fields")
+                logger.warning("RDS secret incomplete, missing username or password")
         else:
             logger.info("RDS secret not found in Secrets Manager, using environment fallback")
     except Exception as e:
