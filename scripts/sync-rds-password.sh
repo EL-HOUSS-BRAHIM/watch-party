@@ -11,7 +11,12 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 BACKEND_DIR="$PROJECT_ROOT/backend"
 ENV_FILE="$BACKEND_DIR/.env"
 
-# Colors for output
+# Configuration
+AWS_CLI_PATH="/home/deploy/aws-cli-bin/aws"
+if [[ ! -x "$AWS_CLI_PATH" ]]; then
+    # Fallback to PATH
+    AWS_CLI_PATH="aws"
+fi
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -43,7 +48,7 @@ get_rds_credentials() {
     
     # Get the secret value
     local secret_json
-    if ! secret_json=$(aws secretsmanager get-secret-value \
+    if ! secret_json=$($AWS_CLI_PATH secretsmanager get-secret-value \
         --secret-id "$secret_id" \
         --region "$region" \
         --query SecretString \
@@ -155,12 +160,18 @@ main() {
     log "Starting RDS password sync..."
     
     # Check if required tools are available
-    for tool in aws jq python3; do
+    for tool in jq python3; do
         if ! command -v "$tool" &> /dev/null; then
             error "Required tool not found: $tool"
             exit 1
         fi
     done
+    
+    # Check AWS CLI specifically
+    if [[ ! -x "$AWS_CLI_PATH" ]]; then
+        error "AWS CLI not found at: $AWS_CLI_PATH"
+        exit 1
+    fi
     
     # Get current DATABASE_URL from .env file
     local current_database_url
