@@ -17,6 +17,9 @@ logger = logging.getLogger(__name__)
 DEBUG = False
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
 
+# Disable automatic slash appending to prevent POST->GET redirect issues
+APPEND_SLASH = False
+
 # Additional security settings for production
 SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=True, cast=bool)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
