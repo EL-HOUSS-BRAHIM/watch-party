@@ -28,6 +28,8 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
   // Public party pages handle their own complete layout (no header/footer wrapper)
   const isPublicParty = pathname?.startsWith('/party/')
   
+  const isLanding = pathname === "/"
+
   if (isDashboard) {
     // Dashboard handles its own complete layout
     return <>{children}</>
@@ -54,9 +56,13 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
     <div className="flex min-h-screen flex-col">
       <MarketingHeader />
       <main className="flex-1">
-        <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-16 sm:px-8 mobile-content">
-          {children}
-        </div>
+        {isLanding ? (
+          <div className="mobile-content">{children}</div>
+        ) : (
+          <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-16 sm:px-8 mobile-content">
+            {children}
+          </div>
+        )}
       </main>
       <SiteFooter />
     </div>
