@@ -47,18 +47,18 @@ const _deviceHighlights = [
 export default function HomePage() {
   return (
     <>
-      <section className="relative mx-auto max-w-6xl px-4 pb-20 pt-10 sm:px-6 lg:px-8">
+      <section className="relative mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 lg:px-8">
         <Hero />
       </section>
 
       <section className="bg-gradient-to-b from-white to-brand-neutral/60 px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-7xl">
           <MetricStrip />
         </div>
       </section>
 
       <section className="px-4 py-24 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-7xl">
           <FeatureGrid />
         </div>
       </section>
@@ -76,7 +76,7 @@ export default function HomePage() {
             Launch a room, add your content, and send a link—WatchParty keeps everyone perfectly in sync across every screen.
           </p>
         </div>
-        <div className="mx-auto mt-16 grid max-w-6xl gap-6 md:grid-cols-3">
+        <div className="mx-auto mt-16 grid max-w-7xl gap-6 md:grid-cols-3">
           {[{
             step: "Step 1",
             title: "Create or join",
@@ -109,13 +109,13 @@ export default function HomePage() {
       </section>
 
       <section className="px-4 py-24 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-7xl">
           <TestimonialGrid />
         </div>
       </section>
 
       <section className="bg-gradient-to-b from-white via-brand-neutral/70 to-white px-4 py-24 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto max-w-7xl">
           <div className="mx-auto mb-16 max-w-4xl rounded-[40px] border border-brand-blue/20 bg-white p-10 text-brand-navy shadow-[0_40px_120px_rgba(45,156,219,0.14)]">
             <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
               <div className="space-y-4">
