@@ -22,8 +22,8 @@ const footerLinks = [
     title: "Resources",
     items: [
       { label: "Pricing", href: "/pricing" },
-      { label: "Status", href: "https://status.watchparty.tv" },
-      { label: "Press kit", href: "https://watchparty.tv/press" }
+      { label: "Support", href: "/support" },
+      { label: "GitHub", href: "https://github.com/EL-HOUSS-BRAHIM/watch-party" }
     ]
   }
 ]

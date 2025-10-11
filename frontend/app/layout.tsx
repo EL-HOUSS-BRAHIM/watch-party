@@ -12,6 +12,13 @@ export const metadata: Metadata = {
   },
   description:
     "Stage luminous watch parties from sunrise premieres to midnight marathons with WatchParty's day-and-night cinema toolkit.",
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/watchparty-logo.png', type: 'image/png', sizes: '512x512' }
+    ],
+    apple: '/watchparty-logo.png'
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",

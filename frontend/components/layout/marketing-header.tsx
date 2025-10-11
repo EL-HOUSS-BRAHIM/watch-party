@@ -30,13 +30,13 @@ export function MarketingHeader() {
         </Link>
         <div className="flex items-center gap-4">
           <Link
-            href="/join"
+            href="/auth/login"
             className="text-sm font-semibold text-brand-navy/80 transition-colors hover:text-brand-navy underline-offset-4 hover:underline"
           >
             Sign in
           </Link>
           <Link
-            href="/auth/login"
+            href="/auth/register"
             className="rounded-xl bg-gradient-to-r from-brand-magenta to-brand-orange px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-magenta/30 transition-all hover:-translate-y-0.5 hover:from-brand-magenta-dark hover:to-brand-orange-dark hover:shadow-brand-magenta/40"
           >
             Start hosting
