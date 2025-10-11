@@ -60,6 +60,9 @@ export async function POST(request: NextRequest) {
       const accessToken = data.access_token ?? data.access
       const refreshToken = data.refresh_token ?? data.refresh
 
+      console.log("[Login] Access token received:", !!accessToken)
+      console.log("[Login] Refresh token received:", !!refreshToken)
+
       // Set HTTP-only cookie with the JWT token for security
       const nextResponse = NextResponse.json({
         success: true,
@@ -67,23 +70,28 @@ export async function POST(request: NextRequest) {
       })
 
       if (accessToken) {
+        console.log("[Login] Setting access_token cookie")
         nextResponse.cookies.set("access_token", accessToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",
           maxAge: 60 * 60 * 24, // 24 hours
+          path: "/",
         })
       }
 
       if (refreshToken) {
+        console.log("[Login] Setting refresh_token cookie")
         nextResponse.cookies.set("refresh_token", refreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",
           maxAge: 60 * 60 * 24 * 7, // 7 days
+          path: "/",
         })
       }
 
+      console.log("[Login] Login successful, cookies set")
       return nextResponse
     } else {
       const message = extractErrorMessage(data)

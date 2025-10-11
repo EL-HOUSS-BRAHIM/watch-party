@@ -34,7 +34,11 @@ export async function GET(request: NextRequest) {
   const accessTokenCookie = request.cookies.get("access_token")?.value
   const refreshTokenCookie = request.cookies.get("refresh_token")?.value
 
+  console.log("[Session Check] Access token exists:", !!accessTokenCookie)
+  console.log("[Session Check] Refresh token exists:", !!refreshTokenCookie)
+
   if (!accessTokenCookie && !refreshTokenCookie) {
+    console.log("[Session Check] No tokens found, returning unauthenticated")
     return NextResponse.json({ authenticated: false, user: null })
   }
 
@@ -46,8 +50,11 @@ export async function GET(request: NextRequest) {
 
       if (profileResponse.ok) {
         const user = await profileResponse.json()
+        console.log("[Session Check] Profile fetched successfully for user:", user.email)
         return NextResponse.json({ authenticated: true, user })
       }
+
+      console.log("[Session Check] Profile fetch failed with status:", profileResponse.status)
 
       if (profileResponse.status !== 401 || !refreshTokenCookie) {
         return NextResponse.json({ authenticated: false, user: null }, { status: profileResponse.status })
