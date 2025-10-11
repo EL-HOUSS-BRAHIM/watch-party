@@ -2,10 +2,12 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { authApi } from "@/lib/api-client"
 import { FormError } from "@/components/ui/feedback"
 
 export default function LoginPage() {
+  const router = useRouter()
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -29,7 +31,10 @@ export default function LoginPage() {
         setTimeout(() => {
           const urlParams = new URLSearchParams(window.location.search)
           const redirect = urlParams.get("redirect") || "/dashboard"
-          window.location.href = decodeURIComponent(redirect)
+          
+          // Use Next.js router instead of window.location for proper cookie handling
+          router.push(decodeURIComponent(redirect))
+          router.refresh() // Force refresh to pick up new cookies
         }, 800)
       } else {
         setError(data.message || "Login failed. Please check your credentials.")
