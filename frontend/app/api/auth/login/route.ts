@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",
-          maxAge: 60 * 60 * 24, // 24 hours
+          maxAge: 60 * 60, // 60 minutes (matches backend JWT_ACCESS_TOKEN_LIFETIME)
           path: "/",
         })
       }
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
           httpOnly: true,
           secure: process.env.NODE_ENV === "production",
           sameSite: "lax",
-          maxAge: 60 * 60 * 24 * 7, // 7 days
+          maxAge: 60 * 60 * 24 * 7, // 7 days (matches backend JWT_REFRESH_TOKEN_LIFETIME)
           path: "/",
         })
       }

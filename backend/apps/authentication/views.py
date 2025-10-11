@@ -44,6 +44,7 @@ from .serializers import (
     GoogleAuthRequestSerializer,
     GitHubAuthRequestSerializer
 )
+from .utils import get_client_ip, extract_device_info, hash_token
 from shared.mixins import RateLimitMixin
 from shared.serializers import MessageResponseSerializer
 
@@ -99,6 +100,25 @@ class LoginView(RateLimitMixin, TokenObtainPairView):
             refresh = RefreshToken.for_user(user)
             access_token = refresh.access_token
             
+            # Create user session record
+            try:
+                ip_address = get_client_ip(request)
+                user_agent = request.META.get('HTTP_USER_AGENT', '')
+                device_info = extract_device_info(request)
+                
+                UserSession.objects.create(
+                    user=user,
+                    refresh_token_hash=hash_token(str(refresh)),
+                    device_info=device_info,
+                    ip_address=ip_address,
+                    user_agent=user_agent,
+                    expires_at=timezone.now() + refresh.lifetime,
+                    is_active=True
+                )
+            except Exception as e:
+                # Log the error but don't fail the login
+                print(f"Error creating user session: {e}")
+            
             return Response({
                 'success': True,
                 'access_token': str(access_token),
@@ -122,7 +142,21 @@ class LogoutView(APIView):
     def post(self, request):
         try:
             refresh_token = request.data.get('refresh_token')
+            
+            # Deactivate user session if refresh token is provided
             if refresh_token:
+                try:
+                    token_hash = hash_token(refresh_token)
+                    UserSession.objects.filter(
+                        user=request.user,
+                        refresh_token_hash=token_hash,
+                        is_active=True
+                    ).update(is_active=False)
+                except Exception as session_error:
+                    # Log error but continue with logout
+                    print(f"Error deactivating session: {session_error}")
+                
+                # Blacklist the refresh token
                 token = RefreshToken(refresh_token)
                 token.blacklist()
             

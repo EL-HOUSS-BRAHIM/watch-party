@@ -105,13 +105,13 @@ export async function GET(request: NextRequest) {
 
     response.cookies.set("access_token", accessToken, {
       ...COOKIE_OPTIONS,
-      maxAge: 60 * 60 * 24,
+      maxAge: 60 * 60, // 60 minutes (matches backend JWT_ACCESS_TOKEN_LIFETIME)
     })
 
     if (newRefreshToken) {
       response.cookies.set("refresh_token", newRefreshToken, {
         ...COOKIE_OPTIONS,
-        maxAge: 60 * 60 * 24 * 7,
+        maxAge: 60 * 60 * 24 * 7, // 7 days (matches backend JWT_REFRESH_TOKEN_LIFETIME)
       })
     }
 

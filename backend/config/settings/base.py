@@ -277,12 +277,27 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'shared.background_tasks.cleanup_expired_data',
         'schedule': 86400.0,  # Daily
     },
+    'cleanup-expired-sessions': {
+        'task': 'apps.authentication.tasks.cleanup_expired_sessions',
+        'schedule': 3600.0,  # Every hour
+    },
+    'cleanup-expired-tokens': {
+        'task': 'apps.authentication.tasks.cleanup_expired_tokens',
+        'schedule': 21600.0,  # Every 6 hours
+    },
+    'cleanup-inactive-sessions': {
+        'task': 'apps.authentication.tasks.cleanup_inactive_sessions',
+        'schedule': 86400.0,  # Daily
+    },
 }
 CELERY_TASK_ROUTES = {
     'shared.background_tasks.process_search_analytics': {'queue': 'analytics'},
     'shared.background_tasks.process_notification_analytics': {'queue': 'analytics'},
     'shared.background_tasks.cleanup_expired_data': {'queue': 'maintenance'},
     'shared.background_tasks.optimize_database_indexes': {'queue': 'maintenance'},
+    'apps.authentication.tasks.cleanup_expired_sessions': {'queue': 'maintenance'},
+    'apps.authentication.tasks.cleanup_expired_tokens': {'queue': 'maintenance'},
+    'apps.authentication.tasks.cleanup_inactive_sessions': {'queue': 'maintenance'},
 }
 
 # Channels Configuration with support for AWS ElastiCache Valkey
