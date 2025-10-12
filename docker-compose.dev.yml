@@ -150,6 +150,14 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        # Pass NEXT_PUBLIC_* variables as build args for local development
+        NEXT_PUBLIC_API_URL: "http://localhost:8000"
+        NEXT_PUBLIC_WS_URL: "ws://localhost:8000/ws"
+        NEXT_PUBLIC_FRONTEND_API: "http://localhost:8000/api"
+        NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE: "true"
+        NEXT_PUBLIC_ENABLE_DISCORD: "true"
+        NEXT_PUBLIC_ENABLE_ANALYTICS: "false"
     env_file:
       - ./frontend/.env.local
     environment:
