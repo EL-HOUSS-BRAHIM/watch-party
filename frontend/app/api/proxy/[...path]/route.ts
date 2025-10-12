@@ -111,7 +111,7 @@ async function handleRequest(
     if (newAccessToken) {
       nextResponse.cookies.set("access_token", newAccessToken, {
         ...COOKIE_OPTIONS,
-        maxAge: 60 * 60 * 24,
+        maxAge: 60 * 60, // 60 minutes (matches backend JWT_ACCESS_TOKEN_LIFETIME)
       })
     }
 
