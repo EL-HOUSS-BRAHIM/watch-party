@@ -50,13 +50,9 @@ export async function POST(request: NextRequest) {
     console.log("[Login] Full URL:", fullUrl)
 
     // Forward the login request to the Django backend using axios
-    // This avoids the fetch body streaming issues in Node.js
-    // Explicitly stringify the body to avoid content-length mismatch
-    const jsonBody = JSON.stringify(body)
-    const response = await axios.post(fullUrl, jsonBody, {
+    const response = await axios.post(fullUrl, body, {
       headers: {
         "Content-Type": "application/json",
-        "Content-Length": Buffer.byteLength(jsonBody).toString(),
       },
       validateStatus: () => true, // Don't throw on any status
     })
