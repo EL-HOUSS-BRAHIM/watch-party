@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { PollComponent, ReactionComponent, SyncControls, GameComponent } from "@/components/interactive"
-import { authApi } from "@/lib/api-client"
+import { authApi, partiesApi, type WatchParty } from "@/lib/api-client"
 
 interface InteractivePageProps {
   params: Promise<{
@@ -10,30 +10,8 @@ interface InteractivePageProps {
   }>
 }
 
-interface Party {
-  id: string
-  name: string
-  description?: string
-  host: {
-    id: string
-    username: string
-    avatar?: string
-  }
-  is_host: boolean
-  member_count: number
-  settings: {
-    max_members?: number
-    is_public: boolean
-    allow_guest_chat: boolean
-    video_sync_enabled: boolean
-    reactions_enabled: boolean
-    polls_enabled: boolean
-    games_enabled: boolean
-  }
-}
-
 export default function InteractivePage({ params }: InteractivePageProps) {
-  const [party, setParty] = useState<Party | null>(null)
+  const [party, setParty] = useState<WatchParty | null>(null)
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<"polls" | "reactions" | "sync" | "games">("polls")
@@ -57,15 +35,7 @@ export default function InteractivePage({ params }: InteractivePageProps) {
     if (!partyId) return
     
     try {
-      const response = await fetch(`/api/parties/${partyId}/`, {
-        credentials: "include"
-      })
-      
-      if (!response.ok) {
-        throw new Error("Failed to load party")
-      }
-      
-      const partyData = await response.json()
+      const partyData = await partiesApi.getById(partyId)
       setParty(partyData)
     } catch (error) {
       console.error("Failed to load party:", error)

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { MobileMenu } from "@/components/mobile"
+import { notificationsApi } from "@/lib/api-client"
 
 interface MobileNavigationProps {
   currentUser?: any
@@ -18,13 +19,8 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
 
   const loadNotificationCount = async () => {
     try {
-      const response = await fetch("/api/notifications/unread-count", {
-        credentials: "include"
-      })
-      if (response.ok) {
-        const data = await response.json()
-        setNotificationCount(data.count || 0)
-      }
+      const data = await notificationsApi.getUnreadCount()
+      setNotificationCount(data.count || 0)
     } catch (error) {
       console.error("Failed to load notification count:", error)
     }

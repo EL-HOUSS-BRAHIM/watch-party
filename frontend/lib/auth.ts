@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
-import type { User } from "@/lib/api-client"
+import { authApi, type User } from "@/lib/api-client"
 
 interface SessionResponse {
   isAuthenticated: boolean
@@ -12,24 +12,10 @@ interface SessionResponse {
 
 async function fetchSession(): Promise<SessionResponse> {
   try {
-    const response = await fetch("/api/auth/session", {
-      method: "GET",
-      credentials: "include",
-      cache: "no-store",
-    })
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        return { isAuthenticated: false, user: null }
-      }
-
-      throw new Error("Unable to verify authentication status")
-    }
-
-    const data = await response.json()
+    const user = await authApi.getProfile()
     return {
-      isAuthenticated: Boolean(data.authenticated),
-      user: data.user ?? null,
+      isAuthenticated: true,
+      user: user
     }
   } catch (error) {
     console.error("Failed to load session", error)
@@ -38,14 +24,7 @@ async function fetchSession(): Promise<SessionResponse> {
 }
 
 async function performLogout(): Promise<void> {
-  const response = await fetch("/api/auth/logout", {
-    method: "POST",
-    credentials: "include",
-  })
-
-  if (!response.ok) {
-    throw new Error("Failed to sign out")
-  }
+  await authApi.logout()
 }
 
 export const session = {

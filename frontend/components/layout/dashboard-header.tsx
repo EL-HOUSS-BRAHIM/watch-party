@@ -4,7 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { useAuth } from "@/lib/auth"
-import { userApi, User } from "@/lib/api-client"
+import { userApi, notificationsApi, User } from "@/lib/api-client"
 
 /**
  * DashboardHeader - Header for authenticated dashboard pages
@@ -36,13 +36,8 @@ export function DashboardHeader() {
 
   const loadNotificationCount = async () => {
     try {
-      const response = await fetch("/api/notifications/unread-count", {
-        credentials: "include"
-      })
-      if (response.ok) {
-        const data = await response.json()
-        setNotificationCount(data.count || 0)
-      }
+      const data = await notificationsApi.getUnreadCount()
+      setNotificationCount(data.count || 0)
     } catch (error) {
       console.error("Failed to load notification count:", error)
     }

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { authApi } from "@/lib/api-client"
 
 interface MobileMenuProps {
   isOpen: boolean
@@ -53,7 +54,7 @@ export default function MobileMenu({ isOpen, onClose, currentUser }: MobileMenuP
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST" })
+      await authApi.logout()
       router.push("/auth/login")
     } catch (error) {
       console.error("Logout failed:", error)

@@ -2,6 +2,7 @@
 
 import { useState, useEffect, use } from "react"
 import { PublicPartyLayout, type PublicPartyViewModel } from "@/components/party/public-party-layout"
+import { partiesApi } from "@/lib/api-client"
 
 interface PublicPartyPageProps {
   params: Promise<{
@@ -122,8 +123,10 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
       setJoinError(null)
 
       try {
-        const response = await fetch(`/api/parties/public/${resolvedParams.code}/`, {
+        // Get public party by code - this method might not exist, we'll use a workaround
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://be-watch-party.brahim-elhouss.me'}/api/parties/public/${resolvedParams.code}/`, {
           cache: "no-store",
+          credentials: "include"
         })
 
         let payload: unknown = null
