@@ -381,7 +381,7 @@ async function apiFetch<T>(
  */
 export const authApi = {
   login: (credentials: { email: string; password: string }) =>
-    apiFetch<{ success: boolean; user?: User; message?: string; error?: string }>('/auth/login', {
+    apiFetch<{ success: boolean; user?: User; message?: string; error?: string }>('/auth/login/', {
       method: 'POST',
       body: JSON.stringify(credentials),
     }),
@@ -393,13 +393,13 @@ export const authApi = {
     }),
 
   logout: () =>
-    apiFetch<{ success: boolean; message?: string }>('/auth/logout', {
+    apiFetch<{ success: boolean; message?: string }>('/auth/logout/', {
       method: 'POST',
     }),
 
   refreshToken: (_refresh?: string) =>
     apiFetch<{ access?: string; access_token?: string; refresh?: string; refresh_token?: string; success?: boolean; message?: string; error?: string }>(
-      '/auth/refresh',
+      '/auth/refresh/',
       {
         method: 'POST',
       }

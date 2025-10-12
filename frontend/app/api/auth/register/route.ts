@@ -57,11 +57,37 @@ export async function POST(request: NextRequest) {
     const data = await response.json()
 
     if (response.ok) {
-      return NextResponse.json({
+      const accessToken = data.access_token ?? data.access
+      const refreshToken = data.refresh_token ?? data.refresh
+
+      // Set HTTP-only cookies with the JWT tokens for security
+      const nextResponse = NextResponse.json({
         success: true,
         message: "Registration successful! Please check your email to verify your account.",
         user: data.user
       })
+
+      if (accessToken) {
+        nextResponse.cookies.set("access_token", accessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: 60 * 60, // 60 minutes (matches backend JWT_ACCESS_TOKEN_LIFETIME)
+          path: "/",
+        })
+      }
+
+      if (refreshToken) {
+        nextResponse.cookies.set("refresh_token", refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          maxAge: 60 * 60 * 24 * 7, // 7 days (matches backend JWT_REFRESH_TOKEN_LIFETIME)
+          path: "/",
+        })
+      }
+
+      return nextResponse
     } else {
       return NextResponse.json({ error: extractErrorMessage(data) }, { status: response.status })
     }
