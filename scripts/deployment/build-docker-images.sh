@@ -92,7 +92,7 @@ fi
 
 # Try parallel build first
 log_info "Attempting parallel build..."
-if timeout 1200 docker-compose build --parallel $BUILD_FLAGS \
+if timeout 1800 docker-compose build --parallel $BUILD_FLAGS \
     --build-arg NEXT_PUBLIC_API_URL="$NEXT_PUBLIC_API_URL" \
     --build-arg NEXT_PUBLIC_WS_URL="$NEXT_PUBLIC_WS_URL" \
     --build-arg NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE="true" \
@@ -106,7 +106,7 @@ else
     
     # Build backend
     log_info "Building backend image..."
-    if ! timeout 600 docker-compose build $BUILD_FLAGS backend \
+    if ! timeout 900 docker-compose build $BUILD_FLAGS backend \
         --build-arg SKIP_AWS_DURING_BUILD=1 \
         --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH"; then
         exit_with_error "Backend build failed"
@@ -115,7 +115,7 @@ else
     
     # Build frontend
     log_info "Building frontend image..."
-    if ! timeout 1200 docker-compose build $BUILD_FLAGS frontend \
+    if ! timeout 1800 docker-compose build $BUILD_FLAGS frontend \
         --build-arg NODE_OPTIONS="--max-old-space-size=2048" \
         --build-arg NEXT_PUBLIC_API_URL="$NEXT_PUBLIC_API_URL" \
         --build-arg NEXT_PUBLIC_WS_URL="$NEXT_PUBLIC_WS_URL" \

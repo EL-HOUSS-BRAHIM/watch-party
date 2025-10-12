@@ -20,13 +20,13 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45  # Increased from 15 to 45 for Docker builds
     steps:
       - uses: actions/checkout@v4
 
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
-        timeout-minutes: 14
+        timeout-minutes: 40  # Increased from 14 to 40
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
