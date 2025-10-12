@@ -286,12 +286,6 @@ urlpatterns = [
     # Redirect /docs to /api/docs for convenience
     path('docs/', lambda request: redirect('/api/docs/')),
     path('swagger/', lambda request: redirect('/api/docs/')),
-    
-    # Legacy redirects (for backward compatibility)
-    path('auth/<path:remaining>', lambda r, remaining: redirect_to_api(r, 'auth', '/api/auth/')),
-    path('users/<path:remaining>', lambda r, remaining: redirect_to_api(r, 'users', '/api/users/')),
-    path('videos/<path:remaining>', lambda r, remaining: redirect_to_api(r, 'videos', '/api/videos/')),
-    path('parties/<path:remaining>', lambda r, remaining: redirect_to_api(r, 'parties', '/api/parties/')),
 ]
 
 # Serve media files in development
