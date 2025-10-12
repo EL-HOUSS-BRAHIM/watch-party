@@ -97,8 +97,8 @@ services:
         - watchparty-frontend:latest
     image: watchparty-frontend:latest
     environment:
-      # Backend URL for server-side API calls (CRITICAL: Must use real domain, not docker service name)
-      - BACKEND_URL=https://be-watch-party.brahim-elhouss.me
+      # Backend URL for server-side API calls (uses internal Docker network)
+      - BACKEND_URL=http://backend:8000
       # Public API URLs for client-side calls
       - NEXT_PUBLIC_API_URL=https://be-watch-party.brahim-elhouss.me
       - NEXT_PUBLIC_WS_URL=wss://be-watch-party.brahim-elhouss.me/ws
