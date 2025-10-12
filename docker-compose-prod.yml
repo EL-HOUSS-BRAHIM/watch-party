@@ -1,0 +1,139 @@
+# Docker Compose configuration for AWS production deployment
+# Uses external AWS RDS PostgreSQL and ElastiCache Valkey
+# This assumes you have already created AWS infrastructure using the setup scripts
+
+services:
+  # Django Backend (uses external AWS RDS and ElastiCache)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      cache_from:
+        - watchparty-backend:latest
+    image: watchparty-backend:latest
+    env_file:
+      - ./backend/.env
+    environment:
+      - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
+      - AWS_CONFIG_FILE=/home/appuser/.aws/config
+      - ALLOWED_HOSTS=be-watch-party.brahim-elhouss.me,backend,localhost,127.0.0.1
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+      - ~/.aws:/home/appuser/.aws:ro
+    ports:
+      - "8000:8000"
+    networks:
+      - watchparty-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # Celery Worker (uses external AWS ElastiCache for broker)
+  celery-worker:
+    image: watchparty-backend:latest
+    command: celery -A config worker --loglevel=info --concurrency=2
+    env_file:
+      - ./backend/.env
+    volumes:
+      - media_volume:/app/media
+      - ~/.aws:/home/appuser/.aws:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - watchparty-network
+    restart: unless-stopped
+
+  # Celery Beat (scheduler, uses external AWS ElastiCache)
+  celery-beat:
+    image: watchparty-backend:latest
+    command: celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ~/.aws:/home/appuser/.aws:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - watchparty-network
+    restart: unless-stopped
+
+  # Next.js Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NODE_OPTIONS: "--max-old-space-size=2048"
+        # Environment variables for build-time configuration
+        NEXT_PUBLIC_WS_URL: "wss://be-watch-party.brahim-elhouss.me/ws"
+        NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE: "true"
+        NEXT_PUBLIC_ENABLE_DISCORD: "true"
+        NEXT_PUBLIC_ENABLE_ANALYTICS: "true"
+      target: runner
+      cache_from:
+        - watchparty-frontend:latest
+    image: watchparty-frontend:latest
+    environment:
+      # Backend URL for server-side API calls (CRITICAL: Must use real domain, not docker service name)
+      - BACKEND_URL=http://backend:8000
+      # WebSocket URL for client-side connections
+      - NEXT_PUBLIC_WS_URL=wss://be-watch-party.brahim-elhouss.me/ws
+      # Feature flags
+      - NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE=true
+      - NEXT_PUBLIC_ENABLE_DISCORD=true
+      - NEXT_PUBLIC_ENABLE_ANALYTICS=true
+    env_file:
+      - ./frontend/.env.local
+    ports:
+      - "3000:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - watchparty-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - static_volume:/var/www/static:ro
+      - media_volume:/var/www/media:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - watchparty-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  static_volume:
+  media_volume:
+
+networks:
+  watchparty-network:
+    driver: bridge
