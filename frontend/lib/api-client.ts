@@ -3,7 +3,8 @@
  * This client covers ALL backend endpoints from the API schema
  * Handles authentication, error handling, and type safety
  * 
- * All requests go directly to the backend - no frontend API routes!
+ * Auth endpoints use frontend API routes for cookie management
+ * All other endpoints go directly to the backend
  */
 
 // Get backend URL from environment variable
@@ -14,6 +15,13 @@ const getBackendUrl = () => {
 
 const BACKEND_URL = getBackendUrl()
 
+// Auth endpoints that need cookie management via frontend API routes
+const AUTH_ENDPOINTS_REQUIRING_PROXY = [
+  '/api/auth/login/',
+  '/api/auth/logout/',
+  '/api/auth/refresh/',
+]
+
 const buildUrl = (endpoint: string) => {
   // If endpoint is already a full URL, return it as-is
   if (/^https?:\/\//i.test(endpoint)) {
@@ -22,6 +30,13 @@ const buildUrl = (endpoint: string) => {
 
   // Ensure endpoint starts with /
   const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`
+  
+  // Check if this is an auth endpoint that needs to go through frontend API route
+  // for cookie management
+  if (AUTH_ENDPOINTS_REQUIRING_PROXY.includes(normalizedEndpoint)) {
+    // Use relative URL to hit Next.js API route
+    return normalizedEndpoint
+  }
   
   return `${BACKEND_URL}${normalizedEndpoint}`
 }
