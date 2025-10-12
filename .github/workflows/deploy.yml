@@ -39,6 +39,7 @@ jobs:
           host: ${{ secrets.LIGHTSAIL_HOST }}
           username: deploy
           key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          command_timeout: 40m
           envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,SSL_ORIGIN,SSL_PRIVATE,FORCE_REBUILD,REMOVE_OLD_IMAGES,TARGET_BRANCH
           script: |
             set -e
