@@ -19,6 +19,7 @@ services:
       - AWS_EC2_METADATA_DISABLED=true
       - AWS_METADATA_SERVICE_TIMEOUT=1
       - AWS_METADATA_SERVICE_NUM_ATTEMPTS=1
+      - ALLOWED_HOSTS=35.181.116.57,be-watch-party.brahim-elhouss.me,watch-party.brahim-elhouss.me,localhost,127.0.0.1,backend
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
