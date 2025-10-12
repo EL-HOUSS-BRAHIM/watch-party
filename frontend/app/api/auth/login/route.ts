@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
+import axios from "axios"
 
-// Backend URL - uses environment variable or defaults to production URL
-// For local development, set BACKEND_URL=http://localhost:8000 in .env.local
-const BACKEND_URL = process.env.BACKEND_URL || "https://be-watch-party.brahim-elhouss.me"
+// Backend URL - uses environment variable or defaults to internal Docker network
+const BACKEND_URL = process.env.BACKEND_URL || "http://backend:8000"
 
 function extractErrorMessage(data: any) {
   if (!data) {
@@ -45,18 +45,27 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
 
-    // Forward the login request to the Django backend
-    const response = await fetch(`${BACKEND_URL}/api/auth/login/`, {
-      method: "POST",
+    console.log("[Login] Forwarding request to backend:", BACKEND_URL)
+    const fullUrl = `${BACKEND_URL}/api/auth/login/`
+    console.log("[Login] Full URL:", fullUrl)
+
+    // Forward the login request to the Django backend using axios
+    // This avoids the fetch body streaming issues in Node.js
+    // Explicitly stringify the body to avoid content-length mismatch
+    const jsonBody = JSON.stringify(body)
+    const response = await axios.post(fullUrl, jsonBody, {
       headers: {
         "Content-Type": "application/json",
+        "Content-Length": Buffer.byteLength(jsonBody).toString(),
       },
-      body: JSON.stringify(body),
+      validateStatus: () => true, // Don't throw on any status
     })
 
-    const data = await response.json()
+    const data = response.data
 
-    if (response.ok) {
+    console.log("[Login] Backend response status:", response.status)
+
+    if (response.status === 200) {
       const accessToken = data.access_token ?? data.access
       const refreshToken = data.refresh_token ?? data.refresh
 
