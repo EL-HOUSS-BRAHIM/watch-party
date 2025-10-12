@@ -322,6 +322,22 @@ export type PartySummary = WatchParty
 export type UserProfile = User
 
 /**
+ * Helper function to get cookie value by name
+ */
+function getCookie(name: string): string | undefined {
+  if (typeof document === 'undefined') return undefined
+  
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  
+  if (parts.length === 2) {
+    return parts.pop()?.split(';').shift()
+  }
+  
+  return undefined
+}
+
+/**
  * Generic fetch wrapper with comprehensive error handling
  * Makes direct requests to the Django backend
  */
@@ -331,8 +347,16 @@ async function apiFetch<T>(
 ): Promise<T> {
   const url = buildUrl(endpoint)
   
+  // Get access token from cookie
+  const accessToken = getCookie('access_token')
+  
   const defaultHeaders: HeadersInit = {
     "Content-Type": "application/json",
+  }
+  
+  // Add Authorization header if we have an access token
+  if (accessToken) {
+    defaultHeaders['Authorization'] = `Bearer ${accessToken}`
   }
 
   const config: RequestInit = {
