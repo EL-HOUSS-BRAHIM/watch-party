@@ -86,10 +86,10 @@ export default function InteractivePage({ params }: InteractivePageProps) {
   }
 
   const tabs = [
-    { id: "polls" as const, name: "Polls", icon: "📊", enabled: party.settings.polls_enabled },
-    { id: "reactions" as const, name: "Reactions", icon: "😊", enabled: party.settings.reactions_enabled },
-    { id: "sync" as const, name: "Sync Controls", icon: "⏯️", enabled: party.settings.video_sync_enabled },
-    { id: "games" as const, name: "Games", icon: "🎮", enabled: party.settings.games_enabled }
+    { id: "polls" as const, name: "Polls", icon: "📊", enabled: party.settings?.polls_enabled ?? true },
+    { id: "reactions" as const, name: "Reactions", icon: "😊", enabled: party.settings?.reactions_enabled ?? true },
+    { id: "sync" as const, name: "Sync Controls", icon: "⏯️", enabled: party.settings?.video_sync_enabled ?? true },
+    { id: "games" as const, name: "Games", icon: "🎮", enabled: party.settings?.games_enabled ?? true }
   ].filter(tab => tab.enabled)
 
   return (
@@ -160,34 +160,34 @@ export default function InteractivePage({ params }: InteractivePageProps) {
         ) : (
           <div className="space-y-6">
             {/* Feature Content */}
-            {activeTab === "polls" && party.settings.polls_enabled && (
+            {activeTab === "polls" && (party.settings?.polls_enabled ?? true) && (
               <PollComponent
                 partyId={party.id}
                 currentUser={currentUser}
-                isHost={party.is_host}
+                isHost={party.is_host ?? false}
               />
             )}
 
-            {activeTab === "reactions" && party.settings.reactions_enabled && (
+            {activeTab === "reactions" && (party.settings?.reactions_enabled ?? true) && (
               <ReactionComponent
                 partyId={party.id}
                 currentUser={currentUser}
               />
             )}
 
-            {activeTab === "sync" && party.settings.video_sync_enabled && (
+            {activeTab === "sync" && (party.settings?.video_sync_enabled ?? true) && (
               <SyncControls
                 partyId={party.id}
                 currentUser={currentUser}
-                isHost={party.is_host}
+                isHost={party.is_host ?? false}
               />
             )}
 
-            {activeTab === "games" && party.settings.games_enabled && (
+            {activeTab === "games" && (party.settings?.games_enabled ?? true) && (
               <GameComponent
                 partyId={party.id}
                 currentUser={currentUser}
-                isHost={party.is_host}
+                isHost={party.is_host ?? false}
               />
             )}
 

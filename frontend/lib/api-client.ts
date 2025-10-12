@@ -64,6 +64,16 @@ export interface WatchParty {
   video?: VideoSummary
   is_public?: boolean
   is_active?: boolean
+  is_host?: boolean // Whether current user is the host
+  settings?: {
+    max_members?: number
+    is_public?: boolean
+    allow_guest_chat?: boolean
+    video_sync_enabled?: boolean
+    reactions_enabled?: boolean
+    polls_enabled?: boolean
+    games_enabled?: boolean
+  }
   created_at: string
   updated_at: string
 }
@@ -1352,6 +1362,9 @@ export const notificationsApi = {
 
     return apiFetch<any>(`/api/notifications/${queryString}`, {}).then(normalizeNotificationPayload)
   },
+
+  getUnreadCount: () =>
+    apiFetch<{ count: number }>('/api/notifications/unread-count/', {}),
 
   markAsRead: (notificationId: string) =>
     apiFetch<void>(`/api/notifications/${notificationId}/mark-read/`, {
