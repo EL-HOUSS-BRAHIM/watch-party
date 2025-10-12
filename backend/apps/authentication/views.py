@@ -82,6 +82,7 @@ class RegisterView(RateLimitMixin, APIView):
                 httponly=True,
                 secure=True,
                 samesite='Lax',
+                domain='.brahim-elhouss.me',
                 path='/',
             )
             
@@ -92,6 +93,7 @@ class RegisterView(RateLimitMixin, APIView):
                 httponly=True,
                 secure=True,
                 samesite='Lax',
+                domain='.brahim-elhouss.me',
                 path='/',
             )
             
@@ -156,6 +158,7 @@ class LoginView(RateLimitMixin, TokenObtainPairView):
                 httponly=True,
                 secure=True,  # HTTPS only in production
                 samesite='Lax',
+                domain='.brahim-elhouss.me',  # Allow subdomain sharing
                 path='/',
             )
             
@@ -167,6 +170,7 @@ class LoginView(RateLimitMixin, TokenObtainPairView):
                 httponly=True,
                 secure=True,  # HTTPS only in production
                 samesite='Lax',
+                domain='.brahim-elhouss.me',  # Allow subdomain sharing
                 path='/',
             )
             
@@ -213,8 +217,8 @@ class LogoutView(APIView):
             }, status=status.HTTP_200_OK)
             
             # Delete authentication cookies
-            response.delete_cookie('access_token', path='/')
-            response.delete_cookie('refresh_token', path='/')
+            response.delete_cookie('access_token', domain='.brahim-elhouss.me', path='/')
+            response.delete_cookie('refresh_token', domain='.brahim-elhouss.me', path='/')
             
             return response
         except Exception:
@@ -224,8 +228,8 @@ class LogoutView(APIView):
                 'message': 'Error during logout.'
             }, status=status.HTTP_400_BAD_REQUEST)
             
-            response.delete_cookie('access_token', path='/')
-            response.delete_cookie('refresh_token', path='/')
+            response.delete_cookie('access_token', domain='.brahim-elhouss.me', path='/')
+            response.delete_cookie('refresh_token', domain='.brahim-elhouss.me', path='/')
             
             return response
 
@@ -1247,6 +1251,7 @@ class CustomTokenRefreshView(BaseTokenRefreshView):
                         httponly=True,
                         secure=True,
                         samesite='Lax',
+                        domain='.brahim-elhouss.me',
                         path='/',
                     )
                 
@@ -1259,6 +1264,7 @@ class CustomTokenRefreshView(BaseTokenRefreshView):
                         httponly=True,
                         secure=True,
                         samesite='Lax',
+                        domain='.brahim-elhouss.me',
                         path='/',
                     )
                 
