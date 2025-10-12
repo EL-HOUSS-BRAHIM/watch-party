@@ -66,14 +66,36 @@ class RegisterView(RateLimitMixin, APIView):
             refresh = RefreshToken.for_user(user)
             access_token = refresh.access_token
             
-            return Response({
+            # Create response with user data only (no tokens in JSON)
+            response = Response({
                 'success': True,
                 'message': 'Registration successful. Please verify your email.',
                 'user': UserProfileSerializer(user).data,
-                'access_token': str(access_token),
-                'refresh_token': str(refresh),
                 'verification_sent': True
             }, status=status.HTTP_201_CREATED)
+            
+            # Set tokens as HTTP-only cookies (auto-login after registration)
+            response.set_cookie(
+                key='access_token',
+                value=str(access_token),
+                max_age=60 * 60,  # 60 minutes
+                httponly=True,
+                secure=True,
+                samesite='Lax',
+                path='/',
+            )
+            
+            response.set_cookie(
+                key='refresh_token',
+                value=str(refresh),
+                max_age=60 * 60 * 24 * 7,  # 7 days
+                httponly=True,
+                secure=True,
+                samesite='Lax',
+                path='/',
+            )
+            
+            return response
         
         return Response({
             'success': False,
@@ -119,12 +141,36 @@ class LoginView(RateLimitMixin, TokenObtainPairView):
                 # Log the error but don't fail the login
                 print(f"Error creating user session: {e}")
             
-            return Response({
+            # Create response with user data only (no tokens in JSON)
+            response = Response({
                 'success': True,
-                'access_token': str(access_token),
-                'refresh_token': str(refresh),
                 'user': UserProfileSerializer(user).data
             }, status=status.HTTP_200_OK)
+            
+            # Set tokens as HTTP-only cookies
+            # Access token: 60 minutes (matches JWT_ACCESS_TOKEN_LIFETIME in settings)
+            response.set_cookie(
+                key='access_token',
+                value=str(access_token),
+                max_age=60 * 60,  # 60 minutes
+                httponly=True,
+                secure=True,  # HTTPS only in production
+                samesite='Lax',
+                path='/',
+            )
+            
+            # Refresh token: 7 days
+            response.set_cookie(
+                key='refresh_token',
+                value=str(refresh),
+                max_age=60 * 60 * 24 * 7,  # 7 days
+                httponly=True,
+                secure=True,  # HTTPS only in production
+                samesite='Lax',
+                path='/',
+            )
+            
+            return response
         
         return Response({
             'success': False,
@@ -160,15 +206,28 @@ class LogoutView(APIView):
                 token = RefreshToken(refresh_token)
                 token.blacklist()
             
-            return Response({
+            # Create response and clear cookies
+            response = Response({
                 'success': True,
                 'message': 'Successfully logged out.'
             }, status=status.HTTP_200_OK)
+            
+            # Delete authentication cookies
+            response.delete_cookie('access_token', path='/')
+            response.delete_cookie('refresh_token', path='/')
+            
+            return response
         except Exception:
-            return Response({
+            # Still clear cookies even on error
+            response = Response({
                 'success': False,
                 'message': 'Error during logout.'
             }, status=status.HTTP_400_BAD_REQUEST)
+            
+            response.delete_cookie('access_token', path='/')
+            response.delete_cookie('refresh_token', path='/')
+            
+            return response
 
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
@@ -1155,26 +1214,61 @@ class CustomTokenRefreshView(BaseTokenRefreshView):
     def post(self, request, *args, **kwargs):
         """Refresh access token with consistent response format"""
         try:
-            # Use parent class logic but customize response
-            response = super().post(request, *args, **kwargs)
+            # Get refresh token from cookie if not in request body
+            if not request.data.get('refresh'):
+                refresh_token_cookie = request.COOKIES.get('refresh_token')
+                if refresh_token_cookie:
+                    # Create a mutable copy of request.data
+                    request.data._mutable = True
+                    request.data['refresh'] = refresh_token_cookie
+                    request.data._mutable = False
             
-            if response.status_code == 200:
+            # Use parent class logic but customize response
+            parent_response = super().post(request, *args, **kwargs)
+            
+            if parent_response.status_code == 200:
                 # Transform response to use consistent field names
-                data = response.data
-                transformed_data = {
+                data = parent_response.data
+                access_token = data.get('access')
+                refresh_token = data.get('refresh', request.data.get('refresh'))
+                
+                # Create response without exposing tokens
+                response = Response({
                     'success': True,
-                    'access_token': data.get('access'),
-                    'refresh_token': data.get('refresh', request.data.get('refresh'))
-                }
-                response.data = transformed_data
+                    'message': 'Token refreshed successfully'
+                }, status=status.HTTP_200_OK)
+                
+                # Set new access token cookie
+                if access_token:
+                    response.set_cookie(
+                        key='access_token',
+                        value=access_token,
+                        max_age=60 * 60,  # 60 minutes
+                        httponly=True,
+                        secure=True,
+                        samesite='Lax',
+                        path='/',
+                    )
+                
+                # Update refresh token cookie if a new one was provided
+                if refresh_token and refresh_token != request.data.get('refresh'):
+                    response.set_cookie(
+                        key='refresh_token',
+                        value=refresh_token,
+                        max_age=60 * 60 * 24 * 7,  # 7 days
+                        httponly=True,
+                        secure=True,
+                        samesite='Lax',
+                        path='/',
+                    )
+                
+                return response
             else:
                 # Handle error case
-                response.data = {
+                return Response({
                     'success': False,
-                    'errors': response.data
-                }
-            
-            return response
+                    'errors': parent_response.data
+                }, status=parent_response.status_code)
             
         except (InvalidToken, TokenError) as e:
             return Response({
