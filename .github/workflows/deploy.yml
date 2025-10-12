@@ -1,6 +1,4 @@
 name: Deploy to Lightsail
-# DISABLED: Workflow temporarily disabled
-# Remove this comment and the following condition to re-enable
 on:
   push:
     branches: ["master", "main"]
