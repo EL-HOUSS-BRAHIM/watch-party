@@ -12,20 +12,12 @@ interface SessionResponse {
 
 async function fetchSession(): Promise<SessionResponse> {
   try {
-    // Use the session endpoint which checks cookies
-    const response = await fetch('/api/auth/session', {
-      credentials: 'include',
-    })
-    
-    if (!response.ok) {
-      return { isAuthenticated: false, user: null }
-    }
-    
-    const data = await response.json()
+    // Use the profile endpoint which checks cookies
+    const user = await authApi.getProfile()
     
     return {
-      isAuthenticated: data.authenticated || false,
-      user: data.user || null
+      isAuthenticated: true,
+      user: user
     }
   } catch (error) {
     console.error("Failed to load session", error)
