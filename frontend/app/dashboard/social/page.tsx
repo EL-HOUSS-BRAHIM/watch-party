@@ -155,8 +155,8 @@ export default function SocialPage() {
         <GradientCard className="relative border-orange-500/30">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
-              <div className="flex items-center gap-4">
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-orange-200 to-pink-200 bg-clip-text text-transparent">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white via-orange-200 to-pink-200 bg-clip-text text-transparent">
                   🎆 Social Hub
                 </h1>
                 <LiveIndicator 
@@ -165,8 +165,8 @@ export default function SocialPage() {
                   label="Online Users" 
                 />
               </div>
-              <p className="text-white/80 text-lg">Connect with {formatNumber(25620)} movie enthusiasts worldwide</p>
-              <div className="flex items-center gap-4 text-sm text-white/60">
+              <p className="text-white/80 text-base sm:text-lg">Connect with {formatNumber(25620)} movie enthusiasts worldwide</p>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-white/60">
                 <span>🌍 Global Community</span>
                 <span>•</span>
                 <span>👥 Find Friends</span>
@@ -217,19 +217,19 @@ export default function SocialPage() {
       {/* Enhanced Search Bar */}
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <span className="text-white/50 text-xl">🔍</span>
+          <span className="text-white/50 text-lg sm:text-xl">🔍</span>
         </div>
         <input
           type="text"
           placeholder={`Search ${activeTab === "friends" ? "friends" : "groups"}...`}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 backdrop-blur-sm transition-all"
+          className="w-full pl-12 sm:pl-14 pr-10 sm:pr-6 py-3 sm:py-4 text-base bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 backdrop-blur-sm transition-all"
         />
         {searchQuery && (
           <button
             onClick={() => setSearchQuery("")}
-            className="absolute inset-y-0 right-0 pr-4 flex items-center text-white/50 hover:text-white"
+            className="absolute inset-y-0 right-0 pr-4 flex items-center text-white/50 hover:text-white min-w-[44px] justify-center"
           >
             ✕
           </button>
@@ -237,7 +237,7 @@ export default function SocialPage() {
       </div>
 
       {/* Enhanced Tabs */}
-      <div className="flex gap-1 bg-black/20 p-1 rounded-2xl border border-white/10 w-fit mx-auto">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-1 bg-black/20 p-2 sm:p-1 rounded-2xl border border-white/10 w-full sm:w-fit mx-auto">
         {[
           { id: "groups", label: "My Groups", icon: "👥", count: groups.filter(g => g.is_member).length },
           { id: "friends", label: "Friends", icon: "👫", count: friends.length },
@@ -246,14 +246,14 @@ export default function SocialPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`flex items-center gap-3 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+            className={`flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 rounded-xl font-medium transition-all duration-200 min-h-[44px] ${
               activeTab === tab.id
-                ? "bg-gradient-to-r from-brand-orange to-brand-magenta text-white shadow-lg scale-105"
+                ? "bg-gradient-to-r from-brand-orange to-brand-magenta text-white shadow-lg sm:scale-105"
                 : "text-white/60 hover:text-white hover:bg-white/10"
             }`}
           >
-            <span className="text-lg">{tab.icon}</span>
-            <span>{tab.label}</span>
+            <span className="text-base sm:text-lg">{tab.icon}</span>
+            <span className="text-sm sm:text-base">{tab.label}</span>
             <span className="bg-white/20 text-xs px-2 py-1 rounded-full font-bold">{tab.count}</span>
           </button>
         ))}
