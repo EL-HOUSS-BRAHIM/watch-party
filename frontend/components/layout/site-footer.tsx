@@ -6,24 +6,24 @@ const footerLinks = [
     title: "Product",
     items: [
       { label: "Features", href: "/#features" },
-      { label: "Dashboard", href: "/auth/login" },
-      { label: "Mobile", href: "/#experience" }
+      { label: "Pricing", href: "/pricing" },
+      { label: "Dashboard", href: "/dashboard" }
     ]
   },
   {
     title: "Company",
     items: [
-      { label: "About", href: "/#testimonials" },
-      { label: "Community", href: "/join" },
-      { label: "Support", href: "/support" }
+      { label: "About", href: "/about" },
+      { label: "Support", href: "/support" },
+      { label: "Community", href: "/join" }
     ]
   },
   {
     title: "Resources",
     items: [
-      { label: "Pricing", href: "/pricing" },
-      { label: "Support", href: "/support" },
-      { label: "GitHub", href: "https://github.com/EL-HOUSS-BRAHIM/watch-party" }
+      { label: "Guides", href: "/guides/watch-night" },
+      { label: "GitHub", href: "https://github.com/EL-HOUSS-BRAHIM/watch-party" },
+      { label: "Get Started", href: "/auth/register" }
     ]
   }
 ]
