@@ -11,6 +11,17 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  experimental: {
+    // Optimize trace collection for faster builds
+    outputFileTracingIncludes: {
+      '/': ['./public/**/*'],
+    },
+    // Reduce trace depth for faster builds
+    outputFileTracingIgnores: [
+      'node_modules/@swc/**',
+      'node_modules/webpack/**',
+    ],
+  },
   // Security headers including CSP
   async headers() {
     return [

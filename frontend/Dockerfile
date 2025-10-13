@@ -51,14 +51,13 @@ ENV GIT_COMMIT_HASH=$GIT_COMMIT_HASH
 COPY --from=deps /app/node_modules ./node_modules
 
 # Copy only necessary files for build
-COPY package.json pnpm-lock.yaml* next.config.ts tsconfig.json tailwind.config.ts postcss.config.mjs ./
+COPY package.json pnpm-lock.yaml* next.config.mjs tsconfig.json tailwind.config.ts postcss.config.mjs ./
 COPY public ./public
 COPY app ./app
 COPY components ./components
 COPY lib ./lib
 COPY hooks ./hooks
-COPY types ./types
-COPY utils ./utils
+COPY styles ./styles
 
 # Build with Next.js cache optimization
 ENV NEXT_TELEMETRY_DISABLED=1
