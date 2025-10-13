@@ -1,6 +1,4 @@
 import Link from "next/link"
-import { MarketingHeader } from "@/components/layout/marketing-header"
-import { SiteFooter } from "@/components/layout/site-footer"
 
 export const metadata = {
   title: "Support | WatchParty",
@@ -9,10 +7,8 @@ export const metadata = {
 
 export default function SupportPage() {
   return (
-    <>
-      <MarketingHeader />
-      <main className="min-h-screen bg-gradient-to-b from-white via-brand-neutral/30 to-white">
-        <div className="mx-auto max-w-4xl px-6 py-20 sm:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-white via-brand-neutral/30 to-white">
+      <div className="mx-auto max-w-4xl px-6 py-20 sm:px-8">
           <div className="text-center">
             <span className="inline-block rounded-full border border-brand-magenta/30 bg-brand-magenta/10 px-4 py-2 text-sm font-semibold uppercase tracking-wider text-brand-magenta-dark">
               Support Center
@@ -154,8 +150,6 @@ export default function SupportPage() {
             </div>
           </div>
         </div>
-      </main>
-      <SiteFooter />
-    </>
+      </div>
   )
 }

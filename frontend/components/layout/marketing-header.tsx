@@ -11,9 +11,9 @@ const _navigation = [
 export function MarketingHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-brand-navy/10 bg-brand-neutral/80 backdrop-blur-xl supports-[backdrop-filter]:bg-brand-neutral/70">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 py-4 text-brand-navy lg:px-8">
-        <Link href="/" className="flex items-center gap-3 group" aria-label="WatchParty home">
-          <span className="relative flex h-12 w-12 items-center justify-center overflow-hidden transition-all group-hover:-translate-y-0.5">
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 text-brand-navy sm:px-6 lg:px-8">
+        <Link href="/" className="flex items-center gap-2 group sm:gap-3" aria-label="WatchParty home">
+          <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden transition-all group-hover:-translate-y-0.5 sm:h-12 sm:w-12">
             <Image 
               src="/watchparty-logo.webp" 
               alt="WatchParty logo" 
@@ -25,21 +25,22 @@ export function MarketingHeader() {
           </span>
           <span className="hidden flex-col leading-tight sm:flex">
             <span className="text-xs font-bold uppercase tracking-wider text-brand-purple">WatchParty</span>
-            <span className="text-lg font-bold bg-gradient-to-r from-brand-navy to-brand-purple bg-clip-text text-transparent">Watch Together</span>
+            <span className="text-base font-bold bg-gradient-to-r from-brand-navy to-brand-purple bg-clip-text text-transparent sm:text-lg">Watch Together</span>
           </span>
         </Link>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <Link
             href="/auth/login"
-            className="text-sm font-semibold text-brand-navy/80 transition-colors hover:text-brand-navy underline-offset-4 hover:underline"
+            className="text-xs font-semibold text-brand-navy/80 transition-colors hover:text-brand-navy underline-offset-4 hover:underline sm:text-sm"
           >
             Sign in
           </Link>
           <Link
             href="/auth/register"
-            className="rounded-xl bg-gradient-to-r from-brand-magenta to-brand-orange px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-magenta/30 transition-all hover:-translate-y-0.5 hover:from-brand-magenta-dark hover:to-brand-orange-dark hover:shadow-brand-magenta/40"
+            className="rounded-lg bg-gradient-to-r from-brand-magenta to-brand-orange px-3 py-2 text-xs font-semibold text-white shadow-lg shadow-brand-magenta/30 transition-all hover:-translate-y-0.5 hover:from-brand-magenta-dark hover:to-brand-orange-dark hover:shadow-brand-magenta/40 sm:rounded-xl sm:px-5 sm:py-2.5 sm:text-sm"
           >
-            Start hosting
+            <span className="hidden sm:inline">Start hosting</span>
+            <span className="sm:hidden">Host</span>
           </Link>
         </div>
       </div>
