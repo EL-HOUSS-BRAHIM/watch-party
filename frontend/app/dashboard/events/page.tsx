@@ -140,8 +140,8 @@ export default function EventsPage() {
         <GradientCard className="relative border-cyan-500/30">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
-              <div className="flex items-center gap-4">
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-cyan-200 to-blue-200 bg-clip-text text-transparent">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white via-cyan-200 to-blue-200 bg-clip-text text-transparent">
                   🎆 Events
                 </h1>
                 <LiveIndicator 
@@ -150,8 +150,8 @@ export default function EventsPage() {
                   label="Upcoming" 
                 />
               </div>
-              <p className="text-white/80 text-lg">Join epic movie marathons and community celebrations</p>
-              <div className="flex items-center gap-4 text-sm text-white/60">
+              <p className="text-white/80 text-base sm:text-lg">Join epic movie marathons and community celebrations</p>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-white/60">
                 <span>🎬 Movie Marathons</span>
                 <span>•</span>
                 <span>🎉 Special Screenings</span>
@@ -195,19 +195,19 @@ export default function EventsPage() {
       {/* Enhanced Search Bar */}
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <span className="text-white/50 text-xl">🔍</span>
+          <span className="text-white/50 text-lg sm:text-xl">🔍</span>
         </div>
         <input
           type="text"
           placeholder="Search events by title, organizer, or description..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 backdrop-blur-sm transition-all"
+          className="w-full pl-12 sm:pl-14 pr-10 sm:pr-6 py-3 sm:py-4 text-base bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 backdrop-blur-sm transition-all"
         />
         {searchQuery && (
           <button
             onClick={() => setSearchQuery("")}
-            className="absolute inset-y-0 right-0 pr-4 flex items-center text-white/50 hover:text-white"
+            className="absolute inset-y-0 right-0 pr-4 flex items-center text-white/50 hover:text-white min-w-[44px] justify-center"
           >
             ✕
           </button>
@@ -215,7 +215,7 @@ export default function EventsPage() {
       </div>
 
       {/* Enhanced Tabs */}
-      <div className="flex gap-1 bg-black/20 p-1 rounded-2xl border border-white/10 w-fit mx-auto">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-1 bg-black/20 p-2 sm:p-1 rounded-2xl border border-white/10 w-full sm:w-fit mx-auto">
         {[
           { id: "upcoming", label: "Upcoming", icon: "📅", count: events.filter(e => e.status === "upcoming").length },
           { id: "my-events", label: "My Events", icon: "🎯", count: events.filter(e => e.is_attending).length },
@@ -224,25 +224,25 @@ export default function EventsPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`flex items-center gap-3 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+            className={`flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 rounded-xl font-medium transition-all duration-200 min-h-[44px] ${
               activeTab === tab.id
-                ? "bg-gradient-to-r from-cyan-600 to-brand-blue text-white shadow-lg scale-105"
+                ? "bg-gradient-to-r from-cyan-600 to-brand-blue text-white shadow-lg sm:scale-105"
                 : "text-white/60 hover:text-white hover:bg-white/10"
             }`}
           >
-            <span className="text-lg">{tab.icon}</span>
-            <span>{tab.label}</span>
+            <span className="text-base sm:text-lg">{tab.icon}</span>
+            <span className="text-sm sm:text-base">{tab.label}</span>
             <span className="bg-white/20 text-xs px-2 py-1 rounded-full font-bold">{tab.count}</span>
           </button>
         ))}
       </div>
 
       {/* Events Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {filteredEvents.map((event) => {
           const dateTime = formatDateTime(event.start_time)
           return (
-            <div key={event.id} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all duration-200">
+            <div key={event.id} className="bg-white/5 border border-white/10 rounded-xl p-4 sm:p-6 hover:bg-white/10 transition-all duration-200">
               {/* Event Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -286,20 +286,20 @@ export default function EventsPage() {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 {event.status === "upcoming" && (
                   <>
                     {event.is_attending ? (
                       <button
                         onClick={() => handleLeaveEvent(event.id)}
-                        className="flex-1 px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-brand-coral-light rounded-lg font-medium transition-colors"
+                        className="flex-1 px-4 py-2 min-h-[44px] bg-red-600/20 hover:bg-red-600/30 text-brand-coral-light rounded-lg font-medium transition-colors text-sm sm:text-base"
                       >
                         Leave Event
                       </button>
                     ) : (
                       <button
                         onClick={() => handleJoinEvent(event.id)}
-                        className="flex-1 px-4 py-2 bg-green-600/20 hover:bg-brand-cyan/30 text-brand-cyan-light rounded-lg font-medium transition-colors"
+                        className="flex-1 px-4 py-2 min-h-[44px] bg-green-600/20 hover:bg-brand-cyan/30 text-brand-cyan-light rounded-lg font-medium transition-colors text-sm sm:text-base"
                       >
                         Join Event
                       </button>
@@ -308,7 +308,7 @@ export default function EventsPage() {
                 )}
                 <button
                   onClick={() => router.push(`/dashboard/events/${event.id}`)}
-                  className="flex-1 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-medium transition-colors"
+                  className="flex-1 px-4 py-2 min-h-[44px] bg-white/10 hover:bg-white/20 text-white rounded-lg font-medium transition-colors text-sm sm:text-base"
                 >
                   View Details
                 </button>
