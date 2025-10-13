@@ -52,12 +52,12 @@ export function TestimonialGrid() {
         <div className="grid gap-6">
           {testimonials.map((testimonial) => (
             <Card key={testimonial.author} className="border-brand-purple/15 bg-white/85 text-brand-navy shadow-[0_24px_80px_rgba(28,28,46,0.12)]">
-              <CardHeader>
+              <CardHeader className="text-center sm:text-left">
                 <CardTitle className="text-lg">{testimonial.author}</CardTitle>
                 <p className="text-xs uppercase tracking-[0.42em] text-brand-navy/50">{testimonial.role}</p>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-base text-brand-navy/70">{testimonial.message}</CardDescription>
+                <CardDescription className="text-base text-brand-navy/70 text-center sm:text-left">{testimonial.message}</CardDescription>
               </CardContent>
             </Card>
           ))}

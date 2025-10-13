@@ -47,7 +47,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(233,64,138,0.18),transparent_55%),radial-gradient(circle_at_bottom_right,rgba(45,156,219,0.22),transparent_60%),radial-gradient(circle_at_top_right,rgba(243,156,18,0.16),transparent_60%)]" />
       </div>
       <div className="relative grid gap-14 lg:grid-cols-[1.5fr,1fr] lg:items-center">
-        <div className="space-y-10">
+  <div className="space-y-10 text-center lg:text-left">
           <div className="flex flex-wrap items-center gap-4">
             <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/30 bg-brand-magenta/10 px-4 py-1 text-[11px] uppercase tracking-[0.45em] text-brand-magenta-dark">
               Cinema OS
@@ -64,12 +64,22 @@ export function Hero() {
               WatchParty balances bright living rooms with twilight-ready ambience. Cue lighting, automate rituals, and keep every guest perfectly in sync no matter the timezone.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
             <Button size="lg" asChild className="px-7 py-4 text-base">
               <Link href="/pricing">Plan your night</Link>
             </Button>
             <Button variant="secondary" size="lg" asChild className="px-7 py-4 text-base">
               <Link href="#features">Preview the toolkit</Link>
+            </Button>
+          </div>
+
+          {/* Quick auth actions for one-tap login/register from the hero */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+            <Link href="/auth/login" className="text-sm font-medium text-brand-navy/80 px-3 py-2 rounded-md">
+              Sign in
+            </Link>
+            <Button asChild size="sm">
+              <Link href="/auth/register" className="px-4 py-2">Start hosting</Link>
             </Button>
           </div>
           <dl className="grid gap-5 sm:grid-cols-3">
@@ -90,7 +100,7 @@ export function Hero() {
             </div>
           </dl>
         </div>
-        <div className="relative mx-auto w-full max-w-md">
+  <div className="relative mx-auto w-full sm:max-w-md">
           <div className="absolute inset-0 -z-10 rounded-[40px] bg-brand-neutral/60 blur-3xl" aria-hidden />
           <div className="relative overflow-hidden rounded-[40px] border border-brand-purple/20 bg-white p-7 text-brand-navy shadow-[0_40px_120px_rgba(28,28,46,0.16)]">
             <header className="flex items-center justify-between gap-4 text-xs uppercase tracking-[0.4em] text-brand-navy/60">

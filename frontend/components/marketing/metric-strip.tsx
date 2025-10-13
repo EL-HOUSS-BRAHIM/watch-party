@@ -45,7 +45,7 @@ export function MetricStrip() {
           {metrics.map((metric, index) => (
             <div 
               key={metric.label} 
-              className="group rounded-[28px] border border-brand-blue/15 bg-white/90 p-7 shadow-[0_16px_50px_rgba(45,156,219,0.1)] backdrop-blur-sm transition-all duration-300 hover:border-brand-blue/25 hover:shadow-[0_20px_60px_rgba(45,156,219,0.16)] hover:-translate-y-0.5"
+              className="group rounded-[28px] border border-brand-blue/15 bg-white/90 p-7 shadow-[0_16px_50px_rgba(45,156,219,0.1)] backdrop-blur-sm transition-all duration-300 hover:border-brand-blue/25 hover:shadow-[0_20px_60px_rgba(45,156,219,0.16)] hover:-translate-y-0.5 text-center sm:text-left"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-brand-blue/70">{metric.label}</p>

@@ -21,11 +21,11 @@ export function CallToAction() {
             Choose a template, invite your crew, and let WatchParty handle the rest. Perfect sync, immersive features, and unforgettable moments—all in one platform.
           </p>
         </div>
-        <div className="flex shrink-0 flex-col items-start gap-4 lg:items-center">
-          <Button size="lg" asChild className="w-full min-w-[240px] lg:w-auto">
+        <div className="flex shrink-0 flex-col items-center gap-4 lg:items-start">
+          <Button size="lg" asChild className="w-full sm:min-w-[240px] lg:w-auto">
             <Link href="/dashboard">Launch Your Party 🎉</Link>
           </Button>
-          <Button variant="secondary" size="lg" asChild className="w-full min-w-[240px] lg:w-auto">
+          <Button variant="secondary" size="lg" asChild className="w-full sm:min-w-[240px] lg:w-auto">
             <Link href="/pricing">View Pricing</Link>
           </Button>
           <p className="mt-1 text-center text-xs text-brand-navy/55 lg:text-sm">

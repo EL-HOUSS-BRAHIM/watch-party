@@ -46,32 +46,32 @@ export function FeatureGrid() {
           <div className="absolute inset-0 opacity-70 [mask-image:linear-gradient(to_bottom,white,transparent)]">
             <div className="h-full w-full bg-[radial-gradient(circle_at_top_left,rgba(233,64,138,0.1),transparent_60%),radial-gradient(circle_at_bottom_right,rgba(45,156,219,0.12),transparent_65%)]" />
           </div>
-          <CardHeader className="relative space-y-4">
+          <CardHeader className="relative space-y-4 text-center sm:text-left">
             <CardTitle className="text-2xl font-bold tracking-tight sm:text-3xl">One schedule, two moods</CardTitle>
-            <CardDescription className="text-base leading-relaxed text-brand-navy/65 sm:text-lg">
+            <CardDescription className="text-base leading-relaxed text-brand-navy/65 text-center sm:text-left sm:text-lg">
               Craft a film-night run of show that glides from daylight warmth to nightfall glow. Drag-and-drop cues control lights, overlays, polls, and co-host permissions without touching the stream.
             </CardDescription>
           </CardHeader>
           <CardContent className="relative grid gap-4 text-sm text-brand-navy/80 sm:gap-5 lg:grid-cols-2">
-            <div className="space-y-3 rounded-[24px] border border-brand-purple/15 bg-white/90 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-brand-purple/25 hover:shadow-md hover:shadow-brand-purple/10">
+            <div className="space-y-3 rounded-[24px] border border-brand-purple/15 bg-white/90 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-brand-purple/25 hover:shadow-md hover:shadow-brand-purple/10 text-center sm:text-left">
               <p className="text-sm font-bold text-brand-purple">Scene designer</p>
               <p className="text-sm leading-relaxed text-brand-navy/70">
                 Lay out sunrise lobbies, intermissions, and encore fireworks. WatchParty automatically pairs each segment with matching ambience and chat settings.
               </p>
             </div>
-            <div className="space-y-3 rounded-[24px] border border-brand-blue/15 bg-white/90 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-brand-blue/25 hover:shadow-md hover:shadow-brand-blue/10">
+            <div className="space-y-3 rounded-[24px] border border-brand-blue/15 bg-white/90 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-brand-blue/25 hover:shadow-md hover:shadow-brand-blue/10 text-center sm:text-left">
               <p className="text-sm font-bold text-brand-blue">Collaborative hosting</p>
               <p className="text-sm leading-relaxed text-brand-navy/70">
                 Assign co-host lanes, grant spotlight access, and stage takeovers without breaking the flow. Perfect for panel discussions or creator premieres.
               </p>
             </div>
-            <div className="space-y-3 rounded-[24px] border border-brand-cyan/15 bg-white/90 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-brand-cyan/25 hover:shadow-md hover:shadow-brand-cyan/10">
+            <div className="space-y-3 rounded-[24px] border border-brand-cyan/15 bg-white/90 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-brand-cyan/25 hover:shadow-md hover:shadow-brand-cyan/10 text-center sm:text-left">
               <p className="text-sm font-bold text-brand-cyan-dark">Automated rituals</p>
               <p className="text-sm leading-relaxed text-brand-navy/70">
                 Countdown cues, lobby soundtracks, and ambient fades trigger right on time so you can focus on the audience.
               </p>
             </div>
-            <div className="space-y-3 rounded-[24px] border border-brand-orange/15 bg-white/90 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-brand-orange/25 hover:shadow-md hover:shadow-brand-orange/10">
+            <div className="space-y-3 rounded-[24px] border border-brand-orange/15 bg-white/90 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:border-brand-orange/25 hover:shadow-md hover:shadow-brand-orange/10 text-center sm:text-left">
               <p className="text-sm font-bold text-brand-orange-dark">Audience orchestration</p>
               <p className="text-sm leading-relaxed text-brand-navy/70">
                 Keep viewers synced with spoiler-safe chat, timed reactions, and polls that inherit the room lighting.
@@ -86,8 +86,8 @@ export function FeatureGrid() {
               className="group border-brand-purple/12 bg-white/90 text-brand-navy shadow-[0_18px_50px_rgba(28,28,46,0.08)] backdrop-blur-sm transition-all duration-300 hover:border-brand-purple/20 hover:shadow-[0_22px_60px_rgba(28,28,46,0.12)] hover:-translate-y-0.5"
               style={{ animationDelay: `${index * 100}ms` }}
             >
-              <CardHeader className="space-y-3 pb-4">
-                <CardTitle className="flex items-start justify-between gap-3 text-lg font-bold tracking-tight text-brand-navy sm:text-xl">
+              <CardHeader className="space-y-3 pb-4 text-center sm:text-left">
+                <CardTitle className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3 text-lg font-bold tracking-tight text-brand-navy sm:text-xl">
                   <span>{feature.title}</span>
                   {feature.highlight ? (
                     <span className="whitespace-nowrap rounded-full border border-brand-cyan/20 bg-brand-cyan/8 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.5em] text-brand-cyan-dark shadow-sm">
@@ -97,7 +97,7 @@ export function FeatureGrid() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0">
-                <CardDescription className="text-sm leading-relaxed text-brand-navy/65 sm:text-base">{feature.description}</CardDescription>
+                <CardDescription className="text-sm leading-relaxed text-brand-navy/65 text-center sm:text-left sm:text-base">{feature.description}</CardDescription>
               </CardContent>
             </Card>
           ))}
