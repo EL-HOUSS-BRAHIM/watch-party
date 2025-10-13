@@ -10,6 +10,8 @@ services:
       dockerfile: Dockerfile
       cache_from:
         - watchparty-backend:latest
+      args:
+        BUILDKIT_INLINE_CACHE: "1"
     image: watchparty-backend:latest
     env_file:
       - ./backend/.env
@@ -93,6 +95,7 @@ services:
         NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE: "true"
         NEXT_PUBLIC_ENABLE_DISCORD: "true"
         NEXT_PUBLIC_ENABLE_ANALYTICS: "true"
+        BUILDKIT_INLINE_CACHE: "1"
       target: runner
       cache_from:
         - watchparty-frontend:latest

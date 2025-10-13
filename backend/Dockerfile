@@ -6,11 +6,11 @@ LABEL maintainer="watch-party-team"
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     DEBIAN_FRONTEND=noninteractive \
-    PIP_NO_CACHE_DIR=1 \
+    PIP_NO_CACHE_DIR=0 \
     PIP_DISABLE_PIP_VERSION_CHECK=1
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# Install system dependencies in one layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
     git \
@@ -18,14 +18,15 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     default-libmysqlclient-dev \
     libmagic-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Set work directory
 WORKDIR /app
 
-# Install Python dependencies first (for better layer caching)
+# Install Python dependencies first (cached unless requirements.txt changes)
 COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --compile -r requirements.txt && \
+    find /usr/local -type d -name '__pycache__' -exec rm -rf {} + 2>/dev/null || true
 
 # Production stage
 FROM python:3.11-slim
@@ -39,17 +40,17 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Accept build argument to skip AWS during build (build-time only)
 ARG SKIP_AWS_DURING_BUILD=0
 
-# Git commit hash for cache busting - changes on every commit
+# Git commit hash for tracking (doesn't break cache)
 ARG GIT_COMMIT_HASH=unknown
-RUN echo "Building from commit: ${GIT_COMMIT_HASH}"
+ENV GIT_COMMIT_HASH=$GIT_COMMIT_HASH
 
-# Install runtime dependencies only
-RUN apt-get update && apt-get install -y \
+# Install runtime dependencies only (cached layer)
+RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     libpq5 \
     libmagic1 \
     default-mysql-client \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Copy Python environment from builder
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages

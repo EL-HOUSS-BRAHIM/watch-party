@@ -1,22 +1,24 @@
 FROM node:18-alpine AS base
 
-# Install pnpm
-RUN npm install -g pnpm
+# Install pnpm globally (cached layer)
+RUN npm install -g pnpm@8
 
 # Install dependencies only when needed
 FROM base AS deps
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml* ./
-
 # Accept build args for optimization
 ARG NODE_OPTIONS="--max-old-space-size=2048"
 ENV NODE_OPTIONS=$NODE_OPTIONS
 
-# Install with network timeout and retry
+# Copy package files
+COPY package.json pnpm-lock.yaml* ./
+
+# Configure pnpm for faster installs and install dependencies
+# This layer is cached unless package.json or pnpm-lock.yaml changes
 RUN pnpm config set network-timeout 300000 && \
-    pnpm install --frozen-lockfile --prefer-offline
+    pnpm config set fetch-retries 5 && \
+    pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
 
 # Rebuild the source code only when needed
 FROM base AS builder
@@ -25,10 +27,6 @@ WORKDIR /app
 # Accept build args for optimization
 ARG NODE_OPTIONS="--max-old-space-size=2048"
 ENV NODE_OPTIONS=$NODE_OPTIONS
-
-# Git commit hash for cache busting - changes on every commit
-ARG GIT_COMMIT_HASH=unknown
-RUN echo "Building from commit: ${GIT_COMMIT_HASH}"
 
 # Accept NEXT_PUBLIC_* environment variables as build args
 # These are embedded into the JavaScript bundle at build time
@@ -45,10 +43,25 @@ ENV NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE=$NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE
 ENV NEXT_PUBLIC_ENABLE_DISCORD=$NEXT_PUBLIC_ENABLE_DISCORD
 ENV NEXT_PUBLIC_ENABLE_ANALYTICS=$NEXT_PUBLIC_ENABLE_ANALYTICS
 
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
+# Git commit hash for tracking (doesn't break cache)
+ARG GIT_COMMIT_HASH=unknown
+ENV GIT_COMMIT_HASH=$GIT_COMMIT_HASH
 
-# Build the application with memory optimization
+# Copy dependencies from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+
+# Copy only necessary files for build
+COPY package.json pnpm-lock.yaml* next.config.ts tsconfig.json tailwind.config.ts postcss.config.mjs ./
+COPY public ./public
+COPY app ./app
+COPY components ./components
+COPY lib ./lib
+COPY hooks ./hooks
+COPY types ./types
+COPY utils ./utils
+
+# Build with Next.js cache optimization
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm run build
 
 # Production image, copy all the files and run next

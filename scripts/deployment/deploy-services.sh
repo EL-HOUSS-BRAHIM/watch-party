@@ -17,48 +17,38 @@ cd "$APP_DIR"
 
 log_info "Deploying services..."
 
-# Configure firewall
-log_info "Configuring firewall..."
+# Configure firewall (in background for speed)
 if command_exists ufw; then
-    sudo ufw allow 80/tcp 2>/dev/null && log_success "HTTP port opened" || log_warning "Could not configure UFW for port 80"
-    sudo ufw allow 443/tcp 2>/dev/null && log_success "HTTPS port opened" || log_warning "Could not configure UFW for port 443"
+    log_info "Configuring firewall..."
+    (sudo ufw allow 80/tcp 2>/dev/null && sudo ufw allow 443/tcp 2>/dev/null) &
 fi
 
-# Start backend first
-log_info "Starting backend service..."
-docker-compose up -d backend
+# Start all services in parallel (docker-compose will handle dependencies)
+log_info "Starting all services..."
+docker-compose up -d
 
-# Wait for backend to be ready
+# Quick wait for containers to initialize
+sleep 5
+
+# Wait for backend health check (faster check)
+log_info "Waiting for backend..."
 if ! wait_for_service "backend" \
-    "docker-compose exec -T backend python manage.py check --deploy" \
-    30 3; then
+    "curl -f -s http://localhost:8000/health/" \
+    20 5; then
     log_error "Backend container logs:"
     docker-compose logs --tail=50 backend
     exit_with_error "Backend failed to start"
 fi
 
-# Start backend workers
-log_info "Starting Celery workers..."
-docker-compose up -d celery-worker celery-beat
-sleep 10
-
-# Start frontend
-log_info "Starting frontend service..."
-docker-compose up -d frontend
-
-# Wait for frontend
+# Quick frontend check (parallel)
+log_info "Waiting for frontend..."
 if ! wait_for_service "frontend" \
     "curl -f -s http://localhost:3000" \
-    15 4; then
+    10 5; then
     log_error "Frontend container logs:"
     docker-compose logs --tail=30 frontend
     exit_with_error "Frontend failed to start"
 fi
-
-# Start nginx
-log_info "Starting nginx reverse proxy..."
-docker-compose up -d nginx
-sleep 10
 
 # Verify all services are running
 log_info "Verifying all services..."

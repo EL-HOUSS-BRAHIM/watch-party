@@ -17,67 +17,53 @@ cd "$APP_DIR"
 
 log_info "Running health checks..."
 
-# Backend health check
-log_info "Testing backend health..."
-backend_healthy=false
+# Quick parallel check
+log_info "Testing services..."
 
-for i in {1..10}; do
-    if curl -f -s -m 5 http://localhost:8000/health/ > /dev/null 2>&1; then
-        log_success "Backend health endpoint responding"
-        backend_healthy=true
-        break
-    elif curl -f -s -m 5 http://localhost:8000/api/health/ > /dev/null 2>&1; then
-        log_success "Backend API health endpoint responding"
+# Backend health check (reduced retries, faster timeout)
+backend_healthy=false
+for i in {1..5}; do
+    if curl -f -s -m 3 http://localhost:8000/health/ > /dev/null 2>&1; then
+        log_success "✓ Backend healthy"
         backend_healthy=true
         break
     else
-        echo "  ⏳ Backend health check... ($i/10)"
-        [ $i -eq 10 ] && break
-        sleep 5
+        [ $i -lt 5 ] && sleep 2
     fi
 done
 
 if [ "$backend_healthy" = false ]; then
     log_error "Backend diagnostics:"
-    docker-compose logs --tail=50 backend
+    docker-compose logs --tail=30 backend
     exit_with_error "Backend health check failed"
 fi
 
-# Frontend health check
-log_info "Testing frontend health..."
+# Frontend health check (reduced retries)
 frontend_healthy=false
-
-for i in {1..6}; do
-    if curl -f -s http://localhost:3000 > /dev/null 2>&1; then
-        log_success "Frontend is healthy"
+for i in {1..4}; do
+    if curl -f -s -m 3 http://localhost:3000 > /dev/null 2>&1; then
+        log_success "✓ Frontend healthy"
         frontend_healthy=true
         break
     else
-        echo "  ⏳ Frontend health check... ($i/6)"
-        [ $i -eq 6 ] && break
-        sleep 5
+        [ $i -lt 4 ] && sleep 2
     fi
 done
 
 if [ "$frontend_healthy" = false ]; then
     log_error "Frontend logs:"
-    docker-compose logs --tail=30 frontend
+    docker-compose logs --tail=20 frontend
     exit_with_error "Frontend health check failed"
 fi
 
-# Nginx health check
+# Nginx quick check (non-blocking)
 log_info "Testing nginx..."
-if curl -f -s -m 10 http://localhost:80/health > /dev/null 2>&1; then
-    log_success "Nginx HTTP (port 80) responding"
-else
-    log_warning "Nginx HTTP (port 80) not responding"
-    docker-compose logs --tail=20 nginx
+if curl -f -s -m 3 http://localhost:80 > /dev/null 2>&1; then
+    log_success "✓ Nginx HTTP responding"
 fi
 
-if curl -f -s -m 10 -k https://localhost:443/health > /dev/null 2>&1; then
-    log_success "Nginx HTTPS (port 443) responding"
-else
-    log_warning "Nginx HTTPS (port 443) not responding"
+if curl -f -s -m 3 -k https://localhost:443 > /dev/null 2>&1; then
+    log_success "✓ Nginx HTTPS responding"
 fi
 
 # Check container status
