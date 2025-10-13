@@ -45,37 +45,36 @@ export function MarketingHeader() {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-4">
-          {/* Mobile menu toggle */}
-          <button
-            onClick={() => setIsOpen(true)}
-            aria-label="Open menu"
-            className="inline-flex items-center justify-center rounded-md p-2 text-brand-navy/80 hover:bg-white/5 md:hidden"
-          >
-            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          {/* Sign in - larger tap target and explicit aria label for accessibility */}
-          <Button asChild variant="ghost" size="sm">
-            <Link href="/auth/login" aria-label="Sign in to WatchParty" className="px-3 py-2">
-              Sign in
-            </Link>
-          </Button>
+          {/* Mobile: hamburger only */}
+          <div className="md:hidden">
+            <Button variant="ghost" size="sm" onClick={() => setIsOpen(true)} aria-label="Open menu" className="p-2 rounded-full bg-white/6 hover:bg-white/10 shadow-sm">
+              <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </Button>
+          </div>
 
-          {/* Primary CTA - use Button for consistent focus/hover behavior */}
-          <Button asChild size="default" className="shadow-lg">
-            <Link href="/auth/register" aria-label="Start hosting on WatchParty" className="flex items-center">
-              <span className="hidden sm:inline">Start hosting</span>
-              <span className="sm:hidden">Host</span>
-            </Link>
-          </Button>
+          {/* Desktop actions */}
+          <div className="hidden md:flex items-center gap-3">
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/auth/login" aria-label="Sign in to WatchParty" className="px-3 py-2">
+                Sign in
+              </Link>
+            </Button>
+
+            <Button asChild size="default" className="shadow-lg">
+              <Link href="/auth/register" aria-label="Start hosting on WatchParty">
+                Start hosting
+              </Link>
+            </Button>
+          </div>
         </div>
       </div>
       {/* Mobile menu overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-60 flex">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setIsOpen(false)} />
-          <div className="relative ml-auto w-80 max-w-full bg-white p-6 shadow-2xl md:hidden">
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setIsOpen(false)} />
+          <aside className="absolute right-0 top-0 bottom-0 w-80 max-w-full bg-white/98 backdrop-blur-sm p-6 shadow-2xl rounded-l-3xl overflow-y-auto">
             <div className="flex items-center justify-between">
               <Link href="/" className="flex items-center gap-2" aria-label="WatchParty home">
                 <span className="relative flex h-8 w-8 items-center justify-center overflow-hidden">
@@ -83,12 +82,14 @@ export function MarketingHeader() {
                 </span>
                 <span className="font-semibold">WatchParty</span>
               </Link>
-              <button onClick={() => setIsOpen(false)} aria-label="Close menu" className="p-2 text-brand-navy/80">
-                ✕
-              </button>
+              <Button variant="ghost" size="sm" onClick={() => setIsOpen(false)} aria-label="Close menu" className="p-2 rounded-full">
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M6 6l12 12M6 18L18 6" />
+                </svg>
+              </Button>
             </div>
 
-            <nav className="mt-6 flex flex-col gap-3">
+            <nav className="mt-8 flex flex-col gap-3">
               {_navigation.map((item) => (
                 <Link key={item.href} href={item.href} className="rounded-md px-3 py-2 text-sm font-medium text-brand-navy/80 hover:bg-brand-neutral/10">
                   {item.label}
@@ -104,7 +105,7 @@ export function MarketingHeader() {
                 Start hosting
               </Link>
             </div>
-          </div>
+          </aside>
         </div>
       )}
     </header>

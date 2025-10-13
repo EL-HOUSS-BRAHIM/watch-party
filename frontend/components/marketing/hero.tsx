@@ -83,17 +83,17 @@ export function Hero() {
             </Button>
           </div>
           <dl className="grid gap-5 sm:grid-cols-3">
-            <div className="rounded-3xl border border-brand-purple/15 bg-white/80 p-5 shadow-[0_20px_60px_rgba(74,46,160,0.12)]">
+            <div className="rounded-3xl border border-brand-purple/15 bg-white/80 p-5 shadow-[0_20px_60px_rgba(74,46,160,0.12)] text-center sm:text-left">
               <dt className="text-xs uppercase tracking-[0.32em] text-brand-purple">Preset palettes</dt>
               <dd className="mt-2 text-3xl font-semibold text-brand-navy">42 scenes</dd>
               <dd className="mt-2 text-xs text-brand-navy/60">Sunrise, dusk, neon, and after-party lighting in one tap.</dd>
             </div>
-            <div className="rounded-3xl border border-brand-cyan/20 bg-white/80 p-5 shadow-[0_20px_60px_rgba(59,198,232,0.15)]">
+            <div className="rounded-3xl border border-brand-cyan/20 bg-white/80 p-5 shadow-[0_20px_60px_rgba(59,198,232,0.15)] text-center sm:text-left">
               <dt className="text-xs uppercase tracking-[0.32em] text-brand-cyan-dark">Sync drift</dt>
               <dd className="mt-2 text-3xl font-semibold text-brand-navy">±18 ms</dd>
               <dd className="mt-2 text-xs text-brand-navy/60">Frame-perfect playback even when guests jump between scenes.</dd>
             </div>
-            <div className="rounded-3xl border border-brand-orange/20 bg-white/80 p-5 shadow-[0_20px_60px_rgba(243,156,18,0.18)]">
+            <div className="rounded-3xl border border-brand-orange/20 bg-white/80 p-5 shadow-[0_20px_60px_rgba(243,156,18,0.18)] text-center sm:text-left">
               <dt className="text-xs uppercase tracking-[0.32em] text-brand-orange-dark">Hosts onboarded</dt>
               <dd className="mt-2 text-3xl font-semibold text-brand-navy">11k / mo</dd>
               <dd className="mt-2 text-xs text-brand-navy/60">Festival crews, classrooms, and fandom clubs in 62 countries.</dd>
@@ -103,7 +103,7 @@ export function Hero() {
   <div className="relative mx-auto w-full sm:max-w-md">
           <div className="absolute inset-0 -z-10 rounded-[40px] bg-brand-neutral/60 blur-3xl" aria-hidden />
           <div className="relative overflow-hidden rounded-[40px] border border-brand-purple/20 bg-white p-7 text-brand-navy shadow-[0_40px_120px_rgba(28,28,46,0.16)]">
-            <header className="flex items-center justify-between gap-4 text-xs uppercase tracking-[0.4em] text-brand-navy/60">
+            <header className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4 text-xs uppercase tracking-[0.4em] text-brand-navy/60 text-center sm:text-left">
               <span>Scene timeline</span>
               <span className="inline-flex items-center gap-2 rounded-full border border-brand-blue/30 bg-brand-blue/10 px-3 py-1 text-brand-blue-dark">
                 Dual ambience
@@ -111,24 +111,24 @@ export function Hero() {
             </header>
             <div className="mt-7 space-y-6">
               <div className="grid gap-5 sm:grid-cols-2">
-                <div className="relative overflow-hidden rounded-[28px] border border-brand-orange/30 bg-white text-brand-navy shadow-[0_20px_55px_rgba(243,156,18,0.18)]">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,rgba(243,156,18,0.35),transparent_65%)]" />
-                  <div className="relative space-y-3 p-5">
-                    <p className="text-xs font-semibold uppercase tracking-[0.32em] text-brand-orange-dark">08:15</p>
-                    <p className="text-sm font-medium text-brand-purple">Sunrise premiere lobby</p>
-                    <p className="text-xs text-brand-navy/60">Warm white lighting, stretch goals board, ambient vinyl.</p>
+                  <div className="relative overflow-hidden rounded-[28px] border border-brand-orange/30 bg-white text-brand-navy shadow-[0_20px_55px_rgba(243,156,18,0.18)]">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_85%_20%,rgba(243,156,18,0.35),transparent_65%)]" />
+                    <div className="relative space-y-3 p-5 text-center sm:text-left">
+                      <p className="text-xs font-semibold uppercase tracking-[0.32em] text-brand-orange-dark">08:15</p>
+                      <p className="text-sm font-medium text-brand-purple">Sunrise premiere lobby</p>
+                      <p className="text-xs text-brand-navy/60">Warm white lighting, stretch goals board, ambient vinyl.</p>
+                    </div>
+                  </div>
+                  <div className="relative overflow-hidden rounded-[28px] border border-brand-purple/25 bg-brand-purple/90 text-white shadow-[0_28px_65px_rgba(74,46,160,0.35)]">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(233,64,138,0.4),transparent_60%)]" />
+                    <div className="relative space-y-3 p-5 text-center sm:text-left">
+                      <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/75">23:45</p>
+                      <p className="text-sm font-medium text-white">Midnight encore</p>
+                      <p className="text-xs text-white/80">Neon accents, spoiler-safe reactions, spotlight co-host.</p>
+                    </div>
                   </div>
                 </div>
-                <div className="relative overflow-hidden rounded-[28px] border border-brand-purple/25 bg-brand-purple/90 text-white shadow-[0_28px_65px_rgba(74,46,160,0.35)]">
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(233,64,138,0.4),transparent_60%)]" />
-                  <div className="relative space-y-3 p-5">
-                    <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/75">23:45</p>
-                    <p className="text-sm font-medium text-white">Midnight encore</p>
-                    <p className="text-xs text-white/80">Neon accents, spoiler-safe reactions, spotlight co-host.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="grid gap-4 rounded-[28px] border border-brand-cyan/25 bg-brand-cyan/5 p-5 text-sm text-brand-navy/80">
+              <div className="grid gap-4 rounded-[28px] border border-brand-cyan/25 bg-brand-cyan/5 p-5 text-sm text-brand-navy/80 text-center sm:text-left">
                 <p className="text-xs uppercase tracking-[0.32em] text-brand-cyan-dark">Tonight&apos;s rituals</p>
                 <ul className="space-y-2 text-brand-navy/70">
                   <li>• Fade lobby soundtrack as countdown hits 30 seconds.</li>
@@ -136,7 +136,7 @@ export function Hero() {
                   <li>• Trigger midnight neon overlay for encore reactions.</li>
                 </ul>
               </div>
-              <div className="grid gap-3 rounded-[24px] border border-brand-magenta/25 bg-brand-magenta/5 p-5 text-xs uppercase tracking-[0.32em] text-brand-navy/60">
+              <div className="grid gap-3 rounded-[24px] border border-brand-magenta/25 bg-brand-magenta/5 p-5 text-xs uppercase tracking-[0.32em] text-brand-navy/60 text-center sm:text-left">
                 <div className="flex items-center justify-between gap-3">
                   <span className="rounded-full border border-brand-magenta/30 bg-brand-magenta/15 px-3 py-1 text-[11px] font-semibold text-brand-magenta-dark">
                     Auto cues
