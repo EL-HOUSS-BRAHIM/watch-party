@@ -65,18 +65,18 @@ export default function HomePage() {
 
       <section className="bg-gradient-to-b from-brand-neutral/60 to-white px-4 py-24 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl text-center text-brand-navy">
-          <span className="inline-block rounded-full border border-brand-cyan/30 bg-brand-cyan/10 px-4 py-2 text-sm font-semibold uppercase tracking-wider text-brand-cyan-dark">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand-cyan/25 bg-brand-cyan/8 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.5em] text-brand-cyan-dark shadow-sm">
             How it works
           </span>
-          <h2 className="mt-6 text-4xl font-black tracking-tight sm:text-5xl">
+          <h2 className="mt-6 text-3xl font-bold tracking-tight leading-[1.2] sm:text-4xl lg:text-5xl">
             Start watching together in
             <span className="bg-gradient-to-r from-brand-magenta via-brand-orange to-brand-cyan bg-clip-text text-transparent"> three simple steps</span>
           </h2>
-          <p className="mt-4 text-lg text-brand-navy/70">
+          <p className="mt-5 text-base leading-relaxed text-brand-navy/65 sm:text-lg">
             Launch a room, add your content, and send a link—WatchParty keeps everyone perfectly in sync across every screen.
           </p>
         </div>
-        <div className="mx-auto mt-16 grid max-w-6xl gap-6 md:grid-cols-3">
+        <div className="mx-auto mt-16 grid max-w-5xl gap-8 md:grid-cols-3">
           {[{
             step: "Step 1",
             title: "Create or join",
@@ -95,14 +95,18 @@ export default function HomePage() {
             description: "Chat, react, and host like you're on the same couch—across any device.",
             accent: "from-brand-orange to-brand-coral",
             icon: "✨"
-          }].map((item) => (
-            <div key={item.step} className="relative overflow-hidden rounded-3xl border border-brand-purple/15 bg-white/90 p-8 text-brand-navy shadow-[0_24px_90px_rgba(28,28,46,0.12)]">
-              <div className={`mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${item.accent} text-3xl text-white shadow-lg`}>
+          }].map((item, index) => (
+            <div 
+              key={item.step} 
+              className="group relative mx-auto flex max-w-sm flex-col items-center overflow-hidden rounded-[32px] border border-brand-purple/12 bg-white/90 p-10 text-center text-brand-navy shadow-[0_20px_70px_rgba(28,28,46,0.1)] backdrop-blur-sm transition-all duration-300 hover:border-brand-purple/20 hover:shadow-[0_24px_80px_rgba(28,28,46,0.14)] hover:-translate-y-1"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <div className={`mb-6 inline-flex h-20 w-20 items-center justify-center rounded-[22px] bg-gradient-to-br ${item.accent} text-4xl shadow-lg transition-transform duration-300 group-hover:scale-110`}>
                 {item.icon}
               </div>
-              <p className="text-xs font-semibold uppercase tracking-[0.45em] text-brand-navy/60">{item.step}</p>
-              <h3 className="mt-3 text-2xl font-bold text-brand-navy">{item.title}</h3>
-              <p className="mt-3 text-base text-brand-navy/70">{item.description}</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-brand-navy/50">{item.step}</p>
+              <h3 className="mt-4 text-2xl font-bold tracking-tight text-brand-navy">{item.title}</h3>
+              <p className="mt-4 text-base leading-relaxed text-brand-navy/65">{item.description}</p>
             </div>
           ))}
         </div>

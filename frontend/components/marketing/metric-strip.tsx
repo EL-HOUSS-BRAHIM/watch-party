@@ -4,44 +4,53 @@ export function MetricStrip() {
   return (
     <section
       id="metrics"
-      className="relative overflow-hidden rounded-[44px] border border-brand-purple/15 bg-white/90 px-6 py-12 text-brand-navy shadow-[0_36px_110px_rgba(28,28,46,0.15)] sm:px-10"
+      className="relative overflow-hidden rounded-[44px] border border-brand-purple/10 bg-gradient-to-br from-white via-white to-brand-purple/5 px-8 py-16 text-brand-navy shadow-[0_32px_90px_rgba(28,28,46,0.12)] sm:px-12 lg:px-16"
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute -left-24 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(233,64,138,0.18),transparent_65%)] opacity-70 blur-[120px]"
+        className="pointer-events-none absolute -left-32 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(233,64,138,0.12),transparent_70%)] opacity-60 blur-[140px]"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -right-24 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(45,156,219,0.2),transparent_60%)] opacity-70 blur-[140px]"
+        className="pointer-events-none absolute -right-32 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(45,156,219,0.14),transparent_65%)] opacity-60 blur-[160px]"
       />
-      <div className="relative grid gap-12 lg:grid-cols-[1.2fr,1fr] lg:items-center">
-        <div className="space-y-5">
-          <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/30 bg-brand-magenta/10 px-4 py-1 text-[11px] uppercase tracking-[0.45em] text-brand-magenta-dark">
-            Proof in the glow
-          </span>
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            Thousands of hosts rely on WatchParty to run seamless days that end in luminous nights
-          </h2>
-          <p className="text-base text-brand-navy/70">
+      <div className="relative grid gap-16 lg:grid-cols-[1.3fr,1fr] lg:items-start">
+        <div className="space-y-6">
+          <div className="space-y-4">
+            <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/25 bg-brand-magenta/8 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.5em] text-brand-magenta-dark shadow-sm">
+              Proof in the glow
+            </span>
+            <h2 className="text-3xl font-bold tracking-tight leading-[1.2] sm:text-4xl lg:text-[2.75rem]">
+              Thousands of hosts rely on WatchParty to run seamless days that end in{" "}
+              <span className="bg-gradient-to-r from-brand-magenta via-brand-orange to-brand-coral bg-clip-text text-transparent">
+                luminous nights
+              </span>
+            </h2>
+          </div>
+          <p className="text-base leading-relaxed text-brand-navy/65 sm:text-lg">
             WatchParty&apos;s sync engine and ambience presets power film festivals, esports leagues, and classroom screenings. Here&apos;s what crews experience after switching from DIY setups.
           </p>
-          <div className="grid gap-4 text-sm text-brand-navy/70 sm:grid-cols-2">
-            <div className="rounded-3xl border border-brand-purple/20 bg-brand-purple/5 p-5">
-              <p className="text-xs uppercase tracking-[0.32em] text-brand-purple">Festival-ready</p>
-              <p className="mt-2 leading-relaxed">Multi-night events schedule cues once and reuse them across screens and locations.</p>
+          <div className="grid gap-5 pt-2 sm:grid-cols-2">
+            <div className="group rounded-3xl border border-brand-purple/15 bg-gradient-to-br from-brand-purple/5 to-brand-purple/8 p-6 transition-all duration-300 hover:border-brand-purple/25 hover:shadow-lg hover:shadow-brand-purple/10">
+              <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-brand-purple">Festival-ready</p>
+              <p className="mt-3 text-sm leading-relaxed text-brand-navy/70">Multi-night events schedule cues once and reuse them across screens and locations.</p>
             </div>
-            <div className="rounded-3xl border border-brand-orange/25 bg-brand-orange/10 p-5">
-              <p className="text-xs uppercase tracking-[0.32em] text-brand-orange-dark">Global friendly</p>
-              <p className="mt-2 leading-relaxed">Auto-translated chat, caption sync, and timezone smart invites keep everyone aligned.</p>
+            <div className="group rounded-3xl border border-brand-orange/15 bg-gradient-to-br from-brand-orange/8 to-brand-orange/12 p-6 transition-all duration-300 hover:border-brand-orange/25 hover:shadow-lg hover:shadow-brand-orange/10">
+              <p className="text-[11px] font-bold uppercase tracking-[0.35em] text-brand-orange-dark">Global friendly</p>
+              <p className="mt-3 text-sm leading-relaxed text-brand-navy/70">Auto-translated chat, caption sync, and timezone smart invites keep everyone aligned.</p>
             </div>
           </div>
         </div>
-        <div className="grid gap-6 sm:grid-cols-3">
-          {metrics.map((metric) => (
-            <div key={metric.label} className="rounded-3xl border border-brand-blue/20 bg-white/85 p-6 text-brand-navy shadow-[0_20px_65px_rgba(45,156,219,0.14)]">
-              <p className="text-xs uppercase tracking-[0.36em] text-brand-blue-dark">{metric.label}</p>
-              <p className="mt-3 text-3xl font-semibold text-brand-navy">{metric.value}</p>
-              <p className="mt-3 text-sm text-brand-navy/70">{metric.description}</p>
+        <div className="grid gap-5 sm:grid-cols-3 lg:grid-cols-1 lg:pt-14">
+          {metrics.map((metric, index) => (
+            <div 
+              key={metric.label} 
+              className="group rounded-[28px] border border-brand-blue/15 bg-white/90 p-7 shadow-[0_16px_50px_rgba(45,156,219,0.1)] backdrop-blur-sm transition-all duration-300 hover:border-brand-blue/25 hover:shadow-[0_20px_60px_rgba(45,156,219,0.16)] hover:-translate-y-0.5"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-brand-blue/70">{metric.label}</p>
+              <p className="mt-4 text-4xl font-black tracking-tight text-brand-navy lg:text-[2.5rem]">{metric.value}</p>
+              <p className="mt-4 text-sm leading-relaxed text-brand-navy/65">{metric.description}</p>
             </div>
           ))}
         </div>
