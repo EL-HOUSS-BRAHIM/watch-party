@@ -87,7 +87,7 @@ export function FeatureGrid() {
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <CardHeader className="space-y-3 pb-4">
-                <CardTitle className="flex items-start justify-between gap-3 text-lg font-bold tracking-tight sm:text-xl">
+                <CardTitle className="flex items-start justify-between gap-3 text-lg font-bold tracking-tight text-brand-navy sm:text-xl">
                   <span>{feature.title}</span>
                   {feature.highlight ? (
                     <span className="whitespace-nowrap rounded-full border border-brand-cyan/20 bg-brand-cyan/8 px-3 py-1 text-[9px] font-bold uppercase tracking-[0.5em] text-brand-cyan-dark shadow-sm">

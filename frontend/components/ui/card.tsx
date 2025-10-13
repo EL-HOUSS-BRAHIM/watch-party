@@ -30,7 +30,7 @@ export function CardHeader({ className, ...props }: CardHeaderProps) {
 }
 
 export function CardTitle({ className, ...props }: CardTitleProps) {
-  return <h3 className={cn("text-xl font-semibold tracking-tight text-white", className)} {...props} />
+  return <h3 className={cn("text-xl font-semibold tracking-tight", className)} {...props} />
 }
 
 export function CardDescription({ className, ...props }: CardDescriptionProps) {

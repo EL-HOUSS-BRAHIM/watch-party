@@ -1,5 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
+import { Button } from "@/components/ui/button"
 
 const _navigation = [
   { href: "/#features", label: "Features" },
@@ -28,20 +29,34 @@ export function MarketingHeader() {
             <span className="text-base font-bold bg-gradient-to-r from-brand-navy to-brand-purple bg-clip-text text-transparent sm:text-lg">Watch Together</span>
           </span>
         </Link>
+        {/* Desktop navigation (hidden on small screens) */}
+        <nav className="hidden md:flex items-center gap-6">
+          {_navigation.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-sm font-medium text-brand-navy/75 hover:text-brand-navy transition-colors"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
         <div className="flex items-center gap-2 sm:gap-4">
-          <Link
-            href="/auth/login"
-            className="text-xs font-semibold text-brand-navy/80 transition-colors hover:text-brand-navy underline-offset-4 hover:underline sm:text-sm"
-          >
-            Sign in
-          </Link>
-          <Link
-            href="/auth/register"
-            className="rounded-lg bg-gradient-to-r from-brand-magenta to-brand-orange px-3 py-2 text-xs font-semibold text-white shadow-lg shadow-brand-magenta/30 transition-all hover:-translate-y-0.5 hover:from-brand-magenta-dark hover:to-brand-orange-dark hover:shadow-brand-magenta/40 sm:rounded-xl sm:px-5 sm:py-2.5 sm:text-sm"
-          >
-            <span className="hidden sm:inline">Start hosting</span>
-            <span className="sm:hidden">Host</span>
-          </Link>
+          {/* Sign in - larger tap target and explicit aria label for accessibility */}
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/auth/login" aria-label="Sign in to WatchParty" className="px-3 py-2">
+              Sign in
+            </Link>
+          </Button>
+
+          {/* Primary CTA - use Button for consistent focus/hover behavior */}
+          <Button asChild size="default" className="shadow-lg">
+            <Link href="/auth/register" aria-label="Start hosting on WatchParty" className="flex items-center">
+              <span className="hidden sm:inline">Start hosting</span>
+              <span className="sm:hidden">Host</span>
+            </Link>
+          </Button>
         </div>
       </div>
     </header>
