@@ -1,7 +1,7 @@
 FROM node:18-alpine AS base
 
 # Install pnpm globally (cached layer)
-RUN npm install -g pnpm@8
+RUN npm install -g pnpm@9
 
 # Install dependencies only when needed
 FROM base AS deps

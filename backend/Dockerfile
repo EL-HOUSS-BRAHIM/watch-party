@@ -44,6 +44,10 @@ ARG SKIP_AWS_DURING_BUILD=0
 ARG GIT_COMMIT_HASH=unknown
 ENV GIT_COMMIT_HASH=$GIT_COMMIT_HASH
 
+# Set a dummy DATABASE_URL for collectstatic (doesn't need real DB)
+ARG DATABASE_URL=sqlite:///tmp/build.db
+ENV DATABASE_URL=$DATABASE_URL
+
 # Install runtime dependencies only (cached layer)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
