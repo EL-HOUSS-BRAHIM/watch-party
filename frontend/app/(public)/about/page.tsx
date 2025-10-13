@@ -46,7 +46,7 @@ export default function AboutPage() {
             <Button size="lg" asChild>
               <Link href="/pricing">Explore plans</Link>
             </Button>
-            <Button variant="outline" size="lg" asChild>
+            <Button variant="secondary" size="lg" asChild>
               <Link href="/guides/watch-night">Read the watch night guide</Link>
             </Button>
           </div>

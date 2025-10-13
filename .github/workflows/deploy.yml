@@ -1,18 +1,18 @@
 name: Deploy to Lightsail
-# DISABLED: Workflow temporarily disabled
-# Remove this comment and the following condition to re-enable
+
 on:
   push:
     branches: ["master", "main"]
+    # Pushes use cache by default for fast builds
   workflow_dispatch:
     inputs:
       force_rebuild:
-        description: 'Force rebuild without cache'
+        description: '🔄 Force rebuild without cache (slower, ensures clean build)'
         required: false
         type: boolean
         default: false
       remove_old_images:
-        description: 'Remove old images before building'
+        description: '🗑️ Remove old images before building (frees space, forces fresh build)'
         required: false
         type: boolean
         default: false
@@ -24,6 +24,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Display Build Configuration
+        run: |
+          echo "🚀 Deployment Configuration"
+          echo "======================================"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "Trigger: Push (automatic)"
+            echo "Build Mode: 🚄 Fast build with cache"
+            echo "Remove Old Images: ❌ No"
+          else
+            echo "Trigger: Manual workflow dispatch"
+            if [ "${{ github.event.inputs.force_rebuild }}" = "true" ]; then
+              echo "Build Mode: 🔄 Force rebuild WITHOUT cache"
+            else
+              echo "Build Mode: 🚄 Fast build with cache"
+            fi
+            if [ "${{ github.event.inputs.remove_old_images }}" = "true" ]; then
+              echo "Remove Old Images: ✅ Yes (clean build)"
+            else
+              echo "Remove Old Images: ❌ No"
+            fi
+          fi
+          echo "======================================"
+
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1.0.3
         timeout-minutes: 40  # Increased from 14 to 40
@@ -32,6 +55,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           SSL_ORIGIN: ${{ secrets.SSL_ORIGIN }}
           SSL_PRIVATE: ${{ secrets.SSL_PRIVATE }}
+          # On push: use cache (both set to 0). On manual trigger: use input values
           FORCE_REBUILD: ${{ github.event.inputs.force_rebuild == 'true' && '1' || '0' }}
           REMOVE_OLD_IMAGES: ${{ github.event.inputs.remove_old_images == 'true' && '1' || '0' }}
           TARGET_BRANCH: ${{ github.ref_name || 'main' }}

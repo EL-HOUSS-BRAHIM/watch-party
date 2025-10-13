@@ -112,7 +112,7 @@ export default function PricingPage() {
             </CardContent>
             <CardFooter>
               <Button 
-                variant={plan.featured ? "default" : "outline"} 
+                variant={plan.featured ? "primary" : "secondary"} 
                 size="lg" 
                 className="w-full"
                 asChild
