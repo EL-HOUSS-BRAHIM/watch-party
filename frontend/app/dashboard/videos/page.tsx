@@ -346,17 +346,17 @@ export default function VideosPage() {
         <GradientCard className="relative border-brand-cyan/30">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
-              <div className="flex items-center gap-4">
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-green-200 to-blue-200 bg-clip-text text-transparent">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white via-green-200 to-blue-200 bg-clip-text text-transparent">
                   📹 Media Library
                 </h1>
                 <div className="flex items-center gap-2 px-3 py-1 bg-brand-cyan/20 rounded-full border border-brand-cyan/30">
                   <div className="w-2 h-2 bg-brand-cyan rounded-full animate-pulse"></div>
-                  <span className="text-brand-cyan-light text-sm font-medium">{videos.length} Videos</span>
+                  <span className="text-brand-cyan-light text-xs sm:text-sm font-medium">{videos.length} Videos</span>
                 </div>
               </div>
-              <p className="text-white/80 text-lg">Build your personal cinema collection with unlimited storage</p>
-              <div className="flex items-center gap-4 text-sm text-white/60">
+              <p className="text-white/80 text-base sm:text-lg">Build your personal cinema collection with unlimited storage</p>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-white/60">
                 <span>🎬 All Formats</span>
                 <span>•</span>
                 <span>☁️ Cloud Storage</span>
@@ -657,18 +657,18 @@ export default function VideosPage() {
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1 relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <span className="text-white/50 text-xl">🔍</span>
+                <span className="text-white/50 text-lg sm:text-xl">🔍</span>
               </div>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search your video library..."
-                className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all"
+                className="w-full pl-12 sm:pl-14 pr-6 py-3 sm:py-4 text-base bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all"
               />
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {[
                 { key: "all", label: "All Videos", icon: "📹", count: videos.length },
                 { key: "ready", label: "Ready", icon: "✅", count: videos.filter(v => v.upload_status === "ready").length },
@@ -678,10 +678,10 @@ export default function VideosPage() {
                 <button
                   key={key}
                   onClick={() => setFilter(key as any)}
-                  className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+                  className={`flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl font-medium transition-all duration-200 min-h-[44px] text-sm sm:text-base ${
                     filter === key
-                      ? "bg-gradient-to-r from-brand-blue to-brand-purple text-white shadow-lg scale-105"
-                      : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white hover:scale-105"
+                      ? "bg-gradient-to-r from-brand-blue to-brand-purple text-white shadow-lg sm:scale-105"
+                      : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white sm:hover:scale-105"
                   }`}
                 >
                   <span>{icon}</span>
