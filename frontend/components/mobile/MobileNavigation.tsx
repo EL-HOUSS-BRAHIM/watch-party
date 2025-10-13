@@ -30,7 +30,7 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
     <>
       {/* Mobile Header */}
       <header className="sticky top-0 z-30 bg-gray-900/95 backdrop-blur-sm border-b border-white/10 md:hidden">
-        <div className="flex items-center justify-between px-4 py-3">
+        <div className="flex items-center justify-between px-4 py-3 min-h-[56px]">
           {/* Logo */}
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-brand-blue to-brand-purple rounded-lg flex items-center justify-center">
@@ -40,13 +40,13 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center gap-2">
             {/* Notifications */}
             <button
               onClick={() => window.location.href = "/dashboard/notifications"}
-              className="relative p-2 text-white/70 hover:text-white transition-colors"
+              className="relative p-2 text-white/70 hover:text-white transition-colors flex items-center justify-center"
             >
-              <span className="text-xl">🔔</span>
+              <span className="text-xl leading-none">🔔</span>
               {notificationCount > 0 && (
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-coral text-white text-xs rounded-full flex items-center justify-center">
                   {notificationCount > 9 ? "9+" : notificationCount}
@@ -57,15 +57,15 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
             {/* Search */}
             <button
               onClick={() => window.location.href = "/dashboard/search"}
-              className="p-2 text-white/70 hover:text-white transition-colors"
+              className="p-2 text-white/70 hover:text-white transition-colors flex items-center justify-center"
             >
-              <span className="text-xl">🔍</span>
+              <span className="text-xl leading-none">🔍</span>
             </button>
 
             {/* Menu Toggle */}
             <button
               onClick={() => setIsMenuOpen(true)}
-              className="p-2 text-white/70 hover:text-white transition-colors"
+              className="p-2 text-white/70 hover:text-white transition-colors flex items-center justify-center"
             >
               <div className="w-6 h-6 flex flex-col justify-center gap-1">
                 <span className="w-full h-0.5 bg-current"></span>
