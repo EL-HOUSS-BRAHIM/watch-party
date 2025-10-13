@@ -149,6 +149,7 @@ if [ "$REBUILD_BACKEND" = "1" ]; then
     log_info "🔨 Building backend..."
     if ! timeout 600 docker-compose build $BUILD_FLAGS backend \
         --build-arg SKIP_AWS_DURING_BUILD=1 \
+        --build-arg DATABASE_URL="sqlite:///tmp/build.db" \
         --build-arg GIT_COMMIT_HASH="$GIT_COMMIT_HASH"; then
         exit_with_error "Backend build failed"
     fi
