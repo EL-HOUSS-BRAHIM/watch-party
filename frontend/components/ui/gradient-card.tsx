@@ -15,7 +15,7 @@ interface GradientCardProps {
 export function GradientCard({ 
   children, 
   className, 
-  gradient = "from-white to-brand-neutral-light",
+  gradient = "from-white via-brand-neutral-light to-brand-neutral",
   blur = true,
   border = true,
   hover = true
