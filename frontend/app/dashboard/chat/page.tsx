@@ -49,11 +49,11 @@ export default function ChatPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
+      <div className="min-h-screen bg-gradient-to-br from-brand-neutral via-white to-brand-neutral-light">
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-white/60">Loading chat...</p>
+            <div className="animate-spin w-12 h-12 border-4 border-brand-purple border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-brand-navy/60">Loading chat...</p>
           </div>
         </div>
       </div>
@@ -61,23 +61,23 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
+    <div className="min-h-screen bg-gradient-to-br from-brand-neutral via-white to-brand-neutral-light">
       <div className="flex h-screen">
         {/* Parties Sidebar */}
-        <div className="w-80 bg-black/20 border-r border-white/10 flex flex-col">
+        <div className="w-80 bg-white/80 border-r border-brand-navy/10 flex flex-col backdrop-blur-sm">
           {/* Header */}
-          <div className="p-6 border-b border-white/10">
+          <div className="p-6 border-b border-brand-navy/10">
             <div className="flex items-center justify-between mb-4">
-              <h1 className="text-2xl font-bold text-white">Chat</h1>
+              <h1 className="text-2xl font-bold text-brand-navy">Chat</h1>
               <button
                 onClick={() => router.push("/dashboard")}
-                className="text-white/60 hover:text-white transition-colors"
+                className="text-brand-navy/60 hover:text-brand-navy transition-colors"
               >
                 ←
               </button>
             </div>
             
-            <p className="text-white/60 text-sm">
+            <p className="text-brand-navy/60 text-sm">
               Select a party to join the chat
             </p>
           </div>
@@ -87,10 +87,10 @@ export default function ChatPage() {
             {parties.length === 0 ? (
               <div className="text-center py-8">
                 <div className="text-4xl mb-4">💬</div>
-                <p className="text-white/60 mb-4">No active parties</p>
+                <p className="text-brand-navy/60 mb-4">No active parties</p>
                 <button
                   onClick={() => router.push("/parties")}
-                  className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm transition-colors"
+                  className="px-4 py-2 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-full text-sm transition-all shadow-lg"
                 >
                   Browse Parties
                 </button>
@@ -101,33 +101,33 @@ export default function ChatPage() {
                   <button
                     key={party.id}
                     onClick={() => setSelectedParty(party)}
-                    className={`w-full text-left p-4 rounded-lg border transition-all ${
+                    className={`w-full text-left p-4 rounded-2xl border transition-all ${
                       selectedParty?.id === party.id
-                        ? "bg-brand-blue/20 border-brand-blue/30 text-white"
-                        : "bg-white/5 border-white/10 text-white/80 hover:bg-white/10"
+                        ? "bg-brand-blue/10 border-brand-blue/30 text-brand-navy shadow-lg"
+                        : "bg-white border-brand-navy/10 text-brand-navy/80 hover:bg-brand-neutral hover:shadow-md"
                     }`}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <h3 className="font-medium truncate">{party.name}</h3>
                       {isHost(party) && (
-                        <span className="px-2 py-1 bg-purple-600/20 text-brand-purple-light rounded text-xs ml-2">
+                        <span className="px-2 py-1 bg-brand-purple/10 text-brand-purple border border-brand-purple/30 rounded-full text-xs ml-2 font-semibold">
                           Host
                         </span>
                       )}
                     </div>
                     
-                    <p className="text-sm text-white/60 line-clamp-2 mb-2">
+                    <p className="text-sm text-brand-navy/60 line-clamp-2 mb-2">
                       {party.description || "No description"}
                     </p>
                     
-                    <div className="flex items-center gap-4 text-xs text-white/50">
+                    <div className="flex items-center gap-4 text-xs text-brand-navy/50">
                       <span>👥 {party.participants_count || 0}</span>
-                      <span className={`px-2 py-1 rounded ${
+                      <span className={`px-2 py-1 rounded-full font-semibold ${
                         party.status === "live" 
-                          ? "bg-brand-cyan/20 text-brand-cyan-light"
+                          ? "bg-brand-cyan/10 text-brand-cyan"
                           : party.status === "scheduled"
-                          ? "bg-brand-orange/20 text-brand-orange-light"
-                          : "bg-brand-coral/20 text-brand-coral-light"
+                          ? "bg-brand-orange/10 text-brand-orange"
+                          : "bg-brand-coral/10 text-brand-coral"
                       }`}>
                         {party.status}
                       </span>
@@ -139,17 +139,17 @@ export default function ChatPage() {
           </div>
 
           {/* Actions */}
-          <div className="p-6 border-t border-white/10">
+          <div className="p-6 border-t border-brand-navy/10">
             <div className="space-y-3">
               <button
                 onClick={() => router.push("/dashboard/rooms")}
-                className="w-full px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm transition-colors"
+                className="w-full px-4 py-2 bg-white border border-brand-navy/20 hover:bg-brand-neutral text-brand-navy rounded-full text-sm transition-all"
               >
                 Manage Rooms
               </button>
               <button
                 onClick={() => router.push("/parties")}
-                className="w-full px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm transition-colors"
+                className="w-full px-4 py-2 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-full text-sm transition-all shadow-lg"
               >
                 Find More Parties
               </button>
@@ -162,11 +162,11 @@ export default function ChatPage() {
           {selectedParty ? (
             <>
               {/* Chat Header */}
-              <div className="p-6 border-b border-white/10 bg-black/20">
+              <div className="p-6 border-b border-brand-navy/10 bg-white/80 backdrop-blur-sm">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-xl font-bold text-white">{selectedParty.name}</h2>
-                    <p className="text-white/60 text-sm">
+                    <h2 className="text-xl font-bold text-brand-navy">{selectedParty.name}</h2>
+                    <p className="text-brand-navy/60 text-sm">
                       {selectedParty.participants_count || 0} participants • {selectedParty.status}
                     </p>
                   </div>
@@ -175,7 +175,7 @@ export default function ChatPage() {
                     {isHost(selectedParty) && (
                       <button
                         onClick={() => setShowModeration(true)}
-                        className="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-brand-blue-light rounded-lg text-sm font-medium transition-colors"
+                        className="px-4 py-2 bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue border border-brand-blue/30 rounded-full text-sm font-medium transition-all"
                       >
                         🛡️ Moderation
                       </button>
@@ -183,7 +183,7 @@ export default function ChatPage() {
                     
                     <button
                       onClick={() => router.push(`/room/${selectedParty.id}`)}
-                      className="px-4 py-2 bg-brand-cyan hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
+                      className="px-4 py-2 bg-gradient-to-r from-brand-cyan to-brand-blue hover:from-brand-cyan-dark hover:to-brand-blue-dark text-white rounded-full text-sm font-medium transition-all shadow-lg"
                     >
                       🎬 Join Room
                     </button>
@@ -204,17 +204,17 @@ export default function ChatPage() {
             <div className="flex-1 flex items-center justify-center">
               <div className="text-center">
                 <div className="text-6xl mb-6">💬</div>
-                <h2 className="text-2xl font-bold text-white mb-4">
+                <h2 className="text-2xl font-bold text-brand-navy mb-4">
                   Welcome to Chat
                 </h2>
-                <p className="text-white/60 mb-8 max-w-md">
+                <p className="text-brand-navy/60 mb-8 max-w-md">
                   Select a party from the sidebar to start chatting with other members.
                 </p>
                 
                 {parties.length === 0 && (
                   <button
                     onClick={() => router.push("/parties")}
-                    className="px-6 py-3 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg font-medium transition-colors"
+                    className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-full font-medium transition-all shadow-lg"
                   >
                     Find Parties to Chat
                   </button>
