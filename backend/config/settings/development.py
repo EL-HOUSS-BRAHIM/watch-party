@@ -30,6 +30,27 @@ DATABASES = {
 # CORS - Allow all origins in development
 CORS_ALLOW_ALL_ORIGINS = True
 
+# Explicitly allow localhost and GitHub Codespaces for development
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000',
+    cast=lambda v: [s.strip() for s in v.split(',')]
+)
+
+# Allow GitHub Codespaces origins (*.app.github.dev)
+CORS_ALLOWED_ORIGIN_REGEXES = config(
+    'CORS_ALLOWED_ORIGIN_REGEXES',
+    default=r'^https://.*\.app\.github\.dev$',
+    cast=lambda v: [s.strip() for s in v.split(',')]
+)
+
+# CSRF trusted origins for development
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000',
+    cast=lambda v: [s.strip() for s in v.split(',')]
+)
+
 # Email backend for development
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
