@@ -72,21 +72,21 @@ export default function SupportPage() {
 
   const statusColor = (status: string) => {
     switch (status) {
-      case "open": return "bg-brand-blue/20 text-brand-blue-light border-brand-blue/30";
-      case "in_progress": return "bg-brand-orange/20 text-brand-orange-light border-brand-orange/30";
-      case "resolved": return "bg-brand-cyan/20 text-brand-cyan-light border-brand-cyan/30";
-      case "closed": return "bg-gray-500/20 text-gray-400 border-gray-500/30";
-      default: return "bg-gray-500/20 text-gray-400 border-gray-500/30";
+      case "open": return "bg-brand-blue/10 text-brand-blue border-brand-blue/30";
+      case "in_progress": return "bg-brand-orange/10 text-brand-orange border-brand-orange/30";
+      case "resolved": return "bg-brand-cyan/10 text-brand-cyan border-brand-cyan/30";
+      case "closed": return "bg-brand-navy/5 text-brand-navy/60 border-brand-navy/20";
+      default: return "bg-brand-navy/5 text-brand-navy/60 border-brand-navy/20";
     }
   };
 
   const priorityColor = (priority: string) => {
     switch (priority) {
-      case "low": return "bg-brand-cyan/20 text-brand-cyan-light";
-      case "medium": return "bg-brand-orange/20 text-brand-orange-light";
-      case "high": return "bg-orange-500/20 text-orange-400";
-      case "urgent": return "bg-brand-coral/20 text-brand-coral-light";
-      default: return "bg-gray-500/20 text-gray-400";
+      case "low": return "bg-brand-cyan/10 text-brand-cyan";
+      case "medium": return "bg-brand-orange/10 text-brand-orange";
+      case "high": return "bg-brand-coral/10 text-brand-coral";
+      case "urgent": return "bg-brand-coral/20 text-brand-coral-dark";
+      default: return "bg-brand-navy/5 text-brand-navy/60";
     }
   };
 
@@ -113,19 +113,19 @@ export default function SupportPage() {
               placeholder="Title"
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-brand-purple focus:outline-none"
+              className="w-full px-4 py-2 bg-white border border-brand-navy/20 rounded-2xl focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20 focus:outline-none text-brand-navy"
             />
             <textarea
               placeholder="Description"
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               rows={4}
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-brand-purple focus:outline-none"
+              className="w-full px-4 py-2 bg-white border border-brand-navy/20 rounded-2xl focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20 focus:outline-none text-brand-navy"
             />
             <select
               value={form.category}
               onChange={(e) => setForm({ ...form, category: e.target.value })}
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-brand-purple focus:outline-none"
+              className="w-full px-4 py-2 bg-white border border-brand-navy/20 rounded-2xl focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20 focus:outline-none text-brand-navy"
             >
               <option value="">Select Category</option>
               {categories.map((cat) => (
@@ -135,7 +135,7 @@ export default function SupportPage() {
             <select
               value={form.priority}
               onChange={(e) => setForm({ ...form, priority: e.target.value as any })}
-              className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-brand-purple focus:outline-none"
+              className="w-full px-4 py-2 bg-white border border-brand-navy/20 rounded-2xl focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20 focus:outline-none text-brand-navy"
             >
               <option value="low">Low</option>
               <option value="medium">Medium</option>
@@ -151,28 +151,28 @@ export default function SupportPage() {
 
       <div className="grid gap-4">
         {loading ? (
-          <div className="text-center py-8 text-gray-400">Loading tickets...</div>
+          <div className="text-center py-8 text-brand-navy/60">Loading tickets...</div>
         ) : tickets.length === 0 ? (
           <GradientCard>
-            <div className="text-center py-8 text-gray-400">No support tickets yet</div>
+            <div className="text-center py-8 text-brand-navy/60">No support tickets yet</div>
           </GradientCard>
         ) : (
           tickets.map((ticket) => (
             <GradientCard key={ticket.id}>
               <div className="flex items-start justify-between cursor-pointer" onClick={() => setSelected(ticket)}>
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold">{ticket.title}</h3>
-                  <p className="text-sm text-gray-400 mt-1">{ticket.description.substring(0, 100)}</p>
+                  <h3 className="text-lg font-semibold text-brand-navy">{ticket.title}</h3>
+                  <p className="text-sm text-brand-navy/60 mt-1">{ticket.description.substring(0, 100)}</p>
                   <div className="flex gap-2 mt-2">
-                    <span className={`text-xs px-2 py-1 rounded border ${statusColor(ticket.status)}`}>
+                    <span className={`text-xs px-2 py-1 rounded-full border font-semibold ${statusColor(ticket.status)}`}>
                       {ticket.status.replace('_', ' ')}
                     </span>
-                    <span className={`text-xs px-2 py-1 rounded ${priorityColor(ticket.priority)}`}>
+                    <span className={`text-xs px-2 py-1 rounded-full font-semibold ${priorityColor(ticket.priority)}`}>
                       {ticket.priority}
                     </span>
                   </div>
                 </div>
-                <div className="text-sm text-gray-400">
+                <div className="text-sm text-brand-navy/60">
                   {new Date(ticket.created_at).toLocaleDateString()}
                 </div>
               </div>
@@ -213,13 +213,13 @@ function TicketDetailModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-gray-900 border border-gray-800 rounded-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="p-6 border-b border-gray-800">
+    <div className="fixed inset-0 bg-brand-navy/40 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-white border border-brand-navy/10 rounded-3xl max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-[0_32px_100px_rgba(28,28,46,0.2)]" onClick={(e) => e.stopPropagation()}>
+        <div className="p-6 border-b border-brand-navy/10">
           <div className="flex items-start justify-between">
             <div>
-              <h2 className="text-2xl font-bold">{ticket.title}</h2>
-              <p className="text-gray-400 mt-2">{ticket.description}</p>
+              <h2 className="text-2xl font-bold text-brand-navy">{ticket.title}</h2>
+              <p className="text-brand-navy/60 mt-2">{ticket.description}</p>
             </div>
             <IconButton onClick={onClose} variant="ghost" size="sm">×</IconButton>
           </div>
@@ -227,24 +227,24 @@ function TicketDetailModal({
         
         <div className="p-6 space-y-4">
           {ticket.messages.map((msg) => (
-            <div key={msg.id} className={`p-4 rounded-lg ${msg.author.is_staff ? 'bg-brand-purple/10 border border-brand-purple/20' : 'bg-gray-800'}`}>
+            <div key={msg.id} className={`p-4 rounded-2xl ${msg.author.is_staff ? 'bg-brand-purple/10 border border-brand-purple/20' : 'bg-brand-neutral'}`}>
               <div className="flex items-center gap-2 mb-2">
-                <span className="font-semibold">{msg.author.username}</span>
-                {msg.author.is_staff && <span className="text-xs bg-brand-purple px-2 py-0.5 rounded">Staff</span>}
-                <span className="text-xs text-gray-400">{new Date(msg.created_at).toLocaleString()}</span>
+                <span className="font-semibold text-brand-navy">{msg.author.username}</span>
+                {msg.author.is_staff && <span className="text-xs bg-brand-purple text-white px-2 py-0.5 rounded-full font-semibold">Staff</span>}
+                <span className="text-xs text-brand-navy/60">{new Date(msg.created_at).toLocaleString()}</span>
               </div>
-              <p className="text-gray-300">{msg.content}</p>
+              <p className="text-brand-navy/80">{msg.content}</p>
             </div>
           ))}
         </div>
 
-        <div className="p-6 border-t border-gray-800">
+        <div className="p-6 border-t border-brand-navy/10">
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type your reply..."
             rows={3}
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:border-brand-purple focus:outline-none mb-3"
+            className="w-full px-4 py-2 bg-white border border-brand-navy/20 rounded-2xl focus:border-brand-purple focus:ring-2 focus:ring-brand-purple/20 focus:outline-none text-brand-navy mb-3"
           />
           <IconButton onClick={send} disabled={sending || !message.trim()} variant="primary" size="md">
             {sending ? "Sending..." : "Send Reply"}

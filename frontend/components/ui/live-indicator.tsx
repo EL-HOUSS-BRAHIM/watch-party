@@ -31,13 +31,13 @@ export function LiveIndicator({
     <div className={cn(
       "inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium",
       isLive 
-        ? "bg-brand-coral/20 text-brand-coral-light border border-brand-coral/30" 
-        : "bg-gray-500/20 text-gray-400 border border-gray-500/30",
+        ? "bg-brand-coral/10 text-brand-coral border border-brand-coral/30" 
+        : "bg-brand-navy/5 text-brand-navy/60 border border-brand-navy/20",
       className
     )}>
       <div className={cn(
         "w-2 h-2 rounded-full",
-        isLive ? "bg-brand-coral" : "bg-gray-500",
+        isLive ? "bg-brand-coral" : "bg-brand-navy/40",
         isLive && pulse && "animate-pulse"
       )}></div>
       <span>{label}</span>
