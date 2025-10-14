@@ -206,7 +206,7 @@ CORS_ALLOW_CREDENTIALS = True
 # Add CORS allowed origins from environment
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='https://watch-party.brahim-elhouss.me,https://be-watch-party.brahim-elhouss.me',
+    default='https://watch-party.brahim-elhouss.me,https://be-watch-party.brahim-elhouss.me,http://localhost:3000,http://127.0.0.1:3000',
     cast=lambda v: [s.strip() for s in v.split(',')]
 )
 
