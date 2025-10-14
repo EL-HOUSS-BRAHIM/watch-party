@@ -157,17 +157,16 @@ export default function HelpPage() {
     <div className="space-y-8">
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-blue/20 via-purple-600/20 to-green-600/20 rounded-3xl blur-xl"></div>
-        <GradientCard className="relative border-brand-blue/30">
+        <GradientCard className="relative" gradient="from-white to-white">
           <div className="text-center space-y-4">
             <div className="text-6xl mb-4">🆘</div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold text-brand-navy">
               Help & Support
             </h1>
-            <p className="text-white/80 text-lg max-w-2xl mx-auto">
+            <p className="text-brand-navy/70 text-lg max-w-2xl mx-auto">
               Find answers to common questions, browse our knowledge base, or get in touch with our support team
             </p>
-            <div className="flex items-center justify-center gap-4 text-sm text-white/60">
+            <div className="flex items-center justify-center gap-4 text-sm text-brand-navy/60">
               <span>📚 Knowledge Base</span>
               <span>•</span>
               <span>💬 24/7 Support</span>
@@ -181,14 +180,14 @@ export default function HelpPage() {
       {/* Search Bar */}
       <div className="relative max-w-2xl mx-auto">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <span className="text-white/50 text-xl">🔍</span>
+          <span className="text-brand-navy/50 text-xl">🔍</span>
         </div>
         <input
           type="text"
           placeholder="Search for help articles, guides, or FAQs..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all"
+          className="w-full pl-14 pr-6 py-4 bg-white border border-brand-navy/20 rounded-2xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all shadow-sm"
         />
       </div>
 
@@ -199,8 +198,8 @@ export default function HelpPage() {
             <div className="space-y-4">
               <div className="text-4xl">{method.icon}</div>
               <div>
-                <h3 className="text-white font-bold mb-2">{method.title}</h3>
-                <p className="text-white/60 text-sm mb-4">{method.description}</p>
+                <h3 className="text-brand-navy font-bold mb-2">{method.title}</h3>
+                <p className="text-brand-navy/60 text-sm mb-4">{method.description}</p>
               </div>
               <IconButton
                 gradient={method.gradient}
@@ -216,7 +215,7 @@ export default function HelpPage() {
 
       {/* Help Categories */}
       <div>
-        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+        <h2 className="text-2xl font-bold text-brand-navy mb-6 flex items-center gap-2">
           <span>📚</span>
           Browse by Category
         </h2>
@@ -227,7 +226,7 @@ export default function HelpPage() {
             className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap ${
               selectedCategory === "all"
                 ? "bg-gradient-to-r from-brand-blue to-brand-purple text-white"
-                : "bg-white/10 text-white/60 hover:text-white hover:bg-white/20"
+                : "bg-brand-navy/5 text-brand-navy/60 hover:text-brand-navy hover:bg-brand-navy/10"
             }`}
           >
             <span>🔍</span>
@@ -240,7 +239,7 @@ export default function HelpPage() {
               className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap ${
                 selectedCategory === category.id
                   ? "bg-gradient-to-r from-brand-blue to-brand-purple text-white"
-                  : "bg-white/10 text-white/60 hover:text-white hover:bg-white/20"
+                  : "bg-brand-navy/5 text-brand-navy/60 hover:text-brand-navy hover:bg-brand-navy/10"
               }`}
             >
               <span>{category.icon}</span>
@@ -257,10 +256,10 @@ export default function HelpPage() {
                   {category.icon}
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-white font-bold mb-1">{category.title}</h3>
-                  <p className="text-white/60 text-sm mb-3">{category.description}</p>
+                  <h3 className="text-brand-navy font-bold mb-1">{category.title}</h3>
+                  <p className="text-brand-navy/60 text-sm mb-3">{category.description}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-white/50 text-xs">{category.articles} articles</span>
+                    <span className="text-brand-navy/50 text-xs">{category.articles} articles</span>
                     <IconButton
                       size="sm"
                       variant="secondary"
@@ -278,7 +277,7 @@ export default function HelpPage() {
 
       {/* Frequently Asked Questions */}
       <div>
-        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+        <h2 className="text-2xl font-bold text-brand-navy mb-6 flex items-center gap-2">
           <span>❓</span>
           Frequently Asked Questions
         </h2>
@@ -291,8 +290,8 @@ export default function HelpPage() {
                 onClick={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
               >
                 <div className="flex items-center justify-between">
-                  <h3 className="text-white font-medium pr-4">{faq.question}</h3>
-                  <div className={`text-white/60 transition-transform duration-200 ${
+                  <h3 className="text-brand-navy font-medium pr-4">{faq.question}</h3>
+                  <div className={`text-brand-navy/60 transition-transform duration-200 ${
                     expandedFAQ === faq.id ? 'rotate-180' : ''
                   }`}>
                     ⌄
@@ -300,10 +299,10 @@ export default function HelpPage() {
                 </div>
                 
                 {expandedFAQ === faq.id && (
-                  <div className="mt-4 pt-4 border-t border-white/10">
-                    <p className="text-white/80">{faq.answer}</p>
+                  <div className="mt-4 pt-4 border-t border-brand-navy/10">
+                    <p className="text-brand-navy/80">{faq.answer}</p>
                     <div className="mt-3 flex items-center gap-4">
-                      <span className="text-white/50 text-sm">Was this helpful?</span>
+                      <span className="text-brand-navy/50 text-sm">Was this helpful?</span>
                       <div className="flex gap-2">
                         <button className="text-brand-cyan-light hover:text-green-300 transition-colors">👍</button>
                         <button className="text-brand-coral-light hover:text-red-300 transition-colors">👎</button>
@@ -319,8 +318,8 @@ export default function HelpPage() {
         {filteredFAQs.length === 0 && (
           <GradientCard className="text-center py-12">
             <div className="text-4xl mb-4">🔍</div>
-            <h3 className="text-xl font-bold text-white mb-2">No results found</h3>
-            <p className="text-white/60">
+            <h3 className="text-xl font-bold text-brand-navy mb-2">No results found</h3>
+            <p className="text-brand-navy/60">
               Try adjusting your search terms or browse by category above.
             </p>
           </GradientCard>
@@ -328,11 +327,11 @@ export default function HelpPage() {
       </div>
 
       {/* Still Need Help */}
-      <GradientCard gradient="from-purple-900/30 via-blue-900/20 to-purple-900/30" className="text-center">
+      <GradientCard gradient="from-white to-white" className="text-center">
         <div className="space-y-4">
           <div className="text-4xl">🤝</div>
-          <h2 className="text-2xl font-bold text-white">Still need help?</h2>
-          <p className="text-white/80 max-w-md mx-auto">
+          <h2 className="text-2xl font-bold text-brand-navy">Still need help?</h2>
+          <p className="text-brand-navy/70 max-w-md mx-auto">
             Can't find what you're looking for? Our support team is here to help you get the most out of Watch Party.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">

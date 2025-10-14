@@ -407,16 +407,16 @@ export default function VideosPage() {
 
       {/* Enhanced Upload Section */}
       {uploadMode && (
-        <GradientCard gradient="from-emerald-900/30 via-green-800/20 to-blue-900/30" className="border-brand-cyan/30">
+        <GradientCard gradient="from-white to-white" className="border-brand-navy/10">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl font-bold text-white flex items-center gap-3">
+              <h2 className="text-2xl font-bold text-brand-navy flex items-center gap-3">
                 <span>📤</span>
                 Add New Content
               </h2>
               <button
                 onClick={() => setUploadMode(null)}
-                className="p-2 text-white/60 hover:text-white transition-colors"
+                className="p-2 text-brand-navy/60 hover:text-brand-navy transition-colors"
               >
                 ✕
               </button>
@@ -652,19 +652,19 @@ export default function VideosPage() {
       )}
 
       {/* Enhanced Search and Filters */}
-      <GradientCard gradient="from-slate-900/50 via-blue-900/30 to-slate-900/50">
+      <GradientCard gradient="from-white to-white">
         <div className="space-y-6">
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1 relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <span className="text-white/50 text-lg sm:text-xl">🔍</span>
+                <span className="text-brand-navy/50 text-lg sm:text-xl">🔍</span>
               </div>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search your video library..."
-                className="w-full pl-12 sm:pl-14 pr-6 py-3 sm:py-4 text-base bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all"
+                className="w-full pl-12 sm:pl-14 pr-6 py-3 sm:py-4 text-base bg-brand-navy/5 border border-brand-navy/20 rounded-2xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all"
               />
             </div>
             
