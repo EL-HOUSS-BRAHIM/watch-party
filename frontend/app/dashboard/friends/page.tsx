@@ -27,8 +27,8 @@ export default function FriendsPage() {
     loadSuggestions()
   }, [])
 
-  useEffect(() => {
-    if (searchQuery.trim()) {
+        <h1 className="text-3xl font-bold text-brand-navy">Friends</h1>
+        <p className="text-brand-navy/70">Connect with friends and discover new people to watch with</p>
       searchUsers()
     } else {
       setSearchResults([])
@@ -38,7 +38,7 @@ export default function FriendsPage() {
   const loadFriends = async () => {
     try {
       const response = await userApi.getFriends()
-      const friendsList = Array.isArray(response) ? response : (response.results || [])
+          className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
       setFriends(friendsList)
     } catch (error) {
       console.error("Failed to load friends:", error)
@@ -98,8 +98,8 @@ export default function FriendsPage() {
       loadFriendRequests()
     } catch (error) {
       alert("Failed to accept friend request: " + (error instanceof Error ? error.message : "Unknown error"))
-    }
-  }
+                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No friends yet</h3>
+                  <p className="text-brand-navy/70 mb-6">
 
   const declineFriendRequest = async (requestId: string) => {
     try {
@@ -138,11 +138,11 @@ export default function FriendsPage() {
   const UserCard = ({ user, actions }: { user: User; actions: React.ReactNode }) => (
     <div className="bg-white/5 border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-colors">
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center overflow-hidden">
-          {user.avatar ? (
+                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No friend requests</h3>
+                  <p className="text-brand-navy/70">
             <img src={user.avatar} alt={user.username} className="w-full h-full object-cover" />
           ) : (
-            <span className="text-lg text-white/60">
+            <span className="text-lg text-brand-navy/60">
               {user.username?.charAt(0).toUpperCase() || "?"}
             </span>
           )}
@@ -150,7 +150,7 @@ export default function FriendsPage() {
         
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="font-semibold text-white truncate">
+            <h3 className="font-semibold text-brand-navy truncate">
               {user.first_name && user.last_name 
                 ? `${user.first_name} ${user.last_name}`
                 : user.username
@@ -159,7 +159,7 @@ export default function FriendsPage() {
             {user.is_verified && <span className="text-brand-cyan-light text-sm">✓</span>}
             {user.is_premium && <span className="text-brand-orange-light text-sm">⭐</span>}
           </div>
-          <p className="text-white/60 text-sm">@{user.username}</p>
+          <p className="text-brand-navy/60 text-sm">@{user.username}</p>
         </div>
         
         <div className="flex gap-2">
@@ -178,8 +178,8 @@ export default function FriendsPage() {
       </div>
 
       {/* Search */}
-      <div className="bg-white/5 border border-white/10 rounded-lg p-4">
-        <input
+                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No suggestions</h3>
+                  <p className="text-brand-navy/70">
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -202,7 +202,7 @@ export default function FriendsPage() {
             className={`px-4 py-2 rounded-md font-medium transition-colors ${
               activeTab === key
                 ? "bg-brand-blue text-white"
-                : "text-white/70 hover:text-white hover:bg-white/10"
+                : "text-brand-navy/70 hover:text-brand-navy hover:bg-white/10"
             }`}
           >
             {label} ({count})
@@ -218,8 +218,8 @@ export default function FriendsPage() {
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-white/20"></div>
                 <div className="flex-1">
-                  <div className="h-4 bg-white/20 rounded mb-2"></div>
-                  <div className="h-3 bg-white/10 rounded w-2/3"></div>
+                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No users found</h3>
+                  <p className="text-brand-navy/70">
                 </div>
               </div>
             </div>
@@ -335,7 +335,7 @@ export default function FriendsPage() {
                           </button>
                           <button
                             onClick={() => blockUser(suggestion.id)}
-                            className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white/70 rounded text-sm transition-colors"
+                            className="px-3 py-1 bg-white/10 hover:bg-white/20 text-brand-navy/70 rounded text-sm transition-colors"
                           >
                             Hide
                           </button>
@@ -375,7 +375,7 @@ export default function FriendsPage() {
                           </button>
                           <Link
                             href={`/dashboard/users/${user.id}`}
-                            className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded text-sm transition-colors"
+                            className="px-3 py-1 bg-white/10 hover:bg-white/20 text-brand-navy rounded text-sm transition-colors"
                           >
                             View
                           </Link>

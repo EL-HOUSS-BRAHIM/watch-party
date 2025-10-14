@@ -150,8 +150,8 @@ export default function EventsPage() {
                   label="Upcoming" 
                 />
               </div>
-              <p className="text-white/80 text-base sm:text-lg">Join epic movie marathons and community celebrations</p>
-              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-white/60">
+              <p className="text-brand-navy/80 text-base sm:text-lg">Join epic movie marathons and community celebrations</p>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-brand-navy/60">
                 <span>🎬 Movie Marathons</span>
                 <span>•</span>
                 <span>🎉 Special Screenings</span>
@@ -195,14 +195,14 @@ export default function EventsPage() {
       {/* Enhanced Search Bar */}
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <span className="text-white/50 text-lg sm:text-xl">🔍</span>
+          <span className="text-brand-navy/50 text-lg sm:text-xl">🔍</span>
         </div>
         <input
           type="text"
           placeholder="Search events by title, organizer, or description..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-12 sm:pl-14 pr-10 sm:pr-6 py-3 sm:py-4 text-base bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 backdrop-blur-sm transition-all"
+          className="w-full pl-12 sm:pl-14 pr-10 sm:pr-6 py-3 sm:py-4 text-base bg-white/10 border border-white/20 rounded-2xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 backdrop-blur-sm transition-all"
         />
         {searchQuery && (
           <button
@@ -246,7 +246,7 @@ export default function EventsPage() {
               {/* Event Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold text-white mb-2">{event.title}</h3>
+                  <h3 className="text-lg font-semibold text-brand-navy mb-2">{event.title}</h3>
                   <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusBadge(event.status)}`}>
                     <span>{getStatusIcon(event.status)}</span>
                     {event.status.charAt(0).toUpperCase() + event.status.slice(1)}
@@ -256,7 +256,7 @@ export default function EventsPage() {
 
               {/* Event Details */}
               <div className="space-y-3 mb-4">
-                <div className="flex items-center gap-3 text-sm text-white/70">
+                <div className="flex items-center gap-3 text-sm text-brand-navy/70">
                   <span>📅</span>
                   <span>{dateTime.date}</span>
                   <span>•</span>
@@ -264,7 +264,7 @@ export default function EventsPage() {
                   <span>{dateTime.time}</span>
                 </div>
 
-                <div className="flex items-center gap-3 text-sm text-white/70">
+                <div className="flex items-center gap-3 text-sm text-brand-navy/70">
                   <span>👥</span>
                   <span>{event.attendee_count} attending</span>
                   {event.max_attendees && (
@@ -275,13 +275,13 @@ export default function EventsPage() {
                   )}
                 </div>
 
-                <div className="flex items-center gap-3 text-sm text-white/70">
+                <div className="flex items-center gap-3 text-sm text-brand-navy/70">
                   <span>👤</span>
                   <span>by {event.organizer.username}</span>
                 </div>
 
                 {event.description && (
-                  <p className="text-sm text-white/60 line-clamp-2">{event.description}</p>
+                  <p className="text-sm text-brand-navy/60 line-clamp-2">{event.description}</p>
                 )}
               </div>
 
@@ -308,7 +308,7 @@ export default function EventsPage() {
                 )}
                 <button
                   onClick={() => router.push(`/dashboard/events/${event.id}`)}
-                  className="flex-1 px-4 py-2 min-h-[44px] bg-white/10 hover:bg-white/20 text-white rounded-lg font-medium transition-colors text-sm sm:text-base"
+                  className="flex-1 px-4 py-2 min-h-[44px] bg-white/10 hover:bg-white/20 text-brand-navy rounded-lg font-medium transition-colors text-sm sm:text-base"
                 >
                   View Details
                 </button>

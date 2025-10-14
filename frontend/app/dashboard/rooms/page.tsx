@@ -112,7 +112,7 @@ export default function RoomsPage() {
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
           <div className="animate-spin w-12 h-12 border-4 border-brand-purple border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p className="text-white/60">Loading your rooms...</p>
+          <p className="text-brand-navy/60">Loading your rooms...</p>
         </div>
       </div>
     )
@@ -136,8 +136,8 @@ export default function RoomsPage() {
                   label="Live" 
                 />
               </div>
-              <p className="text-white/80 text-lg">Manage your watch parties and joined sessions</p>
-              <div className="flex items-center gap-4 text-sm text-white/60">
+              <p className="text-brand-navy/80 text-lg">Manage your watch parties and joined sessions</p>
+              <div className="flex items-center gap-4 text-sm text-brand-navy/60">
                 <span>🎬 Host Parties</span>
                 <span>•</span>
                 <span>👥 Join Sessions</span>
@@ -215,7 +215,7 @@ export default function RoomsPage() {
               {/* Header */}
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-bold text-white line-clamp-2 mb-1">
+                  <h3 className="text-lg font-bold text-brand-navy line-clamp-2 mb-1">
                     {party.title}
                   </h3>
                   <div className="flex items-center gap-2">
@@ -232,17 +232,17 @@ export default function RoomsPage() {
               </div>
 
               {party.description && (
-                <p className="text-white/70 text-sm mb-4 line-clamp-2">
+                <p className="text-brand-navy/70 text-sm mb-4 line-clamp-2">
                   {party.description}
                 </p>
               )}
 
               {/* Party Info */}
               <div className="space-y-2 mb-4">
-                <div className="flex items-center text-sm text-white/60">
+                <div className="flex items-center text-sm text-brand-navy/60">
                   <span>👥 {formatNumber(party.participant_count)} participants</span>
                   {party.max_participants && (
-                    <span className="text-white/40"> / {formatNumber(party.max_participants)}</span>
+                    <span className="text-brand-navy/40"> / {formatNumber(party.max_participants)}</span>
                   )}
                 </div>
                 
@@ -311,7 +311,7 @@ export default function RoomsPage() {
                   <div className="flex items-center justify-between">
                     <span className="text-xs text-white/60">Invite Code:</span>
                     <div className="flex items-center gap-2">
-                      <code className="bg-white/10 px-2 py-1 rounded text-sm text-white font-mono">
+                      <code className="bg-white/10 px-2 py-1 rounded text-sm text-brand-navy font-mono">
                         {party.invite_code}
                       </code>
                       <button
@@ -337,10 +337,10 @@ export default function RoomsPage() {
           <div className="text-6xl mb-4">
             {activeTab === "hosting" ? "🎬" : "👥"}
           </div>
-          <h3 className="text-2xl font-bold text-white mb-2">
+          <h3 className="text-2xl font-bold text-brand-navy mb-2">
             {activeTab === "hosting" ? "No parties hosted yet" : "No parties joined yet"}
           </h3>
-          <p className="text-white/60 mb-6 max-w-md mx-auto">
+          <p className="text-brand-navy/60 mb-6 max-w-md mx-auto">
             {activeTab === "hosting" 
               ? "Create your first watch party and invite friends to join the fun!"
               : "Join a party to start watching with others and make new connections!"

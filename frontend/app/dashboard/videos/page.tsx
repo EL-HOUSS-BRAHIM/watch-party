@@ -355,7 +355,7 @@ export default function VideosPage() {
                   <span className="text-brand-cyan-light text-xs sm:text-sm font-medium">{videos.length} Videos</span>
                 </div>
               </div>
-              <p className="text-white/80 text-base sm:text-lg">Build your personal cinema collection with unlimited storage</p>
+              <p className="text-brand-navy/80 text-base sm:text-lg">Build your personal cinema collection with unlimited storage</p>
               <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-white/60">
                 <span>🎬 All Formats</span>
                 <span>•</span>
@@ -370,7 +370,7 @@ export default function VideosPage() {
                 <button
                   onClick={() => setViewMode("grid")}
                   className={`p-2 rounded-lg transition-all ${
-                    viewMode === "grid" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
+                    viewMode === "grid" ? "bg-white/20 text-brand-navy" : "text-brand-navy/60 hover:text-brand-navy"
                   }`}
                 >
                   ⊞
@@ -378,7 +378,7 @@ export default function VideosPage() {
                 <button
                   onClick={() => setViewMode("list")}
                   className={`p-2 rounded-lg transition-all ${
-                    viewMode === "list" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
+                    viewMode === "list" ? "bg-white/20 text-brand-navy" : "text-brand-navy/60 hover:text-brand-navy"
                   }`}
                 >
                   ☰
@@ -496,7 +496,7 @@ export default function VideosPage() {
                     placeholder="Video title"
                     required
                     disabled={uploading}
-                    className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 backdrop-blur-sm"
+                    className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 backdrop-blur-sm"
                   />
                   <input
                     type="url"
@@ -504,7 +504,7 @@ export default function VideosPage() {
                     placeholder="Video URL (YouTube, Vimeo, etc.)"
                     required
                     disabled={uploading}
-                    className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 backdrop-blur-sm"
+                    className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 backdrop-blur-sm"
                   />
                 </div>
                 <IconButton

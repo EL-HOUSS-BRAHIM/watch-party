@@ -77,7 +77,7 @@ export default function ProfilePage() {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-white mb-4">Profile not found</h2>
+          <h2 className="text-xl font-semibold text-brand-navy mb-4">Profile not found</h2>
           <button
             onClick={loadProfile}
             className="bg-brand-blue hover:bg-brand-blue-dark text-white px-4 py-2 rounded-lg"
@@ -94,8 +94,8 @@ export default function ProfilePage() {
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
-          <h1 className="text-3xl font-bold text-white">Profile</h1>
-          <p className="text-white/70">Manage your account information and preferences</p>
+          <h1 className="text-3xl font-bold text-brand-navy">Profile</h1>
+          <p className="text-brand-navy/70">Manage your account information and preferences</p>
         </div>
         {!editing && (
           <button
@@ -127,7 +127,7 @@ export default function ProfilePage() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span className="text-4xl text-white/60">
+                    <span className="text-4xl text-brand-navy/60">
                       {user.username?.charAt(0).toUpperCase() || "?"}
                     </span>
                   )}
@@ -146,13 +146,13 @@ export default function ProfilePage() {
               </div>
               
               <div>
-                <h2 className="text-xl font-semibold text-white">
+                <h2 className="text-xl font-semibold text-brand-navy">
                   {user.first_name && user.last_name 
                     ? `${user.first_name} ${user.last_name}`
                     : user.username
                   }
                 </h2>
-                <p className="text-white/60">@{user.username}</p>
+                <p className="text-brand-navy/60">@{user.username}</p>
                 {user.is_verified && (
                   <span className="inline-flex items-center gap-1 mt-2 text-sm text-brand-cyan-light">
                     ✓ Verified
@@ -165,7 +165,7 @@ export default function ProfilePage() {
                 )}
               </div>
 
-              <div className="text-sm text-white/60">
+              <div className="text-sm text-brand-navy/60">
                 Member since {new Date(user.created_at).toLocaleDateString()}
               </div>
             </div>
@@ -175,33 +175,33 @@ export default function ProfilePage() {
         {/* Profile Information */}
         <div className="lg:col-span-2">
           <div className="bg-white/5 border border-white/10 rounded-lg p-6">
-            <h3 className="text-xl font-semibold text-white mb-6">Profile Information</h3>
+            <h3 className="text-xl font-semibold text-brand-navy mb-6">Profile Information</h3>
             
             {editing ? (
               <form onSubmit={handleSave} className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-white/90 mb-2">
+                    <label className="block text-sm font-medium text-brand-navy/90 mb-2">
                       First Name
                     </label>
                     <input
                       type="text"
                       value={formData.first_name}
                       onChange={(e) => setFormData(prev => ({ ...prev, first_name: e.target.value }))}
-                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
+                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
                       placeholder="Enter first name"
                     />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-white/90 mb-2">
+                    <label className="block text-sm font-medium text-brand-navy/90 mb-2">
                       Last Name
                     </label>
                     <input
                       type="text"
                       value={formData.last_name}
                       onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
-                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
+                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
                       placeholder="Enter last name"
                     />
                   </div>
@@ -237,10 +237,10 @@ export default function ProfilePage() {
 
                 <div className="flex gap-3 pt-4">
                   <button
-                    type="submit"
-                    disabled={saving}
-                    className="bg-brand-blue hover:bg-brand-blue-dark disabled:bg-blue-600/50 text-white px-6 py-2 rounded-lg font-medium transition-colors"
-                  >
+                      type="submit"
+                      disabled={saving}
+                      className="bg-brand-blue hover:bg-brand-blue-dark disabled:bg-blue-600/50 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                    >
                     {saving ? "Saving..." : "Save Changes"}
                   </button>
                   <button
@@ -254,7 +254,7 @@ export default function ProfilePage() {
                         email: user.email || "",
                       })
                     }}
-                    className="bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                    className="bg-white/10 hover:bg-white/20 text-brand-navy px-6 py-2 rounded-lg font-medium transition-colors"
                   >
                     Cancel
                   </button>
@@ -264,8 +264,8 @@ export default function ProfilePage() {
               <div className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm text-white/60 mb-1">First Name</label>
-                    <p className="text-white">{user.first_name || "Not set"}</p>
+                    <label className="block text-sm text-brand-navy/60 mb-1">First Name</label>
+                    <p className="text-brand-navy">{user.first_name || "Not set"}</p>
                   </div>
                   
                   <div>
@@ -275,13 +275,13 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm text-white/60 mb-1">Username</label>
-                  <p className="text-white">@{user.username}</p>
+                  <label className="block text-sm text-brand-navy/60 mb-1">Username</label>
+                  <p className="text-brand-navy">@{user.username}</p>
                 </div>
 
                 <div>
-                  <label className="block text-sm text-white/60 mb-1">Email Address</label>
-                  <p className="text-white">{user.email}</p>
+                  <label className="block text-sm text-brand-navy/60 mb-1">Email Address</label>
+                  <p className="text-brand-navy">{user.email}</p>
                 </div>
 
                 <div>
@@ -306,7 +306,7 @@ export default function ProfilePage() {
       {/* Quick Actions */}
       <div className="grid md:grid-cols-3 gap-4">
         <div className="bg-white/5 border border-white/10 rounded-lg p-4 text-center">
-          <h4 className="font-semibold text-white mb-2">Friends</h4>
+          <h4 className="font-semibold text-brand-navy mb-2">Friends</h4>
           <p className="text-2xl font-bold text-brand-blue-light mb-2">0</p>
           <a href="/dashboard/friends" className="text-brand-blue-light hover:text-brand-blue-light text-sm">
             Manage Friends →

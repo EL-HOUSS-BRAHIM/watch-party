@@ -253,8 +253,8 @@ export default function IntegrationsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white">Integrations</h1>
-          <p className="text-white/70">Connect your favorite services and tools</p>
+          <h1 className="text-3xl font-bold text-brand-navy">Integrations</h1>
+          <p className="text-brand-navy/70">Connect your favorite services and tools</p>
         </div>
         <button
           onClick={() => router.push("/dashboard/integrations/custom")}
@@ -275,7 +275,7 @@ export default function IntegrationsPage() {
             placeholder="Search integrations..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 pl-12 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50"
+            className="w-full px-4 py-3 pl-12 bg-white/5 border border-white/10 rounded-xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50"
           />
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50">🔍</span>
         </div>
@@ -288,8 +288,8 @@ export default function IntegrationsPage() {
               onClick={() => setSelectedCategory(category.id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-all duration-200 ${
                 selectedCategory === category.id
-                  ? "bg-white/10 text-white"
-                  : "text-white/60 hover:text-white hover:bg-white/5"
+                  ? "bg-white/10 text-brand-navy"
+                  : "text-brand-navy/60 hover:text-brand-navy hover:bg-white/5"
               }`}
             >
               <span>{category.icon}</span>

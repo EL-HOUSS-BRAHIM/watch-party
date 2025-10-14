@@ -202,10 +202,10 @@ export default function SearchPage() {
             <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-cyan-200 to-blue-200 bg-clip-text text-transparent">
               Universal Search
             </h1>
-            <p className="text-white/80 text-lg max-w-2xl mx-auto">
+            <p className="text-brand-navy/80 text-lg max-w-2xl mx-auto">
               Find parties, users, videos, and more across the entire Watch Party platform
             </p>
-            <div className="flex items-center justify-center gap-4 text-sm text-white/60">
+            <div className="flex items-center justify-center gap-4 text-sm text-brand-navy/60">
               <span>🎬 Movies & Shows</span>
               <span>•</span>
               <span>👥 Community</span>
@@ -221,7 +221,7 @@ export default function SearchPage() {
         {/* Main Search Bar */}
         <div className="relative max-w-4xl mx-auto">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <span className="text-white/50 text-xl">🔍</span>
+            <span className="text-brand-navy/50 text-xl">🔍</span>
           </div>
           <input
             type="text"
@@ -233,7 +233,7 @@ export default function SearchPage() {
               }
             }}
             placeholder="Search for parties, users, videos, or anything else..."
-            className="w-full pl-14 pr-24 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 backdrop-blur-sm transition-all text-lg"
+            className="w-full pl-14 pr-24 py-4 bg-white/10 border border-white/20 rounded-2xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 backdrop-blur-sm transition-all text-lg"
           />
           <div className="absolute right-2 top-2">
             <IconButton
@@ -257,7 +257,7 @@ export default function SearchPage() {
                     setQuery(suggestion)
                     performSearch(suggestion)
                   }}
-                  className="w-full px-4 py-3 text-left text-white hover:bg-white/10 first:rounded-t-xl last:rounded-b-xl transition-colors flex items-center gap-3"
+                  className="w-full px-4 py-3 text-left text-brand-navy hover:bg-white/10 first:rounded-t-xl last:rounded-b-xl transition-colors flex items-center gap-3"
                 >
                   <span className="text-white/50">🔍</span>
                   {suggestion}
@@ -283,7 +283,7 @@ export default function SearchPage() {
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                   filters.type === key
                     ? "bg-gradient-to-r from-cyan-600 to-brand-blue text-white shadow-lg"
-                    : "text-white/60 hover:text-white hover:bg-white/10"
+                    : "text-brand-navy/60 hover:text-brand-navy hover:bg-white/10"
                 }`}
               >
                 <span>{icon}</span>
@@ -296,7 +296,7 @@ export default function SearchPage() {
           <select
             value={filters.sort_by}
             onChange={(e) => setFilters(prev => ({ ...prev, sort_by: e.target.value as any }))}
-            className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+            className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-brand-navy focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
           >
             <option value="relevance">Most Relevant</option>
             <option value="recent">Most Recent</option>
@@ -310,7 +310,7 @@ export default function SearchPage() {
       {!query && recentSearches.length > 0 && (
         <GradientCard>
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+            <h3 className="text-lg font-semibold text-brand-navy flex items-center gap-2">
               <span>🕒</span>
               Recent Searches
             </h3>
@@ -329,7 +329,7 @@ export default function SearchPage() {
                   setQuery(search)
                   performSearch(search)
                 }}
-                className="px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm transition-all duration-200 hover:scale-105"
+                className="px-3 py-2 bg-white/10 hover:bg-white/20 text-brand-navy rounded-lg text-sm transition-all duration-200 hover:scale-105"
               >
                 {search}
               </button>
@@ -344,7 +344,7 @@ export default function SearchPage() {
           {/* Results Header */}
           {totalResults > 0 && !loading && (
             <div className="flex items-center justify-between">
-              <p className="text-white/60 text-sm flex items-center gap-2">
+              <p className="text-brand-navy/60 text-sm flex items-center gap-2">
                 <span>📊</span>
                 Found {formatNumber(totalResults)} results in {searchTime}ms
               </p>
@@ -407,18 +407,18 @@ export default function SearchPage() {
                         )}
                       </div>
                       
-                      <h3 className="font-semibold text-white mb-1 truncate">{result.title}</h3>
+                      <h3 className="font-semibold text-brand-navy mb-1 truncate">{result.title}</h3>
                       
                       {result.subtitle && (
-                        <p className="text-white/60 text-sm mb-2">{result.subtitle}</p>
+                        <p className="text-brand-navy/60 text-sm mb-2">{result.subtitle}</p>
                       )}
                       
                       {result.description && (
-                        <p className="text-white/60 text-sm line-clamp-2">{result.description}</p>
+                        <p className="text-brand-navy/60 text-sm line-clamp-2">{result.description}</p>
                       )}
                       
                       {result.metadata && (
-                        <div className="mt-3 flex flex-wrap gap-2 text-xs text-white/40">
+                        <div className="mt-3 flex flex-wrap gap-2 text-xs text-brand-navy/40">
                           {Object.entries(result.metadata).map(([key, value]) => (
                             <span key={key} className="bg-white/5 px-2 py-1 rounded">
                               {key}: {String(value)}
@@ -429,7 +429,7 @@ export default function SearchPage() {
                     </div>
 
                     {/* Arrow */}
-                    <div className="text-white/40 text-xl">→</div>
+                    <div className="text-brand-navy/40 text-xl">→</div>
                   </div>
                 </GradientCard>
                 </div>

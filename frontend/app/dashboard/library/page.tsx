@@ -119,8 +119,8 @@ export default function LibraryPage() {
                 </h1>
                 <LiveIndicator isLive={true} count={media.length} label="Videos" />
               </div>
-              <p className="text-white/80 text-lg">Curate your watch night catalogue with style and ambience</p>
-              <div className="flex items-center gap-4 text-sm text-white/60">
+              <p className="text-brand-navy/80 text-lg">Curate your watch night catalogue with style and ambience</p>
+              <div className="flex items-center gap-4 text-sm text-brand-navy/60">
                 <span>🎬 Movies & Shows</span>
                 <span>•</span>
                 <span>🎨 Custom Ambience</span>
@@ -249,14 +249,14 @@ export default function LibraryPage() {
               {/* Content */}
               <div className="space-y-3">
                 <div>
-                  <h3 className="text-white font-bold text-lg line-clamp-2">{item.title}</h3>
-                  <p className="text-white/60 text-sm flex items-center gap-2">
+                  <h3 className="text-brand-navy font-bold text-lg line-clamp-2">{item.title}</h3>
+                  <p className="text-brand-navy/60 text-sm flex items-center gap-2">
                     <span>{getTypeIcon(item.type)}</span>
                     {item.type}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between text-sm text-white/60">
+                <div className="flex items-center justify-between text-sm text-brand-navy/60">
                   <span>👀 {formatNumber(item.views)}</span>
                   <span>❤️ {formatNumber(item.likes)}</span>
                   <span>{new Date(item.upload_date).toLocaleDateString()}</span>
@@ -322,9 +322,9 @@ export default function LibraryPage() {
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-white font-bold text-lg truncate">{item.title}</h3>
-                  <p className="text-white/60 text-sm">{item.type} • {item.duration}</p>
-                  <div className="flex items-center gap-4 text-xs text-white/50 mt-1">
+                  <h3 className="text-brand-navy font-bold text-lg truncate">{item.title}</h3>
+                  <p className="text-brand-navy/60 text-sm">{item.type} • {item.duration}</p>
+                  <div className="flex items-center gap-4 text-xs text-brand-navy/50 mt-1">
                     <span>👀 {formatNumber(item.views)}</span>
                     <span>❤️ {formatNumber(item.likes)}</span>
                     <span className={getVisibilityColor(item.visibility)}>

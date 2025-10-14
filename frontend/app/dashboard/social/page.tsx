@@ -156,7 +156,7 @@ export default function SocialPage() {
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white via-orange-200 to-pink-200 bg-clip-text text-transparent">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-brand-navy">
                   🎆 Social Hub
                 </h1>
                 <LiveIndicator 
@@ -165,8 +165,8 @@ export default function SocialPage() {
                   label="Online Users" 
                 />
               </div>
-              <p className="text-white/80 text-base sm:text-lg">Connect with {formatNumber(25620)} movie enthusiasts worldwide</p>
-              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-white/60">
+              <p className="text-brand-navy/80 text-base sm:text-lg">Connect with {formatNumber(25620)} movie enthusiasts worldwide</p>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-brand-navy/60">
                 <span>🌍 Global Community</span>
                 <span>•</span>
                 <span>👥 Find Friends</span>
@@ -217,7 +217,7 @@ export default function SocialPage() {
       {/* Enhanced Search Bar */}
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <span className="text-white/50 text-lg sm:text-xl">🔍</span>
+          <span className="text-brand-navy/50 text-lg sm:text-xl">🔍</span>
         </div>
         <input
           type="text"
@@ -278,19 +278,19 @@ export default function SocialPage() {
                     <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${status.dot} rounded-full border-2 border-gray-900`}></div>
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-white">
+                    <h3 className="font-semibold text-brand-navy">
                       {friend.first_name && friend.last_name
                         ? `${friend.first_name} ${friend.last_name}`
                         : friend.username
                       }
                     </h3>
-                    <p className="text-sm text-white/60">@{friend.username}</p>
+                    <p className="text-sm text-brand-navy/60">@{friend.username}</p>
                     <p className={`text-xs ${status.color}`}>{status.text}</p>
                   </div>
                 </div>
 
                 {friend.mutual_friends_count && friend.mutual_friends_count > 0 && (
-                  <p className="text-xs text-white/50 mb-3">
+                  <p className="text-xs text-brand-navy/50 mb-3">
                     {friend.mutual_friends_count} mutual friends
                   </p>
                 )}
@@ -298,7 +298,7 @@ export default function SocialPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => router.push(`/dashboard/social/friends/${friend.id}`)}
-                    className="flex-1 px-3 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition-colors"
+                    className="flex-1 px-3 py-2 bg-white/10 hover:bg-white/20 text-brand-navy rounded-lg text-sm font-medium transition-colors"
                   >
                     View Profile
                   </button>
@@ -329,8 +329,8 @@ export default function SocialPage() {
                   )}
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-white mb-1">{group.name}</h3>
-                  <div className="flex items-center gap-2 text-sm text-white/60">
+                  <h3 className="font-semibold text-brand-navy mb-1">{group.name}</h3>
+                  <div className="flex items-center gap-2 text-sm text-brand-navy/60">
                     <span>👥 {group.member_count} members</span>
                     {!group.is_public && <span>🔒</span>}
                   </div>
@@ -339,14 +339,14 @@ export default function SocialPage() {
 
               {/* Group Description */}
               {group.description && (
-                <p className="text-sm text-white/70 mb-4 line-clamp-2">{group.description}</p>
+                <p className="text-sm text-brand-navy/70 mb-4 line-clamp-2">{group.description}</p>
               )}
 
               {/* Tags */}
               {group.tags && group.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-4">
                   {group.tags.slice(0, 3).map((tag, index) => (
-                    <span key={index} className="px-2 py-1 bg-white/10 text-xs text-white/70 rounded-full">
+                    <span key={index} className="px-2 py-1 bg-white/10 text-xs text-brand-navy/70 rounded-full">
                       {tag}
                     </span>
                   ))}

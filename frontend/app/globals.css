@@ -185,6 +185,20 @@ a:hover {
   box-shadow: 0 8px 25px rgba(233, 64, 138, 0.6);
 }
 
+/* Accessibility fixes: ensure white-on-white elements remain readable in light mode
+   Many components use translucent white backgrounds alongside utility classes that
+   accidentally set text to white. When the site is in light mode (no `.dark` root
+   class) make sure those elements use the brand navy color for text and placeholders.
+*/
+:not(.dark) [class*="bg-white"][class*="text-white"] {
+  color: var(--color-navy) !important;
+}
+
+:not(.dark) [class*="bg-white"]::placeholder {
+  /* Inputs using translucent white backgrounds should show a dark placeholder in light mode */
+  color: rgba(28, 28, 46, 0.45) !important;
+}
+
 /* Loading States */
 .skeleton {
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
