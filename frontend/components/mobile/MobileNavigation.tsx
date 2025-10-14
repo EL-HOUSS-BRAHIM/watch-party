@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { MobileMenu } from "@/components/mobile"
+import { NAVIGATION_SECTIONS } from "@/components/dashboard/navigation"
 import { notificationsApi } from "@/lib/api-client"
 
 interface MobileNavigationProps {
@@ -80,21 +81,17 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
       {/* Mobile Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-t border-brand-navy/10 md:hidden shadow-[0_-8px_24px_rgba(28,28,46,0.08)]">
         <div className="grid grid-cols-5 py-2">
-          <a
-            href="/dashboard"
-            className="flex flex-col items-center py-2 px-1 text-brand-navy/70 hover:text-brand-navy transition-colors"
-          >
-            <span className="text-xl mb-1">🏠</span>
-            <span className="text-xs font-medium">Home</span>
-          </a>
-
-          <a
-            href="/dashboard/parties"
-            className="flex flex-col items-center py-2 px-1 text-brand-navy/70 hover:text-brand-navy transition-colors"
-          >
-            <span className="text-xl mb-1">🎉</span>
-            <span className="text-xs font-medium">Parties</span>
-          </a>
+          {/** Use the core navigation items for the primary mobile tabs (fall back to explicit links) */}
+          {NAVIGATION_SECTIONS[0].items.slice(0, 2).map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="flex flex-col items-center py-2 px-1 text-brand-navy/70 hover:text-brand-navy transition-colors"
+            >
+              <span className="text-xl mb-1">{item.icon}</span>
+              <span className="text-xs font-medium">{item.label}</span>
+            </a>
+          ))}
 
           <button
             onClick={() => window.location.href = "/dashboard/parties/create"}
@@ -106,21 +103,16 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
             <span className="text-xs font-semibold">Create</span>
           </button>
 
-          <a
-            href="/dashboard/videos"
-            className="flex flex-col items-center py-2 px-1 text-brand-navy/70 hover:text-brand-navy transition-colors"
-          >
-            <span className="text-xl mb-1">🎬</span>
-            <span className="text-xs font-medium">Videos</span>
-          </a>
-
-          <a
-            href="/dashboard/friends"
-            className="flex flex-col items-center py-2 px-1 text-brand-navy/70 hover:text-brand-navy transition-colors"
-          >
-            <span className="text-xl mb-1">👥</span>
-            <span className="text-xs font-medium">Friends</span>
-          </a>
+          {NAVIGATION_SECTIONS[0].items.slice(2, 4).map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="flex flex-col items-center py-2 px-1 text-brand-navy/70 hover:text-brand-navy transition-colors"
+            >
+              <span className="text-xl mb-1">{item.icon}</span>
+              <span className="text-xs font-medium">{item.label}</span>
+            </a>
+          ))}
         </div>
       </nav>
 

@@ -64,7 +64,7 @@ export default function ChatPage() {
     <div className="min-h-screen bg-gradient-to-br from-brand-neutral via-white to-brand-neutral-light">
       <div className="flex h-screen">
         {/* Parties Sidebar */}
-        <div className="w-80 bg-white/80 border-r border-brand-navy/10 flex flex-col backdrop-blur-sm">
+  <div className="w-80 bg-white/80 border-r border-brand-navy/10 flex flex-col backdrop-blur-sm page-sidebar">
           {/* Header */}
           <div className="p-6 border-b border-brand-navy/10">
             <div className="flex items-center justify-between mb-4">

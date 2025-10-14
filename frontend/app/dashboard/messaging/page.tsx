@@ -202,7 +202,7 @@ export default function MessagingPage() {
       </header>
 
       <div className="grid gap-6 lg:grid-cols-[0.38fr,0.62fr]">
-        <aside className="flex h-full flex-col gap-4 rounded-3xl border border-brand-navy/10 bg-white/90 p-5 shadow-[0_18px_55px_rgba(28,28,46,0.1)]">
+  <aside className="flex h-full flex-col gap-4 rounded-3xl border border-brand-navy/10 bg-white/90 p-5 shadow-[0_18px_55px_rgba(28,28,46,0.1)] page-sidebar">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-semibold text-brand-navy">Conversations</h2>

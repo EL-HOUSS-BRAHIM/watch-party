@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { authApi } from "@/lib/api-client"
+import { NAVIGATION_SECTIONS } from "@/components/dashboard/navigation"
 
 interface MobileMenuProps {
   isOpen: boolean
@@ -10,22 +11,8 @@ interface MobileMenuProps {
   currentUser?: any
 }
 
-const menuItems = [
-  { href: "/dashboard", label: "Dashboard", icon: "🏠" },
-  { href: "/dashboard/parties", label: "Parties", icon: "🎉" },
-  { href: "/dashboard/videos", label: "Videos", icon: "🎬" },
-  { href: "/dashboard/friends", label: "Friends", icon: "👥" },
-  { href: "/dashboard/events", label: "Events", icon: "📅" },
-  { href: "/dashboard/social", label: "Social", icon: "👫" },
-  { href: "/dashboard/search", label: "Search", icon: "🔍" },
-  { href: "/dashboard/notifications", label: "Notifications", icon: "🔔" },
-  { href: "/dashboard/analytics", label: "Analytics", icon: "📊" },
-  { href: "/dashboard/integrations", label: "Integrations", icon: "🔗" },
-  { href: "/dashboard/store", label: "Store", icon: "🛒" },
-  { href: "/dashboard/billing", label: "Billing", icon: "💳" },
-  { href: "/dashboard/support", label: "Support", icon: "🎫" },
-  { href: "/dashboard/admin", label: "Admin", icon: "⚙️" },
-]
+// Flatten navigation sections for mobile menu
+const menuItems = NAVIGATION_SECTIONS.flatMap((s) => s.items).map((i) => ({ href: i.href, label: i.label, icon: i.icon || "" }))
 
 export default function MobileMenu({ isOpen, onClose, currentUser }: MobileMenuProps) {
   const router = useRouter()

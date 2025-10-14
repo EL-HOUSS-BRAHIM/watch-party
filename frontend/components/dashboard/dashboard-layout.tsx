@@ -7,46 +7,11 @@ import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
 import { DashboardHeader } from "@/components/layout/dashboard-header"
 import MobileNavigation from "@/components/mobile/MobileNavigation"
+import { NAVIGATION_SECTIONS } from "@/components/dashboard/navigation"
 import { userApi, analyticsApi, User, NormalizedRealTimeAnalytics } from "@/lib/api-client"
 
-// Enhanced navigation with categories, icons, and metadata
-const navigationSections = [
-  {
-    title: "Core",
-    items: [
-      { href: "/dashboard", label: "Overview", icon: "🏠", description: "Dashboard home", badge: null },
-      { href: "/dashboard/parties", label: "Watch Parties", icon: "🎬", description: "Host & join parties", badge: "live" },
-      { href: "/dashboard/videos", label: "Media Library", icon: "📱", description: "Your video collection", badge: null },
-      { href: "/dashboard/chat", label: "Messages", icon: "💬", description: "Chat & communications", badge: "3" },
-    ]
-  },
-  {
-    title: "Social",
-    items: [
-      { href: "/dashboard/friends", label: "Friends", icon: "👥", description: "Manage connections", badge: "12" },
-      { href: "/dashboard/social", label: "Communities", icon: "🌟", description: "Groups & discussions", badge: null },
-      { href: "/dashboard/events", label: "Events", icon: "📅", description: "Upcoming events", badge: "2" },
-      { href: "/dashboard/notifications", label: "Notifications", icon: "🔔", description: "Your updates", badge: "5" },
-    ]
-  },
-  {
-    title: "Discover",
-    items: [
-      { href: "/dashboard/search", label: "Explore", icon: "🔍", description: "Find content & users", badge: null },
-      { href: "/dashboard/analytics", label: "Insights", icon: "📊", description: "Your activity stats", badge: null },
-      { href: "/dashboard/store", label: "Store", icon: "🛒", description: "Premium features", badge: "new" },
-    ]
-  },
-  {
-    title: "Tools",
-    items: [
-      { href: "/dashboard/integrations", label: "Connections", icon: "🔗", description: "Third-party services", badge: null },
-      { href: "/dashboard/support", label: "Help Center", icon: "🎫", description: "Support & guides", badge: null },
-      { href: "/dashboard/admin", label: "Admin Panel", icon: "⚙️", description: "System management", badge: null },
-      { href: "/settings", label: "Settings", icon: "🔧", description: "Preferences", badge: null },
-    ]
-  }
-]
+// Use centralized navigation list (keeps mobile, sidebar and other menus in sync)
+const navigationSections = NAVIGATION_SECTIONS
 
 type DashboardLayoutProps = {
   children: ReactNode
@@ -56,6 +21,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const pathname = usePathname()
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [user, setUser] = useState<User | null>(null)
+  const [hasPageSidebar, setHasPageSidebar] = useState(false)
   const [liveStats, setLiveStats] = useState<NormalizedRealTimeAnalytics>({
     timestamp: "",
     onlineUsers: 0,
@@ -80,13 +46,33 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   useEffect(() => {
     loadUserData()
     loadRealTimeStats()
-    
+
+    // Detect client-side page-provided sidebars (pages can mark their sidebar with .page-sidebar)
+    const detectPageSidebar = () => {
+      if (typeof document === 'undefined') return false
+      return Boolean(document.querySelector('.page-sidebar'))
+    }
+
+    setHasPageSidebar(detectPageSidebar())
+
+    // Observe DOM mutations to catch dynamically mounted page sidebars
+    let observer: MutationObserver | null = null
+    if (typeof MutationObserver !== 'undefined') {
+      observer = new MutationObserver(() => {
+        setHasPageSidebar(detectPageSidebar())
+      })
+      observer.observe(document.body, { childList: true, subtree: true })
+    }
+
     // Fetch real-time stats every 30 seconds
     const interval = setInterval(() => {
       loadRealTimeStats()
     }, 30000)
-    
-    return () => clearInterval(interval)
+
+    return () => {
+      clearInterval(interval)
+      if (observer) observer.disconnect()
+    }
   }, [])
 
   const loadUserData = async () => {
@@ -161,12 +147,16 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <MobileNavigation currentUser={user} />
 
       <div className="relative z-10 flex min-h-screen w-full flex-col pt-16 md:flex-row">
-        {/* Enhanced Sidebar - Hidden on mobile, shown on desktop */}
+        {/* Enhanced Sidebar - Hidden on mobile, shown on desktop.
+            If a page provides its own sidebar (marked with .page-sidebar) hide the global sidebar
+            to avoid duplicated navigation UI. */}
         <aside
           className={cn(
             "hidden border-r border-brand-navy/10 bg-white/80 backdrop-blur-xl transition-all duration-300 md:fixed md:left-0 md:top-0 md:block md:h-full",
-            isCollapsed ? "w-20" : "w-80"
+            // If the page has its own sidebar hide the global one on md+ breakpoints
+            hasPageSidebar ? "hidden md:hidden" : (isCollapsed ? "w-20" : "w-80")
           )}
+          aria-hidden={hasPageSidebar}
         >
           {/* Sidebar Header */}
           <div className="border-b border-brand-navy/10 p-6">
@@ -341,7 +331,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         <main
           className={cn(
             "flex-1 w-full overflow-x-hidden transition-all duration-300 pb-24 md:pb-0",
-            isCollapsed ? "md:ml-20" : "md:ml-80"
+            // If a page provides its own left sidebar, don't add the default left margin
+            hasPageSidebar ? "md:ml-0" : (isCollapsed ? "md:ml-20" : "md:ml-80")
           )}
         >
           {/* Page Content */}
