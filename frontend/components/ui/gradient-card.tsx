@@ -15,7 +15,7 @@ interface GradientCardProps {
 export function GradientCard({ 
   children, 
   className, 
-  gradient = "from-purple-900/30 via-blue-900/20 to-purple-900/30",
+  gradient = "from-white to-brand-neutral-light",
   blur = true,
   border = true,
   hover = true
@@ -23,11 +23,11 @@ export function GradientCard({
   return (
     <div 
       className={cn(
-        "rounded-2xl p-6 transition-all duration-300",
+        "rounded-3xl p-6 transition-all duration-300 shadow-[0_18px_45px_rgba(28,28,46,0.08)]",
         `bg-gradient-to-br ${gradient}`,
         blur && "backdrop-blur-sm",
-        border && "border border-white/10",
-        hover && "hover:border-white/20 hover:shadow-lg",
+        border && "border border-brand-navy/10",
+        hover && "hover:border-brand-navy/20 hover:shadow-[0_24px_60px_rgba(28,28,46,0.12)]",
         className
       )}
     >

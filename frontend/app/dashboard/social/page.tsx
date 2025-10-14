@@ -176,11 +176,11 @@ export default function SocialPage() {
             </div>
             
             <div className="flex items-center gap-3">
-              <div className="flex gap-1 bg-black/20 p-1 rounded-xl">
+              <div className="flex gap-1 bg-white/80 p-1 rounded-xl border border-brand-navy/10 backdrop-blur-sm">
                 <button
                   onClick={() => setViewMode("grid")}
                   className={`p-2 rounded-lg transition-all ${
-                    viewMode === "grid" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
+                    viewMode === "grid" ? "bg-brand-purple/10 text-brand-purple" : "text-brand-navy/60 hover:text-brand-navy"
                   }`}
                 >
                   ⊞
@@ -188,7 +188,7 @@ export default function SocialPage() {
                 <button
                   onClick={() => setViewMode("list")}
                   className={`p-2 rounded-lg transition-all ${
-                    viewMode === "list" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
+                    viewMode === "list" ? "bg-brand-purple/10 text-brand-purple" : "text-brand-navy/60 hover:text-brand-navy"
                   }`}
                 >
                   ☰
@@ -237,7 +237,7 @@ export default function SocialPage() {
       </div>
 
       {/* Enhanced Tabs */}
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-1 bg-black/20 p-2 sm:p-1 rounded-2xl border border-white/10 w-full sm:w-fit mx-auto">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-1 bg-white/80 p-2 sm:p-1 rounded-2xl border border-brand-navy/10 backdrop-blur-sm w-full sm:w-fit mx-auto">
         {[
           { id: "groups", label: "My Groups", icon: "👥", count: groups.filter(g => g.is_member).length },
           { id: "friends", label: "Friends", icon: "👫", count: friends.length },
@@ -249,7 +249,7 @@ export default function SocialPage() {
             className={`flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 rounded-xl font-medium transition-all duration-200 min-h-[44px] ${
               activeTab === tab.id
                 ? "bg-gradient-to-r from-brand-orange to-brand-magenta text-white shadow-lg sm:scale-105"
-                : "text-white/60 hover:text-white hover:bg-white/10"
+                : "text-brand-navy/60 hover:text-brand-navy hover:bg-brand-neutral/50"
             }`}
           >
             <span className="text-base sm:text-lg">{tab.icon}</span>

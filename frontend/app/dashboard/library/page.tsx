@@ -154,7 +154,7 @@ export default function LibraryPage() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
           {/* Filter */}
-          <div className="flex gap-1 bg-black/20 p-1 rounded-xl border border-white/10">
+          <div className="flex gap-1 bg-white/80 p-1 rounded-xl border border-brand-navy/10 backdrop-blur-sm">
             {[
               { key: "all", label: "All", count: media.length },
               { key: "public", label: "Public", count: media.filter(m => m.visibility === "public").length },
@@ -166,11 +166,11 @@ export default function LibraryPage() {
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                   filterBy === key
                     ? "bg-gradient-to-r from-brand-purple to-brand-blue text-white shadow-lg"
-                    : "text-white/60 hover:text-white hover:bg-white/10"
+                    : "text-brand-navy/60 hover:text-brand-navy hover:bg-brand-neutral/50"
                 }`}
               >
                 <span>{label}</span>
-                <span className="bg-white/20 text-xs px-2 py-1 rounded-full font-bold">{count}</span>
+                <span className="bg-brand-navy/10 text-xs px-2 py-1 rounded-full font-bold">{count}</span>
               </button>
             ))}
           </div>
@@ -179,7 +179,7 @@ export default function LibraryPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-purple/50"
+            className="px-4 py-2 bg-white border border-brand-navy/20 rounded-xl text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-purple/20"
           >
             <option value="recent">Recent</option>
             <option value="popular">Popular</option>
@@ -188,11 +188,11 @@ export default function LibraryPage() {
         </div>
 
         {/* View Mode */}
-        <div className="flex gap-1 bg-black/20 p-1 rounded-xl border border-white/10">
+        <div className="flex gap-1 bg-white/80 p-1 rounded-xl border border-brand-navy/10 backdrop-blur-sm">
           <button
             onClick={() => setViewMode("grid")}
             className={`px-3 py-2 rounded-lg transition-all ${
-              viewMode === "grid" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
+              viewMode === "grid" ? "bg-brand-purple/10 text-brand-purple" : "text-brand-navy/60 hover:text-brand-navy"
             }`}
           >
             ▦
@@ -200,7 +200,7 @@ export default function LibraryPage() {
           <button
             onClick={() => setViewMode("list")}
             className={`px-3 py-2 rounded-lg transition-all ${
-              viewMode === "list" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
+              viewMode === "list" ? "bg-brand-purple/10 text-brand-purple" : "text-brand-navy/60 hover:text-brand-navy"
             }`}
           >
             ☰

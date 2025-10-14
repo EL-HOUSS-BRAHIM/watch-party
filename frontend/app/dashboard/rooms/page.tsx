@@ -168,7 +168,7 @@ export default function RoomsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-black/20 p-1 rounded-2xl border border-white/10 w-fit mx-auto">
+      <div className="flex gap-1 bg-white/80 p-1 rounded-2xl border border-brand-navy/10 backdrop-blur-sm w-fit mx-auto">
         {[
           { id: "hosting", label: "Hosting", icon: "🎬", count: myParties.length },
           { id: "joined", label: "Joined", icon: "👥", count: joinedParties.length }
@@ -179,12 +179,12 @@ export default function RoomsPage() {
             className={`flex items-center gap-3 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
               activeTab === tab.id
                 ? "bg-gradient-to-r from-brand-purple to-brand-magenta text-white shadow-lg"
-                : "text-white/60 hover:text-white hover:bg-white/10"
+                : "text-brand-navy/60 hover:text-brand-navy hover:bg-brand-neutral/50"
             }`}
           >
             <span className="text-lg">{tab.icon}</span>
             <span>{tab.label}</span>
-            <span className="bg-white/20 text-xs px-2 py-1 rounded-full font-bold">{tab.count}</span>
+            <span className="bg-brand-navy/10 text-xs px-2 py-1 rounded-full font-bold">{tab.count}</span>
           </button>
         ))}
       </div>
