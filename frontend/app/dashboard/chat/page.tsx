@@ -230,7 +230,6 @@ export default function ChatPage() {
             </div>
           )}
         </div>
-      </div>
 
       {/* Moderation Panel */}
       {showModeration && selectedParty && (
