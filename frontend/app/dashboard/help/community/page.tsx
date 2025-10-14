@@ -222,7 +222,7 @@ export default function CommunityPage() {
           </div>
 
           {/* Post */}
-          <div className="bg-white/5 border border-white/10 rounded-lg overflow-hidden mb-6">
+          <div className="bg-white/5 border border-brand-navy/10 rounded-lg overflow-hidden mb-6">
             {/* Post Header */}
             <div className="p-6 border-b border-white/10">
               <div className="flex items-start gap-4">
@@ -232,18 +232,18 @@ export default function CommunityPage() {
                     className={`p-2 rounded transition-colors ${
                       selectedPost.user_vote === "up"
                         ? "bg-brand-cyan text-white"
-                        : "bg-white/10 text-white/60 hover:bg-brand-cyan/20"
+                        : "bg-white/10 text-brand-navy/60 hover:bg-brand-cyan/20"
                     }`}
                   >
                     ↑
                   </button>
-                  <span className="text-white font-medium">{selectedPost.votes}</span>
+                  <span className="text-brand-navy font-medium">{selectedPost.votes}</span>
                   <button
                     onClick={() => votePost(selectedPost.id, "down")}
                     className={`p-2 rounded transition-colors ${
                       selectedPost.user_vote === "down"
                         ? "bg-brand-coral text-white"
-                        : "bg-white/10 text-white/60 hover:bg-brand-coral/20"
+                        : "bg-white/10 text-brand-navy/60 hover:bg-brand-coral/20"
                     }`}
                   >
                     ↓
@@ -264,7 +264,7 @@ export default function CommunityPage() {
 
                   <h1 className="text-2xl font-bold text-white mb-4">{selectedPost.title}</h1>
 
-                  <div className="flex items-center gap-4 text-sm text-white/60 mb-4">
+                  <div className="flex items-center gap-4 text-sm text-brand-navy/60 mb-4">
                     <div className="flex items-center gap-2">
                       {selectedPost.author.avatar && (
                         <img
@@ -296,7 +296,7 @@ export default function CommunityPage() {
                   )}
 
                   <div
-                    className="prose prose-invert max-w-none text-white/90"
+                    className="prose prose-invert max-w-none text-brand-navy/90"
                     dangerouslySetInnerHTML={{ __html: selectedPost.content }}
                   />
                 </div>
@@ -322,20 +322,20 @@ export default function CommunityPage() {
                     <button
                       onClick={() => voteReply(reply.id, "up")}
                       className={`p-1 rounded transition-colors ${
-                        reply.user_vote === "up"
-                          ? "bg-brand-cyan text-white"
-                          : "bg-white/10 text-white/60 hover:bg-brand-cyan/20"
+              reply.user_vote === "up"
+                ? "bg-brand-cyan text-white"
+                : "bg-white/10 text-brand-navy/60 hover:bg-brand-cyan/20"
                       }`}
                     >
                       ↑
                     </button>
-                    <span className="text-white font-medium text-sm">{reply.votes}</span>
+                    <span className="text-brand-navy font-medium text-sm">{reply.votes}</span>
                     <button
                       onClick={() => voteReply(reply.id, "down")}
                       className={`p-1 rounded transition-colors ${
-                        reply.user_vote === "down"
-                          ? "bg-brand-coral text-white"
-                          : "bg-white/10 text-white/60 hover:bg-brand-coral/20"
+              reply.user_vote === "down"
+                ? "bg-brand-coral text-white"
+                : "bg-white/10 text-brand-navy/60 hover:bg-brand-coral/20"
                       }`}
                     >
                       ↓
@@ -377,7 +377,7 @@ export default function CommunityPage() {
                     </div>
 
                     <div
-                      className="prose prose-invert max-w-none text-white/90"
+                      className="prose prose-invert max-w-none text-brand-navy/90"
                       dangerouslySetInnerHTML={{ __html: reply.content }}
                     />
                   </div>
@@ -386,15 +386,15 @@ export default function CommunityPage() {
             ))}
 
             {/* Reply Form */}
-            <div className="bg-white/5 border border-white/10 rounded-lg p-6">
-              <h4 className="font-medium text-white mb-4">Add a Reply</h4>
+            <div className="bg-white/5 border border-brand-navy/10 rounded-lg p-6">
+              <h4 className="font-medium text-brand-navy mb-4">Add a Reply</h4>
               <div className="space-y-4">
                 <textarea
                   value={newReply}
                   onChange={(e) => setNewReply(e.target.value)}
                   placeholder="Share your thoughts or provide help..."
                   rows={5}
-                  className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue resize-none"
+                  className="w-full px-4 py-3 bg-white/10 border border-brand-navy/20 rounded-lg text-brand-navy placeholder-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue resize-none"
                 />
                 <button
                   onClick={createReply}
@@ -441,7 +441,7 @@ export default function CommunityPage() {
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 filter === filterOption.value
                   ? "bg-brand-blue text-white"
-                  : "bg-white/10 text-white/70 hover:text-white hover:bg-white/20"
+                  : "bg-white/10 text-brand-navy/70 hover:text-brand-navy hover:bg-white/20"
               }`}
             >
               {filterOption.label}
@@ -531,17 +531,17 @@ export default function CommunityPage() {
               <button
                 key={post.id}
                 onClick={() => viewPost(post)}
-                className="w-full bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg p-6 text-left transition-colors"
+                className="w-full bg-white/5 hover:bg-white/10 border border-brand-navy/10 rounded-lg p-6 text-left transition-colors"
               >
                 <div className="flex items-start gap-4">
                   <div className="flex flex-col items-center gap-1 text-sm">
-                    <span className="text-white font-medium">{post.votes}</span>
-                    <span className="text-white/60">votes</span>
+                    <span className="text-brand-navy font-medium">{post.votes}</span>
+                    <span className="text-brand-navy/60">votes</span>
                   </div>
 
                   <div className="flex flex-col items-center gap-1 text-sm">
-                    <span className="text-white font-medium">{post.replies_count}</span>
-                    <span className="text-white/60">replies</span>
+                    <span className="text-brand-navy font-medium">{post.replies_count}</span>
+                    <span className="text-brand-navy/60">replies</span>
                   </div>
 
                   <div className="flex-1">
@@ -556,10 +556,10 @@ export default function CommunityPage() {
                       </span>
                     </div>
 
-                    <h3 className="font-semibold text-white mb-2">{post.title}</h3>
+                    <h3 className="font-semibold text-brand-navy mb-2">{post.title}</h3>
                     
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3 text-sm text-white/60">
+                      <div className="flex items-center gap-3 text-sm text-brand-navy/60">
                         <div className="flex items-center gap-1">
                           {post.author.avatar && (
                             <img
@@ -587,7 +587,7 @@ export default function CommunityPage() {
                             </span>
                           ))}
                           {post.tags.length > 2 && (
-                            <span className="text-white/40 text-xs">
+                            <span className="text-brand-navy/40 text-xs">
                               +{post.tags.length - 2}
                             </span>
                           )}

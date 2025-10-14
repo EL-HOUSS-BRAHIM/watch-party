@@ -145,7 +145,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
 
   if (loading) {
     return (
-      <div className="bg-white/5 border border-white/10 rounded-lg p-6">
+      <div className="bg-white/5 border border-brand-navy/10 rounded-lg p-6">
         <div className="animate-pulse space-y-4">
           <div className="h-6 bg-white/10 rounded w-1/4"></div>
           <div className="flex gap-2">
@@ -159,7 +159,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
   }
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-lg p-6 relative overflow-hidden">
+  <div className="bg-white/5 border border-brand-navy/10 rounded-lg p-6 relative overflow-hidden">
       {/* Floating Emojis */}
       {floatingEmojis.map((floating) => (
         <div
@@ -176,7 +176,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
       ))}
 
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-white">Reactions</h3>
+  <h3 className="text-lg font-semibold text-brand-navy">Reactions</h3>
         {reactions.length > 0 && (
           <button
             onClick={clearReactions}
@@ -189,7 +189,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
 
       {/* Quick Reactions */}
       <div className="mb-6">
-        <h4 className="text-white/80 text-sm mb-3">Quick Reactions</h4>
+  <h4 className="text-brand-navy/80 text-sm mb-3">Quick Reactions</h4>
         <div className="grid grid-cols-5 gap-2">
           {QUICK_REACTIONS.map((reaction) => {
             const isAnimating = animatingReactions.has(reaction.emoji)
@@ -211,11 +211,11 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
                   <div className={`text-xl transition-transform ${isAnimating ? "scale-125" : "group-hover:scale-110"}`}>
                     {reaction.emoji}
                   </div>
-                  {existingReaction && existingReaction.count > 0 && (
-                    <div className="text-xs text-white/60 mt-1">
-                      {existingReaction.count}
-                    </div>
-                  )}
+                          {existingReaction && existingReaction.count > 0 && (
+                            <div className="text-xs text-brand-navy/60 mt-1">
+                              {existingReaction.count}
+                            </div>
+                          )}
                 </div>
 
                 {userReacted && (
@@ -230,7 +230,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
       {/* Active Reactions */}
       {reactions.length > 0 && (
         <div className="space-y-3">
-          <h4 className="text-white/80 text-sm">Current Reactions</h4>
+          <h4 className="text-brand-navy/80 text-sm">Current Reactions</h4>
           <div className="space-y-2">
             {reactions
               .filter(reaction => reaction.count > 0)
@@ -238,16 +238,16 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
               .map((reaction) => (
                 <div
                   key={reaction.id}
-                  className="flex items-center justify-between p-3 bg-white/5 border border-white/10 rounded-lg"
+                  className="flex items-center justify-between p-3 bg-white/5 border border-brand-navy/10 rounded-lg"
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-xl">{reaction.emoji}</span>
                     <div>
-                      <div className="text-white font-medium">
+                      <div className="text-brand-navy font-medium">
                         {reaction.count} {reaction.count === 1 ? "reaction" : "reactions"}
                       </div>
                       {reaction.users.length > 0 && (
-                        <div className="text-white/60 text-sm">
+                        <div className="text-brand-navy/60 text-sm">
                           {reaction.users.slice(0, 3).map(u => u.username).join(", ")}
                           {reaction.users.length > 3 && ` +${reaction.users.length - 3} more`}
                         </div>
@@ -260,7 +260,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
                     className={`px-3 py-1 text-sm rounded-lg transition-colors ${
                       reaction.user_reacted
                         ? "bg-brand-blue text-white"
-                        : "bg-white/10 text-white/80 hover:bg-white/20"
+                        : "bg-white/10 text-brand-navy/80 hover:bg-white/20"
                     }`}
                   >
                     {reaction.user_reacted ? "Remove" : "Add"}
@@ -274,8 +274,8 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
       {reactions.length === 0 && (
         <div className="text-center py-8">
           <div className="text-4xl mb-2">😊</div>
-          <p className="text-white/60">No reactions yet</p>
-          <p className="text-white/40 text-sm mt-1">Be the first to react!</p>
+          <p className="text-brand-navy/60">No reactions yet</p>
+          <p className="text-brand-navy/40 text-sm mt-1">Be the first to react!</p>
         </div>
       )}
 

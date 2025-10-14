@@ -152,7 +152,7 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
   return (
     <div className="bg-white/5 border border-white/10 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-white">Party Games</h3>
+  <h3 className="text-lg font-semibold text-brand-navy">Party Games</h3>
         {isHost && !currentGame && (
           <button
             onClick={() => setShowGameSelection(!showGameSelection)}
@@ -179,7 +179,7 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
                   <span className="text-2xl">{game.icon}</span>
                   <div>
                     <h5 className="font-medium text-white">{game.name}</h5>
-                    <p className="text-white/60 text-sm mt-1">{game.description}</p>
+                      <p className="text-brand-navy/60 text-sm mt-1">{game.description}</p>
                   </div>
                 </div>
               </button>
@@ -198,10 +198,10 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
                   {AVAILABLE_GAMES.find(g => g.type === currentGame.game_type)?.icon || "🎮"}
                 </span>
                 <div>
-                  <h4 className="font-medium text-white">
+                  <h4 className="font-medium text-brand-navy">
                     {AVAILABLE_GAMES.find(g => g.type === currentGame.game_type)?.name || "Game"}
                   </h4>
-                  <p className="text-white/60 text-sm">
+                  <p className="text-brand-navy/60 text-sm">
                     Started by {currentGame.created_by.username}
                   </p>
                 </div>
@@ -222,7 +222,7 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
 
             {/* Participants */}
             <div className="mb-4">
-              <h5 className="text-white/80 text-sm mb-2">
+              <h5 className="text-brand-navy/80 text-sm mb-2">
                 Participants ({currentGame.participants.length})
               </h5>
               <div className="flex flex-wrap gap-2">
@@ -238,9 +238,9 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
                         className="w-4 h-4 rounded-full"
                       />
                     )}
-                    <span className="text-white text-sm">{participant.username}</span>
+                    <span className="text-brand-navy text-sm">{participant.username}</span>
                     {typeof participant.score === "number" && (
-                      <span className="text-white/60 text-xs">
+                      <span className="text-brand-navy/60 text-xs">
                         ({participant.score} pts)
                       </span>
                     )}
@@ -352,7 +352,7 @@ function GameInterface({ game, partyId, currentUser: _currentUser, onUpdate }: G
                       className={`p-2 rounded border transition-colors ${
                         answer === option
                           ? "bg-brand-blue border-brand-blue text-white"
-                          : "bg-white/10 border-white/20 text-white/80 hover:bg-white/20"
+                            : "bg-white/10 border-brand-navy/20 text-brand-navy/80 hover:bg-white/20"
                       }`}
                     >
                       {option}

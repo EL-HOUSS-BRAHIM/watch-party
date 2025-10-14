@@ -98,7 +98,7 @@ export function ConfirmDialog({
         <div className="flex gap-3 justify-end">
           <button
             onClick={onCancel}
-            className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-colors"
+            className="px-4 py-2 rounded-lg bg-white/5 border border-brand-navy/10 text-brand-navy hover:bg-white/10 transition-colors"
           >
             {cancelLabel}
           </button>

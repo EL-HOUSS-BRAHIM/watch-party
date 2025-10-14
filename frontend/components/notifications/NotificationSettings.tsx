@@ -326,7 +326,7 @@ export default function NotificationSettings({ onClose }: NotificationSettingsPr
         <div className="flex items-center justify-between p-6 border-t border-white/10">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm transition-colors"
+            className="px-4 py-2 bg-white/10 hover:bg-white/20 text-brand-navy rounded-lg text-sm transition-colors"
           >
             Cancel
           </button>

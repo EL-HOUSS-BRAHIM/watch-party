@@ -3,16 +3,15 @@
 import { useState, useEffect } from "react"
 import api from "@/lib/api-client"
 
-interface SyncControls {
+interface SyncState {
   is_playing: boolean
   current_time: number
   video_url?: string
   video_title?: string
-  last_updated: string
+  last_updated?: string
   updated_by?: {
-    id: string
+    id?: string
     username: string
-    avatar?: string
   }
 }
 
@@ -20,11 +19,11 @@ interface SyncControlsProps {
   partyId: string
   currentUser?: any
   isHost?: boolean
-  onSyncUpdate?: (controls: SyncControls) => void
+  onSyncUpdate?: (state: SyncState) => void
 }
 
 export default function SyncControls({ partyId, currentUser: _currentUser, isHost = false, onSyncUpdate }: SyncControlsProps) {
-  const [syncState, setSyncState] = useState<SyncControls | null>(null)
+  const [syncState, setSyncState] = useState<SyncState | null>(null)
   const [loading, setLoading] = useState(true)
   const [updating, setUpdating] = useState(false)
   const [localTime, setLocalTime] = useState(0)
@@ -33,8 +32,10 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
   const [timeInput, setTimeInput] = useState("")
 
   useEffect(() => {
+    if (!partyId) return
+
     loadSyncState()
-    
+
     // Poll for updates every 2 seconds
     const interval = setInterval(loadSyncState, 2000)
     return () => clearInterval(interval)
@@ -59,14 +60,14 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
     }
   }
 
-  const updateSyncState = async (updates: Partial<SyncControls>) => {
+  const updateSyncState = async (updates: Partial<SyncState>) => {
     if (!isHost) return
 
     setUpdating(true)
     try {
       const response = await api.patch(`/parties/${partyId}/sync/`, updates)
       setSyncState(response)
-      
+
       // Update local state immediately
       if (updates.current_time !== undefined) {
         setLocalTime(updates.current_time)
@@ -91,7 +92,7 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
 
   const seekTo = (time: number) => {
     updateSyncState({
-      current_time: time,
+      current_time: Math.max(0, Math.floor(time)),
       is_playing: localPlaying
     })
   }
@@ -108,8 +109,8 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
   }
 
   const parseTime = (timeStr: string): number => {
-    const parts = timeStr.split(":").map(p => parseInt(p.trim()))
-    
+    const parts = timeStr.split(":").map(p => parseInt(p.trim(), 10))
+
     if (parts.length === 2 && parts.every(p => !isNaN(p))) {
       // MM:SS format
       return parts[0] * 60 + parts[1]
@@ -117,25 +118,25 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
       // HH:MM:SS format
       return parts[0] * 3600 + parts[1] * 60 + parts[2]
     }
-    
+
     return -1
   }
 
   const formatTime = (seconds: number): string => {
-    const hours = Math.floor(seconds / 3600)
-    const minutes = Math.floor((seconds % 3600) / 60)
+    const hrs = Math.floor(seconds / 3600)
+    const mins = Math.floor((seconds % 3600) / 60)
     const secs = Math.floor(seconds % 60)
 
-    if (hours > 0) {
-      return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+    if (hrs > 0) {
+      return `${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
     }
-    return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
   }
 
   const getTimeSinceUpdate = (): string => {
     if (!syncState?.last_updated) return ""
-    
-    const now = new Date().getTime()
+
+    const now = Date.now()
     const updated = new Date(syncState.last_updated).getTime()
     const diffSeconds = Math.floor((now - updated) / 1000)
 
@@ -147,7 +148,7 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
 
   if (loading) {
     return (
-      <div className="bg-white/5 border border-white/10 rounded-lg p-6">
+      <div className="bg-white/5 border border-brand-navy/10 rounded-lg p-6">
         <div className="animate-pulse space-y-4">
           <div className="h-6 bg-white/10 rounded w-1/3"></div>
           <div className="h-16 bg-white/10 rounded"></div>
@@ -158,12 +159,12 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
 
   if (!syncState) {
     return (
-      <div className="bg-white/5 border border-white/10 rounded-lg p-6">
+      <div className="bg-white/5 border border-brand-navy/10 rounded-lg p-6">
         <div className="text-center py-8">
           <div className="text-4xl mb-2">⏯️</div>
-          <p className="text-white/60">No video loaded</p>
+          <p className="text-brand-navy/60">No video loaded</p>
           {isHost && (
-            <p className="text-white/40 text-sm mt-1">Select a video to start syncing</p>
+            <p className="text-brand-navy/40 text-sm mt-1">Select a video to start syncing</p>
           )}
         </div>
       </div>
@@ -171,11 +172,11 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
   }
 
   return (
-    <div className="bg-white/5 border border-white/10 rounded-lg p-6">
+    <div className="bg-white/5 border border-brand-navy/10 rounded-lg p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-white">Sync Controls</h3>
+        <h3 className="text-lg font-semibold text-brand-navy">Sync Controls</h3>
         {syncState.updated_by && (
-          <div className="text-sm text-white/60">
+          <div className="text-sm text-brand-navy/60">
             Updated by {syncState.updated_by.username} {getTimeSinceUpdate()}
           </div>
         )}
@@ -183,9 +184,9 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
 
       {/* Current Video Info */}
       {syncState.video_title && (
-        <div className="mb-6 p-4 bg-white/5 border border-white/10 rounded-lg">
-          <h4 className="font-medium text-white mb-2">Now Playing</h4>
-          <p className="text-white/80 text-sm">{syncState.video_title}</p>
+        <div className="mb-6 p-4 bg-white/5 border border-brand-navy/10 rounded-lg">
+          <h4 className="font-medium text-brand-navy mb-2">Now Playing</h4>
+          <p className="text-brand-navy/80 text-sm">{syncState.video_title}</p>
         </div>
       )}
 
@@ -197,7 +198,7 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
             <button
               onClick={() => seekTo(Math.max(0, localTime - 30))}
               disabled={updating}
-              className="p-3 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+              className="p-3 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-brand-navy rounded-lg transition-colors"
               title="Skip back 30 seconds"
             >
               ⏪
@@ -209,7 +210,7 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
             <button
               onClick={() => seekTo(Math.max(0, localTime - 10))}
               disabled={updating}
-              className="p-3 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+              className="p-3 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-brand-navy rounded-lg transition-colors"
               title="Skip back 10 seconds"
             >
               ⏮️
@@ -223,7 +224,7 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
             className={`p-4 text-2xl rounded-lg transition-all ${
               isHost
                 ? "bg-brand-blue hover:bg-brand-blue-dark text-white"
-                : "bg-white/10 text-white/60 cursor-not-allowed"
+                : "bg-white/10 text-brand-navy/60 cursor-not-allowed"
             } ${updating ? "opacity-50 cursor-not-allowed" : ""}`}
             title={isHost ? (localPlaying ? "Pause" : "Play") : "Host controls only"}
           >
@@ -235,7 +236,7 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
             <button
               onClick={() => seekTo(localTime + 10)}
               disabled={updating}
-              className="p-3 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+              className="p-3 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-brand-navy rounded-lg transition-colors"
               title="Skip forward 10 seconds"
             >
               ⏭️
@@ -247,7 +248,7 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
             <button
               onClick={() => seekTo(localTime + 30)}
               disabled={updating}
-              className="p-3 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-lg transition-colors"
+              className="p-3 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-brand-navy rounded-lg transition-colors"
               title="Skip forward 30 seconds"
             >
               ⏩
@@ -257,7 +258,7 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
 
         {/* Time Display and Seek */}
         <div className="text-center space-y-2">
-          <div className="text-white font-mono text-lg">
+          <div className="text-brand-navy font-mono text-lg">
             {formatTime(localTime)}
           </div>
 
@@ -266,7 +267,7 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
               {!showTimeInput ? (
                 <button
                   onClick={() => setShowTimeInput(true)}
-                  className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white text-sm rounded transition-colors"
+                  className="px-3 py-1 bg-white/10 hover:bg-white/20 text-brand-navy text-sm rounded transition-colors"
                 >
                   Jump to Time
                 </button>
@@ -277,7 +278,7 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
                     value={timeInput}
                     onChange={(e) => setTimeInput(e.target.value)}
                     placeholder="MM:SS or HH:MM:SS"
-                    className="px-2 py-1 bg-white/10 border border-white/20 rounded text-white text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
+                    className="px-2 py-1 bg-white/10 border border-brand-navy/20 rounded text-brand-navy text-sm placeholder-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         handleTimeInputSubmit()
@@ -315,21 +316,21 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
             <button
               onClick={() => seekTo(0)}
               disabled={updating}
-              className="px-3 py-1 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm rounded transition-colors"
+              className="px-3 py-1 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-brand-navy text-sm rounded transition-colors"
             >
               Start
             </button>
             <button
               onClick={() => seekTo(localTime - 60)}
               disabled={updating}
-              className="px-3 py-1 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm rounded transition-colors"
+              className="px-3 py-1 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-brand-navy text-sm rounded transition-colors"
             >
               -1min
             </button>
             <button
               onClick={() => seekTo(localTime + 60)}
               disabled={updating}
-              className="px-3 py-1 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm rounded transition-colors"
+              className="px-3 py-1 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-brand-navy text-sm rounded transition-colors"
             >
               +1min
             </button>
@@ -342,14 +343,10 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
             {localPlaying ? "▶️ Playing" : "⏸️ Paused"}
           </div>
           {!isHost && (
-            <div className="text-xs text-white/60">
-              Host controls playback synchronization
-            </div>
+            <div className="text-xs text-brand-navy/60">Host controls playback synchronization</div>
           )}
           {updating && (
-            <div className="text-xs text-brand-orange-light">
-              Updating...
-            </div>
+            <div className="text-xs text-brand-orange-light">Updating...</div>
           )}
         </div>
       </div>

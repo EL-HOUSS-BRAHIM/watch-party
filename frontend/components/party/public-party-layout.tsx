@@ -60,7 +60,7 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
       ? "border-brand-cyan/30 bg-brand-cyan/15 text-green-300"
       : statusTone === "paused"
         ? "border-brand-orange/30 bg-brand-orange/15 text-brand-orange-light"
-        : "border-white/20 bg-white/10 text-white/70"
+      : "border-brand-navy/20 bg-white/10 text-brand-navy/70"
 
   const chatDisabled = !party.allowChat
   const lastSyncLabel = party.lastSyncAt
@@ -131,7 +131,7 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
             </div>
             <div className="flex items-center gap-2 rounded-lg bg-white/5 px-3 py-1.5">
               <span className="text-sm">👥</span>
-              <span className="text-sm font-medium text-white">{party.participantCount}</span>
+              <span className="text-sm font-medium text-brand-navy">{party.participantCount}</span>
             </div>
             <div className={`rounded-lg border px-3 py-1.5 text-xs font-semibold ${statusBadgeStyles}`}>
               Status: {party.statusLabel}
@@ -253,11 +253,11 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
                         GUEST
                       </span>
                     )}
-                    <span className="ml-auto text-xs text-white/40">
+                    <span className="ml-auto text-xs text-brand-navy/40">
                       {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
-                  <p className="text-sm text-white/90">{msg.text}</p>
+                  <p className="text-sm text-brand-navy/90">{msg.text}</p>
                 </div>
               ))
             )}
@@ -267,7 +267,7 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
           {/* Message Input */}
           <form onSubmit={handleSendMessage} className="border-t border-white/10 p-4">
             <div className="flex gap-2">
-              <input
+                <input
                 type="text"
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
@@ -275,7 +275,7 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
                 maxLength={500}
                 aria-label="Chat message"
                 disabled={chatDisabled}
-                className="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm text-white placeholder-white/50 focus:border-brand-purple/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/20 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex-1 rounded-lg border border-brand-navy/20 bg-white/10 px-4 py-2 text-sm text-brand-navy placeholder-brand-navy/50 focus:border-brand-purple/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/20 disabled:cursor-not-allowed disabled:opacity-50"
               />
               <button
                 type="submit"

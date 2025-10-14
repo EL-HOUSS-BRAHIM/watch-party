@@ -160,7 +160,7 @@ export default function UserManagement({ onBack }: UserManagementProps) {
       </div>
 
       {/* Filters and Search */}
-      <div className="bg-white/5 border border-white/10 rounded-lg p-6">
+  <div className="bg-white/5 border border-brand-navy/10 rounded-lg p-6">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <input
@@ -168,14 +168,14 @@ export default function UserManagement({ onBack }: UserManagementProps) {
               placeholder="Search users by username or email..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
+              className="w-full px-4 py-2 bg-white/10 border border-brand-navy/20 rounded-lg text-brand-navy placeholder-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
             />
           </div>
           
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as any)}
-            className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-brand-blue"
+            className="px-4 py-2 bg-white/10 border border-brand-navy/20 rounded-lg text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-blue"
           >
             <option value="all">All Users</option>
             <option value="verified">Verified Only</option>
@@ -186,10 +186,10 @@ export default function UserManagement({ onBack }: UserManagementProps) {
       </div>
 
       {/* Users Table */}
-      <div className="bg-white/5 border border-white/10 rounded-lg overflow-hidden">
+  <div className="bg-white/5 border border-brand-navy/10 rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-white/10 border-b border-white/10">
+            <thead className="bg-white/10 border-b border-brand-navy/10">
               <tr>
                 <th className="px-6 py-4 text-left">
                   <input
@@ -199,25 +199,25 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                     className="rounded border-white/20 bg-white/10 text-blue-600 focus:ring-brand-blue"
                   />
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-white/80">User</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-white/80">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-white/80">Joined</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-white/80">Last Active</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-white/80">Actions</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-brand-navy/80">User</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-brand-navy/80">Status</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-brand-navy/80">Joined</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-brand-navy/80">Last Active</th>
+                <th className="px-6 py-4 text-left text-sm font-medium text-brand-navy/80">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/10">
+            <tbody className="divide-y divide-brand-navy/10">
               {loading ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center">
                     <div className="animate-spin w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
-                    <p className="text-white/60">Loading users...</p>
+                    <p className="text-brand-navy/60">Loading users...</p>
                   </td>
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-12 text-center">
-                    <p className="text-white/60">No users found</p>
+                    <p className="text-brand-navy/60">No users found</p>
                   </td>
                 </tr>
               ) : (
@@ -241,14 +241,14 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <span className="text-white/60">
+                            <span className="text-brand-navy/60">
                               {user.username?.charAt(0).toUpperCase() || "?"}
                             </span>
                           )}
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <p className="font-medium text-white">{user.username}</p>
+                            <p className="font-medium text-brand-navy">{user.username}</p>
                             {user.is_verified && (
                               <span className="text-brand-cyan-light text-sm">✓</span>
                             )}
@@ -261,7 +261,7 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                               </span>
                             )}
                           </div>
-                          <p className="text-white/60 text-sm">{user.email}</p>
+                          <p className="text-brand-navy/60 text-sm">{user.email}</p>
                         </div>
                       </div>
                     </td>
@@ -282,12 +282,12 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-white/80 text-sm">
+                      <p className="text-brand-navy/80 text-sm">
                         {new Date(user.date_joined || "").toLocaleDateString()}
                       </p>
                     </td>
                     <td className="px-6 py-4">
-                      <p className="text-white/80 text-sm">
+                      <p className="text-brand-navy/80 text-sm">
                         {user.last_login ? new Date(user.last_login).toLocaleDateString() : "Never"}
                       </p>
                     </td>
@@ -328,9 +328,9 @@ export default function UserManagement({ onBack }: UserManagementProps) {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="px-6 py-4 bg-white/5 border-t border-white/10">
+          <div className="px-6 py-4 bg-white/5 border-t border-brand-navy/10">
             <div className="flex items-center justify-between">
-              <p className="text-white/60 text-sm">
+              <p className="text-brand-navy/60 text-sm">
                 Page {currentPage} of {totalPages}
               </p>
               
@@ -338,19 +338,19 @@ export default function UserManagement({ onBack }: UserManagementProps) {
                 <button
                   onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                   disabled={currentPage === 1}
-                  className="px-3 py-2 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded text-sm transition-colors"
+                  className="px-3 py-2 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-brand-navy rounded text-sm transition-colors"
                 >
                   Previous
                 </button>
                 
-                <span className="px-3 py-2 text-white text-sm">
+                <span className="px-3 py-2 text-brand-navy text-sm">
                   {currentPage}
                 </span>
                 
                 <button
                   onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
                   disabled={currentPage === totalPages}
-                  className="px-3 py-2 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded text-sm transition-colors"
+                  className="px-3 py-2 bg-white/10 hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed text-brand-navy rounded text-sm transition-colors"
                 >
                   Next
                 </button>

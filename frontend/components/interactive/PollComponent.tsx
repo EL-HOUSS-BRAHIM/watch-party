@@ -150,7 +150,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
 
   if (loading) {
     return (
-      <div className="bg-white/5 border border-white/10 rounded-lg p-6">
+      <div className="bg-white/5 border border-brand-navy/10 rounded-lg p-6">
         <div className="animate-pulse space-y-4">
           <div className="h-6 bg-white/10 rounded w-1/3"></div>
           <div className="space-y-3">
@@ -179,7 +179,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
 
       {/* Create Poll Form */}
       {showCreatePoll && (
-        <div className="mb-6 p-4 bg-white/5 border border-white/10 rounded-lg">
+  <div className="mb-6 p-4 bg-white/5 border border-brand-navy/10 rounded-lg">
           <h4 className="font-medium text-white mb-4">Create New Poll</h4>
           
           <div className="space-y-4">
@@ -191,7 +191,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
                 onChange={(e) => setNewPoll(prev => ({ ...prev, question: e.target.value }))}
                 placeholder="What's your question?"
                 maxLength={200}
-                className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
+                className="w-full px-3 py-2 bg-white/10 border border-brand-navy/20 rounded-lg text-brand-navy placeholder-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
               />
             </div>
 
@@ -206,7 +206,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
                       onChange={(e) => updateOption(index, e.target.value)}
                       placeholder={`Option ${index + 1}`}
                       maxLength={100}
-                      className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
+                      className="flex-1 px-3 py-2 bg-white/10 border border-brand-navy/20 rounded-lg text-brand-navy placeholder-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
                     />
                     {newPoll.options.length > 2 && (
                       <button
@@ -223,7 +223,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
               {newPoll.options.length < 6 && (
                 <button
                   onClick={addOption}
-                  className="mt-2 px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded text-sm transition-colors"
+                  className="mt-2 px-3 py-1 bg-white/10 hover:bg-white/20 text-brand-navy rounded text-sm transition-colors"
                 >
                   + Add Option
                 </button>
@@ -232,10 +232,10 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
 
             <div>
               <label className="block text-white/80 text-sm mb-2">Duration</label>
-              <select
+                <select
                 value={newPoll.duration}
                 onChange={(e) => setNewPoll(prev => ({ ...prev, duration: parseInt(e.target.value) }))}
-                className="px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-brand-blue"
+                className="px-3 py-2 bg-white/10 border border-brand-navy/20 rounded-lg text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-blue"
               >
                 <option value={60}>1 minute</option>
                 <option value={300}>5 minutes</option>
@@ -255,7 +255,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
               </button>
               <button
                 onClick={() => setShowCreatePoll(false)}
-                className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm transition-colors"
+                className="px-4 py-2 bg-white/10 hover:bg-white/20 text-brand-navy rounded-lg text-sm transition-colors"
               >
                 Cancel
               </button>
@@ -278,7 +278,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
           polls.map((poll) => (
             <div
               key={poll.id}
-              className="p-4 bg-white/5 border border-white/10 rounded-lg"
+              className="p-4 bg-white/5 border border-brand-navy/10 rounded-lg"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1">
@@ -322,15 +322,15 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
                         isVoted
                           ? "bg-brand-blue/20 border-brand-blue/30"
                           : canVote
-                          ? "bg-white/5 border-white/10 hover:bg-white/10"
-                          : "bg-white/5 border-white/10 cursor-not-allowed"
+                          ? "bg-white/5 border-brand-navy/10 hover:bg-white/10"
+                          : "bg-white/5 border-brand-navy/10 cursor-not-allowed"
                       }`}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-white">{option.text}</span>
+                        <span className="text-brand-navy">{option.text}</span>
                         <div className="flex items-center gap-2">
                           {isVoted && <span className="text-brand-blue-light">✓</span>}
-                          <span className="text-white/60 text-sm">
+                          <span className="text-brand-navy/60 text-sm">
                             {option.votes} ({percentage.toFixed(1)}%)
                           </span>
                         </div>

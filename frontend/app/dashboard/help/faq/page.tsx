@@ -144,7 +144,7 @@ export default function FAQPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search FAQ..."
-              className="w-full px-4 py-3 pl-12 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
+                className="w-full px-4 py-3 pl-12 bg-white/10 border border-brand-navy/20 rounded-lg text-brand-navy placeholder-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
             />
             <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/50">
               🔍
@@ -162,7 +162,7 @@ export default function FAQPage() {
                 className={`p-4 border rounded-lg text-left transition-all ${
                   selectedCategory === "all"
                     ? "bg-blue-600/20 border-blue-600/30 text-brand-blue-light"
-                    : "bg-white/5 border-white/10 text-white hover:bg-white/10"
+                    : "bg-white/5 border-brand-navy/10 text-brand-navy hover:bg-white/10"
                 }`}
               >
                 <div className="text-2xl mb-2">📋</div>
@@ -179,7 +179,7 @@ export default function FAQPage() {
                   className={`p-4 border rounded-lg text-left transition-all ${
                     selectedCategory === category.id
                       ? "bg-blue-600/20 border-blue-600/30 text-brand-blue-light"
-                      : "bg-white/5 border-white/10 text-white hover:bg-white/10"
+                      : "bg-white/5 border-brand-navy/10 text-brand-navy hover:bg-white/10"
                   }`}
                 >
                   <div className="text-2xl mb-2">{category.icon}</div>
@@ -224,7 +224,7 @@ export default function FAQPage() {
             </div>
           ) : (
             <>
-              <div className="text-white/60 text-sm mb-4">
+              <div className="text-brand-navy/60 text-sm mb-4">
                 {faqs.length} question{faqs.length !== 1 ? "s" : ""} found
               </div>
 

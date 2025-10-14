@@ -167,7 +167,7 @@ export default function MobileChat({ partyId, currentUser }: MobileChatProps) {
                   className={`inline-block px-4 py-2 rounded-2xl ${
                     isOwnMessage
                       ? "bg-brand-blue text-white"
-                      : "bg-white/10 text-white"
+                      : "bg-white/10 text-brand-navy"
                   } ${message.type === "emoji" ? "text-2xl py-1" : ""}`}
                 >
                   {message.content}
@@ -200,7 +200,7 @@ export default function MobileChat({ partyId, currentUser }: MobileChatProps) {
 
       {/* Emoji Picker */}
       {showEmojiPicker && (
-        <div className="border-t border-white/10 bg-white/5 p-3">
+  <div className="border-t border-brand-navy/10 bg-white/5 p-3">
           <div className="grid grid-cols-8 gap-2">
             {commonEmojis.map((emoji) => (
               <button
@@ -221,8 +221,8 @@ export default function MobileChat({ partyId, currentUser }: MobileChatProps) {
           <button
             onClick={() => setShowEmojiPicker(!showEmojiPicker)}
             className={`p-3 rounded-full transition-colors ${
-              showEmojiPicker ? "bg-brand-orange text-white" : "bg-white/10 text-white/70"
-            }`}
+                showEmojiPicker ? "bg-brand-orange text-white" : "bg-white/10 text-brand-navy/70"
+              }`}
           >
             😊
           </button>
@@ -239,7 +239,7 @@ export default function MobileChat({ partyId, currentUser }: MobileChatProps) {
               }}
               placeholder="Type a message..."
               rows={1}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-2xl text-white placeholder-white/50 resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue"
+              className="w-full px-4 py-3 bg-white/10 border border-brand-navy/20 rounded-2xl text-brand-navy placeholder-brand-navy/50 resize-none focus:outline-none focus:ring-2 focus:ring-brand-blue"
               style={{
                 minHeight: "48px",
                 maxHeight: "120px"

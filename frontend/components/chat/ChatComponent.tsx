@@ -133,7 +133,7 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
   }
 
   return (
-    <div className="flex flex-col h-full bg-white/5 border border-white/10 rounded-lg overflow-hidden">
+  <div className="flex flex-col h-full bg-white/5 border border-brand-navy/10 rounded-lg overflow-hidden">
       {/* Chat Header */}
       <div className="flex items-center justify-between p-4 border-b border-white/10">
         <div className="flex items-center gap-3">
@@ -146,7 +146,7 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowUsers(!showUsers)}
-            className="px-3 py-1 bg-white/10 hover:bg-white/20 text-white rounded text-sm transition-colors"
+            className="px-3 py-1 bg-white/10 hover:bg-white/20 text-brand-navy rounded text-sm transition-colors"
           >
             👥 Users
           </button>
@@ -245,8 +245,8 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
 
                   <div className={`text-sm ${
                     message.message_type === "system" 
-                      ? "text-white/60 italic bg-white/5 rounded-lg px-3 py-2 inline-block"
-                      : "text-white/90"
+                      ? "text-brand-navy/60 italic bg-white/5 rounded-lg px-3 py-2 inline-block"
+                        : "text-white/90"
                   }`}>
                     {getMessageTypeIcon(message.message_type) && (
                       <span className="mr-2">
@@ -277,7 +277,7 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
                 onChange={(e) => setNewMessage(e.target.value)}
                 placeholder="Type a message..."
                 disabled={sending}
-                className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue disabled:opacity-50"
+                className="flex-1 px-3 py-2 bg-white/10 border border-brand-navy/20 rounded-lg text-brand-navy text-sm placeholder-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue disabled:opacity-50"
                 maxLength={500}
               />
               <button
