@@ -75,34 +75,33 @@ class RegisterView(RateLimitMixin, APIView):
             }, status=status.HTTP_201_CREATED)
             
             # Set tokens as HTTP-only cookies (auto-login after registration)
-            # Set tokens as httpOnly cookies for maximum security
-        # Check if request is from localhost (for local development)
-        origin = request.headers.get('Origin', '')
-        is_localhost = 'localhost' in origin or '127.0.0.1' in origin
-        cookie_domain = None if is_localhost else '.brahim-elhouss.me'
-        
-        response.set_cookie(
-            'access_token',
-            access_token,
-            max_age=3600 * 24 * 365,  # 1 year
-            httponly=True,
-            secure=True,  # HTTPS only
-            samesite='Lax',
-            domain=cookie_domain,  # None for localhost, .brahim-elhouss.me for production
-            path='/'
-        )
-        
-        # Set refresh token with longer expiry
-        response.set_cookie(
-            'refresh_token',
-            refresh_token,
-            max_age=3600 * 24 * 365 * 7,  # 7 days
-            httponly=True,
-            secure=True,
-            samesite='Lax',
-            domain=cookie_domain,
-            path='/'
-        )
+            # Check if request is from localhost (for local development)
+            origin = request.headers.get('Origin', '')
+            is_localhost = 'localhost' in origin or '127.0.0.1' in origin
+            cookie_domain = None if is_localhost else '.brahim-elhouss.me'
+            
+            response.set_cookie(
+                'access_token',
+                access_token,
+                max_age=3600 * 24 * 365,  # 1 year
+                httponly=True,
+                secure=True,  # HTTPS only
+                samesite='Lax',
+                domain=cookie_domain,  # None for localhost, .brahim-elhouss.me for production
+                path='/'
+            )
+            
+            # Set refresh token with longer expiry
+            response.set_cookie(
+                'refresh_token',
+                refresh_token,
+                max_age=3600 * 24 * 365 * 7,  # 7 days
+                httponly=True,
+                secure=True,
+                samesite='Lax',
+                domain=cookie_domain,
+                path='/'
+            )
             
             return response
         
@@ -156,11 +155,6 @@ class LoginView(RateLimitMixin, TokenObtainPairView):
                 'user': UserProfileSerializer(user).data
             }, status=status.HTTP_200_OK)
             
-            # Check if request is from localhost (for local development)
-            origin = request.headers.get('Origin', '')
-            is_localhost = 'localhost' in origin or '127.0.0.1' in origin
-            cookie_domain = None if is_localhost else '.brahim-elhouss.me'
-            
             # Set tokens as HTTP-only cookies
             # Access token: 60 minutes (matches JWT_ACCESS_TOKEN_LIFETIME in settings)
             response.set_cookie(
@@ -170,7 +164,7 @@ class LoginView(RateLimitMixin, TokenObtainPairView):
                 httponly=True,
                 secure=True,  # HTTPS only in production
                 samesite='Lax',
-                domain=cookie_domain,
+                domain='.brahim-elhouss.me',  # Allow subdomain sharing
                 path='/',
             )
             
@@ -182,7 +176,7 @@ class LoginView(RateLimitMixin, TokenObtainPairView):
                 httponly=True,
                 secure=True,  # HTTPS only in production
                 samesite='Lax',
-                domain=cookie_domain,
+                domain='.brahim-elhouss.me',  # Allow subdomain sharing
                 path='/',
             )
             
@@ -240,17 +234,13 @@ class LogoutView(APIView):
             return response
         except Exception:
             # Still clear cookies even on error
-            origin = request.headers.get('Origin', '')
-            is_localhost = 'localhost' in origin or '127.0.0.1' in origin
-            cookie_domain = None if is_localhost else '.brahim-elhouss.me'
-            
             response = Response({
                 'success': False,
                 'message': 'Error during logout.'
             }, status=status.HTTP_400_BAD_REQUEST)
             
-            response.delete_cookie('access_token', domain=cookie_domain, path='/')
-            response.delete_cookie('refresh_token', domain=cookie_domain, path='/')
+            response.delete_cookie('access_token', domain='.brahim-elhouss.me', path='/')
+            response.delete_cookie('refresh_token', domain='.brahim-elhouss.me', path='/')
             
             return response
 
@@ -1257,11 +1247,6 @@ class CustomTokenRefreshView(BaseTokenRefreshView):
                 access_token = data.get('access')
                 refresh_token = data.get('refresh', request.data.get('refresh'))
                 
-                # Check if request is from localhost (for local development)
-                origin = request.headers.get('Origin', '')
-                is_localhost = 'localhost' in origin or '127.0.0.1' in origin
-                cookie_domain = None if is_localhost else '.brahim-elhouss.me'
-                
                 # Create response without exposing tokens
                 response = Response({
                     'success': True,
@@ -1277,7 +1262,7 @@ class CustomTokenRefreshView(BaseTokenRefreshView):
                         httponly=True,
                         secure=True,
                         samesite='Lax',
-                        domain=cookie_domain,
+                        domain='.brahim-elhouss.me',
                         path='/',
                     )
                 
@@ -1290,7 +1275,7 @@ class CustomTokenRefreshView(BaseTokenRefreshView):
                         httponly=True,
                         secure=True,
                         samesite='Lax',
-                        domain=cookie_domain,
+                        domain='.brahim-elhouss.me',
                         path='/',
                     )
                 
