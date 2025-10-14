@@ -91,7 +91,7 @@ export default function CreatePartyPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-brand-neutral via-white to-brand-neutral-light relative overflow-hidden">
       {/* Background Effects */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-purple/10 rounded-full blur-3xl animate-pulse"></div>
@@ -109,10 +109,10 @@ export default function CreatePartyPage() {
             ←
           </IconButton>
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent truncate">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-brand-navy truncate">
               ✨ Create Epic Watch Party
             </h1>
-            <p className="text-white/70 text-sm sm:text-base lg:text-lg mt-1 sm:mt-2">Build the perfect movie night experience for your community</p>
+            <p className="text-brand-navy/70 text-sm sm:text-base lg:text-lg mt-1 sm:mt-2">Build the perfect movie night experience for your community</p>
           </div>
           {showPreview && (
             <IconButton
@@ -166,16 +166,16 @@ export default function CreatePartyPage() {
         </div>
 
         <GradientCard 
-          className="border-brand-purple/30 backdrop-blur-xl" 
-          gradient="from-purple-900/40 via-blue-900/30 to-purple-900/40"
+          className="border-brand-navy/10 backdrop-blur-xl" 
+          gradient="from-white to-white"
         >
           {/* Step 1: Party Details */}
           {step === 1 && (
             <div className="space-y-6">
               <div className="text-center mb-6 sm:mb-8">
                 <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">🎬</div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Party Details</h2>
-                <p className="text-white/70 text-sm sm:text-base">Give your watch party a name and set the basics</p>
+                <h2 className="text-xl sm:text-2xl font-bold text-brand-navy mb-2">Party Details</h2>
+                <p className="text-brand-navy/70 text-sm sm:text-base">Give your watch party a name and set the basics</p>
               </div>
 
               <div className="space-y-6 max-w-2xl mx-auto">

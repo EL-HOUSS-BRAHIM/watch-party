@@ -83,18 +83,17 @@ export default function PartiesPage() {
     <div className="space-y-8">
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-brand-cyan/20 rounded-3xl blur-xl"></div>
-        <GradientCard className="relative border-brand-purple/30">
+        <GradientCard className="relative" gradient="from-white to-white">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-4">
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
+                <h1 className="text-4xl font-bold text-brand-navy">
                   🎬 Watch Parties
                 </h1>
                 <LiveIndicator isLive={true} count={liveStats.activeParties} label="Live Parties" />
               </div>
-              <p className="text-white/80 text-lg">Join the global cinema experience with {formatNumber(liveStats.onlineUsers)} movie lovers</p>
-              <div className="flex items-center gap-4 text-sm text-white/60">
+              <p className="text-brand-navy/70 text-lg">Join the global cinema experience with {formatNumber(liveStats.onlineUsers)} movie lovers</p>
+              <div className="flex items-center gap-4 text-sm text-brand-navy/60">
                 <span>🌍 Global Community</span>
                 <span>•</span>
                 <span>⚡ Instant Join</span>
@@ -104,11 +103,11 @@ export default function PartiesPage() {
             </div>
             
             <div className="flex items-center gap-3">
-              <div className="flex gap-1 bg-black/20 p-1 rounded-xl">
+              <div className="flex gap-1 bg-brand-navy/5 p-1 rounded-xl">
                 <button
                   onClick={() => setViewMode("grid")}
                   className={`p-2 rounded-lg transition-all ${
-                    viewMode === "grid" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
+                    viewMode === "grid" ? "bg-brand-navy/10 text-brand-navy" : "text-brand-navy/60 hover:text-brand-navy"
                   }`}
                 >
                   ⚏
@@ -116,7 +115,7 @@ export default function PartiesPage() {
                 <button
                   onClick={() => setViewMode("list")}
                   className={`p-2 rounded-lg transition-all ${
-                    viewMode === "list" ? "bg-white/20 text-white" : "text-white/60 hover:text-white"
+                    viewMode === "list" ? "bg-brand-navy/10 text-brand-navy" : "text-brand-navy/60 hover:text-brand-navy"
                   }`}
                 >
                   ☰
@@ -135,24 +134,24 @@ export default function PartiesPage() {
       </div>
 
       {/* Enhanced Search and Filters */}
-      <GradientCard gradient="from-slate-900/50 via-purple-900/30 to-slate-900/50">
+      <GradientCard gradient="from-white to-white">
         <div className="space-y-6">
           {/* Search Bar */}
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <span className="text-white/50 text-xl">🔍</span>
+              <span className="text-brand-navy/50 text-xl">🔍</span>
             </div>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search parties, hosts, or genres..."
-              className="w-full pl-14 pr-6 py-4 bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50 backdrop-blur-sm transition-all"
+              className="w-full pl-14 pr-6 py-4 bg-brand-navy/5 border border-brand-navy/20 rounded-2xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50 backdrop-blur-sm transition-all"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute inset-y-0 right-0 pr-4 flex items-center text-white/50 hover:text-white"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-brand-navy/50 hover:text-brand-navy"
               >
                 ✕
               </button>
@@ -173,12 +172,12 @@ export default function PartiesPage() {
                 className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
                   filter === key
                     ? "bg-gradient-to-r from-brand-purple to-brand-blue text-white shadow-lg scale-105"
-                    : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white hover:scale-105"
+                    : "bg-brand-navy/5 text-brand-navy/70 hover:bg-brand-navy/10 hover:text-brand-navy hover:scale-105"
                 }`}
               >
                 <span>{icon}</span>
                 <span>{label}</span>
-                <span className="bg-white/20 text-xs px-2 py-1 rounded-full">{count}</span>
+                <span className="bg-brand-navy/10 text-xs px-2 py-1 rounded-full">{count}</span>
               </button>
             ))}
           </div>
@@ -224,8 +223,8 @@ export default function PartiesPage() {
           {parties.map((party) => (
             <GradientCard
               key={party.id}
-              className="group hover:border-brand-purple-light/40 hover:shadow-lg hover:shadow-brand-purple/25 transition-all duration-300 hover:scale-105"
-              gradient="from-slate-900/40 via-purple-900/20 to-blue-900/40"
+              className="group hover:border-brand-purple/40 hover:shadow-lg hover:shadow-brand-purple/10 transition-all duration-300 hover:scale-105"
+              gradient="from-white to-white"
             >
               <div className="space-y-4">
                 {/* Party Header */}
@@ -235,12 +234,12 @@ export default function PartiesPage() {
                       <div className="w-8 h-8 bg-gradient-to-br from-brand-purple to-brand-blue rounded-lg flex items-center justify-center text-white font-bold text-sm">
                         {party.title.charAt(0)}
                       </div>
-                      <h3 className="text-lg font-bold text-white line-clamp-1 group-hover:text-purple-200 transition-colors">
+                      <h3 className="text-lg font-bold text-brand-navy line-clamp-1 group-hover:text-brand-purple transition-colors">
                         {party.title}
                       </h3>
                     </div>
                     {party.description && (
-                      <p className="text-white/70 text-sm line-clamp-2 mb-3">
+                      <p className="text-brand-navy/70 text-sm line-clamp-2 mb-3">
                         {party.description}
                       </p>
                     )}
@@ -253,30 +252,30 @@ export default function PartiesPage() {
 
                 {/* Party Stats */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white/5 rounded-xl p-3 text-center">
-                    <div className="text-lg font-bold text-white">👥</div>
-                    <div className="text-sm text-white/60">
+                  <div className="bg-brand-navy/5 rounded-xl p-3 text-center">
+                    <div className="text-lg font-bold text-brand-navy">👥</div>
+                    <div className="text-sm text-brand-navy/60">
                       {party.participant_count} watching
                     </div>
                   </div>
-                  <div className="bg-white/5 rounded-xl p-3 text-center">
-                    <div className="text-lg font-bold text-white">🎬</div>
-                    <div className="text-sm text-white/60">
+                  <div className="bg-brand-navy/5 rounded-xl p-3 text-center">
+                    <div className="text-lg font-bold text-brand-navy">🎬</div>
+                    <div className="text-sm text-brand-navy/60">
                       {party.video?.title || "No video"}
                     </div>
                   </div>
                 </div>
 
                 {/* Host Info */}
-                <div className="flex items-center gap-3 p-3 bg-white/5 rounded-xl">
+                <div className="flex items-center gap-3 p-3 bg-brand-navy/5 rounded-xl">
                   <div className="w-8 h-8 bg-gradient-to-br from-brand-purple to-brand-purple rounded-full flex items-center justify-center text-white font-semibold text-sm">
                     {party.host?.username?.charAt(0).toUpperCase() || "?"}
                   </div>
                   <div className="flex-1">
-                    <div className="text-white font-medium text-sm">
+                    <div className="text-brand-navy font-medium text-sm">
                       {party.host?.username || "Unknown Host"}
                     </div>
-                    <div className="text-white/60 text-xs">
+                    <div className="text-brand-navy/60 text-xs">
                       {party.scheduled_start 
                         ? `Starts ${new Date(party.scheduled_start).toLocaleString()}`
                         : `Created ${new Date(party.created_at).toLocaleDateString()}`
@@ -317,16 +316,16 @@ export default function PartiesPage() {
 
       {/* Enhanced Empty State */}
       {!loading && parties.length === 0 && (
-        <GradientCard className="text-center py-16" gradient="from-purple-900/20 via-blue-900/20 to-purple-900/20">
+        <GradientCard className="text-center py-16" gradient="from-white to-white">
           <div className="space-y-6">
             <div className="w-24 h-24 mx-auto bg-gradient-to-br from-brand-purple to-brand-blue rounded-3xl flex items-center justify-center text-4xl animate-float">
               🎬
             </div>
             <div className="space-y-2">
-              <h3 className="text-2xl font-bold text-white">
+              <h3 className="text-2xl font-bold text-brand-navy">
                 {searchQuery ? "No parties found" : "No parties available"}
               </h3>
-              <p className="text-white/70 max-w-md mx-auto leading-relaxed">
+              <p className="text-brand-navy/70 max-w-md mx-auto leading-relaxed">
                 {searchQuery 
                   ? `No parties match "${searchQuery}". Try adjusting your search or filters.`
                   : "Be the first to create an epic watch party and invite the community!"
