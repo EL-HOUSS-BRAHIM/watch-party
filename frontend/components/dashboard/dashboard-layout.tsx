@@ -158,8 +158,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           )}
           aria-hidden={hasPageSidebar}
         >
-          {/* Sidebar Header */}
-          <div className="border-b border-brand-navy/10 p-6">
+          {/* Sidebar Header - Hidden on desktop */}
+          <div className="hidden border-b border-brand-navy/10 p-6">
             <div className="flex items-center justify-between">
               <div className={cn("flex items-center gap-3", isCollapsed && "justify-center")}> 
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-magenta to-brand-purple text-lg font-bold text-white shadow-lg">
@@ -181,61 +181,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </button>
             </div>
           </div>
-
-          {/* User Profile Section */}
-          {!isCollapsed && user && (
-            <div className="border-b border-brand-navy/10 p-6">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="relative">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-magenta text-base font-semibold text-white">
-                    {user.avatar ? (
-                      <img src={user.avatar} alt={user.username} className="h-full w-full rounded-full object-cover" />
-                    ) : (
-                      user.username?.[0]?.toUpperCase() || "U"
-                    )}
-                  </div>
-                  <div
-                    className={cn(
-                      "absolute -bottom-1 -right-1 h-4 w-4 rounded-full border-2 border-white",
-                      getStatusColor(getUserStatus())
-                    )}
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold text-brand-navy">{user.first_name || user.username}</p>
-                  <p className="truncate text-xs text-brand-navy/60">@{user.username}</p>
-                  <div
-                    className={cn(
-                      "mt-2 inline-flex items-center gap-1 rounded-full border border-brand-navy/10 px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-brand-navy",
-                      `bg-gradient-to-r ${getPlanColor()}`
-                    )}
-                  >
-                    ✨ {getPlanLabel()}
-                  </div>
-                </div>
-              </div>
-
-              {/* Quick Stats */}
-              <div className="grid grid-cols-2 gap-3 text-center">
-                <div className="rounded-2xl border border-brand-blue/20 bg-brand-blue/5 p-3">
-                  <div className="text-lg font-semibold text-brand-blue-dark">{liveStats.onlineUsers.toLocaleString()}</div>
-                  <div className="text-xs uppercase tracking-[0.3em] text-brand-navy/50">Online</div>
-                </div>
-                <div className="rounded-2xl border border-brand-magenta/20 bg-brand-magenta/5 p-3">
-                  <div className="text-lg font-semibold text-brand-magenta-dark">{liveStats.activeParties}</div>
-                  <div className="text-xs uppercase tracking-[0.3em] text-brand-navy/50">Parties</div>
-                </div>
-                <div className="rounded-2xl border border-brand-cyan/25 bg-brand-cyan/5 p-3">
-                  <div className="text-lg font-semibold text-brand-cyan-dark">{liveStats.systemHealth.systemLoad.toFixed(1)}%</div>
-                  <div className="text-xs uppercase tracking-[0.3em] text-brand-navy/50">Load</div>
-                </div>
-                <div className="rounded-2xl border border-brand-orange/25 bg-brand-orange/5 p-3">
-                  <div className="text-lg font-semibold text-brand-orange-dark">{liveStats.engagement.messagesPerMinute.toLocaleString()}</div>
-                  <div className="text-xs uppercase tracking-[0.3em] text-brand-navy/50">Msgs/min</div>
-                </div>
-              </div>
-            </div>
-          )}
 
           {/* Navigation */}
           <div className="flex-1 space-y-6 overflow-y-auto p-4">

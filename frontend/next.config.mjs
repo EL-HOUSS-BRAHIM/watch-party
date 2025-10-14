@@ -24,6 +24,14 @@ const nextConfig = {
   },
   // Security headers including CSP
   async headers() {
+    const isDev = process.env.NODE_ENV === 'development';
+
+    // In development, disable security headers to allow VS Code Simple Browser
+    // In production, enforce strict CSP and frame protection
+    if (isDev) {
+      return [];
+    }
+
     return [
       {
         source: '/(.*)',
@@ -32,8 +40,8 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline'", // Next.js requires unsafe-eval and unsafe-inline for dev
-              "style-src 'self' 'unsafe-inline'", // Tailwind requires unsafe-inline
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+              "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
               "font-src 'self' data:",
               "connect-src 'self' ws: wss: https:",
