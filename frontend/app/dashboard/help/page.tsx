@@ -157,7 +157,7 @@ export default function HelpPage() {
     <div className="space-y-8">
       {/* Enhanced Header */}
       <div className="relative">
-        <GradientCard className="relative" gradient="from-white to-white">
+        <GradientCard className="relative">
           <div className="text-center space-y-4">
             <div className="text-6xl mb-4">🆘</div>
             <h1 className="text-4xl font-bold text-brand-navy">
@@ -327,7 +327,7 @@ export default function HelpPage() {
       </div>
 
       {/* Still Need Help */}
-      <GradientCard gradient="from-white to-white" className="text-center">
+      <GradientCard className="text-center">
         <div className="space-y-4">
           <div className="text-4xl">🤝</div>
           <h2 className="text-2xl font-bold text-brand-navy">Still need help?</h2>

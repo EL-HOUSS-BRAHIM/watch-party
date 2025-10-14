@@ -407,7 +407,7 @@ export default function VideosPage() {
 
       {/* Enhanced Upload Section */}
       {uploadMode && (
-        <GradientCard gradient="from-white to-white" className="border-brand-navy/10">
+        <GradientCard className="border-brand-navy/10">
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl font-bold text-brand-navy flex items-center gap-3">
@@ -652,7 +652,7 @@ export default function VideosPage() {
       )}
 
       {/* Enhanced Search and Filters */}
-      <GradientCard gradient="from-white to-white">
+      <GradientCard>
         <div className="space-y-6">
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1 relative">

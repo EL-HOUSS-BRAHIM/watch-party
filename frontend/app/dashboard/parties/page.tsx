@@ -83,7 +83,7 @@ export default function PartiesPage() {
     <div className="space-y-8">
       {/* Enhanced Header */}
       <div className="relative">
-        <GradientCard className="relative" gradient="from-white to-white">
+        <GradientCard className="relative">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-4">
@@ -134,7 +134,7 @@ export default function PartiesPage() {
       </div>
 
       {/* Enhanced Search and Filters */}
-      <GradientCard gradient="from-white to-white">
+      <GradientCard>
         <div className="space-y-6">
           {/* Search Bar */}
           <div className="relative">
@@ -224,7 +224,6 @@ export default function PartiesPage() {
             <GradientCard
               key={party.id}
               className="group hover:border-brand-purple/40 hover:shadow-lg hover:shadow-brand-purple/10 transition-all duration-300 hover:scale-105"
-              gradient="from-white to-white"
             >
               <div className="space-y-4">
                 {/* Party Header */}
@@ -316,7 +315,7 @@ export default function PartiesPage() {
 
       {/* Enhanced Empty State */}
       {!loading && parties.length === 0 && (
-        <GradientCard className="text-center py-16" gradient="from-white to-white">
+        <GradientCard className="text-center py-16">
           <div className="space-y-6">
             <div className="w-24 h-24 mx-auto bg-gradient-to-br from-brand-purple to-brand-blue rounded-3xl flex items-center justify-center text-4xl animate-float">
               🎬

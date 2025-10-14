@@ -152,7 +152,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             to avoid duplicated navigation UI. */}
         <aside
           className={cn(
-            "hidden border-r border-brand-navy/10 bg-white/80 backdrop-blur-xl transition-all duration-300 md:fixed md:left-0 md:top-0 md:block md:h-full",
+            "hidden border-r border-brand-navy/10 bg-white/80 backdrop-blur-xl transition-all duration-300 md:fixed md:left-0 md:top-16 md:block md:h-[calc(100vh-4rem)] overflow-y-auto",
             // If the page has its own sidebar hide the global one on md+ breakpoints
             hasPageSidebar ? "hidden md:hidden" : (isCollapsed ? "w-20" : "w-80")
           )}

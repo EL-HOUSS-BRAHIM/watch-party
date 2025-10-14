@@ -61,10 +61,9 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-neutral via-white to-brand-neutral-light">
-      <div className="flex h-screen">
-        {/* Parties Sidebar */}
-  <div className="w-80 bg-white/80 border-r border-brand-navy/10 flex flex-col backdrop-blur-sm page-sidebar">
+    <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] bg-gradient-to-br from-brand-neutral via-white to-brand-neutral-light">
+      {/* Parties Sidebar */}
+      <div className={`${selectedParty ? 'hidden md:flex' : 'flex'} w-full md:w-80 bg-white border-r border-brand-navy/10 flex-col page-sidebar`}>
           {/* Header */}
           <div className="p-6 border-b border-brand-navy/10">
             <div className="flex items-center justify-between mb-4">
@@ -158,24 +157,32 @@ export default function ChatPage() {
         </div>
 
         {/* Chat Area */}
-        <div className="flex-1 flex flex-col">
+        <div className={`${selectedParty ? 'flex' : 'hidden md:flex'} flex-1 flex-col`}>
           {selectedParty ? (
             <>
               {/* Chat Header */}
-              <div className="p-6 border-b border-brand-navy/10 bg-white/80 backdrop-blur-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-bold text-brand-navy">{selectedParty.name}</h2>
-                    <p className="text-brand-navy/60 text-sm">
+              <div className="p-4 md:p-6 border-b border-brand-navy/10 bg-white backdrop-blur-sm">
+                <div className="flex items-center justify-between gap-4">
+                  {/* Mobile back button */}
+                  <button
+                    onClick={() => setSelectedParty(null)}
+                    className="md:hidden p-2 text-brand-navy/60 hover:text-brand-navy"
+                  >
+                    ←
+                  </button>
+                  
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-lg md:text-xl font-bold text-brand-navy truncate">{selectedParty.name}</h2>
+                    <p className="text-brand-navy/60 text-xs md:text-sm">
                       {selectedParty.participants_count || 0} participants • {selectedParty.status}
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 md:gap-3">
                     {isHost(selectedParty) && (
                       <button
                         onClick={() => setShowModeration(true)}
-                        className="px-4 py-2 bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue border border-brand-blue/30 rounded-full text-sm font-medium transition-all"
+                        className="hidden md:flex px-4 py-2 bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue border border-brand-blue/30 rounded-full text-sm font-medium transition-all"
                       >
                         🛡️ Moderation
                       </button>
@@ -183,16 +190,16 @@ export default function ChatPage() {
                     
                     <button
                       onClick={() => router.push(`/room/${selectedParty.id}`)}
-                      className="px-4 py-2 bg-gradient-to-r from-brand-cyan to-brand-blue hover:from-brand-cyan-dark hover:to-brand-blue-dark text-white rounded-full text-sm font-medium transition-all shadow-lg"
+                      className="px-3 md:px-4 py-2 bg-gradient-to-r from-brand-cyan to-brand-blue hover:from-brand-cyan-dark hover:to-brand-blue-dark text-white rounded-full text-xs md:text-sm font-medium transition-all shadow-lg whitespace-nowrap"
                     >
-                      🎬 Join Room
+                      🎬 Join
                     </button>
                   </div>
                 </div>
               </div>
 
               {/* Chat Component */}
-              <div className="flex-1 min-h-0">
+              <div className="flex-1 min-h-0 overflow-hidden">
                 <ChatComponent
                   partyId={selectedParty.id}
                   currentUser={currentUser || undefined}
