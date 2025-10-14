@@ -29,14 +29,14 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
   return (
     <>
       {/* Mobile Header */}
-      <header className="sticky top-0 z-30 bg-gray-900/95 backdrop-blur-sm border-b border-white/10 md:hidden">
+      <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl border-b border-brand-navy/10 md:hidden">
         <div className="flex items-center justify-between px-4 py-3 min-h-[56px]">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-brand-blue to-brand-purple rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-brand-purple to-brand-blue rounded-lg flex items-center justify-center shadow-sm">
               <span className="text-white font-bold text-sm">WP</span>
             </div>
-            <span className="font-bold text-white">Watch Party</span>
+            <span className="font-bold text-brand-navy">Watch Party</span>
           </div>
 
           {/* Actions */}
@@ -44,11 +44,11 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
             {/* Notifications */}
             <button
               onClick={() => window.location.href = "/dashboard/notifications"}
-              className="relative p-2 text-white/70 hover:text-white transition-colors flex items-center justify-center"
+              className="relative p-2 text-brand-navy/70 hover:text-brand-navy transition-colors flex items-center justify-center"
             >
               <span className="text-xl leading-none">🔔</span>
               {notificationCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-coral text-white text-xs rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-brand-coral text-white text-xs rounded-full flex items-center justify-center font-bold shadow-sm">
                   {notificationCount > 9 ? "9+" : notificationCount}
                 </span>
               )}
@@ -57,7 +57,7 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
             {/* Search */}
             <button
               onClick={() => window.location.href = "/dashboard/search"}
-              className="p-2 text-white/70 hover:text-white transition-colors flex items-center justify-center"
+              className="p-2 text-brand-navy/70 hover:text-brand-navy transition-colors flex items-center justify-center"
             >
               <span className="text-xl leading-none">🔍</span>
             </button>
@@ -65,7 +65,7 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
             {/* Menu Toggle */}
             <button
               onClick={() => setIsMenuOpen(true)}
-              className="p-2 text-white/70 hover:text-white transition-colors flex items-center justify-center"
+              className="p-2 text-brand-navy/70 hover:text-brand-navy transition-colors flex items-center justify-center"
             >
               <div className="w-6 h-6 flex flex-col justify-center gap-1">
                 <span className="w-full h-0.5 bg-current"></span>
@@ -78,11 +78,11 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
       </header>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-30 bg-gray-900/95 backdrop-blur-sm border-t border-white/10 md:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-t border-brand-navy/10 md:hidden shadow-[0_-8px_24px_rgba(28,28,46,0.08)]">
         <div className="grid grid-cols-5 py-2">
           <a
             href="/dashboard"
-            className="flex flex-col items-center py-2 px-1 text-white/70 hover:text-white transition-colors"
+            className="flex flex-col items-center py-2 px-1 text-brand-navy/70 hover:text-brand-navy transition-colors"
           >
             <span className="text-xl mb-1">🏠</span>
             <span className="text-xs font-medium">Home</span>
@@ -90,7 +90,7 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
 
           <a
             href="/dashboard/parties"
-            className="flex flex-col items-center py-2 px-1 text-white/70 hover:text-white transition-colors"
+            className="flex flex-col items-center py-2 px-1 text-brand-navy/70 hover:text-brand-navy transition-colors"
           >
             <span className="text-xl mb-1">🎉</span>
             <span className="text-xs font-medium">Parties</span>
@@ -98,17 +98,17 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
 
           <button
             onClick={() => window.location.href = "/dashboard/parties/create"}
-            className="flex flex-col items-center py-2 px-1 text-brand-blue-light hover:text-brand-blue-light transition-colors"
+            className="flex flex-col items-center py-2 px-1 text-brand-purple hover:text-brand-purple-dark transition-colors"
           >
-            <div className="w-8 h-8 bg-brand-blue rounded-full flex items-center justify-center mb-1">
-              <span className="text-white text-lg">+</span>
+            <div className="w-8 h-8 bg-gradient-to-br from-brand-magenta to-brand-orange rounded-full flex items-center justify-center mb-1 shadow-lg shadow-brand-magenta/25">
+              <span className="text-white text-lg font-bold">+</span>
             </div>
-            <span className="text-xs font-medium">Create</span>
+            <span className="text-xs font-semibold">Create</span>
           </button>
 
           <a
             href="/dashboard/videos"
-            className="flex flex-col items-center py-2 px-1 text-white/70 hover:text-white transition-colors"
+            className="flex flex-col items-center py-2 px-1 text-brand-navy/70 hover:text-brand-navy transition-colors"
           >
             <span className="text-xl mb-1">🎬</span>
             <span className="text-xs font-medium">Videos</span>
@@ -116,7 +116,7 @@ export default function MobileNavigation({ currentUser }: MobileNavigationProps)
 
           <a
             href="/dashboard/friends"
-            className="flex flex-col items-center py-2 px-1 text-white/70 hover:text-white transition-colors"
+            className="flex flex-col items-center py-2 px-1 text-brand-navy/70 hover:text-brand-navy transition-colors"
           >
             <span className="text-xl mb-1">👥</span>
             <span className="text-xs font-medium">Friends</span>
