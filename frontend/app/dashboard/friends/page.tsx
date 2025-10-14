@@ -21,24 +21,34 @@ export default function FriendsPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [activeTab, setActiveTab] = useState<"friends" | "requests" | "suggestions" | "search">("friends")
 
+  // Initial load
   useEffect(() => {
+    setLoading(true)
     loadFriends()
     loadFriendRequests()
     loadSuggestions()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-        <h1 className="text-3xl font-bold text-brand-navy">Friends</h1>
-        <p className="text-brand-navy/70">Connect with friends and discover new people to watch with</p>
-      searchUsers()
-    } else {
-      setSearchResults([])
-    }
+  // Debounced search
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (searchQuery.trim()) {
+        searchUsers()
+        setActiveTab("search")
+      } else {
+        setSearchResults([])
+      }
+    }, 300)
+
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery])
 
   const loadFriends = async () => {
     try {
       const response = await userApi.getFriends()
-          className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
+      const friendsList = Array.isArray(response) ? response : (response.results || [])
       setFriends(friendsList)
     } catch (error) {
       console.error("Failed to load friends:", error)
@@ -98,9 +108,8 @@ export default function FriendsPage() {
       loadFriendRequests()
     } catch (error) {
       alert("Failed to accept friend request: " + (error instanceof Error ? error.message : "Unknown error"))
-                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No friends yet</h3>
-                  <p className="text-brand-navy/70 mb-6">
-
+    }
+  }
   const declineFriendRequest = async (requestId: string) => {
     try {
       await userApi.declineFriendRequest(requestId)
@@ -138,30 +147,25 @@ export default function FriendsPage() {
   const UserCard = ({ user, actions }: { user: User; actions: React.ReactNode }) => (
     <div className="bg-white/5 border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-colors">
       <div className="flex items-center gap-3">
-                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No friend requests</h3>
-                  <p className="text-brand-navy/70">
-            <img src={user.avatar} alt={user.username} className="w-full h-full object-cover" />
-          ) : (
-            <span className="text-lg text-brand-navy/60">
-              {user.username?.charAt(0).toUpperCase() || "?"}
-            </span>
-          )}
-        </div>
-        
+        {user.avatar ? (
+          <img src={user.avatar} alt={user.username} className="w-12 h-12 rounded-full object-cover" />
+        ) : (
+          <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
+            <span className="text-lg text-brand-navy/60">{user.username?.charAt(0).toUpperCase() || "?"}</span>
+          </div>
+        )}
+
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
             <h3 className="font-semibold text-brand-navy truncate">
-              {user.first_name && user.last_name 
-                ? `${user.first_name} ${user.last_name}`
-                : user.username
-              }
+              {user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : user.username}
             </h3>
             {user.is_verified && <span className="text-brand-cyan-light text-sm">✓</span>}
             {user.is_premium && <span className="text-brand-orange-light text-sm">⭐</span>}
           </div>
           <p className="text-brand-navy/60 text-sm">@{user.username}</p>
         </div>
-        
+
         <div className="flex gap-2">
           {actions}
         </div>
@@ -178,8 +182,8 @@ export default function FriendsPage() {
       </div>
 
       {/* Search */}
-                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No suggestions</h3>
-                  <p className="text-brand-navy/70">
+      <div>
+        <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -219,7 +223,7 @@ export default function FriendsPage() {
                 <div className="w-12 h-12 rounded-full bg-white/20"></div>
                 <div className="flex-1">
                   <h3 className="text-xl font-semibold text-brand-navy mb-2">No users found</h3>
-                  <p className="text-brand-navy/70">
+                  <p className="text-brand-navy/70">Loading…</p>
                 </div>
               </div>
             </div>
