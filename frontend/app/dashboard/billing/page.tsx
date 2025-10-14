@@ -141,11 +141,11 @@ export default function BillingPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
+      <div className="min-h-screen bg-gradient-to-br from-brand-neutral via-white to-brand-neutral-light">
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p className="text-white/60">Loading billing information...</p>
+            <div className="animate-spin w-12 h-12 border-4 border-brand-purple border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p className="text-brand-navy/60">Loading billing information...</p>
           </div>
         </div>
       </div>
@@ -153,29 +153,29 @@ export default function BillingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
+    <div className="min-h-screen bg-gradient-to-br from-brand-neutral via-white to-brand-neutral-light">
       {/* Header */}
-      <div className="bg-black/20 border-b border-white/10">
+      <div className="bg-white/80 border-b border-brand-navy/10 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => router.push("/dashboard")}
-                className="text-white/60 hover:text-white transition-colors"
+                className="text-brand-navy/60 hover:text-brand-navy transition-colors"
               >
                 ←
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-white">Billing & Subscription</h1>
-                <p className="text-white/60 text-sm">Manage your subscription and billing information</p>
+                <h1 className="text-2xl font-bold text-brand-navy">Billing & Subscription</h1>
+                <p className="text-brand-navy/60 text-sm">Manage your subscription and billing information</p>
               </div>
             </div>
             
             {currentSubscription && (
-              <div className={`px-4 py-2 rounded-lg text-sm font-medium ${
+              <div className={`px-4 py-2 rounded-full text-sm font-medium border ${
                 currentSubscription.status === "active" 
-                  ? "bg-brand-cyan/20 text-brand-cyan-light"
-                  : "bg-brand-coral/20 text-brand-coral-light"
+                  ? "bg-brand-cyan/10 text-brand-cyan border-brand-cyan/30"
+                  : "bg-brand-coral/10 text-brand-coral border-brand-coral/30"
               }`}>
                 {currentSubscription.status.replace('_', ' ').toUpperCase()}
               </div>
@@ -187,32 +187,32 @@ export default function BillingPage() {
       <div className="max-w-6xl mx-auto px-6 py-8 space-y-8">
         {/* Current Subscription */}
         {currentSubscription && (
-          <div className="bg-white/5 border border-white/10 rounded-lg p-6">
-            <h2 className="text-xl font-bold text-white mb-6">Current Subscription</h2>
+          <div className="bg-white border border-brand-navy/10 rounded-3xl p-6 shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+            <h2 className="text-xl font-bold text-brand-navy mb-6">Current Subscription</h2>
             
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div>
-                <h3 className="text-lg font-semibold text-white mb-2">
+                <h3 className="text-lg font-semibold text-brand-navy mb-2">
                   {currentSubscription.plan.name}
                 </h3>
-                <p className="text-white/60 mb-4">{currentSubscription.plan.description}</p>
+                <p className="text-brand-navy/60 mb-4">{currentSubscription.plan.description}</p>
                 
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-white/60">Price:</span>
-                    <span className="text-white">
+                    <span className="text-brand-navy/60">Price:</span>
+                    <span className="text-brand-navy font-semibold">
                       {formatPrice(currentSubscription.plan.price)}/{currentSubscription.plan.interval}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-white/60">Current Period:</span>
-                    <span className="text-white">
+                    <span className="text-brand-navy/60">Current Period:</span>
+                    <span className="text-brand-navy font-semibold">
                       {formatDate(currentSubscription.current_period_start)} - {formatDate(currentSubscription.current_period_end)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-white/60">Next Billing:</span>
-                    <span className="text-white">
+                    <span className="text-brand-navy/60">Next Billing:</span>
+                    <span className="text-brand-navy font-semibold">
                       {currentSubscription.cancel_at_period_end 
                         ? "Canceled" 
                         : formatDate(currentSubscription.current_period_end)
@@ -225,7 +225,7 @@ export default function BillingPage() {
               <div className="space-y-3">
                 <button
                   onClick={updatePaymentMethod}
-                  className="w-full px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm font-medium transition-colors"
+                  className="w-full px-4 py-2 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-full text-sm font-medium transition-all shadow-lg"
                 >
                   Update Payment Method
                 </button>
@@ -233,14 +233,14 @@ export default function BillingPage() {
                 {currentSubscription.cancel_at_period_end ? (
                   <button
                     onClick={reactivateSubscription}
-                    className="w-full px-4 py-2 bg-brand-cyan hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
+                    className="w-full px-4 py-2 bg-brand-cyan hover:bg-brand-cyan-dark text-white rounded-full text-sm font-medium transition-all shadow-lg"
                   >
                     Reactivate Subscription
                   </button>
                 ) : (
                   <button
                     onClick={cancelSubscription}
-                    className="w-full px-4 py-2 bg-brand-coral hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
+                    className="w-full px-4 py-2 border border-brand-coral/30 bg-brand-coral/10 hover:bg-brand-coral/20 text-brand-coral rounded-full text-sm font-medium transition-all"
                   >
                     Cancel Subscription
                   </button>
@@ -251,8 +251,8 @@ export default function BillingPage() {
         )}
 
         {/* Pricing Plans */}
-        <div className="bg-white/5 border border-white/10 rounded-lg p-6">
-          <h2 className="text-xl font-bold text-white mb-6">
+        <div className="bg-white border border-brand-navy/10 rounded-3xl p-6 shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+          <h2 className="text-xl font-bold text-brand-navy mb-6">
             {currentSubscription ? "Change Plan" : "Choose Your Plan"}
           </h2>
           
@@ -260,19 +260,19 @@ export default function BillingPage() {
             {plans.map((plan) => (
               <div
                 key={plan.id}
-                className={`relative bg-white/5 border rounded-lg p-6 ${
+                className={`relative bg-white border rounded-2xl p-6 transition-all hover:shadow-lg ${
                   plan.is_popular 
-                    ? "border-brand-blue ring-2 ring-brand-blue/20" 
-                    : "border-white/10"
+                    ? "border-brand-magenta/30 ring-2 ring-brand-magenta/10" 
+                    : "border-brand-navy/10"
                 } ${
                   currentSubscription?.plan.id === plan.id
-                    ? "bg-brand-cyan/10 border-brand-cyan"
+                    ? "bg-brand-cyan/5 border-brand-cyan/30"
                     : ""
                 }`}
               >
                 {plan.is_popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-brand-blue text-white px-3 py-1 rounded-full text-xs font-medium">
+                    <span className="bg-gradient-to-r from-brand-magenta to-brand-orange text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
                       Most Popular
                     </span>
                   </div>
@@ -280,25 +280,25 @@ export default function BillingPage() {
                 
                 {currentSubscription?.plan.id === plan.id && (
                   <div className="absolute -top-3 right-4">
-                    <span className="bg-brand-cyan text-white px-3 py-1 rounded-full text-xs font-medium">
+                    <span className="bg-brand-cyan text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
                       Current Plan
                     </span>
                   </div>
                 )}
 
                 <div className="text-center mb-6">
-                  <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
-                  <p className="text-white/60 text-sm mb-4">{plan.description}</p>
-                  <div className="text-3xl font-bold text-white">
+                  <h3 className="text-xl font-bold text-brand-navy mb-2">{plan.name}</h3>
+                  <p className="text-brand-navy/60 text-sm mb-4">{plan.description}</p>
+                  <div className="text-3xl font-bold text-brand-navy">
                     {formatPrice(plan.price)}
-                    <span className="text-lg text-white/60">/{plan.interval}</span>
+                    <span className="text-lg text-brand-navy/60">/{plan.interval}</span>
                   </div>
                 </div>
 
                 <ul className="space-y-3 mb-6">
                   {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-center gap-3 text-white/80 text-sm">
-                      <span className="text-brand-cyan-light">✓</span>
+                    <li key={index} className="flex items-center gap-3 text-brand-navy/80 text-sm">
+                      <span className="text-brand-cyan">✓</span>
                       {feature}
                     </li>
                   ))}
@@ -307,12 +307,12 @@ export default function BillingPage() {
                 <button
                   onClick={() => subscribeToPlan(plan.id)}
                   disabled={processing === plan.id || currentSubscription?.plan.id === plan.id}
-                  className={`w-full px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`w-full px-4 py-2 rounded-full text-sm font-medium transition-all shadow-lg ${
                     currentSubscription?.plan.id === plan.id
-                      ? "bg-green-600/20 text-brand-cyan-light cursor-not-allowed"
+                      ? "bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 cursor-not-allowed"
                       : plan.is_popular
-                      ? "bg-brand-blue hover:bg-brand-blue-dark text-white"
-                      : "bg-white/10 hover:bg-white/20 text-white"
+                      ? "bg-gradient-to-r from-brand-magenta to-brand-orange hover:from-brand-magenta-dark hover:to-brand-orange-dark text-white"
+                      : "border border-brand-navy/20 bg-white hover:bg-brand-neutral text-brand-navy"
                   }`}
                 >
                   {processing === plan.id 
@@ -330,44 +330,44 @@ export default function BillingPage() {
         </div>
 
         {/* Billing History */}
-        <div className="bg-white/5 border border-white/10 rounded-lg p-6">
-          <h2 className="text-xl font-bold text-white mb-6">Billing History</h2>
+        <div className="bg-white border border-brand-navy/10 rounded-3xl p-6 shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+          <h2 className="text-xl font-bold text-brand-navy mb-6">Billing History</h2>
           
           {billingHistory.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-white/60">No billing history available</p>
+              <p className="text-brand-navy/60">No billing history available</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead>
-                  <tr className="border-b border-white/10">
-                    <th className="text-left py-3 text-white/80 font-medium">Date</th>
-                    <th className="text-left py-3 text-white/80 font-medium">Description</th>
-                    <th className="text-left py-3 text-white/80 font-medium">Amount</th>
-                    <th className="text-left py-3 text-white/80 font-medium">Status</th>
-                    <th className="text-left py-3 text-white/80 font-medium">Actions</th>
+                  <tr className="border-b border-brand-navy/10">
+                    <th className="text-left py-3 text-brand-navy/80 font-medium">Date</th>
+                    <th className="text-left py-3 text-brand-navy/80 font-medium">Description</th>
+                    <th className="text-left py-3 text-brand-navy/80 font-medium">Amount</th>
+                    <th className="text-left py-3 text-brand-navy/80 font-medium">Status</th>
+                    <th className="text-left py-3 text-brand-navy/80 font-medium">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {billingHistory.map((invoice) => (
-                    <tr key={invoice.id} className="border-b border-white/5">
-                      <td className="py-4 text-white/80 text-sm">
+                    <tr key={invoice.id} className="border-b border-brand-navy/5">
+                      <td className="py-4 text-brand-navy/80 text-sm">
                         {formatDate(invoice.created_at)}
                       </td>
-                      <td className="py-4 text-white/80 text-sm">
+                      <td className="py-4 text-brand-navy/80 text-sm">
                         {invoice.description}
                       </td>
-                      <td className="py-4 text-white text-sm font-medium">
+                      <td className="py-4 text-brand-navy text-sm font-medium">
                         {formatPrice(invoice.amount)}
                       </td>
                       <td className="py-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium border ${
                           invoice.status === "paid"
-                            ? "bg-brand-cyan/20 text-brand-cyan-light"
+                            ? "bg-brand-cyan/10 text-brand-cyan border-brand-cyan/30"
                             : invoice.status === "pending"
-                            ? "bg-brand-orange/20 text-brand-orange-light"
-                            : "bg-brand-coral/20 text-brand-coral-light"
+                            ? "bg-brand-orange/10 text-brand-orange border-brand-orange/30"
+                            : "bg-brand-coral/10 text-brand-coral border-brand-coral/30"
                         }`}>
                           {invoice.status.toUpperCase()}
                         </span>
@@ -376,7 +376,7 @@ export default function BillingPage() {
                         {invoice.status === "paid" && (
                           <button
                             onClick={() => downloadInvoice(invoice.id)}
-                            className="text-brand-blue-light hover:text-brand-blue-light text-sm transition-colors"
+                            className="text-brand-blue hover:text-brand-blue-dark text-sm font-semibold transition-colors"
                           >
                             Download
                           </button>
@@ -391,23 +391,23 @@ export default function BillingPage() {
         </div>
 
         {/* Payment Method */}
-        <div className="bg-white/5 border border-white/10 rounded-lg p-6">
-          <h2 className="text-xl font-bold text-white mb-6">Payment Method</h2>
+        <div className="bg-white border border-brand-navy/10 rounded-3xl p-6 shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
+          <h2 className="text-xl font-bold text-brand-navy mb-6">Payment Method</h2>
           
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-8 bg-white/10 rounded flex items-center justify-center">
-                <span className="text-white/60 text-xs">****</span>
+              <div className="w-12 h-8 bg-brand-neutral rounded flex items-center justify-center">
+                <span className="text-brand-navy/60 text-xs font-semibold">****</span>
               </div>
               <div>
-                <p className="text-white">•••• •••• •••• 4242</p>
-                <p className="text-white/60 text-sm">Expires 12/25</p>
+                <p className="text-brand-navy font-semibold">•••• •••• •••• 4242</p>
+                <p className="text-brand-navy/60 text-sm">Expires 12/25</p>
               </div>
             </div>
             
             <button
               onClick={updatePaymentMethod}
-              className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm font-medium transition-colors"
+              className="px-4 py-2 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-full text-sm font-medium transition-all shadow-lg"
             >
               Update
             </button>
