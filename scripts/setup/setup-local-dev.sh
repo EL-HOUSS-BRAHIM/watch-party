@@ -72,7 +72,9 @@ EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
 DEFAULT_FROM_EMAIL=noreply@watchparty.com
 
 # CORS and Frontend
-CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000
+CORS_ALLOWED_ORIGIN_REGEXES=^https://.*\\.app\\.github\\.dev$
+CSRF_TRUSTED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000
 FRONTEND_URL=http://localhost:3000
 
 # WebSocket Configuration
