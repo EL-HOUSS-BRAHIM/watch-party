@@ -103,7 +103,9 @@ USE_S3=true
 AWS_STORAGE_BUCKET_NAME=your-s3-bucket-name
 AWS_S3_REGION_NAME=eu-west-3
 
-CORS_ALLOWED_ORIGINS=https://watch-party.brahim-elhouss.me,https://be-watch-party.brahim-elhouss.me
+CORS_ALLOWED_ORIGINS=https://watch-party.brahim-elhouss.me,https://be-watch-party.brahim-elhouss.me,http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000
+CORS_ALLOWED_ORIGIN_REGEXES=^https://.*\\.app\\.github\\.dev$
+CSRF_TRUSTED_ORIGINS=https://watch-party.brahim-elhouss.me,https://be-watch-party.brahim-elhouss.me,http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000
 ENVIRONMENT=production
 MAINTENANCE_MODE=False
 REGISTRATION_ENABLED=True

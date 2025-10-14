@@ -134,7 +134,9 @@ REDIS_URL=redis://localhost:6379/0
 ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
 
 # Development settings
-CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000
+CORS_ALLOWED_ORIGIN_REGEXES=^https://.*\\.app\\.github\\.dev$
+CSRF_TRUSTED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000
 EOF
             log_success "Basic .env file created"
         fi

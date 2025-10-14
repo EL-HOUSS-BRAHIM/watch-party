@@ -263,7 +263,9 @@ DEFAULT_FROM_EMAIL=noreply@$backend_domain
 # =============================================================================
 # CORS CONFIGURATION
 # =============================================================================
-CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://$frontend_domain
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000,https://$frontend_domain
+CORS_ALLOWED_ORIGIN_REGEXES=^https://.*\\.app\\.github\\.dev$
+CSRF_TRUSTED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000,https://$frontend_domain
 
 # =============================================================================
 # SECURITY SETTINGS
@@ -461,7 +463,9 @@ DEFAULT_FROM_EMAIL=noreply@$backend_domain
 # =============================================================================
 # CORS CONFIGURATION
 # =============================================================================
-CORS_ALLOWED_ORIGINS=https://$frontend_domain,https://www.$frontend_domain
+CORS_ALLOWED_ORIGINS=https://$frontend_domain,https://www.$frontend_domain,http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000
+CORS_ALLOWED_ORIGIN_REGEXES=^https://.*\\.app\\.github\\.dev$
+CSRF_TRUSTED_ORIGINS=https://$frontend_domain,https://www.$frontend_domain,http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000
 
 # =============================================================================
 # SECURITY SETTINGS
