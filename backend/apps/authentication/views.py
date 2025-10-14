@@ -75,27 +75,34 @@ class RegisterView(RateLimitMixin, APIView):
             }, status=status.HTTP_201_CREATED)
             
             # Set tokens as HTTP-only cookies (auto-login after registration)
-            response.set_cookie(
-                key='access_token',
-                value=str(access_token),
-                max_age=60 * 60,  # 60 minutes
-                httponly=True,
-                secure=True,
-                samesite='Lax',
-                domain='.brahim-elhouss.me',
-                path='/',
-            )
-            
-            response.set_cookie(
-                key='refresh_token',
-                value=str(refresh),
-                max_age=60 * 60 * 24 * 7,  # 7 days
-                httponly=True,
-                secure=True,
-                samesite='Lax',
-                domain='.brahim-elhouss.me',
-                path='/',
-            )
+            # Set tokens as httpOnly cookies for maximum security
+        # Check if request is from localhost (for local development)
+        origin = request.headers.get('Origin', '')
+        is_localhost = 'localhost' in origin or '127.0.0.1' in origin
+        cookie_domain = None if is_localhost else '.brahim-elhouss.me'
+        
+        response.set_cookie(
+            'access_token',
+            access_token,
+            max_age=3600 * 24 * 365,  # 1 year
+            httponly=True,
+            secure=True,  # HTTPS only
+            samesite='Lax',
+            domain=cookie_domain,  # None for localhost, .brahim-elhouss.me for production
+            path='/'
+        )
+        
+        # Set refresh token with longer expiry
+        response.set_cookie(
+            'refresh_token',
+            refresh_token,
+            max_age=3600 * 24 * 365 * 7,  # 7 days
+            httponly=True,
+            secure=True,
+            samesite='Lax',
+            domain=cookie_domain,
+            path='/'
+        )
             
             return response
         
@@ -217,8 +224,13 @@ class LogoutView(APIView):
             }, status=status.HTTP_200_OK)
             
             # Delete authentication cookies
-            response.delete_cookie('access_token', domain='.brahim-elhouss.me', path='/')
-            response.delete_cookie('refresh_token', domain='.brahim-elhouss.me', path='/')
+            # Check if request is from localhost (for local development)
+            origin = request.headers.get('Origin', '')
+            is_localhost = 'localhost' in origin or '127.0.0.1' in origin
+            cookie_domain = None if is_localhost else '.brahim-elhouss.me'
+            
+            response.delete_cookie('access_token', domain=cookie_domain, path='/')
+            response.delete_cookie('refresh_token', domain=cookie_domain, path='/')
             
             return response
         except Exception:
