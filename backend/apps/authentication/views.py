@@ -156,6 +156,11 @@ class LoginView(RateLimitMixin, TokenObtainPairView):
             }, status=status.HTTP_200_OK)
             
             # Set tokens as HTTP-only cookies
+            # Check if request is from localhost (for local development)
+            origin = request.headers.get('Origin', '')
+            is_localhost = 'localhost' in origin or '127.0.0.1' in origin
+            cookie_domain = None if is_localhost else '.brahim-elhouss.me'
+            
             # Access token: 60 minutes (matches JWT_ACCESS_TOKEN_LIFETIME in settings)
             response.set_cookie(
                 key='access_token',
@@ -164,7 +169,7 @@ class LoginView(RateLimitMixin, TokenObtainPairView):
                 httponly=True,
                 secure=True,  # HTTPS only in production
                 samesite='Lax',
-                domain='.brahim-elhouss.me',  # Allow subdomain sharing
+                domain=cookie_domain,  # None for localhost, .brahim-elhouss.me for production
                 path='/',
             )
             
@@ -176,7 +181,7 @@ class LoginView(RateLimitMixin, TokenObtainPairView):
                 httponly=True,
                 secure=True,  # HTTPS only in production
                 samesite='Lax',
-                domain='.brahim-elhouss.me',  # Allow subdomain sharing
+                domain=cookie_domain,  # None for localhost, .brahim-elhouss.me for production
                 path='/',
             )
             
