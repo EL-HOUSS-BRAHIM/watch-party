@@ -22,8 +22,7 @@ class EnhancedSecurityMiddleware:
         response = self.get_response(request)
         if isinstance(response, HttpResponse):
             response.setdefault('X-Content-Type-Options', 'nosniff')
-            # Allow framing for embedding - use SAMEORIGIN or remove for cross-origin
-            response.setdefault('X-Frame-Options', 'ALLOWALL')
+            # X-Frame-Options removed to allow framing/embedding
             if getattr(settings, 'SECURE_BROWSER_XSS_FILTER', False):
                 response.setdefault('X-XSS-Protection', '1; mode=block')
         return response

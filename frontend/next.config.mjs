@@ -26,10 +26,22 @@ const nextConfig = {
   async headers() {
     const isDev = process.env.NODE_ENV === 'development';
 
-    // In development, disable security headers to allow VS Code Simple Browser
-    // In production, enforce strict CSP and frame protection
+    // In development, allow all framing and disable restrictive headers
+    // to support VS Code Simple Browser and other development tools
     if (isDev) {
-      return [];
+      return [
+        {
+          source: '/(.*)',
+          headers: [
+            {
+              key: 'X-Content-Type-Options',
+              value: 'nosniff'
+            },
+            // No X-Frame-Options in dev to allow all framing
+            // No CSP in dev to avoid conflicts
+          ],
+        },
+      ];
     }
 
     return [
@@ -49,7 +61,6 @@ const nextConfig = {
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
-              "frame-ancestors *",
               "upgrade-insecure-requests"
             ].join('; ')
           },
@@ -63,7 +74,7 @@ const nextConfig = {
           },
           {
             key: 'X-Frame-Options',
-            value: 'ALLOWALL'
+            value: 'SAMEORIGIN'
           },
           {
             key: 'X-Content-Type-Options',

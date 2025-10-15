@@ -372,8 +372,7 @@ class SecurityHeaders:
         # Prevent XSS attacks
         response['X-XSS-Protection'] = '1; mode=block'
         response['X-Content-Type-Options'] = 'nosniff'
-        # Allow framing for embedding
-        response['X-Frame-Options'] = 'ALLOWALL'
+        # X-Frame-Options removed to allow framing/embedding
         
         # Prevent MIME type sniffing
         response['Content-Security-Policy'] = (
