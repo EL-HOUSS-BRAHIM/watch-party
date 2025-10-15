@@ -468,8 +468,8 @@ export default function IntegrationsPage() {
       {activeTab === "connected" && connectedIntegrations.length === 0 && (
         <div className="text-center py-12">
           <div className="text-6xl mb-4">🔗</div>
-          <h3 className="text-xl font-semibold text-white mb-2">No integrations connected</h3>
-          <p className="text-white/60 mb-6">
+          <h3 className="text-xl font-semibold text-brand-navy mb-2">No integrations connected</h3>
+          <p className="text-brand-navy/70 mb-6">
             {searchQuery
               ? "No connected integrations match your search"
               : "Connect your favorite services to enhance your watch party experience"
@@ -489,8 +489,8 @@ export default function IntegrationsPage() {
       {activeTab === "available" && filteredIntegrationTypes.length === 0 && (
         <div className="text-center py-12">
           <div className="text-6xl mb-4">🌐</div>
-          <h3 className="text-xl font-semibold text-white mb-2">No integrations found</h3>
-          <p className="text-white/60 mb-6">
+          <h3 className="text-xl font-semibold text-brand-navy mb-2">No integrations found</h3>
+          <p className="text-brand-navy/70 mb-6">
             {searchQuery || selectedCategory !== "all"
               ? "Try adjusting your search or filter criteria"
               : "All available integrations are already connected"

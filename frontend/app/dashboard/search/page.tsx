@@ -478,7 +478,7 @@ export default function SearchPage() {
       {/* Quick Search Shortcuts */}
       {!query && (
         <div>
-          <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+          <h3 className="text-2xl font-bold text-brand-navy mb-6 flex items-center gap-2">
             <span>⚡</span>
             Quick Search
           </h3>
@@ -498,8 +498,8 @@ export default function SearchPage() {
                     {option.icon}
                   </div>
                   <div>
-                    <h4 className="font-medium text-white mb-2">{option.title}</h4>
-                    <p className="text-white/60 text-sm">{option.description}</p>
+                    <h4 className="font-medium text-brand-navy mb-2">{option.title}</h4>
+                    <p className="text-brand-navy/70 text-sm">{option.description}</p>
                   </div>
                   <IconButton
                     gradient={option.gradient}

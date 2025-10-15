@@ -169,8 +169,8 @@ export function EmptyState({ icon, title, message, actionLabel, onAction }: Empt
     <div className="flex items-center justify-center py-12">
       <div className="text-center max-w-md">
         <div className="mb-4 text-6xl">{icon}</div>
-        <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-        <p className="text-white/70 mb-6">{message}</p>
+        <h3 className="text-xl font-bold text-brand-navy mb-2">{title}</h3>
+        <p className="text-brand-navy/70 mb-6">{message}</p>
         {actionLabel && onAction && (
           <button
             onClick={onAction}

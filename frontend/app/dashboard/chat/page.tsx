@@ -62,8 +62,8 @@ export default function ChatPage() {
 
   return (
     <div className="flex flex-col md:flex-row h-[calc(100vh-4rem)] bg-gradient-to-br from-brand-neutral via-white to-brand-neutral-light">
-      {/* Parties Sidebar - Always visible on desktop */}
-      <div className={`${selectedParty ? 'hidden md:flex' : 'flex'} w-full md:w-80 bg-white border-r border-brand-navy/10 flex-col page-sidebar md:flex`}>
+      {/* Parties Sidebar - Always visible on desktop, hidden on mobile when party selected */}
+      <div className={`${selectedParty ? 'hidden' : 'flex'} md:flex w-full md:w-80 bg-white border-r border-brand-navy/10 flex-col page-sidebar`}>
           {/* Header */}
           <div className="p-6 border-b border-brand-navy/10">
             <div className="flex items-center justify-between mb-4">
