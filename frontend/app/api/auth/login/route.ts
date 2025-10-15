@@ -6,6 +6,9 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     
+    console.log('Login route - BACKEND_URL:', BACKEND_URL)
+    console.log('Login route - Request body:', body)
+    
     // Forward request to Django backend
     const response = await fetch(`${BACKEND_URL}/api/auth/login/`, {
       method: 'POST',
@@ -15,6 +18,26 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
       credentials: 'include',
     })
+
+    console.log('Backend response status:', response.status)
+    console.log('Backend response headers:', Object.fromEntries(response.headers.entries()))
+    
+    const contentType = response.headers.get('content-type')
+    console.log('Content-Type:', contentType)
+    
+    // Check if response is JSON
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text()
+      console.error('Backend returned non-JSON response:', text.substring(0, 500))
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'invalid_response',
+          message: 'Backend returned invalid response format' 
+        },
+        { status: 500 }
+      )
+    }
 
     const data = await response.json()
 
