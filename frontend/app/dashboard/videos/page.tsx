@@ -683,12 +683,14 @@ export default function VideosPage() {
                   className={`flex items-center gap-2 px-3 sm:px-4 py-3 rounded-xl font-medium transition-all duration-200 min-h-[44px] text-sm sm:text-base ${
                     filter === key
                       ? "bg-gradient-to-r from-brand-blue to-brand-purple text-white shadow-lg sm:scale-105"
-                      : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white sm:hover:scale-105"
+                      : "bg-brand-navy/5 text-brand-navy/80 hover:bg-brand-navy/10 hover:text-brand-navy sm:hover:scale-105 border border-brand-navy/10"
                   }`}
                 >
                   <span>{icon}</span>
                   <span className="hidden sm:inline">{label}</span>
-                  <span className="bg-white/20 text-xs px-2 py-1 rounded-full">{count}</span>
+                  <span className={`text-xs px-2 py-1 rounded-full ${
+                    filter === key ? "bg-white/20" : "bg-brand-navy/10"
+                  }`}>{count}</span>
                 </button>
               ))}
             </div>
@@ -812,26 +814,28 @@ export default function VideosPage() {
 
       {/* Empty State */}
       {!loading && videos.length === 0 && (
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">🎬</div>
-          <h3 className="text-xl font-semibold text-white mb-2">
-            {searchQuery ? "No videos found" : "No videos yet"}
-          </h3>
-          <p className="text-white/70 mb-6">
-            {searchQuery 
-              ? `No videos match "${searchQuery}". Try a different search term.`
-              : "Upload your first video or add a streaming URL to get started!"
-            }
-          </p>
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="mr-4 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-colors"
-            >
-              Clear Search
-            </button>
-          )}
-        </div>
+        <GradientCard>
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">🎬</div>
+            <h3 className="text-xl font-semibold text-brand-navy mb-2">
+              {searchQuery ? "No videos found" : "No videos yet"}
+            </h3>
+            <p className="text-brand-navy/70 mb-6">
+              {searchQuery 
+                ? `No videos match "${searchQuery}". Try a different search term.`
+                : "Upload your first video or add a streaming URL to get started!"
+              }
+            </p>
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="mr-4 bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue px-4 py-2 rounded-lg transition-colors border border-brand-blue/30"
+              >
+                Clear Search
+              </button>
+            )}
+          </div>
+        </GradientCard>
       )}
     </div>
   )

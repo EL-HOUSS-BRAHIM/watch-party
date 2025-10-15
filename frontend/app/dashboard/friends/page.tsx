@@ -177,8 +177,8 @@ export default function FriendsPage() {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-white">Friends</h1>
-        <p className="text-white/70">Connect with friends and discover new people to watch with</p>
+        <h1 className="text-3xl font-bold text-brand-navy">Friends</h1>
+        <p className="text-brand-navy/70">Connect with friends and discover new people to watch with</p>
       </div>
 
       {/* Search */}
@@ -188,7 +188,7 @@ export default function FriendsPage() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search for users by username or email..."
-          className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
+          className="w-full px-4 py-2 bg-brand-navy/5 border border-brand-navy/20 rounded-lg text-brand-navy placeholder-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
         />
       </div>
 
@@ -265,8 +265,8 @@ export default function FriendsPage() {
               ) : (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">👥</div>
-                  <h3 className="text-xl font-semibold text-white mb-2">No friends yet</h3>
-                  <p className="text-white/70 mb-6">
+                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No friends yet</h3>
+                  <p className="text-brand-navy/70 mb-6">
                     Add friends to start watching together and sharing experiences!
                   </p>
                   <button
@@ -311,8 +311,8 @@ export default function FriendsPage() {
               ) : (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">📬</div>
-                  <h3 className="text-xl font-semibold text-white mb-2">No friend requests</h3>
-                  <p className="text-white/70">
+                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No friend requests</h3>
+                  <p className="text-brand-navy/70">
                     When someone sends you a friend request, it will appear here.
                   </p>
                 </div>
@@ -351,8 +351,8 @@ export default function FriendsPage() {
               ) : (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🔍</div>
-                  <h3 className="text-xl font-semibold text-white mb-2">No suggestions</h3>
-                  <p className="text-white/70">
+                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No suggestions</h3>
+                  <p className="text-brand-navy/70">
                     We'll suggest friends based on your activity and mutual connections.
                   </p>
                 </div>
@@ -391,8 +391,8 @@ export default function FriendsPage() {
               ) : (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">🔍</div>
-                  <h3 className="text-xl font-semibold text-white mb-2">No users found</h3>
-                  <p className="text-white/70">
+                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No users found</h3>
+                  <p className="text-brand-navy/70">
                     No users match "{searchQuery}". Try a different search term.
                   </p>
                 </div>

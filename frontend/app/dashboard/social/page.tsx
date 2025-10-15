@@ -217,19 +217,21 @@ export default function SocialPage() {
       {/* Enhanced Search Bar */}
       <div className="relative">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <span className="text-brand-navy/50 text-lg sm:text-xl">🔍</span>
+          <svg className="w-5 h-5 sm:w-6 sm:h-6 text-brand-navy/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
         </div>
         <input
           type="text"
           placeholder={`Search ${activeTab === "friends" ? "friends" : "groups"}...`}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-12 sm:pl-14 pr-10 sm:pr-6 py-3 sm:py-4 text-base bg-white/10 border border-white/20 rounded-2xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 backdrop-blur-sm transition-all"
+          className="w-full pl-12 sm:pl-14 pr-10 sm:pr-6 py-3 sm:py-4 text-base bg-brand-navy/5 border border-brand-navy/20 rounded-2xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 backdrop-blur-sm transition-all"
         />
         {searchQuery && (
           <button
             onClick={() => setSearchQuery("")}
-            className="absolute inset-y-0 right-0 pr-4 flex items-center text-white/50 hover:text-white min-w-[44px] justify-center"
+            className="absolute inset-y-0 right-0 pr-4 flex items-center text-brand-navy/50 hover:text-brand-navy min-w-[44px] justify-center"
           >
             ✕
           </button>
@@ -346,12 +348,12 @@ export default function SocialPage() {
               {group.tags && group.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1 mb-4">
                   {group.tags.slice(0, 3).map((tag, index) => (
-                    <span key={index} className="px-2 py-1 bg-white/10 text-xs text-brand-navy/70 rounded-full">
+                    <span key={index} className="px-2 py-1 bg-brand-navy/10 text-xs text-brand-navy/70 rounded-full border border-brand-navy/20">
                       {tag}
                     </span>
                   ))}
                   {group.tags.length > 3 && (
-                    <span className="px-2 py-1 bg-white/10 text-xs text-white/70 rounded-full">
+                    <span className="px-2 py-1 bg-brand-navy/10 text-xs text-brand-navy/70 rounded-full border border-brand-navy/20">
                       +{group.tags.length - 3}
                     </span>
                   )}
@@ -359,7 +361,7 @@ export default function SocialPage() {
               )}
 
               {/* Created By */}
-              <div className="flex items-center gap-2 text-xs text-white/50 mb-4">
+              <div className="flex items-center gap-2 text-xs text-brand-navy/50 mb-4">
                 <span>Created by {group.created_by.username}</span>
               </div>
 
@@ -384,13 +386,13 @@ export default function SocialPage() {
                   <>
                     <button
                       onClick={() => handleJoinGroup(group.id)}
-                      className="flex-1 px-4 py-2 bg-green-600/20 hover:bg-brand-cyan/30 text-brand-cyan-light rounded-lg font-medium transition-colors"
+                      className="flex-1 px-4 py-2 bg-green-600/20 hover:bg-brand-cyan/30 text-brand-cyan-light rounded-lg font-medium transition-colors border border-brand-cyan/30"
                     >
                       Join Group
                     </button>
                     <button
                       onClick={() => router.push(`/dashboard/social/groups/${group.id}`)}
-                      className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg font-medium transition-colors"
+                      className="px-4 py-2 bg-brand-navy/10 hover:bg-brand-navy/20 text-brand-navy rounded-lg font-medium transition-colors border border-brand-navy/20"
                     >
                       View
                     </button>
@@ -405,28 +407,29 @@ export default function SocialPage() {
       {/* Empty State */}
       {((activeTab === "friends" && filteredFriends.length === 0) ||
         (activeTab !== "friends" && filteredGroups.filter(group => activeTab === "discover" ? !group.is_member : group.is_member).length === 0)) && (
-        <div className="text-center py-12">
-          <div className="text-6xl mb-4">
-            {activeTab === "friends" ? "👫" : activeTab === "groups" ? "👥" : "🌟"}
-          </div>
-          <h3 className="text-xl font-semibold text-white mb-2">
-            {activeTab === "friends"
-              ? "No friends yet"
-              : activeTab === "groups"
-              ? "No groups joined"
-              : "No groups to discover"
-            }
-          </h3>
-          <p className="text-white/60 mb-6">
-            {searchQuery
-              ? "Try adjusting your search criteria"
-              : activeTab === "friends"
-              ? "Start connecting with other users"
-              : activeTab === "groups"
-              ? "Join some groups to get started"
-              : "All public groups have been joined"
-            }
-          </p>
+        <GradientCard>
+          <div className="text-center py-12">
+            <div className="text-6xl mb-4">
+              {activeTab === "friends" ? "👫" : activeTab === "groups" ? "👥" : "🌟"}
+            </div>
+            <h3 className="text-xl font-semibold text-brand-navy mb-2">
+              {activeTab === "friends"
+                ? "No friends yet"
+                : activeTab === "groups"
+                ? "No groups joined"
+                : "No groups to discover"
+              }
+            </h3>
+            <p className="text-brand-navy/70 mb-6">
+              {searchQuery
+                ? "Try adjusting your search criteria"
+                : activeTab === "friends"
+                ? "Start connecting with other users"
+                : activeTab === "groups"
+                ? "Join some groups to get started"
+                : "All public groups have been joined"
+              }
+            </p>
           {!searchQuery && (
             <div className="flex gap-3 justify-center">
               {activeTab === "friends" && (
@@ -455,7 +458,7 @@ export default function SocialPage() {
               )}
             </div>
           )}
-        </div>
+        </GradientCard>
       )}
     </div>
   )
