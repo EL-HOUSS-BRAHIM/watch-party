@@ -343,7 +343,7 @@ export default function VideosPage() {
       {/* Enhanced Header */}
       <div className="relative">
         <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 via-blue-600/20 to-brand-purple/20 rounded-3xl blur-xl"></div>
-        <GradientCard className="relative border-brand-cyan/30">
+        <GradientCard className="relative border-brand-cyan/30 bg-gradient-to-br from-brand-navy/90 via-brand-navy/80 to-brand-blue/90 backdrop-blur-sm">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
@@ -355,8 +355,8 @@ export default function VideosPage() {
                   <span className="text-brand-cyan-light text-xs sm:text-sm font-medium">{videos.length} Videos</span>
                 </div>
               </div>
-              <p className="text-brand-navy/80 text-base sm:text-lg">Build your personal cinema collection with unlimited storage</p>
-              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-white/60">
+              <p className="text-white/90 text-base sm:text-lg">Build your personal cinema collection with unlimited storage</p>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-white/70">
                 <span>🎬 All Formats</span>
                 <span>•</span>
                 <span>☁️ Cloud Storage</span>
@@ -370,7 +370,7 @@ export default function VideosPage() {
                 <button
                   onClick={() => setViewMode("grid")}
                   className={`p-2 rounded-lg transition-all ${
-                    viewMode === "grid" ? "bg-white/20 text-brand-navy" : "text-brand-navy/60 hover:text-brand-navy"
+                    viewMode === "grid" ? "bg-white/30 text-white" : "text-white/60 hover:text-white"
                   }`}
                 >
                   ⊞
@@ -378,7 +378,7 @@ export default function VideosPage() {
                 <button
                   onClick={() => setViewMode("list")}
                   className={`p-2 rounded-lg transition-all ${
-                    viewMode === "list" ? "bg-white/20 text-brand-navy" : "text-brand-navy/60 hover:text-brand-navy"
+                    viewMode === "list" ? "bg-white/30 text-white" : "text-white/60 hover:text-white"
                   }`}
                 >
                   ☰
@@ -657,7 +657,9 @@ export default function VideosPage() {
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1 relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <span className="text-brand-navy/50 text-lg sm:text-xl">🔍</span>
+                <svg className="w-5 h-5 sm:w-6 sm:h-6 text-brand-navy/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
               </div>
               <input
                 type="text"
