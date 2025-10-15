@@ -430,34 +430,35 @@ export default function SocialPage() {
                 : "All public groups have been joined"
               }
             </p>
-          {!searchQuery && (
-            <div className="flex gap-3 justify-center">
-              {activeTab === "friends" && (
-                <button
-                  onClick={() => router.push("/dashboard/friends/find")}
-                  className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
-                >
-                  Find Friends
-                </button>
-              )}
-              {activeTab === "groups" && (
-                <button
-                  onClick={() => router.push("/dashboard/social/groups/create")}
-                  className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
-                >
-                  Create Group
-                </button>
-              )}
-              {activeTab === "discover" && (
-                <button
-                  onClick={() => setActiveTab("groups")}
-                  className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
-                >
-                  View My Groups
-                </button>
-              )}
-            </div>
-          )}
+            {!searchQuery && (
+              <div className="flex gap-3 justify-center">
+                {activeTab === "friends" && (
+                  <button
+                    onClick={() => router.push("/dashboard/friends/find")}
+                    className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
+                  >
+                    Find Friends
+                  </button>
+                )}
+                {activeTab === "groups" && (
+                  <button
+                    onClick={() => router.push("/dashboard/social/groups/create")}
+                    className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
+                  >
+                    Create Group
+                  </button>
+                )}
+                {activeTab === "discover" && (
+                  <button
+                    onClick={() => setActiveTab("groups")}
+                    className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
+                  >
+                    View My Groups
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
         </GradientCard>
       )}
     </div>
