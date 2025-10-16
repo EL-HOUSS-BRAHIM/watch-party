@@ -103,12 +103,8 @@ class PlatformOverviewAnalyticsView(GenericAPIView):
                 )
             }
             
-            # Geographic distribution
-            geographic_data = User.objects.exclude(
-                country__isnull=True
-            ).values('country').annotate(
-                user_count=Count('id')
-            ).order_by('-user_count')[:20]
+            # Geographic distribution (User model doesn't have country field)
+            geographic_data = []
             
             # Platform health metrics
             health_metrics = {

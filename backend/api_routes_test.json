@@ -22,7 +22,7 @@
           "status": 200,
           "response": {
             "status": "healthy",
-            "timestamp": "2025-10-16T20:14:50.963538+00:00",
+            "timestamp": "2025-10-16T20:26:17.653291+00:00",
             "version": "1.0"
           }
         },
@@ -68,7 +68,7 @@
             "message": "Server is working!",
             "authenticated": false,
             "user_id": null,
-            "timestamp": "2025-10-16T20:14:51.766535+00:00"
+            "timestamp": "2025-10-16T20:26:18.246670+00:00"
           }
         }
       ]
@@ -124,7 +124,7 @@
               "subscription_expires": null,
               "is_subscription_active": false,
               "date_joined": "2025-10-16T18:34:43.222387Z",
-              "last_login": "2025-10-16T20:14:52.952641Z"
+              "last_login": "2025-10-16T20:26:19.405634Z"
             }
           }
         },
@@ -239,7 +239,7 @@
               "friends_count": 0,
               "rank": 0,
               "join_date": "2025-10-16T19:03:18.851792Z",
-              "last_active": "2025-10-16T20:14:50.122689Z"
+              "last_active": "2025-10-16T20:26:15.495511Z"
             }
           }
         },
@@ -283,8 +283,8 @@
                   },
                   "ip_address": "172.18.0.6",
                   "user_agent": "python-requests/2.32.4",
-                  "created_at": "2025-10-16T20:15:00.909563Z",
-                  "expires_at": "2025-10-23T20:15:00.909568Z",
+                  "created_at": "2025-10-16T20:26:25.753276Z",
+                  "expires_at": "2025-10-23T20:26:25.753281Z",
                   "is_current": true
                 }
               ]
@@ -499,7 +499,7 @@
             "message": "Trending parties retrieved successfully",
             "data": [],
             "meta": {
-              "generated_at": "2025-10-16T20:14:55.522787+00:00",
+              "generated_at": "2025-10-16T20:26:20.167395+00:00",
               "results": 0
             }
           }
@@ -597,7 +597,7 @@
             "success": true,
             "message": "Real-time analytics retrieved successfully",
             "data": {
-              "timestamp": "2025-10-16T20:15:06.601633+00:00",
+              "timestamp": "2025-10-16T20:26:32.980183+00:00",
               "online_users": 2,
               "active_parties": 0,
               "recent_activity": [],
@@ -688,7 +688,7 @@
             "data": {
               "status": "healthy",
               "service": "integrations",
-              "timestamp": "2025-10-16T20:14:55.963533+00:00"
+              "timestamp": "2025-10-16T20:26:20.459757+00:00"
             }
           }
         },
@@ -718,7 +718,7 @@
                 "content",
                 "notification"
               ],
-              "last_updated": "2025-10-16T20:15:07.830823+00:00"
+              "last_updated": "2025-10-16T20:26:34.280211+00:00"
             }
           }
         },
@@ -826,6 +826,34 @@
                   "title": "People You Might Know",
                   "items": [
                     {
+                      "id": "5b1fd053-8cef-435f-9b5e-507d342e8f25",
+                      "username": null,
+                      "name": "test@test.com password123",
+                      "profile_picture": null,
+                      "is_online": false
+                    },
+                    {
+                      "id": "6f8c1bea-5532-42df-8a81-ff1733a7ed17",
+                      "username": null,
+                      "name": "BRAHIM EL HOUSS",
+                      "profile_picture": null,
+                      "is_online": false
+                    },
+                    {
+                      "id": "6ba8eff9-5f71-4872-9fe2-b4377d2eea96",
+                      "username": null,
+                      "name": "API Tester",
+                      "profile_picture": null,
+                      "is_online": false
+                    },
+                    {
+                      "id": "cc3bd8c9-191a-4685-8edc-7add1439d6ba",
+                      "username": null,
+                      "name": "Test User",
+                      "profile_picture": null,
+                      "is_online": false
+                    },
+                    {
                       "id": "e40994f5-d784-45dd-b5bb-2457eee81d03",
                       "username": null,
                       "name": "Test User",
@@ -840,37 +868,9 @@
                       "is_online": false
                     },
                     {
-                      "id": "5b1fd053-8cef-435f-9b5e-507d342e8f25",
-                      "username": null,
-                      "name": "test@test.com password123",
-                      "profile_picture": null,
-                      "is_online": false
-                    },
-                    {
-                      "id": "cc3bd8c9-191a-4685-8edc-7add1439d6ba",
-                      "username": null,
-                      "name": "Test User",
-                      "profile_picture": null,
-                      "is_online": false
-                    },
-                    {
                       "id": "a940f0a2-7de6-4e9f-9ea3-099709063d91",
                       "username": null,
                       "name": "Admin User",
-                      "profile_picture": null,
-                      "is_online": false
-                    },
-                    {
-                      "id": "6ba8eff9-5f71-4872-9fe2-b4377d2eea96",
-                      "username": null,
-                      "name": "API Tester",
-                      "profile_picture": null,
-                      "is_online": false
-                    },
-                    {
-                      "id": "6f8c1bea-5532-42df-8a81-ff1733a7ed17",
-                      "username": null,
-                      "name": "BRAHIM EL HOUSS",
                       "profile_picture": null,
                       "is_online": false
                     }
@@ -1318,7 +1318,7 @@
                   "priority": "medium"
                 }
               ],
-              "last_updated": "2025-10-16T20:15:13.432858+00:00"
+              "last_updated": "2025-10-16T20:26:41.025439+00:00"
             }
           }
         },
@@ -1381,12 +1381,32 @@
           "path": "/api/admin/dashboard/",
           "auth_required": true,
           "tested": true,
-          "status": 500,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "f193868f",
-            "message": "Internal server error",
-            "timestamp": "2025-10-16T20:15:14.130401"
+            "user_stats": {
+              "total_users": 8,
+              "new_users_today": 3,
+              "active_users": 5,
+              "suspended_users": 0
+            },
+            "content_stats": {
+              "total_videos": 0,
+              "new_videos_today": 0,
+              "pending_videos": 0,
+              "total_parties": 0,
+              "active_parties": 0
+            },
+            "system_health": {
+              "cpu_usage": 0,
+              "memory_usage": 0,
+              "disk_usage": 0,
+              "active_connections": 0
+            },
+            "recent_activity": [],
+            "revenue_stats": {
+              "total_revenue": 0.0,
+              "active_subscriptions": 0
+            }
           }
         },
         {
@@ -1395,12 +1415,93 @@
           "path": "/api/admin/users/",
           "auth_required": true,
           "tested": true,
-          "status": 500,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "e4bd9d3c",
-            "message": "Internal server error",
-            "timestamp": "2025-10-16T20:15:14.493067"
+            "count": 8,
+            "next": null,
+            "previous": null,
+            "results": [
+              {
+                "id": "1ac2a12c-53d6-4d74-b620-851cbcb82702",
+                "email": "admin@watchparty.test",
+                "full_name": "Super Admin",
+                "is_active": true,
+                "is_staff": true,
+                "date_joined": "2025-10-16T19:03:18.851792Z",
+                "last_login": "2025-10-16T20:26:15.495511Z",
+                "profile": null
+              },
+              {
+                "id": "e40994f5-d784-45dd-b5bb-2457eee81d03",
+                "email": "test@example.com",
+                "full_name": "Test User",
+                "is_active": true,
+                "is_staff": false,
+                "date_joined": "2025-10-16T18:34:43.222387Z",
+                "last_login": "2025-10-16T20:26:19.405634Z",
+                "profile": null
+              },
+              {
+                "id": "6ba8eff9-5f71-4872-9fe2-b4377d2eea96",
+                "email": "api.tester@watchparty.test",
+                "full_name": "API Tester",
+                "is_active": true,
+                "is_staff": false,
+                "date_joined": "2025-10-16T16:24:24.284067Z",
+                "last_login": "2025-10-16T19:22:12.040489Z",
+                "profile": null
+              },
+              {
+                "id": "cc3bd8c9-191a-4685-8edc-7add1439d6ba",
+                "email": "testuser@test.com",
+                "full_name": "Test User",
+                "is_active": true,
+                "is_staff": false,
+                "date_joined": "2025-10-12T11:40:14.953008Z",
+                "last_login": null,
+                "profile": null
+              },
+              {
+                "id": "14bc9787-4a20-44fb-aac3-b2979f969459",
+                "email": "bross.or.of@gmail.com",
+                "full_name": "Giovani Barrows",
+                "is_active": true,
+                "is_staff": false,
+                "date_joined": "2025-10-01T16:55:40.931103Z",
+                "last_login": null,
+                "profile": null
+              },
+              {
+                "id": "6f8c1bea-5532-42df-8a81-ff1733a7ed17",
+                "email": "admin@watchparty.local",
+                "full_name": "BRAHIM EL HOUSS",
+                "is_active": true,
+                "is_staff": false,
+                "date_joined": "2025-09-27T15:19:03.005049Z",
+                "last_login": "2025-10-16T17:40:36.757418Z",
+                "profile": null
+              },
+              {
+                "id": "5b1fd053-8cef-435f-9b5e-507d342e8f25",
+                "email": "testuser",
+                "full_name": "test@test.com password123",
+                "is_active": true,
+                "is_staff": false,
+                "date_joined": "2025-09-27T15:11:05.541102Z",
+                "last_login": null,
+                "profile": null
+              },
+              {
+                "id": "a940f0a2-7de6-4e9f-9ea3-099709063d91",
+                "email": "admin@watchparty.com",
+                "full_name": "Admin User",
+                "is_active": true,
+                "is_staff": true,
+                "date_joined": "2025-08-14T15:40:37.485183Z",
+                "last_login": "2025-09-27T15:14:32.336127Z",
+                "profile": null
+              }
+            ]
           }
         },
         {
@@ -1409,12 +1510,12 @@
           "path": "/api/admin/parties/",
           "auth_required": true,
           "tested": true,
-          "status": 500,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "dc5fc698",
-            "message": "Internal server error",
-            "timestamp": "2025-10-16T20:15:14.846785"
+            "count": 0,
+            "next": null,
+            "previous": null,
+            "results": []
           }
         }
       ]
