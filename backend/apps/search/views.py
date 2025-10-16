@@ -199,7 +199,7 @@ class GlobalSearchView(APIView):
             elif sort_by == 'alphabetical':
                 parties_queryset = parties_queryset.order_by('title')
             else:  # relevance
-                parties_queryset = parties_queryset.order_by('-is_active', '-created_at')
+                parties_queryset = parties_queryset.order_by('-created_at')
             
             parties = parties_queryset[offset:offset + limit]
             parties_count = parties_queryset.count()
@@ -207,7 +207,7 @@ class GlobalSearchView(APIView):
             
             parties_data = []
             for party in parties:
-                participant_count = party.participants.filter(is_active=True).count()
+                participant_count = party.participants.count()
                 parties_data.append({
                     'id': party.id,
                     'title': party.title,
@@ -217,8 +217,8 @@ class GlobalSearchView(APIView):
                         'username': party.host.username,
                         'name': party.host.get_full_name(),
                     },
-                    'is_public': party.is_public,
-                    'is_live': party.is_active,
+                    'is_public': party.visibility == 'public',
+                    'is_live': party.status == 'live',
                     'participant_count': participant_count,
                     'max_participants': getattr(party, 'max_participants', None),
                     'created_at': party.created_at,

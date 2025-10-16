@@ -419,9 +419,10 @@ class GoogleDriveMoviesView(APIView):
             # Check if user has Google Drive connected
             if not hasattr(request.user, 'profile') or not request.user.profile.google_drive_connected:
                 return Response({
-                    'success': False,
-                    'message': 'Google Drive not connected'
-                }, status=status.HTTP_400_BAD_REQUEST)
+                    'success': True,
+                    'message': 'Google Drive not connected',
+                    'movies': []
+                }, status=status.HTTP_200_OK)
             
             # Get Drive service
             drive_service = get_drive_service(request.user)
