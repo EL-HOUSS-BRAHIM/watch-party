@@ -22,7 +22,7 @@
           "status": 200,
           "response": {
             "status": "healthy",
-            "timestamp": "2025-10-16T19:36:16.558454+00:00",
+            "timestamp": "2025-10-16T19:50:55.731849+00:00",
             "version": "1.0"
           }
         },
@@ -68,7 +68,7 @@
             "message": "Server is working!",
             "authenticated": false,
             "user_id": null,
-            "timestamp": "2025-10-16T19:36:20.605654+00:00"
+            "timestamp": "2025-10-16T19:50:56.367826+00:00"
           }
         }
       ]
@@ -124,7 +124,7 @@
               "subscription_expires": null,
               "is_subscription_active": false,
               "date_joined": "2025-10-16T18:34:43.222387Z",
-              "last_login": "2025-10-16T19:36:21.959759Z"
+              "last_login": "2025-10-16T19:50:57.476105Z"
             }
           }
         },
@@ -239,7 +239,7 @@
               "friends_count": 0,
               "rank": 0,
               "join_date": "2025-10-16T19:03:18.851792Z",
-              "last_active": "2025-10-16T19:36:15.667477Z"
+              "last_active": "2025-10-16T19:50:53.628182Z"
             }
           }
         },
@@ -283,8 +283,8 @@
                   },
                   "ip_address": "172.18.0.6",
                   "user_agent": "python-requests/2.32.4",
-                  "created_at": "2025-10-16T19:36:29.123330Z",
-                  "expires_at": "2025-10-23T19:36:29.123335Z",
+                  "created_at": "2025-10-16T19:51:04.221641Z",
+                  "expires_at": "2025-10-23T19:51:04.221647Z",
                   "is_current": true
                 }
               ]
@@ -499,7 +499,7 @@
             "message": "Trending parties retrieved successfully",
             "data": [],
             "meta": {
-              "generated_at": "2025-10-16T19:36:23.051254+00:00",
+              "generated_at": "2025-10-16T19:50:58.335992+00:00",
               "results": 0
             }
           }
@@ -597,7 +597,7 @@
             "success": true,
             "message": "Real-time analytics retrieved successfully",
             "data": {
-              "timestamp": "2025-10-16T19:36:34.466750+00:00",
+              "timestamp": "2025-10-16T19:51:09.435887+00:00",
               "online_users": 3,
               "active_parties": 0,
               "recent_activity": [],
@@ -688,7 +688,7 @@
             "data": {
               "status": "healthy",
               "service": "integrations",
-              "timestamp": "2025-10-16T19:36:23.410059+00:00"
+              "timestamp": "2025-10-16T19:50:58.644028+00:00"
             }
           }
         },
@@ -698,8 +698,29 @@
           "path": "/api/integrations/status/",
           "auth_required": true,
           "tested": true,
-          "status": "CONNECTION_ERROR",
-          "response": "Could not connect to server"
+          "status": 200,
+          "response": {
+            "success": true,
+            "message": "Integration status retrieved",
+            "data": {
+              "summary": {
+                "total": 0,
+                "healthy": 0,
+                "enabled": 0,
+                "health_percentage": 0
+              },
+              "integrations": [],
+              "types_available": [
+                "streaming",
+                "social",
+                "payment",
+                "analytics",
+                "content",
+                "notification"
+              ],
+              "last_updated": "2025-10-16T19:51:10.679317+00:00"
+            }
+          }
         },
         {
           "name": "User Connections",
@@ -805,13 +826,6 @@
                   "title": "People You Might Know",
                   "items": [
                     {
-                      "id": "6ba8eff9-5f71-4872-9fe2-b4377d2eea96",
-                      "username": null,
-                      "name": "API Tester",
-                      "profile_picture": null,
-                      "is_online": false
-                    },
-                    {
                       "id": "e40994f5-d784-45dd-b5bb-2457eee81d03",
                       "username": null,
                       "name": "Test User",
@@ -819,23 +833,9 @@
                       "is_online": false
                     },
                     {
-                      "id": "cc3bd8c9-191a-4685-8edc-7add1439d6ba",
+                      "id": "5b1fd053-8cef-435f-9b5e-507d342e8f25",
                       "username": null,
-                      "name": "Test User",
-                      "profile_picture": null,
-                      "is_online": false
-                    },
-                    {
-                      "id": "14bc9787-4a20-44fb-aac3-b2979f969459",
-                      "username": null,
-                      "name": "Giovani Barrows",
-                      "profile_picture": null,
-                      "is_online": false
-                    },
-                    {
-                      "id": "6f8c1bea-5532-42df-8a81-ff1733a7ed17",
-                      "username": null,
-                      "name": "BRAHIM EL HOUSS",
+                      "name": "test@test.com password123",
                       "profile_picture": null,
                       "is_online": false
                     },
@@ -847,9 +847,30 @@
                       "is_online": false
                     },
                     {
-                      "id": "5b1fd053-8cef-435f-9b5e-507d342e8f25",
+                      "id": "cc3bd8c9-191a-4685-8edc-7add1439d6ba",
                       "username": null,
-                      "name": "test@test.com password123",
+                      "name": "Test User",
+                      "profile_picture": null,
+                      "is_online": false
+                    },
+                    {
+                      "id": "6ba8eff9-5f71-4872-9fe2-b4377d2eea96",
+                      "username": null,
+                      "name": "API Tester",
+                      "profile_picture": null,
+                      "is_online": false
+                    },
+                    {
+                      "id": "6f8c1bea-5532-42df-8a81-ff1733a7ed17",
+                      "username": null,
+                      "name": "BRAHIM EL HOUSS",
+                      "profile_picture": null,
+                      "is_online": false
+                    },
+                    {
+                      "id": "14bc9787-4a20-44fb-aac3-b2979f969459",
+                      "username": null,
+                      "name": "Giovani Barrows",
                       "profile_picture": null,
                       "is_online": false
                     }
@@ -904,8 +925,33 @@
           "path": "/api/social/groups/",
           "auth_required": true,
           "tested": true,
-          "status": "TIMEOUT",
-          "response": "Request timed out"
+          "status": 200,
+          "response": {
+            "success": true,
+            "message": "Social groups retrieved successfully",
+            "data": {
+              "groups": [],
+              "categories": {
+                "general": "General",
+                "movies": "Movies",
+                "tv_shows": "TV Shows",
+                "anime": "Anime",
+                "documentaries": "Documentaries",
+                "gaming": "Gaming",
+                "music": "Music",
+                "sports": "Sports",
+                "comedy": "Comedy",
+                "horror": "Horror",
+                "sci_fi": "Science Fiction",
+                "other": "Other"
+              },
+              "privacy_options": {
+                "public": "Public",
+                "private": "Private",
+                "invite_only": "Invite Only"
+              }
+            }
+          }
         }
       ]
     },
@@ -1272,7 +1318,7 @@
                   "priority": "medium"
                 }
               ],
-              "last_updated": "2025-10-16T19:37:08.137371+00:00"
+              "last_updated": "2025-10-16T19:51:21.849261+00:00"
             }
           }
         },
@@ -1335,13 +1381,8 @@
           "path": "/api/admin/dashboard/",
           "auth_required": true,
           "tested": true,
-          "status": 500,
-          "response": {
-            "success": false,
-            "error_id": "ad40354d",
-            "message": "Internal server error",
-            "timestamp": "2025-10-16T19:37:10.547860"
-          }
+          "status": "CONNECTION_ERROR",
+          "response": "Could not connect to server"
         },
         {
           "name": "Admin Users List",
@@ -1352,9 +1393,9 @@
           "status": 500,
           "response": {
             "success": false,
-            "error_id": "3089a14b",
+            "error_id": "8ac0c18c",
             "message": "Internal server error",
-            "timestamp": "2025-10-16T19:37:12.896399"
+            "timestamp": "2025-10-16T19:51:42.613316"
           }
         },
         {
@@ -1363,8 +1404,13 @@
           "path": "/api/admin/parties/",
           "auth_required": true,
           "tested": true,
-          "status": "CONNECTION_ERROR",
-          "response": "Could not connect to server"
+          "status": 500,
+          "response": {
+            "success": false,
+            "error_id": "b18945ce",
+            "message": "Internal server error",
+            "timestamp": "2025-10-16T19:51:42.933142"
+          }
         }
       ]
     }

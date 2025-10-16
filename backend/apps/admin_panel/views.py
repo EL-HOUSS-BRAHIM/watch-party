@@ -310,12 +310,11 @@ def admin_users_list(request):
     order_by = request.GET.get('order_by', '-date_joined')
     
     # Build queryset
-    queryset = User.objects.select_related('profile')
+    queryset = User.objects.prefetch_related('userprofile')
     
     # Apply search filter
     if search:
         queryset = queryset.filter(
-            Q(username__icontains=search) |
             Q(email__icontains=search) |
             Q(first_name__icontains=search) |
             Q(last_name__icontains=search)
@@ -337,20 +336,25 @@ def admin_users_list(request):
     # Serialize data
     users_data = []
     for user in page:
+        try:
+            profile = user.userprofile
+            profile_data = {
+                'avatar': str(profile.avatar) if profile.avatar else None,
+                'country': profile.country,
+                'is_verified': profile.is_verified
+            }
+        except:
+            profile_data = None
+            
         user_data = {
             'id': str(user.id),
-            'username': user.username,
             'email': user.email,
             'full_name': user.get_full_name(),
             'is_active': user.is_active,
             'is_staff': user.is_staff,
             'date_joined': user.date_joined,
             'last_login': user.last_login,
-            'profile': {
-                'avatar': getattr(user.profile, 'avatar', None),
-                'country': getattr(user.profile, 'country', None),
-                'is_verified': getattr(user.profile, 'is_verified', False)
-            } if hasattr(user, 'profile') else None
+            'profile': profile_data
         }
         users_data.append(user_data)
     
@@ -422,7 +426,9 @@ def admin_parties_list(request):
     if search:
         queryset = queryset.filter(
             Q(title__icontains=search) |
-            Q(host__username__icontains=search)
+            Q(host__email__icontains=search) |
+            Q(host__first_name__icontains=search) |
+            Q(host__last_name__icontains=search)
         )
     
     # Apply status filter
@@ -444,7 +450,7 @@ def admin_parties_list(request):
             'title': party.title,
             'host': {
                 'id': str(party.host.id),
-                'username': party.host.username,
+                'email': party.host.email,
                 'full_name': party.host.get_full_name()
             },
             'status': party.status,
