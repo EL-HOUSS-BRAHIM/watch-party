@@ -310,7 +310,7 @@ def admin_users_list(request):
     order_by = request.GET.get('order_by', '-date_joined')
     
     # Build queryset
-    queryset = User.objects.prefetch_related('userprofile')
+    queryset = User.objects.all()
     
     # Apply search filter
     if search:
@@ -337,13 +337,16 @@ def admin_users_list(request):
     users_data = []
     for user in page:
         try:
-            profile = user.userprofile
-            profile_data = {
-                'avatar': str(profile.avatar) if profile.avatar else None,
-                'country': profile.country,
-                'is_verified': profile.is_verified
-            }
-        except:
+            profile = getattr(user, 'userprofile', None)
+            if profile:
+                profile_data = {
+                    'avatar': str(profile.avatar) if profile.avatar else None,
+                    'country': profile.country,
+                    'is_verified': profile.is_verified
+                }
+            else:
+                profile_data = None
+        except Exception:
             profile_data = None
             
         user_data = {
