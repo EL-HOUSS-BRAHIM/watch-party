@@ -22,7 +22,7 @@
           "status": 200,
           "response": {
             "status": "healthy",
-            "timestamp": "2025-10-16T16:52:35.171154+00:00",
+            "timestamp": "2025-10-16T17:09:33.919818+00:00",
             "version": "1.0"
           }
         },
@@ -68,7 +68,7 @@
             "message": "Server is working!",
             "authenticated": false,
             "user_id": null,
-            "timestamp": "2025-10-16T16:52:36.289308+00:00"
+            "timestamp": "2025-10-16T17:09:34.560876+00:00"
           }
         }
       ]
@@ -234,7 +234,7 @@
               "friends_count": 0,
               "rank": 0,
               "join_date": "2025-10-16T16:24:24.284067Z",
-              "last_active": "2025-10-16T16:52:34.481035Z"
+              "last_active": "2025-10-16T17:09:33.206655Z"
             }
           }
         },
@@ -278,8 +278,8 @@
                   },
                   "ip_address": "172.18.0.6",
                   "user_agent": "python-requests/2.32.4",
-                  "created_at": "2025-10-16T16:52:47.627626Z",
-                  "expires_at": "2025-10-23T16:52:47.627631Z",
+                  "created_at": "2025-10-16T17:09:45.989535Z",
+                  "expires_at": "2025-10-23T17:09:45.989540Z",
                   "is_current": true
                 }
               ]
@@ -381,9 +381,9 @@
           "status": 404,
           "response": {
             "success": false,
-            "error_id": "f82bb138",
+            "error_id": "266921f2",
             "message": "",
-            "timestamp": "2025-10-16T16:52:49.393383"
+            "timestamp": "2025-10-16T17:09:47.613096"
           }
         },
         {
@@ -395,9 +395,9 @@
           "status": 404,
           "response": {
             "success": false,
-            "error_id": "53c016b7",
+            "error_id": "74a3d448",
             "message": "",
-            "timestamp": "2025-10-16T16:52:49.750803"
+            "timestamp": "2025-10-16T17:09:47.926061"
           }
         }
       ]
@@ -482,7 +482,7 @@
             "message": "Trending parties retrieved successfully",
             "data": [],
             "meta": {
-              "generated_at": "2025-10-16T16:52:42.672660+00:00",
+              "generated_at": "2025-10-16T17:09:35.923687+00:00",
               "results": 0
             }
           }
@@ -496,9 +496,9 @@
           "status": 404,
           "response": {
             "success": false,
-            "error_id": "af4c70ad",
+            "error_id": "19606c7f",
             "message": "",
-            "timestamp": "2025-10-16T16:52:51.232435"
+            "timestamp": "2025-10-16T17:09:50.411886"
           }
         }
       ]
@@ -515,9 +515,9 @@
           "status": 500,
           "response": {
             "success": false,
-            "error_id": "a8d3a616",
+            "error_id": "f73a2d2f",
             "message": "Internal server error",
-            "timestamp": "2025-10-16T16:52:51.709543"
+            "timestamp": "2025-10-16T17:09:50.770112"
           }
         },
         {
@@ -561,9 +561,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "fd76118c",
+            "error_id": "18a932c7",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T16:52:52.475196"
+            "timestamp": "2025-10-16T17:09:52.078633"
           }
         },
         {
@@ -575,9 +575,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "6679fba9",
+            "error_id": "84c1bd32",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T16:52:52.866069"
+            "timestamp": "2025-10-16T17:09:52.401866"
           }
         }
       ]
@@ -611,9 +611,9 @@
           "status": 500,
           "response": {
             "success": false,
-            "error_id": "eadb6265",
+            "error_id": "29d9883b",
             "message": "Internal server error",
-            "timestamp": "2025-10-16T16:52:53.592976"
+            "timestamp": "2025-10-16T17:09:53.119643"
           }
         }
       ]
@@ -634,7 +634,7 @@
             "data": {
               "status": "healthy",
               "service": "integrations",
-              "timestamp": "2025-10-16T16:52:43.087900+00:00"
+              "timestamp": "2025-10-16T17:09:36.366462+00:00"
             }
           }
         },
@@ -647,9 +647,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "770c59d5",
+            "error_id": "b324c037",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T16:52:53.871779"
+            "timestamp": "2025-10-16T17:09:54.232747"
           }
         },
         {
@@ -741,9 +741,9 @@
           "status": 500,
           "response": {
             "success": false,
-            "error_id": "f9eee45e",
+            "error_id": "a7f1cbfe",
             "message": "Internal server error",
-            "timestamp": "2025-10-16T16:52:55.255064"
+            "timestamp": "2025-10-16T17:10:05.124571"
           }
         },
         {
@@ -755,9 +755,9 @@
           "status": 500,
           "response": {
             "success": false,
-            "error_id": "77063baf",
+            "error_id": "fabe7107",
             "message": "Internal server error",
-            "timestamp": "2025-10-16T16:52:55.666650"
+            "timestamp": "2025-10-16T17:10:05.613254"
           }
         },
         {
@@ -769,9 +769,9 @@
           "status": 500,
           "response": {
             "success": false,
-            "error_id": "1674593f",
+            "error_id": "0f58fd92",
             "message": "Internal server error",
-            "timestamp": "2025-10-16T16:52:56.209226"
+            "timestamp": "2025-10-16T17:10:05.961974"
           }
         }
       ]
@@ -1137,9 +1137,9 @@
           "status": 500,
           "response": {
             "success": false,
-            "error_id": "9aac7a8e",
+            "error_id": "57920160",
             "message": "Internal server error",
-            "timestamp": "2025-10-16T16:53:01.887563"
+            "timestamp": "2025-10-16T17:10:09.572303"
           }
         },
         {
@@ -1204,9 +1204,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "fb2f81fa",
+            "error_id": "6c084520",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T16:53:02.938684"
+            "timestamp": "2025-10-16T17:10:10.317240"
           }
         },
         {
@@ -1218,9 +1218,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "636371f4",
+            "error_id": "510b7360",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T16:53:03.539800"
+            "timestamp": "2025-10-16T17:10:10.680635"
           }
         },
         {
@@ -1232,9 +1232,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "e00e2c60",
+            "error_id": "ff0df068",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T16:53:04.056896"
+            "timestamp": "2025-10-16T17:10:11.145263"
           }
         }
       ]

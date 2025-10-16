@@ -18,11 +18,13 @@ app_name = 'parties'
 
 # Create router for ViewSets
 router = DefaultRouter()
-router.register(r'', WatchPartyViewSet, basename='party')
 router.register(r'invitations', PartyInvitationViewSet, basename='invitation')
 
 urlpatterns = [
-    # Special endpoints first (before router includes)
+    # Invitation endpoints FIRST to avoid conflicts
+    path('invitations/', include(router.urls)),
+    
+    # Special endpoints (before party CRUD)
     path('recent/', RecentPartiesView.as_view(), name='recent'),
     path('public/<str:room_code>/', PublicPartyDetailView.as_view(), name='public-detail'),
     path('public/', PublicPartiesView.as_view(), name='public'),
@@ -38,8 +40,17 @@ urlpatterns = [
     path('<uuid:party_id>/analytics/', party_analytics, name='analytics'),
     path('<uuid:party_id>/update-analytics/', update_party_analytics, name='update_analytics'),
     
-    # Party CRUD operations (handled by ViewSet)
-    path('', include(router.urls)),
+    # Party CRUD operations (WatchPartyViewSet)
+    path('', WatchPartyViewSet.as_view({'get': 'list', 'post': 'create'}), name='party-list'),
+    path('<uuid:pk>/', WatchPartyViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='party-detail'),
+    path('<uuid:pk>/join/', WatchPartyViewSet.as_view({'post': 'join'}), name='party-join'),
+    path('<uuid:pk>/leave/', WatchPartyViewSet.as_view({'post': 'leave'}), name='party-leave'),
+    path('<uuid:pk>/start/', WatchPartyViewSet.as_view({'post': 'start'}), name='party-start'),
+    path('<uuid:pk>/control/', WatchPartyViewSet.as_view({'post': 'control'}), name='party-control'),
+    path('<uuid:pk>/chat/', WatchPartyViewSet.as_view({'get': 'chat', 'post': 'chat'}), name='party-chat'),
+    path('<uuid:pk>/react/', WatchPartyViewSet.as_view({'post': 'react'}), name='party-react'),
+    path('<uuid:pk>/participants/', WatchPartyViewSet.as_view({'get': 'participants'}), name='party-participants'),
+    path('<uuid:pk>/invite/', WatchPartyViewSet.as_view({'post': 'invite'}), name='party-invite'),
 ]
 
 # ViewSet generates these URLs:

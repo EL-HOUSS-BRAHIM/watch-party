@@ -320,56 +320,69 @@ class SearchSuggestionsView(APIView):
     @extend_schema(summary="SearchSuggestionsView GET")
     def get(self, request):
         """Get search suggestions"""
-        query = request.GET.get('q', '').strip()
-        suggestion_type = request.GET.get('type', 'all')
-        limit = min(int(request.GET.get('limit', 10)), 20)
-        
-        if not query or len(query) < 2:
-            # Return trending suggestions
-            trending = TrendingQuery.objects.filter(
-                date=timezone.now().date(),
-                period='daily'
-            ).order_by('-search_count')[:limit]
+        try:
+            query = request.GET.get('q', '').strip()
+            suggestion_type = request.GET.get('type', 'all')
+            limit = min(int(request.GET.get('limit', 10)), 20)
             
-            suggestions = []
-            for trend in trending:
-                suggestions.append({
-                    'text': trend.query,
-                    'type': 'trending',
-                    'popularity_score': trend.search_count,
-                    'metadata': {'search_count': trend.search_count}
+            if not query or len(query) < 2:
+                # Return trending suggestions
+                try:
+                    trending = TrendingQuery.objects.filter(
+                        date=timezone.now().date(),
+                        period='daily'
+                    ).order_by('-search_count')[:limit]
+                    
+                    suggestions = []
+                    for trend in trending:
+                        suggestions.append({
+                            'text': trend.query,
+                            'type': 'trending',
+                            'popularity_score': trend.search_count,
+                            'metadata': {'search_count': trend.search_count}
+                        })
+                    
+                    return StandardResponse.success(
+                        data={'suggestions': suggestions},
+                        message="Trending suggestions retrieved"
+                    )
+                except Exception:
+                    # Return empty suggestions if trending queries don't exist
+                    return StandardResponse.success(
+                        data={'suggestions': []},
+                        message="No trending suggestions available"
+                    )
+            
+            # Get matching suggestions
+            suggestions_q = Q(text__icontains=query, is_active=True)
+            
+            if suggestion_type != 'all':
+                suggestions_q &= Q(suggestion_type=suggestion_type)
+            
+            suggestions = SearchSuggestion.objects.filter(
+                suggestions_q
+            ).order_by('-popularity_score', '-click_count')[:limit]
+            
+            suggestions_data = []
+            for suggestion in suggestions:
+                suggestions_data.append({
+                    'id': suggestion.id,
+                    'text': suggestion.text,
+                    'type': suggestion.suggestion_type,
+                    'popularity_score': suggestion.popularity_score,
+                    'click_count': suggestion.click_count,
+                    'metadata': suggestion.metadata,
                 })
             
             return StandardResponse.success(
-                data={'suggestions': suggestions},
-                message="Trending suggestions retrieved"
+                data={'suggestions': suggestions_data},
+                message=f"Found {len(suggestions_data)} suggestions"
             )
-        
-        # Get matching suggestions
-        suggestions_q = Q(text__icontains=query, is_active=True)
-        
-        if suggestion_type != 'all':
-            suggestions_q &= Q(suggestion_type=suggestion_type)
-        
-        suggestions = SearchSuggestion.objects.filter(
-            suggestions_q
-        ).order_by('-popularity_score', '-click_count')[:limit]
-        
-        suggestions_data = []
-        for suggestion in suggestions:
-            suggestions_data.append({
-                'id': suggestion.id,
-                'text': suggestion.text,
-                'type': suggestion.suggestion_type,
-                'popularity_score': suggestion.popularity_score,
-                'click_count': suggestion.click_count,
-                'metadata': suggestion.metadata,
-            })
-        
-        return StandardResponse.success(
-            data={'suggestions': suggestions_data},
-            message=f"Found {len(suggestions_data)} suggestions"
-        )
+        except Exception as e:
+            return StandardResponse.error(
+                message=f"Error retrieving search suggestions: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
     
     @extend_schema(summary="SearchSuggestionsView POST")
     def post(self, request):
@@ -501,36 +514,43 @@ class TrendingSearchView(APIView):
     @extend_schema(summary="TrendingSearchView GET")
     def get(self, request):
         """Get trending searches"""
-        period = request.GET.get('period', 'daily')  # daily, weekly, monthly
-        limit = min(int(request.GET.get('limit', 10)), 50)
-        
-        # Get date range based on period
-        if period == 'weekly':
-            date_threshold = timezone.now().date() - timedelta(days=7)
-        elif period == 'monthly':
-            date_threshold = timezone.now().date() - timedelta(days=30)
-        else:  # daily
-            date_threshold = timezone.now().date()
-        
-        trending = TrendingQuery.objects.filter(
-            period=period,
-            date__gte=date_threshold
-        ).order_by('-search_count')[:limit]
-        
-        trending_data = []
-        for trend in trending:
-            trending_data.append({
-                'query': trend.query,
-                'search_count': trend.search_count,
-                'unique_users': trend.unique_users,
-                'period': trend.period,
-                'date': trend.date,
-            })
-        
-        return StandardResponse.success(
-            data={'trending_searches': trending_data},
-            message=f"Retrieved {len(trending_data)} trending searches"
-        )
+        try:
+            period = request.GET.get('period', 'daily')  # daily, weekly, monthly
+            limit = min(int(request.GET.get('limit', 10)), 50)
+            
+            # Get date range based on period
+            if period == 'weekly':
+                date_threshold = timezone.now().date() - timedelta(days=7)
+            elif period == 'monthly':
+                date_threshold = timezone.now().date() - timedelta(days=30)
+            else:  # daily
+                date_threshold = timezone.now().date()
+            
+            trending = TrendingQuery.objects.filter(
+                period=period,
+                date__gte=date_threshold
+            ).order_by('-search_count')[:limit]
+            
+            trending_data = []
+            for trend in trending:
+                trending_data.append({
+                    'query': trend.query,
+                    'search_count': trend.search_count,
+                    'unique_users': trend.unique_users,
+                    'period': trend.period,
+                    'date': trend.date,
+                })
+            
+            return StandardResponse.success(
+                data={'trending_searches': trending_data},
+                message=f"Retrieved {len(trending_data)} trending searches"
+            )
+        except Exception as e:
+            # Return empty trending data if there's an error
+            return StandardResponse.success(
+                data={'trending_searches': []},
+                message="No trending searches available"
+            )
 
 
 class SearchAnalyticsView(APIView):
@@ -699,133 +719,152 @@ class DiscoverContentView(APIView):
     @extend_schema(summary="DiscoverContentView GET")
     def get(self, request):
         """Get personalized content recommendations"""
-        user = request.user
-        
-        # Get models
-        Video = apps.get_model('videos', 'Video')
-        WatchParty = apps.get_model('parties', 'WatchParty')
-        User = apps.get_model('authentication', 'User')
-        
-        # Get trending videos (most viewed recently)
-        from django.utils import timezone
-        from datetime import timedelta
-        
-        one_week_ago = timezone.now() - timedelta(days=7)
-        
-        trending_videos = Video.objects.filter(
-            is_active=True,
-            created_at__gte=one_week_ago
-        ).order_by('-view_count', '-created_at')[:8]
-        
-        # Get active parties
-        active_parties = WatchParty.objects.filter(
-            is_active=True,
-            is_public=True
-        ).order_by('-created_at')[:6]
-        
-        # Get suggested users (random for now, could be based on mutual friends/interests)
-        suggested_users = User.objects.filter(
-            is_active=True
-        ).exclude(id=user.id).order_by('?')[:8]
-        
-        # Get featured content (recent uploads from popular creators)
-        featured_videos = Video.objects.filter(
-            is_active=True
-        ).select_related('uploaded_by').order_by('-created_at')[:6]
-        
-        # Serialize data
-        trending_videos_data = []
-        for video in trending_videos:
+        try:
+            user = request.user
+            
+            # Get models
+            Video = apps.get_model('videos', 'Video')
+            WatchParty = apps.get_model('parties', 'WatchParty')
+            User = apps.get_model('authentication', 'User')
+            
+            # Get trending videos (most viewed recently)
+            from django.utils import timezone
+            from datetime import timedelta
+            
+            one_week_ago = timezone.now() - timedelta(days=7)
+            
+            # Try to order by view_count if it exists, otherwise just by created_at
             try:
-                trending_videos_data.append({
-                    'id': video.id,
-                    'title': video.title,
-                    'description': video.description[:150] + '...' if len(video.description) > 150 else video.description,
-                    'thumbnail': video.thumbnail.url if video.thumbnail else None,
-                    'duration': video.duration,
-                    'uploaded_by': {
-                        'id': video.uploaded_by.id,
-                        'username': video.uploaded_by.username,
-                        'name': video.uploaded_by.get_full_name(),
-                    },
-                    'views': getattr(video, 'view_count', 0) if hasattr(video, 'view_count') else 0,
-                    'created_at': video.created_at,
-                })
+                trending_videos = Video.objects.filter(
+                    is_active=True,
+                    created_at__gte=one_week_ago
+                ).order_by('-view_count', '-created_at')[:8]
             except Exception:
-                continue
-        
-        active_parties_data = []
-        for party in active_parties:
-            active_parties_data.append({
-                'id': party.id,
-                'title': party.title,
-                'description': party.description[:150] + '...' if len(party.description) > 150 else party.description,
-                'host': {
-                    'id': party.host.id,
-                    'username': party.host.username,
-                    'name': party.host.get_full_name(),
+                trending_videos = Video.objects.filter(
+                    is_active=True,
+                    created_at__gte=one_week_ago
+                ).order_by('-created_at')[:8]
+            
+            # Get active parties
+            active_parties = WatchParty.objects.filter(
+                is_active=True,
+                is_public=True
+            ).order_by('-created_at')[:6]
+            
+            # Get suggested users (random for now, could be based on mutual friends/interests)
+            suggested_users = User.objects.filter(
+                is_active=True
+            ).exclude(id=user.id).order_by('?')[:8]
+            
+            # Get featured content (recent uploads from popular creators)
+            featured_videos = Video.objects.filter(
+                is_active=True
+            ).select_related('uploaded_by').order_by('-created_at')[:6]
+            
+            # Serialize data
+            trending_videos_data = []
+            for video in trending_videos:
+                try:
+                    trending_videos_data.append({
+                        'id': video.id,
+                        'title': video.title,
+                        'description': video.description[:150] + '...' if len(video.description) > 150 else video.description,
+                        'thumbnail': video.thumbnail.url if video.thumbnail else None,
+                        'duration': video.duration,
+                        'uploaded_by': {
+                            'id': video.uploaded_by.id,
+                            'username': video.uploaded_by.username,
+                            'name': video.uploaded_by.get_full_name(),
+                        },
+                        'views': getattr(video, 'view_count', 0) if hasattr(video, 'view_count') else 0,
+                        'created_at': video.created_at,
+                    })
+                except Exception:
+                    continue
+            
+            active_parties_data = []
+            for party in active_parties:
+                try:
+                    active_parties_data.append({
+                        'id': party.id,
+                        'title': party.title,
+                        'description': party.description[:150] + '...' if len(party.description) > 150 else party.description,
+                        'host': {
+                            'id': party.host.id,
+                            'username': party.host.username,
+                            'name': party.host.get_full_name(),
+                        },
+                        'participant_count': party.participants.filter(is_active=True).count(),
+                        'is_live': party.is_active,
+                        'created_at': party.created_at,
+                    })
+                except Exception:
+                    continue
+            
+            suggested_users_data = []
+            for suggested_user in suggested_users:
+                try:
+                    profile_pic = None
+                    if hasattr(suggested_user, 'profile_picture') and suggested_user.profile_picture:
+                        try:
+                            profile_pic = suggested_user.profile_picture.url
+                        except Exception:
+                            profile_pic = None
+                    
+                    suggested_users_data.append({
+                        'id': suggested_user.id,
+                        'username': suggested_user.username,
+                        'name': suggested_user.get_full_name(),
+                        'profile_picture': profile_pic,
+                        'is_online': getattr(suggested_user, 'is_online', False),
+                    })
+                except Exception:
+                    continue
+            
+            featured_videos_data = []
+            for video in featured_videos:
+                try:
+                    featured_videos_data.append({
+                        'id': video.id,
+                        'title': video.title,
+                        'description': video.description[:150] + '...' if len(video.description) > 150 else video.description,
+                        'thumbnail': video.thumbnail.url if video.thumbnail else None,
+                        'duration': video.duration,
+                        'uploaded_by': {
+                            'id': video.uploaded_by.id,
+                            'username': video.uploaded_by.username,
+                            'name': video.uploaded_by.get_full_name(),
+                        },
+                        'created_at': video.created_at,
+                    })
+                except Exception:
+                    continue
+            
+            return StandardResponse.success(
+                data={
+                    'sections': {
+                        'trending_videos': {
+                            'title': 'Trending This Week',
+                            'items': trending_videos_data,
+                        },
+                        'active_parties': {
+                            'title': 'Live Watch Parties',
+                            'items': active_parties_data,
+                        },
+                        'suggested_users': {
+                            'title': 'People You Might Know',
+                            'items': suggested_users_data,
+                        },
+                        'featured_videos': {
+                            'title': 'Recently Added',
+                            'items': featured_videos_data,
+                        },
+                    }
                 },
-                'participant_count': party.participants.filter(is_active=True).count(),
-                'is_live': party.is_active,
-                'created_at': party.created_at,
-            })
-        
-        suggested_users_data = []
-        for suggested_user in suggested_users:
-            try:
-                profile_pic = None
-                if hasattr(suggested_user, 'profile_picture') and suggested_user.profile_picture:
-                    try:
-                        profile_pic = suggested_user.profile_picture.url
-                    except Exception:
-                        profile_pic = None
-                
-                suggested_users_data.append({
-                    'id': suggested_user.id,
-                    'username': suggested_user.username,
-                    'name': suggested_user.get_full_name(),
-                    'profile_picture': profile_pic,
-                    'is_online': getattr(suggested_user, 'is_online', False),
-                })
-            except Exception:
-                continue
-        
-        featured_videos_data = []
-        for video in featured_videos:
-            featured_videos_data.append({
-                'id': video.id,
-                'title': video.title,
-                'description': video.description[:150] + '...' if len(video.description) > 150 else video.description,
-                'thumbnail': video.thumbnail.url if video.thumbnail else None,
-                'duration': video.duration,
-                'uploaded_by': {
-                    'id': video.uploaded_by.id,
-                    'username': video.uploaded_by.username,
-                    'name': video.uploaded_by.get_full_name(),
-                },
-                'created_at': video.created_at,
-            })
-        
-        return StandardResponse.success(
-            data={
-                'sections': {
-                    'trending_videos': {
-                        'title': 'Trending This Week',
-                        'items': trending_videos_data,
-                    },
-                    'active_parties': {
-                        'title': 'Live Watch Parties',
-                        'items': active_parties_data,
-                    },
-                    'suggested_users': {
-                        'title': 'People You Might Know',
-                        'items': suggested_users_data,
-                    },
-                    'featured_videos': {
-                        'title': 'Recently Added',
-                        'items': featured_videos_data,
-                    },
-                }
-            },
-            message="Discovery content retrieved successfully"
-        )
+                message="Discovery content retrieved successfully"
+            )
+        except Exception as e:
+            return StandardResponse.error(
+                message=f"Error retrieving discovery content: {str(e)}",
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
