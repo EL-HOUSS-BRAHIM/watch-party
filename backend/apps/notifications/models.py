@@ -500,7 +500,7 @@ class NotificationPreferences(models.Model):
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Updated At')
     
     class Meta:
-        db_table = 'user_notification_preferences'
+        db_table = 'notification_preferences'
         verbose_name = 'Notification Preferences'
         verbose_name_plural = 'Notification Preferences'
         
