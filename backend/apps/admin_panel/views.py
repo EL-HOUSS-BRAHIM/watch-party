@@ -51,7 +51,7 @@ class AdminDashboardView(generics.GenericAPIView):
         responses={200: AdminDashboardStatsSerializer}
     )
     def get(self, request):
-        return admin_dashboard(request)
+        return admin_dashboard(request._request)
 
 
 class AdminUsersListView(generics.GenericAPIView):
@@ -65,7 +65,7 @@ class AdminUsersListView(generics.GenericAPIView):
         responses={200: AdminGenericResponseSerializer}
     )
     def get(self, request):
-        return admin_users_list(request)
+        return admin_users_list(request._request)
 
 
 class AdminSuspendUserView(generics.GenericAPIView):
@@ -107,7 +107,7 @@ class AdminPartiesListView(generics.GenericAPIView):
         responses={200: AdminGenericResponseSerializer}
     )
     def get(self, request):
-        return admin_parties_list(request)
+        return admin_parties_list(request._request)
 
 
 class AdminDeletePartyView(generics.GenericAPIView):
