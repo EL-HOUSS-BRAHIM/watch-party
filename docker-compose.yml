@@ -16,6 +16,8 @@ services:
     env_file:
       - ./backend/.env
     environment:
+      # Unset DATABASE_URL from Dockerfile so production uses AWS Secrets Manager
+      - DATABASE_URL=
       - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
       - AWS_CONFIG_FILE=/home/appuser/.aws/config
       - AWS_EC2_METADATA_DISABLED=true
@@ -45,6 +47,8 @@ services:
     env_file:
       - ./backend/.env
     environment:
+      # Unset DATABASE_URL from Dockerfile so production uses AWS Secrets Manager
+      - DATABASE_URL=
       - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
       - AWS_CONFIG_FILE=/home/appuser/.aws/config
       - AWS_EC2_METADATA_DISABLED=true
@@ -67,6 +71,8 @@ services:
     env_file:
       - ./backend/.env
     environment:
+      # Unset DATABASE_URL from Dockerfile so production uses AWS Secrets Manager
+      - DATABASE_URL=
       - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
       - AWS_CONFIG_FILE=/home/appuser/.aws/config
       - AWS_EC2_METADATA_DISABLED=true
