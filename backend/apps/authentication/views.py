@@ -94,7 +94,7 @@ class RegisterView(RateLimitMixin, APIView):
             # Set refresh token with longer expiry
             response.set_cookie(
                 'refresh_token',
-                refresh_token,
+                str(refresh),
                 max_age=3600 * 24 * 365 * 7,  # 7 days
                 httponly=True,
                 secure=True,

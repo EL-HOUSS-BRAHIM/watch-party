@@ -207,7 +207,7 @@ class MobileHomeView(APIView):
         recent_videos = Video.objects.filter(
             status='ready',
             visibility='public'
-        ).select_related('uploaded_by').order_by('-created_at')[:10]
+        ).select_related('uploader').order_by('-created_at')[:10]
         
         return [
             {
@@ -217,9 +217,9 @@ class MobileHomeView(APIView):
                 'thumbnail': video.thumbnail.url if video.thumbnail else None,
                 'duration': str(video.duration) if video.duration else None,
                 'uploaded_by': {
-                    'id': str(video.uploaded_by.id),
-                    'username': video.uploaded_by.username,
-                    'display_name': video.uploaded_by.get_full_name() or video.uploaded_by.username
+                    'id': str(video.uploader.id),
+                    'username': video.uploader.username,
+                    'display_name': video.uploader.get_full_name() or video.uploader.username
                 },
                 'created_at': video.created_at.isoformat(),
                 'view_count': getattr(video, 'view_count', 0),
@@ -323,7 +323,7 @@ class MobileHomeView(APIView):
         
         return {
             'parties_hosted': WatchParty.objects.filter(host=user).count(),
-            'videos_uploaded': Video.objects.filter(uploaded_by=user).count(),
+            'videos_uploaded': Video.objects.filter(uploader=user).count(),
             'achievements_unlocked': UserAchievement.objects.filter(user=user).count(),
             'watch_time_hours': getattr(user, 'total_watch_time', timedelta()).total_seconds() // 3600,
             'virtual_currency': getattr(user, 'virtual_currency', 0),
@@ -434,7 +434,7 @@ class MobileOfflineSyncView(APIView):
         from apps.videos.models import Video
         
         updated_videos = Video.objects.filter(
-            Q(uploaded_by=user) | Q(is_public=True),
+            Q(uploader=user) | Q(visibility='public'),
             updated_at__gte=last_sync,
             status='ready'
         )[:50]
@@ -800,7 +800,7 @@ class MobileSyncView(APIView):
         # Sync videos
         from apps.videos.models import Video
         user_videos = Video.objects.filter(
-            Q(uploaded_by=user) | Q(is_public=True),
+            Q(uploader=user) | Q(visibility='public'),
             status='ready'
         )[:50]
         

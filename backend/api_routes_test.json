@@ -22,7 +22,7 @@
           "status": 200,
           "response": {
             "status": "healthy",
-            "timestamp": "2025-10-16T18:02:36.310967+00:00",
+            "timestamp": "2025-10-16T18:34:39.192707+00:00",
             "version": "1.0"
           }
         },
@@ -68,7 +68,7 @@
             "message": "Server is working!",
             "authenticated": false,
             "user_id": null,
-            "timestamp": "2025-10-16T18:02:38.818515+00:00"
+            "timestamp": "2025-10-16T18:34:42.894453+00:00"
           }
         }
       ]
@@ -88,6 +88,14 @@
             "confirm_password": "Test123!@#",
             "first_name": "Test",
             "last_name": "User"
+          },
+          "tested": true,
+          "status": 500,
+          "response": {
+            "success": false,
+            "error_id": "fd75609e",
+            "message": "Internal server error",
+            "timestamp": "2025-10-16T18:34:43.660523"
           }
         },
         {
@@ -98,6 +106,24 @@
           "body": {
             "email": "test@example.com",
             "password": "Test123!@#"
+          },
+          "tested": true,
+          "status": 200,
+          "response": {
+            "success": true,
+            "user": {
+              "id": "e40994f5-d784-45dd-b5bb-2457eee81d03",
+              "email": "test@example.com",
+              "first_name": "Test",
+              "last_name": "User",
+              "full_name": "Test User",
+              "avatar": null,
+              "is_premium": false,
+              "subscription_expires": null,
+              "is_subscription_active": false,
+              "date_joined": "2025-10-16T18:34:43.222387Z",
+              "last_login": "2025-10-16T18:34:44.540591Z"
+            }
           }
         },
         {
@@ -211,7 +237,7 @@
               "friends_count": 0,
               "rank": 0,
               "join_date": "2025-10-16T16:24:24.284067Z",
-              "last_active": "2025-10-16T18:02:33.706132Z"
+              "last_active": "2025-10-16T18:34:35.296441Z"
             }
           }
         },
@@ -255,8 +281,8 @@
                   },
                   "ip_address": "172.18.0.6",
                   "user_agent": "python-requests/2.32.4",
-                  "created_at": "2025-10-16T18:02:48.416733Z",
-                  "expires_at": "2025-10-23T18:02:48.416738Z",
+                  "created_at": "2025-10-16T18:34:52.043378Z",
+                  "expires_at": "2025-10-23T18:34:52.043383Z",
                   "is_current": true
                 }
               ]
@@ -299,6 +325,13 @@
                   "id": "14bc9787-4a20-44fb-aac3-b2979f969459",
                   "username": null,
                   "name": "Giovani Barrows",
+                  "profile_picture": null,
+                  "mutual_friends": 0
+                },
+                {
+                  "id": "e40994f5-d784-45dd-b5bb-2457eee81d03",
+                  "username": null,
+                  "name": "Test User",
                   "profile_picture": null,
                   "mutual_friends": 0
                 },
@@ -355,12 +388,12 @@
           "path": "/api/videos/search/",
           "auth_required": true,
           "tested": true,
-          "status": 404,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "f790c95f",
-            "message": "",
-            "timestamp": "2025-10-16T18:02:50.072633"
+            "count": 0,
+            "results": [],
+            "page": 1,
+            "page_size": 20
           }
         },
         {
@@ -369,12 +402,10 @@
           "path": "/api/videos/gdrive/",
           "auth_required": true,
           "tested": true,
-          "status": 404,
+          "status": 400,
           "response": {
             "success": false,
-            "error_id": "d95aaa50",
-            "message": "",
-            "timestamp": "2025-10-16T18:02:50.461451"
+            "message": "Google Drive not connected"
           }
         }
       ]
@@ -459,7 +490,7 @@
             "message": "Trending parties retrieved successfully",
             "data": [],
             "meta": {
-              "generated_at": "2025-10-16T18:02:40.595398+00:00",
+              "generated_at": "2025-10-16T18:34:45.325306+00:00",
               "results": 0
             }
           }
@@ -486,12 +517,20 @@
           "path": "/api/analytics/dashboard/",
           "auth_required": true,
           "tested": true,
-          "status": 500,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "79e32f41",
-            "message": "Internal server error",
-            "timestamp": "2025-10-16T18:02:52.555119"
+            "user_stats": {
+              "total_parties_hosted": 0,
+              "total_parties_joined": 0,
+              "total_watch_time": 0,
+              "total_videos_uploaded": 0,
+              "recent_parties_hosted": 0,
+              "recent_watch_time": 0,
+              "friend_activity": 0
+            },
+            "recent_activity": [],
+            "favorite_genres": [],
+            "watch_time_by_day": []
           }
         },
         {
@@ -535,9 +574,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "8290f784",
+            "error_id": "c64aebc4",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T18:02:53.898473"
+            "timestamp": "2025-10-16T18:34:56.146378"
           }
         },
         {
@@ -549,9 +588,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "9464d096",
+            "error_id": "d4ad4e97",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T18:02:54.252482"
+            "timestamp": "2025-10-16T18:34:56.457320"
           }
         }
       ]
@@ -582,12 +621,12 @@
           "path": "/api/notifications/preferences/",
           "auth_required": true,
           "tested": true,
-          "status": 500,
+          "status": 400,
           "response": {
             "success": false,
-            "error_id": "33cc686f",
-            "message": "Internal server error",
-            "timestamp": "2025-10-16T18:02:55.021528"
+            "error_id": "a298258e",
+            "message": "[ErrorDetail(string='Error retrieving notification preferences: relation \"user_notification_preferences\" does not exist\\nLINE 1: ...\"user_notification_preferences\".\"updated_at\" FROM \"user_noti...\\n                                                             ^', code='invalid')]",
+            "timestamp": "2025-10-16T18:34:57.177498"
           }
         }
       ]
@@ -608,7 +647,7 @@
             "data": {
               "status": "healthy",
               "service": "integrations",
-              "timestamp": "2025-10-16T18:02:40.935365+00:00"
+              "timestamp": "2025-10-16T18:34:46.721964+00:00"
             }
           }
         },
@@ -621,9 +660,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "a39c0d12",
+            "error_id": "0e4777f2",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T18:02:55.680011"
+            "timestamp": "2025-10-16T18:34:57.497102"
           }
         },
         {
@@ -648,8 +687,46 @@
           "path": "/api/integrations/types/",
           "auth_required": true,
           "tested": true,
-          "status": "CONNECTION_ERROR",
-          "response": "Could not connect to server"
+          "status": 200,
+          "response": {
+            "success": true,
+            "message": "Integration types retrieved",
+            "data": {
+              "types": [
+                {
+                  "value": "streaming",
+                  "name": "STREAMING",
+                  "description": "Video streaming and content platforms"
+                },
+                {
+                  "value": "social",
+                  "name": "SOCIAL",
+                  "description": "Social media platforms"
+                },
+                {
+                  "value": "payment",
+                  "name": "PAYMENT",
+                  "description": "Payment processing services"
+                },
+                {
+                  "value": "analytics",
+                  "name": "ANALYTICS",
+                  "description": "Analytics and tracking services"
+                },
+                {
+                  "value": "content",
+                  "name": "CONTENT",
+                  "description": "Content management and CDN services"
+                },
+                {
+                  "value": "notification",
+                  "name": "NOTIFICATION",
+                  "description": "Push notification and messaging services"
+                }
+              ],
+              "total_types": 6
+            }
+          }
         }
       ]
     },
@@ -677,7 +754,7 @@
           "status": 500,
           "response": {
             "success": false,
-            "message": "Error retrieving discovery content: Cannot resolve keyword 'is_active' into field. Choices are: allow_download, analytics, analytics_events, bitrate, codec, comments, content_reports, created_at, description, duration, file, file_size, fps, gdrive_download_url, gdrive_file_id, gdrive_mime_type, id, like_count, likes, notifications, parties, processing, require_premium, resolution, source_id, source_type, source_url, status, streaming_urls, thumbnail, title, updated_at, uploader, uploader_id, video_views, videoupload, view_count, visibility, watch_times"
+            "message": "Error retrieving discovery content: Cannot resolve keyword 'is_active' into field. Choices are: allow_chat, allow_join_by_code, allow_public_search, allow_reactions, analytics, analytics_events, chat_room, content_reports, created_at, current_timestamp, description, ended_at, engagement_analytics, gdrive_file_id, host, host_id, id, interactive_polls, interactive_sessions, invitations, invite_code, invite_code_expires_at, is_playing, last_sync_at, live_reactions, max_participants, movie_duration, movie_title, notifications, participants, peak_concurrent_viewers, reactions, reports, require_approval, room_code, scheduled_start, screen_shares, started_at, status, title, total_chat_messages, total_reactions, total_viewers, updated_at, video, video_id, visibility, voice_chat_room, watch_times"
           }
         },
         {
@@ -1070,12 +1147,11 @@
           "path": "/api/mobile/home/",
           "auth_required": true,
           "tested": true,
-          "status": 500,
+          "status": 400,
           "response": {
             "success": false,
-            "error_id": "0a9d940e",
-            "message": "Internal server error",
-            "timestamp": "2025-10-16T18:03:11.001960"
+            "message": "Error loading home screen: Invalid field name(s) given in select_related: 'uploaded_by'. Choices are: uploader, processing, analytics",
+            "details": 500
           }
         },
         {
@@ -1140,9 +1216,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "4ed27020",
+            "error_id": "a6196e05",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T18:03:11.748427"
+            "timestamp": "2025-10-16T18:35:03.527427"
           }
         },
         {
@@ -1154,9 +1230,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "1f2bf9fb",
+            "error_id": "e8eb7c68",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T18:03:12.127022"
+            "timestamp": "2025-10-16T18:35:03.924104"
           }
         },
         {
@@ -1168,9 +1244,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "09680924",
+            "error_id": "baae2915",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T18:03:12.499922"
+            "timestamp": "2025-10-16T18:35:04.248064"
           }
         }
       ]

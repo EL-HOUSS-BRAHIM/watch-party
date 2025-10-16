@@ -185,7 +185,7 @@ class GlobalSearchView(APIView):
             parties_q = Q(
                 Q(title__icontains=query) | 
                 Q(description__icontains=query),
-                is_active=True
+                status__in=['scheduled', 'live']
             ) & date_filter_q
             
             parties_queryset = WatchParty.objects.filter(parties_q).select_related('host')
@@ -635,7 +635,7 @@ class SearchAnalyticsView(APIView):
         parties = WatchParty.objects.filter(
             Q(title__icontains=query) | 
             Q(description__icontains=query),
-            is_active=True
+            status__in=['scheduled', 'live']
         )[:5]
         
         # Serialize results
@@ -747,8 +747,8 @@ class DiscoverContentView(APIView):
             
             # Get active parties
             active_parties = WatchParty.objects.filter(
-                is_active=True,
-                is_public=True
+                status='live',
+                visibility='public'
             ).order_by('-created_at')[:6]
             
             # Get suggested users (random for now, could be based on mutual friends/interests)
