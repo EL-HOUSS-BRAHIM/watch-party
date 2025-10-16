@@ -760,7 +760,7 @@ class PublicPartiesView(generics.ListAPIView):
     """Get public parties that users can join"""
     
     serializer_class = WatchPartySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['status']
     search_fields = ['title', 'description']

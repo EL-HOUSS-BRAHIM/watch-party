@@ -3,7 +3,7 @@ Mobile app specific API endpoints and optimizations
 """
 
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework import serializers
 from django.utils import timezone
@@ -20,7 +20,7 @@ class MobileAppConfigView(APIView):
     Mobile app configuration endpoint
     """
     serializer_class = serializers.Serializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     
     @api_response_documentation(
         summary="Get mobile app configuration",
@@ -514,7 +514,7 @@ def update_push_token(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def mobile_app_info(request):
     """Get mobile app information and update notifications"""
     app_version = request.headers.get('X-App-Version', '1.0.0')

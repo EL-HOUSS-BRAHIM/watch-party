@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 # Security
 DEBUG = False
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=lambda v: [s.strip() for s in v.split(',')])
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1,0.0.0.0', cast=lambda v: [s.strip() for s in v.split(',')])
 
 # Disable automatic slash appending to prevent POST->GET redirect issues
 APPEND_SLASH = False

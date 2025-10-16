@@ -4,7 +4,7 @@ Enhanced Party Views for Watch Party Backend
 
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.utils import timezone
 from django.db.models import Count, F
 from django.shortcuts import get_object_or_404
@@ -187,7 +187,7 @@ def party_analytics(request, party_id):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def trending_parties(request):
     """Get trending public parties based on activity"""
     try:
