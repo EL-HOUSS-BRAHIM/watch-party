@@ -282,13 +282,13 @@ class MobileHomeView(APIView):
         # Trending videos (simplified - based on recent creation)
         trending_videos = Video.objects.filter(
             status='ready',
-            is_public=True,
+            visibility='public',
             created_at__gte=timezone.now() - timedelta(days=7)
         ).order_by('-created_at')[:5]
         
         # Popular parties
         popular_parties = WatchParty.objects.filter(
-            is_active=True,
+            status='live',
             created_at__gte=timezone.now() - timedelta(days=1)
         ).annotate(
             participant_count=Count('participants')

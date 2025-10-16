@@ -22,7 +22,7 @@
           "status": 200,
           "response": {
             "status": "healthy",
-            "timestamp": "2025-10-16T18:34:39.192707+00:00",
+            "timestamp": "2025-10-16T18:58:03.147735+00:00",
             "version": "1.0"
           }
         },
@@ -68,7 +68,7 @@
             "message": "Server is working!",
             "authenticated": false,
             "user_id": null,
-            "timestamp": "2025-10-16T18:34:42.894453+00:00"
+            "timestamp": "2025-10-16T18:58:07.293880+00:00"
           }
         }
       ]
@@ -90,12 +90,14 @@
             "last_name": "User"
           },
           "tested": true,
-          "status": 500,
+          "status": 400,
           "response": {
             "success": false,
-            "error_id": "fd75609e",
-            "message": "Internal server error",
-            "timestamp": "2025-10-16T18:34:43.660523"
+            "errors": {
+              "email": [
+                "User with this Email Address already exists."
+              ]
+            }
           }
         },
         {
@@ -122,7 +124,7 @@
               "subscription_expires": null,
               "is_subscription_active": false,
               "date_joined": "2025-10-16T18:34:43.222387Z",
-              "last_login": "2025-10-16T18:34:44.540591Z"
+              "last_login": "2025-10-16T18:58:08.621696Z"
             }
           }
         },
@@ -237,7 +239,7 @@
               "friends_count": 0,
               "rank": 0,
               "join_date": "2025-10-16T16:24:24.284067Z",
-              "last_active": "2025-10-16T18:34:35.296441Z"
+              "last_active": "2025-10-16T18:57:58.215304Z"
             }
           }
         },
@@ -281,8 +283,8 @@
                   },
                   "ip_address": "172.18.0.6",
                   "user_agent": "python-requests/2.32.4",
-                  "created_at": "2025-10-16T18:34:52.043378Z",
-                  "expires_at": "2025-10-23T18:34:52.043383Z",
+                  "created_at": "2025-10-16T18:58:16.938036Z",
+                  "expires_at": "2025-10-23T18:58:16.938041Z",
                   "is_current": true
                 }
               ]
@@ -490,7 +492,7 @@
             "message": "Trending parties retrieved successfully",
             "data": [],
             "meta": {
-              "generated_at": "2025-10-16T18:34:45.325306+00:00",
+              "generated_at": "2025-10-16T18:58:09.499524+00:00",
               "results": 0
             }
           }
@@ -574,9 +576,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "c64aebc4",
+            "error_id": "fb3cd724",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T18:34:56.146378"
+            "timestamp": "2025-10-16T18:58:22.280805"
           }
         },
         {
@@ -588,9 +590,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "d4ad4e97",
+            "error_id": "ba32c0b4",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T18:34:56.457320"
+            "timestamp": "2025-10-16T18:58:23.602384"
           }
         }
       ]
@@ -624,9 +626,9 @@
           "status": 400,
           "response": {
             "success": false,
-            "error_id": "a298258e",
+            "error_id": "4ae88a5f",
             "message": "[ErrorDetail(string='Error retrieving notification preferences: relation \"user_notification_preferences\" does not exist\\nLINE 1: ...\"user_notification_preferences\".\"updated_at\" FROM \"user_noti...\\n                                                             ^', code='invalid')]",
-            "timestamp": "2025-10-16T18:34:57.177498"
+            "timestamp": "2025-10-16T18:58:24.855840"
           }
         }
       ]
@@ -647,7 +649,7 @@
             "data": {
               "status": "healthy",
               "service": "integrations",
-              "timestamp": "2025-10-16T18:34:46.721964+00:00"
+              "timestamp": "2025-10-16T18:58:09.938139+00:00"
             }
           }
         },
@@ -660,9 +662,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "0e4777f2",
+            "error_id": "53161e86",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T18:34:57.497102"
+            "timestamp": "2025-10-16T18:58:25.210588"
           }
         },
         {
@@ -754,7 +756,7 @@
           "status": 500,
           "response": {
             "success": false,
-            "message": "Error retrieving discovery content: Cannot resolve keyword 'is_active' into field. Choices are: allow_chat, allow_join_by_code, allow_public_search, allow_reactions, analytics, analytics_events, chat_room, content_reports, created_at, current_timestamp, description, ended_at, engagement_analytics, gdrive_file_id, host, host_id, id, interactive_polls, interactive_sessions, invitations, invite_code, invite_code_expires_at, is_playing, last_sync_at, live_reactions, max_participants, movie_duration, movie_title, notifications, participants, peak_concurrent_viewers, reactions, reports, require_approval, room_code, scheduled_start, screen_shares, started_at, status, title, total_chat_messages, total_reactions, total_viewers, updated_at, video, video_id, visibility, voice_chat_room, watch_times"
+            "message": "Error retrieving discovery content: Invalid field name(s) given in select_related: 'uploaded_by'. Choices are: uploader, processing, analytics"
           }
         },
         {
@@ -1150,7 +1152,7 @@
           "status": 400,
           "response": {
             "success": false,
-            "message": "Error loading home screen: Invalid field name(s) given in select_related: 'uploaded_by'. Choices are: uploader, processing, analytics",
+            "message": "Error loading home screen: Cannot resolve keyword 'is_public' into field. Choices are: allow_download, analytics, analytics_events, bitrate, codec, comments, content_reports, created_at, description, duration, file, file_size, fps, gdrive_download_url, gdrive_file_id, gdrive_mime_type, id, like_count, likes, notifications, parties, processing, require_premium, resolution, source_id, source_type, source_url, status, streaming_urls, thumbnail, title, updated_at, uploader, uploader_id, video_views, videoupload, view_count, visibility, watch_times",
             "details": 500
           }
         },
@@ -1216,9 +1218,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "a6196e05",
+            "error_id": "913f3cf7",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T18:35:03.527427"
+            "timestamp": "2025-10-16T18:58:31.078165"
           }
         },
         {
@@ -1230,9 +1232,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "e8eb7c68",
+            "error_id": "6b454c19",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T18:35:03.924104"
+            "timestamp": "2025-10-16T18:58:31.408344"
           }
         },
         {
@@ -1244,9 +1246,9 @@
           "status": 403,
           "response": {
             "success": false,
-            "error_id": "baae2915",
+            "error_id": "a5fb8573",
             "message": "You do not have permission to perform this action.",
-            "timestamp": "2025-10-16T18:35:04.248064"
+            "timestamp": "2025-10-16T18:58:31.726213"
           }
         }
       ]

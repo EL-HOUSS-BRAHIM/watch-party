@@ -129,7 +129,7 @@ class GlobalSearchView(APIView):
             if category:
                 videos_q &= Q(category__icontains=category)
                 
-            videos_queryset = Video.objects.filter(videos_q).select_related('uploaded_by')
+            videos_queryset = Video.objects.filter(videos_q).select_related('uploader')
             
             if sort_by == 'popularity':
                 videos_queryset = videos_queryset.order_by('-view_count', '-created_at')
@@ -163,9 +163,9 @@ class GlobalSearchView(APIView):
                     'thumbnail': video.thumbnail.url if video.thumbnail else None,
                     'duration': video.duration,
                     'uploaded_by': {
-                        'id': video.uploaded_by.id,
-                        'username': video.uploaded_by.username,
-                        'name': video.uploaded_by.get_full_name(),
+                        'id': video.uploader.id,
+                        'username': video.uploader.username,
+                        'name': video.uploader.get_full_name(),
                     },
                     'created_at': video.created_at,
                     'views': getattr(video, 'view_count', 0),
@@ -659,9 +659,9 @@ class SearchAnalyticsView(APIView):
                 'thumbnail': video.thumbnail.url if video.thumbnail else None,
                 'duration': video.duration,
                 'uploaded_by': {
-                    'id': video.uploaded_by.id,
-                    'username': video.uploaded_by.username,
-                    'name': video.uploaded_by.get_full_name(),
+                    'id': video.uploader.id,
+                    'username': video.uploader.username,
+                    'name': video.uploader.get_full_name(),
                 },
                 'created_at': video.created_at,
                 'views': getattr(video, 'view_count', 0),
@@ -759,7 +759,7 @@ class DiscoverContentView(APIView):
             # Get featured content (recent uploads from popular creators)
             featured_videos = Video.objects.filter(
                 status='ready'
-            ).select_related('uploaded_by').order_by('-created_at')[:6]
+            ).select_related('uploader').order_by('-created_at')[:6]
             
             # Serialize data
             trending_videos_data = []
@@ -772,9 +772,9 @@ class DiscoverContentView(APIView):
                         'thumbnail': video.thumbnail.url if video.thumbnail else None,
                         'duration': video.duration,
                         'uploaded_by': {
-                            'id': video.uploaded_by.id,
-                            'username': video.uploaded_by.username,
-                            'name': video.uploaded_by.get_full_name(),
+                            'id': video.uploader.id,
+                            'username': video.uploader.username,
+                            'name': video.uploader.get_full_name(),
                         },
                         'views': getattr(video, 'view_count', 0) if hasattr(video, 'view_count') else 0,
                         'created_at': video.created_at,
@@ -831,9 +831,9 @@ class DiscoverContentView(APIView):
                         'thumbnail': video.thumbnail.url if video.thumbnail else None,
                         'duration': video.duration,
                         'uploaded_by': {
-                            'id': video.uploaded_by.id,
-                            'username': video.uploaded_by.username,
-                            'name': video.uploaded_by.get_full_name(),
+                            'id': video.uploader.id,
+                            'username': video.uploader.username,
+                            'name': video.uploader.get_full_name(),
                         },
                         'created_at': video.created_at,
                     })
