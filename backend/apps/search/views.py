@@ -736,20 +736,23 @@ class DiscoverContentView(APIView):
         # Serialize data
         trending_videos_data = []
         for video in trending_videos:
-            trending_videos_data.append({
-                'id': video.id,
-                'title': video.title,
-                'description': video.description[:150] + '...' if len(video.description) > 150 else video.description,
-                'thumbnail': video.thumbnail.url if video.thumbnail else None,
-                'duration': video.duration,
-                'uploaded_by': {
-                    'id': video.uploaded_by.id,
-                    'username': video.uploaded_by.username,
-                    'name': video.uploaded_by.get_full_name(),
-                },
-                'views': getattr(video, 'view_count', 0),
-                'created_at': video.created_at,
-            })
+            try:
+                trending_videos_data.append({
+                    'id': video.id,
+                    'title': video.title,
+                    'description': video.description[:150] + '...' if len(video.description) > 150 else video.description,
+                    'thumbnail': video.thumbnail.url if video.thumbnail else None,
+                    'duration': video.duration,
+                    'uploaded_by': {
+                        'id': video.uploaded_by.id,
+                        'username': video.uploaded_by.username,
+                        'name': video.uploaded_by.get_full_name(),
+                    },
+                    'views': getattr(video, 'view_count', 0) if hasattr(video, 'view_count') else 0,
+                    'created_at': video.created_at,
+                })
+            except Exception:
+                continue
         
         active_parties_data = []
         for party in active_parties:
@@ -769,13 +772,23 @@ class DiscoverContentView(APIView):
         
         suggested_users_data = []
         for suggested_user in suggested_users:
-            suggested_users_data.append({
-                'id': suggested_user.id,
-                'username': suggested_user.username,
-                'name': suggested_user.get_full_name(),
-                'profile_picture': suggested_user.profile_picture.url if suggested_user.profile_picture else None,
-                'is_online': getattr(suggested_user, 'is_online', False),
-            })
+            try:
+                profile_pic = None
+                if hasattr(suggested_user, 'profile_picture') and suggested_user.profile_picture:
+                    try:
+                        profile_pic = suggested_user.profile_picture.url
+                    except Exception:
+                        profile_pic = None
+                
+                suggested_users_data.append({
+                    'id': suggested_user.id,
+                    'username': suggested_user.username,
+                    'name': suggested_user.get_full_name(),
+                    'profile_picture': profile_pic,
+                    'is_online': getattr(suggested_user, 'is_online', False),
+                })
+            except Exception:
+                continue
         
         featured_videos_data = []
         for video in featured_videos:

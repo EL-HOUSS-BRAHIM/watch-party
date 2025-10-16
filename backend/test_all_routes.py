@@ -7,22 +7,10 @@ import json
 import requests
 import sys
 from datetime import datetime
-import random
-import string
 
 # Configuration
 JSON_FILE = "api_routes_test.json"
 BASE_URL = "https://be-watch-party.brahim-elhouss.me"
-
-# Test user credentials
-TEST_USER = {
-    "email": "test@watchparty.com",
-    "username": "testuser",
-    "password": "TestPass123!@#",
-    "first_name": "Test",
-    "last_name": "User",
-    "confirm_password": "TestPass123!@#"
-}
 
 # Test user credentials
 TEST_USER = {
@@ -52,50 +40,6 @@ def save_routes(data):
     """Save routes to JSON file"""
     with open(JSON_FILE, 'w') as f:
         json.dump(data, f, indent=2)
-
-def register_or_login():
-    """Register a test user or login if already exists"""
-    print(f"{Colors.BLUE}Attempting to register/login test user...{Colors.RESET}")
-    
-    # Try to register first
-    register_url = BASE_URL + '/api/auth/register/'
-    try:
-        response = requests.post(register_url, json=TEST_USER, timeout=10)
-        if response.status_code == 201 or response.status_code == 200:
-            data = response.json()
-            if data.get('success') and data.get('data', {}).get('access_token'):
-                print(f"{Colors.GREEN}✓ Registration successful!{Colors.RESET}")
-                return data['data']['access_token']
-            elif data.get('access'):
-                print(f"{Colors.GREEN}✓ Registration successful!{Colors.RESET}")
-                return data['access']
-    except Exception as e:
-        print(f"{Colors.YELLOW}Registration failed or user exists: {e}{Colors.RESET}")
-    
-    # Try to login
-    login_url = BASE_URL + '/api/auth/login/'
-    login_data = {
-        "email": TEST_USER["email"],
-        "password": TEST_USER["password"]
-    }
-    
-    try:
-        response = requests.post(login_url, json=login_data, timeout=10)
-        if response.status_code == 200:
-            data = response.json()
-            if data.get('success') and data.get('data', {}).get('access_token'):
-                print(f"{Colors.GREEN}✓ Login successful!{Colors.RESET}")
-                return data['data']['access_token']
-            elif data.get('access'):
-                print(f"{Colors.GREEN}✓ Login successful!{Colors.RESET}")
-                return data['access']
-        print(f"{Colors.RED}✗ Login failed: {response.status_code}{Colors.RESET}")
-        print(f"Response: {response.text[:200]}")
-    except Exception as e:
-        print(f"{Colors.RED}✗ Login error: {e}{Colors.RESET}")
-    
-    return None
-
 
 def test_endpoint(endpoint, token=None):
     """Test a single endpoint"""
@@ -225,8 +169,15 @@ def login_user():
         }, timeout=10)
         
         if response.status_code == 200:
+            # Check for token in cookies (HTTP-only cookie auth)
+            if 'access_token' in response.cookies:
+                token = response.cookies['access_token']
+                print(f"{Colors.GREEN}✓ Login successful (cookie-based auth){Colors.RESET}")
+                print(f"   Token: {token[:50]}...{Colors.RESET}\n")
+                return token
+            
+            # Fallback: Check for token in JSON response body
             data = response.json()
-            # Try different possible token field names
             token = (data.get('data', {}).get('access_token') or 
                     data.get('data', {}).get('token') or
                     data.get('access_token') or 
@@ -234,11 +185,12 @@ def login_user():
                     data.get('token'))
             
             if token:
-                print(f"{Colors.GREEN}✓ Login successful{Colors.RESET}")
+                print(f"{Colors.GREEN}✓ Login successful (token in response){Colors.RESET}")
                 print(f"   Token: {token[:50]}...{Colors.RESET}\n")
                 return token
             else:
-                print(f"{Colors.YELLOW}⚠ Login succeeded but no token found{Colors.RESET}")
+                print(f"{Colors.YELLOW}⚠ Login succeeded but no token found in cookies or response{Colors.RESET}")
+                print(f"Cookies: {list(response.cookies.keys())}")
                 print(f"Response: {json.dumps(data, indent=2)[:300]}\n")
                 return None
         else:

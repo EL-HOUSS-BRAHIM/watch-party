@@ -22,7 +22,7 @@
           "status": 200,
           "response": {
             "status": "healthy",
-            "timestamp": "2025-10-16T16:14:36.741517+00:00",
+            "timestamp": "2025-10-16T16:52:35.171154+00:00",
             "version": "1.0"
           }
         },
@@ -68,7 +68,7 @@
             "message": "Server is working!",
             "authenticated": false,
             "user_id": null,
-            "timestamp": "2025-10-16T16:14:37.787007+00:00"
+            "timestamp": "2025-10-16T16:52:36.289308+00:00"
           }
         }
       ]
@@ -129,12 +129,10 @@
           "path": "/api/auth/logout/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "cb9d9bc5",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:14:51.889593"
+            "success": true,
+            "message": "Successfully logged out."
           }
         },
         {
@@ -143,12 +141,17 @@
           "path": "/api/auth/profile/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "a24799b7",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:14:52.326232"
+            "id": "6ba8eff9-5f71-4872-9fe2-b4377d2eea96",
+            "email": "api.tester@watchparty.test",
+            "first_name": "API",
+            "last_name": "Tester",
+            "avatar": null,
+            "is_premium": false,
+            "subscription_expires": null,
+            "date_joined": "2025-10-16T16:24:24.284067Z",
+            "profile": null
           }
         },
         {
@@ -157,12 +160,11 @@
           "path": "/api/auth/google-drive/status/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "7a55bc7e",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:14:53.326866"
+            "success": true,
+            "connected": false,
+            "folder_id": null
           }
         }
       ]
@@ -176,12 +178,13 @@
           "path": "/api/users/dashboard/stats/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "aad24e50",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:14:53.785969"
+            "friends_count": 0,
+            "videos_count": 0,
+            "parties_hosted": 0,
+            "profile_completion": 80,
+            "total_watch_time": "0h"
           }
         },
         {
@@ -190,12 +193,22 @@
           "path": "/api/users/profile/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "649accd8",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:14:54.155986"
+            "id": "6ba8eff9-5f71-4872-9fe2-b4377d2eea96",
+            "email": "api.tester@watchparty.test",
+            "first_name": "API",
+            "last_name": "Tester",
+            "full_name": "API Tester",
+            "avatar_url": null,
+            "is_premium": false,
+            "date_joined": "2025-10-16T16:24:24.284067Z",
+            "friends_count": 0,
+            "profile": {
+              "bio": "",
+              "timezone": "UTC",
+              "language": "en"
+            }
           }
         },
         {
@@ -204,12 +217,25 @@
           "path": "/api/users/stats/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "f52d2a47",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:14:54.573383"
+            "success": true,
+            "data": {
+              "level": 1,
+              "experience_points": 0,
+              "total_watch_time": 0,
+              "parties_hosted": 0,
+              "parties_joined": 0,
+              "videos_uploaded": 0,
+              "achievements_unlocked": 0,
+              "total_achievements": 0,
+              "currency_balance": 0,
+              "items_owned": 0,
+              "friends_count": 0,
+              "rank": 0,
+              "join_date": "2025-10-16T16:24:24.284067Z",
+              "last_active": "2025-10-16T16:52:34.481035Z"
+            }
           }
         },
         {
@@ -218,12 +244,19 @@
           "path": "/api/users/achievements/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "4cf565e2",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:14:59.975746"
+            "success": true,
+            "data": {
+              "unlocked_achievements": [],
+              "all_achievements": [],
+              "stats": {
+                "total_unlocked": 0,
+                "total_available": 0,
+                "completion_percentage": 0,
+                "total_points": 0
+              }
+            }
           }
         },
         {
@@ -232,12 +265,25 @@
           "path": "/api/users/sessions/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "46cbf95e",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:01.642963"
+            "success": true,
+            "data": {
+              "sessions": [
+                {
+                  "id": "1",
+                  "device_info": {
+                    "browser": "Chrome",
+                    "os": "Windows"
+                  },
+                  "ip_address": "172.18.0.6",
+                  "user_agent": "python-requests/2.32.4",
+                  "created_at": "2025-10-16T16:52:47.627626Z",
+                  "expires_at": "2025-10-23T16:52:47.627631Z",
+                  "is_current": true
+                }
+              ]
+            }
           }
         },
         {
@@ -246,12 +292,48 @@
           "path": "/api/users/friends/suggestions/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "601a63e0",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:01.940239"
+            "success": true,
+            "data": {
+              "suggestions": [
+                {
+                  "id": "5b1fd053-8cef-435f-9b5e-507d342e8f25",
+                  "username": null,
+                  "name": "test@test.com password123",
+                  "profile_picture": null,
+                  "mutual_friends": 0
+                },
+                {
+                  "id": "a940f0a2-7de6-4e9f-9ea3-099709063d91",
+                  "username": null,
+                  "name": "Admin User",
+                  "profile_picture": null,
+                  "mutual_friends": 0
+                },
+                {
+                  "id": "14bc9787-4a20-44fb-aac3-b2979f969459",
+                  "username": null,
+                  "name": "Giovani Barrows",
+                  "profile_picture": null,
+                  "mutual_friends": 0
+                },
+                {
+                  "id": "cc3bd8c9-191a-4685-8edc-7add1439d6ba",
+                  "username": null,
+                  "name": "Test User",
+                  "profile_picture": null,
+                  "mutual_friends": 0
+                },
+                {
+                  "id": "6f8c1bea-5532-42df-8a81-ff1733a7ed17",
+                  "username": null,
+                  "name": "BRAHIM EL HOUSS",
+                  "profile_picture": null,
+                  "mutual_friends": 0
+                }
+              ]
+            }
           }
         },
         {
@@ -260,12 +342,12 @@
           "path": "/api/users/friends/requests/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "76600c05",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:02.251750"
+            "received": [],
+            "sent": [],
+            "received_count": 0,
+            "sent_count": 0
           }
         }
       ]
@@ -299,9 +381,9 @@
           "status": 404,
           "response": {
             "success": false,
-            "error_id": "650d583c",
+            "error_id": "f82bb138",
             "message": "",
-            "timestamp": "2025-10-16T16:15:03.534250"
+            "timestamp": "2025-10-16T16:52:49.393383"
           }
         },
         {
@@ -313,9 +395,9 @@
           "status": 404,
           "response": {
             "success": false,
-            "error_id": "74c94b0d",
+            "error_id": "53c016b7",
             "message": "",
-            "timestamp": "2025-10-16T16:15:03.917708"
+            "timestamp": "2025-10-16T16:52:49.750803"
           }
         }
       ]
@@ -329,12 +411,15 @@
           "path": "/api/parties/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "9c8432c1",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:04.278428"
+            "count": 0,
+            "next": null,
+            "previous": null,
+            "total_pages": 1,
+            "current_page": 1,
+            "page_size": 20,
+            "results": []
           }
         },
         {
@@ -343,12 +428,15 @@
           "path": "/api/parties/recent/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "c2ed6316",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:04.671450"
+            "count": 0,
+            "next": null,
+            "previous": null,
+            "total_pages": 1,
+            "current_page": 1,
+            "page_size": 20,
+            "results": []
           }
         },
         {
@@ -357,12 +445,15 @@
           "path": "/api/parties/public/",
           "auth_required": false,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "15e61049",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:14:44.010212"
+            "count": 0,
+            "next": null,
+            "previous": null,
+            "total_pages": 1,
+            "current_page": 1,
+            "page_size": 20,
+            "results": []
           }
         },
         {
@@ -371,12 +462,12 @@
           "path": "/api/parties/search/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "92f4bf0c",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:09.958654"
+            "count": 0,
+            "results": [],
+            "page": 1,
+            "page_size": 20
           }
         },
         {
@@ -385,12 +476,15 @@
           "path": "/api/parties/trending/",
           "auth_required": false,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "eff57ede",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:14:49.575138"
+            "success": true,
+            "message": "Trending parties retrieved successfully",
+            "data": [],
+            "meta": {
+              "generated_at": "2025-10-16T16:52:42.672660+00:00",
+              "results": 0
+            }
           }
         },
         {
@@ -399,12 +493,12 @@
           "path": "/api/parties/invitations/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 404,
           "response": {
             "success": false,
-            "error_id": "1600d0d8",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:10.357566"
+            "error_id": "af4c70ad",
+            "message": "",
+            "timestamp": "2025-10-16T16:52:51.232435"
           }
         }
       ]
@@ -418,12 +512,12 @@
           "path": "/api/analytics/dashboard/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 500,
           "response": {
             "success": false,
-            "error_id": "3e0cd907",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:10.706686"
+            "error_id": "a8d3a616",
+            "message": "Internal server error",
+            "timestamp": "2025-10-16T16:52:51.709543"
           }
         },
         {
@@ -432,12 +526,30 @@
           "path": "/api/analytics/user-stats/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "f87bfea5",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:10.994035"
+            "id": "b9e35a1c-e733-45b3-8395-e74df0cf0447",
+            "user": "6ba8eff9-5f71-4872-9fe2-b4377d2eea96",
+            "user_name": "API Tester",
+            "total_watch_time_minutes": 0,
+            "total_watch_time_hours": 0.0,
+            "this_week_watch_time_minutes": 0,
+            "this_month_watch_time_minutes": 0,
+            "total_parties_joined": 0,
+            "total_parties_hosted": 0,
+            "this_week_parties_joined": 0,
+            "this_month_parties_joined": 0,
+            "total_messages_sent": 0,
+            "this_week_messages_sent": 0,
+            "this_month_messages_sent": 0,
+            "videos_uploaded": 0,
+            "reactions_sent": 0,
+            "friends_added": 0,
+            "average_session_duration_minutes": 0.0,
+            "favorite_genre": "",
+            "most_active_hour": null,
+            "last_updated": "2025-10-16T16:52:51.689185Z",
+            "created_at": "2025-10-16T16:52:51.688865Z"
           }
         },
         {
@@ -446,12 +558,12 @@
           "path": "/api/analytics/platform-overview/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 403,
           "response": {
             "success": false,
-            "error_id": "572c828b",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:11.290147"
+            "error_id": "fd76118c",
+            "message": "You do not have permission to perform this action.",
+            "timestamp": "2025-10-16T16:52:52.475196"
           }
         },
         {
@@ -460,12 +572,12 @@
           "path": "/api/analytics/real-time/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 403,
           "response": {
             "success": false,
-            "error_id": "0b9280d6",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:11.647864"
+            "error_id": "6679fba9",
+            "message": "You do not have permission to perform this action.",
+            "timestamp": "2025-10-16T16:52:52.866069"
           }
         }
       ]
@@ -479,12 +591,15 @@
           "path": "/api/notifications/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "92b0290a",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:11.931503"
+            "count": 0,
+            "next": null,
+            "previous": null,
+            "total_pages": 1,
+            "current_page": 1,
+            "page_size": 20,
+            "results": []
           }
         },
         {
@@ -493,12 +608,12 @@
           "path": "/api/notifications/preferences/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 500,
           "response": {
             "success": false,
-            "error_id": "db50ac57",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:17.229073"
+            "error_id": "eadb6265",
+            "message": "Internal server error",
+            "timestamp": "2025-10-16T16:52:53.592976"
           }
         }
       ]
@@ -519,7 +634,7 @@
             "data": {
               "status": "healthy",
               "service": "integrations",
-              "timestamp": "2025-10-16T16:14:49.876197+00:00"
+              "timestamp": "2025-10-16T16:52:43.087900+00:00"
             }
           }
         },
@@ -529,12 +644,12 @@
           "path": "/api/integrations/status/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 403,
           "response": {
             "success": false,
-            "error_id": "4b72aa0e",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:17.704257"
+            "error_id": "770c59d5",
+            "message": "You do not have permission to perform this action.",
+            "timestamp": "2025-10-16T16:52:53.871779"
           }
         },
         {
@@ -543,12 +658,14 @@
           "path": "/api/integrations/connections/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "07edea2d",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:18.053849"
+            "success": true,
+            "message": "User connections retrieved",
+            "data": {
+              "connections": [],
+              "total": 0
+            }
           }
         },
         {
@@ -557,12 +674,45 @@
           "path": "/api/integrations/types/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "774ab329",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:18.328537"
+            "success": true,
+            "message": "Integration types retrieved",
+            "data": {
+              "types": [
+                {
+                  "value": "streaming",
+                  "name": "STREAMING",
+                  "description": "Video streaming and content platforms"
+                },
+                {
+                  "value": "social",
+                  "name": "SOCIAL",
+                  "description": "Social media platforms"
+                },
+                {
+                  "value": "payment",
+                  "name": "PAYMENT",
+                  "description": "Payment processing services"
+                },
+                {
+                  "value": "analytics",
+                  "name": "ANALYTICS",
+                  "description": "Analytics and tracking services"
+                },
+                {
+                  "value": "content",
+                  "name": "CONTENT",
+                  "description": "Content management and CDN services"
+                },
+                {
+                  "value": "notification",
+                  "name": "NOTIFICATION",
+                  "description": "Push notification and messaging services"
+                }
+              ],
+              "total_types": 6
+            }
           }
         }
       ]
@@ -576,12 +726,10 @@
           "path": "/api/search/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 400,
           "response": {
             "success": false,
-            "error_id": "d05d965e",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:18.889917"
+            "message": "Query parameter 'q' is required"
           }
         },
         {
@@ -590,12 +738,12 @@
           "path": "/api/search/discover/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 500,
           "response": {
             "success": false,
-            "error_id": "6dbb2116",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:19.225980"
+            "error_id": "f9eee45e",
+            "message": "Internal server error",
+            "timestamp": "2025-10-16T16:52:55.255064"
           }
         },
         {
@@ -604,12 +752,12 @@
           "path": "/api/search/suggestions/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 500,
           "response": {
             "success": false,
-            "error_id": "781baabc",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:19.577270"
+            "error_id": "77063baf",
+            "message": "Internal server error",
+            "timestamp": "2025-10-16T16:52:55.666650"
           }
         },
         {
@@ -618,12 +766,12 @@
           "path": "/api/search/trending/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 500,
           "response": {
             "success": false,
-            "error_id": "0751067c",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:20.668062"
+            "error_id": "1674593f",
+            "message": "Internal server error",
+            "timestamp": "2025-10-16T16:52:56.209226"
           }
         }
       ]
@@ -637,12 +785,32 @@
           "path": "/api/social/groups/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "da6086be",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:20.912244"
+            "success": true,
+            "message": "Social groups retrieved successfully",
+            "data": {
+              "groups": [],
+              "categories": {
+                "general": "General",
+                "movies": "Movies",
+                "tv_shows": "TV Shows",
+                "anime": "Anime",
+                "documentaries": "Documentaries",
+                "gaming": "Gaming",
+                "music": "Music",
+                "sports": "Sports",
+                "comedy": "Comedy",
+                "horror": "Horror",
+                "sci_fi": "Science Fiction",
+                "other": "Other"
+              },
+              "privacy_options": {
+                "public": "Public",
+                "private": "Private",
+                "invite_only": "Invite Only"
+              }
+            }
           }
         }
       ]
@@ -656,12 +824,14 @@
           "path": "/api/messaging/conversations/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "9c48e71c",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:21.250107"
+            "success": true,
+            "message": "Conversations retrieved successfully",
+            "data": {
+              "conversations": [],
+              "total_unread": 0
+            }
           }
         }
       ]
@@ -711,12 +881,14 @@
           "path": "/api/support/tickets/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "968d5aac",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:21.525187"
+            "success": true,
+            "message": "Support tickets retrieved successfully",
+            "data": {
+              "tickets": [],
+              "total_count": 0
+            }
           }
         }
       ]
@@ -730,12 +902,12 @@
           "path": "/api/events/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "06a539a7",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:21.843658"
+            "count": 0,
+            "next": null,
+            "previous": null,
+            "results": []
           }
         }
       ]
@@ -749,12 +921,27 @@
           "path": "/api/store/items/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "6fe98723",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:22.169860"
+            "success": true,
+            "message": "Store items retrieved successfully",
+            "data": {
+              "items": [],
+              "categories": {
+                "avatar": "Avatar Items",
+                "themes": "Themes",
+                "emotes": "Emotes",
+                "badges": "Badges",
+                "backgrounds": "Backgrounds",
+                "effects": "Special Effects"
+              },
+              "rarities": [
+                "common",
+                "rare",
+                "epic",
+                "legendary"
+              ]
+            }
           }
         },
         {
@@ -763,12 +950,23 @@
           "path": "/api/store/inventory/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "e8f35292",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:27.609701"
+            "success": true,
+            "message": "Inventory retrieved successfully",
+            "data": {
+              "inventory": [],
+              "currency": {
+                "balance": 0,
+                "total_earned": 0,
+                "total_spent": 0
+              },
+              "stats": {
+                "total_items": 0,
+                "equipped_items": 0,
+                "categories": []
+              }
+            }
           }
         },
         {
@@ -777,12 +975,28 @@
           "path": "/api/store/achievements/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "336f45bd",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:27.962010"
+            "success": true,
+            "message": "Achievements retrieved successfully",
+            "data": {
+              "achievements": [],
+              "unlocked_achievements": [],
+              "stats": {
+                "total_achievements": 0,
+                "unlocked_count": 0,
+                "completion_percentage": 0,
+                "total_points": 0
+              },
+              "types": {
+                "social": "Social",
+                "watching": "Watching",
+                "hosting": "Hosting",
+                "community": "Community",
+                "milestone": "Milestone",
+                "special": "Special Event"
+              }
+            }
           }
         },
         {
@@ -791,12 +1005,21 @@
           "path": "/api/store/rewards/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "71f5ed36",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:28.274311"
+            "success": true,
+            "message": "Rewards retrieved successfully",
+            "data": {
+              "rewards": [],
+              "recent_claims": [],
+              "types": {
+                "daily": "Daily Reward",
+                "weekly": "Weekly Reward",
+                "challenge": "Challenge Reward",
+                "streak": "Streak Reward",
+                "milestone": "Milestone Reward"
+              }
+            }
           }
         }
       ]
@@ -810,12 +1033,99 @@
           "path": "/api/mobile/config/",
           "auth_required": false,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "a533b9cd",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:14:51.135575"
+            "success": true,
+            "message": "Mobile app configuration retrieved",
+            "data": {
+              "app_info": {
+                "min_supported_version": "1.0.0",
+                "latest_version": "1.2.0",
+                "force_update": false,
+                "update_message": "A new version is available with improved performance."
+              },
+              "features": {
+                "video_upload": true,
+                "live_chat": true,
+                "push_notifications": true,
+                "offline_mode": true,
+                "background_audio": false,
+                "picture_in_picture": true,
+                "chromecast_support": false,
+                "airplay_support": false
+              },
+              "limits": {
+                "max_video_size_mb": 500,
+                "max_video_duration_minutes": 120,
+                "max_party_participants": 50,
+                "max_upload_concurrent": 3,
+                "video_quality_auto_adjust": true
+              },
+              "media_settings": {
+                "thumbnail_sizes": [
+                  "150x84",
+                  "300x168",
+                  "480x270"
+                ],
+                "video_qualities": [
+                  "240p",
+                  "360p",
+                  "480p",
+                  "720p",
+                  "1080p"
+                ],
+                "default_quality": "auto",
+                "adaptive_streaming": true,
+                "preload_buffer_seconds": 10
+              },
+              "sync_settings": {
+                "sync_interval_seconds": 30,
+                "offline_cache_duration_hours": 24,
+                "background_sync": true,
+                "wifi_only_uploads": false
+              },
+              "ui_settings": {
+                "theme": "dark",
+                "primary_color": "#007AFF",
+                "show_party_thumbnails": true,
+                "enable_haptic_feedback": false,
+                "gesture_controls": true
+              },
+              "notification_settings": {
+                "categories": [
+                  {
+                    "id": "party_invites",
+                    "name": "Party Invitations",
+                    "default": true
+                  },
+                  {
+                    "id": "friend_requests",
+                    "name": "Friend Requests",
+                    "default": true
+                  },
+                  {
+                    "id": "new_messages",
+                    "name": "New Messages",
+                    "default": true
+                  },
+                  {
+                    "id": "party_updates",
+                    "name": "Party Updates",
+                    "default": true
+                  },
+                  {
+                    "id": "achievements",
+                    "name": "Achievements",
+                    "default": true
+                  },
+                  {
+                    "id": "system_announcements",
+                    "name": "System Announcements",
+                    "default": false
+                  }
+                ]
+              }
+            }
           }
         },
         {
@@ -824,12 +1134,12 @@
           "path": "/api/mobile/home/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 500,
           "response": {
             "success": false,
-            "error_id": "bfed0b7f",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:28.604442"
+            "error_id": "9aac7a8e",
+            "message": "Internal server error",
+            "timestamp": "2025-10-16T16:53:01.887563"
           }
         },
         {
@@ -838,12 +1148,24 @@
           "path": "/api/mobile/app-info/",
           "auth_required": false,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "6e494413",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:14:51.517518"
+            "success": true,
+            "message": "App info retrieved",
+            "data": {
+              "current_version": "1.0.0",
+              "latest_version": "1.2.0",
+              "needs_update": false,
+              "force_update": false,
+              "update_url": null,
+              "changelog": [
+                "Improved video streaming performance",
+                "New party invitation features",
+                "Bug fixes and stability improvements"
+              ],
+              "maintenance_mode": false,
+              "maintenance_message": null
+            }
           }
         }
       ]
@@ -857,12 +1179,15 @@
           "path": "/api/moderation/reports/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 200,
           "response": {
-            "success": false,
-            "error_id": "f3ba4e20",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:28.924274"
+            "count": 0,
+            "next": null,
+            "previous": null,
+            "total_pages": 1,
+            "current_page": 1,
+            "page_size": 20,
+            "results": []
           }
         }
       ]
@@ -876,12 +1201,12 @@
           "path": "/api/admin/dashboard/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 403,
           "response": {
             "success": false,
-            "error_id": "90cead22",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:29.275691"
+            "error_id": "fb2f81fa",
+            "message": "You do not have permission to perform this action.",
+            "timestamp": "2025-10-16T16:53:02.938684"
           }
         },
         {
@@ -890,12 +1215,12 @@
           "path": "/api/admin/users/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 403,
           "response": {
             "success": false,
-            "error_id": "f4d8953d",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:29.601671"
+            "error_id": "636371f4",
+            "message": "You do not have permission to perform this action.",
+            "timestamp": "2025-10-16T16:53:03.539800"
           }
         },
         {
@@ -904,12 +1229,12 @@
           "path": "/api/admin/parties/",
           "auth_required": true,
           "tested": true,
-          "status": 401,
+          "status": 403,
           "response": {
             "success": false,
-            "error_id": "ab548e33",
-            "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T16:15:31.153475"
+            "error_id": "e00e2c60",
+            "message": "You do not have permission to perform this action.",
+            "timestamp": "2025-10-16T16:53:04.056896"
           }
         }
       ]

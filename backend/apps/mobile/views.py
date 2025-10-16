@@ -107,80 +107,98 @@ class MobileHomeView(APIView):
     @extend_schema(summary="MobileHomeView GET")
     def get(self, request):
         """Get mobile home screen data"""
-        user = request.user
-        
-        # Get active parties
-        active_parties = self.get_active_parties(user)
-        
-        # Get recent videos
-        recent_videos = self.get_recent_videos(user)
-        
-        # Get friend activities
-        friend_activities = self.get_friend_activities(user)
-        
-        # Get trending content
-        trending = self.get_trending_content()
-        
-        # Get user quick stats
-        quick_stats = self.get_user_quick_stats(user)
-        
-        # Get recommendations
-        recommendations = self.get_recommendations(user)
-        
-        home_data = {
-            'user_info': {
-                'id': str(user.id),
-                'username': user.username,
-                'display_name': user.get_full_name() or user.username,
-                'avatar_url': user.avatar.url if user.avatar else None,
-                'is_premium': getattr(user, 'is_premium', False),
-                'unread_notifications': self.get_unread_notifications_count(user)
-            },
-            'quick_stats': quick_stats,
-            'active_parties': active_parties,
-            'recent_videos': recent_videos,
-            'friend_activities': friend_activities,
-            'trending': trending,
-            'recommendations': recommendations,
-            'last_updated': timezone.now().isoformat()
-        }
-        
-        return StandardResponse.success(home_data, "Home screen data retrieved")
+        try:
+            user = request.user
+            
+            # Get active parties
+            active_parties = self.get_active_parties(user)
+            
+            # Get recent videos
+            recent_videos = self.get_recent_videos(user)
+            
+            # Get friend activities
+            friend_activities = self.get_friend_activities(user)
+            
+            # Get trending content
+            trending = self.get_trending_content()
+            
+            # Get user quick stats
+            quick_stats = self.get_user_quick_stats(user)
+            
+            # Get recommendations
+            recommendations = self.get_recommendations(user)
+            
+            # Safe avatar URL access
+            avatar_url = None
+            if hasattr(user, 'avatar') and user.avatar:
+                try:
+                    avatar_url = user.avatar.url
+                except Exception:
+                    avatar_url = None
+            
+            home_data = {
+                'user_info': {
+                    'id': str(user.id),
+                    'username': user.username,
+                    'display_name': user.get_full_name() or user.username,
+                    'avatar_url': avatar_url,
+                    'is_premium': getattr(user, 'is_premium', False),
+                    'unread_notifications': self.get_unread_notifications_count(user)
+                },
+                'quick_stats': quick_stats,
+                'active_parties': active_parties,
+                'recent_videos': recent_videos,
+                'friend_activities': friend_activities,
+                'trending': trending,
+                'recommendations': recommendations,
+                'last_updated': timezone.now().isoformat()
+            }
+            
+            return StandardResponse.success(home_data, "Home screen data retrieved")
+        except Exception as e:
+            return StandardResponse.error(f"Error loading home screen: {str(e)}", status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def get_active_parties(self, user):
         """Get active parties for user"""
-        from apps.parties.models import WatchParty, PartyParticipant
-        
-        # Parties user is hosting or participating in
-        user_parties = WatchParty.objects.filter(
-            Q(host=user) | Q(participants__user=user, participants__is_active=True),
-            is_active=True
-        ).distinct().select_related('host', 'current_video').prefetch_related(
-            Prefetch(
-                'participants',
-                queryset=PartyParticipant.objects.filter(is_active=True).select_related('user')
-            )
-        )[:5]
-        
-        return [
-            {
-                'id': str(party.id),
-                'title': party.title,
-                'host': {
-                    'id': str(party.host.id),
-                    'username': party.host.username,
-                    'display_name': party.host.get_full_name() or party.host.username
-                },
-                'participant_count': party.participants.filter(is_active=True).count(),
-                'current_video': {
-                    'title': party.current_video.title if party.current_video else None,
-                    'thumbnail': party.current_video.thumbnail.url if party.current_video and party.current_video.thumbnail else None
-                } if party.current_video else None,
-                'created_at': party.created_at.isoformat(),
-                'is_host': party.host == user
-            }
-            for party in user_parties
-        ]
+        try:
+            from apps.parties.models import WatchParty, PartyParticipant
+            
+            # Parties user is hosting or participating in
+            user_parties = WatchParty.objects.filter(
+                Q(host=user) | Q(participants__user=user, participants__is_active=True),
+                is_active=True
+            ).distinct().select_related('host', 'current_video').prefetch_related(
+                Prefetch(
+                    'participants',
+                    queryset=PartyParticipant.objects.filter(is_active=True).select_related('user')
+                )
+            )[:5]
+            
+            parties_data = []
+            for party in user_parties:
+                try:
+                    parties_data.append({
+                        'id': str(party.id),
+                        'title': party.title,
+                        'host': {
+                            'id': str(party.host.id),
+                            'username': party.host.username,
+                            'display_name': party.host.get_full_name() or party.host.username
+                        },
+                        'participant_count': party.participants.filter(is_active=True).count(),
+                        'current_video': {
+                            'title': party.current_video.title if party.current_video else None,
+                            'thumbnail': party.current_video.thumbnail.url if party.current_video and party.current_video.thumbnail else None
+                        } if party.current_video else None,
+                        'created_at': party.created_at.isoformat(),
+                        'is_host': party.host == user
+                    })
+                except Exception:
+                    continue
+            
+            return parties_data
+        except Exception:
+            return []
     
     def get_recent_videos(self, user):
         """Get recent videos for user"""

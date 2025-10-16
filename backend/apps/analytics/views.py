@@ -30,9 +30,15 @@ class DashboardView(generics.GenericAPIView):
     @extend_schema(summary="DashboardView GET")
     def get(self, request):
         if request.user.is_staff:
-            return AdminAnalyticsView().get(request)
+            view = AdminAnalyticsView()
+            view.request = request
+            view.format_kwarg = None
+            return view.get(request)
         else:
-            return UserDetailedStatsView().get(request)
+            view = UserDetailedStatsView()
+            view.request = request
+            view.format_kwarg = None
+            return view.get(request)
 
 
 class UserStatsView(generics.RetrieveAPIView):

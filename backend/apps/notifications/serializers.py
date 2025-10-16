@@ -358,27 +358,3 @@ class NotificationWebhookSerializer(serializers.Serializer):
     provider_data = serializers.DictField(required=False)
     user_agent = serializers.CharField(required=False)
     ip_address = serializers.IPAddressField(required=False)
-
-
-class NotificationPreferencesSerializer(serializers.ModelSerializer):
-    """Serializer for user notification preferences/channels"""
-    
-    user = serializers.SerializerMethodField()
-    
-    class Meta:
-        model = NotificationPreferences
-        fields = [
-            'id', 'user', 'email_enabled', 'push_enabled', 
-            'sms_enabled', 'in_app_enabled', 'created_at', 'updated_at'
-        ]
-    
-    @extend_schema_field(OpenApiTypes.OBJECT)
-    def get_user(self, obj: NotificationPreferences) -> dict:
-        """Get user information"""
-        if not obj.user:
-            return {}
-        return {
-            'id': str(obj.user.id),
-            'username': obj.user.username,
-            'email': obj.user.email
-        }
