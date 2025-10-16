@@ -292,18 +292,21 @@ def get_optimized_database_config():
         if ssl_key:
             config['default']['OPTIONS']['sslkey'] = ssl_key
     
-    # Add SQLite config for development when DEBUG is true and no DATABASE_URL
+    # Override with SQLite config for development when DEBUG is true and no DATABASE_URL
     debug = os.environ.get('DEBUG', 'False').lower() in ('true', '1', 'yes')
     if debug and not database_url and os.environ.get('DATABASE_HOST', 'localhost') == 'localhost':
         # Get BASE_DIR equivalent
         base_dir = Path(__file__).resolve().parent.parent
-        config['default'] = {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': base_dir / 'db.sqlite3',
-            'OPTIONS': {
-                'timeout': 60,
-                'check_same_thread': False,
-            },
+        # Don't include any PostgreSQL settings for SQLite
+        config = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': base_dir / 'db.sqlite3',
+                'OPTIONS': {
+                    'timeout': 60,
+                    'check_same_thread': False,
+                },
+            }
         }
     
     return config
