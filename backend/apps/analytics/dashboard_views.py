@@ -66,7 +66,7 @@ def dashboard_stats(request):
 
     if friends_qs is not None:
         friend_parties = WatchParty.objects.filter(
-            participants__in=friends_qs,
+            participants__user__in=friends_qs,
             created_at__gte=start_date
         ).count()
     

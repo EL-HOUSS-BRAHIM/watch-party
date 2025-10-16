@@ -46,16 +46,33 @@ router.register(r'', VideoViewSet, basename='video')
 router.register(r'comments', VideoCommentViewSet, basename='video-comment')
 
 urlpatterns = [
-    # Video CRUD operations (handled by ViewSet)
-    path('', include(router.urls)),
-    
-    # Upload endpoints
+    # Upload endpoints (specific patterns first)
     path('upload/', VideoUploadView.as_view(), name='upload'),
     path('upload/s3/', S3VideoUploadView.as_view(), name='s3_upload'),
     path('upload/<uuid:upload_id>/complete/', VideoUploadCompleteView.as_view(), name='upload_complete'),
     path('upload/<uuid:upload_id>/status/', VideoUploadStatusView.as_view(), name='upload_status'),
     
-    # Video processing and streaming
+    # Search (specific patterns before router)
+    path('search/', VideoSearchView.as_view(), name='search'),
+    path('search/advanced/', VideoSearchEnhancedView.as_view(), name='advanced_search'),
+    
+    # Google Drive movie management (specific patterns before router)
+    path('gdrive/', GoogleDriveMoviesView.as_view(), name='gdrive_movies'),
+    path('gdrive/upload/', GoogleDriveMovieUploadView.as_view(), name='gdrive_upload'),
+    path('gdrive/<uuid:video_id>/delete/', GoogleDriveMovieDeleteView.as_view(), name='gdrive_delete'),
+    path('gdrive/<uuid:video_id>/stream/', GoogleDriveMovieStreamView.as_view(), name='gdrive_stream'),
+    
+    # Video validation
+    path('validate-url/', validate_video_url, name='validate_url'),
+    
+    # Channel Analytics (specific patterns before router)
+    path('analytics/channel/', channel_analytics_dashboard, name='channel_analytics'),
+    path('analytics/trending/', trending_videos_analytics, name='trending_analytics'),
+    
+    # Video CRUD operations (handled by ViewSet) - router comes after specific patterns
+    path('', include(router.urls)),
+    
+    # Video processing and streaming (with UUID, so can come after router)
     path('<uuid:video_id>/stream/', VideoStreamingUrlView.as_view(), name='streaming_url'),
     path('<uuid:video_id>/thumbnail/', VideoThumbnailView.as_view(), name='thumbnail'),
     path('<uuid:video_id>/analytics/', VideoAnalyticsView.as_view(), name='analytics'),
@@ -72,23 +89,6 @@ urlpatterns = [
     path('<uuid:video_id>/analytics/retention/', video_retention_curve, name='retention_curve'),
     path('<uuid:video_id>/analytics/journey/', video_viewer_journey, name='viewer_journey'),
     path('<uuid:video_id>/analytics/comparative/', video_comparative_analytics, name='comparative_analytics'),
-    
-    # Channel Analytics
-    path('analytics/channel/', channel_analytics_dashboard, name='channel_analytics'),
-    path('analytics/trending/', trending_videos_analytics, name='trending_analytics'),
-    
-    # Video validation
-    path('validate-url/', validate_video_url, name='validate_url'),
-    
-    # Search
-    path('search/', VideoSearchView.as_view(), name='search'),
-    path('search/advanced/', VideoSearchEnhancedView.as_view(), name='advanced_search'),
-    
-    # Google Drive movie management
-    path('gdrive/', GoogleDriveMoviesView.as_view(), name='gdrive_movies'),
-    path('gdrive/upload/', GoogleDriveMovieUploadView.as_view(), name='gdrive_upload'),
-    path('gdrive/<uuid:video_id>/delete/', GoogleDriveMovieDeleteView.as_view(), name='gdrive_delete'),
-    path('gdrive/<uuid:video_id>/stream/', GoogleDriveMovieStreamView.as_view(), name='gdrive_stream'),
     
     # Video proxy for streaming
     path('<uuid:video_id>/proxy/', VideoProxyView.as_view(), name='video_proxy'),

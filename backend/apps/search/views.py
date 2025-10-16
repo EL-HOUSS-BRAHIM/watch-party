@@ -123,7 +123,7 @@ class GlobalSearchView(APIView):
                 Q(title__icontains=query) | 
                 Q(description__icontains=query) |
                 Q(tags__icontains=query),
-                is_active=True
+                status='ready'
             ) & date_filter_q
             
             if category:
@@ -628,7 +628,7 @@ class SearchAnalyticsView(APIView):
         videos = Video.objects.filter(
             Q(title__icontains=query) | 
             Q(description__icontains=query),
-            is_active=True
+            status='ready'
         )[:10]
         
         # Search parties
@@ -736,12 +736,12 @@ class DiscoverContentView(APIView):
             # Try to order by view_count if it exists, otherwise just by created_at
             try:
                 trending_videos = Video.objects.filter(
-                    is_active=True,
+                    status='ready',
                     created_at__gte=one_week_ago
                 ).order_by('-view_count', '-created_at')[:8]
             except Exception:
                 trending_videos = Video.objects.filter(
-                    is_active=True,
+                    status='ready',
                     created_at__gte=one_week_ago
                 ).order_by('-created_at')[:8]
             
@@ -758,7 +758,7 @@ class DiscoverContentView(APIView):
             
             # Get featured content (recent uploads from popular creators)
             featured_videos = Video.objects.filter(
-                is_active=True
+                status='ready'
             ).select_related('uploaded_by').order_by('-created_at')[:6]
             
             # Serialize data

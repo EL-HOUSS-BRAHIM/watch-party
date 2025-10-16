@@ -5,7 +5,7 @@ Mobile app specific API endpoints and optimizations
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework import serializers
+from rest_framework import serializers, status
 from django.utils import timezone
 from django.db.models import Q, Count, Prefetch
 from drf_spectacular.utils import extend_schema
@@ -206,7 +206,7 @@ class MobileHomeView(APIView):
         
         recent_videos = Video.objects.filter(
             status='ready',
-            is_public=True
+            visibility='public'
         ).select_related('uploaded_by').order_by('-created_at')[:10]
         
         return [

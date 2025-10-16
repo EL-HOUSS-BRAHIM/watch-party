@@ -188,7 +188,7 @@ class NotificationPreferencesView(generics.RetrieveUpdateAPIView):
             preferences, created = NotificationPreferences.objects.get_or_create(user=user)
             return preferences
         except Exception as e:
-            from apps.shared.response import StandardResponse
+            from shared.responses import StandardResponse
             raise ValidationError(f"Error retrieving notification preferences: {str(e)}")
 
 
