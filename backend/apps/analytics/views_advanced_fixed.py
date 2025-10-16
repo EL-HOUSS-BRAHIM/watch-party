@@ -73,10 +73,10 @@ class PlatformOverviewAnalyticsView(GenericAPIView):
                     total=Sum('average_watch_time')
                 )['total'] or timedelta(0),
                 'average_session_duration': UserAnalytics.objects.filter(
-                    date__gte=start_date.date()
+                    created_at__gte=start_date
                 ).aggregate(
-                    avg_session=Avg('average_session_duration')
-                )['avg_session'] or timedelta(0),
+                    avg_session=Avg('average_session_duration_minutes')
+                )['avg_session'] or 0,
                 'total_reactions': PartyEngagementAnalytics.objects.aggregate(
                     total=Sum('most_rewound_timestamp')
                 )['total'] or 0,

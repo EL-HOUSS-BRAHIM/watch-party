@@ -14,12 +14,12 @@ BASE_URL = "https://be-watch-party.brahim-elhouss.me"
 
 # Test user credentials
 TEST_USER = {
-    "email": "api.tester@watchparty.test",
-    "username": "api_tester",
-    "password": "TestPassword123!@#",
-    "first_name": "API",
-    "last_name": "Tester",
-    "confirm_password": "TestPassword123!@#"
+    "email": "admin@watchparty.test",
+    "username": "Super_Admin",
+    "password": "Admin@123456",
+    "first_name": "Super",
+    "last_name": "Admin",
+    "confirm_password": "Admin@123456"
 }
 
 # ANSI color codes for terminal output

@@ -226,7 +226,7 @@ def admin_dashboard(request):
     
     total_parties = WatchParty.objects.count()
     active_parties = WatchParty.objects.filter(
-        status='active'
+        status='live'
     ).count()
     
     # System health
@@ -773,13 +773,13 @@ def admin_video_management(request):
     order_by = request.GET.get('order_by', '-created_at')
     
     # Build queryset
-    queryset = Video.objects.select_related('uploaded_by')
+    queryset = Video.objects.select_related('uploader')
     
     # Apply search filter
     if search:
         queryset = queryset.filter(
             Q(title__icontains=search) |
-            Q(uploaded_by__username__icontains=search)
+            Q(uploader__username__icontains=search)
         )
     
     # Apply status filter
@@ -799,10 +799,10 @@ def admin_video_management(request):
         video_data = {
             'id': str(video.id),
             'title': video.title,
-            'uploaded_by': {
-                'id': str(video.uploaded_by.id),
-                'username': video.uploaded_by.username,
-                'full_name': video.uploaded_by.get_full_name()
+            'uploader': {
+                'id': str(video.uploader.id),
+                'username': video.uploader.username,
+                'full_name': video.uploader.get_full_name()
             },
             'status': video.status,
             'created_at': video.created_at,
@@ -830,7 +830,7 @@ def admin_delete_video(request, video_id):
         data={
             'video_id': str(video.id),
             'video_title': video.title,
-            'uploaded_by_id': str(video.uploaded_by.id)
+            'uploader_id': str(video.uploader.id)
         },
         ip_address=request.META.get('REMOTE_ADDR', '')
     )
