@@ -130,8 +130,8 @@ class PlatformOverviewAnalyticsView(GenericAPIView):
                     'parties': list(content_growth['parties'])
                 },
                 'engagement_metrics': {
-                    'total_watch_time_hours': engagement_metrics['total_watch_time'].total_seconds() / 3600,
-                    'average_session_minutes': engagement_metrics['average_session_duration'].total_seconds() / 60,
+                    'total_watch_time_hours': engagement_metrics['total_watch_time'].total_seconds() / 3600 if isinstance(engagement_metrics['total_watch_time'], timedelta) else 0,
+                    'average_session_minutes': engagement_metrics['average_session_duration'] if isinstance(engagement_metrics['average_session_duration'], int) else engagement_metrics['average_session_duration'].total_seconds() / 60,
                     'total_reactions': engagement_metrics['total_reactions'],
                     'chat_messages': engagement_metrics['chat_messages']
                 },

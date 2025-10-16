@@ -22,7 +22,7 @@
           "status": 200,
           "response": {
             "status": "healthy",
-            "timestamp": "2025-10-16T20:26:17.653291+00:00",
+            "timestamp": "2025-10-16T20:36:33.046290+00:00",
             "version": "1.0"
           }
         },
@@ -68,7 +68,7 @@
             "message": "Server is working!",
             "authenticated": false,
             "user_id": null,
-            "timestamp": "2025-10-16T20:26:18.246670+00:00"
+            "timestamp": "2025-10-16T20:36:33.686220+00:00"
           }
         }
       ]
@@ -124,7 +124,7 @@
               "subscription_expires": null,
               "is_subscription_active": false,
               "date_joined": "2025-10-16T18:34:43.222387Z",
-              "last_login": "2025-10-16T20:26:19.405634Z"
+              "last_login": "2025-10-16T20:36:35.155984Z"
             }
           }
         },
@@ -239,7 +239,7 @@
               "friends_count": 0,
               "rank": 0,
               "join_date": "2025-10-16T19:03:18.851792Z",
-              "last_active": "2025-10-16T20:26:15.495511Z"
+              "last_active": "2025-10-16T20:36:32.403382Z"
             }
           }
         },
@@ -283,8 +283,8 @@
                   },
                   "ip_address": "172.18.0.6",
                   "user_agent": "python-requests/2.32.4",
-                  "created_at": "2025-10-16T20:26:25.753276Z",
-                  "expires_at": "2025-10-23T20:26:25.753281Z",
+                  "created_at": "2025-10-16T20:36:42.693079Z",
+                  "expires_at": "2025-10-23T20:36:42.693083Z",
                   "is_current": true
                 }
               ]
@@ -331,6 +331,13 @@
                   "mutual_friends": 0
                 },
                 {
+                  "id": "e40994f5-d784-45dd-b5bb-2457eee81d03",
+                  "username": null,
+                  "name": "Test User",
+                  "profile_picture": null,
+                  "mutual_friends": 0
+                },
+                {
                   "id": "6ba8eff9-5f71-4872-9fe2-b4377d2eea96",
                   "username": null,
                   "name": "API Tester",
@@ -339,13 +346,6 @@
                 },
                 {
                   "id": "cc3bd8c9-191a-4685-8edc-7add1439d6ba",
-                  "username": null,
-                  "name": "Test User",
-                  "profile_picture": null,
-                  "mutual_friends": 0
-                },
-                {
-                  "id": "e40994f5-d784-45dd-b5bb-2457eee81d03",
                   "username": null,
                   "name": "Test User",
                   "profile_picture": null,
@@ -499,7 +499,7 @@
             "message": "Trending parties retrieved successfully",
             "data": [],
             "meta": {
-              "generated_at": "2025-10-16T20:26:20.167395+00:00",
+              "generated_at": "2025-10-16T20:36:35.900175+00:00",
               "results": 0
             }
           }
@@ -583,7 +583,7 @@
           "status": 400,
           "response": {
             "success": false,
-            "message": "Error retrieving platform analytics: Cannot resolve keyword 'country' into field. Choices are: achievements, active_chat_rooms, activities, added_participants, analytics, analytics_events, annotations, assigned_content_reports, assigned_tickets, auth_sessions, avatar, billing_address, chat_bans, chat_bans_issued, content_moderation_actions, content_reports_against, content_reports_made, conversationdraft, conversationparticipant, conversations, created_batches, created_faqs, created_groups, created_polls, currency, currency_transactions, date_joined, email, email_verifications, event_attendances, event_reminders, experience_points, favorites, feedback, feedback_votes, first_name, friend_requests_received, friend_requests_sent, github_id, google_id, group_invitations_sent, groupevent, groupmembership, grouppost, grouppostreaction, groups, hosted_parties, id, interactive_sessions, inventory, invoices, is_active, is_email_verified, is_online, is_premium, is_staff, is_superuser, last_activity, last_login, last_name, level, live_reactions, logentry, messagereaction, mobile_devices, moderated_chat_messages, moderation_actions, moderation_received, notification_settings, notificationbatch, notifications, onboarding_completed, organized_events, outstandingtoken, party_participations, party_reactions, party_reports, password, password_resets, payment_methods, payments, poll_responses, profile, profile_picture, push_subscriptions, received_event_invitations, received_group_invitations, received_invitations, related_notifications, reported_in_parties, reports_made, reports_received, requested_urls, reward_claims, saved_searches, screen_shares, searchquery, sent_chat_messages, sent_event_invitations, sent_group_invitations, sent_invitations, sent_messages, service_connections, sessions, settings, social_accounts, social_groups, subscription, subscription_expires, support_messages, support_tickets, total_watch_time, two_factor_auth, uploaded_videos, uploads, user_permissions, videocomment, videolike, videoview, virtual_currency, voice_chat_sessions, watch_times"
+            "message": "Error retrieving platform analytics: 'int' object has no attribute 'total_seconds'"
           }
         },
         {
@@ -597,7 +597,7 @@
             "success": true,
             "message": "Real-time analytics retrieved successfully",
             "data": {
-              "timestamp": "2025-10-16T20:26:32.980183+00:00",
+              "timestamp": "2025-10-16T20:36:49.179256+00:00",
               "online_users": 2,
               "active_parties": 0,
               "recent_activity": [],
@@ -688,7 +688,7 @@
             "data": {
               "status": "healthy",
               "service": "integrations",
-              "timestamp": "2025-10-16T20:26:20.459757+00:00"
+              "timestamp": "2025-10-16T20:36:36.209557+00:00"
             }
           }
         },
@@ -718,7 +718,7 @@
                 "content",
                 "notification"
               ],
-              "last_updated": "2025-10-16T20:26:34.280211+00:00"
+              "last_updated": "2025-10-16T20:36:50.509893+00:00"
             }
           }
         },
@@ -826,9 +826,23 @@
                   "title": "People You Might Know",
                   "items": [
                     {
-                      "id": "5b1fd053-8cef-435f-9b5e-507d342e8f25",
+                      "id": "a940f0a2-7de6-4e9f-9ea3-099709063d91",
                       "username": null,
-                      "name": "test@test.com password123",
+                      "name": "Admin User",
+                      "profile_picture": null,
+                      "is_online": false
+                    },
+                    {
+                      "id": "14bc9787-4a20-44fb-aac3-b2979f969459",
+                      "username": null,
+                      "name": "Giovani Barrows",
+                      "profile_picture": null,
+                      "is_online": false
+                    },
+                    {
+                      "id": "e40994f5-d784-45dd-b5bb-2457eee81d03",
+                      "username": null,
+                      "name": "Test User",
                       "profile_picture": null,
                       "is_online": false
                     },
@@ -854,23 +868,9 @@
                       "is_online": false
                     },
                     {
-                      "id": "e40994f5-d784-45dd-b5bb-2457eee81d03",
+                      "id": "5b1fd053-8cef-435f-9b5e-507d342e8f25",
                       "username": null,
-                      "name": "Test User",
-                      "profile_picture": null,
-                      "is_online": false
-                    },
-                    {
-                      "id": "14bc9787-4a20-44fb-aac3-b2979f969459",
-                      "username": null,
-                      "name": "Giovani Barrows",
-                      "profile_picture": null,
-                      "is_online": false
-                    },
-                    {
-                      "id": "a940f0a2-7de6-4e9f-9ea3-099709063d91",
-                      "username": null,
-                      "name": "Admin User",
+                      "name": "test@test.com password123",
                       "profile_picture": null,
                       "is_online": false
                     }
@@ -1318,7 +1318,7 @@
                   "priority": "medium"
                 }
               ],
-              "last_updated": "2025-10-16T20:26:41.025439+00:00"
+              "last_updated": "2025-10-16T20:37:01.798133+00:00"
             }
           }
         },
@@ -1428,7 +1428,7 @@
                 "is_active": true,
                 "is_staff": true,
                 "date_joined": "2025-10-16T19:03:18.851792Z",
-                "last_login": "2025-10-16T20:26:15.495511Z",
+                "last_login": "2025-10-16T20:36:32.403382Z",
                 "profile": null
               },
               {
@@ -1438,7 +1438,7 @@
                 "is_active": true,
                 "is_staff": false,
                 "date_joined": "2025-10-16T18:34:43.222387Z",
-                "last_login": "2025-10-16T20:26:19.405634Z",
+                "last_login": "2025-10-16T20:36:35.155984Z",
                 "profile": null
               },
               {
