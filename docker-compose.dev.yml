@@ -112,6 +112,8 @@ services:
     networks:
       - watchparty-network
     restart: unless-stopped
+    healthcheck:
+      disable: true
 
   # Celery Beat (scheduler)
   celery-beat:
@@ -144,6 +146,8 @@ services:
     networks:
       - watchparty-network
     restart: unless-stopped
+    healthcheck:
+      disable: true
 
   # Next.js Frontend
   frontend:

@@ -48,6 +48,8 @@ services:
     networks:
       - watchparty-network
     restart: unless-stopped
+    healthcheck:
+      disable: true
 
   # Celery Beat (scheduler, uses external AWS ElastiCache)
   celery-beat:
@@ -63,6 +65,8 @@ services:
     networks:
       - watchparty-network
     restart: unless-stopped
+    healthcheck:
+      disable: true
 
   # Next.js Frontend
   frontend:
