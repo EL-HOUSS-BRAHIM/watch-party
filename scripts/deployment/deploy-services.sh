@@ -23,9 +23,10 @@ if command_exists ufw; then
     (sudo ufw allow 80/tcp 2>/dev/null && sudo ufw allow 443/tcp 2>/dev/null) &
 fi
 
-# Start all services in parallel (docker-compose will handle dependencies)
+# Start all services (docker-compose will handle dependencies)
+# Note: docker-compose up -d will recreate containers if .env changed
 log_info "Starting all services..."
-docker-compose up -d
+docker-compose up -d --force-recreate --remove-orphans
 
 # Quick wait for containers to initialize
 sleep 5

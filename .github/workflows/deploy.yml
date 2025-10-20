@@ -1,10 +1,9 @@
 name: Deploy to Lightsail
 
 on:
-  # Temporarily disabled automatic deploy on push
-  # push:
-  #   branches: ["master", "main"]
-  #   # Pushes use cache by default for fast builds
+  push:
+    branches: ["master", "main"]
+    # Pushes use cache by default for fast builds
   workflow_dispatch:
     inputs:
       force_rebuild:

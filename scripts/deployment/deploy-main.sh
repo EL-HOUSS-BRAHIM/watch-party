@@ -51,6 +51,10 @@ bash "$SCRIPT_DIR/deploy-services.sh" || exit_with_error "Service deployment fai
 log_step "Step 6: Health Checks"
 bash "$SCRIPT_DIR/health-checks.sh" || exit_with_error "Health checks failed"
 
+# Step 7: Setup automatic password sync
+log_step "Step 7: Setting up RDS Password Sync"
+bash "$SCRIPT_DIR/setup-password-sync.sh" || log_warning "Password sync setup failed (non-critical)"
+
 # Cleanup
 log_step "Cleanup"
 docker system prune -f || true

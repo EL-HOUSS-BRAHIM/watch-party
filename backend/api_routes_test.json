@@ -22,7 +22,7 @@
           "status": 200,
           "response": {
             "status": "healthy",
-            "timestamp": "2025-10-16T21:52:09.929757+00:00",
+            "timestamp": "2025-10-16T22:25:42.874557+00:00",
             "version": "1.0"
           }
         },
@@ -68,7 +68,7 @@
             "message": "Server is working!",
             "authenticated": false,
             "user_id": null,
-            "timestamp": "2025-10-16T21:52:10.772759+00:00"
+            "timestamp": "2025-10-16T22:25:43.540986+00:00"
           }
         }
       ]
@@ -93,9 +93,9 @@
           "status": 500,
           "response": {
             "success": false,
-            "error_id": "36b4d8c8",
+            "error_id": "ea5f348c",
             "message": "Internal server error",
-            "timestamp": "2025-10-16T21:52:11.524126"
+            "timestamp": "2025-10-16T22:25:44.277848"
           }
         },
         {
@@ -111,9 +111,9 @@
           "status": 500,
           "response": {
             "success": false,
-            "error_id": "8f2c1a5a",
+            "error_id": "3c2b0429",
             "message": "Internal server error",
-            "timestamp": "2025-10-16T21:52:11.937861"
+            "timestamp": "2025-10-16T22:25:44.591657"
           }
         },
         {
@@ -125,9 +125,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "f9c8fed4",
+            "error_id": "4091df8f",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:14.767293"
+            "timestamp": "2025-10-16T22:25:46.870141"
           }
         },
         {
@@ -139,9 +139,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "ea33999f",
+            "error_id": "777874a6",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:15.653036"
+            "timestamp": "2025-10-16T22:25:47.138574"
           }
         },
         {
@@ -153,9 +153,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "ae51585d",
+            "error_id": "88cfebfe",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:15.956298"
+            "timestamp": "2025-10-16T22:25:47.419885"
           }
         }
       ]
@@ -172,9 +172,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "9946ed2d",
+            "error_id": "9121dd11",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:16.292574"
+            "timestamp": "2025-10-16T22:25:47.702334"
           }
         },
         {
@@ -186,9 +186,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "67536599",
+            "error_id": "968486d8",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:16.613091"
+            "timestamp": "2025-10-16T22:25:48.025698"
           }
         },
         {
@@ -200,9 +200,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "c6e8b9c4",
+            "error_id": "38c7bad1",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:16.925679"
+            "timestamp": "2025-10-16T22:25:48.297683"
           }
         },
         {
@@ -214,9 +214,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "8e126de1",
+            "error_id": "de9e3d77",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:17.244725"
+            "timestamp": "2025-10-16T22:25:48.619675"
           }
         },
         {
@@ -228,9 +228,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "a02a785e",
+            "error_id": "04e8ad90",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:17.614044"
+            "timestamp": "2025-10-16T22:25:48.882211"
           }
         },
         {
@@ -242,9 +242,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "39ec05d2",
+            "error_id": "cbf2fa9d",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:17.926121"
+            "timestamp": "2025-10-16T22:25:49.115376"
           }
         },
         {
@@ -256,9 +256,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "352bc022",
+            "error_id": "6501c2b1",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:18.246048"
+            "timestamp": "2025-10-16T22:25:49.386210"
           }
         }
       ]
@@ -275,9 +275,9 @@
           "status": 500,
           "response": {
             "success": false,
-            "error_id": "5695175c",
+            "error_id": "94fdeeaa",
             "message": "Internal server error",
-            "timestamp": "2025-10-16T21:52:18.605661"
+            "timestamp": "2025-10-16T22:25:49.669739"
           }
         },
         {
@@ -289,9 +289,9 @@
           "status": 500,
           "response": {
             "success": false,
-            "error_id": "81ba66f7",
+            "error_id": "55866dbf",
             "message": "Internal server error",
-            "timestamp": "2025-10-16T21:52:18.898569"
+            "timestamp": "2025-10-16T22:25:49.948372"
           }
         },
         {
@@ -303,9 +303,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "e09d3dad",
+            "error_id": "38d26429",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:19.327155"
+            "timestamp": "2025-10-16T22:25:50.224084"
           }
         }
       ]
@@ -322,9 +322,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "713c3e76",
+            "error_id": "cfc3a1ad",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:19.725466"
+            "timestamp": "2025-10-16T22:25:50.500671"
           }
         },
         {
@@ -336,9 +336,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "b5c12493",
+            "error_id": "7cc4a8d5",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:20.095336"
+            "timestamp": "2025-10-16T22:25:50.792245"
           }
         },
         {
@@ -350,9 +350,9 @@
           "status": 500,
           "response": {
             "success": false,
-            "error_id": "0bd8741e",
+            "error_id": "173d2c1f",
             "message": "Internal server error",
-            "timestamp": "2025-10-16T21:52:12.329328"
+            "timestamp": "2025-10-16T22:25:44.856254"
           }
         },
         {
@@ -364,9 +364,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "7b572857",
+            "error_id": "04f2fb57",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:20.493370"
+            "timestamp": "2025-10-16T22:25:51.148084"
           }
         },
         {
@@ -390,9 +390,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "c0398a55",
+            "error_id": "2e07d357",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:20.894139"
+            "timestamp": "2025-10-16T22:25:51.552935"
           }
         }
       ]
@@ -409,9 +409,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "4f78a860",
+            "error_id": "16c4f2e4",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:21.286901"
+            "timestamp": "2025-10-16T22:25:51.913145"
           }
         },
         {
@@ -423,9 +423,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "eee16026",
+            "error_id": "6c5aac92",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:21.692433"
+            "timestamp": "2025-10-16T22:25:52.305933"
           }
         },
         {
@@ -437,9 +437,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "d0a819c4",
+            "error_id": "54291170",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:21.994943"
+            "timestamp": "2025-10-16T22:25:52.712697"
           }
         },
         {
@@ -451,9 +451,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "9625f7f2",
+            "error_id": "1002dc1a",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:27.328833"
+            "timestamp": "2025-10-16T22:25:53.159232"
           }
         }
       ]
@@ -470,9 +470,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "4b2850cb",
+            "error_id": "c3498a2a",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:28.294445"
+            "timestamp": "2025-10-16T22:25:53.539379"
           }
         },
         {
@@ -484,9 +484,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "b834f5ab",
+            "error_id": "dd936f8f",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:28.616132"
+            "timestamp": "2025-10-16T22:25:53.919111"
           }
         }
       ]
@@ -507,7 +507,7 @@
             "data": {
               "status": "healthy",
               "service": "integrations",
-              "timestamp": "2025-10-16T21:52:12.970396+00:00"
+              "timestamp": "2025-10-16T22:25:45.394878+00:00"
             }
           }
         },
@@ -520,9 +520,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "d8ea1e56",
+            "error_id": "667d407c",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:33.897586"
+            "timestamp": "2025-10-16T22:25:59.185705"
           }
         },
         {
@@ -534,9 +534,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "6ab5155f",
+            "error_id": "ee1206ac",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:39.178306"
+            "timestamp": "2025-10-16T22:25:59.456611"
           }
         },
         {
@@ -548,9 +548,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "fc7919db",
+            "error_id": "2d5ef59c",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:44.484814"
+            "timestamp": "2025-10-16T22:25:59.746159"
           }
         }
       ]
@@ -567,9 +567,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "c9a0517c",
+            "error_id": "7f1fd3dc",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:45.290557"
+            "timestamp": "2025-10-16T22:26:00.034197"
           }
         },
         {
@@ -581,9 +581,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "8b8c0d79",
+            "error_id": "de6c1e42",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:45.599069"
+            "timestamp": "2025-10-16T22:26:00.257447"
           }
         },
         {
@@ -595,9 +595,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "65a93ae0",
+            "error_id": "42916946",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:45.882960"
+            "timestamp": "2025-10-16T22:26:00.498883"
           }
         },
         {
@@ -609,9 +609,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "4725566a",
+            "error_id": "4b3af7b2",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:46.207962"
+            "timestamp": "2025-10-16T22:26:00.744018"
           }
         }
       ]
@@ -628,9 +628,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "1d9586f8",
+            "error_id": "ede93898",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:46.493525"
+            "timestamp": "2025-10-16T22:26:00.985551"
           }
         }
       ]
@@ -647,9 +647,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "22304777",
+            "error_id": "a8d5cd1a",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:46.894878"
+            "timestamp": "2025-10-16T22:26:01.227860"
           }
         }
       ]
@@ -690,9 +690,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "5046ede2",
+            "error_id": "5442c0fe",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:47.169163"
+            "timestamp": "2025-10-16T22:26:01.599185"
           }
         }
       ]
@@ -709,9 +709,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "0fa59f7f",
+            "error_id": "40e6fd3a",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:47.573420"
+            "timestamp": "2025-10-16T22:26:01.916702"
           }
         }
       ]
@@ -728,9 +728,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "92eac4e8",
+            "error_id": "ddaa7654",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:48.095350"
+            "timestamp": "2025-10-16T22:26:02.180537"
           }
         },
         {
@@ -742,9 +742,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "5e9a8318",
+            "error_id": "ae66b4ac",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:48.369044"
+            "timestamp": "2025-10-16T22:26:02.439207"
           }
         },
         {
@@ -756,9 +756,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "fceaf050",
+            "error_id": "1bb8cf37",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:48.754993"
+            "timestamp": "2025-10-16T22:26:02.746684"
           }
         },
         {
@@ -770,9 +770,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "86072278",
+            "error_id": "6384d5a5",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:49.034066"
+            "timestamp": "2025-10-16T22:26:03.038738"
           }
         }
       ]
@@ -890,9 +890,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "f2305cd1",
+            "error_id": "498e15d2",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:49.405054"
+            "timestamp": "2025-10-16T22:26:03.298799"
           }
         },
         {
@@ -935,9 +935,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "15db7365",
+            "error_id": "5b40a87f",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:49.655211"
+            "timestamp": "2025-10-16T22:26:03.598219"
           }
         }
       ]
@@ -954,9 +954,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "04b19070",
+            "error_id": "e3c0a3ed",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:49.916778"
+            "timestamp": "2025-10-16T22:26:03.955559"
           }
         },
         {
@@ -968,9 +968,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "5e14a995",
+            "error_id": "f2b0253a",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:50.261385"
+            "timestamp": "2025-10-16T22:26:04.305900"
           }
         },
         {
@@ -982,9 +982,9 @@
           "status": 401,
           "response": {
             "success": false,
-            "error_id": "d9385a73",
+            "error_id": "19238907",
             "message": "Authentication credentials were not provided.",
-            "timestamp": "2025-10-16T21:52:50.572125"
+            "timestamp": "2025-10-16T22:26:04.697932"
           }
         }
       ]
