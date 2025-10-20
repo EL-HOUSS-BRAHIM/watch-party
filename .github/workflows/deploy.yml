@@ -68,12 +68,12 @@ jobs:
           script: |
             set -e
 
-            # Quick repository setup
-            APP_NAME=watch-party
-            APP_DIR=/srv/$APP_NAME
+            # Use home directory directly to avoid permission issues
+            APP_DIR="$HOME/watch-party"
             TARGET_BRANCH=${TARGET_BRANCH:-main}
             REPO_URL="https://github.com/EL-HOUSS-BRAHIM/watch-party.git"
 
+            # Detect default branch
             if ! git ls-remote --exit-code --heads "$REPO_URL" "$TARGET_BRANCH" >/dev/null 2>&1; then
               for candidate in main master; do
                 if git ls-remote --exit-code --heads "$REPO_URL" "$candidate" >/dev/null 2>&1; then
@@ -88,54 +88,25 @@ jobs:
 
             # Clone or update repository
             if [ ! -d "$APP_DIR" ]; then
-              if ! git clone --branch "$TARGET_BRANCH" --single-branch "$REPO_URL" "$APP_DIR"; then
+              git clone --branch "$TARGET_BRANCH" --single-branch "$REPO_URL" "$APP_DIR" || {
                 git clone "$REPO_URL" "$APP_DIR"
                 cd "$APP_DIR"
                 TARGET_BRANCH=$(git remote show origin | awk '/HEAD branch/ {print $NF}') || TARGET_BRANCH=main
-                if [ -z "$TARGET_BRANCH" ]; then
-                  TARGET_BRANCH=main
-                fi
                 git checkout "$TARGET_BRANCH"
-              fi
+              }
             else
-              cd $APP_DIR
+              cd "$APP_DIR"
               git fetch origin
               if ! git rev-parse --verify "origin/$TARGET_BRANCH" >/dev/null 2>&1; then
                 TARGET_BRANCH=$(git remote show origin | awk '/HEAD branch/ {print $NF}') || TARGET_BRANCH=main
-                if [ -z "$TARGET_BRANCH" ]; then
-                  TARGET_BRANCH=main
-                fi
               fi
               git checkout "$TARGET_BRANCH"
               git reset --hard "origin/$TARGET_BRANCH"
             fi
 
-            # Check directory permissions and use home directory if needed
-            if [ "$(stat -c '%U' $APP_DIR 2>/dev/null)" != "deploy" ]; then
-              if ! sudo chown -R deploy:deploy $APP_DIR 2>/dev/null; then
-                APP_DIR="$HOME/watch-party"
-                if [ ! -d "$APP_DIR" ]; then
-                  git clone --branch "$TARGET_BRANCH" --single-branch "$REPO_URL" "$APP_DIR"
-                else
-                  cd $APP_DIR
-                  git fetch origin
-                  if ! git rev-parse --verify "origin/$TARGET_BRANCH" >/dev/null 2>&1; then
-                    TARGET_BRANCH=$(git remote show origin | awk '/HEAD branch/ {print $NF}') || TARGET_BRANCH=main
-                    if [ -z "$TARGET_BRANCH" ]; then
-                      TARGET_BRANCH=main
-                    fi
-                  fi
-                  git checkout "$TARGET_BRANCH"
-                  git reset --hard "origin/$TARGET_BRANCH"
-                fi
-              fi
-            fi
-
-            cd $APP_DIR
+            cd "$APP_DIR"
 
             export DEPLOY_BRANCH="$TARGET_BRANCH"
-
-            # Run modular deployment script
             export APP_DIR
             export AWS_ACCESS_KEY_ID
             export AWS_SECRET_ACCESS_KEY
@@ -143,5 +114,5 @@ jobs:
             export SSL_PRIVATE
             export FORCE_REBUILD
             export REMOVE_OLD_IMAGES
-            
+
             bash scripts/deployment/deploy-main.sh
