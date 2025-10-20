@@ -9,7 +9,8 @@
 set -e
 
 APP_NAME=watch-party
-APP_DIR=/srv/$APP_NAME
+# Use APP_DIR from environment if set, otherwise default to /srv/watch-party
+: ${APP_DIR:=/srv/$APP_NAME}
 
 echo "🚀 Starting Watch Party Deployment..."
 echo "=================================================="

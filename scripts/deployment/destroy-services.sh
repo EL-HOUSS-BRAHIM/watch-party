@@ -12,7 +12,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common-functions.sh"
 
 # Configuration
-APP_DIR="${APP_DIR:-/srv/watch-party}"
+APP_DIR="${APP_DIR:-$HOME/watch-party}"
 DESTROY_TARGET="${DESTROY_TARGET:-both}"
 
 log_info "Starting destroy process for: $DESTROY_TARGET"

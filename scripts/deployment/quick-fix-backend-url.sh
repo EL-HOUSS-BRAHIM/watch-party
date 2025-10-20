@@ -8,7 +8,7 @@ set -e
 echo "🚀 Fixing BACKEND_URL configuration for frontend..."
 
 # Navigate to app directory
-APP_DIR="/srv/watch-party"
+APP_DIR="${APP_DIR:-/srv/watch-party}"
 if [ ! -d "$APP_DIR" ]; then
     APP_DIR="$HOME/watch-party"
 fi
