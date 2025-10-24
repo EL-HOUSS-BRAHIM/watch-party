@@ -16,8 +16,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      # Override Dockerfile's SQLite DATABASE_URL with PostgreSQL from .env
-      - DATABASE_URL=postgresql://watchparty_admin:L0SL3PE%3F%2AO%298Tab5%3C~5kFHivFA%285@all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com:5432/watchparty_prod?sslmode=require
+
       - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
       - AWS_CONFIG_FILE=/home/appuser/.aws/config
       - AWS_EC2_METADATA_DISABLED=true
@@ -47,8 +46,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      # Override Dockerfile's SQLite DATABASE_URL with PostgreSQL
-      - DATABASE_URL=postgresql://watchparty_admin:L0SL3PE%3F%2AO%298Tab5%3C~5kFHivFA%285@all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com:5432/watchparty_prod?sslmode=require
+
       - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
       - AWS_CONFIG_FILE=/home/appuser/.aws/config
       - AWS_EC2_METADATA_DISABLED=true
@@ -73,8 +71,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      # Override Dockerfile's SQLite DATABASE_URL with PostgreSQL
-      - DATABASE_URL=postgresql://watchparty_admin:L0SL3PE%3F%2AO%298Tab5%3C~5kFHivFA%285@all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com:5432/watchparty_prod?sslmode=require
+
       - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
       - AWS_CONFIG_FILE=/home/appuser/.aws/config
       - AWS_EC2_METADATA_DISABLED=true
