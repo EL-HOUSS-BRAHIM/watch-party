@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { ConfirmDialog } from "@/components/ui/feedback"
+import { SyncedVideoPlayer } from "@/components/party/SyncedVideoPlayer"
 
 export interface PublicPartyViewModel {
   id: string
@@ -160,16 +161,21 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
           <div className="flex-1 rounded-2xl bg-black/40 border border-white/10 overflow-hidden">
             {party.video ? (
               <div className="flex h-full flex-col">
-                {/* Video Player Placeholder */}
+                {/* Synced Video Player */}
                 <div className="relative flex-1 bg-black">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center">
-                      <div className="mb-4 text-6xl">📹</div>
-                      <p className="mb-2 text-2xl font-bold text-white">{party.video.title}</p>
-                      <p className="text-white/50">Video player would render here</p>
-                      <p className="mt-2 text-sm text-white/30">Synced with host</p>
-                    </div>
-                  </div>
+                  <SyncedVideoPlayer
+                    partyId={party.id}
+                    videoUrl={party.video.id} // Will need to construct proper video URL
+                    isHost={false} // Guests are never hosts
+                    currentUserId={undefined} // Guest has no user ID
+                    onPlayStateChange={(isPlaying) => {
+                      // Could update local state if needed
+                      console.log('Play state changed:', isPlaying);
+                    }}
+                    onTimeUpdate={(time) => {
+                      // Could update progress display if needed
+                    }}
+                  />
                 </div>
 
                 {/* Simple Controls */}
@@ -187,9 +193,6 @@ export function PublicPartyLayout({ party, guestName, onLeave }: PublicPartyLayo
                           Duration: <span className="font-semibold text-white">{party.video.durationLabel}</span>
                         </span>
                       )}
-                    </div>
-                    <div className="rounded-lg border border-brand-orange/30 bg-brand-orange/15 px-3 py-1.5 text-xs font-medium text-yellow-200">
-                      🔒 Host controls playback
                     </div>
                   </div>
                   {lastSyncLabel && (
