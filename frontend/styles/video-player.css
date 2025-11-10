@@ -1,0 +1,237 @@
+/**
+ * Video.js Custom Glassmorphism Skin
+ * Matches Watch Party's design system with semi-transparent controls
+ */
+
+/* Import Video.js base styles */
+@import 'video.js/dist/video-js.css';
+
+/* Video container */
+.video-js {
+  font-family: inherit;
+}
+
+/* Control bar with glassmorphism effect */
+.video-js .vjs-control-bar {
+  background: rgba(139, 92, 246, 0.1) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  height: 4em;
+  padding: 0 1em;
+}
+
+/* Hover state for control bar */
+.video-js:hover .vjs-control-bar {
+  background: rgba(139, 92, 246, 0.15) !important;
+}
+
+/* Play button styling */
+.video-js .vjs-big-play-button {
+  background: rgba(139, 92, 246, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 3em;
+  height: 3em;
+  line-height: 3em;
+  font-size: 2em;
+  left: 50%;
+  top: 50%;
+  margin-left: -1.5em;
+  margin-top: -1.5em;
+  transition: all 0.3s ease;
+}
+
+.video-js .vjs-big-play-button:hover {
+  background: rgba(139, 92, 246, 1);
+  transform: scale(1.1);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.video-js .vjs-big-play-button .vjs-icon-placeholder:before {
+  font-size: 1.5em;
+}
+
+/* Progress control - gradient from purple to pink */
+.video-js .vjs-progress-control {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 0.5em;
+  top: -0.5em;
+}
+
+.video-js .vjs-progress-holder {
+  background: rgba(255, 255, 255, 0.2);
+  height: 0.5em;
+  border-radius: 0.25em;
+}
+
+.video-js .vjs-play-progress {
+  background: linear-gradient(90deg, #8b5cf6 0%, #ec4899 100%);
+  border-radius: 0.25em;
+}
+
+.video-js .vjs-play-progress:before {
+  content: '';
+  display: block;
+  position: absolute;
+  right: -0.5em;
+  top: -0.25em;
+  width: 1em;
+  height: 1em;
+  background: #ec4899;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+}
+
+.video-js .vjs-load-progress {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 0.25em;
+}
+
+/* Volume control */
+.video-js .vjs-volume-level {
+  background: linear-gradient(90deg, #8b5cf6 0%, #ec4899 100%);
+}
+
+.video-js .vjs-volume-panel {
+  order: 4;
+}
+
+/* Time display */
+.video-js .vjs-current-time,
+.video-js .vjs-time-divider,
+.video-js .vjs-duration {
+  display: block;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1em;
+  line-height: 4em;
+}
+
+.video-js .vjs-time-divider {
+  min-width: auto;
+  padding: 0;
+}
+
+/* Control buttons */
+.video-js .vjs-control {
+  color: rgba(255, 255, 255, 0.9);
+  width: 3em;
+  transition: all 0.2s ease;
+}
+
+.video-js .vjs-control:hover,
+.video-js .vjs-control:focus {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5em;
+}
+
+.video-js .vjs-play-control {
+  order: 1;
+}
+
+.video-js .vjs-time-control {
+  order: 2;
+  min-width: auto;
+}
+
+.video-js .vjs-current-time {
+  order: 2;
+  padding-right: 0;
+}
+
+.video-js .vjs-time-divider {
+  order: 3;
+}
+
+.video-js .vjs-duration {
+  order: 4;
+  padding-left: 0;
+}
+
+.video-js .vjs-fullscreen-control {
+  order: 10;
+}
+
+/* Quality selector (for future HLS support) */
+.video-js .vjs-quality-selector {
+  order: 9;
+}
+
+/* Loading spinner */
+.video-js .vjs-loading-spinner {
+  border-color: rgba(139, 92, 246, 0.3);
+  border-top-color: #8b5cf6;
+}
+
+/* Error display */
+.video-js .vjs-error-display {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.video-js .vjs-error-display:before {
+  content: '';
+  display: block;
+  width: 4em;
+  height: 4em;
+  margin: 0 auto 1em;
+  background: rgba(239, 68, 68, 0.2);
+  border-radius: 50%;
+}
+
+.video-js .vjs-error-display .vjs-modal-dialog-content {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .video-js .vjs-control-bar {
+    height: 3em;
+    padding: 0 0.5em;
+  }
+
+  .video-js .vjs-big-play-button {
+    font-size: 1.5em;
+  }
+
+  .video-js .vjs-control {
+    width: 2.5em;
+  }
+
+  .video-js .vjs-current-time,
+  .video-js .vjs-time-divider,
+  .video-js .vjs-duration {
+    font-size: 0.9em;
+    line-height: 3em;
+  }
+}
+
+/* Responsive aspect ratio */
+.vjs-16-9,
+.video-js.vjs-fluid {
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+}
+
+/* Custom poster image */
+.video-js .vjs-poster {
+  background-size: cover;
+  background-position: center;
+}
+
+/* Focus styles for accessibility */
+.video-js .vjs-control:focus {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 2px;
+}
+
+/* Hide quality selector until HLS is implemented */
+.vjs-quality-selector {
+  display: none !important;
+}
