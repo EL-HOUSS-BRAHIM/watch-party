@@ -15,6 +15,10 @@ const getBackendUrl = () => {
 
 const BACKEND_URL = getBackendUrl()
 
+// Detect VS Code Simple Browser
+const isVSCodeBrowser = typeof navigator !== 'undefined' && 
+  (navigator.userAgent.includes('vscode') || navigator.userAgent.includes('VSCode'))
+
 const buildUrl = (endpoint: string) => {
   // If endpoint is already a full URL, return it as-is
   if (/^https?:\/\//i.test(endpoint)) {
