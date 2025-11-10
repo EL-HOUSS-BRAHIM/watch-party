@@ -51,6 +51,15 @@ CSRF_TRUSTED_ORIGINS = config(
     cast=lambda v: [s.strip() for s in v.split(',')]
 )
 
+# VS Code Simple Browser and development tools support
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r'^https://.*\.app\.github\.dev$',   # GitHub Codespaces
+    r'^https://.*\.vscode-cdn\.net$',    # VS Code Simple Browser
+    r'^vscode-webview://.*$',             # VS Code webview protocol
+    r'^http://localhost:\d+$',            # Any localhost port
+    r'^http://127\.0\.0\.1:\d+$',       # Any 127.0.0.1 port
+]
+
 # Email backend for development
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
