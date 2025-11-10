@@ -25,10 +25,11 @@ const nextConfig = {
   // Security headers including CSP
   async headers() {
     const isDev = process.env.NODE_ENV === 'development';
+    const isVSCode = process.env.VSCODE_SIMPLE_BROWSER === 'true';
 
-    // In development, allow all framing and disable restrictive headers
+    // In development OR VS Code Simple Browser, allow all framing and disable restrictive headers
     // to support VS Code Simple Browser and other development tools
-    if (isDev) {
+    if (isDev || isVSCode) {
       return [
         {
           source: '/(.*)',
