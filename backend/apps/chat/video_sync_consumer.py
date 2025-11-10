@@ -14,10 +14,25 @@ logger = logging.getLogger(__name__)
 
 
 class VideoSyncConsumer(AsyncWebsocketConsumer):
-    """Enhanced WebSocket consumer for video synchronization"""
+    """
+    Enhanced WebSocket consumer for video synchronization
+    
+    ⚠️ DEPRECATION WARNING: This consumer is being phased out.
+    For new implementations, use EnhancedPartyConsumer at:
+    ws/party/<party_id>/enhanced/
+    
+    EnhancedPartyConsumer provides all video sync features plus:
+    - Integrated chat
+    - Interactive features
+    - Unified connection management
+    """
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        logger.warning(
+            "VideoSyncConsumer is deprecated. Please migrate to EnhancedPartyConsumer "
+            "at ws/party/<party_id>/enhanced/ for comprehensive features."
+        )
         self.party_code = None
         self.user = None
         self.is_host = False
