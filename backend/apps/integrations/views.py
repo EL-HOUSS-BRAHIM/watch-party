@@ -8,8 +8,12 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework import serializers, status
 from django.urls import reverse
 from django.utils import timezone
+from django.http import StreamingHttpResponse, HttpResponse
+from django.core.cache import cache
 from drf_spectacular.utils import extend_schema
 import asyncio
+import requests
+import re
 
 from shared.responses import StandardResponse
 from shared.api_documentation import api_response_documentation
@@ -472,6 +476,133 @@ def google_drive_streaming_url(request, file_id):
         return StandardResponse.error(
             message=f"Failed to generate streaming URL: {exc}",
             status_code=status.HTTP_502_BAD_GATEWAY
+        )
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def google_drive_proxy(request, file_id):
+    """
+    Proxy Google Drive video streaming with range request support
+    Handles CORS and user-specific permissions with Redis caching
+    """
+    user_id = str(request.user.id)
+    cache_key = f"drive_stream_url:{file_id}:{user_id}"
+    
+    # Try to get cached streaming URL
+    cached_url = cache.get(cache_key)
+    
+    if not cached_url:
+        # Generate fresh streaming URL
+        try:
+            drive_service = get_drive_service_for_user(request.user)
+            streaming_url = drive_service.generate_streaming_url(file_id, force_refresh=True)
+            
+            # Cache for 5 minutes (300 seconds)
+            cache.set(cache_key, streaming_url, 300)
+            cached_url = streaming_url
+            
+        except ValueError as exc:
+            return HttpResponse(
+                f"Error: {exc}",
+                status=400,
+                content_type='text/plain'
+            )
+        except Exception as exc:
+            return HttpResponse(
+                f"Failed to generate streaming URL: {exc}",
+                status=502,
+                content_type='text/plain'
+            )
+    
+    # Parse Range header for video seeking support
+    range_header = request.META.get('HTTP_RANGE', '')
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+    }
+    
+    if range_header:
+        headers['Range'] = range_header
+    
+    try:
+        # Stream video from Google Drive
+        response = requests.get(cached_url, headers=headers, stream=True, timeout=30)
+        
+        # Check for token expiry (401/403) and refresh if needed
+        if response.status_code in [401, 403]:
+            # Clear cache and regenerate URL
+            cache.delete(cache_key)
+            try:
+                drive_service = get_drive_service_for_user(request.user)
+                streaming_url = drive_service.generate_streaming_url(file_id, force_refresh=True)
+                cache.set(cache_key, streaming_url, 300)
+                
+                # Retry request
+                response = requests.get(streaming_url, headers=headers, stream=True, timeout=30)
+            except Exception as refresh_exc:
+                return HttpResponse(
+                    f"Failed to refresh streaming URL: {refresh_exc}",
+                    status=502,
+                    content_type='text/plain'
+                )
+        
+        # Determine content type
+        content_type = response.headers.get('Content-Type', 'video/mp4')
+        
+        # Create streaming response
+        def stream_generator():
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:
+                    yield chunk
+        
+        # Build response with appropriate status code
+        status_code = response.status_code if response.status_code in [200, 206] else 200
+        streaming_response = StreamingHttpResponse(
+            stream_generator(),
+            status=status_code,
+            content_type=content_type
+        )
+        
+        # Copy important headers
+        if 'Content-Length' in response.headers:
+            streaming_response['Content-Length'] = response.headers['Content-Length']
+        
+        if 'Content-Range' in response.headers:
+            streaming_response['Content-Range'] = response.headers['Content-Range']
+        
+        # Enable range requests
+        streaming_response['Accept-Ranges'] = 'bytes'
+        
+        # CORS headers
+        origin = request.META.get('HTTP_ORIGIN', '')
+        if origin:
+            streaming_response['Access-Control-Allow-Origin'] = origin
+        else:
+            # Fallback to configured frontend URL
+            from django.conf import settings
+            frontend_url = getattr(settings, 'FRONTEND_URL', '*')
+            streaming_response['Access-Control-Allow-Origin'] = frontend_url
+        
+        streaming_response['Access-Control-Allow-Credentials'] = 'true'
+        streaming_response['Access-Control-Allow-Methods'] = 'GET, HEAD, OPTIONS'
+        streaming_response['Access-Control-Allow-Headers'] = 'Range, Content-Type'
+        
+        # Cache control
+        streaming_response['Cache-Control'] = 'public, max-age=300'
+        
+        return streaming_response
+        
+    except requests.RequestException as exc:
+        return HttpResponse(
+            f"Failed to stream video: {exc}",
+            status=502,
+            content_type='text/plain'
+        )
+    except Exception as exc:
+        return HttpResponse(
+            f"Unexpected error: {exc}",
+            status=500,
+            content_type='text/plain'
         )
 
 
