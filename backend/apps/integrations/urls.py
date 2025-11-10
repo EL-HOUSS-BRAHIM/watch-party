@@ -10,6 +10,7 @@ google_drive_patterns = [
     path('oauth-callback/', views.google_drive_oauth_callback, name='google_drive_oauth_callback'),
     path('files/', views.google_drive_list_files, name='google_drive_list_files'),
     path('files/<str:file_id>/streaming-url/', views.google_drive_streaming_url, name='google_drive_streaming_url'),
+    path('proxy/<str:file_id>/', views.google_drive_proxy, name='google_drive_proxy'),
 ]
 
 # AWS S3 Integration URLs
