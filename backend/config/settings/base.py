@@ -559,6 +559,8 @@ LOGGING = {
 # Security Settings
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
+# Allow embedding in iframes (for VS Code Simple Browser, Codespaces, etc.)
+# For production, consider 'SAMEORIGIN' if not using embedded previews
 X_FRAME_OPTIONS = 'ALLOWALL'
 SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=0, cast=int)
 SECURE_HSTS_INCLUDE_SUBDOMAINS = config('SECURE_HSTS_INCLUDE_SUBDOMAINS', default=False, cast=bool)
