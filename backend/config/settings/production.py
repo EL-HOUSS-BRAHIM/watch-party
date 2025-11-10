@@ -200,22 +200,23 @@ CSRF_TRUSTED_ORIGINS = config(
     cast=lambda v: [s.strip() for s in v.split(',')]
 )
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS Configuration - Secure production settings
+CORS_ALLOW_ALL_ORIGINS = False  # Changed from True for security
 CORS_ALLOW_CREDENTIALS = True
 
 # Add CORS allowed origins from environment
 CORS_ALLOWED_ORIGINS = config(
     'CORS_ALLOWED_ORIGINS',
-    default='https://watch-party.brahim-elhouss.me,https://be-watch-party.brahim-elhouss.me,http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000',
+    default='https://watch-party.brahim-elhouss.me,https://be-watch-party.brahim-elhouss.me,http://localhost:3000,http://127.0.0.1:3000,https://localhost:3000,https://127.0.0.1:3000,http://localhost:8000,http://127.0.0.1:8000',
     cast=lambda v: [s.strip() for s in v.split(',')]
 )
 
-# Allow GitHub Codespaces origins (*.app.github.dev)
-CORS_ALLOWED_ORIGIN_REGEXES = config(
-    'CORS_ALLOWED_ORIGIN_REGEXES',
-    default=r'^https://.*\.app\.github\.dev$',
-    cast=lambda v: [s.strip() for s in v.split(',')]
-)
+# Allow GitHub Codespaces, VS Code Simple Browser, and development origins
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r'^https://.*\.app\.github\.dev$',  # GitHub Codespaces
+    r'^https://.*\.vscode-cdn\.net$',   # VS Code Simple Browser
+    r'^vscode-webview://.*$',            # VS Code webview protocol
+]
 
 # Additional CORS settings for proper preflight handling
 CORS_ALLOW_HEADERS = config(
