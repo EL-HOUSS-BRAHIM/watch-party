@@ -17,10 +17,26 @@ logger = logging.getLogger(__name__)
 
 
 class PartyConsumer(AsyncWebsocketConsumer):
-    """WebSocket consumer for watch party functionality"""
+    """
+    WebSocket consumer for watch party functionality
+    
+    ⚠️ DEPRECATION WARNING: This consumer is being phased out.
+    For new implementations, use EnhancedPartyConsumer at:
+    ws/party/<party_id>/enhanced/
+    
+    EnhancedPartyConsumer provides:
+    - Comprehensive video sync
+    - Chat integration
+    - Interactive features (polls, reactions)
+    - Better error handling
+    """
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        logger.warning(
+            "PartyConsumer is deprecated. Please migrate to EnhancedPartyConsumer "
+            "at ws/party/<party_id>/enhanced/ for full features."
+        )
         self.party_id = None
         self.party_group_name = None
         self.user = None
