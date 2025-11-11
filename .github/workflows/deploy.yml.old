@@ -1,0 +1,118 @@
+name: Deploy to Lightsail
+
+on:
+  push:
+    branches: ["master", "main"]
+    # Pushes use cache by default for fast builds
+  workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: '🔄 Force rebuild without cache (slower, ensures clean build)'
+        required: false
+        type: boolean
+        default: false
+      remove_old_images:
+        description: '🗑️ Remove old images before building (frees space, forces fresh build)'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20  # Optimized: fast builds with cache, reduced from 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Display Build Configuration
+        run: |
+          echo "🚀 Deployment Configuration"
+          echo "======================================"
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "Trigger: Push (automatic)"
+            echo "Build Mode: 🚄 Fast build with cache"
+            echo "Remove Old Images: ❌ No"
+          else
+            echo "Trigger: Manual workflow dispatch"
+            if [ "${{ github.event.inputs.force_rebuild }}" = "true" ]; then
+              echo "Build Mode: 🔄 Force rebuild WITHOUT cache"
+            else
+              echo "Build Mode: 🚄 Fast build with cache"
+            fi
+            if [ "${{ github.event.inputs.remove_old_images }}" = "true" ]; then
+              echo "Remove Old Images: ✅ Yes (clean build)"
+            else
+              echo "Remove Old Images: ❌ No"
+            fi
+          fi
+          echo "======================================"
+
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.0.3
+        timeout-minutes: 18  # Optimized: smart caching + parallel deployment
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          SSL_ORIGIN: ${{ secrets.SSL_ORIGIN }}
+          SSL_PRIVATE: ${{ secrets.SSL_PRIVATE }}
+          # On push: use cache (both set to 0). On manual trigger: use input values
+          FORCE_REBUILD: ${{ github.event.inputs.force_rebuild == 'true' && '1' || '0' }}
+          REMOVE_OLD_IMAGES: ${{ github.event.inputs.remove_old_images == 'true' && '1' || '0' }}
+          TARGET_BRANCH: ${{ github.ref_name || 'main' }}
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: deploy
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          command_timeout: 18m
+          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,SSL_ORIGIN,SSL_PRIVATE,FORCE_REBUILD,REMOVE_OLD_IMAGES,TARGET_BRANCH
+          script: |
+            set -e
+
+            # Use home directory directly to avoid permission issues
+            APP_DIR="$HOME/watch-party"
+            TARGET_BRANCH=${TARGET_BRANCH:-main}
+            REPO_URL="https://github.com/EL-HOUSS-BRAHIM/watch-party.git"
+
+            # Detect default branch
+            if ! git ls-remote --exit-code --heads "$REPO_URL" "$TARGET_BRANCH" >/dev/null 2>&1; then
+              for candidate in main master; do
+                if git ls-remote --exit-code --heads "$REPO_URL" "$candidate" >/dev/null 2>&1; then
+                  TARGET_BRANCH="$candidate"
+                  break
+                fi
+              done
+            fi
+            if [ -z "$TARGET_BRANCH" ]; then
+              TARGET_BRANCH=main
+            fi
+
+            # Clone or update repository
+            if [ ! -d "$APP_DIR" ]; then
+              git clone --branch "$TARGET_BRANCH" --single-branch "$REPO_URL" "$APP_DIR" || {
+                git clone "$REPO_URL" "$APP_DIR"
+                cd "$APP_DIR"
+                TARGET_BRANCH=$(git remote show origin | awk '/HEAD branch/ {print $NF}') || TARGET_BRANCH=main
+                git checkout "$TARGET_BRANCH"
+              }
+            else
+              cd "$APP_DIR"
+              git fetch origin
+              if ! git rev-parse --verify "origin/$TARGET_BRANCH" >/dev/null 2>&1; then
+                TARGET_BRANCH=$(git remote show origin | awk '/HEAD branch/ {print $NF}') || TARGET_BRANCH=main
+              fi
+              git checkout "$TARGET_BRANCH"
+              git reset --hard "origin/$TARGET_BRANCH"
+            fi
+
+            cd "$APP_DIR"
+
+            export DEPLOY_BRANCH="$TARGET_BRANCH"
+            export APP_DIR
+            export AWS_ACCESS_KEY_ID
+            export AWS_SECRET_ACCESS_KEY
+            export SSL_ORIGIN
+            export SSL_PRIVATE
+            export FORCE_REBUILD
+            export REMOVE_OLD_IMAGES
+
+            bash scripts/deployment/deploy-main.sh
