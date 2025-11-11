@@ -147,7 +147,30 @@ python manage.py migrate
 
 ## 🟢 MEDIUM PRIORITY - IMPROVE QUALITY
 
-### 8. Add Test Coverage
+### 8. Code Cleanup
+
+**Files Created:**
+- ✅ `scripts/cleanup-codebase.sh` - Automated cleanup script
+- ✅ `CODE_ORGANIZATION_GUIDE.md` - File naming strategy
+- ✅ `CODE_CLEANUP_SUMMARY.md` - Cleanup analysis
+
+**Action:**
+```bash
+# Preview what will be deleted
+./scripts/cleanup-codebase.sh --dry-run
+
+# Execute cleanup
+./scripts/cleanup-codebase.sh
+```
+
+**Important:** "Enhanced" and "fixed" files are NOT duplicates - they're intentional architecture!
+
+- [ ] Review cleanup dry-run output
+- [ ] Execute cleanup script
+- [ ] Test application after cleanup
+- [ ] Commit cleaned codebase
+
+### 9. Add Test Coverage
 
 **Backend Tests:**
 ```bash
@@ -172,7 +195,7 @@ npm test
 - [ ] Write tests for authentication
 - [ ] Write E2E tests with Playwright
 
-### 9. Documentation Cleanup
+### 10. Documentation Cleanup
 
 - [ ] Move old fix docs to `/docs/archive/`
 - [ ] Create consolidated deployment guide
@@ -180,7 +203,7 @@ npm test
 - [ ] Update main README with VS Code support
 - [ ] Create troubleshooting guide
 
-### 10. Performance Optimization
+### 11. Performance Optimization
 
 - [ ] Test video upload with 5GB limit
 - [ ] Monitor Redis connection pooling
@@ -188,7 +211,7 @@ npm test
 - [ ] Add database query optimization
 - [ ] Add CDN caching for static assets
 
-### 11. Error Monitoring Setup
+### 12. Error Monitoring Setup
 
 - [ ] Get Sentry DSN and add to `.env`
 - [ ] Test error reporting in Sentry
