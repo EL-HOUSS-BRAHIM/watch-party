@@ -35,6 +35,10 @@ cd frontend && npm test
 
 # Check health
 curl http://localhost:8000/api/health/
+
+# Code cleanup (preview first!)
+./scripts/cleanup-codebase.sh --dry-run
+./scripts/cleanup-codebase.sh
 ```
 
 ---
