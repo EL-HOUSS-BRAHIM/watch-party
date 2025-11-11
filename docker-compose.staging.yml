@@ -1,0 +1,229 @@
+# Docker Compose configuration for Staging environment
+# Extends base configuration with staging-specific settings
+# Uses same AWS RDS cluster with separate database: watchparty_staging
+
+services:
+  # Django Backend - Staging
+  backend-staging:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      cache_from:
+        - watchparty-backend:staging
+      args:
+        BUILDKIT_INLINE_CACHE: "1"
+    image: watchparty-backend:staging
+    container_name: backend-staging
+    env_file:
+      - ./backend/.env
+    environment:
+      # Staging database on same RDS cluster
+      - DATABASE_URL=${STAGING_DATABASE_URL:-postgresql://watchparty_admin:${DB_PASSWORD}@all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com:5432/watchparty_staging?sslmode=require}
+      # Use Redis database 1 for staging (production uses 0)
+      - REDIS_URL=${STAGING_REDIS_URL:-rediss://default:${VALKEY_AUTH_TOKEN}@clustercfg.watch-party-valkey-001.rnipvl.memorydb.eu-west-3.amazonaws.com:6379/1}
+      - CELERY_BROKER_URL=${STAGING_REDIS_URL:-rediss://default:${VALKEY_AUTH_TOKEN}@clustercfg.watch-party-valkey-001.rnipvl.memorydb.eu-west-3.amazonaws.com:6379/1}
+      - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
+      - AWS_CONFIG_FILE=/home/appuser/.aws/config
+      - AWS_EC2_METADATA_DISABLED=true
+      - AWS_METADATA_SERVICE_TIMEOUT=1
+      - AWS_METADATA_SERVICE_NUM_ATTEMPTS=1
+      - ALLOWED_HOSTS=35.181.116.57,staging-be-watch-party.brahim-elhouss.me,staging-watch-party.brahim-elhouss.me,localhost,127.0.0.1,backend-staging
+      - DEBUG=False
+      - ENVIRONMENT=staging
+      # Staging-specific S3 prefix
+      - AWS_LOCATION=staging/
+    volumes:
+      - static_volume_staging:/app/staticfiles
+      - media_volume_staging:/app/media
+      - ~/.aws:/home/appuser/.aws:ro
+    ports:
+      - "8003:8000"
+    networks:
+      - watchparty-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # Celery Worker - Staging
+  celery-worker-staging:
+    image: watchparty-backend:staging
+    container_name: celery-worker-staging
+    command: celery -A config worker --loglevel=info --concurrency=1
+    env_file:
+      - ./backend/.env
+    environment:
+      - DATABASE_URL=${STAGING_DATABASE_URL:-postgresql://watchparty_admin:${DB_PASSWORD}@all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com:5432/watchparty_staging?sslmode=require}
+      - REDIS_URL=${STAGING_REDIS_URL:-rediss://default:${VALKEY_AUTH_TOKEN}@clustercfg.watch-party-valkey-001.rnipvl.memorydb.eu-west-3.amazonaws.com:6379/1}
+      - CELERY_BROKER_URL=${STAGING_REDIS_URL:-rediss://default:${VALKEY_AUTH_TOKEN}@clustercfg.watch-party-valkey-001.rnipvl.memorydb.eu-west-3.amazonaws.com:6379/1}
+      - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
+      - AWS_CONFIG_FILE=/home/appuser/.aws/config
+      - AWS_EC2_METADATA_DISABLED=true
+      - AWS_METADATA_SERVICE_TIMEOUT=1
+      - AWS_METADATA_SERVICE_NUM_ATTEMPTS=1
+      - ENVIRONMENT=staging
+      - AWS_LOCATION=staging/
+    volumes:
+      - media_volume_staging:/app/media
+      - ~/.aws:/home/appuser/.aws:ro
+    depends_on:
+      backend-staging:
+        condition: service_healthy
+    networks:
+      - watchparty-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    healthcheck:
+      disable: true
+
+  # Celery Beat - Staging
+  celery-beat-staging:
+    image: watchparty-backend:staging
+    container_name: celery-beat-staging
+    command: celery -A config beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    env_file:
+      - ./backend/.env
+    environment:
+      - DATABASE_URL=${STAGING_DATABASE_URL:-postgresql://watchparty_admin:${DB_PASSWORD}@all-in-one.cj6w0queklir.eu-west-3.rds.amazonaws.com:5432/watchparty_staging?sslmode=require}
+      - REDIS_URL=${STAGING_REDIS_URL:-rediss://default:${VALKEY_AUTH_TOKEN}@clustercfg.watch-party-valkey-001.rnipvl.memorydb.eu-west-3.amazonaws.com:6379/1}
+      - CELERY_BROKER_URL=${STAGING_REDIS_URL:-rediss://default:${VALKEY_AUTH_TOKEN}@clustercfg.watch-party-valkey-001.rnipvl.memorydb.eu-west-3.amazonaws.com:6379/1}
+      - AWS_SHARED_CREDENTIALS_FILE=/home/appuser/.aws/credentials
+      - AWS_CONFIG_FILE=/home/appuser/.aws/config
+      - AWS_EC2_METADATA_DISABLED=true
+      - AWS_METADATA_SERVICE_TIMEOUT=1
+      - AWS_METADATA_SERVICE_NUM_ATTEMPTS=1
+      - ENVIRONMENT=staging
+    volumes:
+      - ~/.aws:/home/appuser/.aws:ro
+    depends_on:
+      backend-staging:
+        condition: service_healthy
+    networks:
+      - watchparty-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.25'
+        reservations:
+          memory: 128M
+          cpus: '0.1'
+    healthcheck:
+      disable: true
+
+  # Next.js Frontend - Staging
+  frontend-staging:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NODE_OPTIONS: "--max-old-space-size=2048"
+        # Staging API URLs embedded at build time
+        NEXT_PUBLIC_API_URL: "https://staging-be-watch-party.brahim-elhouss.me"
+        NEXT_PUBLIC_WS_URL: "wss://staging-be-watch-party.brahim-elhouss.me/ws"
+        NEXT_PUBLIC_FRONTEND_API: "https://staging-be-watch-party.brahim-elhouss.me/api"
+        NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE: "true"
+        NEXT_PUBLIC_ENABLE_DISCORD: "true"
+        NEXT_PUBLIC_ENABLE_ANALYTICS: "false"
+        BUILDKIT_INLINE_CACHE: "1"
+      target: runner
+      cache_from:
+        - watchparty-frontend:staging
+    image: watchparty-frontend:staging
+    container_name: frontend-staging
+    environment:
+      # Backend URL for server-side API calls (uses internal Docker network)
+      - BACKEND_URL=http://backend-staging:8000
+      # Public API URLs for client-side calls
+      - NEXT_PUBLIC_API_URL=https://staging-be-watch-party.brahim-elhouss.me
+      - NEXT_PUBLIC_WS_URL=wss://staging-be-watch-party.brahim-elhouss.me/ws
+      - NEXT_PUBLIC_FRONTEND_API=https://staging-be-watch-party.brahim-elhouss.me/api
+      # Feature flags
+      - NEXT_PUBLIC_ENABLE_GOOGLE_DRIVE=true
+      - NEXT_PUBLIC_ENABLE_DISCORD=true
+      - NEXT_PUBLIC_ENABLE_ANALYTICS=false
+      - NODE_ENV=production
+    env_file:
+      - ./frontend/.env.local
+    ports:
+      - "3001:3000"
+    depends_on:
+      backend-staging:
+        condition: service_healthy
+    networks:
+      - watchparty-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+
+  # Nginx Reverse Proxy - Staging (uses shared nginx with staging.conf)
+  nginx-staging:
+    image: nginx:alpine
+    container_name: nginx-staging
+    ports:
+      - "8080:8080"   # HTTP staging
+      - "8443:8443"   # HTTPS staging
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - static_volume_staging:/var/www/static-staging:ro
+      - media_volume_staging:/var/www/media-staging:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend-staging
+      - frontend-staging
+    networks:
+      - watchparty-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: '0.25'
+        reservations:
+          memory: 64M
+          cpus: '0.1'
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  static_volume_staging:
+  media_volume_staging:
+
+networks:
+  watchparty-network:
+    external: true

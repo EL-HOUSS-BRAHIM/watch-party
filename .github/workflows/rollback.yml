@@ -1,0 +1,252 @@
+name: Rollback Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to rollback'
+        required: true
+        type: choice
+        options:
+          - 'production'
+          - 'staging'
+        default: 'production'
+      version:
+        description: 'Version to rollback to (git SHA or "latest")'
+        required: true
+        type: string
+        default: 'latest'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/watch-party
+
+jobs:
+  list-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.list.outputs.versions }}
+    steps:
+      - name: List available versions
+        id: list
+        run: |
+          # Login to GHCR
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          
+          ENV="${{ github.event.inputs.environment }}"
+          
+          # Get last 10 backend tags
+          echo "📦 Available versions for $ENV:"
+          echo "Backend tags:"
+          docker run --rm quay.io/skopeo/stable:latest list-tags docker://${{ env.IMAGE_PREFIX }}-backend | \
+            jq -r '.Tags[]' | grep "^${ENV}-" | sort -r | head -10 || echo "No tags found"
+          
+          echo ""
+          echo "Frontend tags:"
+          docker run --rm quay.io/skopeo/stable:latest list-tags docker://${{ env.IMAGE_PREFIX }}-frontend | \
+            jq -r '.Tags[]' | grep "^${ENV}-" | sort -r | head -10 || echo "No tags found"
+
+  rollback:
+    needs: list-versions
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Determine rollback images
+        id: images
+        run: |
+          ENV="${{ github.event.inputs.environment }}"
+          VERSION="${{ github.event.inputs.version }}"
+          
+          if [ "$VERSION" = "latest" ]; then
+            BACKEND_IMAGE="${{ env.IMAGE_PREFIX }}-backend:${ENV}-latest"
+            FRONTEND_IMAGE="${{ env.IMAGE_PREFIX }}-frontend:${ENV}-latest"
+          else
+            BACKEND_IMAGE="${{ env.IMAGE_PREFIX }}-backend:${ENV}-${VERSION}"
+            FRONTEND_IMAGE="${{ env.IMAGE_PREFIX }}-frontend:${ENV}-${VERSION}"
+          fi
+          
+          echo "backend_image=${BACKEND_IMAGE}" >> $GITHUB_OUTPUT
+          echo "frontend_image=${FRONTEND_IMAGE}" >> $GITHUB_OUTPUT
+          
+          echo "🔄 Rolling back to:"
+          echo "Backend: ${BACKEND_IMAGE}"
+          echo "Frontend: ${FRONTEND_IMAGE}"
+
+      - name: Verify images exist
+        run: |
+          echo "Verifying backend image..."
+          docker pull ${{ steps.images.outputs.backend_image }}
+          
+          echo "Verifying frontend image..."
+          docker pull ${{ steps.images.outputs.frontend_image }}
+
+      - name: Get AWS SES credentials for email notification
+        id: ses_creds
+        run: |
+          # Install AWS CLI if not present
+          if ! command -v aws &> /dev/null; then
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip -q awscliv2.zip
+            sudo ./aws/install
+          fi
+          
+          # Configure AWS credentials
+          export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
+          export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          export AWS_DEFAULT_REGION=eu-west-3
+          
+          # Fetch SES SMTP credentials from Secrets Manager
+          SES_SECRET=$(aws secretsmanager get-secret-value --secret-id watch-party/ses-smtp --query SecretString --output text 2>/dev/null || echo '{}')
+          
+          # Parse credentials (fallback to secrets if AWS Secrets Manager not configured yet)
+          SMTP_USER=$(echo "$SES_SECRET" | jq -r '.username // empty')
+          SMTP_PASS=$(echo "$SES_SECRET" | jq -r '.password // empty')
+          
+          if [ -z "$SMTP_USER" ] || [ -z "$SMTP_PASS" ]; then
+            # Fallback to GitHub secrets
+            echo "smtp_username=${{ secrets.SES_SMTP_USERNAME }}" >> $GITHUB_OUTPUT
+            echo "smtp_password=${{ secrets.SES_SMTP_PASSWORD }}" >> $GITHUB_OUTPUT
+          else
+            echo "smtp_username=${SMTP_USER}" >> $GITHUB_OUTPUT
+            echo "smtp_password=${SMTP_PASS}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get current version before rollback
+        id: current
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: deploy
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          script: |
+            ENV="${{ github.event.inputs.environment }}"
+            if [ "$ENV" = "production" ]; then
+              TAG_SUFFIX="latest"
+            else
+              TAG_SUFFIX="staging"
+            fi
+            
+            BACKEND_ID=$(docker images watchparty-backend:${TAG_SUFFIX} --format "{{.ID}}" | head -1)
+            FRONTEND_ID=$(docker images watchparty-frontend:${TAG_SUFFIX} --format "{{.ID}}" | head -1)
+            
+            echo "Current backend image ID: ${BACKEND_ID}"
+            echo "Current frontend image ID: ${FRONTEND_ID}"
+
+      - name: Rollback deployment
+        uses: appleboy/ssh-action@v1.0.3
+        timeout-minutes: 10
+        env:
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
+          BACKEND_IMAGE: ${{ steps.images.outputs.backend_image }}
+          FRONTEND_IMAGE: ${{ steps.images.outputs.frontend_image }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USERNAME: ${{ github.actor }}
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: deploy
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          command_timeout: 10m
+          envs: ENVIRONMENT,BACKEND_IMAGE,FRONTEND_IMAGE,GHCR_TOKEN,GHCR_USERNAME
+          script: |
+            set -e
+            cd "$HOME/watch-party"
+            
+            # Login to GHCR
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
+            
+            echo "🔄 Starting rollback process..."
+            
+            # Pull rollback images
+            docker pull "$BACKEND_IMAGE"
+            docker pull "$FRONTEND_IMAGE"
+            
+            # Tag for deployment
+            if [ "$ENVIRONMENT" = "production" ]; then
+              docker tag "$BACKEND_IMAGE" watchparty-backend:latest
+              docker tag "$FRONTEND_IMAGE" watchparty-frontend:latest
+            else
+              docker tag "$BACKEND_IMAGE" watchparty-backend:staging
+              docker tag "$FRONTEND_IMAGE" watchparty-frontend:staging
+            fi
+            
+            # Deploy with rollback images
+            export SERVICES="all"
+            bash scripts/deployment/deploy-services.sh
+
+      - name: Run health checks
+        uses: appleboy/ssh-action@v1.0.3
+        timeout-minutes: 3
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: deploy
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          command_timeout: 3m
+          script: |
+            set -e
+            cd "$HOME/watch-party"
+            bash scripts/deployment/health-check.sh ${{ github.event.inputs.environment }}
+
+      - name: Send rollback success email
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: email-smtp.eu-west-3.amazonaws.com
+          server_port: 587
+          username: ${{ steps.ses_creds.outputs.smtp_username }}
+          password: ${{ steps.ses_creds.outputs.smtp_password }}
+          subject: '✅ Rollback Successful - Watch Party ${{ github.event.inputs.environment }}'
+          to: bross.or.of.1@gmail.com
+          from: Watch Party Deployments <no-reply@brahim-elhouss.me>
+          body: |
+            Rollback completed successfully!
+            
+            🔄 Rollback Details:
+            • Environment: ${{ github.event.inputs.environment }}
+            • Rolled back to version: ${{ github.event.inputs.version }}
+            • Triggered by: ${{ github.actor }}
+            
+            📦 Restored Images:
+            • Backend: ${{ steps.images.outputs.backend_image }}
+            • Frontend: ${{ steps.images.outputs.frontend_image }}
+            
+            🔗 Links:
+            ${{ github.event.inputs.environment == 'production' && '• Frontend: https://watch-party.brahim-elhouss.me' || '• Frontend: https://staging-watch-party.brahim-elhouss.me' }}
+            ${{ github.event.inputs.environment == 'production' && '• Backend: https://be-watch-party.brahim-elhouss.me' || '• Backend: https://staging-be-watch-party.brahim-elhouss.me' }}
+            • GitHub Actions: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            ✅ All health checks passed!
+
+      - name: Send rollback failure email
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: email-smtp.eu-west-3.amazonaws.com
+          server_port: 587
+          username: ${{ steps.ses_creds.outputs.smtp_username }}
+          password: ${{ steps.ses_creds.outputs.smtp_password }}
+          subject: '❌ Rollback Failed - Watch Party ${{ github.event.inputs.environment }}'
+          to: bross.or.of.1@gmail.com
+          from: Watch Party Deployments <no-reply@brahim-elhouss.me>
+          body: |
+            ⚠️ Rollback failed!
+            
+            🔄 Rollback Details:
+            • Environment: ${{ github.event.inputs.environment }}
+            • Attempted version: ${{ github.event.inputs.version }}
+            • Triggered by: ${{ github.actor }}
+            
+            🔗 Check logs:
+            ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            
+            ⚠️ System may be in an inconsistent state. Please investigate immediately!

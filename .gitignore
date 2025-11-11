@@ -47,6 +47,7 @@ backend/share/python-wheels/
 backend/.installed.cfg
 *.egg
 MANIFEST
+secrets
 
 # Django
 backend/*.log
@@ -118,3 +119,7 @@ frontend/.env.production
 
 # SSL certificates
 nginx/ssl/
+
+# Documentation with example secrets (keep local only)
+docs/CREDENTIALS_SETUP_CHECKLIST.md
+docs/PRE_DEPLOYMENT_CHECKLIST.md
