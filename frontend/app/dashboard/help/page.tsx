@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { GradientCard } from "@/components/ui/gradient-card"
 import { IconButton } from "@/components/ui/icon-button"
 import { useDesignSystem } from "@/hooks/use-design-system"
 
@@ -156,60 +155,58 @@ export default function HelpPage() {
   return (
     <div className="space-y-8">
       {/* Enhanced Header */}
-      <div className="relative">
-        <GradientCard className="relative">
-          <div className="text-center space-y-4">
-            <div className="text-6xl mb-4">🆘</div>
-            <h1 className="text-4xl font-bold text-brand-navy">
-              Help & Support
-            </h1>
-            <p className="text-brand-navy/70 text-lg max-w-2xl mx-auto">
-              Find answers to common questions, browse our knowledge base, or get in touch with our support team
-            </p>
-            <div className="flex items-center justify-center gap-4 text-sm text-brand-navy/60">
-              <span>📚 Knowledge Base</span>
-              <span>•</span>
-              <span>💬 24/7 Support</span>
-              <span>•</span>
-              <span>🎥 Video Guides</span>
-            </div>
+      <div className="glass-panel rounded-3xl p-8 border-brand-navy/10 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+        <div className="relative z-10 text-center space-y-4">
+          <div className="text-6xl mb-4 opacity-80 animate-float">🆘</div>
+          <h1 className="text-4xl font-bold text-brand-navy">
+            Help & Support
+          </h1>
+          <p className="text-brand-navy/70 text-lg max-w-2xl mx-auto font-medium">
+            Find answers to common questions, browse our knowledge base, or get in touch with our support team
+          </p>
+          <div className="flex items-center justify-center gap-4 text-sm text-brand-navy/60 font-bold uppercase tracking-wide">
+            <span>📚 Knowledge Base</span>
+            <span>•</span>
+            <span>💬 24/7 Support</span>
+            <span>•</span>
+            <span>🎥 Video Guides</span>
           </div>
-        </GradientCard>
+        </div>
       </div>
 
       {/* Search Bar */}
-      <div className="relative max-w-2xl mx-auto">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <span className="text-brand-navy/50 text-xl">🔍</span>
+      <div className="relative max-w-2xl mx-auto group">
+        <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+          <span className="text-brand-navy/40 text-xl">🔍</span>
         </div>
         <input
           type="text"
           placeholder="Search for help articles, guides, or FAQs..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-14 pr-6 py-4 bg-white border border-brand-navy/20 rounded-2xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue/50 focus:border-brand-blue/50 backdrop-blur-sm transition-all shadow-sm"
+          className="w-full pl-14 pr-6 py-4 bg-white/50 border border-brand-navy/10 rounded-2xl text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-blue/10 focus:border-brand-blue/30 backdrop-blur-sm transition-all shadow-sm"
         />
       </div>
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {contactMethods.map((method, index) => (
-          <GradientCard key={index} gradient={`${method.gradient}/20`} className="text-center hover:border-blue-400/40 transition-all duration-300">
+          <div key={index} className="glass-card rounded-3xl p-6 text-center hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 group">
             <div className="space-y-4">
-              <div className="text-4xl">{method.icon}</div>
+              <div className="text-4xl group-hover:scale-110 transition-transform duration-300">{method.icon}</div>
               <div>
-                <h3 className="text-brand-navy font-bold mb-2">{method.title}</h3>
-                <p className="text-brand-navy/60 text-sm mb-4">{method.description}</p>
+                <h3 className="text-brand-navy font-bold mb-2 text-lg">{method.title}</h3>
+                <p className="text-brand-navy/60 text-sm mb-4 font-medium">{method.description}</p>
               </div>
               <IconButton
-                gradient={method.gradient}
-                className="w-full"
+                className={`w-full bg-gradient-to-r ${method.gradient} text-white shadow-md hover:shadow-lg border-none`}
                 disabled={!method.available}
               >
                 {method.action}
               </IconButton>
             </div>
-          </GradientCard>
+          </div>
         ))}
       </div>
 
@@ -220,13 +217,13 @@ export default function HelpPage() {
           Browse by Category
         </h2>
         
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+        <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
           <button
             onClick={() => setSelectedCategory("all")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap ${
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap ${
               selectedCategory === "all"
-                ? "bg-gradient-to-r from-brand-blue to-brand-purple text-white"
-                : "bg-brand-navy/5 text-brand-navy/60 hover:text-brand-navy hover:bg-brand-navy/10"
+                ? "bg-brand-navy text-white shadow-md"
+                : "bg-white/40 text-brand-navy/60 hover:text-brand-navy hover:bg-white/60 border border-brand-navy/5"
             }`}
           >
             <span>🔍</span>
@@ -236,10 +233,10 @@ export default function HelpPage() {
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all whitespace-nowrap ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold transition-all whitespace-nowrap ${
                 selectedCategory === category.id
-                  ? "bg-gradient-to-r from-brand-blue to-brand-purple text-white"
-                  : "bg-brand-navy/5 text-brand-navy/60 hover:text-brand-navy hover:bg-brand-navy/10"
+                  ? "bg-brand-navy text-white shadow-md"
+                  : "bg-white/40 text-brand-navy/60 hover:text-brand-navy hover:bg-white/60 border border-brand-navy/5"
               }`}
             >
               <span>{category.icon}</span>
@@ -250,27 +247,26 @@ export default function HelpPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
-            <GradientCard key={category.id} gradient={`${category.color}/10`} className="hover:border-blue-400/40 transition-all duration-300">
+            <div key={category.id} className="glass-card rounded-3xl p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 group">
               <div className="flex items-start gap-4">
-                <div className={`w-12 h-12 bg-gradient-to-br ${category.color} rounded-xl flex items-center justify-center text-white text-xl`}>
+                <div className={`w-14 h-14 bg-gradient-to-br ${category.color} rounded-2xl flex items-center justify-center text-white text-2xl shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                   {category.icon}
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-brand-navy font-bold mb-1">{category.title}</h3>
-                  <p className="text-brand-navy/60 text-sm mb-3">{category.description}</p>
+                  <h3 className="text-brand-navy font-bold mb-1 text-lg">{category.title}</h3>
+                  <p className="text-brand-navy/60 text-sm mb-3 font-medium">{category.description}</p>
                   <div className="flex items-center justify-between">
-                    <span className="text-brand-navy/50 text-xs">{category.articles} articles</span>
-                    <IconButton
-                      size="sm"
-                      variant="secondary"
+                    <span className="text-brand-navy/40 text-xs font-bold uppercase tracking-wider">{category.articles} articles</span>
+                    <button
                       onClick={() => setSelectedCategory(category.id)}
+                      className="text-brand-blue hover:text-brand-blue-dark text-sm font-bold transition-colors"
                     >
                       Browse →
-                    </IconButton>
+                    </button>
                   </div>
                 </div>
               </div>
-            </GradientCard>
+            </div>
           ))}
         </div>
       </div>
@@ -284,60 +280,60 @@ export default function HelpPage() {
         
         <div className="space-y-4">
           {filteredFAQs.map((faq) => (
-            <GradientCard key={faq.id} className="transition-all duration-300">
+            <div key={faq.id} className="glass-card rounded-2xl p-6 hover:border-brand-purple/30 transition-all duration-300 hover:shadow-md">
               <div
-                className="cursor-pointer"
+                className="cursor-pointer group"
                 onClick={() => setExpandedFAQ(expandedFAQ === faq.id ? null : faq.id)}
               >
                 <div className="flex items-center justify-between">
-                  <h3 className="text-brand-navy font-medium pr-4">{faq.question}</h3>
-                  <div className={`text-brand-navy/60 transition-transform duration-200 ${
-                    expandedFAQ === faq.id ? 'rotate-180' : ''
+                  <h3 className="text-brand-navy font-bold text-lg pr-4 group-hover:text-brand-purple transition-colors">{faq.question}</h3>
+                  <div className={`text-brand-navy/40 transition-transform duration-300 bg-brand-navy/5 rounded-full p-1 ${
+                    expandedFAQ === faq.id ? 'rotate-180 bg-brand-purple/10 text-brand-purple' : ''
                   }`}>
-                    ⌄
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                   </div>
                 </div>
                 
                 {expandedFAQ === faq.id && (
-                  <div className="mt-4 pt-4 border-t border-brand-navy/10">
-                    <p className="text-brand-navy/80">{faq.answer}</p>
-                    <div className="mt-3 flex items-center gap-4">
-                      <span className="text-brand-navy/50 text-sm">Was this helpful?</span>
+                  <div className="mt-4 pt-4 border-t border-brand-navy/5 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <p className="text-brand-navy/70 font-medium leading-relaxed">{faq.answer}</p>
+                    <div className="mt-4 flex items-center gap-4">
+                      <span className="text-brand-navy/40 text-xs font-bold uppercase tracking-wider">Was this helpful?</span>
                       <div className="flex gap-2">
-                        <button className="text-brand-cyan-light hover:text-green-300 transition-colors">👍</button>
-                        <button className="text-brand-coral-light hover:text-red-300 transition-colors">👎</button>
+                        <button className="p-1.5 rounded-lg hover:bg-green-50 text-brand-navy/40 hover:text-green-600 transition-colors">👍</button>
+                        <button className="p-1.5 rounded-lg hover:bg-red-50 text-brand-navy/40 hover:text-red-600 transition-colors">👎</button>
                       </div>
                     </div>
                   </div>
                 )}
               </div>
-            </GradientCard>
+            </div>
           ))}
         </div>
 
         {filteredFAQs.length === 0 && (
-          <GradientCard className="text-center py-12">
-            <div className="text-4xl mb-4">🔍</div>
+          <div className="glass-card rounded-3xl p-12 text-center border-dashed border-2 border-brand-navy/10">
+            <div className="text-5xl mb-4 opacity-50">🔍</div>
             <h3 className="text-xl font-bold text-brand-navy mb-2">No results found</h3>
-            <p className="text-brand-navy/60">
+            <p className="text-brand-navy/60 font-medium">
               Try adjusting your search terms or browse by category above.
             </p>
-          </GradientCard>
+          </div>
         )}
       </div>
 
       {/* Still Need Help */}
-      <GradientCard className="text-center">
-        <div className="space-y-4">
-          <div className="text-4xl">🤝</div>
-          <h2 className="text-2xl font-bold text-brand-navy">Still need help?</h2>
-          <p className="text-brand-navy/70 max-w-md mx-auto">
+      <div className="glass-panel rounded-3xl p-10 text-center relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-blue via-brand-purple to-brand-magenta opacity-50"></div>
+        <div className="relative z-10 space-y-6">
+          <div className="text-5xl animate-bounce-slow">🤝</div>
+          <h2 className="text-3xl font-bold text-brand-navy">Still need help?</h2>
+          <p className="text-brand-navy/70 max-w-lg mx-auto text-lg font-medium">
             Can't find what you're looking for? Our support team is here to help you get the most out of Watch Party.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <IconButton
-              gradient="from-brand-blue to-brand-purple"
-              className="shadow-lg hover:shadow-brand-blue/25"
+              className="btn-gradient shadow-lg hover:shadow-brand-blue/25 px-8 py-4 text-lg"
             >
               <span>💬</span>
               Start Live Chat
@@ -345,13 +341,14 @@ export default function HelpPage() {
             <IconButton
               variant="secondary"
               onClick={() => router.push("/dashboard/support")}
+              className="bg-white hover:bg-brand-neutral px-8 py-4 text-lg"
             >
               <span>📧</span>
               Contact Support
             </IconButton>
           </div>
         </div>
-      </GradientCard>
+      </div>
     </div>
   )
 }
