@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import api from "@/lib/api-client"
-import { GradientCard } from "@/components/ui/gradient-card"
 import { IconButton } from "@/components/ui/icon-button"
 import { LiveIndicator } from "@/components/ui/live-indicator"
 import { LoadingState, ErrorMessage } from "@/components/ui/feedback"
@@ -151,13 +150,13 @@ export default function SocialPage() {
       )}
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-orange/20 via-pink-600/20 to-brand-purple/20 rounded-3xl blur-xl"></div>
-        <GradientCard className="relative border-orange-500/30">
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-orange/20 via-pink-600/20 to-brand-purple/20 rounded-3xl blur-3xl opacity-60"></div>
+        <div className="glass-panel relative rounded-3xl p-8 border-brand-orange/20">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                   <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-brand-navy">
-                  🎆 Social Hub
+                  <span className="gradient-text">Social Hub</span>
                 </h1>
                 <LiveIndicator 
                   isLive={true} 
@@ -165,8 +164,8 @@ export default function SocialPage() {
                   label="Online Users" 
                 />
               </div>
-              <p className="text-brand-navy/80 text-base sm:text-lg">Connect with {formatNumber(25620)} movie enthusiasts worldwide</p>
-              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-brand-navy/60">
+              <p className="text-brand-navy/70 text-base sm:text-lg font-medium">Connect with {formatNumber(25620)} movie enthusiasts worldwide</p>
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-brand-navy/50 font-medium">
                 <span>🌍 Global Community</span>
                 <span>•</span>
                 <span>👥 Find Friends</span>
@@ -176,11 +175,11 @@ export default function SocialPage() {
             </div>
             
             <div className="flex items-center gap-3">
-              <div className="flex gap-1 bg-white/80 p-1 rounded-xl border border-brand-navy/10 backdrop-blur-sm">
+              <div className="flex gap-1 bg-white/50 p-1 rounded-xl border border-brand-navy/5">
                 <button
                   onClick={() => setViewMode("grid")}
                   className={`p-2 rounded-lg transition-all ${
-                    viewMode === "grid" ? "bg-brand-purple/10 text-brand-purple" : "text-brand-navy/60 hover:text-brand-navy"
+                    viewMode === "grid" ? "bg-brand-navy text-white shadow-md" : "text-brand-navy/60 hover:text-brand-navy hover:bg-white/50"
                   }`}
                 >
                   ⊞
@@ -188,7 +187,7 @@ export default function SocialPage() {
                 <button
                   onClick={() => setViewMode("list")}
                   className={`p-2 rounded-lg transition-all ${
-                    viewMode === "list" ? "bg-brand-purple/10 text-brand-purple" : "text-brand-navy/60 hover:text-brand-navy"
+                    viewMode === "list" ? "bg-brand-navy text-white shadow-md" : "text-brand-navy/60 hover:text-brand-navy hover:bg-white/50"
                   }`}
                 >
                   ☰
@@ -196,8 +195,7 @@ export default function SocialPage() {
               </div>
               <IconButton
                 onClick={() => router.push("/dashboard/social/groups/create")}
-                gradient="from-brand-orange to-brand-magenta"
-                className="shadow-lg hover:shadow-orange-500/25"
+                className="btn-gradient shadow-lg hover:shadow-brand-orange/25 border-none"
               >
                 <span>✨</span>
                 <span className="hidden sm:inline">Create Group</span>
@@ -205,41 +203,44 @@ export default function SocialPage() {
               <IconButton
                 onClick={() => router.push("/dashboard/friends/find")}
                 variant="secondary"
+                className="bg-white hover:bg-brand-purple/10 hover:text-brand-purple border-brand-navy/10"
               >
                 <span>🔍</span>
                 <span className="hidden sm:inline">Find Friends</span>
               </IconButton>
             </div>
           </div>
-        </GradientCard>
+        </div>
       </div>
 
       {/* Enhanced Search Bar */}
-      <div className="relative">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <svg className="w-5 h-5 sm:w-6 sm:h-6 text-brand-navy/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+      <div className="glass-card rounded-3xl p-6">
+        <div className="relative group">
+          <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-brand-navy/40 group-focus-within:text-brand-purple transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input
+            type="text"
+            placeholder={`Search ${activeTab === "friends" ? "friends" : "groups"}...`}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-12 sm:pl-14 pr-10 sm:pr-6 py-3 sm:py-4 text-base bg-white/50 border border-brand-navy/10 rounded-2xl text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-purple/10 focus:border-brand-purple/30 focus:bg-white transition-all"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute inset-y-0 right-0 pr-4 flex items-center text-brand-navy/40 hover:text-brand-navy min-w-[44px] justify-center"
+            >
+              ✕
+            </button>
+          )}
         </div>
-        <input
-          type="text"
-          placeholder={`Search ${activeTab === "friends" ? "friends" : "groups"}...`}
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full pl-12 sm:pl-14 pr-10 sm:pr-6 py-3 sm:py-4 text-base bg-brand-navy/5 border border-brand-navy/20 rounded-2xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 backdrop-blur-sm transition-all"
-        />
-        {searchQuery && (
-          <button
-            onClick={() => setSearchQuery("")}
-            className="absolute inset-y-0 right-0 pr-4 flex items-center text-brand-navy/50 hover:text-brand-navy min-w-[44px] justify-center"
-          >
-            ✕
-          </button>
-        )}
       </div>
 
       {/* Enhanced Tabs */}
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-1 bg-white/80 p-2 sm:p-1 rounded-2xl border border-brand-navy/10 backdrop-blur-sm w-full sm:w-fit mx-auto">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-1 bg-white/50 p-2 sm:p-1 rounded-2xl border border-brand-navy/5 backdrop-blur-sm w-full sm:w-fit mx-auto">
         {[
           { id: "groups", label: "My Groups", icon: "👥", count: groups.filter(g => g.is_member).length },
           { id: "friends", label: "Friends", icon: "👫", count: friends.length },
@@ -248,15 +249,17 @@ export default function SocialPage() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 rounded-xl font-medium transition-all duration-200 min-h-[44px] ${
+            className={`flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 rounded-xl font-bold transition-all duration-300 min-h-[44px] ${
               activeTab === tab.id
-                ? "bg-gradient-to-r from-brand-orange to-brand-magenta text-white shadow-lg sm:scale-105"
-                : "text-brand-navy/60 hover:text-brand-navy hover:bg-brand-neutral/50"
+                ? "bg-brand-navy text-white shadow-lg sm:scale-105"
+                : "text-brand-navy/60 hover:text-brand-navy hover:bg-white/50"
             }`}
           >
             <span className="text-base sm:text-lg">{tab.icon}</span>
             <span className="text-sm sm:text-base">{tab.label}</span>
-            <span className="bg-white/20 text-xs px-2 py-1 rounded-full font-bold">{tab.count}</span>
+            <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
+              activeTab === tab.id ? "bg-white/20 text-white" : "bg-brand-navy/5 text-brand-navy/40"
+            }`}>{tab.count}</span>
           </button>
         ))}
       </div>
@@ -267,46 +270,46 @@ export default function SocialPage() {
           {filteredFriends.map((friend) => {
             const status = getOnlineStatus(friend.is_online, friend.last_seen)
             return (
-              <div key={friend.id} className="bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all duration-200">
-                <div className="flex items-center gap-3 mb-3">
+              <div key={friend.id} className="glass-card rounded-3xl p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5">
+                <div className="flex items-center gap-4 mb-4">
                   <div className="relative">
-                    <div className="w-12 h-12 bg-gradient-to-br from-brand-purple to-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
+                    <div className="w-14 h-14 bg-gradient-to-br from-brand-purple to-blue-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-md">
                       {friend.avatar ? (
-                        <img src={friend.avatar} alt={friend.username} className="w-full h-full rounded-full object-cover" />
+                        <img src={friend.avatar} alt={friend.username} className="w-full h-full rounded-2xl object-cover" />
                       ) : (
                         friend.username.charAt(0).toUpperCase()
                       )}
                     </div>
-                    <div className={`absolute -bottom-1 -right-1 w-4 h-4 ${status.dot} rounded-full border-2 border-gray-900`}></div>
+                    <div className={`absolute -bottom-1 -right-1 w-5 h-5 ${status.dot} rounded-full border-4 border-white shadow-sm`}></div>
                   </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-brand-navy">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-brand-navy text-lg truncate">
                       {friend.first_name && friend.last_name
                         ? `${friend.first_name} ${friend.last_name}`
                         : friend.username
                       }
                     </h3>
-                    <p className="text-sm text-brand-navy/60">@{friend.username}</p>
-                    <p className={`text-xs ${status.color}`}>{status.text}</p>
+                    <p className="text-sm text-brand-navy/60 font-medium truncate">@{friend.username}</p>
+                    <p className={`text-xs font-bold mt-0.5 ${status.color}`}>{status.text}</p>
                   </div>
                 </div>
 
                 {friend.mutual_friends_count && friend.mutual_friends_count > 0 && (
-                  <p className="text-xs text-brand-navy/50 mb-3">
+                  <p className="text-xs text-brand-navy/50 mb-4 font-medium bg-brand-navy/5 py-1 px-2 rounded-lg inline-block">
                     {friend.mutual_friends_count} mutual friends
                   </p>
                 )}
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 mt-auto">
                   <button
                     onClick={() => router.push(`/dashboard/social/friends/${friend.id}`)}
-                    className="flex-1 px-3 py-2 bg-white/10 hover:bg-white/20 text-brand-navy rounded-lg text-sm font-medium transition-colors"
+                    className="flex-1 px-3 py-2.5 bg-brand-navy text-white hover:bg-brand-navy-light rounded-xl text-sm font-bold transition-all shadow-lg shadow-brand-navy/10"
                   >
                     View Profile
                   </button>
                   <button
                     onClick={() => router.push(`/dashboard/chat/direct/${friend.id}`)}
-                    className="px-3 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-brand-blue-light rounded-lg text-sm font-medium transition-colors"
+                    className="px-3 py-2.5 bg-white hover:bg-brand-purple/10 text-brand-purple border border-brand-navy/10 rounded-xl text-sm font-bold transition-colors"
                   >
                     💬
                   </button>
@@ -320,40 +323,40 @@ export default function SocialPage() {
           {filteredGroups
             .filter(group => activeTab === "discover" ? !group.is_member : group.is_member)
             .map((group) => (
-            <div key={group.id} className="bg-white/5 border border-white/10 rounded-xl p-6 hover:bg-white/10 transition-all duration-200">
+            <div key={group.id} className="glass-card rounded-3xl p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 flex flex-col">
               {/* Group Header */}
-              <div className="flex items-start gap-3 mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-brand-purple to-blue-500 rounded-lg flex items-center justify-center text-white font-semibold">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-brand-purple to-blue-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-md shrink-0">
                   {group.avatar ? (
-                    <img src={group.avatar} alt={group.name} className="w-full h-full rounded-lg object-cover" />
+                    <img src={group.avatar} alt={group.name} className="w-full h-full rounded-2xl object-cover" />
                   ) : (
                     group.name.charAt(0).toUpperCase()
                   )}
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-semibold text-brand-navy mb-1">{group.name}</h3>
-                  <div className="flex items-center gap-2 text-sm text-brand-navy/60">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-brand-navy text-lg mb-1 truncate">{group.name}</h3>
+                  <div className="flex items-center gap-2 text-sm text-brand-navy/60 font-medium">
                     <span>👥 {group.member_count} members</span>
-                    {!group.is_public && <span>🔒</span>}
+                    {!group.is_public && <span title="Private Group">🔒</span>}
                   </div>
                 </div>
               </div>
 
               {/* Group Description */}
               {group.description && (
-                <p className="text-sm text-brand-navy/70 mb-4 line-clamp-2">{group.description}</p>
+                <p className="text-sm text-brand-navy/70 mb-4 line-clamp-2 font-medium leading-relaxed">{group.description}</p>
               )}
 
               {/* Tags */}
               {group.tags && group.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mb-4">
+                <div className="flex flex-wrap gap-1.5 mb-4">
                   {group.tags.slice(0, 3).map((tag, index) => (
-                    <span key={index} className="px-2 py-1 bg-brand-navy/10 text-xs text-brand-navy/70 rounded-full border border-brand-navy/20">
+                    <span key={index} className="px-2.5 py-1 bg-brand-navy/5 text-xs font-bold text-brand-navy/60 rounded-lg border border-brand-navy/5">
                       {tag}
                     </span>
                   ))}
                   {group.tags.length > 3 && (
-                    <span className="px-2 py-1 bg-brand-navy/10 text-xs text-brand-navy/70 rounded-full border border-brand-navy/20">
+                    <span className="px-2.5 py-1 bg-brand-navy/5 text-xs font-bold text-brand-navy/60 rounded-lg border border-brand-navy/5">
                       +{group.tags.length - 3}
                     </span>
                   )}
@@ -361,23 +364,23 @@ export default function SocialPage() {
               )}
 
               {/* Created By */}
-              <div className="flex items-center gap-2 text-xs text-brand-navy/50 mb-4">
+              <div className="flex items-center gap-2 text-xs text-brand-navy/40 mb-5 font-medium mt-auto">
                 <span>Created by {group.created_by.username}</span>
               </div>
 
               {/* Actions */}
-              <div className="flex gap-2">
+              <div className="flex gap-2 pt-2 border-t border-brand-navy/5">
                 {group.is_member ? (
                   <>
                     <button
                       onClick={() => router.push(`/dashboard/social/groups/${group.id}`)}
-                      className="flex-1 px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 text-brand-blue-light rounded-lg font-medium transition-colors"
+                      className="flex-1 px-4 py-2.5 bg-brand-navy text-white hover:bg-brand-navy-light rounded-xl font-bold transition-all shadow-lg shadow-brand-navy/10"
                     >
                       Open Group
                     </button>
                     <button
                       onClick={() => handleLeaveGroup(group.id)}
-                      className="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-brand-coral-light rounded-lg font-medium transition-colors"
+                      className="px-4 py-2.5 bg-white hover:bg-red-50 text-brand-coral hover:text-red-600 border border-brand-navy/10 rounded-xl font-bold transition-colors"
                     >
                       Leave
                     </button>
@@ -386,13 +389,13 @@ export default function SocialPage() {
                   <>
                     <button
                       onClick={() => handleJoinGroup(group.id)}
-                      className="flex-1 px-4 py-2 bg-green-600/20 hover:bg-brand-cyan/30 text-brand-cyan-light rounded-lg font-medium transition-colors border border-brand-cyan/30"
+                      className="flex-1 px-4 py-2.5 bg-brand-navy text-white hover:bg-brand-navy-light rounded-xl font-bold transition-all shadow-lg shadow-brand-navy/10"
                     >
                       Join Group
                     </button>
                     <button
                       onClick={() => router.push(`/dashboard/social/groups/${group.id}`)}
-                      className="px-4 py-2 bg-brand-navy/10 hover:bg-brand-navy/20 text-brand-navy rounded-lg font-medium transition-colors border border-brand-navy/20"
+                      className="px-4 py-2.5 bg-white hover:bg-brand-purple/10 text-brand-navy hover:text-brand-purple border border-brand-navy/10 rounded-xl font-bold transition-colors"
                     >
                       View
                     </button>
@@ -407,35 +410,37 @@ export default function SocialPage() {
       {/* Empty State */}
       {((activeTab === "friends" && filteredFriends.length === 0) ||
         (activeTab !== "friends" && filteredGroups.filter(group => activeTab === "discover" ? !group.is_member : group.is_member).length === 0)) && (
-        <GradientCard>
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">
+        <div className="glass-card rounded-3xl text-center py-20 px-6">
+          <div className="space-y-6">
+            <div className="w-24 h-24 mx-auto bg-gradient-to-br from-brand-purple to-brand-blue rounded-3xl flex items-center justify-center text-5xl shadow-2xl shadow-brand-purple/20 animate-float">
               {activeTab === "friends" ? "👫" : activeTab === "groups" ? "👥" : "🌟"}
             </div>
-            <h3 className="text-xl font-semibold text-brand-navy mb-2">
-              {activeTab === "friends"
-                ? "No friends yet"
-                : activeTab === "groups"
-                ? "No groups joined"
-                : "No groups to discover"
-              }
-            </h3>
-            <p className="text-brand-navy/70 mb-6">
-              {searchQuery
-                ? "Try adjusting your search criteria"
-                : activeTab === "friends"
-                ? "Start connecting with other users"
-                : activeTab === "groups"
-                ? "Join some groups to get started"
-                : "All public groups have been joined"
-              }
-            </p>
+            <div className="space-y-3">
+              <h3 className="text-3xl font-bold text-brand-navy">
+                {activeTab === "friends"
+                  ? "No friends yet"
+                  : activeTab === "groups"
+                  ? "No groups joined"
+                  : "No groups to discover"
+                }
+              </h3>
+              <p className="text-brand-navy/60 max-w-md mx-auto text-lg leading-relaxed">
+                {searchQuery
+                  ? "Try adjusting your search criteria"
+                  : activeTab === "friends"
+                  ? "Start connecting with other users"
+                  : activeTab === "groups"
+                  ? "Join some groups to get started"
+                  : "All public groups have been joined"
+                }
+              </p>
+            </div>
             {!searchQuery && (
-              <div className="flex gap-3 justify-center">
+              <div className="flex gap-3 justify-center pt-4">
                 {activeTab === "friends" && (
                   <button
                     onClick={() => router.push("/dashboard/friends/find")}
-                    className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
+                    className="px-8 py-4 btn-gradient text-white rounded-xl font-bold transition-all duration-200 shadow-xl hover:shadow-brand-purple/25 text-lg"
                   >
                     Find Friends
                   </button>
@@ -443,7 +448,7 @@ export default function SocialPage() {
                 {activeTab === "groups" && (
                   <button
                     onClick={() => router.push("/dashboard/social/groups/create")}
-                    className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
+                    className="px-8 py-4 btn-gradient text-white rounded-xl font-bold transition-all duration-200 shadow-xl hover:shadow-brand-purple/25 text-lg"
                   >
                     Create Group
                   </button>
@@ -451,7 +456,7 @@ export default function SocialPage() {
                 {activeTab === "discover" && (
                   <button
                     onClick={() => setActiveTab("groups")}
-                    className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-medium transition-all duration-200"
+                    className="px-8 py-4 btn-gradient text-white rounded-xl font-bold transition-all duration-200 shadow-xl hover:shadow-brand-purple/25 text-lg"
                   >
                     View My Groups
                   </button>
@@ -459,7 +464,7 @@ export default function SocialPage() {
               </div>
             )}
           </div>
-        </GradientCard>
+        </div>
       )}
     </div>
   )
