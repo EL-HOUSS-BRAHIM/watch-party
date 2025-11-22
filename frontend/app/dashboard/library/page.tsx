@@ -109,18 +109,18 @@ export default function LibraryPage() {
 
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-blue-600/20 to-brand-cyan/20 rounded-3xl blur-xl"></div>
-        <GradientCard className="relative border-brand-purple/30">
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/20 via-brand-blue/20 to-brand-cyan/20 rounded-3xl blur-3xl opacity-60"></div>
+        <div className="glass-panel relative rounded-3xl p-8 border-brand-purple/20">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-4">
-                <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-200 to-blue-200 bg-clip-text text-transparent">
-                  📚 Media Library
+                <h1 className="text-3xl sm:text-4xl font-bold text-brand-navy">
+                  <span className="gradient-text">Media Library</span>
                 </h1>
                 <LiveIndicator isLive={true} count={media.length} label="Videos" />
               </div>
-              <p className="text-brand-navy/80 text-lg">Curate your watch night catalogue with style and ambience</p>
-              <div className="flex items-center gap-4 text-sm text-brand-navy/60">
+              <p className="text-brand-navy/70 text-lg">Curate your watch night catalogue with style and ambience</p>
+              <div className="flex items-center gap-4 text-sm text-brand-navy/60 font-medium">
                 <span>🎬 Movies & Shows</span>
                 <span>•</span>
                 <span>🎨 Custom Ambience</span>
@@ -130,31 +130,30 @@ export default function LibraryPage() {
             </div>
             
             <div className="flex items-center gap-3">
-              <IconButton
+              <button
                 onClick={() => router.push("/dashboard/videos/upload")}
-                gradient="from-brand-purple to-brand-blue"
-                className="shadow-lg hover:shadow-brand-purple/25"
+                className="btn-gradient px-6 py-3 rounded-xl font-bold text-white shadow-lg hover:shadow-brand-purple/25 transition-all hover:-translate-y-0.5 flex items-center gap-2"
               >
                 <span>📤</span>
                 <span className="hidden sm:inline">Upload Video</span>
-              </IconButton>
-              <IconButton
+              </button>
+              <button
                 onClick={() => router.push("/dashboard/library/playlists")}
-                variant="secondary"
+                className="px-6 py-3 bg-white border border-brand-navy/10 hover:bg-brand-navy/5 text-brand-navy rounded-xl font-bold transition-colors flex items-center gap-2"
               >
                 <span>📋</span>
                 <span className="hidden sm:inline">Playlists</span>
-              </IconButton>
+              </button>
             </div>
           </div>
-        </GradientCard>
+        </div>
       </div>
 
       {/* Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
           {/* Filter */}
-          <div className="flex gap-1 bg-white/80 p-1 rounded-xl border border-brand-navy/10 backdrop-blur-sm">
+          <div className="flex gap-1 bg-white/40 p-1 rounded-xl border border-brand-navy/5 backdrop-blur-sm">
             {[
               { key: "all", label: "All", count: media.length },
               { key: "public", label: "Public", count: media.filter(m => m.visibility === "public").length },
@@ -163,14 +162,16 @@ export default function LibraryPage() {
               <button
                 key={key}
                 onClick={() => setFilterBy(key as any)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all duration-200 ${
                   filterBy === key
-                    ? "bg-gradient-to-r from-brand-purple to-brand-blue text-white shadow-lg"
-                    : "text-brand-navy/60 hover:text-brand-navy hover:bg-brand-neutral/50"
+                    ? "bg-brand-navy text-white shadow-md"
+                    : "text-brand-navy/60 hover:text-brand-navy hover:bg-white/50"
                 }`}
               >
                 <span>{label}</span>
-                <span className="bg-brand-navy/10 text-xs px-2 py-1 rounded-full font-bold">{count}</span>
+                <span className={`text-xs px-2 py-0.5 rounded-full ${filterBy === key ? "bg-white/20 text-white" : "bg-brand-navy/5 text-brand-navy/60"}`}>
+                  {count}
+                </span>
               </button>
             ))}
           </div>
@@ -179,7 +180,7 @@ export default function LibraryPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="px-4 py-2 bg-white border border-brand-navy/20 rounded-xl text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-purple/20"
+            className="px-4 py-2 bg-white/40 border border-brand-navy/10 rounded-xl text-brand-navy font-medium focus:outline-none focus:ring-2 focus:ring-brand-purple/20 cursor-pointer hover:bg-white/60 transition-colors"
           >
             <option value="recent">Recent</option>
             <option value="popular">Popular</option>
@@ -188,11 +189,11 @@ export default function LibraryPage() {
         </div>
 
         {/* View Mode */}
-        <div className="flex gap-1 bg-white/80 p-1 rounded-xl border border-brand-navy/10 backdrop-blur-sm">
+        <div className="flex gap-1 bg-white/40 p-1 rounded-xl border border-brand-navy/5 backdrop-blur-sm">
           <button
             onClick={() => setViewMode("grid")}
             className={`px-3 py-2 rounded-lg transition-all ${
-              viewMode === "grid" ? "bg-brand-purple/10 text-brand-purple" : "text-brand-navy/60 hover:text-brand-navy"
+              viewMode === "grid" ? "bg-brand-navy text-white shadow-md" : "text-brand-navy/60 hover:text-brand-navy hover:bg-white/50"
             }`}
           >
             ▦
@@ -200,7 +201,7 @@ export default function LibraryPage() {
           <button
             onClick={() => setViewMode("list")}
             className={`px-3 py-2 rounded-lg transition-all ${
-              viewMode === "list" ? "bg-brand-purple/10 text-brand-purple" : "text-brand-navy/60 hover:text-brand-navy"
+              viewMode === "list" ? "bg-brand-navy text-white shadow-md" : "text-brand-navy/60 hover:text-brand-navy hover:bg-white/50"
             }`}
           >
             ☰
@@ -220,28 +221,29 @@ export default function LibraryPage() {
       ) : viewMode === "grid" ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredAndSortedMedia.map((item) => (
-            <GradientCard key={item.id} className="hover:border-brand-purple/40 transition-all duration-300">
+            <div key={item.id} className="glass-card rounded-2xl p-4 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 group">
               {/* Thumbnail */}
-              <div className="relative h-40 bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 rounded-xl mb-4 overflow-hidden">
+              <div className="relative h-48 bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 rounded-xl mb-4 overflow-hidden group-hover:shadow-inner">
                 {item.thumbnail ? (
                   <img
                     src={item.thumbnail}
                     alt={item.title}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-4xl">{getTypeIcon(item.type)}</span>
+                    <span className="text-5xl opacity-50 group-hover:scale-110 transition-transform duration-300">{getTypeIcon(item.type)}</span>
                   </div>
                 )}
                 
                 {/* Overlay Info */}
-                <div className="absolute bottom-2 left-2 right-2 flex justify-between items-end">
-                  <span className="bg-black/60 backdrop-blur-sm px-2 py-1 rounded text-white text-xs">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute bottom-3 left-3 right-3 flex justify-between items-end">
+                  <span className="bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-lg text-white text-xs font-bold border border-white/10">
                     {item.duration}
                   </span>
-                  <span className={`bg-black/60 backdrop-blur-sm px-2 py-1 rounded text-xs ${getVisibilityColor(item.visibility)}`}>
-                    {item.visibility === "public" ? "🌍" : "🔒"} {item.visibility}
+                  <span className={`bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-lg text-xs font-bold border border-white/10 ${getVisibilityColor(item.visibility)}`}>
+                    {item.visibility === "public" ? "🌍" : "🔒"} {item.visibility.charAt(0).toUpperCase() + item.visibility.slice(1)}
                   </span>
                 </div>
               </div>
@@ -249,14 +251,14 @@ export default function LibraryPage() {
               {/* Content */}
               <div className="space-y-3">
                 <div>
-                  <h3 className="text-brand-navy font-bold text-lg line-clamp-2">{item.title}</h3>
-                  <p className="text-brand-navy/60 text-sm flex items-center gap-2">
+                  <h3 className="text-brand-navy font-bold text-lg line-clamp-1 group-hover:text-brand-purple transition-colors">{item.title}</h3>
+                  <p className="text-brand-navy/60 text-xs font-bold uppercase tracking-wide flex items-center gap-2 mt-1">
                     <span>{getTypeIcon(item.type)}</span>
                     {item.type}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between text-sm text-brand-navy/60">
+                <div className="flex items-center justify-between text-xs font-medium text-brand-navy/50 bg-brand-navy/5 rounded-lg p-2">
                   <span>👀 {formatNumber(item.views)}</span>
                   <span>❤️ {formatNumber(item.likes)}</span>
                   <span>{new Date(item.upload_date).toLocaleDateString()}</span>
@@ -264,102 +266,108 @@ export default function LibraryPage() {
 
                 {/* Ambience Tag */}
                 <div className="flex items-center gap-2">
-                  <span className="text-white/50 text-xs">Ambience:</span>
-                  <span className="bg-gradient-to-r from-purple-600/20 to-brand-blue/20 px-3 py-1 rounded-full text-xs text-white border border-white/10">
+                  <span className="text-brand-navy/40 text-xs font-bold uppercase">Ambience</span>
+                  <span className="bg-gradient-to-r from-brand-purple/10 to-brand-blue/10 px-2.5 py-0.5 rounded-full text-xs font-bold text-brand-purple-dark border border-brand-purple/20">
                     🎨 {item.ambience}
                   </span>
                 </div>
 
                 {/* Actions */}
-                <div className="flex gap-2 pt-2">
-                  <IconButton
+                <div className="flex gap-2 pt-3 border-t border-brand-navy/5">
+                  <button
                     onClick={() => router.push(`/dashboard/videos/${item.id}`)}
-                    variant="primary"
-                    size="sm"
-                    className="flex-1"
+                    className="flex-1 px-3 py-2 bg-brand-purple/10 hover:bg-brand-purple/20 text-brand-purple-dark rounded-lg text-sm font-bold transition-colors"
                   >
                     ▶️ Play
-                  </IconButton>
-                  <IconButton
+                  </button>
+                  <button
                     onClick={() => router.push(`/dashboard/videos/${item.id}/edit`)}
-                    variant="secondary"
-                    size="sm"
+                    className="px-3 py-2 bg-white border border-brand-navy/10 hover:bg-brand-navy/5 text-brand-navy rounded-lg text-sm font-bold transition-colors"
+                    title="Edit"
                   >
                     ✏️
-                  </IconButton>
-                  <IconButton
+                  </button>
+                  <button
                     onClick={() => router.push(`/dashboard/parties/create?video=${item.id}`)}
-                    variant="secondary"
-                    size="sm"
+                    className="px-3 py-2 bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue-dark rounded-lg text-sm font-bold transition-colors"
+                    title="Create Party"
                   >
                     🎬
-                  </IconButton>
+                  </button>
                 </div>
               </div>
-            </GradientCard>
+            </div>
           ))}
         </div>
       ) : (
         /* List View */
         <div className="space-y-4">
           {filteredAndSortedMedia.map((item) => (
-            <GradientCard key={item.id} className="hover:border-brand-purple/40 transition-all duration-300">
+            <div key={item.id} className="glass-card rounded-2xl p-4 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-brand-navy/5 group">
               <div className="flex items-center gap-6">
                 {/* Thumbnail */}
-                <div className="w-24 h-16 bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 rounded-lg overflow-hidden flex-shrink-0">
+                <div className="w-32 h-20 bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 rounded-xl overflow-hidden flex-shrink-0 relative group-hover:shadow-md transition-all">
                   {item.thumbnail ? (
                     <img
                       src={item.thumbnail}
                       alt={item.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <span className="text-xl">{getTypeIcon(item.type)}</span>
+                      <span className="text-2xl opacity-50">{getTypeIcon(item.type)}</span>
                     </div>
                   )}
+                  <div className="absolute bottom-1 right-1 bg-black/60 backdrop-blur-sm px-1.5 py-0.5 rounded text-[10px] font-bold text-white border border-white/10">
+                    {item.duration}
+                  </div>
                 </div>
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-brand-navy font-bold text-lg truncate">{item.title}</h3>
-                  <p className="text-brand-navy/60 text-sm">{item.type} • {item.duration}</p>
-                  <div className="flex items-center gap-4 text-xs text-brand-navy/50 mt-1">
+                  <h3 className="text-brand-navy font-bold text-lg truncate group-hover:text-brand-purple transition-colors">{item.title}</h3>
+                  <div className="flex items-center gap-3 mt-1">
+                    <span className="text-brand-navy/60 text-xs font-bold uppercase tracking-wide">{item.type}</span>
+                    <span className="text-brand-navy/20">•</span>
+                    <span className="bg-brand-purple/5 text-brand-purple-dark px-2 py-0.5 rounded-full text-xs font-bold border border-brand-purple/10">
+                      🎨 {item.ambience}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4 text-xs font-medium text-brand-navy/50 mt-2">
                     <span>👀 {formatNumber(item.views)}</span>
                     <span>❤️ {formatNumber(item.likes)}</span>
                     <span className={getVisibilityColor(item.visibility)}>
-                      {item.visibility === "public" ? "🌍" : "🔒"} {item.visibility}
+                      {item.visibility === "public" ? "🌍" : "🔒"} {item.visibility.charAt(0).toUpperCase() + item.visibility.slice(1)}
                     </span>
-                    <span>🎨 {item.ambience}</span>
+                    <span>📅 {new Date(item.upload_date).toLocaleDateString()}</span>
                   </div>
                 </div>
 
                 {/* Actions */}
                 <div className="flex gap-2">
-                  <IconButton
+                  <button
                     onClick={() => router.push(`/dashboard/videos/${item.id}`)}
-                    variant="primary"
-                    size="sm"
+                    className="px-4 py-2 bg-brand-purple/10 hover:bg-brand-purple/20 text-brand-purple-dark rounded-lg text-sm font-bold transition-colors"
                   >
                     ▶️ Play
-                  </IconButton>
-                  <IconButton
+                  </button>
+                  <button
                     onClick={() => router.push(`/dashboard/videos/${item.id}/edit`)}
-                    variant="secondary"
-                    size="sm"
+                    className="p-2 bg-white border border-brand-navy/10 hover:bg-brand-navy/5 text-brand-navy rounded-lg transition-colors"
+                    title="Edit"
                   >
                     ✏️
-                  </IconButton>
-                  <IconButton
+                  </button>
+                  <button
                     onClick={() => router.push(`/dashboard/parties/create?video=${item.id}`)}
-                    variant="secondary"
-                    size="sm"
+                    className="p-2 bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue-dark rounded-lg transition-colors"
+                    title="Create Party"
                   >
                     🎬
-                  </IconButton>
+                  </button>
                 </div>
               </div>
-            </GradientCard>
+            </div>
           ))}
         </div>
       )}
