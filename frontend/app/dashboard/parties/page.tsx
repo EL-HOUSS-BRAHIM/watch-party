@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { partiesApi, WatchParty } from "@/lib/api-client"
-import { GradientCard } from "@/components/ui/gradient-card"
 import { IconButton } from "@/components/ui/icon-button"
 import { LiveIndicator } from "@/components/ui/live-indicator"
 import { useDesignSystem } from "@/hooks/use-design-system"
@@ -79,21 +78,33 @@ export default function PartiesPage() {
     }
   }
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center">
+          <div className="loading-reel mx-auto mb-6"></div>
+          <p className="text-brand-navy/60 font-medium animate-pulse">Loading parties...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-8">
       {/* Enhanced Header */}
       <div className="relative">
-        <GradientCard className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/20 via-brand-magenta/20 to-brand-orange/20 rounded-3xl blur-3xl opacity-60"></div>
+        <div className="glass-panel relative rounded-3xl p-8 border-brand-purple/20">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-4">
                 <h1 className="text-4xl font-bold text-brand-navy">
-                  🎬 Watch Parties
+                  <span className="gradient-text">Watch Parties</span>
                 </h1>
                 <LiveIndicator isLive={true} count={liveStats.activeParties} label="Live Parties" />
               </div>
               <p className="text-brand-navy/70 text-lg">Join the global cinema experience with {formatNumber(liveStats.onlineUsers)} movie lovers</p>
-              <div className="flex items-center gap-4 text-sm text-brand-navy/60">
+              <div className="flex items-center gap-4 text-sm text-brand-navy/50 font-medium">
                 <span>🌍 Global Community</span>
                 <span>•</span>
                 <span>⚡ Instant Join</span>
@@ -103,11 +114,11 @@ export default function PartiesPage() {
             </div>
             
             <div className="flex items-center gap-3">
-              <div className="flex gap-1 bg-brand-navy/5 p-1 rounded-xl">
+              <div className="flex gap-1 bg-white/50 p-1 rounded-xl border border-brand-navy/5">
                 <button
                   onClick={() => setViewMode("grid")}
                   className={`p-2 rounded-lg transition-all ${
-                    viewMode === "grid" ? "bg-brand-navy/10 text-brand-navy" : "text-brand-navy/60 hover:text-brand-navy"
+                    viewMode === "grid" ? "bg-brand-navy text-white shadow-md" : "text-brand-navy/60 hover:text-brand-navy hover:bg-white/50"
                   }`}
                 >
                   ⚏
@@ -115,7 +126,7 @@ export default function PartiesPage() {
                 <button
                   onClick={() => setViewMode("list")}
                   className={`p-2 rounded-lg transition-all ${
-                    viewMode === "list" ? "bg-brand-navy/10 text-brand-navy" : "text-brand-navy/60 hover:text-brand-navy"
+                    viewMode === "list" ? "bg-brand-navy text-white shadow-md" : "text-brand-navy/60 hover:text-brand-navy hover:bg-white/50"
                   }`}
                 >
                   ☰
@@ -123,35 +134,35 @@ export default function PartiesPage() {
               </div>
               <IconButton
                 onClick={() => router.push("/dashboard/parties/create")}
-                className="shadow-lg hover:shadow-brand-purple/25"
+                className="btn-gradient shadow-lg hover:shadow-brand-purple/25 border-none"
               >
                 <span>✨</span>
                 <span className="hidden sm:inline">Host Party</span>
               </IconButton>
             </div>
           </div>
-        </GradientCard>
+        </div>
       </div>
 
       {/* Enhanced Search and Filters */}
-      <GradientCard>
+      <div className="glass-card rounded-3xl p-6">
         <div className="space-y-6">
           {/* Search Bar */}
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <span className="text-brand-navy/50 text-xl">🔍</span>
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+              <span className="text-brand-navy/40 text-xl group-focus-within:text-brand-purple transition-colors">🔍</span>
             </div>
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search parties, hosts, or genres..."
-              className="w-full pl-14 pr-6 py-4 bg-brand-navy/5 border border-brand-navy/20 rounded-2xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple/50 backdrop-blur-sm transition-all"
+              className="w-full pl-14 pr-6 py-4 bg-white/50 border border-brand-navy/10 rounded-2xl text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-purple/10 focus:border-brand-purple/30 focus:bg-white transition-all"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute inset-y-0 right-0 pr-4 flex items-center text-brand-navy/50 hover:text-brand-navy"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-brand-navy/40 hover:text-brand-navy transition-colors"
               >
                 ✕
               </button>
@@ -169,51 +180,44 @@ export default function PartiesPage() {
               <button
                 key={key}
                 onClick={() => setFilter(key as any)}
-                className={`flex items-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${
+                className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold transition-all duration-300 ${
                   filter === key
-                    ? "bg-gradient-to-r from-brand-purple to-brand-blue text-white shadow-lg scale-105"
-                    : "bg-brand-navy/5 text-brand-navy/70 hover:bg-brand-navy/10 hover:text-brand-navy hover:scale-105"
+                    ? "bg-brand-navy text-white shadow-lg scale-105"
+                    : "bg-white/50 text-brand-navy/60 hover:bg-white hover:text-brand-navy hover:shadow-md"
                 }`}
               >
                 <span>{icon}</span>
                 <span>{label}</span>
-                <span className="bg-brand-navy/10 text-xs px-2 py-1 rounded-full">{count}</span>
+                <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
+                  filter === key ? "bg-white/20 text-white" : "bg-brand-navy/5 text-brand-navy/40"
+                }`}>{count}</span>
               </button>
             ))}
           </div>
         </div>
-      </GradientCard>
+      </div>
 
       {/* Error State */}
       {error && (
-        <div className="bg-brand-coral/10 border border-brand-coral/20 rounded-lg p-4">
-          <p className="text-brand-coral-light">{error}</p>
-          <button
-            onClick={loadParties}
-            className="mt-2 text-red-300 hover:text-red-200 underline"
-          >
-            Try again
-          </button>
-        </div>
-      )}
-
-      {/* Loading State */}
-      {loading && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-white/5 border border-white/10 rounded-lg p-6 animate-pulse">
-              <div className="h-4 bg-white/20 rounded mb-3"></div>
-              <div className="h-3 bg-white/10 rounded mb-2"></div>
-              <div className="h-3 bg-white/10 rounded w-2/3"></div>
-            </div>
-          ))}
+        <div className="glass-card border-brand-coral/30 bg-brand-coral/5 rounded-2xl p-6 flex items-center gap-4">
+          <div className="text-3xl">⚠️</div>
+          <div>
+            <p className="text-brand-coral-dark font-bold">{error}</p>
+            <button
+              onClick={loadParties}
+              className="mt-1 text-brand-coral hover:text-brand-coral-dark underline text-sm font-medium"
+            >
+              Try again
+            </button>
+          </div>
         </div>
       )}
 
       {/* Informational State */}
       {!loading && infoMessage && (
-        <div className="bg-brand-blue/10 border border-brand-blue/20 rounded-lg p-4">
-          <p className="text-blue-300">{infoMessage}</p>
+        <div className="glass-card border-brand-blue/30 bg-brand-blue/5 rounded-2xl p-6 flex items-center gap-4">
+          <div className="text-3xl">ℹ️</div>
+          <p className="text-brand-blue-dark font-medium">{infoMessage}</p>
         </div>
       )}
 
@@ -221,16 +225,16 @@ export default function PartiesPage() {
       {!loading && parties.length > 0 && (
         <div className={viewMode === "grid" ? "grid gap-6 sm:grid-cols-2 lg:grid-cols-3" : "space-y-4"}>
           {parties.map((party) => (
-            <GradientCard
+            <div
               key={party.id}
-              className="group hover:border-brand-purple/40 hover:shadow-lg hover:shadow-brand-purple/10 transition-all duration-300 hover:scale-105"
+              className="glass-card group rounded-3xl p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5"
             >
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {/* Party Header */}
                 <div className="flex items-start justify-between">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-2">
-                      <div className="w-8 h-8 bg-gradient-to-br from-brand-purple to-brand-blue rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                  <div className="flex-1 min-w-0 pr-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <div className="w-10 h-10 bg-gradient-to-br from-brand-purple to-brand-blue rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:scale-110 transition-transform">
                         {party.title.charAt(0)}
                       </div>
                       <h3 className="text-lg font-bold text-brand-navy line-clamp-1 group-hover:text-brand-purple transition-colors">
@@ -238,43 +242,47 @@ export default function PartiesPage() {
                       </h3>
                     </div>
                     {party.description && (
-                      <p className="text-brand-navy/70 text-sm line-clamp-2 mb-3">
+                      <p className="text-brand-navy/60 text-sm line-clamp-2 font-medium pl-1">
                         {party.description}
                       </p>
                     )}
                   </div>
-                  <LiveIndicator 
-                    isLive={party.status === "live"} 
-                    label={party.status === "live" ? "LIVE" : party.status.toUpperCase()}
-                  />
+                  <div className="shrink-0">
+                    <LiveIndicator 
+                      isLive={party.status === "live"} 
+                      label={party.status === "live" ? "LIVE" : party.status.toUpperCase()}
+                    />
+                  </div>
                 </div>
 
                 {/* Party Stats */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-brand-navy/5 rounded-xl p-3 text-center">
-                    <div className="text-lg font-bold text-brand-navy">👥</div>
-                    <div className="text-sm text-brand-navy/60">
-                      {party.participant_count} watching
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-white/40 border border-white/50 rounded-2xl p-3 text-center transition-colors group-hover:bg-white/60">
+                    <div className="text-xl mb-1">👥</div>
+                    <div className="text-sm font-bold text-brand-navy">
+                      {formatNumber(party.participant_count)}
                     </div>
+                    <div className="text-xs text-brand-navy/50 font-medium uppercase tracking-wide">Watching</div>
                   </div>
-                  <div className="bg-brand-navy/5 rounded-xl p-3 text-center">
-                    <div className="text-lg font-bold text-brand-navy">🎬</div>
-                    <div className="text-sm text-brand-navy/60">
+                  <div className="bg-white/40 border border-white/50 rounded-2xl p-3 text-center transition-colors group-hover:bg-white/60">
+                    <div className="text-xl mb-1">🎬</div>
+                    <div className="text-sm font-bold text-brand-navy truncate px-1">
                       {party.video?.title || "No video"}
                     </div>
+                    <div className="text-xs text-brand-navy/50 font-medium uppercase tracking-wide">Playing</div>
                   </div>
                 </div>
 
                 {/* Host Info */}
-                <div className="flex items-center gap-3 p-3 bg-brand-navy/5 rounded-xl">
-                  <div className="w-8 h-8 bg-gradient-to-br from-brand-purple to-brand-purple rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                <div className="flex items-center gap-3 p-3 bg-brand-navy/5 rounded-2xl border border-transparent group-hover:border-brand-navy/5 transition-colors">
+                  <div className="w-8 h-8 bg-brand-navy text-white rounded-full flex items-center justify-center font-bold text-xs shadow-sm">
                     {party.host?.username?.charAt(0).toUpperCase() || "?"}
                   </div>
-                  <div className="flex-1">
-                    <div className="text-brand-navy font-medium text-sm">
+                  <div className="flex-1 min-w-0">
+                    <div className="text-brand-navy font-bold text-sm truncate">
                       {party.host?.username || "Unknown Host"}
                     </div>
-                    <div className="text-brand-navy/60 text-xs">
+                    <div className="text-brand-navy/50 text-xs font-medium truncate">
                       {party.scheduled_start 
                         ? `Starts ${new Date(party.scheduled_start).toLocaleString()}`
                         : `Created ${new Date(party.created_at).toLocaleDateString()}`
@@ -284,12 +292,15 @@ export default function PartiesPage() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex gap-2">
+                <div className="flex gap-2 pt-2">
                   <IconButton
                     onClick={() => handleJoinParty(party.id)}
                     disabled={party.status === "ended" || party.status === "cancelled"}
-                    variant={party.status === "live" ? "primary" : "secondary"}
-                    className="flex-1"
+                    className={`flex-1 font-bold border-none ${
+                      party.status === "live" 
+                        ? "bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/20" 
+                        : "bg-brand-navy text-white hover:bg-brand-navy-light shadow-lg shadow-brand-navy/20"
+                    }`}
                   >
                     {party.status === "live" ? (
                       <>🚀 Join Live</>
@@ -301,30 +312,30 @@ export default function PartiesPage() {
                   </IconButton>
                   <IconButton
                     onClick={() => router.push(`/party/${party.id}`)}
-                    variant="ghost"
-                    size="md"
+                    variant="secondary"
+                    className="bg-white hover:bg-brand-purple/10 hover:text-brand-purple border-brand-navy/10"
                   >
                     ℹ️
                   </IconButton>
                 </div>
               </div>
-            </GradientCard>
+            </div>
           ))}
         </div>
       )}
 
       {/* Enhanced Empty State */}
       {!loading && parties.length === 0 && (
-        <GradientCard className="text-center py-16">
+        <div className="glass-card rounded-3xl text-center py-20 px-6">
           <div className="space-y-6">
-            <div className="w-24 h-24 mx-auto bg-gradient-to-br from-brand-purple to-brand-blue rounded-3xl flex items-center justify-center text-4xl animate-float">
+            <div className="w-24 h-24 mx-auto bg-gradient-to-br from-brand-purple to-brand-blue rounded-3xl flex items-center justify-center text-5xl shadow-2xl shadow-brand-purple/20 animate-float">
               🎬
             </div>
-            <div className="space-y-2">
-              <h3 className="text-2xl font-bold text-brand-navy">
+            <div className="space-y-3">
+              <h3 className="text-3xl font-bold text-brand-navy">
                 {searchQuery ? "No parties found" : "No parties available"}
               </h3>
-              <p className="text-brand-navy/70 max-w-md mx-auto leading-relaxed">
+              <p className="text-brand-navy/60 max-w-md mx-auto text-lg leading-relaxed">
                 {searchQuery 
                   ? `No parties match "${searchQuery}". Try adjusting your search or filters.`
                   : "Be the first to create an epic watch party and invite the community!"
@@ -332,11 +343,12 @@ export default function PartiesPage() {
               </p>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
               {searchQuery && (
                 <IconButton
                   onClick={() => setSearchQuery("")}
-                  variant="ghost"
+                  variant="secondary"
+                  className="bg-white hover:bg-brand-neutral px-6"
                 >
                   <span>🔄</span>
                   Clear Search
@@ -344,14 +356,14 @@ export default function PartiesPage() {
               )}
               <IconButton
                 onClick={() => router.push("/dashboard/parties/create")}
-                className="shadow-lg hover:shadow-brand-purple/25"
+                className="btn-gradient shadow-xl hover:shadow-brand-purple/25 px-8 py-4 text-lg"
               >
                 <span>✨</span>
                 {searchQuery ? "Create New Party" : "Host Your First Party"}
               </IconButton>
             </div>
           </div>
-        </GradientCard>
+        </div>
       )}
     </div>
   )
