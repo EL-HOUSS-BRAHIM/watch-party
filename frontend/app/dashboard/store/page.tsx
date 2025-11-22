@@ -132,80 +132,81 @@ export default function StorePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-neutral via-white to-brand-neutral-light">
+    <div className="space-y-8">
       {/* Header */}
-      <div className="bg-white/80 border-b border-brand-navy/10 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => router.push("/dashboard")}
-                className="text-brand-navy/60 hover:text-brand-navy transition-colors"
-              >
-                ←
-              </button>
-              <div>
-                <h1 className="text-2xl font-bold text-brand-navy">Store</h1>
-                <p className="text-brand-navy/60 text-sm">Enhance your Watch Party experience</p>
-              </div>
-            </div>
-            
+      <div className="glass-panel rounded-3xl p-8 border-brand-navy/10 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+        <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-center gap-4">
             <button
-              onClick={() => router.push("/dashboard/billing")}
-              className="px-4 py-2 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-full text-sm font-medium transition-all shadow-lg"
+              onClick={() => router.push("/dashboard")}
+              className="inline-flex items-center gap-2 text-sm font-bold text-brand-blue transition-colors hover:text-brand-blue-dark group"
             >
-              View Billing
+              <span className="group-hover:-translate-x-1 transition-transform">←</span> Back
             </button>
+            <div>
+              <h1 className="text-3xl font-bold text-brand-navy">Store</h1>
+              <p className="text-brand-navy/70 text-sm font-medium">Enhance your Watch Party experience</p>
+            </div>
           </div>
+          
+          <button
+            onClick={() => router.push("/dashboard/billing")}
+            className="btn-gradient px-6 py-3 text-white rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-brand-purple/25 hover:-translate-y-0.5"
+          >
+            View Billing
+          </button>
+        </div>
+
+        {/* Category Filter */}
+        <div className="mt-8 flex flex-wrap gap-3">
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setSelectedCategory(category.id)}
+              className={`flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-bold transition-all duration-300 ${
+                selectedCategory === category.id
+                  ? "border-brand-purple/30 bg-brand-purple/10 text-brand-purple shadow-lg shadow-brand-purple/5 scale-105"
+                  : "border-brand-navy/10 bg-white/40 text-brand-navy/60 hover:border-brand-navy/20 hover:text-brand-navy hover:bg-white/60"
+              }`}
+            >
+              <span>{getCategoryIcon(category.id)}</span>
+              {category.label}
+              {category.count > 0 && (
+                <span className={`ml-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                  selectedCategory === category.id ? "bg-brand-purple/20 text-brand-purple" : "bg-brand-navy/10 text-brand-navy/60"
+                }`}>
+                  {category.count}
+                </span>
+              )}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Category Filter */}
-      <div className="bg-white/60 border-b border-brand-navy/10 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex space-x-8 overflow-x-auto">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`flex items-center gap-2 px-4 py-4 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
-                  selectedCategory === category.id
-                    ? "text-brand-purple border-brand-purple"
-                    : "text-brand-navy/60 border-transparent hover:text-brand-navy"
-                }`}
-              >
-                <span>{getCategoryIcon(category.id)}</span>
-                {category.label}
-                {category.count > 0 && (
-                  <span className="px-2 py-1 bg-brand-navy/10 rounded-full text-xs font-semibold">
-                    {category.count}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="space-y-12">
         {/* Featured Items */}
         {selectedCategory === "all" && (
-          <div className="mb-12">
-            <h2 className="text-xl font-bold text-brand-navy mb-6">Featured Items</h2>
+          <div className="space-y-6">
+            <h2 className="text-2xl font-bold text-brand-navy flex items-center gap-2">
+              <span className="text-2xl">✨</span> Featured Items
+            </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {storeItems.filter(item => item.is_featured).slice(0, 2).map((item) => (
                 <div
                   key={item.id}
-                  className="relative bg-gradient-to-r from-brand-blue/10 to-brand-purple/10 border border-brand-blue/30 rounded-3xl p-6 overflow-hidden shadow-lg"
+                  className="glass-card relative rounded-3xl p-8 overflow-hidden group hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-gradient-to-r from-brand-magenta to-brand-orange text-white px-3 py-1 rounded-full text-xs font-medium shadow-lg">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-brand-purple/20 to-brand-blue/20 rounded-full blur-2xl -mr-10 -mt-10 group-hover:scale-150 transition-transform duration-700"></div>
+                  
+                  <div className="absolute top-4 right-4 z-10">
+                    <span className="bg-gradient-to-r from-brand-magenta to-brand-orange text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider shadow-lg">
                       Featured
                     </span>
                   </div>
 
-                  <div className="flex items-start gap-6">
-                    <div className="w-20 h-20 bg-brand-neutral rounded-2xl flex items-center justify-center">
+                  <div className="relative z-10 flex items-start gap-6">
+                    <div className="w-24 h-24 bg-white/50 rounded-2xl flex items-center justify-center shadow-inner border border-white/50">
                       {item.image_url ? (
                         <img
                           src={item.image_url}
@@ -213,23 +214,23 @@ export default function StorePage() {
                           className="w-full h-full object-cover rounded-2xl"
                         />
                       ) : (
-                        <span className="text-3xl">{getCategoryIcon(item.category)}</span>
+                        <span className="text-4xl filter drop-shadow-md">{getCategoryIcon(item.category)}</span>
                       )}
                     </div>
 
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold text-brand-navy mb-2">{item.name}</h3>
-                      <p className="text-brand-navy/70 text-sm mb-4">{item.description}</p>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-2xl font-bold text-brand-navy mb-2">{item.name}</h3>
+                      <p className="text-brand-navy/70 text-sm font-medium mb-6 leading-relaxed">{item.description}</p>
                       
-                      <div className="flex items-center gap-4">
+                      <div className="flex flex-wrap items-center gap-4">
                         <div className="text-2xl font-bold text-brand-navy">
                           {item.discount_percentage ? (
-                            <>
+                            <div className="flex items-baseline gap-2">
                               <span className="text-brand-cyan">{formatPrice(item.price)}</span>
-                              <span className="text-lg text-brand-navy/60 line-through ml-2">
+                              <span className="text-sm text-brand-navy/40 line-through font-medium">
                                 {formatPrice(item.original_price || item.price)}
                               </span>
-                            </>
+                            </div>
                           ) : (
                             formatPrice(item.price)
                           )}
@@ -238,17 +239,17 @@ export default function StorePage() {
                         <button
                           onClick={() => purchaseItem(item.id)}
                           disabled={purchasing === item.id || isPurchased(item.id)}
-                          className={`px-6 py-2 rounded-full text-sm font-medium transition-all shadow-lg ${
+                          className={`px-8 py-3 rounded-xl text-sm font-bold transition-all shadow-lg ${
                             isPurchased(item.id)
-                              ? "bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 cursor-not-allowed"
-                              : "bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white"
+                              ? "bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 cursor-not-allowed"
+                              : "btn-gradient text-white hover:shadow-brand-purple/25 hover:-translate-y-0.5"
                           }`}
                         >
                           {purchasing === item.id 
                             ? "Processing..." 
                             : isPurchased(item.id)
-                            ? "Owned"
-                            : "Purchase"
+                            ? "✓ Owned"
+                            : "Purchase Now"
                           }
                         </button>
                       </div>
@@ -261,16 +262,17 @@ export default function StorePage() {
         )}
 
         {/* Store Items Grid */}
-        <div className="mb-8">
-          <h2 className="text-xl font-bold text-brand-navy mb-6">
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-brand-navy flex items-center gap-2">
+            <span className="text-2xl">🛍️</span>
             {selectedCategory === "all" ? "All Items" : categories.find(c => c.id === selectedCategory)?.label}
           </h2>
           
           {filteredItems.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">🛍️</div>
-              <h3 className="text-xl font-semibold text-brand-navy mb-2">No items found</h3>
-              <p className="text-brand-navy/60">
+            <div className="glass-card rounded-3xl p-12 text-center border-dashed border-2 border-brand-navy/10">
+              <div className="text-6xl mb-4 opacity-50">🛍️</div>
+              <h3 className="text-xl font-bold text-brand-navy mb-2">No items found</h3>
+              <p className="text-brand-navy/60 font-medium">
                 {selectedCategory === "all" 
                   ? "The store is currently empty. Check back soon for new items!"
                   : `No items available in the ${categories.find(c => c.id === selectedCategory)?.label} category.`
@@ -282,10 +284,19 @@ export default function StorePage() {
               {filteredItems.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-white border border-brand-navy/10 rounded-3xl p-6 hover:shadow-lg transition-all shadow-[0_18px_45px_rgba(28,28,46,0.08)]"
+                  className="glass-card group relative rounded-3xl p-6 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                 >
+                  {/* Discount Badge */}
+                  {item.discount_percentage && (
+                    <div className="absolute top-4 left-4 z-10">
+                      <span className="bg-brand-coral text-white px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider shadow-lg">
+                        -{item.discount_percentage}%
+                      </span>
+                    </div>
+                  )}
+
                   {/* Item Image */}
-                  <div className="w-full h-32 bg-brand-neutral rounded-2xl mb-4 flex items-center justify-center">
+                  <div className="w-full h-40 bg-white/40 rounded-2xl mb-5 flex items-center justify-center border border-white/50 shadow-inner group-hover:scale-[1.02] transition-transform duration-300">
                     {item.image_url ? (
                       <img
                         src={item.image_url}
@@ -293,47 +304,47 @@ export default function StorePage() {
                         className="w-full h-full object-cover rounded-2xl"
                       />
                     ) : (
-                      <span className="text-4xl">{getCategoryIcon(item.category)}</span>
+                      <span className="text-5xl filter drop-shadow-md">{getCategoryIcon(item.category)}</span>
                     )}
                   </div>
 
                   {/* Category Badge */}
                   <div className="mb-3">
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getCategoryColor(item.category)}`}>
-                      {item.category.charAt(0).toUpperCase() + item.category.slice(1)}
+                    <span className={`px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider ${getCategoryColor(item.category)}`}>
+                      {item.category}
                     </span>
                   </div>
 
                   {/* Item Info */}
-                  <h3 className="font-bold text-brand-navy mb-2">{item.name}</h3>
-                  <p className="text-brand-navy/60 text-sm mb-4 line-clamp-2">{item.description}</p>
+                  <h3 className="text-lg font-bold text-brand-navy mb-2 line-clamp-1">{item.name}</h3>
+                  <p className="text-brand-navy/60 text-sm font-medium mb-5 line-clamp-2 h-10">{item.description}</p>
 
                   {/* Features */}
                   {item.features.length > 0 && (
-                    <ul className="space-y-1 mb-4">
-                      {item.features.slice(0, 3).map((feature, index) => (
-                        <li key={index} className="flex items-center gap-2 text-brand-navy/80 text-xs">
-                          <span className="text-brand-cyan">✓</span>
-                          {feature}
+                    <ul className="space-y-2 mb-5 bg-white/30 rounded-xl p-3 border border-white/40">
+                      {item.features.slice(0, 2).map((feature, index) => (
+                        <li key={index} className="flex items-start gap-2 text-brand-navy/70 text-xs font-medium">
+                          <span className="text-brand-cyan font-bold mt-0.5">✓</span>
+                          <span className="line-clamp-1">{feature}</span>
                         </li>
                       ))}
-                      {item.features.length > 3 && (
-                        <li className="text-brand-navy/60 text-xs">
-                          +{item.features.length - 3} more features
+                      {item.features.length > 2 && (
+                        <li className="text-brand-navy/50 text-[10px] font-bold uppercase tracking-wider pl-5">
+                          +{item.features.length - 2} more features
                         </li>
                       )}
                     </ul>
                   )}
 
                   {/* Price and Purchase */}
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-brand-navy/5">
                     <div>
                       {item.discount_percentage ? (
                         <div>
                           <div className="text-lg font-bold text-brand-cyan">
                             {formatPrice(item.price)}
                           </div>
-                          <div className="text-sm text-brand-navy/60 line-through">
+                          <div className="text-xs text-brand-navy/40 line-through font-bold">
                             {formatPrice(item.original_price || item.price)}
                           </div>
                         </div>
@@ -347,10 +358,10 @@ export default function StorePage() {
                     <button
                       onClick={() => purchaseItem(item.id)}
                       disabled={purchasing === item.id || isPurchased(item.id)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-all shadow-lg ${
+                      className={`px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all shadow-md ${
                         isPurchased(item.id)
-                          ? "bg-brand-cyan/20 text-brand-cyan border border-brand-cyan/30 cursor-not-allowed"
-                          : "bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white"
+                          ? "bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/20 cursor-not-allowed"
+                          : "btn-gradient text-white hover:shadow-brand-purple/25 hover:-translate-y-0.5"
                       }`}
                     >
                       {purchasing === item.id 
@@ -361,15 +372,6 @@ export default function StorePage() {
                       }
                     </button>
                   </div>
-
-                  {/* Discount Badge */}
-                  {item.discount_percentage && (
-                    <div className="absolute top-2 left-2">
-                      <span className="bg-brand-coral text-white px-2 py-1 rounded-full text-xs font-bold shadow-lg">
-                        -{item.discount_percentage}%
-                      </span>
-                    </div>
-                  )}
                 </div>
               ))}
             </div>
@@ -378,39 +380,41 @@ export default function StorePage() {
 
         {/* Purchase History */}
         {purchases.length > 0 && (
-          <div className="bg-white border border-brand-navy/10 rounded-3xl p-6 shadow-[0_18px_45px_rgba(28,28,46,0.08)]">
-            <h2 className="text-xl font-bold text-brand-navy mb-6">Purchase History</h2>
+          <div className="glass-card rounded-3xl p-8">
+            <h2 className="text-xl font-bold text-brand-navy mb-6 flex items-center gap-2">
+              <span className="text-xl">📜</span> Purchase History
+            </h2>
             
-            <div className="space-y-4">
+            <div className="space-y-3">
               {purchases.slice(0, 5).map((purchase) => (
                 <div
                   key={purchase.id}
-                  className="flex items-center justify-between p-4 bg-brand-neutral rounded-2xl"
+                  className="flex items-center justify-between p-4 bg-white/40 rounded-2xl border border-white/50 hover:bg-white/60 transition-colors"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-white/50 rounded-xl flex items-center justify-center shadow-sm border border-white/50">
                       <span className="text-xl">{getCategoryIcon(purchase.item.category)}</span>
                     </div>
                     <div>
-                      <h4 className="font-medium text-brand-navy">{purchase.item.name}</h4>
-                      <p className="text-brand-navy/60 text-sm">
+                      <h4 className="font-bold text-brand-navy">{purchase.item.name}</h4>
+                      <p className="text-brand-navy/50 text-xs font-bold uppercase tracking-wider">
                         {new Date(purchase.purchase_date).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
                   
                   <div className="text-right">
-                    <div className="font-medium text-brand-navy">
+                    <div className="font-bold text-brand-navy">
                       {formatPrice(purchase.amount_paid)}
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${
+                    <span className={`inline-block mt-1 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border ${
                       purchase.status === "completed"
-                        ? "bg-brand-cyan/10 text-brand-cyan border-brand-cyan/30"
+                        ? "bg-brand-cyan/10 text-brand-cyan border-brand-cyan/20"
                         : purchase.status === "pending"
-                        ? "bg-brand-orange/10 text-brand-orange border-brand-orange/30"
-                        : "bg-brand-coral/10 text-brand-coral border-brand-coral/30"
+                        ? "bg-brand-orange/10 text-brand-orange border-brand-orange/20"
+                        : "bg-brand-coral/10 text-brand-coral border-brand-coral/20"
                     }`}>
-                      {purchase.status.toUpperCase()}
+                      {purchase.status}
                     </span>
                   </div>
                 </div>
@@ -418,7 +422,7 @@ export default function StorePage() {
               
               {purchases.length > 5 && (
                 <div className="text-center pt-4">
-                  <button className="text-brand-blue-light hover:text-brand-blue-light text-sm transition-colors">
+                  <button className="text-brand-blue hover:text-brand-blue-dark text-sm font-bold transition-colors hover:underline">
                     View All Purchases ({purchases.length})
                   </button>
                 </div>
