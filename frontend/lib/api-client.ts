@@ -45,11 +45,14 @@ export interface User {
   email: string
   first_name?: string
   last_name?: string
+  full_name?: string
   avatar?: string
   is_verified?: boolean
   is_premium?: boolean
   is_staff?: boolean
   is_active?: boolean
+  is_online?: boolean
+  last_seen?: string
   date_joined?: string
   last_login?: string
   created_at: string
