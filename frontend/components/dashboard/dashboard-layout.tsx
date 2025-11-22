@@ -130,68 +130,77 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-gradient-to-br from-brand-neutral via-white to-brand-neutral-light text-brand-navy">
+    <div className="relative min-h-screen overflow-x-hidden bg-brand-neutral-bg text-brand-navy">
       {/* Dashboard Header - hide duplicate header on mobile */}
       <div className="hidden md:block">
         <DashboardHeader />
       </div>
 
       {/* Background Effects */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -left-20 top-20 h-80 w-80 rounded-full bg-brand-magenta/10 blur-3xl" />
-        <div className="absolute -right-16 bottom-32 h-96 w-96 rounded-full bg-brand-blue/10 blur-3xl" />
-        <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-radial from-brand-purple/8 via-transparent to-transparent" />
+      <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
+        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] opacity-[0.03]" />
+        <div className="absolute -left-20 top-20 h-96 w-96 rounded-full bg-brand-magenta/5 blur-3xl" />
+        <div className="absolute -right-16 bottom-32 h-[500px] w-[500px] rounded-full bg-brand-blue/5 blur-3xl" />
+        <div className="absolute left-1/2 top-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-radial from-brand-purple/5 via-transparent to-transparent opacity-50" />
       </div>
 
       {/* Mobile Navigation - Shown only on mobile */}
       <MobileNavigation currentUser={user} />
 
       <div className="relative z-10 flex min-h-screen w-full flex-col pt-16 md:flex-row">
-        {/* Enhanced Sidebar - Hidden on mobile, shown on desktop.
-            If a page provides its own sidebar (marked with .page-sidebar) hide the global sidebar
-            to avoid duplicated navigation UI. */}
+        {/* Enhanced Sidebar */}
         <aside
           className={cn(
-            "hidden border-r border-brand-navy/10 bg-white/80 backdrop-blur-xl transition-all duration-300 md:fixed md:left-0 md:top-16 md:block md:h-[calc(100vh-4rem)] overflow-y-auto",
-            // If the page has its own sidebar hide the global one on md+ breakpoints
-            hasPageSidebar ? "hidden md:hidden" : (isCollapsed ? "w-20" : "w-80")
+            "hidden border-r border-white/50 bg-white/60 backdrop-blur-xl transition-all duration-300 md:fixed md:left-0 md:top-16 md:block md:h-[calc(100vh-4rem)] overflow-y-auto shadow-[4px_0_24px_rgba(0,0,0,0.02)] z-20",
+            hasPageSidebar ? "hidden md:hidden" : (isCollapsed ? "w-24" : "w-80")
           )}
           aria-hidden={hasPageSidebar}
         >
-          {/* Sidebar Header - Hidden on desktop */}
-          <div className="hidden border-b border-brand-navy/10 p-6">
+          {/* Sidebar Header */}
+          <div className="hidden border-b border-brand-navy/5 p-6">
             <div className="flex items-center justify-between">
-              <div className={cn("flex items-center gap-3", isCollapsed && "justify-center")}> 
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-magenta to-brand-purple text-lg font-bold text-white shadow-lg">
+              <div className={cn("flex items-center gap-3", isCollapsed && "justify-center w-full")}> 
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-magenta to-brand-purple text-xl font-bold text-white shadow-lg shadow-brand-purple/20">
                   W
                 </div>
                 {!isCollapsed && (
                   <div>
-                    <h1 className="text-lg font-semibold text-brand-navy">WatchParty</h1>
-                    <p className="text-xs uppercase tracking-[0.3em] text-brand-navy/50">Cinema hub</p>
+                    <h1 className="text-lg font-bold text-brand-navy tracking-tight">WatchParty</h1>
+                    <p className="text-[10px] uppercase tracking-[0.25em] text-brand-navy/50 font-bold">Cinema hub</p>
                   </div>
                 )}
               </div>
+              {!isCollapsed && (
+                <button
+                  onClick={() => setIsCollapsed(!isCollapsed)}
+                  className="rounded-lg border border-brand-navy/10 bg-white/50 p-2 text-brand-navy/60 transition-colors hover:bg-white hover:text-brand-navy hover:shadow-sm"
+                  aria-label="Collapse navigation"
+                >
+                  ←
+                </button>
+              )}
+            </div>
+            {isCollapsed && (
               <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="rounded-lg border border-brand-navy/10 bg-white/70 p-2 text-brand-navy/60 transition-colors hover:border-brand-navy/30 hover:text-brand-navy"
-                aria-label={isCollapsed ? "Expand navigation" : "Collapse navigation"}
+                className="mt-4 w-full rounded-lg border border-brand-navy/10 bg-white/50 p-2 text-brand-navy/60 transition-colors hover:bg-white hover:text-brand-navy hover:shadow-sm"
+                aria-label="Expand navigation"
               >
-                {isCollapsed ? "→" : "←"}
+                →
               </button>
-            </div>
+            )}
           </div>
 
           {/* Navigation */}
-          <div className="flex-1 space-y-6 overflow-y-auto p-4">
+          <div className="flex-1 space-y-8 overflow-y-auto p-5">
             {navigationSections.map((section) => (
               <div key={section.title}>
                 {!isCollapsed && (
-                  <h3 className="mb-3 px-3 text-xs font-semibold uppercase tracking-[0.4em] text-brand-navy/50">
+                  <h3 className="mb-4 px-3 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-navy/40">
                     {section.title}
                   </h3>
                 )}
-                <nav className="space-y-1">
+                <nav className="space-y-1.5">
                   {section.items.map((item) => {
                     const isActive = pathname === item.href
                     return (
@@ -199,28 +208,33 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                         key={item.href}
                         href={item.href}
                         className={cn(
-                          "group relative flex items-center gap-3 overflow-hidden rounded-2xl px-3 py-3 text-sm font-medium transition-all",
+                          "group relative flex items-center gap-3 overflow-hidden rounded-2xl px-4 py-3.5 text-sm font-medium transition-all duration-300",
                           isActive
-                            ? "border border-brand-purple/25 bg-white text-brand-navy shadow-[0_14px_40px_rgba(74,46,160,0.12)]"
-                            : "text-brand-navy/70 hover:border hover:border-brand-navy/10 hover:bg-white/70 hover:text-brand-navy"
+                            ? "bg-white text-brand-navy shadow-[0_8px_20px_rgba(0,0,0,0.04)] ring-1 ring-black/5"
+                            : "text-brand-navy/60 hover:bg-white/60 hover:text-brand-navy hover:shadow-sm"
                         )}
                         title={isCollapsed ? item.label : ""}
                       >
                         {isActive && (
-                          <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-brand-magenta to-brand-blue" />
+                          <div className="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-brand-magenta to-brand-blue rounded-r-full" />
                         )}
 
-                        <span className="flex-shrink-0 text-lg">{item.icon}</span>
+                        <span className={cn(
+                          "flex-shrink-0 text-xl transition-transform duration-300 group-hover:scale-110", 
+                          isActive ? "text-brand-purple scale-110" : "text-brand-navy/50 group-hover:text-brand-purple"
+                        )}>
+                          {item.icon}
+                        </span>
 
                         {!isCollapsed && (
                           <>
                             <div className="min-w-0 flex-1">
-                              <div className="truncate text-sm font-semibold">{item.label}</div>
-                              <div className="truncate text-xs text-brand-navy/50">{item.description}</div>
+                              <div className={cn("truncate font-semibold", isActive ? "text-brand-navy" : "text-brand-navy/80")}>{item.label}</div>
+                              {item.description && <div className="truncate text-xs text-brand-navy/40 mt-0.5">{item.description}</div>}
                             </div>
 
                             {item.badge && (
-                              <span className={cn("rounded-full px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.3em]", getBadgeColor(item.badge))}>
+                              <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider shadow-sm", getBadgeColor(item.badge))}>
                                 {item.badge}
                               </span>
                             )}
@@ -229,11 +243,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
                         {isCollapsed && item.badge && (
                           <div className={cn(
-                            "absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-semibold uppercase tracking-[0.2em]",
-                            getBadgeColor(item.badge)
-                          )}>
-                            {Number(item.badge) ? item.badge : "!"}
-                          </div>
+                            "absolute top-2 right-2 h-2.5 w-2.5 rounded-full ring-2 ring-white",
+                            getBadgeColor(item.badge).split(' ')[0] // Extract bg color only
+                          )} />
                         )}
                       </Link>
                     )
@@ -244,28 +256,36 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
 
           {/* Footer Actions */}
-          <div className="border-t border-brand-navy/10 p-4">
+          <div className="border-t border-brand-navy/5 p-5 bg-white/30 backdrop-blur-md">
             {!isCollapsed ? (
               <div className="space-y-3">
-                <button className="w-full rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange px-4 py-3 font-semibold text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5">
+                <button className="btn-gradient w-full rounded-xl px-4 py-3.5 font-bold text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-brand-magenta/30">
                   <span className="flex items-center justify-center gap-2">
                     <span>✨</span>
                     Create party
                   </span>
                 </button>
                 <div className="flex gap-2">
-                  <button className="flex-1 rounded-xl border border-brand-navy/10 bg-white/70 px-3 py-2 text-sm font-semibold text-brand-navy transition-colors hover:border-brand-navy/30">🎧 Audio</button>
-                  <button className="flex-1 rounded-xl border border-brand-navy/10 bg-white/70 px-3 py-2 text-sm font-semibold text-brand-navy transition-colors hover:border-brand-navy/30">🌙 Theme</button>
+                  <button className="flex-1 rounded-xl border border-brand-navy/10 bg-white/60 px-3 py-2.5 text-xs font-bold text-brand-navy transition-colors hover:bg-white hover:shadow-sm">
+                    🎧 Audio
+                  </button>
+                  <button className="flex-1 rounded-xl border border-brand-navy/10 bg-white/60 px-3 py-2.5 text-xs font-bold text-brand-navy transition-colors hover:bg-white hover:shadow-sm">
+                    🌙 Theme
+                  </button>
                 </div>
               </div>
             ) : (
-              <div className="space-y-2">
-                <button className="w-full rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange p-3 text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5">
+              <div className="space-y-3">
+                <button className="btn-gradient w-full rounded-xl p-3 text-white shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-brand-magenta/30 flex justify-center">
                   ✨
                 </button>
-                <div className="grid grid-cols-2 gap-1">
-                  <button className="rounded-xl border border-brand-navy/10 bg-white/70 p-2 text-sm text-brand-navy transition-colors hover:border-brand-navy/30">🎧</button>
-                  <button className="rounded-xl border border-brand-navy/10 bg-white/70 p-2 text-sm text-brand-navy transition-colors hover:border-brand-navy/30">🌙</button>
+                <div className="flex flex-col gap-2">
+                  <button className="rounded-xl border border-brand-navy/10 bg-white/60 p-2.5 text-xs text-brand-navy transition-colors hover:bg-white hover:shadow-sm flex justify-center">
+                    🎧
+                  </button>
+                  <button className="rounded-xl border border-brand-navy/10 bg-white/60 p-2.5 text-xs text-brand-navy transition-colors hover:bg-white hover:shadow-sm flex justify-center">
+                    🌙
+                  </button>
                 </div>
               </div>
             )}
@@ -277,12 +297,12 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           className={cn(
             "flex-1 w-full overflow-x-hidden transition-all duration-300 pb-24 md:pb-0",
             // If a page provides its own left sidebar, don't add the default left margin
-            hasPageSidebar ? "md:ml-0" : (isCollapsed ? "md:ml-20" : "md:ml-80")
+            hasPageSidebar ? "md:ml-0" : (isCollapsed ? "md:ml-24" : "md:ml-80")
           )}
         >
           {/* Page Content */}
-          <div className="flex-1 px-4 py-6 sm:px-8 lg:px-12 xl:px-16">
-            <div className="mx-auto w-full max-w-[min(100%,1440px)] space-y-8">
+          <div className="flex-1 px-4 py-8 sm:px-8 lg:px-10 xl:px-12">
+            <div className="mx-auto w-full max-w-[1600px] space-y-8 animate-fade-in">
               {children}
             </div>
           </div>
@@ -290,13 +310,16 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
 
       {/* Floating Action Button */}
-      <button className="fixed bottom-6 right-6 hidden h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-xl text-white shadow-2xl shadow-brand-purple/30 transition-all hover:-translate-y-1 hover:shadow-brand-purple/45 md:flex">
+      <button className="fixed bottom-8 right-8 hidden h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-brand-purple to-brand-blue text-2xl text-white shadow-2xl shadow-brand-purple/30 transition-all hover:-translate-y-1 hover:scale-105 hover:shadow-brand-purple/50 md:flex z-50">
         ⚡
       </button>
 
       {/* Live Status Indicator */}
-      <div className="fixed bottom-6 left-6 hidden items-center gap-2 rounded-full border border-brand-navy/10 bg-white/70 px-4 py-2 text-sm font-semibold text-brand-navy shadow-md shadow-brand-navy/5 md:flex">
-        <div className="h-2 w-2 animate-pulse rounded-full bg-brand-cyan" />
+      <div className="fixed bottom-8 left-8 hidden items-center gap-3 rounded-full border border-white/50 bg-white/80 backdrop-blur-md px-5 py-2.5 text-sm font-bold text-brand-navy shadow-lg shadow-brand-navy/5 md:flex z-50">
+        <div className="relative flex h-3 w-3">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-cyan opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-brand-cyan"></span>
+        </div>
         <span>System online</span>
       </div>
     </div>
