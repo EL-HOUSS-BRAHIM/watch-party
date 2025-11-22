@@ -25,9 +25,15 @@ const timeline = [
 
 export default function AboutPage() {
   return (
-    <div className="space-y-20">
+    <div className="space-y-20 relative">
+      {/* Background Blobs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-gradient-radial from-brand-purple/10 via-transparent to-transparent blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-gradient-radial from-brand-cyan/10 via-transparent to-transparent blur-3xl" />
+      </div>
+
       {/* Hero Section */}
-      <section className="text-center">
+      <section className="text-center relative z-10">
         <div className="mx-auto max-w-4xl space-y-6">
           <span className="inline-flex items-center gap-2 rounded-full border border-brand-purple/25 bg-brand-purple/8 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.5em] text-brand-purple shadow-sm">
             About WatchParty
@@ -43,10 +49,10 @@ export default function AboutPage() {
             WatchParty combines precision sync with beautiful ambience presets. Automations handle the technical details so hosts can focus on creating unforgettable shared experiences.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-            <Button size="lg" asChild>
+            <Button size="lg" asChild className="rounded-xl bg-gradient-to-r from-brand-purple to-brand-blue shadow-lg shadow-brand-purple/25 hover:shadow-xl hover:shadow-brand-purple/40 transition-all hover:-translate-y-0.5">
               <Link href="/pricing">Explore plans</Link>
             </Button>
-            <Button variant="secondary" size="lg" asChild>
+            <Button variant="secondary" size="lg" asChild className="rounded-xl bg-white/80 hover:bg-white shadow-sm border border-brand-navy/10">
               <Link href="/guides/watch-night">Read the watch night guide</Link>
             </Button>
           </div>
@@ -54,15 +60,15 @@ export default function AboutPage() {
       </section>
 
       {/* Features and Stats Grid */}
-      <section className="grid gap-8 lg:grid-cols-[1.1fr,1fr]">
-        <Card className="border border-brand-navy/10 bg-white/80 shadow-xl backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-brand-navy">Day-to-night design principles</CardTitle>
-            <CardDescription className="text-base leading-relaxed text-brand-navy/70">
+      <section className="grid gap-8 lg:grid-cols-[1.1fr,1fr] relative z-10">
+        <div className="glass-panel rounded-[40px] p-8 border-brand-navy/10 shadow-xl backdrop-blur-sm">
+          <div className="space-y-2 mb-6">
+            <h2 className="text-2xl font-bold text-brand-navy">Day-to-night design principles</h2>
+            <p className="text-base leading-relaxed text-brand-navy/70">
               Our product philosophy blends physical theatre cues with collaborative tooling. Every module respects the film while guiding conversation.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
+            </p>
+          </div>
+          <div className="space-y-6">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="rounded-2xl border border-brand-cyan/20 bg-brand-cyan/5 p-5">
                 <p className="text-sm font-semibold text-brand-navy">Ambience without distraction</p>
@@ -83,17 +89,17 @@ export default function AboutPage() {
                 Pre-show lobbies, spoiler-safe threads, and reaction prompts transform remote screens into shared memories.
               </p>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
         
-        <Card className="border border-brand-navy/10 bg-gradient-to-br from-white to-brand-blue/5 shadow-xl">
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold text-brand-navy">Core stats</CardTitle>
-            <CardDescription className="text-base leading-relaxed text-brand-navy/70">
+        <div className="glass-panel rounded-[40px] p-8 border-brand-navy/10 shadow-xl backdrop-blur-sm">
+          <div className="space-y-2 mb-6">
+            <h2 className="text-2xl font-bold text-brand-navy">Core stats</h2>
+            <p className="text-base leading-relaxed text-brand-navy/70">
               A quick snapshot of the rooms, events, and guests who rely on WatchParty each month.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-5">
+            </p>
+          </div>
+          <div className="space-y-5">
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="rounded-2xl border border-brand-orange/20 bg-brand-orange/10 p-4 shadow-sm">
                 <p className="text-xs font-semibold uppercase tracking-[0.35em] text-brand-orange">Watch nights hosted</p>
@@ -111,12 +117,12 @@ export default function AboutPage() {
             <p className="text-sm leading-relaxed text-brand-navy/70">
               These numbers grow as hosts bring new rituals to life—our roadmap stays focused on keeping those moments cinematic.
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </section>
 
       {/* Timeline Section */}
-      <section className="rounded-3xl border border-brand-navy/10 bg-gradient-to-br from-brand-neutral/50 to-white p-8 shadow-xl sm:p-12">
+      <section className="glass-panel rounded-[40px] border-brand-navy/10 p-8 shadow-xl sm:p-12 relative z-10">
         <div className="mb-8 text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-brand-blue/25 bg-brand-blue/8 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.5em] text-brand-blue shadow-sm">
             Our Journey
@@ -127,7 +133,7 @@ export default function AboutPage() {
           {timeline.map((item, index) => (
             <div 
               key={item.year} 
-              className={`space-y-3 rounded-2xl border p-6 shadow-md transition-all hover:shadow-lg ${
+              className={`space-y-3 rounded-3xl border p-6 shadow-md transition-all hover:shadow-lg hover:-translate-y-1 ${
                 index === 0 
                   ? 'border-brand-magenta/20 bg-brand-magenta/5' 
                   : index === 1 
