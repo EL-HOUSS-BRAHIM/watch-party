@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { userApi, type UserProfile } from "@/lib/api-client"
 import { LoadingState, ErrorMessage } from "@/components/ui/feedback"
 
@@ -66,70 +65,83 @@ export default function SettingsPage() {
         />
       )}
 
-  <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-10">
-        <div className="space-y-3">
-          <p className="text-xs uppercase tracking-[0.4em] text-white/60">Settings</p>
-          <h1 className="text-3xl font-semibold text-white sm:text-4xl">Fine-tune your host preferences</h1>
-          <p className="text-sm text-white/70">
-            Customize ambience defaults, crew permissions, and communication so every watch night stays on brand.
-          </p>
-          {profile && (
-            <div className="mt-4 flex items-center gap-4">
-              <div className="rounded-full border border-white/12 bg-white/10 px-4 py-2 text-sm text-white">
-                {userName}
-              </div>
-              <div className="text-sm text-white/60">{userEmail}</div>
-              {isPremium && (
-                <div className="rounded-full border border-brand-orange/30 bg-brand-orange/10 px-3 py-1 text-xs font-semibold text-brand-orange-light">
-                  ⭐ Premium
+      <section className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/20 via-brand-magenta/20 to-brand-orange/20 rounded-3xl blur-3xl opacity-60"></div>
+        <div className="glass-panel relative rounded-3xl p-8 sm:p-10 border-brand-purple/20">
+          <div className="space-y-4">
+            <p className="text-xs uppercase tracking-[0.4em] text-brand-navy/60 font-bold">Settings</p>
+            <h1 className="text-3xl font-bold text-brand-navy sm:text-4xl">
+              <span className="gradient-text">Fine-tune your host preferences</span>
+            </h1>
+            <p className="text-lg text-brand-navy/70 max-w-2xl">
+              Customize ambience defaults, crew permissions, and communication so every watch night stays on brand.
+            </p>
+            {profile && (
+              <div className="mt-6 flex flex-wrap items-center gap-4">
+                <div className="rounded-full border border-brand-navy/10 bg-white/50 px-4 py-2 text-sm font-bold text-brand-navy shadow-sm">
+                  {userName}
                 </div>
-              )}
-            </div>
-          )}
+                <div className="text-sm text-brand-navy/60 font-medium">{userEmail}</div>
+                {isPremium && (
+                  <div className="rounded-full border border-brand-orange/30 bg-brand-orange/10 px-3 py-1 text-xs font-bold text-brand-orange-dark shadow-sm">
+                    ⭐ Premium
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
-      <section className="grid gap-5 lg:grid-cols-3">
+      <section className="grid gap-6 lg:grid-cols-3">
         {placeholderPreferences.map((preference) => (
-          <Card key={preference.title} className="border-white/10 bg-white/[0.02] relative">
+          <div key={preference.title} className="glass-card rounded-3xl p-6 relative hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5">
             {preference.comingSoon && (
-              <div className="absolute top-4 right-4 bg-brand-blue/20 text-blue-300 px-2 py-1 rounded text-xs font-medium">
+              <div className="absolute top-4 right-4 bg-brand-blue/10 text-brand-blue-dark px-2 py-1 rounded-lg text-xs font-bold border border-brand-blue/20">
                 Coming Soon
               </div>
             )}
-            <CardHeader>
-              <CardTitle className="text-lg text-white">{preference.title}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CardDescription className="text-sm text-white/70">{preference.description}</CardDescription>
-            </CardContent>
-          </Card>
+            <div className="space-y-3">
+              <h3 className="text-xl font-bold text-brand-navy">{preference.title}</h3>
+              <p className="text-sm text-brand-navy/60 font-medium leading-relaxed">{preference.description}</p>
+            </div>
+          </div>
         ))}
       </section>
 
-      <section className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-10">
-        <Card className="border-white/10 bg-white/[0.02]">
-          <CardHeader>
-            <CardTitle className="text-2xl text-white">Integrations</CardTitle>
-            <CardDescription className="text-sm text-white/70">
+      <section className="glass-card rounded-3xl p-8 sm:p-10">
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-brand-navy mb-2">Integrations</h2>
+            <p className="text-brand-navy/60 font-medium">
               Connect automation tools and streaming sources.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm text-white/75">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/60">Lighting</p>
-              <p className="mt-2 text-white/80">Philips Hue · LIFX</p>
+            </p>
+          </div>
+          
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div className="rounded-2xl border border-brand-navy/10 bg-white/50 p-5 hover:bg-white hover:shadow-md transition-all duration-300">
+              <p className="text-xs uppercase tracking-[0.35em] text-brand-navy/40 font-bold mb-3">Lighting</p>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">💡</span>
+                <p className="text-brand-navy font-bold">Philips Hue · LIFX</p>
+              </div>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/60">Streaming</p>
-              <p className="mt-2 text-white/80">YouTube Live · Vimeo · RTMP</p>
+            <div className="rounded-2xl border border-brand-navy/10 bg-white/50 p-5 hover:bg-white hover:shadow-md transition-all duration-300">
+              <p className="text-xs uppercase tracking-[0.35em] text-brand-navy/40 font-bold mb-3">Streaming</p>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">📹</span>
+                <p className="text-brand-navy font-bold">YouTube · Vimeo</p>
+              </div>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-              <p className="text-xs uppercase tracking-[0.35em] text-white/60">Community</p>
-              <p className="mt-2 text-white/80">Discord · Slack · Custom webhooks</p>
+            <div className="rounded-2xl border border-brand-navy/10 bg-white/50 p-5 hover:bg-white hover:shadow-md transition-all duration-300">
+              <p className="text-xs uppercase tracking-[0.35em] text-brand-navy/40 font-bold mb-3">Community</p>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">💬</span>
+                <p className="text-brand-navy font-bold">Discord · Slack</p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </section>
     </div>
   )
