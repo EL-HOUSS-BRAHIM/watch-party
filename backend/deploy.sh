@@ -27,7 +27,7 @@ SSL_CERT_PATH="/etc/ssl/certs"
 SSL_KEY_PATH="/etc/ssl/private"
 
 # Production EC2 Instance Configuration
-PRODUCTION_HOST="35.181.208.71"
+PRODUCTION_HOST="35.181.116.57"
 PRODUCTION_USER="ubuntu"
 PRODUCTION_KEY_PATH="/workspaces/watch-party-backend/.ssh/id_rsa"
 
