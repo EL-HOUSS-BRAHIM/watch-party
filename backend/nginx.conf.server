@@ -10,14 +10,14 @@ upstream websocket_backend {
 # HTTP redirect to HTTPS
 server {
     listen 80;
-    server_name be-watch-party.brahim-elhouss.me watch-party.brahim-elhouss.me 35.181.208.71;
+    server_name be-watch-party.brahim-elhouss.me watch-party.brahim-elhouss.me 35.181.116.57;
     return 301 https://$server_name$request_uri;
 }
 
 # HTTPS server
 server {
     listen 443 ssl http2;
-    server_name be-watch-party.brahim-elhouss.me watch-party.brahim-elhouss.me 35.181.208.71;
+    server_name be-watch-party.brahim-elhouss.me watch-party.brahim-elhouss.me 35.181.116.57;
 
     # SSL Configuration
     ssl_certificate /etc/ssl/certs/cloudflare-origin.pem;
