@@ -20,6 +20,10 @@ on:
 env:
   REGISTRY: ghcr.io
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   list-versions:
     runs-on: ubuntu-latest
