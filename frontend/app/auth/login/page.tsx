@@ -55,25 +55,30 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4 py-16">
-      <div className="w-full max-w-xl rounded-3xl border border-brand-purple/20 bg-white/95 p-8 text-brand-navy shadow-[0_32px_90px_rgba(28,28,46,0.14)] sm:p-10">
+    // ...existing code...
+  return (
+    <div className="flex min-h-[80vh] items-center justify-center px-4 py-16 relative">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-brand-purple/10 via-transparent to-transparent blur-3xl" />
+      </div>
+      <div className="glass-panel w-full max-w-xl rounded-[40px] p-8 text-brand-navy sm:p-12 relative z-10">
         <div className="text-center">
-          <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/30 bg-brand-magenta/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-brand-magenta-dark">
+          <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/20 bg-brand-magenta/5 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.4em] text-brand-magenta-dark shadow-sm">
             Welcome back
           </span>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Sign in to WatchParty</h1>
-          <p className="mt-3 text-base text-brand-navy/70">Host cinematic nights, collaborate with friends, and keep every screening on schedule.</p>
+          <h1 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl bg-gradient-to-br from-brand-navy to-brand-purple bg-clip-text text-transparent">Sign in to WatchParty</h1>
+          <p className="mt-4 text-base text-brand-navy/70 leading-relaxed">Host cinematic nights, collaborate with friends, and keep every screening on schedule.</p>
         </div>
 
         {error && (
-          <div className="mt-6">
+          <div className="mt-8">
             <FormError error={error} />
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-10 space-y-5">
+        <form onSubmit={handleSubmit} className="mt-10 space-y-6">
           <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-semibold uppercase tracking-[0.25em] text-brand-navy/60">
+            <label htmlFor="email" className="block text-xs font-bold uppercase tracking-[0.25em] text-brand-navy/50 ml-1">
               Email
             </label>
             <input
@@ -85,13 +90,13 @@ export default function LoginPage() {
               value={formData.email}
               onChange={handleChange}
               disabled={loading}
-              className="w-full rounded-2xl border border-brand-blue/25 bg-brand-blue/5 px-5 py-3 text-base text-brand-navy focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-2xl border border-brand-navy/10 bg-white/50 px-5 py-4 text-base text-brand-navy placeholder:text-brand-navy/30 focus:border-brand-blue/50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-blue/10 transition-all disabled:cursor-not-allowed disabled:opacity-60"
               placeholder="you@example.com"
             />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="password" className="block text-sm font-semibold uppercase tracking-[0.25em] text-brand-navy/60">
+            <label htmlFor="password" className="block text-xs font-bold uppercase tracking-[0.25em] text-brand-navy/50 ml-1">
               Password
             </label>
             <input
@@ -103,7 +108,7 @@ export default function LoginPage() {
               value={formData.password}
               onChange={handleChange}
               disabled={loading}
-              className="w-full rounded-2xl border border-brand-blue/25 bg-brand-blue/5 px-5 py-3 text-base text-brand-navy focus:border-brand-blue focus:outline-none focus:ring-2 focus:ring-brand-blue/30 disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-2xl border border-brand-navy/10 bg-white/50 px-5 py-4 text-base text-brand-navy placeholder:text-brand-navy/30 focus:border-brand-blue/50 focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand-blue/10 transition-all disabled:cursor-not-allowed disabled:opacity-60"
               placeholder="••••••••"
             />
           </div>
@@ -111,7 +116,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading || success}
-            className="w-full rounded-full bg-gradient-to-r from-brand-magenta to-brand-orange px-6 py-4 text-lg font-semibold text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5 hover:from-brand-magenta-dark hover:to-brand-orange-dark disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-2xl bg-gradient-to-r from-brand-magenta to-brand-orange px-6 py-4 text-lg font-bold text-white shadow-lg shadow-brand-magenta/25 transition-all hover:-translate-y-0.5 hover:shadow-brand-magenta/40 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-60 mt-2"
           >
             {success ? (
               <span className="flex items-center justify-center gap-2">
@@ -134,13 +139,13 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-8 flex flex-col gap-3 text-center text-sm text-brand-navy/70">
-          <Link href="/auth/forgot-password" className="font-semibold text-brand-blue hover:text-brand-blue-dark">
+        <div className="mt-10 flex flex-col gap-4 text-center text-sm text-brand-navy/60">
+          <Link href="/auth/forgot-password" className="font-semibold text-brand-blue hover:text-brand-blue-dark hover:underline decoration-brand-blue/30 underline-offset-4 transition-all">
             Forgot your password?
           </Link>
           <p>
             Don&apos;t have an account?{" "}
-            <Link href="/auth/register" className="font-semibold text-brand-magenta hover:text-brand-magenta-dark">
+            <Link href="/auth/register" className="font-bold text-brand-magenta hover:text-brand-magenta-dark hover:underline decoration-brand-magenta/30 underline-offset-4 transition-all">
               Create one for free
             </Link>
           </p>
