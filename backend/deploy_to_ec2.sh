@@ -4,7 +4,7 @@
 # Watch Party Backend - EC2 Deployment Script
 # =============================================================================
 # This script deploys the Watch Party backend to your EC2 instance
-# EC2 Instance: 35.181.208.71 (ubuntu user)
+# EC2 Instance: 35.181.116.57 (ubuntu user)
 # 
 # Usage:
 #   ./deploy_to_ec2.sh [--key-path /path/to/key.pem] [--skip-deps] [--restart-only]
@@ -26,7 +26,7 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Default configuration
-PRODUCTION_HOST="35.181.208.71"
+PRODUCTION_HOST="35.181.116.57"
 PRODUCTION_USER="ubuntu"
 PRODUCTION_KEY_PATH="/workspaces/watch-party-backend/.ssh/id_rsa"
 REMOTE_DIR="/opt/watch-party-backend"
