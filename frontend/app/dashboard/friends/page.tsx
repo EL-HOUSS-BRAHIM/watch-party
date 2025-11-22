@@ -145,25 +145,28 @@ export default function FriendsPage() {
   }
 
   const UserCard = ({ user, actions }: { user: User; actions: React.ReactNode }) => (
-    <div className="bg-white/5 border border-white/10 rounded-lg p-4 hover:bg-white/10 transition-colors">
-      <div className="flex items-center gap-3">
-        {user.avatar ? (
-          <img src={user.avatar} alt={user.username} className="w-12 h-12 rounded-full object-cover" />
-        ) : (
-          <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-            <span className="text-lg text-brand-navy/60">{user.username?.charAt(0).toUpperCase() || "?"}</span>
-          </div>
-        )}
+    <div className="glass-card rounded-2xl p-4 hover:border-brand-purple/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-brand-navy/5">
+      <div className="flex items-center gap-4">
+        <div className="relative">
+          {user.avatar ? (
+            <img src={user.avatar} alt={user.username} className="w-14 h-14 rounded-full object-cover border-2 border-white/20 shadow-sm" />
+          ) : (
+            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-brand-purple/20 to-brand-blue/20 flex items-center justify-center border-2 border-white/20 shadow-sm">
+              <span className="text-xl font-bold text-brand-navy/60">{user.username?.charAt(0).toUpperCase() || "?"}</span>
+            </div>
+          )}
+          <div className={`absolute bottom-0 right-0 w-3.5 h-3.5 rounded-full border-2 border-white ${user.is_online ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+        </div>
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <h3 className="font-semibold text-brand-navy truncate">
+            <h3 className="font-bold text-brand-navy truncate text-lg">
               {user.first_name && user.last_name ? `${user.first_name} ${user.last_name}` : user.username}
             </h3>
-            {user.is_verified && <span className="text-brand-cyan-light text-sm">✓</span>}
-            {user.is_premium && <span className="text-brand-orange-light text-sm">⭐</span>}
+            {user.is_verified && <span className="text-brand-cyan text-sm" title="Verified">✓</span>}
+            {user.is_premium && <span className="text-brand-orange text-sm" title="Premium">⭐</span>}
           </div>
-          <p className="text-brand-navy/60 text-sm">@{user.username}</p>
+          <p className="text-brand-navy/60 text-sm font-medium">@{user.username}</p>
         </div>
 
         <div className="flex gap-2">
@@ -174,56 +177,71 @@ export default function FriendsPage() {
   )
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-brand-navy">Friends</h1>
-        <p className="text-brand-navy/70">Connect with friends and discover new people to watch with</p>
-      </div>
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/20 via-brand-magenta/20 to-brand-orange/20 rounded-3xl blur-3xl opacity-60"></div>
+        <div className="glass-panel relative rounded-3xl p-8 border-brand-purple/20">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+            <div className="space-y-2">
+              <h1 className="text-3xl sm:text-4xl font-bold text-brand-navy">
+                <span className="gradient-text">Friends & Community</span>
+              </h1>
+              <p className="text-brand-navy/70 text-lg">Connect with friends and discover new people to watch with</p>
+            </div>
+            
+            <div className="w-full md:w-auto relative group">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <span className="text-brand-navy/40 text-lg">🔍</span>
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Find users..."
+                className="w-full md:w-64 pl-10 pr-4 py-3 bg-white/50 border border-brand-navy/10 rounded-xl text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-purple/10 focus:border-brand-purple/30 transition-all shadow-sm"
+              />
+            </div>
+          </div>
 
-      {/* Search */}
-      <div>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Search for users by username or email..."
-          className="w-full px-4 py-2 bg-brand-navy/5 border border-brand-navy/20 rounded-lg text-brand-navy placeholder-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-brand-blue"
-        />
-      </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 bg-white/5 p-1 rounded-lg w-fit">
-        {[
-          { key: "friends", label: "Friends", count: friends.length },
-          { key: "requests", label: "Requests", count: friendRequests.length },
-          { key: "suggestions", label: "Suggestions", count: suggestions.length },
-          ...(searchQuery.trim() ? [{ key: "search", label: "Search", count: searchResults.length }] : []),
-        ].map(({ key, label, count }) => (
-          <button
-            key={key}
-            onClick={() => setActiveTab(key as any)}
-            className={`px-4 py-2 rounded-md font-medium transition-colors ${
-              activeTab === key
-                ? "bg-brand-blue text-white"
-                : "text-brand-navy/70 hover:text-brand-navy hover:bg-white/10"
-            }`}
-          >
-            {label} ({count})
-          </button>
-        ))}
+          {/* Tabs */}
+          <div className="mt-8 flex flex-wrap gap-2">
+            {[
+              { key: "friends", label: "Friends", count: friends.length, icon: "👥" },
+              { key: "requests", label: "Requests", count: friendRequests.length, icon: "📬" },
+              { key: "suggestions", label: "Suggestions", count: suggestions.length, icon: "✨" },
+              ...(searchQuery.trim() ? [{ key: "search", label: "Search Results", count: searchResults.length, icon: "🔍" }] : []),
+            ].map(({ key, label, count, icon }) => (
+              <button
+                key={key}
+                onClick={() => setActiveTab(key as any)}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold transition-all duration-300 ${
+                  activeTab === key
+                    ? "bg-brand-navy text-white shadow-lg shadow-brand-navy/20 scale-105"
+                    : "bg-white/40 text-brand-navy/70 hover:bg-white hover:text-brand-navy border border-transparent hover:border-white/60"
+                }`}
+              >
+                <span>{icon}</span>
+                {label}
+                <span className={`ml-1 px-2 py-0.5 rounded-full text-xs ${activeTab === key ? "bg-white/20 text-white" : "bg-brand-navy/5 text-brand-navy/60"}`}>
+                  {count}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Loading State */}
       {loading && (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-white/5 border border-white/10 rounded-lg p-4 animate-pulse">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-white/20"></div>
-                <div className="flex-1">
-                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No users found</h3>
-                  <p className="text-brand-navy/70">Loading…</p>
+            <div key={i} className="glass-card rounded-2xl p-4 animate-pulse">
+              <div className="flex items-center gap-4">
+                <div className="w-14 h-14 rounded-full bg-brand-navy/5"></div>
+                <div className="flex-1 space-y-2">
+                  <div className="h-5 bg-brand-navy/5 rounded w-3/4"></div>
+                  <div className="h-4 bg-brand-navy/5 rounded w-1/2"></div>
                 </div>
               </div>
             </div>
@@ -233,45 +251,47 @@ export default function FriendsPage() {
 
       {/* Content */}
       {!loading && (
-        <div className="space-y-4">
+        <div className="min-h-[400px]">
           {/* Friends Tab */}
           {activeTab === "friends" && (
             <>
               {friends.length > 0 ? (
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {friends.map((friend) => (
                     <UserCard
                       key={friend.id}
                       user={friend}
                       actions={
-                        <>
+                        <div className="flex gap-2">
                           <Link
                             href={`/dashboard/users/${friend.id}`}
-                            className="px-3 py-1 bg-brand-blue hover:bg-brand-blue-dark text-white rounded text-sm transition-colors"
+                            className="p-2 bg-brand-blue/10 hover:bg-brand-blue/20 text-brand-blue-dark rounded-lg transition-colors"
+                            title="View Profile"
                           >
-                            View
+                            👤
                           </Link>
                           <button
                             onClick={() => removeFriend(friend.username)}
-                            className="px-3 py-1 bg-red-600/20 hover:bg-red-600/30 text-brand-coral-light rounded text-sm transition-colors"
+                            className="p-2 bg-brand-coral/10 hover:bg-brand-coral/20 text-brand-coral-dark rounded-lg transition-colors"
+                            title="Remove Friend"
                           >
-                            Remove
+                            ✕
                           </button>
-                        </>
+                        </div>
                       }
                     />
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
-                  <div className="text-6xl mb-4">👥</div>
-                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No friends yet</h3>
-                  <p className="text-brand-navy/70 mb-6">
+                <div className="glass-card rounded-3xl p-12 text-center">
+                  <div className="text-6xl mb-6 opacity-80">👥</div>
+                  <h3 className="text-2xl font-bold text-brand-navy mb-3">No friends yet</h3>
+                  <p className="text-brand-navy/60 mb-8 max-w-md mx-auto text-lg">
                     Add friends to start watching together and sharing experiences!
                   </p>
                   <button
                     onClick={() => setActiveTab("suggestions")}
-                    className="bg-brand-blue hover:bg-brand-blue-dark text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                    className="btn-gradient px-8 py-3 rounded-xl font-bold text-white shadow-lg hover:shadow-brand-purple/25 transition-all hover:-translate-y-0.5"
                   >
                     Find Friends
                   </button>
@@ -284,35 +304,35 @@ export default function FriendsPage() {
           {activeTab === "requests" && (
             <>
               {friendRequests.length > 0 ? (
-                <div className="space-y-4">
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {friendRequests.map((request) => (
                     <UserCard
                       key={request.id}
                       user={request.from_user}
                       actions={
-                        <>
+                        <div className="flex gap-2">
                           <button
                             onClick={() => acceptFriendRequest(request.id)}
-                            className="px-3 py-1 bg-brand-cyan hover:bg-green-700 text-white rounded text-sm transition-colors"
+                            className="px-4 py-2 bg-brand-cyan hover:bg-brand-cyan-dark text-white rounded-lg text-sm font-bold transition-colors shadow-sm"
                           >
                             Accept
                           </button>
                           <button
                             onClick={() => declineFriendRequest(request.id)}
-                            className="px-3 py-1 bg-red-600/20 hover:bg-red-600/30 text-brand-coral-light rounded text-sm transition-colors"
+                            className="px-4 py-2 bg-white border border-brand-navy/10 hover:bg-brand-coral/10 text-brand-coral-dark rounded-lg text-sm font-bold transition-colors"
                           >
                             Decline
                           </button>
-                        </>
+                        </div>
                       }
                     />
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
-                  <div className="text-6xl mb-4">📬</div>
-                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No friend requests</h3>
-                  <p className="text-brand-navy/70">
+                <div className="glass-card rounded-3xl p-12 text-center">
+                  <div className="text-6xl mb-6 opacity-80">📬</div>
+                  <h3 className="text-2xl font-bold text-brand-navy mb-3">No friend requests</h3>
+                  <p className="text-brand-navy/60 text-lg">
                     When someone sends you a friend request, it will appear here.
                   </p>
                 </div>
@@ -324,35 +344,36 @@ export default function FriendsPage() {
           {activeTab === "suggestions" && (
             <>
               {suggestions.length > 0 ? (
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {suggestions.map((suggestion) => (
                     <UserCard
                       key={suggestion.id}
                       user={suggestion}
                       actions={
-                        <>
+                        <div className="flex gap-2">
                           <button
                             onClick={() => sendFriendRequest(suggestion.id)}
-                            className="px-3 py-1 bg-brand-blue hover:bg-brand-blue-dark text-white rounded text-sm transition-colors"
+                            className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm font-bold transition-colors shadow-sm"
                           >
                             Add Friend
                           </button>
                           <button
                             onClick={() => blockUser(suggestion.id)}
-                            className="px-3 py-1 bg-white/10 hover:bg-white/20 text-brand-navy/70 rounded text-sm transition-colors"
+                            className="p-2 bg-white border border-brand-navy/10 hover:bg-brand-navy/5 text-brand-navy/40 hover:text-brand-navy/70 rounded-lg transition-colors"
+                            title="Hide"
                           >
-                            Hide
+                            ✕
                           </button>
-                        </>
+                        </div>
                       }
                     />
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
-                  <div className="text-6xl mb-4">🔍</div>
-                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No suggestions</h3>
-                  <p className="text-brand-navy/70">
+                <div className="glass-card rounded-3xl p-12 text-center">
+                  <div className="text-6xl mb-6 opacity-80">✨</div>
+                  <h3 className="text-2xl font-bold text-brand-navy mb-3">No suggestions</h3>
+                  <p className="text-brand-navy/60 text-lg">
                     We'll suggest friends based on your activity and mutual connections.
                   </p>
                 </div>
@@ -364,35 +385,36 @@ export default function FriendsPage() {
           {activeTab === "search" && searchQuery.trim() && (
             <>
               {searchResults.length > 0 ? (
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                   {searchResults.map((user) => (
                     <UserCard
                       key={user.id}
                       user={user}
                       actions={
-                        <>
+                        <div className="flex gap-2">
                           <button
                             onClick={() => sendFriendRequest(user.id)}
-                            className="px-3 py-1 bg-brand-blue hover:bg-brand-blue-dark text-white rounded text-sm transition-colors"
+                            className="px-4 py-2 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-lg text-sm font-bold transition-colors shadow-sm"
                           >
                             Add Friend
                           </button>
                           <Link
                             href={`/dashboard/users/${user.id}`}
-                            className="px-3 py-1 bg-white/10 hover:bg-white/20 text-brand-navy rounded text-sm transition-colors"
+                            className="p-2 bg-white border border-brand-navy/10 hover:bg-brand-navy/5 text-brand-navy rounded-lg transition-colors"
+                            title="View Profile"
                           >
-                            View
+                            👤
                           </Link>
-                        </>
+                        </div>
                       }
                     />
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
-                  <div className="text-6xl mb-4">🔍</div>
-                  <h3 className="text-xl font-semibold text-brand-navy mb-2">No users found</h3>
-                  <p className="text-brand-navy/70">
+                <div className="glass-card rounded-3xl p-12 text-center">
+                  <div className="text-6xl mb-6 opacity-80">🔍</div>
+                  <h3 className="text-2xl font-bold text-brand-navy mb-3">No users found</h3>
+                  <p className="text-brand-navy/60 text-lg">
                     No users match "{searchQuery}". Try a different search term.
                   </p>
                 </div>
