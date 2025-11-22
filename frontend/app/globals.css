@@ -55,10 +55,83 @@
   --gradient-success: linear-gradient(135deg, var(--color-cyan) 0%, var(--color-blue) 100%);
   --gradient-warning: linear-gradient(135deg, var(--color-orange) 0%, #ffd700 100%);
   --gradient-danger: linear-gradient(135deg, var(--color-coral) 0%, #ff3838 100%);
+  /* ...existing code... */
   --glass-bg: rgba(255, 255, 255, 0.82);
   --glass-border: rgba(233, 233, 240, 0.75);
   --glass-hover: rgba(255, 255, 255, 0.95);
+  
+  /* Noise Texture */
+  --noise-pattern: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
 }
+
+body {
+  position: relative;
+  min-height: 100vh;
+  background: var(--color-neutral-bg);
+  color: var(--color-text-primary);
+  overflow-x: hidden;
+  @apply antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top left, rgba(233, 64, 138, 0.12), transparent 55%),
+    radial-gradient(circle at top right, rgba(45, 156, 219, 0.12), transparent 50%),
+    radial-gradient(circle at bottom, rgba(243, 156, 18, 0.12), transparent 55%);
+  z-index: -1;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--noise-pattern);
+  opacity: 0.4;
+  z-index: -1;
+  mix-blend-mode: overlay;
+}
+
+/* Enhanced Scrollbar */
+/* ...existing code... */
+/* Custom Components */
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.02),
+    0 2px 4px -1px rgba(0, 0, 0, 0.02),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.glass-card:hover {
+  background: var(--glass-hover);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.05),
+    0 4px 6px -2px rgba(0, 0, 0, 0.025),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.05), 
+    0 10px 10px -5px rgba(0, 0, 0, 0.02),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+/* Custom Animations */
+/* ...existing code... */
 
 body {
   position: relative;
