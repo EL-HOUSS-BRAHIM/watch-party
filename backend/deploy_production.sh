@@ -21,7 +21,7 @@ set -euo pipefail
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly PROJECT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 readonly SERVER_USER="${DEPLOY_USER:-ubuntu}"
-readonly SERVER_HOST="${DEPLOY_HOST:-35.181.208.71}"
+readonly SERVER_HOST="${DEPLOY_HOST:-35.181.116.57}"
 readonly SERVER_PATH="/opt/watch-party-backend"
 readonly SSH_KEY="${SSH_KEY:-$HOME/.ssh/id_rsa}"
 readonly BRANCH="${DEPLOY_BRANCH:-master}"
@@ -248,7 +248,7 @@ Commands:
 
 Environment Variables:
   DEPLOY_USER   Server username (default: ubuntu)
-  DEPLOY_HOST   Server hostname (default: 35.181.208.71) 
+  DEPLOY_HOST   Server hostname (default: 35.181.116.57) 
   DEPLOY_BRANCH Git branch to deploy (default: master)
   SSH_KEY       Path to SSH key (default: ~/.ssh/id_rsa)
 
