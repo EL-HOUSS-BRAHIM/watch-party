@@ -19,7 +19,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/watch-party
 
 jobs:
   list-versions:
@@ -33,17 +32,21 @@ jobs:
           # Login to GHCR
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           
+          # Convert repository owner to lowercase
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE_PREFIX="ghcr.io/${REPO_OWNER}/watch-party"
+          
           ENV="${{ github.event.inputs.environment }}"
           
           # Get last 10 backend tags
           echo "📦 Available versions for $ENV:"
           echo "Backend tags:"
-          docker run --rm quay.io/skopeo/stable:latest list-tags docker://${{ env.IMAGE_PREFIX }}-backend | \
+          docker run --rm quay.io/skopeo/stable:latest list-tags docker://${IMAGE_PREFIX}-backend | \
             jq -r '.Tags[]' | grep "^${ENV}-" | sort -r | head -10 || echo "No tags found"
           
           echo ""
           echo "Frontend tags:"
-          docker run --rm quay.io/skopeo/stable:latest list-tags docker://${{ env.IMAGE_PREFIX }}-frontend | \
+          docker run --rm quay.io/skopeo/stable:latest list-tags docker://${IMAGE_PREFIX}-frontend | \
             jq -r '.Tags[]' | grep "^${ENV}-" | sort -r | head -10 || echo "No tags found"
 
   rollback:
@@ -65,15 +68,19 @@ jobs:
       - name: Determine rollback images
         id: images
         run: |
+          # Convert repository owner to lowercase
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE_PREFIX="ghcr.io/${REPO_OWNER}/watch-party"
+          
           ENV="${{ github.event.inputs.environment }}"
           VERSION="${{ github.event.inputs.version }}"
           
           if [ "$VERSION" = "latest" ]; then
-            BACKEND_IMAGE="${{ env.IMAGE_PREFIX }}-backend:${ENV}-latest"
-            FRONTEND_IMAGE="${{ env.IMAGE_PREFIX }}-frontend:${ENV}-latest"
+            BACKEND_IMAGE="${IMAGE_PREFIX}-backend:${ENV}-latest"
+            FRONTEND_IMAGE="${IMAGE_PREFIX}-frontend:${ENV}-latest"
           else
-            BACKEND_IMAGE="${{ env.IMAGE_PREFIX }}-backend:${ENV}-${VERSION}"
-            FRONTEND_IMAGE="${{ env.IMAGE_PREFIX }}-frontend:${ENV}-${VERSION}"
+            BACKEND_IMAGE="${IMAGE_PREFIX}-backend:${ENV}-${VERSION}"
+            FRONTEND_IMAGE="${IMAGE_PREFIX}-frontend:${ENV}-${VERSION}"
           fi
           
           echo "backend_image=${BACKEND_IMAGE}" >> $GITHUB_OUTPUT

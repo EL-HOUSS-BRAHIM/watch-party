@@ -21,7 +21,6 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/watch-party
 
 jobs:
   deploy-production:
@@ -47,12 +46,16 @@ jobs:
       - name: Generate image tags
         id: tags
         run: |
+          # Convert repository owner to lowercase for Docker tags
+          REPO_OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          IMAGE_PREFIX="ghcr.io/${REPO_OWNER}/watch-party"
+          
           SHORT_SHA=$(git rev-parse --short HEAD)
           echo "short_sha=${SHORT_SHA}" >> $GITHUB_OUTPUT
-          echo "backend_image=${{ env.IMAGE_PREFIX }}-backend:production-${SHORT_SHA}" >> $GITHUB_OUTPUT
-          echo "backend_latest=${{ env.IMAGE_PREFIX }}-backend:production-latest" >> $GITHUB_OUTPUT
-          echo "frontend_image=${{ env.IMAGE_PREFIX }}-frontend:production-${SHORT_SHA}" >> $GITHUB_OUTPUT
-          echo "frontend_latest=${{ env.IMAGE_PREFIX }}-frontend:production-latest" >> $GITHUB_OUTPUT
+          echo "backend_image=${IMAGE_PREFIX}-backend:production-${SHORT_SHA}" >> $GITHUB_OUTPUT
+          echo "backend_latest=${IMAGE_PREFIX}-backend:production-latest" >> $GITHUB_OUTPUT
+          echo "frontend_image=${IMAGE_PREFIX}-frontend:production-${SHORT_SHA}" >> $GITHUB_OUTPUT
+          echo "frontend_latest=${IMAGE_PREFIX}-frontend:production-latest" >> $GITHUB_OUTPUT
 
       - name: Build and push backend image
         if: github.event.inputs.services == 'all' || github.event.inputs.services == 'backend'
