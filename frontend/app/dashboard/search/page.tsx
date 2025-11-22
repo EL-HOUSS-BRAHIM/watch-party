@@ -195,17 +195,17 @@ export default function SearchPage() {
     <div className="space-y-8">
       {/* Enhanced Header */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/20 via-blue-600/20 to-brand-purple/20 rounded-3xl blur-xl"></div>
-        <GradientCard className="relative border-cyan-500/30">
-          <div className="text-center space-y-4">
-            <div className="text-6xl mb-4">🔍</div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-cyan-200 to-blue-200 bg-clip-text text-transparent">
-              Universal Search
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-cyan/20 via-brand-blue/20 to-brand-purple/20 rounded-3xl blur-3xl opacity-60"></div>
+        <div className="glass-panel relative rounded-3xl p-8 border-brand-cyan/20 text-center">
+          <div className="space-y-4">
+            <div className="text-6xl mb-4 opacity-80">🔍</div>
+            <h1 className="text-4xl font-bold text-brand-navy">
+              <span className="gradient-text">Universal Search</span>
             </h1>
-            <p className="text-brand-navy/80 text-lg max-w-2xl mx-auto">
+            <p className="text-brand-navy/70 text-lg max-w-2xl mx-auto">
               Find parties, users, videos, and more across the entire Watch Party platform
             </p>
-            <div className="flex items-center justify-center gap-4 text-sm text-brand-navy/60">
+            <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-brand-navy/60 font-medium">
               <span>🎬 Movies & Shows</span>
               <span>•</span>
               <span>👥 Community</span>
@@ -213,15 +213,15 @@ export default function SearchPage() {
               <span>🎉 Live Parties</span>
             </div>
           </div>
-        </GradientCard>
+        </div>
       </div>
 
       {/* Search Form */}
       <div className="space-y-6">
         {/* Main Search Bar */}
-        <div className="relative max-w-4xl mx-auto">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <span className="text-brand-navy/50 text-xl">🔍</span>
+        <div className="relative max-w-4xl mx-auto group">
+          <div className="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+            <span className="text-brand-navy/40 text-2xl">🔍</span>
           </div>
           <input
             type="text"
@@ -233,23 +233,21 @@ export default function SearchPage() {
               }
             }}
             placeholder="Search for parties, users, videos, or anything else..."
-            className="w-full pl-14 pr-24 py-4 bg-white/10 border border-white/20 rounded-2xl text-brand-navy placeholder:text-brand-navy/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500/50 backdrop-blur-sm transition-all text-lg"
+            className="w-full pl-16 pr-32 py-5 bg-white/50 border border-brand-navy/10 rounded-2xl text-brand-navy placeholder:text-brand-navy/40 focus:outline-none focus:ring-4 focus:ring-brand-cyan/10 focus:border-brand-cyan/30 backdrop-blur-sm transition-all text-lg shadow-lg shadow-brand-navy/5"
           />
-          <div className="absolute right-2 top-2">
-            <IconButton
+          <div className="absolute right-3 top-3">
+            <button
               onClick={() => performSearch()}
               disabled={loading || !query.trim()}
-              gradient="from-cyan-600 to-brand-blue"
-              className="shadow-lg"
+              className="btn-gradient px-6 py-2.5 rounded-xl font-bold text-white shadow-lg hover:shadow-brand-cyan/25 transition-all hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "🔄" : "🔍"}
-              <span className="hidden sm:inline">{loading ? "Searching..." : "Search"}</span>
-            </IconButton>
+              {loading ? "🔄" : "Search"}
+            </button>
           </div>
           
           {/* Search Suggestions */}
           {suggestions.length > 0 && query.length > 2 && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-black/80 backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl z-50">
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white/90 backdrop-blur-xl border border-brand-navy/10 rounded-2xl shadow-2xl z-50 overflow-hidden">
               {suggestions.map((suggestion, index) => (
                 <button
                   key={index}
@@ -257,9 +255,9 @@ export default function SearchPage() {
                     setQuery(suggestion)
                     performSearch(suggestion)
                   }}
-                  className="w-full px-4 py-3 text-left text-brand-navy hover:bg-white/10 first:rounded-t-xl last:rounded-b-xl transition-colors flex items-center gap-3"
+                  className="w-full px-6 py-3 text-left text-brand-navy hover:bg-brand-navy/5 transition-colors flex items-center gap-3 font-medium"
                 >
-                  <span className="text-white/50">🔍</span>
+                  <span className="text-brand-navy/30">🔍</span>
                   {suggestion}
                 </button>
               ))}
@@ -270,7 +268,7 @@ export default function SearchPage() {
         {/* Filter Controls */}
         <div className="flex flex-wrap justify-center gap-4">
           {/* Type Filter */}
-          <div className="flex gap-1 bg-black/20 p-1 rounded-xl border border-white/10">
+          <div className="flex gap-1 bg-white/40 p-1 rounded-xl border border-brand-navy/5 backdrop-blur-sm">
             {[
               { key: "all", label: "All", icon: "🔍" },
               { key: "parties", label: "Parties", icon: "🎉" },
@@ -280,10 +278,10 @@ export default function SearchPage() {
               <button
                 key={key}
                 onClick={() => setFilters(prev => ({ ...prev, type: key as any }))}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all duration-200 ${
                   filters.type === key
-                    ? "bg-gradient-to-r from-cyan-600 to-brand-blue text-white shadow-lg"
-                    : "text-brand-navy/60 hover:text-brand-navy hover:bg-white/10"
+                    ? "bg-brand-navy text-white shadow-md"
+                    : "text-brand-navy/60 hover:text-brand-navy hover:bg-white/50"
                 }`}
               >
                 <span>{icon}</span>
@@ -296,7 +294,7 @@ export default function SearchPage() {
           <select
             value={filters.sort_by}
             onChange={(e) => setFilters(prev => ({ ...prev, sort_by: e.target.value as any }))}
-            className="px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-brand-navy focus:outline-none focus:ring-2 focus:ring-cyan-500/50"
+            className="px-4 py-2 bg-white/40 border border-brand-navy/10 rounded-xl text-brand-navy font-medium focus:outline-none focus:ring-2 focus:ring-brand-cyan/20 cursor-pointer hover:bg-white/60 transition-colors"
           >
             <option value="relevance">Most Relevant</option>
             <option value="recent">Most Recent</option>
@@ -308,15 +306,15 @@ export default function SearchPage() {
 
       {/* Recent Searches */}
       {!query && recentSearches.length > 0 && (
-        <GradientCard>
+        <div className="glass-card rounded-3xl p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-brand-navy flex items-center gap-2">
+            <h3 className="text-lg font-bold text-brand-navy flex items-center gap-2">
               <span>🕒</span>
               Recent Searches
             </h3>
             <button
               onClick={clearRecentSearches}
-              className="text-brand-coral-light hover:text-red-300 text-sm transition-colors"
+              className="text-brand-coral hover:text-brand-coral-dark text-sm font-bold transition-colors"
             >
               Clear All
             </button>
@@ -329,13 +327,13 @@ export default function SearchPage() {
                   setQuery(search)
                   performSearch(search)
                 }}
-                className="px-3 py-2 bg-white/10 hover:bg-white/20 text-brand-navy rounded-lg text-sm transition-all duration-200 hover:scale-105"
+                className="px-4 py-2 bg-brand-navy/5 hover:bg-brand-navy/10 text-brand-navy rounded-lg text-sm font-medium transition-all duration-200 hover:-translate-y-0.5"
               >
                 {search}
               </button>
             ))}
           </div>
-        </GradientCard>
+        </div>
       )}
 
       {/* Search Results */}
@@ -343,8 +341,8 @@ export default function SearchPage() {
         <div className="space-y-6">
           {/* Results Header */}
           {totalResults > 0 && !loading && (
-            <div className="flex items-center justify-between">
-              <p className="text-brand-navy/60 text-sm flex items-center gap-2">
+            <div className="flex items-center justify-between px-2">
+              <p className="text-brand-navy/60 font-medium flex items-center gap-2">
                 <span>📊</span>
                 Found {formatNumber(totalResults)} results in {searchTime}ms
               </p>
@@ -356,16 +354,16 @@ export default function SearchPage() {
           {loading && (
             <div className="space-y-4">
               {[1, 2, 3, 4, 5].map(i => (
-                <GradientCard key={i} className="animate-pulse">
+                <div key={i} className="glass-card rounded-2xl p-4 animate-pulse">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-white/10 rounded-lg"></div>
-                    <div className="flex-1 space-y-2">
-                      <div className="h-6 bg-white/10 rounded w-3/4"></div>
-                      <div className="h-4 bg-white/10 rounded w-1/2"></div>
-                      <div className="h-4 bg-white/10 rounded w-2/3"></div>
+                    <div className="w-16 h-16 bg-brand-navy/5 rounded-xl"></div>
+                    <div className="flex-1 space-y-3">
+                      <div className="h-6 bg-brand-navy/5 rounded w-3/4"></div>
+                      <div className="h-4 bg-brand-navy/5 rounded w-1/2"></div>
+                      <div className="h-4 bg-brand-navy/5 rounded w-2/3"></div>
                     </div>
                   </div>
-                </GradientCard>
+                </div>
               ))}
             </div>
           )}
@@ -376,62 +374,62 @@ export default function SearchPage() {
               {results.map((result) => (
                 <div
                   key={`${result.type}-${result.id}`}
-                  className="cursor-pointer"
+                  className="cursor-pointer group"
                   onClick={() => handleResultClick(result)}
                 >
-                  <GradientCard className="hover:border-cyan-400/40 transition-all duration-300">
-                  <div className="flex items-start gap-4">
-                    {/* Thumbnail/Avatar */}
-                    <div className="w-12 h-12 bg-gradient-to-br from-brand-cyan/20 to-brand-blue/20 rounded-lg flex items-center justify-center overflow-hidden">
-                      {result.thumbnail || result.avatar ? (
-                        <img
-                          src={result.thumbnail || result.avatar}
-                          alt={result.title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-xl">{getResultIcon(result.type)}</span>
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="px-2 py-1 bg-gradient-to-r from-cyan-600/20 to-brand-blue/20 text-cyan-400 text-xs rounded border border-cyan-500/30">
-                          {getResultTypeLabel(result.type)}
-                        </span>
-                        {result.relevance_score && (
-                          <span className="text-white/40 text-xs">
-                            {Math.round(result.relevance_score * 100)}% match
-                          </span>
+                  <div className="glass-card rounded-2xl p-4 hover:border-brand-cyan/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-brand-navy/5">
+                    <div className="flex items-start gap-4">
+                      {/* Thumbnail/Avatar */}
+                      <div className="w-16 h-16 bg-gradient-to-br from-brand-cyan/10 to-brand-blue/10 rounded-xl flex items-center justify-center overflow-hidden border border-brand-navy/5 group-hover:scale-105 transition-transform">
+                        {result.thumbnail || result.avatar ? (
+                          <img
+                            src={result.thumbnail || result.avatar}
+                            alt={result.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <span className="text-2xl">{getResultIcon(result.type)}</span>
                         )}
                       </div>
-                      
-                      <h3 className="font-semibold text-brand-navy mb-1 truncate">{result.title}</h3>
-                      
-                      {result.subtitle && (
-                        <p className="text-brand-navy/60 text-sm mb-2">{result.subtitle}</p>
-                      )}
-                      
-                      {result.description && (
-                        <p className="text-brand-navy/60 text-sm line-clamp-2">{result.description}</p>
-                      )}
-                      
-                      {result.metadata && (
-                        <div className="mt-3 flex flex-wrap gap-2 text-xs text-brand-navy/40">
-                          {Object.entries(result.metadata).map(([key, value]) => (
-                            <span key={key} className="bg-white/5 px-2 py-1 rounded">
-                              {key}: {String(value)}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
 
-                    {/* Arrow */}
-                    <div className="text-brand-navy/40 text-xl">→</div>
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="px-2 py-0.5 bg-brand-navy/5 text-brand-navy/60 text-xs font-bold uppercase tracking-wide rounded">
+                            {getResultTypeLabel(result.type)}
+                          </span>
+                          {result.relevance_score && (
+                            <span className="text-brand-cyan text-xs font-bold">
+                              {Math.round(result.relevance_score * 100)}% match
+                            </span>
+                          )}
+                        </div>
+                        
+                        <h3 className="text-lg font-bold text-brand-navy mb-1 truncate group-hover:text-brand-blue transition-colors">{result.title}</h3>
+                        
+                        {result.subtitle && (
+                          <p className="text-brand-navy/60 text-sm font-medium mb-2">{result.subtitle}</p>
+                        )}
+                        
+                        {result.description && (
+                          <p className="text-brand-navy/60 text-sm line-clamp-2">{result.description}</p>
+                        )}
+                        
+                        {result.metadata && (
+                          <div className="mt-3 flex flex-wrap gap-2 text-xs text-brand-navy/40 font-medium">
+                            {Object.entries(result.metadata).map(([key, value]) => (
+                              <span key={key} className="bg-brand-navy/5 px-2 py-1 rounded">
+                                {key}: {String(value)}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Arrow */}
+                      <div className="text-brand-navy/20 text-xl group-hover:text-brand-blue group-hover:translate-x-1 transition-all">→</div>
+                    </div>
                   </div>
-                </GradientCard>
                 </div>
               ))}
             </div>
@@ -439,14 +437,14 @@ export default function SearchPage() {
 
           {/* No Results */}
           {!loading && query && results.length === 0 && (
-            <GradientCard className="text-center py-12">
-              <div className="text-6xl mb-4">🔍</div>
-              <h3 className="text-xl font-semibold text-white mb-2">No Results Found</h3>
-              <p className="text-white/60 mb-6">
+            <div className="glass-card rounded-3xl p-12 text-center">
+              <div className="text-6xl mb-6 opacity-80">🔍</div>
+              <h3 className="text-2xl font-bold text-brand-navy mb-3">No Results Found</h3>
+              <p className="text-brand-navy/60 mb-8 max-w-md mx-auto text-lg">
                 No results found for "{query}". Try adjusting your search terms or filters.
               </p>
-              <div className="space-y-2 text-white/40 text-sm mb-6">
-                <p className="font-medium">Suggestions:</p>
+              <div className="space-y-2 text-brand-navy/50 text-sm mb-8">
+                <p className="font-bold uppercase tracking-wide">Suggestions:</p>
                 <ul className="list-disc list-inside space-y-1">
                   <li>Check your spelling</li>
                   <li>Try different keywords</li>
@@ -454,7 +452,7 @@ export default function SearchPage() {
                   <li>Remove filters to see more results</li>
                 </ul>
               </div>
-              <IconButton
+              <button
                 onClick={() => {
                   setQuery("")
                   setFilters({
@@ -465,12 +463,11 @@ export default function SearchPage() {
                     sort_by: "relevance"
                   })
                 }}
-                variant="secondary"
+                className="bg-brand-navy hover:bg-brand-navy-light text-white px-6 py-3 rounded-xl font-bold transition-colors shadow-lg"
               >
-                <span>🔄</span>
                 Clear Search
-              </IconButton>
-            </GradientCard>
+              </button>
+            </div>
           )}
         </div>
       )}
@@ -486,30 +483,21 @@ export default function SearchPage() {
             {quickSearchOptions.map((option, index) => (
               <div
                 key={index}
-                className="cursor-pointer"
+                className="cursor-pointer group"
                 onClick={option.action}
               >
-                <GradientCard
-                  gradient={`${option.gradient}/10`}
-                  className="text-center hover:border-cyan-400/40 transition-all duration-300"
-                >
-                <div className="space-y-4">
-                  <div className={`w-16 h-16 bg-gradient-to-br ${option.gradient} rounded-2xl flex items-center justify-center text-white text-2xl mx-auto`}>
+                <div className="glass-card rounded-3xl p-6 text-center hover:border-brand-cyan/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-navy/5 h-full flex flex-col">
+                  <div className={`w-16 h-16 bg-gradient-to-br ${option.gradient} rounded-2xl flex items-center justify-center text-white text-3xl mx-auto mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     {option.icon}
                   </div>
-                  <div>
-                    <h4 className="font-medium text-brand-navy mb-2">{option.title}</h4>
-                    <p className="text-brand-navy/70 text-sm">{option.description}</p>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-bold text-brand-navy mb-2">{option.title}</h4>
+                    <p className="text-brand-navy/60 text-sm mb-6">{option.description}</p>
                   </div>
-                  <IconButton
-                    gradient={option.gradient}
-                    size="sm"
-                    className="w-full"
-                  >
+                  <button className="w-full py-2.5 rounded-xl bg-brand-navy/5 text-brand-navy font-bold group-hover:bg-brand-navy group-hover:text-white transition-colors">
                     Search Now
-                  </IconButton>
+                  </button>
                 </div>
-              </GradientCard>
               </div>
             ))}
           </div>
