@@ -16,10 +16,10 @@ export function MarketingHeader() {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <>
-      <header className="sticky top-0 z-50 border-b border-brand-navy/10 bg-brand-neutral/80 backdrop-blur-xl supports-[backdrop-filter]:bg-brand-neutral/70">
+      <header className="sticky top-0 z-50 border-b border-white/20 bg-white/70 backdrop-blur-xl supports-[backdrop-filter]:bg-white/60 shadow-sm">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-3 text-brand-navy sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-2 group sm:gap-3" aria-label="WatchParty home">
-            <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden transition-all group-hover:-translate-y-0.5 sm:h-12 sm:w-12">
+            <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-0.5 group-hover:shadow-lg group-hover:shadow-brand-purple/20 rounded-xl sm:h-12 sm:w-12">
               <Image 
                 src="/watchparty-logo.webp" 
                 alt="WatchParty logo" 
@@ -36,14 +36,15 @@ export function MarketingHeader() {
           </Link>
           
           {/* Desktop navigation (hidden on small screens) */}
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden md:flex items-center gap-8">
             {_navigation.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-sm font-medium text-brand-navy/75 hover:text-brand-navy transition-colors"
+                className="text-sm font-medium text-brand-navy/70 hover:text-brand-navy transition-colors relative group"
               >
                 {item.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-brand-purple transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
           </nav>
@@ -56,7 +57,7 @@ export function MarketingHeader() {
                 size="sm" 
                 onClick={() => setIsOpen(true)} 
                 aria-label="Open menu" 
-                className="p-2.5 rounded-lg bg-brand-navy/5 hover:bg-brand-navy/10 border border-brand-navy/10 shadow-sm transition-all active:scale-95"
+                className="p-2.5 rounded-xl bg-brand-navy/5 hover:bg-brand-navy/10 border border-brand-navy/5 shadow-sm transition-all active:scale-95"
               >
                 <svg 
                   className="h-6 w-6 text-brand-navy" 
@@ -75,13 +76,13 @@ export function MarketingHeader() {
 
             {/* Desktop actions */}
             <div className="hidden md:flex items-center gap-3">
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/auth/login" aria-label="Sign in to WatchParty" className="px-3 py-2">
+              <Button asChild variant="ghost" size="sm" className="hover:bg-brand-navy/5 text-brand-navy/80 hover:text-brand-navy">
+                <Link href="/auth/login" aria-label="Sign in to WatchParty" className="px-4 py-2">
                   Sign in
                 </Link>
               </Button>
 
-              <Button asChild size="default" className="shadow-lg">
+              <Button asChild size="default" className="shadow-lg shadow-brand-magenta/20 bg-gradient-to-r from-brand-magenta to-brand-orange hover:shadow-brand-magenta/40 border-0 transition-all hover:-translate-y-0.5">
                 <Link href="/auth/register" aria-label="Start hosting on WatchParty">
                   Start hosting
                 </Link>
