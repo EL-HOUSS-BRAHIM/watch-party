@@ -175,17 +175,18 @@ export default function NotificationsPage() {
 
   return (
     <div className="space-y-8">
-      <header className="rounded-3xl border border-brand-navy/10 bg-white/90 p-6 shadow-[0_24px_70px_rgba(28,28,46,0.12)]">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+      <header className="glass-panel rounded-3xl p-8 border-brand-navy/10 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+        <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div>
             <button
               onClick={() => router.push("/dashboard")}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-blue transition-colors hover:text-brand-blue-dark"
+              className="inline-flex items-center gap-2 text-sm font-bold text-brand-blue transition-colors hover:text-brand-blue-dark group"
             >
-              ← Back to dashboard
+              <span className="group-hover:-translate-x-1 transition-transform">←</span> Back to dashboard
             </button>
-            <h1 className="mt-3 text-2xl font-bold text-brand-navy">Inbox center</h1>
-            <p className="mt-1 text-sm text-brand-navy/70">
+            <h1 className="mt-3 text-3xl font-bold text-brand-navy">Inbox center</h1>
+            <p className="mt-1 text-sm font-medium text-brand-navy/70">
               Manage invites, system alerts, and watch party updates from a single organized feed.
             </p>
           </div>
@@ -193,7 +194,7 @@ export default function NotificationsPage() {
             {unreadCount > 0 && (
               <button
                 onClick={markAllAsRead}
-                className="inline-flex items-center gap-2 rounded-full border border-brand-purple/20 bg-brand-purple/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-purple"
+                className="inline-flex items-center gap-2 rounded-full border border-brand-purple/20 bg-brand-purple/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-purple hover:bg-brand-purple/20 transition-colors"
               >
                 ✅ Mark all read
               </button>
@@ -201,7 +202,7 @@ export default function NotificationsPage() {
             {selectedNotifications.size > 0 && (
               <button
                 onClick={bulkDismiss}
-                className="inline-flex items-center gap-2 rounded-full border border-brand-coral/20 bg-brand-coral/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-brand-coral-dark"
+                className="inline-flex items-center gap-2 rounded-full border border-brand-coral/20 bg-brand-coral/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-coral-dark hover:bg-brand-coral/20 transition-colors"
               >
                 🗑️ Dismiss selected ({selectedNotifications.size})
               </button>
@@ -209,15 +210,15 @@ export default function NotificationsPage() {
           </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-2">
+        <div className="mt-8 flex flex-wrap gap-3 relative z-10">
           {filters.map((item) => (
             <button
               key={item.id}
               onClick={() => setFilter(item.id)}
-              className={`flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-semibold transition-all ${
+              className={`flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-bold transition-all duration-300 ${
                 filter === item.id
-                  ? "border-brand-purple/30 bg-brand-purple/10 text-brand-purple"
-                  : "border-brand-navy/10 bg-white/70 text-brand-navy/60 hover:border-brand-navy/20 hover:text-brand-navy"
+                  ? "border-brand-purple/30 bg-brand-purple/10 text-brand-purple shadow-lg shadow-brand-purple/5 scale-105"
+                  : "border-brand-navy/10 bg-white/40 text-brand-navy/60 hover:border-brand-navy/20 hover:text-brand-navy hover:bg-white/60"
               }`}
             >
               <span>{item.icon}</span>
@@ -227,30 +228,34 @@ export default function NotificationsPage() {
         </div>
       </header>
 
-      <section className="space-y-4">
-        <div className="flex items-center justify-between text-sm text-brand-navy/60">
-          <div className="flex items-center gap-3">
+      <section className="space-y-6">
+        <div className="flex items-center justify-between text-sm text-brand-navy/60 px-2">
+          <div className="flex items-center gap-4">
             <button
               onClick={selectAll}
-              className="rounded-full border border-brand-navy/10 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-brand-navy/60 hover:border-brand-navy/20"
+              className="rounded-full border border-brand-navy/10 bg-white/40 px-4 py-1.5 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-navy/60 hover:border-brand-navy/20 hover:bg-white/60 transition-all"
             >
               {selectedNotifications.size === notifications.length ? "Clear selection" : "Select all"}
             </button>
-            <span>{filteredNotifications.length} notifications</span>
+            <span className="font-medium">{filteredNotifications.length} notifications</span>
           </div>
           {unreadCount > 0 && (
-            <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/20 bg-brand-magenta/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-brand-magenta-dark">
-              🔴 {unreadCount} unread
+            <span className="inline-flex items-center gap-2 rounded-full border border-brand-magenta/20 bg-brand-magenta/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-magenta-dark">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-magenta opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-magenta"></span>
+              </span>
+              {unreadCount} unread
             </span>
           )}
         </div>
 
-        <div className="grid gap-3">
+        <div className="grid gap-4">
           {filteredNotifications.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-brand-navy/15 bg-white/70 p-10 text-center text-sm text-brand-navy/60">
-              <div className="text-4xl">📭</div>
-              <p className="mt-3 font-semibold">You're all caught up!</p>
-              <p className="mt-1 text-xs uppercase tracking-[0.3em]">No notifications for this filter</p>
+            <div className="rounded-3xl border-2 border-dashed border-brand-navy/10 bg-white/20 p-12 text-center text-brand-navy/60">
+              <div className="text-5xl mb-4 opacity-50">📭</div>
+              <p className="font-bold text-lg">You're all caught up!</p>
+              <p className="mt-2 text-xs font-bold uppercase tracking-[0.2em] opacity-70">No notifications for this filter</p>
             </div>
           ) : (
             filteredNotifications.map((notification) => {
@@ -258,41 +263,41 @@ export default function NotificationsPage() {
               return (
                 <article
                   key={notification.id}
-                  className={`flex flex-col gap-3 rounded-3xl border border-brand-navy/10 bg-white/90 p-5 shadow-[0_14px_45px_rgba(28,28,46,0.08)] transition-all hover:-translate-y-0.5 hover:shadow-[0_24px_60px_rgba(28,28,46,0.12)] ${
-                    !notification.is_read ? "ring-1 ring-brand-blue/30" : ""
-                  }`}
+                  className={`glass-card flex flex-col gap-4 rounded-3xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
+                    !notification.is_read ? "border-brand-blue/30 bg-brand-blue/5" : ""
+                  } ${isSelected ? "border-brand-purple/30 bg-brand-purple/5" : ""}`}
                 >
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-start gap-4">
                       <button
                         onClick={() => toggleSelection(notification.id)}
-                        className={`flex h-6 w-6 items-center justify-center rounded-full border text-xs font-semibold transition-colors ${
+                        className={`mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border transition-all ${
                           isSelected
-                            ? "border-brand-purple bg-brand-purple text-white"
-                            : "border-brand-navy/20 bg-white text-brand-navy/50"
+                            ? "border-brand-purple bg-brand-purple text-white shadow-md scale-110"
+                            : "border-brand-navy/20 bg-white/40 text-transparent hover:border-brand-purple/50"
                         }`}
                         aria-label={isSelected ? "Deselect notification" : "Select notification"}
                       >
-                        {isSelected ? "✓" : ""}
+                        ✓
                       </button>
-                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-brand-neutral text-lg">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-purple/10 to-brand-blue/10 text-xl shadow-inner">
                         {getNotificationIcon(notification.template_type || notification.type || "system")}
                       </div>
                       <div>
-                        <h2 className="text-base font-semibold text-brand-navy">{notification.title || "Notification"}</h2>
-                        <p className="text-sm text-brand-navy/70">{notification.content ?? notification.message}</p>
+                        <h2 className="text-lg font-bold text-brand-navy">{notification.title || "Notification"}</h2>
+                        <p className="text-sm font-medium text-brand-navy/70 mt-1 leading-relaxed">{notification.content ?? notification.message}</p>
                       </div>
                     </div>
-                    <div className="text-xs font-semibold uppercase tracking-[0.3em] text-brand-navy/40">
+                    <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-navy/40 whitespace-nowrap shrink-0">
                       {formatTime(notification.created_at)}
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-brand-navy/60">
+                  <div className="flex flex-wrap items-center justify-between gap-3 pl-14">
                     <div className="flex items-center gap-3">
-                      <span className={`rounded-full border px-3 py-1 font-semibold ${
+                      <span className={`rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-wide ${
                         notification.is_read
-                          ? "border-brand-navy/15 bg-brand-neutral/80 text-brand-navy/60"
+                          ? "border-brand-navy/10 bg-brand-navy/5 text-brand-navy/50"
                           : "border-brand-blue/20 bg-brand-blue/10 text-brand-blue-dark"
                       }`}>
                         {notification.is_read ? "Read" : "Unread"}
@@ -300,7 +305,7 @@ export default function NotificationsPage() {
                       {notification.action_url && (
                         <a
                           href={notification.action_url}
-                          className="inline-flex items-center gap-1 text-brand-blue transition-colors hover:text-brand-blue-dark"
+                          className="inline-flex items-center gap-1 text-sm font-bold text-brand-blue transition-colors hover:text-brand-blue-dark hover:underline"
                         >
                           View details →
                         </a>
@@ -311,14 +316,14 @@ export default function NotificationsPage() {
                       {!notification.is_read && (
                         <button
                           onClick={() => markAsRead(notification.id)}
-                          className="rounded-full border border-brand-blue/20 bg-brand-blue/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-brand-blue-dark hover:border-brand-blue/40"
+                          className="rounded-full border border-brand-blue/20 bg-brand-blue/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-blue-dark hover:border-brand-blue/40 hover:bg-brand-blue/20 transition-all"
                         >
                           Mark read
                         </button>
                       )}
                       <button
                         onClick={() => dismissNotification(notification.id)}
-                        className="rounded-full border border-brand-coral/20 bg-brand-coral/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.3em] text-brand-coral-dark hover:border-brand-coral/40"
+                        className="rounded-full border border-brand-coral/20 bg-brand-coral/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-brand-coral-dark hover:border-brand-coral/40 hover:bg-brand-coral/20 transition-all"
                       >
                         Dismiss
                       </button>
