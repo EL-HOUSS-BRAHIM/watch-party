@@ -38,9 +38,15 @@ const tips = [
 
 export default function WatchNightGuidePage() {
   return (
-    <div className="space-y-16">
-      <section className="relative overflow-hidden rounded-[48px] border border-brand-purple/20 bg-gradient-to-br from-white via-brand-neutral/30 to-white px-8 py-16 shadow-[0_60px_150px_rgba(74,46,160,0.12)] sm:px-12 lg:px-20">
-        <div className="absolute inset-0 opacity-30">
+    <div className="space-y-16 relative">
+      {/* Background Blobs */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-gradient-radial from-brand-purple/10 via-transparent to-transparent blur-3xl" />
+        <div className="absolute bottom-0 right-0 w-[800px] h-[800px] bg-gradient-radial from-brand-orange/10 via-transparent to-transparent blur-3xl" />
+      </div>
+
+      <section className="glass-panel relative overflow-hidden rounded-[48px] border-brand-purple/20 px-8 py-16 shadow-xl sm:px-12 lg:px-20 z-10">
+        <div className="absolute inset-0 opacity-30 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(233,64,138,0.15),transparent_50%),radial-gradient(circle_at_70%_80%,rgba(45,156,219,0.15),transparent_50%)]" />
         </div>
         <div className="relative space-y-6 text-brand-navy">
@@ -68,11 +74,11 @@ export default function WatchNightGuidePage() {
         </div>
       </section>
 
-      <section className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 relative z-10">
         {steps.map((step, index) => (
           <div 
             key={step.title} 
-            className="group relative flex flex-col overflow-hidden rounded-[32px] border border-brand-purple/12 bg-white/90 p-8 text-brand-navy shadow-[0_20px_70px_rgba(28,28,46,0.1)] backdrop-blur-sm transition-all duration-300 hover:border-brand-purple/20 hover:shadow-[0_24px_80px_rgba(28,28,46,0.14)] hover:-translate-y-1"
+            className="glass-panel group relative flex flex-col overflow-hidden rounded-[32px] border-brand-purple/12 p-8 text-brand-navy shadow-lg backdrop-blur-sm transition-all duration-300 hover:border-brand-purple/20 hover:shadow-xl hover:-translate-y-1"
             style={{ animationDelay: `${index * 100}ms` }}
           >
             <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-brand-navy/50">Step {index + 1}</p>
@@ -82,7 +88,7 @@ export default function WatchNightGuidePage() {
         ))}
       </section>
 
-      <section className="rounded-[40px] border border-brand-blue/20 bg-white p-10 text-brand-navy shadow-[0_40px_120px_rgba(45,156,219,0.14)]">
+      <section className="glass-panel rounded-[40px] border-brand-blue/20 p-10 text-brand-navy shadow-xl relative z-10">
         <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Signature rituals</h2>
         <div className="mt-8 grid gap-6 sm:grid-cols-3">
           {tips.map((tip, index) => (
@@ -105,28 +111,28 @@ export default function WatchNightGuidePage() {
         </div>
       </section>
 
-      <section className="rounded-[40px] border border-brand-purple/20 bg-white p-10 text-brand-navy shadow-[0_40px_120px_rgba(74,46,160,0.18)]">
+      <section className="glass-panel rounded-[40px] border-brand-purple/20 p-10 text-brand-navy shadow-xl relative z-10">
         <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-purple to-brand-magenta text-2xl shadow-lg">
+          <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-purple to-brand-magenta text-2xl shadow-lg text-white">
             ✓
           </div>
           <div className="flex-1">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">Host checklist</h2>
             <ul className="mt-6 space-y-3 text-sm leading-relaxed text-brand-navy/70">
               <li className="flex items-start gap-3">
-                <span className="text-brand-purple">•</span>
+                <span className="text-brand-purple font-bold">•</span>
                 <span>Preview your ambience cues in the stage manager timeline.</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-brand-purple">•</span>
+                <span className="text-brand-purple font-bold">•</span>
                 <span>Assign a co-host to manage chat reactions and polls.</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-brand-purple">•</span>
+                <span className="text-brand-purple font-bold">•</span>
                 <span>Upload custom overlays or sponsor loops if you&apos;re running a premiere.</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-brand-purple">•</span>
+                <span className="text-brand-purple font-bold">•</span>
                 <span>Schedule encore slots so guests can linger in a spoiler-safe lounge.</span>
               </li>
             </ul>
