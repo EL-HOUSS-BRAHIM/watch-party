@@ -22,7 +22,7 @@ services:
       - media_volume:/app/media
       - ~/.aws:/home/appuser/.aws:ro
     ports:
-      - "8000:8000"
+      - "8001:8000"
     networks:
       - watchparty-network
     restart: unless-stopped

@@ -15,7 +15,7 @@ services:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
     ports:
-      - "8000:8000"
+      - "8001:8000"
     networks:
       - watchparty-network
     restart: unless-stopped
