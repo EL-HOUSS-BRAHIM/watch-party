@@ -173,7 +173,7 @@ services:
       NEXT_PUBLIC_ENABLE_DISCORD: "true"
       NEXT_PUBLIC_ENABLE_ANALYTICS: "false"
     ports:
-      - "3000:3000"
+      - "3002:3000"
     depends_on:
       - backend
     networks:
