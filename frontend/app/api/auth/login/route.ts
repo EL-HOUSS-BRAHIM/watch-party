@@ -58,12 +58,13 @@ export async function POST(request: NextRequest) {
     // If backend sent tokens in JSON, set them as HTTP-only cookies
     if (data.access_token && data.refresh_token) {
       // Backend sent tokens in JSON (fallback for old backend versions)
-      // Set them as HTTP-only cookies
+      // Set them as HTTP-only cookies with domain for cross-subdomain access
       nextResponse.cookies.set('access_token', data.access_token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',
+        domain: '.brahim-elhouss.me', // Allow cookies across subdomains
         maxAge: 60 * 60, // 1 hour
       })
 
@@ -72,6 +73,7 @@ export async function POST(request: NextRequest) {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
         path: '/',
+        domain: '.brahim-elhouss.me', // Allow cookies across subdomains
         maxAge: 60 * 60 * 24 * 7, // 7 days
       })
     }
