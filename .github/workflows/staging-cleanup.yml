@@ -20,6 +20,7 @@ jobs:
       - name: Check staging activity and cleanup if idle
         uses: appleboy/ssh-action@v1.0.3
         id: cleanup
+        continue-on-error: true
         timeout-minutes: 8
         env:
           FORCE_CLEANUP: ${{ github.event.inputs.force_cleanup }}
@@ -30,8 +31,7 @@ jobs:
           command_timeout: 8m
           envs: FORCE_CLEANUP
           script: |
-            set -e
-            cd "$HOME/watch-party"
+            cd "$HOME/watch-party" || exit 0
             
             ACTIVITY_LOG="logs/staging-activity.log"
             NGINX_LOG="/var/log/nginx/staging-access.log"
@@ -42,11 +42,10 @@ jobs:
             touch "$ACTIVITY_LOG"
             
             # Check if staging is running
-            STAGING_RUNNING=$(docker ps --filter "name=.*staging" --format "{{.Names}}" | wc -l)
+            STAGING_RUNNING=$(docker ps --filter "name=.*staging" --format "{{.Names}}" 2>/dev/null | wc -l || echo "0")
             
             if [ "$STAGING_RUNNING" -eq 0 ]; then
               echo "✅ Staging is already stopped. No cleanup needed."
-              echo "status=already-stopped" >> $GITHUB_OUTPUT
               exit 0
             fi
             
@@ -55,30 +54,29 @@ jobs:
             # Force cleanup if requested
             if [ "$FORCE_CLEANUP" = "true" ]; then
               echo "⚠️ Force cleanup requested. Stopping staging environment..."
-              docker-compose -f docker-compose.staging.yml down
-              echo "status=force-stopped" >> $GITHUB_OUTPUT
+              docker-compose -f docker-compose.staging.yml down 2>/dev/null || docker compose -f docker-compose.staging.yml down 2>/dev/null || true
               echo "$(date -Iseconds) - Force cleanup by GitHub Actions" >> "$ACTIVITY_LOG"
               exit 0
             fi
             
             # Check Nginx access logs for staging domain activity
             LAST_ACCESS_TIME=0
-            if [ -f "$NGINX_LOG" ] && sudo test -r "$NGINX_LOG"; then
+            if [ -f "$NGINX_LOG" ] && sudo test -r "$NGINX_LOG" 2>/dev/null; then
               # Get timestamp of last staging request
               LAST_ACCESS=$(sudo grep "staging-watch-party.brahim-elhouss.me\|staging-be-watch-party.brahim-elhouss.me" "$NGINX_LOG" 2>/dev/null | tail -1 | awk '{print $4}' | tr -d '[' || echo "")
               
               if [ -n "$LAST_ACCESS" ]; then
                 # Convert to epoch timestamp
-                LAST_ACCESS_TIME=$(date -d "${LAST_ACCESS}" +%s 2>/dev/null || echo 0)
+                LAST_ACCESS_TIME=$(date -d "${LAST_ACCESS}" +%s 2>/dev/null || echo "0")
               fi
             fi
             
             # Check activity log for deployment activity
             if [ -f "$ACTIVITY_LOG" ]; then
-              LAST_DEPLOY=$(tail -1 "$ACTIVITY_LOG" | awk '{print $1}' || echo "")
+              LAST_DEPLOY=$(tail -1 "$ACTIVITY_LOG" 2>/dev/null | awk '{print $1}' || echo "")
               if [ -n "$LAST_DEPLOY" ]; then
-                LAST_DEPLOY_TIME=$(date -d "${LAST_DEPLOY}" +%s 2>/dev/null || echo 0)
-                if [ "$LAST_DEPLOY_TIME" -gt "$LAST_ACCESS_TIME" ]; then
+                LAST_DEPLOY_TIME=$(date -d "${LAST_DEPLOY}" +%s 2>/dev/null || echo "0")
+                if [ "$LAST_DEPLOY_TIME" -gt "$LAST_ACCESS_TIME" ] 2>/dev/null; then
                   LAST_ACCESS_TIME=$LAST_DEPLOY_TIME
                 fi
               fi
@@ -88,11 +86,14 @@ jobs:
             CURRENT_TIME=$(date +%s)
             
             # Calculate inactivity duration
-            if [ "$LAST_ACCESS_TIME" -eq 0 ]; then
+            if [ "$LAST_ACCESS_TIME" -eq 0 ] 2>/dev/null; then
               # No activity recorded, check container uptime
-              CONTAINER_UPTIME=$(docker inspect -f '{{.State.StartedAt}}' $(docker ps -q --filter "name=.*staging" | head -1) 2>/dev/null || echo "")
-              if [ -n "$CONTAINER_UPTIME" ]; then
-                LAST_ACCESS_TIME=$(date -d "${CONTAINER_UPTIME}" +%s 2>/dev/null || echo 0)
+              STAGING_CONTAINER=$(docker ps -q --filter "name=.*staging" 2>/dev/null | head -1)
+              if [ -n "$STAGING_CONTAINER" ]; then
+                CONTAINER_UPTIME=$(docker inspect -f '{{.State.StartedAt}}' "$STAGING_CONTAINER" 2>/dev/null || echo "")
+                if [ -n "$CONTAINER_UPTIME" ]; then
+                  LAST_ACCESS_TIME=$(date -d "${CONTAINER_UPTIME}" +%s 2>/dev/null || echo "0")
+                fi
               fi
             fi
             
@@ -105,73 +106,8 @@ jobs:
             
             if [ "$INACTIVE_SECONDS" -ge "$INACTIVITY_THRESHOLD" ]; then
               echo "⚠️ Staging inactive for ${INACTIVE_HOURS} hours. Stopping services..."
-              docker-compose -f docker-compose.staging.yml down
-              echo "status=auto-stopped" >> $GITHUB_OUTPUT
-              echo "inactive_hours=${INACTIVE_HOURS}" >> $GITHUB_OUTPUT
+              docker-compose -f docker-compose.staging.yml down 2>/dev/null || docker compose -f docker-compose.staging.yml down 2>/dev/null || true
               echo "$(date -Iseconds) - Auto-cleanup after ${INACTIVE_HOURS}h inactivity" >> "$ACTIVITY_LOG"
             else
               echo "✅ Staging is active. No cleanup needed."
-              echo "status=active" >> $GITHUB_OUTPUT
-              echo "inactive_hours=${INACTIVE_HOURS}" >> $GITHUB_OUTPUT
             fi
-
-      - name: Get AWS SES credentials for email notification
-        if: steps.cleanup.outputs.status == 'auto-stopped' || steps.cleanup.outputs.status == 'force-stopped'
-        id: ses_creds
-        run: |
-          # Install AWS CLI if not present
-          if ! command -v aws &> /dev/null; then
-            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            unzip -q awscliv2.zip
-            sudo ./aws/install
-          fi
-          
-          # Configure AWS credentials
-          export AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}"
-          export AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-          export AWS_DEFAULT_REGION=eu-west-3
-          
-          # Fetch SES SMTP credentials from Secrets Manager
-          SES_SECRET=$(aws secretsmanager get-secret-value --secret-id watch-party/ses-smtp --query SecretString --output text 2>/dev/null || echo '{}')
-          
-          # Parse credentials (fallback to secrets if AWS Secrets Manager not configured yet)
-          SMTP_USER=$(echo "$SES_SECRET" | jq -r '.username // empty')
-          SMTP_PASS=$(echo "$SES_SECRET" | jq -r '.password // empty')
-          
-          if [ -z "$SMTP_USER" ] || [ -z "$SMTP_PASS" ]; then
-            # Fallback to GitHub secrets
-            echo "smtp_username=${{ secrets.SES_SMTP_USERNAME }}" >> $GITHUB_OUTPUT
-            echo "smtp_password=${{ secrets.SES_SMTP_PASSWORD }}" >> $GITHUB_OUTPUT
-          else
-            echo "smtp_username=${SMTP_USER}" >> $GITHUB_OUTPUT
-            echo "smtp_password=${SMTP_PASS}" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Send cleanup notification email
-        if: steps.cleanup.outputs.status == 'auto-stopped' || steps.cleanup.outputs.status == 'force-stopped'
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: email-smtp.eu-west-3.amazonaws.com
-          server_port: 587
-          username: ${{ steps.ses_creds.outputs.smtp_username }}
-          password: ${{ steps.ses_creds.outputs.smtp_password }}
-          subject: '🧹 Staging Environment Cleaned Up - Watch Party'
-          to: bross.or.of.1@gmail.com
-          from: Watch Party Deployments <no-reply@brahim-elhouss.me>
-          body: |
-            Staging environment has been automatically stopped.
-            
-            🧹 Cleanup Details:
-            • Environment: Staging
-            • Reason: ${{ steps.cleanup.outputs.status == 'force-stopped' && 'Force cleanup requested' || format('Inactive for {0} hours', steps.cleanup.outputs.inactive_hours) }}
-            • Timestamp: ${{ github.event.repository.updated_at }}
-            
-            💡 To restart staging:
-            1. Go to GitHub Actions
-            2. Run "Deploy to Staging" workflow
-            3. Select your branch and services
-            
-            🔗 GitHub Actions:
-            ${{ github.server_url }}/${{ github.repository }}/actions
-            
-            ✅ Resources freed successfully!

@@ -58,6 +58,7 @@ COPY components ./components
 COPY lib ./lib
 COPY hooks ./hooks
 COPY styles ./styles
+COPY types ./types
 
 # Build with Next.js cache optimization
 ENV NEXT_TELEMETRY_DISABLED=1
