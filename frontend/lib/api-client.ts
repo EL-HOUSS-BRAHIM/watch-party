@@ -591,7 +591,7 @@ export const partiesApi = {
     video_id?: string;
     scheduled_start?: string;
   }) =>
-    apiFetch<WatchParty>('/parties', {
+    apiFetch<WatchParty>('/api/parties/', {
       method: 'POST',
       body: JSON.stringify(data),
     }),

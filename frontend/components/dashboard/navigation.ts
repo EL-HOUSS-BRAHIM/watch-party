@@ -46,7 +46,7 @@ export const NAVIGATION_SECTIONS: NavSection[] = [
   { href: "/dashboard/support", label: "Help Center", icon: "🎫", description: "Support & guides", badge: null },
   { href: "/dashboard/billing", label: "Billing", icon: "💳", description: "Billing & invoices", badge: null },
       { href: "/dashboard/admin", label: "Admin Panel", icon: "⚙️", description: "System management", badge: null },
-      { href: "/settings", label: "Settings", icon: "🔧", description: "Preferences", badge: null },
+      { href: "/dashboard/settings", label: "Settings", icon: "🔧", description: "Preferences", badge: null },
     ]
   }
 ]

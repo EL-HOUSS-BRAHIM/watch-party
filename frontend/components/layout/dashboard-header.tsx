@@ -113,7 +113,7 @@ export function DashboardHeader() {
 
           {/* Settings */}
           <Link
-            href="/settings"
+            href="/dashboard/settings"
             className="flex h-10 w-10 items-center justify-center rounded-xl border border-brand-navy/10 bg-white/80 text-brand-navy transition-all hover:border-brand-navy/30 hover:text-brand-navy"
           >
             <span className="text-xl">⚙️</span>
@@ -157,7 +157,7 @@ export function DashboardHeader() {
                     <span>👤</span>
                     <span>Profile</span>
                   </Link>
-                  <Link href="/settings" className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-brand-navy transition-colors hover:bg-brand-neutral/60">
+                  <Link href="/dashboard/settings" className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-brand-navy transition-colors hover:bg-brand-neutral/60">
                     <span>⚙️</span>
                     <span>Settings</span>
                   </Link>

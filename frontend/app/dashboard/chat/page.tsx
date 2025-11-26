@@ -88,7 +88,7 @@ export default function ChatPage() {
                 <div className="text-4xl mb-4">💬</div>
                 <p className="text-brand-navy/60 mb-4 font-medium">No active parties</p>
                 <button
-                  onClick={() => router.push("/parties")}
+                  onClick={() => router.push("/dashboard/parties")}
                   className="px-6 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-brand-purple/25 hover:-translate-y-0.5"
                 >
                   Browse Parties
@@ -147,7 +147,7 @@ export default function ChatPage() {
                 Manage Rooms
               </button>
               <button
-                onClick={() => router.push("/parties")}
+                onClick={() => router.push("/dashboard/parties")}
                 className="w-full px-4 py-3 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-brand-purple/25 hover:-translate-y-0.5"
               >
                 Find More Parties
@@ -222,7 +222,7 @@ export default function ChatPage() {
                 
                 {parties.length === 0 && (
                   <button
-                    onClick={() => router.push("/parties")}
+                    onClick={() => router.push("/dashboard/parties")}
                     className="px-8 py-4 bg-gradient-to-r from-brand-purple to-brand-blue hover:from-brand-purple-dark hover:to-brand-blue-dark text-white rounded-xl font-bold transition-all shadow-lg hover:shadow-brand-purple/25 hover:-translate-y-0.5"
                   >
                     Find Parties to Chat

@@ -51,7 +51,7 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
 
   const loadSyncState = async () => {
     try {
-      const response = await api.get(`/parties/${partyId}/sync/`)
+      const response = await api.get(`/api/parties/${partyId}/sync/`)
       setSyncState(response)
     } catch (error) {
       console.error("Failed to load sync state:", error)
@@ -65,7 +65,7 @@ export default function SyncControls({ partyId, currentUser: _currentUser, isHos
 
     setUpdating(true)
     try {
-      const response = await api.patch(`/parties/${partyId}/sync/`, updates)
+      const response = await api.patch(`/api/parties/${partyId}/sync/`, updates)
       setSyncState(response)
 
       // Update local state immediately

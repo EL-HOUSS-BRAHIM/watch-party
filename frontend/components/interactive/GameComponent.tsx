@@ -73,7 +73,7 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
 
   const loadCurrentGame = async () => {
     try {
-      const response = await api.get(`/parties/${partyId}/games/current/`)
+      const response = await api.get(`/api/parties/${partyId}/games/current/`)
       setCurrentGame(response)
     } catch (error) {
       if (error instanceof Error && error.message.includes("404")) {
@@ -89,7 +89,7 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
   const startGame = async (gameType: string) => {
     setStarting(true)
     try {
-      const response = await api.post(`/parties/${partyId}/games/`, {
+      const response = await api.post(`/api/parties/${partyId}/games/`, {
         game_type: gameType
       })
       setCurrentGame(response)
@@ -105,7 +105,7 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
     if (!currentGame || !confirm("Are you sure you want to end the current game?")) return
 
     try {
-      await api.patch(`/parties/${partyId}/games/${currentGame.id}/`, {
+      await api.patch(`/api/parties/${partyId}/games/${currentGame.id}/`, {
         is_active: false
       })
       setCurrentGame(null)
@@ -118,7 +118,7 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
     if (!currentGame) return
 
     try {
-      await api.post(`/parties/${partyId}/games/${currentGame.id}/join/`)
+      await api.post(`/api/parties/${partyId}/games/${currentGame.id}/join/`)
       await loadCurrentGame()
     } catch (error) {
       alert("Failed to join game: " + (error instanceof Error ? error.message : "Unknown error"))
@@ -129,7 +129,7 @@ export default function GameComponent({ partyId, currentUser, isHost = false }: 
     if (!currentGame) return
 
     try {
-      await api.post(`/parties/${partyId}/games/${currentGame.id}/leave/`)
+      await api.post(`/api/parties/${partyId}/games/${currentGame.id}/leave/`)
       await loadCurrentGame()
     } catch (error) {
       alert("Failed to leave game: " + (error instanceof Error ? error.message : "Unknown error"))
@@ -322,7 +322,7 @@ function GameInterface({ game, partyId, currentUser: _currentUser, onUpdate }: G
 
     setSubmitting(true)
     try {
-      await api.post(`/parties/${partyId}/games/${game.id}/answer/`, {
+      await api.post(`/api/parties/${partyId}/games/${game.id}/answer/`, {
         answer: answer.trim()
       })
       setAnswer("")

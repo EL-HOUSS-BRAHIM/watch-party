@@ -54,7 +54,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
 
   const loadReactions = async () => {
     try {
-      const response = await api.get(`/parties/${partyId}/reactions/`)
+      const response = await api.get(`/api/parties/${partyId}/reactions/`)
       const reactionsList = Array.isArray(response) ? response : (response.results || [])
       setReactions(reactionsList)
     } catch (error) {
@@ -110,7 +110,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
       // Add floating emoji
       addFloatingEmoji(emoji)
 
-      await api.post(`/parties/${partyId}/reactions/`, { emoji })
+      await api.post(`/api/parties/${partyId}/reactions/`, { emoji })
       await loadReactions()
     } catch (error) {
       console.error("Failed to add reaction:", error)
@@ -136,7 +136,7 @@ export default function ReactionComponent({ partyId, currentUser }: ReactionComp
     if (!confirm("Clear all reactions for this party?")) return
 
     try {
-      await api.delete(`/parties/${partyId}/reactions/`)
+      await api.delete(`/api/parties/${partyId}/reactions/`)
       setReactions([])
     } catch (error) {
       console.error("Failed to clear reactions:", error)

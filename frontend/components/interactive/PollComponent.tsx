@@ -50,7 +50,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
 
   const loadPolls = async () => {
     try {
-      const response = await api.get(`/parties/${partyId}/polls/`)
+      const response = await api.get(`/api/parties/${partyId}/polls/`)
       const pollsList = Array.isArray(response) ? response : (response.results || [])
       setPolls(pollsList)
     } catch (error) {
@@ -69,7 +69,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
     setCreating(true)
     try {
       const validOptions = newPoll.options.filter(opt => opt.trim())
-      await api.post(`/parties/${partyId}/polls/`, {
+      await api.post(`/api/parties/${partyId}/polls/`, {
         question: newPoll.question.trim(),
         options: validOptions,
         duration: newPoll.duration
@@ -87,7 +87,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
 
   const vote = async (pollId: string, optionId: string) => {
     try {
-      await api.post(`/parties/${partyId}/polls/${pollId}/vote/`, {
+      await api.post(`/api/parties/${partyId}/polls/${pollId}/vote/`, {
         option_id: optionId
       })
       await loadPolls()
@@ -100,7 +100,7 @@ export default function PollComponent({ partyId, currentUser, isHost = false }: 
     if (!confirm("Are you sure you want to delete this poll?")) return
 
     try {
-      await api.delete(`/parties/${partyId}/polls/${pollId}/`)
+      await api.delete(`/api/parties/${partyId}/polls/${pollId}/`)
       await loadPolls()
     } catch (error) {
       alert("Failed to delete poll: " + (error instanceof Error ? error.message : "Unknown error"))
