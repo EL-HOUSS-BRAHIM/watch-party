@@ -28,10 +28,10 @@ const buildUrl = (endpoint: string) => {
   // Ensure endpoint starts with /
   const normalizedEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`
   
-  // ALL /api/ requests should go through nginx proxy (relative URL)
-  // This ensures cookies work correctly across the same domain
+  // ALL /api/ requests go to the backend URL directly
+  // This ensures proper routing to the Django backend
   if (normalizedEndpoint.startsWith('/api/')) {
-    return normalizedEndpoint
+    return `${BACKEND_URL}${normalizedEndpoint}`
   }
   
   // Non-API endpoints (if any) go to backend directly
