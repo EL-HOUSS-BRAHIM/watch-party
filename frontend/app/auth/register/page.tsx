@@ -53,8 +53,6 @@ export default function RegisterPage() {
   }
 
   return (
-    // ...existing code...
-  return (
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-16 relative">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-radial from-brand-magenta/10 via-transparent to-transparent blur-3xl" />
