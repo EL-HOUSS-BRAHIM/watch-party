@@ -15,7 +15,7 @@ services:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
     ports:
-      - "8001:8000"
+      - "8000:8000"
     networks:
       - watchparty-network
     restart: unless-stopped
@@ -89,7 +89,7 @@ services:
     env_file:
       - ./frontend/.env.local
     ports:
-      - "3002:3000"
+      - "3000:3000"
     depends_on:
       - backend
     networks:
@@ -104,9 +104,7 @@ services:
   # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
-    ports:
-      - "9080:80"
-      - "9443:443"
+    ports: []  # System nginx handles external traffic
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
