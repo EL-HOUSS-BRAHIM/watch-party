@@ -52,11 +52,41 @@ export default function CreatePartyPage() {
         videoId = video.id
       }
       
-      // Create the party
-      const party = await partiesApi.create({
-        ...partyData,
-        video_id: videoId || undefined
-      })
+      // Create the party - format data properly
+      // Only include fields that have values to avoid validation errors
+      const partyPayload: Record<string, any> = {
+        title: partyData.title.trim(),
+      }
+      
+      // Only include optional fields if they have values
+      if (partyData.description && partyData.description.trim()) {
+        partyPayload.description = partyData.description.trim()
+      }
+      
+      if (partyData.visibility) {
+        partyPayload.visibility = partyData.visibility
+      }
+      
+      if (partyData.max_participants) {
+        partyPayload.max_participants = partyData.max_participants
+      }
+      
+      // Only include video_id if we have one (from upload/url)
+      if (videoId) {
+        partyPayload.video_id = videoId
+      }
+      
+      // Convert datetime-local to ISO format if provided
+      // datetime-local gives us "YYYY-MM-DDTHH:mm" format
+      if (partyData.scheduled_start && partyData.scheduled_start.trim()) {
+        // Append seconds and timezone to make it ISO 8601 compliant
+        const dateValue = new Date(partyData.scheduled_start)
+        if (!isNaN(dateValue.getTime())) {
+          partyPayload.scheduled_start = dateValue.toISOString()
+        }
+      }
+      
+      const party = await partiesApi.create(partyPayload)
       
       // Redirect to the party page
       router.push(`/party/${party.id}`)

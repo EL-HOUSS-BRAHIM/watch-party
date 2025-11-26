@@ -155,7 +155,8 @@ class WatchPartyDetailSerializer(WatchPartySerializer):
 class WatchPartyCreateSerializer(serializers.ModelSerializer):
     """Watch party creation serializer"""
     
-    video_id = serializers.UUIDField(write_only=True)
+    video_id = serializers.UUIDField(write_only=True, required=False, allow_null=True)
+    scheduled_start = serializers.DateTimeField(required=False, allow_null=True)
     
     class Meta:
         model = WatchParty
@@ -163,20 +164,33 @@ class WatchPartyCreateSerializer(serializers.ModelSerializer):
             'title', 'description', 'video_id', 'visibility', 'max_participants',
             'require_approval', 'allow_chat', 'allow_reactions', 'scheduled_start'
         ]
+        extra_kwargs = {
+            'description': {'required': False, 'allow_blank': True},
+            'visibility': {'required': False},
+            'max_participants': {'required': False},
+            'require_approval': {'required': False},
+            'allow_chat': {'required': False},
+            'allow_reactions': {'required': False},
+        }
     
     def create(self, validated_data):
-        video_id = validated_data.pop('video_id')
+        video_id = validated_data.pop('video_id', None)
         
-        # Get video and validate ownership/permissions
-        from apps.videos.models import Video
-        video = Video.objects.get(id=video_id)
+        video = None
+        if video_id:
+            # Get video and validate ownership/permissions
+            from apps.videos.models import Video
+            try:
+                video = Video.objects.get(id=video_id)
+                
+                # Check if user can use this video
+                request = self.context['request']
+                if video.uploader != request.user and video.visibility == 'private':
+                    raise serializers.ValidationError("You don't have permission to use this video")
+            except Video.DoesNotExist:
+                raise serializers.ValidationError({"video_id": "Video not found"})
         
-        # Check if user can use this video
-        request = self.context['request']
-        if video.uploader != request.user and video.visibility == 'private':
-            raise serializers.ValidationError("You don't have permission to use this video")
-        
-        validated_data['host'] = request.user
+        validated_data['host'] = self.context['request'].user
         validated_data['video'] = video
         
         return super().create(validated_data)
