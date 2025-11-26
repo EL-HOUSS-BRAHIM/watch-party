@@ -384,7 +384,7 @@ def user_personal_analytics(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser])
+@permission_classes([IsAuthenticated])
 def real_time_analytics(request):
     """Get real-time platform analytics"""
     try:
