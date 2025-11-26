@@ -149,6 +149,10 @@ jobs:
             set -e
             cd "$HOME/watch-party"
             
+            # Pull latest code to get updated docker-compose and scripts
+            git fetch origin master
+            git reset --hard origin/master
+            
             # Login to GHCR
             echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
             
