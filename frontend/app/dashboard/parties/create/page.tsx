@@ -54,7 +54,14 @@ export default function CreatePartyPage() {
       
       // Create the party - format data properly
       // Only include fields that have values to avoid validation errors
-      const partyPayload: Record<string, any> = {
+      const partyPayload: {
+        title: string;
+        description?: string;
+        visibility?: string;
+        max_participants?: number;
+        video_id?: string;
+        scheduled_start?: string;
+      } = {
         title: partyData.title.trim(),
       }
       
