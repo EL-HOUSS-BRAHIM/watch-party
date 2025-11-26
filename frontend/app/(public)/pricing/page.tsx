@@ -120,7 +120,7 @@ export default function PricingPage() {
             </div>
             <div>
               <Button 
-                variant={plan.featured ? "default" : "secondary"} 
+                variant={plan.featured ? "primary" : "secondary"} 
                 size="lg" 
                 className={`w-full rounded-xl text-lg font-bold h-14 ${
                   plan.featured 
