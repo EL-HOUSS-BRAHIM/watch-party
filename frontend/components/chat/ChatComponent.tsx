@@ -21,6 +21,14 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const chatContainerRef = useRef<HTMLDivElement>(null)
 
+  // Helper function to get display name from user object
+  const getUserDisplayName = (user: ChatMessage['user']) => {
+    if (!user) return 'Unknown'
+    const firstName = user.first_name || ''
+    const lastName = user.last_name || ''
+    return (firstName + ' ' + lastName).trim() || 'Unknown'
+  }
+
   useEffect(() => {
     loadMessages()
     loadActiveUsers()
@@ -199,15 +207,15 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
               >
                 {message.message_type !== "system" && (
                   <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                    {message.user.avatar ? (
+                    {message.user?.avatar ? (
                       <img
                         src={message.user.avatar}
-                        alt={message.user.username}
+                        alt={getUserDisplayName(message.user)}
                         className="w-full h-full object-cover"
                       />
                     ) : (
                       <span className="text-sm text-white/60">
-                        {message.user.username?.charAt(0).toUpperCase() || "?"}
+                        {getUserDisplayName(message.user)?.charAt(0).toUpperCase() || "?"}
                       </span>
                     )}
                   </div>
@@ -219,21 +227,18 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
                   {message.message_type !== "system" && (
                     <div className="flex items-center gap-2 mb-1">
                       <span className="font-medium text-white text-sm">
-                        {message.user.username}
+                        {getUserDisplayName(message.user)}
                       </span>
-                      {message.user.is_verified && (
-                        <span className="text-brand-cyan-light text-xs">✓</span>
-                      )}
-                      {message.user.is_premium && (
+                      {message.user?.is_premium && (
                         <span className="text-brand-orange-light text-xs">⭐</span>
                       )}
                       <span className="text-white/40 text-xs">
-                        {formatTime(message.timestamp)}
+                        {formatTime(message.created_at)}
                       </span>
                       
-                      {isHost && message.user.id !== currentUser?.id && (
+                      {isHost && message.user?.id && message.user.id !== currentUser?.id && (
                         <button
-                          onClick={() => banUser(message.user.id, message.user.username)}
+                          onClick={() => banUser(message.user!.id, getUserDisplayName(message.user))}
                           className="text-brand-coral-light hover:text-red-300 text-xs ml-2"
                           title="Ban user"
                         >
