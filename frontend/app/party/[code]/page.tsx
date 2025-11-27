@@ -123,11 +123,23 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
       setJoinError(null)
 
       try {
-        // Get public party by code - this method might not exist, we'll use a workaround
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://be-watch-party.brahim-elhouss.me'}/api/parties/public/${resolvedParams.code}/`, {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://be-watch-party.brahim-elhouss.me'
+        const code = resolvedParams.code
+        
+        // Try public endpoint first (for room_code), then fall back to authenticated endpoint (for UUID)
+        let response = await fetch(`${apiUrl}/api/parties/public/${code}/`, {
           cache: "no-store",
           credentials: "include"
         })
+        
+        // If public endpoint fails with 404, try the authenticated party detail endpoint
+        // This handles when the URL contains a UUID instead of room_code
+        if (response.status === 404) {
+          response = await fetch(`${apiUrl}/api/parties/${code}/`, {
+            cache: "no-store",
+            credentials: "include"
+          })
+        }
 
         let payload: unknown = null
         try {

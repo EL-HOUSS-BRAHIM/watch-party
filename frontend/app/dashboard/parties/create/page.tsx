@@ -95,8 +95,10 @@ export default function CreatePartyPage() {
       
       const party = await partiesApi.create(partyPayload)
       
-      // Redirect to the party page
-      router.push(`/party/${party.id}`)
+      // Redirect to the party page using room_code for the public URL
+      // The party API returns room_code which is used for public access
+      const roomCode = (party as any).room_code || party.id
+      router.push(`/party/${roomCode}`)
       
     } catch (error) {
       console.error("Failed to create party:", error)
