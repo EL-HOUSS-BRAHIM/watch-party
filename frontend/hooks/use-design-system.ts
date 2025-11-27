@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { analyticsApi, userApi, User as ApiUser, NormalizedRealTimeAnalytics } from '@/lib/api-client'
 
 export interface User {
   id: string
@@ -27,19 +28,19 @@ export interface NotificationSettings {
 
 export function useDesignSystem() {
   const [user, setUser] = useState<User>({
-    id: '1',
-    name: 'Alex Johnson',
-    username: '@alexj',
+    id: '',
+    name: '',
+    username: '',
     avatar: undefined,
-    status: 'online',
-    plan: 'Pro'
+    status: 'offline',
+    plan: 'Free'
   })
   
   const [liveStats, setLiveStats] = useState<LiveStats>({
-    onlineUsers: 1247,
-    activeParties: 89,
-    totalWatchTime: 25620,
-    newUsers: 156
+    onlineUsers: 0,
+    activeParties: 0,
+    totalWatchTime: 0,
+    newUsers: 0
   })
   
   const [notifications, setNotifications] = useState<NotificationSettings>({
@@ -50,21 +51,57 @@ export function useDesignSystem() {
   })
   
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  // Load real user data
+  const loadUserData = useCallback(async () => {
+    try {
+      const userData = await userApi.getProfile()
+      setUser({
+        id: userData.id,
+        name: userData.full_name || userData.first_name || userData.username || '',
+        username: userData.username ? `@${userData.username}` : '',
+        avatar: userData.avatar,
+        status: userData.is_online ? 'online' : 'offline',
+        plan: userData.is_premium ? 'Premium' : userData.is_staff ? 'Pro' : 'Free'
+      })
+    } catch (error) {
+      console.error('Failed to load user data:', error)
+    }
+  }, [])
+
+  // Load real-time stats from API
+  const loadLiveStats = useCallback(async () => {
+    try {
+      const realTimeData = await analyticsApi.getRealTime()
+      setLiveStats({
+        onlineUsers: realTimeData.onlineUsers || 0,
+        activeParties: realTimeData.activeParties || 0,
+        totalWatchTime: realTimeData.engagement?.concurrentViewers || 0,
+        newUsers: 0 // This could be fetched from a separate endpoint if available
+      })
+    } catch (error) {
+      console.error('Failed to load real-time stats:', error)
+    }
+  }, [])
   
-  // Simulate real-time updates
+  // Load data on mount and set up polling
   useEffect(() => {
+    const initializeData = async () => {
+      setIsLoading(true)
+      await Promise.all([loadUserData(), loadLiveStats()])
+      setIsLoading(false)
+    }
+
+    initializeData()
+
+    // Poll for live stats every 30 seconds
     const interval = setInterval(() => {
-      setLiveStats(prev => ({
-        ...prev,
-        onlineUsers: Math.max(1000, prev.onlineUsers + Math.floor(Math.random() * 20) - 10),
-        activeParties: Math.max(0, prev.activeParties + Math.floor(Math.random() * 6) - 3),
-        totalWatchTime: prev.totalWatchTime + Math.floor(Math.random() * 100),
-        newUsers: prev.newUsers + Math.floor(Math.random() * 5)
-      }))
-    }, 15000)
+      loadLiveStats()
+    }, 30000)
     
     return () => clearInterval(interval)
-  }, [])
+  }, [loadUserData, loadLiveStats])
   
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -120,11 +157,14 @@ export function useDesignSystem() {
     liveStats,
     notifications,
     isCollapsed,
+    isLoading,
     
     // Actions
     toggleSidebar,
     updateUserStatus,
     updateNotificationSettings,
+    refreshStats: loadLiveStats,
+    refreshUser: loadUserData,
     
     // Utilities
     getStatusColor,
