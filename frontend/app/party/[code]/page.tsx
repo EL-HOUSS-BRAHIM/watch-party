@@ -134,7 +134,9 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
           setAuthUser(profile as UserInfo)
           // Auto-join for authenticated users - skip guest name input
           setHasJoined(true)
-          setGuestName(profile.full_name || profile.username || "User")
+          // Use username, fallback to full_name only if username is empty
+          const displayName = profile.username || profile.full_name || "User"
+          setGuestName(displayName)
         }
       } catch (err) {
         // User is not authenticated, that's fine - they'll use guest mode
@@ -374,6 +376,7 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
       party={party}
       guestName={guestName}
       isAuthenticated={!!authUser}
+      userId={authUser?.id}
       onLeave={() => setHasJoined(false)}
     />
   )

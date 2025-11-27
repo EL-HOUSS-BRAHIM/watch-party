@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { ConfirmDialog } from "@/components/ui/feedback"
 import { SyncedVideoPlayer } from "@/components/party/SyncedVideoPlayer"
+import { chatApi, ChatMessage as ApiChatMessage } from "@/lib/api-client"
 
 export interface PublicPartyViewModel {
   id: string
@@ -42,6 +43,7 @@ interface PublicPartyLayoutProps {
   party: PublicPartyViewModel
   guestName: string
   isAuthenticated?: boolean
+  userId?: string
   onLeave: () => void
 }
 
@@ -50,11 +52,13 @@ interface PublicPartyLayoutProps {
  * Features: Video sync + basic text chat ONLY
  * No: Voice, emoji reactions, polls, games, advanced controls
  */
-export function PublicPartyLayout({ party, guestName, isAuthenticated, onLeave }: PublicPartyLayoutProps) {
+export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, onLeave }: PublicPartyLayoutProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState("")
   const [showLeaveDialog, setShowLeaveDialog] = useState(false)
+  const [sendingMessage, setSendingMessage] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const loadedMessagesRef = useRef(false)
 
   const statusTone = party.status.toLowerCase()
   const statusBadgeStyles =
@@ -74,35 +78,87 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, onLeave }
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages])
 
-  // Simulate receiving messages (replace with WebSocket in production)
+  // Load existing messages and add welcome message
   useEffect(() => {
-    // Add welcome message
-    const welcomeMsg: Message = {
-      id: Date.now().toString(),
-      user: "System",
-      text: `${guestName} joined the party`,
-      timestamp: new Date(),
-      isGuest: false
-    }
-    setMessages([welcomeMsg])
-  }, [guestName])
+    if (loadedMessagesRef.current) return
+    loadedMessagesRef.current = true
 
-  const handleSendMessage = (e: React.FormEvent) => {
+    const loadMessages = async () => {
+      try {
+        // Load existing messages from API
+        const response = await chatApi.getMessages(party.id, { page_size: 50 })
+        const existingMessages: Message[] = response.results.map((msg: ApiChatMessage) => ({
+          id: msg.id,
+          user: msg.user?.username || msg.user?.full_name || 'Unknown',
+          text: msg.content,
+          timestamp: new Date(msg.timestamp),
+          isGuest: false // API messages are from authenticated users
+        }))
+        
+        // Add welcome message
+        const welcomeMsg: Message = {
+          id: `welcome-${Date.now()}`,
+          user: "System",
+          text: `${guestName} joined the party`,
+          timestamp: new Date(),
+          isGuest: false
+        }
+        
+        setMessages([...existingMessages, welcomeMsg])
+      } catch (err) {
+        console.error('Failed to load chat messages:', err)
+        // Still show welcome message even if loading fails
+        const welcomeMsg: Message = {
+          id: `welcome-${Date.now()}`,
+          user: "System",
+          text: `${guestName} joined the party`,
+          timestamp: new Date(),
+          isGuest: false
+        }
+        setMessages([welcomeMsg])
+      }
+    }
+
+    void loadMessages()
+  }, [party.id, guestName])
+
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newMessage.trim()) return
+    if (!newMessage.trim() || sendingMessage) return
 
-    const message: Message = {
-      id: Date.now().toString(),
-      user: guestName,
-      text: newMessage,
-      timestamp: new Date(),
-      isGuest: true
-    }
-
-    setMessages(prev => [...prev, message])
+    const messageText = newMessage.trim()
     setNewMessage("")
+    setSendingMessage(true)
 
-    // TODO: Send to WebSocket/API
+    // Optimistic update - add message immediately
+    const tempId = `temp-${Date.now()}`
+    const optimisticMessage: Message = {
+      id: tempId,
+      user: guestName,
+      text: messageText,
+      timestamp: new Date(),
+      isGuest: !isAuthenticated
+    }
+    setMessages(prev => [...prev, optimisticMessage])
+
+    try {
+      // Send to API (only works for authenticated users)
+      if (isAuthenticated) {
+        const savedMessage = await chatApi.sendMessage(party.id, messageText)
+        // Replace temp message with saved one
+        setMessages(prev => prev.map(msg => 
+          msg.id === tempId 
+            ? { ...msg, id: savedMessage.id }
+            : msg
+        ))
+      }
+    } catch (err) {
+      console.error('Failed to send message:', err)
+      // Message is already shown optimistically, keep it visible
+      // Could add error indicator here if needed
+    } finally {
+      setSendingMessage(false)
+    }
   }
 
   const handleLeaveParty = () => {
@@ -140,10 +196,12 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, onLeave }
             </div>
           </div>
 
-          {/* Guest Badge & Leave */}
+          {/* User Badge & Leave */}
           <div className="flex items-center gap-3">
-            <div className="rounded-lg bg-brand-blue/20 border border-brand-blue/30 px-3 py-1.5">
-              <span className="text-sm font-medium text-blue-300">👁️ Guest: {guestName}</span>
+            <div className={`rounded-lg px-3 py-1.5 ${isAuthenticated ? 'bg-brand-purple/20 border border-brand-purple/30' : 'bg-brand-blue/20 border border-brand-blue/30'}`}>
+              <span className={`text-sm font-medium ${isAuthenticated ? 'text-purple-300' : 'text-blue-300'}`}>
+                {isAuthenticated ? '👤' : '👁️'} {isAuthenticated ? '' : 'Guest: '}{guestName}
+              </span>
             </div>
             <button
               onClick={handleLeaveParty}
@@ -249,12 +307,17 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, onLeave }
               messages.map((msg) => (
                 <div key={msg.id} className="rounded-lg bg-white/5 p-3">
                   <div className="mb-1 flex items-center gap-2">
-                    <span className={`text-sm font-semibold ${msg.isGuest ? 'text-blue-300' : 'text-purple-300'}`}>
+                    <span className={`text-sm font-semibold ${msg.user === 'System' ? 'text-yellow-300' : msg.isGuest ? 'text-blue-300' : 'text-purple-300'}`}>
                       {msg.user}
                     </span>
-                    {msg.isGuest && (
+                    {msg.isGuest && msg.user !== 'System' && (
                       <span className="rounded bg-brand-blue/20 px-1.5 py-0.5 text-[10px] font-bold text-brand-blue-light">
                         GUEST
+                      </span>
+                    )}
+                    {!msg.isGuest && msg.user !== 'System' && (
+                      <span className="rounded bg-brand-purple/20 px-1.5 py-0.5 text-[10px] font-bold text-purple-300">
+                        MEMBER
                       </span>
                     )}
                     <span className="ml-auto text-xs text-brand-navy/40">
