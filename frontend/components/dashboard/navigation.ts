@@ -2,13 +2,13 @@ export type NavItem = {
   href: string
   label: string
   icon?: string
-  description?: string
   badge?: string | null
   badgeKey?: string // Key to look up dynamic badge value
 }
 
 export type NavSection = {
   title: string
+  icon?: string // Section icon for visual grouping
   items: NavItem[]
 }
 
@@ -54,42 +54,42 @@ export const getBadgeValue = (item: NavItem, dynamicBadges: DynamicBadges): stri
   }
 }
 
-// Centralized navigation used across dashboard and mobile menus
+// Simplified and better organized navigation
 export const NAVIGATION_SECTIONS: NavSection[] = [
   {
-    title: "Core",
+    title: "Main",
+    icon: "📍",
     items: [
-      { href: "/dashboard", label: "Overview", icon: "🏠", description: "Dashboard home", badge: null },
-      { href: "/dashboard/parties", label: "Watch Parties", icon: "🎬", description: "Host & join parties", badge: null, badgeKey: "activeParties" },
-      { href: "/dashboard/videos", label: "Media Library", icon: "📱", description: "Your video collection", badge: null },
-      { href: "/dashboard/chat", label: "Messages", icon: "💬", description: "Chat & communications", badge: null, badgeKey: "unreadMessages" },
+      { href: "/dashboard", label: "Dashboard", icon: "🏠", badge: null },
+      { href: "/dashboard/parties", label: "Watch Parties", icon: "🎬", badge: null, badgeKey: "activeParties" },
+      { href: "/dashboard/videos", label: "My Videos", icon: "📹", badge: null },
     ]
   },
   {
     title: "Social",
+    icon: "👥",
     items: [
-      { href: "/dashboard/friends", label: "Friends", icon: "👥", description: "Manage connections", badge: null, badgeKey: "friendRequests" },
-      { href: "/dashboard/social", label: "Communities", icon: "🌟", description: "Groups & discussions", badge: null },
-      { href: "/dashboard/events", label: "Events", icon: "📅", description: "Upcoming events", badge: null, badgeKey: "upcomingEvents" },
-      { href: "/dashboard/notifications", label: "Notifications", icon: "🔔", description: "Your updates", badge: null, badgeKey: "unreadNotifications" },
+      { href: "/dashboard/chat", label: "Messages", icon: "💬", badge: null, badgeKey: "unreadMessages" },
+      { href: "/dashboard/friends", label: "Friends", icon: "🤝", badge: null, badgeKey: "friendRequests" },
+      { href: "/dashboard/notifications", label: "Notifications", icon: "🔔", badge: null, badgeKey: "unreadNotifications" },
     ]
   },
   {
-    title: "Discover",
+    title: "Explore",
+    icon: "🔍",
     items: [
-      { href: "/dashboard/search", label: "Explore", icon: "🔍", description: "Find content & users", badge: null },
-      { href: "/dashboard/analytics", label: "Insights", icon: "📊", description: "Your activity stats", badge: null },
-      { href: "/dashboard/store", label: "Store", icon: "🛒", description: "Premium features", badge: null, badgeKey: "hasNewStoreItems" },
+      { href: "/dashboard/search", label: "Discover", icon: "🌐", badge: null },
+      { href: "/dashboard/events", label: "Events", icon: "📅", badge: null, badgeKey: "upcomingEvents" },
+      { href: "/dashboard/analytics", label: "Analytics", icon: "📊", badge: null },
     ]
   },
   {
-    title: "Tools",
+    title: "Account",
+    icon: "⚙️",
     items: [
-      { href: "/dashboard/integrations", label: "Connections", icon: "🔗", description: "Third-party services", badge: null },
-      { href: "/dashboard/support", label: "Help Center", icon: "🎫", description: "Support & guides", badge: null },
-      { href: "/dashboard/billing", label: "Billing", icon: "💳", description: "Billing & invoices", badge: null },
-      { href: "/dashboard/admin", label: "Admin Panel", icon: "⚙️", description: "System management", badge: null },
-      { href: "/dashboard/settings", label: "Settings", icon: "🔧", description: "Preferences", badge: null },
+      { href: "/dashboard/settings", label: "Settings", icon: "⚙️", badge: null },
+      { href: "/dashboard/billing", label: "Billing", icon: "💳", badge: null },
+      { href: "/dashboard/support", label: "Help", icon: "❓", badge: null },
     ]
   }
 ]
