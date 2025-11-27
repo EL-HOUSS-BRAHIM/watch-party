@@ -24,13 +24,33 @@ class ChatHistoryView(generics.ListAPIView):
     serializer_class = ChatMessageSerializer
     permission_classes = [permissions.IsAuthenticated]
     
+    def get_room(self):
+        """Get or create the chat room for the party"""
+        from apps.parties.models import WatchParty
+        
+        # Support both party_id and room_id parameters
+        party_id = self.kwargs.get('party_id') or self.kwargs.get('room_id')
+        
+        # First try to get the party
+        party = get_object_or_404(WatchParty, id=party_id)
+        
+        # Get or create the chat room for this party
+        room, created = ChatRoom.objects.get_or_create(
+            party=party,
+            defaults={
+                'name': f"Chat for {party.title}",
+                'description': f"Chat room for watch party: {party.title}",
+            }
+        )
+        
+        return room
+    
     def get_queryset(self):
         # Handle schema generation when there's no user
         if getattr(self, 'swagger_fake_view', False):
             return ChatMessage.objects.none()
         
-        room_id = self.kwargs.get('room_id')
-        room = get_object_or_404(ChatRoom, id=room_id)
+        room = self.get_room()
         
         # Check if user has access to the party
         user = self.request.user
@@ -53,8 +73,7 @@ class ChatHistoryView(generics.ListAPIView):
     
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        room_id = self.kwargs.get('room_id')
-        context['room'] = get_object_or_404(ChatRoom, id=room_id)
+        context['room'] = self.get_room()
         return context
 
 
@@ -64,9 +83,29 @@ class SendMessageView(generics.CreateAPIView):
     serializer_class = ChatMessageCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
     
+    def get_room(self):
+        """Get or create the chat room for the party"""
+        from apps.parties.models import WatchParty
+        
+        # Support both party_id and room_id parameters
+        party_id = self.kwargs.get('party_id') or self.kwargs.get('room_id')
+        
+        # First try to get the party
+        party = get_object_or_404(WatchParty, id=party_id)
+        
+        # Get or create the chat room for this party
+        room, created = ChatRoom.objects.get_or_create(
+            party=party,
+            defaults={
+                'name': f"Chat for {party.title}",
+                'description': f"Chat room for watch party: {party.title}",
+            }
+        )
+        
+        return room
+    
     def create(self, request, *args, **kwargs):
-        room_id = kwargs.get('room_id')
-        room = get_object_or_404(ChatRoom, id=room_id)
+        room = self.get_room()
         user = request.user
         
         # Check if user has access to the party
