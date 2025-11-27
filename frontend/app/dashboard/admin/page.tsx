@@ -262,7 +262,7 @@ export default function AdminDashboard() {
                   <div className="pt-4 border-t border-brand-navy/5">
                     <div className="flex justify-between text-sm font-bold">
                       <span className="text-brand-navy/60">Active Connections</span>
-                      <span className="text-brand-navy">{stats?.active_connections || 1247}</span>
+                      <span className="text-brand-navy">{stats?.active_connections || 0}</span>
                     </div>
                   </div>
                 </div>
