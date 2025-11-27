@@ -134,8 +134,8 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
           setAuthUser(profile as UserInfo)
           // Auto-join for authenticated users - skip guest name input
           setHasJoined(true)
-          // Use username, fallback to full_name only if username is empty
-          const displayName = profile.username || profile.full_name || "User"
+          // Use full_name first, then username (full_name is more user-friendly)
+          const displayName = profile.full_name || profile.username || "User"
           setGuestName(displayName)
         }
       } catch (err) {
@@ -371,12 +371,16 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
     )
   }
 
+  // Check if current user is the host
+  const isHost = !!authUser && party.host.id === authUser.id
+
   return (
     <PublicPartyLayout
       party={party}
       guestName={guestName}
       isAuthenticated={!!authUser}
       userId={authUser?.id}
+      isHost={isHost}
       onLeave={() => setHasJoined(false)}
     />
   )

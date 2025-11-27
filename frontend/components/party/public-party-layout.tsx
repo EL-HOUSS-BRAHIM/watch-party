@@ -44,15 +44,16 @@ interface PublicPartyLayoutProps {
   guestName: string
   isAuthenticated?: boolean
   userId?: string
+  isHost?: boolean
   onLeave: () => void
 }
 
 /**
- * PublicPartyLayout - Limited feature party room for anonymous users
- * Features: Video sync + basic text chat ONLY
- * No: Voice, emoji reactions, polls, games, advanced controls
+ * PublicPartyLayout - Party room for both authenticated users and guests
+ * Features: Video sync + basic text chat 
+ * Host gets full controls, authenticated users get member features, guests get limited access
  */
-export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, onLeave }: PublicPartyLayoutProps) {
+export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, isHost, onLeave }: PublicPartyLayoutProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [newMessage, setNewMessage] = useState("")
   const [showLeaveDialog, setShowLeaveDialog] = useState(false)
@@ -198,9 +199,9 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, o
 
           {/* User Badge & Leave */}
           <div className="flex items-center gap-3">
-            <div className={`rounded-lg px-3 py-1.5 ${isAuthenticated ? 'bg-brand-purple/20 border border-brand-purple/30' : 'bg-brand-blue/20 border border-brand-blue/30'}`}>
-              <span className={`text-sm font-medium ${isAuthenticated ? 'text-purple-300' : 'text-blue-300'}`}>
-                {isAuthenticated ? '👤' : '👁️'} {isAuthenticated ? '' : 'Guest: '}{guestName}
+            <div className={`rounded-lg px-3 py-1.5 ${isHost ? 'bg-brand-coral/20 border border-brand-coral/30' : isAuthenticated ? 'bg-brand-purple/20 border border-brand-purple/30' : 'bg-brand-blue/20 border border-brand-blue/30'}`}>
+              <span className={`text-sm font-medium ${isHost ? 'text-orange-300' : isAuthenticated ? 'text-purple-300' : 'text-blue-300'}`}>
+                {isHost ? '👑 Host: ' : isAuthenticated ? '👤 ' : '👁️ Guest: '}{guestName}
               </span>
             </div>
             <button
@@ -225,8 +226,8 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, o
                   <SyncedVideoPlayer
                     partyId={party.id}
                     videoUrl={party.video.id} // Will need to construct proper video URL
-                    isHost={false} // Guests are never hosts
-                    currentUserId={undefined} // Guest has no user ID
+                    isHost={isHost || false} // Pass actual host status
+                    currentUserId={userId} // Pass actual user ID
                     onPlayStateChange={(isPlaying) => {
                       // Could update local state if needed
                       console.log('Play state changed:', isPlaying);
@@ -275,14 +276,27 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, o
             )}
           </div>
 
-          {/* Guest Mode Notice */}
-          <div className="mt-4 rounded-lg bg-brand-blue/10 border border-brand-blue/20 p-3">
-            <p className="text-sm text-blue-300">
-              <strong>Guest Mode Limitations:</strong> You can watch synced video and send text messages only. 
-              <a href="/auth/register" className="ml-1 underline hover:text-blue-200">Sign up</a> for 
-              voice chat, emoji reactions, polls, and more!
-            </p>
-          </div>
+          {/* Mode Notice */}
+          {!isHost && (
+            <div className="mt-4 rounded-lg bg-brand-blue/10 border border-brand-blue/20 p-3">
+              <p className="text-sm text-blue-300">
+                {isAuthenticated ? (
+                  <><strong>Member Mode:</strong> You can watch synced video and participate in chat. Only the host can control playback.</>
+                ) : (
+                  <><strong>Guest Mode Limitations:</strong> You can watch synced video and send text messages only. 
+                  <a href="/auth/register" className="ml-1 underline hover:text-blue-200">Sign up</a> for 
+                  voice chat, emoji reactions, polls, and more!</>
+                )}
+              </p>
+            </div>
+          )}
+          {isHost && (
+            <div className="mt-4 rounded-lg bg-brand-coral/10 border border-brand-coral/20 p-3">
+              <p className="text-sm text-orange-300">
+                <strong>Host Controls:</strong> You have full control over video playback. Use the video player controls to play, pause, and seek.
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Chat Sidebar */}
