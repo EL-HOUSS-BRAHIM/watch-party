@@ -88,13 +88,20 @@ export function PublicPartyLayout({ party, guestName, isAuthenticated, userId, i
       try {
         // Load existing messages from API
         const response = await chatApi.getMessages(party.id, { page_size: 50 })
-        const existingMessages: Message[] = response.results.map((msg: ApiChatMessage) => ({
-          id: msg.id,
-          user: msg.user?.username || msg.user?.full_name || 'Unknown',
-          text: msg.content,
-          timestamp: new Date(msg.timestamp),
-          isGuest: false // API messages are from authenticated users
-        }))
+        const existingMessages: Message[] = response.results.map((msg: ApiChatMessage) => {
+          // Construct display name from first_name and last_name
+          const firstName = msg.user?.first_name || ''
+          const lastName = msg.user?.last_name || ''
+          const displayName = (firstName + ' ' + lastName).trim() || 'Unknown'
+          
+          return {
+            id: msg.id,
+            user: displayName,
+            text: msg.content,
+            timestamp: new Date(msg.created_at), // API returns created_at, not timestamp
+            isGuest: false // API messages are from authenticated users
+          }
+        })
         
         // Add welcome message
         const welcomeMsg: Message = {

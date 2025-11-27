@@ -105,11 +105,17 @@ export interface WatchParty {
 
 export interface ChatMessage {
   id: string
-  user: User
+  user: {
+    id: string
+    first_name?: string
+    last_name?: string
+    avatar?: string
+    is_premium?: boolean
+  } | null
   content: string
-  message_type: 'text' | 'system' | 'reaction'
-  timestamp: string
-  edited_at?: string
+  message_type: 'text' | 'system' | 'reaction' | 'emoji' | 'join' | 'leave'
+  created_at: string
+  updated_at?: string
   reply_to?: string
 }
 

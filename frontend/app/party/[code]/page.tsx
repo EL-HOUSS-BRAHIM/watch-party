@@ -134,8 +134,11 @@ export default function PublicPartyPage({ params }: PublicPartyPageProps) {
           setAuthUser(profile as UserInfo)
           // Auto-join for authenticated users - skip guest name input
           setHasJoined(true)
-          // Use full_name first, then username (full_name is more user-friendly)
-          const displayName = profile.full_name || profile.username || "User"
+          // Use full_name, or construct from first_name + last_name, or fallback to "User"
+          const firstName = profile.first_name || ''
+          const lastName = profile.last_name || ''
+          const constructedName = (firstName + ' ' + lastName).trim()
+          const displayName = profile.full_name || constructedName || "User"
           setGuestName(displayName)
         }
       } catch (err) {

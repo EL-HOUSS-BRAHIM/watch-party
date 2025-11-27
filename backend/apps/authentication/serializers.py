@@ -171,14 +171,15 @@ class UserProfileDetailSerializer(serializers.ModelSerializer):
     """Detailed user profile serializer including profile data"""
     
     profile = serializers.SerializerMethodField()
+    full_name = serializers.CharField(source='get_full_name', read_only=True)
     
     class Meta:
         model = User
         fields = [
-            'id', 'email', 'first_name', 'last_name', 'avatar',
+            'id', 'email', 'first_name', 'last_name', 'full_name', 'avatar',
             'is_premium', 'subscription_expires', 'date_joined', 'profile'
         ]
-        read_only_fields = ['id', 'email', 'date_joined']
+        read_only_fields = ['id', 'email', 'full_name', 'date_joined']
     
     @extend_schema_field(OpenApiTypes.OBJECT)
     def get_profile(self, obj) -> Optional[Dict[str, Any]]:
