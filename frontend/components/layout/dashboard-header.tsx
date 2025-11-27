@@ -44,7 +44,7 @@ export function DashboardHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-brand-navy/10 bg-white/80 backdrop-blur-xl">
+    <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-brand-navy/10 bg-white/95 backdrop-blur-xl shadow-sm">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6">
         {/* Logo & Brand */}
         <Link href="/dashboard" className="flex items-center gap-3 transition-opacity hover:opacity-80">
