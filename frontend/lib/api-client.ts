@@ -443,6 +443,7 @@ export const authApi = {
   logout: () =>
     apiFetch<{ success: boolean; message?: string }>('/api/auth/logout/', {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   refreshToken: (_refresh?: string) =>
@@ -450,6 +451,7 @@ export const authApi = {
       '/api/auth/refresh/',
       {
         method: 'POST',
+        body: JSON.stringify({}),
       }
     ),
 
@@ -496,6 +498,7 @@ export const authApi = {
   setup2FA: () =>
     apiFetch<{ qr_code: string; secret: string }>('/api/auth/2fa/setup/', {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   verify2FA: (token: string) =>
@@ -557,6 +560,7 @@ export const authApi = {
   disconnectGoogleDrive: () =>
     apiFetch<{ message: string }>('/api/auth/google-drive/disconnect/', {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   getGoogleDriveStatus: () =>
@@ -614,11 +618,13 @@ export const partiesApi = {
   join: (id: string) =>
     apiFetch<{ message: string }>(`/api/parties/${id}/join/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   leave: (id: string) =>
     apiFetch<{ message: string }>(`/api/parties/${id}/leave/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   getParticipants: (id: string) =>
@@ -627,6 +633,7 @@ export const partiesApi = {
   generateInvite: (id: string) =>
     apiFetch<{ invite_code: string }>(`/api/parties/${id}/generate-invite/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   joinByCode: (code: string) =>
@@ -653,6 +660,7 @@ export const partiesApi = {
   start: (id: string) =>
     apiFetch<{ message: string }>(`/api/parties/${id}/start/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   react: (id: string, reaction: string) =>
@@ -733,11 +741,13 @@ export const chatApi = {
   joinRoom: (roomId: string) =>
     apiFetch<{ message: string }>(`/api/chat/${roomId}/join/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   leaveRoom: (roomId: string) =>
     apiFetch<{ message: string }>(`/api/chat/${roomId}/leave/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   banUser: (roomId: string, userId: string, reason?: string) =>
@@ -792,6 +802,7 @@ export const chatApi = {
   clearChat: (partyId: string) =>
     apiFetch<{ message: string }>(`/api/chat/${partyId}/clear/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   // Missing method for EmojiPicker
@@ -862,6 +873,7 @@ export const videosApi = {
   like: (id: string) =>
     apiFetch<{ message: string }>(`/api/videos/${id}/like/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   share: (id: string, platform: string) =>
@@ -891,6 +903,7 @@ export const videosApi = {
   regenerateThumbnail: (id: string) =>
     apiFetch<{ message: string }>(`/api/videos/${id}/regenerate-thumbnail/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   search: (query: string, filters?: any) =>
@@ -970,11 +983,13 @@ export const userApi = {
   acceptFriendRequest: (requestId: string) =>
     apiFetch<{ message: string }>(`/api/users/friends/${requestId}/accept/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   declineFriendRequest: (requestId: string) =>
     apiFetch<{ message: string }>(`/api/users/friends/${requestId}/decline/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   removeFriend: (username: string) =>
@@ -1036,17 +1051,20 @@ export const userApi = {
   markNotificationAsRead: (notificationId: string) =>
     apiFetch<void>(`/api/notifications/${notificationId}/mark-read/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   markAllNotificationsAsRead: () =>
     apiFetch<void>('/api/notifications/mark-all-read/', {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   // User blocking
   blockUser: (userId: string) =>
     apiFetch<{ message: string }>(`/api/users/${userId}/block/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   unblockUser: (userId: string) =>
@@ -1068,6 +1086,7 @@ export const userApi = {
   removeFavorite: (favoriteId: string) =>
     apiFetch<{ message: string }>(`/api/users/favorites/${favoriteId}/remove/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   // User achievements
@@ -1250,11 +1269,13 @@ export const adminApi = {
   unbanUser: (userId: string) =>
     apiFetch<{ message: string }>(`/api/admin/users/${userId}/unban/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   verifyUser: (userId: string) =>
     apiFetch<{ message: string }>(`/api/admin/users/${userId}/verify/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   // Content moderation
@@ -1282,6 +1303,7 @@ export const adminApi = {
   clearCache: () =>
     apiFetch<{ message: string }>('/api/admin/system/clear-cache/', {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 }
 
@@ -1347,17 +1369,20 @@ export const billingApi = {
   cancelSubscription: () =>
     apiFetch<any>('/api/billing/cancel/', {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   reactivateSubscription: () =>
     apiFetch<any>('/api/billing/reactivate/', {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   // Payment methods
   updatePaymentMethod: () =>
     apiFetch<any>('/api/billing/update-payment-method/', {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   // Billing history
@@ -1409,11 +1434,13 @@ export const notificationsApi = {
   markAsRead: (notificationId: string) =>
     apiFetch<void>(`/api/notifications/${notificationId}/mark-read/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   markAllAsRead: () =>
     apiFetch<void>(`/api/notifications/mark-all-read/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   dismiss: (notificationId: string) =>
@@ -1508,11 +1535,13 @@ export const interactiveApi = {
   joinGame: (partyId: string, gameId: string) =>
     apiFetch<any>(`/api/parties/${partyId}/games/${gameId}/join/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   leaveGame: (partyId: string, gameId: string) =>
     apiFetch<any>(`/api/parties/${partyId}/games/${gameId}/leave/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   submitAnswer: (partyId: string, gameId: string, answer: string) =>
@@ -1641,6 +1670,7 @@ export const supportApi = {
   viewFAQ: (faqId: string) =>
     apiFetch<any>(`/api/support/faq/${faqId}/view/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   voteFAQ: (faqId: string, vote: 'helpful' | 'unhelpful') =>
@@ -1665,6 +1695,7 @@ export const supportApi = {
   viewDoc: (docId: string) =>
     apiFetch<any>(`/api/support/docs/${docId}/view/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   markDocHelpful: (docId: string, helpful: boolean) =>
@@ -1719,6 +1750,7 @@ export const supportApi = {
   viewCommunityPost: (postId: string) =>
     apiFetch<any>(`/api/support/community/${postId}/view/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 
   voteCommunityPost: (postId: string, vote: 'up' | 'down') =>
@@ -1745,6 +1777,7 @@ export const supportApi = {
   markReplySolution: (replyId: string) =>
     apiFetch<any>(`/api/support/community/replies/${replyId}/solution/`, {
       method: 'POST',
+      body: JSON.stringify({}),
     }),
 }
 
