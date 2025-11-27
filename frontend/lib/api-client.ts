@@ -41,7 +41,7 @@ const buildUrl = (endpoint: string) => {
 // Core Types (matching the API schema)
 export interface User {
   id: string
-  username: string
+  username?: string  // Optional - backend uses email as identifier
   email: string
   first_name?: string
   last_name?: string
