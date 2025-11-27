@@ -59,12 +59,20 @@ export default function PartiesPage() {
     }
   }
 
-  const handleJoinParty = async (partyId: string) => {
+  const handleJoinParty = async (partyId: string, roomCode?: string) => {
     try {
       await partiesApi.join(partyId)
-      window.location.href = `/party/${partyId}`
+      // Redirect using room_code if available, otherwise use partyId
+      window.location.href = `/party/${roomCode || partyId}`
     } catch (error) {
-      alert(error instanceof Error ? error.message : "Failed to join party")
+      const errorMessage = error instanceof Error ? error.message : "Failed to join party"
+      // If already joined, just redirect to the party
+      if (errorMessage.toLowerCase().includes("already joined") || 
+          errorMessage.toLowerCase().includes("already a participant")) {
+        window.location.href = `/party/${roomCode || partyId}`
+        return
+      }
+      alert(errorMessage)
     }
   }
 
@@ -294,7 +302,7 @@ export default function PartiesPage() {
                 {/* Action Buttons */}
                 <div className="flex gap-2 pt-2">
                   <IconButton
-                    onClick={() => handleJoinParty(party.id)}
+                    onClick={() => handleJoinParty(party.id, party.room_code)}
                     disabled={party.status === "ended" || party.status === "cancelled"}
                     className={`flex-1 font-bold border-none ${
                       party.status === "live" 
@@ -311,7 +319,7 @@ export default function PartiesPage() {
                     )}
                   </IconButton>
                   <IconButton
-                    onClick={() => router.push(`/party/${party.id}`)}
+                    onClick={() => router.push(`/party/${party.room_code || party.id}`)}
                     variant="secondary"
                     className="bg-white hover:bg-brand-purple/10 hover:text-brand-purple border-brand-navy/10"
                   >

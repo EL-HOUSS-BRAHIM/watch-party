@@ -65,6 +65,7 @@ export interface WatchParty {
   name?: string // Alias for title for backward compatibility
   description?: string
   host: User
+  room_code?: string // Unique room code for sharing
   status: 'scheduled' | 'live' | 'paused' | 'ended' | 'cancelled'
   visibility: 'public' | 'friends' | 'private'
   participant_count: number
