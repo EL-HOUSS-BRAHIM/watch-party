@@ -261,7 +261,7 @@ export default function ChatComponent({ partyId, currentUser, isHost = false }: 
                     {message.content}
                   </div>
 
-                  {message.edited_at && (
+                  {message.updated_at && message.updated_at !== message.created_at && (
                     <div className="text-xs text-white/40 mt-1">
                       (edited)
                     </div>
